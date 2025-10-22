@@ -26,6 +26,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -36,6 +37,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -67,6 +69,7 @@ import com.instructure.horizon.features.dashboard.widget.announcement.DashboardA
 import com.instructure.horizon.features.dashboard.widget.skillhighlights.DashboardSkillHighlightsWidget
 import com.instructure.horizon.features.dashboard.widget.skilloverview.DashboardSkillOverviewWidget
 import com.instructure.horizon.features.dashboard.widget.timespent.DashboardTimeSpentWidget
+import com.instructure.horizon.features.dashboard.widget.myprogress.DashboardMyProgressWidget
 import com.instructure.horizon.horizonui.animation.shimmerEffect
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
@@ -81,22 +84,11 @@ import com.instructure.horizon.navigation.MainNavigationRoute
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 
-const val DASHBOARD_REFRESH = "refreshDashboard"
-const val DASHBOARD_SNACKBAR = "dashboardSnackbar"
-
 @Composable
 fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostController, homeNavController: NavHostController) {
     val snackbarHostState = remember { SnackbarHostState() }
 
-    val parentEntry = remember(mainNavController.currentBackStackEntry) { mainNavController.getBackStackEntry("home") }
-    val savedStateHandle = parentEntry.savedStateHandle
-
-    val externalRefreshFlow = remember { savedStateHandle.getStateFlow(DASHBOARD_REFRESH, false) }
-    val externalRefreshState by externalRefreshFlow.collectAsState()
     var shouldRefresh by rememberSaveable { mutableStateOf(false) }
-
-    val snackbarFlow = remember { savedStateHandle.getStateFlow(DASHBOARD_SNACKBAR, "") }
-    val snackbar by snackbarFlow.collectAsState()
 
     /*
     Using a list of booleans to represent each refreshing component.
@@ -111,24 +103,25 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
 
     LaunchedEffect(shouldRefresh) {
         if (shouldRefresh) {
-            delay(50)
             shouldRefresh = false
         }
     }
 
-    LaunchedEffect(externalRefreshState) {
-        if (externalRefreshState) {
-            savedStateHandle[DASHBOARD_REFRESH] = false
+    LaunchedEffect(uiState.externalShouldRefresh) {
+        if (uiState.externalShouldRefresh) {
             shouldRefresh = true
+            uiState.updateExternalShouldRefresh(false)
         }
     }
 
-    LaunchedEffect(snackbar) {
-        if (snackbar.isNotEmpty()) {
-            snackbarHostState.showSnackbar(
-                message = snackbar,
+    LaunchedEffect(uiState.snackbarMessage) {
+        if (uiState.snackbarMessage != null) {
+            val result = snackbarHostState.showSnackbar(
+                message = uiState.snackbarMessage,
             )
-            savedStateHandle[DASHBOARD_SNACKBAR] = ""
+            if (result == SnackbarResult.Dismissed) {
+                uiState.onSnackbarDismiss()
+            }
         }
     }
 
@@ -155,6 +148,7 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
             }
         ){
             Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .padding(paddingValues)
                     .verticalScroll(rememberScrollState())
@@ -179,9 +173,15 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
+                        .fillMaxWidth()
                         .horizontalScroll(rememberScrollState())
                         .padding(start = 16.dp)
                 ) {
+                    DashboardMyProgressWidget(
+                        shouldRefresh,
+                        refreshStateFlow
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
                     DashboardTimeSpentWidget(
                         shouldRefresh,
                         refreshStateFlow

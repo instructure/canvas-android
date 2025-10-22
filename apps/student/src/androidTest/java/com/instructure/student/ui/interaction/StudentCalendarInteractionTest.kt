@@ -48,7 +48,7 @@ class StudentCalendarInteractionTest : CalendarInteractionTest() {
     override val activityRule = StudentActivityTestRule(LoginActivity::class.java)
 
     private val dashboardPage = DashboardPage()
-    private val assignmentDetailsPage = AssignmentDetailsPage(ModuleItemInteractions())
+    private val assignmentDetailsPage = AssignmentDetailsPage(ModuleItemInteractions(), composeTestRule)
     private val discussionDetailsPage = DiscussionDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next_item, R.id.prev_item))
 
     override fun goToCalendar(data: MockCanvas) {

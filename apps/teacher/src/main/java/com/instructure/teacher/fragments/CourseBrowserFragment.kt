@@ -59,7 +59,7 @@ import com.instructure.teacher.databinding.FragmentCourseBrowserBinding
 import com.instructure.teacher.events.CourseUpdatedEvent
 import com.instructure.teacher.factory.CourseBrowserPresenterFactory
 import com.instructure.teacher.features.modules.list.ui.ModuleListFragment
-import com.instructure.teacher.features.syllabus.ui.SyllabusFragment
+import com.instructure.teacher.features.syllabus.ui.SyllabusRepositoryFragment
 import com.instructure.teacher.holders.CourseBrowserViewHolder
 import com.instructure.teacher.presenters.CourseBrowserPresenter
 import com.instructure.teacher.router.RouteMatcher
@@ -270,7 +270,7 @@ class CourseBrowserFragment : BaseSyncFragment<
                     presenter.handleStudentViewClick()
                 }
                 Tab.SYLLABUS_ID -> {
-                    RouteMatcher.route(requireActivity(), Route(SyllabusFragment::class.java, presenter.canvasContext, presenter.canvasContext.makeBundle()))
+                    RouteMatcher.route(requireActivity(), Route(SyllabusRepositoryFragment::class.java, presenter.canvasContext, presenter.canvasContext.makeBundle()))
                 }
                 else -> {
                     if (tab.type == Tab.TYPE_EXTERNAL) {

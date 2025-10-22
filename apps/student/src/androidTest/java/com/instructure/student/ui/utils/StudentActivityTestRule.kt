@@ -18,13 +18,12 @@ package com.instructure.student.ui.utils
 
 import android.app.Activity
 import android.content.Context
-import com.instructure.student.util.CacheControlFlags
-import com.instructure.student.util.StudentPrefs
 import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.loginapi.login.util.LoginPrefs
 import com.instructure.loginapi.login.util.PreviousUsersUtils
 import com.instructure.pandautils.utils.PandaAppResetter
-import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.student.util.CacheControlFlags
+import com.instructure.student.util.StudentPrefs
 
 class StudentActivityTestRule<T : Activity>(activityClass: Class<T>) : InstructureActivityTestRule<T>(activityClass) {
 
@@ -34,9 +33,6 @@ class StudentActivityTestRule<T : Activity>(activityClass: Class<T>) : Instructu
         CacheControlFlags.clearPrefs()
         PreviousUsersUtils.clear(context)
         LoginPrefs.clearPrefs()
-
-        // We need to set this true so the theme selector won't stop our tests.
-        ThemePrefs.themeSelectionShown = true
     }
 
 }

@@ -168,32 +168,4 @@ class DashboardSkillOverviewWidgetUiTest {
         composeTestRule.onNodeWithText("999").assertIsDisplayed()
         composeTestRule.onNodeWithText(earnedLabel).assertIsDisplayed()
     }
-
-    @Test
-    fun testMultipleSkillCounts() {
-        val skillCounts = listOf(0, 1, 3, 10, 24, 50, 100)
-
-        skillCounts.forEach { count ->
-            val uiState = DashboardSkillOverviewUiState(
-                state = DashboardItemState.SUCCESS,
-                cardState = DashboardSkillOverviewCardState(completedSkillCount = count)
-            )
-
-            composeTestRule.setContent {
-                DashboardSkillOverviewSection(uiState, rememberNavController())
-            }
-
-            val title = context.getString(R.string.dashboardSkillOverviewTitle)
-            composeTestRule.onNodeWithText(title).assertIsDisplayed()
-
-            if (count == 0) {
-                val noDataMessage = context.getString(R.string.dashboardSkillOverviewNoDataMessage)
-                composeTestRule.onNodeWithText(noDataMessage).assertIsDisplayed()
-            } else {
-                val earnedLabel = context.getString(R.string.dashboardSkillOverviewEarnedLabel)
-                composeTestRule.onNodeWithText(count.toString()).assertIsDisplayed()
-                composeTestRule.onNodeWithText(earnedLabel).assertIsDisplayed()
-            }
-        }
-    }
 }

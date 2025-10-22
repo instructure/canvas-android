@@ -40,8 +40,7 @@ data class AssignmentDetailsViewData(
     val discussionHeaderViewData: DiscussionHeaderViewData? = null,
     val quizDetails: QuizViewViewData? = null,
     val attemptsViewData: AttemptsViewData? = null,
-    @Bindable var hasDraft: Boolean = false,
-    @Bindable var reminders: List<ReminderItemViewModel> = emptyList()
+    @Bindable var hasDraft: Boolean = false
 ) : BaseObservable() {
     val firstAttemptOrNull = attempts.firstOrNull()
     val noDescriptionVisible = description.isEmpty() && !fullLocked
@@ -70,7 +69,8 @@ sealed class AssignmentDetailAction {
         val isObserver: Boolean,
         val selectedSubmissionAttempt: Long?,
         val assignmentUrl: String?,
-        val isAssignmentEnhancementEnabled: Boolean
+        val isAssignmentEnhancementEnabled: Boolean,
+        val isQuiz: Boolean
     ) : AssignmentDetailAction()
     data class NavigateToQuizScreen(val quiz: Quiz) : AssignmentDetailAction()
     data class NavigateToDiscussionScreen(val discussionTopicHeaderId: Long, val course: Course) : AssignmentDetailAction()

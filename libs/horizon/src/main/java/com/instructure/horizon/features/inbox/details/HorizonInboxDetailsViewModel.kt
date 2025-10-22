@@ -30,6 +30,8 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
 import com.instructure.horizon.features.inbox.HorizonInboxItemType
+import com.instructure.horizon.features.inbox.InboxEvent
+import com.instructure.horizon.features.inbox.InboxEventHandler
 import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachment
 import com.instructure.horizon.features.inbox.navigation.HorizonInboxRoute
 import com.instructure.horizon.horizonui.platform.LoadingState
@@ -55,6 +57,7 @@ class HorizonInboxDetailsViewModel @Inject constructor(
     private val workManager: WorkManager,
     private val fileDownloadProgressDao: FileDownloadProgressDao,
     savedStateHandle: SavedStateHandle,
+    private val inboxEventHandler: InboxEventHandler
 ): ViewModel() {
     private val courseId: String? = savedStateHandle[HorizonInboxRoute.InboxDetails.COURSE_ID]
     private val typeStringValue: String? = savedStateHandle[HorizonInboxRoute.InboxDetails.TYPE]
@@ -182,7 +185,7 @@ class HorizonInboxDetailsViewModel @Inject constructor(
                         )
 
                         if (result.isSuccess) {
-                            _uiState.update { it.copy(announcementMarkedAsRead = true) }
+                            inboxEventHandler.postEvent(InboxEvent.AnnouncementRead)
                         }
 
                         // We need to refresh the announcement in the background, so the next time we open and it's opened from the cache it wouldn't show as unread

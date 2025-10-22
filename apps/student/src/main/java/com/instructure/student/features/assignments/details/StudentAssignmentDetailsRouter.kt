@@ -59,7 +59,8 @@ class StudentAssignmentDetailsRouter: AssignmentDetailsRouter() {
         assignmentUrl: String?,
         isAssignmentEnhancementEnabled: Boolean,
         isObserver: Boolean,
-        initialSelectedSubmissionAttempt: Long?
+        initialSelectedSubmissionAttempt: Long?,
+        isQuiz: Boolean
     ) {
         RouteMatcher.route(
             activity,

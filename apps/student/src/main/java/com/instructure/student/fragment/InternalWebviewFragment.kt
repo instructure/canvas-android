@@ -224,12 +224,18 @@ open class InternalWebviewFragment : ParentFragment() {
                 }
             }
 
+            override fun downloadInternalMedia(mime: String?, url: String?, filename: String?) {
+                this@InternalWebviewFragment.downloadInternalMedia(mime, url, filename)
+            }
+
         })
 
         if (savedInstanceState != null) {
             canvasWebViewWrapper?.webView?.restoreState(savedInstanceState)
         }
     }
+
+    open fun downloadInternalMedia(mime: String?, url: String?, filename: String?) = Unit
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

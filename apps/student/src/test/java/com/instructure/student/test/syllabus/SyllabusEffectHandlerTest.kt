@@ -97,6 +97,38 @@ class SyllabusEffectHandlerTest : Assert() {
         coEvery {
             syllabusRepository.getCalendarEvents(
                 any(),
+                CalendarEventAPI.CalendarEventType.ASSIGNMENT,
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns DataResult.Fail()
+
+        coEvery {
+            syllabusRepository.getCalendarEvents(
+                any(),
+                CalendarEventAPI.CalendarEventType.SUB_ASSIGNMENT,
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns DataResult.Fail()
+
+        coEvery {
+            syllabusRepository.getCalendarEvents(
+                any(),
+                CalendarEventAPI.CalendarEventType.CALENDAR,
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns DataResult.Fail()
+
+        coEvery {
+            syllabusRepository.getPlannerItems(
                 any(),
                 any(),
                 any(),
@@ -162,6 +194,17 @@ class SyllabusEffectHandlerTest : Assert() {
         coEvery {
             syllabusRepository.getCalendarEvents(
                 any(),
+                CalendarEventAPI.CalendarEventType.SUB_ASSIGNMENT,
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns DataResult.Success(emptyList())
+
+        coEvery {
+            syllabusRepository.getCalendarEvents(
+                any(),
                 CalendarEventAPI.CalendarEventType.CALENDAR,
                 any(),
                 any(),
@@ -169,6 +212,16 @@ class SyllabusEffectHandlerTest : Assert() {
                 any()
             )
         } returns DataResult.Success(calendarEvents)
+
+        coEvery {
+            syllabusRepository.getPlannerItems(
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns DataResult.Success(emptyList())
 
         connection.accept(SyllabusEffect.LoadData(courseId, false))
 
@@ -209,6 +262,17 @@ class SyllabusEffectHandlerTest : Assert() {
         coEvery {
             syllabusRepository.getCalendarEvents(
                 any(),
+                CalendarEventAPI.CalendarEventType.SUB_ASSIGNMENT,
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns DataResult.Success(emptyList())
+
+        coEvery {
+            syllabusRepository.getCalendarEvents(
+                any(),
                 CalendarEventAPI.CalendarEventType.CALENDAR,
                 any(),
                 any(),
@@ -216,6 +280,16 @@ class SyllabusEffectHandlerTest : Assert() {
                 any()
             )
         } returns DataResult.Fail()
+
+        coEvery {
+            syllabusRepository.getPlannerItems(
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns DataResult.Success(emptyList())
 
         connection.accept(SyllabusEffect.LoadData(courseId, false))
 
@@ -256,6 +330,17 @@ class SyllabusEffectHandlerTest : Assert() {
         coEvery {
             syllabusRepository.getCalendarEvents(
                 any(),
+                CalendarEventAPI.CalendarEventType.SUB_ASSIGNMENT,
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns DataResult.Success(emptyList())
+
+        coEvery {
+            syllabusRepository.getCalendarEvents(
+                any(),
                 CalendarEventAPI.CalendarEventType.CALENDAR,
                 any(),
                 any(),
@@ -263,6 +348,16 @@ class SyllabusEffectHandlerTest : Assert() {
                 any()
             )
         } returns DataResult.Success(calendarEvents)
+
+        coEvery {
+            syllabusRepository.getPlannerItems(
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns DataResult.Success(emptyList())
 
         connection.accept(SyllabusEffect.LoadData(courseId, false))
 
@@ -307,6 +402,53 @@ class SyllabusEffectHandlerTest : Assert() {
 
         coEvery { syllabusRepository.getCourseWithSyllabus(courseId, false) } returns DataResult.Success(course)
 
+        connection.accept(SyllabusEffect.LoadData(courseId, false))
+
+        verify(timeout = 100) {
+            eventConsumer.accept(expectedEvent)
+        }
+
+        confirmVerified(eventConsumer)
+    }
+
+    @Test
+    fun `LoadData with sub-assignments results in DataLoaded with sorted items`() {
+        val courseId = 1L
+        val itemCount = 2
+        val now = Date().time
+        val assignments = List(itemCount) {
+            ScheduleItem(
+                itemId = it.toString(),
+                itemType = ScheduleItem.Type.TYPE_ASSIGNMENT,
+                startAt = Date(now + (1000 * it)).toApiString()
+            )
+        }
+        val subAssignments = List(itemCount) {
+            ScheduleItem(
+                itemId = (it + assignments.size).toString(),
+                itemType = ScheduleItem.Type.TYPE_ASSIGNMENT,
+                startAt = Date(now + (500 * it)).toApiString()
+            )
+        }
+        val calendarEvents = List(itemCount) {
+            ScheduleItem(
+                itemId = (it + assignments.size + subAssignments.size).toString(),
+                itemType = ScheduleItem.Type.TYPE_CALENDAR,
+                startAt = Date(now + (1000 * it)).toApiString()
+            )
+        }
+
+        val allItems = (assignments + subAssignments + calendarEvents).sortedBy { it.startAt }
+
+        val expectedEvent = SyllabusEvent.DataLoaded(
+            DataResult.Success(course),
+            DataResult.Success(allItems)
+        )
+
+        coEvery { syllabusRepository.getCourseWithSyllabus(any(), any()) } returns DataResult.Success(course)
+
+        coEvery { syllabusRepository.getCourseSettings(any(), any()) } returns CourseSettings(courseSummary = true)
+
         coEvery {
             syllabusRepository.getCalendarEvents(
                 any(),
@@ -321,6 +463,17 @@ class SyllabusEffectHandlerTest : Assert() {
         coEvery {
             syllabusRepository.getCalendarEvents(
                 any(),
+                CalendarEventAPI.CalendarEventType.SUB_ASSIGNMENT,
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns DataResult.Success(subAssignments)
+
+        coEvery {
+            syllabusRepository.getCalendarEvents(
+                any(),
                 CalendarEventAPI.CalendarEventType.CALENDAR,
                 any(),
                 any(),
@@ -328,6 +481,84 @@ class SyllabusEffectHandlerTest : Assert() {
                 any()
             )
         } returns DataResult.Success(calendarEvents)
+
+        coEvery {
+            syllabusRepository.getPlannerItems(
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns DataResult.Success(emptyList())
+
+        connection.accept(SyllabusEffect.LoadData(courseId, false))
+
+        verify(timeout = 100) {
+            eventConsumer.accept(expectedEvent)
+        }
+
+        confirmVerified(eventConsumer)
+    }
+
+    @Test
+    fun `LoadData with failed sub-assignments results in partial success DataLoaded`() {
+        val courseId = 1L
+        val assignments = List(1) {
+            ScheduleItem(itemId = it.toString(), itemType = ScheduleItem.Type.TYPE_ASSIGNMENT)
+        }
+
+        val expectedEvent = SyllabusEvent.DataLoaded(
+            DataResult.Success(course),
+            DataResult.Success(assignments)
+        )
+
+        coEvery { syllabusRepository.getCourseWithSyllabus(courseId, false) } returns DataResult.Success(course)
+
+        coEvery { syllabusRepository.getCourseSettings(courseId, false) } returns CourseSettings(courseSummary = true)
+
+        coEvery {
+            syllabusRepository.getCalendarEvents(
+                any(),
+                CalendarEventAPI.CalendarEventType.ASSIGNMENT,
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns DataResult.Success(assignments)
+
+        coEvery {
+            syllabusRepository.getCalendarEvents(
+                any(),
+                CalendarEventAPI.CalendarEventType.SUB_ASSIGNMENT,
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns DataResult.Fail()
+
+        coEvery {
+            syllabusRepository.getCalendarEvents(
+                any(),
+                CalendarEventAPI.CalendarEventType.CALENDAR,
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns DataResult.Success(emptyList())
+
+        coEvery {
+            syllabusRepository.getPlannerItems(
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns DataResult.Success(emptyList())
 
         connection.accept(SyllabusEffect.LoadData(courseId, false))
 
@@ -341,10 +572,10 @@ class SyllabusEffectHandlerTest : Assert() {
     @Test
     fun `ShowAssignmentView results in view calling showAssignmentView`() {
         val assignment = Assignment()
-        connection.accept(SyllabusEffect.ShowAssignmentView(assignment, course))
+        connection.accept(SyllabusEffect.ShowAssignmentView(assignment.id, course))
 
         verify(timeout = 100) {
-            view.showAssignmentView(assignment, course)
+            view.showAssignmentView(assignment.id, course)
         }
 
         confirmVerified(view)

@@ -39,6 +39,7 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCard
 import com.instructure.horizon.features.home.HomeNavigationRoute
+import com.instructure.horizon.horizonui.animation.shimmerEffect
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
@@ -53,43 +54,49 @@ import com.instructure.horizon.horizonui.molecules.PillType
 fun DashboardSkillHighlightsCardContent(
     state: DashboardSkillHighlightsCardState,
     homeNavController: NavHostController,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isLoading: Boolean = false
 ) {
     DashboardWidgetCard(
         title = stringResource(R.string.dashboardSkillHighlightsTitle),
         iconRes = R.drawable.hub,
         widgetColor = HorizonColors.PrimitivesGreen.green12(),
+        isLoading = isLoading,
         useMinWidth = false,
         modifier = modifier
     ) {
         if (state.skills.isEmpty()) {
-            Column(
-                modifier = Modifier.fillMaxWidth()
-            ) {
+            Column {
                 HorizonSpace(SpaceSize.SPACE_8)
                 Text(
                     text = stringResource(R.string.dashboardSkillHighlightsNoDataTitle),
                     style = HorizonTypography.h4,
-                    color = HorizonColors.Text.title()
+                    color = HorizonColors.Text.title(),
+                    modifier = Modifier.shimmerEffect(isLoading)
                 )
                 HorizonSpace(SpaceSize.SPACE_4)
                 Text(
                     text = stringResource(R.string.dashboardSkillHighlightsNoDataMessage),
                     style = HorizonTypography.p2,
-                    color = HorizonColors.Text.timestamp()
+                    color = HorizonColors.Text.timestamp(),
+                    modifier = Modifier.shimmerEffect(isLoading)
                 )
             }
         } else {
             HorizonSpace(SpaceSize.SPACE_8)
             Column(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier.fillMaxWidth()
             ) {
                 state.skills.forEach { skill ->
                     SkillCard(
                         skill,
                         skill.proficiencyLevel.opacity(),
-                        homeNavController
+                        homeNavController,
+                        modifier = Modifier.shimmerEffect(
+                            isLoading,
+                            backgroundColor = HorizonColors.PrimitivesGreen.green12().copy(alpha = 0.8f),
+                            shimmerColor = HorizonColors.PrimitivesGreen.green12().copy(alpha = 0.5f)
+                        )
                     )
                 }
             }
@@ -102,10 +109,11 @@ private fun SkillCard(
     skill: SkillHighlight,
     opacity: Float,
     homeNavController: NavHostController,
+    modifier: Modifier = Modifier
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier
+        modifier = modifier
             .clip(RoundedCornerShape(16.dp))
             .background(HorizonColors.PrimitivesGreen.green12().copy(alpha = opacity))
             .fillMaxWidth()
@@ -169,5 +177,16 @@ private fun DashboardSkillHighlightsCardContentNoDataPreview() {
     DashboardSkillHighlightsCardContent(
         state = DashboardSkillHighlightsCardState(skills = emptyList()),
         rememberNavController()
+    )
+}
+
+@Composable
+@Preview
+private fun DashboardSkillHighlightsLoadingPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    DashboardSkillHighlightsCardContent(
+        state = DashboardSkillHighlightsCardState(skills = emptyList()),
+        rememberNavController(),
+        isLoading = true
     )
 }

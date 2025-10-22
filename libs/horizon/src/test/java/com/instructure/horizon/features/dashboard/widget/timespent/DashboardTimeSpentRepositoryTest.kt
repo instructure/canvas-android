@@ -19,10 +19,10 @@ package com.instructure.horizon.features.dashboard.widget.timespent
 import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
 import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetWidgetsManager
-import com.instructure.canvasapi2.managers.graphql.horizon.journey.TimeSpentWidgetData
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.journey.GetWidgetDataQuery
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -57,47 +57,73 @@ class DashboardTimeSpentRepositoryTest {
 
     @Test
     fun `getTimeSpentData returns data successfully`() = runTest {
-        val expectedData = TimeSpentWidgetData(
+        val graphqlData = GetWidgetDataQuery.WidgetData(
             lastModifiedDate = Date(),
-            data = listOf(mapOf("hours" to 10.5))
+            data = listOf(
+                mapOf(
+                    "date" to "2025-10-08",
+                    "user_id" to 1.0,
+                    "course_id" to 101.0,
+                    "course_name" to "Test Course",
+                    "minutes_per_day" to 120.0
+                )
+            )
         )
 
-        coEvery { getWidgetsManager.getTimeSpentWidgetData(null, false) } returns expectedData
+        coEvery { getWidgetsManager.getTimeSpentWidgetData(null, false) } returns graphqlData
 
         val result = repository.getTimeSpentData(null, false)
 
-        assertEquals(expectedData, result)
+        assertEquals(graphqlData.lastModifiedDate, result.lastModifiedDate)
+        assertEquals(1, result.data.size)
+        assertEquals(101L, result.data[0].courseId)
+        assertEquals("Test Course", result.data[0].courseName)
+        assertEquals(120, result.data[0].minutesPerDay)
         coVerify { getWidgetsManager.getTimeSpentWidgetData(null, false) }
     }
 
     @Test
     fun `getTimeSpentData with courseId passes courseId to manager`() = runTest {
         val courseId = 123L
-        val expectedData = TimeSpentWidgetData(
+        val graphqlData = GetWidgetDataQuery.WidgetData(
             lastModifiedDate = Date(),
-            data = listOf(mapOf("hours" to 5.0))
+            data = listOf(
+                mapOf(
+                    "date" to "2025-10-08",
+                    "course_id" to 123.0,
+                    "course_name" to "Filtered Course",
+                    "minutes_per_day" to 90.0
+                )
+            )
         )
 
-        coEvery { getWidgetsManager.getTimeSpentWidgetData(courseId, false) } returns expectedData
+        coEvery { getWidgetsManager.getTimeSpentWidgetData(courseId, false) } returns graphqlData
 
         val result = repository.getTimeSpentData(courseId, false)
 
-        assertEquals(expectedData, result)
+        assertEquals(graphqlData.lastModifiedDate, result.lastModifiedDate)
+        assertEquals(1, result.data.size)
+        assertEquals(123L, result.data[0].courseId)
         coVerify { getWidgetsManager.getTimeSpentWidgetData(courseId, false) }
     }
 
     @Test
     fun `getTimeSpentData with forceNetwork true uses network`() = runTest {
-        val expectedData = TimeSpentWidgetData(
+        val graphqlData = GetWidgetDataQuery.WidgetData(
             lastModifiedDate = Date(),
-            data = listOf(mapOf("hours" to 8.0))
+            data = listOf(
+                mapOf(
+                    "minutes_per_day" to 150.0
+                )
+            )
         )
 
-        coEvery { getWidgetsManager.getTimeSpentWidgetData(null, true) } returns expectedData
+        coEvery { getWidgetsManager.getTimeSpentWidgetData(null, true) } returns graphqlData
 
         val result = repository.getTimeSpentData(null, true)
 
-        assertEquals(expectedData, result)
+        assertEquals(graphqlData.lastModifiedDate, result.lastModifiedDate)
+        assertEquals(150, result.data[0].minutesPerDay)
         coVerify { getWidgetsManager.getTimeSpentWidgetData(null, true) }
     }
 

@@ -20,7 +20,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -37,6 +39,7 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCard
 import com.instructure.horizon.features.home.HomeNavigationRoute
+import com.instructure.horizon.horizonui.animation.shimmerEffect
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 
@@ -44,12 +47,14 @@ import com.instructure.horizon.horizonui.foundation.HorizonTypography
 fun DashboardSkillOverviewCardContent(
     state: DashboardSkillOverviewCardState,
     homeNavController: NavHostController,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isLoading: Boolean = false,
 ) {
     DashboardWidgetCard(
         title = stringResource(R.string.dashboardSkillOverviewTitle),
         iconRes = R.drawable.hub,
         widgetColor = HorizonColors.PrimitivesGreen.green12(),
+        isLoading = isLoading,
         useMinWidth = true,
         onClick = {
             homeNavController.navigate(HomeNavigationRoute.Skillspace.route) {
@@ -61,13 +66,17 @@ fun DashboardSkillOverviewCardContent(
             }
         },
         modifier = modifier
+            .widthIn(max = 300.dp)
+            .padding(bottom = 8.dp),
     ) {
         if (state.completedSkillCount == 0) {
             Text(
                 text = stringResource(R.string.dashboardSkillOverviewNoDataMessage),
                 style = HorizonTypography.p2,
                 color = HorizonColors.Text.timestamp(),
-                modifier = Modifier.width(IntrinsicSize.Max)
+                modifier = Modifier
+                    .width(IntrinsicSize.Max)
+                    .shimmerEffect(isLoading)
             )
         } else {
             Row(
@@ -78,12 +87,14 @@ fun DashboardSkillOverviewCardContent(
                 Text(
                     text = state.completedSkillCount.toString(),
                     style = HorizonTypography.h1.copy(fontSize = 38.sp, letterSpacing = 0.sp),
-                    color = HorizonColors.Text.body()
+                    color = HorizonColors.Text.body(),
+                    modifier = Modifier.shimmerEffect(isLoading)
                 )
                 Text(
                     text = stringResource(R.string.dashboardSkillOverviewEarnedLabel),
                     style = HorizonTypography.labelMediumBold,
-                    color = HorizonColors.Text.title()
+                    color = HorizonColors.Text.title(),
+                    modifier = Modifier.shimmerEffect(isLoading)
                 )
             }
         }
@@ -109,3 +120,15 @@ private fun DashboardSkillOverviewCardContentNoDataPreview() {
         rememberNavController()
     )
 }
+
+@Composable
+@Preview
+private fun DashboardSkillOverviewLoadingPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    DashboardSkillOverviewCardContent(
+        state = DashboardSkillOverviewCardState(completedSkillCount = 0),
+        rememberNavController(),
+        isLoading = true
+    )
+}
+

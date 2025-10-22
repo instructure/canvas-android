@@ -40,6 +40,7 @@ import com.instructure.canvas.espresso.common.pages.LegalPage
 import com.instructure.canvas.espresso.common.pages.LoginFindSchoolPage
 import com.instructure.canvas.espresso.common.pages.LoginLandingPage
 import com.instructure.canvas.espresso.common.pages.LoginSignInPage
+import com.instructure.canvas.espresso.common.pages.WrongDomainPage
 import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.Searchable
@@ -85,7 +86,6 @@ import com.instructure.student.ui.pages.classic.QuizTakingPage
 import com.instructure.student.ui.pages.classic.RemoteConfigSettingsPage
 import com.instructure.student.ui.pages.classic.ShareExtensionStatusPage
 import com.instructure.student.ui.pages.classic.ShareExtensionTargetPage
-import com.instructure.student.ui.pages.classic.StudentAssignmentDetailsPage
 import com.instructure.student.ui.pages.classic.SubmissionDetailsPage
 import com.instructure.student.ui.pages.classic.SyllabusPage
 import com.instructure.student.ui.pages.classic.TextSubmissionUploadPage
@@ -120,7 +120,6 @@ abstract class StudentTest : CanvasTest() {
      */
     val annotationCommentListPage = AnnotationCommentListPage()
     val announcementListPage = AnnouncementListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
-    val assignmentDetailsPage = StudentAssignmentDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next_item, R.id.prev_item))
     val bookmarkPage = BookmarkPage()
     val canvasWebViewPage = CanvasWebViewPage()
     val courseBrowserPage = CourseBrowserPage()
@@ -145,6 +144,7 @@ abstract class StudentTest : CanvasTest() {
     val loginLandingPage = LoginLandingPage()
     val canvasNetworkSignInPage = CanvasNetworkSignInPage()
     val loginSignInPage = LoginSignInPage()
+    val wrongDomainPage = WrongDomainPage()
     val moduleProgressionPage = ModuleProgressionPage()
     val modulesPage = ModulesPage()
     val notificationPage = NotificationPage()

@@ -182,4 +182,22 @@ open class DiscussionListPage(val searchable: Searchable) : BasePage(R.id.discus
         val matcher = allOf(withId(R.id.dueDate), withText(containsString(expectedDateString)), hasSibling(allOf(withId(R.id.discussionTitle), withText(topicTitle))))
         onView(matcher).scrollTo().assertDisplayed()
     }
+
+    fun assertCheckpointDueDates(topicTitle: String, expectedDateString: String) {
+        val matcher = allOf(
+            withId(R.id.checkpointDueDates),
+            withText(containsString(expectedDateString)),
+            hasSibling(allOf(withId(R.id.discussionTitle), withText(topicTitle)))
+        )
+        onView(matcher).scrollTo().assertDisplayed()
+    }
+
+    fun assertPointsDisplayed(topicTitle: String, points: Int) {
+        val matcher = allOf(
+            withId(R.id.readUnreadCounts),
+            withText(containsString("$points pts")),
+            hasSibling(allOf(withId(R.id.discussionTitle), withText(topicTitle)))
+        )
+        onView(matcher).scrollTo().assertDisplayed()
+    }
 }

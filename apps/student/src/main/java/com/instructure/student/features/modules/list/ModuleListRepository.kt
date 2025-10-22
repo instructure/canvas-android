@@ -16,6 +16,7 @@
  */
 package com.instructure.student.features.modules.list
 
+import com.instructure.canvasapi2.managers.graphql.ModuleItemWithCheckpoints
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.ModuleItem
@@ -23,6 +24,8 @@ import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.repository.Repository
+import com.instructure.pandautils.utils.Const.REPLY_TO_ENTRY
+import com.instructure.pandautils.utils.Const.REPLY_TO_TOPIC
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.modules.list.datasource.ModuleListDataSource
@@ -73,5 +76,17 @@ class ModuleListRepository(
 
     suspend fun getNextPageModuleItems(nextUrl: String, forceNetwork: Boolean): DataResult<List<ModuleItem>> {
         return networkDataSource.getNextPageModuleItems(nextUrl, forceNetwork)
+    }
+
+    suspend fun getModuleItemCheckpoints(courseId: String, forceNetwork: Boolean): List<ModuleItemWithCheckpoints> {
+        return dataSource().getModuleItemCheckpoints(courseId, forceNetwork).map {
+            it.copy(checkpoints = it.checkpoints.sortedBy { checkpoint ->
+                when (checkpoint.tag) {
+                    REPLY_TO_TOPIC -> 0
+                    REPLY_TO_ENTRY -> 1
+                    else -> 2
+                }
+            })
+        }
     }
 }

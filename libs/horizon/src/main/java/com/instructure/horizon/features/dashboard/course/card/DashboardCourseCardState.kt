@@ -1,12 +1,14 @@
 package com.instructure.horizon.features.dashboard.course.card
 
+import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.model.LearningObjectType
 import java.util.Date
 
 data class DashboardCourseCardState(
+    val chipState: DashboardCourseCardChipState? = null,
     val parentPrograms: List<DashboardCourseCardParentProgramState>? = null,
-    val imageUrl: String? = null,
-    val title: String,
+    val imageState: DashboardCourseCardImageState? = null,
+    val title: String? = null,
     val description: String? = null,
     val progress: Double? = null,
     val moduleItem: DashboardCourseCardModuleItemState? = null,
@@ -34,6 +36,16 @@ data class DashboardCourseCardButtonState(
     val onClickAction: CardClickAction,
     val isLoading: Boolean = false,
     val action: suspend () -> Unit = { },
+)
+
+data class DashboardCourseCardChipState(
+    val label: String,
+    val color: StatusChipColor,
+)
+
+data class DashboardCourseCardImageState(
+    val imageUrl: String? = null,
+    val showPlaceholder: Boolean = false,
 )
 
 sealed class CardClickAction {

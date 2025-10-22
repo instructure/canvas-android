@@ -365,10 +365,9 @@
     <string name="dashboardCourseCardErrorTitle">We weren’t able to load this content.</string>
     <string name="dashboardCourseCardErrorMessage">Please try again.</string>
     <string name="dashboardCourseCardRetryLabel">Retry</string>
-    <string name="dashboardNotStartedProgramDescription">Welcome! View your program to enroll in your first course.</string>
     <string name="dashboardNotStartedProgramDetailsLabel">Program details</string>
     <string name="dashboardTimeSpentTitle">Time</string>
-    <string name="dashboardTimeSpentLoadingMessage">This widget will update once data becomes available.</string>
+    <string name="dashboardTimeSpentEmptyMessage">This widget will update once data becomes available.</string>
     <string name="dashboardTimeSpentErrorMessage">We weren\'t able to load this content.\nPlease try again.</string>
     <string name="dashboardTimeSpentRetry">Refresh</string>
     <string name="dashboardTimeSpentHoursIn">hours in</string>
@@ -384,6 +383,12 @@
     <string name="dashboardSkillProficienyLevelProficient">Proficient</string>
     <string name="dashboardSkillProficienyLevelAdvanced">Advanced</string>
     <string name="dashboardSkillProficienyLevelExpert">Expert</string>
+    <string name="dashboardCompletedCourseDetails">Congrats! You\'ve completed your course. View your progress and scores on the Learn page.</string>
+    <string name="dashboardMyProgressTitle">Activities</string>
+    <string name="dashboardMyProgressCompleted">completed</string>
+    <string name="dashboardMyProgressEmptyMessage">This widget will update once data becomes available.</string>
+    <string name="dashboardMyProgressErrorMessage">We weren\'t able to load this content.\nPlease try again.</string>
+    <string name="dashboardMyProgressRetry">Refresh</string>
     <string name="dashboardSkillOverviewTitle">Skills</string>
     <string name="dashboardSkillOverviewEarnedLabel">earned</string>
     <string name="dashboardSkillOverviewNoDataMessage">This widget will update once data becomes available.</string>
@@ -391,7 +396,6 @@
     <string name="dashboardSkillOverviewRetry">Refresh</string>
     <string name="a11y_inboxComposeSelectCourse">Select Course</string>
     <string name="a11y_close">Close</string>
-    <string name="dashboardCompletedCourseDetails">Congrats! You’ve completed your course. View your progress and scores on the Learn page.</string>
     <string name="a11y_expanded">Expanded</string>
     <string name="a11y_collapsed">Collapsed</string>
     <string name="a11y_expand">Expand</string>
@@ -406,4 +410,6 @@
     <string name="dashboardAnnouncementBannerPaginationLabel">%1$d of %2$d</string>
     <string name="dashboardAnnouncementBannerPreviousAnnouncement">Previous announcement</string>
     <string name="dashboardAnnouncementBannerNextAnnouncement">Next announcement</string>
+    <string name="dashboardCourseCardProgramChipLabel">Program</string>
+    <string name="dashboardCourseCardProgramDetailsMessage">Welcome to %1$s! View your program to enroll in your first course.</string>
 </resources>

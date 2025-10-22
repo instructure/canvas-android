@@ -33,10 +33,12 @@ import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.LaunchDefinitionsAPI
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.apis.PageAPI
+import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.apis.StudioApi
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
+import com.instructure.canvasapi2.managers.graphql.ModuleManager
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.offline.offlinecontent.CourseFileSharedRepository
 import com.instructure.pandautils.features.offline.sync.AggregateProgressObserver
@@ -44,6 +46,7 @@ import com.instructure.pandautils.features.offline.sync.CourseSync
 import com.instructure.pandautils.features.offline.sync.FileSync
 import com.instructure.pandautils.features.offline.sync.HtmlParser
 import com.instructure.pandautils.features.offline.sync.StudioSync
+import com.instructure.pandautils.room.offline.daos.CheckpointDao
 import com.instructure.pandautils.room.offline.daos.CourseFeaturesDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
@@ -53,6 +56,7 @@ import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.LocalFileDao
 import com.instructure.pandautils.room.offline.daos.PageDao
+import com.instructure.pandautils.room.offline.daos.PlannerItemDao
 import com.instructure.pandautils.room.offline.daos.QuizDao
 import com.instructure.pandautils.room.offline.daos.StudioMediaProgressDao
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
@@ -148,7 +152,11 @@ class OfflineSyncModule {
         firebaseCrashlytics: FirebaseCrashlytics,
         fileSync: FileSync,
         customGradeStatusDao: CustomGradeStatusDao,
-        customGradeStatusesManager: CustomGradeStatusesManager
+        customGradeStatusesManager: CustomGradeStatusesManager,
+        plannerApi: PlannerAPI.PlannerInterface,
+        plannerItemDao: PlannerItemDao,
+        checkpointDao: CheckpointDao,
+        moduleManager: ModuleManager
     ): CourseSync {
         return CourseSync(
             courseApi,
@@ -156,6 +164,7 @@ class OfflineSyncModule {
             userApi,
             assignmentApi,
             calendarEventApi,
+            plannerApi,
             courseSyncSettingsDao,
             pageFacade,
             userFacade,
@@ -186,7 +195,10 @@ class OfflineSyncModule {
             firebaseCrashlytics,
             fileSync,
             customGradeStatusDao,
-            customGradeStatusesManager
+            customGradeStatusesManager,
+            plannerItemDao,
+            checkpointDao,
+            moduleManager
         )
     }
 

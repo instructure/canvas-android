@@ -85,14 +85,18 @@ fun SmartSearchScreen(
     CanvasTheme {
         if (showPreferences) {
             SmartSearchPreferencesScreen(
-                Color(uiState.canvasContext.color),
-                sortType,
-                uiState.filters
-            ) { filters, type ->
-                showPreferences = false
-                sortType = type
-                uiState.actionHandler(SmartSearchAction.Filter(filters))
-            }
+                color = Color(uiState.canvasContext.color),
+                sortType = sortType,
+                filters = uiState.filters,
+                onDone = { filters, type ->
+                    showPreferences = false
+                    sortType = type
+                    uiState.actionHandler(SmartSearchAction.Filter(filters))
+                },
+                onCancel = {
+                    showPreferences = false
+                }
+            )
         }
 
         SmartSearchScreenContent(uiState, sortType, navigationItemClick) {

@@ -41,6 +41,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardCard
+import com.instructure.horizon.horizonui.animation.shimmerEffect
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
@@ -49,10 +50,11 @@ import com.instructure.pandautils.compose.modifiers.conditional
 
 @Composable
 fun DashboardWidgetCard(
-    title: String = "",
-    @DrawableRes iconRes: Int? = null,
+    title: String,
+    @DrawableRes iconRes: Int,
     widgetColor: Color,
     modifier: Modifier = Modifier,
+    isLoading: Boolean = false,
     useMinWidth: Boolean = true,
     onClick: (() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit
@@ -70,39 +72,34 @@ fun DashboardWidgetCard(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
+                Text(
+                    text = title,
+                    style = HorizonTypography.labelMediumBold,
+                    color = HorizonColors.Text.dataPoint(),
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        .shimmerEffect(isLoading)
+                )
 
-                if (title.isNotEmpty()) {
-                    Text(
-                        text = title,
-                        style = HorizonTypography.labelMediumBold,
-                        color = HorizonColors.Text.dataPoint(),
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .background(widgetColor)
+                        .padding(6.dp)
+                        .shimmerEffect(isLoading, backgroundColor = widgetColor.copy(alpha = 0.8f), shimmerColor = widgetColor.copy(alpha = 0.5f))
+                ) {
+                    Icon(
+                        painter = painterResource(iconRes),
+                        contentDescription = null,
+                        tint = HorizonColors.Icon.default(),
                         modifier = Modifier
-                            .padding(end = 8.dp)
+                            .size(16.dp)
                     )
                 }
-
-                iconRes?.let{
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .clip(CircleShape)
-                            .background(widgetColor)
-                            .padding(6.dp)
-                    ) {
-                        Icon(
-                            painter = painterResource(iconRes),
-                            contentDescription = null,
-                            tint = HorizonColors.Icon.default(),
-                            modifier = Modifier
-                                .size(16.dp)
-                        )
-                    }
-                }
             }
 
-            if (title.isNotEmpty() || iconRes != null) {
-                HorizonSpace(SpaceSize.SPACE_8)
-            }
+            HorizonSpace(SpaceSize.SPACE_8)
 
             content()
         }
@@ -115,20 +112,6 @@ private fun DashboardTimeSpentCardPreview() {
     DashboardWidgetCard(
         title = "Time",
         iconRes = R.drawable.schedule,
-        widgetColor = HorizonColors.PrimitivesBlue.blue12()
-    ) {
-        Text(
-            text = "Content",
-            style = HorizonTypography.h1,
-            color = HorizonColors.Text.body()
-        )
-    }
-}
-
-@Composable
-@Preview
-private fun DashboardNoTitleCardPreview() {
-    DashboardWidgetCard(
         widgetColor = HorizonColors.PrimitivesBlue.blue12()
     ) {
         Text(

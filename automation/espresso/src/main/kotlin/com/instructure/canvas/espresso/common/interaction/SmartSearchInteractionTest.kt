@@ -35,7 +35,7 @@ abstract class SmartSearchInteractionTest : CanvasComposeTest() {
 
     private val smartSearchPage = SmartSearchPage(composeTestRule)
     private val smartSearchPreferencesPage = SmartSearchPreferencesPage(composeTestRule)
-    private val assignmentDetailsPage = AssignmentDetailsPage(ModuleItemInteractions())
+    private val assignmentDetailsPage = AssignmentDetailsPage(ModuleItemInteractions(), composeTestRule)
 
     @Test
     fun assertQuery() {
@@ -224,6 +224,71 @@ abstract class SmartSearchInteractionTest : CanvasComposeTest() {
         smartSearchPage.assertItemDisplayed("Test Discussion for query", "Discussion")
         smartSearchPage.assertItemDisplayed("Test Announcement for query", "Announcement")
         smartSearchPage.assertItemDisplayed("Test Assignment for query", "Assignment")
+    }
+
+    @Test
+    fun cancelFiltersDoesNotChangeFilterLogic() {
+        val data = initData()
+
+        val course = data.courses.values.first()
+        val pageId = Random.nextLong(0, 100)
+        data.addPageToCourse(
+            course.id,
+            pageId,
+            title = "Test Page for query",
+            body = "Test Body for query",
+            url = "https://mock-data.instructure.com/courses/${course.id}/pages/$pageId"
+        )
+
+        data.addDiscussionTopicToCourse(
+            course,
+            data.teachers.first(),
+            topicTitle = "Test Discussion for query",
+            isAnnouncement = false
+        )
+
+        data.addDiscussionTopicToCourse(
+            course,
+            data.teachers.first(),
+            topicTitle = "Test Announcement for query",
+            isAnnouncement = true
+        )
+
+        data.addAssignment(course.id, name = "Test Assignment for query")
+
+        goToSmartSearch(data, "query")
+
+        composeTestRule.waitForIdle()
+
+        smartSearchPage.assertItemDisplayed("Test Page for query", "Page")
+        smartSearchPage.assertItemDisplayed("Test Discussion for query", "Discussion")
+        smartSearchPage.assertItemDisplayed("Test Announcement for query", "Announcement")
+        smartSearchPage.assertItemDisplayed("Test Assignment for query", "Assignment")
+
+        smartSearchPage.clickOnFilters()
+
+        smartSearchPreferencesPage.clickOnFilter(SmartSearchFilter.PAGES)
+        smartSearchPreferencesPage.selectTypeSortType()
+
+        smartSearchPreferencesPage.cancelFilters()
+
+        smartSearchPage.assertGroupHeaderNotDisplayed(SmartSearchContentType.WIKI_PAGE)
+        smartSearchPage.assertGroupHeaderNotDisplayed(SmartSearchContentType.DISCUSSION_TOPIC)
+        smartSearchPage.assertGroupHeaderNotDisplayed(SmartSearchContentType.ANNOUNCEMENT)
+        smartSearchPage.assertGroupHeaderNotDisplayed(SmartSearchContentType.ASSIGNMENT)
+
+        smartSearchPage.assertItemDisplayed("Test Page for query", "Page")
+        smartSearchPage.assertItemDisplayed("Test Discussion for query", "Discussion")
+        smartSearchPage.assertItemDisplayed("Test Announcement for query", "Announcement")
+        smartSearchPage.assertItemDisplayed("Test Assignment for query", "Assignment")
+
+        smartSearchPage.clickOnFilters()
+
+        smartSearchPreferencesPage.assertRadioButtonSelected("Relevance")
+        smartSearchPreferencesPage.assertFilterChecked(SmartSearchFilter.PAGES)
+        smartSearchPreferencesPage.assertFilterChecked(SmartSearchFilter.DISCUSSION_TOPICS)
+        smartSearchPreferencesPage.assertFilterChecked(SmartSearchFilter.ANNOUNCEMENTS)
+        smartSearchPreferencesPage.assertFilterChecked(SmartSearchFilter.ASSIGNMENTS)
     }
 
     @Test

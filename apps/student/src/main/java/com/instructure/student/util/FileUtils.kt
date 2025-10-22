@@ -72,20 +72,14 @@ object FileUtils {
             // We don't want to allow users to edit for submission viewing
             pspdfActivityConfiguration = PdfActivityConfiguration.Builder(context)
                 .scrollDirection(PageScrollDirection.HORIZONTAL)
-                .showThumbnailGrid()
                 .setThumbnailBarMode(ThumbnailBarMode.THUMBNAIL_BAR_MODE_PINNED)
-                .disableAnnotationEditing()
-                .disableAnnotationList()
-                .disableDocumentEditor()
                 .fitMode(PageFitMode.FIT_TO_WIDTH)
                 .build()
         } else {
             // Standard behavior
             pspdfActivityConfiguration = PdfActivityConfiguration.Builder(context)
                 .scrollDirection(PageScrollDirection.HORIZONTAL)
-                .showThumbnailGrid()
                 .setDocumentInfoViewSeparated(false)
-                .enableDocumentEditor()
                 .enabledAnnotationTools(annotationCreationList)
                 .editableAnnotationTypes(annotationEditList)
                 .fitMode(PageFitMode.FIT_TO_WIDTH)
