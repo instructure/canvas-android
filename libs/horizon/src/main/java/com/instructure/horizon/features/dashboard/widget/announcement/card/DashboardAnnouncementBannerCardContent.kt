@@ -16,29 +16,21 @@
  */
 package com.instructure.horizon.features.dashboard.widget.announcement.card
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -57,13 +49,15 @@ import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.ButtonHeight
 import com.instructure.horizon.horizonui.molecules.ButtonWidth
+import com.instructure.horizon.horizonui.molecules.IconButton
+import com.instructure.horizon.horizonui.molecules.IconButtonColor
+import com.instructure.horizon.horizonui.molecules.IconButtonSize
 import com.instructure.horizon.horizonui.molecules.StatusChip
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.molecules.StatusChipState
+import com.instructure.pandautils.utils.localisedFormat
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.Locale
 
 @Composable
 fun DashboardAnnouncementBannerCardContent(
@@ -72,17 +66,23 @@ fun DashboardAnnouncementBannerCardContent(
     modifier: Modifier = Modifier
 ) {
     val pagerState = rememberPagerState(pageCount = { state.announcements.size })
-    val scope = rememberCoroutineScope()
 
     DashboardCard(
-        modifier = modifier
+        modifier = modifier,
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth()
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp)
         ) {
+            HorizonSpace(SpaceSize.SPACE_24)
             HorizontalPager(
                 state = pagerState,
-                modifier = Modifier.fillMaxWidth()
+                pageSpacing = 24.dp,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .animateContentSize()
             ) { page ->
                 AnnouncementPageContent(
                     announcement = state.announcements[page],
@@ -92,76 +92,70 @@ fun DashboardAnnouncementBannerCardContent(
 
             HorizonSpace(SpaceSize.SPACE_16)
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(32.dp)
-                        .clip(CircleShape)
-                        .background(HorizonColors.Surface.cardPrimary())
-                        .border(1.dp, HorizonColors.LineAndBorder.containerStroke(), CircleShape)
-                        .alpha(if (pagerState.currentPage > 0) 1f else 0.5f),
-                    contentAlignment = Alignment.Center
-                ) {
-                    IconButton(
-                        onClick = {
-                            scope.launch {
-                                pagerState.animateScrollToPage(pagerState.currentPage - 1)
-                            }
-                        },
-                        enabled = pagerState.currentPage > 0,
-                        modifier = Modifier.size(32.dp)
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.chevron_left),
-                            contentDescription = stringResource(R.string.dashboardAnnouncementBannerPreviousAnnouncement),
-                            tint = HorizonColors.Icon.default(),
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
-                }
+            PagerIndicator(pagerState)
 
-                Text(
-                    text = stringResource(
-                        R.string.dashboardAnnouncementBannerPaginationLabel,
-                        pagerState.currentPage + 1,
-                        state.announcements.size
-                    ),
-                    style = HorizonTypography.p1,
-                    color = HorizonColors.Text.title()
-                )
+            HorizonSpace(SpaceSize.SPACE_24)
+        }
+    }
+}
 
-                Box(
-                    modifier = Modifier
-                        .size(32.dp)
-                        .clip(CircleShape)
-                        .background(HorizonColors.Surface.cardPrimary())
-                        .border(1.dp, HorizonColors.LineAndBorder.containerStroke(), CircleShape)
-                        .alpha(if (pagerState.currentPage < state.announcements.size - 1) 1f else 0.5f),
-                    contentAlignment = Alignment.Center
-                ) {
-                    IconButton(
-                        onClick = {
-                            scope.launch {
-                                pagerState.animateScrollToPage(pagerState.currentPage + 1)
-                            }
-                        },
-                        enabled = pagerState.currentPage < state.announcements.size - 1,
-                        modifier = Modifier.size(32.dp)
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.chevron_right),
-                            contentDescription = stringResource(R.string.dashboardAnnouncementBannerNextAnnouncement),
-                            tint = HorizonColors.Icon.default(),
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
+@Composable
+private fun PagerIndicator(
+    pagerState: PagerState,
+) {
+    val scope = rememberCoroutineScope()
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        IconButton(
+            iconRes = R.drawable.chevron_left,
+            contentDescription = stringResource(R.string.dashboardAnnouncementBannerPreviousAnnouncement),
+            size = IconButtonSize.NORMAL,
+            color = IconButtonColor.Custom(
+                backgroundColor = HorizonColors.Surface.cardPrimary(),
+                iconColor = HorizonColors.Icon.default(),
+                borderColor = HorizonColors.LineAndBorder.lineStroke()
+            ),
+            enabled = pagerState.currentPage > 0,
+            onClick = {
+                scope.launch {
+                    pagerState.animateScrollToPage(pagerState.currentPage - 1)
                 }
             }
-        }
+        )
+
+        Spacer(Modifier.weight(1f))
+
+        Text(
+            text = stringResource(
+                R.string.dashboardAnnouncementBannerPaginationLabel,
+                pagerState.currentPage + 1,
+                pagerState.pageCount
+            ),
+            style = HorizonTypography.p1,
+            color = HorizonColors.Text.title()
+        )
+
+        Spacer(Modifier.weight(1f))
+
+        IconButton(
+            iconRes = R.drawable.chevron_right,
+            contentDescription = stringResource(R.string.dashboardAnnouncementBannerNextAnnouncement),
+            size = IconButtonSize.NORMAL,
+            color = IconButtonColor.Custom(
+                backgroundColor = HorizonColors.Surface.cardPrimary(),
+                iconColor = HorizonColors.Icon.default(),
+                borderColor = HorizonColors.LineAndBorder.lineStroke()
+            ),
+            enabled = pagerState.currentPage < pagerState.pageCount - 1,
+            onClick = {
+                scope.launch {
+                    pagerState.animateScrollToPage(pagerState.currentPage + 1)
+                }
+            }
+        )
     }
 }
 
@@ -190,17 +184,19 @@ private fun AnnouncementPageContent(
                     it
                 ),
                 style = HorizonTypography.p2,
-                color = HorizonColors.Text.timestamp()
+                color = HorizonColors.Text.dataPoint()
             )
             HorizonSpace(SpaceSize.SPACE_4)
         }
         announcement.date?.let { date ->
             Text(
-                text = formatDate(date),
+                text = date.localisedFormat("MMM dd, yyyy"),
                 style = HorizonTypography.p2,
                 color = HorizonColors.Text.timestamp(),
             )
         }
+
+        HorizonSpace(SpaceSize.SPACE_8)
 
         Text(
             text = announcement.title,
@@ -208,8 +204,9 @@ private fun AnnouncementPageContent(
             color = HorizonColors.Text.body(),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 8.dp, bottom = 16.dp)
         )
+
+        HorizonSpace(SpaceSize.SPACE_16)
 
         Button(
             label = stringResource(R.string.dashboardAnnouncementBannerGoToAnnouncement),
@@ -221,11 +218,6 @@ private fun AnnouncementPageContent(
             color = ButtonColor.BlackOutline
         )
     }
-}
-
-private fun formatDate(date: Date): String {
-    val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
-    return dateFormat.format(date)
 }
 
 @Composable
