@@ -16,6 +16,7 @@
  */
 package com.instructure.horizon.features.dashboard.widget.timespent.card
 
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -34,8 +35,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.hideFromAccessibility
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -93,15 +95,21 @@ fun DashboardTimeSpentCardContent(
             FlowRow(
                 verticalArrangement = Arrangement.Center,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.fillMaxWidth().clearAndSetSemantics {
-                    contentDescription = widgetContentDescription
-                }
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .semantics {
+                        contentDescription = widgetContentDescription
+                    }
             ) {
                 Text(
                     text = state.hours.roundToInt().toString(),
                     style = HorizonTypography.h1.copy(fontSize = 38.sp, letterSpacing = 0.sp),
                     color = HorizonColors.Text.body(),
-                    modifier = Modifier.shimmerEffect(isLoading)
+                    modifier = Modifier
+                        .shimmerEffect(isLoading)
+                        .semantics {
+                            hideFromAccessibility()
+                        }
                 )
 
                 Row(
@@ -115,7 +123,11 @@ fun DashboardTimeSpentCardContent(
                             text = stringResource(R.string.dashboardTimeSpentHoursIn),
                             style = HorizonTypography.labelMediumBold,
                             color = HorizonColors.Text.title(),
-                            modifier = Modifier.shimmerEffect(isLoading)
+                            modifier = Modifier
+                                .shimmerEffect(isLoading)
+                                .semantics {
+                                    hideFromAccessibility()
+                                }
                         )
 
                         HorizonSpace(SpaceSize.SPACE_8)
@@ -133,14 +145,20 @@ fun DashboardTimeSpentCardContent(
 
                         SingleSelect(
                             courseSelectState,
-                            modifier = Modifier.shimmerEffect(isLoading)
+                            modifier = Modifier
+                                .shimmerEffect(isLoading)
+                                .focusable()
                         )
                     } else {
                         Text(
                             text = stringResource(R.string.dashboardTimeSpentHoursInYourCourse),
                             style = HorizonTypography.labelMediumBold,
                             color = HorizonColors.Text.title(),
-                            modifier = Modifier.shimmerEffect(isLoading)
+                            modifier = Modifier
+                                .shimmerEffect(isLoading)
+                                .semantics {
+                                    hideFromAccessibility()
+                                }
                         )
                     }
                 }
