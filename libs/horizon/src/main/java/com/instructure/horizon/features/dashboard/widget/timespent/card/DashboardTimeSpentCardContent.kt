@@ -34,6 +34,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -65,7 +67,6 @@ fun DashboardTimeSpentCardContent(
             .padding(bottom = 8.dp),
         isLoading
     ) {
-
         if (state.hours == 0.0) {
             Text(
                 text = stringResource(R.string.dashboardTimeSpentEmptyMessage),
@@ -76,10 +77,25 @@ fun DashboardTimeSpentCardContent(
                     .shimmerEffect(isLoading)
             )
         } else {
+            val widgetContentDescription = if (state.courses.size > 1) {
+                stringResource(
+                    R.string.a11y_dashboardTimeSpentMultipleCoursesContentDescription,
+                    state.hours.roundToInt(),
+                    state.courses.firstOrNull { it.id == state.selectedCourseId }?.name
+                        ?: stringResource(R.string.dashboardTimeSpentAllCourses)
+                )
+            } else {
+                stringResource(
+                    R.string.a11y_dashboardTimeSpentContentDescription,
+                    state.hours.roundToInt()
+                )
+            }
             FlowRow(
                 verticalArrangement = Arrangement.Center,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().clearAndSetSemantics {
+                    contentDescription = widgetContentDescription
+                }
             ) {
                 Text(
                     text = state.hours.roundToInt().toString(),

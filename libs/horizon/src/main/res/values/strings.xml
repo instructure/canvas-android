@@ -408,4 +408,8 @@
     <string name="dashboardCourseCardProgramDetailsMessage">Welcome to %1$s! View your program to enroll in your first course.</string>
     <string name="a11y_dashboardWidgetLoadingContentDescription">%1$s widget is loading</string>
     <string name="a11y_dashboardCoursesSectionTitle">Courses</string>
+    <string name="a11y_dashboardMyProgressContentDescription">%1$d completed</string>
+    <string name="a11y_dashboardSkillOverviewContentDescription">%1$d earned</string>
+    <string name="a11y_dashboardTimeSpentMultipleCoursesContentDescription">%1$d hours in %2$s</string>
+    <string name="a11y_dashboardTimeSpentContentDescription">%1$d hours in your course</string>
 </resources>
