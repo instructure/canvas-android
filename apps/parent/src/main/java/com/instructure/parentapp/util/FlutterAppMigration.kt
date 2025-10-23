@@ -37,7 +37,6 @@ import com.instructure.pandautils.dialogs.RatingDialog
 import com.instructure.pandautils.features.reminder.ReminderRepository
 import com.instructure.pandautils.room.calendar.daos.CalendarFilterDao
 import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
-import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.fromJson
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -95,7 +94,6 @@ data class FlutterSignedInUser(
 
 class FlutterAppMigration(
     @ApplicationContext private val context: Context,
-    private val themePrefs: ThemePrefs,
     private val parentPrefs: ParentPrefs,
     private val loginPrefs: LoginPrefs,
     private val previousUsersUtils: PreviousUsersUtils,
@@ -108,20 +106,9 @@ class FlutterAppMigration(
     fun migrateIfNecessary() {
         if (!parentPrefs.hasMigrated) {
             parentPrefs.hasMigrated = true
-            migratePrefs()
             migrateEncryptedSharedPrefs()
             migrateDatabase()
         }
-    }
-
-    private fun migratePrefs() = try {
-        val prefs = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
-
-        val isDarkMode = prefs.getBoolean(KEY_DARK_MODE, false)
-
-        themePrefs.appTheme = if (isDarkMode) 1 else 0
-    } catch (e: Exception) {
-        e.printStackTrace()
     }
 
     private fun migrateEncryptedSharedPrefs() = try {

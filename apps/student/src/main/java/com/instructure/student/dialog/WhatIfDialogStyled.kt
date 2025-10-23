@@ -24,13 +24,14 @@ import android.view.LayoutInflater
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatEditText
-import com.instructure.pandautils.base.BaseCanvasDialogFragment
 import androidx.fragment.app.FragmentManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.pandautils.analytics.SCREEN_VIEW_WHAT_IF
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.base.BaseCanvasDialogFragment
 import com.instructure.pandautils.utils.IntArg
 import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
 import kotlin.properties.Delegates
 
@@ -50,15 +51,7 @@ class WhatIfDialogStyled : BaseCanvasDialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(requireContext())
                 .setTitle(getString(R.string.whatIfDialogText))
-                .setPositiveButton(R.string.done) { _, _ ->
-                    try {
-                        val whatIfText = currentScoreView?.text.toString()
-                        callback(if(whatIfText.isBlank()) null else whatIfText.toDouble(), assignment.pointsPossible)
-                    } catch (e: Throwable) {
-                        callback(null, assignment.pointsPossible)
-                    }
-                    dismissAllowingStateLoss()
-                }
+                .setPositiveButton(R.string.done, null)
                 .setNegativeButton(R.string.cancel) { _, _ -> dismissAllowingStateLoss() }
 
         @SuppressLint("InflateParams")
@@ -72,6 +65,26 @@ class WhatIfDialogStyled : BaseCanvasDialogFragment() {
             if (textButtonColor != 0) {
                 dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(textButtonColor)
                 dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(textButtonColor)
+            }
+
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                try {
+                    val whatIfText = currentScoreView?.text.toString()
+                    if (whatIfText.isNotBlank()) {
+                        val enteredScore = whatIfText.toDouble()
+                        if (enteredScore > assignment.pointsPossible) {
+                            toast(R.string.whatIfScoreExceedsMaximum)
+                            return@setOnClickListener
+                        }
+                        callback(enteredScore, assignment.pointsPossible)
+                    } else {
+                        callback(null, assignment.pointsPossible)
+                    }
+                    dismissAllowingStateLoss()
+                } catch (e: Throwable) {
+                    callback(null, assignment.pointsPossible)
+                    dismissAllowingStateLoss()
+                }
             }
         }
 

@@ -29,7 +29,7 @@ sealed class SyllabusEvent {
 
 sealed class SyllabusEffect {
     data class LoadData(val courseId: Long, val forceNetwork: Boolean) : SyllabusEffect()
-    data class ShowAssignmentView(val assignment: Assignment, val course: Course) : SyllabusEffect()
+    data class ShowAssignmentView(val assignmentId: Long, val course: Course) : SyllabusEffect()
     data class ShowScheduleItemView(val scheduleItem: ScheduleItem, val course: Course) : SyllabusEffect()
 }
 

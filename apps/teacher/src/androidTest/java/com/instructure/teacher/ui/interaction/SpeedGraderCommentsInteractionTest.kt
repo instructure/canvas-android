@@ -20,20 +20,30 @@ import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvas.espresso.mockcanvas.addAssignment
 import com.instructure.canvas.espresso.mockcanvas.addCoursePermissions
 import com.instructure.canvas.espresso.mockcanvas.addSubmissionsForAssignment
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeDifferentiationTagsManager
 import com.instructure.canvas.espresso.mockcanvas.init
+import com.instructure.canvasapi2.managers.graphql.DifferentiationTagsManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.espresso.randomString
+import com.instructure.pandautils.di.DifferentiationTagsModule
 import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.extensions.tokenLogin
+import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.UninstallModules
 import org.junit.Test
 
 @HiltAndroidTest
+@UninstallModules(DifferentiationTagsModule::class)
 class SpeedGraderCommentsInteractionTest : TeacherComposeTest() {
+
+    @BindValue
+    @JvmField
+    val differentiationTagsManager: DifferentiationTagsManager = FakeDifferentiationTagsManager()
 
     // Just good enough to mock the *representation* of a file, not to mock the file itself.
     val attachment = Attachment(

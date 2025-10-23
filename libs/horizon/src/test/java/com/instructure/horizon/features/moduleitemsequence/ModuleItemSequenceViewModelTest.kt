@@ -24,6 +24,8 @@ import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleItemSequence
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
+import com.instructure.horizon.features.dashboard.DashboardEventHandler
+import com.instructure.horizon.features.learn.LearnEventHandler
 import com.instructure.horizon.horizonui.organisms.cards.ModuleItemCardStateMapper
 import com.instructure.horizon.navigation.MainNavigationRoute
 import io.mockk.coEvery
@@ -50,6 +52,8 @@ class ModuleItemSequenceViewModelTest {
     private val repository: ModuleItemSequenceRepository = mockk(relaxed = true)
     private val moduleItemCardStateMapper: ModuleItemCardStateMapper = mockk(relaxed = true)
     private val aiAssistContextProvider: AiAssistContextProvider = mockk(relaxed = true)
+    private val dashboardEventHandler: DashboardEventHandler = DashboardEventHandler()
+    private val learnEventHandler: LearnEventHandler = LearnEventHandler()
     private val testDispatcher = UnconfinedTestDispatcher()
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
 
@@ -143,7 +147,9 @@ class ModuleItemSequenceViewModelTest {
             repository,
             moduleItemCardStateMapper,
             aiAssistContextProvider,
-            savedStateHandle
+            savedStateHandle,
+            dashboardEventHandler,
+            learnEventHandler
         )
     }
 }

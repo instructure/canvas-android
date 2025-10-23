@@ -22,6 +22,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.CustomGradeStatusesQuery
+import com.instructure.canvasapi2.DifferentiationTagsQuery
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
@@ -205,6 +206,9 @@ class SubmissionListViewModelTest {
             }
         )
 
+        coEvery { submissionListRepository.getSections(any(), any()) } returns emptyList()
+        coEvery { submissionListRepository.getDifferentiationTags(any(), any()) } returns emptyList()
+
         setupString()
     }
 
@@ -252,22 +256,52 @@ class SubmissionListViewModelTest {
 
         val expected = listOf(
             SubmissionUiState(
+                5L,
+                5L,
+                "Bad Graded Student",
+                false,
+                null,
+                listOf(SubmissionTag.Graded),
+                "0",
+                true
+            ),
+            SubmissionUiState(
+                9L,
+                9L,
+                "Custom Status Student",
+                false,
+                null,
+                listOf(SubmissionTag.Custom("Custom Status 1", R.drawable.ic_flag, R.color.textInfo)),
+                "0",
+                false
+            ),
+            SubmissionUiState(
+                6L,
+                6L,
+                "Excused Student",
+                false,
+                null,
+                listOf(SubmissionTag.Excused),
+                "",
+                true
+            ),
+            SubmissionUiState(
+                4L,
+                4L,
+                "Good Graded Student",
+                false,
+                null,
+                listOf(SubmissionTag.Graded),
+                "10",
+                true
+            ),
+            SubmissionUiState(
                 1L,
                 1L,
                 "Late Student",
                 false,
                 null,
                 listOf(SubmissionTag.Late, SubmissionTag.NeedsGrading),
-                "-",
-                true
-            ),
-            SubmissionUiState(
-                2L,
-                2L,
-                "On Time Student",
-                false,
-                null,
-                listOf(SubmissionTag.Submitted, SubmissionTag.NeedsGrading),
                 "-",
                 true
             ),
@@ -282,33 +316,23 @@ class SubmissionListViewModelTest {
                 true
             ),
             SubmissionUiState(
-                4L,
-                4L,
-                "Good Graded Student",
+                8L,
+                8L,
+                "Not Submitted Student",
                 false,
                 null,
-                listOf(SubmissionTag.Graded),
-                "10",
-                true
+                listOf(SubmissionTag.NotSubmitted),
+                "-",
+                false
             ),
             SubmissionUiState(
-                5L,
-                5L,
-                "Bad Graded Student",
+                2L,
+                2L,
+                "On Time Student",
                 false,
                 null,
-                listOf(SubmissionTag.Graded),
-                "0",
-                true
-            ),
-            SubmissionUiState(
-                6L,
-                6L,
-                "Excused Student",
-                false,
-                null,
-                listOf(SubmissionTag.Excused),
-                "",
+                listOf(SubmissionTag.Submitted, SubmissionTag.NeedsGrading),
+                "-",
                 true
             ),
             SubmissionUiState(
@@ -320,26 +344,6 @@ class SubmissionListViewModelTest {
                 listOf(SubmissionTag.Graded),
                 "10",
                 true
-            ),
-            SubmissionUiState(
-                8L,
-                8L,
-                "Not Submitted Student",
-                false,
-                null,
-                listOf(SubmissionTag.NotSubmitted),
-                "-",
-                false
-            ),
-            SubmissionUiState(
-                9L,
-                9L,
-                "Custom Status Student",
-                false,
-                null,
-                listOf(SubmissionTag.Custom("Custom Status 1", R.drawable.ic_flag, R.color.textInfo)),
-                "-",
-                false
             )
         )
 
@@ -350,11 +354,16 @@ class SubmissionListViewModelTest {
     fun `Filter late submissions`() = runTest {
         val viewModel = createViewModel()
 
-        viewModel.uiState.value.actionHandler(
+        viewModel.uiState.value.filtersUiState.actionHandler(
             SubmissionListAction.SetFilters(
-                SubmissionListFilter.LATE,
-                null,
-                emptyList()
+                selectedFilters = setOf(SubmissionListFilter.LATE),
+                filterValueAbove = null,
+                filterValueBelow = null,
+                selectedSections = emptyList(),
+                selectedDifferentiationTagIds = emptySet(),
+                includeStudentsWithoutTags = false,
+                sortOrder = SubmissionSortOrder.STUDENT_SORTABLE_NAME,
+                selectedCustomStatusIds = emptySet()
             )
         )
 
@@ -378,25 +387,20 @@ class SubmissionListViewModelTest {
     fun `Filter graded submissions`() {
         val viewModel = createViewModel()
 
-        viewModel.uiState.value.actionHandler(
+        viewModel.uiState.value.filtersUiState.actionHandler(
             SubmissionListAction.SetFilters(
-                SubmissionListFilter.GRADED,
-                null,
-                emptyList()
+                selectedFilters = setOf(SubmissionListFilter.GRADED),
+                filterValueAbove = null,
+                filterValueBelow = null,
+                selectedSections = emptyList(),
+                selectedDifferentiationTagIds = emptySet(),
+                includeStudentsWithoutTags = false,
+                sortOrder = SubmissionSortOrder.STUDENT_SORTABLE_NAME,
+                selectedCustomStatusIds = emptySet()
             )
         )
 
         val expectedData = listOf(
-            SubmissionUiState(
-                4L,
-                4L,
-                "Good Graded Student",
-                false,
-                null,
-                listOf(SubmissionTag.Graded),
-                "10",
-                true
-            ),
             SubmissionUiState(
                 5L,
                 5L,
@@ -406,6 +410,16 @@ class SubmissionListViewModelTest {
                 listOf(SubmissionTag.Graded),
                 "0",
                 true
+            ),
+            SubmissionUiState(
+                9L,
+                9L,
+                "Custom Status Student",
+                false,
+                null,
+                listOf(SubmissionTag.Custom("Custom Status 1", R.drawable.ic_flag, R.color.textInfo)),
+                "0",
+                false
             ),
             SubmissionUiState(
                 6L,
@@ -418,14 +432,14 @@ class SubmissionListViewModelTest {
                 true
             ),
             SubmissionUiState(
-                9L,
-                9L,
-                "Custom Status Student",
+                4L,
+                4L,
+                "Good Graded Student",
                 false,
                 null,
-                listOf(SubmissionTag.Custom("Custom Status 1", R.drawable.ic_flag, R.color.textInfo)),
-                "-",
-                false
+                listOf(SubmissionTag.Graded),
+                "10",
+                true
             )
         )
 
@@ -436,11 +450,16 @@ class SubmissionListViewModelTest {
     fun `Filter not graded submissions`() {
         val viewModel = createViewModel()
 
-        viewModel.uiState.value.actionHandler(
+        viewModel.uiState.value.filtersUiState.actionHandler(
             SubmissionListAction.SetFilters(
-                SubmissionListFilter.NOT_GRADED,
-                null,
-                emptyList()
+                selectedFilters = setOf(SubmissionListFilter.NOT_GRADED),
+                filterValueAbove = null,
+                filterValueBelow = null,
+                selectedSections = emptyList(),
+                selectedDifferentiationTagIds = emptySet(),
+                includeStudentsWithoutTags = false,
+                sortOrder = SubmissionSortOrder.STUDENT_SORTABLE_NAME,
+                selectedCustomStatusIds = emptySet()
             )
         )
 
@@ -456,22 +475,22 @@ class SubmissionListViewModelTest {
                 true
             ),
             SubmissionUiState(
-                2L,
-                2L,
-                "On Time Student",
-                false,
-                null,
-                listOf(SubmissionTag.Submitted, SubmissionTag.NeedsGrading),
-                "-",
-                true
-            ),
-            SubmissionUiState(
                 3L,
                 3L,
                 "Missing Student",
                 false,
                 null,
                 listOf(SubmissionTag.Missing),
+                "-",
+                true
+            ),
+            SubmissionUiState(
+                2L,
+                2L,
+                "On Time Student",
+                false,
+                null,
+                listOf(SubmissionTag.Submitted, SubmissionTag.NeedsGrading),
                 "-",
                 true
             ),
@@ -494,11 +513,16 @@ class SubmissionListViewModelTest {
     fun `Filter not submitted`() {
         val viewModel = createViewModel()
 
-        viewModel.uiState.value.actionHandler(
+        viewModel.uiState.value.filtersUiState.actionHandler(
             SubmissionListAction.SetFilters(
-                SubmissionListFilter.MISSING,
-                null,
-                emptyList()
+                selectedFilters = setOf(SubmissionListFilter.MISSING),
+                filterValueAbove = null,
+                filterValueBelow = null,
+                selectedSections = emptyList(),
+                selectedDifferentiationTagIds = emptySet(),
+                includeStudentsWithoutTags = false,
+                sortOrder = SubmissionSortOrder.STUDENT_SORTABLE_NAME,
+                selectedCustomStatusIds = emptySet()
             )
         )
 
@@ -522,11 +546,16 @@ class SubmissionListViewModelTest {
     fun `Filter scored more than`() {
         val viewModel = createViewModel()
 
-        viewModel.uiState.value.actionHandler(
+        viewModel.uiState.value.filtersUiState.actionHandler(
             SubmissionListAction.SetFilters(
-                SubmissionListFilter.ABOVE_VALUE,
-                5.0,
-                emptyList()
+                selectedFilters = setOf(SubmissionListFilter.ALL),
+                filterValueAbove = 5.0,
+                filterValueBelow = null,
+                selectedSections = emptyList(),
+                selectedDifferentiationTagIds = emptySet(),
+                includeStudentsWithoutTags = false,
+                sortOrder = SubmissionSortOrder.STUDENT_SORTABLE_NAME,
+                selectedCustomStatusIds = emptySet()
             )
         )
 
@@ -560,11 +589,16 @@ class SubmissionListViewModelTest {
     fun `Filter scored less than`() {
         val viewModel = createViewModel()
 
-        viewModel.uiState.value.actionHandler(
+        viewModel.uiState.value.filtersUiState.actionHandler(
             SubmissionListAction.SetFilters(
-                SubmissionListFilter.BELOW_VALUE,
-                5.0,
-                emptyList()
+                selectedFilters = setOf(SubmissionListFilter.ALL),
+                filterValueAbove = null,
+                filterValueBelow = 5.0,
+                selectedSections = emptyList(),
+                selectedDifferentiationTagIds = emptySet(),
+                includeStudentsWithoutTags = false,
+                sortOrder = SubmissionSortOrder.STUDENT_SORTABLE_NAME,
+                selectedCustomStatusIds = emptySet()
             )
         )
 
@@ -586,7 +620,7 @@ class SubmissionListViewModelTest {
                 false,
                 null,
                 listOf(SubmissionTag.Custom("Custom Status 1", R.drawable.ic_flag, R.color.textInfo)),
-                "-",
+                "0",
                 false
             )
         )
@@ -640,11 +674,16 @@ class SubmissionListViewModelTest {
 
         val viewModel = createViewModel()
 
-        viewModel.uiState.value.actionHandler(
+        viewModel.uiState.value.filtersUiState.actionHandler(
             SubmissionListAction.SetFilters(
-                SubmissionListFilter.ALL,
-                null,
-                listOf(1L)
+                selectedFilters = setOf(SubmissionListFilter.ALL),
+                filterValueAbove = null,
+                filterValueBelow = null,
+                selectedSections = listOf(1L),
+                selectedDifferentiationTagIds = emptySet(),
+                includeStudentsWithoutTags = false,
+                sortOrder = SubmissionSortOrder.STUDENT_SORTABLE_NAME,
+                selectedCustomStatusIds = emptySet()
             )
         )
 
@@ -749,7 +788,7 @@ class SubmissionListViewModelTest {
 
         val viewModel = createViewModel()
 
-        viewModel.uiState.value.actionHandler(SubmissionListAction.SubmissionClicked(1L))
+        viewModel.uiState.value.filtersUiState.actionHandler(SubmissionListAction.SubmissionClicked(1L))
 
         val events = mutableListOf<SubmissionListViewModelAction>()
         backgroundScope.launch(testDispatcher) {
@@ -761,8 +800,9 @@ class SubmissionListViewModelTest {
                     selectedIdx = 0,
                     anonymousGrading = false,
                     filteredSubmissionIds = longArrayOf(1L),
-                    SubmissionListFilter.ALL,
-                    0.0
+                    selectedFilters = setOf(SubmissionListFilter.ALL),
+                    filterValueAbove = null,
+                    filterValueBelow = null
                 ), events.last()
             )
         }
@@ -787,7 +827,7 @@ class SubmissionListViewModelTest {
                 any()
             )
         } returns submissions
-        viewModel.uiState.value.actionHandler(SubmissionListAction.Refresh)
+        viewModel.uiState.value.filtersUiState.actionHandler(SubmissionListAction.Refresh)
 
         coVerify {
             submissionListRepository.getGradeableStudentSubmissions(any<Assignment>(), any(), true)
@@ -799,7 +839,7 @@ class SubmissionListViewModelTest {
     @Test
     fun `Route to user profile`() = runTest {
         val viewModel = createViewModel()
-        viewModel.uiState.value.actionHandler(SubmissionListAction.AvatarClicked(1L))
+        viewModel.uiState.value.filtersUiState.actionHandler(SubmissionListAction.AvatarClicked(1L))
 
         val events = mutableListOf<SubmissionListViewModelAction>()
         backgroundScope.launch(testDispatcher) {
@@ -811,7 +851,7 @@ class SubmissionListViewModelTest {
     @Test
     fun `Search action`() = runTest {
         val viewModel = createViewModel()
-        viewModel.uiState.value.actionHandler(SubmissionListAction.Search("On Time Student"))
+        viewModel.uiState.value.filtersUiState.actionHandler(SubmissionListAction.Search("On Time Student"))
 
         val expected = listOf(
             SubmissionUiState(
@@ -833,23 +873,28 @@ class SubmissionListViewModelTest {
     @Test
     fun `Set filters update uiState`() {
         val viewModel = createViewModel()
-        viewModel.uiState.value.actionHandler(
+        viewModel.uiState.value.filtersUiState.actionHandler(
             SubmissionListAction.SetFilters(
-                SubmissionListFilter.ABOVE_VALUE,
-                5.0,
-                listOf(1L)
+                selectedFilters = setOf(SubmissionListFilter.ALL),
+                filterValueAbove = 5.0,
+                filterValueBelow = null,
+                selectedSections = listOf(1L),
+                selectedDifferentiationTagIds = emptySet(),
+                includeStudentsWithoutTags = false,
+                sortOrder = SubmissionSortOrder.STUDENT_SORTABLE_NAME,
+                selectedCustomStatusIds = emptySet()
             )
         )
 
-        assertEquals(SubmissionListFilter.ABOVE_VALUE, viewModel.uiState.value.filter)
-        assertEquals(5.0, viewModel.uiState.value.filterValue)
-        assertEquals(listOf(1L), viewModel.uiState.value.selectedSections)
+        assertEquals(setOf(SubmissionListFilter.ALL), viewModel.uiState.value.filtersUiState.selectedFilters)
+        assertEquals(5.0, viewModel.uiState.value.filtersUiState.filterValueAbove)
+        assertEquals(listOf(1L), viewModel.uiState.value.filtersUiState.initialSelectedSections)
     }
 
     @Test
     fun `Open post policy`() = runTest {
         val viewModel = createViewModel()
-        viewModel.uiState.value.actionHandler(SubmissionListAction.ShowPostPolicy)
+        viewModel.uiState.value.filtersUiState.actionHandler(SubmissionListAction.ShowPostPolicy)
 
         val events = mutableListOf<SubmissionListViewModelAction>()
         backgroundScope.launch(testDispatcher) {
@@ -872,15 +917,20 @@ class SubmissionListViewModelTest {
 
         val viewModel = createViewModel()
 
-        viewModel.uiState.value.actionHandler(
+        viewModel.uiState.value.filtersUiState.actionHandler(
             SubmissionListAction.SetFilters(
-                SubmissionListFilter.NOT_GRADED,
-                null,
-                emptyList()
+                selectedFilters = setOf(SubmissionListFilter.NOT_GRADED),
+                filterValueAbove = null,
+                filterValueBelow = null,
+                selectedSections = emptyList(),
+                selectedDifferentiationTagIds = emptySet(),
+                includeStudentsWithoutTags = false,
+                sortOrder = SubmissionSortOrder.STUDENT_SORTABLE_NAME,
+                selectedCustomStatusIds = emptySet()
             )
         )
 
-        viewModel.uiState.value.actionHandler(SubmissionListAction.SendMessage)
+        viewModel.uiState.value.filtersUiState.actionHandler(SubmissionListAction.SendMessage)
 
         val expectedRecipients =
             listOf(submissions[0], submissions[1], submissions[2], submissions[6]).map {
@@ -1044,7 +1094,7 @@ class SubmissionListViewModelTest {
     fun `Set filter to 'All' if nothing is set`() {
         every { savedStateHandle.get<SubmissionListFilter>(SubmissionListFragment.FILTER_TYPE) } returns null
         val viewModel = createViewModel()
-        assertEquals(SubmissionListFilter.ALL, viewModel.uiState.value.filter)
+        assertEquals(setOf(SubmissionListFilter.ALL), viewModel.uiState.value.filtersUiState.selectedFilters)
     }
 
     @Test
@@ -1094,7 +1144,7 @@ class SubmissionListViewModelTest {
 
         val viewModel = createViewModel()
 
-        val excepted = listOf(
+        val expected = listOf(
             SubmissionUiState(
                 1L,
                 1L,
@@ -1127,10 +1177,525 @@ class SubmissionListViewModelTest {
             )
         )
 
-        excepted.forEach {
+        expected.forEach {
             assert(viewModel.uiState.value.submissions.contains(it))
         }
-        assertEquals(true, viewModel.uiState.value.anonymousGrading)
+        assertEquals(true, viewModel.uiState.value.filtersUiState.anonymousGrading)
+    }
+
+    @Test
+    fun `Filter by custom grade status`() = runTest {
+        val viewModel = createViewModel()
+
+        viewModel.uiState.value.filtersUiState.actionHandler(
+            SubmissionListAction.SetFilters(
+                selectedFilters = setOf(SubmissionListFilter.ALL),
+                filterValueAbove = null,
+                filterValueBelow = null,
+                selectedSections = emptyList(),
+                selectedDifferentiationTagIds = emptySet(),
+                includeStudentsWithoutTags = false,
+                sortOrder = SubmissionSortOrder.STUDENT_SORTABLE_NAME,
+                selectedCustomStatusIds = setOf("1")
+            )
+        )
+
+        val expected = listOf(
+            SubmissionUiState(
+                9L,
+                9L,
+                "Custom Status Student",
+                false,
+                null,
+                listOf(SubmissionTag.Custom("Custom Status 1", R.drawable.ic_flag, R.color.textInfo)),
+                "0",
+                false
+            )
+        )
+
+        assertEquals(expected, viewModel.uiState.value.submissions)
+    }
+
+    @Test
+    fun `Custom status filter uses OR logic with standard filters`() = runTest {
+        val viewModel = createViewModel()
+
+        viewModel.uiState.value.filtersUiState.actionHandler(
+            SubmissionListAction.SetFilters(
+                selectedFilters = setOf(SubmissionListFilter.LATE),
+                filterValueAbove = null,
+                filterValueBelow = null,
+                selectedSections = emptyList(),
+                selectedDifferentiationTagIds = emptySet(),
+                includeStudentsWithoutTags = false,
+                sortOrder = SubmissionSortOrder.STUDENT_SORTABLE_NAME,
+                selectedCustomStatusIds = setOf("1")
+            )
+        )
+
+        // Should show both LATE submissions AND custom status submissions
+        val expected = listOf(
+            SubmissionUiState(
+                9L,
+                9L,
+                "Custom Status Student",
+                false,
+                null,
+                listOf(SubmissionTag.Custom("Custom Status 1", R.drawable.ic_flag, R.color.textInfo)),
+                "0",
+                false
+            ),
+            SubmissionUiState(
+                1L,
+                1L,
+                "Late Student",
+                false,
+                null,
+                listOf(SubmissionTag.Late, SubmissionTag.NeedsGrading),
+                "-",
+                true
+            )
+        )
+
+        assertEquals(expected, viewModel.uiState.value.submissions)
+    }
+
+    @Test
+    fun `Custom status excludes ALL filter when selected`() = runTest {
+        val viewModel = createViewModel()
+
+        viewModel.uiState.value.filtersUiState.actionHandler(
+            SubmissionListAction.SetFilters(
+                selectedFilters = setOf(SubmissionListFilter.ALL),
+                filterValueAbove = null,
+                filterValueBelow = null,
+                selectedSections = emptyList(),
+                selectedDifferentiationTagIds = emptySet(),
+                includeStudentsWithoutTags = false,
+                sortOrder = SubmissionSortOrder.STUDENT_SORTABLE_NAME,
+                selectedCustomStatusIds = setOf("1")
+            )
+        )
+
+        // When custom status is selected, ALL filter should be ignored
+        val expected = listOf(
+            SubmissionUiState(
+                9L,
+                9L,
+                "Custom Status Student",
+                false,
+                null,
+                listOf(SubmissionTag.Custom("Custom Status 1", R.drawable.ic_flag, R.color.textInfo)),
+                "0",
+                false
+            )
+        )
+
+        assertEquals(expected, viewModel.uiState.value.submissions)
+    }
+
+    @Test
+    fun `Filter by differentiation tags`() = runTest {
+        val diffTag1 = mockk<DifferentiationTagsQuery.Group>(relaxed = true) {
+            every { _id } returns "tag1"
+            every { name } returns "Group 1"
+            every { membersConnection?.nodes } returns listOf(
+                mockk {
+                    every { user?._id } returns "1"
+                }
+            )
+        }
+
+        coEvery {
+            submissionListRepository.getDifferentiationTags(any(), any())
+        } returns listOf(Pair(diffTag1, "Group Set 1"))
+
+        coEvery {
+            submissionListRepository.getGradeableStudentSubmissions(
+                any<Assignment>(),
+                any(),
+                any()
+            )
+        } returns listOf(
+            GradeableStudentSubmission(
+                assignee = StudentAssignee(
+                    student = User(1L, name = "Student 1"),
+                ),
+                submission = Submission(id = 1L, late = false, attempt = 1L),
+            ),
+            GradeableStudentSubmission(
+                assignee = StudentAssignee(
+                    student = User(2L, name = "Student 2"),
+                ),
+                submission = Submission(id = 2L, late = false, attempt = 1L),
+            ),
+        )
+
+        val viewModel = createViewModel()
+
+        viewModel.uiState.value.filtersUiState.actionHandler(
+            SubmissionListAction.SetFilters(
+                selectedFilters = setOf(SubmissionListFilter.ALL),
+                filterValueAbove = null,
+                filterValueBelow = null,
+                selectedSections = emptyList(),
+                selectedDifferentiationTagIds = setOf("tag1"),
+                includeStudentsWithoutTags = false,
+                sortOrder = SubmissionSortOrder.STUDENT_SORTABLE_NAME,
+                selectedCustomStatusIds = emptySet()
+            )
+        )
+
+        // Should only show Student 1 who belongs to tag1
+        assertEquals(1, viewModel.uiState.value.submissions.size)
+        assertEquals("Student 1", viewModel.uiState.value.submissions[0].userName)
+    }
+
+    @Test
+    fun `Filter students without differentiation tags`() = runTest {
+        val diffTag1 = mockk<DifferentiationTagsQuery.Group>(relaxed = true) {
+            every { _id } returns "tag1"
+            every { name } returns "Group 1"
+            every { membersConnection?.nodes } returns listOf(
+                mockk {
+                    every { user?._id } returns "1"
+                }
+            )
+        }
+
+        coEvery {
+            submissionListRepository.getDifferentiationTags(any(), any())
+        } returns listOf(Pair(diffTag1, "Group Set 1"))
+
+        coEvery {
+            submissionListRepository.getGradeableStudentSubmissions(
+                any<Assignment>(),
+                any(),
+                any()
+            )
+        } returns listOf(
+            GradeableStudentSubmission(
+                assignee = StudentAssignee(
+                    student = User(1L, name = "Student 1"),
+                ),
+                submission = Submission(id = 1L, late = false, attempt = 1L),
+            ),
+            GradeableStudentSubmission(
+                assignee = StudentAssignee(
+                    student = User(2L, name = "Student 2"),
+                ),
+                submission = Submission(id = 2L, late = false, attempt = 1L),
+            ),
+        )
+
+        val viewModel = createViewModel()
+
+        viewModel.uiState.value.filtersUiState.actionHandler(
+            SubmissionListAction.SetFilters(
+                selectedFilters = setOf(SubmissionListFilter.ALL),
+                filterValueAbove = null,
+                filterValueBelow = null,
+                selectedSections = emptyList(),
+                selectedDifferentiationTagIds = emptySet(),
+                includeStudentsWithoutTags = true,
+                sortOrder = SubmissionSortOrder.STUDENT_SORTABLE_NAME,
+                selectedCustomStatusIds = emptySet()
+            )
+        )
+
+        // Should only show Student 2 who doesn't belong to any tag
+        assertEquals(1, viewModel.uiState.value.submissions.size)
+        assertEquals("Student 2", viewModel.uiState.value.submissions[0].userName)
+    }
+
+    @Test
+    fun `Filter differentiation tags with OR logic`() = runTest {
+        val diffTag1 = mockk<DifferentiationTagsQuery.Group>(relaxed = true) {
+            every { _id } returns "tag1"
+            every { name } returns "Group 1"
+            every { membersConnection?.nodes } returns listOf(
+                mockk {
+                    every { user?._id } returns "1"
+                }
+            )
+        }
+
+        coEvery {
+            submissionListRepository.getDifferentiationTags(any(), any())
+        } returns listOf(Pair(diffTag1, "Group Set 1"))
+
+        coEvery {
+            submissionListRepository.getGradeableStudentSubmissions(
+                any<Assignment>(),
+                any(),
+                any()
+            )
+        } returns listOf(
+            GradeableStudentSubmission(
+                assignee = StudentAssignee(
+                    student = User(1L, name = "Student 1"),
+                ),
+                submission = Submission(id = 1L, late = false, attempt = 1L),
+            ),
+            GradeableStudentSubmission(
+                assignee = StudentAssignee(
+                    student = User(2L, name = "Student 2"),
+                ),
+                submission = Submission(id = 2L, late = false, attempt = 1L),
+            ),
+        )
+
+        val viewModel = createViewModel()
+
+        viewModel.uiState.value.filtersUiState.actionHandler(
+            SubmissionListAction.SetFilters(
+                selectedFilters = setOf(SubmissionListFilter.ALL),
+                filterValueAbove = null,
+                filterValueBelow = null,
+                selectedSections = emptyList(),
+                selectedDifferentiationTagIds = setOf("tag1"),
+                includeStudentsWithoutTags = true,
+                sortOrder = SubmissionSortOrder.STUDENT_SORTABLE_NAME,
+                selectedCustomStatusIds = emptySet()
+            )
+        )
+
+        // Should show both Student 1 (in tag) AND Student 2 (without tag)
+        assertEquals(2, viewModel.uiState.value.submissions.size)
+    }
+
+    @Test
+    fun `Sort by student name`() = runTest {
+        coEvery {
+            submissionListRepository.getGradeableStudentSubmissions(
+                any<Assignment>(),
+                any(),
+                any()
+            )
+        } returns listOf(
+            GradeableStudentSubmission(
+                assignee = StudentAssignee(
+                    student = User(1L, name = "Charlie Student"),
+                ),
+                submission = Submission(id = 1L, late = false, attempt = 1L),
+            ),
+            GradeableStudentSubmission(
+                assignee = StudentAssignee(
+                    student = User(2L, name = "Alice Student"),
+                ),
+                submission = Submission(id = 2L, late = false, attempt = 1L),
+            ),
+            GradeableStudentSubmission(
+                assignee = StudentAssignee(
+                    student = User(3L, name = "Bob Student"),
+                ),
+                submission = Submission(id = 3L, late = false, attempt = 1L),
+            ),
+        )
+
+        val viewModel = createViewModel()
+
+        viewModel.uiState.value.filtersUiState.actionHandler(
+            SubmissionListAction.SetFilters(
+                selectedFilters = setOf(SubmissionListFilter.ALL),
+                filterValueAbove = null,
+                filterValueBelow = null,
+                selectedSections = emptyList(),
+                selectedDifferentiationTagIds = emptySet(),
+                includeStudentsWithoutTags = false,
+                sortOrder = SubmissionSortOrder.STUDENT_NAME,
+                selectedCustomStatusIds = emptySet()
+            )
+        )
+
+        val submissions = viewModel.uiState.value.submissions
+        assertEquals("Alice Student", submissions[0].userName)
+        assertEquals("Bob Student", submissions[1].userName)
+        assertEquals("Charlie Student", submissions[2].userName)
+    }
+
+    @Test
+    fun `Sort by submission date`() = runTest {
+        coEvery {
+            submissionListRepository.getGradeableStudentSubmissions(
+                any<Assignment>(),
+                any(),
+                any()
+            )
+        } returns listOf(
+            GradeableStudentSubmission(
+                assignee = StudentAssignee(
+                    student = User(1L, name = "Student 1"),
+                ),
+                submission = Submission(id = 1L, late = false, attempt = 1L, submittedAt = Date(100)),
+            ),
+            GradeableStudentSubmission(
+                assignee = StudentAssignee(
+                    student = User(2L, name = "Student 2"),
+                ),
+                submission = Submission(id = 2L, late = false, attempt = 1L, submittedAt = Date(300)),
+            ),
+            GradeableStudentSubmission(
+                assignee = StudentAssignee(
+                    student = User(3L, name = "Student 3"),
+                ),
+                submission = Submission(id = 3L, late = false, attempt = 1L, submittedAt = Date(200)),
+            ),
+        )
+
+        val viewModel = createViewModel()
+
+        viewModel.uiState.value.filtersUiState.actionHandler(
+            SubmissionListAction.SetFilters(
+                selectedFilters = setOf(SubmissionListFilter.ALL),
+                filterValueAbove = null,
+                filterValueBelow = null,
+                selectedSections = emptyList(),
+                selectedDifferentiationTagIds = emptySet(),
+                includeStudentsWithoutTags = false,
+                sortOrder = SubmissionSortOrder.SUBMISSION_DATE,
+                selectedCustomStatusIds = emptySet()
+            )
+        )
+
+        val submissions = viewModel.uiState.value.submissions
+        // Should be sorted by submission date descending (most recent first)
+        assertEquals("Student 2", submissions[0].userName)  // Date(300)
+        assertEquals("Student 3", submissions[1].userName)  // Date(200)
+        assertEquals("Student 1", submissions[2].userName)  // Date(100)
+    }
+
+    @Test
+    fun `Sort by submission status`() = runTest {
+        coEvery {
+            submissionListRepository.getGradeableStudentSubmissions(
+                any<Assignment>(),
+                any(),
+                any()
+            )
+        } returns listOf(
+            GradeableStudentSubmission(
+                assignee = StudentAssignee(
+                    student = User(1L, name = "Submitted Student"),
+                ),
+                submission = Submission(id = 1L, late = false, attempt = 1L),
+            ),
+            GradeableStudentSubmission(
+                assignee = StudentAssignee(
+                    student = User(2L, name = "Missing Student"),
+                ),
+                submission = Submission(id = 2L, missing = true),
+            ),
+            GradeableStudentSubmission(
+                assignee = StudentAssignee(
+                    student = User(3L, name = "Late Student"),
+                ),
+                submission = Submission(id = 3L, late = true, attempt = 1L),
+            ),
+            GradeableStudentSubmission(
+                assignee = StudentAssignee(
+                    student = User(4L, name = "Not Submitted Student"),
+                ),
+                submission = null,
+            ),
+        )
+
+        val viewModel = createViewModel()
+
+        viewModel.uiState.value.filtersUiState.actionHandler(
+            SubmissionListAction.SetFilters(
+                selectedFilters = setOf(SubmissionListFilter.ALL),
+                filterValueAbove = null,
+                filterValueBelow = null,
+                selectedSections = emptyList(),
+                selectedDifferentiationTagIds = emptySet(),
+                includeStudentsWithoutTags = false,
+                sortOrder = SubmissionSortOrder.SUBMISSION_STATUS,
+                selectedCustomStatusIds = emptySet()
+            )
+        )
+
+        val submissions = viewModel.uiState.value.submissions
+        // Order: 0=submitted, 1=late, 2=missing, 3=not submitted
+        assertEquals("Submitted Student", submissions[0].userName)
+        assertEquals("Late Student", submissions[1].userName)
+        assertEquals("Missing Student", submissions[2].userName)
+        assertEquals("Not Submitted Student", submissions[3].userName)
+    }
+
+    @Test
+    fun `Multiple status filters use OR logic`() = runTest {
+        val viewModel = createViewModel()
+
+        viewModel.uiState.value.filtersUiState.actionHandler(
+            SubmissionListAction.SetFilters(
+                selectedFilters = setOf(SubmissionListFilter.LATE, SubmissionListFilter.MISSING),
+                filterValueAbove = null,
+                filterValueBelow = null,
+                selectedSections = emptyList(),
+                selectedDifferentiationTagIds = emptySet(),
+                includeStudentsWithoutTags = false,
+                sortOrder = SubmissionSortOrder.STUDENT_SORTABLE_NAME,
+                selectedCustomStatusIds = emptySet()
+            )
+        )
+
+        // Should show LATE submissions OR MISSING submissions
+        val submissions = viewModel.uiState.value.submissions
+        val userNames = submissions.map { it.userName }
+
+        assert(userNames.contains("Late Student"))
+        assert(userNames.contains("Not Submitted Student"))
+        assertEquals(2, submissions.size)
+    }
+
+    @Test
+    fun `Filter by scored above and status filters combined`() = runTest {
+        val viewModel = createViewModel()
+
+        viewModel.uiState.value.filtersUiState.actionHandler(
+            SubmissionListAction.SetFilters(
+                selectedFilters = setOf(SubmissionListFilter.GRADED),
+                filterValueAbove = 5.0,
+                filterValueBelow = null,
+                selectedSections = emptyList(),
+                selectedDifferentiationTagIds = emptySet(),
+                includeStudentsWithoutTags = false,
+                sortOrder = SubmissionSortOrder.STUDENT_SORTABLE_NAME,
+                selectedCustomStatusIds = emptySet()
+            )
+        )
+
+        // Should show graded submissions that scored more than 5
+        val submissions = viewModel.uiState.value.submissions
+        assertEquals(1, submissions.size)
+        assertEquals("Good Graded Student", submissions[0].userName)
+        assertEquals("10", submissions[0].grade)
+    }
+
+    @Test
+    fun `Filter by scored below and custom status combined`() = runTest {
+        val viewModel = createViewModel()
+
+        viewModel.uiState.value.filtersUiState.actionHandler(
+            SubmissionListAction.SetFilters(
+                selectedFilters = setOf(SubmissionListFilter.ALL),
+                filterValueAbove = null,
+                filterValueBelow = 5.0,
+                selectedSections = emptyList(),
+                selectedDifferentiationTagIds = emptySet(),
+                includeStudentsWithoutTags = false,
+                sortOrder = SubmissionSortOrder.STUDENT_SORTABLE_NAME,
+                selectedCustomStatusIds = setOf("1")
+            )
+        )
+
+        // Should show submissions with custom status AND score below 5
+        // Custom Status Student has no grade (score = null), Bad Graded Student has score = 0
+        val submissions = viewModel.uiState.value.submissions
+        // Only Custom Status Student should appear (Bad Graded Student is filtered out by custom status filter)
+        assertEquals(1, submissions.size)
+        assertEquals("Custom Status Student", submissions[0].userName)
     }
 
     @Test
@@ -1157,7 +1722,7 @@ class SubmissionListViewModelTest {
 
         val viewModel = createViewModel()
 
-        val excepted = SubmissionUiState(
+        val expected = SubmissionUiState(
             1L,
             1L,
             "Student 1",
@@ -1168,7 +1733,7 @@ class SubmissionListViewModelTest {
             true
         )
 
-        assertEquals(excepted, viewModel.uiState.value.submissions.first())
+        assertEquals(expected, viewModel.uiState.value.submissions.first())
     }
 
     private fun createViewModel(): SubmissionListViewModel {
