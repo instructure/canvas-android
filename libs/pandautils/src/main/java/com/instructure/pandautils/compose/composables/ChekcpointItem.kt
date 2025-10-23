@@ -61,14 +61,15 @@ fun CheckpointItem(
         Text(
             text = discussionCheckpointUiState.name,
             color = colorResource(id = R.color.textDarkest),
-            fontSize = 16.sp
+            fontSize = 16.sp,
+            modifier = Modifier.testTag("checkpointName")
         )
         FlowRow {
             Text(
                 text = discussionCheckpointUiState.dueDate,
                 color = colorResource(id = R.color.textDark),
                 fontSize = 14.sp,
-                modifier = Modifier.testTag("checkpointDueDate")
+                modifier = Modifier.testTag("checkpointDueDate_${discussionCheckpointUiState.name}")
             )
             if (discussionCheckpointUiState.submissionStateLabel != SubmissionStateLabel.None) {
                 Spacer(modifier = Modifier.width(4.dp))
