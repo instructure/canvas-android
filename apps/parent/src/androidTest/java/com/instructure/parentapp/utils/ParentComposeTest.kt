@@ -66,6 +66,7 @@ abstract class ParentComposeTest : ParentTest() {
     protected val notAParentPage = NotAParentPage(composeTestRule)
     protected val courseDetailsPage = CourseDetailsPage(composeTestRule)
     protected val summaryPage = SummaryPage(composeTestRule)
+    protected val inboxComposePage = InboxComposePage(composeTestRule)
     protected val announcementDetailsPage = AnnouncementDetailsPage(composeTestRule)
     protected val createAccountPage = CreateAccountPage(composeTestRule)
     protected val inboxDetailsPage = InboxDetailsPage(composeTestRule)

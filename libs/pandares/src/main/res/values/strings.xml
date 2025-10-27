@@ -2070,6 +2070,8 @@
     <string name="allAssignments">All Assignments</string>
     <string name="statusFilter">Status Filter</string>
     <string name="a11y_contentDescription_filter">Filter</string>
+    <string name="a11y_filter_active">Filter active</string>
+    <string name="a11y_filter_inactive">Filter inactive</string>
     <string name="a11y_contentDescription_postPolicy">Post policy</string>
     <string name="late">Late</string>
     <string name="a11y_contentDescription_expand">Expand</string>
@@ -2161,4 +2163,18 @@
     <string name="a11y_discussion_checkpoints">Discussion Checkpoints</string>
     <string name="multipleDueDates">Multiple Due Dates</string>
     <string name="courseConcludedError">Course concluded. Unable to send messages!</string>
+    <string name="statuses">Statuses</string>
+    <string name="precise_filtering">Precise filtering</string>
+    <string name="differentiation_tags">Differentiation tags</string>
+    <string name="students_without_differentiation_tags">Students without Differentiation tags</string>
+    <string name="sort_by">Sort by</string>
+    <string name="student_sortable_name">Student sortable name</string>
+    <string name="student_name">Student name</string>
+    <string name="submission_date">Submission date</string>
+    <string name="submission_status">Submission status</string>
+    <string name="write_score_here">Write score here</string>
+    <string name="scored_more_than_with_max">Scored More than / %s pts</string>
+    <string name="scored_less_than_with_max">Scored Less than / %s pts</string>
+    <string name="scored_between_values">Scored %1$s - %2$s</string>
+    <string name="multiple_filters">Multiple filters</string>
 </resources>
