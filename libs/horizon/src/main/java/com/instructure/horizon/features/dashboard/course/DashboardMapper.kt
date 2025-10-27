@@ -22,12 +22,18 @@ import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
 import com.instructure.canvasapi2.type.EnrollmentWorkflowState
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.course.card.CardClickAction
-import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardButtonState
-import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardChipState
 import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardImageState
 import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardModuleItemState
 import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardParentProgramState
 import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardState
+import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardButtonRoute
+import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardButtonState
+import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardChipState
+import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardItemState
+import com.instructure.horizon.features.home.HomeNavigationRoute
+import com.instructure.horizon.horizonui.molecules.ButtonColor
+import com.instructure.horizon.horizonui.molecules.ButtonHeight
+import com.instructure.horizon.horizonui.molecules.ButtonWidth
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 
 internal suspend fun List<GetCoursesQuery.Enrollment>.mapToDashboardCourseCardState(
@@ -40,20 +46,23 @@ internal suspend fun List<GetCoursesQuery.Enrollment>.mapToDashboardCourseCardSt
     return (active + completed).sortedByDescending { it.lastAccessed }
 }
 
-internal fun List<Program>.mapToDashboardCourseCardState(context: Context,): List<DashboardCourseCardState> {
+internal fun List<Program>.mapToDashboardCourseCardState(context: Context): List<DashboardPaginatedWidgetCardItemState> {
     return this.map { program ->
-        DashboardCourseCardState(
-            chipState = DashboardCourseCardChipState(
+        DashboardPaginatedWidgetCardItemState(
+            chipState = DashboardPaginatedWidgetCardChipState(
                 label = context.getString(R.string.dashboardCourseCardProgramChipLabel),
                 color = StatusChipColor.Grey
             ),
-            description = context.getString(
+            title = context.getString(
                 R.string.dashboardCourseCardProgramDetailsMessage,
                 program.name
             ),
-            buttonState = DashboardCourseCardButtonState(
+            buttonState = DashboardPaginatedWidgetCardButtonState(
                 label = context.getString(R.string.dashboardNotStartedProgramDetailsLabel),
-                onClickAction = CardClickAction.NavigateToProgram(program.id),
+                height = ButtonHeight.SMALL,
+                width = ButtonWidth.RELATIVE,
+                color = ButtonColor.Inverse,
+                route = DashboardPaginatedWidgetCardButtonRoute.HomeRoute(HomeNavigationRoute.Learn.withProgram(program.id)),
             ),
         )
     }

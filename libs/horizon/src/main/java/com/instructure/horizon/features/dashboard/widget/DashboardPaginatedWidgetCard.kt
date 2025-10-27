@@ -70,45 +70,47 @@ fun DashboardPaginatedWidgetCard(
 ) {
     val pagerState = rememberPagerState(pageCount = { state.items.size })
 
-    DashboardCard(
-        modifier = modifier,
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxWidth()
+    if (state.items.isNotEmpty()) {
+        DashboardCard(
+            modifier = modifier,
         ) {
-            HorizonSpace(SpaceSize.SPACE_24)
-            HorizontalPager(
-                state = pagerState,
-                pageSpacing = 24.dp,
-                verticalAlignment = Alignment.Top,
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .animateContentSize()
-            ) { page ->
-                DashboardPaginatedWidgetCardItem(
-                    item = state.items[page],
-                    isLoading = state.isLoading,
-                    mainNavController = mainNavController,
-                    homeNavController = homeNavController,
+            ) {
+                HorizonSpace(SpaceSize.SPACE_24)
+                HorizontalPager(
+                    state = pagerState,
+                    pageSpacing = 24.dp,
+                    verticalAlignment = Alignment.Top,
                     modifier = Modifier
-                        .padding(horizontal = 24.dp)
-                        .semantics(mergeDescendants = true) {}
-                )
+                        .fillMaxWidth()
+                        .animateContentSize()
+                ) { page ->
+                    DashboardPaginatedWidgetCardItem(
+                        item = state.items[page],
+                        isLoading = state.isLoading,
+                        mainNavController = mainNavController,
+                        homeNavController = homeNavController,
+                        modifier = Modifier
+                            .padding(horizontal = 24.dp)
+                            .semantics(mergeDescendants = true) {}
+                    )
+                }
+
+                if (state.items.size > 1) {
+                    HorizonSpace(SpaceSize.SPACE_16)
+
+                    PagerIndicator(
+                        state.isLoading,
+                        pagerState,
+                        Modifier.padding(horizontal = 24.dp)
+                    )
+                }
+
+                HorizonSpace(SpaceSize.SPACE_24)
             }
-
-            if (state.items.size > 1) {
-                HorizonSpace(SpaceSize.SPACE_16)
-
-                PagerIndicator(
-                    state.isLoading,
-                    pagerState,
-                    Modifier.padding(horizontal = 24.dp)
-                )
-            }
-
-            HorizonSpace(SpaceSize.SPACE_24)
         }
     }
 }

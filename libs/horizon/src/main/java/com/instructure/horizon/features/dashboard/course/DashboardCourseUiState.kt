@@ -18,10 +18,11 @@ package com.instructure.horizon.features.dashboard.course
 
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardState
+import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardState
 
 data class DashboardCourseUiState(
     val state: DashboardItemState = DashboardItemState.LOADING,
-    val programs: List<DashboardCourseCardState> = emptyList(),
+    val programs: DashboardPaginatedWidgetCardState = DashboardPaginatedWidgetCardState(),
     val courses: List<DashboardCourseCardState> = emptyList(),
     val onRefresh: (onFinished: () -> Unit)-> Unit = { }
 )
