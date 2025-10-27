@@ -1355,19 +1355,19 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        assertEquals(2, viewModel.discussionCheckpoints.size)
+        assertEquals(2, viewModel.discussionCheckpoints.value.size)
 
         // First checkpoint - graded
-        assertEquals("Reply to topic", viewModel.discussionCheckpoints[0].name)
-        assertEquals("5 / 5 pts", viewModel.discussionCheckpoints[0].grade)
-        assertTrue(viewModel.discussionCheckpoints[0].stateLabel is com.instructure.pandautils.features.grades.SubmissionStateLabel.Predefined)
-        assertEquals(R.string.gradedSubmissionLabel, (viewModel.discussionCheckpoints[0].stateLabel as com.instructure.pandautils.features.grades.SubmissionStateLabel.Predefined).labelRes)
+        assertEquals("Reply to topic", viewModel.discussionCheckpoints.value[0].name)
+        assertEquals("5 / 5 pts", viewModel.discussionCheckpoints.value[0].grade)
+        assertTrue(viewModel.discussionCheckpoints.value[0].stateLabel is com.instructure.pandautils.features.grades.SubmissionStateLabel.Predefined)
+        assertEquals(R.string.gradedSubmissionLabel, (viewModel.discussionCheckpoints.value[0].stateLabel as com.instructure.pandautils.features.grades.SubmissionStateLabel.Predefined).labelRes)
 
         // Second checkpoint - late
-        assertEquals("Additional replies (3)", viewModel.discussionCheckpoints[1].name)
-        assertEquals("3 / 5 pts", viewModel.discussionCheckpoints[1].grade)
-        assertTrue(viewModel.discussionCheckpoints[1].stateLabel is com.instructure.pandautils.features.grades.SubmissionStateLabel.Predefined)
-        assertEquals(R.string.lateSubmissionLabel, (viewModel.discussionCheckpoints[1].stateLabel as com.instructure.pandautils.features.grades.SubmissionStateLabel.Predefined).labelRes)
+        assertEquals("Additional replies (3)", viewModel.discussionCheckpoints.value[1].name)
+        assertEquals("3 / 5 pts", viewModel.discussionCheckpoints.value[1].grade)
+        assertTrue(viewModel.discussionCheckpoints.value[1].stateLabel is com.instructure.pandautils.features.grades.SubmissionStateLabel.Predefined)
+        assertEquals(R.string.lateSubmissionLabel, (viewModel.discussionCheckpoints.value[1].stateLabel as com.instructure.pandautils.features.grades.SubmissionStateLabel.Predefined).labelRes)
     }
 
     @Test
@@ -1383,6 +1383,6 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel()
 
-        assertTrue(viewModel.discussionCheckpoints.isEmpty())
+        assertTrue(viewModel.discussionCheckpoints.value.isEmpty())
     }
 }

@@ -32,6 +32,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.collectAsState
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.snackbar.Snackbar
@@ -162,8 +163,8 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
         }
 
         binding?.checkpointGradesComposeView?.setContent {
-            val checkpoints = viewModel.discussionCheckpoints
-            DiscussionCheckpointLayout(checkpoints)
+            val checkpoints = viewModel.discussionCheckpoints.collectAsState()
+            DiscussionCheckpointLayout(checkpoints.value)
         }
 
         return binding?.root

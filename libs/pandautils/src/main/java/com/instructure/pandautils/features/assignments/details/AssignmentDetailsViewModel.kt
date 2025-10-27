@@ -76,6 +76,9 @@ import com.instructure.pandautils.utils.orderedCheckpoints
 import com.instructure.pandautils.utils.toFormattedString
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.io.File
 import java.text.DateFormat
@@ -141,9 +144,8 @@ class AssignmentDetailsViewModel @Inject constructor(
     val dueDateReminderViewStates: List<ReminderViewState>
         get() = _dueDateReminderViewStates
 
-    private val _discussionCheckpoints = mutableStateListOf<DiscussionCheckpointViewState>()
-    val discussionCheckpoints: List<DiscussionCheckpointViewState>
-        get() = _discussionCheckpoints
+    private val _discussionCheckpoints = MutableStateFlow<List<DiscussionCheckpointViewState>>(emptyList())
+    val discussionCheckpoints: StateFlow<List<DiscussionCheckpointViewState>> = _discussionCheckpoints.asStateFlow()
 
     var checkingReminderPermission = false
     var checkingNotificationPermission = false
@@ -252,7 +254,7 @@ class AssignmentDetailsViewModel @Inject constructor(
 
                 if (assignment?.checkpoints?.isNotEmpty() == true) {
                     _dueDateReminderViewStates.clear()
-                    _discussionCheckpoints.clear()
+                    val checkpointsList = mutableListOf<DiscussionCheckpointViewState>()
                     assignment?.orderedCheckpoints?.forEach { checkpoint ->
                         val dueLabel = when (checkpoint.tag) {
                             Const.REPLY_TO_TOPIC -> application.getString(R.string.reply_to_topic_due)
@@ -294,7 +296,7 @@ class AssignmentDetailsViewModel @Inject constructor(
                             showZeroPossiblePoints = true,
                             showNotGraded = true
                         )
-                        _discussionCheckpoints.add(
+                        checkpointsList.add(
                             DiscussionCheckpointViewState(
                                 name = checkpointName,
                                 stateLabel = stateLabel,
@@ -303,9 +305,10 @@ class AssignmentDetailsViewModel @Inject constructor(
                             )
                         )
                     }
+                    _discussionCheckpoints.value = checkpointsList
                 } else {
                     _dueDateReminderViewStates.clear()
-                    _discussionCheckpoints.clear()
+                    _discussionCheckpoints.value = emptyList()
                     _dueDateReminderViewStates.add(
                         ReminderViewState(
                             dueLabel = application.getString(R.string.dueLabel),
