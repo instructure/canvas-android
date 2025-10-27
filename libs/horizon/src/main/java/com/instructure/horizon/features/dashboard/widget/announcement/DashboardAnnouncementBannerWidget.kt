@@ -61,7 +61,7 @@ fun DashboardAnnouncementBannerWidget(
         }
     }
 
-    if (state.state == DashboardItemState.LOADING || state.cardState.items.isNotEmpty()) {
+    if (state.state != DashboardItemState.SUCCESS || state.cardState.items.isNotEmpty()) {
         DashboardAnnouncementBannerSection(state, mainNavController, homeNavController)
     }
 }

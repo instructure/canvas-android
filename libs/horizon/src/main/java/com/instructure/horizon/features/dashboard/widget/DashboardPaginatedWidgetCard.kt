@@ -216,7 +216,7 @@ private fun PagerIndicator(
     ) {
         IconButton(
             iconRes = R.drawable.chevron_left,
-            contentDescription = stringResource(R.string.dashboardAnnouncementBannerPreviousAnnouncement),
+            contentDescription = stringResource(R.string.a11y_dashboardPreviousItemContentDescription),
             size = IconButtonSize.NORMAL,
             color = IconButtonColor.Custom(
                 backgroundColor = HorizonColors.Surface.cardPrimary(),
@@ -249,7 +249,7 @@ private fun PagerIndicator(
 
         IconButton(
             iconRes = R.drawable.chevron_right,
-            contentDescription = stringResource(R.string.dashboardAnnouncementBannerNextAnnouncement),
+            contentDescription = stringResource(R.string.a11y_dashboardNextItemContentDescription),
             size = IconButtonSize.NORMAL,
             color = IconButtonColor.Custom(
                 backgroundColor = HorizonColors.Surface.cardPrimary(),

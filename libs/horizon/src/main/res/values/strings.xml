@@ -413,4 +413,6 @@
     <string name="dashboardCourseCardProgramChipLabel">Program</string>
     <string name="dashboardCourseCardProgramDetailsMessage">Welcome to %1$s! View your program to enroll in your first course.</string>
     <string name="dashboardAnnouncementRefreshMessage">Refresh</string>
+    <string name="a11y_dashboardNextItemContentDescription">Next item</string>
+    <string name="a11y_dashboardPreviousItemContentDescription">Previous item</string>
 </resources>

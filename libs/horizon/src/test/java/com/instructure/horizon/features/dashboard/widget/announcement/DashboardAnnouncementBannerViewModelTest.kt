@@ -16,7 +16,10 @@
  */
 package com.instructure.horizon.features.dashboard.widget.announcement
 
+import android.content.Context
+import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.features.dashboard.DashboardItemState
+import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardButtonRoute
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -38,6 +41,8 @@ import java.util.Date
 @OptIn(ExperimentalCoroutinesApi::class)
 class DashboardAnnouncementBannerViewModelTest {
     private val repository: DashboardAnnouncementBannerRepository = mockk(relaxed = true)
+    private val context: Context = mockk(relaxed = true)
+    private val eventHandler = DashboardEventHandler()
     private val testDispatcher = UnconfinedTestDispatcher()
 
     @Before
@@ -69,8 +74,8 @@ class DashboardAnnouncementBannerViewModelTest {
 
         val state = viewModel.uiState.value
         assertEquals(DashboardItemState.SUCCESS, state.state)
-        assertEquals(1, state.cardState.announcements.size)
-        assertEquals("Test Announcement", state.cardState.announcements[0].title)
+        assertEquals(1, state.cardState.items.size)
+        assertEquals("Test Announcement", state.cardState.items[0].title)
         coVerify { repository.getUnreadAnnouncements(false) }
     }
 
@@ -98,9 +103,9 @@ class DashboardAnnouncementBannerViewModelTest {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertEquals(2, state.cardState.announcements.size)
-        assertEquals("First Announcement", state.cardState.announcements[0].title)
-        assertEquals("Second Announcement", state.cardState.announcements[1].title)
+        assertEquals(2, state.cardState.items.size)
+        assertEquals("First Announcement", state.cardState.items[0].title)
+        assertEquals("Second Announcement", state.cardState.items[1].title)
     }
 
     @Test
@@ -112,7 +117,7 @@ class DashboardAnnouncementBannerViewModelTest {
 
         val state = viewModel.uiState.value
         assertEquals(DashboardItemState.SUCCESS, state.state)
-        assertTrue(state.cardState.announcements.isEmpty())
+        assertTrue(state.cardState.items.isEmpty())
     }
 
     @Test
@@ -219,9 +224,9 @@ class DashboardAnnouncementBannerViewModelTest {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertEquals(1, state.cardState.announcements.size)
-        assertEquals(AnnouncementType.COURSE, state.cardState.announcements[0].type)
-        assertEquals("Introduction to Kotlin", state.cardState.announcements[0].source)
+        assertEquals(1, state.cardState.items.size)
+        assertEquals(DashboardPaginatedWidgetCardButtonRoute.MainRoute(announcements[0].route), state.cardState.items[0].buttonState?.route)
+        assertEquals("Introduction to Kotlin", state.cardState.items[0].source)
     }
 
     @Test
@@ -241,12 +246,12 @@ class DashboardAnnouncementBannerViewModelTest {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertEquals(1, state.cardState.announcements.size)
-        assertEquals(AnnouncementType.GLOBAL, state.cardState.announcements[0].type)
-        assertEquals(null, state.cardState.announcements[0].source)
+        assertEquals(1, state.cardState.items.size)
+        assertEquals(DashboardPaginatedWidgetCardButtonRoute.MainRoute(announcements[0].route), state.cardState.items[0].buttonState?.route)
+        assertEquals(null, state.cardState.items[0].source)
     }
 
     private fun getViewModel(): DashboardAnnouncementBannerViewModel {
-        return DashboardAnnouncementBannerViewModel(repository)
+        return DashboardAnnouncementBannerViewModel(repository, eventHandler, context)
     }
 }
