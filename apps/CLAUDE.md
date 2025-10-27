@@ -130,6 +130,7 @@ Dependencies are centralized in `buildSrc/src/main/java/GlobalDependencies.kt` w
 - Follow existing project patterns and conventions
 - Self-documenting code without inline comments unless specifically requested
 - Use descriptive variable and function names
+- **Companion objects**: Place companion objects at the bottom of the class, following Kotlin style guides. For simple private constants used only within a file, consider using top-level constants instead
 
 ### Component Patterns
 - Use existing utility functions and shared components from `pandautils`
