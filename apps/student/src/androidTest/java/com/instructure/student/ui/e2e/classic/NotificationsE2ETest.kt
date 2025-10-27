@@ -109,7 +109,6 @@ class NotificationsE2ETest : StudentTest() {
 
         Log.d(STEP_TAG, "Navigate to Inbox page.")
         dashboardPage.clickInboxTab()
-        refresh() //To make sure that the conversation appears.
 
         Log.d(ASSERTION_TAG, "Assert that the conversation '${seededConversation.subject}' IS displayed in the Inbox.")
         inboxPage.assertConversationDisplayed(seededConversation.subject)

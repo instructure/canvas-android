@@ -45,8 +45,8 @@ class NotificationPage : BasePage() {
         onView(matcher).assertDisplayed()
     }
 
-    fun assertNotificationNotDisplayed(title: String) {
-        val matcher = allOf(withText(title), withAncestor(R.id.listView))
+    fun assertNotificationNotDisplayed(notificationTitle: String) {
+        val matcher = allOf(withText(notificationTitle), withAncestor(R.id.listView))
         onView(matcher).check(doesNotExist())
     }
 
