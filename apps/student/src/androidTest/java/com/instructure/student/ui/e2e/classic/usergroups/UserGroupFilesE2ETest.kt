@@ -27,6 +27,7 @@ import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
 import com.instructure.dataseeding.api.GroupsApi
 import com.instructure.espresso.handleWorkManagerTask
+import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.extensions.seedData
 import com.instructure.student.ui.utils.extensions.tokenLogin
@@ -105,10 +106,14 @@ class UserGroupFilesE2ETest : StudentTest() {
             Intents.release()
         }
         fileChooserPage.clickUpload()
-        handleWorkManagerTask("FileUploadWorker", 20000)
 
-        Log.d(ASSERTION_TAG, "Assert that the file upload was successful.")
-        fileListPage.assertItemDisplayed("samplepdf.pdf")
+        retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = {
+            handleWorkManagerTask("FileUploadWorker", 20000)
+        })
+        {
+            Log.d(ASSERTION_TAG, "Assert that the file upload was successful.")
+            fileListPage.assertItemDisplayed("samplepdf.pdf")
+        }
 
         Log.d(STEP_TAG, "Navigate back to File List Page.")
         Espresso.pressBack()
