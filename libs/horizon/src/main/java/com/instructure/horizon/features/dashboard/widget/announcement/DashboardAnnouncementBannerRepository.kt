@@ -21,12 +21,10 @@ import com.instructure.canvasapi2.apis.AnnouncementAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.DiscussionTopicHeader.ReadState
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.horizon.features.inbox.HorizonInboxItemType
 import com.instructure.horizon.features.inbox.navigation.HorizonInboxRoute
-import com.instructure.horizon.features.notification.NotificationRoute
 import java.util.Calendar
 import java.util.Date
 import javax.inject.Inject
@@ -55,7 +53,7 @@ class DashboardAnnouncementBannerRepository @Inject constructor(
         return announcementApi.getFirstPageAnnouncements(
             courseCode = courses.map { it.contextId }.toTypedArray(),
             startDate = Calendar.getInstance()
-                .apply { set(Calendar.YEAR, get(Calendar.YEAR) - 1) }.time.toApiString(),
+                .apply { set(Calendar.WEEK_OF_YEAR, get(Calendar.WEEK_OF_YEAR) - 2) }.time.toApiString(),
             endDate = Date().toApiString(),
             params = params
         )
@@ -81,7 +79,8 @@ class DashboardAnnouncementBannerRepository @Inject constructor(
 
     private suspend fun getUnreadGlobalAnnouncements(forceRefresh: Boolean): List<AnnouncementBannerItem> {
         val params = RestParams(isForceReadFromNetwork = forceRefresh, usePerPageQueryParam = true)
-
+        val fromDate = Calendar.getInstance()
+            .apply { set(Calendar.WEEK_OF_YEAR, get(Calendar.WEEK_OF_YEAR) - 2) }.time
         return accountNotificationApi.getAccountNotifications(
             params,
             includePast = true,
@@ -90,6 +89,7 @@ class DashboardAnnouncementBannerRepository @Inject constructor(
             .depaginate { accountNotificationApi.getNextPageNotifications(it, params) }
             .dataOrThrow
             .filter { !it.closed }
+            .filter { it.startDate?.after(fromDate) ?: true }
             .map { notification ->
                 AnnouncementBannerItem(
                     title = notification.subject,
