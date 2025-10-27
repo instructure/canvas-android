@@ -26,7 +26,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.horizon.features.notification.NotificationItem
 import com.instructure.horizon.features.notification.NotificationItemCategory
-import com.instructure.horizon.features.notification.NotificationRoute
 import com.instructure.horizon.features.notification.NotificationScreen
 import com.instructure.horizon.features.notification.NotificationUiState
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
@@ -74,7 +73,7 @@ class HorizonNotificationUiTest {
                     title = "New Announcement",
                     date = Date(),
                     isRead = false,
-                    route = NotificationRoute.DeepLink("")
+                    deepLink = ""
                 )
             )
         )
@@ -109,7 +108,7 @@ class HorizonNotificationUiTest {
                     title = "New Announcement",
                     date = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, -1) }.time,
                     isRead = false,
-                    route = NotificationRoute.DeepLink("")
+                    deepLink = ""
                 )
             )
         )
@@ -145,7 +144,7 @@ class HorizonNotificationUiTest {
                     title = "New Announcement",
                     date = date,
                     isRead = false,
-                    route = NotificationRoute.DeepLink("")
+                    deepLink = ""
                 )
             )
         )
@@ -182,7 +181,7 @@ class HorizonNotificationUiTest {
                     title = "New Announcement",
                     date = date,
                     isRead = false,
-                    route = NotificationRoute.DeepLink("")
+                    deepLink = ""
                 )
             )
         )
