@@ -17,12 +17,12 @@
 package com.instructure.horizon.features.dashboard.widget.announcement
 
 import com.instructure.horizon.features.dashboard.DashboardItemState
-import com.instructure.horizon.features.dashboard.widget.announcement.card.DashboardAnnouncementBannerCardState
+import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardState
 import java.util.Date
 
 data class DashboardAnnouncementBannerUiState(
     val state: DashboardItemState = DashboardItemState.LOADING,
-    val cardState: DashboardAnnouncementBannerCardState = DashboardAnnouncementBannerCardState(),
+    val cardState: DashboardPaginatedWidgetCardState = DashboardPaginatedWidgetCardState(),
     val onRefresh: (() -> Unit) -> Unit,
 )
 

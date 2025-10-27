@@ -22,12 +22,22 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardItemState
-import com.instructure.horizon.features.dashboard.widget.announcement.card.DashboardAnnouncementBannerCardContent
+import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCard
+import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardButtonRoute
+import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardButtonState
+import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardChipState
+import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardItemState
 import com.instructure.horizon.features.dashboard.widget.announcement.card.DashboardAnnouncementBannerCardError
+import com.instructure.horizon.horizonui.molecules.ButtonColor
+import com.instructure.horizon.horizonui.molecules.ButtonHeight
+import com.instructure.horizon.horizonui.molecules.ButtonWidth
+import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import java.util.Date
@@ -35,6 +45,7 @@ import java.util.Date
 @Composable
 fun DashboardAnnouncementBannerWidget(
     mainNavController: NavHostController,
+    homeNavController: NavHostController,
     shouldRefresh: Boolean,
     refreshState: MutableStateFlow<List<Boolean>>
 ) {
@@ -50,8 +61,8 @@ fun DashboardAnnouncementBannerWidget(
         }
     }
 
-    if (state.state == DashboardItemState.LOADING || state.cardState.announcements.isNotEmpty()) {
-        DashboardAnnouncementBannerSection(state, mainNavController)
+    if (state.state == DashboardItemState.LOADING || state.cardState.items.isNotEmpty()) {
+        DashboardAnnouncementBannerSection(state, mainNavController, homeNavController)
     }
 }
 
@@ -59,23 +70,34 @@ fun DashboardAnnouncementBannerWidget(
 fun DashboardAnnouncementBannerSection(
     state: DashboardAnnouncementBannerUiState,
     mainNavController: NavHostController,
+    homeNavController: NavHostController,
 ) {
     when (state.state) {
         DashboardItemState.LOADING -> {
-            DashboardAnnouncementBannerCardContent(
+            DashboardPaginatedWidgetCard(
                 state.cardState.copy(
-                    announcements = listOf(
-                        AnnouncementBannerItem(
+                    items = listOf(
+                        DashboardPaginatedWidgetCardItemState(
+                            chipState = DashboardPaginatedWidgetCardChipState(
+                                label = stringResource(R.string.notificationsAnnouncementCategoryLabel),
+                                color = StatusChipColor.Sky
+                            ),
                             title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Announcement title shown here.",
                             source = "Institution or Course Name Here",
                             date = Date(),
-                            type = AnnouncementType.COURSE,
-                            route = ""
+                            buttonState = DashboardPaginatedWidgetCardButtonState(
+                                label = stringResource(R.string.dashboardAnnouncementBannerGoToAnnouncement),
+                                height = ButtonHeight.SMALL,
+                                width = ButtonWidth.FILL,
+                                color = ButtonColor.WhiteWithOutline,
+                                route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
+                            )
                         )
-                    )
+                    ),
+                    isLoading = true
                 ),
-                true,
                 mainNavController,
+                homeNavController,
                 Modifier.padding(horizontal = 16.dp)
             )
         }
@@ -86,10 +108,10 @@ fun DashboardAnnouncementBannerSection(
             )
         }
         DashboardItemState.SUCCESS -> {
-            DashboardAnnouncementBannerCardContent(
+            DashboardPaginatedWidgetCard(
                 state.cardState,
-                false,
                 mainNavController,
+                homeNavController,
                 Modifier.padding(horizontal = 16.dp)
             )
         }
