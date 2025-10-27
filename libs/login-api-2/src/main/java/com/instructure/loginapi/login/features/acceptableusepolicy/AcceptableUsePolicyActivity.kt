@@ -24,6 +24,7 @@ import com.instructure.loginapi.login.databinding.ActivityAcceptableUsePolicyBin
 import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.utils.ToolbarColorizeHelper
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.setMenu
 import com.instructure.pandautils.utils.setupAsCloseButton
 import com.instructure.pandautils.utils.withRequireNetwork
@@ -47,6 +48,7 @@ class AcceptableUsePolicyActivity : BaseCanvasActivity() {
         binding.lifecycleOwner = this
         setContentView(binding.root)
 
+        binding.toolbar.applyTopSystemBarInsets()
         binding.toolbar.setTitle(R.string.acceptableUsePolicyTitle)
         binding.toolbar.setupAsCloseButton {
             router.logout()

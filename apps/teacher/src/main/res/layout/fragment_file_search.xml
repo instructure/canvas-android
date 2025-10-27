@@ -23,7 +23,8 @@
     <LinearLayout
         android:id="@+id/searchHeader"
         android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
+        android:layout_height="wrap_content"
+        android:minHeight="?android:attr/actionBarSize"
         android:orientation="horizontal">
 
         <ImageButton
@@ -91,7 +92,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/fileSearchRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:clipToPadding="false"/>
 
         <com.instructure.pandautils.views.EmptyView
             android:id="@+id/emptyPandaView"

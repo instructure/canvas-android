@@ -18,8 +18,12 @@
 package com.instructure.parentapp.features.courses.details
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.FloatingActionButton
@@ -48,6 +52,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.WindowInsets
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
@@ -198,6 +203,7 @@ private fun CourseDetailsScreenContent(
 
     Scaffold(
         backgroundColor = colorResource(id = R.color.backgroundLightest),
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         snackbarHost = {
             SnackbarHost(
                 hostState = snackbarHostState,
@@ -260,7 +266,8 @@ private fun CourseDetailsScreenContent(
                 backgroundColor = Color(uiState.studentColor),
                 onClick = {
                     actionHandler(CourseDetailsAction.SendAMessage)
-                }
+                },
+                modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Bottom))
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_chat),

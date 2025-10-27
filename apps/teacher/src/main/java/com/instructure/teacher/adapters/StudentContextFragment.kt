@@ -50,6 +50,8 @@ import com.instructure.pandautils.utils.BooleanArg
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.ProfileUtils
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.asStateList
 import com.instructure.pandautils.utils.children
 import com.instructure.pandautils.utils.color
@@ -60,6 +62,11 @@ import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.toast
+import com.instructure.pandautils.utils.toPx
+import android.widget.RelativeLayout
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateLayoutParams
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentStudentContextBinding
 import com.instructure.teacher.factory.StudentContextPresenterFactory
@@ -150,6 +157,9 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
         setupScrollListener()
 
         // Toolbar setup
+        toolbar.applyTopSystemBarInsets()
+        contentContainer.applyBottomSystemBarInsets()
+
         if (activity is MasterDetailInteractions) {
             toolbar.setupBackButtonWithExpandCollapseAndBack(this@StudentContextFragment) {
                 toolbar.updateToolbarExpandCollapseIcon(this@StudentContextFragment)
@@ -166,6 +176,19 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
         // Message FAB
         messageButton.setVisible()
         ViewStyler.themeFAB(messageButton)
+
+        ViewCompat.setOnApplyWindowInsetsListener(messageButton) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val baseMargin = 16.toPx
+            view.updateLayoutParams<RelativeLayout.LayoutParams> {
+                bottomMargin = baseMargin + systemBars.bottom
+            }
+            insets
+        }
+        if (messageButton.isAttachedToWindow) {
+            ViewCompat.requestApplyInsets(messageButton)
+        }
+
         messageButton.setOnClickListener {
             val recipient = Recipient(
                 stringId = student.id,

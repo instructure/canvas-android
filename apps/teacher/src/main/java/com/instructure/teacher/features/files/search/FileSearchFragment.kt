@@ -19,6 +19,9 @@ package com.instructure.teacher.features.files.search
 import android.view.View
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.graphics.ColorUtils
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.CanvasContext
@@ -34,6 +37,7 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.NullableParcelableArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getDrawableCompat
 import com.instructure.pandautils.utils.isUser
@@ -107,6 +111,19 @@ class FileSearchFragment : BaseSyncFragment<
     override fun onReadySetGo(presenter: FileSearchPresenter) {
         if (recyclerView.adapter == null) binding.fileSearchRecyclerView.adapter = createAdapter()
         setupViews()
+        setupWindowInsets()
+    }
+
+    private fun setupWindowInsets() = with(binding) {
+        searchHeader.applyTopSystemBarInsets()
+        ViewCompat.setOnApplyWindowInsetsListener(fileSearchRecyclerView) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.updatePadding(bottom = systemBars.bottom)
+            insets
+        }
+        if (fileSearchRecyclerView.isAttachedToWindow) {
+            ViewCompat.requestApplyInsets(fileSearchRecyclerView)
+        }
     }
 
     override fun createAdapter(): FileSearchAdapter = searchAdapter

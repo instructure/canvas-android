@@ -23,6 +23,9 @@ import android.view.View
 import android.view.ViewGroup
 import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import com.instructure.pandautils.analytics.SCREEN_VIEW_VIEW_PDF
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
@@ -89,6 +92,7 @@ class ViewPdfFragment : PresenterFragment<ViewPdfFragmentPresenter, ViewPdfFragm
     override fun onActivityCreated(savedInstanceState: Bundle?) = with(binding) {
         super.onActivityCreated(savedInstanceState)
         toolbar.title = url
+        setupWindowInsets()
 
         editableFile?.let {
             toolbar.setupMenu(R.menu.menu_file_details) { menu ->
@@ -149,6 +153,12 @@ class ViewPdfFragment : PresenterFragment<ViewPdfFragmentPresenter, ViewPdfFragm
     override fun onLoadingError() {
         toast(R.string.errorLoadingFiles)
         activity?.onBackPressed()
+    }
+
+    private fun setupWindowInsets() = with(binding) {
+        if (isInModulesPager || (isTablet && toolbarColor != 0)) {
+            toolbar.applyTopSystemBarInsets()
+        }
     }
 
     companion object {

@@ -32,6 +32,8 @@ import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getDrawableCompat
 import com.instructure.pandautils.utils.onClick
@@ -88,6 +90,9 @@ class SyllabusView(
     }
 
     init {
+        binding.toolbar.applyTopSystemBarInsets()
+        binding.swipeRefreshLayout.applyBottomSystemBarInsets()
+
         binding.toolbar.setupMenu(R.menu.menu_edit_generic) { consumer?.accept(SyllabusEvent.EditClicked) }
         setEditVisibility(false)
         ViewStyler.themeToolbarColored(activity, binding.toolbar, canvasContext)

@@ -17,11 +17,15 @@ package com.instructure.teacher.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.widget.TextView
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
@@ -49,6 +53,7 @@ import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.NullableParcelableArg
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.loadHtmlWithIframes
@@ -136,6 +141,17 @@ class QuizDetailsFragment : BasePresenterFragment<
     }
 
     override fun onPresenterPrepared(presenter: QuizDetailsPresenter) = Unit
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.toolbar.applyTopSystemBarInsets()
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.swipeRefreshLayout) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.updatePadding(bottom = systemBars.bottom)
+            insets
+        }
+    }
 
     override fun onRefreshFinished() = Unit
 

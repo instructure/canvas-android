@@ -19,6 +19,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
@@ -159,6 +162,23 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupCommentInput()
+        setupWindowInsets()
+    }
+
+    private fun setupWindowInsets() = with(binding) {
+        ViewCompat.setOnApplyWindowInsetsListener(speedGraderCommentsRecyclerView) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.updatePadding(bottom = systemBars.bottom)
+            insets
+        }
+        ViewCompat.setOnApplyWindowInsetsListener(commentInputContainer.commentInputRoot) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.updatePadding(bottom = systemBars.bottom)
+            insets
+        }
+        if (speedGraderCommentsRecyclerView.isAttachedToWindow) {
+            ViewCompat.requestApplyInsets(speedGraderCommentsRecyclerView)
+        }
     }
 
     override fun onRefreshStarted() {}

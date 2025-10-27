@@ -69,6 +69,8 @@ import com.instructure.teacher.presenters.ProfileEditFragmentPresenter
 import com.instructure.teacher.utils.setupCloseButton
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.viewinterface.ProfileEditFragmentView
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
 import retrofit2.Response
 import java.io.File
 
@@ -129,15 +131,21 @@ class ProfileEditFragment : BasePresenterFragment<
     override fun onResume() {
         super.onResume()
         setupToolbar()
+        setupWindowInsets()
     }
 
     fun setupToolbar() = with(binding) {
+        toolbar.applyTopSystemBarInsets()
         toolbar.setupCloseButton(this@ProfileEditFragment)
         toolbar.title = getString(R.string.editProfile)
         toolbar.setupMenu(R.menu.menu_save_generic) { saveProfile() }
         ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
         saveButton?.setTextColor(ThemePrefs.textButtonColor)
+    }
+
+    private fun setupWindowInsets() = with(binding) {
+        usersName.applyBottomSystemBarInsets()
     }
 
     override fun readyToLoadUI(user: User?) = with(binding) {

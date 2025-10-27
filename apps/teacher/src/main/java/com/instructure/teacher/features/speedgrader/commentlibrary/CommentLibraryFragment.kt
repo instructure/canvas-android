@@ -20,6 +20,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.activityViewModels
 import com.instructure.pandautils.analytics.SCREEN_VIEW_COMMENT_LIBRARY
@@ -27,6 +30,7 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.teacher.databinding.FragmentCommentLibraryBinding
 import com.instructure.teacher.utils.setupCloseButton
 import dagger.hilt.android.AndroidEntryPoint
@@ -56,7 +60,25 @@ class CommentLibraryFragment : BaseCanvasFragment() {
             }
         }
 
+        setupWindowInsets()
+
         return binding.root
+    }
+
+    private fun setupWindowInsets() = with(binding) {
+        commentLibraryToolbar.applyTopSystemBarInsets()
+
+        ViewCompat.setOnApplyWindowInsetsListener(commentLibraryRecyclerView) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.updatePadding(bottom = systemBars.bottom)
+            insets
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(commentInputContainer.root) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.updatePadding(bottom = systemBars.bottom)
+            insets
+        }
     }
 
     override fun onResume() {

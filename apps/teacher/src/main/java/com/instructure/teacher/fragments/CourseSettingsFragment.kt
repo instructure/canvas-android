@@ -31,6 +31,7 @@ import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.setCourseImage
@@ -99,6 +100,7 @@ class CourseSettingsFragment : BasePresenterFragment<
     }
 
     private fun setupToolbar() = with(binding) {
+        toolbar.applyTopSystemBarInsets()
         toolbar.setupBackButton(this@CourseSettingsFragment)
         toolbar.title = getString(R.string.course_settings)
         ViewStyler.themeToolbarLight(requireActivity(), toolbar)

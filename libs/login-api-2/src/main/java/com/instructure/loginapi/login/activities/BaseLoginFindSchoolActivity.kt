@@ -53,6 +53,8 @@ import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.ColorUtils
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.setupAsBackButton
 import retrofit2.Response
 import java.util.Locale
@@ -118,6 +120,7 @@ abstract class BaseLoginFindSchoolActivity : BaseCanvasActivity() {
         mWhatsYourSchoolName = findViewById(R.id.whatsYourSchoolName)
         mLoginFlowLogout = findViewById(R.id.loginFlowLogout)
         toolbar.apply {
+            applyTopSystemBarInsets()
             navigationIcon?.isAutoMirrored = true
             setupAsBackButton { finish() }
             inflateMenu(R.menu.menu_next)
@@ -197,6 +200,7 @@ abstract class BaseLoginFindSchoolActivity : BaseCanvasActivity() {
         recyclerView.addItemDecoration(DividerItemDecoration(this@BaseLoginFindSchoolActivity, RecyclerView.VERTICAL))
         recyclerView.layoutManager = LinearLayoutManager(this@BaseLoginFindSchoolActivity, RecyclerView.VERTICAL, false)
         recyclerView.adapter = mDomainAdapter
+        recyclerView.applyBottomSystemBarInsets()
     }
 
     /**

@@ -20,12 +20,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.utils.FeatureFlagPref
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.teacher.R
@@ -45,6 +49,14 @@ class FeatureFlagsFragment : BaseCanvasFragment() {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
         binding.recyclerView.adapter = FeatureFlagAdapter()
+
+        binding.toolbar.applyTopSystemBarInsets()
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.recyclerView) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.updatePadding(bottom = systemBars.bottom)
+            insets
+        }
     }
 
     private fun setupToolbar() {

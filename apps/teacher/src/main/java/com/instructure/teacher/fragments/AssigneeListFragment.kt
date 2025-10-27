@@ -22,6 +22,9 @@ import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.widget.TextView
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.instructure.canvasapi2.models.CanvasComparable
@@ -72,7 +75,15 @@ class AssigneeListFragment : BaseExpandableSyncFragment<
     override fun withPagination() = false
     override fun perPageCount() = ApiPrefs.perPageCount
     override fun getPresenterFactory() = AssigneeListPresenterFactory(mDateGroups, mTargetIdx, sections, groups, students)
-    override fun onCreateView(view: View) {}
+    override fun onCreateView(view: View) {
+        binding.toolbar.applyTopSystemBarInsets()
+
+        ViewCompat.setOnApplyWindowInsetsListener(assigneeRecyclerView) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.updatePadding(bottom = systemBars.bottom)
+            insets
+        }
+    }
 
     private fun performSave() {
         presenter.save()

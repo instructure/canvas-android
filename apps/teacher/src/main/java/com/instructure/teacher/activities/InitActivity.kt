@@ -33,7 +33,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuItemCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updatePadding
 import androidx.drawerlayout.widget.DrawerLayout.SimpleDrawerListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -87,12 +91,14 @@ import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.utils.CanvasFont
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.EdgeToEdgeHelper
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.ProfileUtils
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.WebViewAuthenticator
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
 import com.instructure.pandautils.utils.applyTheme
 import com.instructure.pandautils.utils.isAccessibilityEnabled
 import com.instructure.pandautils.utils.items
@@ -211,6 +217,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        EdgeToEdgeHelper.enableEdgeToEdge(this)
 
         val nightModeFlags: Int = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         ColorKeeper.darkTheme = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
@@ -233,6 +240,8 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
 
         navigationDrawerBinding = NavigationDrawerBinding.bind(binding.root)
         setContentView(binding.root)
+
+        setupWindowInsets()
 
         selectedTab = savedInstanceState?.getInt(SELECTED_TAB) ?: 0
 
@@ -272,6 +281,10 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
     override fun onResume() {
         super.onResume()
         webViewAuthenticator.authenticateWebViews(lifecycleScope, this)
+    }
+
+    private fun setupWindowInsets() = with(binding) {
+        bottomBar.applyBottomSystemBarInsets()
     }
 
     private fun requestNotificationsPermission() {

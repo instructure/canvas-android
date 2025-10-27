@@ -16,6 +16,9 @@
 package com.instructure.teacher.fragments
 
 import android.view.View
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Submission
@@ -64,6 +67,18 @@ class SpeedGraderFilesFragment : BaseSyncFragment<
         RecyclerViewUtils.buildRecyclerView(rootView, requireContext(), adapter, presenter, R.id.swipeRefreshLayout,
                 R.id.speedGraderFilesRecyclerView, R.id.speedGraderFilesEmptyView, getString(R.string.no_items_to_display_short))
         binding.swipeRefreshLayout.isEnabled = false
+        setupWindowInsets()
+    }
+
+    private fun setupWindowInsets() = with(binding) {
+        ViewCompat.setOnApplyWindowInsetsListener(speedGraderFilesRecyclerView) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.updatePadding(bottom = systemBars.bottom)
+            insets
+        }
+        if (speedGraderFilesRecyclerView.isAttachedToWindow) {
+            ViewCompat.requestApplyInsets(speedGraderFilesRecyclerView)
+        }
     }
 
     override fun onReadySetGo(presenter: SpeedGraderFilesPresenter) {

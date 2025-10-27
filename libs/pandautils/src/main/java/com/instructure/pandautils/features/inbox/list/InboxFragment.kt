@@ -64,6 +64,10 @@ import com.instructure.pandautils.features.inbox.utils.InboxSharedAction
 import com.instructure.pandautils.features.inbox.utils.InboxSharedEvents
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.mvvm.ViewState
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateLayoutParams
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.addListener
@@ -344,6 +348,20 @@ class InboxFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInterac
         ViewStyler.themeToolbarColored(requireActivity(), binding.editToolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         binding.toolbarWrapper.setBackgroundColor(ThemePrefs.primaryColor)
         ViewStyler.themeFAB(binding.addMessage)
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.addMessage) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val baseMargin = 16.toPx
+            view.updateLayoutParams<CoordinatorLayout.LayoutParams> {
+                bottomMargin = baseMargin + systemBars.bottom
+                rightMargin = baseMargin + systemBars.right
+            }
+            insets
+        }
+        if (binding.addMessage.isAttachedToWindow) {
+            ViewCompat.requestApplyInsets(binding.addMessage)
+        }
+
         binding.scopeFilterText.setTextColor(ThemePrefs.textButtonColor)
         binding.scopeFilterIcon.setColorFilter(ThemePrefs.textButtonColor)
         inboxRouter.attachNavigationIcon(binding.toolbar)

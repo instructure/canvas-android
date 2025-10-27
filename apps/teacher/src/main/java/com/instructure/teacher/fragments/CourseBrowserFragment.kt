@@ -46,6 +46,8 @@ import com.instructure.pandautils.utils.Const.MARKET_URI_PREFIX
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.a11yManager
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.isSwitchAccessEnabled
 import com.instructure.pandautils.utils.isTablet
@@ -197,12 +199,15 @@ class CourseBrowserFragment : BaseSyncFragment<
             overlayToolbar
         }
 
+        appBarLayout.setBackgroundColor(presenter.canvasContext.color)
+        appBarLayout.applyTopSystemBarInsets()
         toolbar.setupBackButton(this@CourseBrowserFragment)
         toolbar.setupMenu(R.menu.menu_course_browser, menuItemCallback)
         ViewStyler.colorToolbarIconsAndText(requireActivity(), toolbar, requireContext().getColor(R.color.textLightest))
         ViewStyler.setStatusBarDark(requireActivity(), presenter.canvasContext.color)
 
         collapsingToolbarLayout.setContentScrimColor(presenter.canvasContext.color)
+        swipeRefreshLayout.applyBottomSystemBarInsets()
 
         // Hide image placeholder if color overlay is disabled and there is no valid image
         val hasImage = (presenter.canvasContext as? Course)?.imageUrl?.isValid() == true
