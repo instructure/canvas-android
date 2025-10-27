@@ -18,6 +18,7 @@
 package com.instructure.pandautils.features.grades.gradepreferences
 
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -68,6 +69,7 @@ fun GradePreferencesScreen(
 
     Scaffold(
         backgroundColor = colorResource(id = R.color.backgroundLightest),
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
             CanvasThemedAppBar(
                 title = stringResource(id = R.string.gradePreferencesScreenTitle),

@@ -36,6 +36,7 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.isCourse
 import com.instructure.pandautils.utils.makeBundle
@@ -87,6 +88,7 @@ class PeopleListFragment : ParentFragment(), Bookmarkable {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        view.applyHorizontalSystemBarInsets()
         recyclerAdapter = PeopleListRecyclerAdapter(requireContext(), lifecycleScope, repository, canvasContext, adapterToFragmentCallback)
         configureRecyclerView(
             view,

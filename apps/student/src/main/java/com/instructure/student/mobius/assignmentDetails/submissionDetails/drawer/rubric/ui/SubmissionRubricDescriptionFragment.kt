@@ -30,6 +30,7 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
@@ -58,6 +59,7 @@ class SubmissionRubricDescriptionFragment : BaseCanvasDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        view.applyHorizontalSystemBarInsets()
         with (binding) {
             toolbar.title = title
             toolbar.setupAsBackButton(this@SubmissionRubricDescriptionFragment)

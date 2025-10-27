@@ -79,6 +79,7 @@ import com.instructure.pandautils.utils.ProfileUtils
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.getModuleItemId
 import com.instructure.pandautils.utils.isAccessibilityEnabled
@@ -167,6 +168,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        view?.applyHorizontalSystemBarInsets()
         populateDiscussionData()
         binding.swipeRefreshLayout.setOnRefreshListener {
             authenticatedSessionURL = null

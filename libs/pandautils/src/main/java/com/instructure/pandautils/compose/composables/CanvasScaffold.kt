@@ -37,8 +37,12 @@ import androidx.compose.ui.graphics.Shape
  *
  * This scaffold is configured for edge-to-edge display:
  * - TopBar should handle its own status bar insets (CanvasAppBar and CanvasThemedAppBar do this automatically)
- * - Content area respects navigation bar insets via contentWindowInsets
+ * - Content area respects window insets via contentWindowInsets parameter
  * - Use this as a drop-in replacement for Material Scaffold in Canvas screens
+ *
+ * @param contentWindowInsets Window insets to apply to content area. Defaults to navigation bars only.
+ *   For screens with text input, use: WindowInsets.ime.union(WindowInsets.navigationBars)
+ *   For read-only screens, use: WindowInsets(0, 0, 0, 0) or default
  */
 @Composable
 fun CanvasScaffold(
@@ -58,6 +62,7 @@ fun CanvasScaffold(
     drawerScrimColor: Color = androidx.compose.material.DrawerDefaults.scrimColor,
     backgroundColor: Color = MaterialTheme.colors.background,
     contentColor: Color = contentColorFor(backgroundColor),
+    contentWindowInsets: WindowInsets = WindowInsets.navigationBars,
     content: @Composable (PaddingValues) -> Unit
 ) {
     Scaffold(
@@ -77,7 +82,7 @@ fun CanvasScaffold(
         drawerScrimColor = drawerScrimColor,
         backgroundColor = backgroundColor,
         contentColor = contentColor,
-        contentWindowInsets = WindowInsets.navigationBars,
+        contentWindowInsets = contentWindowInsets,
         content = content
     )
 }

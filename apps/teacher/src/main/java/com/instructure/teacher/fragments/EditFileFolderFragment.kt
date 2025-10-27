@@ -58,6 +58,7 @@ import com.instructure.pandautils.utils.ParcelableArrayListArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
+import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.pandautils.utils.descendants
 import com.instructure.pandautils.utils.postSticky
 import com.instructure.pandautils.utils.setGone
@@ -145,6 +146,7 @@ class EditFileFolderFragment : BasePresenterFragment<
     }
 
     override fun onReadySetGo(presenter: EditFileFolderPresenter) {
+        binding.root.applyHorizontalSystemBarInsets()
         showUsageRights(presenter.usageRightsEnabled)
         setupToolbar()
         setupViews()

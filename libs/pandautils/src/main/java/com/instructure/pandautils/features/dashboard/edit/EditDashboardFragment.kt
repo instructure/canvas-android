@@ -34,8 +34,9 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_EDIT_DASHBOARD
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.databinding.FragmentEditDashboardBinding
 import com.instructure.pandautils.utils.*
-import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -68,6 +69,7 @@ class EditDashboardFragment : BaseCanvasFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        view.applyHorizontalSystemBarInsets()
         setupToolbar()
         binding.toolbar.applyTopSystemBarInsets()
         binding.swipeRefreshLayout.applyBottomSystemBarInsets()

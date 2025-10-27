@@ -61,6 +61,7 @@ import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ParcelableArrayListArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.onTextChanged
@@ -161,23 +162,29 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
     )
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        view.applyHorizontalSystemBarInsets()
         setupCommentInput()
         setupWindowInsets()
     }
 
     private fun setupWindowInsets() = with(binding) {
         ViewCompat.setOnApplyWindowInsetsListener(speedGraderCommentsRecyclerView) { view, insets ->
+            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            view.updatePadding(bottom = systemBars.bottom)
+            view.updatePadding(bottom = maxOf(ime.bottom, systemBars.bottom))
             insets
         }
         ViewCompat.setOnApplyWindowInsetsListener(commentInputContainer.commentInputRoot) { view, insets ->
+            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            view.updatePadding(bottom = systemBars.bottom)
+            view.updatePadding(bottom = maxOf(ime.bottom, systemBars.bottom))
             insets
         }
         if (speedGraderCommentsRecyclerView.isAttachedToWindow) {
             ViewCompat.requestApplyInsets(speedGraderCommentsRecyclerView)
+        }
+        if (commentInputContainer.commentInputRoot.isAttachedToWindow) {
+            ViewCompat.requestApplyInsets(commentInputContainer.commentInputRoot)
         }
     }
 

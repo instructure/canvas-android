@@ -21,6 +21,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.collectAsState
@@ -63,6 +64,7 @@ class CourseSelectorActivity : BaseCanvasActivity() {
         setContent {
             val uiState by viewModel.uiState.collectAsState()
             Scaffold(
+                contentWindowInsets = WindowInsets(0, 0, 0, 0),
                 topBar = {
                     CanvasThemedAppBar(
                         title = stringResource(R.string.selectCourse),

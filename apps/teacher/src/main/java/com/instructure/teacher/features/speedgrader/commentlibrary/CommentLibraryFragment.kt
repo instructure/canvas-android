@@ -31,6 +31,7 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
+import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.teacher.databinding.FragmentCommentLibraryBinding
 import com.instructure.teacher.utils.setupCloseButton
 import dagger.hilt.android.AndroidEntryPoint
@@ -60,6 +61,7 @@ class CommentLibraryFragment : BaseCanvasFragment() {
             }
         }
 
+        binding.root.applyHorizontalSystemBarInsets()
         setupWindowInsets()
 
         return binding.root
@@ -69,14 +71,16 @@ class CommentLibraryFragment : BaseCanvasFragment() {
         commentLibraryToolbar.applyTopSystemBarInsets()
 
         ViewCompat.setOnApplyWindowInsetsListener(commentLibraryRecyclerView) { view, insets ->
+            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            view.updatePadding(bottom = systemBars.bottom)
+            view.updatePadding(bottom = maxOf(ime.bottom, systemBars.bottom))
             insets
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(commentInputContainer.root) { view, insets ->
+            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            view.updatePadding(bottom = systemBars.bottom)
+            view.updatePadding(bottom = maxOf(ime.bottom, systemBars.bottom))
             insets
         }
     }

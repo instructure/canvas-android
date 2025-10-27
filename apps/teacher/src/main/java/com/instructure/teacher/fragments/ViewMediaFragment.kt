@@ -56,6 +56,7 @@ import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.Utils
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
+import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
@@ -90,6 +91,7 @@ class ViewMediaFragment : BaseCanvasFragment(), ShareableFile {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        binding.root.applyHorizontalSystemBarInsets()
         binding.speedGraderMediaPlayerView.findViewById<Toolbar>(R.id.toolbar).setGone()
         setupWindowInsets()
     }

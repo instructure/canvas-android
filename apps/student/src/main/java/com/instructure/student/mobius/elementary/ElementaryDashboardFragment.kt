@@ -34,6 +34,7 @@ import com.instructure.pandautils.features.elementary.schedule.pager.SchedulePag
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.makeBundle
@@ -82,6 +83,7 @@ class ElementaryDashboardFragment : ParentFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         super.onViewCreated(view, savedInstanceState)
+        view.applyHorizontalSystemBarInsets()
 
         dashboardPager.adapter = ElementaryDashboardPagerAdapter(fragments, childFragmentManager)
         dashboardPager.applyBottomSystemBarInsets()

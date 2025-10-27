@@ -133,7 +133,7 @@ internal fun ManageStudentsScreen(
                 FloatingActionButton(
                     modifier = Modifier
                         .testTag("addStudentButton")
-                        .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Bottom)),
+                        .windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal)),
                     backgroundColor = Color(ThemePrefs.buttonColor),
                     onClick = {
                         actionHandler(ManageStudentsAction.AddStudent)

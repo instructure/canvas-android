@@ -51,6 +51,7 @@ import com.instructure.pandautils.utils.PermissionUtils
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.getModuleItemId
 import com.instructure.pandautils.utils.makeBundle
@@ -118,6 +119,7 @@ class FileDetailsFragment : ParentFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        view.applyHorizontalSystemBarInsets()
         binding.downloadButton.setVisible(repository.isOnline())
         binding.toolbar.applyTopSystemBarInsets()
         binding.buttonContainer.applyBottomSystemBarInsets()

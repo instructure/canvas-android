@@ -57,6 +57,7 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.applyTheme
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
+import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.pandautils.utils.handleLTIPlaceHolders
 import com.instructure.pandautils.utils.hideKeyboard
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
@@ -102,6 +103,7 @@ class CreateOrEditPageDetailsFragment : BasePresenterFragment<
     override fun onRefreshFinished() {}
     override fun onRefreshStarted() {}
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        view.applyHorizontalSystemBarInsets()
         binding.toolbar.applyTopSystemBarInsets()
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.scrollView) { v, insets ->

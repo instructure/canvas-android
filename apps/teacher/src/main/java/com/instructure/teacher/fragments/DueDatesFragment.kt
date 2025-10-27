@@ -35,6 +35,7 @@ import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
+import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.pandautils.utils.bind
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.isTablet
@@ -139,6 +140,7 @@ class DueDatesFragment : BaseSyncFragment<DueDateGroup, DueDatesPresenter, DueDa
     }
 
     override fun onReadySetGo(presenter: DueDatesPresenter) {
+        binding.root.applyHorizontalSystemBarInsets()
         dueDateRecyclerView.adapter = adapter
         presenter.loadData(false)
     }

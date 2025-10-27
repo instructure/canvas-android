@@ -117,6 +117,10 @@ fun View.applyHorizontalSystemBarInsets() {
         view.updatePadding(left = systemBars.left, right = systemBars.right)
         insets
     }
+    // Request insets to be dispatched immediately if view is attached
+    if (isAttachedToWindow) {
+        ViewCompat.requestApplyInsets(this)
+    }
 }
 
 fun View.applySystemBarInsets(

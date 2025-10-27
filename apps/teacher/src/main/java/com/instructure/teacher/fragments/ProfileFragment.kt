@@ -42,6 +42,7 @@ import com.instructure.teacher.utils.setupBackButtonAsBackPressedOnly
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 
 @PageView(url = "profile")
 @ScreenView(SCREEN_VIEW_PROFILE)
@@ -62,6 +63,7 @@ class ProfileFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
+        binding.root.applyHorizontalSystemBarInsets()
         setupToolbar()
         setupViewableData()
         setupWindowInsets()

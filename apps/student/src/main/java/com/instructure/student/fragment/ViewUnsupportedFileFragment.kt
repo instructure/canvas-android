@@ -29,6 +29,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentUnsupportedFileTypeBinding
 import org.greenrobot.eventbus.EventBus
@@ -52,6 +53,7 @@ class ViewUnsupportedFileFragment : BaseCanvasFragment() {
 
     override fun onResume() {
         super.onResume()
+        view?.applyHorizontalSystemBarInsets()
         // If returning from editing this file, check if it was deleted so we can immediately go back
         val fileFolderDeletedEvent = EventBus.getDefault().getStickyEvent(FileFolderDeletedEvent::class.java)
         if (fileFolderDeletedEvent != null)

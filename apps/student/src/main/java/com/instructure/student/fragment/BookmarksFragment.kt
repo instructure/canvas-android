@@ -42,6 +42,7 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.hideKeyboard
 import com.instructure.pandautils.utils.isTablet
@@ -80,6 +81,7 @@ class BookmarksFragment : ParentFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        view.applyHorizontalSystemBarInsets()
         pandaRecyclerBinding = PandaRecyclerRefreshLayoutBinding.bind(binding.root)
         configureRecyclerView()
         applyTheme()

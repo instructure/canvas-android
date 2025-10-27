@@ -17,6 +17,7 @@
 package com.instructure.pandautils.features.assignments.list.filter
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -59,6 +60,7 @@ fun AssignmentListFilterScreen(
     var selectedFilters by remember { mutableStateOf(selectedOptions) }
     Scaffold(
         backgroundColor = colorResource(id = com.instructure.pandares.R.color.backgroundLightest),
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
             CanvasThemedAppBar(
                 title = stringResource(R.string.gradePreferences),

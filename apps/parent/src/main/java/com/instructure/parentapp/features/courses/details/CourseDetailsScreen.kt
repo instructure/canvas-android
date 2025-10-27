@@ -267,7 +267,7 @@ private fun CourseDetailsScreenContent(
                 onClick = {
                     actionHandler(CourseDetailsAction.SendAMessage)
                 },
-                modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Bottom))
+                modifier = Modifier.windowInsetsPadding(WindowInsets.systemBars.only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal))
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_chat),
