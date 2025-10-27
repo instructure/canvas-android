@@ -259,6 +259,7 @@ class DiscussionsE2ETest: StudentComposeTest() {
         syllabusPage.assertItemDisplayed("$discussionWithCheckpointsWithDueDateTitle Reply to Topic")
         syllabusPage.assertItemDisplayed("$discussionWithCheckpointsWithDueDateTitle Required Replies (1)")
 
+        Log.d(STEP_TAG, "Select '$discussionWithCheckpointsNoDueDateTitle Reply to Topic' syllabus summary event.")
         syllabusPage.selectSummaryEvent("$discussionWithCheckpointsNoDueDateTitle Reply to Topic")
 
         Log.d(ASSERTION_TAG, "Assert that the Assignment Details Page is displayed properly with the correct toolbar title and subtitle.")
@@ -267,7 +268,7 @@ class DiscussionsE2ETest: StudentComposeTest() {
         assignmentDetailsPage.assertDisplayToolbarSubtitle(courseName)
 
         Log.d(ASSERTION_TAG, "Assert that the checkpoints are displayed properly on the Assignment Details Page.")
-        assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Reply to topic due","No Due Date")
-        assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Additional replies (2) due","No Due Date")
+        assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Reply to topic due","Nov 13, 2025 7:59 AM")
+        assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Additional replies (1) due","Nov 20, 2025 7:59 AM")
     }
 }

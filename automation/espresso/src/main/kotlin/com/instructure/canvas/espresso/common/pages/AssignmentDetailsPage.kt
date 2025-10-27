@@ -86,7 +86,7 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
     }
 
     fun assertDisplayToolbarSubtitle(courseNameText: String) {
-        onView(allOf(withText(courseNameText), withParent(R.id.toolbar))).assertDisplayed()
+        onView(allOf(withText(courseNameText), withParent(R.id.toolbar), withAncestor(R.id.assignmentDetailsPage))).assertDisplayed()
     }
 
     fun assertDisplaysDate(dateText: String, position: Int = 0) {
