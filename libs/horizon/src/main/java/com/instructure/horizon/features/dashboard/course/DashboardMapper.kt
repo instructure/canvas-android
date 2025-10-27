@@ -61,7 +61,7 @@ internal fun List<Program>.mapToDashboardCourseCardState(context: Context): List
                 label = context.getString(R.string.dashboardNotStartedProgramDetailsLabel),
                 height = ButtonHeight.SMALL,
                 width = ButtonWidth.RELATIVE,
-                color = ButtonColor.Inverse,
+                color = ButtonColor.Black,
                 route = DashboardPaginatedWidgetCardButtonRoute.HomeRoute(HomeNavigationRoute.Learn.withProgram(program.id)),
             ),
         )
