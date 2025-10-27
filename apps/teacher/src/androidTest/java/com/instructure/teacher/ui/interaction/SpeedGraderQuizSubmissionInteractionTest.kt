@@ -21,17 +21,27 @@ import com.instructure.canvas.espresso.mockcanvas.addCoursePermissions
 import com.instructure.canvas.espresso.mockcanvas.addQuestionToQuiz
 import com.instructure.canvas.espresso.mockcanvas.addQuizSubmission
 import com.instructure.canvas.espresso.mockcanvas.addQuizToCourse
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeDifferentiationTagsManager
 import com.instructure.canvas.espresso.mockcanvas.init
+import com.instructure.canvasapi2.managers.graphql.DifferentiationTagsManager
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.models.QuizAnswer
+import com.instructure.pandautils.di.DifferentiationTagsModule
 import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.extensions.tokenLogin
+import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.UninstallModules
 import org.junit.Test
 
 @HiltAndroidTest
+@UninstallModules(DifferentiationTagsModule::class)
 class SpeedGraderQuizSubmissionInteractionTest : TeacherComposeTest() {
+
+    @BindValue
+    @JvmField
+    val differentiationTagsManager: DifferentiationTagsManager = FakeDifferentiationTagsManager()
 
     @Stub
     @Test

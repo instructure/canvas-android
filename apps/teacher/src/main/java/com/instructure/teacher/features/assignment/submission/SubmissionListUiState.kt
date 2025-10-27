@@ -21,6 +21,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.ui.graphics.Color
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.models.Section
@@ -28,20 +29,18 @@ import com.instructure.pandautils.features.speedgrader.SubmissionListFilter
 import com.instructure.teacher.R
 
 data class SubmissionListUiState(
-    val assignmentName: String,
-    val courseColor: Color,
     val headerTitle: String,
-    val anonymousGrading: Boolean,
     val searchQuery: String = "",
-    val filter: SubmissionListFilter = SubmissionListFilter.ALL,
-    val filterValue: Double? = null,
-    val sections: List<Section> = emptyList(),
-    val selectedSections: List<Long> = emptyList(),
+    val filtersUiState: SubmissionListFiltersUiState,
     val submissions: List<SubmissionUiState> = emptyList(),
     val loading: Boolean = false,
     val refreshing: Boolean = false,
-    val error: Boolean = false,
-    val actionHandler: (SubmissionListAction) -> Unit
+    val error: Boolean = false
+)
+
+data class CustomGradeStatus(
+    val id: String,
+    val name: String
 )
 
 data class SubmissionUiState(
@@ -88,9 +87,14 @@ sealed class SubmissionListAction {
     data class SubmissionClicked(val submissionId: Long) : SubmissionListAction()
     data class Search(val query: String) : SubmissionListAction()
     data class SetFilters(
-        val filter: SubmissionListFilter,
-        val filterValue: Double?,
-        val selectedSections: List<Long>
+        val selectedFilters: Set<SubmissionListFilter>,
+        val filterValueAbove: Double?,
+        val filterValueBelow: Double?,
+        val selectedSections: List<Long>,
+        val selectedDifferentiationTagIds: Set<String>,
+        val includeStudentsWithoutTags: Boolean,
+        val sortOrder: SubmissionSortOrder,
+        val selectedCustomStatusIds: Set<String>
     ) : SubmissionListAction()
 
     data object ShowPostPolicy : SubmissionListAction()
@@ -105,8 +109,9 @@ sealed class SubmissionListViewModelAction {
         val selectedIdx: Int,
         val anonymousGrading: Boolean? = null,
         val filteredSubmissionIds: LongArray = longArrayOf(),
-        val filter: SubmissionListFilter? = null,
-        val filterValue: Double = 0.0
+        val selectedFilters: Set<SubmissionListFilter> = setOf(SubmissionListFilter.ALL),
+        val filterValueAbove: Double? = null,
+        val filterValueBelow: Double? = null
     ) : SubmissionListViewModelAction()
 
     data class ShowPostPolicy(val course: Course, val assignment: Assignment) :

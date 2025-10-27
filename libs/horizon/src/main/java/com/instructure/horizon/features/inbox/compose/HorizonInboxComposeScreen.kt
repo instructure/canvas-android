@@ -58,9 +58,6 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentPicker
 import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentPickerUiState
-import com.instructure.horizon.features.inbox.list.HORIZON_INBOX_LIST_NEW_CONVERSATION_CREATED
-import com.instructure.horizon.features.inbox.list.HORIZON_REFRESH_INBOX_LIST
-import com.instructure.horizon.features.inbox.navigation.HorizonInboxRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
@@ -411,23 +408,11 @@ private fun HorizonInboxComposeControlsSection(state: HorizonInboxComposeUiState
                         )
                     }
                 } else {
-                    val listEntry = remember(navController.currentBackStackEntry) {
-                        try {
-                            navController.getBackStackEntry(HorizonInboxRoute.InboxList.route)
-                        } catch (e: IllegalArgumentException) {
-                            // If the back stack entry doesn't exist, we can safely ignore it
-                            null
-                        }
-                    }
                     Button(
                         label = stringResource(R.string.inboxComposeSendLabel),
                         color = ButtonColor.Institution,
                         onClick = {
                             state.onSendConversation {
-                                listEntry?.savedStateHandle?.set(
-                                    HORIZON_REFRESH_INBOX_LIST,
-                                    HORIZON_INBOX_LIST_NEW_CONVERSATION_CREATED
-                                )
                                 navController.popBackStack()
                             }
                         }

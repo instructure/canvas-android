@@ -23,7 +23,6 @@ import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.loginapi.login.util.LoginPrefs
 import com.instructure.loginapi.login.util.PreviousUsersUtils
 import com.instructure.pandautils.utils.PandaAppResetter
-import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.parentapp.util.ParentPrefs
 
 
@@ -34,8 +33,5 @@ class ParentActivityTestRule<T : Activity>(activityClass: Class<T>) : Instructur
         ParentPrefs.clearPrefs()
         PreviousUsersUtils.clear(context)
         LoginPrefs.clearPrefs()
-
-        // We need to set this true so the theme selector won't stop our tests.
-        ThemePrefs.themeSelectionShown = true
     }
 }

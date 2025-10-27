@@ -19,6 +19,8 @@ package com.instructure.student.di.feature
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.apis.TabAPI
+import com.instructure.canvasapi2.managers.graphql.ModuleManager
+import com.instructure.pandautils.room.offline.daos.CheckpointDao
 import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
 import com.instructure.pandautils.room.offline.daos.TabDao
 import com.instructure.pandautils.room.offline.facade.ModuleFacade
@@ -37,13 +39,23 @@ import dagger.hilt.android.components.FragmentComponent
 class ModuleListModule {
 
     @Provides
-    fun provideModuleListLocalDataSource(tabDao: TabDao, moduleFacade: ModuleFacade, courseSettingsDao: CourseSettingsDao): ModuleListLocalDataSource {
-        return ModuleListLocalDataSource(tabDao, moduleFacade, courseSettingsDao)
+    fun provideModuleListLocalDataSource(
+        tabDao: TabDao,
+        moduleFacade: ModuleFacade,
+        courseSettingsDao: CourseSettingsDao,
+        checkpointDao: CheckpointDao
+    ): ModuleListLocalDataSource {
+        return ModuleListLocalDataSource(tabDao, moduleFacade, courseSettingsDao, checkpointDao)
     }
 
     @Provides
-    fun provideModuleListNetworkDataSource(moduleApi: ModuleAPI.ModuleInterface, tabApi: TabAPI.TabsInterface, courseApi: CourseAPI.CoursesInterface): ModuleListNetworkDataSource {
-        return ModuleListNetworkDataSource(moduleApi, tabApi, courseApi)
+    fun provideModuleListNetworkDataSource(
+        moduleApi: ModuleAPI.ModuleInterface,
+        tabApi: TabAPI.TabsInterface,
+        courseApi: CourseAPI.CoursesInterface,
+        moduleManager: ModuleManager
+    ): ModuleListNetworkDataSource {
+        return ModuleListNetworkDataSource(moduleApi, tabApi, courseApi, moduleManager)
     }
 
     @Provides

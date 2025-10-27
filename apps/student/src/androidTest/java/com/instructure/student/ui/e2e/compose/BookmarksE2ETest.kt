@@ -19,6 +19,7 @@ package com.instructure.student.ui.e2e.compose
 import android.util.Log
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.web.webdriver.Locator
+import androidx.test.uiautomator.UiSelector
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
@@ -165,6 +166,66 @@ class BookmarksE2ETest : StudentComposeTest() {
 
         Log.d(ASSERTION_TAG, "Assert if it's navigating to the '$pagePublishedFront' Front Page.")
         canvasWebViewPage.runTextChecks(WebViewTextCheck(Locator.ID, "header1", "Front Page Text"))
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.COMMON, FeatureCategory.BOOKMARKS, TestCategory.E2E)
+    fun testBookmarkAddToHomeScreenE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+
+        Log.d(PREPARATION_TAG, "Preparing an assignment which will be saved as a bookmark.")
+        val assignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
+
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
+        tokenLogin(student)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Navigate to assignments page and click on the prepared assignment: '${assignment.name}'.")
+        dashboardPage.selectCourse(course)
+        courseBrowserPage.selectAssignments()
+        assignmentListPage.clickAssignment(assignment)
+
+        val bookmarkName = "Assignment bookmark"
+        Log.d(STEP_TAG, "Add a new bookmark with name: '$bookmarkName'")
+        assignmentDetailsPage.addBookmark(bookmarkName)
+
+        Log.d(STEP_TAG, "Navigate back to Dashboard page.")
+        pressBackButton(3)
+
+        Log.d(STEP_TAG, "Click on the 'Bookmarks' menu within the left side menu to open the Bookmarks page.")
+        leftSideNavigationDrawerPage.clickBookmarksMenu()
+
+        Log.d(ASSERTION_TAG, "Assert if the newly created bookmark: '$bookmarkName' has displayed.")
+        bookmarkPage.assertBookmarkDisplayed(bookmarkName)
+
+        Log.d(STEP_TAG, "Click on 'Add to Home Screen' option for the bookmark: '$bookmarkName'.")
+        bookmarkPage.addBookmarkToHomeScreen(bookmarkName, device)
+
+        Log.d(ASSERTION_TAG, "Assert that we're still on the bookmarks page after adding the bookmark: '$bookmarkName' to home screen.")
+        bookmarkPage.assertBookmarkDisplayed(bookmarkName)
+
+        Log.d(STEP_TAG, "Press 'Home' button to go to home screen.")
+        device.pressHome()
+
+        Log.d(STEP_TAG, "Find and click the '$bookmarkName' shortcut on the home screen.")
+        device.findObject(UiSelector().textContains(bookmarkName)).click()
+
+        Log.d(ASSERTION_TAG, "Assert that the bookmark shortcut opened the correct assignment: '${assignment.name}' with all details.")
+        assignmentDetailsPage.assertAssignmentTitle(assignment.name)
+        assignmentDetailsPage.assertAssignmentDetails(assignment)
+
+        Log.d(STEP_TAG, "Navigate back to the system home screen.")
+        device.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that the app returned to the system home screen by verifying the bookmark shortcut is visible.")
+        val homeScreenShortcut = device.findObject(UiSelector().textContains(bookmarkName))
+        assert(homeScreenShortcut.exists()) { "Expected to be on system home screen with bookmark shortcut visible, but it was not found." }
     }
 
 }

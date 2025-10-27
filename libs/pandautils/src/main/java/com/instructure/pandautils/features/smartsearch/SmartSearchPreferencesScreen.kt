@@ -71,18 +71,32 @@ fun SmartSearchPreferencesScreen(
     color: Color,
     sortType: SmartSearchSortType,
     filters: List<SmartSearchFilter>,
-    navigationClick: (List<SmartSearchFilter>, SmartSearchSortType) -> Unit
+    onDone: (List<SmartSearchFilter>, SmartSearchSortType) -> Unit,
+    onCancel: () -> Unit
 ) {
     val selectedTypes = remember { filters.toMutableStateList() }
     var selectedSort by remember { mutableStateOf(sortType) }
-    FullScreenDialog(onDismissRequest = { navigationClick(selectedTypes, selectedSort) }) {
+    FullScreenDialog(onDismissRequest = onCancel) {
         CanvasScaffold(
             topBar = {
                 CanvasAppBar(
                     backgroundColor = color,
                     textColor = colorResource(R.color.textLightest),
                     title = stringResource(R.string.searchPreferencesTitle),
-                    navigationActionClick = { navigationClick(selectedTypes, selectedSort) }
+                    navigationActionClick = onCancel,
+                    actions = {
+                        TextButton(
+                            onClick = { onDone(selectedTypes, selectedSort) },
+                            modifier = Modifier.testTag("doneButton")
+                        ) {
+                            Text(
+                                text = stringResource(R.string.done),
+                                color = colorResource(R.color.textLightest),
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
+                    }
                 )
             }
         ) { padding ->
@@ -284,7 +298,8 @@ fun SmartSearchPreferencesScreenPreview() {
         Color.Magenta,
         sortType = SmartSearchSortType.RELEVANCE,
         filters = SmartSearchFilter.entries,
-        navigationClick = { _, _ -> }
+        onDone = { _, _ -> },
+        onCancel = {}
     )
 }
 
@@ -295,7 +310,8 @@ fun SmartSearchPreferencesScreenDarkPreview() {
         Color.Magenta,
         sortType = SmartSearchSortType.RELEVANCE,
         filters = SmartSearchFilter.entries,
-        navigationClick = { _, _ -> }
+        onDone = { _, _ -> },
+        onCancel = {}
     )
 }
 

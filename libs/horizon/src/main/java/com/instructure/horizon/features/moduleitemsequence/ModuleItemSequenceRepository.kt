@@ -18,7 +18,7 @@ package com.instructure.horizon.features.moduleitemsequence
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.managers.HorizonGetCommentsManager
+import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCommentsManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleItem
