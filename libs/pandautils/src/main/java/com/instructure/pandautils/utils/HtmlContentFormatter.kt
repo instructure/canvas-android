@@ -34,13 +34,19 @@ import java.util.regex.Pattern
 class HtmlContentFormatter(
     private val context: Context,
     private val crashlytics: FirebaseCrashlytics,
-    private val oAuthManager: OAuthManager
+    private val oAuthManager: OAuthManager,
+    private val featureFlagProvider: FeatureFlagProvider
 ) {
 
-    suspend fun formatHtmlWithIframes(html: String): String {
+    suspend fun formatHtmlWithIframes(html: String, courseId: Long? = null): String {
         try {
             if (html.contains("<iframe")) {
                 var newHTML: String = html
+
+                // Check feature flag for studio embed improvements
+                val studioEmbedImprovementsEnabled = courseId?.let {
+                    featureFlagProvider.checkStudioEmbedImprovementsFlag(it)
+                } ?: false
 
                 // First we need to find LTIs by looking for iframes
                 val iframeMatcher = Pattern.compile("<iframe(.|\\n)*?iframe>").matcher(html)
@@ -76,7 +82,7 @@ class HtmlContentFormatter(
                             newHTML = newHTML.replace(iframe, newIframe)
                         }
 
-                        if (hasStudioMediaUrl(srcUrl)) {
+                        if (hasStudioMediaUrl(srcUrl) && studioEmbedImprovementsEnabled) {
                             val videoTitle = extractVideoTitle(iframe)
                             val immersiveUrl = convertToImmersiveViewUrl(srcUrl, videoTitle)
                             val newIframe = iframeWithStudioButton(immersiveUrl, iframe, context)
@@ -142,8 +148,6 @@ class HtmlContentFormatter(
     }
 
     private fun convertToImmersiveViewUrl(srcUrl: String, title: String?): String {
-        // Convert: https://studio-sandbox.cd.instructure.com/media_attachments_iframe/27752
-        // To: https://studio-sandbox.cd.instructure.com/media_attachments/27752/immersive_view?embedded=true&title=...
         val baseUrl = srcUrl.replace("media_attachments_iframe", "media_attachments")
             .plus("/immersive_view?embedded=true")
         return if (title != null) {

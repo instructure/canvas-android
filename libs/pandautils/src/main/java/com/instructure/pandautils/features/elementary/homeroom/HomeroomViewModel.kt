@@ -169,8 +169,8 @@ class HomeroomViewModel @Inject constructor(
     ): AnnouncementItemViewModel? {
         return if (announcement != null) {
             val htmlWithIframes = htmlContentFormatter.formatHtmlWithIframes(
-                announcement.message
-                    ?: ""
+                announcement.message ?: "",
+                course.id
             )
             AnnouncementItemViewModel(
                 AnnouncementViewData(course.name, announcement.title ?: "", htmlWithIframes),

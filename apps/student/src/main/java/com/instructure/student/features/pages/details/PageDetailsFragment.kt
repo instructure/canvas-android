@@ -45,6 +45,7 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.BooleanArg
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NullableStringArg
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
@@ -78,6 +79,9 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
 
     @Inject
     lateinit var webViewRouter: WebViewRouter
+
+    @Inject
+    lateinit var featureFlagProvider: FeatureFlagProvider
 
     private var loadHtmlJob: Job? = null
     private var pageName: String? by NullableStringArg(key = PAGE_NAME)
@@ -226,11 +230,24 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
             val body = """<script>window.ENV = { COURSE: { id: "${canvasContext.id}" } };</script>""" + page.body.orEmpty()
 
             // Load the html with the helper function to handle iframe cases
-            loadHtmlJob = canvasWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), body, {
-                canvasWebViewWrapper.loadHtml(it, page.title, baseUrl = page.htmlUrl)
-            }) {
-                RouteMatcher.route(requireActivity(), LtiLaunchFragment.makeSessionlessLtiUrlRoute(requireActivity(), canvasContext, it))
-            }
+            loadHtmlJob = canvasWebViewWrapper.webView.loadHtmlWithIframes(
+                requireContext(),
+                featureFlagProvider,
+                body,
+                {
+                    canvasWebViewWrapper.loadHtml(it, page.title, baseUrl = page.htmlUrl)
+                },
+                courseId = canvasContext.id,
+                onLtiButtonPressed = {
+                    RouteMatcher.route(
+                        requireActivity(),
+                        LtiLaunchFragment.makeSessionlessLtiUrlRoute(
+                            requireActivity(),
+                            canvasContext,
+                            it
+                        )
+                    )
+                })
         } else if (page.body == null || page.body?.endsWith("") == true) {
             loadHtml(resources.getString(R.string.noPageFound), "text/html", "utf-8", null)
         }

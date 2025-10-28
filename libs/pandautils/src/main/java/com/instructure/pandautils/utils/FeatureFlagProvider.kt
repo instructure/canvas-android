@@ -65,4 +65,13 @@ class FeatureFlagProvider(
     suspend fun checkRestrictStudentAccessFlag(): Boolean {
         return checkEnvironmentFeatureFlag("restrict_student_access")
     }
+
+    suspend fun checkStudioEmbedImprovementsFlag(courseId: Long): Boolean {
+        return try {
+            val flag = featuresApi.getStudioEmbedImprovementsFlag(courseId, RestParams(isForceReadFromNetwork = true)).dataOrThrow
+            flag.state == "on" || flag.state == "allowed_on"
+        } catch (e: Exception) {
+            false
+        }
+    }
 }
