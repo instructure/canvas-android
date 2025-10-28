@@ -18,7 +18,6 @@ package com.instructure.pandautils.features.offline.sync
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import com.instructure.canvasapi2.apis.FileFolderAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.StudioMediaMetadata
@@ -37,10 +36,6 @@ class HtmlParser(
     private val fileSyncSettingsDao: FileSyncSettingsDao,
     private val fileFolderApi: FileFolderAPI.FilesFoldersInterface
 ) {
-
-    companion object {
-        private const val TAG = "HtmlParser"
-    }
 
     private val imageRegex = Regex("<img[^>]*src=\"([^\"]*)\"[^>]*>")
     private val fileLinkRegex = Regex("<a[^>]*class=\"instructure_file_link[^>]*href=\"([^\"]*)\"[^>]*>")
