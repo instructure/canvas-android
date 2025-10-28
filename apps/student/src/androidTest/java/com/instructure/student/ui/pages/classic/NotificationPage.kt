@@ -59,6 +59,11 @@ class NotificationPage : BasePage() {
         onView(matcher).scrollTo().assertDisplayed()
     }
 
+    fun assertCheckpointLabel(title: String, checkpointLabel: String) {
+        val matcher = allOf(containsTextCaseInsensitive(title.dropLast(1)) + hasSibling(withId(R.id.checkpointLabel) + withText(checkpointLabel)))
+        onView(matcher).scrollTo().assertDisplayed()
+    }
+
     fun clickNotification(title: String) {
         val matcher = withText(title)
         scrollRecyclerView(R.id.listView, matcher)
