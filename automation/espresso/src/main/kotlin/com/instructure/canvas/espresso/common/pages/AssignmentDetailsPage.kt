@@ -175,6 +175,10 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
         onView(withId(R.id.submissionStatus)).waitForCheck(matches(withText(statusResourceId)))
     }
 
+    fun assertCustomStatus(status: String) {
+        onView(withId(R.id.submissionStatus)).waitForCheck(matches(withText(status)))
+    }
+
     fun assertStatusSubmitted() {
         assertStatus(R.string.submitted)
     }
