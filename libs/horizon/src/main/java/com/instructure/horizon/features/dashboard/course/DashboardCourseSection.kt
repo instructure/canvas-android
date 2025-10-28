@@ -49,6 +49,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.hideFromAccessibility
 import androidx.compose.ui.semantics.role
@@ -230,7 +231,7 @@ private fun DashboardCourseCardIndicator(pagerState: PagerState) {
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxWidth()
-            .semantics {
+            .clearAndSetSemantics {
                 hideFromAccessibility()
             }
     ) {
@@ -244,13 +245,14 @@ private fun DashboardCourseCardIndicator(pagerState: PagerState) {
                     .border(1.dp, HorizonColors.Icon.medium(), CircleShape)
                     .clip(CircleShape)
                     .clickable { scrollToIndex = itemIndex }
-                    .semantics {
+                    .clearAndSetSemantics {
                         selected = itemIndex == selectedIndex
                         contentDescription = context.getString(
                             R.string.a11y_dashboardPagerIndicatorContentDescription,
                             itemIndex + 1,
                             pagerState.pageCount
                         )
+                        hideFromAccessibility()
                     }
             ) {
                 if (itemIndex == selectedIndex) {

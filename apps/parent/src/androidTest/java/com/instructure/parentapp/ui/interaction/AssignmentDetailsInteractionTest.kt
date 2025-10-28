@@ -491,6 +491,36 @@ class AssignmentDetailsInteractionTest : ParentComposeTest() {
         onWebView().check(webMatches(getCurrentUrl(), containsString(expectedUrl)))
     }
 
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    fun testDiscussionCheckpointsDisplayed() {
+        val data = setupData(false)
+        val course = data.courses.values.first()
+
+        val checkpoint1 = Checkpoint(
+            tag = "reply_to_topic",
+            pointsPossible = 5.0,
+            dueAt = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 1) }.time.toApiString()
+        )
+        val checkpoint2 = Checkpoint(
+            tag = "reply_to_entry",
+            pointsPossible = 5.0,
+            dueAt = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 2) }.time.toApiString()
+        )
+
+        val assignment = data.addAssignment(
+            courseId = course.id,
+            name = "Discussion Checkpoint Assignment",
+            checkpoints = listOf(checkpoint1, checkpoint2),
+            submissionTypeList = listOf(Assignment.SubmissionType.DISCUSSION_TOPIC)
+        )
+
+        gotoAssignment(data, assignment)
+
+        assignmentDetailsPage.assertCheckpointDisplayed(0, "Reply to topic", "-/5")
+        assignmentDetailsPage.assertCheckpointDisplayed(1, "Additional replies (0)", "-/5")
+    }
+
     private fun setupData(restrictQuantitativeData: Boolean = false): MockCanvas {
         val data = MockCanvas.init(
             parentCount = 1,

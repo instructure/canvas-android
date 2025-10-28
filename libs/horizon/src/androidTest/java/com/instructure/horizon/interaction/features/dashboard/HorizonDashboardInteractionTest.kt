@@ -87,12 +87,5 @@ class HorizonDashboardInteractionTest: HorizonTest() {
             fakeGetHorizonCourseManager.getCourses().first().progress,
             moduleItem1.title
         )
-
-        dashboardPage.selectCourseCardAtIndex(1, 2)
-
-        dashboardPage.assertCourseCardDisplayed(
-            course2.name,
-            progress = fakeGetHorizonCourseManager.getCourses()[1].progress,
-        )
     }
 }
