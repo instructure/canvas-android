@@ -50,7 +50,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.graphics.toColorInt
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
@@ -60,9 +60,10 @@ import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.localisedFormat
+import com.instructure.pandautils.utils.courseOrUserColor
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -106,7 +107,7 @@ fun ToDoListScreen(
         ) {
             when {
                 uiState.isLoading -> {
-                    Loading()
+                    Loading(modifier = Modifier.align(Alignment.Center))
                 }
 
                 uiState.isError -> {
@@ -147,7 +148,7 @@ fun ToDoListScreen(
 
 @Composable
 private fun ToDoListContent(
-    itemsByDate: Map<String, List<ToDoItemUiState>>,
+    itemsByDate: Map<Date, List<ToDoItemUiState>>,
     actionHandler: (ToDoListActionHandler) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -188,11 +189,11 @@ private fun ToDoItem(
     modifier: Modifier = Modifier
 ) {
     val calendar = Calendar.getInstance().apply {
-        time = item.dueDate
+        time = item.date
     }
-    val dayOfWeek = SimpleDateFormat("EEE", Locale.getDefault()).format(item.dueDate)
+    val dayOfWeek = SimpleDateFormat("EEE", Locale.getDefault()).format(item.date)
     val day = calendar.get(Calendar.DAY_OF_MONTH)
-    val month = SimpleDateFormat("MMM", Locale.getDefault()).format(item.dueDate)
+    val month = SimpleDateFormat("MMM", Locale.getDefault()).format(item.date)
 
     Row(
         modifier = modifier
@@ -236,11 +237,12 @@ private fun ToDoItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.weight(1f)) {
+                val contextColor = Color(item.canvasContext.courseOrUserColor)
                 Row(verticalAlignment = Alignment.Top) {
                     Icon(
-                        painter = painterResource(id = item.itemType.iconRes),
+                        painter = painterResource(id = item.iconRes),
                         contentDescription = null,
-                        tint = Color(item.contextColor),
+                        tint = contextColor,
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
@@ -253,7 +255,7 @@ private fun ToDoItem(
                     Text(
                         text = item.contextLabel,
                         fontSize = 14.sp,
-                        color = Color(item.contextColor),
+                        color = contextColor,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.weight(1f)
@@ -268,13 +270,15 @@ private fun ToDoItem(
                     overflow = TextOverflow.Ellipsis
                 )
 
-                Text(
-                    text = item.dueDate.localisedFormat("h:mm a"),
-                    fontSize = 14.sp,
-                    color = colorResource(id = R.color.textDark),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
+                item.dateLabel?.let {
+                    Text(
+                        text = it,
+                        fontSize = 14.sp,
+                        color = colorResource(id = R.color.textDark),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.width(16.dp))
@@ -301,60 +305,66 @@ fun ToDoListScreenPreview() {
         ToDoListScreen(
             uiState = ToDoListUiState(
                 itemsByDate = mapOf(
-                    "Sun Oct 22" to listOf(
+                    Date(10) to listOf(
                         ToDoItemUiState(
                             id = "1",
                             title = "Short title",
-                            dueDate = calendar.apply { set(2024, 9, 22, 7, 59) }.time,
+                            date = calendar.apply { set(2024, 9, 22, 7, 59) }.time,
+                            dateLabel = "7:59 AM",
                             contextLabel = "COURSE",
-                            contextColor = "#00AC18".toColorInt(),
+                            canvasContext = CanvasContext.emptyCourseContext(1),
                             itemType = ToDoItemType.ASSIGNMENT,
                             isChecked = false
                         ),
                         ToDoItemUiState(
                             id = "2",
                             title = "Levitate an object without crushing it, bonus points if you don't scratch the paint",
-                            dueDate = calendar.apply { set(2024, 9, 22, 11, 59) }.time,
+                            date = calendar.apply { set(2024, 9, 22, 11, 59) }.time,
+                            dateLabel = "11:59 AM",
                             contextLabel = "Introduction to Advanced Galactic Force Manipulation and Control Techniques for Beginners",
-                            contextColor = "#2196F3".toColorInt(),
+                            canvasContext = CanvasContext.emptyCourseContext(1),
                             itemType = ToDoItemType.QUIZ,
                             isChecked = false
                         ),
                         ToDoItemUiState(
                             id = "3",
                             title = "Identify which emotions lead to Jedi calmness vs. a full Darth Vader office meltdown situation",
-                            dueDate = calendar.apply { set(2024, 9, 22, 14, 30) }.time,
+                            date = calendar.apply { set(2024, 9, 22, 14, 30) }.time,
+                            dateLabel = "2:30 PM",
                             contextLabel = "FORC 101",
-                            contextColor = "#00AC18".toColorInt(),
+                            canvasContext = CanvasContext.emptyCourseContext(1),
                             itemType = ToDoItemType.ASSIGNMENT,
                             isChecked = true
                         )
                     ),
-                    "Mon 23" to listOf(
+                    Date(1000) to listOf(
                         ToDoItemUiState(
                             id = "4",
                             title = "Essay - Why Force-choking co-workers is frowned upon in most galactic workplaces",
-                            dueDate = calendar.apply { set(2024, 9, 23, 19, 0) }.time,
+                            date = calendar.apply { set(2024, 9, 23, 19, 0) }.time,
+                            dateLabel = "7:00 PM",
                             contextLabel = "Professional Jedi Ethics and Workplace Communication",
-                            contextColor = "#FF5722".toColorInt(),
+                            canvasContext = CanvasContext.emptyCourseContext(1),
                             itemType = ToDoItemType.DISCUSSION,
                             isChecked = false
                         ),
                         ToDoItemUiState(
                             id = "5",
                             title = "Q",
-                            dueDate = calendar.apply { set(2024, 9, 23, 23, 59) }.time,
+                            date = calendar.apply { set(2024, 9, 23, 23, 59) }.time,
+                            dateLabel = "11:59 PM",
                             contextLabel = "PHY",
-                            contextColor = "#9C27B0".toColorInt(),
+                            canvasContext = CanvasContext.emptyCourseContext(1),
                             itemType = ToDoItemType.PLANNER_NOTE,
                             isChecked = false
                         ),
                         ToDoItemUiState(
                             id = "6",
                             title = "Write a comprehensive research paper analyzing the psychological and physiological effects of prolonged exposure to the Dark Side of the Force on Jedi Knights and their ability to maintain emotional equilibrium",
-                            dueDate = calendar.apply { set(2024, 9, 23, 23, 59) }.time,
+                            date = calendar.apply { set(2024, 9, 23, 23, 59) }.time,
+                            dateLabel = "11:59 PM",
                             contextLabel = "Advanced Force Psychology",
-                            contextColor = "#FF9800".toColorInt(),
+                            canvasContext = CanvasContext.emptyCourseContext(1),
                             itemType = ToDoItemType.ASSIGNMENT,
                             isChecked = false
                         )

@@ -15,8 +15,7 @@
  */
 package com.instructure.pandautils.features.todolist
 
-import androidx.annotation.ColorInt
-import androidx.annotation.DrawableRes
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.R
 import java.util.Date
 
@@ -24,25 +23,28 @@ data class ToDoListUiState(
     val isLoading: Boolean = false,
     val isError: Boolean = false,
     val isRefreshing: Boolean = false,
-    val itemsByDate: Map<String, List<ToDoItemUiState>> = emptyMap()
+    val itemsByDate: Map<Date, List<ToDoItemUiState>> = emptyMap()
 )
 
 data class ToDoItemUiState(
     val id: String,
     val title: String,
-    val dueDate: Date,
+    val date: Date,
+    val dateLabel: String?,
     val contextLabel: String,
-    @ColorInt val contextColor: Int,
+    val canvasContext: CanvasContext,
     val itemType: ToDoItemType,
-    val isChecked: Boolean = false
+    val isChecked: Boolean = false,
+    val iconRes: Int = R.drawable.ic_calendar
 )
 
-enum class ToDoItemType(@DrawableRes val iconRes: Int) {
-    ASSIGNMENT(R.drawable.ic_assignment),
-    QUIZ(R.drawable.ic_quiz),
-    DISCUSSION(R.drawable.ic_discussion),
-    CALENDAR_EVENT(R.drawable.ic_calendar),
-    PLANNER_NOTE(R.drawable.ic_todo)
+enum class ToDoItemType {
+    ASSIGNMENT,
+    SUB_ASSIGNMENT,
+    QUIZ,
+    DISCUSSION,
+    CALENDAR_EVENT,
+    PLANNER_NOTE
 }
 
 sealed class ToDoListViewModelAction {

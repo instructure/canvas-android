@@ -15,11 +15,67 @@
  */
 package com.instructure.pandautils.features.todolist
 
+import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
+import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.PlannableType
+import com.instructure.canvasapi2.models.PlannerItem
+import com.instructure.canvasapi2.models.PlannerOverride
+import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.depaginate
 import javax.inject.Inject
 
 class ToDoListRepository @Inject constructor(
-    private val plannerApi: PlannerAPI.PlannerInterface
+    private val plannerApi: PlannerAPI.PlannerInterface,
+    private val courseApi: CourseAPI.CoursesInterface
 ) {
-    // TODO: Implement methods to fetch planner items
+    suspend fun getPlannerItems(
+        startDate: String,
+        endDate: String,
+        forceRefresh: Boolean
+    ): DataResult<List<PlannerItem>> {
+        val restParams = RestParams(isForceReadFromNetwork = forceRefresh, usePerPageQueryParam = true)
+        return plannerApi.getPlannerItems(
+            startDate = startDate,
+            endDate = endDate,
+            contextCodes = emptyList(),
+            restParams = restParams
+        ).depaginate { nextUrl ->
+            plannerApi.nextPagePlannerItems(nextUrl, restParams)
+        }
+    }
+
+    suspend fun getCourses(forceRefresh: Boolean): DataResult<List<Course>> {
+        val restParams = RestParams(isForceReadFromNetwork = forceRefresh)
+        return courseApi.getFirstPageCourses(restParams).depaginate { nextUrl ->
+            courseApi.next(nextUrl, restParams)
+        }
+    }
+
+    suspend fun updatePlannerOverride(
+        plannerOverrideId: Long,
+        markedComplete: Boolean
+    ): DataResult<PlannerOverride> {
+        val restParams = RestParams(isForceReadFromNetwork = true)
+        return plannerApi.updatePlannerOverride(
+            plannerOverrideId = plannerOverrideId,
+            complete = markedComplete,
+            params = restParams
+        )
+    }
+
+    suspend fun createPlannerOverride(
+        plannableId: Long,
+        plannableType: PlannableType,
+        markedComplete: Boolean
+    ): DataResult<PlannerOverride> {
+        val restParams = RestParams(isForceReadFromNetwork = true)
+        val override = PlannerOverride(
+            plannableId = plannableId,
+            plannableType = plannableType,
+            markedComplete = markedComplete
+        )
+        return plannerApi.createPlannerOverride(override, restParams)
+    }
 }

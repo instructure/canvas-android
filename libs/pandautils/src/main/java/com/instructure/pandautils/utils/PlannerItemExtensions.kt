@@ -18,9 +18,12 @@ package com.instructure.pandautils.utils
 
 import android.content.Context
 import androidx.annotation.DrawableRes
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.canvasapi2.utils.toDate
 import com.instructure.pandautils.R
 
 fun PlannerItem.todoHtmlUrl(apiPrefs: ApiPrefs): String {
@@ -36,6 +39,59 @@ fun PlannerItem.getIconForPlannerItem(): Int {
         PlannableType.DISCUSSION_TOPIC, PlannableType.SUB_ASSIGNMENT -> R.drawable.ic_discussion
         PlannableType.PLANNER_NOTE -> R.drawable.ic_todo
         else -> R.drawable.ic_calendar
+    }
+}
+
+fun PlannerItem.getDateTextForPlannerItem(context: Context): String? {
+    return when (plannableType) {
+        PlannableType.PLANNER_NOTE -> {
+            plannable.todoDate.toDate()?.let {
+                DateHelper.getFormattedTime(context, it)
+            }
+        }
+
+        PlannableType.CALENDAR_EVENT -> {
+            val startDate = plannable.startAt
+            val endDate = plannable.endAt
+            if (startDate != null && endDate != null) {
+                val startText = DateHelper.getFormattedTime(context, startDate).orEmpty()
+                val endText = DateHelper.getFormattedTime(context, endDate).orEmpty()
+
+                when {
+                    plannable.allDay == true -> context.getString(R.string.widgetAllDay)
+                    startDate == endDate -> startText
+                    else -> context.getString(R.string.widgetFromTo, startText, endText)
+                }
+            } else null
+        }
+
+        else -> {
+            plannable.dueAt?.let {
+                val timeText = DateHelper.getFormattedTime(context, it).orEmpty()
+                context.getString(R.string.widgetDueDate, timeText)
+            }
+        }
+    }
+}
+
+fun PlannerItem.getContextNameForPlannerItem(context: Context, courses: Collection<Course>): String {
+    val courseCode = courses.find { it.id == canvasContext.id }?.courseCode
+    return when (plannableType) {
+        PlannableType.PLANNER_NOTE -> {
+            if (contextName.isNullOrEmpty()) {
+                context.getString(R.string.userCalendarToDo)
+            } else {
+                context.getString(R.string.courseToDo, courseCode)
+            }
+        }
+
+        else -> {
+            if (canvasContext is Course) {
+                courseCode.orEmpty()
+            } else {
+                contextName.orEmpty()
+            }
+        }
     }
 }
 
