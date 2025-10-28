@@ -43,7 +43,10 @@ internal suspend fun List<GetCoursesQuery.Enrollment>.mapToDashboardCourseCardSt
 ): List<DashboardCourseCardState> {
     val completed = this.filter { it.isCompleted() }.map { it.mapCompleted(context, programs) }
     val active = this.filter { it.isActive() }.map { it.mapActive(programs, nextModuleForCourse) }
-    return (active + completed).sortedByDescending { it.lastAccessed }
+    return (active + completed).sortedByDescending { course ->
+        course.progress.run { if (this == 100.0) -1.0 else this } // Active courses first, then completed courses
+            ?: 0.0
+    }
 }
 
 internal fun List<Program>.mapToDashboardCourseCardState(context: Context): List<DashboardPaginatedWidgetCardItemState> {
@@ -69,11 +72,15 @@ internal fun List<Program>.mapToDashboardCourseCardState(context: Context): List
 }
 
 private fun GetCoursesQuery.Enrollment.isCompleted(): Boolean {
-    return this.state == EnrollmentWorkflowState.completed
+    return this.state == EnrollmentWorkflowState.completed || this.isMaxProgress()
 }
 
 private fun GetCoursesQuery.Enrollment.isActive(): Boolean {
-    return this.state == EnrollmentWorkflowState.active
+    return this.state == EnrollmentWorkflowState.active && !this.isMaxProgress()
+}
+
+private fun GetCoursesQuery.Enrollment.isMaxProgress(): Boolean {
+    return this.course?.usersConnection?.nodes?.firstOrNull()?.courseProgression?.requirements?.completionPercentage == 100.0
 }
 
 private fun GetCoursesQuery.Enrollment.mapCompleted(context: Context, programs: List<Program>): DashboardCourseCardState {
@@ -87,10 +94,13 @@ private fun GetCoursesQuery.Enrollment.mapCompleted(context: Context, programs: 
                     onClickAction = CardClickAction.NavigateToProgram(program.id)
                 )
             },
-        imageState = null,
+        imageState = DashboardCourseCardImageState(
+            imageUrl = this.course?.image_download_url,
+            showPlaceholder = true
+        ),
         title = this.course?.name.orEmpty(),
         description = context.getString(R.string.dashboardCompletedCourseDetails),
-        progress = 1.0,
+        progress = this.course?.usersConnection?.nodes?.firstOrNull()?.courseProgression?.requirements?.completionPercentage ?: 0.0,
         moduleItem = null,
         buttonState = null,
         onClickAction = CardClickAction.NavigateToCourse(this.course?.id?.toLongOrNull() ?: -1L)
