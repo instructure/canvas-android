@@ -17,21 +17,17 @@
 package com.instructure.horizon.features.notification
 
 import android.content.Context
-import com.instructure.canvasapi2.models.AccountNotification
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.StreamItem
-import com.instructure.canvasapi2.utils.toApiString
-import com.instructure.canvasapi2.utils.toDate
 import com.instructure.horizon.R
-import com.instructure.horizon.features.inbox.HorizonInboxItemType
-import com.instructure.horizon.features.inbox.navigation.HorizonInboxRoute
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -41,7 +37,6 @@ import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import java.util.Date
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class NotificationViewModelTest {
@@ -50,11 +45,6 @@ class NotificationViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val course = Course(1L, "Course 1")
-    private val globalAnnouncement = AccountNotification(
-        id = 1L,
-        subject = "Global Announcement 1",
-        startAt = Date().toApiString(),
-    )
     val streamItems = listOf(
         StreamItem(
             id = 1,
@@ -85,13 +75,6 @@ class NotificationViewModelTest {
             course_id = course.id,
             htmlUrl = "deeplinkUrl3"
         ),
-        StreamItem(
-            id = 4,
-            type = "Announcement",
-            course_id = course.id,
-            htmlUrl = "deeplinkUrl4",
-            title = "Announcement 1"
-        ),
     )
 
     @Before
@@ -103,7 +86,6 @@ class NotificationViewModelTest {
         every { context.getString(R.string.notificationsScoreChangedCategoryLabel) } returns "Score changed"
         every { context.getString(R.string.notificationsScoredItemTitle, "Scored item") } returns "Scored item's score is now available"
         coEvery { repository.getCourse(course.id) } returns course
-        coEvery { repository.getGlobalAnnouncements(any()) } returns listOf(globalAnnouncement)
         coEvery { repository.getNotifications(any()) } returns streamItems
     }
 
@@ -117,7 +99,7 @@ class NotificationViewModelTest {
     fun `Test ViewModel mapping to NotificationItems`() {
         val viewModel = getViewModel()
         val state = viewModel.uiState.value
-        assertEquals(5, state.notificationItems.size)
+        assertEquals(3, state.notificationItems.size)
         assertTrue(state.notificationItems.contains(
             NotificationItem(
                 category = NotificationItemCategory(
@@ -128,7 +110,7 @@ class NotificationViewModelTest {
                 courseLabel = null,
                 date = null,
                 isRead = false,
-                route = NotificationRoute.DeepLink("assignmentUrl1")
+                deepLink = "assignmentUrl1"
             )
         ))
         assertTrue(state.notificationItems.contains(
@@ -141,7 +123,7 @@ class NotificationViewModelTest {
                 courseLabel = null,
                 date = null,
                 isRead = false,
-                route = NotificationRoute.DeepLink("deeplinkUrl2")
+                deepLink = "deeplinkUrl2"
             )
         ))
         assertTrue(state.notificationItems.contains(
@@ -154,10 +136,10 @@ class NotificationViewModelTest {
                 courseLabel = null,
                 date = null,
                 isRead = false,
-                route = NotificationRoute.DeepLink("deeplinkUrl3")
+                deepLink = "deeplinkUrl3"
             )
         ))
-        assertTrue(state.notificationItems.contains(
+        assertFalse(state.notificationItems.contains(
             NotificationItem(
                 category = NotificationItemCategory(
                     "Announcement",
@@ -167,26 +149,7 @@ class NotificationViewModelTest {
                 courseLabel = course.name,
                 date = null,
                 isRead = false,
-                route = NotificationRoute.DeepLink("deeplinkUrl4")
-            )
-        ))
-        assertTrue(state.notificationItems.contains(
-            NotificationItem(
-                category = NotificationItemCategory(
-                    "Announcement",
-                    StatusChipColor.Sky
-                ),
-                title = "Global Announcement 1",
-                courseLabel = null,
-                date = globalAnnouncement.startAt.toDate(),
-                isRead = true,
-                route = NotificationRoute.ExplicitRoute(
-                    HorizonInboxRoute.InboxDetails.route(
-                        type = HorizonInboxItemType.AccountNotification,
-                        id = 1L,
-                        courseId = null
-                    )
-                )
+                deepLink = "deeplinkUrl4"
             )
         ))
     }

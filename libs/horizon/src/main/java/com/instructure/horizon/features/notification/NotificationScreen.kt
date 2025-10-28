@@ -162,22 +162,14 @@ private fun NotificationItemContent(
             .clip(HorizonCornerRadius.level2)
             .fillMaxWidth()
             .clickable {
-                when (val route = notificationItem.route) {
-                    is NotificationRoute.DeepLink -> {
-                        val request = NavDeepLinkRequest.Builder
-                            .fromUri(route.deepLink.toUri())
-                            .build()
+                val request = NavDeepLinkRequest.Builder
+                    .fromUri(notificationItem.deepLink.toUri())
+                    .build()
 
-                        try {
-                            navController.navigate(request)
-                        } catch (e: IllegalArgumentException) {
-                            showSnackbar(context.getString(R.string.notificationsFailedToOpenMessage))
-                        }
-                    }
-
-                    is NotificationRoute.ExplicitRoute -> {
-                        navController.navigate(route.route)
-                    }
+                try {
+                    navController.navigate(request)
+                } catch (e: IllegalArgumentException) {
+                    showSnackbar(context.getString(R.string.notificationsFailedToOpenMessage))
                 }
             }
             .padding(horizontal = 16.dp)
@@ -265,7 +257,7 @@ private fun NotificationsScreenPreview() {
             courseLabel = "Biology 101",
             date = Date(),
             isRead = false,
-            route = NotificationRoute.DeepLink("myapp://course/1/assignment/1")
+            deepLink = "myapp://course/1/assignment/1"
         ),
         NotificationItem(
             category = NotificationItemCategory(
@@ -276,41 +268,8 @@ private fun NotificationsScreenPreview() {
             courseLabel = "Math 201",
             date = Calendar.getInstance().apply { time = Date(); add(Calendar.DAY_OF_WEEK, -1) }.time,
             isRead = true,
-            route = NotificationRoute.ExplicitRoute("course/2/grade")
+            deepLink = "course/2/grade"
         ),
-        NotificationItem(
-            category = NotificationItemCategory(
-                stringResource(R.string.notificationsAnnouncementCategoryLabel),
-                StatusChipColor.Sky
-            ),
-            title = "New announcement in your course",
-            courseLabel = null,
-            date = Calendar.getInstance().apply { time = Date(); add(Calendar.DAY_OF_WEEK, -2) }.time,
-            isRead = false,
-            route = NotificationRoute.DeepLink("myapp://course/3/announcement/1")
-        ),
-        NotificationItem(
-            category = NotificationItemCategory(
-                stringResource(R.string.notificationsAnnouncementCategoryLabel),
-                StatusChipColor.Sky
-            ),
-            title = "New announcement in your course",
-            courseLabel = null,
-            date = Calendar.getInstance().apply { time = Date(); add(Calendar.DAY_OF_WEEK, -6) }.time,
-            isRead = false,
-            route = NotificationRoute.DeepLink("myapp://course/3/announcement/1")
-        ),
-        NotificationItem(
-            category = NotificationItemCategory(
-                stringResource(R.string.notificationsAnnouncementCategoryLabel),
-                StatusChipColor.Sky
-            ),
-            title = "New announcement in your course",
-            courseLabel = null,
-            date = Calendar.getInstance().apply { time = Date(); add(Calendar.DAY_OF_WEEK, -7) }.time,
-            isRead = false,
-            route = NotificationRoute.DeepLink("myapp://course/3/announcement/1")
-        )
     )
 
     val previewState = NotificationUiState(

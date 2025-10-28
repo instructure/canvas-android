@@ -23,8 +23,6 @@ import com.instructure.canvasapi2.models.StreamItem
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
-import com.instructure.horizon.features.inbox.HorizonInboxItemType
-import com.instructure.horizon.features.inbox.navigation.HorizonInboxRoute
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.platform.LoadingState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -79,36 +77,17 @@ class NotificationViewModel @Inject constructor(
                 courseLabel = if (it.isCourseNotification()) getCourseName(it.courseId) else null,
                 date = it.updatedDate,
                 isRead = it.isReadState,
-                route = if (it.assignment?.htmlUrl != null) {
-                    NotificationRoute.DeepLink(it.assignment?.htmlUrl!!)
+                deepLink = if (it.assignment?.htmlUrl != null) {
+                    it.assignment?.htmlUrl!!
                 } else {
-                    NotificationRoute.DeepLink(it.htmlUrl)
+                    it.htmlUrl
                 }
-            )
-        }
-        val globalNotifications = repository.getGlobalAnnouncements(forceRefresh).map {
-            NotificationItem(
-                category = NotificationItemCategory(
-                    context.getString(R.string.notificationsAnnouncementCategoryLabel),
-                    StatusChipColor.Sky
-                ),
-                title = it.subject,
-                courseLabel = null,
-                date = it.startDate,
-                isRead = true,
-                route = NotificationRoute.ExplicitRoute(
-                    HorizonInboxRoute.InboxDetails.route(
-                        type = HorizonInboxItemType.AccountNotification,
-                        id = it.id,
-                        courseId = null
-                    )
-                )
             )
         }
 
         _uiState.update {
             it.copy(
-                notificationItems = (userNotifications + globalNotifications).sortedByDescending { item -> item.date }
+                notificationItems = (userNotifications).sortedByDescending { item -> item.date }
             )
         }
     }
