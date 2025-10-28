@@ -270,7 +270,7 @@ class NotificationInteractionTest : StudentComposeTest() {
         grade: String? = null,
         excused: Boolean = false,
         checkpointTag: String? = null,
-        replyRequiredCount: Int = 1
+        replyRequiredCount: Int = 0
     ): MockCanvas {
         val data = MockCanvas.init(courseCount = 1, favoriteCourseCount = 1, studentCount = 1, teacherCount = 1)
 
