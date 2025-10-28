@@ -16,7 +16,6 @@
  */
 package com.instructure.horizon.ui.features.dashboard.widget.myprogress
 
-import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
@@ -69,9 +68,8 @@ class DashboardMyProgressWidgetUiTest {
         composeTestRule.onNodeWithText("We weren't able to load this content.\nPlease try again.", substring = true)
             .assertIsDisplayed()
 
-        composeTestRule.onNodeWithText("Refresh")
+        composeTestRule.onNodeWithText("Refresh", useUnmergedTree = true)
             .assertIsDisplayed()
-            .assertHasClickAction()
             .performClick()
 
         assert(refreshCalled) { "Refresh callback should be called when retry button is clicked" }
@@ -92,9 +90,9 @@ class DashboardMyProgressWidgetUiTest {
 
         composeTestRule.onNodeWithText("Activities").assertIsDisplayed()
 
-        composeTestRule.onNodeWithText("5").assertIsDisplayed()
+        composeTestRule.onNodeWithText("5", useUnmergedTree = true).assertIsDisplayed()
 
-        composeTestRule.onNodeWithText("completed").assertIsDisplayed()
+        composeTestRule.onNodeWithText("completed", useUnmergedTree = true).assertIsDisplayed()
     }
 
     @Test
