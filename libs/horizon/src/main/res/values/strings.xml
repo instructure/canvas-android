@@ -406,4 +406,5 @@
     <string name="a11y_unselected">Unselected</string>
     <string name="dashboardCourseCardProgramChipLabel">Program</string>
     <string name="dashboardCourseCardProgramDetailsMessage">Welcome to %1$s! View your program to enroll in your first course.</string>
+    <string name="dashboardNoCoursesMessage">You aren’t currently enrolled in a course.</string>
 </resources>

@@ -35,6 +35,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -48,6 +49,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.hideFromAccessibility
@@ -60,6 +62,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.instructure.horizon.R
+import com.instructure.horizon.features.dashboard.DashboardCard
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.course.card.CardClickAction
 import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardContent
@@ -68,6 +71,7 @@ import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCar
 import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardState
 import com.instructure.horizon.features.home.HomeNavigationRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.navigation.MainNavigationRoute
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -137,55 +141,69 @@ private fun DashboardCourseSectionContent(
             )
         }
 
-
-        HorizontalPager(
-            pagerstate,
-            beyondViewportPageCount = pagerstate.pageCount,
-            contentPadding = PaddingValues(horizontal = 16.dp),
-            pageSpacing = 4.dp,
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.semantics {
-                role = Role.Carousel
+        if (state.courses.isNotEmpty()) {
+            HorizontalPager(
+                pagerstate,
+                beyondViewportPageCount = pagerstate.pageCount,
+                contentPadding = PaddingValues(horizontal = 16.dp),
+                pageSpacing = 4.dp,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.semantics {
+                    role = Role.Carousel
+                }
+            ) {
+                var cardWidthList by remember { mutableStateOf(emptyMap<Int, Float>()) }
+                val scaleAnimation by animateFloatAsState(
+                    if (it == pagerstate.currentPage) {
+                        (1 - abs(pagerstate.currentPageOffsetFraction.convertScaleRange()))
+                    } else {
+                        (1f - (cardAnimationRange * 2)) + (abs(pagerstate.currentPageOffsetFraction.convertScaleRange()))
+                    },
+                    label = "DashboardCourseCardAnimation",
+                )
+                val animationDirection = when {
+                    it < pagerstate.currentPage -> 1
+                    it > pagerstate.currentPage -> -1
+                    else -> if (pagerstate.currentPageOffsetFraction > 0) 1 else -1
+                }
+                DashboardCourseItem(
+                    state.courses[it],
+                    mainNavController,
+                    homeNavController,
+                    Modifier
+                        .onGloballyPositioned { coordinates ->
+                            cardWidthList = cardWidthList + (it to coordinates.size.width.toFloat())
+                        }
+                        .offset {
+                            IntOffset(
+                                (animationDirection * ((cardWidthList[it]
+                                    ?: 0f) / 2 * (1 - scaleAnimation))).toInt(),
+                                0
+                            )
+                        }
+                        .scale(scaleAnimation)
+                )
             }
-        ) {
-            var cardWidthList by remember { mutableStateOf(emptyMap<Int, Float>()) }
-            val scaleAnimation by animateFloatAsState(
-                if (it == pagerstate.currentPage) {
-                    (1 - abs(pagerstate.currentPageOffsetFraction.convertScaleRange()))
-                } else {
-                    (1f - (cardAnimationRange * 2)) + (abs(pagerstate.currentPageOffsetFraction.convertScaleRange()))
-                },
-                label = "DashboardCourseCardAnimation",
-            )
-            val animationDirection = when {
-                it < pagerstate.currentPage -> 1
-                it > pagerstate.currentPage -> -1
-                else -> if (pagerstate.currentPageOffsetFraction > 0) 1 else -1
+
+            if (pagerstate.pageCount >= 4) {
+                DashboardCourseCardIndicator(pagerstate)
             }
-            DashboardCourseItem(
-                state.courses[it],
-                mainNavController,
-                homeNavController,
-                Modifier
-                    .onGloballyPositioned { coordinates ->
-                        cardWidthList = cardWidthList + (it to coordinates.size.width.toFloat())
-                    }
-                    .offset {
-                        IntOffset(
-                            (animationDirection * ((cardWidthList[it]
-                                ?: 0f) / 2 * (1 - scaleAnimation))).toInt(),
-                            0
-                        )
-                    }
-                    .scale(scaleAnimation)
-            )
-        }
 
-        if (pagerstate.pageCount >= 4) {
-            DashboardCourseCardIndicator(pagerstate)
+            Spacer(Modifier.height(16.dp))
+        } else {
+            DashboardCard(
+                Modifier.padding(horizontal = 16.dp)
+            ) {
+                Text(
+                    stringResource(R.string.dashboardNoCoursesMessage),
+                    style = HorizonTypography.h4,
+                    color = HorizonColors.Text.body(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp, vertical = 24.dp)
+                )
+            }
         }
-
-        Spacer(Modifier.height(16.dp))
     }
 }
 
