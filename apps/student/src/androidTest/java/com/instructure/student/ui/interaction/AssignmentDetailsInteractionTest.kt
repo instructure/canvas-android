@@ -63,9 +63,7 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
 
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, SecondaryFeatureCategory.SUBMISSIONS_ONLINE_URL)
-    fun testSubmission_submitAssignment() {
-        // TODO - Test submitting for each submission type
-        // For now, I'm going to just test one submission type
+    fun testSubmission_submitOnlineURL() {
         val data = MockCanvas.init(
             studentCount = 1,
             courseCount = 1
@@ -87,6 +85,109 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
         assignmentDetailsPage.clickSubmit()
         urlSubmissionUploadPage.submitText("https://google.com")
         assignmentDetailsPage.assertStatusSubmitted()
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, SecondaryFeatureCategory.SUBMISSIONS_TEXT_ENTRY)
+    fun testSubmission_submitTextEntry() {
+        val data = MockCanvas.init(
+            studentCount = 1,
+            courseCount = 1
+        )
+
+        val course = data.courses.values.first()
+        val student = data.students[0]
+        val token = data.tokenFor(student)!!
+        val assignment = data.addAssignment(courseId = course.id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY))
+        data.addSubmissionForAssignment(
+            assignmentId = assignment.id,
+            userId = data.users.values.first().id,
+            type = Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString
+        )
+        tokenLogin(data.domain, token, student)
+        routeTo("courses/${course.id}/assignments", data.domain)
+
+        assignmentListPage.clickAssignment(assignment)
+        assignmentDetailsPage.clickSubmit()
+        textSubmissionUploadPage.typeText("This is my test submission text.")
+        textSubmissionUploadPage.clickOnSubmitButton()
+        assignmentDetailsPage.assertStatusSubmitted()
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, SecondaryFeatureCategory.SUBMISSIONS_FILE_UPLOAD)
+    fun testSubmission_submitFileUpload() {
+        val data = MockCanvas.init(
+            studentCount = 1,
+            courseCount = 1
+        )
+
+        val course = data.courses.values.first()
+        val student = data.students[0]
+        val token = data.tokenFor(student)!!
+        val assignment = data.addAssignment(courseId = course.id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_UPLOAD))
+        data.addSubmissionForAssignment(
+            assignmentId = assignment.id,
+            userId = data.users.values.first().id,
+            type = Assignment.SubmissionType.ONLINE_UPLOAD.apiString
+        )
+        tokenLogin(data.domain, token, student)
+        routeTo("courses/${course.id}/assignments", data.domain)
+
+        val fileName = "test.txt"
+        androidx.test.espresso.intent.Intents.init()
+        try {
+            stubFilePickerIntent(fileName)
+            setupFileOnDevice(fileName)
+
+            assignmentListPage.clickAssignment(assignment)
+            assignmentDetailsPage.clickSubmit()
+            pickerSubmissionUploadPage.chooseDevice()
+            pickerSubmissionUploadPage.waitForSubmitButtonToAppear()
+            pickerSubmissionUploadPage.assertFileDisplayed(fileName)
+            pickerSubmissionUploadPage.submit()
+            assignmentDetailsPage.assertStatusSubmitted()
+        } finally {
+            androidx.test.espresso.intent.Intents.release()
+        }
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, SecondaryFeatureCategory.SUBMISSIONS_MEDIA_RECORDING)
+    fun testSubmission_submitMediaRecording() {
+        val data = MockCanvas.init(
+            studentCount = 1,
+            courseCount = 1
+        )
+
+        val course = data.courses.values.first()
+        val student = data.students[0]
+        val token = data.tokenFor(student)!!
+        val assignment = data.addAssignment(courseId = course.id, submissionTypeList = listOf(Assignment.SubmissionType.MEDIA_RECORDING))
+        data.addSubmissionForAssignment(
+            assignmentId = assignment.id,
+            userId = data.users.values.first().id,
+            type = Assignment.SubmissionType.MEDIA_RECORDING.apiString
+        )
+        tokenLogin(data.domain, token, student)
+        routeTo("courses/${course.id}/assignments", data.domain)
+
+        val fileName = "test_video.mp4"
+        androidx.test.espresso.intent.Intents.init()
+        try {
+            stubFilePickerIntent(fileName)
+            setupFileOnDevice(fileName)
+
+            assignmentListPage.clickAssignment(assignment)
+            assignmentDetailsPage.clickSubmit()
+            pickerSubmissionUploadPage.chooseDevice()
+            pickerSubmissionUploadPage.waitForSubmitButtonToAppear()
+            pickerSubmissionUploadPage.assertFileDisplayed(fileName)
+            pickerSubmissionUploadPage.submit()
+            assignmentDetailsPage.assertStatusSubmitted()
+        } finally {
+            androidx.test.espresso.intent.Intents.release()
+        }
     }
 
     @Test
