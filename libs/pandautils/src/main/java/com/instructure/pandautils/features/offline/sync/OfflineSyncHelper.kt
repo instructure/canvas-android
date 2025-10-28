@@ -25,10 +25,10 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import androidx.work.await
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.offline.sync.settings.SyncFrequency
 import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
+import kotlinx.coroutines.flow.first
 import java.util.concurrent.TimeUnit
 
 class OfflineSyncHelper(
@@ -103,17 +103,16 @@ class OfflineSyncHelper(
     }
 
     private suspend fun isWorkScheduled(): Boolean {
-        return workManager.getWorkInfosForUniqueWork(apiPrefs.user?.id.toString()).await()
-            .any { it.state != WorkInfo.State.CANCELLED }
+        return workManager.getWorkInfosForUniqueWorkFlow(apiPrefs.user?.id.toString()).first().any { it.state != WorkInfo.State.CANCELLED }
     }
 
     private suspend fun isPeriodicWorkRunning(): Boolean {
-        return workManager.getWorkInfosForUniqueWork(apiPrefs.user?.id.toString()).await()
+        return workManager.getWorkInfosForUniqueWorkFlow(apiPrefs.user?.id.toString()).first()
             .any { it.state == WorkInfo.State.RUNNING }
     }
 
     private suspend fun getRunningOneTimeWorkInfo(): WorkInfo? {
-        return workManager.getWorkInfosByTag(OfflineSyncWorker.ONE_TIME_TAG).await()
+        return workManager.getWorkInfosByTagFlow(OfflineSyncWorker.ONE_TIME_TAG).first()
             .firstOrNull { it.state == WorkInfo.State.RUNNING }
     }
 

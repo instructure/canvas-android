@@ -18,10 +18,10 @@ package com.instructure.horizon.features.learn
 
 import android.content.Context
 import androidx.lifecycle.SavedStateHandle
-import com.instructure.canvasapi2.managers.CourseWithModuleItemDurations
-import com.instructure.canvasapi2.managers.CourseWithProgress
-import com.instructure.canvasapi2.managers.graphql.Program
-import com.instructure.canvasapi2.managers.graphql.ProgramRequirement
+import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithModuleItemDurations
+import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.ProgramRequirement
 import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus
 import com.instructure.journey.type.ProgramVariantType
 import io.mockk.coEvery
@@ -44,12 +44,28 @@ class LearnViewModelTest {
     private val context: Context = mockk(relaxed = true)
     private val repository: LearnRepository = mockk(relaxed = true)
     private val savedStateHandle: SavedStateHandle = SavedStateHandle()
+    private val learnEventHandler: LearnEventHandler = LearnEventHandler()
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val testCourses = listOf(
-        CourseWithProgress(courseId = 1L, courseName = "Course 1", courseSyllabus = "", progress = 50.0),
-        CourseWithProgress(courseId = 2L, courseName = "Course 2", courseSyllabus = "", progress = 75.0),
-        CourseWithProgress(courseId = 3L, courseName = "Course 3", courseSyllabus = "", progress = 25.0)
+        CourseWithProgress(
+            courseId = 1L,
+            courseName = "Course 1",
+            courseSyllabus = "",
+            progress = 50.0
+        ),
+        CourseWithProgress(
+            courseId = 2L,
+            courseName = "Course 2",
+            courseSyllabus = "",
+            progress = 75.0
+        ),
+        CourseWithProgress(
+            courseId = 3L,
+            courseName = "Course 3",
+            courseSyllabus = "",
+            progress = 25.0
+        )
     )
 
     private val testProgram = Program(
@@ -145,12 +161,46 @@ class LearnViewModelTest {
     fun `Test learningItemId from saved state`() = runTest {
         val savedStateWithId = SavedStateHandle(mapOf("learningItemId" to "testId"))
 
-        val viewModel = LearnViewModel(context, repository, savedStateWithId)
+        val viewModel = LearnViewModel(context, repository, savedStateWithId, learnEventHandler)
 
         assertFalse(viewModel.state.value.screenState.isLoading)
     }
 
+    @Test
+    fun `RefreshRequested event triggers refresh and reloads data`() = runTest {
+        val viewModel = getViewModel()
+
+        val updatedCourses = listOf(
+            CourseWithProgress(courseId = 4L, courseName = "Updated Course", courseSyllabus = "", progress = 90.0)
+        )
+        coEvery { repository.getCoursesWithProgress(any()) } returns updatedCourses
+
+        learnEventHandler.postEvent(LearnEvent.RefreshRequested)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        assertTrue(viewModel.state.value.screenState.isRefreshing == false)
+    }
+
+    @Test
+    fun `Multiple refresh events update state correctly`() = runTest {
+        val viewModel = getViewModel()
+
+        learnEventHandler.postEvent(LearnEvent.RefreshRequested)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        val secondCourses = listOf(
+            CourseWithProgress(courseId = 5L, courseName = "Second Update", courseSyllabus = "", progress = 100.0)
+        )
+        coEvery { repository.getCoursesWithProgress(any()) } returns secondCourses
+        coEvery { repository.getPrograms(any()) } returns emptyList()
+
+        learnEventHandler.postEvent(LearnEvent.RefreshRequested)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        assertFalse(viewModel.state.value.screenState.isRefreshing)
+    }
+
     private fun getViewModel(): LearnViewModel {
-        return LearnViewModel(context, repository, savedStateHandle)
+        return LearnViewModel(context, repository, savedStateHandle, learnEventHandler)
     }
 }

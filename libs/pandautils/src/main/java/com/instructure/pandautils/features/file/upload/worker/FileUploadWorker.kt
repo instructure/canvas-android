@@ -331,7 +331,7 @@ class FileUploadWorker @AssistedInject constructor(
                 }
             }).dataOrThrow
 
-            val updatedList = workDataBuilder.build()
+            val updatedList: Array<String?> = workDataBuilder.build()
                 .getStringArray(PROGRESS_DATA_UPLOADED_FILES)
                 .orEmpty()
                 .toMutableList()

@@ -30,8 +30,9 @@ class SpeedGraderPresenterFactory(
     private val discussionEntries:  DiscussionTopicHeader?,
     private val repository: AssignmentSubmissionRepository,
     private val filteredSubmissionIds: LongArray,
-    private val filter: SubmissionListFilter,
-    private val filterValue: Double
+    private val selectedFilters: Set<SubmissionListFilter>,
+    private val filterValueAbove: Double?,
+    private val filterValueBelow: Double?
 ) : PresenterFactory<SpeedGraderView, SpeedGraderPresenter> {
-    override fun create() = SpeedGraderPresenter(courseId, assignmentId, submissionId, discussionEntries, repository, filteredSubmissionIds, filter, filterValue)
+    override fun create() = SpeedGraderPresenter(courseId, assignmentId, submissionId, discussionEntries, repository, filteredSubmissionIds, selectedFilters, filterValueAbove, filterValueBelow)
 }

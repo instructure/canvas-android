@@ -72,7 +72,20 @@ class SettingsScreenTest {
         }
 
         items.forEach { (title, items) ->
-            composeTestRule.onNodeWithText(context.getString(title)).assertExists()
+            retry(catchBlock = {
+                val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+                val y = device.displayHeight / 2
+                val x = device.displayWidth / 2
+                device.swipe(
+                    x,
+                    y,
+                    x,
+                    0,
+                    10
+                )
+            }) {
+                composeTestRule.onNodeWithText(context.getString(title)).assertExists()
+            }
             items.forEach { item ->
                 retry(catchBlock = {
                     val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())

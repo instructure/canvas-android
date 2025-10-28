@@ -18,9 +18,9 @@ package com.instructure.canvas.espresso.mockcanvas.fakes
 
 import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvasapi2.GetCoursesQuery
-import com.instructure.canvasapi2.managers.CourseWithModuleItemDurations
-import com.instructure.canvasapi2.managers.CourseWithProgress
-import com.instructure.canvasapi2.managers.HorizonGetCoursesManager
+import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithModuleItemDurations
+import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
+import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
 import com.instructure.canvasapi2.type.EnrollmentWorkflowState
 import com.instructure.canvasapi2.utils.DataResult
 import java.util.Date

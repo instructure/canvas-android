@@ -20,6 +20,8 @@ package com.instructure.pandautils.room.offline.facade
 import androidx.room.withTransaction
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.pandautils.room.offline.OfflineDatabase
+import com.instructure.pandautils.room.offline.daos.AssignmentDao
+import com.instructure.pandautils.room.offline.daos.CheckpointDao
 import com.instructure.pandautils.room.offline.daos.DiscussionParticipantDao
 import com.instructure.pandautils.room.offline.daos.DiscussionTopicHeaderDao
 import com.instructure.pandautils.room.offline.daos.DiscussionTopicPermissionDao
@@ -39,7 +41,9 @@ class DiscussionTopicHeaderFacade(
     private val remoteFileDao: RemoteFileDao,
     private val localFileDao: LocalFileDao,
     private val discussionTopicRemoteFileDao: DiscussionTopicRemoteFileDao,
-    private val offlineDatabase: OfflineDatabase
+    private val offlineDatabase: OfflineDatabase,
+    private val assignmentDao: AssignmentDao,
+    private val checkpointDao: CheckpointDao
 ) {
     suspend fun insertDiscussion(discussionTopicHeader: DiscussionTopicHeader, courseId: Long): Long {
         discussionTopicHeader.author?.let { discussionParticipantDao.insert(DiscussionParticipantEntity(it)) }
@@ -127,6 +131,20 @@ class DiscussionTopicHeaderFacade(
                 it.copy(url = path)
             }
             .map { it.toApiModel() }
-        return discussionTopicHeaderEntity.toApiModel(authorEntity?.toApiModel(), permissions = permission?.toApiModel(), attachments = attachments)
+        val assignment = discussionTopicHeaderEntity.assignmentId?.let {
+            assignmentDao.findById(it)?.let { assignmentEntity ->
+                val checkpoints = checkpointDao.findByAssignmentId(assignmentEntity.id).map { checkpoint ->
+                    checkpoint.toApiModel()
+                }
+                assignmentEntity.toApiModel(checkpoints = checkpoints)
+            }
+        }
+
+        return discussionTopicHeaderEntity.toApiModel(
+            authorEntity?.toApiModel(),
+            assignment,
+            permission?.toApiModel(),
+            attachments
+        )
     }
 }

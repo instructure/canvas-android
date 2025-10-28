@@ -17,10 +17,10 @@
 package com.instructure.horizon.features.moduleitemsequence.content.page
 
 import androidx.lifecycle.SavedStateHandle
-import com.instructure.canvasapi2.managers.NoteHighlightedData
-import com.instructure.canvasapi2.managers.NoteHighlightedDataRange
-import com.instructure.canvasapi2.managers.NoteHighlightedDataTextPosition
-import com.instructure.canvasapi2.managers.NoteObjectType
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedData
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedDataRange
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedDataTextPosition
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteObjectType
 import com.instructure.canvasapi2.models.Page
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemContent
 import com.instructure.horizon.features.notebook.addedit.add.AddNoteRepository

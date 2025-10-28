@@ -68,6 +68,7 @@ import com.instructure.pandautils.room.offline.daos.ModuleItemDao
 import com.instructure.pandautils.room.offline.daos.ModuleNameDao
 import com.instructure.pandautils.room.offline.daos.ModuleObjectDao
 import com.instructure.pandautils.room.offline.daos.PageDao
+import com.instructure.pandautils.room.offline.daos.PlannerItemDao
 import com.instructure.pandautils.room.offline.daos.PlannerOverrideDao
 import com.instructure.pandautils.room.offline.daos.QuizDao
 import com.instructure.pandautils.room.offline.daos.RemoteFileDao
@@ -139,6 +140,7 @@ import com.instructure.pandautils.room.offline.entities.ModuleNameEntity
 import com.instructure.pandautils.room.offline.entities.ModuleObjectEntity
 import com.instructure.pandautils.room.offline.entities.NeedsGradingCountEntity
 import com.instructure.pandautils.room.offline.entities.PageEntity
+import com.instructure.pandautils.room.offline.entities.PlannerItemEntity
 import com.instructure.pandautils.room.offline.entities.PlannerOverrideEntity
 import com.instructure.pandautils.room.offline.entities.QuizEntity
 import com.instructure.pandautils.room.offline.entities.RemoteFileEntity
@@ -197,6 +199,7 @@ import com.instructure.pandautils.room.offline.entities.UserEntity
         ModuleObjectEntity::class,
         NeedsGradingCountEntity::class,
         PageEntity::class,
+        PlannerItemEntity::class,
         PlannerOverrideEntity::class,
         RemoteFileEntity::class,
         RubricCriterionAssessmentEntity::class,
@@ -233,7 +236,7 @@ import com.instructure.pandautils.room.offline.entities.UserEntity
         CustomGradeStatusEntity::class,
         CheckpointEntity::class,
         SubAssignmentSubmissionEntity::class
-    ], version = 6
+    ], version = 9
 )
 @TypeConverters(value = [Converters::class, OfflineConverters::class])
 abstract class OfflineDatabase : RoomDatabase() {
@@ -271,6 +274,8 @@ abstract class OfflineDatabase : RoomDatabase() {
     abstract fun submissionDao(): SubmissionDao
 
     abstract fun groupDao(): GroupDao
+
+    abstract fun plannerItemDao(): PlannerItemDao
 
     abstract fun plannerOverrideDao(): PlannerOverrideDao
 

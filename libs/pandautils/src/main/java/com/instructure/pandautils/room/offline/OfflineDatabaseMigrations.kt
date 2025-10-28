@@ -155,5 +155,62 @@ val offlineDatabaseMigrations = arrayOf(
                     "`isGradeMatchesCurrentSubmission` INTEGER NOT NULL," +
                     "FOREIGN KEY(`submissionId`, `submissionAttempt`) REFERENCES `SubmissionEntity`(`id`, `attempt`) ON UPDATE NO ACTION ON DELETE CASCADE)"
         )
+    },
+    createMigration(6, 7) { database ->
+        database.execSQL(
+            "CREATE TABLE IF NOT EXISTS `PlannerItemEntity` (" +
+                    "`id` INTEGER PRIMARY KEY NOT NULL," +
+                    "`courseId` INTEGER," +
+                    "`groupId` INTEGER," +
+                    "`userId` INTEGER," +
+                    "`contextType` TEXT," +
+                    "`contextName` TEXT," +
+                    "`plannableType` TEXT NOT NULL," +
+                    "`plannableId` INTEGER NOT NULL," +
+                    "`plannableTitle` TEXT," +
+                    "`plannableDetails` TEXT," +
+                    "`plannableTodoDate` TEXT," +
+                    "`plannableEndAt` INTEGER," +
+                    "`plannableAllDay` INTEGER," +
+                    "`plannableCourseId` INTEGER," +
+                    "`plannableGroupId` INTEGER," +
+                    "`plannableUserId` INTEGER," +
+                    "`plannableDate` INTEGER NOT NULL," +
+                    "`htmlUrl` TEXT," +
+                    "`submissionStateSubmitted` INTEGER," +
+                    "`submissionStateExcused` INTEGER," +
+                    "`submissionStateGraded` INTEGER," +
+                    "`newActivity` INTEGER," +
+                    "`plannerOverrideId` INTEGER," +
+                    "`plannerOverrideMarkedComplete` INTEGER," +
+                    "FOREIGN KEY(`courseId`) REFERENCES `CourseEntity`(`id`) ON DELETE CASCADE)"
+        )
+    },
+    createMigration(7, 8) { database ->
+        database.execSQL(
+            "CREATE TABLE IF NOT EXISTS `CheckpointEntity_temp` (" +
+                    "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
+                    "`assignmentId` INTEGER," +
+                    "`name` TEXT," +
+                    "`tag` TEXT," +
+                    "`pointsPossible` REAL," +
+                    "`dueAt` TEXT," +
+                    "`onlyVisibleToOverrides` INTEGER NOT NULL," +
+                    "`lockAt` TEXT," +
+                    "`unlockAt` TEXT," +
+                    "`moduleItemId` INTEGER," +
+                    "`courseId` INTEGER," +
+                    "FOREIGN KEY(`assignmentId`) REFERENCES `AssignmentEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE," +
+                    "FOREIGN KEY(`moduleItemId`) REFERENCES `ModuleItemEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE)"
+        )
+        database.execSQL(
+            "INSERT INTO CheckpointEntity_temp (id, assignmentId, name, tag, pointsPossible, dueAt, onlyVisibleToOverrides, lockAt, unlockAt) " +
+                    "SELECT id, assignmentId, name, tag, pointsPossible, dueAt, onlyVisibleToOverrides, lockAt, unlockAt FROM CheckpointEntity"
+        )
+        database.execSQL("DROP TABLE CheckpointEntity")
+        database.execSQL("ALTER TABLE CheckpointEntity_temp RENAME TO CheckpointEntity")
+    },
+    createMigration(8, 9) { database ->
+        database.execSQL("ALTER TABLE `ScheduleItemEntity` ADD COLUMN `subAssignmentId` INTEGER")
     }
 )

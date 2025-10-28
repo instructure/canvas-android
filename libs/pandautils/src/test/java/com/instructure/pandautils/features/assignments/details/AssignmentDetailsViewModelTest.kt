@@ -34,6 +34,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Checkpoint
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseSettings
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.LockInfo
 import com.instructure.canvasapi2.models.Quiz
@@ -499,7 +500,8 @@ class AssignmentDetailsViewModelTest {
             isObserver = false,
             selectedSubmissionAttempt = null,
             assignmentUrl = "https://assignment.url",
-            isAssignmentEnhancementEnabled = true
+            isAssignmentEnhancementEnabled = true,
+            isQuiz = false
         )
         assertEquals(expected, viewModel.events.value?.peekContent())
     }
@@ -1164,7 +1166,8 @@ class AssignmentDetailsViewModelTest {
             isObserver = false,
             selectedSubmissionAttempt = 2L,
             assignmentUrl = "https://assignment.url",
-            isAssignmentEnhancementEnabled = true
+            isAssignmentEnhancementEnabled = true,
+            isQuiz = false
         )
         assertEquals(expected, viewModel.events.value?.peekContent())
     }
@@ -1304,5 +1307,82 @@ class AssignmentDetailsViewModelTest {
 
         assertTrue(viewModel.dueDateReminderViewStates[0].reminders.isEmpty())
         assertTrue(viewModel.dueDateReminderViewStates[1].reminders.isEmpty())
+    }
+
+    @Test
+    fun `Assignment with checkpoints maps discussionCheckpoints correctly`() {
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+        every { colorProvider.getContentColor(any()) } returns colorKeeper.getOrGenerateColor(course)
+        every { application.getString(R.string.reply_to_topic) } returns "Reply to topic"
+        every { application.getString(R.string.additional_replies, any()) } returns "Additional replies (3)"
+        every { resources.getString(R.string.gradedSubmissionLabel) } returns "Graded"
+        every { resources.getString(R.string.lateSubmissionLabel) } returns "Late"
+        every { resources.getString(R.string.gradeFormatScoreOutOfPointsPossible, "5", "5") } returns "5 / 5 pts"
+        every { resources.getString(R.string.gradeFormatScoreOutOfPointsPossible, "3", "5") } returns "3 / 5 pts"
+
+        val checkpoint1 = Checkpoint(
+            tag = "reply_to_topic",
+            pointsPossible = 5.0,
+            dueAt = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 1) }.time.toApiString()
+        )
+        val checkpoint2 = Checkpoint(
+            tag = "reply_to_entry",
+            pointsPossible = 5.0,
+            dueAt = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 2) }.time.toApiString()
+        )
+
+        val subSubmission1 = SubAssignmentSubmission(
+            subAssignmentTag = "reply_to_topic",
+            grade = "5",
+            score = 5.0
+        )
+        val subSubmission2 = SubAssignmentSubmission(
+            subAssignmentTag = "reply_to_entry",
+            grade = "3",
+            score = 3.0,
+            late = true
+        )
+
+        val assignment = Assignment(
+            checkpoints = listOf(checkpoint1, checkpoint2),
+            discussionTopicHeader = DiscussionTopicHeader(replyRequiredCount = 3),
+            submission = Submission(
+                subAssignmentSubmissions = arrayListOf(subSubmission1, subSubmission2)
+            )
+        )
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+
+        val viewModel = getViewModel()
+
+        assertEquals(2, viewModel.discussionCheckpoints.value.size)
+
+        // First checkpoint - graded
+        assertEquals("Reply to topic", viewModel.discussionCheckpoints.value[0].name)
+        assertEquals("5 / 5 pts", viewModel.discussionCheckpoints.value[0].grade)
+        assertTrue(viewModel.discussionCheckpoints.value[0].stateLabel is com.instructure.pandautils.features.grades.SubmissionStateLabel.Predefined)
+        assertEquals(R.string.gradedSubmissionLabel, (viewModel.discussionCheckpoints.value[0].stateLabel as com.instructure.pandautils.features.grades.SubmissionStateLabel.Predefined).labelRes)
+
+        // Second checkpoint - late
+        assertEquals("Additional replies (3)", viewModel.discussionCheckpoints.value[1].name)
+        assertEquals("3 / 5 pts", viewModel.discussionCheckpoints.value[1].grade)
+        assertTrue(viewModel.discussionCheckpoints.value[1].stateLabel is com.instructure.pandautils.features.grades.SubmissionStateLabel.Predefined)
+        assertEquals(R.string.lateSubmissionLabel, (viewModel.discussionCheckpoints.value[1].stateLabel as com.instructure.pandautils.features.grades.SubmissionStateLabel.Predefined).labelRes)
+    }
+
+    @Test
+    fun `Assignment without checkpoints has empty discussionCheckpoints list`() {
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        val assignment = Assignment(
+            name = "Regular assignment",
+            dueAt = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 1) }.time.toApiString()
+        )
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+
+        val viewModel = getViewModel()
+
+        assertTrue(viewModel.discussionCheckpoints.value.isEmpty())
     }
 }

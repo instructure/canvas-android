@@ -24,8 +24,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.instructure.horizon.R
+import com.instructure.horizon.features.dashboard.DashboardCard
 import com.instructure.horizon.horizonui.animation.shimmerEffect
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
@@ -36,7 +41,17 @@ import com.instructure.horizon.horizonui.foundation.SpaceSize
 fun DashboardCourseCardLoading(
     modifier: Modifier = Modifier,
 ) {
-    DashboardCourseCard(modifier.padding(bottom = 8.dp)) {
+    val context = LocalContext.current
+    DashboardCard(
+        modifier
+            .padding(bottom = 8.dp)
+            .clearAndSetSemantics {
+                contentDescription = context.getString(
+                    R.string.a11y_dashboardWidgetLoadingContentDescription,
+                    context.getString(R.string.a11y_dashboardCoursesSectionTitle)
+                )
+            },
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()

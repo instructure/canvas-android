@@ -19,18 +19,17 @@ package com.instructure.horizon.features.notification
 import com.instructure.canvasapi2.apis.AccountNotificationAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.StreamAPI
-import com.instructure.canvasapi2.managers.CourseWithProgress
-import com.instructure.canvasapi2.managers.HorizonGetCoursesManager
-import com.instructure.canvasapi2.models.AccountNotification
+import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
+import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.StreamItem
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.canvasapi2.utils.LinkHeaders
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -110,8 +109,8 @@ class NotificationRepositoryTest {
 
         val result = getRepository().getNotifications(forceRefresh = true)
 
-        assertEquals(5, result.size)
-        assertTrue(result.contains(announcementStreamItem))
+        assertEquals(4, result.size)
+        assertFalse(result.contains(announcementStreamItem))
         assertTrue(result.contains(dueDateStreamItem))
         assertTrue(result.contains(scoredGradeStreamItem))
         assertTrue(result.contains(scoredScoreStreamItem))
@@ -123,32 +122,6 @@ class NotificationRepositoryTest {
         coEvery { getCoursesManager.getCoursesWithProgress(any(), any()) } returns DataResult.Success(emptyList())
         coEvery { streamApi.getUserStream(any()) } returns DataResult.Fail()
         getRepository().getNotifications(true)
-    }
-
-    @Test
-    fun `Test successful Global Announcements depagination`() = runTest {
-        val announcement1 = AccountNotification(id = 1L, subject = "Announcement 1")
-        val announcement2 = AccountNotification(id = 2L, subject = "Announcement 2")
-
-        coEvery { accountNotificationApi.getAccountNotifications(any(), any(), any()) } returns
-            DataResult.Success(
-                listOf(announcement1),
-                LinkHeaders(nextUrl = "nextPageUrl")
-            )
-        coEvery { accountNotificationApi.getNextPageNotifications("nextPageUrl", any()) } returns
-                DataResult.Success(
-                    listOf(announcement2),
-                )
-
-        val result = getRepository().getGlobalAnnouncements(true)
-        assertEquals(2, result.size)
-        assertEquals(listOf(announcement1, announcement2), result)
-    }
-
-    @Test(expected = IllegalStateException::class)
-    fun `Test failed Global Announcements depagination`() = runTest {
-        coEvery { accountNotificationApi.getAccountNotifications(any(), any(), any()) } returns DataResult.Fail()
-        getRepository().getGlobalAnnouncements(true)
     }
 
     @Test
@@ -167,6 +140,6 @@ class NotificationRepositoryTest {
     }
 
     private fun getRepository(): NotificationRepository {
-        return NotificationRepository(apiPrefs, streamApi, courseApi, accountNotificationApi, getCoursesManager)
+        return NotificationRepository(apiPrefs, streamApi, courseApi, getCoursesManager)
     }
 }

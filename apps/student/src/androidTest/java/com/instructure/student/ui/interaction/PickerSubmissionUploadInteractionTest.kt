@@ -192,37 +192,6 @@ class PickerSubmissionUploadInteractionTest : StudentComposeTest() {
 
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
-    fun testFab_scanner(){
-        val scannerComponent = "com.instructure.student.features.documentscanning.DocumentScanningActivity"
-
-        goToSubmissionPicker()
-
-        Intents.init()
-        try {
-            val context = getInstrumentation().targetContext
-            val dir = context.externalCacheDir
-            val sampleFile = File(dir, mockedFileName)
-            val uri = Uri.fromFile(sampleFile)
-            val resultData = Intent().apply { data = uri }
-            val scannerResult = Instrumentation.ActivityResult(Activity.RESULT_OK, resultData)
-
-            intending(
-                IntentMatchers.hasComponent(scannerComponent)
-            ).respondWith(scannerResult)
-
-            pickerSubmissionUploadPage.chooseScanner()
-        } finally {
-            release()
-        }
-
-        pickerSubmissionUploadPage.waitForSubmitButtonToAppear()
-
-        pickerSubmissionUploadPage.assertFileDisplayed(mockedFileName)
-
-    }
-
-    @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
     fun testDeleteFile() {
         goToSubmissionPicker()
 

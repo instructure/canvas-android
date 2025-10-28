@@ -226,6 +226,12 @@
                         app:layout_constraintTop_toBottomOf="@id/gradeCellBarrier"
                         app:viewData="@{viewModel.data.selectedGradeCellViewData}" />
 
+                    <androidx.compose.ui.platform.ComposeView
+                        android:id="@+id/checkpointGradesComposeView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@id/gradeCell" />
+
                     <View
                         android:id="@+id/lockedDivider"
                         android:layout_width="match_parent"
@@ -233,7 +239,7 @@
                         android:layout_marginTop="30dp"
                         android:background="@color/borderMedium"
                         android:visibility="@{viewModel.data.lockedMessage.empty ? View.GONE : View.VISIBLE}"
-                        app:layout_constraintTop_toBottomOf="@id/gradeCell" />
+                        app:layout_constraintTop_toBottomOf="@id/checkpointGradesComposeView" />
 
                     <TextView
                         android:id="@+id/lockedMessageLabel"
