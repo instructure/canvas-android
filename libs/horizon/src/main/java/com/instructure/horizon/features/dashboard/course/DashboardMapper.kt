@@ -37,7 +37,10 @@ internal suspend fun List<GetCoursesQuery.Enrollment>.mapToDashboardCourseCardSt
 ): List<DashboardCourseCardState> {
     val completed = this.filter { it.isCompleted() }.map { it.mapCompleted(context, programs) }
     val active = this.filter { it.isActive() }.map { it.mapActive(programs, nextModuleForCourse) }
-    return (active + completed).sortedByDescending { it.lastAccessed }
+    return (active + completed).sortedByDescending { course ->
+        course.progress.run { if (this == 100.0) -1.0 else this } // Active courses first, then completed courses
+            ?: 0.0
+    }
 }
 
 internal fun List<Program>.mapToDashboardCourseCardState(context: Context,): List<DashboardCourseCardState> {
