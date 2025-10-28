@@ -68,6 +68,9 @@ class DiscussionRouterFragment : BaseCanvasFragment() {
             is DiscussionRouterAction.RouteToGroupDiscussion -> {
                 discussionRouter.routeToGroupDiscussion(action.group, action.id, action.header, action.isRedesignEnabled)
             }
+            is DiscussionRouterAction.RouteToDiscussionWebView -> {
+                discussionRouter.routeToDiscussionWebView(action.canvasContext, action.discussionTopicHeaderId)
+            }
             is DiscussionRouterAction.ShowToast -> {
                 toast(action.toast, Toast.LENGTH_SHORT)
                 Handler(Looper.getMainLooper()).post { requireActivity().onBackPressed() }

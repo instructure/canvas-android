@@ -45,5 +45,14 @@ class StudentDiscussionRouter(
         RouteMatcher.route(fragmentActivity, route)
     }
 
+    override fun routeToDiscussionWebView(canvasContext: CanvasContext, discussionTopicHeaderId: Long) {
+        val route = DiscussionDetailsWebViewFragment.makeRoute(canvasContext, discussionTopicHeaderId)
+        route.apply {
+            removePreviousScreen = true
+        }
+
+        RouteMatcher.route(fragmentActivity, route)
+    }
+
     override fun routeToNativeSpeedGrader(courseId: Long, assignmentId: Long, submissionIds: List<Long>, selectedIdx: Int, anonymousGrading: Boolean?, discussionTopicEntryId: Long?) = Unit
 }
