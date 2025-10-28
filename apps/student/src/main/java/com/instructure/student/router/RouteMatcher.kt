@@ -80,15 +80,16 @@ import com.instructure.student.features.pages.list.PageListFragment
 import com.instructure.student.features.people.details.PeopleDetailsFragment
 import com.instructure.student.features.people.list.PeopleListFragment
 import com.instructure.student.features.quiz.list.QuizListFragment
+import com.instructure.student.features.todolist.ToDoListFragment
 import com.instructure.student.fragment.AnnouncementListFragment
 import com.instructure.student.fragment.BasicQuizViewFragment
 import com.instructure.student.fragment.CourseSettingsFragment
 import com.instructure.student.fragment.DashboardFragment
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.fragment.NotificationListFragment
+import com.instructure.student.fragment.OldToDoListFragment
 import com.instructure.student.fragment.ProfileSettingsFragment
 import com.instructure.student.fragment.StudioWebViewFragment
-import com.instructure.student.fragment.ToDoListFragment
 import com.instructure.student.fragment.UnsupportedFeatureFragment
 import com.instructure.student.fragment.UnsupportedTabFragment
 import com.instructure.student.fragment.ViewHtmlFragment
@@ -97,6 +98,7 @@ import com.instructure.student.fragment.ViewUnsupportedFileFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListRepositoryFragment
 import com.instructure.student.mobius.syllabus.ui.SyllabusRepositoryFragment
+import com.instructure.student.util.FeatureFlagPrefs
 import com.instructure.student.util.FileUtils
 import com.instructure.student.util.onMainThread
 import java.util.Locale
@@ -343,7 +345,12 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route("/todos/:${ToDoFragment.PLANNABLE_ID}", ToDoFragment::class.java))
 
         // To Do List
-        routes.add(Route("/todolist", ToDoListFragment::class.java).copy(canvasContext = ApiPrefs.user))
+        val todoListFragmentClass = if (FeatureFlagPrefs.ENABLE_NEW_TODO_LIST_SCREEN) {
+            ToDoListFragment::class.java
+        } else {
+            OldToDoListFragment::class.java
+        }
+        routes.add(Route("/todolist", todoListFragmentClass).copy(canvasContext = ApiPrefs.user))
 
         // Syllabus
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/syllabus"), SyllabusRepositoryFragment::class.java))

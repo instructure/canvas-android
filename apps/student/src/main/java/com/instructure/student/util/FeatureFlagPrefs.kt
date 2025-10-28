@@ -19,4 +19,7 @@ import com.instructure.canvasapi2.utils.PrefManager
 
 object FeatureFlagPrefs : PrefManager("feature_flags") {
 
+    // Temporary feature flag to enable the new To-Do List screen. There is a ticket to implement feature flag handling
+    const val ENABLE_NEW_TODO_LIST_SCREEN = true
+
 }

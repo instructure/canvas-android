@@ -24,7 +24,10 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.utils.CanvasFont
 import com.instructure.student.activity.NothingToSeeHereFragment
+import com.instructure.student.features.todolist.ToDoListFragment
+import com.instructure.student.fragment.OldToDoListFragment
 import com.instructure.student.fragment.ParentFragment
+import com.instructure.student.util.FeatureFlagPrefs
 
 interface NavigationBehavior {
 
@@ -40,6 +43,15 @@ interface NavigationBehavior {
     val visibleAccountMenuItems: Set<AccountMenuItem>
 
     val canvasFont: CanvasFont
+
+    val todoFragmentClass: Class<out Fragment>
+        get() {
+            return if (FeatureFlagPrefs.ENABLE_NEW_TODO_LIST_SCREEN) {
+                ToDoListFragment::class.java
+            } else {
+                OldToDoListFragment::class.java
+            }
+        }
 
     @get:MenuRes
     val bottomBarMenu: Int

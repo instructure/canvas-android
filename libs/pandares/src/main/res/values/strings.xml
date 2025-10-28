@@ -2161,4 +2161,8 @@
     <string name="a11y_discussion_checkpoints">Discussion Checkpoints</string>
     <string name="multipleDueDates">Multiple Due Dates</string>
     <string name="courseConcludedError">Course concluded. Unable to send messages!</string>
+    <string name="a11y_contentDescriptionToDoFilter">Filter</string>
+    <string name="errorLoadingToDos">There was an error loading your to-do items. Please check your connection and try again.</string>
+    <string name="noToDosForNow">No To Dos for now!</string>
+    <string name="noToDosForNowSubtext">It looks like a great time to rest, relax, and recharge.</string>
 </resources>
