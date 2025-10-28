@@ -15,6 +15,7 @@
  */
 package com.instructure.pandautils.features.todolist
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,6 +28,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Checkbox
 import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.ExperimentalMaterialApi
@@ -195,6 +197,16 @@ private fun ToDoItem(
     val day = calendar.get(Calendar.DAY_OF_MONTH)
     val month = SimpleDateFormat("MMM", Locale.getDefault()).format(item.date)
 
+    val today = Calendar.getInstance()
+    val isToday = calendar.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
+            calendar.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)
+
+    val dateTextColor = if (isToday) {
+        Color(ThemePrefs.brandColor)
+    } else {
+        colorResource(id = R.color.textDark)
+    }
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -215,18 +227,29 @@ private fun ToDoItem(
                     Text(
                         text = dayOfWeek,
                         fontSize = 12.sp,
-                        color = colorResource(id = R.color.textDark)
+                        color = dateTextColor
                     )
-                    Text(
-                        text = day.toString(),
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = colorResource(id = R.color.textDark)
-                    )
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = if (isToday) {
+                            Modifier
+                                .size(32.dp)
+                                .border(width = 1.dp, color = dateTextColor, shape = CircleShape)
+                        } else {
+                            Modifier
+                        }
+                    ) {
+                        Text(
+                            text = day.toString(),
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = dateTextColor
+                        )
+                    }
                     Text(
                         text = month,
                         fontSize = 10.sp,
-                        color = colorResource(id = R.color.textDark)
+                        color = dateTextColor
                     )
                 }
             }
@@ -270,6 +293,16 @@ private fun ToDoItem(
                     overflow = TextOverflow.Ellipsis
                 )
 
+                item.tag?.let {
+                    Text(
+                        text = it,
+                        fontSize = 14.sp,
+                        color = colorResource(id = R.color.textDark),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+
                 item.dateLabel?.let {
                     Text(
                         text = it,
@@ -312,8 +345,9 @@ fun ToDoListScreenPreview() {
                             date = calendar.apply { set(2024, 9, 22, 7, 59) }.time,
                             dateLabel = "7:59 AM",
                             contextLabel = "COURSE",
-                            canvasContext = CanvasContext.emptyCourseContext(1),
+                            canvasContext = CanvasContext.defaultCanvasContext(),
                             itemType = ToDoItemType.ASSIGNMENT,
+                            iconRes = R.drawable.ic_assignment,
                             isChecked = false
                         ),
                         ToDoItemUiState(
@@ -322,8 +356,9 @@ fun ToDoListScreenPreview() {
                             date = calendar.apply { set(2024, 9, 22, 11, 59) }.time,
                             dateLabel = "11:59 AM",
                             contextLabel = "Introduction to Advanced Galactic Force Manipulation and Control Techniques for Beginners",
-                            canvasContext = CanvasContext.emptyCourseContext(1),
+                            canvasContext = CanvasContext.defaultCanvasContext(),
                             itemType = ToDoItemType.QUIZ,
+                            iconRes = R.drawable.ic_quiz,
                             isChecked = false
                         ),
                         ToDoItemUiState(
@@ -332,40 +367,69 @@ fun ToDoListScreenPreview() {
                             date = calendar.apply { set(2024, 9, 22, 14, 30) }.time,
                             dateLabel = "2:30 PM",
                             contextLabel = "FORC 101",
-                            canvasContext = CanvasContext.emptyCourseContext(1),
+                            canvasContext = CanvasContext.defaultCanvasContext(),
                             itemType = ToDoItemType.ASSIGNMENT,
+                            iconRes = R.drawable.ic_assignment,
                             isChecked = true
+                        ),
+                        ToDoItemUiState(
+                            id = "4",
+                            title = "Peer review discussion post",
+                            date = calendar.apply { set(2024, 9, 22, 16, 0) }.time,
+                            dateLabel = "4:00 PM",
+                            tag = "Peer Reviews for Exploring Emotional Mastery",
+                            contextLabel = "Advanced Force Psychology",
+                            canvasContext = CanvasContext.defaultCanvasContext(),
+                            itemType = ToDoItemType.SUB_ASSIGNMENT,
+                            iconRes = R.drawable.ic_discussion,
+                            isChecked = false
                         )
                     ),
                     Date(1000) to listOf(
                         ToDoItemUiState(
-                            id = "4",
+                            id = "5",
                             title = "Essay - Why Force-choking co-workers is frowned upon in most galactic workplaces",
                             date = calendar.apply { set(2024, 9, 23, 19, 0) }.time,
                             dateLabel = "7:00 PM",
                             contextLabel = "Professional Jedi Ethics and Workplace Communication",
-                            canvasContext = CanvasContext.emptyCourseContext(1),
+                            canvasContext = CanvasContext.defaultCanvasContext(),
                             itemType = ToDoItemType.DISCUSSION,
-                            isChecked = false
-                        ),
-                        ToDoItemUiState(
-                            id = "5",
-                            title = "Q",
-                            date = calendar.apply { set(2024, 9, 23, 23, 59) }.time,
-                            dateLabel = "11:59 PM",
-                            contextLabel = "PHY",
-                            canvasContext = CanvasContext.emptyCourseContext(1),
-                            itemType = ToDoItemType.PLANNER_NOTE,
+                            iconRes = R.drawable.ic_discussion,
                             isChecked = false
                         ),
                         ToDoItemUiState(
                             id = "6",
-                            title = "Write a comprehensive research paper analyzing the psychological and physiological effects of prolonged exposure to the Dark Side of the Force on Jedi Knights and their ability to maintain emotional equilibrium",
+                            title = "Personal meditation practice",
+                            date = calendar.apply { set(2024, 9, 23, 20, 0) }.time,
+                            dateLabel = "8:00 PM",
+                            contextLabel = "My Notes",
+                            canvasContext = CanvasContext.defaultCanvasContext(),
+                            itemType = ToDoItemType.PLANNER_NOTE,
+                            iconRes = R.drawable.ic_todo,
+                            isChecked = false
+                        ),
+                        ToDoItemUiState(
+                            id = "7",
+                            title = "Q",
                             date = calendar.apply { set(2024, 9, 23, 23, 59) }.time,
                             dateLabel = "11:59 PM",
-                            contextLabel = "Advanced Force Psychology",
-                            canvasContext = CanvasContext.emptyCourseContext(1),
-                            itemType = ToDoItemType.ASSIGNMENT,
+                            contextLabel = "PHY",
+                            canvasContext = CanvasContext.defaultCanvasContext(),
+                            itemType = ToDoItemType.PLANNER_NOTE,
+                            iconRes = R.drawable.ic_todo,
+                            isChecked = false
+                        )
+                    ),
+                    Date(2000) to listOf(
+                        ToDoItemUiState(
+                            id = "9",
+                            title = "Lightsaber maintenance workshop",
+                            date = calendar.apply { set(2024, 9, 24, 10, 0) }.time,
+                            dateLabel = "10:00 AM",
+                            contextLabel = "Equipment & Safety",
+                            canvasContext = CanvasContext.defaultCanvasContext(),
+                            itemType = ToDoItemType.CALENDAR_EVENT,
+                            iconRes = R.drawable.ic_calendar,
                             isChecked = false
                         )
                     )

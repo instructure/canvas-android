@@ -35,7 +35,8 @@ data class ToDoItemUiState(
     val canvasContext: CanvasContext,
     val itemType: ToDoItemType,
     val isChecked: Boolean = false,
-    val iconRes: Int = R.drawable.ic_calendar
+    val iconRes: Int = R.drawable.ic_calendar,
+    val tag: String? = null
 )
 
 enum class ToDoItemType {

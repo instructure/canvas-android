@@ -24,10 +24,10 @@ import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.isInvited
 import com.instructure.canvasapi2.utils.toApiString
-import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.getContextNameForPlannerItem
 import com.instructure.pandautils.utils.getDateTextForPlannerItem
 import com.instructure.pandautils.utils.getIconForPlannerItem
+import com.instructure.pandautils.utils.getTagForPlannerItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
@@ -131,7 +131,8 @@ class ToDoListViewModel @Inject constructor(
             canvasContext = plannerItem.canvasContext,
             itemType = itemType,
             isChecked = false,
-            iconRes = plannerItem.getIconForPlannerItem()
+            iconRes = plannerItem.getIconForPlannerItem(),
+            tag = plannerItem.getTagForPlannerItem(context)
         )
     }
 
