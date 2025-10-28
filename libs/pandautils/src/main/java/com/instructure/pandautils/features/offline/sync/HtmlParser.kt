@@ -18,6 +18,7 @@ package com.instructure.pandautils.features.offline.sync
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import com.instructure.canvasapi2.apis.FileFolderAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.StudioMediaMetadata
@@ -37,10 +38,15 @@ class HtmlParser(
     private val fileFolderApi: FileFolderAPI.FilesFoldersInterface
 ) {
 
+    companion object {
+        private const val TAG = "HtmlParser"
+    }
+
     private val imageRegex = Regex("<img[^>]*src=\"([^\"]*)\"[^>]*>")
     private val fileLinkRegex = Regex("<a[^>]*class=\"instructure_file_link[^>]*href=\"([^\"]*)\"[^>]*>")
     private val internalFileRegex = Regex(".*${apiPrefs.domain}.*files/(\\d+)")
     private val studioIframeRegex = Regex("<iframe[^>]*custom_arc_media_id%3D([^%]*)%[^>]*>[^<]*</iframe>")
+    private val studioIframeExternalToolsRegex = Regex("<iframe[^>]*src=\"[^\"]*custom_arc_media_id%3D([^%&\"]+)[^\"]*\"[^>]*>.*?</iframe>", RegexOption.DOT_MATCHES_ALL)
 
     private val videoTagReplacement = """
         <video controls playsinline preload="auto" poster="{posterPath}">
@@ -148,22 +154,30 @@ class HtmlParser(
         var resultHtml: String = htmlParsingResult.htmlWithLocalFileLinks ?: return htmlParsingResult
         val studioMediaIds = mutableSetOf<String>()
 
-        val matches = studioIframeRegex.findAll(resultHtml)
-        matches.forEach { match ->
-            val studioIframe = match.groupValues[0]
-            val studioMediaId = match.groupValues[1]
-            studioMediaIds.add(studioMediaId)
+        val regexes = listOf(studioIframeRegex, studioIframeExternalToolsRegex)
+        regexes.forEach { regex ->
+            val matches = regex.findAll(resultHtml)
+            matches.forEach { match ->
+                val studioIframe = match.groupValues[0]
+                val studioMediaId = match.groupValues[1]
+                studioMediaIds.add(studioMediaId)
 
-            val videoMetadata = studioMetadata.find { it.ltiLaunchId == studioMediaId }
-            val captionsHtml = createCaptionsHtml(videoMetadata)
+                val videoMetadata = studioMetadata.find { it.ltiLaunchId == studioMediaId }
+                val captionsHtml = createCaptionsHtml(videoMetadata)
 
-            resultHtml = resultHtml.replace(
-                studioIframe, videoTagReplacement
-                    .replace("{posterPath}", "file://${getFileForStudioVideoDir(studioMediaId).absolutePath}/poster.jpg")
-                    .replace("{srcPath}", "file://${getLocalPathForStudioMedia(studioMediaId).absolutePath}")
-                    .replace("{mimeType}", videoMetadata?.mimeType.orEmpty())
+                val posterPath = "file://${getFileForStudioVideoDir(studioMediaId).absolutePath}/poster.jpg"
+                val srcPath = "file://${getLocalPathForStudioMedia(studioMediaId).absolutePath}"
+                // Studio returns DASH format but we download MP4, so override the mimeType
+                val mimeType = "video/mp4"
+
+                val videoTag = videoTagReplacement
+                    .replace("{posterPath}", posterPath)
+                    .replace("{srcPath}", srcPath)
+                    .replace("{mimeType}", mimeType)
                     .replace("{captions}", captionsHtml)
-            )
+
+                resultHtml = resultHtml.replace(studioIframe, videoTag)
+            }
         }
 
         return htmlParsingResult.copy(htmlWithLocalFileLinks = resultHtml, studioMediaIds = studioMediaIds)
