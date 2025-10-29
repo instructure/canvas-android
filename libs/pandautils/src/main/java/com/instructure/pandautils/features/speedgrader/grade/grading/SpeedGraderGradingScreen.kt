@@ -781,39 +781,33 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
         }
     }
 
-    var isTextFieldUpdate by remember { mutableStateOf(false) }
-
     LaunchedEffect(textFieldScore) {
         val scoreAsFloat = textFieldScore.toFloatOrNull()
         val scaledScore = (scoreAsFloat ?: 0f) * pointScale
 
-        // Update bounds if needed
         maxScore = max(scoreAsFloat ?: 0f, maxScore)
         minScore = min(scoreAsFloat ?: 0f, minScore)
 
-        // Mark that this slider update is from text field, not user drag
-        isTextFieldUpdate = true
-
-        // Set slider position (it will snap to nearest step due to discrete steps)
+        // Set slider position (will snap to nearest step due to discrete steps)
         sliderState.value = scaledScore.coerceIn(minScore * pointScale, maxScore * pointScale)
 
-        // Send exact decimal value to API
+        // Sync sliderDrivenScore with slider's actual snapped value to prevent
+        // the slider's LaunchedEffect from thinking this was a user drag
+        sliderDrivenScore = sliderState.value
+
         if (scoreAsFloat != uiState.enteredScore) {
             uiState.onScoreChange(scoreAsFloat)
         }
     }
 
     LaunchedEffect(sliderState.value) {
-        // Only update text field if slider was moved by user, not by text field input
-        if (!isTextFieldUpdate) {
-            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-            val newScoreFromSlider = sliderState.value.roundToInt().toFloat() / pointScale
-            if (sliderDrivenScore != sliderState.value) {
-                sliderDrivenScore = sliderState.value
-                textFieldScore = numberFormatter.format(newScoreFromSlider)
-            }
+        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+        val newScoreFromSlider = sliderState.value.roundToInt().toFloat() / pointScale
+        // Only update text field if slider value changed due to user dragging
+        if (sliderDrivenScore != sliderState.value) {
+            sliderDrivenScore = sliderState.value
+            textFieldScore = numberFormatter.format(newScoreFromSlider)
         }
-        isTextFieldUpdate = false
     }
 
     Column {
