@@ -56,7 +56,7 @@ class DashboardAnnouncementBannerRepository @Inject constructor(
         return announcementApi.getFirstPageAnnouncements(
             courseCode = courses.map { "course_" + it.courseId }.toTypedArray(),
             startDate = Calendar.getInstance()
-                .apply { set(Calendar.WEEK_OF_YEAR, get(Calendar.WEEK_OF_YEAR) - 2) }.time.toApiString(),
+                .apply { set(Calendar.YEAR, get(Calendar.YEAR) - 1) }.time.toApiString(),
             endDate = Date().toApiString(),
             params = params
         )
@@ -83,7 +83,7 @@ class DashboardAnnouncementBannerRepository @Inject constructor(
     private suspend fun getUnreadGlobalAnnouncements(forceRefresh: Boolean): List<AnnouncementBannerItem> {
         val params = RestParams(isForceReadFromNetwork = forceRefresh, usePerPageQueryParam = true)
         val fromDate = Calendar.getInstance()
-            .apply { set(Calendar.WEEK_OF_YEAR, get(Calendar.WEEK_OF_YEAR) - 2) }.time
+            .apply { set(Calendar.YEAR, get(Calendar.YEAR) - 1) }.time
         return accountNotificationApi.getAccountNotifications(
             params,
             includePast = true,
