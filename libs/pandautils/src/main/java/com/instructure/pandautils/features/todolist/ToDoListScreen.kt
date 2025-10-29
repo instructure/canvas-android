@@ -45,8 +45,11 @@ import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -73,6 +76,7 @@ import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
+import com.instructure.pandautils.compose.modifiers.conditional
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.courseOrUserColor
 import java.text.SimpleDateFormat
@@ -184,7 +188,9 @@ private fun ToDoListContent(
     val dateGroups = itemsByDate.entries.toList()
     val listState = rememberLazyListState()
     val itemPositions = remember { mutableStateMapOf<String, Float>() }
+    val itemSizes = remember { mutableStateMapOf<String, Int>() }
     val density = LocalDensity.current
+    var listHeight by remember { mutableIntStateOf(0) }
 
     val stickyHeaderState = rememberStickyHeaderState(
         dateGroups = dateGroups,
@@ -193,10 +199,33 @@ private fun ToDoListContent(
         density = density
     )
 
+    // Calculate content height from last item's position + size
+    val listContentHeight by remember {
+        derivedStateOf {
+            if (dateGroups.isEmpty()) return@derivedStateOf 0
+            val lastGroup = dateGroups.last()
+            val lastItem = lastGroup.value.last()
+            val lastItemPosition = itemPositions[lastItem.id] ?: return@derivedStateOf 0
+            val lastItemSize = itemSizes[lastItem.id] ?: return@derivedStateOf 0
+            (lastItemPosition + lastItemSize).toInt()
+        }
+    }
+
+    // Calculate if there's enough space for pandas (at least 140dp)
+    val availableSpacePx = listHeight - listContentHeight
+    val minSpaceForPandasPx = with(density) { 140.dp.toPx() }
+    val showPandas = listHeight > 0 && listContentHeight > 0 &&
+                     availableSpacePx >= minSpaceForPandasPx &&
+                     itemsByDate.isNotEmpty()
+
     Box(modifier = modifier.fillMaxSize()) {
         LazyColumn(
             state = listState,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .onGloballyPositioned { coordinates ->
+                    listHeight = coordinates.size.height
+                }
         ) {
             dateGroups.forEachIndexed { groupIndex, (date, items) ->
                 items.forEachIndexed { index, item ->
@@ -209,22 +238,32 @@ private fun ToDoListContent(
                             onClick = { actionHandler(ToDoListActionHandler.ItemClicked(item.id)) },
                             modifier = Modifier.onGloballyPositioned { coordinates ->
                                 itemPositions[item.id] = coordinates.positionInParent().y
+                                itemSizes[item.id] = coordinates.size.height
                             }
                         )
                     }
                 }
 
-                if (groupIndex < dateGroups.size - 1) {
+                // Add divider between date groups, or after last group if pandas are showing
+                if (groupIndex < dateGroups.size - 1 || showPandas) {
                     item(key = "divider_$date") {
+                        val isLastDivider = groupIndex == dateGroups.size - 1
                         CanvasDivider(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(0.5.dp)
-                                .padding(horizontal = 16.dp)
+                                .conditional(!isLastDivider) {
+                                    padding(horizontal = 16.dp)
+                                }
                         )
                     }
                 }
             }
+        }
+
+        // Panda illustrations
+        if (showPandas) {
+            PandaIllustrations(contentHeightPx = listContentHeight.toFloat())
         }
 
         // Sticky header overlay
@@ -518,6 +557,37 @@ private fun calculateStickyHeaderState(
     )
 }
 
+@Composable
+private fun PandaIllustrations(contentHeightPx: Float) {
+    val density = LocalDensity.current
+
+    Box(modifier = Modifier.fillMaxSize()) {
+        // Top-right panda - positioned at top-right, below content
+        Icon(
+            painter = painterResource(id = R.drawable.ic_panda_top),
+            contentDescription = null,
+            modifier = Modifier
+                .width(180.dp)
+                .height(137.dp)
+                .align(Alignment.TopEnd)
+                .offset(x = (-24).dp, y = with(density) { (contentHeightPx - 2.5.dp.toPx()).toDp() }),
+            tint = Color.Unspecified
+        )
+
+        // Bottom-left panda - positioned at bottom-left
+        Icon(
+            painter = painterResource(id = R.drawable.ic_panda_bottom),
+            contentDescription = null,
+            modifier = Modifier
+                .width(114.dp)
+                .height(137.dp)
+                .align(Alignment.BottomStart)
+                .offset(x = 24.dp, y = 30.5.dp),
+            tint = Color.Unspecified
+        )
+    }
+}
+
 @Preview(name = "Light Mode", showBackground = true)
 @Preview(name = "Dark Mode", showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
@@ -620,6 +690,47 @@ fun ToDoListScreenPreview() {
                             canvasContext = CanvasContext.defaultCanvasContext(),
                             itemType = ToDoItemType.CALENDAR_EVENT,
                             iconRes = R.drawable.ic_calendar,
+                            isChecked = false
+                        )
+                    )
+                )
+            ),
+            actionHandler = {}
+        )
+    }
+}
+
+@Preview(name = "With Pandas Light Mode", showBackground = true)
+@Preview(name = "With Pandas Dark Mode", showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun ToDoListScreenWithPandasPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    val calendar = Calendar.getInstance()
+    CanvasTheme {
+        ToDoListScreen(
+            uiState = ToDoListUiState(
+                itemsByDate = mapOf(
+                    Date(10) to listOf(
+                        ToDoItemUiState(
+                            id = "1",
+                            title = "Complete Force training assignment",
+                            date = calendar.apply { set(2024, 9, 22, 7, 59) }.time,
+                            dateLabel = "7:59 AM",
+                            contextLabel = "FORC 101",
+                            canvasContext = CanvasContext.defaultCanvasContext(),
+                            itemType = ToDoItemType.ASSIGNMENT,
+                            iconRes = R.drawable.ic_assignment,
+                            isChecked = false
+                        ),
+                        ToDoItemUiState(
+                            id = "2",
+                            title = "Read chapter on Jedi meditation techniques",
+                            date = calendar.apply { set(2024, 9, 22, 11, 59) }.time,
+                            dateLabel = "11:59 AM",
+                            contextLabel = "Introduction to Advanced Force Manipulation",
+                            canvasContext = CanvasContext.defaultCanvasContext(),
+                            itemType = ToDoItemType.QUIZ,
+                            iconRes = R.drawable.ic_quiz,
                             isChecked = false
                         )
                     )
