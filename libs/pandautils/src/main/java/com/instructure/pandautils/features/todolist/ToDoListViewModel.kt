@@ -61,8 +61,8 @@ class ToDoListViewModel @Inject constructor(
                 _uiState.update { it.copy(isLoading = !forceRefresh, isRefreshing = forceRefresh, isError = false) }
 
                 val now = LocalDate.now().atStartOfDay()
-                val startDate = now.minusDays(28).toApiString().orEmpty()
-                val endDate = now.plusDays(28).toApiString().orEmpty()
+                val startDate = now.minusDays(7).toApiString().orEmpty()
+                val endDate = now.plusDays(7).toApiString().orEmpty()
 
                 val courses = repository.getCourses(forceRefresh).dataOrThrow
                 val plannerItems = repository.getPlannerItems(startDate, endDate, forceRefresh).dataOrThrow

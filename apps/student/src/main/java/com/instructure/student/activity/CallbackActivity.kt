@@ -219,8 +219,8 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
     private suspend fun getToDoCount() {
         // TODO Implement correct filtering in MBL-19401
         val now = LocalDate.now().atStartOfDay()
-        val startDate = now.minusDays(28).toApiString().orEmpty()
-        val endDate = now.plusDays(28).toApiString().orEmpty()
+        val startDate = now.minusDays(7).toApiString().orEmpty()
+        val endDate = now.plusDays(7).toApiString().orEmpty()
 
         val restParams = RestParams(isForceReadFromNetwork = true, usePerPageQueryParam = true)
         val plannerItems = plannerApi.getPlannerItems(
