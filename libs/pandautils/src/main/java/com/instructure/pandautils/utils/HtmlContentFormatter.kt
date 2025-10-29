@@ -43,11 +43,6 @@ class HtmlContentFormatter(
             if (html.contains("<iframe")) {
                 var newHTML: String = html
 
-                // Check feature flag for studio embed improvements
-                val studioEmbedImprovementsEnabled = courseId?.let {
-                    featureFlagProvider.checkStudioEmbedImprovementsFlag(it)
-                } ?: false
-
                 // First we need to find LTIs by looking for iframes
                 val iframeMatcher = Pattern.compile("<iframe(.|\\n)*?iframe>").matcher(html)
 
@@ -82,11 +77,18 @@ class HtmlContentFormatter(
                             newHTML = newHTML.replace(iframe, newIframe)
                         }
 
-                        if (hasStudioMediaUrl(srcUrl) && studioEmbedImprovementsEnabled) {
-                            val videoTitle = extractVideoTitle(iframe)
-                            val immersiveUrl = convertToImmersiveViewUrl(srcUrl, videoTitle)
-                            val newIframe = iframeWithStudioButton(immersiveUrl, iframe, context)
-                            newHTML = newHTML.replace(iframe, newIframe)
+                        if (hasStudioMediaUrl(srcUrl)) {
+                            // Only check feature flag if we actually have a Studio URL
+                            val studioEmbedImprovementsEnabled = courseId?.let {
+                                featureFlagProvider.checkStudioEmbedImprovementsFlag(it)
+                            } ?: false
+
+                            if (studioEmbedImprovementsEnabled) {
+                                val videoTitle = extractVideoTitle(iframe)
+                                val immersiveUrl = convertToImmersiveViewUrl(srcUrl, videoTitle)
+                                val newIframe = iframeWithStudioButton(immersiveUrl, iframe, context)
+                                newHTML = newHTML.replace(iframe, newIframe)
+                            }
                         }
                     }
                 }

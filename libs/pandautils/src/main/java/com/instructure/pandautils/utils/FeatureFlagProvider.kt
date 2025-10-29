@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.utils
 
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.UserManager
@@ -71,6 +72,7 @@ class FeatureFlagProvider(
             val flag = featuresApi.getStudioEmbedImprovementsFlag(courseId, RestParams(isForceReadFromNetwork = true)).dataOrThrow
             flag.state == "on" || flag.state == "allowed_on"
         } catch (e: Exception) {
+            FirebaseCrashlytics.getInstance().recordException(e)
             false
         }
     }
