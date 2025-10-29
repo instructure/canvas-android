@@ -33,6 +33,8 @@ import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.RemoteConfigParam
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.interactions.router.BaseRouteMatcher
@@ -345,7 +347,7 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route("/todos/:${ToDoFragment.PLANNABLE_ID}", ToDoFragment::class.java))
 
         // To Do List
-        val todoListFragmentClass = if (FeatureFlagPrefs.ENABLE_NEW_TODO_LIST_SCREEN) {
+        val todoListFragmentClass = if (RemoteConfigUtils.getBoolean(RemoteConfigParam.TODO_REDESIGN)) {
             ToDoListFragment::class.java
         } else {
             OldToDoListFragment::class.java

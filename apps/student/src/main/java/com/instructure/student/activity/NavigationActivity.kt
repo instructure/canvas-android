@@ -62,6 +62,8 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.MasqueradeHelper
 import com.instructure.canvasapi2.utils.Pronouns
+import com.instructure.canvasapi2.utils.RemoteConfigParam
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
@@ -1314,12 +1316,12 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 CalendarFragment.newInstance(route)
             }
             navigationBehavior.todoFragmentClass.name -> {
-                val route = if (FeatureFlagPrefs.ENABLE_NEW_TODO_LIST_SCREEN) {
+                val route = if (RemoteConfigUtils.getBoolean(RemoteConfigParam.TODO_REDESIGN)) {
                     ToDoListFragment.makeRoute(ApiPrefs.user!!)
                 } else {
                     OldToDoListFragment.makeRoute(ApiPrefs.user!!)
                 }
-                if (FeatureFlagPrefs.ENABLE_NEW_TODO_LIST_SCREEN) {
+                if (RemoteConfigUtils.getBoolean(RemoteConfigParam.TODO_REDESIGN)) {
                     ToDoListFragment.newInstance(route)
                 } else {
                     OldToDoListFragment.newInstance(route)

@@ -42,6 +42,8 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.RemoteConfigParam
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.canvasapi2.utils.pageview.PandataInfo
 import com.instructure.canvasapi2.utils.pageview.PandataManager
@@ -186,7 +188,9 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
 
             getUnreadNotificationCount()
 
-            getToDoCount()
+            if (RemoteConfigUtils.getBoolean(RemoteConfigParam.TODO_REDESIGN)) {
+                getToDoCount()
+            }
 
             initialCoreDataLoadingComplete()
         } catch {
