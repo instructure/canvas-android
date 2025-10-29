@@ -15,6 +15,7 @@
  */
 package com.instructure.pandautils.features.todolist
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -24,10 +25,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Checkbox
 import androidx.compose.material.CheckboxDefaults
@@ -40,18 +44,27 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlin.math.roundToInt
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
@@ -67,6 +80,20 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+
+private data class StickyHeaderState(
+    val item: ToDoItemUiState?,
+    val yOffset: Float,
+    val isVisible: Boolean
+)
+
+private data class DateBadgeData(
+    val dayOfWeek: String,
+    val day: Int,
+    val month: String,
+    val isToday: Boolean,
+    val dateTextColor: Color
+)
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -155,29 +182,83 @@ private fun ToDoListContent(
     modifier: Modifier = Modifier
 ) {
     val dateGroups = itemsByDate.entries.toList()
-    LazyColumn(modifier = modifier.fillMaxSize()) {
-        dateGroups.forEachIndexed { groupIndex, (date, items) ->
-            items.forEachIndexed { index, item ->
-                item(key = item.id) {
-                    ToDoItem(
-                        item = item,
-                        showDateBadge = index == 0,
-                        onCheckedChange = { actionHandler(ToDoListActionHandler.ToggleItemChecked(item.id)) },
-                        onClick = { actionHandler(ToDoListActionHandler.ItemClicked(item.id)) }
-                    )
-                }
-            }
+    val listState = rememberLazyListState()
+    val itemPositions = remember { mutableStateMapOf<String, Float>() }
+    val density = LocalDensity.current
 
-            if (groupIndex < dateGroups.size - 1) {
-                item(key = "divider_$date") {
-                    CanvasDivider(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(0.5.dp)
-                            .padding(horizontal = 16.dp)
-                    )
+    val stickyHeaderState = rememberStickyHeaderState(
+        dateGroups = dateGroups,
+        listState = listState,
+        itemPositions = itemPositions,
+        density = density
+    )
+
+    Box(modifier = modifier.fillMaxSize()) {
+        LazyColumn(
+            state = listState,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            dateGroups.forEachIndexed { groupIndex, (date, items) ->
+                items.forEachIndexed { index, item ->
+                    item(key = item.id) {
+                        ToDoItem(
+                            item = item,
+                            showDateBadge = index == 0,
+                            hideDate = index == 0 && stickyHeaderState.isVisible && stickyHeaderState.item?.id == item.id,
+                            onCheckedChange = { actionHandler(ToDoListActionHandler.ToggleItemChecked(item.id)) },
+                            onClick = { actionHandler(ToDoListActionHandler.ItemClicked(item.id)) },
+                            modifier = Modifier.onGloballyPositioned { coordinates ->
+                                itemPositions[item.id] = coordinates.positionInParent().y
+                            }
+                        )
+                    }
+                }
+
+                if (groupIndex < dateGroups.size - 1) {
+                    item(key = "divider_$date") {
+                        CanvasDivider(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(0.5.dp)
+                                .padding(horizontal = 16.dp)
+                        )
+                    }
                 }
             }
+        }
+
+        // Sticky header overlay
+        stickyHeaderState.item?.let { item ->
+            if (stickyHeaderState.isVisible) {
+                StickyDateBadge(
+                    item = item,
+                    yOffset = stickyHeaderState.yOffset
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun StickyDateBadge(
+    item: ToDoItemUiState,
+    yOffset: Float
+) {
+    val dateBadgeData = rememberDateBadgeData(item.date)
+
+    Box(
+        modifier = Modifier
+            .offset { IntOffset(0, yOffset.roundToInt()) }
+            .padding(start = 12.dp, top = 8.dp, bottom = 8.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .width(44.dp)
+                .padding(end = 12.dp)
+                .background(colorResource(id = R.color.backgroundLightest)),
+            contentAlignment = Alignment.TopCenter
+        ) {
+            DateBadge(dateBadgeData)
         }
     }
 }
@@ -188,24 +269,10 @@ private fun ToDoItem(
     showDateBadge: Boolean,
     onCheckedChange: () -> Unit,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    hideDate: Boolean = false
 ) {
-    val calendar = Calendar.getInstance().apply {
-        time = item.date
-    }
-    val dayOfWeek = SimpleDateFormat("EEE", Locale.getDefault()).format(item.date)
-    val day = calendar.get(Calendar.DAY_OF_MONTH)
-    val month = SimpleDateFormat("MMM", Locale.getDefault()).format(item.date)
-
-    val today = Calendar.getInstance()
-    val isToday = calendar.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
-            calendar.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)
-
-    val dateTextColor = if (isToday) {
-        Color(ThemePrefs.brandColor)
-    } else {
-        colorResource(id = R.color.textDark)
-    }
+    val dateBadgeData = rememberDateBadgeData(item.date)
 
     Row(
         modifier = modifier
@@ -220,38 +287,8 @@ private fun ToDoItem(
                 .padding(end = 12.dp),
             contentAlignment = Alignment.TopCenter
         ) {
-            if (showDateBadge) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = dayOfWeek,
-                        fontSize = 12.sp,
-                        color = dateTextColor
-                    )
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = if (isToday) {
-                            Modifier
-                                .size(32.dp)
-                                .border(width = 1.dp, color = dateTextColor, shape = CircleShape)
-                        } else {
-                            Modifier
-                        }
-                    ) {
-                        Text(
-                            text = day.toString(),
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = dateTextColor
-                        )
-                    }
-                    Text(
-                        text = month,
-                        fontSize = 10.sp,
-                        color = dateTextColor
-                    )
-                }
+            if (showDateBadge && !hideDate) {
+                DateBadge(dateBadgeData)
             }
         }
 
@@ -326,6 +363,151 @@ private fun ToDoItem(
             )
         }
     }
+}
+
+@Composable
+private fun rememberDateBadgeData(date: Date): DateBadgeData {
+    val calendar = remember(date) {
+        Calendar.getInstance().apply { time = date }
+    }
+
+    val dayOfWeek = remember(date) {
+        SimpleDateFormat("EEE", Locale.getDefault()).format(date)
+    }
+
+    val day = remember(date) {
+        calendar.get(Calendar.DAY_OF_MONTH)
+    }
+
+    val month = remember(date) {
+        SimpleDateFormat("MMM", Locale.getDefault()).format(date)
+    }
+
+    val isToday = remember(date) {
+        val today = Calendar.getInstance()
+        calendar.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
+                calendar.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)
+    }
+
+    val dateTextColor = if (isToday) {
+        Color(ThemePrefs.brandColor)
+    } else {
+        colorResource(id = R.color.textDark)
+    }
+
+    return DateBadgeData(dayOfWeek, day, month, isToday, dateTextColor)
+}
+
+@Composable
+private fun DateBadge(dateBadgeData: DateBadgeData) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = dateBadgeData.dayOfWeek,
+            fontSize = 12.sp,
+            color = dateBadgeData.dateTextColor
+        )
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = if (dateBadgeData.isToday) {
+                Modifier
+                    .size(32.dp)
+                    .border(width = 1.dp, color = dateBadgeData.dateTextColor, shape = CircleShape)
+            } else {
+                Modifier
+            }
+        ) {
+            Text(
+                text = dateBadgeData.day.toString(),
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold,
+                color = dateBadgeData.dateTextColor
+            )
+        }
+        Text(
+            text = dateBadgeData.month,
+            fontSize = 10.sp,
+            color = dateBadgeData.dateTextColor
+        )
+    }
+}
+
+@Composable
+private fun rememberStickyHeaderState(
+    dateGroups: List<Map.Entry<Date, List<ToDoItemUiState>>>,
+    listState: LazyListState,
+    itemPositions: Map<String, Float>,
+    density: Density
+): StickyHeaderState {
+    return remember {
+        derivedStateOf {
+            calculateStickyHeaderState(dateGroups, listState, itemPositions, density)
+        }
+    }.value
+}
+
+private fun calculateStickyHeaderState(
+    dateGroups: List<Map.Entry<Date, List<ToDoItemUiState>>>,
+    listState: LazyListState,
+    itemPositions: Map<String, Float>,
+    density: Density
+): StickyHeaderState {
+    val firstVisibleItemIndex = listState.firstVisibleItemIndex
+    val firstVisibleItemScrollOffset = listState.firstVisibleItemScrollOffset
+
+    // Find which date group's first item has been scrolled past
+    var currentGroupIndex = -1
+    var itemCount = 0
+
+    for ((groupIndex, group) in dateGroups.withIndex()) {
+        val groupItemCount = group.value.size
+        if (firstVisibleItemIndex < itemCount + groupItemCount) {
+            currentGroupIndex = groupIndex
+            break
+        }
+        itemCount += groupItemCount + if (groupIndex < dateGroups.size - 1) 1 else 0 // +1 for divider
+    }
+
+    if (currentGroupIndex == -1 || currentGroupIndex >= dateGroups.size) {
+        return StickyHeaderState(null, 0f, false)
+    }
+
+    val currentGroup = dateGroups[currentGroupIndex]
+    val firstItemOfCurrentGroup = currentGroup.value.first()
+
+    // Check if the first item has scrolled up even slightly
+    val shouldShowSticky = if (firstVisibleItemIndex > 0) {
+        true
+    } else {
+        firstVisibleItemScrollOffset > 0
+    }
+
+    // Calculate offset for animation when next group approaches
+    var yOffset = 0f
+    if (currentGroupIndex < dateGroups.size - 1) {
+        val nextGroup = dateGroups[currentGroupIndex + 1]
+        val nextGroupFirstItem = nextGroup.value.first()
+        val nextItemPosition = itemPositions[nextGroupFirstItem.id] ?: Float.MAX_VALUE
+
+        // When next group's first item date badge approaches, start pushing the sticky header up
+        // Components to consider:
+        // - Date badge height: 54dp (dayOfWeek 12sp + circle 32dp + month 10sp)
+        //   Note: The circle (32dp) is only shown for today, but we calculate for the max height
+        // - Item bottom padding: 8dp (top padding doesn't count since sticky header has its own top padding)
+        // Total: 54dp + 8dp = 62dp
+        // Convert dp to pixels for comparison with positionInParent() which returns pixels
+        val stickyHeaderHeightPx = with(density) { 62.dp.toPx() }
+        if (nextItemPosition < stickyHeaderHeightPx && nextItemPosition > 0) {
+            yOffset = nextItemPosition - stickyHeaderHeightPx
+        }
+    }
+
+    return StickyHeaderState(
+        item = if (shouldShowSticky) firstItemOfCurrentGroup else null,
+        yOffset = yOffset,
+        isVisible = shouldShowSticky
+    )
 }
 
 @Preview(name = "Light Mode", showBackground = true)
