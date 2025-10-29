@@ -64,11 +64,8 @@ class ToDoListViewModel @Inject constructor(
                 val startDate = now.minusDays(28).toApiString().orEmpty()
                 val endDate = now.plusDays(28).toApiString().orEmpty()
 
-                val coursesResult = repository.getCourses(forceRefresh)
-                val plannerItemsResult = repository.getPlannerItems(startDate, endDate, forceRefresh)
-
-                val courses = coursesResult.dataOrNull ?: emptyList()
-                val plannerItems = plannerItemsResult.dataOrNull ?: emptyList()
+                val courses = repository.getCourses(forceRefresh).dataOrThrow
+                val plannerItems = repository.getPlannerItems(startDate, endDate, forceRefresh).dataOrThrow
 
                 // Filter courses - exclude access restricted, invited
                 val filteredCourses = courses.filter {
