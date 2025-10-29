@@ -43,7 +43,6 @@ import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgress
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -144,16 +143,13 @@ class HorizonInboxDetailsViewModel @Inject constructor(
                 val accountNotification = repository.getAccountAnnouncement(id, forceRefresh)
 
                 if (!accountNotification.closed) {
-                    viewModelScope.async {
+                    viewModelScope.tryLaunch {
                         val result = repository.deleteAccountAnnouncement(id)
                         if (result.isSuccess) {
                             inboxEventHandler.postEvent(InboxEvent.AnnouncementRead)
                             dashboardEventHandler.postEvent(DashboardEvent.AnnouncementRefresh)
                         }
-
-                        // We need to refresh the announcement in the background, so the next time we open and it's opened from the cache it wouldn't show as unread
-                        repository.getAccountAnnouncement(id, true)
-                    }
+                    } catch { }
                 }
 
                 uiState.value.copy(
@@ -181,7 +177,7 @@ class HorizonInboxDetailsViewModel @Inject constructor(
                 val topic = repository.getAnnouncementTopic(id, courseId.toLong(), forceRefresh)
 
                 if (announcement.status == DiscussionTopicHeader.ReadState.UNREAD) {
-                    viewModelScope.async {
+                    viewModelScope.tryLaunch {
                         val result = repository.markAnnouncementAsRead(
                             courseId = courseId.toLong(),
                             announcementId = id,
@@ -192,10 +188,7 @@ class HorizonInboxDetailsViewModel @Inject constructor(
                             inboxEventHandler.postEvent(InboxEvent.AnnouncementRead)
                             dashboardEventHandler.postEvent(DashboardEvent.AnnouncementRefresh)
                         }
-
-                        // We need to refresh the announcement in the background, so the next time we open and it's opened from the cache it wouldn't show as unread
-                        repository.getAnnouncement(id, courseId.toLong(), true)
-                    }
+                    } catch { }
                 }
 
                 uiState.value.copy(
