@@ -24,11 +24,8 @@ import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesMana
 import com.instructure.canvasapi2.models.DiscussionTopicHeader.ReadState
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.depaginate
-import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.horizon.features.inbox.HorizonInboxItemType
 import com.instructure.horizon.features.inbox.navigation.HorizonInboxRoute
-import java.util.Calendar
-import java.util.Date
 import javax.inject.Inject
 
 class DashboardAnnouncementBannerRepository @Inject constructor(
@@ -55,9 +52,6 @@ class DashboardAnnouncementBannerRepository @Inject constructor(
 
         return announcementApi.getFirstPageAnnouncements(
             courseCode = courses.map { "course_" + it.courseId }.toTypedArray(),
-            startDate = Calendar.getInstance()
-                .apply { set(Calendar.YEAR, get(Calendar.YEAR) - 1) }.time.toApiString(),
-            endDate = Date().toApiString(),
             params = params
         )
             .depaginate { announcementApi.getNextPageAnnouncementsList(it, params) }
@@ -82,8 +76,6 @@ class DashboardAnnouncementBannerRepository @Inject constructor(
 
     private suspend fun getUnreadGlobalAnnouncements(forceRefresh: Boolean): List<AnnouncementBannerItem> {
         val params = RestParams(isForceReadFromNetwork = forceRefresh, usePerPageQueryParam = true)
-        val fromDate = Calendar.getInstance()
-            .apply { set(Calendar.YEAR, get(Calendar.YEAR) - 1) }.time
         return accountNotificationApi.getAccountNotifications(
             params,
             includePast = true,
@@ -92,7 +84,6 @@ class DashboardAnnouncementBannerRepository @Inject constructor(
             .depaginate { accountNotificationApi.getNextPageNotifications(it, params) }
             .dataOrThrow
             .filter { !it.closed }
-            .filter { it.startDate?.after(fromDate) ?: true }
             .map { notification ->
                 AnnouncementBannerItem(
                     title = notification.subject,

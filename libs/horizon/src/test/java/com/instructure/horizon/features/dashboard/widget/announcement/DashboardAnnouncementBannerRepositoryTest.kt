@@ -158,7 +158,7 @@ class DashboardAnnouncementBannerRepositoryTest {
         announcements: List<DiscussionTopicHeader>
     ) {
         coEvery { getCoursesManager.getCoursesWithProgress(any(), any()) } returns DataResult.Success(courses)
-        coEvery { announcementApi.getFirstPageAnnouncements(any(), startDate = any(), endDate = any(), params = any()) } returns DataResult.Success(announcements)
+        coEvery { announcementApi.getFirstPageAnnouncements(any(), params = any()) } returns DataResult.Success(announcements)
         coEvery { announcementApi.getNextPageAnnouncementsList(any(), any()) } returns DataResult.Success(announcements)
     }
 
