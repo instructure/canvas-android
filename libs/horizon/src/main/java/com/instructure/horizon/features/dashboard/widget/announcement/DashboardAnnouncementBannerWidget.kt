@@ -35,8 +35,6 @@ import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidge
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardItemState
 import com.instructure.horizon.features.dashboard.widget.announcement.card.DashboardAnnouncementBannerCardError
 import com.instructure.horizon.horizonui.molecules.ButtonColor
-import com.instructure.horizon.horizonui.molecules.ButtonHeight
-import com.instructure.horizon.horizonui.molecules.ButtonWidth
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -87,8 +85,6 @@ fun DashboardAnnouncementBannerSection(
                             date = Date(),
                             buttonState = DashboardPaginatedWidgetCardButtonState(
                                 label = stringResource(R.string.dashboardAnnouncementBannerGoToAnnouncement),
-                                height = ButtonHeight.SMALL,
-                                width = ButtonWidth.FILL,
                                 color = ButtonColor.WhiteWithOutline,
                                 route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
                             )

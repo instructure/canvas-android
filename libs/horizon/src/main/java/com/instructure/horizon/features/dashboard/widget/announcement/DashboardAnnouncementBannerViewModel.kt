@@ -31,8 +31,6 @@ import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidge
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardState
 import com.instructure.horizon.horizonui.molecules.ButtonColor
-import com.instructure.horizon.horizonui.molecules.ButtonHeight
-import com.instructure.horizon.horizonui.molecules.ButtonWidth
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -116,8 +114,6 @@ private fun AnnouncementBannerItem.toPaginatedWidgetCardItemState(context: Conte
         buttonState =
             DashboardPaginatedWidgetCardButtonState(
                 label = context.getString(R.string.dashboardAnnouncementBannerGoToAnnouncement),
-                height = ButtonHeight.SMALL,
-                width = ButtonWidth.FILL,
                 color = ButtonColor.WhiteWithOutline,
                 route = DashboardPaginatedWidgetCardButtonRoute.MainRoute(route)
             )
