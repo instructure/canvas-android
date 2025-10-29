@@ -187,12 +187,12 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                         shouldRefresh,
                         refreshStateFlow
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.width(4.dp))
                     DashboardTimeSpentWidget(
                         shouldRefresh,
                         refreshStateFlow
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.width(4.dp))
                     DashboardSkillOverviewWidget(
                         homeNavController,
                         shouldRefresh,
