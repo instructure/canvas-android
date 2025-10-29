@@ -16,8 +16,14 @@
 package com.instructure.student.ui.pages.classic
 
 import androidx.appcompat.widget.AppCompatButton
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasAnyAncestor
+import androidx.compose.ui.test.hasAnyDescendant
+import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.canvas.espresso.common.pages.AssignmentDetailsPage
@@ -59,6 +65,24 @@ class StudentAssignmentDetailsPage(moduleItemInteractions: ModuleItemInteraction
         }
 
         onView(viewMatcher).click()
+    }
+
+    fun assertDiscussionCheckpointDetailsOnDetailsPage(checkpointText: String, dueAt: String)
+    {
+        try {
+            composeTestRule.onNode(hasText(dueAt) and hasAnyAncestor(hasTestTag("dueDateColumn-$checkpointText") and hasAnyDescendant(hasTestTag("dueDateHeaderText-$checkpointText")))).assertIsDisplayed()
+        } catch (e: AssertionError) {
+            Espresso.onView(withId(R.id.dueComposeView)).perform(ViewActions.scrollTo())
+            composeTestRule.waitForIdle()
+        }
+
+        composeTestRule.onNode(hasTestTag("dueDateHeaderText-$checkpointText"), useUnmergedTree = true).assertIsDisplayed()
+        composeTestRule.onNode(hasText(dueAt) and hasAnyAncestor(hasTestTag("dueDateColumn-$checkpointText") and hasAnyDescendant(hasTestTag("dueDateHeaderText-$checkpointText")))).assertIsDisplayed()
+    }
+
+    fun assertCheckpointGradesView(checkpointName: String, checkpointGrade: String) {
+        composeTestRule.onNode(hasTestTag("checkpointName") and hasText(checkpointName), useUnmergedTree = true).assertIsDisplayed()
+        composeTestRule.onNode(hasTestTag("checkpointGrade") and hasText(checkpointGrade), useUnmergedTree = true).assertIsDisplayed()
     }
 
     //OfflineMethod

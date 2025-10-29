@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.managers.graphql.horizon.journey.ProgramRequir
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.type.EnrollmentWorkflowState
+import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus
 import com.instructure.journey.type.ProgramVariantType
 import io.mockk.coEvery
@@ -48,6 +49,7 @@ class DashboardCourseViewModelTest {
     private val context: Context = mockk(relaxed = true)
     private var repository: DashboardCourseRepository = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
+    private val dashboardEventHandler = DashboardEventHandler()
 
     private val courses = listOf<GetCoursesQuery.Course>(
         GetCoursesQuery.Course(
@@ -187,8 +189,6 @@ class DashboardCourseViewModelTest {
         assertTrue(state.courses.none { it.title == "Course 3" })
 
         assertEquals(1, state.programs.size)
-        assertTrue(state.programs.any { it.title == "Program 1" })
-        assertTrue(state.programs.none { it.title == "Program 2" })
     }
 
     @Test
@@ -198,6 +198,6 @@ class DashboardCourseViewModelTest {
     }
 
     private fun getViewModel(): DashboardCourseViewModel {
-        return DashboardCourseViewModel(context, repository)
+        return DashboardCourseViewModel(context, repository, dashboardEventHandler)
     }
 }

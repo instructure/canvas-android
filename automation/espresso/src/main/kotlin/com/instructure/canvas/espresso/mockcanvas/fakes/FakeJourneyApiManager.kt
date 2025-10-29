@@ -18,9 +18,11 @@ package com.instructure.canvas.espresso.mockcanvas.fakes
 
 import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetProgramsManager
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetSkillsManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetWidgetsManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.ProgramRequirement
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.Skill
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.journey.GetWidgetDataQuery
 import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus
@@ -103,4 +105,29 @@ class FakeGetWidgetsManager : GetWidgetsManager {
             )
         )
     }
+}
+
+class FakeGetSkillsManager: GetSkillsManager {
+    override suspend fun getSkills(
+        completedOnly: Boolean?,
+        forceNetwork: Boolean
+    ): List<Skill> {
+        return listOf(
+            Skill(
+                id = "1",
+                name = "Skill 1",
+                proficiencyLevel = "beginner",
+                createdAt = null,
+                updatedAt = null
+            ),
+            Skill(
+                id = "2",
+                name = "Skill 2",
+                proficiencyLevel = "expert",
+                createdAt = null,
+                updatedAt = null
+            )
+        )
+    }
+
 }

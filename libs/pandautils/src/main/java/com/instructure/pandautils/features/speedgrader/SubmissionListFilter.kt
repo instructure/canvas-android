@@ -23,5 +23,6 @@ enum class SubmissionListFilter {
     NOT_GRADED,
     GRADED,
     BELOW_VALUE,
-    ABOVE_VALUE
+    ABOVE_VALUE,
+    SUBMITTED
 }

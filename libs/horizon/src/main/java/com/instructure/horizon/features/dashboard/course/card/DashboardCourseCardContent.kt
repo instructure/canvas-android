@@ -24,11 +24,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -40,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.LinkAnnotation
@@ -63,7 +67,9 @@ import com.instructure.horizon.features.dashboard.DashboardCard
 import com.instructure.horizon.horizonui.animation.shimmerEffect
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
+import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
+import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.ButtonHeight
 import com.instructure.horizon.horizonui.molecules.ButtonIconPosition
@@ -74,10 +80,13 @@ import com.instructure.horizon.horizonui.molecules.PillCase
 import com.instructure.horizon.horizonui.molecules.PillSize
 import com.instructure.horizon.horizonui.molecules.PillStyle
 import com.instructure.horizon.horizonui.molecules.PillType
-import com.instructure.horizon.horizonui.molecules.ProgressBar
-import com.instructure.horizon.horizonui.molecules.ProgressBarNumberStyle
+import com.instructure.horizon.horizonui.molecules.ProgressBarSmall
+import com.instructure.horizon.horizonui.molecules.ProgressBarStyle
+import com.instructure.horizon.horizonui.molecules.StatusChip
+import com.instructure.horizon.horizonui.molecules.StatusChipState
 import com.instructure.pandautils.utils.localisedFormatMonthDay
 import java.util.Date
+import kotlin.math.roundToInt
 
 @Composable
 fun DashboardCourseCardContent(
@@ -93,27 +102,31 @@ fun DashboardCourseCardContent(
                     handleOnClickAction(state.onClickAction)
                 }
         ) {
-            if (!state.imageUrl.isNullOrEmpty()) {
-                CourseImage(imageUrl = state.imageUrl)
+            if (state.imageState != null) {
+                CourseImage(state.imageState)
             }
             Column(
                 modifier = Modifier
                     .padding(horizontal = 24.dp)
             ) {
+                if (state.chipState != null) {
+                    Spacer(Modifier.height(24.dp))
+                    CardChip(state.chipState)
+                }
                 if (!state.parentPrograms.isNullOrEmpty()) {
                     Spacer(Modifier.height(16.dp))
                     ProgramsText(state.parentPrograms, handleOnClickAction)
                 }
-                if (state.title.isNotEmpty()) {
+                if (!state.title.isNullOrEmpty()) {
                     Spacer(Modifier.height(16.dp))
                     TitleText(state.title)
                 }
                 if (!state.description.isNullOrEmpty()) {
-                    Spacer(Modifier.height(8.dp))
+                    Spacer(Modifier.height(16.dp))
                     DescriptionText(state.description)
                 }
                 if (state.progress != null) {
-                    Spacer(Modifier.height(8.dp))
+                    Spacer(Modifier.height(12.dp))
                     CourseProgress(state.progress)
                 }
                 if (state.moduleItem != null) {
@@ -132,39 +145,72 @@ fun DashboardCourseCardContent(
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-private fun CourseImage(imageUrl: String) {
+private fun CourseImage(state: DashboardCourseCardImageState) {
     var isLoading by rememberSaveable { mutableStateOf(true) }
-    GlideImage(
-        imageUrl,
-        contentDescription = null,
-        contentScale = ContentScale.FillBounds,
-        requestBuilderTransform = { it.addListener( object : RequestListener<Drawable> {
-            override fun onLoadFailed(
-                e: GlideException?,
-                model: Any?,
-                target: Target<Drawable>,
-                isFirstResource: Boolean
-            ): Boolean {
-                isLoading = false
-                return false
-            }
+    if (!state.imageUrl.isNullOrEmpty()) {
+        GlideImage(
+            state.imageUrl,
+            contentDescription = null,
+            contentScale = ContentScale.FillBounds,
+            requestBuilderTransform = {
+                it.addListener(object : RequestListener<Drawable> {
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        model: Any?,
+                        target: Target<Drawable>,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        isLoading = false
+                        return false
+                    }
 
-            override fun onResourceReady(
-                resource: Drawable,
-                model: Any,
-                target: Target<Drawable>?,
-                dataSource: DataSource,
-                isFirstResource: Boolean
-            ): Boolean {
-                isLoading = false
-                return false
-            }
+                    override fun onResourceReady(
+                        resource: Drawable,
+                        model: Any,
+                        target: Target<Drawable>?,
+                        dataSource: DataSource,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        isLoading = false
+                        return false
+                    }
 
-        }) },
-        modifier = Modifier
-            .fillMaxWidth()
-            .aspectRatio(1.69f)
-            .shimmerEffect(isLoading)
+                })
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(1.69f)
+                .shimmerEffect(isLoading)
+        )
+    } else {
+        if (state.showPlaceholder) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1.69f)
+                    .background(HorizonColors.Surface.institution().copy(alpha = 0.1f))
+            ) {
+                Icon(
+                    painterResource(R.drawable.book_2_filled),
+                    contentDescription = null,
+                    tint = HorizonColors.Surface.institution(),
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun CardChip(state: DashboardCourseCardChipState) {
+    StatusChip(
+        StatusChipState(
+            label = state.label,
+            color = state.color,
+            fill = true,
+            iconRes = null
+        )
     )
 }
 
@@ -211,7 +257,7 @@ private fun ProgramsText(
 private fun TitleText(title: String) {
     Text(
         text = title,
-        style = HorizonTypography.h3,
+        style = HorizonTypography.h4,
         color = HorizonColors.Text.title(),
         maxLines = 2,
         overflow = TextOverflow.Ellipsis
@@ -229,7 +275,24 @@ private fun DescriptionText(description: String) {
 
 @Composable
 private fun CourseProgress(progress: Double) {
-    ProgressBar(progress = progress, numberStyle = ProgressBarNumberStyle.OUTSIDE)
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        ProgressBarSmall(
+            progress = progress,
+            style = ProgressBarStyle.Institution,
+            showLabels = false,
+            modifier = Modifier.weight(1f)
+        )
+
+        HorizonSpace(SpaceSize.SPACE_8)
+
+        Text(
+            text = stringResource(R.string.progressBar_percent, progress.roundToInt()),
+            style = HorizonTypography.p2,
+            color = HorizonColors.Surface.institution(),
+        )
+    }
 }
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -244,7 +307,8 @@ private fun ModuleItemCard(
             .background(
                 color = HorizonColors.Surface
                     .institution()
-                    .copy(alpha = 0.1f), shape = HorizonCornerRadius.level2
+                    .copy(alpha = 0.1f),
+                shape = HorizonCornerRadius.level2
             )
             .clip(HorizonCornerRadius.level2)
             .clickable { handleOnClickAction(state.onClickAction) }
@@ -326,7 +390,7 @@ private fun DashboardCourseCardWithModulePreview() {
                 onClickAction = CardClickAction.Action({})
             )
         ),
-        imageUrl = null,
+        imageState = null,
         title = "Course Title That Might Be Really Long and Go On Two Lines",
         description = "This is a description of the course. It might be really long and go on multiple lines.",
         progress = 45.0,

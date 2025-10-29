@@ -26,6 +26,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -36,6 +37,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -52,6 +54,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.ScrollAxisRange
+import androidx.compose.ui.semantics.horizontalScrollAxisRange
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
@@ -64,6 +71,8 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.course.DashboardCourseSection
 import com.instructure.horizon.features.dashboard.widget.myprogress.DashboardMyProgressWidget
+import com.instructure.horizon.features.dashboard.widget.skillhighlights.DashboardSkillHighlightsWidget
+import com.instructure.horizon.features.dashboard.widget.skilloverview.DashboardSkillOverviewWidget
 import com.instructure.horizon.features.dashboard.widget.timespent.DashboardTimeSpentWidget
 import com.instructure.horizon.horizonui.animation.shimmerEffect
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -76,25 +85,13 @@ import com.instructure.horizon.horizonui.molecules.BadgeType
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.navigation.MainNavigationRoute
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-
-const val DASHBOARD_REFRESH = "refreshDashboard"
-const val DASHBOARD_SNACKBAR = "dashboardSnackbar"
 
 @Composable
 fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostController, homeNavController: NavHostController) {
     val snackbarHostState = remember { SnackbarHostState() }
 
-    val parentEntry = remember(mainNavController.currentBackStackEntry) { mainNavController.getBackStackEntry("home") }
-    val savedStateHandle = parentEntry.savedStateHandle
-
-    val externalRefreshFlow = remember { savedStateHandle.getStateFlow(DASHBOARD_REFRESH, false) }
-    val externalRefreshState by externalRefreshFlow.collectAsState()
     var shouldRefresh by rememberSaveable { mutableStateOf(false) }
-
-    val snackbarFlow = remember { savedStateHandle.getStateFlow(DASHBOARD_SNACKBAR, "") }
-    val snackbar by snackbarFlow.collectAsState()
 
     /*
     Using a list of booleans to represent each refreshing component.
@@ -107,20 +104,27 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
 
     NotificationPermissionRequest()
 
-    LaunchedEffect(shouldRefresh, externalRefreshState) {
-        if (shouldRefresh || externalRefreshState) {
-            savedStateHandle[DASHBOARD_REFRESH] = false
-            delay(50)
+    LaunchedEffect(shouldRefresh) {
+        if (shouldRefresh) {
             shouldRefresh = false
         }
     }
 
-    LaunchedEffect(snackbar) {
-        if (snackbar.isNotEmpty()) {
-            snackbarHostState.showSnackbar(
-                message = snackbar,
+    LaunchedEffect(uiState.externalShouldRefresh) {
+        if (uiState.externalShouldRefresh) {
+            shouldRefresh = true
+            uiState.updateExternalShouldRefresh(false)
+        }
+    }
+
+    LaunchedEffect(uiState.snackbarMessage) {
+        if (uiState.snackbarMessage != null) {
+            val result = snackbarHostState.showSnackbar(
+                message = uiState.snackbarMessage,
             )
-            savedStateHandle[DASHBOARD_SNACKBAR] = ""
+            if (result == SnackbarResult.Dismissed) {
+                uiState.onSnackbarDismiss()
+            }
         }
     }
 
@@ -147,6 +151,7 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
             }
         ){
             Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .padding(paddingValues)
                     .verticalScroll(rememberScrollState())
@@ -163,23 +168,43 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                     shouldRefresh,
                     refreshStateFlow
                 )
+                val scrollState = rememberScrollState()
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
-                        .horizontalScroll(rememberScrollState())
+                        .fillMaxWidth()
+                        .horizontalScroll(scrollState)
                         .padding(start = 16.dp)
+                        .semantics {
+                            horizontalScrollAxisRange = ScrollAxisRange(
+                                value = { scrollState.value.toFloat() },
+                                maxValue = { scrollState.maxValue.toFloat() }
+                            )
+                            role = Role.Carousel
+                        }
                 ) {
+                    DashboardMyProgressWidget(
+                        shouldRefresh,
+                        refreshStateFlow
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
                     DashboardTimeSpentWidget(
                         shouldRefresh,
                         refreshStateFlow
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    DashboardMyProgressWidget(
+                    DashboardSkillOverviewWidget(
+                        homeNavController,
                         shouldRefresh,
                         refreshStateFlow
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                 }
+                DashboardSkillHighlightsWidget(
+                    homeNavController,
+                    shouldRefresh,
+                    refreshStateFlow
+                )
             }
         }
     }

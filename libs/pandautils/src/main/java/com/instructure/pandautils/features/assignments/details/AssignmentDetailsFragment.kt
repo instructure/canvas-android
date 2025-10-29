@@ -33,7 +33,6 @@ import android.view.ViewGroup
 import android.webkit.WebView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.snackbar.Snackbar
@@ -53,8 +52,8 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.databinding.FragmentAssignmentDetailsBinding
+import com.instructure.pandautils.features.assignments.details.composables.DiscussionCheckpointLayout
 import com.instructure.pandautils.features.assignments.details.composables.DueDateReminderLayout
-import com.instructure.pandautils.features.reminder.composables.ReminderView
 import com.instructure.pandautils.features.shareextension.ShareFileSubmissionTarget
 import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.Const
@@ -161,6 +160,11 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
                     )
                 }
             )
+        }
+
+        binding?.checkpointGradesComposeView?.setContent {
+            val checkpoints = viewModel.discussionCheckpoints.collectAsState()
+            DiscussionCheckpointLayout(checkpoints.value)
         }
 
         return binding?.root

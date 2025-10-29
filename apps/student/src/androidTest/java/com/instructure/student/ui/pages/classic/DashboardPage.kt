@@ -219,6 +219,11 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onView(withId(R.id.titleTextView) + withText(course.originalName)).perform(withCustomConstraints(click(), isDisplayingAtLeast(10)))
     }
 
+    fun selectCourse(courseName: String) {
+        assertDisplaysCourse(courseName)
+        onView(withId(R.id.titleTextView) + withText(courseName)).perform(withCustomConstraints(click(), isDisplayingAtLeast(10)))
+    }
+
     fun selectGroup(group: Group) {
         val groupNameMatcher = allOf(withText(group.name), withId(R.id.groupNameView))
         waitForView(groupNameMatcher).scrollTo().click()

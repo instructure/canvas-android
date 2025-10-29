@@ -61,9 +61,6 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentPicker
 import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentPickerViewModel
-import com.instructure.horizon.features.inbox.list.HORIZON_INBOX_LIST_ANNOUNCEMENT_READ
-import com.instructure.horizon.features.inbox.list.HORIZON_REFRESH_INBOX_LIST
-import com.instructure.horizon.features.inbox.navigation.HorizonInboxRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
@@ -101,21 +98,6 @@ fun HorizonInboxDetailsScreen(
     state: HorizonInboxDetailsUiState,
     navController: NavHostController
 ) {
-    val listEntry = remember(navController.currentBackStackEntry) {
-        try {
-            navController.getBackStackEntry(HorizonInboxRoute.InboxList.route)
-        } catch (e: IllegalArgumentException) {
-            // If the back stack entry doesn't exist, we can safely ignore it
-            null
-        }
-    }
-
-    LaunchedEffect(state.announcementMarkedAsRead) {
-        if (state.announcementMarkedAsRead) {
-            listEntry?.savedStateHandle?.set(HORIZON_REFRESH_INBOX_LIST, HORIZON_INBOX_LIST_ANNOUNCEMENT_READ)
-        }
-    }
-
     Scaffold(
         containerColor = HorizonColors.Surface.pagePrimary(),
         topBar = { HorizonInboxDetailsHeader(state.title, state.titleIcon, state, navController) },

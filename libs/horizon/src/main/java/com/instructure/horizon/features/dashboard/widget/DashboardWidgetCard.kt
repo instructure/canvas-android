@@ -36,7 +36,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.horizon.R
@@ -46,6 +50,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.pandautils.compose.modifiers.conditional
 
 @Composable
 fun DashboardWidgetCard(
@@ -54,13 +59,28 @@ fun DashboardWidgetCard(
     widgetColor: Color,
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
+    useMinWidth: Boolean = true,
+    onClick: (() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    DashboardCard(modifier) {
+    val context = LocalContext.current
+    DashboardCard(
+        modifier
+            .semantics(mergeDescendants = true) { }
+            .conditional(isLoading) {
+                clearAndSetSemantics {
+                    contentDescription =
+                        context.getString(R.string.a11y_dashboardWidgetLoadingContentDescription, title)
+                }
+            },
+        onClick
+    ) {
         Column(
             modifier = Modifier
                 .padding(24.dp)
-                .width(IntrinsicSize.Min)
+                .conditional(useMinWidth) {
+                    width(IntrinsicSize.Min)
+                }
         ) {
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -82,7 +102,11 @@ fun DashboardWidgetCard(
                         .clip(CircleShape)
                         .background(widgetColor)
                         .padding(6.dp)
-                        .shimmerEffect(isLoading, backgroundColor = widgetColor.copy(alpha = 0.8f), shimmerColor = widgetColor.copy(alpha = 0.5f))
+                        .shimmerEffect(
+                            isLoading,
+                            backgroundColor = widgetColor.copy(alpha = 0.8f),
+                            shimmerColor = widgetColor.copy(alpha = 0.5f)
+                        )
                 ) {
                     Icon(
                         painter = painterResource(iconRes),

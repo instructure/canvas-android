@@ -36,18 +36,34 @@ class DiscussionRouterViewModel @Inject constructor(
                 val header = discussionTopicHeader ?: discussionRouteHelper.getDiscussionHeader(
                     canvasContext,
                     discussionTopicHeaderId
-                )!!
+                )
+
+                if (header == null) {
+                    // Unable to fetch discussion header (e.g., 404 for anonymous discussions)
+                    if (shouldShowDiscussionRedesign) {
+                        // Fallback to web view for redesigned discussions
+                        routeToDiscussionWebView(canvasContext, discussionTopicHeaderId, isAnnouncement)
+                    } else {
+                        // Show error for non-redesigned discussions
+                        _events.postValue(Event(DiscussionRouterAction.ShowToast(resources.getString(R.string.discussionErrorToast))))
+                    }
+                    return@launch
+                }
 
                 if (header.groupTopicChildren.isNotEmpty()) {
                     val discussionGroup = discussionRouteHelper.getDiscussionGroup(header)
                     discussionGroup?.let {
-                        val groupDiscussionHeader = discussionRouteHelper.getDiscussionHeader(it.first, it.second)!!
-                        routeToDiscussionGroup(
-                            it.first,
-                            it.second,
-                            groupDiscussionHeader,
-                            shouldShowDiscussionRedesign
-                        )
+                        val groupDiscussionHeader = discussionRouteHelper.getDiscussionHeader(it.first, it.second)
+                        if (groupDiscussionHeader != null) {
+                            routeToDiscussionGroup(
+                                it.first,
+                                it.second,
+                                groupDiscussionHeader,
+                                shouldShowDiscussionRedesign
+                            )
+                        } else {
+                            routeToDiscussion(canvasContext, header, shouldShowDiscussionRedesign, isAnnouncement)
+                        }
                     } ?: routeToDiscussion(canvasContext, header, shouldShowDiscussionRedesign, isAnnouncement)
                 } else {
                     routeToDiscussion(canvasContext, header, shouldShowDiscussionRedesign, isAnnouncement)
@@ -91,6 +107,21 @@ class DiscussionRouterViewModel @Inject constructor(
                     shouldShowDiscussionRedesign,
                     header,
                     isAnnouncement
+                )
+            )
+        )
+    }
+
+    private fun routeToDiscussionWebView(
+        canvasContext: CanvasContext,
+        discussionTopicHeaderId: Long,
+        isAnnouncement: Boolean
+    ) {
+        _events.postValue(
+            Event(
+                DiscussionRouterAction.RouteToDiscussionWebView(
+                    canvasContext,
+                    discussionTopicHeaderId
                 )
             )
         )
