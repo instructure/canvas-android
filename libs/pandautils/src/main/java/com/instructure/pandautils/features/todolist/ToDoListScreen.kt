@@ -55,16 +55,15 @@ import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.unit.Density
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlin.math.roundToInt
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
@@ -80,6 +79,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import kotlin.math.roundToInt
 
 private data class StickyHeaderState(
     val item: ToDoItemUiState?,
@@ -406,7 +406,9 @@ private fun DateBadge(dateBadgeData: DateBadgeData) {
         Text(
             text = dateBadgeData.dayOfWeek,
             fontSize = 12.sp,
-            color = dateBadgeData.dateTextColor
+            color = dateBadgeData.dateTextColor,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
         )
         Box(
             contentAlignment = Alignment.Center,
@@ -428,7 +430,9 @@ private fun DateBadge(dateBadgeData: DateBadgeData) {
         Text(
             text = dateBadgeData.month,
             fontSize = 10.sp,
-            color = dateBadgeData.dateTextColor
+            color = dateBadgeData.dateTextColor,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
         )
     }
 }
@@ -490,14 +494,18 @@ private fun calculateStickyHeaderState(
         val nextGroupFirstItem = nextGroup.value.first()
         val nextItemPosition = itemPositions[nextGroupFirstItem.id] ?: Float.MAX_VALUE
 
-        // When next group's first item date badge approaches, start pushing the sticky header up
-        // Components to consider:
-        // - Date badge height: 54dp (dayOfWeek 12sp + circle 32dp + month 10sp)
-        //   Note: The circle (32dp) is only shown for today, but we calculate for the max height
-        // - Item bottom padding: 8dp (top padding doesn't count since sticky header has its own top padding)
-        // Total: 54dp + 8dp = 62dp
-        // Convert dp to pixels for comparison with positionInParent() which returns pixels
-        val stickyHeaderHeightPx = with(density) { 62.dp.toPx() }
+        // Calculate date badge height by converting sp and dp values to pixels
+        // Date badge components:
+        // - dayOfWeek text: 12.sp
+        // - day text (in 32.dp box): 12.sp (bold)
+        // - month text: 10.sp
+        // - All text heights together: 22.sp
+        // - item bottom padding: 8.dp
+        val textHeightPx = with(density) { 22.sp.toPx() }
+        val circleHeightPx = with(density) { 32.dp.toPx() }
+        val paddingPx = with(density) { 8.dp.toPx() }
+        val stickyHeaderHeightPx = textHeightPx + circleHeightPx + paddingPx
+
         if (nextItemPosition < stickyHeaderHeightPx && nextItemPosition > 0) {
             yOffset = nextItemPosition - stickyHeaderHeightPx
         }
