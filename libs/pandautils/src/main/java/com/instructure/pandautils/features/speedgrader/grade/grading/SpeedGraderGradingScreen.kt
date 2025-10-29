@@ -801,10 +801,10 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
     }
 
     LaunchedEffect(sliderState.value) {
-        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
         val newScoreFromSlider = sliderState.value.roundToInt().toFloat() / pointScale
         // Only update text field if slider value changed due to user dragging
         if (sliderDrivenScore != sliderState.value) {
+            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
             sliderDrivenScore = sliderState.value
             textFieldScore = numberFormatter.format(newScoreFromSlider)
         }
