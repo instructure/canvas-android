@@ -267,8 +267,12 @@ class DiscussionsE2ETest: StudentComposeTest() {
         assignmentDetailsPage.assertDisplayToolbarTitle()
         assignmentDetailsPage.assertDisplayToolbarSubtitle(courseName)
 
+        Log.d(ASSERTION_TAG, "Assert that there is a separate view (box) for the checkpoints with their corresponding grades.")
+        assignmentDetailsPage.assertCheckpointGradesView("Reply to topic", "-/100")
+        assignmentDetailsPage.assertCheckpointGradesView("Additional replies (1)", "-/3")
+
         Log.d(ASSERTION_TAG, "Assert that the checkpoints are displayed properly on the Assignment Details Page.")
-        assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Reply to topic due","Nov 12, 2025 10:59 PM")
-        assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Additional replies (1) due","Nov 19, 2025 10:59 PM")
+        assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Reply to topic due","Nov 13, 2025 7:59 AM")
+        assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Additional replies (1) due","Nov 20, 2025 7:59 AM")
     }
 }
