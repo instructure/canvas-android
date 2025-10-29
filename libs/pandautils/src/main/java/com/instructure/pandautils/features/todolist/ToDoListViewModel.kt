@@ -130,10 +130,21 @@ class ToDoListViewModel @Inject constructor(
             contextLabel = plannerItem.getContextNameForPlannerItem(context, courseMap.values),
             canvasContext = plannerItem.canvasContext,
             itemType = itemType,
-            isChecked = false,
+            isChecked = isComplete(plannerItem),
             iconRes = plannerItem.getIconForPlannerItem(),
             tag = plannerItem.getTagForPlannerItem(context)
         )
+    }
+
+    private fun isComplete(plannerItem: PlannerItem): Boolean {
+        return if (plannerItem.plannableType == PlannableType.ASSIGNMENT
+            || plannerItem.plannableType == PlannableType.DISCUSSION_TOPIC
+            || plannerItem.plannableType == PlannableType.SUB_ASSIGNMENT
+        ) {
+            plannerItem.submissionState?.submitted == true
+        } else {
+            plannerItem.plannerOverride?.markedComplete == true
+        }
     }
 
     fun handleAction(action: ToDoListActionHandler) {
