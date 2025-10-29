@@ -75,19 +75,21 @@ fun PlannerItem.getDateTextForPlannerItem(context: Context): String? {
 }
 
 fun PlannerItem.getContextNameForPlannerItem(context: Context, courses: Collection<Course>): String {
-    val courseCode = courses.find { it.id == canvasContext.id }?.courseCode
+    val course = courses.find { it.id == canvasContext.id }
+    val hasNickname = course?.originalName != null
+    val courseTitle = if (hasNickname) course.name else course?.courseCode
     return when (plannableType) {
         PlannableType.PLANNER_NOTE -> {
             if (contextName.isNullOrEmpty()) {
                 context.getString(R.string.userCalendarToDo)
             } else {
-                context.getString(R.string.courseToDo, courseCode)
+                context.getString(R.string.courseToDo, courseTitle ?: contextName)
             }
         }
 
         else -> {
             if (canvasContext is Course) {
-                courseCode.orEmpty()
+                courseTitle.orEmpty()
             } else {
                 contextName.orEmpty()
             }

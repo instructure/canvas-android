@@ -29,7 +29,6 @@ import com.instructure.student.activity.NothingToSeeHereFragment
 import com.instructure.student.features.todolist.ToDoListFragment
 import com.instructure.student.fragment.OldToDoListFragment
 import com.instructure.student.fragment.ParentFragment
-import com.instructure.student.util.FeatureFlagPrefs
 
 interface NavigationBehavior {
 

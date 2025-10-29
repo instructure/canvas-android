@@ -153,7 +153,6 @@ import com.instructure.student.router.RouteResolver
 import com.instructure.student.tasks.StudentLogoutTask
 import com.instructure.student.util.Analytics
 import com.instructure.student.util.AppShortcutManager
-import com.instructure.student.util.FeatureFlagPrefs
 import com.instructure.student.util.StudentPrefs
 import com.instructure.student.widget.WidgetUpdater
 import dagger.hilt.android.AndroidEntryPoint

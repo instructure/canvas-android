@@ -100,7 +100,6 @@ import com.instructure.student.fragment.ViewUnsupportedFileFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsFragment
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListRepositoryFragment
 import com.instructure.student.mobius.syllabus.ui.SyllabusRepositoryFragment
-import com.instructure.student.util.FeatureFlagPrefs
 import com.instructure.student.util.FileUtils
 import com.instructure.student.util.onMainThread
 import java.util.Locale
