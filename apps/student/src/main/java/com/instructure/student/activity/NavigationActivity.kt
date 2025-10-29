@@ -1268,6 +1268,10 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         updateBottomBarBadge(R.id.bottomNavigationNotifications, notificationCount, R.plurals.a11y_notificationsUnreadCount)
     }
 
+    override fun updateToDoCount(toDoCount: Int) {
+        updateBottomBarBadge(R.id.bottomNavigationToDo, toDoCount, R.plurals.a11y_todoBadgeCount)
+    }
+
     private fun updateBottomBarBadge(@IdRes menuItemId: Int, count: Int, @PluralsRes quantityContentDescription: Int? = null) = with(binding) {
         if (count > 0) {
             bottomBar.getOrCreateBadge(menuItemId).number = count

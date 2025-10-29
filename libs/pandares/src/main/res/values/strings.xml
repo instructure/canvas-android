@@ -1375,6 +1375,11 @@
         <item quantity="other">%s unread notifications</item>
     </plurals>
 
+    <plurals name="a11y_todoBadgeCount">
+        <item quantity="one">%s to do item</item>
+        <item quantity="other">%s to do items</item>
+    </plurals>
+
     <string name="noAnnotationSelected">No annotation selected</string>
 
     <string name="emailNotifications">Email Notifications</string>
