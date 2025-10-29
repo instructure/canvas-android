@@ -110,35 +110,9 @@ object DiscussionTopicsApi {
             checkpoints = checkpoints
         )
 
-        val response = kotlinx.coroutines.runBlocking {
-            try {
+        kotlinx.coroutines.runBlocking {
                 apolloClient.mutation(mutation).execute()
-            } catch (e: Exception) {
-                println("=== Exception during mutation execution ===")
-                println("Exception type: ${e::class.java.name}")
-                println("Message: ${e.message}")
-                println("Cause: ${e.cause}")
-                e.printStackTrace()
-                throw e
-            }
         }
-
-        if (response.exception != null) {
-            println("=== Apollo Response Exception ===")
-            println("Exception type: ${response.exception!!::class.java.name}")
-            println("Message: ${response.exception?.message}")
-            println("Cause: ${response.exception?.cause}")
-            println("Cause message: ${response.exception?.cause?.message}")
-            response.exception?.printStackTrace()
-            throw response.exception!!
-        }
-
-        val errors = response.data?.createDiscussionTopic?.errors
-        if (!errors.isNullOrEmpty()) {
-            println("GraphQL Errors: ${errors.map { "${it.attribute}: ${it.message}" }}")
-            throw Exception("Failed to create discussion: ${errors.first().message}")
-        }
-
     }
 
     fun createAnnouncement(courseId: Long, token: String, lockedForUser: Boolean = false, locked: Boolean = false, announcementTitle: String? = null): DiscussionApiModel {
