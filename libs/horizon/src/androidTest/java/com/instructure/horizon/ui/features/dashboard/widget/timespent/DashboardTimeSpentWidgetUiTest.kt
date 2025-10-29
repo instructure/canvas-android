@@ -16,7 +16,6 @@
  */
 package com.instructure.horizon.ui.features.dashboard.widget.timespent
 
-import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
@@ -75,9 +74,8 @@ class DashboardTimeSpentWidgetUiTest {
             .assertIsDisplayed()
 
         // Verify retry button is displayed and clickable
-        composeTestRule.onNodeWithText("Refresh")
+        composeTestRule.onNodeWithText("Refresh", useUnmergedTree = true)
             .assertIsDisplayed()
-            .assertHasClickAction()
             .performClick()
 
         assert(refreshCalled) { "Refresh callback should be called when retry button is clicked" }

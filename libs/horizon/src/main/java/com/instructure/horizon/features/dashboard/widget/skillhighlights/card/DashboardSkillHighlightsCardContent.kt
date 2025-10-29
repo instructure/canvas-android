@@ -54,8 +54,8 @@ import com.instructure.horizon.horizonui.molecules.PillType
 fun DashboardSkillHighlightsCardContent(
     state: DashboardSkillHighlightsCardState,
     homeNavController: NavHostController,
+    isLoading: Boolean,
     modifier: Modifier = Modifier,
-    isLoading: Boolean = false
 ) {
     DashboardWidgetCard(
         title = stringResource(R.string.dashboardSkillHighlightsTitle),
@@ -166,7 +166,8 @@ private fun DashboardSkillHighlightsCardContentPreview() {
                 SkillHighlight("Adipiscing elit skill name", SkillHighlightProficiencyLevel.PROFICIENT)
             )
         ),
-        rememberNavController()
+        rememberNavController(),
+        false
     )
 }
 
@@ -176,7 +177,8 @@ private fun DashboardSkillHighlightsCardContentNoDataPreview() {
     ContextKeeper.appContext = LocalContext.current
     DashboardSkillHighlightsCardContent(
         state = DashboardSkillHighlightsCardState(skills = emptyList()),
-        rememberNavController()
+        rememberNavController(),
+        false
     )
 }
 

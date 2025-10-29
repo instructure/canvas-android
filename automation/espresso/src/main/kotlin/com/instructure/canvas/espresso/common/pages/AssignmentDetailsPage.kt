@@ -19,6 +19,9 @@ package com.instructure.canvas.espresso.common.pages
 import android.view.View
 import android.widget.ScrollView
 import androidx.compose.ui.test.assertTextEquals
+import androidx.compose.ui.test.hasAnyAncestor
+import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithTag
@@ -211,7 +214,7 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
     fun openOverflowMenu() {
         Espresso.onView(
             allOf(
-                ViewMatchers.withContentDescription(stringContainsTextCaseInsensitive("More options")),
+                withContentDescription(stringContainsTextCaseInsensitive("More options")),
                 isDisplayed()
             )).click()
     }
@@ -259,6 +262,21 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
 
     fun assertReminderViewDisplayed(position: Int = 0) {
         composeTestRule.onNodeWithTag("reminderView-$position").assertExists()
+    }
+
+    fun assertCheckpointDisplayed(position: Int, name: String, grade: String) {
+        composeTestRule.onNode(
+            hasTestTag("checkpointName")
+                .and(hasText(name))
+                .and(hasAnyAncestor(hasTestTag("checkpointItem-$position"))),
+            useUnmergedTree = true
+        ).assertExists()
+        composeTestRule.onNode(
+            hasTestTag("checkpointGrade")
+                .and(hasText(grade))
+                .and(hasAnyAncestor(hasTestTag("checkpointItem-$position"))),
+            useUnmergedTree = true
+        ).assertExists()
     }
 
     fun assertNoDescriptionViewDisplayed() {
