@@ -48,12 +48,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
-import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.courseOrUserColor
 import com.instructure.pandautils.utils.isCourse
 import com.instructure.pandautils.utils.isGroup
 import com.instructure.pandautils.utils.isUser
@@ -188,13 +186,7 @@ private fun SelectContextItem(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val color = Color(
-        if (canvasContext is User) {
-            ThemePrefs.brandColor
-        } else {
-            canvasContext.color
-        }
-    )
+    val color = Color(canvasContext.courseOrUserColor)
     Row(
         modifier = modifier
             .defaultMinSize(minHeight = 54.dp)
