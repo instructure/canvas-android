@@ -33,6 +33,17 @@ class TeacherDiscussionRouter(private val activity: FragmentActivity) : Discussi
 
     override fun routeToGroupDiscussion(group: Group, id: Long, header: DiscussionTopicHeader, isRedesign: Boolean) = Unit
 
+    override fun routeToDiscussionWebView(canvasContext: CanvasContext, discussionTopicHeaderId: Long) {
+        val route = DiscussionDetailsWebViewFragment.makeRoute(canvasContext, discussionTopicHeaderId)
+        route.apply {
+            removePreviousScreen = true
+        }
+
+        RouteMatcher.route(activity, route)
+
+        if (activity is FullscreenActivity) activity.finish()
+    }
+
     override fun routeToNativeSpeedGrader(
         courseId: Long,
         assignmentId: Long,

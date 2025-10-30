@@ -70,6 +70,7 @@ import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCar
 import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardError
 import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardLoading
 import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardState
+import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCard
 import com.instructure.horizon.features.home.HomeNavigationRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
@@ -132,15 +133,13 @@ private fun DashboardCourseSectionContent(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        state.programs.forEach { programCardState ->
-            DashboardCourseItem(
-                programCardState,
-                mainNavController,
-                homeNavController,
-                Modifier
-                    .padding(horizontal = 16.dp)
-            )
-        }
+        DashboardPaginatedWidgetCard(
+            state.programs,
+            mainNavController,
+            homeNavController,
+            Modifier
+                .padding(horizontal = 16.dp)
+        )
 
         if (state.courses.isNotEmpty()) {
             HorizontalPager(

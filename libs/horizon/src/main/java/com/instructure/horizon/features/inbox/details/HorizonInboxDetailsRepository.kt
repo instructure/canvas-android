@@ -28,6 +28,7 @@ import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.DiscussionTopic
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.DataResult
+import retrofit2.Call
 import javax.inject.Inject
 
 class HorizonInboxDetailsRepository @Inject constructor(
@@ -44,6 +45,11 @@ class HorizonInboxDetailsRepository @Inject constructor(
     suspend fun getAccountAnnouncement(id: Long, forceRefresh: Boolean): AccountNotification {
         val params = RestParams(isForceReadFromNetwork = forceRefresh)
         return accountNotificationApi.getAccountNotifications(params, true, true).dataOrThrow.first { it.id == id }
+    }
+
+    suspend fun deleteAccountAnnouncement(id: Long): DataResult<AccountNotification> {
+        val params = RestParams()
+        return accountNotificationApi.deleteAccountNotification(id, params)
     }
 
     suspend fun getAnnouncement(id: Long, courseId: Long, forceRefresh: Boolean): DiscussionTopicHeader {
