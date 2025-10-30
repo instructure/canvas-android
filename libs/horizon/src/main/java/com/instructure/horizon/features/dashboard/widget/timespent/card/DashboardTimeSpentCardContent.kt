@@ -19,7 +19,6 @@ package com.instructure.horizon.features.dashboard.widget.timespent.card
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -92,8 +91,8 @@ fun DashboardTimeSpentCardContent(
                     state.hours.roundToInt()
                 )
             }
-            FlowRow(
-                verticalArrangement = Arrangement.Center,
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -137,6 +136,7 @@ fun DashboardTimeSpentCardContent(
                             isMenuOpen = isMenuOpen,
                             onMenuOpenChanged = { isMenuOpen = it },
                             size = SingleSelectInputSize.Medium,
+                            isSingleLineOptions = true,
                             options = listOf(stringResource(R.string.dashboardTimeSpentAllCourses)) + state.courses.map { it.name },
                             selectedOption = state.courses.firstOrNull { it.id == state.selectedCourseId }?.name
                                 ?: stringResource(R.string.dashboardTimeSpentAllCourses),

@@ -121,13 +121,13 @@ fun DashboardCourseCardContent(
                     Spacer(Modifier.height(16.dp))
                     TitleText(state.title)
                 }
-                if (!state.description.isNullOrEmpty()) {
-                    Spacer(Modifier.height(16.dp))
-                    DescriptionText(state.description)
-                }
                 if (state.progress != null) {
                     Spacer(Modifier.height(12.dp))
                     CourseProgress(state.progress)
+                }
+                if (!state.description.isNullOrEmpty()) {
+                    Spacer(Modifier.height(16.dp))
+                    DescriptionText(state.description)
                 }
                 if (state.moduleItem != null) {
                     Spacer(Modifier.height(16.dp))
