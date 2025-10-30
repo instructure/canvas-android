@@ -20,12 +20,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.pageview.PageView
@@ -38,12 +34,9 @@ import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.features.todolist.ToDoListRouter
 import com.instructure.pandautils.features.todolist.ToDoListScreen
-import com.instructure.pandautils.features.todolist.ToDoListViewModel
-import com.instructure.pandautils.features.todolist.ToDoListViewModelAction
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.utils.withArgs
 import com.instructure.student.R
@@ -55,8 +48,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class ToDoListFragment : BaseCanvasFragment(), FragmentInteractions, NavigationCallbacks {
 
-    private val viewModel: ToDoListViewModel by viewModels()
-
     @Inject
     lateinit var toDoListRouter: ToDoListRouter
 
@@ -66,17 +57,18 @@ class ToDoListFragment : BaseCanvasFragment(), FragmentInteractions, NavigationC
         savedInstanceState: Bundle?
     ): View {
         applyTheme()
-        viewLifecycleOwner.lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
 
         return ComposeView(requireActivity()).apply {
             setContent {
                 CanvasTheme {
-                    val uiState by viewModel.uiState.collectAsState()
-
                     ToDoListScreen(
-                        uiState = uiState,
-                        actionHandler = viewModel::handleAction,
-                        navigationIconClick = { toDoListRouter.openNavigationDrawer() }
+                        navigationIconClick = { toDoListRouter.openNavigationDrawer() },
+                        openToDoItem = { itemId -> toDoListRouter.openToDoItem(itemId) },
+                        showSnackbar = { message ->
+                            view?.let { view ->
+                                Snackbar.make(view, message, Snackbar.LENGTH_LONG).show()
+                            }
+                        }
                     )
                 }
             }
@@ -94,17 +86,6 @@ class ToDoListFragment : BaseCanvasFragment(), FragmentInteractions, NavigationC
     }
 
     override fun getFragment(): Fragment = this
-
-    private fun handleAction(action: ToDoListViewModelAction) {
-        when (action) {
-            is ToDoListViewModelAction.OpenToDoItem -> toDoListRouter.openToDoItem(action.itemId)
-            is ToDoListViewModelAction.ShowSnackbar -> {
-                view?.let { view ->
-                    Snackbar.make(view, action.message, Snackbar.LENGTH_LONG).show()
-                }
-            }
-        }
-    }
 
     override fun onHandleBackPressed(): Boolean {
         return false
