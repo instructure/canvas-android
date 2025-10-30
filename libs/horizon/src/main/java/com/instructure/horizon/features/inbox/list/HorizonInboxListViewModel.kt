@@ -187,7 +187,7 @@ class HorizonInboxListViewModel @Inject constructor(
                             title = context.getString(R.string.inboxAnnouncementTitle),
                             description = it.subject,
                             date = it.startDate,
-                            isUnread = true
+                            isUnread = !it.closed
                         )
                     }
             )
