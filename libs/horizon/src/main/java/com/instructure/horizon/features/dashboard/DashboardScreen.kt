@@ -85,6 +85,7 @@ import com.instructure.horizon.horizonui.molecules.BadgeContent
 import com.instructure.horizon.horizonui.molecules.BadgeType
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
+import com.instructure.horizon.horizonui.organisms.CollapsableHeaderScreen
 import com.instructure.horizon.navigation.MainNavigationRoute
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -151,68 +152,76 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                 )
             }
         ){
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .padding(paddingValues)
-                    .verticalScroll(rememberScrollState())
-            ) {
-                HomeScreenTopBar(
-                    uiState,
-                    mainNavController,
-                    modifier = Modifier.height(56.dp)
-                )
-                HorizonSpace(SpaceSize.SPACE_24)
-                DashboardAnnouncementBannerWidget(
-                    mainNavController,
-                    homeNavController,
-                    shouldRefresh,
-                    refreshStateFlow
-                )
-                DashboardCourseSection(
-                    mainNavController,
-                    homeNavController,
-                    shouldRefresh,
-                    refreshStateFlow
-                )
-                val scrollState = rememberScrollState()
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .horizontalScroll(scrollState)
-                        .padding(start = 16.dp)
-                        .semantics {
-                            horizontalScrollAxisRange = ScrollAxisRange(
-                                value = { scrollState.value.toFloat() },
-                                maxValue = { scrollState.maxValue.toFloat() }
+            CollapsableHeaderScreen(
+                headerContent = {
+                    Column {
+                        HomeScreenTopBar(
+                            uiState,
+                            mainNavController,
+                            modifier = Modifier.height(56.dp)
+                        )
+                        HorizonSpace(SpaceSize.SPACE_24)
+                    }
+                },
+                bodyContent = {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .padding(paddingValues)
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        DashboardAnnouncementBannerWidget(
+                            mainNavController,
+                            homeNavController,
+                            shouldRefresh,
+                            refreshStateFlow
+                        )
+                        DashboardCourseSection(
+                            mainNavController,
+                            homeNavController,
+                            shouldRefresh,
+                            refreshStateFlow
+                        )
+                        val scrollState = rememberScrollState()
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .horizontalScroll(scrollState)
+                                .padding(start = 16.dp)
+                                .semantics {
+                                    horizontalScrollAxisRange = ScrollAxisRange(
+                                        value = { scrollState.value.toFloat() },
+                                        maxValue = { scrollState.maxValue.toFloat() }
+                                    )
+                                    role = Role.Carousel
+                                }
+                        ) {
+                            DashboardMyProgressWidget(
+                                shouldRefresh,
+                                refreshStateFlow
                             )
-                            role = Role.Carousel
+                            Spacer(modifier = Modifier.width(4.dp))
+                            DashboardTimeSpentWidget(
+                                shouldRefresh,
+                                refreshStateFlow
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            DashboardSkillOverviewWidget(
+                                homeNavController,
+                                shouldRefresh,
+                                refreshStateFlow
+                            )
+                            Spacer(modifier = Modifier.width(16.dp))
                         }
-                ) {
-                    DashboardMyProgressWidget(
-                        shouldRefresh,
-                        refreshStateFlow
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    DashboardTimeSpentWidget(
-                        shouldRefresh,
-                        refreshStateFlow
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    DashboardSkillOverviewWidget(
-                        homeNavController,
-                        shouldRefresh,
-                        refreshStateFlow
-                    )
-                    Spacer(modifier = Modifier.width(16.dp))
+                        DashboardSkillHighlightsWidget(
+                            homeNavController,
+                            shouldRefresh,
+                            refreshStateFlow
+                        )
+                    }
                 }
-                DashboardSkillHighlightsWidget(
-                    homeNavController,
-                    shouldRefresh,
-                    refreshStateFlow
-                )
-            }
+            )
         }
     }
 }
