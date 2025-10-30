@@ -106,7 +106,7 @@ fun SingleSelect(
             InputDropDownPopup(
                 isMenuOpen = state.isMenuOpen,
                 options = state.options,
-                width = width,
+                width = if (state.isPopupWidthFollowContainer) width else null,
                 verticalOffsetPx = heightInPx,
                 onMenuOpenChanged = state.onMenuOpenChanged,
                 onOptionSelected = { selectedOption ->
