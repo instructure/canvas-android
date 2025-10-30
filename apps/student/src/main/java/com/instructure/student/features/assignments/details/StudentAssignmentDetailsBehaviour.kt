@@ -109,6 +109,8 @@ class StudentAssignmentDetailsBehaviour (
         isStudioEnabled: Boolean,
         studioLTITool: LTITool?
     ) {
+        Analytics.logEvent(AnalyticsEventConstants.ASSIGNMENT_SUBMIT_SELECTED)
+
         val builder = AlertDialog.Builder(activity)
         val dialogBinding = DialogSubmissionPickerBinding.inflate(LayoutInflater.from(activity))
         val dialog = builder.setView(dialogBinding.root).create()
