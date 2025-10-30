@@ -51,6 +51,7 @@ class AnnotationSubmissionUploadFragment : BaseCanvasFragment() {
     private var assignmentId by LongArg(key = Const.ASSIGNMENT_ID)
     private var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
     private var assignmentName by StringArg(key = Const.ASSIGNMENT_NAME)
+    private var attempt by LongArg(key = Const.SUBMISSION_ATTEMPT, default = 1L)
 
     private val viewModel: AnnotationSubmissionViewModel by viewModels()
 
@@ -88,7 +89,7 @@ class AnnotationSubmissionUploadFragment : BaseCanvasFragment() {
         toolbar.setMenu(R.menu.menu_submit_generic) {
             when (it.itemId) {
                 R.id.menuSubmit -> {
-                    submissionHelper.startStudentAnnotationSubmission(canvasContext, assignmentId, assignmentName, annotatableAttachmentId)
+                    submissionHelper.startStudentAnnotationSubmission(canvasContext, assignmentId, assignmentName, annotatableAttachmentId, attempt)
                     requireActivity().onBackPressed()
                 }
             }
@@ -111,7 +112,8 @@ class AnnotationSubmissionUploadFragment : BaseCanvasFragment() {
             annotatableAttachmentId: Long,
             submissionId: Long,
             assignmentId: Long,
-            assignmentName: String
+            assignmentName: String,
+            attempt: Long = 1L
         ): Route {
             val bundle = Bundle().apply {
                 putParcelable(Const.CANVAS_CONTEXT, canvasContext)
@@ -119,6 +121,7 @@ class AnnotationSubmissionUploadFragment : BaseCanvasFragment() {
                 putLong(SUBMISSION_ID, submissionId)
                 putLong(Const.ASSIGNMENT_ID, assignmentId)
                 putString(Const.ASSIGNMENT_NAME, assignmentName)
+                putLong(Const.SUBMISSION_ATTEMPT, attempt)
             }
             return Route(AnnotationSubmissionUploadFragment::class.java, canvasContext, bundle)
         }

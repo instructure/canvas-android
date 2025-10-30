@@ -28,7 +28,7 @@ class TextSubmissionUploadEffectHandler(private val submissionHelper: Submission
     override fun accept(effect: TextSubmissionUploadEffect) {
         when (effect) {
             is TextSubmissionUploadEffect.SubmitText -> {
-                submissionHelper.startTextSubmission(effect.canvasContext, effect.assignmentId, effect.assignmentName, effect.text)
+                submissionHelper.startTextSubmission(effect.canvasContext, effect.assignmentId, effect.assignmentName, effect.text, effect.attempt)
                 view?.goBack()
             }
             is TextSubmissionUploadEffect.InitializeText -> view?.setInitialSubmissionText(effect.text)

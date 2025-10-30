@@ -66,10 +66,10 @@ class UrlSubmissionUploadEffectHandlerTest : Assert() {
         val course = Course()
         val url = "www.instructure.com"
 
-        connection.accept(UrlSubmissionUploadEffect.SubmitUrl(url, course, assignment.id, assignment.name))
+        connection.accept(UrlSubmissionUploadEffect.SubmitUrl(url, course, assignment.id, assignment.name, 1L))
 
         verify(timeout = 100) {
-            submissionHelper.startUrlSubmission(course, assignment.id, assignment.name, url)
+            submissionHelper.startUrlSubmission(course, assignment.id, assignment.name, url, 1L)
         }
 
         confirmVerified(submissionHelper)

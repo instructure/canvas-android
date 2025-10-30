@@ -107,7 +107,8 @@ fun uploadAudioRecording(submissionHelper: SubmissionHelper, file: File, assignm
         assignmentId = assignment.id,
         assignmentGroupCategoryId = assignment.groupCategoryId,
         assignmentName = assignment.name,
-        mediaFilePath = file.path
+        mediaFilePath = file.path,
+        mediaSource = "audio_recorder"
     )
 }
 

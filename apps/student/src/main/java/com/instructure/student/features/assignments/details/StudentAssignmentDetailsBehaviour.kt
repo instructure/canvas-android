@@ -24,6 +24,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentActivity
+import android.os.Bundle
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
@@ -31,6 +32,7 @@ import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
+import com.instructure.canvasapi2.utils.AnalyticsParamConstants
 import com.instructure.interactions.Navigation
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.pandautils.databinding.FragmentAssignmentDetailsBinding
@@ -64,7 +66,6 @@ class StudentAssignmentDetailsBehaviour (
         startVideoCapture: () -> Unit,
         onLaunchMediaPicker: () -> Unit,
     ) {
-        Analytics.logEvent(AnalyticsEventConstants.SUBMIT_MEDIARECORDING_SELECTED)
         val builder = AlertDialog.Builder(activity)
         val dialogBinding = DialogSubmissionPickerMediaBinding.inflate(LayoutInflater.from(activity))
         val dialog = builder.setView(dialogBinding.root).create()
@@ -108,38 +109,55 @@ class StudentAssignmentDetailsBehaviour (
         isStudioEnabled: Boolean,
         studioLTITool: LTITool?
     ) {
+        Analytics.logEvent(AnalyticsEventConstants.ASSIGNMENT_SUBMIT_SELECTED)
+
         val builder = AlertDialog.Builder(activity)
         val dialogBinding = DialogSubmissionPickerBinding.inflate(LayoutInflater.from(activity))
         val dialog = builder.setView(dialogBinding.root).create()
         val submissionTypes = assignment.getSubmissionTypes()
 
         dialog.setOnShowListener {
+            val nextAttempt = (assignment.submission?.attempt ?: 0) + 1
             setupDialogRow(dialog, dialogBinding.submissionEntryText, submissionTypes.contains(
                 Assignment.SubmissionType.ONLINE_TEXT_ENTRY)) {
+                Analytics.logEvent(AnalyticsEventConstants.SUBMIT_TEXTENTRY_SELECTED, Bundle().apply {
+                    putString(AnalyticsParamConstants.ATTEMPT, nextAttempt.toString())
+                })
                 router.navigateToTextEntryScreen(
                     activity,
                     course,
                     assignment.id,
                     assignment.name.orEmpty(),
+                    attempt = nextAttempt.toLong()
                 )
             }
             setupDialogRow(dialog, dialogBinding.submissionEntryWebsite, submissionTypes.contains(
                 Assignment.SubmissionType.ONLINE_URL)) {
+                Analytics.logEvent(AnalyticsEventConstants.SUBMIT_URL_SELECTED, Bundle().apply {
+                    putString(AnalyticsParamConstants.ATTEMPT, nextAttempt.toString())
+                })
                 router.navigateToUrlSubmissionScreen(
                     activity,
                     course,
                     assignment.id,
                     assignment.name.orEmpty(),
                     null,
-                    false
+                    false,
+                    nextAttempt.toLong()
                 )
             }
             setupDialogRow(dialog, dialogBinding.submissionEntryFile, submissionTypes.contains(
                 Assignment.SubmissionType.ONLINE_UPLOAD)) {
-                router.navigateToUploadScreen(activity, course, assignment)
+                Analytics.logEvent(AnalyticsEventConstants.SUBMIT_FILEUPLOAD_SELECTED, Bundle().apply {
+                    putString(AnalyticsParamConstants.ATTEMPT, nextAttempt.toString())
+                })
+                router.navigateToUploadScreen(activity, course, assignment, attempt = nextAttempt.toLong())
             }
             setupDialogRow(dialog, dialogBinding.submissionEntryMedia, submissionTypes.contains(
                 Assignment.SubmissionType.MEDIA_RECORDING)) {
+                Analytics.logEvent(AnalyticsEventConstants.SUBMIT_MEDIARECORDING_SELECTED, Bundle().apply {
+                    putString(AnalyticsParamConstants.ATTEMPT, nextAttempt.toString())
+                })
                 showMediaDialog(activity, binding, recordCallback, startVideoCapture, onLaunchMediaPicker)
             }
             setupDialogRow(
@@ -147,10 +165,16 @@ class StudentAssignmentDetailsBehaviour (
                 dialogBinding.submissionEntryStudio,
                 isStudioEnabled
             ) {
+                Analytics.logEvent(AnalyticsEventConstants.SUBMIT_STUDIO_SELECTED, Bundle().apply {
+                    putString(AnalyticsParamConstants.ATTEMPT, nextAttempt.toString())
+                })
                 navigateToStudioScreen(activity, course, assignment, studioLTITool)
             }
             setupDialogRow(dialog, dialogBinding.submissionEntryStudentAnnotation, submissionTypes.contains(
                 Assignment.SubmissionType.STUDENT_ANNOTATION)) {
+                Analytics.logEvent(AnalyticsEventConstants.SUBMIT_ANNOTATION_SELECTED, Bundle().apply {
+                    putString(AnalyticsParamConstants.ATTEMPT, nextAttempt.toString())
+                })
                 assignment.submission?.id?.let{
                     router.navigateToAnnotationSubmissionScreen(
                         activity,
@@ -158,7 +182,8 @@ class StudentAssignmentDetailsBehaviour (
                         assignment.annotatableAttachmentId,
                         it,
                         assignment.id,
-                        assignment.name.orEmpty())
+                        assignment.name.orEmpty(),
+                        nextAttempt.toLong())
                 }
             }
         }
@@ -174,7 +199,7 @@ class StudentAssignmentDetailsBehaviour (
     }
 
     private fun navigateToStudioScreen(activity: FragmentActivity, canvasContext: CanvasContext, assignment: Assignment, studioLTITool: LTITool?) {
-        Analytics.logEvent(AnalyticsEventConstants.SUBMIT_STUDIO_SELECTED)
+        val nextAttempt = (assignment.submission?.attempt ?: 0) + 1
         RouteMatcher.route(
             activity,
             StudioWebViewFragment.makeRoute(
@@ -182,7 +207,8 @@ class StudentAssignmentDetailsBehaviour (
                 studioLTITool?.getResourceSelectorUrl(canvasContext, assignment).orEmpty(),
                 studioLTITool?.name.orEmpty(),
                 true,
-                assignment
+                assignment,
+                nextAttempt.toLong()
             )
         )
     }

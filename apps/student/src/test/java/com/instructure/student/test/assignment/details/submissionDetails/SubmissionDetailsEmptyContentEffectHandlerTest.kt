@@ -258,7 +258,8 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
                 assignment.id,
                 assignment.name,
                 assignment.groupCategoryId,
-                "Path"
+                "Path",
+                mediaSource = "audio_recorder"
             )
         } returns Unit
 
@@ -270,7 +271,8 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
                 assignment.id,
                 assignment.name,
                 assignment.groupCategoryId,
-                "Path"
+                "Path",
+                mediaSource = "audio_recorder"
             )
         }
     }

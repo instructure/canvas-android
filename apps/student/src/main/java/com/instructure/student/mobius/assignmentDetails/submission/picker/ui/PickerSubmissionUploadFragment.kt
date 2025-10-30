@@ -42,6 +42,7 @@ class PickerSubmissionUploadFragment : BasePickerSubmissionUploadFragment() {
 
         const val PICKER_MODE = "pickerMode"
         const val INVALID_ATTEMPT = -1L
+        const val MEDIA_SOURCE = "mediaSource"
 
         private fun validRoute(route: Route) = route.canvasContext?.isCourseOrGroup == true
                 && route.arguments.containsKey(Const.ASSIGNMENT)
@@ -66,12 +67,16 @@ class PickerSubmissionUploadFragment : BasePickerSubmissionUploadFragment() {
         fun makeRoute(
             canvasContext: CanvasContext,
             assignment: Assignment,
-            mediaUri: Uri
+            mediaUri: Uri,
+            attemptId: Long = 1L,
+            mediaSource: String? = null
         ): Route {
             val bundle = canvasContext.makeBundle {
                 putParcelable(Const.ASSIGNMENT, assignment)
                 putParcelable(Const.PASSED_URI, mediaUri)
                 putSerializable(PICKER_MODE, PickerSubmissionMode.MediaSubmission)
+                putLong(Const.SUBMISSION_ATTEMPT, attemptId)
+                mediaSource?.let { putString(MEDIA_SOURCE, it) }
             }
 
             return Route(PickerSubmissionUploadFragment::class.java, canvasContext, bundle)

@@ -50,7 +50,8 @@ data class PickerSubmissionUploadModel(
     val mediaFileUri: Uri? = null,
     val files: List<FileSubmitObject> = emptyList(),
     val isLoadingFile: Boolean = false,
-    val attemptId: Long? = null
+    val attemptId: Long? = null,
+    val mediaSource: String? = null
 )
 
 enum class PickerSubmissionMode {

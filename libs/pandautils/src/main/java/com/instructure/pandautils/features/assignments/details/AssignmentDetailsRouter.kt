@@ -30,7 +30,9 @@ open class AssignmentDetailsRouter {
         activity: FragmentActivity,
         canvasContext: CanvasContext,
         assignment: Assignment,
-        mediaUri: Uri
+        mediaUri: Uri,
+        attempt: Long = 1L,
+        mediaSource: String? = null
     ) = Unit
 
     open fun navigateToSubmissionScreen(
@@ -57,7 +59,8 @@ open class AssignmentDetailsRouter {
         activity: FragmentActivity,
         canvasContext: CanvasContext,
         assignment: Assignment,
-        attemptId: Long? = null
+        attemptId: Long? = null,
+        attempt: Long = 1L
     ) = Unit
 
     open fun navigateToTextEntryScreen(
@@ -66,7 +69,8 @@ open class AssignmentDetailsRouter {
         assignmentId: Long,
         assignmentName: String? = "",
         initialText: String? = null,
-        isFailure: Boolean = false
+        isFailure: Boolean = false,
+        attempt: Long = 1L
     ) = Unit
 
     open fun navigateToUrlSubmissionScreen(
@@ -75,7 +79,8 @@ open class AssignmentDetailsRouter {
         assignmentId: Long,
         assignmentName: String? = "",
         initialUrl: String?,
-        isFailure: Boolean = false
+        isFailure: Boolean = false,
+        attempt: Long = 1L
     ) = Unit
 
     open fun navigateToAnnotationSubmissionScreen(
@@ -84,7 +89,8 @@ open class AssignmentDetailsRouter {
         annotatableAttachmentId: Long,
         submissionId: Long,
         assignmentId: Long,
-        assignmentName: String
+        assignmentName: String,
+        attempt: Long = 1L
     ) = Unit
 
     open fun navigateToLtiLaunchScreen(

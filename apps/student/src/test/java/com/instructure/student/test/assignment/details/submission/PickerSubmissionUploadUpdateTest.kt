@@ -73,7 +73,7 @@ class PickerSubmissionUploadUpdateTest : Assert() {
     fun `Initializes with LoadFileContents effect given a media uri`() {
         val uri = mockk<Uri>()
         val startModel = initModel.copy(mediaFileUri = uri, isLoadingFile = false)
-        val expectedModel = startModel.copy(isLoadingFile = true)
+        val expectedModel = startModel.copy(isLoadingFile = true, mediaSource = "camera")
         initSpec
             .whenInit(startModel)
             .then(

@@ -42,6 +42,7 @@ abstract class BaseTextSubmissionUploadFragment : MobiusFragment<TextSubmissionU
     private val initialText by StringArg(key = Const.TEXT)
     private val isFailure by BooleanArg(key = Const.IS_FAILURE)
     private val assignmentName by StringArg(key = Const.ASSIGNMENT_NAME)
+    private val attempt by LongArg(key = Const.SUBMISSION_ATTEMPT, default = 1L)
 
     override fun makeUpdate() = TextSubmissionUploadUpdate()
 
@@ -50,7 +51,7 @@ abstract class BaseTextSubmissionUploadFragment : MobiusFragment<TextSubmissionU
     override fun makePresenter() = TextSubmissionUploadPresenter
 
     override fun makeInitModel(): TextSubmissionUploadModel {
-        return TextSubmissionUploadModel(course, assignmentId, assignmentName, initialText, isFailure)
+        return TextSubmissionUploadModel(course, assignmentId, assignmentName, initialText, isFailure, attempt = attempt)
     }
 
     override fun getExternalEventSources() = listOf(TextSubmissionUploadEventBusSource())

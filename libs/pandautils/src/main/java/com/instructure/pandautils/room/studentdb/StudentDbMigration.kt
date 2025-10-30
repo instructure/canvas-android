@@ -17,6 +17,13 @@
 import com.instructure.pandautils.room.common.createMigration
 
 val studentDbMigrations = arrayOf(
+    createMigration(5, 6) { database ->
+        // Add attempt column to CreateSubmissionEntity table
+        database.execSQL("ALTER TABLE `CreateSubmissionEntity` ADD COLUMN `attempt` INTEGER NOT NULL DEFAULT 1")
+        // Add mediaType and mediaSource columns to CreateSubmissionEntity table
+        database.execSQL("ALTER TABLE `CreateSubmissionEntity` ADD COLUMN `mediaType` TEXT")
+        database.execSQL("ALTER TABLE `CreateSubmissionEntity` ADD COLUMN `mediaSource` TEXT")
+    },
     createMigration(4, 5) { database ->
         // Add a new table
         database.execSQL(

@@ -41,7 +41,8 @@ class TextSubmissionUploadUpdate :
                         event.text,
                         model.canvasContext,
                         model.assignmentId,
-                        model.assignmentName
+                        model.assignmentName,
+                        model.attempt
                     )
                 )
             )

@@ -51,7 +51,7 @@ class UrlSubmissionUploadUpdate : UpdateInit<UrlSubmissionUploadModel, UrlSubmis
                 Next.next(model.copy(isSubmittable = true, urlError = MalformedUrlError.NONE), setOf(UrlSubmissionUploadEffect.ShowUrlPreview(url)))
             }
             is UrlSubmissionUploadEvent.SubmitClicked -> {
-                Next.dispatch(Effects.effects((UrlSubmissionUploadEffect.SubmitUrl(event.url, model.course, model.assignmentId, model.assignmentName)) as UrlSubmissionUploadEffect))
+                Next.dispatch(Effects.effects((UrlSubmissionUploadEffect.SubmitUrl(event.url, model.course, model.assignmentId, model.assignmentName, model.attempt)) as UrlSubmissionUploadEffect))
             }
         }
     }

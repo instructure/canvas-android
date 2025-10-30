@@ -24,6 +24,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ServiceInfo
 import android.os.Build
+import android.os.Bundle
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
@@ -46,6 +47,7 @@ import com.instructure.canvasapi2.models.notorious.NotoriousResult
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
+import com.instructure.canvasapi2.utils.AnalyticsParamConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.FileUtils
@@ -231,6 +233,12 @@ class SubmissionWorker @AssistedInject constructor(
                 createFileSubmissionDao.deleteFilesForSubmissionId(submission.id)
                 createSubmissionDao.deleteSubmissionById(submission.id)
 
+                analytics.logEvent(AnalyticsEventConstants.SUBMIT_MEDIARECORDING_SUCCEEDED, Bundle().apply {
+                    putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                    submission.mediaType?.let { putString(AnalyticsParamConstants.MEDIA_TYPE, it) }
+                    submission.mediaSource?.let { putString(AnalyticsParamConstants.MEDIA_SOURCE, it) }
+                })
+
                 showCompleteNotification(
                     context,
                     submission,
@@ -240,10 +248,20 @@ class SubmissionWorker @AssistedInject constructor(
             } ?: run {
                 createSubmissionDao.setSubmissionError(true, submission.id)
                 showErrorNotification(context, submission)
+                analytics.logEvent(AnalyticsEventConstants.SUBMIT_MEDIARECORDING_FAILED, Bundle().apply {
+                    putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                    submission.mediaType?.let { putString(AnalyticsParamConstants.MEDIA_TYPE, it) }
+                    submission.mediaSource?.let { putString(AnalyticsParamConstants.MEDIA_SOURCE, it) }
+                })
                 Result.failure()
             }
         }.onFailure {
             handleFileError(submission, 0, listOf(mediaFile), it?.message)
+            analytics.logEvent(AnalyticsEventConstants.SUBMIT_MEDIARECORDING_FAILED, Bundle().apply {
+                putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                submission.mediaType?.let { putString(AnalyticsParamConstants.MEDIA_TYPE, it) }
+                submission.mediaSource?.let { putString(AnalyticsParamConstants.MEDIA_SOURCE, it) }
+            })
             return Result.failure()
         }
         return Result.failure()
@@ -337,7 +355,9 @@ class SubmissionWorker @AssistedInject constructor(
                     return true
                 }
             }).onSuccess { attachment ->
-                analytics.logEvent(AnalyticsEventConstants.SUBMIT_FILEUPLOAD_SUCCEEDED)
+                analytics.logEvent(AnalyticsEventConstants.SUBMIT_FILEUPLOAD_SUCCEEDED, Bundle().apply {
+                    putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                })
                 updateFileProgress(
                     submission.id,
                     1.0f,
@@ -357,7 +377,9 @@ class SubmissionWorker @AssistedInject constructor(
 
                 attachmentIds.add(attachment.id)
             }.onFailure {
-                analytics.logEvent(AnalyticsEventConstants.SUBMIT_FILEUPLOAD_FAILED)
+                analytics.logEvent(AnalyticsEventConstants.SUBMIT_FILEUPLOAD_FAILED, Bundle().apply {
+                    putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                })
                 runBlocking {
                     handleFileError(submission, index, attachments, it?.message)
                 }
@@ -610,10 +632,58 @@ class SubmissionWorker @AssistedInject constructor(
         return result.dataOrNull?.let {
             createSubmissionDao.deleteSubmissionById(submission.id)
             if (!result.dataOrThrow.late) showConfetti()
+
+            when (submission.submissionType) {
+                Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString -> {
+                    analytics.logEvent(AnalyticsEventConstants.SUBMIT_TEXTENTRY_SUCCEEDED, Bundle().apply {
+                        putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                    })
+                }
+                Assignment.SubmissionType.ONLINE_URL.apiString -> {
+                    analytics.logEvent(AnalyticsEventConstants.SUBMIT_URL_SUCCEEDED, Bundle().apply {
+                        putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                    })
+                }
+                Assignment.SubmissionType.BASIC_LTI_LAUNCH.apiString -> {
+                    analytics.logEvent(AnalyticsEventConstants.SUBMIT_STUDIO_SUCCEEDED, Bundle().apply {
+                        putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                    })
+                }
+                Assignment.SubmissionType.STUDENT_ANNOTATION.apiString -> {
+                    analytics.logEvent(AnalyticsEventConstants.SUBMIT_ANNOTATION_SUCCEEDED, Bundle().apply {
+                        putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                    })
+                }
+            }
+
             Result.success()
         } ?: run {
             createSubmissionDao.setSubmissionError(true, submission.id)
             showErrorNotification(context, submission)
+
+            when (submission.submissionType) {
+                Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString -> {
+                    analytics.logEvent(AnalyticsEventConstants.SUBMIT_TEXTENTRY_FAILED, Bundle().apply {
+                        putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                    })
+                }
+                Assignment.SubmissionType.ONLINE_URL.apiString -> {
+                    analytics.logEvent(AnalyticsEventConstants.SUBMIT_URL_FAILED, Bundle().apply {
+                        putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                    })
+                }
+                Assignment.SubmissionType.BASIC_LTI_LAUNCH.apiString -> {
+                    analytics.logEvent(AnalyticsEventConstants.SUBMIT_STUDIO_FAILED, Bundle().apply {
+                        putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                    })
+                }
+                Assignment.SubmissionType.STUDENT_ANNOTATION.apiString -> {
+                    analytics.logEvent(AnalyticsEventConstants.SUBMIT_ANNOTATION_FAILED, Bundle().apply {
+                        putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                    })
+                }
+            }
+
             Result.failure()
         }
     }

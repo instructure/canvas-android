@@ -155,7 +155,7 @@ class UrlSubmissionUploadUpdateTest : Assert() {
 
     @Test
     fun `SubmitClicked event with valid url results in SubmitUrl effect`() {
-        val expectedEffect: UrlSubmissionUploadEffect = UrlSubmissionUploadEffect.SubmitUrl(defaultValidUrl, course, assignment.id, assignment.name)
+        val expectedEffect: UrlSubmissionUploadEffect = UrlSubmissionUploadEffect.SubmitUrl(defaultValidUrl, course, assignment.id, assignment.name, 1L)
 
         updateSpec
             .given(initModel)
