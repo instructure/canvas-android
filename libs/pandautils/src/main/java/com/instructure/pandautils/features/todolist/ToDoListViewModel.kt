@@ -62,7 +62,7 @@ class ToDoListViewModel @Inject constructor(
 
                 val now = LocalDate.now().atStartOfDay()
                 val startDate = now.minusDays(7).toApiString().orEmpty()
-                val endDate = now.plusDays(7).toApiString().orEmpty()
+                val endDate = now.plusDays(28).toApiString().orEmpty() // TODO revert
 
                 val courses = repository.getCourses(forceRefresh).dataOrThrow
                 val plannerItems = repository.getPlannerItems(startDate, endDate, forceRefresh).dataOrThrow
@@ -134,13 +134,13 @@ class ToDoListViewModel @Inject constructor(
     }
 
     private fun isComplete(plannerItem: PlannerItem): Boolean {
-        return if (plannerItem.plannableType == PlannableType.ASSIGNMENT
+        return plannerItem.plannerOverride?.markedComplete ?: if (plannerItem.plannableType == PlannableType.ASSIGNMENT
             || plannerItem.plannableType == PlannableType.DISCUSSION_TOPIC
             || plannerItem.plannableType == PlannableType.SUB_ASSIGNMENT
         ) {
             plannerItem.submissionState?.submitted == true
         } else {
-            plannerItem.plannerOverride?.markedComplete == true
+            false
         }
     }
 
