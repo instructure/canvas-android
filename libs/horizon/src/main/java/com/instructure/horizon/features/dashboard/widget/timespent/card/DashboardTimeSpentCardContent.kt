@@ -109,12 +109,11 @@ fun DashboardTimeSpentCardContent(
                     )
                 }
 
-
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
-                        .width(IntrinsicSize.Max)
+                        .fillMaxWidth()
                 ) {
                     if (state.courses.size > 1) {
                         HorizonSpace(SpaceSize.SPACE_8)
