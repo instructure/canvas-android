@@ -28,8 +28,16 @@ data class ToDoListUiState(
     val onOpenToDoItem: () -> Unit = {},
     val snackbarMessage: String? = null,
     val onSnackbarDismissed: () -> Unit = {},
+    val markedAsDoneItem: MarkedAsDoneItem? = null,
+    val onUndoMarkAsDone: () -> Unit = {},
+    val onMarkedAsDoneSnackbarDismissed: () -> Unit = {},
     val onItemClicked: (String) -> Unit = {},
     val onRefresh: () -> Unit = {}
+)
+
+data class MarkedAsDoneItem(
+    val itemId: String,
+    val title: String
 )
 
 data class ToDoItemUiState(

@@ -22,7 +22,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
-import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.FragmentInteractions
@@ -63,12 +62,7 @@ class ToDoListFragment : BaseCanvasFragment(), FragmentInteractions, NavigationC
                 CanvasTheme {
                     ToDoListScreen(
                         navigationIconClick = { toDoListRouter.openNavigationDrawer() },
-                        openToDoItem = { itemId -> toDoListRouter.openToDoItem(itemId) },
-                        showSnackbar = { message ->
-                            view?.let { view ->
-                                Snackbar.make(view, message, Snackbar.LENGTH_LONG).show()
-                            }
-                        }
+                        openToDoItem = { itemId -> toDoListRouter.openToDoItem(itemId) }
                     )
                 }
             }
