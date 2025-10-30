@@ -306,7 +306,7 @@ private fun ToDoItemsList(
                             item = item,
                             showDateBadge = index == 0,
                             hideDate = index == 0 && stickyHeaderState.isVisible && stickyHeaderState.item?.id == item.id,
-                            onCheckedChange = { /* TODO: Implement toggle checked - will be implemented in future story */ },
+                            onCheckedChange = { item.onCheckboxToggle(!item.isChecked) },
                             onClick = { onItemClicked(item.id) },
                             modifier = Modifier.onGloballyPositioned { coordinates ->
                                 itemPositions[item.id] = coordinates.positionInParent().y
