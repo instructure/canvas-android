@@ -28,6 +28,7 @@ import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.course.card.CardClickAction
 import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardModuleItemState
 import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardState
+import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardState
 import com.instructure.horizon.model.LearningObjectType
 import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus
 import com.instructure.pandautils.utils.formatIsoDuration
@@ -132,7 +133,7 @@ class DashboardCourseViewModel @Inject constructor(
 
         _uiState.update {
             it.copy(
-                programs = programCardStates,
+                programs = DashboardPaginatedWidgetCardState(programCardStates),
                 courses = courseCardStates
             )
         }

@@ -53,6 +53,12 @@ object AccountNotificationAPI {
         @DELETE("accounts/self/users/self/account_notifications/{accountNotificationId}")
         fun deleteAccountNotification(@Path("accountNotificationId") accountNotificationId: Long): Call<AccountNotification>
 
+        @DELETE("accounts/self/users/self/account_notifications/{accountNotificationId}")
+        suspend fun deleteAccountNotification(
+            @Path("accountNotificationId") accountNotificationId: Long,
+            @Tag restParams: RestParams
+        ): DataResult<AccountNotification>
+
         @GET("accounts/self/users/self/account_notifications/{accountNotificationId}")
         fun getAccountNotification(@Path("accountNotificationId") accountNotificationId: Long): Call<AccountNotification>
 

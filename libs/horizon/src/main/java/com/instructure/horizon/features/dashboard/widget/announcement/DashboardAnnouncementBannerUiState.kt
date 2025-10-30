@@ -14,15 +14,27 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.dashboard.course
+package com.instructure.horizon.features.dashboard.widget.announcement
 
 import com.instructure.horizon.features.dashboard.DashboardItemState
-import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardState
+import java.util.Date
 
-data class DashboardCourseUiState(
+data class DashboardAnnouncementBannerUiState(
     val state: DashboardItemState = DashboardItemState.LOADING,
-    val programs: DashboardPaginatedWidgetCardState = DashboardPaginatedWidgetCardState(),
-    val courses: List<DashboardCourseCardState> = emptyList(),
-    val onRefresh: (onFinished: () -> Unit)-> Unit = { }
+    val cardState: DashboardPaginatedWidgetCardState = DashboardPaginatedWidgetCardState(),
+    val onRefresh: (() -> Unit) -> Unit,
 )
+
+data class AnnouncementBannerItem(
+    val title: String,
+    val source: String? = null,
+    val date: Date?,
+    val type: AnnouncementType,
+    val route: String
+)
+
+enum class AnnouncementType {
+    COURSE,
+    GLOBAL
+}
