@@ -122,7 +122,7 @@ class StudentAssignmentDetailsRouter: AssignmentDetailsRouter() {
         initialUrl: String?,
         isFailure: Boolean
     ) {
-        Analytics.logEvent(AnalyticsEventConstants.SUBMIT_ONLINEURL_SELECTED)
+        Analytics.logEvent(AnalyticsEventConstants.SUBMIT_URL_SELECTED)
         RouteMatcher.route(
             activity,
             UrlSubmissionUploadFragment.makeRoute(course, assignmentId, assignmentName, initialUrl, isFailure)
@@ -137,7 +137,7 @@ class StudentAssignmentDetailsRouter: AssignmentDetailsRouter() {
         assignmentId: Long,
         assignmentName: String
     ) {
-        Analytics.logEvent(AnalyticsEventConstants.SUBMIT_STUDENT_ANNOTATION_SELECTED)
+        Analytics.logEvent(AnalyticsEventConstants.SUBMIT_ANNOTATION_SELECTED)
         RouteMatcher.route(
             activity,
             AnnotationSubmissionUploadFragment.makeRoute(

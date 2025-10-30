@@ -231,6 +231,8 @@ class SubmissionWorker @AssistedInject constructor(
                 createFileSubmissionDao.deleteFilesForSubmissionId(submission.id)
                 createSubmissionDao.deleteSubmissionById(submission.id)
 
+                analytics.logEvent(AnalyticsEventConstants.SUBMIT_MEDIARECORDING_SUCCEEDED)
+
                 showCompleteNotification(
                     context,
                     submission,
@@ -240,10 +242,12 @@ class SubmissionWorker @AssistedInject constructor(
             } ?: run {
                 createSubmissionDao.setSubmissionError(true, submission.id)
                 showErrorNotification(context, submission)
+                analytics.logEvent(AnalyticsEventConstants.SUBMIT_MEDIARECORDING_FAILED)
                 Result.failure()
             }
         }.onFailure {
             handleFileError(submission, 0, listOf(mediaFile), it?.message)
+            analytics.logEvent(AnalyticsEventConstants.SUBMIT_MEDIARECORDING_FAILED)
             return Result.failure()
         }
         return Result.failure()
@@ -610,10 +614,42 @@ class SubmissionWorker @AssistedInject constructor(
         return result.dataOrNull?.let {
             createSubmissionDao.deleteSubmissionById(submission.id)
             if (!result.dataOrThrow.late) showConfetti()
+
+            when (submission.submissionType) {
+                Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString -> {
+                    analytics.logEvent(AnalyticsEventConstants.SUBMIT_TEXTENTRY_SUCCEEDED)
+                }
+                Assignment.SubmissionType.ONLINE_URL.apiString -> {
+                    analytics.logEvent(AnalyticsEventConstants.SUBMIT_URL_SUCCEEDED)
+                }
+                Assignment.SubmissionType.BASIC_LTI_LAUNCH.apiString -> {
+                    analytics.logEvent(AnalyticsEventConstants.SUBMIT_STUDIO_SUCCEEDED)
+                }
+                Assignment.SubmissionType.STUDENT_ANNOTATION.apiString -> {
+                    analytics.logEvent(AnalyticsEventConstants.SUBMIT_ANNOTATION_SUCCEEDED)
+                }
+            }
+
             Result.success()
         } ?: run {
             createSubmissionDao.setSubmissionError(true, submission.id)
             showErrorNotification(context, submission)
+
+            when (submission.submissionType) {
+                Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString -> {
+                    analytics.logEvent(AnalyticsEventConstants.SUBMIT_TEXTENTRY_FAILED)
+                }
+                Assignment.SubmissionType.ONLINE_URL.apiString -> {
+                    analytics.logEvent(AnalyticsEventConstants.SUBMIT_URL_FAILED)
+                }
+                Assignment.SubmissionType.BASIC_LTI_LAUNCH.apiString -> {
+                    analytics.logEvent(AnalyticsEventConstants.SUBMIT_STUDIO_FAILED)
+                }
+                Assignment.SubmissionType.STUDENT_ANNOTATION.apiString -> {
+                    analytics.logEvent(AnalyticsEventConstants.SUBMIT_ANNOTATION_FAILED)
+                }
+            }
+
             Result.failure()
         }
     }

@@ -135,7 +135,7 @@ class SubmissionDetailsEmptyContentView(
     }
 
     fun showOnlineUrlEntryView(assignmentId: Long, assignmentName: String?, canvasContext: CanvasContext, submittedUrl: String? = null) {
-        logEventWithOrigin(AnalyticsEventConstants.SUBMIT_ONLINEURL_SELECTED)
+        logEventWithOrigin(AnalyticsEventConstants.SUBMIT_URL_SELECTED)
         RouteMatcher.route(activity as FragmentActivity, UrlSubmissionUploadFragment.makeRoute(canvasContext, assignmentId, assignmentName, submittedUrl))
     }
 
@@ -235,7 +235,7 @@ class SubmissionDetailsEmptyContentView(
     }
 
     fun showStudentAnnotationView(assignment: Assignment) {
-        logEvent(AnalyticsEventConstants.SUBMIT_STUDENT_ANNOTATION_SELECTED)
+        logEvent(AnalyticsEventConstants.SUBMIT_ANNOTATION_SELECTED)
 
         val submissionId = assignment.submission?.id
         if (submissionId != null) {
