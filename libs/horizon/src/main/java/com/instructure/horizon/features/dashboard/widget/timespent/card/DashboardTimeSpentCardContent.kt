@@ -85,7 +85,6 @@ fun DashboardTimeSpentCardContent(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .semantics(mergeDescendants = true) {}
             ) {
                 if (state.minutes == 0) {
                     DashboardTimeSpentSingleTimeUnit(
