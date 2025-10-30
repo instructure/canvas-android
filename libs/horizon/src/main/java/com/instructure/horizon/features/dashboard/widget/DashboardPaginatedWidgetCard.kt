@@ -29,6 +29,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -96,7 +98,9 @@ fun DashboardPaginatedWidgetCard(
                         isLoading = state.isLoading,
                         modifier = Modifier
                             .padding(horizontal = 24.dp)
-                            .semantics(mergeDescendants = true) {}
+                            .semantics(mergeDescendants = true) {
+                                role = Role.Button
+                            }
                     )
 
                     HorizonSpace(SpaceSize.SPACE_24)
