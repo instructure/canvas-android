@@ -54,6 +54,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.ScrollAxisRange
+import androidx.compose.ui.semantics.horizontalScrollAxisRange
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
@@ -65,6 +70,7 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.course.DashboardCourseSection
+import com.instructure.horizon.features.dashboard.widget.announcement.DashboardAnnouncementBannerWidget
 import com.instructure.horizon.features.dashboard.widget.myprogress.DashboardMyProgressWidget
 import com.instructure.horizon.features.dashboard.widget.skillhighlights.DashboardSkillHighlightsWidget
 import com.instructure.horizon.features.dashboard.widget.skilloverview.DashboardSkillOverviewWidget
@@ -157,29 +163,43 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                     modifier = Modifier.height(56.dp)
                 )
                 HorizonSpace(SpaceSize.SPACE_24)
+                DashboardAnnouncementBannerWidget(
+                    mainNavController,
+                    homeNavController,
+                    shouldRefresh,
+                    refreshStateFlow
+                )
                 DashboardCourseSection(
                     mainNavController,
                     homeNavController,
                     shouldRefresh,
                     refreshStateFlow
                 )
+                val scrollState = rememberScrollState()
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .horizontalScroll(rememberScrollState())
+                        .horizontalScroll(scrollState)
                         .padding(start = 16.dp)
+                        .semantics {
+                            horizontalScrollAxisRange = ScrollAxisRange(
+                                value = { scrollState.value.toFloat() },
+                                maxValue = { scrollState.maxValue.toFloat() }
+                            )
+                            role = Role.Carousel
+                        }
                 ) {
                     DashboardMyProgressWidget(
                         shouldRefresh,
                         refreshStateFlow
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.width(4.dp))
                     DashboardTimeSpentWidget(
                         shouldRefresh,
                         refreshStateFlow
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.width(4.dp))
                     DashboardSkillOverviewWidget(
                         homeNavController,
                         shouldRefresh,

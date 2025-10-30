@@ -45,6 +45,7 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.utils.ContextKeeper
@@ -154,12 +155,16 @@ private fun SingleSelectContent(state: SingleSelectState) {
         if (state.selectedOption != null) {
             Text(
                 text = state.selectedOption,
+                maxLines = if (state.isSingleLineOptions) 1 else Int.MAX_VALUE,
+                overflow = TextOverflow.Ellipsis,
                 style = HorizonTypography.p1,
                 color = HorizonColors.Text.body(),
             )
         } else if (state.placeHolderText != null) {
             Text(
                 text = state.placeHolderText,
+                maxLines = if (state.isSingleLineOptions) 1 else Int.MAX_VALUE,
+                overflow = TextOverflow.Ellipsis,
                 style = HorizonTypography.p1,
                 color = HorizonColors.Text.placeholder(),
             )

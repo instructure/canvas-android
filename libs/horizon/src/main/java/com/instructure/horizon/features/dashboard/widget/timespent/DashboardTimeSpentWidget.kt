@@ -18,23 +18,30 @@ package com.instructure.horizon.features.dashboard.widget.timespent
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardItemState
+import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCardError
 import com.instructure.horizon.features.dashboard.widget.timespent.card.DashboardTimeSpentCardContent
-import com.instructure.horizon.features.dashboard.widget.timespent.card.DashboardTimeSpentCardError
+import com.instructure.horizon.horizonui.foundation.HorizonColors
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
 @Composable
 fun DashboardTimeSpentWidget(
     shouldRefresh: Boolean,
-    refreshState: MutableStateFlow<List<Boolean>>
+    refreshState: MutableStateFlow<List<Boolean>>,
+    modifier: Modifier = Modifier
 ) {
     val viewModel = hiltViewModel<DashboardTimeSpentViewModel>()
     val state by viewModel.uiState.collectAsState()
@@ -48,20 +55,28 @@ fun DashboardTimeSpentWidget(
         }
     }
 
-    DashboardTimeSpentSection(state)
+    DashboardTimeSpentSection(state, modifier)
 }
 
 @Composable
 fun DashboardTimeSpentSection(
-    state: DashboardTimeSpentUiState
+    state: DashboardTimeSpentUiState,
+    modifier: Modifier = Modifier
 ) {
     when (state.state) {
         DashboardItemState.LOADING -> {
-            DashboardTimeSpentCardContent(state.cardState, isLoading = true)
+            DashboardTimeSpentCardContent(state.cardState, true, modifier)
         }
         DashboardItemState.ERROR -> {
-            DashboardTimeSpentCardError(
-                { state.onRefresh {} }
+            DashboardWidgetCardError(
+                stringResource(R.string.dashboardTimeSpentTitle),
+                R.drawable.schedule,
+                HorizonColors.PrimitivesHoney.honey12(),
+                true,
+                { state.onRefresh {} },
+                modifier = modifier
+                    .widthIn(max = 300.dp)
+                    .padding(bottom = 8.dp)
             )
         }
         DashboardItemState.SUCCESS -> {
@@ -69,7 +84,7 @@ fun DashboardTimeSpentSection(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                DashboardTimeSpentCardContent(state.cardState, isLoading = false)
+                DashboardTimeSpentCardContent(state.cardState, false, modifier)
             }
         }
     }

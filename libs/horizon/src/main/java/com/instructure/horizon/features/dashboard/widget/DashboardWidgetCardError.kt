@@ -14,17 +14,24 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.dashboard.widget.skillhighlights.card
+package com.instructure.horizon.features.dashboard.widget
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.onClick
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import com.instructure.horizon.R
-import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCard
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
@@ -35,46 +42,46 @@ import com.instructure.horizon.horizonui.molecules.ButtonHeight
 import com.instructure.horizon.horizonui.molecules.ButtonIconPosition
 
 @Composable
-fun DashboardSkillHighlightsCardError(
+fun DashboardWidgetCardError(
+    title: String,
+    @DrawableRes iconRes: Int,
+    widgetColor: Color,
+    useMinWidth: Boolean,
     onRetryClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     DashboardWidgetCard(
-        title = stringResource(R.string.dashboardSkillHighlightsTitle),
-        iconRes = R.drawable.hub,
-        widgetColor = HorizonColors.PrimitivesGreen.green12(),
-        useMinWidth = false,
+        title = title,
+        iconRes = iconRes,
+        widgetColor = widgetColor,
+        useMinWidth = useMinWidth,
         modifier = modifier
+            .semantics(mergeDescendants = true) {
+                role = Role.Button
+                onClick(context.getString(R.string.dashboardWidgetCardErrorRetry)) {
+                    onRetryClick()
+                    true
+                }
+            }
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.width(IntrinsicSize.Max)
         ) {
-            HorizonSpace(SpaceSize.SPACE_8)
             Text(
-                text = stringResource(R.string.dashboardSkillHighlightsErrorTitle),
-                style = HorizonTypography.h4,
-                color = HorizonColors.Text.title()
-            )
-            HorizonSpace(SpaceSize.SPACE_4)
-            Text(
-                text = stringResource(R.string.dashboardSkillHighlightsErrorMessage),
+                text = stringResource(R.string.dashboardWidgetCardErrorMessage),
                 style = HorizonTypography.p2,
                 color = HorizonColors.Text.timestamp()
             )
-            HorizonSpace(SpaceSize.SPACE_16)
+            HorizonSpace(SpaceSize.SPACE_8)
             Button(
-                label = stringResource(R.string.dashboardSkillHighlightsRetry),
+                label = stringResource(R.string.dashboardWidgetCardErrorRetry),
                 onClick = onRetryClick,
                 color = ButtonColor.WhiteWithOutline,
                 height = ButtonHeight.SMALL,
-                iconPosition = ButtonIconPosition.End(R.drawable.restart_alt)
+                iconPosition = ButtonIconPosition.End(R.drawable.restart_alt),
+                modifier = Modifier.clearAndSetSemantics { }
             )
         }
     }
-}
-
-@Composable
-@Preview
-private fun DashboardSkillHighlightsCardErrorPreview() {
-    DashboardSkillHighlightsCardError(onRetryClick = {})
 }

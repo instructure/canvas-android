@@ -364,7 +364,7 @@
     <string name="dashboardCourseCardCompletedLabel">%1$d\%% complete</string>
     <string name="dashboardCourseCardErrorTitle">We weren’t able to load this content.</string>
     <string name="dashboardCourseCardErrorMessage">Please try again.</string>
-    <string name="dashboardCourseCardRetryLabel">Retry</string>
+    <string name="dashboardCourseCardRefreshLabel">Refresh</string>
     <string name="dashboardNotStartedProgramDetailsLabel">Program details</string>
     <string name="dashboardTimeSpentTitle">Time</string>
     <string name="dashboardTimeSpentEmptyMessage">This widget will update once data becomes available.</string>
@@ -392,8 +392,8 @@
     <string name="dashboardSkillOverviewTitle">Skills</string>
     <string name="dashboardSkillOverviewEarnedLabel">earned</string>
     <string name="dashboardSkillOverviewNoDataMessage">This widget will update once data becomes available.</string>
-    <string name="dashboardSkillOverviewErrorMessage">We weren\'t able to load this content.\nPlease try again.</string>
-    <string name="dashboardSkillOverviewRetry">Refresh</string>
+    <string name="dashboardWidgetCardErrorRetry">Refresh</string>
+    <string name="dashboardWidgetCardErrorMessage">We weren\'t able to load this content.\nPlease try again.</string>
     <string name="a11y_inboxComposeSelectCourse">Select Course</string>
     <string name="a11y_close">Close</string>
     <string name="a11y_expanded">Expanded</string>
@@ -404,6 +404,22 @@
     <string name="a11y_not_completed">Not completed</string>
     <string name="a11y_locked">Locked</string>
     <string name="a11y_unselected">Unselected</string>
+    <string name="dashboardAnnouncementBannerFrom">From %1$s</string>
+    <string name="dashboardAnnouncementBannerGoToAnnouncement">Go to announcement</string>
+    <string name="dashboardAnnouncementBannerErrorMessage">We weren\'t able to load this content.\nPlease try again.</string>
+    <string name="dashboardAnnouncementBannerPaginationLabel">%1$d of %2$d</string>
+    <string name="dashboardAnnouncementBannerPreviousAnnouncement">Previous announcement</string>
+    <string name="dashboardAnnouncementBannerNextAnnouncement">Next announcement</string>
     <string name="dashboardCourseCardProgramChipLabel">Program</string>
     <string name="dashboardCourseCardProgramDetailsMessage">Welcome to %1$s! View your program to enroll in your first course.</string>
+    <string name="dashboardNoCoursesMessage">You aren’t currently enrolled in a course.</string>
+    <string name="a11y_dashboardWidgetLoadingContentDescription">%1$s widget is loading</string>
+    <string name="a11y_dashboardCoursesSectionTitle">Courses</string>
+    <string name="a11y_dashboardMyProgressContentDescription">%1$d completed</string>
+    <string name="a11y_dashboardSkillOverviewContentDescription">%1$d earned</string>
+    <string name="a11y_dashboardTimeSpentMultipleCoursesContentDescription">%1$d hours in %2$s</string>
+    <string name="a11y_dashboardTimeSpentContentDescription">%1$d hours in your course</string>
+    <string name="dashboardAnnouncementRefreshMessage">Refresh</string>
+    <string name="a11y_dashboardNextItemContentDescription">Next item</string>
+    <string name="a11y_dashboardPreviousItemContentDescription">Previous item</string>
 </resources>

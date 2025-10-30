@@ -16,12 +16,10 @@
  */
 package com.instructure.horizon.features.notification
 
-import com.instructure.canvasapi2.apis.AccountNotificationAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.StreamAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
-import com.instructure.canvasapi2.models.AccountNotification
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.StreamItem
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -32,7 +30,6 @@ class NotificationRepository @Inject constructor(
     private val apiPrefs: ApiPrefs,
     private val streamApi: StreamAPI.StreamInterface,
     private val courseApi: CourseAPI.CoursesInterface,
-    private val accountNotificationApi: AccountNotificationAPI.AccountNotificationInterface,
     private val getCoursesManager: HorizonGetCoursesManager
 ) {
     suspend fun getNotifications(forceRefresh: Boolean): List<StreamItem> {
@@ -45,18 +42,10 @@ class NotificationRepository @Inject constructor(
                 it.courseId == -1L || courseIds.contains(it.courseId)
             }
             .filter {
-                it.isCourseNotification()
-                    || it.isDueDateNotification()
+                    it.isDueDateNotification()
                     || it.isNotificationItemScored()
                     || it.isGradingPeriodNotification()
             }
-    }
-
-    suspend fun getGlobalAnnouncements(forceRefresh: Boolean): List<AccountNotification> {
-        val params = RestParams(isForceReadFromNetwork = forceRefresh, usePerPageQueryParam = true)
-        return accountNotificationApi.getAccountNotifications(params, true, true)
-            .depaginate { accountNotificationApi.getNextPageNotifications(it, params) }
-            .dataOrThrow
     }
 
     suspend fun getCourse(courseId: Long): Course {

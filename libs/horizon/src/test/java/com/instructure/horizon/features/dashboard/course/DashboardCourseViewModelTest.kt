@@ -188,7 +188,7 @@ class DashboardCourseViewModelTest {
         assertTrue(state.courses.any { it.title == "Course 4" })
         assertTrue(state.courses.none { it.title == "Course 3" })
 
-        assertEquals(1, state.programs.size)
+        assertEquals(1, state.programs.items.size)
     }
 
     @Test
