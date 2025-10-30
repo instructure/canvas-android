@@ -512,7 +512,8 @@ class AssignmentDetailsViewModel @Inject constructor(
                     "<body dir=\"rtl\">${it}</body>"
                 } else {
                     it
-                }
+                },
+                courseId
             )
         }.orEmpty()
 

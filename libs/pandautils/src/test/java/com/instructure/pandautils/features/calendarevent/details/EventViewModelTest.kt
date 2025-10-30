@@ -31,6 +31,7 @@ import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.features.reminder.ReminderManager
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ThemedColor
@@ -72,6 +73,7 @@ class EventViewModelTest {
     private val themePrefs: ThemePrefs = mockk(relaxed = true)
     private val reminderManager: ReminderManager = mockk(relaxed = true)
     private val eventViewModelBehavior: EventViewModelBehavior = mockk(relaxed = true)
+    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
 
     private lateinit var viewModel: EventViewModel
 
@@ -99,7 +101,7 @@ class EventViewModelTest {
         mockkObject(ColorKeeper)
         every { ColorKeeper.getOrGenerateColor(any()) } returns ThemedColor(0)
 
-        coEvery { htmlContentFormatter.formatHtmlWithIframes(any()) } answers { firstArg() }
+        coEvery { htmlContentFormatter.formatHtmlWithIframes(any(), any()) } answers { firstArg() }
 
         every { savedStateHandle.get<Any>(any()) } returns null
 
