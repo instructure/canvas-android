@@ -26,6 +26,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.FragmentInteractions
@@ -97,6 +98,11 @@ class ToDoListFragment : BaseCanvasFragment(), FragmentInteractions, NavigationC
     private fun handleAction(action: ToDoListViewModelAction) {
         when (action) {
             is ToDoListViewModelAction.OpenToDoItem -> toDoListRouter.openToDoItem(action.itemId)
+            is ToDoListViewModelAction.ShowSnackbar -> {
+                view?.let { view ->
+                    Snackbar.make(view, action.message, Snackbar.LENGTH_LONG).show()
+                }
+            }
         }
     }
 

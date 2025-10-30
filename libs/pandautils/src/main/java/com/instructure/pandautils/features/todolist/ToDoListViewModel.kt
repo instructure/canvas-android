@@ -28,6 +28,7 @@ import com.instructure.pandautils.utils.getContextNameForPlannerItem
 import com.instructure.pandautils.utils.getDateTextForPlannerItem
 import com.instructure.pandautils.utils.getIconForPlannerItem
 import com.instructure.pandautils.utils.getTagForPlannerItem
+import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
@@ -50,6 +51,8 @@ class ToDoListViewModel @Inject constructor(
 
     private val _events = Channel<ToDoListViewModelAction>()
     val events = _events.receiveAsFlow()
+
+    private val plannerItemsMap = mutableMapOf<String, PlannerItem>()
 
     init {
         loadData()
@@ -77,6 +80,10 @@ class ToDoListViewModel @Inject constructor(
                 val filteredItems = plannerItems
                     .filter { it.plannableType != PlannableType.ANNOUNCEMENT && it.plannableType != PlannableType.ASSESSMENT_REQUEST }
                     .sortedBy { it.comparisonDate }
+
+                // Store planner items for later reference
+                plannerItemsMap.clear()
+                filteredItems.forEach { plannerItemsMap[it.plannable.id.toString()] = it }
 
                 // Group items by date
                 val itemsByDate = filteredItems
@@ -119,8 +126,10 @@ class ToDoListViewModel @Inject constructor(
             else -> ToDoItemType.CALENDAR_EVENT
         }
 
+        val itemId = plannerItem.plannable.id.toString()
+
         return ToDoItemUiState(
-            id = plannerItem.plannable.id.toString(),
+            id = itemId,
             title = plannerItem.plannable.title,
             date = plannerItem.plannableDate,
             dateLabel = plannerItem.getDateTextForPlannerItem(context),
@@ -129,7 +138,8 @@ class ToDoListViewModel @Inject constructor(
             itemType = itemType,
             isChecked = isComplete(plannerItem),
             iconRes = plannerItem.getIconForPlannerItem(),
-            tag = plannerItem.getTagForPlannerItem(context)
+            tag = plannerItem.getTagForPlannerItem(context),
+            onSwipeToDone = { handleSwipeToDone(itemId) }
         )
     }
 
@@ -141,6 +151,63 @@ class ToDoListViewModel @Inject constructor(
             plannerItem.submissionState?.submitted == true
         } else {
             false
+        }
+    }
+
+    private fun handleSwipeToDone(itemId: String) {
+        viewModelScope.launch {
+            val plannerItem = plannerItemsMap[itemId] ?: return@launch
+            val currentIsChecked = isComplete(plannerItem)
+            val newIsChecked = !currentIsChecked
+
+            // Optimistically update UI
+            updateItemCheckedState(itemId, newIsChecked)
+
+            try {
+                // Update or create planner override
+                val plannerOverrideResult = if (plannerItem.plannerOverride?.id != null) {
+                    repository.updatePlannerOverride(
+                        plannerOverrideId = plannerItem.plannerOverride?.id.orDefault(),
+                        markedComplete = newIsChecked
+                    ).dataOrThrow
+                } else {
+                    repository.createPlannerOverride(
+                        plannableId = plannerItem.plannable.id,
+                        plannableType = plannerItem.plannableType,
+                        markedComplete = newIsChecked
+                    ).dataOrThrow
+                }
+
+                // Update the stored planner item with new override state
+                val updatedPlannerItem = plannerItem.copy(plannerOverride = plannerOverrideResult)
+                plannerItemsMap[itemId] = updatedPlannerItem
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                // Revert the optimistic update
+                updateItemCheckedState(itemId, currentIsChecked)
+                // Show error snackbar
+                _events.send(
+                    ToDoListViewModelAction.ShowSnackbar(
+                        context.getString(com.instructure.pandautils.R.string.errorUpdatingToDo)
+                    )
+                )
+            }
+        }
+    }
+
+    private fun updateItemCheckedState(itemId: String, isChecked: Boolean) {
+        _uiState.update { state ->
+            val updatedItemsByDate = state.itemsByDate.mapValues { (_, items) ->
+                items.map { item ->
+                    if (item.id == itemId) {
+                        item.copy(isChecked = isChecked)
+                    } else {
+                        item
+                    }
+                }
+            }
+            state.copy(itemsByDate = updatedItemsByDate)
         }
     }
 

@@ -36,7 +36,8 @@ data class ToDoItemUiState(
     val itemType: ToDoItemType,
     val isChecked: Boolean = false,
     val iconRes: Int = R.drawable.ic_calendar,
-    val tag: String? = null
+    val tag: String? = null,
+    val onSwipeToDone: () -> Unit = {}
 )
 
 enum class ToDoItemType {
@@ -50,6 +51,7 @@ enum class ToDoItemType {
 
 sealed class ToDoListViewModelAction {
     data class OpenToDoItem(val itemId: String) : ToDoListViewModelAction()
+    data class ShowSnackbar(val message: String) : ToDoListViewModelAction()
 }
 
 sealed class ToDoListActionHandler {

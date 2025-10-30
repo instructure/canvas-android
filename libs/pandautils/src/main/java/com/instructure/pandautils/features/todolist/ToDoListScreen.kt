@@ -349,8 +349,11 @@ private fun ToDoItem(
                     animationSpec = tween(durationMillis = 200)
                 )
                 delay(300)
+                animateToCenter()
+                item.onSwipeToDone()
+            } else {
+                animateToCenter()
             }
-            animateToCenter()
         }
     }
 
