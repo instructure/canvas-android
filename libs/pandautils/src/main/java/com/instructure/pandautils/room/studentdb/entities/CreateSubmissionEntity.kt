@@ -38,5 +38,7 @@ data class CreateSubmissionEntity(
     val progress: Float? = null,
     val annotatableAttachmentId: Long? = null,
     val isDraft: Boolean = false,
-    val attempt: Long = 1L
+    val attempt: Long = 1L,
+    val mediaType: String? = null,
+    val mediaSource: String? = null
 )

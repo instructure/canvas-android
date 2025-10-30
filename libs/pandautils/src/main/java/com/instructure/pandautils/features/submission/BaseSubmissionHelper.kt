@@ -196,7 +196,9 @@ abstract class BaseSubmissionHelper(
         assignmentName: String?,
         assignmentGroupCategoryId: Long,
         mediaFilePath: String,
-        attempt: Long = 1L
+        attempt: Long = 1L,
+        mediaType: String? = null,
+        mediaSource: String? = null
     ) {
         val file = File(mediaFilePath).let {
             FileSubmitObject(
@@ -216,7 +218,9 @@ abstract class BaseSubmissionHelper(
                     submissionType = Assignment.SubmissionType.MEDIA_RECORDING.apiString,
                     userId = getUserId(),
                     lastActivityDate = Date(),
-                    attempt = attempt
+                    attempt = attempt,
+                    mediaType = mediaType,
+                    mediaSource = mediaSource
                 )
                 it.submissionDao().insert(entity)
             }

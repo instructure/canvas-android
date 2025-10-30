@@ -104,7 +104,7 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
         val course = viewModel.course.value
         if (assignment != null && captureVideoUri != null && it && course != null) {
             val nextAttempt = (assignment.submission?.attempt ?: 0) + 1
-            assignmentDetailsRouter.navigateToAssignmentUploadPicker(requireActivity(), course, assignment, captureVideoUri!!, nextAttempt.toLong())
+            assignmentDetailsRouter.navigateToAssignmentUploadPicker(requireActivity(), course, assignment, captureVideoUri!!, nextAttempt.toLong(), "camera")
         } else {
             toast(R.string.videoRecordingError)
         }
@@ -115,7 +115,7 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
         val course = viewModel.course.value
         if (assignment != null && it != null && course != null) {
             val nextAttempt = (assignment.submission?.attempt ?: 0) + 1
-            assignmentDetailsRouter.navigateToAssignmentUploadPicker(requireActivity(), course, assignment, it, nextAttempt.toLong())
+            assignmentDetailsRouter.navigateToAssignmentUploadPicker(requireActivity(), course, assignment, it, nextAttempt.toLong(), "library")
         } else {
             toast(R.string.unexpectedErrorOpeningFile)
         }

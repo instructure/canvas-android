@@ -31,7 +31,8 @@ open class AssignmentDetailsRouter {
         canvasContext: CanvasContext,
         assignment: Assignment,
         mediaUri: Uri,
-        attempt: Long = 1L
+        attempt: Long = 1L,
+        mediaSource: String? = null
     ) = Unit
 
     open fun navigateToSubmissionScreen(

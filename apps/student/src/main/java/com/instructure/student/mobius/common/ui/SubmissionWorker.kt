@@ -235,6 +235,8 @@ class SubmissionWorker @AssistedInject constructor(
 
                 analytics.logEvent(AnalyticsEventConstants.SUBMIT_MEDIARECORDING_SUCCEEDED, Bundle().apply {
                     putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                    submission.mediaType?.let { putString(AnalyticsParamConstants.MEDIA_TYPE, it) }
+                    submission.mediaSource?.let { putString(AnalyticsParamConstants.MEDIA_SOURCE, it) }
                 })
 
                 showCompleteNotification(
@@ -248,6 +250,8 @@ class SubmissionWorker @AssistedInject constructor(
                 showErrorNotification(context, submission)
                 analytics.logEvent(AnalyticsEventConstants.SUBMIT_MEDIARECORDING_FAILED, Bundle().apply {
                     putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                    submission.mediaType?.let { putString(AnalyticsParamConstants.MEDIA_TYPE, it) }
+                    submission.mediaSource?.let { putString(AnalyticsParamConstants.MEDIA_SOURCE, it) }
                 })
                 Result.failure()
             }
@@ -255,6 +259,8 @@ class SubmissionWorker @AssistedInject constructor(
             handleFileError(submission, 0, listOf(mediaFile), it?.message)
             analytics.logEvent(AnalyticsEventConstants.SUBMIT_MEDIARECORDING_FAILED, Bundle().apply {
                 putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                submission.mediaType?.let { putString(AnalyticsParamConstants.MEDIA_TYPE, it) }
+                submission.mediaSource?.let { putString(AnalyticsParamConstants.MEDIA_SOURCE, it) }
             })
             return Result.failure()
         }

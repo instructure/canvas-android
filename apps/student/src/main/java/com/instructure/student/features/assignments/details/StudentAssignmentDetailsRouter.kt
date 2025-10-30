@@ -43,11 +43,12 @@ class StudentAssignmentDetailsRouter: AssignmentDetailsRouter() {
         canvasContext: CanvasContext,
         assignment: Assignment,
         mediaUri: Uri,
-        attempt: Long
+        attempt: Long,
+        mediaSource: String?
     ) {
         RouteMatcher.route(
             activity,
-            PickerSubmissionUploadFragment.makeRoute(canvasContext, assignment, mediaUri, attempt)
+            PickerSubmissionUploadFragment.makeRoute(canvasContext, assignment, mediaUri, attempt, mediaSource)
         )
     }
 
@@ -132,7 +133,7 @@ class StudentAssignmentDetailsRouter: AssignmentDetailsRouter() {
         activity: FragmentActivity,
         canvasContext: CanvasContext,
         annotatableAttachmentId: Long,
-        submissionId: Long,
+    submissionId: Long,
         assignmentId: Long,
         assignmentName: String,
         attempt: Long

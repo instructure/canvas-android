@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 6,
-    "identityHash": "585f176c2b7c3b849970675dc5b90eb3",
+    "identityHash": "5bcd6a554981819d2df188b0d0e2d48e",
     "entities": [
       {
         "tableName": "CreateSubmissionEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `submissionEntry` TEXT, `lastActivityDate` INTEGER, `assignmentName` TEXT, `assignmentId` INTEGER NOT NULL, `canvasContext` TEXT NOT NULL, `submissionType` TEXT NOT NULL, `errorFlag` INTEGER NOT NULL, `assignmentGroupCategoryId` INTEGER, `userId` INTEGER NOT NULL, `currentFile` INTEGER NOT NULL, `fileCount` INTEGER NOT NULL, `progress` REAL, `annotatableAttachmentId` INTEGER, `isDraft` INTEGER NOT NULL, `attempt` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `submissionEntry` TEXT, `lastActivityDate` INTEGER, `assignmentName` TEXT, `assignmentId` INTEGER NOT NULL, `canvasContext` TEXT NOT NULL, `submissionType` TEXT NOT NULL, `errorFlag` INTEGER NOT NULL, `assignmentGroupCategoryId` INTEGER, `userId` INTEGER NOT NULL, `currentFile` INTEGER NOT NULL, `fileCount` INTEGER NOT NULL, `progress` REAL, `annotatableAttachmentId` INTEGER, `isDraft` INTEGER NOT NULL, `attempt` INTEGER NOT NULL, `mediaType` TEXT, `mediaSource` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -97,6 +97,16 @@
             "columnName": "attempt",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "mediaType",
+            "columnName": "mediaType",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "mediaSource",
+            "columnName": "mediaSource",
+            "affinity": "TEXT"
           }
         ],
         "primaryKey": {
@@ -340,7 +350,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '585f176c2b7c3b849970675dc5b90eb3')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5bcd6a554981819d2df188b0d0e2d48e')"
     ]
   }
 }

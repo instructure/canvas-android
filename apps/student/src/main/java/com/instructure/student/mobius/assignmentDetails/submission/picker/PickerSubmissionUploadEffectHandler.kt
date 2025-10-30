@@ -130,13 +130,21 @@ class PickerSubmissionUploadEffectHandler(
     private fun handleSubmit(model: PickerSubmissionUploadModel) {
         when (model.mode) {
             MediaSubmission -> {
+                val file = model.files.first()
+                val mediaType = when {
+                    file.contentType?.startsWith("video/") == true -> "video"
+                    file.contentType?.startsWith("audio/") == true -> "audio"
+                    else -> null
+                }
                 submissionHelper.startMediaSubmission(
                     canvasContext = model.canvasContext,
                     assignmentId = model.assignmentId,
                     assignmentName = model.assignmentName,
                     assignmentGroupCategoryId = model.assignmentGroupCategoryId,
-                    mediaFilePath = model.files.first().fullPath,
-                    attempt = model.attemptId ?: 1L
+                    mediaFilePath = file.fullPath,
+                    attempt = model.attemptId ?: 1L,
+                    mediaType = mediaType,
+                    mediaSource = model.mediaSource
                 )
             }
             FileSubmission -> {
