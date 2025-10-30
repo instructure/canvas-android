@@ -88,6 +88,7 @@ import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.Utils
 import com.instructure.pandautils.utils.ViewStyler.themeStatusBar
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAsBackButton
@@ -165,6 +166,7 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupViews() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        toolbar.applyTopSystemBarInsets()
         toolbar.title = accountDomain.domain
         toolbar.navigationIcon?.isAutoMirrored = true
         toolbar.setupAsBackButton {

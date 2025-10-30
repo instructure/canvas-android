@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentNotAvailableOfflineBinding
 import com.instructure.student.fragment.ParentFragment
@@ -52,11 +53,13 @@ class NotAvailableOfflineFragment : ParentFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        view.applyHorizontalSystemBarInsets()
         setIconVisibility()
         binding.description.text = description
         if (showToolbar) {
             binding.toolbar.title = moduleItemName
             binding.toolbar.setupAsBackButton(this)
+            binding.toolbar.applyTopSystemBarInsets()
             ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, course)
         } else {
             binding.toolbar.setGone()

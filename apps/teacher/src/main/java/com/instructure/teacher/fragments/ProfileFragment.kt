@@ -40,6 +40,9 @@ import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.adoptToolbarStyle
 import com.instructure.teacher.utils.setupBackButtonAsBackPressedOnly
 import com.instructure.teacher.utils.setupMenu
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 
 @PageView(url = "profile")
 @ScreenView(SCREEN_VIEW_PROFILE)
@@ -60,16 +63,23 @@ class ProfileFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
+        binding.root.applyHorizontalSystemBarInsets()
         setupToolbar()
         setupViewableData()
+        setupWindowInsets()
     }
 
     private fun setupToolbar() = with(binding) {
+        toolbar.applyTopSystemBarInsets()
         toolbar.setupMenu(R.menu.menu_settings_edit, menuItemCallback)
         toolbar.setupBackButtonAsBackPressedOnly(this@ProfileFragment)
         titleTextView.adoptToolbarStyle(toolbar)
         ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         toolbar.requestAccessibilityFocus()
+    }
+
+    private fun setupWindowInsets() = with(binding) {
+        usersBio.applyBottomSystemBarInsets()
     }
 
     private fun setupViewableData() = with(binding) {

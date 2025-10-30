@@ -34,6 +34,9 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.student.BuildConfig
@@ -73,6 +76,7 @@ class AccountPreferencesFragment : ParentFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        view.applyHorizontalSystemBarInsets()
         applyTheme()
         setupViews()
     }
@@ -80,10 +84,12 @@ class AccountPreferencesFragment : ParentFragment() {
     override fun applyTheme() = with(binding) {
         toolbar.title = title()
         toolbar.setupAsBackButton(this@AccountPreferencesFragment)
+        toolbar.applyTopSystemBarInsets()
         ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
     }
 
     private fun setupViews() = with(binding) {
+        scrollView.applyBottomSystemBarInsets()
         if (BuildConfig.DEBUG) {
             // Only show language override picker in debug builds
             languageContainer.setVisible()

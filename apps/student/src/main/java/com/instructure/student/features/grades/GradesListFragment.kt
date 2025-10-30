@@ -57,6 +57,9 @@ import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getContentDescriptionForMinusGradeString
 import com.instructure.pandautils.utils.makeBundle
@@ -126,6 +129,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        view.applyHorizontalSystemBarInsets()
         course = canvasContext as Course
         recyclerAdapter = GradesListRecyclerAdapter(
             requireContext(),
@@ -172,6 +176,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
                     R.id.listView
                 )
             }
+            binding.swipeRefreshLayout.applyBottomSystemBarInsets()
 
         }
     }
@@ -187,6 +192,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
             setupToolbarMenu(toolbar)
             toolbar.title = title()
             toolbar.setupAsBackButton(this@GradesListFragment)
+            toolbar.applyTopSystemBarInsets()
             ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
         }
     }

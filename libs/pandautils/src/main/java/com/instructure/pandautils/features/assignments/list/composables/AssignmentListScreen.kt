@@ -77,6 +77,7 @@ import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
+import com.instructure.pandautils.compose.composables.CanvasScaffold
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.CheckpointItem
 import com.instructure.pandautils.compose.composables.EmptyContent
@@ -115,7 +116,7 @@ fun AssignmentListScreen(
     CanvasTheme {
         when (state.screenOption) {
             AssignmentListScreenOption.List -> {
-                Scaffold(
+                CanvasScaffold(
                     backgroundColor = colorResource(id = R.color.backgroundLightest),
                     topBar = {
                         AppBar(

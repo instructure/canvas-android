@@ -30,6 +30,7 @@ import android.view.MotionEvent.ACTION_CANCEL
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
@@ -39,6 +40,7 @@ import androidx.work.WorkInfo.State
 import androidx.work.WorkManager
 import androidx.work.WorkQuery
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.canvasapi2.managers.CourseNicknameManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.CanvasColor
@@ -155,9 +157,12 @@ class DashboardFragment : ParentFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        view.applyHorizontalSystemBarInsets()
         recyclerBinding = CourseGridRecyclerRefreshLayoutBinding.bind(binding.root)
 
         applyTheme()
+
+        binding.toolbar.applyTopSystemBarInsets()
 
         networkStateProvider.isOnlineLiveData.observe(this) { online ->
             recyclerAdapter?.refresh()

@@ -26,6 +26,9 @@ import com.instructure.canvasapi2.utils.FeatureFlagPref
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.student.R
 import com.instructure.student.databinding.AdapterFeatureFlagBinding
@@ -42,12 +45,15 @@ class FeatureFlagsFragment : BaseCanvasFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        view.applyHorizontalSystemBarInsets()
         setupToolbar()
         binding.recyclerView.adapter = FeatureFlagAdapter()
+        binding.recyclerView.applyBottomSystemBarInsets()
     }
 
     private fun setupToolbar() {
         binding.toolbar.setupAsBackButton(this)
+        binding.toolbar.applyTopSystemBarInsets()
         ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
     }
 }

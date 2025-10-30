@@ -50,6 +50,8 @@ import com.instructure.pandautils.utils.FileUploadEvent
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getDrawableCompat
 import com.instructure.pandautils.utils.isCourse
@@ -59,6 +61,11 @@ import com.instructure.pandautils.utils.remove
 import com.instructure.pandautils.utils.setInvisible
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.toast
+import com.instructure.pandautils.utils.toPx
+import android.widget.RelativeLayout
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateLayoutParams
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.FileListAdapter
 import com.instructure.teacher.databinding.FragmentFileListBinding
@@ -308,9 +315,23 @@ class FileListFragment : BaseSyncFragment<
     }
 
     private fun setupViews() = with(binding) {
+        swipeRefreshLayout.applyBottomSystemBarInsets()
+
         ViewStyler.themeFAB(addFab)
         ViewStyler.themeFAB(addFileFab)
         ViewStyler.themeFAB(addFolderFab)
+
+        ViewCompat.setOnApplyWindowInsetsListener(addFab) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val baseMargin = 16.toPx
+            view.updateLayoutParams<RelativeLayout.LayoutParams> {
+                bottomMargin = baseMargin + systemBars.bottom
+            }
+            insets
+        }
+        if (addFab.isAttachedToWindow) {
+            ViewCompat.requestApplyInsets(addFab)
+        }
 
         addFab.setOnClickListener { animateFabs() }
         addFileFab.setOnClickListener {
@@ -354,6 +375,7 @@ class FileListFragment : BaseSyncFragment<
     }
 
     private fun setupToolbar() = with(binding) {
+        fileListToolbar.applyTopSystemBarInsets()
         fileListToolbar.setupBackButton(this@FileListFragment)
 
         fileListToolbar.subtitle = presenter.mCanvasContext.name

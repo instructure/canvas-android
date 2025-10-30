@@ -31,8 +31,12 @@ import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.loginapi.login.util.QRLogin
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.setMenu
 import com.instructure.pandautils.utils.setupAsBackButton
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 
 abstract class LoginWithQRActivity : BaseCanvasActivity() {
 
@@ -66,6 +70,7 @@ abstract class LoginWithQRActivity : BaseCanvasActivity() {
 
     private fun bindViews() = with(binding) {
         toolbar.apply {
+            applyTopSystemBarInsets()
             title = getString(R.string.locateQRCode)
             setupAsBackButton { finish() }
             navigationIcon?.isAutoMirrored = true
@@ -89,5 +94,12 @@ abstract class LoginWithQRActivity : BaseCanvasActivity() {
 
         val nextText: TextView = findViewById(R.id.next)
         nextText.setTextColor(ContextCompat.getColor(this@LoginWithQRActivity, R.color.textInfo))
+
+        // Apply bottom insets to the image (last element in scrollable content)
+        ViewCompat.setOnApplyWindowInsetsListener(image) { view, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.updatePadding(bottom = insets.bottom)
+            windowInsets
+        }
     }
 }

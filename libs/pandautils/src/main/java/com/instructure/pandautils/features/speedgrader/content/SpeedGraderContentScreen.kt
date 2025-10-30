@@ -128,7 +128,7 @@ private fun SpeedGraderContentScreen(
         containerColor = colorResource(id = R.color.backgroundLightest),
         modifier = Modifier.fillMaxSize()
     ) {
-        Column(Modifier.padding(it)) {
+        Column {
             UserHeader(
                 userUrl = uiState.userUrl,
                 userName = uiState.userName,

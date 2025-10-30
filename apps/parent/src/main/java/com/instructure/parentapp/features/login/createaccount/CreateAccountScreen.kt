@@ -74,6 +74,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.layout.WindowInsets
 import com.instructure.canvasapi2.models.TermsOfService
 import com.instructure.pandares.R
 import com.instructure.pandautils.compose.CanvasTheme
@@ -98,6 +99,7 @@ internal fun CreateAccountScreen(
 
         Scaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
+            contentWindowInsets = WindowInsets(0, 0, 0, 0),
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
             content = { padding ->
                 Column(

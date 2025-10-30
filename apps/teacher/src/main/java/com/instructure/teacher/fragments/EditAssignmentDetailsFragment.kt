@@ -73,6 +73,9 @@ import com.instructure.teacher.models.DueDateGroup
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.*
 import com.instructure.teacher.view.AssignmentOverrideView
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
+import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -156,6 +159,7 @@ class EditAssignmentDetailsFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        view.applyHorizontalSystemBarInsets()
         savedInstanceState?.let {
             @Suppress("UNCHECKED_CAST")
             editDateGroups = (savedInstanceState.getSerializable(EDIT_DATE_GROUPS) as ArrayList<DueDateGroup>)
@@ -166,6 +170,11 @@ class EditAssignmentDetailsFragment : BaseFragment() {
 
         setupViews()
         setupToolbar()
+        setupWindowInsets()
+    }
+
+    private fun setupWindowInsets() = with(binding) {
+        scrollView.applyBottomSystemBarInsets()
     }
 
     override fun onStart() {
@@ -192,6 +201,7 @@ class EditAssignmentDetailsFragment : BaseFragment() {
     }
 
     private fun setupToolbar() = with(binding) {
+        toolbar.applyTopSystemBarInsets()
         toolbar.setupCloseButton(this@EditAssignmentDetailsFragment)
         toolbar.title = getString(R.string.edit_assignment)
         toolbar.setupMenu(R.menu.menu_save_generic) { saveAssignment() }

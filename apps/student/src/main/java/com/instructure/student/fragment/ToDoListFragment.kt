@@ -42,6 +42,9 @@ import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.accessibilityClassName
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.children
 import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.makeBundle
@@ -107,6 +110,7 @@ class ToDoListFragment : ParentFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        view.applyHorizontalSystemBarInsets()
         recyclerViewBinding = PandaRecyclerRefreshLayoutBinding.bind(binding.root)
         with (binding.toolbar) {
             inflateMenu(R.menu.fragment_list_todo)
@@ -128,6 +132,7 @@ class ToDoListFragment : ParentFragment() {
         }
 
         recyclerViewBinding.listView.isSelectionEnabled = false
+        recyclerViewBinding.swipeRefreshLayout.applyBottomSystemBarInsets()
 
         binding.confirmButton.text = getString(R.string.markAsDone)
         binding.confirmButton.setOnClickListener { recyclerAdapter?.confirmButtonClicked() }
@@ -154,6 +159,7 @@ class ToDoListFragment : ParentFragment() {
 
     override fun applyTheme() {
         setupToolbarMenu(binding.toolbar)
+        binding.toolbar.applyTopSystemBarInsets()
         ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
     }
 

@@ -21,7 +21,9 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Icon
@@ -139,7 +141,7 @@ fun SpeedGraderScreen(
             )
         },
         modifier = Modifier.imePadding(),
-        contentWindowInsets = WindowInsets.ime
+        contentWindowInsets = WindowInsets.ime.union(WindowInsets.navigationBars)
     ) { padding ->
         when {
             uiState.loading -> {

@@ -19,6 +19,9 @@ package com.instructure.teacher.PSPDFKit.AnnotationComments
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialog
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -29,6 +32,7 @@ import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BaseListFragment
 import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentAnnotationCommentListBinding
 import com.instructure.teacher.utils.getColorCompat
@@ -92,9 +96,29 @@ class AnnotationCommentListFragment : BaseListFragment<
     }
 
     override fun onReadySetGo(presenter: AnnotationCommentListPresenter) {
+        binding.root.applyHorizontalSystemBarInsets()
         setupToolbar()
         presenter.loadData(false)
         setupCommentInput()
+        setupWindowInsets()
+    }
+
+    private fun setupWindowInsets() = with(binding) {
+        toolbar.applyTopSystemBarInsets()
+
+        ViewCompat.setOnApplyWindowInsetsListener(annotationCommentsRecyclerView) { view, insets ->
+            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.updatePadding(bottom = maxOf(ime.bottom, systemBars.bottom))
+            insets
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(commentInputContainer) { view, insets ->
+            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.updatePadding(bottom = maxOf(ime.bottom, systemBars.bottom))
+            insets
+        }
     }
 
     fun setupToolbar() {

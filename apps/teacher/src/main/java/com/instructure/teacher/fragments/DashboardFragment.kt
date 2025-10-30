@@ -21,6 +21,9 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.view.MenuItem
 import android.view.View
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -34,6 +37,7 @@ import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
 import com.instructure.pandautils.features.dashboard.notifications.DashboardNotificationsFragment
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.InitActivity
 import com.instructure.teacher.adapters.CoursesAdapter
@@ -134,6 +138,16 @@ class DashboardFragment : BaseSyncFragment<Course, DashboardPresenter, CoursesVi
         courseRecyclerView.setPaddingRelative(padding, paddingTop, padding, padding)
         courseRecyclerView.clipToPadding = false
 
+        // Apply bottom insets to RecyclerView
+        ViewCompat.setOnApplyWindowInsetsListener(courseRecyclerView) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.updatePadding(bottom = padding + systemBars.bottom)
+            insets
+        }
+        if (courseRecyclerView.isAttachedToWindow) {
+            ViewCompat.requestApplyInsets(courseRecyclerView)
+        }
+
         emptyCoursesView.onClickAddCourses { routeEditDashboard() }
         setupHeader()
 
@@ -155,6 +169,7 @@ class DashboardFragment : BaseSyncFragment<Course, DashboardPresenter, CoursesVi
     }
 
     private fun setupToolbar() = with(binding) {
+        toolbar.applyTopSystemBarInsets()
         toolbar.setupMenu(R.menu.courses_fragment, menuItemCallback)
 
         val dashboardLayoutMenuItem = toolbar.menu.findItem(R.id.menu_dashboard_cards)

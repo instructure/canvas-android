@@ -27,6 +27,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="?android:attr/actionBarSize"
         app:title="@string/page_title_add_assignees"/>
 
     <TextView

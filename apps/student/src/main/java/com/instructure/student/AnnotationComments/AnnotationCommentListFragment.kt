@@ -22,6 +22,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialog
 import androidx.core.content.ContextCompat
+import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -41,7 +42,23 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ANNOTATION_COMMENT_LIST
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.BooleanArg
+import com.instructure.pandautils.utils.LongArg
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ParcelableArrayListArg
+import com.instructure.pandautils.utils.StringArg
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
+import com.instructure.pandautils.utils.hideKeyboard
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
+import com.instructure.pandautils.utils.onTextChanged
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setInvisible
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAsCloseButton
+import com.instructure.pandautils.utils.withArgs
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentAnnotationCommentListBinding
 import com.instructure.student.fragment.ParentFragment
@@ -49,7 +66,7 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.conten
 import kotlinx.coroutines.Job
 import okhttp3.ResponseBody
 import org.greenrobot.eventbus.EventBus
-import java.util.*
+import java.util.Locale
 
 @ScreenView(SCREEN_VIEW_ANNOTATION_COMMENT_LIST)
 class AnnotationCommentListFragment : ParentFragment() {
@@ -75,6 +92,7 @@ class AnnotationCommentListFragment : ParentFragment() {
         with (binding) {
             toolbar.title = title()
             toolbar.setupAsCloseButton(this@AnnotationCommentListFragment)
+            toolbar.applyTopSystemBarInsets()
             ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         }
     }
@@ -84,6 +102,7 @@ class AnnotationCommentListFragment : ParentFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        view?.applyHorizontalSystemBarInsets()
         recyclerAdapter = AnnotationCommentListRecyclerAdapter(requireContext(), docSession, { annotation, position ->
             AnnotationCommentDialog.getInstance(requireFragmentManager(), annotation.contents ?: "", requireContext().getString(R.string.editComment)) { cancelled, text ->
                 if(!cancelled) {
@@ -111,6 +130,7 @@ class AnnotationCommentListFragment : ParentFragment() {
         configureRecyclerView()
         applyTheme()
         setupCommentInput()
+        setupWindowInsets()
 
         if(recyclerAdapter?.size() == 0) {
             recyclerAdapter?.addAll(annotations)
@@ -153,6 +173,24 @@ class AnnotationCommentListFragment : ParentFragment() {
             sendCommentButton.onClickWithRequireNetwork {
                 sendComment(commentEditText.text.toString())
             }
+        }
+    }
+
+    private fun setupWindowInsets() = with(binding) {
+        toolbar.applyTopSystemBarInsets()
+
+        androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(annotationCommentsRecyclerView) { view, insets ->
+            val ime = insets.getInsets(androidx.core.view.WindowInsetsCompat.Type.ime())
+            val systemBars = insets.getInsets(androidx.core.view.WindowInsetsCompat.Type.systemBars())
+            view.updatePadding(bottom = maxOf(ime.bottom, systemBars.bottom))
+            insets
+        }
+
+        androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(commentInputContainer) { view, insets ->
+            val ime = insets.getInsets(androidx.core.view.WindowInsetsCompat.Type.ime())
+            val systemBars = insets.getInsets(androidx.core.view.WindowInsetsCompat.Type.systemBars())
+            view.updatePadding(bottom = maxOf(ime.bottom, systemBars.bottom))
+            insets
         }
     }
 

@@ -51,8 +51,12 @@ import com.instructure.pandautils.compose.composables.SearchBar
 import com.instructure.pandautils.features.smartsearch.SmartSearchFragment
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.a11yManager
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.isSwitchAccessEnabled
 import com.instructure.pandautils.utils.makeBundle
@@ -108,6 +112,7 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         super.onViewCreated(view, savedInstanceState)
+        view.applyHorizontalSystemBarInsets()
 
         networkStateProvider.isOnlineLiveData.observe(viewLifecycleOwner) { isOnline ->
             searchBar.setVisible(isOnline)
@@ -173,7 +178,12 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
         noOverlayToolbar.title = canvasContext.name
         (canvasContext as? Course)?.term?.name?.let { noOverlayToolbar.subtitle = it }
         noOverlayToolbar.setBackgroundColor(canvasContext.color)
+        appBarLayout.setBackgroundColor(canvasContext.color)
         updateToolbarVisibility()
+
+        noOverlayToolbar.applyTopSystemBarInsets()
+        overlayToolbar.applyTopSystemBarInsets()
+        appBarLayout.applyTopSystemBarInsets()
 
         // Hide image placeholder if color overlay is disabled and there is no valid image
         val hasImage = (canvasContext as? Course)?.imageUrl?.isValid() == true
@@ -189,6 +199,8 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
         }
 
         swipeRefreshLayout.setOnRefreshListener { loadTabs(true) }
+
+        swipeRefreshLayout.applyBottomSystemBarInsets()
 
         loadTabs()
     }

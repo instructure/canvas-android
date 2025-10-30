@@ -23,11 +23,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
@@ -90,6 +93,7 @@ fun InboxDetailsScreen(
     CanvasTheme {
         Scaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
+            contentWindowInsets = WindowInsets(0, 0, 0, 0),
             topBar = {
                 AppBar(title, uiState, actionHandler)
             },
@@ -136,6 +140,7 @@ private fun AppBar(
         contentColor = Color(color = ThemePrefs.primaryTextColor),
         elevation = 0.dp,
         modifier = Modifier
+            .windowInsetsPadding(WindowInsets.statusBars)
             .height(64.dp)
             .testTag("toolbar"),
     )

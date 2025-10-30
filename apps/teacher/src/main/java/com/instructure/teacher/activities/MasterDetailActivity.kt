@@ -37,6 +37,7 @@ import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.interfaces.NavigationCallbacks
+import com.instructure.pandautils.utils.EdgeToEdgeHelper
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.setGone
@@ -67,6 +68,7 @@ class MasterDetailActivity : BaseAppCompatActivity(), MasterDetailInteractions {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) = with(binding) {
+        EdgeToEdgeHelper.enableEdgeToEdge(this@MasterDetailActivity)
         super.onCreate(savedInstanceState)
 
         setContentView(binding.root)

@@ -32,7 +32,16 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_PEOPLE_LIST
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
+import com.instructure.pandautils.utils.isCourse
+import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.withArgs
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentPeopleListBinding
 import com.instructure.student.features.people.details.PeopleDetailsFragment
@@ -79,6 +88,7 @@ class PeopleListFragment : ParentFragment(), Bookmarkable {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        view.applyHorizontalSystemBarInsets()
         recyclerAdapter = PeopleListRecyclerAdapter(requireContext(), lifecycleScope, repository, canvasContext, adapterToFragmentCallback)
         configureRecyclerView(
             view,
@@ -88,12 +98,14 @@ class PeopleListFragment : ParentFragment(), Bookmarkable {
             R.id.emptyView,
             R.id.listView
         )
+        view.findViewById<androidx.swiperefreshlayout.widget.SwipeRefreshLayout>(R.id.swipeRefreshLayout)?.applyBottomSystemBarInsets()
     }
 
     override fun applyTheme() {
         with(binding) {
             toolbar.title = title()
             toolbar.setupAsBackButton(this@PeopleListFragment)
+            toolbar.applyTopSystemBarInsets()
             setupToolbarMenu(toolbar)
             ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
         }

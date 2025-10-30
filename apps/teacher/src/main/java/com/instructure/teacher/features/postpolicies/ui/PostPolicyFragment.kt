@@ -21,6 +21,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
@@ -33,6 +36,8 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
+import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.withArgs
 import com.instructure.teacher.R
@@ -52,10 +57,23 @@ class PostPolicyFragment : BaseCanvasFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        view.applyHorizontalSystemBarInsets()
 
         val titles = listOf(getString(R.string.postGradesTab), getString(R.string.hideGradesTab))
         binding.postPolicyPager.adapter = PostPolicyPagerAdapter(assignment, childFragmentManager, titles)
         binding.postPolicyTabLayout.setupWithViewPager(binding.postPolicyPager, true)
+
+        setupWindowInsets()
+    }
+
+    private fun setupWindowInsets() = with(binding) {
+        postPolicyToolbar.applyTopSystemBarInsets()
+
+        ViewCompat.setOnApplyWindowInsetsListener(postPolicyPager) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.updatePadding(bottom = systemBars.bottom)
+            insets
+        }
     }
 
     override fun onResume() {

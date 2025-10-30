@@ -57,7 +57,6 @@
         <item name="windowActionModeOverlay">true</item>
         <item name="android:editTextStyle">@style/NoGifEditText</item>
         <item name="editTextStyle">@style/NoGifEditText</item>
-        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
     </style>
 
     <style name="CanvasMaterialTheme_Default.Translucent">
@@ -106,6 +105,5 @@
     </style>
 
     <style name="AvatarCropActivityTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
     </style>
 </resources>

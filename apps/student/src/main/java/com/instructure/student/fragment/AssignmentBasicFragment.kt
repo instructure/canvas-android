@@ -36,6 +36,8 @@ import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.OnBackStackChangedEvent
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.argsWithContext
 import com.instructure.pandautils.utils.loadHtmlWithIframes
 import com.instructure.pandautils.utils.setGone
@@ -74,6 +76,7 @@ class AssignmentBasicFragment : ParentFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        view?.applyHorizontalSystemBarInsets()
         setupViews()
     }
 
@@ -186,6 +189,7 @@ class AssignmentBasicFragment : ParentFragment() {
         binding.toolbar.let {
             it.title = assignment.name ?: ""
             it.setupAsBackButton(this)
+            it.applyTopSystemBarInsets()
             ViewStyler.themeToolbarColored(requireActivity(), it, canvasContext)
         }
     }

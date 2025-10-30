@@ -54,6 +54,9 @@ import com.instructure.pandautils.features.inbox.details.InboxDetailsFragment
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.isCourse
 import com.instructure.pandautils.utils.isCourseOrGroup
 import com.instructure.pandautils.utils.isGroup
@@ -137,6 +140,7 @@ class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        view.applyHorizontalSystemBarInsets()
         recyclerBinding = PandaRecyclerRefreshLayoutBinding.bind(binding.root)
         recyclerAdapter = NotificationListRecyclerAdapter(requireContext(), canvasContext, adapterToFragmentCallback)
         recyclerAdapter?.let {
@@ -151,6 +155,7 @@ class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager
         }
 
         recyclerBinding.listView.isSelectionEnabled = false
+        recyclerBinding.swipeRefreshLayout.applyBottomSystemBarInsets()
 
         binding.confirmButton.text = getString(R.string.delete)
         binding.confirmButton.setOnClickListener { recyclerAdapter?.confirmButtonClicked() }
@@ -189,10 +194,12 @@ class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager
         val canvasContext = canvasContext
         if (canvasContext is Course || canvasContext is Group) {
             binding.toolbar.setupAsBackButton(this)
+            binding.toolbar.applyTopSystemBarInsets()
             ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, canvasContext)
         } else {
             val navigation = navigation
             navigation?.attachNavigationDrawer(this, binding.toolbar)
+            binding.toolbar.applyTopSystemBarInsets()
             // Styling done in attachNavigationDrawer
         }
     }
