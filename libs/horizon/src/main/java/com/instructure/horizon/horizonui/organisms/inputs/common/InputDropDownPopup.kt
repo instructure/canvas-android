@@ -89,6 +89,9 @@ fun <T> InputDropDownPopup(
                 modifier = modifier
                     .padding(bottom = 8.dp)
                     .padding(horizontal = 8.dp)
+                    .conditional(width == null) {
+                        fillMaxWidth()
+                    }
                     .conditional(width != null) {
                         width(width!!)
                     },

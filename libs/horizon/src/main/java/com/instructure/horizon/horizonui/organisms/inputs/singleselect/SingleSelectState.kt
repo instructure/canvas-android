@@ -11,7 +11,7 @@ data class SingleSelectState(
     val isMenuOpen: Boolean = false,
     val errorText: String? = null,
     val isSingleLineOptions: Boolean = false,
-    val isPopupWidthFollowContainer: Boolean = true,
+    val isFullWidth: Boolean = false,
     val required: InputLabelRequired = InputLabelRequired.Regular,
     val size: SingleSelectInputSize,
     val options: List<String>,

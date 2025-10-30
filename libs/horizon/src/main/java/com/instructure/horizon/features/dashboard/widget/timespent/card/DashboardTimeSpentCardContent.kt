@@ -126,7 +126,7 @@ fun DashboardTimeSpentCardContent(
                             onMenuOpenChanged = { isMenuOpen = it },
                             size = SingleSelectInputSize.Medium,
                             isSingleLineOptions = true,
-                            isPopupWidthFollowContainer = false,
+                            isFullWidth = true,
                             options = listOf(stringResource(R.string.dashboardTimeSpentTotal)) + state.courses.map { it.name },
                             selectedOption = courseValue,
                             onOptionSelected = { state.onCourseSelected(it) }
