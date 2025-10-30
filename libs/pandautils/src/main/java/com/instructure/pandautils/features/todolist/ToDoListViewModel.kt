@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.isInvited
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
+import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.getContextNameForPlannerItem
 import com.instructure.pandautils.utils.getDateTextForPlannerItem
 import com.instructure.pandautils.utils.getIconForPlannerItem
@@ -42,7 +43,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ToDoListViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val repository: ToDoListRepository
+    private val repository: ToDoListRepository,
+    private val networkStateProvider: NetworkStateProvider
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ToDoListUiState(
@@ -160,6 +162,13 @@ class ToDoListViewModel @Inject constructor(
 
     private fun handleSwipeToDone(itemId: String) {
         viewModelScope.launch {
+            if (!networkStateProvider.isOnline()) {
+                _uiState.update {
+                    it.copy(snackbarMessage = context.getString(R.string.todoActionOffline))
+                }
+                return@launch
+            }
+
             val plannerItem = plannerItemsMap[itemId] ?: return@launch
             val currentIsChecked = isComplete(plannerItem)
             val newIsChecked = !currentIsChecked
@@ -194,6 +203,13 @@ class ToDoListViewModel @Inject constructor(
 
     private fun handleCheckboxToggle(itemId: String, isChecked: Boolean) {
         viewModelScope.launch {
+            if (!networkStateProvider.isOnline()) {
+                _uiState.update {
+                    it.copy(snackbarMessage = context.getString(R.string.todoActionOffline))
+                }
+                return@launch
+            }
+
             val plannerItem = plannerItemsMap[itemId] ?: return@launch
 
             val success = updateItemCompleteState(itemId, isChecked)

@@ -2193,4 +2193,5 @@
     <string name="todoSwipeUndo">Undo</string>
     <string name="todoMarkedAsDone">%s marked as done</string>
     <string name="todoMarkedAsDoneSnackbarUndo">Undo</string>
+    <string name="todoActionOffline">This action cannot be performed offline</string>
 </resources>

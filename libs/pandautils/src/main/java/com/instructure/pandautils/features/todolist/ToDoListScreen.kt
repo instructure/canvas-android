@@ -15,6 +15,7 @@
  */
 package com.instructure.pandautils.features.todolist
 
+import android.view.HapticFeedbackConstants
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -72,6 +73,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -387,6 +389,7 @@ private fun ToDoItem(
     val animatedOffsetX = remember { Animatable(0f) }
     var itemWidth by remember { mutableFloatStateOf(0f) }
     val density = LocalDensity.current
+    val view = LocalView.current
 
     val swipeThreshold = with(density) { 150.dp.toPx() }
 
@@ -409,6 +412,7 @@ private fun ToDoItem(
                     targetValue = targetOffset,
                     animationSpec = tween(durationMillis = 200)
                 )
+                view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
                 delay(300)
                 animateToCenter()
                 item.onSwipeToDone()
@@ -538,6 +542,7 @@ private fun ToDoItemContent(
     modifier: Modifier = Modifier
 ) {
     val dateBadgeData = rememberDateBadgeData(item.date)
+    val view = LocalView.current
 
     Row(
         modifier = modifier
@@ -621,7 +626,10 @@ private fun ToDoItemContent(
 
             Checkbox(
                 checked = item.isChecked,
-                onCheckedChange = { onCheckedChange() },
+                onCheckedChange = {
+                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+                    onCheckedChange()
+                },
                 colors = CheckboxDefaults.colors(
                     checkedColor = Color(ThemePrefs.brandColor),
                     uncheckedColor = colorResource(id = R.color.textDark)
