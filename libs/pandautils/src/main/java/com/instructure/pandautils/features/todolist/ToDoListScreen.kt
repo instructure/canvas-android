@@ -44,6 +44,11 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Snackbar
+import androidx.compose.material.SnackbarDuration
+import androidx.compose.material.SnackbarHost
+import androidx.compose.material.SnackbarHostState
+import androidx.compose.material.SnackbarResult
 import androidx.compose.material.Text
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
@@ -118,11 +123,12 @@ private data class DateBadgeData(
 fun ToDoListScreen(
     navigationIconClick: () -> Unit,
     openToDoItem: (String) -> Unit,
-    showSnackbar: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val viewModel = hiltViewModel<ToDoListViewModel>()
     val uiState by viewModel.uiState.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
 
     LaunchedEffect(uiState.openToDoItemId) {
         uiState.openToDoItemId?.let { itemId ->
@@ -133,8 +139,24 @@ fun ToDoListScreen(
 
     LaunchedEffect(uiState.snackbarMessage) {
         uiState.snackbarMessage?.let { message ->
-            showSnackbar(message)
+            snackbarHostState.showSnackbar(message)
             uiState.onSnackbarDismissed()
+        }
+    }
+
+    LaunchedEffect(uiState.markedAsDoneItem) {
+        uiState.markedAsDoneItem?.let { item ->
+            val message = context.getString(R.string.todoMarkedAsDone, item.title)
+            val result = snackbarHostState.showSnackbar(
+                message = message,
+                actionLabel = context.getString(R.string.todoMarkedAsDoneSnackbarUndo),
+                duration = SnackbarDuration.Long
+            )
+            if (result == SnackbarResult.ActionPerformed) {
+                uiState.onUndoMarkAsDone()
+            } else {
+                uiState.onMarkedAsDoneSnackbarDismissed()
+            }
         }
     }
 
@@ -160,6 +182,14 @@ fun ToDoListScreen(
                     }
                 }
             )
+        },
+        snackbarHost = {
+            SnackbarHost(snackbarHostState) { data ->
+                Snackbar(
+                    snackbarData = data,
+                    actionColor = Color(ThemePrefs.textButtonColor)
+                )
+            }
         },
         modifier = modifier
     ) { padding ->

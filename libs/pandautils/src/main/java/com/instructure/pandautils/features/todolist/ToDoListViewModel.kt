@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.isInvited
 import com.instructure.canvasapi2.utils.toApiString
+import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.getContextNameForPlannerItem
 import com.instructure.pandautils.utils.getDateTextForPlannerItem
 import com.instructure.pandautils.utils.getIconForPlannerItem
@@ -47,6 +48,8 @@ class ToDoListViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(ToDoListUiState(
         onOpenToDoItem = { clearOpenToDoItem() },
         onSnackbarDismissed = { clearSnackbarMessage() },
+        onUndoMarkAsDone = { handleUndoMarkAsDone() },
+        onMarkedAsDoneSnackbarDismissed = { clearMarkedAsDoneItem() },
         onItemClicked = { itemId -> handleItemClicked(itemId) },
         onRefresh = { handleRefresh() }
     ))
@@ -160,37 +163,70 @@ class ToDoListViewModel @Inject constructor(
             val currentIsChecked = isComplete(plannerItem)
             val newIsChecked = !currentIsChecked
 
-            // Optimistically update UI
-            updateItemCheckedState(itemId, newIsChecked)
+            val success = updateItemCompleteState(itemId, newIsChecked)
 
-            try {
-                // Update or create planner override
-                val plannerOverrideResult = if (plannerItem.plannerOverride?.id != null) {
-                    repository.updatePlannerOverride(
-                        plannerOverrideId = plannerItem.plannerOverride?.id.orDefault(),
-                        markedComplete = newIsChecked
-                    ).dataOrThrow
-                } else {
-                    repository.createPlannerOverride(
-                        plannableId = plannerItem.plannable.id,
-                        plannableType = plannerItem.plannableType,
-                        markedComplete = newIsChecked
-                    ).dataOrThrow
-                }
-
-                // Update the stored planner item with new override state
-                val updatedPlannerItem = plannerItem.copy(plannerOverride = plannerOverrideResult)
-                plannerItemsMap[itemId] = updatedPlannerItem
-
-            } catch (e: Exception) {
-                e.printStackTrace()
-                // Revert the optimistic update
-                updateItemCheckedState(itemId, currentIsChecked)
-                // Show error snackbar
+            // Show marked-as-done snackbar only when marking as done (not when undoing)
+            if (success && newIsChecked) {
                 _uiState.update {
-                    it.copy(snackbarMessage = context.getString(com.instructure.pandautils.R.string.errorUpdatingToDo))
+                    it.copy(
+                        markedAsDoneItem = MarkedAsDoneItem(
+                            itemId = itemId,
+                            title = plannerItem.plannable.title
+                        )
+                    )
                 }
             }
+        }
+    }
+
+    private fun handleUndoMarkAsDone() {
+        viewModelScope.launch {
+            val markedAsDoneItem = _uiState.value.markedAsDoneItem ?: return@launch
+            val itemId = markedAsDoneItem.itemId
+
+            // Clear the snackbar immediately
+            _uiState.update { it.copy(markedAsDoneItem = null) }
+
+            updateItemCompleteState(itemId, false)
+        }
+    }
+
+    private suspend fun updateItemCompleteState(itemId: String, newIsChecked: Boolean): Boolean {
+        val plannerItem = plannerItemsMap[itemId] ?: return false
+        val currentIsChecked = isComplete(plannerItem)
+
+        // Optimistically update UI
+        updateItemCheckedState(itemId, newIsChecked)
+
+        return try {
+            // Update or create planner override
+            val plannerOverrideResult = if (plannerItem.plannerOverride?.id != null) {
+                repository.updatePlannerOverride(
+                    plannerOverrideId = plannerItem.plannerOverride?.id.orDefault(),
+                    markedComplete = newIsChecked
+                ).dataOrThrow
+            } else {
+                repository.createPlannerOverride(
+                    plannableId = plannerItem.plannable.id,
+                    plannableType = plannerItem.plannableType,
+                    markedComplete = newIsChecked
+                ).dataOrThrow
+            }
+
+            // Update the stored planner item with new override state
+            val updatedPlannerItem = plannerItem.copy(plannerOverride = plannerOverrideResult)
+            plannerItemsMap[itemId] = updatedPlannerItem
+
+            true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            // Revert the optimistic update
+            updateItemCheckedState(itemId, currentIsChecked)
+            // Show error snackbar
+            _uiState.update {
+                it.copy(snackbarMessage = context.getString(R.string.errorUpdatingToDo))
+            }
+            false
         }
     }
 
@@ -223,5 +259,9 @@ class ToDoListViewModel @Inject constructor(
 
     private fun clearSnackbarMessage() {
         _uiState.update { it.copy(snackbarMessage = null) }
+    }
+
+    private fun clearMarkedAsDoneItem() {
+        _uiState.update { it.copy(markedAsDoneItem = null) }
     }
 }
