@@ -189,4 +189,5 @@ object AnalyticsParamConstants {
     const val STAR_RATING = "star_rating"
     const val MEDIA_SOURCE = "media_source"
     const val MEDIA_TYPE = "media_type"
+    const val ATTEMPT = "attempt"
 }

@@ -135,7 +135,8 @@ class PickerSubmissionUploadEffectHandler(
                     assignmentId = model.assignmentId,
                     assignmentName = model.assignmentName,
                     assignmentGroupCategoryId = model.assignmentGroupCategoryId,
-                    mediaFilePath = model.files.first().fullPath
+                    mediaFilePath = model.files.first().fullPath,
+                    attempt = model.attemptId ?: 1L
                 )
             }
             FileSubmission -> {
@@ -144,7 +145,8 @@ class PickerSubmissionUploadEffectHandler(
                     assignmentId = model.assignmentId,
                     assignmentName = model.assignmentName,
                     assignmentGroupCategoryId = model.assignmentGroupCategoryId,
-                    files = ArrayList(model.files)
+                    files = ArrayList(model.files),
+                    attempt = model.attemptId ?: 1L
                 )
             }
             CommentAttachment -> {

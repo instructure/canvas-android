@@ -23,8 +23,6 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.models.RemoteFile
-import com.instructure.canvasapi2.utils.Analytics
-import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRouter
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.lti.LtiLaunchFragment
@@ -44,11 +42,12 @@ class StudentAssignmentDetailsRouter: AssignmentDetailsRouter() {
         activity: FragmentActivity,
         canvasContext: CanvasContext,
         assignment: Assignment,
-        mediaUri: Uri
+        mediaUri: Uri,
+        attempt: Long
     ) {
         RouteMatcher.route(
             activity,
-            PickerSubmissionUploadFragment.makeRoute(canvasContext, assignment, mediaUri)
+            PickerSubmissionUploadFragment.makeRoute(canvasContext, assignment, mediaUri, attempt)
         )
     }
 
@@ -90,12 +89,12 @@ class StudentAssignmentDetailsRouter: AssignmentDetailsRouter() {
         activity: FragmentActivity,
         canvasContext: CanvasContext,
         assignment: Assignment,
-        attemptId: Long?
+        attemptId: Long?,
+        attempt: Long
     ) {
-        Analytics.logEvent(AnalyticsEventConstants.SUBMIT_FILEUPLOAD_SELECTED)
         RouteMatcher.route(
             activity,
-            PickerSubmissionUploadFragment.makeRoute(canvasContext, assignment, PickerSubmissionMode.FileSubmission)
+            PickerSubmissionUploadFragment.makeRoute(canvasContext, assignment, PickerSubmissionMode.FileSubmission, attempt)
         )
     }
 
@@ -105,12 +104,12 @@ class StudentAssignmentDetailsRouter: AssignmentDetailsRouter() {
         assignmentId: Long,
         assignmentName: String?,
         initialText: String?,
-        isFailure: Boolean
+        isFailure: Boolean,
+        attempt: Long
     ) {
-        Analytics.logEvent(AnalyticsEventConstants.SUBMIT_TEXTENTRY_SELECTED)
         RouteMatcher.route(
             activity,
-            TextSubmissionUploadFragment.makeRoute(course, assignmentId, assignmentName, initialText, isFailure)
+            TextSubmissionUploadFragment.makeRoute(course, assignmentId, assignmentName, initialText, isFailure, attempt)
         )
     }
 
@@ -120,12 +119,12 @@ class StudentAssignmentDetailsRouter: AssignmentDetailsRouter() {
         assignmentId: Long,
         assignmentName: String?,
         initialUrl: String?,
-        isFailure: Boolean
+        isFailure: Boolean,
+        attempt: Long
     ) {
-        Analytics.logEvent(AnalyticsEventConstants.SUBMIT_URL_SELECTED)
         RouteMatcher.route(
             activity,
-            UrlSubmissionUploadFragment.makeRoute(course, assignmentId, assignmentName, initialUrl, isFailure)
+            UrlSubmissionUploadFragment.makeRoute(course, assignmentId, assignmentName, initialUrl, isFailure, attempt)
         )
     }
 
@@ -135,9 +134,9 @@ class StudentAssignmentDetailsRouter: AssignmentDetailsRouter() {
         annotatableAttachmentId: Long,
         submissionId: Long,
         assignmentId: Long,
-        assignmentName: String
+        assignmentName: String,
+        attempt: Long
     ) {
-        Analytics.logEvent(AnalyticsEventConstants.SUBMIT_ANNOTATION_SELECTED)
         RouteMatcher.route(
             activity,
             AnnotationSubmissionUploadFragment.makeRoute(
@@ -145,7 +144,8 @@ class StudentAssignmentDetailsRouter: AssignmentDetailsRouter() {
                 annotatableAttachmentId,
                 submissionId,
                 assignmentId,
-                assignmentName
+                assignmentName,
+                attempt
             )
         )
     }

@@ -37,5 +37,6 @@ data class CreateSubmissionEntity(
     val fileCount: Int = 0,
     val progress: Float? = null,
     val annotatableAttachmentId: Long? = null,
-    val isDraft: Boolean = false
+    val isDraft: Boolean = false,
+    val attempt: Long = 1L
 )
