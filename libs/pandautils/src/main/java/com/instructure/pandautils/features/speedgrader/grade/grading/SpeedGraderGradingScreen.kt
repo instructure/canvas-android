@@ -832,7 +832,7 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
                 hintColor = colorResource(R.color.textPlaceholder),
                 textColor = LocalCourseColor.current,
                 keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Decimal,
+                    keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Done
                 ),
                 decorationText = pluralStringResource(
