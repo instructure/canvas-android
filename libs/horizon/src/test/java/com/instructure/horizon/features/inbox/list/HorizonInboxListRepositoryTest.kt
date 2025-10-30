@@ -101,7 +101,7 @@ class HorizonInboxListRepositoryTest {
         val announcement = DiscussionTopicHeader(id = 1L, title = "Announcement 1", contextCode = "course_1")
 
         coEvery { courseApi.getFirstPageCoursesInbox(any()) } returns DataResult.Success(listOf(course))
-        coEvery { announcementsApi.getFirstPageAnnouncements(any(), startDate = any(), endDate = any(), params = any()) } returns
+        coEvery { announcementsApi.getFirstPageAnnouncements(any(), params = any()) } returns
             DataResult.Success(listOf(announcement))
 
         val result = getRepository().getCourseAnnouncements(false)

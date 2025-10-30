@@ -32,8 +32,6 @@ import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidge
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardItemState
 import com.instructure.horizon.features.home.HomeNavigationRoute
 import com.instructure.horizon.horizonui.molecules.ButtonColor
-import com.instructure.horizon.horizonui.molecules.ButtonHeight
-import com.instructure.horizon.horizonui.molecules.ButtonWidth
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 
 internal suspend fun List<GetCoursesQuery.Enrollment>.mapToDashboardCourseCardState(
@@ -59,8 +57,6 @@ internal fun List<Program>.mapToDashboardCourseCardState(context: Context): List
             ),
             buttonState = DashboardPaginatedWidgetCardButtonState(
                 label = context.getString(R.string.dashboardNotStartedProgramDetailsLabel),
-                height = ButtonHeight.SMALL,
-                width = ButtonWidth.RELATIVE,
                 color = ButtonColor.Black,
                 route = DashboardPaginatedWidgetCardButtonRoute.HomeRoute(HomeNavigationRoute.Learn.withProgram(program.id)),
             ),

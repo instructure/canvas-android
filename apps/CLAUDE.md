@@ -58,6 +58,18 @@ Run from repository root (`canvas-android/`), not the `apps/` directory:
 ./gradle/gradlew -p apps :parent:testQaDebugUnitTest
 ```
 
+**Shared Library Tests:**
+```bash
+# Test a specific module
+./gradle/gradlew -p apps :pandautils:testDebugUnitTest
+
+# Test specific class
+./gradle/gradlew -p apps :pandautils:testDebugUnitTest --tests "com.instructure.pandautils.features.discussion.router.DiscussionRouterViewModelTest.*"
+
+# Force re-run tests (ignore cache)
+./gradle/gradlew -p apps :pandautils:testDebugUnitTest --rerun-tasks
+```
+
 **Instrumentation/Espresso Tests:**
 ```bash
 ./gradle/gradlew -p apps :student:connectedQaDebugAndroidTest
@@ -130,6 +142,7 @@ Dependencies are centralized in `buildSrc/src/main/java/GlobalDependencies.kt` w
 - Follow existing project patterns and conventions
 - Self-documenting code without inline comments unless specifically requested
 - Use descriptive variable and function names
+- **Companion objects**: Place companion objects at the bottom of the class, following Kotlin style guides. For simple private constants used only within a file, consider using top-level constants instead
 
 ### Component Patterns
 - Use existing utility functions and shared components from `pandautils`
@@ -152,6 +165,52 @@ Dependencies are centralized in `buildSrc/src/main/java/GlobalDependencies.kt` w
 - Shared libraries are in `../libs/` relative to `apps/`
 - Canvas API models and endpoints are in `:canvas-api-2`
 - Common utilities, dialogs, and base classes are in `:pandautils`
+
+### Router Pattern
+The project uses a Router pattern for navigation between features:
+- **Interface Definition**: Router interfaces defined in `pandautils` (e.g., `DiscussionRouter`, `CalendarRouter`)
+- **App Implementation**: Each app implements the router interface (e.g., `StudentDiscussionRouter`, `TeacherDiscussionRouter`)
+- **Dependency Injection**: Routers are injected via Hilt into Fragments/ViewModels
+- **Usage**: ViewModels emit actions that are handled by Fragments, which delegate to app-specific routers
+- **Routing Methods**: Routers use `RouteMatcher.route()` to navigate to other fragments using `Route` objects
+- **Example Flow**: ViewModel → Action → Fragment.handleAction() → Router.routeTo*() → RouteMatcher.route()
+
+## Device Deployment
+
+**Install to Connected Device:**
+```bash
+# Install Student app
+./gradle/gradlew -p apps :student:installDevDebug
+
+# Install Teacher app
+./gradle/gradlew -p apps :teacher:installDevDebug
+
+# Install Parent app
+./gradle/gradlew -p apps :parent:installDevDebug
+```
+
+**Launch App:**
+```bash
+# Check connected devices
+adb devices
+
+# Launch using monkey (works with any launcher activity)
+adb shell monkey -p com.instructure.candroid -c android.intent.category.LAUNCHER 1
+adb shell monkey -p com.instructure.teacher -c android.intent.category.LAUNCHER 1
+adb shell monkey -p com.instructure.parentapp -c android.intent.category.LAUNCHER 1
+```
+
+**Common ADB Commands:**
+```bash
+# View logs
+adb logcat | grep "candroid"
+
+# Clear app data
+adb shell pm clear com.instructure.candroid
+
+# Uninstall app
+adb uninstall com.instructure.candroid
+```
 
 ## Additional Context
 

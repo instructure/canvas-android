@@ -18,21 +18,21 @@ package com.instructure.horizon.features.dashboard.widget.announcement
 
 import com.instructure.canvasapi2.apis.AccountNotificationAPI
 import com.instructure.canvasapi2.apis.AnnouncementAPI
-import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
+import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
 import com.instructure.canvasapi2.models.DiscussionTopicHeader.ReadState
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.depaginate
-import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.horizon.features.inbox.HorizonInboxItemType
 import com.instructure.horizon.features.inbox.navigation.HorizonInboxRoute
-import java.util.Calendar
-import java.util.Date
 import javax.inject.Inject
 
 class DashboardAnnouncementBannerRepository @Inject constructor(
     private val announcementApi: AnnouncementAPI.AnnouncementInterface,
     private val accountNotificationApi: AccountNotificationAPI.AccountNotificationInterface,
-    private val courseApi: CourseAPI.CoursesInterface,
+    private val getCoursesManager: HorizonGetCoursesManager,
+    private val apiPrefs: ApiPrefs,
 ) {
     suspend fun getUnreadAnnouncements(forceRefresh: Boolean): List<AnnouncementBannerItem> {
         val courseAnnouncements = getUnreadCourseAnnouncements(forceRefresh)
@@ -44,27 +44,24 @@ class DashboardAnnouncementBannerRepository @Inject constructor(
 
     private suspend fun getUnreadCourseAnnouncements(forceRefresh: Boolean): List<AnnouncementBannerItem> {
         val params = RestParams(isForceReadFromNetwork = forceRefresh, usePerPageQueryParam = true)
-        val courses = getAllInboxCourses(forceRefresh)
+        val courses = getCourses(forceRefresh)
 
         if (courses.isEmpty()) {
             return emptyList()
         }
 
         return announcementApi.getFirstPageAnnouncements(
-            courseCode = courses.map { it.contextId }.toTypedArray(),
-            startDate = Calendar.getInstance()
-                .apply { set(Calendar.WEEK_OF_YEAR, get(Calendar.WEEK_OF_YEAR) - 2) }.time.toApiString(),
-            endDate = Date().toApiString(),
+            courseCode = courses.map { "course_" + it.courseId }.toTypedArray(),
             params = params
         )
             .depaginate { announcementApi.getNextPageAnnouncementsList(it, params) }
             .dataOrThrow
             .filter { it.status == ReadState.UNREAD }
             .map { announcement ->
-                val course = courses.first { it.contextId == announcement.contextCode }
+                val course = courses.first { it.courseId == announcement.contextCode?.removePrefix("course_")?.toLong() }
                 AnnouncementBannerItem(
                     title = announcement.title.orEmpty(),
-                    source = course.name,
+                    source = course.courseName,
                     date = announcement.postedDate,
                     type = AnnouncementType.COURSE,
                     route =
@@ -79,8 +76,6 @@ class DashboardAnnouncementBannerRepository @Inject constructor(
 
     private suspend fun getUnreadGlobalAnnouncements(forceRefresh: Boolean): List<AnnouncementBannerItem> {
         val params = RestParams(isForceReadFromNetwork = forceRefresh, usePerPageQueryParam = true)
-        val fromDate = Calendar.getInstance()
-            .apply { set(Calendar.WEEK_OF_YEAR, get(Calendar.WEEK_OF_YEAR) - 2) }.time
         return accountNotificationApi.getAccountNotifications(
             params,
             includePast = true,
@@ -89,7 +84,6 @@ class DashboardAnnouncementBannerRepository @Inject constructor(
             .depaginate { accountNotificationApi.getNextPageNotifications(it, params) }
             .dataOrThrow
             .filter { !it.closed }
-            .filter { it.startDate?.after(fromDate) ?: true }
             .map { notification ->
                 AnnouncementBannerItem(
                     title = notification.subject,
@@ -105,13 +99,7 @@ class DashboardAnnouncementBannerRepository @Inject constructor(
             }
     }
 
-    private suspend fun getAllInboxCourses(forceRefresh: Boolean) =
-        courseApi.getFirstPageCoursesInbox(
-            RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceRefresh)
-        ).depaginate {
-            courseApi.next(
-                it,
-                RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceRefresh)
-            )
-        }.dataOrThrow
+    suspend fun getCourses(forceNetwork: Boolean): List<CourseWithProgress> {
+        return getCoursesManager.getCoursesWithProgress(apiPrefs.user!!.id, forceNetwork).dataOrThrow
+    }
 }

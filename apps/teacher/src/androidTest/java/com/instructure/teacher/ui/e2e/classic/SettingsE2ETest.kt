@@ -649,4 +649,177 @@ class SettingsE2ETest : TeacherComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the previously set inbox signature text is displayed by default since we logged back with '${teacher.name}' teacher.")
         inboxComposePage.assertBodyText("\n\n---\nPresident of AC Milan\nVice President of Ferencvaros")
     }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.BUG_CASE, FeatureCategory.INBOX, TestCategory.E2E, SecondaryFeatureCategory.INBOX_SIGNATURE)
+    fun testInboxSignaturesFABButtonWithDifferentUsersE2E() {
+
+        //Bug Ticket: MBL-18929
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(teachers = 2, students = 1, courses = 1)
+        val teacher = data.teachersList[0]
+        val teacher2 = data.teachersList[1]
+        val student = data.studentsList[0]
+        val course = data.coursesList[0]
+
+        Log.d(STEP_TAG, "Click 'Find My School' button.")
+        loginLandingPage.clickFindMySchoolButton()
+
+        Log.d(STEP_TAG, "Enter domain: '${CanvasNetworkAdapter.canvasDomain}'")
+        loginFindSchoolPage.enterDomain(CanvasNetworkAdapter.canvasDomain)
+
+        Log.d(STEP_TAG, "Click on 'Next' button on the toolbar.")
+        loginFindSchoolPage.clickToolbarNextMenuItem()
+
+        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
+        loginSignInPage.loginAs(teacher)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Open the Left Side Navigation Drawer menu.")
+        dashboardPage.openLeftSideMenu()
+
+        Log.d(STEP_TAG, "Navigate to Settings Page on the left-side menu.")
+        leftSideNavigationDrawerPage.clickSettingsMenu()
+
+        Log.d(ASSERTION_TAG, "Assert that by default the Inbox Signature is 'Not Set'.")
+        settingsPage.assertSettingsItemDisplayed("Inbox Signature", "Not Set")
+
+        Log.d(STEP_TAG, "Click on the 'Inbox Signature' settings.")
+        settingsPage.clickOnSettingsItem("Inbox Signature")
+
+        Log.d(ASSERTION_TAG, "Assert that by default the 'Inbox Signature' toggle is turned off.")
+        inboxSignatureSettingsPage.assertSignatureEnabledState(false)
+
+        val signatureText = "Best Regards\nCanvas Teacher"
+        Log.d(STEP_TAG, "Turn on the 'Inbox Signature' and set the inbox signature text to: '$signatureText'. Save the changes.")
+        inboxSignatureSettingsPage.toggleSignatureEnabledState()
+        inboxSignatureSettingsPage.changeSignatureText(signatureText)
+        inboxSignatureSettingsPage.saveChanges()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Inbox settings saved!' toast message is displayed.")
+        checkToastText(R.string.inboxSignatureSettingsUpdated, activityRule.activity)
+
+        Log.d(STEP_TAG, "Refresh the Settings page.")
+        settingsPage.refresh()
+
+        Log.d(ASSERTION_TAG, "Assert that the Inbox Signature became 'Enabled'.")
+        settingsPage.assertSettingsItemDisplayed("Inbox Signature", "Enabled")
+
+        Log.d(STEP_TAG, "Navigate back to the Dashboard.")
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG, "Select course: '${course.name}'.")
+        dashboardPage.selectCourse(course)
+
+        Log.d(STEP_TAG, "Navigate to People page.")
+        courseBrowserPage.openPeopleTab()
+
+        Log.d(STEP_TAG, "Click on student: '${student.name}' to open Student Context Page.")
+        peopleListPage.clickPerson(student)
+
+        Log.d(ASSERTION_TAG, "Assert that Student Context Page displays correct student.")
+        studentContextPage.assertDisplaysStudentInfo(student.shortName, student.loginId)
+
+        Log.d(STEP_TAG, "Click on the 'Compose' button on Student Context Page.")
+        studentContextPage.clickOnNewMessageButton()
+
+        Log.d(ASSERTION_TAG, "Assert that the inbox signature: '${signatureText}' text is displayed when composing message from Student Context page FAB.")
+        inboxComposePage.assertBodyText("\n\n---\nBest Regards\nCanvas Teacher")
+
+        Log.d(STEP_TAG, "Click on the 'Close' (X) button on the Compose New Message Page.")
+        inboxComposePage.clickOnCloseButton()
+
+        Log.d(STEP_TAG, "Navigate back to Dashboard.")
+        pressBackButton(3)
+
+        Log.d(STEP_TAG, "Click on 'Change User' button on the Left Side Navigation Drawer menu.")
+        leftSideNavigationDrawerPage.clickChangeUserMenu()
+
+        Log.d(STEP_TAG, "Click on the 'Find another school' button.")
+        loginLandingPage.clickFindAnotherSchoolButton()
+
+        Log.d(STEP_TAG, "Enter domain: '${CanvasNetworkAdapter.canvasDomain}'")
+        loginFindSchoolPage.enterDomain(CanvasNetworkAdapter.canvasDomain)
+
+        Log.d(STEP_TAG, "Click on 'Next' button on the toolbar.")
+        loginFindSchoolPage.clickToolbarNextMenuItem()
+
+        Log.d(STEP_TAG, "Login with the other user: '${teacher2.name}', login id: '${teacher2.loginId}'.")
+        loginSignInPage.loginAs(teacher2)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Select course: '${course.name}'.")
+        dashboardPage.selectCourse(course)
+
+        Log.d(STEP_TAG, "Navigate to People page.")
+        courseBrowserPage.openPeopleTab()
+
+        Log.d(STEP_TAG, "Click on student: '${student.name}' to open Student Context Page.")
+        peopleListPage.clickPerson(student)
+
+        Log.d(ASSERTION_TAG, "Assert that Student Context Page displays correct student.")
+        studentContextPage.assertDisplaysStudentInfo(student.shortName, student.loginId)
+
+        Log.d(STEP_TAG, "Click on the 'Compose' button on Student Context Page.")
+        studentContextPage.clickOnNewMessageButton()
+
+        Log.d(ASSERTION_TAG, "Assert that the previously set inbox signature text is NOT displayed since it was set for another user.")
+        inboxComposePage.assertBodyText("")
+
+        Log.d(STEP_TAG, "Click on the 'Close' (X) button on the Compose New Message Page.")
+        inboxComposePage.clickOnCloseButton()
+
+        Log.d(STEP_TAG, "Navigate back to Dashboard.")
+        pressBackButton(3)
+
+        Log.d(STEP_TAG, "Open the Left Side Navigation Drawer menu.")
+        dashboardPage.openLeftSideMenu()
+
+        Log.d(STEP_TAG, "Navigate to Settings Page on the Left Side Navigation Drawer menu.")
+        leftSideNavigationDrawerPage.clickSettingsMenu()
+
+        Log.d(ASSERTION_TAG, "Assert that by default the Inbox Signature is 'Not Set'.")
+        settingsPage.assertSettingsItemDisplayed("Inbox Signature", "Not Set")
+
+        Log.d(STEP_TAG, "Click on the 'Inbox Signature' settings.")
+        settingsPage.clickOnSettingsItem("Inbox Signature")
+
+        Log.d(ASSERTION_TAG, "Assert that by default the 'Inbox Signature' toggle is turned off.")
+        inboxSignatureSettingsPage.assertSignatureEnabledState(false)
+
+        val secondSignatureText = "Loyal member of Instructure"
+        Log.d(STEP_TAG, "Turn on the 'Inbox Signature' and set the inbox signature text to: '$secondSignatureText'. Save the changes.")
+        inboxSignatureSettingsPage.toggleSignatureEnabledState()
+        inboxSignatureSettingsPage.changeSignatureText(secondSignatureText)
+        inboxSignatureSettingsPage.saveChanges()
+
+        Log.d(STEP_TAG, "Refresh the Settings page.")
+        settingsPage.refresh()
+
+        Log.d(ASSERTION_TAG, "Assert that the Inbox Signature became 'Enabled'.")
+        settingsPage.assertSettingsItemDisplayed("Inbox Signature", "Enabled")
+
+        Log.d(STEP_TAG, "Navigate back to the Dashboard.")
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG, "Select course: '${course.name}'.")
+        dashboardPage.selectCourse(course)
+
+        Log.d(STEP_TAG, "Navigate to People page.")
+        courseBrowserPage.openPeopleTab()
+
+        Log.d(STEP_TAG, "Click on student: '${student.name}' to open Student Context Page.")
+        peopleListPage.clickPerson(student)
+
+        Log.d(ASSERTION_TAG, "Assert that Student Context Page displays correct student.")
+        studentContextPage.assertDisplaysStudentInfo(student.shortName, student.loginId)
+
+        Log.d(STEP_TAG, "Click on the 'Compose' button on Student Context Page.")
+        studentContextPage.clickOnNewMessageButton()
+
+        Log.d(ASSERTION_TAG, "Assert that the previously set inbox signature: '$secondSignatureText' text is displayed when composing message from People Details page FAB.")
+        inboxComposePage.assertBodyText("\n\n---\nLoyal member of Instructure")
+    }
+
 }

@@ -189,8 +189,8 @@ private fun DashboardPaginatedWidgetCardItem(
                         }
                     }
                 },
-                height = buttonState.height,
-                width = buttonState.width,
+                height = ButtonHeight.SMALL,
+                width = ButtonWidth.FILL,
                 color = buttonState.color,
                 modifier = Modifier
                     .shimmerEffect(
@@ -284,8 +284,6 @@ private fun DashboardPaginatedWidgetCardAnnouncementContentPreview() {
                     date = Date(),
                     buttonState = DashboardPaginatedWidgetCardButtonState(
                         label = "Go to announcement",
-                        height = ButtonHeight.SMALL,
-                        width = ButtonWidth.FILL,
                         color = ButtonColor.WhiteWithOutline,
                         route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
                     )
@@ -300,8 +298,6 @@ private fun DashboardPaginatedWidgetCardAnnouncementContentPreview() {
                     date = Date(),
                     buttonState = DashboardPaginatedWidgetCardButtonState(
                         label = "Go to announcement",
-                        height = ButtonHeight.SMALL,
-                        width = ButtonWidth.FILL,
                         color = ButtonColor.WhiteWithOutline,
                         route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
                     )
@@ -315,8 +311,6 @@ private fun DashboardPaginatedWidgetCardAnnouncementContentPreview() {
                     date = Date(),
                     buttonState = DashboardPaginatedWidgetCardButtonState(
                         label = "Go to announcement",
-                        height = ButtonHeight.SMALL,
-                        width = ButtonWidth.FILL,
                         color = ButtonColor.WhiteWithOutline,
                         route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
                     )
@@ -345,8 +339,6 @@ private fun DashboardPaginatedWidgetCardAnnouncementSingleContentPreview() {
                     date = Date(),
                     buttonState = DashboardPaginatedWidgetCardButtonState(
                         label = "Go to announcement",
-                        height = ButtonHeight.SMALL,
-                        width = ButtonWidth.FILL,
                         color = ButtonColor.WhiteWithOutline,
                         route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
                     )
@@ -375,8 +367,6 @@ private fun DashboardPaginatedWidgetCardAnnouncementLoadingPreview() {
                     date = Date(),
                     buttonState = DashboardPaginatedWidgetCardButtonState(
                         label = "Go to announcement",
-                        height = ButtonHeight.SMALL,
-                        width = ButtonWidth.FILL,
                         color = ButtonColor.WhiteWithOutline,
                         route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
                     )
@@ -391,8 +381,6 @@ private fun DashboardPaginatedWidgetCardAnnouncementLoadingPreview() {
                     date = Date(),
                     buttonState = DashboardPaginatedWidgetCardButtonState(
                         label = "Go to announcement",
-                        height = ButtonHeight.SMALL,
-                        width = ButtonWidth.FILL,
                         color = ButtonColor.WhiteWithOutline,
                         route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
                     )
@@ -406,8 +394,6 @@ private fun DashboardPaginatedWidgetCardAnnouncementLoadingPreview() {
                     date = Date(),
                     buttonState = DashboardPaginatedWidgetCardButtonState(
                         label = "Go to announcement",
-                        height = ButtonHeight.SMALL,
-                        width = ButtonWidth.FILL,
                         color = ButtonColor.WhiteWithOutline,
                         route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
                     )

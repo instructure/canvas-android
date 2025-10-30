@@ -36,7 +36,7 @@ class DashboardSkillHighlightsWidgetUiTest {
         }
 
         val title = context.getString(R.string.dashboardSkillHighlightsTitle)
-        composeTestRule.onNodeWithText(title).assertIsDisplayed()
+        composeTestRule.onNodeWithText(title, useUnmergedTree = true).assertIsDisplayed()
     }
 
     @Test
@@ -51,14 +51,12 @@ class DashboardSkillHighlightsWidgetUiTest {
         }
 
         val title = context.getString(R.string.dashboardSkillHighlightsTitle)
-        val errorTitle = context.getString(R.string.dashboardSkillHighlightsErrorTitle)
-        val errorMessage = context.getString(R.string.dashboardSkillHighlightsErrorMessage)
+        val errorMessage = context.getString(R.string.dashboardWidgetCardErrorMessage)
         val retryLabel = context.getString(R.string.dashboardSkillHighlightsRetry)
 
         composeTestRule.onNodeWithText(title).assertIsDisplayed()
-        composeTestRule.onNodeWithText(errorTitle).assertIsDisplayed()
-        composeTestRule.onNodeWithText(errorMessage).assertIsDisplayed()
-        composeTestRule.onNodeWithText(retryLabel).assertIsDisplayed()
+        composeTestRule.onNodeWithText(errorMessage, useUnmergedTree = true).assertIsDisplayed()
+        composeTestRule.onNodeWithText(retryLabel, useUnmergedTree = true).assertIsDisplayed()
     }
 
     @Test
@@ -74,7 +72,7 @@ class DashboardSkillHighlightsWidgetUiTest {
         }
 
         val retryLabel = context.getString(R.string.dashboardSkillHighlightsRetry)
-        composeTestRule.onNodeWithText(retryLabel).performClick()
+        composeTestRule.onNodeWithText(retryLabel, useUnmergedTree = true).performClick()
 
         assert(refreshCalled)
     }

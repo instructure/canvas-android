@@ -16,6 +16,7 @@
 package com.instructure.pandautils.compose.composables
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Checkbox
@@ -39,13 +40,13 @@ fun CheckboxText(
     color: Color,
     onCheckedChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
+    subtitle: String? = null,
     testTag: String = "checkboxText"
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .clickable { onCheckedChanged(!selected) }
-            .padding(vertical = 8.dp, horizontal = 16.dp)
     ) {
         Checkbox(
             checked = selected,
@@ -58,12 +59,22 @@ fun CheckboxText(
             ),
             modifier = Modifier.testTag(testTag)
         )
-        Text(
-            text = text,
-            fontSize = 16.sp,
-            lineHeight = 21.sp,
-            color = colorResource(R.color.textDarkest)
-        )
+        Column {
+            subtitle?.let {
+                Text(
+                    text = it,
+                    fontSize = 14.sp,
+                    lineHeight = 18.sp,
+                    color = colorResource(R.color.textDark)
+                )
+            }
+            Text(
+                text = text,
+                fontSize = 16.sp,
+                lineHeight = 21.sp,
+                color = colorResource(R.color.textDarkest)
+            )
+        }
     }
 }
 

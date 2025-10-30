@@ -43,8 +43,6 @@ object AnnouncementAPI {
         @GET("announcements")
         suspend fun getFirstPageAnnouncements(
             @Query("context_codes[]") vararg courseCode: String,
-            @Query("start_date") startDate: String,
-            @Query("end_date") endDate: String,
             @Tag params: RestParams
         ): DataResult<List<DiscussionTopicHeader>>
 

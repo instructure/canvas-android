@@ -17,6 +17,7 @@
 package com.instructure.teacher.ui.e2e.compose
 
 import android.util.Log
+import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
@@ -31,6 +32,7 @@ import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
 import com.instructure.espresso.retry
+import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.pages.classic.PersonContextPage
 import com.instructure.teacher.ui.utils.TeacherComposeTest
@@ -48,6 +50,7 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
+    @OptIn(ExperimentalTestApi::class)
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.GRADES, TestCategory.E2E)
@@ -118,9 +121,10 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
         Log.d(STEP_TAG, "Open 'Not Submitted' submissions.")
         assignmentDetailsPage.clickNotSubmittedSubmissions()
 
-        Log.d(ASSERTION_TAG, "Assert that the 'Haven't Submitted Yet' label is displayed (as we filtered for only 'Not Submitted') and the submission of '${noSubStudent.name}' student is displayed.")
-        assignmentSubmissionListPage.assertFilterLabelNotSubmittedSubmissions()
-        assignmentSubmissionListPage.assertHasStudentSubmission(noSubStudent)
+        Log.d(ASSERTION_TAG, "Assert that the submission of '${noSubStudent.name}' student is displayed.")
+        retryWithIncreasingDelay(initialDelay = 500, maxDelay = 5000, times = 5) {
+            assignmentSubmissionListPage.assertHasStudentSubmission(noSubStudent)
+        }
 
         Log.d(ASSERTION_TAG, "Assert that the '${noSubStudent.name}' student has '-' as score as it's submission is not submitted yet.")
         assignmentSubmissionListPage.assertStudentScoreText(noSubStudent.name, "-")
@@ -176,20 +180,17 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
         Espresso.pressBack()
         assignmentSubmissionListPage.refresh()
 
-        Log.d(ASSERTION_TAG, "Assert that the 'All Submissions' filter text is displayed.")
-        assignmentSubmissionListPage.assertFilterLabelAllSubmissions()
-
         Log.d(STEP_TAG, "Click on filter button and click on 'Filter submissions'.")
         assignmentSubmissionListPage.clickFilterButton()
 
         Log.d(ASSERTION_TAG, "Assert that all the corresponding filter texts are displayed.")
-        assignmentSubmissionListPage.assertSubmissionFilterOption("All Submissions")
-        assignmentSubmissionListPage.assertSubmissionFilterOption("Submitted Late")
+        assignmentSubmissionListPage.assertSubmissionFilterOption("Late")
+        assignmentSubmissionListPage.assertSubmissionFilterOption("Missing")
         assignmentSubmissionListPage.assertSubmissionFilterOption("Needs Grading")
-        assignmentSubmissionListPage.assertSubmissionFilterOption("Not Submitted")
+        assignmentSubmissionListPage.assertSubmissionFilterOption("Submitted")
         assignmentSubmissionListPage.assertSubmissionFilterOption("Graded")
-        assignmentSubmissionListPage.assertSubmissionFilterOption("Scored Less Than…")
-        assignmentSubmissionListPage.assertSubmissionFilterOption("Scored More Than…")
+        assignmentSubmissionListPage.assertPreciseFilterOption("Scored Less Than…")
+        assignmentSubmissionListPage.assertPreciseFilterOption("Scored More Than…")
 
         Log.d(STEP_TAG, "Select 'Not Graded' and click on 'OK'.")
         assignmentSubmissionListPage.clickFilterUngraded()
@@ -248,8 +249,11 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
         postSettingsPage.clickOnHideGradesButton()
 
         Log.d(ASSERTION_TAG, "Assert that the hide grades (eye) icon is displayed next to the corresponding (graded) students.")
-        assignmentSubmissionListPage.assertGradesHidden(gradedStudent.name)
-        assignmentSubmissionListPage.assertGradesHidden(student.name)
+        retryWithIncreasingDelay(initialDelay = 500, maxDelay = 5000, times = 5) {
+            assignmentSubmissionListPage.assertGradesHidden(gradedStudent.name)
+            assignmentSubmissionListPage.assertGradesHidden(student.name)
+        }
+
     }
 
 }

@@ -600,6 +600,37 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
         checkToastText(R.string.reminderAlreadySet, activityRule.activity)
     }
 
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    fun testDiscussionCheckpointsDisplayed() {
+        val data = setUpData()
+        val course = data.courses.values.first()
+
+        val checkpoint1 = Checkpoint(
+            tag = "reply_to_topic",
+            pointsPossible = 5.0,
+            dueAt = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 1) }.time.toApiString()
+        )
+        val checkpoint2 = Checkpoint(
+            tag = "reply_to_entry",
+            pointsPossible = 5.0,
+            dueAt = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 2) }.time.toApiString()
+        )
+
+        val assignment = data.addAssignment(
+            courseId = course.id,
+            name = "Discussion Checkpoint Assignment",
+            checkpoints = listOf(checkpoint1, checkpoint2),
+            submissionTypeList = listOf(Assignment.SubmissionType.DISCUSSION_TOPIC)
+        )
+
+        goToAssignmentList()
+        assignmentListPage.clickAssignment(assignment)
+
+        assignmentDetailsPage.assertCheckpointDisplayed(0, "Reply to topic", "-/5")
+        assignmentDetailsPage.assertCheckpointDisplayed(1, "Additional replies (0)", "-/5")
+    }
+
     private fun setUpData(restrictQuantitativeData: Boolean = false): MockCanvas {
         // Test clicking on the Submission and Rubric button to load the Submission Details Page
         val data = MockCanvas.init(
