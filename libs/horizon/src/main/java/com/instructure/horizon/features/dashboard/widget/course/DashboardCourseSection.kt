@@ -14,50 +14,24 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.dashboard.course
+package com.instructure.horizon.features.dashboard.widget.course
 
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.semantics.clearAndSetSemantics
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.hideFromAccessibility
-import androidx.compose.ui.semantics.role
-import androidx.compose.ui.semantics.selected
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -65,21 +39,20 @@ import androidx.navigation.NavHostController
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardCard
 import com.instructure.horizon.features.dashboard.DashboardItemState
-import com.instructure.horizon.features.dashboard.course.card.CardClickAction
-import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardContent
-import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardError
-import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardLoading
-import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCard
+import com.instructure.horizon.features.dashboard.widget.course.card.CardClickAction
+import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCourseCardContent
+import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCourseCardError
+import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCourseCardLoading
+import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCourseCardState
 import com.instructure.horizon.features.home.HomeNavigationRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
+import com.instructure.horizon.horizonui.organisms.AnimatedHorizontalPager
+import com.instructure.horizon.horizonui.organisms.AnimatedHorizontalPagerIndicator
 import com.instructure.horizon.navigation.MainNavigationRoute
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
-import kotlin.math.abs
-
-private const val cardAnimationRange: Float = 0.2f
 
 @Composable
 fun DashboardCourseSection(
@@ -137,56 +110,26 @@ private fun DashboardCourseSectionContent(
             state.programs,
             mainNavController,
             homeNavController,
-            Modifier
-                .padding(horizontal = 16.dp)
         )
 
         if (state.courses.isNotEmpty()) {
-            HorizontalPager(
+            AnimatedHorizontalPager(
                 pagerstate,
                 beyondViewportPageCount = pagerstate.pageCount,
                 contentPadding = PaddingValues(horizontal = 16.dp),
                 pageSpacing = 4.dp,
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.semantics {
-                    role = Role.Carousel
-                }
-            ) {
-                var cardWidthList by remember { mutableStateOf(emptyMap<Int, Float>()) }
-                val scaleAnimation by animateFloatAsState(
-                    if (it == pagerstate.currentPage) {
-                        (1 - abs(pagerstate.currentPageOffsetFraction.convertScaleRange()))
-                    } else {
-                        (1f - (cardAnimationRange * 2)) + (abs(pagerstate.currentPageOffsetFraction.convertScaleRange()))
-                    },
-                    label = "DashboardCourseCardAnimation",
-                )
-                val animationDirection = when {
-                    it < pagerstate.currentPage -> 1
-                    it > pagerstate.currentPage -> -1
-                    else -> if (pagerstate.currentPageOffsetFraction > 0) 1 else -1
-                }
+            ) { index, modifier ->
                 DashboardCourseItem(
-                    state.courses[it],
+                    state.courses[index],
                     mainNavController,
                     homeNavController,
-                    Modifier
-                        .onGloballyPositioned { coordinates ->
-                            cardWidthList = cardWidthList + (it to coordinates.size.width.toFloat())
-                        }
-                        .offset {
-                            IntOffset(
-                                (animationDirection * ((cardWidthList[it]
-                                    ?: 0f) / 2 * (1 - scaleAnimation))).toInt(),
-                                0
-                            )
-                        }
-                        .scale(scaleAnimation)
+                    modifier
                 )
             }
 
             if (pagerstate.pageCount >= 4) {
-                DashboardCourseCardIndicator(pagerstate)
+                AnimatedHorizontalPagerIndicator(pagerstate)
             }
 
             Spacer(Modifier.height(16.dp))
@@ -207,14 +150,6 @@ private fun DashboardCourseSectionContent(
     }
 }
 
-private fun Float.convertScaleRange(): Float {
-    val oldMin = -0.5f
-    val oldMax = 0.5f
-    val newMin = -cardAnimationRange
-    val newMax = cardAnimationRange
-    return ((this - oldMin) / (oldMax - oldMin) ) * (newMax - newMin) + newMin
-}
-
 @Composable
 private fun DashboardCourseItem(
     cardState: DashboardCourseCardState,
@@ -229,67 +164,6 @@ private fun DashboardCourseItem(
         DashboardCourseCardContent(
             cardState, { handleClickAction(it, mainNavController, homeNavController) }
         )
-    }
-}
-
-@Composable
-private fun DashboardCourseCardIndicator(pagerState: PagerState) {
-    val selectedIndex = pagerState.currentPage
-    val offset = pagerState.currentPageOffsetFraction
-
-    var scrollToIndex: Int? by remember { mutableStateOf(null) }
-    LaunchedEffect(scrollToIndex) {
-        if (scrollToIndex != null) {
-            pagerState.animateScrollToPage(scrollToIndex ?: return@LaunchedEffect)
-            scrollToIndex = null
-        }
-    }
-
-    LazyRow(
-        horizontalArrangement = Arrangement.Center,
-        modifier = Modifier
-            .fillMaxWidth()
-            .clearAndSetSemantics {
-                hideFromAccessibility()
-            }
-    ) {
-        items(pagerState.pageCount) { itemIndex ->
-            val context = LocalContext.current
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .size(20.dp)
-                    .padding(5.dp)
-                    .border(1.dp, HorizonColors.Icon.medium(), CircleShape)
-                    .clip(CircleShape)
-                    .clickable { scrollToIndex = itemIndex }
-                    .clearAndSetSemantics {
-                        selected = itemIndex == selectedIndex
-                        contentDescription = context.getString(
-                            R.string.a11y_dashboardPagerIndicatorContentDescription,
-                            itemIndex + 1,
-                            pagerState.pageCount
-                        )
-                        hideFromAccessibility()
-                    }
-            ) {
-                if (itemIndex == selectedIndex) {
-                    Box(
-                        modifier = Modifier
-                            .size(10.dp * (1 - abs(offset)))
-                            .clip(CircleShape)
-                            .background(HorizonColors.Icon.medium())
-                    )
-                } else if (itemIndex == selectedIndex + (1 * if (offset > 0) 1 else -1)) {
-                    Box(
-                        modifier = Modifier
-                            .size(10.dp * (abs(offset)))
-                            .clip(CircleShape)
-                            .background(HorizonColors.Icon.medium())
-                    )
-                }
-            }
-        }
     }
 }
 

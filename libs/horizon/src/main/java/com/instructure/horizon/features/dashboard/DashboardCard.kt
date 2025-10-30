@@ -20,7 +20,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -38,10 +37,9 @@ fun DashboardCard(
 ) {
     Box(modifier = modifier
         .padding(horizontal = 8.dp)
-        .padding(bottom = 16.dp)
+        .padding(vertical = 8.dp)
         .horizonShadow(HorizonElevation.level4, shape = HorizonCornerRadius.level4, clip = true)
         .background(color = HorizonColors.Surface.cardPrimary(), shape = HorizonCornerRadius.level4)
-        .widthIn(max = 400.dp)
         .conditional(onClick != null) {
             clickable(onClick = { onClick?.invoke() })
         }

@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -64,9 +63,9 @@ fun DashboardTimeSpentCardContent(
         R.drawable.schedule,
         HorizonColors.PrimitivesHoney.honey12(),
         modifier
-            .widthIn(max = 300.dp)
             .padding(bottom = 8.dp),
-        isLoading
+        isLoading,
+        false
     ) {
         if (state.hours == 0.0) {
             Text(
