@@ -62,6 +62,8 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.MasqueradeHelper
 import com.instructure.canvasapi2.utils.Pronouns
+import com.instructure.canvasapi2.utils.RemoteConfigParam
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
@@ -134,10 +136,11 @@ import com.instructure.student.events.UserUpdatedEvent
 import com.instructure.student.features.files.list.FileListFragment
 import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
 import com.instructure.student.features.navigation.NavigationRepository
+import com.instructure.student.features.todolist.ToDoListFragment
 import com.instructure.student.fragment.BookmarksFragment
 import com.instructure.student.fragment.DashboardFragment
 import com.instructure.student.fragment.NotificationListFragment
-import com.instructure.student.fragment.ToDoListFragment
+import com.instructure.student.fragment.OldToDoListFragment
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffectHandler
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentFragment
 import com.instructure.student.navigation.AccountMenuItem
@@ -537,7 +540,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 }
                 AppShortcutManager.APP_SHORTCUT_CALENDAR -> selectBottomNavFragment(
                     CalendarFragment::class.java)
-                AppShortcutManager.APP_SHORTCUT_TODO -> selectBottomNavFragment(ToDoListFragment::class.java)
+                AppShortcutManager.APP_SHORTCUT_TODO -> selectBottomNavFragment(navigationBehavior.todoFragmentClass)
                 AppShortcutManager.APP_SHORTCUT_NOTIFICATIONS -> selectBottomNavFragment(NotificationListFragment::class.java)
                 AppShortcutManager.APP_SHORTCUT_INBOX -> {
                     if (ApiPrefs.isStudentView) {
@@ -789,7 +792,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         when (item.itemId) {
             R.id.bottomNavigationHome -> selectBottomNavFragment(navigationBehavior.homeFragmentClass)
             R.id.bottomNavigationCalendar -> selectBottomNavFragment(CalendarFragment::class.java)
-            R.id.bottomNavigationToDo -> selectBottomNavFragment(ToDoListFragment::class.java)
+            R.id.bottomNavigationToDo -> selectBottomNavFragment(navigationBehavior.todoFragmentClass)
             R.id.bottomNavigationNotifications -> selectBottomNavFragment(NotificationListFragment::class.java)
             R.id.bottomNavigationInbox -> {
                 if (ApiPrefs.isStudentView) {
@@ -812,7 +815,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 R.id.bottomNavigationHome -> abortReselect = currentFragmentClass.isAssignableFrom(navigationBehavior.homeFragmentClass)
                 R.id.bottomNavigationCalendar -> abortReselect = currentFragmentClass.isAssignableFrom(
                     CalendarFragment::class.java)
-                R.id.bottomNavigationToDo -> abortReselect = currentFragmentClass.isAssignableFrom(ToDoListFragment::class.java)
+                R.id.bottomNavigationToDo -> abortReselect = currentFragmentClass.isAssignableFrom(navigationBehavior.todoFragmentClass)
                 R.id.bottomNavigationNotifications -> abortReselect = currentFragmentClass.isAssignableFrom(NotificationListFragment::class.java)
                 R.id.bottomNavigationInbox -> abortReselect = currentFragmentClass.isAssignableFrom(InboxFragment::class.java)
             }
@@ -822,7 +825,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             when (item.itemId) {
                 R.id.bottomNavigationHome -> selectBottomNavFragment(navigationBehavior.homeFragmentClass)
                 R.id.bottomNavigationCalendar -> selectBottomNavFragment(CalendarFragment::class.java)
-                R.id.bottomNavigationToDo -> selectBottomNavFragment(ToDoListFragment::class.java)
+                R.id.bottomNavigationToDo -> selectBottomNavFragment(navigationBehavior.todoFragmentClass)
                 R.id.bottomNavigationNotifications -> selectBottomNavFragment(NotificationListFragment::class.java)
                 R.id.bottomNavigationInbox -> {
                     if (ApiPrefs.isStudentView) {
@@ -875,6 +878,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             is EventFragment -> setBottomBarItemSelected(R.id.bottomNavigationCalendar)
             //To-do
             is ToDoListFragment -> setBottomBarItemSelected(R.id.bottomNavigationToDo)
+            is OldToDoListFragment -> setBottomBarItemSelected(R.id.bottomNavigationToDo)
             //Notifications
             is NotificationListFragment-> {
                 setBottomBarItemSelected(if(fragment.isCourseOrGroup()) R.id.bottomNavigationHome
@@ -1265,6 +1269,10 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         updateBottomBarBadge(R.id.bottomNavigationNotifications, notificationCount, R.plurals.a11y_notificationsUnreadCount)
     }
 
+    override fun updateToDoCount(toDoCount: Int) {
+        updateBottomBarBadge(R.id.bottomNavigationToDo, toDoCount, R.plurals.a11y_todoBadgeCount)
+    }
+
     private fun updateBottomBarBadge(@IdRes menuItemId: Int, count: Int, @PluralsRes quantityContentDescription: Int? = null) = with(binding) {
         if (count > 0) {
             bottomBar.getOrCreateBadge(menuItemId).number = count
@@ -1306,9 +1314,17 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 val route = CalendarFragment.makeRoute()
                 CalendarFragment.newInstance(route)
             }
-            ToDoListFragment::class.java.name -> {
-                val route = ToDoListFragment.makeRoute(ApiPrefs.user!!)
-                ToDoListFragment.newInstance(route)
+            navigationBehavior.todoFragmentClass.name -> {
+                val route = if (RemoteConfigUtils.getBoolean(RemoteConfigParam.TODO_REDESIGN)) {
+                    ToDoListFragment.makeRoute(ApiPrefs.user!!)
+                } else {
+                    OldToDoListFragment.makeRoute(ApiPrefs.user!!)
+                }
+                if (RemoteConfigUtils.getBoolean(RemoteConfigParam.TODO_REDESIGN)) {
+                    ToDoListFragment.newInstance(route)
+                } else {
+                    OldToDoListFragment.newInstance(route)
+                }
             }
             NotificationListFragment::class.java.name -> {
                 val route = NotificationListFragment.makeRoute(ApiPrefs.user!!)
