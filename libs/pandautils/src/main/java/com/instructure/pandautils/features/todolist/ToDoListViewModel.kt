@@ -142,7 +142,8 @@ class ToDoListViewModel @Inject constructor(
             isChecked = isComplete(plannerItem),
             iconRes = plannerItem.getIconForPlannerItem(),
             tag = plannerItem.getTagForPlannerItem(context),
-            onSwipeToDone = { handleSwipeToDone(itemId) }
+            onSwipeToDone = { handleSwipeToDone(itemId) },
+            onCheckboxToggle = { isChecked -> handleCheckboxToggle(itemId, isChecked) }
         )
     }
 
@@ -188,6 +189,26 @@ class ToDoListViewModel @Inject constructor(
             _uiState.update { it.copy(markedAsDoneItem = null) }
 
             updateItemCompleteState(itemId, false)
+        }
+    }
+
+    private fun handleCheckboxToggle(itemId: String, isChecked: Boolean) {
+        viewModelScope.launch {
+            val plannerItem = plannerItemsMap[itemId] ?: return@launch
+
+            val success = updateItemCompleteState(itemId, isChecked)
+
+            // Show marked-as-done snackbar only when checking the box
+            if (success && isChecked) {
+                _uiState.update {
+                    it.copy(
+                        markedAsDoneItem = MarkedAsDoneItem(
+                            itemId = itemId,
+                            title = plannerItem.plannable.title
+                        )
+                    )
+                }
+            }
         }
     }
 
