@@ -290,28 +290,22 @@ class ToDoListViewModelTest {
         assertFalse(item.isChecked)
     }
 
-    // handleAction tests
+    // Callback tests
     @Test
-    fun `handleAction ItemClicked sends OpenToDoItem event`() = runTest {
+    fun `onItemClicked callback updates openToDoItemId in UiState`() = runTest {
         coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
         coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(emptyList())
 
         val viewModel = getViewModel()
-        val events = mutableListOf<ToDoListViewModelAction>()
 
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        viewModel.uiState.value.onItemClicked("123")
 
-        viewModel.handleAction(ToDoListActionHandler.ItemClicked("123"))
-
-        assertEquals(1, events.size)
-        assertTrue(events.first() is ToDoListViewModelAction.OpenToDoItem)
-        assertEquals("123", (events.first() as ToDoListViewModelAction.OpenToDoItem).itemId)
+        val uiState = viewModel.uiState.value
+        assertEquals("123", uiState.openToDoItemId)
     }
 
     @Test
-    fun `handleAction Refresh triggers data reload with forceRefresh`() = runTest {
+    fun `onRefresh callback triggers data reload with forceRefresh`() = runTest {
         val courses = listOf(Course(id = 1L, name = "Course 1", courseCode = "CS101"))
         val initialPlannerItems = listOf(createPlannerItem(id = 1L, title = "Assignment 1"))
         val refreshedPlannerItems = listOf(
@@ -332,7 +326,7 @@ class ToDoListViewModelTest {
         assertEquals("Assignment 1", initialUiState.itemsByDate.values.flatten().first().title)
 
         // Trigger refresh
-        viewModel.handleAction(ToDoListActionHandler.Refresh)
+        viewModel.uiState.value.onRefresh()
 
         // Verify refreshed data
         val refreshedUiState = viewModel.uiState.value

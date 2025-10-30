@@ -23,7 +23,13 @@ data class ToDoListUiState(
     val isLoading: Boolean = false,
     val isError: Boolean = false,
     val isRefreshing: Boolean = false,
-    val itemsByDate: Map<Date, List<ToDoItemUiState>> = emptyMap()
+    val itemsByDate: Map<Date, List<ToDoItemUiState>> = emptyMap(),
+    val openToDoItemId: String? = null,
+    val onOpenToDoItem: () -> Unit = {},
+    val snackbarMessage: String? = null,
+    val onSnackbarDismissed: () -> Unit = {},
+    val onItemClicked: (String) -> Unit = {},
+    val onRefresh: () -> Unit = {}
 )
 
 data class ToDoItemUiState(
@@ -47,16 +53,4 @@ enum class ToDoItemType {
     DISCUSSION,
     CALENDAR_EVENT,
     PLANNER_NOTE
-}
-
-sealed class ToDoListViewModelAction {
-    data class OpenToDoItem(val itemId: String) : ToDoListViewModelAction()
-    data class ShowSnackbar(val message: String) : ToDoListViewModelAction()
-}
-
-sealed class ToDoListActionHandler {
-    data object Refresh : ToDoListActionHandler()
-    data class ToggleItemChecked(val itemId: String) : ToDoListActionHandler()
-    data class ItemClicked(val itemId: String) : ToDoListActionHandler()
-    data object FilterClicked : ToDoListActionHandler()
 }

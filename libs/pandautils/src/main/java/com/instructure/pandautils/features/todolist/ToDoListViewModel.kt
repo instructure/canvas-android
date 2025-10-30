@@ -31,10 +31,8 @@ import com.instructure.pandautils.utils.getTagForPlannerItem
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
@@ -46,11 +44,13 @@ class ToDoListViewModel @Inject constructor(
     private val repository: ToDoListRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(ToDoListUiState())
+    private val _uiState = MutableStateFlow(ToDoListUiState(
+        onOpenToDoItem = { clearOpenToDoItem() },
+        onSnackbarDismissed = { clearSnackbarMessage() },
+        onItemClicked = { itemId -> handleItemClicked(itemId) },
+        onRefresh = { handleRefresh() }
+    ))
     val uiState = _uiState.asStateFlow()
-
-    private val _events = Channel<ToDoListViewModelAction>()
-    val events = _events.receiveAsFlow()
 
     private val plannerItemsMap = mutableMapOf<String, PlannerItem>()
 
@@ -187,11 +187,9 @@ class ToDoListViewModel @Inject constructor(
                 // Revert the optimistic update
                 updateItemCheckedState(itemId, currentIsChecked)
                 // Show error snackbar
-                _events.send(
-                    ToDoListViewModelAction.ShowSnackbar(
-                        context.getString(com.instructure.pandautils.R.string.errorUpdatingToDo)
-                    )
-                )
+                _uiState.update {
+                    it.copy(snackbarMessage = context.getString(com.instructure.pandautils.R.string.errorUpdatingToDo))
+                }
             }
         }
     }
@@ -211,25 +209,19 @@ class ToDoListViewModel @Inject constructor(
         }
     }
 
-    fun handleAction(action: ToDoListActionHandler) {
-        when (action) {
-            is ToDoListActionHandler.ItemClicked -> {
-                viewModelScope.launch {
-                    _events.send(ToDoListViewModelAction.OpenToDoItem(action.itemId))
-                }
-            }
+    private fun handleItemClicked(itemId: String) {
+        _uiState.update { it.copy(openToDoItemId = itemId) }
+    }
 
-            is ToDoListActionHandler.Refresh -> {
-                loadData(forceRefresh = true)
-            }
+    private fun handleRefresh() {
+        loadData(forceRefresh = true)
+    }
 
-            is ToDoListActionHandler.ToggleItemChecked -> {
-                // TODO: Implement toggle checked - will be implemented in future story
-            }
+    private fun clearOpenToDoItem() {
+        _uiState.update { it.copy(openToDoItemId = null) }
+    }
 
-            is ToDoListActionHandler.FilterClicked -> {
-                // TODO: Implement filter - will be implemented in future story
-            }
-        }
+    private fun clearSnackbarMessage() {
+        _uiState.update { it.copy(snackbarMessage = null) }
     }
 }

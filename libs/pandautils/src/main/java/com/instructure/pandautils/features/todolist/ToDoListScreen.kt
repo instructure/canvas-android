@@ -49,6 +49,8 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -75,6 +77,7 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
@@ -113,14 +116,31 @@ private data class DateBadgeData(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ToDoListScreen(
-    uiState: ToDoListUiState,
-    actionHandler: (ToDoListActionHandler) -> Unit,
-    modifier: Modifier = Modifier,
-    navigationIconClick: () -> Unit = {}
+    navigationIconClick: () -> Unit,
+    openToDoItem: (String) -> Unit,
+    showSnackbar: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
+    val viewModel = hiltViewModel<ToDoListViewModel>()
+    val uiState by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(uiState.openToDoItemId) {
+        uiState.openToDoItemId?.let { itemId ->
+            openToDoItem(itemId)
+            uiState.onOpenToDoItem()
+        }
+    }
+
+    LaunchedEffect(uiState.snackbarMessage) {
+        uiState.snackbarMessage?.let { message ->
+            showSnackbar(message)
+            uiState.onSnackbarDismissed()
+        }
+    }
+
     val pullRefreshState = rememberPullRefreshState(
         refreshing = uiState.isRefreshing,
-        onRefresh = { actionHandler(ToDoListActionHandler.Refresh) }
+        onRefresh = uiState.onRefresh
     )
 
     Scaffold(
@@ -132,7 +152,7 @@ fun ToDoListScreen(
                 navIconContentDescription = stringResource(id = R.string.navigation_drawer_open),
                 navigationActionClick = navigationIconClick,
                 actions = {
-                    IconButton(onClick = { actionHandler(ToDoListActionHandler.FilterClicked) }) {
+                    IconButton(onClick = { /* TODO: Implement filter - will be implemented in future story */ }) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_filter_outline),
                             contentDescription = stringResource(id = R.string.a11y_contentDescriptionToDoFilter)
@@ -149,35 +169,9 @@ fun ToDoListScreen(
                 .padding(padding)
                 .pullRefresh(pullRefreshState)
         ) {
-            when {
-                uiState.isLoading -> {
-                    Loading(modifier = Modifier.align(Alignment.Center))
-                }
-
-                uiState.isError -> {
-                    ErrorContent(
-                        errorMessage = stringResource(id = R.string.errorLoadingToDos),
-                        retryClick = { actionHandler(ToDoListActionHandler.Refresh) },
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
-
-                uiState.itemsByDate.isEmpty() -> {
-                    EmptyContent(
-                        emptyTitle = stringResource(id = R.string.noToDosForNow),
-                        emptyMessage = stringResource(id = R.string.noToDosForNowSubtext),
-                        imageRes = R.drawable.ic_no_events,
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
-
-                else -> {
-                    ToDoListContent(
-                        itemsByDate = uiState.itemsByDate,
-                        actionHandler = actionHandler
-                    )
-                }
-            }
+            ToDoListContent(
+                uiState = uiState
+            )
 
             PullRefreshIndicator(
                 refreshing = uiState.isRefreshing,
@@ -192,8 +186,45 @@ fun ToDoListScreen(
 
 @Composable
 private fun ToDoListContent(
+    uiState: ToDoListUiState,
+    modifier: Modifier = Modifier
+) {
+    when {
+        uiState.isLoading -> {
+            Loading(modifier = modifier.fillMaxSize())
+        }
+
+        uiState.isError -> {
+            ErrorContent(
+                errorMessage = stringResource(id = R.string.errorLoadingToDos),
+                retryClick = uiState.onRefresh,
+                modifier = modifier.fillMaxSize()
+            )
+        }
+
+        uiState.itemsByDate.isEmpty() -> {
+            EmptyContent(
+                emptyTitle = stringResource(id = R.string.noToDosForNow),
+                emptyMessage = stringResource(id = R.string.noToDosForNowSubtext),
+                imageRes = R.drawable.ic_no_events,
+                modifier = modifier.fillMaxSize()
+            )
+        }
+
+        else -> {
+            ToDoItemsList(
+                itemsByDate = uiState.itemsByDate,
+                onItemClicked = uiState.onItemClicked,
+                modifier = modifier
+            )
+        }
+    }
+}
+
+@Composable
+private fun ToDoItemsList(
     itemsByDate: Map<Date, List<ToDoItemUiState>>,
-    actionHandler: (ToDoListActionHandler) -> Unit,
+    onItemClicked: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val dateGroups = itemsByDate.entries.toList()
@@ -245,8 +276,8 @@ private fun ToDoListContent(
                             item = item,
                             showDateBadge = index == 0,
                             hideDate = index == 0 && stickyHeaderState.isVisible && stickyHeaderState.item?.id == item.id,
-                            onCheckedChange = { actionHandler(ToDoListActionHandler.ToggleItemChecked(item.id)) },
-                            onClick = { actionHandler(ToDoListActionHandler.ItemClicked(item.id)) },
+                            onCheckedChange = { /* TODO: Implement toggle checked - will be implemented in future story */ },
+                            onClick = { onItemClicked(item.id) },
                             modifier = Modifier.onGloballyPositioned { coordinates ->
                                 itemPositions[item.id] = coordinates.positionInParent().y
                                 itemSizes[item.id] = coordinates.size.height
@@ -761,7 +792,7 @@ fun ToDoListScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
     val calendar = Calendar.getInstance()
     CanvasTheme {
-        ToDoListScreen(
+        ToDoListContent(
             uiState = ToDoListUiState(
                 itemsByDate = mapOf(
                     Date(10) to listOf(
@@ -860,8 +891,7 @@ fun ToDoListScreenPreview() {
                         )
                     )
                 )
-            ),
-            actionHandler = {}
+            )
         )
     }
 }
@@ -873,7 +903,7 @@ fun ToDoListScreenWithPandasPreview() {
     ContextKeeper.appContext = LocalContext.current
     val calendar = Calendar.getInstance()
     CanvasTheme {
-        ToDoListScreen(
+        ToDoListContent(
             uiState = ToDoListUiState(
                 itemsByDate = mapOf(
                     Date(10) to listOf(
@@ -901,8 +931,7 @@ fun ToDoListScreenWithPandasPreview() {
                         )
                     )
                 )
-            ),
-            actionHandler = {}
+            )
         )
     }
 }
@@ -913,9 +942,8 @@ fun ToDoListScreenWithPandasPreview() {
 fun ToDoListScreenEmptyPreview() {
     ContextKeeper.appContext = LocalContext.current
     CanvasTheme {
-        ToDoListScreen(
-            uiState = ToDoListUiState(),
-            actionHandler = {}
+        ToDoListContent(
+            uiState = ToDoListUiState()
         )
     }
 }
