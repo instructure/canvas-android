@@ -621,8 +621,13 @@ object RouteMatcher : BaseRouteMatcher() {
 
                 override fun onCreateLoader(id: Int, args: Bundle?): Loader<OpenMediaAsyncTaskLoader.LoadedMedia> {
                     if (!activity.isFinishing) {
+                        val view = android.view.LayoutInflater.from(activity).inflate(com.instructure.pandautils.R.layout.dialog_loading_view, null)
+                        val loadingView = view.findViewById<com.instructure.pandautils.views.CanvasLoadingView>(com.instructure.pandautils.R.id.canvasLoadingView)
+                        val studentColor = androidx.core.content.ContextCompat.getColor(activity, com.instructure.pandares.R.color.login_studentAppTheme)
+                        loadingView?.setOverrideColor(studentColor)
+
                         dialog = AlertDialog.Builder(activity, com.instructure.pandautils.R.style.CustomViewAlertDialog)
-                            .setView(com.instructure.pandautils.R.layout.dialog_loading_view)
+                            .setView(view)
                             .create()
                         dialog!!.show()
                     }
