@@ -140,7 +140,7 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                 Indicator(
                     modifier = Modifier
                         .align(Alignment.TopCenter)
-                        .padding(top = 16.dp),
+                        .padding(top = 56.dp),
                     isRefreshing = isRefreshing,
                     containerColor = HorizonColors.Surface.pageSecondary(),
                     color = HorizonColors.Surface.institution(),
@@ -157,7 +157,7 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                             mainNavController,
                             modifier = Modifier.height(56.dp)
                         )
-                        HorizonSpace(SpaceSize.SPACE_16)
+                        HorizonSpace(SpaceSize.SPACE_12)
                     }
                 },
                 bodyContent = {
@@ -167,6 +167,7 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                         modifier = Modifier
                             .verticalScroll(rememberScrollState())
                     ) {
+                        HorizonSpace(SpaceSize.SPACE_12)
                         DashboardAnnouncementBannerWidget(
                             mainNavController,
                             homeNavController,
