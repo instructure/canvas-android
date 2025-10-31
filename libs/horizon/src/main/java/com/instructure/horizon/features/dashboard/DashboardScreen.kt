@@ -184,7 +184,6 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                         modifier = Modifier
                             .verticalScroll(scrollState)
                     ) {
-                        HorizonSpace(SpaceSize.SPACE_12)
                         DashboardAnnouncementBannerWidget(
                             mainNavController,
                             homeNavController,
@@ -197,6 +196,7 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                             shouldRefresh,
                             refreshStateFlow
                         )
+                        HorizonSpace(SpaceSize.SPACE_16)
                         NumericWidgetRow(shouldRefresh, refreshStateFlow, homeNavController)
                         DashboardSkillHighlightsWidget(
                             homeNavController,
@@ -290,6 +290,7 @@ private fun NumericWidgetRow(
                     .horizontalScroll(rememberScrollState())
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp)
+                    .padding(bottom = 12.dp)
             ) {
                 DashboardMyProgressWidget(
                     shouldRefresh,
