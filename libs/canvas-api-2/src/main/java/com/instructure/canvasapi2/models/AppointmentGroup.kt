@@ -27,5 +27,6 @@ data class AppointmentGroup(
     @SerializedName("location_name") val locationName: String? = null,
     @SerializedName("location_address") val locationAddress: String? = null,
     @SerializedName("participant_count") val participantCount: Int = 0,
+    @SerializedName("max_appointments_per_participant") val maxAppointmentsPerParticipant: Int? = null,
     @SerializedName("appointments") val appointments: List<AppointmentSlot> = emptyList()
 ) : Parcelable

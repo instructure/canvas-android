@@ -34,8 +34,11 @@ data class AppointmentGroupUiState(
     val locationName: String?,
     val locationAddress: String?,
     val participantCount: Int,
+    val maxAppointmentsPerParticipant: Int?,
+    val currentReservationCount: Int,
+    val canReserveMore: Boolean,
     val slots: List<AppointmentSlotUiState>,
-    val isExpanded: Boolean = true
+    val isExpanded: Boolean = false
 )
 
 data class AppointmentSlotUiState(

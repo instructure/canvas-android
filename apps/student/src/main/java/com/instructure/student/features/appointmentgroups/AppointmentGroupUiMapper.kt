@@ -25,6 +25,10 @@ class AppointmentGroupUiMapper @Inject constructor() {
 
     fun mapToUiState(domainGroups: List<AppointmentGroupDomain>): List<AppointmentGroupUiState> {
         return domainGroups.map { group ->
+            val currentReservationCount = group.slots.count { it.isReservedByMe }
+            val maxLimit = group.maxAppointmentsPerParticipant
+            val canReserveMore = maxLimit == null || currentReservationCount < maxLimit
+
             AppointmentGroupUiState(
                 id = group.id,
                 title = group.title,
@@ -32,6 +36,9 @@ class AppointmentGroupUiMapper @Inject constructor() {
                 locationName = group.locationName,
                 locationAddress = group.locationAddress,
                 participantCount = group.participantCount,
+                maxAppointmentsPerParticipant = group.maxAppointmentsPerParticipant,
+                currentReservationCount = currentReservationCount,
+                canReserveMore = canReserveMore,
                 slots = group.slots.map { mapSlotToUiState(it) }
             )
         }

@@ -48,6 +48,7 @@ class AppointmentGroupUiMapperTest {
             locationName = "Room 301",
             locationAddress = "123 Main St",
             participantCount = 5,
+            maxAppointmentsPerParticipant = null,
             slots = emptyList()
         )
 
@@ -60,6 +61,9 @@ class AppointmentGroupUiMapperTest {
         assertEquals("Room 301", result[0].locationName)
         assertEquals("123 Main St", result[0].locationAddress)
         assertEquals(5, result[0].participantCount)
+        assertNull(result[0].maxAppointmentsPerParticipant)
+        assertEquals(0, result[0].currentReservationCount)
+        assertTrue(result[0].canReserveMore)
         assertTrue(result[0].isExpanded)
     }
 
@@ -72,6 +76,7 @@ class AppointmentGroupUiMapperTest {
             locationName = null,
             locationAddress = null,
             participantCount = 0,
+            maxAppointmentsPerParticipant = null,
             slots = emptyList()
         )
 
@@ -105,6 +110,7 @@ class AppointmentGroupUiMapperTest {
             locationName = null,
             locationAddress = null,
             participantCount = 0,
+            maxAppointmentsPerParticipant = null,
             slots = listOf(slot)
         )
 
@@ -142,6 +148,7 @@ class AppointmentGroupUiMapperTest {
             locationName = null,
             locationAddress = null,
             participantCount = 0,
+            maxAppointmentsPerParticipant = null,
             slots = listOf(slot)
         )
 
@@ -175,6 +182,7 @@ class AppointmentGroupUiMapperTest {
             locationName = null,
             locationAddress = null,
             participantCount = 0,
+            maxAppointmentsPerParticipant = null,
             slots = listOf(slot)
         )
 
@@ -207,6 +215,7 @@ class AppointmentGroupUiMapperTest {
             locationName = null,
             locationAddress = null,
             participantCount = 0,
+            maxAppointmentsPerParticipant = null,
             slots = listOf(slot)
         )
 
@@ -225,6 +234,7 @@ class AppointmentGroupUiMapperTest {
             locationName = null,
             locationAddress = null,
             participantCount = 0,
+            maxAppointmentsPerParticipant = null,
             slots = emptyList()
         )
 
@@ -235,6 +245,7 @@ class AppointmentGroupUiMapperTest {
             locationName = null,
             locationAddress = null,
             participantCount = 0,
+            maxAppointmentsPerParticipant = null,
             slots = emptyList()
         )
 
@@ -268,6 +279,7 @@ class AppointmentGroupUiMapperTest {
             locationName = null,
             locationAddress = null,
             participantCount = 0,
+            maxAppointmentsPerParticipant = null,
             slots = listOf(slot)
         )
 
@@ -308,6 +320,7 @@ class AppointmentGroupUiMapperTest {
             locationName = null,
             locationAddress = null,
             participantCount = 0,
+            maxAppointmentsPerParticipant = null,
             slots = listOf(slot)
         )
 
@@ -315,5 +328,162 @@ class AppointmentGroupUiMapperTest {
 
         assertFalse(result[0].slots[0].isAvailable)
         assertTrue(result[0].slots[0].isReservedByMe)
+    }
+
+    @Test
+    fun `mapToUiState calculates canReserveMore correctly with no limit`() {
+        val slot1 = AppointmentSlotDomain(
+            id = 100L,
+            appointmentGroupId = 1L,
+            startDate = dateFormat.parse("2025-11-06 16:00")!!,
+            endDate = dateFormat.parse("2025-11-06 16:30")!!,
+            availableSlots = 5,
+            isReservedByMe = true,
+            myReservationId = 999L,
+            conflictInfo = ConflictInfo(hasConflict = false, conflictingEventTitle = null)
+        )
+
+        val domainGroup = AppointmentGroupDomain(
+            id = 1L,
+            title = "Office Hours",
+            description = null,
+            locationName = null,
+            locationAddress = null,
+            participantCount = 0,
+            maxAppointmentsPerParticipant = null,
+            slots = listOf(slot1)
+        )
+
+        val result = mapper.mapToUiState(listOf(domainGroup))
+
+        assertNull(result[0].maxAppointmentsPerParticipant)
+        assertEquals(1, result[0].currentReservationCount)
+        assertTrue(result[0].canReserveMore)
+    }
+
+    @Test
+    fun `mapToUiState calculates canReserveMore correctly when under limit`() {
+        val slot1 = AppointmentSlotDomain(
+            id = 100L,
+            appointmentGroupId = 1L,
+            startDate = dateFormat.parse("2025-11-06 16:00")!!,
+            endDate = dateFormat.parse("2025-11-06 16:30")!!,
+            availableSlots = 5,
+            isReservedByMe = true,
+            myReservationId = 999L,
+            conflictInfo = ConflictInfo(hasConflict = false, conflictingEventTitle = null)
+        )
+
+        val domainGroup = AppointmentGroupDomain(
+            id = 1L,
+            title = "Office Hours",
+            description = null,
+            locationName = null,
+            locationAddress = null,
+            participantCount = 0,
+            maxAppointmentsPerParticipant = 2,
+            slots = listOf(slot1)
+        )
+
+        val result = mapper.mapToUiState(listOf(domainGroup))
+
+        assertEquals(2, result[0].maxAppointmentsPerParticipant)
+        assertEquals(1, result[0].currentReservationCount)
+        assertTrue(result[0].canReserveMore)
+    }
+
+    @Test
+    fun `mapToUiState calculates canReserveMore correctly when at limit`() {
+        val slot1 = AppointmentSlotDomain(
+            id = 100L,
+            appointmentGroupId = 1L,
+            startDate = dateFormat.parse("2025-11-06 16:00")!!,
+            endDate = dateFormat.parse("2025-11-06 16:30")!!,
+            availableSlots = 5,
+            isReservedByMe = true,
+            myReservationId = 999L,
+            conflictInfo = ConflictInfo(hasConflict = false, conflictingEventTitle = null)
+        )
+
+        val slot2 = AppointmentSlotDomain(
+            id = 101L,
+            appointmentGroupId = 1L,
+            startDate = dateFormat.parse("2025-11-06 17:00")!!,
+            endDate = dateFormat.parse("2025-11-06 17:30")!!,
+            availableSlots = 5,
+            isReservedByMe = true,
+            myReservationId = 1000L,
+            conflictInfo = ConflictInfo(hasConflict = false, conflictingEventTitle = null)
+        )
+
+        val domainGroup = AppointmentGroupDomain(
+            id = 1L,
+            title = "Office Hours",
+            description = null,
+            locationName = null,
+            locationAddress = null,
+            participantCount = 0,
+            maxAppointmentsPerParticipant = 2,
+            slots = listOf(slot1, slot2)
+        )
+
+        val result = mapper.mapToUiState(listOf(domainGroup))
+
+        assertEquals(2, result[0].maxAppointmentsPerParticipant)
+        assertEquals(2, result[0].currentReservationCount)
+        assertFalse(result[0].canReserveMore)
+    }
+
+    @Test
+    fun `mapToUiState calculates canReserveMore correctly when over limit`() {
+        val slot1 = AppointmentSlotDomain(
+            id = 100L,
+            appointmentGroupId = 1L,
+            startDate = dateFormat.parse("2025-11-06 16:00")!!,
+            endDate = dateFormat.parse("2025-11-06 16:30")!!,
+            availableSlots = 5,
+            isReservedByMe = true,
+            myReservationId = 999L,
+            conflictInfo = ConflictInfo(hasConflict = false, conflictingEventTitle = null)
+        )
+
+        val slot2 = AppointmentSlotDomain(
+            id = 101L,
+            appointmentGroupId = 1L,
+            startDate = dateFormat.parse("2025-11-06 17:00")!!,
+            endDate = dateFormat.parse("2025-11-06 17:30")!!,
+            availableSlots = 5,
+            isReservedByMe = true,
+            myReservationId = 1000L,
+            conflictInfo = ConflictInfo(hasConflict = false, conflictingEventTitle = null)
+        )
+
+        val slot3 = AppointmentSlotDomain(
+            id = 102L,
+            appointmentGroupId = 1L,
+            startDate = dateFormat.parse("2025-11-06 18:00")!!,
+            endDate = dateFormat.parse("2025-11-06 18:30")!!,
+            availableSlots = 5,
+            isReservedByMe = true,
+            myReservationId = 1001L,
+            conflictInfo = ConflictInfo(hasConflict = false, conflictingEventTitle = null)
+        )
+
+        val domainGroup = AppointmentGroupDomain(
+            id = 1L,
+            title = "Office Hours",
+            description = null,
+            locationName = null,
+            locationAddress = null,
+            participantCount = 0,
+            maxAppointmentsPerParticipant = 2,
+            slots = listOf(slot1, slot2, slot3)
+        )
+
+        val result = mapper.mapToUiState(listOf(domainGroup))
+
+        assertEquals(2, result[0].maxAppointmentsPerParticipant)
+        assertEquals(3, result[0].currentReservationCount)
+        assertFalse(result[0].canReserveMore)
     }
 }

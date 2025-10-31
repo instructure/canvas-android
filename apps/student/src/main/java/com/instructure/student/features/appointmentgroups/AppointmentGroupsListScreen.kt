@@ -21,6 +21,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,6 +35,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
@@ -62,11 +64,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.LocalCourseColor
 import com.instructure.pandautils.compose.composables.EmptyContent
@@ -159,7 +163,7 @@ fun AppointmentGroupsList(
     onAction: (AppointmentGroupsListAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn(modifier = modifier.fillMaxSize()) {
+    LazyColumn(modifier = modifier.fillMaxSize().background(colorResource(R.color.backgroundLightest))) {
         items(groups, key = { it.id }) { group ->
             AppointmentGroupCard(
                 group = group,
@@ -182,22 +186,21 @@ fun AppointmentGroupCard(
     val rotationState by animateFloatAsState(
         targetValue = if (group.isExpanded) 180f else 0f,
         animationSpec = tween(
-            durationMillis = 300,
-            easing = LinearOutSlowInEasing
+            durationMillis = 300
         ),
         label = "arrow_rotation"
     )
 
     Card(
         modifier = modifier.fillMaxWidth(),
-        elevation = 2.dp
+        elevation = 2.dp,
+        backgroundColor = colorResource(R.color.backgroundLightest)
     ) {
         Column(
             modifier = Modifier
                 .animateContentSize(
                     animationSpec = tween(
-                        durationMillis = 300,
-                        easing = LinearOutSlowInEasing
+                        durationMillis = 300
                     )
                 )
         ) {
@@ -213,7 +216,7 @@ fun AppointmentGroupCard(
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = group.title,
-                        style = MaterialTheme.typography.h6,
+                        fontSize = 20.sp,
                         color = colorResource(id = R.color.textDarkest)
                     )
 
@@ -221,7 +224,6 @@ fun AppointmentGroupCard(
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
                             text = group.description,
-                            style = MaterialTheme.typography.body2,
                             color = colorResource(id = R.color.textDark)
                         )
                     }
@@ -230,7 +232,6 @@ fun AppointmentGroupCard(
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
                             text = group.locationName,
-                            style = MaterialTheme.typography.body2,
                             color = colorResource(id = R.color.textDarkest)
                         )
                     }
@@ -253,13 +254,14 @@ fun AppointmentGroupCard(
                 Text(
                     modifier = Modifier.padding(16.dp),
                     text = stringResource(id = R.string.myReservations),
-                    style = MaterialTheme.typography.subtitle1,
+                    fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     color = colorResource(id = R.color.textDarkest)
                 )
                 reservedSlots.forEach { slot ->
                     AppointmentSlotItem(
                         slot = slot,
+                        canReserveMore = group.canReserveMore,
                         onAction = onAction,
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
                     )
@@ -273,7 +275,7 @@ fun AppointmentGroupCard(
                 }
                 Text(
                     text = stringResource(id = R.string.availableSlots),
-                    style = MaterialTheme.typography.subtitle1,
+                    fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
                     color = colorResource(id = R.color.textDarkest),
                     modifier = Modifier.padding(16.dp),
@@ -281,11 +283,13 @@ fun AppointmentGroupCard(
                 availableSlots.forEach { slot ->
                     AppointmentSlotItem(
                         slot = slot,
+                        canReserveMore = group.canReserveMore,
                         onAction = onAction,
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
                     )
                 }
             }
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
@@ -293,6 +297,7 @@ fun AppointmentGroupCard(
 @Composable
 fun AppointmentSlotItem(
     slot: AppointmentSlotUiState,
+    canReserveMore: Boolean,
     onAction: (AppointmentGroupsListAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -302,12 +307,12 @@ fun AppointmentSlotItem(
     Card(
         modifier = modifier.fillMaxWidth(),
         elevation = 1.dp,
-        backgroundColor = colorResource(id = R.color.backgroundLightest)
+        backgroundColor = colorResource(id = R.color.backgroundLightestElevated)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable(enabled = slot.isAvailable || slot.isReservedByMe) {
+                .clickable(enabled = (slot.isAvailable && canReserveMore) || slot.isReservedByMe) {
                     if (slot.isReservedByMe) {
                         slot.myReservationId?.let { reservationId ->
                             onAction(
@@ -316,7 +321,7 @@ fun AppointmentSlotItem(
                                 )
                             )
                         }
-                    } else if (slot.isAvailable) {
+                    } else if (slot.isAvailable && canReserveMore) {
                         showReserveDialog = true
                     }
                 }
@@ -395,10 +400,13 @@ fun AppointmentSlotItem(
                     )
                 }
             } else if (slot.isAvailable) {
-                TextButton(onClick = { showReserveDialog = true }) {
+                TextButton(
+                    onClick = { showReserveDialog = true },
+                    enabled = canReserveMore
+                ) {
                     Text(
                         text = stringResource(id = R.string.reserve),
-                        color = courseColor
+                        color = if (canReserveMore) courseColor else colorResource(id = R.color.textDark).copy(alpha = 0.5f)
                     )
                 }
             }
@@ -408,6 +416,7 @@ fun AppointmentSlotItem(
     if (showReserveDialog) {
         ReserveSlotDialog(
             slot = slot,
+            courseColor = courseColor,
             onConfirm = { comments ->
                 onAction(
                     AppointmentGroupsListAction.ReserveSlot(
@@ -425,10 +434,12 @@ fun AppointmentSlotItem(
 @Composable
 fun ReserveSlotDialog(
     slot: AppointmentSlotUiState,
+    courseColor: Color,
     onConfirm: (String?) -> Unit,
     onDismiss: () -> Unit
 ) {
-    androidx.compose.material.AlertDialog(
+    AlertDialog(
+        backgroundColor = colorResource(R.color.backgroundLightestElevated),
         onDismissRequest = onDismiss,
         title = {
             Text(text = stringResource(id = R.string.reserveAppointment))
@@ -459,18 +470,25 @@ fun ReserveSlotDialog(
         },
         confirmButton = {
             TextButton(onClick = { onConfirm(null) }) {
-                Text(stringResource(id = R.string.reserve))
+                Text(
+                    text = stringResource(id = R.string.reserve),
+                    color = courseColor
+                )
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(id = android.R.string.cancel))
+                Text(
+                    text = stringResource(id = android.R.string.cancel),
+                    color = courseColor
+                )
             }
         }
     )
 }
 
 @Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun AppointmentGroupsListScreenPreview() {
     val sampleState = AppointmentGroupsListUiState(
@@ -483,6 +501,9 @@ fun AppointmentGroupsListScreenPreview() {
                 locationName = "Room 301",
                 locationAddress = null,
                 participantCount = 5,
+                maxAppointmentsPerParticipant = 2,
+                currentReservationCount = 1,
+                canReserveMore = true,
                 isExpanded = true,
                 slots = listOf(
                     AppointmentSlotUiState(

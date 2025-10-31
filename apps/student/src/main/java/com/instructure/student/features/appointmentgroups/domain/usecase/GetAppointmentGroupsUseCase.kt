@@ -53,6 +53,7 @@ class GetAppointmentGroupsUseCase @Inject constructor(
                 locationName = group.locationName,
                 locationAddress = group.locationAddress,
                 participantCount = group.participantCount,
+                maxAppointmentsPerParticipant = group.maxAppointmentsPerParticipant,
                 slots = group.appointments.map { slot ->
                     val conflictInfo = checkForConflict(slot.startAt, slot.endAt, userEvents)
                     AppointmentSlotDomain(

@@ -22,5 +22,6 @@ data class AppointmentGroupDomain(
     val locationName: String?,
     val locationAddress: String?,
     val participantCount: Int,
+    val maxAppointmentsPerParticipant: Int?,
     val slots: List<AppointmentSlotDomain>
 )

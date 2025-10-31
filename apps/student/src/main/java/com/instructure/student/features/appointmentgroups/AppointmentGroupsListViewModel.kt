@@ -120,19 +120,25 @@ class AppointmentGroupsListViewModel @Inject constructor(
             val previousState = _uiState.value.groups
 
             val updatedGroups = _uiState.value.groups.map { group ->
-                group.copy(
-                    slots = group.slots.map { slot ->
-                        if (slot.id == appointmentId) {
-                            slot.copy(
-                                isReservedByMe = true,
-                                isAvailable = false,
-                                myReservationId = -1L,
-                                availableSlots = (slot.availableSlots - 1).coerceAtLeast(0)
-                            )
-                        } else {
-                            slot
-                        }
+                val updatedSlots = group.slots.map { slot ->
+                    if (slot.id == appointmentId) {
+                        slot.copy(
+                            isReservedByMe = true,
+                            isAvailable = false,
+                            myReservationId = -1L,
+                            availableSlots = (slot.availableSlots - 1).coerceAtLeast(0)
+                        )
+                    } else {
+                        slot
                     }
+                }
+                val newReservationCount = updatedSlots.count { it.isReservedByMe }
+                val canReserveMore = group.maxAppointmentsPerParticipant == null ||
+                                     newReservationCount < group.maxAppointmentsPerParticipant
+                group.copy(
+                    slots = updatedSlots,
+                    currentReservationCount = newReservationCount,
+                    canReserveMore = canReserveMore
                 )
             }
             _uiState.update { it.copy(groups = updatedGroups) }
@@ -176,19 +182,25 @@ class AppointmentGroupsListViewModel @Inject constructor(
             val previousState = _uiState.value.groups
 
             val updatedGroups = _uiState.value.groups.map { group ->
-                group.copy(
-                    slots = group.slots.map { slot ->
-                        if (slot.myReservationId == reservationId) {
-                            slot.copy(
-                                isReservedByMe = false,
-                                isAvailable = true,
-                                myReservationId = null,
-                                availableSlots = slot.availableSlots + 1
-                            )
-                        } else {
-                            slot
-                        }
+                val updatedSlots = group.slots.map { slot ->
+                    if (slot.myReservationId == reservationId) {
+                        slot.copy(
+                            isReservedByMe = false,
+                            isAvailable = true,
+                            myReservationId = null,
+                            availableSlots = slot.availableSlots + 1
+                        )
+                    } else {
+                        slot
                     }
+                }
+                val newReservationCount = updatedSlots.count { it.isReservedByMe }
+                val canReserveMore = group.maxAppointmentsPerParticipant == null ||
+                                     newReservationCount < group.maxAppointmentsPerParticipant
+                group.copy(
+                    slots = updatedSlots,
+                    currentReservationCount = newReservationCount,
+                    canReserveMore = canReserveMore
                 )
             }
             _uiState.update { it.copy(groups = updatedGroups) }

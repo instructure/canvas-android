@@ -317,6 +317,7 @@ class AppointmentGroupsListViewModelTest {
     private fun createAppointmentGroupDomain(
         id: Long,
         title: String,
+        maxAppointmentsPerParticipant: Int? = null,
         slots: List<AppointmentSlotDomain> = emptyList()
     ) = AppointmentGroupDomain(
         id = id,
@@ -325,6 +326,7 @@ class AppointmentGroupsListViewModelTest {
         locationName = null,
         locationAddress = null,
         participantCount = 0,
+        maxAppointmentsPerParticipant = maxAppointmentsPerParticipant,
         slots = slots
     )
 
@@ -347,6 +349,7 @@ class AppointmentGroupsListViewModelTest {
     private fun createAppointmentGroupUiState(
         id: Long,
         title: String,
+        maxAppointmentsPerParticipant: Int? = null,
         isExpanded: Boolean = true,
         slots: List<AppointmentSlotUiState> = emptyList()
     ) = AppointmentGroupUiState(
@@ -356,6 +359,10 @@ class AppointmentGroupsListViewModelTest {
         locationName = null,
         locationAddress = null,
         participantCount = 0,
+        maxAppointmentsPerParticipant = maxAppointmentsPerParticipant,
+        currentReservationCount = slots.count { it.isReservedByMe },
+        canReserveMore = maxAppointmentsPerParticipant == null ||
+                         slots.count { it.isReservedByMe } < maxAppointmentsPerParticipant,
         slots = slots,
         isExpanded = isExpanded
     )
