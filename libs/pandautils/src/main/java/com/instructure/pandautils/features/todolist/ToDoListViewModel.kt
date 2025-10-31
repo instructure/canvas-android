@@ -30,6 +30,7 @@ import com.instructure.pandautils.utils.getContextNameForPlannerItem
 import com.instructure.pandautils.utils.getDateTextForPlannerItem
 import com.instructure.pandautils.utils.getIconForPlannerItem
 import com.instructure.pandautils.utils.getTagForPlannerItem
+import com.instructure.pandautils.utils.isComplete
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -38,6 +39,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -53,7 +55,8 @@ class ToDoListViewModel @Inject constructor(
         onUndoMarkAsDone = { handleUndoMarkAsDone() },
         onMarkedAsDoneSnackbarDismissed = { clearMarkedAsDoneItem() },
         onItemClicked = { itemId -> handleItemClicked(itemId) },
-        onRefresh = { handleRefresh() }
+        onRefresh = { handleRefresh() },
+        onToDoCountChanged = { clearToDoCount() }
     ))
     val uiState = _uiState.asStateFlow()
 
@@ -70,7 +73,7 @@ class ToDoListViewModel @Inject constructor(
 
                 val now = LocalDate.now().atStartOfDay()
                 val startDate = now.minusDays(7).toApiString().orEmpty()
-                val endDate = now.plusDays(28).toApiString().orEmpty() // TODO revert
+                val endDate = now.plusDays(7).toApiString().orEmpty()
 
                 val courses = repository.getCourses(forceRefresh).dataOrThrow
                 val plannerItems = repository.getPlannerItems(startDate, endDate, forceRefresh).dataOrThrow
@@ -99,12 +102,15 @@ class ToDoListViewModel @Inject constructor(
                         }
                     }
 
+                val toDoCount = calculateToDoCount(itemsByDate)
+
                 _uiState.update {
                     it.copy(
                         isLoading = false,
                         isRefreshing = false,
                         isError = false,
-                        itemsByDate = itemsByDate
+                        itemsByDate = itemsByDate,
+                        toDoCount = toDoCount
                     )
                 }
             } catch (e: Exception) {
@@ -141,23 +147,12 @@ class ToDoListViewModel @Inject constructor(
             contextLabel = plannerItem.getContextNameForPlannerItem(context, courseMap.values),
             canvasContext = plannerItem.canvasContext,
             itemType = itemType,
-            isChecked = isComplete(plannerItem),
+            isChecked = plannerItem.isComplete(),
             iconRes = plannerItem.getIconForPlannerItem(),
             tag = plannerItem.getTagForPlannerItem(context),
             onSwipeToDone = { handleSwipeToDone(itemId) },
             onCheckboxToggle = { isChecked -> handleCheckboxToggle(itemId, isChecked) }
         )
-    }
-
-    private fun isComplete(plannerItem: PlannerItem): Boolean {
-        return plannerItem.plannerOverride?.markedComplete ?: if (plannerItem.plannableType == PlannableType.ASSIGNMENT
-            || plannerItem.plannableType == PlannableType.DISCUSSION_TOPIC
-            || plannerItem.plannableType == PlannableType.SUB_ASSIGNMENT
-        ) {
-            plannerItem.submissionState?.submitted == true
-        } else {
-            false
-        }
     }
 
     private fun handleSwipeToDone(itemId: String) {
@@ -170,7 +165,7 @@ class ToDoListViewModel @Inject constructor(
             }
 
             val plannerItem = plannerItemsMap[itemId] ?: return@launch
-            val currentIsChecked = isComplete(plannerItem)
+            val currentIsChecked = plannerItem.isComplete()
             val newIsChecked = !currentIsChecked
 
             val success = updateItemCompleteState(itemId, newIsChecked)
@@ -230,7 +225,7 @@ class ToDoListViewModel @Inject constructor(
 
     private suspend fun updateItemCompleteState(itemId: String, newIsChecked: Boolean): Boolean {
         val plannerItem = plannerItemsMap[itemId] ?: return false
-        val currentIsChecked = isComplete(plannerItem)
+        val currentIsChecked = plannerItem.isComplete()
 
         // Optimistically update UI
         updateItemCheckedState(itemId, newIsChecked)
@@ -253,6 +248,9 @@ class ToDoListViewModel @Inject constructor(
             // Update the stored planner item with new override state
             val updatedPlannerItem = plannerItem.copy(plannerOverride = plannerOverrideResult)
             plannerItemsMap[itemId] = updatedPlannerItem
+
+            // Invalidate planner cache
+            repository.invalidateCachedResponses()
 
             true
         } catch (e: Exception) {
@@ -278,8 +276,13 @@ class ToDoListViewModel @Inject constructor(
                     }
                 }
             }
-            state.copy(itemsByDate = updatedItemsByDate)
+            val toDoCount = calculateToDoCount(updatedItemsByDate)
+            state.copy(itemsByDate = updatedItemsByDate, toDoCount = toDoCount)
         }
+    }
+
+    private fun calculateToDoCount(itemsByDate: Map<Date, List<ToDoItemUiState>>): Int {
+        return itemsByDate.values.flatten().count { !it.isChecked }
     }
 
     private fun handleItemClicked(itemId: String) {
@@ -300,5 +303,9 @@ class ToDoListViewModel @Inject constructor(
 
     private fun clearMarkedAsDoneItem() {
         _uiState.update { it.copy(markedAsDoneItem = null) }
+    }
+
+    private fun clearToDoCount() {
+        _uiState.update { it.copy(toDoCount = null) }
     }
 }

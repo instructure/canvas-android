@@ -32,7 +32,9 @@ data class ToDoListUiState(
     val onUndoMarkAsDone: () -> Unit = {},
     val onMarkedAsDoneSnackbarDismissed: () -> Unit = {},
     val onItemClicked: (String) -> Unit = {},
-    val onRefresh: () -> Unit = {}
+    val onRefresh: () -> Unit = {},
+    val toDoCount: Int? = null,
+    val onToDoCountChanged: () -> Unit = {}
 )
 
 data class MarkedAsDoneItem(

@@ -125,6 +125,7 @@ private data class DateBadgeData(
 fun ToDoListScreen(
     navigationIconClick: () -> Unit,
     openToDoItem: (String) -> Unit,
+    onToDoCountChanged: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val viewModel = hiltViewModel<ToDoListViewModel>()
@@ -159,6 +160,13 @@ fun ToDoListScreen(
             } else {
                 uiState.onMarkedAsDoneSnackbarDismissed()
             }
+        }
+    }
+
+    LaunchedEffect(uiState.toDoCount) {
+        uiState.toDoCount?.let { count ->
+            onToDoCountChanged(count)
+            uiState.onToDoCountChanged()
         }
     }
 
