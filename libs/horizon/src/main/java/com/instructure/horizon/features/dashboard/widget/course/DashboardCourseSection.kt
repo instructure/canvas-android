@@ -45,9 +45,7 @@ import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCo
 import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCourseCardState
 import com.instructure.horizon.features.home.HomeNavigationRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
-import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
-import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.organisms.AnimatedHorizontalPager
 import com.instructure.horizon.horizonui.organisms.AnimatedHorizontalPagerIndicator
 import com.instructure.horizon.navigation.MainNavigationRoute
@@ -112,8 +110,6 @@ private fun DashboardCourseSectionContent(
                 mainNavController,
                 homeNavController,
             )
-
-            HorizonSpace(SpaceSize.SPACE_16)
         }
 
         if (state.courses.isNotEmpty()) {
@@ -128,11 +124,9 @@ private fun DashboardCourseSectionContent(
                     state.courses[index],
                     mainNavController,
                     homeNavController,
-                    modifier
+                    modifier.padding(bottom = 8.dp)
                 )
             }
-
-            HorizonSpace(SpaceSize.SPACE_8)
 
             if (pagerState.pageCount >= 4) {
                 AnimatedHorizontalPagerIndicator(pagerState)

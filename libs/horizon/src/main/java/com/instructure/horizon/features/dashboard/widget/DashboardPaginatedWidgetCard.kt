@@ -73,14 +73,19 @@ fun DashboardPaginatedWidgetCard(
         ) { index, modifier ->
             DashboardCard(
                 modifier = modifier.padding(bottom = 16.dp),
-                onClick = {
-                    state.items[index].route?.let { route ->
-                        when (route) {
-                            is DashboardPaginatedWidgetCardButtonRoute.HomeRoute -> {
-                                homeNavController.navigate(route.route)
-                            }
-                            is DashboardPaginatedWidgetCardButtonRoute.MainRoute -> {
-                                mainNavController.navigate(route.route)
+                onClick = if (state.isLoading) {
+                    null
+                } else {
+                    {
+                        state.items[index].route?.let { route ->
+                            when (route) {
+                                is DashboardPaginatedWidgetCardButtonRoute.HomeRoute -> {
+                                    homeNavController.navigate(route.route)
+                                }
+
+                                is DashboardPaginatedWidgetCardButtonRoute.MainRoute -> {
+                                    mainNavController.navigate(route.route)
+                                }
                             }
                         }
                     }
