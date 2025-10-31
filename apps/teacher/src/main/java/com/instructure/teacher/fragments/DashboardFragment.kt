@@ -336,7 +336,9 @@ class DashboardFragment : BaseSyncFragment<Course, DashboardPresenter, CoursesVi
     }
 
     fun cancelCardDrag() {
-        binding.courseRecyclerView.onTouchEvent(MotionEvent.obtain(0L, 0L, ACTION_CANCEL, 0f, 0f, 0))
+        val cancelEvent = MotionEvent.obtain(0L, 0L, ACTION_CANCEL, 0f, 0f, 0)
+        binding.courseRecyclerView.onTouchEvent(cancelEvent)
+        cancelEvent.recycle()
     }
 
     companion object {

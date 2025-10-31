@@ -125,9 +125,12 @@ class DashboardPresenter(
     }
 
     fun moveCourse(fromPosition: Int, toPosition: Int) {
-        if (fromPosition < 0 || toPosition < 0 || fromPosition >= data.size() || toPosition >= data.size()) {
-            return
-        }
+        if (fromPosition < 0
+            || toPosition < 0
+            || fromPosition >= data.size()
+            || toPosition >= data.size()
+            || fromPosition == toPosition
+        ) return
         val courses = data.toList().toMutableList()
         val movedCourse = courses.removeAt(fromPosition)
         courses.add(toPosition, movedCourse)
