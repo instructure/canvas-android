@@ -19,10 +19,8 @@ package com.instructure.horizon.features.dashboard
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
@@ -36,8 +34,6 @@ fun DashboardCard(
     content: @Composable () -> Unit
 ) {
     Box(modifier = modifier
-        .padding(horizontal = 8.dp)
-        .padding(vertical = 8.dp)
         .horizonShadow(HorizonElevation.level4, shape = HorizonCornerRadius.level4, clip = true)
         .background(color = HorizonColors.Surface.cardPrimary(), shape = HorizonCornerRadius.level4)
         .conditional(onClick != null) {

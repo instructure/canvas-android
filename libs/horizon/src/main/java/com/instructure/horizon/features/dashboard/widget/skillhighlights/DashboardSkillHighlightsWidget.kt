@@ -68,7 +68,7 @@ fun DashboardSkillHighlightsSection(
                 state.cardState,
                 homeNavController,
                 true,
-                modifier.padding(horizontal = 16.dp),
+                modifier.padding(horizontal = 24.dp),
             )
         }
         DashboardItemState.ERROR -> {
@@ -78,7 +78,7 @@ fun DashboardSkillHighlightsSection(
                 HorizonColors.PrimitivesGreen.green12(),
                 false,
                 { state.onRefresh {} },
-                modifier = modifier.padding(horizontal = 16.dp)
+                modifier = modifier.padding(horizontal = 24.dp)
             )
         }
         DashboardItemState.SUCCESS -> {
@@ -86,7 +86,7 @@ fun DashboardSkillHighlightsSection(
                 state.cardState,
                 homeNavController,
                 false,
-                modifier.padding(horizontal = 16.dp),
+                modifier.padding(horizontal = 24.dp),
             )
         }
     }

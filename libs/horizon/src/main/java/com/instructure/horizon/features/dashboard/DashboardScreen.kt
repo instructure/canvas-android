@@ -22,6 +22,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -148,6 +149,7 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
             }
         ){
             CollapsableHeaderScreen(
+                modifier = Modifier.padding(paddingValues),
                 headerContent = {
                     Column {
                         HomeScreenTopBar(
@@ -161,8 +163,8 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                 bodyContent = {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
                         modifier = Modifier
-                            .padding(paddingValues)
                             .verticalScroll(rememberScrollState())
                     ) {
                         DashboardAnnouncementBannerWidget(
@@ -181,8 +183,8 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                         AnimatedHorizontalPager(
                             pagerState,
                             sizeAnimationRange = 0f,
-                            contentPadding = PaddingValues(horizontal = 16.dp),
-                            pageSpacing = 0.dp,
+                            contentPadding = PaddingValues(horizontal = 24.dp),
+                            pageSpacing = 12.dp,
                             verticalAlignment = Alignment.CenterVertically,
                         ) { index, modifier ->
                             when (index) {
@@ -218,7 +220,7 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                             shouldRefresh,
                             refreshStateFlow
                         )
-                        HorizonSpace(SpaceSize.SPACE_16)
+                        HorizonSpace(SpaceSize.SPACE_24)
                     }
                 }
             )

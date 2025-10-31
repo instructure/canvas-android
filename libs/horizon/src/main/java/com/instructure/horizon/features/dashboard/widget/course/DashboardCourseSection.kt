@@ -19,9 +19,7 @@ package com.instructure.horizon.features.dashboard.widget.course
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Text
@@ -47,7 +45,9 @@ import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCo
 import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCourseCardState
 import com.instructure.horizon.features.home.HomeNavigationRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
+import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.organisms.AnimatedHorizontalPager
 import com.instructure.horizon.horizonui.organisms.AnimatedHorizontalPagerIndicator
 import com.instructure.horizon.navigation.MainNavigationRoute
@@ -84,10 +84,10 @@ fun DashboardCourseSection(
 ) {
     when(state.state) {
         DashboardItemState.LOADING -> {
-            DashboardCourseCardLoading(Modifier.padding(horizontal = 16.dp))
+            DashboardCourseCardLoading(Modifier.padding(horizontal = 24.dp))
         }
         DashboardItemState.ERROR -> {
-            DashboardCourseCardError({state.onRefresh {} }, Modifier.padding(horizontal = 16.dp))
+            DashboardCourseCardError({state.onRefresh {} }, Modifier.padding(horizontal = 24.dp))
         }
         DashboardItemState.SUCCESS -> {
             DashboardCourseSectionContent(state, mainNavController, homeNavController)
@@ -101,23 +101,27 @@ private fun DashboardCourseSectionContent(
     mainNavController: NavHostController,
     homeNavController: NavHostController
 ) {
-    val pagerstate = rememberPagerState { state.courses.size }
+    val pagerState = rememberPagerState { state.courses.size }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        DashboardPaginatedWidgetCard(
-            state.programs,
-            mainNavController,
-            homeNavController,
-        )
+        if (state.programs.items.isNotEmpty()) {
+            DashboardPaginatedWidgetCard(
+                state.programs,
+                mainNavController,
+                homeNavController,
+            )
+
+            HorizonSpace(SpaceSize.SPACE_16)
+        }
 
         if (state.courses.isNotEmpty()) {
             AnimatedHorizontalPager(
-                pagerstate,
-                beyondViewportPageCount = pagerstate.pageCount,
-                contentPadding = PaddingValues(horizontal = 16.dp),
-                pageSpacing = 4.dp,
+                pagerState,
+                beyondViewportPageCount = pagerState.pageCount,
+                contentPadding = PaddingValues(horizontal = 24.dp),
+                pageSpacing = 12.dp,
                 verticalAlignment = Alignment.CenterVertically,
             ) { index, modifier ->
                 DashboardCourseItem(
@@ -128,11 +132,11 @@ private fun DashboardCourseSectionContent(
                 )
             }
 
-            if (pagerstate.pageCount >= 4) {
-                AnimatedHorizontalPagerIndicator(pagerstate)
-            }
+            HorizonSpace(SpaceSize.SPACE_8)
 
-            Spacer(Modifier.height(16.dp))
+            if (pagerState.pageCount >= 4) {
+                AnimatedHorizontalPagerIndicator(pagerState)
+            }
         } else {
             DashboardCard(
                 Modifier.padding(horizontal = 16.dp)

@@ -67,8 +67,8 @@ fun DashboardPaginatedWidgetCard(
             pagerState,
             modifier,
             sizeAnimationRange = 0f,
-            contentPadding = PaddingValues(horizontal = 16.dp),
-            pageSpacing = 0.dp,
+            contentPadding = PaddingValues(horizontal = 24.dp),
+            pageSpacing = 12.dp,
             verticalAlignment = Alignment.CenterVertically,
         ) { index, modifier ->
             DashboardCard(

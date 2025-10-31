@@ -44,7 +44,6 @@ fun DashboardCourseCardLoading(
     val context = LocalContext.current
     DashboardCard(
         modifier
-            .padding(bottom = 8.dp)
             .clearAndSetSemantics {
                 contentDescription = context.getString(
                     R.string.a11y_dashboardWidgetLoadingContentDescription,
