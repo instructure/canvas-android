@@ -30,11 +30,9 @@ import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCard
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardButtonRoute
-import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardButtonState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardChipState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardItemState
 import com.instructure.horizon.features.dashboard.widget.announcement.card.DashboardAnnouncementBannerCardError
-import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -83,18 +81,13 @@ fun DashboardAnnouncementBannerSection(
                             title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Announcement title shown here.",
                             source = "Institution or Course Name Here",
                             date = Date(),
-                            buttonState = DashboardPaginatedWidgetCardButtonState(
-                                label = stringResource(R.string.dashboardAnnouncementBannerGoToAnnouncement),
-                                color = ButtonColor.WhiteWithOutline,
-                                route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
-                            )
+                            route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
                         )
                     ),
                     isLoading = true
                 ),
                 mainNavController,
                 homeNavController,
-                Modifier.padding(horizontal = 16.dp)
             )
         }
         DashboardItemState.ERROR -> {
@@ -108,7 +101,6 @@ fun DashboardAnnouncementBannerSection(
                 state.cardState,
                 mainNavController,
                 homeNavController,
-                Modifier.padding(horizontal = 16.dp)
             )
         }
     }

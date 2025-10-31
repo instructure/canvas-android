@@ -26,11 +26,9 @@ import com.instructure.horizon.features.dashboard.DashboardEvent
 import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardButtonRoute
-import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardButtonState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardChipState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardState
-import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -81,8 +79,8 @@ class DashboardAnnouncementBannerViewModel @Inject constructor(
             it.copy(
                 state = DashboardItemState.SUCCESS,
                 cardState = DashboardPaginatedWidgetCardState(
-                    items = announcements.map { announcement ->
-                        announcement.toPaginatedWidgetCardItemState(context)
+                    items = announcements.mapIndexed { index, announcement ->
+                        announcement.toPaginatedWidgetCardItemState(context, index, announcements.size)
                     }
                 )
             )
@@ -102,20 +100,24 @@ class DashboardAnnouncementBannerViewModel @Inject constructor(
     }
 }
 
-private fun AnnouncementBannerItem.toPaginatedWidgetCardItemState(context: Context): DashboardPaginatedWidgetCardItemState {
+private fun AnnouncementBannerItem.toPaginatedWidgetCardItemState(
+    context: Context,
+    itemIndex: Int,
+    size: Int,
+): DashboardPaginatedWidgetCardItemState {
     return DashboardPaginatedWidgetCardItemState(
         chipState = DashboardPaginatedWidgetCardChipState(
             label = context.getString(R.string.notificationsAnnouncementCategoryLabel),
             color = StatusChipColor.Sky
         ),
+        pageState = if (size > 1) {
+            context.getString(R.string.dsahboardPaginatedWidgetPagerMessage, itemIndex + 1, size)
+        } else {
+            null
+        },
         source = source,
         date = date,
         title = title,
-        buttonState =
-            DashboardPaginatedWidgetCardButtonState(
-                label = context.getString(R.string.dashboardAnnouncementBannerGoToAnnouncement),
-                color = ButtonColor.WhiteWithOutline,
-                route = DashboardPaginatedWidgetCardButtonRoute.MainRoute(route)
-            )
+        route = DashboardPaginatedWidgetCardButtonRoute.MainRoute(route)
     )
 }

@@ -28,6 +28,7 @@ import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.type.EnrollmentWorkflowState
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.horizon.features.dashboard.widget.course.DashboardCourseRepository
 import com.instructure.journey.type.ProgramVariantType
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -179,6 +180,12 @@ class DashboardCourseRepositoryTest {
     }
 
     private fun getRepository(): DashboardCourseRepository {
-        return DashboardCourseRepository(horizonGetCoursesManager, moduleApi, apiPrefs, enrollmentApi, getProgramsManager)
+        return DashboardCourseRepository(
+            horizonGetCoursesManager,
+            moduleApi,
+            apiPrefs,
+            enrollmentApi,
+            getProgramsManager
+        )
     }
 }

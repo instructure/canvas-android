@@ -55,6 +55,7 @@ class DashboardTimeSpentViewModelTest {
 
     @Test
     fun `init loads time spent data successfully`() = runTest {
+        val minutesSpend = listOf(300, 450)
         val courses = listOf(
             CourseWithProgress(courseId = 1L, courseName = "Course 1", progress = 0.0),
             CourseWithProgress(courseId = 2L, courseName = "Course 2", progress = 0.0)
@@ -62,8 +63,8 @@ class DashboardTimeSpentViewModelTest {
         val timeSpentData = TimeSpentWidgetData(
             lastModifiedDate = Date(),
             data = listOf(
-                TimeSpentDataEntry(courseId = 1L, courseName = "Course 1", minutesPerDay = 300),
-                TimeSpentDataEntry(courseId = 2L, courseName = "Course 2", minutesPerDay = 450)
+                TimeSpentDataEntry(courseId = 1L, courseName = "Course 1", minutesPerDay = minutesSpend[0]),
+                TimeSpentDataEntry(courseId = 2L, courseName = "Course 2", minutesPerDay = minutesSpend[1])
             )
         )
 
@@ -74,7 +75,8 @@ class DashboardTimeSpentViewModelTest {
 
         val state = viewModel.uiState.value
         assertEquals(DashboardItemState.SUCCESS, state.state)
-        assertEquals(12.5, state.cardState.hours)
+        assertEquals((minutesSpend.sum() / 60), state.cardState.hours)
+        assertEquals((minutesSpend.sum() % 60), state.cardState.minutes)
         assertEquals(2, state.cardState.courses.size)
         assertEquals("Course 1", state.cardState.courses[0].name)
         assertEquals("Course 2", state.cardState.courses[1].name)
@@ -92,13 +94,14 @@ class DashboardTimeSpentViewModelTest {
 
     @Test
     fun `calculates hours from minutesPerDay correctly`() = runTest {
+        val minutesSpent = 480
         val courses = listOf(
             CourseWithProgress(courseId = 1L, courseName = "Course 1", progress = 0.0)
         )
         val timeSpentData = TimeSpentWidgetData(
             lastModifiedDate = Date(),
             data = listOf(
-                TimeSpentDataEntry(courseId = 1L, minutesPerDay = 480)
+                TimeSpentDataEntry(courseId = 1L, minutesPerDay = minutesSpent)
             )
         )
 
@@ -108,7 +111,8 @@ class DashboardTimeSpentViewModelTest {
         viewModel = DashboardTimeSpentViewModel(repository)
 
         val state = viewModel.uiState.value
-        assertEquals(8.0, state.cardState.hours)
+        assertEquals((minutesSpent / 60), state.cardState.hours)
+        assertEquals((minutesSpent % 60), state.cardState.minutes)
     }
 
     @Test
@@ -125,7 +129,7 @@ class DashboardTimeSpentViewModelTest {
         viewModel = DashboardTimeSpentViewModel(repository)
 
         val state = viewModel.uiState.value
-        assertEquals(0.0, state.cardState.hours)
+        assertEquals(0, state.cardState.hours)
     }
 
     @Test
@@ -136,7 +140,7 @@ class DashboardTimeSpentViewModelTest {
         val timeSpentData = TimeSpentWidgetData(
             lastModifiedDate = Date(),
             data = listOf(
-                TimeSpentDataEntry(courseId = 1L, minutesPerDay = 120),
+                TimeSpentDataEntry(courseId = 1L, minutesPerDay = 150),
                 TimeSpentDataEntry(courseId = 2L, minutesPerDay = 180),
                 TimeSpentDataEntry(courseId = 999L, minutesPerDay = 300)
             )
@@ -148,7 +152,8 @@ class DashboardTimeSpentViewModelTest {
         viewModel = DashboardTimeSpentViewModel(repository)
 
         val state = viewModel.uiState.value
-        assertEquals(2.0, state.cardState.hours)
+        assertEquals(150 / 60, state.cardState.hours)
+        assertEquals(150 % 60, state.cardState.minutes)
     }
 
     @Test
@@ -169,7 +174,7 @@ class DashboardTimeSpentViewModelTest {
         viewModel = DashboardTimeSpentViewModel(repository)
 
         val state = viewModel.uiState.value
-        assertEquals(0.0, state.cardState.hours)
+        assertEquals(0, state.cardState.hours)
     }
 
     @Test

@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.dashboard.course
+package com.instructure.horizon.features.dashboard.widget.course
 
 import com.instructure.canvasapi2.GetCoursesQuery
 import com.instructure.canvasapi2.apis.EnrollmentAPI

@@ -1,6 +1,5 @@
 package com.instructure.horizon.features.dashboard.widget
 
-import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import java.util.Date
 
@@ -11,21 +10,16 @@ data class DashboardPaginatedWidgetCardState(
 
 data class DashboardPaginatedWidgetCardItemState(
     val chipState: DashboardPaginatedWidgetCardChipState? = null,
+    val pageState: String? = null,
     val source: String? = null,
     val date: Date? = null,
     val title: String? = null,
-    val buttonState: DashboardPaginatedWidgetCardButtonState? = null
+    val route: DashboardPaginatedWidgetCardButtonRoute? = null
 )
 
 data class DashboardPaginatedWidgetCardChipState(
     val label: String,
     val color: StatusChipColor,
-)
-
-data class DashboardPaginatedWidgetCardButtonState(
-    val label: String,
-    val color: ButtonColor,
-    val route: DashboardPaginatedWidgetCardButtonRoute,
 )
 
 sealed class DashboardPaginatedWidgetCardButtonRoute {
