@@ -23,7 +23,23 @@ data class ToDoListUiState(
     val isLoading: Boolean = false,
     val isError: Boolean = false,
     val isRefreshing: Boolean = false,
-    val itemsByDate: Map<Date, List<ToDoItemUiState>> = emptyMap()
+    val itemsByDate: Map<Date, List<ToDoItemUiState>> = emptyMap(),
+    val openToDoItemId: String? = null,
+    val onOpenToDoItem: () -> Unit = {},
+    val snackbarMessage: String? = null,
+    val onSnackbarDismissed: () -> Unit = {},
+    val markedAsDoneItem: MarkedAsDoneItem? = null,
+    val onUndoMarkAsDone: () -> Unit = {},
+    val onMarkedAsDoneSnackbarDismissed: () -> Unit = {},
+    val onItemClicked: (String) -> Unit = {},
+    val onRefresh: () -> Unit = {},
+    val toDoCount: Int? = null,
+    val onToDoCountChanged: () -> Unit = {}
+)
+
+data class MarkedAsDoneItem(
+    val itemId: String,
+    val title: String
 )
 
 data class ToDoItemUiState(
@@ -36,7 +52,9 @@ data class ToDoItemUiState(
     val itemType: ToDoItemType,
     val isChecked: Boolean = false,
     val iconRes: Int = R.drawable.ic_calendar,
-    val tag: String? = null
+    val tag: String? = null,
+    val onSwipeToDone: () -> Unit = {},
+    val onCheckboxToggle: (Boolean) -> Unit = {}
 )
 
 enum class ToDoItemType {
@@ -46,15 +64,4 @@ enum class ToDoItemType {
     DISCUSSION,
     CALENDAR_EVENT,
     PLANNER_NOTE
-}
-
-sealed class ToDoListViewModelAction {
-    data class OpenToDoItem(val itemId: String) : ToDoListViewModelAction()
-}
-
-sealed class ToDoListActionHandler {
-    data object Refresh : ToDoListActionHandler()
-    data class ToggleItemChecked(val itemId: String) : ToDoListActionHandler()
-    data class ItemClicked(val itemId: String) : ToDoListActionHandler()
-    data object FilterClicked : ToDoListActionHandler()
 }

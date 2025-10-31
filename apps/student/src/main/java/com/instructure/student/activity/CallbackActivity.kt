@@ -60,6 +60,7 @@ import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.SHA256
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.isComplete
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toast
 import com.instructure.student.BuildConfig
@@ -236,7 +237,7 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
             plannerApi.nextPagePlannerItems(nextUrl, restParams)
         }
 
-        val todoCount = plannerItems.dataOrNull?.count().orDefault()
+        val todoCount = plannerItems.dataOrNull?.count { !it.isComplete() }.orDefault()
         updateToDoCount(todoCount)
     }
 

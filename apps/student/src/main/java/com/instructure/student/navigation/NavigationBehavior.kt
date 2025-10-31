@@ -26,7 +26,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.utils.CanvasFont
 import com.instructure.student.activity.NothingToSeeHereFragment
-import com.instructure.student.features.todolist.ToDoListFragment
+import com.instructure.pandautils.features.todolist.ToDoListFragment
 import com.instructure.student.fragment.OldToDoListFragment
 import com.instructure.student.fragment.ParentFragment
 

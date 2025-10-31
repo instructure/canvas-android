@@ -24,32 +24,43 @@ import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.isInvited
 import com.instructure.canvasapi2.utils.toApiString
+import com.instructure.pandautils.R
+import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.getContextNameForPlannerItem
 import com.instructure.pandautils.utils.getDateTextForPlannerItem
 import com.instructure.pandautils.utils.getIconForPlannerItem
 import com.instructure.pandautils.utils.getTagForPlannerItem
+import com.instructure.pandautils.utils.isComplete
+import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
 class ToDoListViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val repository: ToDoListRepository
+    private val repository: ToDoListRepository,
+    private val networkStateProvider: NetworkStateProvider
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(ToDoListUiState())
+    private val _uiState = MutableStateFlow(ToDoListUiState(
+        onOpenToDoItem = { clearOpenToDoItem() },
+        onSnackbarDismissed = { clearSnackbarMessage() },
+        onUndoMarkAsDone = { handleUndoMarkAsDone() },
+        onMarkedAsDoneSnackbarDismissed = { clearMarkedAsDoneItem() },
+        onItemClicked = { itemId -> handleItemClicked(itemId) },
+        onRefresh = { handleRefresh() },
+        onToDoCountChanged = { clearToDoCount() }
+    ))
     val uiState = _uiState.asStateFlow()
 
-    private val _events = Channel<ToDoListViewModelAction>()
-    val events = _events.receiveAsFlow()
+    private val plannerItemsMap = mutableMapOf<String, PlannerItem>()
 
     init {
         loadData()
@@ -78,6 +89,10 @@ class ToDoListViewModel @Inject constructor(
                     .filter { it.plannableType != PlannableType.ANNOUNCEMENT && it.plannableType != PlannableType.ASSESSMENT_REQUEST }
                     .sortedBy { it.comparisonDate }
 
+                // Store planner items for later reference
+                plannerItemsMap.clear()
+                filteredItems.forEach { plannerItemsMap[it.plannable.id.toString()] = it }
+
                 // Group items by date
                 val itemsByDate = filteredItems
                     .groupBy { DateHelper.getCleanDate(it.comparisonDate.time) }
@@ -87,12 +102,15 @@ class ToDoListViewModel @Inject constructor(
                         }
                     }
 
+                val toDoCount = calculateToDoCount(itemsByDate)
+
                 _uiState.update {
                     it.copy(
                         isLoading = false,
                         isRefreshing = false,
                         isError = false,
-                        itemsByDate = itemsByDate
+                        itemsByDate = itemsByDate,
+                        toDoCount = toDoCount
                     )
                 }
             } catch (e: Exception) {
@@ -119,50 +137,175 @@ class ToDoListViewModel @Inject constructor(
             else -> ToDoItemType.CALENDAR_EVENT
         }
 
+        val itemId = plannerItem.plannable.id.toString()
+
         return ToDoItemUiState(
-            id = plannerItem.plannable.id.toString(),
+            id = itemId,
             title = plannerItem.plannable.title,
             date = plannerItem.plannableDate,
             dateLabel = plannerItem.getDateTextForPlannerItem(context),
             contextLabel = plannerItem.getContextNameForPlannerItem(context, courseMap.values),
             canvasContext = plannerItem.canvasContext,
             itemType = itemType,
-            isChecked = isComplete(plannerItem),
+            isChecked = plannerItem.isComplete(),
             iconRes = plannerItem.getIconForPlannerItem(),
-            tag = plannerItem.getTagForPlannerItem(context)
+            tag = plannerItem.getTagForPlannerItem(context),
+            onSwipeToDone = { handleSwipeToDone(itemId) },
+            onCheckboxToggle = { isChecked -> handleCheckboxToggle(itemId, isChecked) }
         )
     }
 
-    private fun isComplete(plannerItem: PlannerItem): Boolean {
-        return if (plannerItem.plannableType == PlannableType.ASSIGNMENT
-            || plannerItem.plannableType == PlannableType.DISCUSSION_TOPIC
-            || plannerItem.plannableType == PlannableType.SUB_ASSIGNMENT
-        ) {
-            plannerItem.submissionState?.submitted == true
-        } else {
-            plannerItem.plannerOverride?.markedComplete == true
+    private fun handleSwipeToDone(itemId: String) {
+        viewModelScope.launch {
+            if (!networkStateProvider.isOnline()) {
+                _uiState.update {
+                    it.copy(snackbarMessage = context.getString(R.string.todoActionOffline))
+                }
+                return@launch
+            }
+
+            val plannerItem = plannerItemsMap[itemId] ?: return@launch
+            val currentIsChecked = plannerItem.isComplete()
+            val newIsChecked = !currentIsChecked
+
+            val success = updateItemCompleteState(itemId, newIsChecked)
+
+            // Show marked-as-done snackbar only when marking as done (not when undoing)
+            if (success && newIsChecked) {
+                _uiState.update {
+                    it.copy(
+                        markedAsDoneItem = MarkedAsDoneItem(
+                            itemId = itemId,
+                            title = plannerItem.plannable.title
+                        )
+                    )
+                }
+            }
         }
     }
 
-    fun handleAction(action: ToDoListActionHandler) {
-        when (action) {
-            is ToDoListActionHandler.ItemClicked -> {
-                viewModelScope.launch {
-                    _events.send(ToDoListViewModelAction.OpenToDoItem(action.itemId))
+    private fun handleUndoMarkAsDone() {
+        viewModelScope.launch {
+            val markedAsDoneItem = _uiState.value.markedAsDoneItem ?: return@launch
+            val itemId = markedAsDoneItem.itemId
+
+            // Clear the snackbar immediately
+            _uiState.update { it.copy(markedAsDoneItem = null) }
+
+            updateItemCompleteState(itemId, false)
+        }
+    }
+
+    private fun handleCheckboxToggle(itemId: String, isChecked: Boolean) {
+        viewModelScope.launch {
+            if (!networkStateProvider.isOnline()) {
+                _uiState.update {
+                    it.copy(snackbarMessage = context.getString(R.string.todoActionOffline))
+                }
+                return@launch
+            }
+
+            val plannerItem = plannerItemsMap[itemId] ?: return@launch
+
+            val success = updateItemCompleteState(itemId, isChecked)
+
+            // Show marked-as-done snackbar only when checking the box
+            if (success && isChecked) {
+                _uiState.update {
+                    it.copy(
+                        markedAsDoneItem = MarkedAsDoneItem(
+                            itemId = itemId,
+                            title = plannerItem.plannable.title
+                        )
+                    )
                 }
             }
-
-            is ToDoListActionHandler.Refresh -> {
-                loadData(forceRefresh = true)
-            }
-
-            is ToDoListActionHandler.ToggleItemChecked -> {
-                // TODO: Implement toggle checked - will be implemented in future story
-            }
-
-            is ToDoListActionHandler.FilterClicked -> {
-                // TODO: Implement filter - will be implemented in future story
-            }
         }
+    }
+
+    private suspend fun updateItemCompleteState(itemId: String, newIsChecked: Boolean): Boolean {
+        val plannerItem = plannerItemsMap[itemId] ?: return false
+        val currentIsChecked = plannerItem.isComplete()
+
+        // Optimistically update UI
+        updateItemCheckedState(itemId, newIsChecked)
+
+        return try {
+            // Update or create planner override
+            val plannerOverrideResult = if (plannerItem.plannerOverride?.id != null) {
+                repository.updatePlannerOverride(
+                    plannerOverrideId = plannerItem.plannerOverride?.id.orDefault(),
+                    markedComplete = newIsChecked
+                ).dataOrThrow
+            } else {
+                repository.createPlannerOverride(
+                    plannableId = plannerItem.plannable.id,
+                    plannableType = plannerItem.plannableType,
+                    markedComplete = newIsChecked
+                ).dataOrThrow
+            }
+
+            // Update the stored planner item with new override state
+            val updatedPlannerItem = plannerItem.copy(plannerOverride = plannerOverrideResult)
+            plannerItemsMap[itemId] = updatedPlannerItem
+
+            // Invalidate planner cache
+            repository.invalidateCachedResponses()
+
+            true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            // Revert the optimistic update
+            updateItemCheckedState(itemId, currentIsChecked)
+            // Show error snackbar
+            _uiState.update {
+                it.copy(snackbarMessage = context.getString(R.string.errorUpdatingToDo))
+            }
+            false
+        }
+    }
+
+    private fun updateItemCheckedState(itemId: String, isChecked: Boolean) {
+        _uiState.update { state ->
+            val updatedItemsByDate = state.itemsByDate.mapValues { (_, items) ->
+                items.map { item ->
+                    if (item.id == itemId) {
+                        item.copy(isChecked = isChecked)
+                    } else {
+                        item
+                    }
+                }
+            }
+            val toDoCount = calculateToDoCount(updatedItemsByDate)
+            state.copy(itemsByDate = updatedItemsByDate, toDoCount = toDoCount)
+        }
+    }
+
+    private fun calculateToDoCount(itemsByDate: Map<Date, List<ToDoItemUiState>>): Int {
+        return itemsByDate.values.flatten().count { !it.isChecked }
+    }
+
+    private fun handleItemClicked(itemId: String) {
+        _uiState.update { it.copy(openToDoItemId = itemId) }
+    }
+
+    private fun handleRefresh() {
+        loadData(forceRefresh = true)
+    }
+
+    private fun clearOpenToDoItem() {
+        _uiState.update { it.copy(openToDoItemId = null) }
+    }
+
+    private fun clearSnackbarMessage() {
+        _uiState.update { it.copy(snackbarMessage = null) }
+    }
+
+    private fun clearMarkedAsDoneItem() {
+        _uiState.update { it.copy(markedAsDoneItem = null) }
+    }
+
+    private fun clearToDoCount() {
+        _uiState.update { it.copy(toDoCount = null) }
     }
 }
