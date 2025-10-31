@@ -295,18 +295,18 @@ private fun NumericWidgetRow(
                 DashboardMyProgressWidget(
                     shouldRefresh,
                     refreshStateFlow,
-                    Modifier.width(IntrinsicSize.Min)
+                    Modifier.width(IntrinsicSize.Max)
                 )
                 DashboardTimeSpentWidget(
                     shouldRefresh,
                     refreshStateFlow,
-                    Modifier.width(IntrinsicSize.Min)
+                    Modifier.width(IntrinsicSize.Max)
                 )
                 DashboardSkillOverviewWidget(
                     homeNavController,
                     shouldRefresh,
                     refreshStateFlow,
-                    Modifier.width(IntrinsicSize.Min)
+                    Modifier.width(IntrinsicSize.Max)
                 )
             }
         } else {
