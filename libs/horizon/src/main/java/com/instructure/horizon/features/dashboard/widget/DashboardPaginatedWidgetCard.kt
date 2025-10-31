@@ -72,7 +72,7 @@ fun DashboardPaginatedWidgetCard(
             verticalAlignment = Alignment.CenterVertically,
         ) { index, modifier ->
             DashboardCard(
-                modifier = modifier,
+                modifier = modifier.padding(bottom = 16.dp),
                 onClick = {
                     state.items[index].route?.let { route ->
                         when (route) {

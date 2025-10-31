@@ -22,7 +22,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -175,7 +174,6 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                 bodyContent = {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
                         modifier = Modifier
                             .verticalScroll(scrollState)
                     ) {
@@ -192,6 +190,7 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                             shouldRefresh,
                             refreshStateFlow
                         )
+                        HorizonSpace(SpaceSize.SPACE_16)
                         val pagerState = rememberPagerState{ 3 }
                         AnimatedHorizontalPager(
                             pagerState,
@@ -205,14 +204,14 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                                     DashboardMyProgressWidget(
                                         shouldRefresh,
                                         refreshStateFlow,
-                                        modifier
+                                        modifier.padding(bottom = 16.dp)
                                     )
                                 }
                                 1 -> {
                                     DashboardTimeSpentWidget(
                                         shouldRefresh,
                                         refreshStateFlow,
-                                        modifier
+                                        modifier.padding(bottom = 16.dp)
                                     )
                                 }
                                 2 -> {
@@ -220,7 +219,7 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                                         homeNavController,
                                         shouldRefresh,
                                         refreshStateFlow,
-                                        modifier
+                                        modifier.padding(bottom = 16.dp)
                                     )
                                 }
                                 else -> {

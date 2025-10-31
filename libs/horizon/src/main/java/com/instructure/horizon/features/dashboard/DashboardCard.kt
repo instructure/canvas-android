@@ -34,7 +34,7 @@ fun DashboardCard(
     content: @Composable () -> Unit
 ) {
     Box(modifier = modifier
-        .horizonShadow(HorizonElevation.level4, shape = HorizonCornerRadius.level4, clip = true)
+        .horizonShadow(HorizonElevation.level4, shape = HorizonCornerRadius.level4)
         .background(color = HorizonColors.Surface.cardPrimary(), shape = HorizonCornerRadius.level4)
         .conditional(onClick != null) {
             clickable(onClick = { onClick?.invoke() })
