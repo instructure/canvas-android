@@ -41,7 +41,6 @@ import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidge
 import com.instructure.horizon.features.dashboard.widget.course.card.CardClickAction
 import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCourseCardContent
 import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCourseCardError
-import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCourseCardLoading
 import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCourseCardState
 import com.instructure.horizon.features.home.HomeNavigationRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -84,7 +83,12 @@ fun DashboardCourseSection(
 ) {
     when(state.state) {
         DashboardItemState.LOADING -> {
-            DashboardCourseCardLoading(Modifier.padding(horizontal = 24.dp))
+            DashboardCourseCardContent(
+                DashboardCourseCardState.Loading,
+                { handleClickAction(it, mainNavController, homeNavController) },
+                true,
+                modifier = Modifier.padding(horizontal = 24.dp)
+            )
         }
         DashboardItemState.ERROR -> {
             DashboardCourseCardError({state.onRefresh {} }, Modifier.padding(horizontal = 24.dp))
@@ -166,7 +170,9 @@ private fun DashboardCourseItem(
         modifier = modifier.fillMaxWidth()
     ){
         DashboardCourseCardContent(
-            cardState, { handleClickAction(it, mainNavController, homeNavController) }
+            cardState,
+            { handleClickAction(it, mainNavController, homeNavController) },
+            false
         )
     }
 }

@@ -30,6 +30,7 @@ import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCardError
 import com.instructure.horizon.features.dashboard.widget.myprogress.card.DashboardMyProgressCardContent
+import com.instructure.horizon.features.dashboard.widget.myprogress.card.DashboardMyProgressCardState
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -67,7 +68,7 @@ fun DashboardMyProgressSection(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 DashboardMyProgressCardContent(
-                    state.cardState,
+                    DashboardMyProgressCardState.Loading,
                     true,
                     modifier
                 )

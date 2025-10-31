@@ -22,14 +22,19 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -77,6 +82,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.isWideLayout
 import com.instructure.horizon.horizonui.molecules.Badge
 import com.instructure.horizon.horizonui.molecules.BadgeContent
 import com.instructure.horizon.horizonui.molecules.BadgeType
@@ -192,42 +198,7 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                             shouldRefresh,
                             refreshStateFlow
                         )
-                        val pagerState = rememberPagerState{ 3 }
-                        AnimatedHorizontalPager(
-                            pagerState,
-                            sizeAnimationRange = 0f,
-                            contentPadding = PaddingValues(horizontal = 24.dp),
-                            pageSpacing = 12.dp,
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) { index, modifier ->
-                            when (index) {
-                                0 -> {
-                                    DashboardMyProgressWidget(
-                                        shouldRefresh,
-                                        refreshStateFlow,
-                                        modifier
-                                    )
-                                }
-                                1 -> {
-                                    DashboardTimeSpentWidget(
-                                        shouldRefresh,
-                                        refreshStateFlow,
-                                        modifier
-                                    )
-                                }
-                                2 -> {
-                                    DashboardSkillOverviewWidget(
-                                        homeNavController,
-                                        shouldRefresh,
-                                        refreshStateFlow,
-                                        modifier
-                                    )
-                                }
-                                else -> {
-
-                                }
-                            }
-                        }
+                        NumericWidgetRow(shouldRefresh, refreshStateFlow, homeNavController)
                         DashboardSkillHighlightsWidget(
                             homeNavController,
                             shouldRefresh,
@@ -301,6 +272,84 @@ private fun HomeScreenTopBar(uiState: DashboardUiState, mainNavController: NavCo
                 }
             } else null
         )
+    }
+}
+
+@Composable
+private fun NumericWidgetRow(
+    shouldRefresh: Boolean,
+    refreshStateFlow: MutableStateFlow<List<Boolean>>,
+    homeNavController: NavHostController
+) {
+    BoxWithConstraints {
+        val pagerState = rememberPagerState { 3 }
+        if (this.isWideLayout) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier
+                    .horizontalScroll(rememberScrollState())
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp)
+            ) {
+                DashboardMyProgressWidget(
+                    shouldRefresh,
+                    refreshStateFlow,
+                    Modifier.width(IntrinsicSize.Min)
+                )
+                DashboardTimeSpentWidget(
+                    shouldRefresh,
+                    refreshStateFlow,
+                    Modifier.width(IntrinsicSize.Min)
+                )
+                DashboardSkillOverviewWidget(
+                    homeNavController,
+                    shouldRefresh,
+                    refreshStateFlow,
+                    Modifier.width(IntrinsicSize.Min)
+                )
+            }
+        } else {
+            AnimatedHorizontalPager(
+                pagerState,
+                sizeAnimationRange = 0f,
+                beyondViewportPageCount = 3,
+                contentPadding = PaddingValues(horizontal = 24.dp),
+                pageSpacing = 12.dp,
+                verticalAlignment = Alignment.CenterVertically,
+            ) { index, modifier ->
+                when (index) {
+                    0 -> {
+                        DashboardMyProgressWidget(
+                            shouldRefresh,
+                            refreshStateFlow,
+                            modifier
+                        )
+                    }
+
+                    1 -> {
+                        DashboardTimeSpentWidget(
+                            shouldRefresh,
+                            refreshStateFlow,
+                            modifier
+                        )
+                    }
+
+                    2 -> {
+                        DashboardSkillOverviewWidget(
+                            homeNavController,
+                            shouldRefresh,
+                            refreshStateFlow,
+                            modifier
+                        )
+                    }
+
+                    else -> {
+
+                    }
+                }
+            }
+        }
     }
 }
 

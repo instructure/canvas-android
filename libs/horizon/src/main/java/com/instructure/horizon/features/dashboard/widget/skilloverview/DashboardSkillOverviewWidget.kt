@@ -28,6 +28,7 @@ import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCardError
 import com.instructure.horizon.features.dashboard.widget.skilloverview.card.DashboardSkillOverviewCardContent
+import com.instructure.horizon.features.dashboard.widget.skilloverview.card.DashboardSkillOverviewCardState
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -63,7 +64,7 @@ fun DashboardSkillOverviewSection(
     when (state.state) {
         DashboardItemState.LOADING -> {
             DashboardSkillOverviewCardContent(
-                state.cardState,
+                DashboardSkillOverviewCardState.Loading,
                 homeNavController,
                 true,
                 modifier

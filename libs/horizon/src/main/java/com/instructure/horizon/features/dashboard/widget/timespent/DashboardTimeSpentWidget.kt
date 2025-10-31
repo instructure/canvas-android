@@ -30,6 +30,7 @@ import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCardError
 import com.instructure.horizon.features.dashboard.widget.timespent.card.DashboardTimeSpentCardContent
+import com.instructure.horizon.features.dashboard.widget.timespent.card.DashboardTimeSpentCardState
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -62,7 +63,7 @@ fun DashboardTimeSpentSection(
 ) {
     when (state.state) {
         DashboardItemState.LOADING -> {
-            DashboardTimeSpentCardContent(state.cardState, true, modifier)
+            DashboardTimeSpentCardContent(DashboardTimeSpentCardState.Loading, true, modifier)
         }
         DashboardItemState.ERROR -> {
             DashboardWidgetCardError(
