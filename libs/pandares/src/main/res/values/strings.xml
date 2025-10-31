@@ -2179,4 +2179,24 @@
     <string name="scored_less_than_with_max">Scored Less than / %s pts</string>
     <string name="scored_between_values">Scored %1$s - %2$s</string>
     <string name="multiple_filters">Multiple filters</string>
+
+    <!-- Appointment Groups -->
+    <string name="appointmentGroups">Appointments</string>
+    <string name="noAppointmentGroups">No Appointments</string>
+    <string name="noAppointmentGroupsMessage">There are no appointment groups available for this course.</string>
+    <string name="reserve">Reserve</string>
+    <string name="reserveAppointment">Reserve Appointment</string>
+    <string name="reserveAppointmentMessage">Do you want to reserve this appointment for %s?</string>
+    <string name="reservedByYou">Reserved by you</string>
+    <string name="noSlotsAvailable">No slots available</string>
+    <string name="conflictWithEvent">Conflicts with: %s</string>
+    <string name="conflictWarning">This appointment conflicts with: %s</string>
+    <string name="appointmentReserved">Appointment reserved successfully</string>
+    <string name="appointmentReservationError">Failed to reserve appointment</string>
+    <string name="appointmentCancelled">Appointment cancelled successfully</string>
+    <string name="appointmentCancellationError">Failed to cancel appointment</string>
+    <string name="myReservations">My Reservations</string>
+    <string name="availableSlots">Available Slots</string>
+    <string name="expand">Expand</string>
+    <string name="collapse">Collapse</string>
 </resources>

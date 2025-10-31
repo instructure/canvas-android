@@ -5,6 +5,7 @@ import com.instructure.canvasapi2.LoginRouter
 import com.instructure.canvasapi2.TokenRefresher
 import com.instructure.canvasapi2.apis.AccountNotificationAPI
 import com.instructure.canvasapi2.apis.AnnouncementAPI
+import com.instructure.canvasapi2.apis.AppointmentGroupAPI
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.apis.CommunicationChannelsAPI
@@ -445,6 +446,11 @@ class ApiModule {
     @Provides
     fun provideExternalToolApi(): ExternalToolAPI.ExternalToolInterface {
         return RestBuilder().build(ExternalToolAPI.ExternalToolInterface::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideAppointmentGroupApi(): AppointmentGroupAPI {
+        return RestBuilder().build(AppointmentGroupAPI::class.java, RestParams())
     }
 }
 

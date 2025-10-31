@@ -29,6 +29,7 @@ import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.student.activity.NothingToSeeHereFragment
+import com.instructure.student.features.appointmentgroups.AppointmentGroupsListFragment
 import com.instructure.student.features.coursebrowser.CourseBrowserFragment
 import com.instructure.student.features.discussion.details.DiscussionDetailsFragment
 import com.instructure.student.features.discussion.list.DiscussionListFragment
@@ -132,6 +133,7 @@ object RouteResolver {
             cls.isA<LtiLaunchFragment>() -> LtiLaunchFragment.newInstance(route)
             cls.isA<SyllabusRepositoryFragment>() -> SyllabusRepositoryFragment.newInstance(route)
             cls.isA<GradesListFragment>() -> GradesListFragment.newInstance(route)
+            cls.isA<AppointmentGroupsListFragment>() -> AppointmentGroupsListFragment.newInstance(route)
             cls.isA<ModuleListFragment>() -> ModuleListFragment.newInstance(route)
             cls.isA<CourseSettingsFragment>() -> CourseSettingsFragment.newInstance(route)
             cls.isA<AnnouncementListFragment>() -> AnnouncementListFragment.newInstance(route)

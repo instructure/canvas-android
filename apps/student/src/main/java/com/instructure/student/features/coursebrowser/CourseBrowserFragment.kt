@@ -64,6 +64,7 @@ import com.instructure.student.R
 import com.instructure.student.adapter.CourseBrowserAdapter
 import com.instructure.student.databinding.FragmentCourseBrowserBinding
 import com.instructure.student.events.CourseColorOverlayToggledEvent
+import com.instructure.student.features.appointmentgroups.AppointmentGroupsListFragment
 import com.instructure.student.features.pages.details.PageDetailsFragment
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.Const
@@ -290,9 +291,24 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
             val sortedTabs = tabs.filter { it.tabId != Tab.SEARCH_ID }.toMutableList()
             sortedTabs.sortBy { if (TabHelper.isHomeTab(it)) -1 else 1 }
 
+            // Add synthetic Appointments tab for courses only
+            if (canvasContext is Course) {
+                val appointmentsTab = Tab(
+                    tabId = Tab.APPOINTMENTS_ID,
+                    label = getString(R.string.appointmentGroups),
+                    type = Tab.TYPE_INTERNAL,
+                    enabled = true
+                )
+                sortedTabs.add(appointmentsTab)
+            }
+
             courseBrowserRecyclerView.adapter =
                 CourseBrowserAdapter(sortedTabs, canvasContext, homePageTitle) { tab ->
-                    if (isHomeAPage && TabHelper.isHomeTab(tab, canvasContext as Course)) {
+                    if (tab.tabId == Tab.APPOINTMENTS_ID) {
+                        val route = AppointmentGroupsListFragment.makeRoute(canvasContext as Course)
+                            .apply { ignoreDebounce = true }
+                        RouteMatcher.route(requireActivity(), route)
+                    } else if (isHomeAPage && TabHelper.isHomeTab(tab, canvasContext as Course)) {
                         // Load Pages List
                         if (tabs.any { it.tabId == Tab.PAGES_ID }) {
                             // Do not load the pages list if the tab is hidden or locked.
