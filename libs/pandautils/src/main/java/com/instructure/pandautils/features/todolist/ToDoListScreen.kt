@@ -67,6 +67,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -105,6 +106,8 @@ import java.util.Date
 import java.util.Locale
 import kotlin.math.abs
 import kotlin.math.roundToInt
+
+private const val SWIPE_THRESHOLD_DP = 150
 
 private data class StickyHeaderState(
     val item: ToDoItemUiState?,
@@ -399,7 +402,7 @@ private fun ToDoItem(
     val density = LocalDensity.current
     val view = LocalView.current
 
-    val swipeThreshold = with(density) { 150.dp.toPx() }
+    val swipeThreshold = with(density) { SWIPE_THRESHOLD_DP.dp.toPx() }
 
     fun animateToCenter() {
         coroutineScope.launch {
@@ -485,6 +488,11 @@ private fun BoxScope.SwipeBackground(isChecked: Boolean, offsetX: Float) {
         R.drawable.ic_checkmark_lined
     }
 
+    // Calculate alpha based on swipe progress
+    val density = LocalDensity.current
+    val swipeThreshold = with(density) { SWIPE_THRESHOLD_DP.dp.toPx() }
+    val alpha = (abs(offsetX) / swipeThreshold).coerceIn(0f, 1f)
+
     Box(
         modifier = Modifier
             .matchParentSize()
@@ -494,7 +502,8 @@ private fun BoxScope.SwipeBackground(isChecked: Boolean, offsetX: Float) {
             Row(
                 modifier = Modifier
                     .align(Alignment.CenterStart)
-                    .padding(start = 16.dp),
+                    .padding(start = 16.dp)
+                    .alpha(alpha),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start
             ) {
@@ -518,7 +527,8 @@ private fun BoxScope.SwipeBackground(isChecked: Boolean, offsetX: Float) {
             Row(
                 modifier = Modifier
                     .align(Alignment.CenterEnd)
-                    .padding(end = 16.dp),
+                    .padding(end = 16.dp)
+                    .alpha(alpha),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.End
             ) {
