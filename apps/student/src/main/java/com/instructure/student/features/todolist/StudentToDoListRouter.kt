@@ -18,6 +18,7 @@ package com.instructure.student.features.todolist
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import com.instructure.pandautils.features.todolist.ToDoListFragment
 import com.instructure.pandautils.features.todolist.ToDoListRouter
 import com.instructure.student.activity.NavigationActivity
 
