@@ -16,6 +16,7 @@
  */
 package com.instructure.horizon.horizonui.organisms
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.OverscrollEffect
 import androidx.compose.foundation.background
@@ -97,7 +98,7 @@ fun AnimatedHorizontalPager(
         overscrollEffect = overscrollEffect,
         modifier = modifier.semantics {
             role = Role.Carousel
-        }
+        }.animateContentSize()
     ) {
         var cardWidthList by remember { mutableStateOf(emptyMap<Int, Float>()) }
         val scaleAnimation by animateFloatAsState(

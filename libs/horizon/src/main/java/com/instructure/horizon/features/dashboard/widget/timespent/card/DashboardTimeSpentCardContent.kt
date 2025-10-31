@@ -66,7 +66,7 @@ fun DashboardTimeSpentCardContent(
         isLoading,
         false
     ) {
-        if (state.hours == 0 && state.minutes == 0) {
+        if (state.hours == 0 && state.minutes == 0 && state.courses.isEmpty()) {
             Text(
                 text = stringResource(R.string.dashboardTimeSpentEmptyMessage),
                 style = HorizonTypography.p2,
