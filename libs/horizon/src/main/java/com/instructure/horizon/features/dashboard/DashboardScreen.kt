@@ -51,6 +51,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -83,6 +85,7 @@ import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.organisms.AnimatedHorizontalPager
 import com.instructure.horizon.horizonui.organisms.CollapsableHeaderScreen
 import com.instructure.horizon.navigation.MainNavigationRoute
+import com.instructure.pandautils.compose.modifiers.conditional
 import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
@@ -148,16 +151,25 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                 )
             }
         ){
+            val scrollState = rememberScrollState()
             CollapsableHeaderScreen(
                 modifier = Modifier.padding(paddingValues),
                 headerContent = {
-                    Column {
+                    Column(
+                        modifier = Modifier.conditional(scrollState.canScrollBackward) {
+                            shadow(
+                                elevation = HorizonElevation.level3,
+                                spotColor = Color.Transparent,
+                            )
+                        }
+                    ) {
                         HomeScreenTopBar(
                             uiState,
                             mainNavController,
-                            modifier = Modifier.height(56.dp)
+                            modifier = Modifier
+                                .height(56.dp)
+                                .padding(bottom = 12.dp)
                         )
-                        HorizonSpace(SpaceSize.SPACE_12)
                     }
                 },
                 bodyContent = {
@@ -165,7 +177,7 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(16.dp),
                         modifier = Modifier
-                            .verticalScroll(rememberScrollState())
+                            .verticalScroll(scrollState)
                     ) {
                         HorizonSpace(SpaceSize.SPACE_12)
                         DashboardAnnouncementBannerWidget(
@@ -230,8 +242,12 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
 }
 
 @Composable
-private fun HomeScreenTopBar(uiState: DashboardUiState, mainNavController: NavController, modifier: Modifier = Modifier) {
-    Row(verticalAlignment = Alignment.Bottom, modifier = modifier.padding(horizontal = 24.dp)) {
+private fun HomeScreenTopBar(uiState: DashboardUiState, mainNavController: NavController, modifier: Modifier = Modifier
+) {
+    Row(
+        verticalAlignment = Alignment.Bottom,
+        modifier = modifier.padding(horizontal = 24.dp)
+    ) {
         GlideImage(
             model = uiState.logoUrl,
             contentScale = ContentScale.Fit,
