@@ -181,7 +181,6 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                 bodyContent = {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
                         modifier = Modifier
                             .verticalScroll(scrollState)
                     ) {
@@ -323,7 +322,7 @@ private fun NumericWidgetRow(
                         DashboardMyProgressWidget(
                             shouldRefresh,
                             refreshStateFlow,
-                            modifier
+                            modifier.padding(bottom = 16.dp)
                         )
                     }
 
@@ -331,7 +330,7 @@ private fun NumericWidgetRow(
                         DashboardTimeSpentWidget(
                             shouldRefresh,
                             refreshStateFlow,
-                            modifier
+                            modifier.padding(bottom = 16.dp)
                         )
                     }
 
@@ -340,7 +339,7 @@ private fun NumericWidgetRow(
                             homeNavController,
                             shouldRefresh,
                             refreshStateFlow,
-                            modifier
+                            modifier.padding(bottom = 16.dp)
                         )
                     }
 
