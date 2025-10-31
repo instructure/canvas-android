@@ -143,7 +143,7 @@ private fun DashboardCourseSectionContent(
             }
         } else {
             DashboardCard(
-                Modifier.padding(horizontal = 16.dp)
+                Modifier.padding(horizontal = 24.dp)
             ) {
                 Text(
                     stringResource(R.string.dashboardNoCoursesMessage),
