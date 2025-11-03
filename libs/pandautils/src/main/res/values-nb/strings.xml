@@ -500,4 +500,5 @@
         <item quantity="one">%d min</item>
         <item quantity="other">%d minutter</item>
     </plurals>
+    <string name="notATeacherDescription">En av våre andre applikasjoner kan være mer tilpasset. Trykk på et ikon for å logge inn der.</string>
 </resources>

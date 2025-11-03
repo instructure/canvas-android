@@ -1074,6 +1074,10 @@
     <string name="downloadFailed">Сбой скачивания</string>
     <string name="downloadSuccessful">Скачивание завершено</string>
 
+    <string name="downloading">Скачивание</string>
+    <string name="downloadComplete">Скачивание завершено</string>
+    <string name="notificationChannelNameFileDownloadsName">Уведомления о скачивании</string>
+    <string name="notificationChannelNameFileDownloadsDescription">Уведомления Canvas для текущих скачиваний.</string>
     <string name="full_due_date_details">Полная информация о сроке выполнения</string>
     <string name="submissions">Отправки</string>
     <string name="attachment">Вложение</string>
@@ -2203,4 +2207,9 @@
     <string name="daysLateHint">Написать дни опоздания</string>
     <string name="reply_to_topic">Ответ по теме</string>
     <string name="additional_replies">Дополнительные ответы (%d)</string>
+    <string name="reply_to_topic_due">Требуется ответ по теме</string>
+    <string name="additional_replies_due">Требуются дополнительные ответы (%d)</string>
+    <string name="a11y_discussion_checkpoints">Контрольные точки обсуждения</string>
+    <string name="multipleDueDates">Множественные даты выполнения</string>
+    <string name="courseConcludedError">Курс завершен. Невозможно отправить сообщение!</string>
 </resources>

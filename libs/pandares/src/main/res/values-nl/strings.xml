@@ -1042,6 +1042,10 @@
     <string name="downloadFailed">Downloaden mislukt</string>
     <string name="downloadSuccessful">Downloaden gelukt</string>
 
+    <string name="downloading">Bezig met downloaden</string>
+    <string name="downloadComplete">Downloaden voltooid</string>
+    <string name="notificationChannelNameFileDownloadsName">Meldingen downloaden</string>
+    <string name="notificationChannelNameFileDownloadsDescription">Canvas-meldingen voor lopende downloads.</string>
     <string name="full_due_date_details">Alle details inleverdatum</string>
     <string name="submissions">Inleveringen</string>
     <string name="attachment">Bijlage</string>
@@ -2131,4 +2135,9 @@
     <string name="daysLateHint">Schrijf het aantal dagen te laat op</string>
     <string name="reply_to_topic">Reageer op onderwerp</string>
     <string name="additional_replies">Aanvullende reacties (%d)</string>
+    <string name="reply_to_topic_due">Antwoord op onderwerp vereist </string>
+    <string name="additional_replies_due">Aanvullende antwoorden (%d) vereist</string>
+    <string name="a11y_discussion_checkpoints">Discussiecontrolemomenten</string>
+    <string name="multipleDueDates">Meerdere inleverdatums</string>
+    <string name="courseConcludedError">Cursus afgesloten. Kan geen berichten verzenden!</string>
 </resources>

@@ -500,4 +500,5 @@
         <item quantity="one">%d นาที</item>
         <item quantity="other">%d นาที</item>
     </plurals>
+    <string name="notATeacherDescription">แอพอื่น ๆ บางส่วนของเราอาจเหมาะสมมากกว่า กดเลือกไอคอนเพื่อล็อกอินจากที่นี่</string>
 </resources>

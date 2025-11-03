@@ -1042,6 +1042,10 @@
     <string name="downloadFailed">Prenos ni uspel.</string>
     <string name="downloadSuccessful">Prenos je uspel.</string>
 
+    <string name="downloading">Prenašanje</string>
+    <string name="downloadComplete">Prenos je končan</string>
+    <string name="notificationChannelNameFileDownloadsName">Sporočila o prenosih</string>
+    <string name="notificationChannelNameFileDownloadsDescription">Obvestila sistema Canvas za prenose v teku.</string>
     <string name="full_due_date_details">Vse podrobnosti o roku</string>
     <string name="submissions">Oddaje</string>
     <string name="attachment">Priloga</string>
@@ -2131,4 +2135,9 @@
     <string name="daysLateHint">Vnesite dni zamude</string>
     <string name="reply_to_topic">Odgovor na temo</string>
     <string name="additional_replies">Dodatni odgovori (%d)</string>
+    <string name="reply_to_topic_due">Rok za odgovor na temo</string>
+    <string name="additional_replies_due">Rok za dodatne odgovore (%d)</string>
+    <string name="a11y_discussion_checkpoints">Točke preverjanja razprave</string>
+    <string name="multipleDueDates">Več rokov</string>
+    <string name="courseConcludedError">Predmet zaključen. Sporočil ni bilo mogoče poslati!</string>
 </resources>
