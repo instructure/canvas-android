@@ -16,6 +16,7 @@
 package com.instructure.pandautils.features.todolist
 
 import android.content.Context
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Plannable
 import com.instructure.canvasapi2.models.PlannableType
@@ -53,6 +54,7 @@ class ToDoListViewModelTest {
     private val context: Context = mockk(relaxed = true)
     private val repository: ToDoListRepository = mockk(relaxed = true)
     private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
+    private val firebaseCrashlytics: FirebaseCrashlytics = mockk(relaxed = true)
 
     @Before
     fun setUp() {
@@ -717,7 +719,7 @@ class ToDoListViewModelTest {
 
     // Helper functions
     private fun getViewModel(): ToDoListViewModel {
-        return ToDoListViewModel(context, repository, networkStateProvider)
+        return ToDoListViewModel(context, repository, networkStateProvider, firebaseCrashlytics)
     }
 
     private fun createPlannerItem(
