@@ -15,7 +15,9 @@
  */
 package com.instructure.pandautils.features.todolist
 
+import android.os.Build
 import android.view.HapticFeedbackConstants
+import android.view.View
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -108,6 +110,32 @@ import kotlin.math.abs
 import kotlin.math.roundToInt
 
 private const val SWIPE_THRESHOLD_DP = 150
+
+/**
+ * Performs haptic feedback with appropriate constants based on API level.
+ * Uses TOGGLE_ON/TOGGLE_OFF on API 34+ for marking done/undone, falls back to CONTEXT_CLICK on older versions.
+ */
+private fun View.performToggleHapticFeedback(isMarkingAsDone: Boolean) {
+    val hapticConstant = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+        if (isMarkingAsDone) HapticFeedbackConstants.TOGGLE_ON else HapticFeedbackConstants.TOGGLE_OFF
+    } else {
+        HapticFeedbackConstants.CONTEXT_CLICK
+    }
+    performHapticFeedback(hapticConstant)
+}
+
+/**
+ * Performs haptic feedback for gesture start/end with appropriate constants based on API level.
+ * Uses GESTURE_START/GESTURE_END on API 34+, falls back to CONTEXT_CLICK on older versions.
+ */
+private fun View.performGestureHapticFeedback(isStart: Boolean) {
+    val hapticConstant = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+        if (isStart) HapticFeedbackConstants.GESTURE_START else HapticFeedbackConstants.GESTURE_END
+    } else {
+        HapticFeedbackConstants.CONTEXT_CLICK
+    }
+    performHapticFeedback(hapticConstant)
+}
 
 private data class StickyHeaderState(
     val item: ToDoItemUiState?,
@@ -423,7 +451,9 @@ private fun ToDoItem(
                     targetValue = targetOffset,
                     animationSpec = tween(durationMillis = 200)
                 )
-                view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+
+                // Gesture end haptic feedback
+                view.performGestureHapticFeedback(isStart = false)
                 delay(300)
                 animateToCenter()
                 item.onSwipeToDone()
@@ -441,8 +471,14 @@ private fun ToDoItem(
             }
             .pointerInput(Unit) {
                 detectHorizontalDragGestures(
+                    onDragStart = {
+                        // Gesture start haptic feedback when user begins dragging
+                        view.performGestureHapticFeedback(isStart = true)
+                    },
                     onDragEnd = { handleSwipeEnd() },
-                    onDragCancel = { animateToCenter() },
+                    onDragCancel = {
+                        animateToCenter()
+                    },
                     onHorizontalDrag = { _, dragAmount ->
                         coroutineScope.launch {
                             val newOffset = (animatedOffsetX.value + dragAmount).coerceIn(-itemWidth, itemWidth)
@@ -488,10 +524,12 @@ private fun BoxScope.SwipeBackground(isChecked: Boolean, offsetX: Float) {
         R.drawable.ic_checkmark_lined
     }
 
-    // Calculate alpha based on swipe progress
+    // Calculate alpha based on swipe progress with ease-in curve
     val density = LocalDensity.current
     val swipeThreshold = with(density) { SWIPE_THRESHOLD_DP.dp.toPx() }
-    val alpha = (abs(offsetX) / swipeThreshold).coerceIn(0f, 1f)
+    val progress = (abs(offsetX) / swipeThreshold).coerceIn(0f, 1f)
+    // Apply ease-in cubic easing for gradual fade-in that accelerates near threshold
+    val alpha = progress * progress * progress
 
     Box(
         modifier = Modifier
@@ -645,7 +683,8 @@ private fun ToDoItemContent(
             Checkbox(
                 checked = item.isChecked,
                 onCheckedChange = {
-                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+                    // Determine if marking as done or undone based on the new checked state
+                    view.performToggleHapticFeedback(it)
                     onCheckedChange()
                 },
                 colors = CheckboxDefaults.colors(
