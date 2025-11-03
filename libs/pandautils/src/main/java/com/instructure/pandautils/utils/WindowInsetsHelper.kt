@@ -157,6 +157,19 @@ fun View.applySystemBarInsets(
     }
 }
 
+fun View.applyImeAndSystemBarInsets() {
+    ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
+        val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+        val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+        view.updatePadding(bottom = maxOf(ime.bottom, systemBars.bottom))
+        insets
+    }
+    // Request insets to be dispatched immediately if view is attached
+    if (isAttachedToWindow) {
+        ViewCompat.requestApplyInsets(this)
+    }
+}
+
 fun View.doOnApplyWindowInsets(block: (view: View, insets: Insets) -> WindowInsetsCompat) {
     ViewCompat.setOnApplyWindowInsetsListener(this) { view, windowInsets ->
         val systemBars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())

@@ -19,9 +19,6 @@ package com.instructure.teacher.PSPDFKit.AnnotationComments
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialog
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -103,20 +100,8 @@ class AnnotationCommentListFragment : BaseListFragment<
 
     private fun setupWindowInsets() = with(binding) {
         toolbar.applyTopSystemBarInsets()
-
-        ViewCompat.setOnApplyWindowInsetsListener(annotationCommentsRecyclerView) { view, insets ->
-            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            view.updatePadding(bottom = maxOf(ime.bottom, systemBars.bottom))
-            insets
-        }
-
-        ViewCompat.setOnApplyWindowInsetsListener(commentInputContainer) { view, insets ->
-            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            view.updatePadding(bottom = maxOf(ime.bottom, systemBars.bottom))
-            insets
-        }
+        annotationCommentsRecyclerView.applyImeAndSystemBarInsets()
+        commentInputContainer.applyImeAndSystemBarInsets()
     }
 
     fun setupToolbar() {
