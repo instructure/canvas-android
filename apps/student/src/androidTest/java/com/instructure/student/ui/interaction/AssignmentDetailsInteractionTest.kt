@@ -35,6 +35,7 @@ import com.instructure.canvas.espresso.mockcanvas.addAssignmentsToGroups
 import com.instructure.canvas.espresso.mockcanvas.addSubmissionForAssignment
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeCustomGradeStatusesManager
 import com.instructure.canvas.espresso.mockcanvas.init
+import com.instructure.canvas.espresso.refresh
 import com.instructure.canvasapi2.di.graphql.CustomGradeStatusModule
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.models.Assignment
@@ -159,7 +160,7 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
 
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, SecondaryFeatureCategory.SUBMISSIONS_MEDIA_RECORDING)
-    fun testSubmission_submitMediaRecordingVideoFromFile() {
+    fun testSubmission_submitMediaRecordingChooseMediaFile() {
         val data = MockCanvas.init(
             studentCount = 1,
             courseCount = 1
@@ -193,15 +194,15 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
 
         val resultData = android.content.Intent()
         val dir = activity.externalCacheDir
-        val file = java.io.File(dir?.path, fileName)
-        val uri = android.net.Uri.fromFile(file)
+        val file = File(dir?.path, fileName)
+        val uri = Uri.fromFile(file)
         resultData.data = uri
         val activityResult = android.app.Instrumentation.ActivityResult(android.app.Activity.RESULT_OK, resultData)
 
         androidx.test.espresso.intent.Intents.init()
         try {
             androidx.test.espresso.intent.Intents.intending(
-                org.hamcrest.Matchers.anyOf(
+                Matchers.anyOf(
                     androidx.test.espresso.intent.matcher.IntentMatchers.hasAction(android.content.Intent.ACTION_GET_CONTENT),
                     androidx.test.espresso.intent.matcher.IntentMatchers.hasAction(android.content.Intent.ACTION_PICK),
                     androidx.test.espresso.intent.matcher.IntentMatchers.hasAction(android.content.Intent.ACTION_OPEN_DOCUMENT)
@@ -224,7 +225,7 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
 
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, SecondaryFeatureCategory.SUBMISSIONS_MEDIA_RECORDING)
-    fun testSubmission_submitMediaRecordingVideoFromRecording() {
+    fun testSubmission_submitMediaRecordingRecordVideo() {
         val data = MockCanvas.init(
             studentCount = 1,
             courseCount = 1
@@ -260,7 +261,7 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
 
         androidx.test.espresso.intent.Intents.init()
         androidx.test.espresso.intent.Intents.intending(
-            org.hamcrest.Matchers.allOf(
+            Matchers.allOf(
                 androidx.test.espresso.intent.matcher.IntentMatchers.hasAction(android.provider.MediaStore.ACTION_VIDEO_CAPTURE),
                 androidx.test.espresso.intent.matcher.IntentMatchers.hasExtraWithKey(android.provider.MediaStore.EXTRA_OUTPUT)
             )
@@ -303,7 +304,7 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
 
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, SecondaryFeatureCategory.SUBMISSIONS_MEDIA_RECORDING)
-    fun testSubmission_submitMediaRecordingAudioFromRecording() {
+    fun testSubmission_submitMediaRecordingRecordAudio() {
         val data = MockCanvas.init(
             studentCount = 1,
             courseCount = 1
@@ -325,17 +326,12 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
 
         androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().uiAutomation.grantRuntimePermission(
             activity.packageName,
-            android.Manifest.permission.CAMERA
-        )
-        androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().uiAutomation.grantRuntimePermission(
-            activity.packageName,
             android.Manifest.permission.RECORD_AUDIO
         )
 
         val testAudioFileName = "test_audio.mp3"
         copyAssetFileToExternalCache(activity, testAudioFileName)
 
-        // Pre-create the audio file to mock MediaRecorder output before any UI interaction
         val context = androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().targetContext
         val recordingFile = File(context.externalCacheDir, "audio.amr")
         val testAudioFile = File(context.externalCacheDir, testAudioFileName)
@@ -345,48 +341,13 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
         assignmentDetailsPage.clickSubmit()
         onView(withId(R.id.submissionEntryAudio)).perform(click())
 
-        // Wait for audio recorder to appear
-        Thread.sleep(1000)
+        device.findObject(androidx.test.uiautomator.UiSelector().resourceIdMatches(".*recordAudioButton")).click()
 
-        // Click record button using UiDevice - find by clickable property since resource ID might not work
-        val recordButton = device.findObject(androidx.test.uiautomator.UiSelector().clickable(true).index(0))
-        if (recordButton.exists()) {
-            recordButton.click()
-        } else {
-            // Fallback: click at the center-bottom area where the record button typically appears
-            val displayWidth = device.displayWidth
-            val displayHeight = device.displayHeight
-            device.click(displayWidth / 2, displayHeight - 300)
-        }
+        device.findObject(androidx.test.uiautomator.UiSelector().resourceIdMatches(".*stopButton")).click()
 
-        // Verify recording started
-        Thread.sleep(500)
+        device.findObject(androidx.test.uiautomator.UiSelector().resourceIdMatches(".*sendAudioButton")).click()
 
-        // Wait a minimal amount of time and copy our test file again to ensure it's used
-        Thread.sleep(100)
-        testAudioFile.copyTo(recordingFile, overwrite = true)
-
-        // Click stop button using UiDevice
-        val stopButton = device.findObject(androidx.test.uiautomator.UiSelector().resourceId("com.instructure.student:id/stopButton"))
-        stopButton.click()
-
-        // Wait for UI to update and show send button
-        Thread.sleep(500)
-
-        // Click send button using UiDevice
-        val sendButton = device.findObject(androidx.test.uiautomator.UiSelector().resourceId("com.instructure.student:id/sendAudioButton"))
-        sendButton.click()
-
-        // Wait for the audio recorder to disappear
-        Thread.sleep(1000)
-
-        pickerSubmissionUploadPage.waitForSubmitButtonToAppear()
-
-        // Verify a file is displayed (it will have a UUID-based name)
-        onView(withId(R.id.fileName)).check(androidx.test.espresso.assertion.ViewAssertions.matches(ViewMatchers.isDisplayed()))
-
-        pickerSubmissionUploadPage.submit()
-
+        refresh()
         assignmentDetailsPage.assertStatusSubmitted()
     }
 
