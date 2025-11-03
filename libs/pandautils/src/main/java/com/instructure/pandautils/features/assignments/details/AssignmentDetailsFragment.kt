@@ -60,7 +60,7 @@ import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.PermissionUtils
-import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyBottomSystemBarMargin
 import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.makeBundle
@@ -138,7 +138,7 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
 
             assignmentDetailsBehaviour.applyTheme(requireActivity(), binding, bookmark, viewModel.course.value, this)
         }
-        binding?.swipeRefreshLayout?.applyBottomSystemBarInsets()
+        binding?.submitButton?.applyBottomSystemBarMargin()
     }
 
     override fun getFragment(): Fragment = this

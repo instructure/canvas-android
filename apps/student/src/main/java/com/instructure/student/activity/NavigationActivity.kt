@@ -426,9 +426,12 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
         ViewCompat.setOnApplyWindowInsetsListener(bottomBar) { view, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            view.updateLayoutParams<LinearLayout.LayoutParams> {
-                bottomMargin = systemBars.bottom
-            }
+            view.setPadding(
+                view.paddingLeft,
+                view.paddingTop,
+                view.paddingRight,
+                systemBars.bottom
+            )
             insets
         }
 

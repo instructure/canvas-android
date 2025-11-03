@@ -38,7 +38,7 @@ import com.instructure.pandautils.utils.NullableParcelableArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.announceAccessibilityText
-import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyBottomSystemBarMargin
 import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.argsWithContext
@@ -145,7 +145,7 @@ class OfflineContentFragment : BaseCanvasFragment(), FragmentInteractions {
             updateMenuText(data.selectedCount)
         }
 
-        binding.swipeRefreshLayout.applyBottomSystemBarInsets()
+        binding.syncButton.applyBottomSystemBarMargin()
     }
 
     override fun getFragment(): Fragment = this
