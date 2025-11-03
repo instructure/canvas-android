@@ -1,4 +1,4 @@
-package com.instructure.horizon.features.dashboard.course.card
+package com.instructure.horizon.features.dashboard.widget.course.card
 
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.model.LearningObjectType

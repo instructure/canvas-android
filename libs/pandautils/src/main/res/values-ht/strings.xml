@@ -499,4 +499,5 @@
         <item quantity="one">%d Min</item>
         <item quantity="other">%d Mins</item>
     </plurals>
+    <string name="notATeacherDescription"> Youn nan lòt aplikasyon nou yo ka pi bon pou ou. Peze yon ikòn pou w konekte la.</string>
 </resources>

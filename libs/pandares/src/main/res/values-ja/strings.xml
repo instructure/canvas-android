@@ -1026,6 +1026,10 @@
     <string name="downloadFailed">ダウンロードに失敗</string>
     <string name="downloadSuccessful">ダウンロードに成功</string>
 
+    <string name="downloading">読み込み中</string>
+    <string name="downloadComplete">ダウンロード完了</string>
+    <string name="notificationChannelNameFileDownloadsName">通知をダウンロードする</string>
+    <string name="notificationChannelNameFileDownloadsDescription">現在ダウンロード中の Canvas 通知。</string>
     <string name="full_due_date_details">締め切り日の全詳細</string>
     <string name="submissions">提出物</string>
     <string name="attachment">添付ファイル</string>
@@ -2095,4 +2099,9 @@
     <string name="daysLateHint">遅延日数を書いてください</string>
     <string name="reply_to_topic">トピックに返信する</string>
     <string name="additional_replies">追加の返信 (%d)</string>
+    <string name="reply_to_topic_due">トピックに返信する期日：</string>
+    <string name="additional_replies_due">追加の返信 (%d)の期日：</string>
+    <string name="a11y_discussion_checkpoints">ディスカッションチェックポイント</string>
+    <string name="multipleDueDates">複数の締切日</string>
+    <string name="courseConcludedError">コース完了しました。メッセージを送信できません！</string>
 </resources>

@@ -1042,6 +1042,10 @@
     <string name="downloadFailed">I rahua te tikiake</string>
     <string name="downloadSuccessful">I pai te tikiake</string>
 
+    <string name="downloading">Tikiake ana</string>
+    <string name="downloadComplete">Kua oti te tango</string>
+    <string name="notificationChannelNameFileDownloadsName">Ngā Pānui Tikiake</string>
+    <string name="notificationChannelNameFileDownloadsDescription">Ngā pānui Canvas mō ngā tikiake tonu.</string>
     <string name="full_due_date_details">Ngā taipitopito katoa o ngā rā e tika ana</string>
     <string name="submissions">Tukunga</string>
     <string name="attachment">Āpitihanga</string>
@@ -2131,4 +2135,9 @@
     <string name="daysLateHint">Tuhia nga ra tomuri</string>
     <string name="reply_to_topic">Whakautu ki te kaupapa</string>
     <string name="additional_replies">Nga whakautu taapiri (%d)</string>
+    <string name="reply_to_topic_due">Kua tae ki te wā whakautu ki te kaupapa</string>
+    <string name="additional_replies_due">Kua tae ki te wā whakautu tāpiri (%d)</string>
+    <string name="a11y_discussion_checkpoints">Matapakinga Takitaki</string>
+    <string name="multipleDueDates">Maha Rā e tika ana</string>
+    <string name="courseConcludedError">Kua mutu te akoranga. Kaore e taea te tuku karere!</string>
 </resources>

@@ -1074,6 +1074,10 @@
     <string name="downloadFailed">Nie udało się pobrać</string>
     <string name="downloadSuccessful">Pobrano</string>
 
+    <string name="downloading">Pobieranie</string>
+    <string name="downloadComplete">Ukończono pobieranie</string>
+    <string name="notificationChannelNameFileDownloadsName">Powiadomienia o pobraniu</string>
+    <string name="notificationChannelNameFileDownloadsDescription">Powiadomienia Canvas dotyczące pobieranych obecnie plików.</string>
     <string name="full_due_date_details">Szczegóły dotyczące terminu</string>
     <string name="submissions">Przesłane materiały</string>
     <string name="attachment">Załącznik</string>
@@ -2203,4 +2207,9 @@
     <string name="daysLateHint">Wpisz dni spóźnienia</string>
     <string name="reply_to_topic">Odpowiedź na temat</string>
     <string name="additional_replies">Dodatkowe odpowiedzi (%d)</string>
+    <string name="reply_to_topic_due">Wymagana odpowiedź na temat</string>
+    <string name="additional_replies_due">Wymagane dodatkowe odpowiedzi (%d)</string>
+    <string name="a11y_discussion_checkpoints">Punkty kontrolne dyskusji</string>
+    <string name="multipleDueDates">Wiele terminów</string>
+    <string name="courseConcludedError">Zakończony kurs. Nie udało się wysłać wiadomości!</string>
 </resources>
