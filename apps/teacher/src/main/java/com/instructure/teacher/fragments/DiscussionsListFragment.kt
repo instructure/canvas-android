@@ -42,17 +42,13 @@ import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.addSearch
+import com.instructure.pandautils.utils.applyBottomAndRightSystemBarPadding
 import com.instructure.pandautils.utils.applyBottomSystemBarInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.closeSearch
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getDrawableCompat
-import com.instructure.pandautils.utils.toPx
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updateLayoutParams
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
@@ -249,18 +245,7 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
         createNewDiscussion.setGone()
         createNewDiscussion.backgroundTintList = ViewStyler.makeColorStateListForButton()
         createNewDiscussion.setImageDrawable(ColorUtils.colorIt(ThemePrefs.buttonTextColor, createNewDiscussion.drawable))
-
-        ViewCompat.setOnApplyWindowInsetsListener(createNewDiscussion) { view, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            val baseMargin = 16.toPx
-            view.updateLayoutParams<CoordinatorLayout.LayoutParams> {
-                bottomMargin = baseMargin + systemBars.bottom
-            }
-            insets
-        }
-        if (createNewDiscussion.isAttachedToWindow) {
-            ViewCompat.requestApplyInsets(createNewDiscussion)
-        }
+        createNewDiscussion.applyBottomAndRightSystemBarPadding()
 
         createNewDiscussion.onClickWithRequireNetwork {
             if(isAnnouncements) {

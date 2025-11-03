@@ -36,6 +36,7 @@ import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.addSearch
+import com.instructure.pandautils.utils.applyBottomAndRightSystemBarPadding
 import com.instructure.pandautils.utils.applyBottomSystemBarInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.closeSearch
@@ -46,11 +47,6 @@ import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
-import com.instructure.pandautils.utils.toPx
-import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updateLayoutParams
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.PageListAdapter
 import com.instructure.teacher.databinding.FragmentPageListBinding
@@ -207,18 +203,7 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
             val args = CreateOrEditPageDetailsFragment.newInstanceCreate(canvasContext).nonNullArgs
             RouteMatcher.route(requireActivity(), Route(CreateOrEditPageDetailsFragment::class.java, null, args))
         }
-
-        ViewCompat.setOnApplyWindowInsetsListener(createNewPage) { view, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            val baseMargin = 16.toPx
-            view.updateLayoutParams<CoordinatorLayout.LayoutParams> {
-                bottomMargin = baseMargin + systemBars.bottom
-            }
-            insets
-        }
-        if (createNewPage.isAttachedToWindow) {
-            ViewCompat.requestApplyInsets(createNewPage)
-        }
+        createNewPage.applyBottomAndRightSystemBarPadding()
     }
 
     @Suppress("unused")

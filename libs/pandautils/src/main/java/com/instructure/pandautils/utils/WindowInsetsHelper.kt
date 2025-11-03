@@ -126,6 +126,23 @@ fun View.applyBottomSystemBarMargin() {
     }
 }
 
+fun View.applyBottomAndRightSystemBarPadding() {
+    val originalBottomPadding = paddingBottom
+    val originalRightPadding = paddingRight
+    ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
+        val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+        view.updatePadding(
+            bottom = originalBottomPadding + systemBars.bottom,
+            right = originalRightPadding + systemBars.right
+        )
+        insets
+    }
+    // Request insets to be dispatched immediately if view is attached
+    if (isAttachedToWindow) {
+        ViewCompat.requestApplyInsets(this)
+    }
+}
+
 fun View.applyHorizontalSystemBarInsets() {
     ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
         val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
