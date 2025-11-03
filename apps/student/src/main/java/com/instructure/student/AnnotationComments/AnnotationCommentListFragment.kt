@@ -22,6 +22,8 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialog
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -177,16 +179,16 @@ class AnnotationCommentListFragment : ParentFragment() {
     private fun setupWindowInsets() = with(binding) {
         toolbar.applyTopSystemBarInsets()
 
-        androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(annotationCommentsRecyclerView) { view, insets ->
-            val ime = insets.getInsets(androidx.core.view.WindowInsetsCompat.Type.ime())
-            val systemBars = insets.getInsets(androidx.core.view.WindowInsetsCompat.Type.systemBars())
+        ViewCompat.setOnApplyWindowInsetsListener(annotationCommentsRecyclerView) { view, insets ->
+            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             view.updatePadding(bottom = maxOf(ime.bottom, systemBars.bottom))
             insets
         }
 
-        androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(commentInputContainer) { view, insets ->
-            val ime = insets.getInsets(androidx.core.view.WindowInsetsCompat.Type.ime())
-            val systemBars = insets.getInsets(androidx.core.view.WindowInsetsCompat.Type.systemBars())
+        ViewCompat.setOnApplyWindowInsetsListener(commentInputContainer) { view, insets ->
+            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             view.updatePadding(bottom = maxOf(ime.bottom, systemBars.bottom))
             insets
         }
