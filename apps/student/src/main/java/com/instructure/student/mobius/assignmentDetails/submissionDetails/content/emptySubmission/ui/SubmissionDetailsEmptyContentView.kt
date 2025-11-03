@@ -19,6 +19,7 @@ import android.app.Dialog
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.net.Uri
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,6 +32,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
+import com.instructure.canvasapi2.utils.AnalyticsParamConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.lti.LtiLaunchFragment
@@ -98,23 +100,42 @@ class SubmissionDetailsEmptyContentView(
         val dialog = builder.setView(binding.root).create()
 
         dialog.setOnShowListener {
+            val nextAttempt = (assignment.submission?.attempt ?: 0) + 1
             setupDialogRow(dialog, binding.submissionEntryText, visibilities.textEntry) {
+                logEvent(AnalyticsEventConstants.SUBMIT_TEXTENTRY_SELECTED, Bundle().apply {
+                    putString(AnalyticsParamConstants.ATTEMPT, nextAttempt.toString())
+                })
                 showOnlineTextEntryView(assignment.id, assignment.name)
             }
             setupDialogRow(dialog, binding.submissionEntryWebsite, visibilities.urlEntry) {
+                logEvent(AnalyticsEventConstants.SUBMIT_URL_SELECTED, Bundle().apply {
+                    putString(AnalyticsParamConstants.ATTEMPT, nextAttempt.toString())
+                })
                 showOnlineUrlEntryView(assignment.id, assignment.name, canvasContext)
             }
             setupDialogRow(dialog, binding.submissionEntryFile, visibilities.fileUpload) {
+                logEvent(AnalyticsEventConstants.SUBMIT_FILEUPLOAD_SELECTED, Bundle().apply {
+                    putString(AnalyticsParamConstants.ATTEMPT, nextAttempt.toString())
+                })
                 showFileUploadView(assignment)
             }
             setupDialogRow(dialog, binding.submissionEntryMedia, visibilities.mediaRecording) {
+                logEvent(AnalyticsEventConstants.SUBMIT_MEDIARECORDING_SELECTED, Bundle().apply {
+                    putString(AnalyticsParamConstants.ATTEMPT, nextAttempt.toString())
+                })
                 showMediaRecordingView()
             }
             setupDialogRow(dialog, binding.submissionEntryStudio, visibilities.studioUpload) {
+                logEvent(AnalyticsEventConstants.SUBMIT_STUDIO_SELECTED, Bundle().apply {
+                    putString(AnalyticsParamConstants.ATTEMPT, nextAttempt.toString())
+                })
                 // The LTI info shouldn't be null if we are showing the Studio upload option
                 showStudioUploadView(assignment, ltiToolUrl!!, ltiToolName!!)
             }
             setupDialogRow(dialog, binding.submissionEntryStudentAnnotation, visibilities.studentAnnotation) {
+                logEvent(AnalyticsEventConstants.SUBMIT_ANNOTATION_SELECTED, Bundle().apply {
+                    putString(AnalyticsParamConstants.ATTEMPT, nextAttempt.toString())
+                })
                 showStudentAnnotationView(assignment)
             }
         }
@@ -130,12 +151,10 @@ class SubmissionDetailsEmptyContentView(
     }
 
     fun showOnlineTextEntryView(assignmentId: Long, assignmentName: String?, submittedText: String? = null, isFailure: Boolean = false) {
-        logEventWithOrigin(AnalyticsEventConstants.SUBMIT_TEXTENTRY_SELECTED)
         RouteMatcher.route(activity as FragmentActivity, TextSubmissionUploadFragment.makeRoute(canvasContext, assignmentId, assignmentName, submittedText, isFailure))
     }
 
     fun showOnlineUrlEntryView(assignmentId: Long, assignmentName: String?, canvasContext: CanvasContext, submittedUrl: String? = null) {
-        logEventWithOrigin(AnalyticsEventConstants.SUBMIT_ONLINEURL_SELECTED)
         RouteMatcher.route(activity as FragmentActivity, UrlSubmissionUploadFragment.makeRoute(canvasContext, assignmentId, assignmentName, submittedUrl))
     }
 
@@ -161,7 +180,6 @@ class SubmissionDetailsEmptyContentView(
     }
 
     fun showMediaRecordingView() {
-        logEventWithOrigin(AnalyticsEventConstants.SUBMIT_MEDIARECORDING_SELECTED)
         val builder = AlertDialog.Builder(context)
         val binding = DialogSubmissionPickerMediaBinding.inflate(LayoutInflater.from(context), null, false)
         val dialog = builder.setView(binding.root).create()
@@ -182,7 +200,6 @@ class SubmissionDetailsEmptyContentView(
     }
 
     private fun showStudioUploadView(assignment: Assignment, ltiUrl: String, studioLtiToolName: String) {
-        logEventWithOrigin(AnalyticsEventConstants.SUBMIT_STUDIO_SELECTED)
         RouteMatcher.route(activity as FragmentActivity, StudioWebViewFragment.makeRoute(canvasContext, ltiUrl, studioLtiToolName, true, assignment))
     }
 
@@ -214,7 +231,6 @@ class SubmissionDetailsEmptyContentView(
     }
 
     fun showFileUploadView(assignment: Assignment) {
-        logEventWithOrigin(AnalyticsEventConstants.SUBMIT_FILEUPLOAD_SELECTED)
         RouteMatcher.route(activity as FragmentActivity, PickerSubmissionUploadFragment.makeRoute(canvasContext, assignment, PickerSubmissionMode.FileSubmission))
     }
 
@@ -235,8 +251,6 @@ class SubmissionDetailsEmptyContentView(
     }
 
     fun showStudentAnnotationView(assignment: Assignment) {
-        logEvent(AnalyticsEventConstants.SUBMIT_STUDENT_ANNOTATION_SELECTED)
-
         val submissionId = assignment.submission?.id
         if (submissionId != null) {
             RouteMatcher.route(

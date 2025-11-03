@@ -44,6 +44,7 @@ abstract class BaseSubmissionHelper(
         assignmentId: Long,
         assignmentName: String?,
         text: String,
+        attempt: Long = 1L,
         deleteBySubmissionTypeFilter: Assignment.SubmissionType? = null
     ) {
         val dbSubmissionId = runBlocking {
@@ -56,7 +57,8 @@ abstract class BaseSubmissionHelper(
                     submissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString,
                     userId = getUserId(),
                     lastActivityDate = Date(),
-                    isDraft = false
+                    isDraft = false,
+                    attempt = attempt
                 )
                 it.submissionDao().insert(entity)
             }
@@ -123,7 +125,8 @@ abstract class BaseSubmissionHelper(
         canvasContext: CanvasContext,
         assignmentId: Long,
         assignmentName: String?,
-        url: String
+        url: String,
+        attempt: Long = 1L
     ) {
         val dbSubmissionId = runBlocking {
             insertNewSubmission(assignmentId) {
@@ -134,7 +137,8 @@ abstract class BaseSubmissionHelper(
                     canvasContext = canvasContext,
                     submissionType = Assignment.SubmissionType.ONLINE_URL.apiString,
                     userId = getUserId(),
-                    lastActivityDate = Date()
+                    lastActivityDate = Date(),
+                    attempt = attempt
                 )
                 it.submissionDao().insert(entity)
             }
@@ -149,7 +153,8 @@ abstract class BaseSubmissionHelper(
         assignmentName: String?,
         assignmentGroupCategoryId: Long = 0,
         files: ArrayList<FileSubmitObject>,
-        deleteBySubmissionTypeFilter: Assignment.SubmissionType? = null
+        deleteBySubmissionTypeFilter: Assignment.SubmissionType? = null,
+        attempt: Long = 1L
 
     ) {
         files.ifEmpty { return } // No need to upload files if we aren't given any
@@ -164,7 +169,8 @@ abstract class BaseSubmissionHelper(
                     submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString,
                     userId = getUserId(),
                     lastActivityDate = Date(),
-                    fileCount = files.size
+                    fileCount = files.size,
+                    attempt = attempt
                 )
                 it.submissionDao().insert(entity)
             }
@@ -189,7 +195,10 @@ abstract class BaseSubmissionHelper(
         assignmentId: Long,
         assignmentName: String?,
         assignmentGroupCategoryId: Long,
-        mediaFilePath: String
+        mediaFilePath: String,
+        attempt: Long = 1L,
+        mediaType: String? = null,
+        mediaSource: String? = null
     ) {
         val file = File(mediaFilePath).let {
             FileSubmitObject(
@@ -208,7 +217,10 @@ abstract class BaseSubmissionHelper(
                     canvasContext = canvasContext,
                     submissionType = Assignment.SubmissionType.MEDIA_RECORDING.apiString,
                     userId = getUserId(),
-                    lastActivityDate = Date()
+                    lastActivityDate = Date(),
+                    attempt = attempt,
+                    mediaType = mediaType,
+                    mediaSource = mediaSource
                 )
                 it.submissionDao().insert(entity)
             }
@@ -221,7 +233,8 @@ abstract class BaseSubmissionHelper(
         canvasContext: CanvasContext,
         assignmentId: Long,
         assignmentName: String?,
-        url: String
+        url: String,
+        attempt: Long = 1L
     ) {
         val dbSubmissionId = runBlocking {
             insertNewSubmission(assignmentId) {
@@ -232,7 +245,8 @@ abstract class BaseSubmissionHelper(
                     canvasContext = canvasContext,
                     submissionType = Assignment.SubmissionType.ONLINE_URL.apiString,
                     userId = getUserId(),
-                    lastActivityDate = Date()
+                    lastActivityDate = Date(),
+                    attempt = attempt
                 )
                 it.submissionDao().insert(entity)
             }
@@ -307,7 +321,8 @@ abstract class BaseSubmissionHelper(
         canvasContext: CanvasContext,
         assignmentId: Long,
         assignmentName: String?,
-        annotatableAttachmentId: Long
+        annotatableAttachmentId: Long,
+        attempt: Long = 1L
     ) {
         val dbSubmissionId = runBlocking {
             insertNewSubmission(assignmentId) {
@@ -318,7 +333,8 @@ abstract class BaseSubmissionHelper(
                     canvasContext = canvasContext,
                     submissionType = Assignment.SubmissionType.STUDENT_ANNOTATION.apiString,
                     userId = getUserId(),
-                    lastActivityDate = Date()
+                    lastActivityDate = Date(),
+                    attempt = attempt
                 )
                 it.submissionDao().insert(entity)
             }

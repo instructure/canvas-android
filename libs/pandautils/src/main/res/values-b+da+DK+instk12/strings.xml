@@ -499,4 +499,5 @@
         <item quantity="one">%d min.</item>
         <item quantity="other">%d min.</item>
     </plurals>
+    <string name="notATeacherDescription">En af vores andre apps kan være et bedre valg. Tryk på et ikon for at logge ind der.</string>
 </resources>

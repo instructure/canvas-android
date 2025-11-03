@@ -51,6 +51,7 @@ import javax.inject.Inject
 class StudioWebViewFragment : InternalWebviewFragment() {
     val assignmentId: Long by LongArg(key = Const.ASSIGNMENT_ID)
     val assignmentName: String by StringArg(key = Const.ASSIGNMENT_NAME)
+    val attempt: Long by LongArg(key = Const.SUBMISSION_ATTEMPT, default = 1L)
 
     @Inject
     lateinit var submissionHelper: SubmissionHelper
@@ -146,7 +147,7 @@ class StudioWebViewFragment : InternalWebviewFragment() {
                 url = StringEscapeUtils.unescapeJava(url)
 
                 // Upload the url as a submission
-                submissionHelper.startStudioSubmission(canvasContext, assignmentId, assignmentName, url)
+                submissionHelper.startStudioSubmission(canvasContext, assignmentId, assignmentName, url, attempt)
 
                 // Close this page
                 navigation?.popCurrentFragment()
@@ -167,7 +168,7 @@ class StudioWebViewFragment : InternalWebviewFragment() {
             }
         } else null
 
-        fun makeRoute(canvasContext: CanvasContext, url: String, title: String, authenticate: Boolean, assignment: Assignment): Route =
+        fun makeRoute(canvasContext: CanvasContext, url: String, title: String, authenticate: Boolean, assignment: Assignment, attempt: Long = 1L): Route =
             Route(
                 StudioWebViewFragment::class.java, canvasContext,
                         canvasContext.makeBundle().apply {
@@ -176,6 +177,7 @@ class StudioWebViewFragment : InternalWebviewFragment() {
                             putString(Const.ACTION_BAR_TITLE, title)
                             putString(Const.ASSIGNMENT_NAME, assignment.name)
                             putLong(Const.ASSIGNMENT_ID, assignment.id)
+                            putLong(Const.SUBMISSION_ATTEMPT, attempt)
                         })
 
         fun validRoute(route: Route) : Boolean {

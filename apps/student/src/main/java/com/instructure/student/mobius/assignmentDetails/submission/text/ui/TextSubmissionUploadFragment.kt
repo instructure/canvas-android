@@ -35,12 +35,13 @@ class TextSubmissionUploadFragment : BaseTextSubmissionUploadFragment() {
 
     companion object {
 
-        fun makeRoute(course: CanvasContext, assignmentId: Long, assignmentName: String? = "", initialText: String? = null, isFailure: Boolean = false): Route {
+        fun makeRoute(course: CanvasContext, assignmentId: Long, assignmentName: String? = "", initialText: String? = null, isFailure: Boolean = false, attempt: Long = 1L): Route {
             val bundle = course.makeBundle{
                 putLong(Const.ASSIGNMENT_ID, assignmentId)
                 putString(Const.ASSIGNMENT_NAME, assignmentName)
                 putString(Const.TEXT, initialText)
                 putBoolean(Const.IS_FAILURE, isFailure)
+                putLong(Const.SUBMISSION_ATTEMPT, attempt)
             }
 
             return Route(null, TextSubmissionUploadFragment::class.java, course, bundle)

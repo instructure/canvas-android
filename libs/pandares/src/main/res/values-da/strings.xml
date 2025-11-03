@@ -1042,6 +1042,10 @@
     <string name="downloadFailed">Download mislykkedes</string>
     <string name="downloadSuccessful">Download lykkedes</string>
 
+    <string name="downloading">Downloader</string>
+    <string name="downloadComplete">Download fuldført</string>
+    <string name="notificationChannelNameFileDownloadsName">Downloadmeddelelser</string>
+    <string name="notificationChannelNameFileDownloadsDescription">Canvas-meddelelser for igangværende downloads.</string>
     <string name="full_due_date_details">Fulde oplysninger om afleveringsdato</string>
     <string name="submissions">Afleveringer</string>
     <string name="attachment">Vedhæftet fil</string>
@@ -2131,4 +2135,9 @@
     <string name="daysLateHint">Skriv dage forsinket</string>
     <string name="reply_to_topic">Svar på emne</string>
     <string name="additional_replies">Yderligere svar (%d)</string>
+    <string name="reply_to_topic_due">Afleveringsdato for svar på emne</string>
+    <string name="additional_replies_due">Yderligere svar (%d) afleveringsdato</string>
+    <string name="a11y_discussion_checkpoints">Diskussionens kontrolpunkter</string>
+    <string name="multipleDueDates">Flere forfaldsdatoer</string>
+    <string name="courseConcludedError">Faget er afsluttet. Kunne ikke sende beskeder!</string>
 </resources>

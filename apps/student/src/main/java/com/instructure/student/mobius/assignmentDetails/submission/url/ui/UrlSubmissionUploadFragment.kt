@@ -38,12 +38,13 @@ class UrlSubmissionUploadFragment : BaseUrlSubmissionUploadFragment() {
 
     companion object {
 
-        fun makeRoute(course: CanvasContext, assignmentId: Long, assignmentName: String? = "", initialUrl: String?, isFailure: Boolean = false): Route {
+        fun makeRoute(course: CanvasContext, assignmentId: Long, assignmentName: String? = "", initialUrl: String?, isFailure: Boolean = false, attempt: Long = 1L): Route {
             val bundle = course.makeBundle{
                 putLong(Const.ASSIGNMENT_ID, assignmentId)
                 putString(Const.ASSIGNMENT_NAME, assignmentName)
                 putString(Const.URL, initialUrl)
                 putBoolean(Const.IS_FAILURE, isFailure)
+                putLong(Const.SUBMISSION_ATTEMPT, attempt)
             }
 
             return Route(null, UrlSubmissionUploadFragment::class.java, course, bundle)
