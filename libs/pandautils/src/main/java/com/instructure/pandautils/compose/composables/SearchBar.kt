@@ -61,7 +61,8 @@ fun SearchBar(
     searchQuery: String = "",
     collapsable: Boolean = true,
     @DrawableRes hintIcon: Int? = null,
-    collapseOnSearch: Boolean = false
+    collapseOnSearch: Boolean = false,
+    onQueryChange: ((String) -> Unit)? = null
 ) {
     Row(
         modifier = modifier
@@ -103,7 +104,10 @@ fun SearchBar(
                     .focusRequester(focusRequester),
                 placeholder = { Text(placeholder) },
                 value = query,
-                onValueChange = { query = it },
+                onValueChange = {
+                    query = it
+                    onQueryChange?.invoke(it)
+                },
                 singleLine = true,
                 keyboardOptions = KeyboardOptions.Default.copy(
                     imeAction = ImeAction.Search

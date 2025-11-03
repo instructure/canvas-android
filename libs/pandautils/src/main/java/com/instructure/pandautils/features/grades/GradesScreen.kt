@@ -100,6 +100,7 @@ import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.FullScreenDialog
 import com.instructure.pandautils.compose.composables.GroupHeader
 import com.instructure.pandautils.compose.composables.Loading
+import com.instructure.pandautils.compose.composables.SearchBar
 import com.instructure.pandautils.compose.composables.SubmissionState
 import com.instructure.pandautils.features.grades.gradepreferences.GradePreferencesScreen
 import com.instructure.pandautils.utils.DisplayGrade
@@ -296,6 +297,26 @@ private fun GradesScreenContent(
                     )
                 }
 
+                if (uiState.isSearchExpanded) {
+                    SearchBar(
+                        icon = R.drawable.ic_search_white_24dp,
+                        searchQuery = uiState.searchQuery,
+                        tintColor = colorResource(R.color.textDarkest),
+                        placeholder = stringResource(R.string.search),
+                        collapsable = false,
+                        onSearch = {
+                            actionHandler(GradesAction.SearchQueryChanged(it))
+                        },
+                        onClear = {
+                            actionHandler(GradesAction.SearchQueryChanged(""))
+                        },
+                        onQueryChange = {
+                            actionHandler(GradesAction.SearchQueryChanged(it))
+                        },
+                        modifier = Modifier.testTag("searchField")
+                    )
+                }
+
                 if (uiState.items.isEmpty()) {
                     EmptyContent()
                 }
@@ -420,6 +441,27 @@ private fun GradesCard(
                 contentDescription = stringResource(id = R.string.gradesFilterContentDescription),
                 tint = Color(userColor),
                 modifier = Modifier.size(24.dp)
+            )
+        }
+        Box(
+            modifier = Modifier
+                .size(48.dp)
+                .clip(CircleShape)
+                .clickable {
+                    actionHandler(GradesAction.ToggleSearch)
+                }
+                .semantics {
+                    role = Role.Button
+                },
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_search_white_24dp),
+                contentDescription = stringResource(id = R.string.search),
+                tint = Color(userColor),
+                modifier = Modifier
+                    .size(24.dp)
+                    .testTag("searchIcon")
             )
         }
     }
