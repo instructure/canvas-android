@@ -18,7 +18,6 @@
 package com.instructure.student.features.appointmentgroups
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -51,7 +50,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
@@ -80,7 +78,6 @@ import com.instructure.pandautils.compose.composables.ErrorContent
 fun AppointmentGroupsListScreen(
     title: String,
     uiState: AppointmentGroupsListUiState,
-    onAction: (AppointmentGroupsListAction) -> Unit,
     onRefresh: () -> Unit,
     onBack: () -> Unit,
     modifier: Modifier = Modifier
@@ -143,7 +140,9 @@ fun AppointmentGroupsListScreen(
                 else -> {
                     AppointmentGroupsList(
                         groups = uiState.groups,
-                        onAction = onAction
+                        onReserveSlot = uiState.onReserveSlot,
+                        onCancelReservation = uiState.onCancelReservation,
+                        onToggleGroupExpansion = uiState.onToggleGroupExpansion
                     )
                 }
             }
@@ -160,14 +159,18 @@ fun AppointmentGroupsListScreen(
 @Composable
 fun AppointmentGroupsList(
     groups: List<AppointmentGroupUiState>,
-    onAction: (AppointmentGroupsListAction) -> Unit,
+    onReserveSlot: (Long, String?) -> Unit,
+    onCancelReservation: (Long) -> Unit,
+    onToggleGroupExpansion: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier.fillMaxSize().background(colorResource(R.color.backgroundLightest))) {
         items(groups, key = { it.id }) { group ->
             AppointmentGroupCard(
                 group = group,
-                onAction = onAction,
+                onReserveSlot = onReserveSlot,
+                onCancelReservation = onCancelReservation,
+                onToggleGroupExpansion = onToggleGroupExpansion,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
             )
         }
@@ -177,7 +180,9 @@ fun AppointmentGroupsList(
 @Composable
 fun AppointmentGroupCard(
     group: AppointmentGroupUiState,
-    onAction: (AppointmentGroupsListAction) -> Unit,
+    onReserveSlot: (Long, String?) -> Unit,
+    onCancelReservation: (Long) -> Unit,
+    onToggleGroupExpansion: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val reservedSlots = group.slots.filter { it.isReservedByMe }
@@ -208,7 +213,7 @@ fun AppointmentGroupCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
-                        onAction(AppointmentGroupsListAction.ToggleGroupExpansion(group.id))
+                        onToggleGroupExpansion(group.id)
                     }
                     .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -262,7 +267,8 @@ fun AppointmentGroupCard(
                     AppointmentSlotItem(
                         slot = slot,
                         canReserveMore = group.canReserveMore,
-                        onAction = onAction,
+                        onReserveSlot = onReserveSlot,
+                        onCancelReservation = onCancelReservation,
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
                     )
                 }
@@ -284,7 +290,8 @@ fun AppointmentGroupCard(
                     AppointmentSlotItem(
                         slot = slot,
                         canReserveMore = group.canReserveMore,
-                        onAction = onAction,
+                        onReserveSlot = onReserveSlot,
+                        onCancelReservation = onCancelReservation,
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
                     )
                 }
@@ -298,7 +305,8 @@ fun AppointmentGroupCard(
 fun AppointmentSlotItem(
     slot: AppointmentSlotUiState,
     canReserveMore: Boolean,
-    onAction: (AppointmentGroupsListAction) -> Unit,
+    onReserveSlot: (Long, String?) -> Unit,
+    onCancelReservation: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var showReserveDialog by remember { mutableStateOf(false) }
@@ -315,11 +323,7 @@ fun AppointmentSlotItem(
                 .clickable(enabled = (slot.isAvailable && canReserveMore) || slot.isReservedByMe) {
                     if (slot.isReservedByMe) {
                         slot.myReservationId?.let { reservationId ->
-                            onAction(
-                                AppointmentGroupsListAction.CancelReservation(
-                                    reservationId = reservationId
-                                )
-                            )
+                            onCancelReservation(reservationId)
                         }
                     } else if (slot.isAvailable && canReserveMore) {
                         showReserveDialog = true
@@ -387,11 +391,7 @@ fun AppointmentSlotItem(
             if (slot.isReservedByMe) {
                 TextButton(onClick = {
                     slot.myReservationId?.let { reservationId ->
-                        onAction(
-                            AppointmentGroupsListAction.CancelReservation(
-                                reservationId = reservationId
-                            )
-                        )
+                        onCancelReservation(reservationId)
                     }
                 }) {
                     Text(
@@ -418,12 +418,7 @@ fun AppointmentSlotItem(
             slot = slot,
             courseColor = courseColor,
             onConfirm = { comments ->
-                onAction(
-                    AppointmentGroupsListAction.ReserveSlot(
-                        appointmentId = slot.id,
-                        comments = comments
-                    )
-                )
+                onReserveSlot(slot.id, comments)
                 showReserveDialog = false
             },
             onDismiss = { showReserveDialog = false }
@@ -544,7 +539,6 @@ fun AppointmentGroupsListScreenPreview() {
     AppointmentGroupsListScreen(
         title = "Appointments",
         uiState = sampleState,
-        onAction = {},
         onRefresh = {},
         onBack = {}
     )

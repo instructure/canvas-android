@@ -24,7 +24,10 @@ data class AppointmentGroupsListUiState(
     val showReservationErrorSnackbar: Boolean = false,
     val showCancellationSuccessSnackbar: Boolean = false,
     val showCancellationErrorSnackbar: Boolean = false,
-    val snackbarShown: () -> Unit = {}
+    val snackbarShown: () -> Unit = {},
+    val onReserveSlot: (appointmentId: Long, comments: String?) -> Unit = { _, _ -> },
+    val onCancelReservation: (reservationId: Long) -> Unit = {},
+    val onToggleGroupExpansion: (groupId: Long) -> Unit = {}
 )
 
 data class AppointmentGroupUiState(
@@ -51,18 +54,3 @@ data class AppointmentSlotUiState(
     val hasConflict: Boolean,
     val conflictEventTitle: String?
 )
-
-sealed class AppointmentGroupsListAction {
-    data class ReserveSlot(
-        val appointmentId: Long,
-        val comments: String?
-    ) : AppointmentGroupsListAction()
-
-    data class CancelReservation(
-        val reservationId: Long
-    ) : AppointmentGroupsListAction()
-
-    data class ToggleGroupExpansion(
-        val groupId: Long
-    ) : AppointmentGroupsListAction()
-}

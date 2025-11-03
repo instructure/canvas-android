@@ -34,7 +34,6 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
-import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.makeBundle
@@ -98,7 +97,6 @@ class AppointmentGroupsListFragment : ParentFragment() {
                     AppointmentGroupsListScreen(
                         title = title(),
                         uiState = uiState,
-                        onAction = { viewModel.handleAction(it) },
                         onRefresh = { viewModel.loadAppointmentGroups(isRefresh = true) },
                         onBack = { requireActivity().onBackPressed() }
                     )

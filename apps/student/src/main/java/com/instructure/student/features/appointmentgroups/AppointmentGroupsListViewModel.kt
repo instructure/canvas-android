@@ -43,7 +43,10 @@ class AppointmentGroupsListViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(
         AppointmentGroupsListUiState(
-            snackbarShown = ::snackbarShown
+            snackbarShown = ::snackbarShown,
+            onReserveSlot = ::reserveSlot,
+            onCancelReservation = ::cancelReservation,
+            onToggleGroupExpansion = ::toggleGroupExpansion
         )
     )
     val uiState: StateFlow<AppointmentGroupsListUiState> = _uiState.asStateFlow()
@@ -83,21 +86,6 @@ class AppointmentGroupsListViewModel @Inject constructor(
                     _uiState.update { it.copy(isLoading = false, isRefreshing = false, isError = true) }
                 }
             }
-        }
-    }
-
-    fun handleAction(action: AppointmentGroupsListAction) {
-        when (action) {
-            is AppointmentGroupsListAction.ReserveSlot -> reserveSlot(
-                action.appointmentId,
-                action.comments
-            )
-            is AppointmentGroupsListAction.CancelReservation -> cancelReservation(
-                action.reservationId
-            )
-            is AppointmentGroupsListAction.ToggleGroupExpansion -> toggleGroupExpansion(
-                action.groupId
-            )
         }
     }
 

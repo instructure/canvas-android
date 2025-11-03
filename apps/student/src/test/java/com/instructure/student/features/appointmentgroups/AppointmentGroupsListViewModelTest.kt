@@ -139,7 +139,8 @@ class AppointmentGroupsListViewModelTest {
 
         viewModel = createViewModel()
 
-        viewModel.handleAction(AppointmentGroupsListAction.ToggleGroupExpansion(1L))
+        val state = viewModel.uiState.first()
+        state.onToggleGroupExpansion(1L)
 
         val stateBeforeRefresh = viewModel.uiState.first()
         assertFalse(stateBeforeRefresh.groups[0].isExpanded)
@@ -168,11 +169,12 @@ class AppointmentGroupsListViewModelTest {
 
         viewModel = createViewModel()
 
-        viewModel.handleAction(AppointmentGroupsListAction.ToggleGroupExpansion(1L))
-
         val state = viewModel.uiState.first()
-        assertFalse(state.groups[0].isExpanded)
-        assertTrue(state.groups[1].isExpanded)
+        state.onToggleGroupExpansion(1L)
+
+        val updatedState = viewModel.uiState.first()
+        assertFalse(updatedState.groups[0].isExpanded)
+        assertTrue(updatedState.groups[1].isExpanded)
     }
 
     @Test
@@ -196,13 +198,14 @@ class AppointmentGroupsListViewModelTest {
 
         viewModel = createViewModel()
 
-        viewModel.handleAction(AppointmentGroupsListAction.ReserveSlot(100L, null))
-
         val state = viewModel.uiState.first()
-        assertTrue(state.groups[0].slots[0].isReservedByMe)
-        assertEquals(999L, state.groups[0].slots[0].myReservationId)
-        assertEquals(4, state.groups[0].slots[0].availableSlots)
-        assertTrue(state.showReservationSuccessSnackbar)
+        state.onReserveSlot(100L, null)
+
+        val updatedState = viewModel.uiState.first()
+        assertTrue(updatedState.groups[0].slots[0].isReservedByMe)
+        assertEquals(999L, updatedState.groups[0].slots[0].myReservationId)
+        assertEquals(4, updatedState.groups[0].slots[0].availableSlots)
+        assertTrue(updatedState.showReservationSuccessSnackbar)
     }
 
     @Test
@@ -224,12 +227,13 @@ class AppointmentGroupsListViewModelTest {
 
         viewModel = createViewModel()
 
-        viewModel.handleAction(AppointmentGroupsListAction.ReserveSlot(100L, null))
-
         val state = viewModel.uiState.first()
-        assertFalse(state.groups[0].slots[0].isReservedByMe)
-        assertEquals(5, state.groups[0].slots[0].availableSlots)
-        assertTrue(state.showReservationErrorSnackbar)
+        state.onReserveSlot(100L, null)
+
+        val updatedState = viewModel.uiState.first()
+        assertFalse(updatedState.groups[0].slots[0].isReservedByMe)
+        assertEquals(5, updatedState.groups[0].slots[0].availableSlots)
+        assertTrue(updatedState.showReservationErrorSnackbar)
     }
 
     @Test
@@ -251,12 +255,13 @@ class AppointmentGroupsListViewModelTest {
 
         viewModel = createViewModel()
 
-        viewModel.handleAction(AppointmentGroupsListAction.CancelReservation(999L))
-
         val state = viewModel.uiState.first()
-        assertFalse(state.groups[0].slots[0].isReservedByMe)
-        assertEquals(5, state.groups[0].slots[0].availableSlots)
-        assertTrue(state.showCancellationSuccessSnackbar)
+        state.onCancelReservation(999L)
+
+        val updatedState = viewModel.uiState.first()
+        assertFalse(updatedState.groups[0].slots[0].isReservedByMe)
+        assertEquals(5, updatedState.groups[0].slots[0].availableSlots)
+        assertTrue(updatedState.showCancellationSuccessSnackbar)
     }
 
     @Test
@@ -278,12 +283,13 @@ class AppointmentGroupsListViewModelTest {
 
         viewModel = createViewModel()
 
-        viewModel.handleAction(AppointmentGroupsListAction.CancelReservation(999L))
-
         val state = viewModel.uiState.first()
-        assertTrue(state.groups[0].slots[0].isReservedByMe)
-        assertEquals(4, state.groups[0].slots[0].availableSlots)
-        assertTrue(state.showCancellationErrorSnackbar)
+        state.onCancelReservation(999L)
+
+        val updatedState = viewModel.uiState.first()
+        assertTrue(updatedState.groups[0].slots[0].isReservedByMe)
+        assertEquals(4, updatedState.groups[0].slots[0].availableSlots)
+        assertTrue(updatedState.showCancellationErrorSnackbar)
     }
 
     @Test

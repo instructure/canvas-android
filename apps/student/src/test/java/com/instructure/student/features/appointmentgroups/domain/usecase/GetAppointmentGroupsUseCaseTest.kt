@@ -31,7 +31,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
 
 class GetAppointmentGroupsUseCaseTest {
@@ -147,11 +146,8 @@ class GetAppointmentGroupsUseCaseTest {
                         appointmentGroupId = 1L,
                         startAt = slotStart,
                         endAt = slotEnd,
-                        startDate = dateFormat.parse(slotStart)!!,
-                        endDate = dateFormat.parse(slotEnd)!!,
                         availableSlots = 5,
-                        isReservedByMe = false,
-                        myReservation = null
+                        childEvents = emptyList()
                     )
                 )
             )
@@ -197,11 +193,8 @@ class GetAppointmentGroupsUseCaseTest {
                         appointmentGroupId = 1L,
                         startAt = slotStart,
                         endAt = slotEnd,
-                        startDate = dateFormat.parse(slotStart)!!,
-                        endDate = dateFormat.parse(slotEnd)!!,
                         availableSlots = 5,
-                        isReservedByMe = false,
-                        myReservation = null
+                        childEvents = emptyList()
                     )
                 )
             )
@@ -310,7 +303,7 @@ class GetAppointmentGroupsUseCaseTest {
         val mockReservation = mockk<com.instructure.canvasapi2.models.AppointmentReservation> {
             io.mockk.every { id } returns 999L
             io.mockk.every { user } returns mockk {
-                io.mockk.every { id } returns com.instructure.canvasapi2.utils.ApiPrefs.user?.id ?: 1L
+                io.mockk.every { id } returns (com.instructure.canvasapi2.utils.ApiPrefs.user?.id ?: 1L)
             }
         }
 
