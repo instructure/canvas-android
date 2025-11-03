@@ -1042,6 +1042,10 @@
     <string name="downloadFailed">Muat turun gagal</string>
     <string name="downloadSuccessful">Muat turun berjaya</string>
 
+    <string name="downloading">Memuat turun</string>
+    <string name="downloadComplete">Muat turun lengkap</string>
+    <string name="notificationChannelNameFileDownloadsName">Pemberitahuan muat turun</string>
+    <string name="notificationChannelNameFileDownloadsDescription">Pemberitahuan Canvas untuk muat turun yang sedang berjalan.</string>
     <string name="full_due_date_details">Butiran tarikh siap yang penuh</string>
     <string name="submissions">Serahan</string>
     <string name="attachment">Kepilan</string>
@@ -2137,4 +2141,9 @@
     <string name="daysLateHint">Tulis hari yang lewat</string>
     <string name="reply_to_topic">Balas kepada topik</string>
     <string name="additional_replies">Balasan tambahan (%d)</string>
+    <string name="reply_to_topic_due">Balas kepada topik yang perlu dihantar</string>
+    <string name="additional_replies_due">Balasan tambahan (%d) perlu dihantar</string>
+    <string name="a11y_discussion_checkpoints">Titik Semakan Perbincangan</string>
+    <string name="multipleDueDates">Berbilang Tarikh Siap</string>
+    <string name="courseConcludedError">Kursus selesaai. Tidak dapat menghantar mesej!</string>
 </resources>

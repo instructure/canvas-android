@@ -1042,6 +1042,10 @@
     <string name="downloadFailed">Nedladdningen misslyckades</string>
     <string name="downloadSuccessful">Nedladdningen lyckades</string>
 
+    <string name="downloading">Laddar ned</string>
+    <string name="downloadComplete">Nedladdning slutförd</string>
+    <string name="notificationChannelNameFileDownloadsName">Nedladdningsaviseringar</string>
+    <string name="notificationChannelNameFileDownloadsDescription">Canvas-aviseringar för pågående nedladdningar.</string>
     <string name="full_due_date_details">Fullständiga detaljer för inlämningsdatum</string>
     <string name="submissions">Inskickningar</string>
     <string name="attachment">Bilaga</string>
@@ -2131,4 +2135,9 @@
     <string name="daysLateHint">Ange dagars försening</string>
     <string name="reply_to_topic">Svar på ämne</string>
     <string name="additional_replies">Ytterligare svar (%d)</string>
+    <string name="reply_to_topic_due">Svara på ämnet som är försenat</string>
+    <string name="additional_replies_due">Ytterligare svar (%d) försenade</string>
+    <string name="a11y_discussion_checkpoints">Kontrollpunkter för diskussion</string>
+    <string name="multipleDueDates">Flera inlämningsdatum</string>
+    <string name="courseConcludedError">Kursen slutförd Det gick inte att skicka meddelanden!</string>
 </resources>

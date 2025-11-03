@@ -1042,6 +1042,10 @@
     <string name="downloadFailed">Transferência falhou</string>
     <string name="downloadSuccessful">Transferência com êxito</string>
 
+    <string name="downloading">A transferir</string>
+    <string name="downloadComplete">Transferência concluída</string>
+    <string name="notificationChannelNameFileDownloadsName">Notificações de transferência</string>
+    <string name="notificationChannelNameFileDownloadsDescription">Notificações do Canvas para transferências em andamento.</string>
     <string name="full_due_date_details">Detalhes completos da data limite</string>
     <string name="submissions">Submissões</string>
     <string name="attachment">Anexo</string>
@@ -2131,4 +2135,9 @@
     <string name="daysLateHint">Escrever com atraso</string>
     <string name="reply_to_topic">Responder ao tópico</string>
     <string name="additional_replies">Respostas adicionais (%d)</string>
+    <string name="reply_to_topic_due">Resposta ao tópico com prazo</string>
+    <string name="additional_replies_due">Respostas adicionais (%d) com prazo</string>
+    <string name="a11y_discussion_checkpoints">Pontos de controlo do debate</string>
+    <string name="multipleDueDates">Datas de limite múltiplas</string>
+    <string name="courseConcludedError">Disciplina concluída. Não é possível enviar mensagens!</string>
 </resources>
