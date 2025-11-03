@@ -31,7 +31,6 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
-import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.teacher.databinding.FragmentCommentLibraryBinding
 import com.instructure.teacher.utils.setupCloseButton
 import dagger.hilt.android.AndroidEntryPoint
@@ -61,7 +60,6 @@ class CommentLibraryFragment : BaseCanvasFragment() {
             }
         }
 
-        binding.root.applyHorizontalSystemBarInsets()
         setupWindowInsets()
 
         return binding.root

@@ -33,7 +33,6 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.applyBottomSystemBarInsets
-import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.utils.setVisible
@@ -69,7 +68,6 @@ class CourseSettingsFragment : ParentFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         super.onViewCreated(view, savedInstanceState)
-        view.applyHorizontalSystemBarInsets()
         courseName.text = course.name
         courseCode.text = course.courseCode
         license.text = course.license?.prettyString

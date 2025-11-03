@@ -71,7 +71,6 @@ import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.viewinterface.ProfileEditFragmentView
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.applyBottomSystemBarInsets
-import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import retrofit2.Response
 import java.io.File
 
@@ -89,7 +88,6 @@ class ProfileEditFragment : BasePresenterFragment<
     override fun getPresenterFactory() = ProfileEditFragmentPresenterFactory()
 
     override fun onReadySetGo(presenter: ProfileEditFragmentPresenter) {
-        binding.root.applyHorizontalSystemBarInsets()
         presenter.loadData(false)
     }
 

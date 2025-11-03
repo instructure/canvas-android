@@ -27,7 +27,6 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.applyBottomSystemBarInsets
-import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.student.R
@@ -45,7 +44,6 @@ class FeatureFlagsFragment : BaseCanvasFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.applyHorizontalSystemBarInsets()
         setupToolbar()
         binding.recyclerView.adapter = FeatureFlagAdapter()
         binding.recyclerView.applyBottomSystemBarInsets()

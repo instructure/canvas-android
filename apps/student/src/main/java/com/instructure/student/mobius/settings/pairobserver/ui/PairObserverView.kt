@@ -26,7 +26,6 @@ import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.pandautils.utils.*
-import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentPairObserverBinding
 import com.instructure.student.mobius.common.ui.MobiusView
@@ -42,7 +41,6 @@ class PairObserverView(inflater: LayoutInflater, parent: ViewGroup) :
     ) {
 
     init {
-        binding.root.applyHorizontalSystemBarInsets()
         binding.toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
         binding.toolbar.applyTopSystemBarInsets()
     }

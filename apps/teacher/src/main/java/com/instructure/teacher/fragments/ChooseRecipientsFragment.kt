@@ -35,7 +35,6 @@ import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
-import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.pandautils.utils.nonNullArgs
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.ChooseMessageRecipientRecyclerAdapter
@@ -120,7 +119,6 @@ class ChooseRecipientsFragment : BaseSyncFragment<Recipient, ChooseRecipientsPre
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         swipeRefreshLayoutContainerBinding = RecyclerSwipeRefreshLayoutBinding.bind(view)
         super.onViewCreated(view, savedInstanceState)
-        view.applyHorizontalSystemBarInsets()
 
         mRecyclerView?.let { recyclerView ->
             ViewCompat.setOnApplyWindowInsetsListener(recyclerView) { v, insets ->

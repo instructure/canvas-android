@@ -48,7 +48,6 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.Utils.copyToClipboard
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
-import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setGone
@@ -88,7 +87,6 @@ class ViewUnsupportedFileFragment : BaseCanvasFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.applyHorizontalSystemBarInsets()
         setupWindowInsets()
     }
 

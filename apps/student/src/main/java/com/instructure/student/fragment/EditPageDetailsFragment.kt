@@ -41,7 +41,6 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_EDIT_PAGE_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
-import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentEditPageBinding
 import com.instructure.student.dialog.UnsavedChangesExitDialog
@@ -81,7 +80,6 @@ class EditPageDetailsFragment : ParentFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.applyHorizontalSystemBarInsets()
         setupToolbar()
         setupDescription()
     }

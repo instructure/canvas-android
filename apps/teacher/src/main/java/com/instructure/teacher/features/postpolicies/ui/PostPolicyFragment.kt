@@ -37,7 +37,6 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
-import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.withArgs
 import com.instructure.teacher.R
@@ -57,7 +56,6 @@ class PostPolicyFragment : BaseCanvasFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.applyHorizontalSystemBarInsets()
 
         val titles = listOf(getString(R.string.postGradesTab), getString(R.string.hideGradesTab))
         binding.postPolicyPager.adapter = PostPolicyPagerAdapter(assignment, childFragmentManager, titles)

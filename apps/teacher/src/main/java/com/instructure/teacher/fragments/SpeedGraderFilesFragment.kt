@@ -20,7 +20,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
-import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_FILES
@@ -64,7 +63,6 @@ class SpeedGraderFilesFragment : BaseSyncFragment<
     override fun layoutResId() = R.layout.fragment_speedgrader_files
     override fun getPresenterFactory() = SpeedGraderFilesPresenterFactory(mSubmission)
     override fun onCreateView(view: View) {
-        view.applyHorizontalSystemBarInsets()
     }
     override fun onPresenterPrepared(presenter: SpeedGraderFilesPresenter) {
         RecyclerViewUtils.buildRecyclerView(rootView, requireContext(), adapter, presenter, R.id.swipeRefreshLayout,

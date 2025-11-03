@@ -38,7 +38,6 @@ import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.NullableStringArg
 import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.enableAlgorithmicDarkening
@@ -77,7 +76,6 @@ class SimpleWebViewFragment : BaseCanvasFragment(), NavigationCallbacks {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.applyHorizontalSystemBarInsets()
         applyTheme()
         lifecycleScope.collectOneOffEvents(viewModel.events, ::handleAction)
         lifecycleScope.launch {

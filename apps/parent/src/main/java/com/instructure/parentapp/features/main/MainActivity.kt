@@ -78,12 +78,26 @@ class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated, Masqueradin
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        setupWindowInsets()
         setupTheme()
         setupNavigation()
         handleQrMasquerading()
         scheduleAlarms()
 
         RatingDialog.showRatingDialog(this, AppType.PARENT)
+    }
+
+    private fun setupWindowInsets() {
+        androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
+            val systemBars = insets.getInsets(androidx.core.view.WindowInsetsCompat.Type.systemBars())
+            view.setPadding(
+                systemBars.left,
+                0,
+                systemBars.right,
+                0
+            )
+            insets
+        }
     }
 
     override fun onResume() {

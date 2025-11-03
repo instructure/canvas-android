@@ -276,6 +276,17 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
     }
 
     private fun setupWindowInsets() = with(binding) {
+        ViewCompat.setOnApplyWindowInsetsListener(container) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(
+                systemBars.left,
+                0,
+                systemBars.right,
+                0
+            )
+            insets
+        }
+
         ViewCompat.setOnApplyWindowInsetsListener(bottomBar) { view, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             view.updateLayoutParams<RelativeLayout.LayoutParams> {

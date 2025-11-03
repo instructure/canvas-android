@@ -46,7 +46,6 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_PROFILE_SETTINGS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.*
-import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.student.R
 import com.instructure.student.activity.PandaAvatarActivity
 import com.instructure.student.databinding.DialogPhotoSourceBinding
@@ -81,7 +80,6 @@ class ProfileSettingsFragment : ParentFragment(), LoaderManager.LoaderCallbacks<
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.applyHorizontalSystemBarInsets()
         applyTheme()
         setupViews()
         getUserPermissions()

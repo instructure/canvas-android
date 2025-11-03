@@ -38,7 +38,6 @@ import com.instructure.pandautils.utils.NullableParcelableArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
-import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getDrawableCompat
 import com.instructure.pandautils.utils.isUser
@@ -110,7 +109,6 @@ class FileSearchFragment : BaseSyncFragment<
     }
 
     override fun onReadySetGo(presenter: FileSearchPresenter) {
-        binding.root.applyHorizontalSystemBarInsets()
         if (recyclerView.adapter == null) binding.fileSearchRecyclerView.adapter = createAdapter()
         setupViews()
         setupWindowInsets()

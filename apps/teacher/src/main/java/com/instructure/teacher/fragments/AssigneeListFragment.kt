@@ -38,7 +38,6 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BaseExpandableSyncFragment
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
-import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.pandautils.views.EmptyView
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.AssigneeListAdapter
@@ -125,7 +124,6 @@ class AssigneeListFragment : BaseExpandableSyncFragment<
     }
 
     override fun onReadySetGo(presenter: AssigneeListPresenter) {
-        binding.root.applyHorizontalSystemBarInsets()
         assigneeRecyclerView.adapter = adapter
         presenter.loadData(false)
     }

@@ -41,6 +41,8 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.instructure.canvasapi2.RequestInterceptor.Companion.acceptedLanguageString
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.TokenRefreshState
@@ -136,6 +138,7 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        setupWindowInsets()
         canvasLogin = intent!!.extras!!.getInt(Const.CANVAS_LOGIN, 0)
         setupViews()
         applyTheme()
@@ -160,6 +163,19 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
                 .setCancelable(false)
                 .create()
                 .show()
+        }
+    }
+
+    private fun setupWindowInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(
+                systemBars.left,
+                0,
+                systemBars.right,
+                0
+            )
+            insets
         }
     }
 

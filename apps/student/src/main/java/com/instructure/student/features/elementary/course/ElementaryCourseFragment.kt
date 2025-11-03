@@ -37,7 +37,6 @@ import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.applyBottomSystemBarInsets
-import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.argsWithContext
 import com.instructure.pandautils.utils.isCourse
@@ -80,7 +79,6 @@ class ElementaryCourseFragment : BaseCanvasFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         super.onViewCreated(view, savedInstanceState)
-        view.applyHorizontalSystemBarInsets()
         applyTheme()
         this@ElementaryCourseFragment.viewModel.getData(canvasContext, tabId)
 

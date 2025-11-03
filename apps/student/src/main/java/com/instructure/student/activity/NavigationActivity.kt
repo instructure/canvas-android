@@ -41,9 +41,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import android.widget.LinearLayout
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuItemCompat
-import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
@@ -363,8 +366,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         canvasLoadingBinding = LoadingCanvasViewBinding.bind(binding.root)
         setContentView(binding.root)
 
-        binding.bottomBar.applyBottomSystemBarInsets()
-        binding.bottomBarDivider.applyBottomSystemBarInsets()
+        setupWindowInsets()
 
         val masqueradingUserId: Long = intent.getLongExtra(Const.QR_CODE_MASQUERADE_ID, 0L)
         if (masqueradingUserId != 0L) {
@@ -408,6 +410,35 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         scheduleAlarms()
 
         WidgetUpdater.updateWidgets()
+    }
+
+    private fun setupWindowInsets() = with(binding) {
+        ViewCompat.setOnApplyWindowInsetsListener(fullscreen) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(
+                systemBars.left,
+                0,
+                systemBars.right,
+                0
+            )
+            insets
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(bottomBar) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.updateLayoutParams<LinearLayout.LayoutParams> {
+                bottomMargin = systemBars.bottom
+            }
+            insets
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(bottomBarDivider) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.updateLayoutParams<LinearLayout.LayoutParams> {
+                bottomMargin = systemBars.bottom
+            }
+            insets
+        }
     }
 
     private fun logOfflineEvents(isOnline: Boolean) {

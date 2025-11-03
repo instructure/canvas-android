@@ -49,7 +49,6 @@ import com.instructure.pandautils.utils.ParcelableArrayListArg
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.hideKeyboard
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
@@ -102,7 +101,6 @@ class AnnotationCommentListFragment : ParentFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        view?.applyHorizontalSystemBarInsets()
         recyclerAdapter = AnnotationCommentListRecyclerAdapter(requireContext(), docSession, { annotation, position ->
             AnnotationCommentDialog.getInstance(requireFragmentManager(), annotation.contents ?: "", requireContext().getString(R.string.editComment)) { cancelled, text ->
                 if(!cancelled) {

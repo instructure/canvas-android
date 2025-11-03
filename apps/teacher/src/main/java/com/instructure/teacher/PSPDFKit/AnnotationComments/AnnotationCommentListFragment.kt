@@ -32,7 +32,6 @@ import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BaseListFragment
 import com.instructure.pandautils.utils.*
-import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentAnnotationCommentListBinding
 import com.instructure.teacher.utils.getColorCompat
@@ -96,7 +95,6 @@ class AnnotationCommentListFragment : BaseListFragment<
     }
 
     override fun onReadySetGo(presenter: AnnotationCommentListPresenter) {
-        binding.root.applyHorizontalSystemBarInsets()
         setupToolbar()
         presenter.loadData(false)
         setupCommentInput()

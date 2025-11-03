@@ -33,7 +33,6 @@ import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.utils.Utils.copyToClipboard
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
-import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentViewPdfBinding
 import com.instructure.teacher.factory.ViewPdfFragmentPresenterFactory
@@ -68,7 +67,6 @@ class ViewPdfFragment : PresenterFragment<ViewPdfFragmentPresenter, ViewPdfFragm
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.applyHorizontalSystemBarInsets()
     }
 
     override fun onResume() {
