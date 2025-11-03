@@ -343,6 +343,8 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
 
         device.findObject(androidx.test.uiautomator.UiSelector().resourceIdMatches(".*recordAudioButton")).click()
 
+        testAudioFile.copyTo(recordingFile, overwrite = true)
+
         device.findObject(androidx.test.uiautomator.UiSelector().resourceIdMatches(".*stopButton")).click()
 
         device.findObject(androidx.test.uiautomator.UiSelector().resourceIdMatches(".*sendAudioButton")).click()
