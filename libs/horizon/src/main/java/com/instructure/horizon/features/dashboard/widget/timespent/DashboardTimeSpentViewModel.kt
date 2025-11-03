@@ -68,17 +68,20 @@ class DashboardTimeSpentViewModel @Inject constructor(
     }
 
     private fun updateTimeSpentWidgetState() {
-        val totalHours = timeSpentData?.data
+        val totalMinutes = timeSpentData?.data
             ?.filter { courses.any { course -> course.id == it.courseId } }
             ?.filter { uiState.value.cardState.selectedCourseId == null || it.courseId == uiState.value.cardState.selectedCourseId }
             ?.sumOf { it.minutesPerDay?.toDouble() ?: 0.0 }
-            .orDefault() / 60
+            .orDefault()
+        val hours = (totalMinutes / 60).toInt()
+        val minutes = (totalMinutes % 60).toInt()
 
         _uiState.update {
             it.copy(
                 state = DashboardItemState.SUCCESS,
                 cardState = DashboardTimeSpentCardState(
-                    hours = totalHours,
+                    hours = hours,
+                    minutes = minutes,
                     courses = courses,
                     selectedCourseId = it.cardState.selectedCourseId,
                     onCourseSelected = ::onCourseSelected

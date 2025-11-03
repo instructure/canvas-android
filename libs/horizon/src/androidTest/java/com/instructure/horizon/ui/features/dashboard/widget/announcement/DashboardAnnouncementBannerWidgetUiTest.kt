@@ -18,9 +18,7 @@ package com.instructure.horizon.ui.features.dashboard.widget.announcement
 
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.navigation.compose.rememberNavController
@@ -29,15 +27,11 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardButtonRoute
-import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardButtonState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardChipState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardState
 import com.instructure.horizon.features.dashboard.widget.announcement.DashboardAnnouncementBannerSection
 import com.instructure.horizon.features.dashboard.widget.announcement.DashboardAnnouncementBannerUiState
-import com.instructure.horizon.horizonui.molecules.ButtonColor
-import com.instructure.horizon.horizonui.molecules.ButtonHeight
-import com.instructure.horizon.horizonui.molecules.ButtonWidth
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import org.junit.Rule
 import org.junit.Test
@@ -101,13 +95,7 @@ class DashboardAnnouncementBannerWidgetUiTest {
             title = "Important Announcement",
             source = "Course Name",
             date = Date(),
-            buttonState = DashboardPaginatedWidgetCardButtonState(
-                label = "Go to announcement",
-                height = ButtonHeight.SMALL,
-                width = ButtonWidth.FILL,
-                color = ButtonColor.WhiteWithOutline,
-                route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
-            ),
+            route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
         )
 
         val uiState = DashboardAnnouncementBannerUiState(
@@ -124,18 +112,17 @@ class DashboardAnnouncementBannerWidgetUiTest {
 
         val announcementLabel = context.getString(R.string.notificationsAnnouncementCategoryLabel)
         val fromLabel = context.getString(R.string.dashboardAnnouncementBannerFrom, "Course Name")
-        val goToLabel = context.getString(R.string.dashboardAnnouncementBannerGoToAnnouncement)
 
         composeTestRule.onNodeWithText(announcementLabel).assertIsDisplayed()
         composeTestRule.onNodeWithText(fromLabel).assertIsDisplayed()
         composeTestRule.onNodeWithText("Important Announcement").assertIsDisplayed()
-        composeTestRule.onNodeWithText(goToLabel).assertIsDisplayed()
     }
 
     @Test
     fun testSuccessStateWithMultipleAnnouncementsDisplaysAllItems() {
         val announcements = listOf(
             DashboardPaginatedWidgetCardItemState(
+                pageState = "1 of 2",
                 chipState = DashboardPaginatedWidgetCardChipState(
                     label = "Announcement",
                     color = StatusChipColor.Sky
@@ -143,15 +130,10 @@ class DashboardAnnouncementBannerWidgetUiTest {
                 title = "First Announcement",
                 source = "Course 1",
                 date = Date(),
-                buttonState = DashboardPaginatedWidgetCardButtonState(
-                    label = "Go to announcement",
-                    height = ButtonHeight.SMALL,
-                    width = ButtonWidth.FILL,
-                    color = ButtonColor.WhiteWithOutline,
-                    route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
-                ),
+                route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
             ),
             DashboardPaginatedWidgetCardItemState(
+                pageState = "2 of 2",
                 chipState = DashboardPaginatedWidgetCardChipState(
                     label = "Announcement",
                     color = StatusChipColor.Sky
@@ -159,13 +141,7 @@ class DashboardAnnouncementBannerWidgetUiTest {
                 title = "Second Announcement",
                 source = "Course 2",
                 date = Date(),
-                buttonState = DashboardPaginatedWidgetCardButtonState(
-                    label = "Go to announcement",
-                    height = ButtonHeight.SMALL,
-                    width = ButtonWidth.FILL,
-                    color = ButtonColor.WhiteWithOutline,
-                    route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
-                ),
+                route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
             )
         )
 
@@ -184,12 +160,7 @@ class DashboardAnnouncementBannerWidgetUiTest {
             context.getString(R.string.dashboardAnnouncementBannerFrom, "Course 1")
         ).assertIsDisplayed()
 
-        composeTestRule.onNodeWithContentDescription("Next item").assertIsDisplayed().performClick()
-
-        composeTestRule.onNodeWithText("Second Announcement").assertIsDisplayed()
-        composeTestRule.onNodeWithText(
-            context.getString(R.string.dashboardAnnouncementBannerFrom, "Course 2")
-        ).assertIsDisplayed()
+        composeTestRule.onNodeWithText("1 of 2", useUnmergedTree = true).assertIsDisplayed()
     }
 
     @Test
@@ -202,13 +173,7 @@ class DashboardAnnouncementBannerWidgetUiTest {
             title = "Global Announcement",
             source = null,
             date = Date(),
-            buttonState = DashboardPaginatedWidgetCardButtonState(
-                label = "Go to announcement",
-                height = ButtonHeight.SMALL,
-                width = ButtonWidth.FILL,
-                color = ButtonColor.WhiteWithOutline,
-                route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
-            ),
+            route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
         )
 
         val uiState = DashboardAnnouncementBannerUiState(
@@ -222,15 +187,13 @@ class DashboardAnnouncementBannerWidgetUiTest {
         }
 
         val announcementLabel = context.getString(R.string.notificationsAnnouncementCategoryLabel)
-        val goToLabel = context.getString(R.string.dashboardAnnouncementBannerGoToAnnouncement)
 
         composeTestRule.onNodeWithText(announcementLabel).assertIsDisplayed()
         composeTestRule.onNodeWithText("Global Announcement").assertIsDisplayed()
-        composeTestRule.onNodeWithText(goToLabel).assertIsDisplayed()
     }
 
     @Test
-    fun testSuccessStateGoToAnnouncementButtonIsClickable() {
+    fun testSuccessStateAnnouncementIsClickable() {
         val testAnnouncement = DashboardPaginatedWidgetCardItemState(
             chipState = DashboardPaginatedWidgetCardChipState(
                 label = "Announcement",
@@ -239,13 +202,7 @@ class DashboardAnnouncementBannerWidgetUiTest {
             title = "Test Announcement",
             source = "Test Course",
             date = Date(),
-            buttonState = DashboardPaginatedWidgetCardButtonState(
-                label = "Go to announcement",
-                height = ButtonHeight.SMALL,
-                width = ButtonWidth.FILL,
-                color = ButtonColor.WhiteWithOutline,
-                route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
-            ),
+            route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
         )
 
         val uiState = DashboardAnnouncementBannerUiState(
@@ -258,11 +215,9 @@ class DashboardAnnouncementBannerWidgetUiTest {
             DashboardAnnouncementBannerSection(uiState, rememberNavController(), rememberNavController())
         }
 
-        val goToLabel = context.getString(R.string.dashboardAnnouncementBannerGoToAnnouncement)
 
-        composeTestRule.onNodeWithText(goToLabel)
+        composeTestRule.onNodeWithText(testAnnouncement.title!!)
             .assertIsDisplayed()
-            .assertHasClickAction()
     }
 
     @Test
@@ -276,13 +231,7 @@ class DashboardAnnouncementBannerWidgetUiTest {
             title = "Dated Announcement",
             source = "Test Course",
             date = testDate,
-            buttonState = DashboardPaginatedWidgetCardButtonState(
-                label = "Go to announcement",
-                height = ButtonHeight.SMALL,
-                width = ButtonWidth.FILL,
-                color = ButtonColor.WhiteWithOutline,
-                route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
-            ),
+            route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
         )
 
         val uiState = DashboardAnnouncementBannerUiState(
@@ -308,13 +257,7 @@ class DashboardAnnouncementBannerWidgetUiTest {
             title = "No Date Announcement",
             source = "Test Course",
             date = null,
-            buttonState = DashboardPaginatedWidgetCardButtonState(
-                label = "Go to announcement",
-                height = ButtonHeight.SMALL,
-                width = ButtonWidth.FILL,
-                color = ButtonColor.WhiteWithOutline,
-                route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
-            ),
+            route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
         )
 
         val uiState = DashboardAnnouncementBannerUiState(
@@ -341,13 +284,7 @@ class DashboardAnnouncementBannerWidgetUiTest {
             title = longTitle,
             source = "Test Course",
             date = Date(),
-            buttonState = DashboardPaginatedWidgetCardButtonState(
-                label = "Go to announcement",
-                height = ButtonHeight.SMALL,
-                width = ButtonWidth.FILL,
-                color = ButtonColor.WhiteWithOutline,
-                route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
-            ),
+            route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
         )
 
         val uiState = DashboardAnnouncementBannerUiState(
@@ -361,64 +298,5 @@ class DashboardAnnouncementBannerWidgetUiTest {
         }
 
         composeTestRule.onNodeWithText(longTitle).assertIsDisplayed()
-    }
-
-    @Test
-    fun testSuccessStateWithMixedAnnouncementTypes() {
-        val announcements = listOf(
-            DashboardPaginatedWidgetCardItemState(
-                chipState = DashboardPaginatedWidgetCardChipState(
-                    label = "Announcement",
-                    color = StatusChipColor.Sky
-                ),
-                title = "Course Announcement",
-                source = "Course Name",
-                date = Date(),
-                buttonState = DashboardPaginatedWidgetCardButtonState(
-                    label = "Go to announcement",
-                    height = ButtonHeight.SMALL,
-                    width = ButtonWidth.FILL,
-                    color = ButtonColor.WhiteWithOutline,
-                    route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
-                ),
-            ),
-            DashboardPaginatedWidgetCardItemState(
-                chipState = DashboardPaginatedWidgetCardChipState(
-                    label = "Announcement",
-                    color = StatusChipColor.Sky
-                ),
-                title = "Global Announcement",
-                source = null,
-                date = Date(),
-                buttonState = DashboardPaginatedWidgetCardButtonState(
-                    label = "Go to announcement",
-                    height = ButtonHeight.SMALL,
-                    width = ButtonWidth.FILL,
-                    color = ButtonColor.WhiteWithOutline,
-                    route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
-                ),
-            )
-        )
-
-        val uiState = DashboardAnnouncementBannerUiState(
-            state = DashboardItemState.SUCCESS,
-            cardState = DashboardPaginatedWidgetCardState(announcements),
-            onRefresh = { it() }
-        )
-
-        composeTestRule.setContent {
-            DashboardAnnouncementBannerSection(uiState, rememberNavController(), rememberNavController())
-        }
-
-        composeTestRule.onNodeWithText("Course Announcement").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Global Announcement").assertIsNotDisplayed()
-        composeTestRule.onNodeWithText(
-            context.getString(R.string.dashboardAnnouncementBannerFrom, "Course Name")
-        ).assertIsDisplayed()
-
-        composeTestRule.onNodeWithContentDescription("Next item").assertIsDisplayed().performClick()
-
-        composeTestRule.onNodeWithText("Course Announcement").assertIsNotDisplayed()
-        composeTestRule.onNodeWithText("Global Announcement").assertIsDisplayed()
     }
 }
