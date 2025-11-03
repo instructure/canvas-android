@@ -184,6 +184,7 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                         modifier = Modifier
                             .verticalScroll(scrollState)
                     ) {
+                        HorizonSpace(SpaceSize.SPACE_12)
                         DashboardAnnouncementBannerWidget(
                             mainNavController,
                             homeNavController,

@@ -58,10 +58,10 @@ class TextSubmissionUploadEffectHandlerTest : Assert() {
         val assignmentName = "Name"
         val course = Course()
 
-        connection.accept(TextSubmissionUploadEffect.SubmitText(text, course, assignmentId, assignmentName))
+        connection.accept(TextSubmissionUploadEffect.SubmitText(text, course, assignmentId, assignmentName, 1L))
 
         verify(timeout = 100) {
-            submissionHelper.startTextSubmission(course, assignmentId, assignmentName, text)
+            submissionHelper.startTextSubmission(course, assignmentId, assignmentName, text, 1L)
             view.goBack()
         }
 
