@@ -24,6 +24,7 @@
         android:id="@+id/syllabusEventsRecycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clipToPadding="false"
         tools:listitem="@layout/viewholder_card_generic"
         tools:visibility="gone" />
 

@@ -26,6 +26,7 @@ import android.util.Log
 import android.view.View
 import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.CompoundButton
+import android.widget.RelativeLayout
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.IdRes
 import androidx.annotation.PluralsRes
@@ -37,7 +38,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
-import androidx.core.view.updatePadding
 import androidx.drawerlayout.widget.DrawerLayout.SimpleDrawerListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -97,7 +97,6 @@ import com.instructure.pandautils.utils.ProfileUtils
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.WebViewAuthenticator
-import com.instructure.pandautils.utils.applyBottomSystemBarInsets
 import com.instructure.pandautils.utils.applyTheme
 import com.instructure.pandautils.utils.isAccessibilityEnabled
 import com.instructure.pandautils.utils.items
@@ -277,7 +276,13 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
     }
 
     private fun setupWindowInsets() = with(binding) {
-        bottomBar.applyBottomSystemBarInsets()
+        ViewCompat.setOnApplyWindowInsetsListener(bottomBar) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.updateLayoutParams<RelativeLayout.LayoutParams> {
+                bottomMargin = systemBars.bottom
+            }
+            insets
+        }
     }
 
     private fun requestNotificationsPermission() {

@@ -21,6 +21,7 @@ import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -105,6 +106,7 @@ fun CalendarScreen(
         }
         CanvasScaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
+            contentWindowInsets = WindowInsets(0, 0, 0, 0),
             topBar = {
                 if (showToolbar) {
                     CanvasThemedAppBar(
