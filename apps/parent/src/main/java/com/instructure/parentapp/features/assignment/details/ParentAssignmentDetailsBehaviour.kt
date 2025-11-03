@@ -35,6 +35,7 @@ import com.instructure.pandautils.features.assignments.details.AssignmentDetails
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.utils.DP
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarMargin
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.studentColor
@@ -96,6 +97,7 @@ class ParentAssignmentDetailsBehaviour @Inject constructor(
                 marginEnd = context.DP(16).toInt()
                 bottomMargin = context.DP(16).toInt()
             }
+            applyBottomSystemBarMargin()
             onClick {
                 routeToCompose?.invoke(getInboxComposeOptions(context, course, assignment))
             }
