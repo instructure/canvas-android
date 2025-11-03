@@ -26,14 +26,13 @@ import com.instructure.student.R
 import com.instructure.student.fragment.DashboardFragment
 import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.fragment.ParentFragment
-import com.instructure.student.fragment.ToDoListFragment
 
 class DefaultNavigationBehavior(private val apiPrefs: ApiPrefs) : NavigationBehavior {
 
     override val bottomNavBarFragments: List<Class<out Fragment>> = listOf(
         DashboardFragment::class.java,
         CalendarFragment::class.java,
-        ToDoListFragment::class.java,
+        todoFragmentClass,
         NotificationListFragment::class.java,
         getInboxBottomBarFragment(apiPrefs)
     )
