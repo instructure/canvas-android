@@ -18,6 +18,7 @@ package com.instructure.pandautils.features.todolist
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
@@ -46,7 +47,8 @@ import javax.inject.Inject
 class ToDoListViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val repository: ToDoListRepository,
-    private val networkStateProvider: NetworkStateProvider
+    private val networkStateProvider: NetworkStateProvider,
+    private val firebaseCrashlytics: FirebaseCrashlytics
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ToDoListUiState(
@@ -115,6 +117,7 @@ class ToDoListViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
+                firebaseCrashlytics.recordException(e)
                 _uiState.update {
                     it.copy(
                         isLoading = false,
@@ -255,6 +258,7 @@ class ToDoListViewModel @Inject constructor(
             true
         } catch (e: Exception) {
             e.printStackTrace()
+            firebaseCrashlytics.recordException(e)
             // Revert the optimistic update
             updateItemCheckedState(itemId, currentIsChecked)
             // Show error snackbar
