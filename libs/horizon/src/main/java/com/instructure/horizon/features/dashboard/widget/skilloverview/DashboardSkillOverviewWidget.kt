@@ -16,6 +16,7 @@
  */
 package com.instructure.horizon.features.dashboard.widget.skilloverview
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState

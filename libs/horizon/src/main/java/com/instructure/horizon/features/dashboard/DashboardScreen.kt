@@ -324,7 +324,9 @@ private fun NumericWidgetRow(
                         DashboardMyProgressWidget(
                             shouldRefresh,
                             refreshStateFlow,
-                            modifier.padding(bottom = 16.dp)
+                            modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 16.dp)
                         )
                     }
 
@@ -332,7 +334,9 @@ private fun NumericWidgetRow(
                         DashboardTimeSpentWidget(
                             shouldRefresh,
                             refreshStateFlow,
-                            modifier.padding(bottom = 16.dp)
+                            modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 16.dp)
                         )
                     }
 
@@ -341,7 +345,9 @@ private fun NumericWidgetRow(
                             homeNavController,
                             shouldRefresh,
                             refreshStateFlow,
-                            modifier.padding(bottom = 16.dp)
+                            modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 16.dp)
                         )
                     }
 

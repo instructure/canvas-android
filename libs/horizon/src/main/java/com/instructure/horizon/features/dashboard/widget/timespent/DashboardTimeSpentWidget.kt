@@ -16,13 +16,10 @@
  */
 package com.instructure.horizon.features.dashboard.widget.timespent
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -63,7 +60,11 @@ fun DashboardTimeSpentSection(
 ) {
     when (state.state) {
         DashboardItemState.LOADING -> {
-            DashboardTimeSpentCardContent(DashboardTimeSpentCardState.Loading, true, modifier)
+            DashboardTimeSpentCardContent(
+                DashboardTimeSpentCardState.Loading,
+                true,
+                modifier
+            )
         }
         DashboardItemState.ERROR -> {
             DashboardWidgetCardError(
@@ -76,12 +77,11 @@ fun DashboardTimeSpentSection(
             )
         }
         DashboardItemState.SUCCESS -> {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                DashboardTimeSpentCardContent(state.cardState, false, modifier)
-            }
+            DashboardTimeSpentCardContent(
+                state.cardState,
+                false,
+                modifier
+            )
         }
     }
 }

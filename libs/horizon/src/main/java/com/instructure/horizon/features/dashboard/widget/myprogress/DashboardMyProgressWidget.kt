@@ -16,13 +16,10 @@
  */
 package com.instructure.horizon.features.dashboard.widget.myprogress
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -63,16 +60,11 @@ fun DashboardMyProgressSection(
 ) {
     when (state.state) {
         DashboardItemState.LOADING -> {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                DashboardMyProgressCardContent(
-                    DashboardMyProgressCardState.Loading,
-                    true,
-                    modifier
-                )
-            }
+            DashboardMyProgressCardContent(
+                DashboardMyProgressCardState.Loading,
+                true,
+                modifier
+            )
         }
         DashboardItemState.ERROR -> {
             DashboardWidgetCardError(
@@ -85,16 +77,11 @@ fun DashboardMyProgressSection(
             )
         }
         DashboardItemState.SUCCESS -> {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                DashboardMyProgressCardContent(
-                    state.cardState,
-                    false,
-                    modifier
-                )
-            }
+            DashboardMyProgressCardContent(
+                state.cardState,
+                false,
+                modifier
+            )
         }
     }
 }
