@@ -434,14 +434,6 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             )
             insets
         }
-
-        ViewCompat.setOnApplyWindowInsetsListener(bottomBarDivider) { view, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            view.updateLayoutParams<LinearLayout.LayoutParams> {
-                bottomMargin = systemBars.bottom
-            }
-            insets
-        }
     }
 
     private fun logOfflineEvents(isOnline: Boolean) {

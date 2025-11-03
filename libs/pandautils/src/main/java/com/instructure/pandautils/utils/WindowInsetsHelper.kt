@@ -112,10 +112,11 @@ fun View.applyBottomSystemBarInsets() {
 }
 
 fun View.applyBottomSystemBarMargin() {
+    val originalBottomMargin = (layoutParams as? android.view.ViewGroup.MarginLayoutParams)?.bottomMargin ?: 0
     ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
         val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
         val layoutParams = view.layoutParams as? android.view.ViewGroup.MarginLayoutParams
-        layoutParams?.bottomMargin = systemBars.bottom
+        layoutParams?.bottomMargin = originalBottomMargin + systemBars.bottom
         view.layoutParams = layoutParams
         insets
     }

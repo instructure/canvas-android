@@ -72,6 +72,7 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyBottomSystemBarMargin
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.isCourse
 import com.instructure.pandautils.utils.isCourseOrGroup
@@ -193,6 +194,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
         binding.toolbar.title = title()
         binding.toolbar.subtitle = canvasContext.name
         binding.addFab.setInvisible()
+        binding.addFab.applyBottomSystemBarMargin()
         binding.toolbar.setMenu(R.menu.menu_file_list) {}
 
         if (canvasContext.type == CanvasContext.Type.USER) applyTheme()
