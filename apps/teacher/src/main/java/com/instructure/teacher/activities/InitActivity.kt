@@ -97,6 +97,7 @@ import com.instructure.pandautils.utils.ProfileUtils
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.WebViewAuthenticator
+import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.pandautils.utils.applyTheme
 import com.instructure.pandautils.utils.isAccessibilityEnabled
 import com.instructure.pandautils.utils.items
@@ -294,6 +295,8 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
             }
             insets
         }
+
+        navigationDrawerBinding.navigationDrawer.applyHorizontalSystemBarInsets()
     }
 
     private fun requestNotificationsPermission() {

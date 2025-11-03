@@ -105,6 +105,7 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.EdgeToEdgeHelper
 import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.pandautils.utils.OnActivityResults
 import com.instructure.pandautils.utils.OnBackStackChangedEvent
 import com.instructure.pandautils.utils.PermissionReceiver
@@ -434,6 +435,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             )
             insets
         }
+
+        navigationDrawerBinding.navigationDrawer.applyHorizontalSystemBarInsets()
     }
 
     private fun logOfflineEvents(isOnline: Boolean) {
