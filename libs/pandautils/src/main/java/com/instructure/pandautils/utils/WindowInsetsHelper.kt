@@ -126,6 +126,23 @@ fun View.applyBottomSystemBarMargin() {
     }
 }
 
+fun View.applyBottomAndRightSystemBarMargin() {
+    val originalBottomMargin = (layoutParams as? android.view.ViewGroup.MarginLayoutParams)?.bottomMargin ?: 0
+    val originalRightMargin = (layoutParams as? android.view.ViewGroup.MarginLayoutParams)?.rightMargin ?: 0
+    ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
+        val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+        val layoutParams = view.layoutParams as? android.view.ViewGroup.MarginLayoutParams
+        layoutParams?.bottomMargin = originalBottomMargin + systemBars.bottom
+        layoutParams?.rightMargin = originalRightMargin + systemBars.right
+        view.layoutParams = layoutParams
+        insets
+    }
+    // Request insets to be dispatched immediately if view is attached
+    if (isAttachedToWindow) {
+        ViewCompat.requestApplyInsets(this)
+    }
+}
+
 fun View.applyBottomAndRightSystemBarPadding() {
     val originalBottomPadding = paddingBottom
     val originalRightPadding = paddingRight
