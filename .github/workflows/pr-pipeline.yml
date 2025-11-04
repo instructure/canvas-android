@@ -164,7 +164,6 @@ jobs:
             --build-cache \
             --parallel \
             --max-workers=4 \
-            --configuration-cache \
             --no-daemon \
             -Dorg.gradle.jvmargs="-Xmx4g -XX:+HeapDumpOnOutOfMemoryError" \
             -Dkotlin.compiler.execution.strategy=in-process \
@@ -279,7 +278,6 @@ jobs:
             --build-cache \
             --parallel \
             --max-workers=4 \
-            --configuration-cache \
             --no-daemon \
             -Dorg.gradle.jvmargs="-Xmx4g -XX:+HeapDumpOnOutOfMemoryError" \
             -Dkotlin.compiler.execution.strategy=in-process
@@ -288,7 +286,6 @@ jobs:
             --build-cache \
             --parallel \
             --max-workers=4 \
-            --configuration-cache \
             --no-daemon \
             -Dorg.gradle.jvmargs="-Xmx4g -XX:+HeapDumpOnOutOfMemoryError" \
             -Dkotlin.compiler.execution.strategy=in-process
@@ -300,7 +297,6 @@ jobs:
             --build-cache \
             --parallel \
             --max-workers=4 \
-            --configuration-cache \
             --no-daemon \
             -Dorg.gradle.jvmargs="-Xmx4g -XX:+HeapDumpOnOutOfMemoryError" \
             -Dkotlin.compiler.execution.strategy=in-process
@@ -369,7 +365,6 @@ jobs:
             --build-cache \
             --parallel \
             --max-workers=4 \
-            --configuration-cache \
             --no-daemon \
             -Dorg.gradle.jvmargs="-Xmx4g -XX:+HeapDumpOnOutOfMemoryError" \
             -Dkotlin.compiler.execution.strategy=in-process
