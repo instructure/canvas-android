@@ -69,7 +69,6 @@ fun GradePreferencesScreen(
 
     Scaffold(
         backgroundColor = colorResource(id = R.color.backgroundLightest),
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
             CanvasThemedAppBar(
                 title = stringResource(id = R.string.gradePreferencesScreenTitle),

@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
+import androidx.core.view.WindowCompat
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.R
 
@@ -49,6 +50,11 @@ fun FullScreenDialog(
         (LocalView.current.parent as? DialogWindowProvider)?.window?.apply {
             setDimAmount(0f)
             clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+            WindowCompat.setDecorFitsSystemWindows(this, false)
+
+            // Enable drawing behind system bars
+            addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN)
+            addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         }
         var modifier = Modifier.fillMaxSize()
         if (ApiPrefs.isMasquerading) {
