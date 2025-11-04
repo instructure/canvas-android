@@ -60,6 +60,7 @@ import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.PermissionUtils
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
 import com.instructure.pandautils.utils.applyBottomSystemBarMargin
 import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
@@ -138,7 +139,6 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
 
             assignmentDetailsBehaviour.applyTheme(requireActivity(), binding, bookmark, viewModel.course.value, this)
         }
-        binding?.submitButton?.applyBottomSystemBarMargin()
     }
 
     override fun getFragment(): Fragment = this
@@ -168,12 +168,13 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
             )
         }
 
+        binding?.submitButton?.applyBottomSystemBarMargin()
+
         return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.applyHorizontalSystemBarInsets()
 
         applyTheme()
         setupDescriptionView()
