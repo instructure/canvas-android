@@ -43,7 +43,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -101,7 +100,6 @@ import com.instructure.horizon.features.moduleitemsequence.content.lti.ExternalT
 import com.instructure.horizon.features.moduleitemsequence.content.page.PageDetailsContentScreen
 import com.instructure.horizon.features.moduleitemsequence.content.page.PageDetailsViewModel
 import com.instructure.horizon.features.moduleitemsequence.progress.ProgressScreen
-import com.instructure.horizon.features.notebook.NotebookBottomDialog
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
@@ -129,7 +127,6 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.orDefault
-import kotlinx.coroutines.launch
 import kotlin.math.abs
 
 @Composable
@@ -153,7 +150,7 @@ fun ModuleItemSequenceScreen(mainNavController: NavHostController, uiState: Modu
                 onPreviousClick = uiState.onPreviousClick,
                 onAssignmentToolsClick = uiState.onAssignmentToolsClick,
                 onAiAssistClick = { uiState.updateShowAiAssist(true) },
-                onNotebookClick = { uiState.updateShowNotebook(true) },
+                onNotebookClick = { mainNavController.navigate(MainNavigationRoute.Notebook.route) },
                 notebookEnabled = uiState.notebookButtonEnabled,
                 aiAssistEnabled = uiState.aiAssistButtonEnabled,
                 hasUnreadComments = uiState.hasUnreadComments
@@ -164,22 +161,6 @@ fun ModuleItemSequenceScreen(mainNavController: NavHostController, uiState: Modu
             if (uiState.showAiAssist) {
                 AiAssistantScreen(
                     onDismiss = { uiState.updateShowAiAssist(false) },
-                )
-            }
-            if (uiState.showNotebook) {
-                NotebookBottomDialog(
-                    uiState.courseId,
-                    uiState.objectTypeAndId,
-                    { snackbarMessage, onDismiss ->
-                        scope.launch {
-                            if (snackbarMessage != null) {
-                                val result = snackbarHostState.showSnackbar(snackbarMessage)
-                                if (result == SnackbarResult.Dismissed) {
-                                    onDismiss()
-                                }
-                            }
-                        } },
-                    { uiState.updateShowNotebook(false) }
                 )
             }
             ModuleItemSequenceContent(uiState = uiState, mainNavController = mainNavController, onBackPressed = {
@@ -646,7 +627,6 @@ private fun ModuleItemSequenceScreenPreview() {
                 moduleItemContent = ModuleItemContent.Assignment(courseId = 1, assignmentId = 1L)
             ),
             updateShowAiAssist = {},
-            updateShowNotebook = {},
         )
     )
 }
