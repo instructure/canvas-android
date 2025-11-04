@@ -144,16 +144,21 @@ fun ToDoListScreen(
         }
     }
 
-    LaunchedEffect(uiState.markedAsDoneItem) {
-        uiState.markedAsDoneItem?.let { item ->
-            val message = context.getString(R.string.todoMarkedAsDone, item.title)
+    LaunchedEffect(uiState.confirmationSnackbarData) {
+        uiState.confirmationSnackbarData?.let { item ->
+            val messageRes = if (item.markedAsDone) {
+                R.string.todoMarkedAsDone
+            } else {
+                R.string.todoMarkedAsNotDone
+            }
+            val message = context.getString(messageRes, item.title)
             val result = snackbarHostState.showSnackbar(
                 message = message,
                 actionLabel = context.getString(R.string.todoMarkedAsDoneSnackbarUndo),
                 duration = SnackbarDuration.Long
             )
             if (result == SnackbarResult.ActionPerformed) {
-                uiState.onUndoMarkAsDone()
+                uiState.onUndoMarkAsDoneUndoneAction()
             } else {
                 uiState.onMarkedAsDoneSnackbarDismissed()
             }

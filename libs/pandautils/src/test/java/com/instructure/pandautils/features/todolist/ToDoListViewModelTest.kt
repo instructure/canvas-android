@@ -436,7 +436,8 @@ class ToDoListViewModelTest {
         val uiState = viewModel.uiState.value
 
         assertTrue(uiState.itemsByDate.values.flatten().first().isChecked)
-        assertEquals("Assignment", uiState.markedAsDoneItem?.title)
+        assertEquals("Assignment", uiState.confirmationSnackbarData?.title)
+        assertTrue(uiState.confirmationSnackbarData?.markedAsDone == true)
         coVerify { repository.createPlannerOverride(1L, PlannableType.ASSIGNMENT, true) }
     }
 
@@ -461,7 +462,6 @@ class ToDoListViewModelTest {
         val uiState = viewModel.uiState.value
 
         assertFalse(uiState.itemsByDate.values.flatten().first().isChecked)
-        assertEquals(null, uiState.markedAsDoneItem)
         coVerify { repository.updatePlannerOverride(100L, false) }
     }
 
@@ -525,7 +525,8 @@ class ToDoListViewModelTest {
         val uiState = viewModel.uiState.value
 
         assertTrue(uiState.itemsByDate.values.flatten().first().isChecked)
-        assertEquals("Assignment", uiState.markedAsDoneItem?.title)
+        assertEquals("Assignment", uiState.confirmationSnackbarData?.title)
+        assertTrue(uiState.confirmationSnackbarData?.markedAsDone == true)
     }
 
     @Test
@@ -549,7 +550,6 @@ class ToDoListViewModelTest {
         val uiState = viewModel.uiState.value
 
         assertFalse(uiState.itemsByDate.values.flatten().first().isChecked)
-        assertEquals(null, uiState.markedAsDoneItem)
     }
 
     @Test
@@ -653,12 +653,12 @@ class ToDoListViewModelTest {
         assertTrue(viewModel.uiState.value.itemsByDate.values.flatten().first().isChecked)
 
         // Now undo
-        viewModel.uiState.value.onUndoMarkAsDone()
+        viewModel.uiState.value.onUndoMarkAsDoneUndoneAction()
 
         val uiState = viewModel.uiState.value
 
         assertFalse(uiState.itemsByDate.values.flatten().first().isChecked)
-        assertEquals(null, uiState.markedAsDoneItem)
+        assertEquals(null, uiState.confirmationSnackbarData)
     }
 
     @Test

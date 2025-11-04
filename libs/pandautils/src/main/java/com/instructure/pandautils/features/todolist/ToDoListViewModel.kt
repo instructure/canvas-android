@@ -51,12 +51,13 @@ class ToDoListViewModel @Inject constructor(
     private val firebaseCrashlytics: FirebaseCrashlytics
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(ToDoListUiState(
-        onSnackbarDismissed = { clearSnackbarMessage() },
-        onUndoMarkAsDone = { handleUndoMarkAsDone() },
-        onMarkedAsDoneSnackbarDismissed = { clearMarkedAsDoneItem() },
-        onRefresh = { handleRefresh() }
-    ))
+    private val _uiState = MutableStateFlow(
+        ToDoListUiState(
+            onSnackbarDismissed = { clearSnackbarMessage() },
+            onUndoMarkAsDoneUndoneAction = { handleUndoMarkAsDoneUndone() },
+            onMarkedAsDoneSnackbarDismissed = { clearMarkedAsDoneItem() },
+            onRefresh = { handleRefresh() }
+        ))
     val uiState = _uiState.asStateFlow()
 
     private val plannerItemsMap = mutableMapOf<String, PlannerItem>()
@@ -171,12 +172,13 @@ class ToDoListViewModel @Inject constructor(
             val success = updateItemCompleteState(itemId, newIsChecked)
 
             // Show marked-as-done snackbar only when marking as done (not when undoing)
-            if (success && newIsChecked) {
+            if (success) {
                 _uiState.update {
                     it.copy(
-                        markedAsDoneItem = MarkedAsDoneItem(
+                        confirmationSnackbarData = ConfirmationSnackbarData(
                             itemId = itemId,
-                            title = plannerItem.plannable.title
+                            title = plannerItem.plannable.title,
+                            markedAsDone = newIsChecked
                         )
                     )
                 }
@@ -184,15 +186,15 @@ class ToDoListViewModel @Inject constructor(
         }
     }
 
-    private fun handleUndoMarkAsDone() {
+    private fun handleUndoMarkAsDoneUndone() {
         viewModelScope.launch {
-            val markedAsDoneItem = _uiState.value.markedAsDoneItem ?: return@launch
+            val markedAsDoneItem = _uiState.value.confirmationSnackbarData ?: return@launch
             val itemId = markedAsDoneItem.itemId
 
             // Clear the snackbar immediately
-            _uiState.update { it.copy(markedAsDoneItem = null) }
+            _uiState.update { it.copy(confirmationSnackbarData = null) }
 
-            updateItemCompleteState(itemId, false)
+            updateItemCompleteState(itemId, !markedAsDoneItem.markedAsDone)
         }
     }
 
@@ -210,12 +212,13 @@ class ToDoListViewModel @Inject constructor(
             val success = updateItemCompleteState(itemId, isChecked)
 
             // Show marked-as-done snackbar only when checking the box
-            if (success && isChecked) {
+            if (success) {
                 _uiState.update {
                     it.copy(
-                        markedAsDoneItem = MarkedAsDoneItem(
+                        confirmationSnackbarData = ConfirmationSnackbarData(
                             itemId = itemId,
-                            title = plannerItem.plannable.title
+                            title = plannerItem.plannable.title,
+                            markedAsDone = isChecked
                         )
                     )
                 }
@@ -295,6 +298,6 @@ class ToDoListViewModel @Inject constructor(
     }
 
     private fun clearMarkedAsDoneItem() {
-        _uiState.update { it.copy(markedAsDoneItem = null) }
+        _uiState.update { it.copy(confirmationSnackbarData = null) }
     }
 }
