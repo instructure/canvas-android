@@ -22,15 +22,14 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -51,6 +50,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -64,7 +65,8 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
-import com.instructure.horizon.features.dashboard.course.DashboardCourseSection
+import com.instructure.horizon.features.dashboard.widget.announcement.DashboardAnnouncementBannerWidget
+import com.instructure.horizon.features.dashboard.widget.course.DashboardCourseSection
 import com.instructure.horizon.features.dashboard.widget.myprogress.DashboardMyProgressWidget
 import com.instructure.horizon.features.dashboard.widget.skillhighlights.DashboardSkillHighlightsWidget
 import com.instructure.horizon.features.dashboard.widget.skilloverview.DashboardSkillOverviewWidget
@@ -79,7 +81,10 @@ import com.instructure.horizon.horizonui.molecules.BadgeContent
 import com.instructure.horizon.horizonui.molecules.BadgeType
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
+import com.instructure.horizon.horizonui.organisms.AnimatedHorizontalPager
+import com.instructure.horizon.horizonui.organisms.CollapsableHeaderScreen
 import com.instructure.horizon.navigation.MainNavigationRoute
+import com.instructure.pandautils.compose.modifiers.conditional
 import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
@@ -137,7 +142,7 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                 Indicator(
                     modifier = Modifier
                         .align(Alignment.TopCenter)
-                        .padding(top = 16.dp),
+                        .padding(top = 56.dp),
                     isRefreshing = isRefreshing,
                     containerColor = HorizonColors.Surface.pageSecondary(),
                     color = HorizonColors.Surface.institution(),
@@ -145,61 +150,103 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                 )
             }
         ){
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .padding(paddingValues)
-                    .verticalScroll(rememberScrollState())
-            ) {
-                HomeScreenTopBar(
-                    uiState,
-                    mainNavController,
-                    modifier = Modifier.height(56.dp)
-                )
-                HorizonSpace(SpaceSize.SPACE_24)
-                DashboardCourseSection(
-                    mainNavController,
-                    homeNavController,
-                    shouldRefresh,
-                    refreshStateFlow
-                )
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .horizontalScroll(rememberScrollState())
-                        .padding(start = 16.dp)
-                ) {
-                    DashboardMyProgressWidget(
-                        shouldRefresh,
-                        refreshStateFlow
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    DashboardTimeSpentWidget(
-                        shouldRefresh,
-                        refreshStateFlow
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    DashboardSkillOverviewWidget(
-                        homeNavController,
-                        shouldRefresh,
-                        refreshStateFlow
-                    )
-                    Spacer(modifier = Modifier.width(16.dp))
+            val scrollState = rememberScrollState()
+            CollapsableHeaderScreen(
+                modifier = Modifier.padding(paddingValues),
+                headerContent = {
+                    Column(
+                        modifier = Modifier.conditional(scrollState.canScrollBackward) {
+                            shadow(
+                                elevation = HorizonElevation.level3,
+                                spotColor = Color.Transparent,
+                            )
+                        }
+                    ) {
+                        HomeScreenTopBar(
+                            uiState,
+                            mainNavController,
+                            modifier = Modifier
+                                .height(56.dp)
+                                .padding(bottom = 12.dp)
+                        )
+                    }
+                },
+                bodyContent = {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .verticalScroll(scrollState)
+                    ) {
+                        HorizonSpace(SpaceSize.SPACE_12)
+                        DashboardAnnouncementBannerWidget(
+                            mainNavController,
+                            homeNavController,
+                            shouldRefresh,
+                            refreshStateFlow
+                        )
+                        DashboardCourseSection(
+                            mainNavController,
+                            homeNavController,
+                            shouldRefresh,
+                            refreshStateFlow
+                        )
+                        HorizonSpace(SpaceSize.SPACE_16)
+                        val pagerState = rememberPagerState{ 3 }
+                        AnimatedHorizontalPager(
+                            pagerState,
+                            sizeAnimationRange = 0f,
+                            contentPadding = PaddingValues(horizontal = 24.dp),
+                            pageSpacing = 12.dp,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) { index, modifier ->
+                            when (index) {
+                                0 -> {
+                                    DashboardMyProgressWidget(
+                                        shouldRefresh,
+                                        refreshStateFlow,
+                                        modifier.padding(bottom = 16.dp)
+                                    )
+                                }
+                                1 -> {
+                                    DashboardTimeSpentWidget(
+                                        shouldRefresh,
+                                        refreshStateFlow,
+                                        modifier.padding(bottom = 16.dp)
+                                    )
+                                }
+                                2 -> {
+                                    DashboardSkillOverviewWidget(
+                                        homeNavController,
+                                        shouldRefresh,
+                                        refreshStateFlow,
+                                        modifier.padding(bottom = 16.dp)
+                                    )
+                                }
+                                else -> {
+
+                                }
+                            }
+                        }
+                        DashboardSkillHighlightsWidget(
+                            homeNavController,
+                            shouldRefresh,
+                            refreshStateFlow
+                        )
+                        HorizonSpace(SpaceSize.SPACE_24)
+                    }
                 }
-                DashboardSkillHighlightsWidget(
-                    homeNavController,
-                    shouldRefresh,
-                    refreshStateFlow
-                )
-            }
+            )
         }
     }
 }
 
 @Composable
-private fun HomeScreenTopBar(uiState: DashboardUiState, mainNavController: NavController, modifier: Modifier = Modifier) {
-    Row(verticalAlignment = Alignment.Bottom, modifier = modifier.padding(horizontal = 24.dp)) {
+private fun HomeScreenTopBar(uiState: DashboardUiState, mainNavController: NavController, modifier: Modifier = Modifier
+) {
+    Row(
+        verticalAlignment = Alignment.Bottom,
+        modifier = modifier.padding(horizontal = 24.dp)
+    ) {
         GlideImage(
             model = uiState.logoUrl,
             contentScale = ContentScale.Fit,

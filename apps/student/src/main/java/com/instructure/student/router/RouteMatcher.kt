@@ -33,6 +33,8 @@ import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.RemoteConfigParam
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.interactions.router.BaseRouteMatcher
@@ -80,15 +82,16 @@ import com.instructure.student.features.pages.list.PageListFragment
 import com.instructure.student.features.people.details.PeopleDetailsFragment
 import com.instructure.student.features.people.list.PeopleListFragment
 import com.instructure.student.features.quiz.list.QuizListFragment
+import com.instructure.student.features.todolist.ToDoListFragment
 import com.instructure.student.fragment.AnnouncementListFragment
 import com.instructure.student.fragment.BasicQuizViewFragment
 import com.instructure.student.fragment.CourseSettingsFragment
 import com.instructure.student.fragment.DashboardFragment
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.fragment.NotificationListFragment
+import com.instructure.student.fragment.OldToDoListFragment
 import com.instructure.student.fragment.ProfileSettingsFragment
 import com.instructure.student.fragment.StudioWebViewFragment
-import com.instructure.student.fragment.ToDoListFragment
 import com.instructure.student.fragment.UnsupportedFeatureFragment
 import com.instructure.student.fragment.UnsupportedTabFragment
 import com.instructure.student.fragment.ViewHtmlFragment
@@ -343,7 +346,12 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route("/todos/:${ToDoFragment.PLANNABLE_ID}", ToDoFragment::class.java))
 
         // To Do List
-        routes.add(Route("/todolist", ToDoListFragment::class.java).copy(canvasContext = ApiPrefs.user))
+        val todoListFragmentClass = if (RemoteConfigUtils.getBoolean(RemoteConfigParam.TODO_REDESIGN)) {
+            ToDoListFragment::class.java
+        } else {
+            OldToDoListFragment::class.java
+        }
+        routes.add(Route("/todolist", todoListFragmentClass).copy(canvasContext = ApiPrefs.user))
 
         // Syllabus
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/syllabus"), SyllabusRepositoryFragment::class.java))
@@ -401,6 +409,13 @@ object RouteMatcher : BaseRouteMatcher() {
             )
         )
 
+        // Studio Media Immersive View
+        routes.add(
+            Route(
+                "/media_attachments/:${RouterParams.ATTACHMENT_ID}/immersive_view",
+                InternalWebviewFragment::class.java
+            )
+        )
 
         // Submissions
         // :sliding_tab_type can be /rubric or /submissions (used to navigate to the nested fragment)
@@ -537,6 +552,31 @@ object RouteMatcher : BaseRouteMatcher() {
             if (route?.uri != null) {
                 // No route, no problem
                 handleWebViewUrl(activity, route.uri.toString())
+            }
+        } else if (route.primaryClass == InternalWebviewFragment::class.java && route.uri?.toString()?.contains("media_attachments") == true) {
+            // Handle studio media immersive view - pass the full URL and title to InternalWebviewFragment
+            val uri = route.uri!!
+            var urlString = uri.toString()
+
+            // Convert media_attachments_iframe to media_attachments (for iframe button)
+            urlString = urlString.replace("media_attachments_iframe", "media_attachments")
+
+            // Ensure embedded=true parameter is always present
+            if (!urlString.contains("embedded=true")) {
+                val separator = if (urlString.contains("?")) "&" else "?"
+                urlString = "$urlString${separator}embedded=true"
+            }
+
+            route.arguments.putString(Const.INTERNAL_URL, urlString)
+
+            // Extract title from URL query parameter if present, otherwise use fallback
+            val title = uri.getQueryParameter("title") ?: activity.getString(R.string.immersiveView)
+            route.arguments.putString(Const.ACTION_BAR_TITLE, title)
+
+            if (activity.resources.getBoolean(R.bool.isDeviceTablet)) {
+                handleTabletRoute(activity, route)
+            } else {
+                handleFullscreenRoute(activity, route)
             }
         } else if (route.routeContext == RouteContext.FILE
             || route.primaryClass?.isAssignableFrom(FileListFragment::class.java) == true

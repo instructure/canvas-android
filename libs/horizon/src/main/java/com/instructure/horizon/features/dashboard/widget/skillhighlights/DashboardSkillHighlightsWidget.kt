@@ -22,12 +22,15 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardItemState
+import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCardError
 import com.instructure.horizon.features.dashboard.widget.skillhighlights.card.DashboardSkillHighlightsCardContent
-import com.instructure.horizon.features.dashboard.widget.skillhighlights.card.DashboardSkillHighlightsCardError
+import com.instructure.horizon.horizonui.foundation.HorizonColors
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
@@ -35,7 +38,8 @@ import kotlinx.coroutines.flow.update
 fun DashboardSkillHighlightsWidget(
     homeNavController: NavHostController,
     shouldRefresh: Boolean,
-    refreshState: MutableStateFlow<List<Boolean>>
+    refreshState: MutableStateFlow<List<Boolean>>,
+    modifier: Modifier = Modifier
 ) {
     val viewModel = hiltViewModel<DashboardSkillHighlightsViewModel>()
     val state by viewModel.uiState.collectAsState()
@@ -49,35 +53,40 @@ fun DashboardSkillHighlightsWidget(
         }
     }
 
-    DashboardSkillHighlightsSection(state, homeNavController)
+    DashboardSkillHighlightsSection(state, homeNavController, modifier)
 }
 
 @Composable
 fun DashboardSkillHighlightsSection(
     state: DashboardSkillHighlightsUiState,
     homeNavController: NavHostController,
+    modifier: Modifier = Modifier
 ) {
     when (state.state) {
         DashboardItemState.LOADING -> {
             DashboardSkillHighlightsCardContent(
                 state.cardState,
                 homeNavController,
-                Modifier.padding(horizontal = 16.dp),
-                true
+                true,
+                modifier.padding(horizontal = 24.dp),
             )
         }
         DashboardItemState.ERROR -> {
-            DashboardSkillHighlightsCardError(
+            DashboardWidgetCardError(
+                stringResource(R.string.dashboardSkillHighlightsTitle),
+                R.drawable.hub,
+                HorizonColors.PrimitivesGreen.green12(),
+                false,
                 { state.onRefresh {} },
-                Modifier.padding(horizontal = 16.dp)
+                modifier = modifier.padding(horizontal = 24.dp)
             )
         }
         DashboardItemState.SUCCESS -> {
             DashboardSkillHighlightsCardContent(
                 state.cardState,
                 homeNavController,
-                Modifier.padding(horizontal = 16.dp),
-                false
+                false,
+                modifier.padding(horizontal = 24.dp),
             )
         }
     }

@@ -499,4 +499,5 @@
         <item quantity="one">%d Munud</item>
         <item quantity="other">%d Munud</item>
     </plurals>
+    <string name="notATeacherDescription">Efallai y byddai un o\'r apiau eraill yn fwy addas. Cliciwch ar eicon i fewngofnodi yn y fan honno.</string>
 </resources>

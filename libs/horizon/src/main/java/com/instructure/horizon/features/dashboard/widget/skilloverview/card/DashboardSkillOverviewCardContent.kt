@@ -20,15 +20,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -47,15 +47,15 @@ import com.instructure.horizon.horizonui.foundation.HorizonTypography
 fun DashboardSkillOverviewCardContent(
     state: DashboardSkillOverviewCardState,
     homeNavController: NavHostController,
+    isLoading: Boolean,
     modifier: Modifier = Modifier,
-    isLoading: Boolean = false,
 ) {
     DashboardWidgetCard(
         title = stringResource(R.string.dashboardSkillOverviewTitle),
         iconRes = R.drawable.hub,
         widgetColor = HorizonColors.PrimitivesGreen.green12(),
         isLoading = isLoading,
-        useMinWidth = true,
+        useMinWidth = false,
         onClick = {
             homeNavController.navigate(HomeNavigationRoute.Skillspace.route) {
                 popUpTo(homeNavController.graph.findStartDestination().id) {
@@ -66,8 +66,6 @@ fun DashboardSkillOverviewCardContent(
             }
         },
         modifier = modifier
-            .widthIn(max = 300.dp)
-            .padding(bottom = 8.dp),
     ) {
         if (state.completedSkillCount == 0) {
             Text(
@@ -79,10 +77,18 @@ fun DashboardSkillOverviewCardContent(
                     .shimmerEffect(isLoading)
             )
         } else {
+            val context = LocalContext.current
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clearAndSetSemantics {
+                        contentDescription = context.getString(
+                            R.string.a11y_dashboardSkillOverviewContentDescription,
+                            state.completedSkillCount
+                        )
+                    }
             ) {
                 Text(
                     text = state.completedSkillCount.toString(),
@@ -107,7 +113,8 @@ private fun DashboardSkillOverviewCardContentPreview() {
     ContextKeeper.appContext = LocalContext.current
     DashboardSkillOverviewCardContent(
         state = DashboardSkillOverviewCardState(completedSkillCount = 24),
-        rememberNavController()
+        rememberNavController(),
+        false
     )
 }
 
@@ -117,7 +124,8 @@ private fun DashboardSkillOverviewCardContentNoDataPreview() {
     ContextKeeper.appContext = LocalContext.current
     DashboardSkillOverviewCardContent(
         state = DashboardSkillOverviewCardState(completedSkillCount = 0),
-        rememberNavController()
+        rememberNavController(),
+        false
     )
 }
 

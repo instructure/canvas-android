@@ -283,12 +283,15 @@ class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager
                 SUBMISSION -> {
                     if (canvasContext !is Course) return
 
-                    if (streamItem.assignment == null) {
+                    val assignment = streamItem.assignment
+
+                    if (assignment == null) {
                         RouteMatcher.route(activity, AssignmentDetailsFragment.makeRoute(canvasContext, streamItem.assignmentId))
                     } else {
                         // Add an empty submission with the grade to the assignment so that we can see the score.
-                        streamItem.assignment?.submission = Submission(grade = streamItem.grade)
-                        RouteMatcher.route(activity, AssignmentDetailsFragment.makeRoute(canvasContext, streamItem.assignment!!.id))
+                        assignment.submission = Submission(grade = streamItem.grade)
+                        val assignmentId = assignment.discussionTopicHeader?.assignmentId ?: assignment.id
+                        RouteMatcher.route(activity, AssignmentDetailsFragment.makeRoute(canvasContext, assignmentId))
                     }
                     null
                 }

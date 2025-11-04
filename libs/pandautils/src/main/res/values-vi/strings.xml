@@ -500,4 +500,5 @@
         <item quantity="one">%d Phút</item>
         <item quantity="other">%d Phút</item>
     </plurals>
+    <string name="notATeacherDescription">Một trong các ứng dụng khác có thể thích hợp hơn. Chạm một biểu tượng để đăng nhập vào đó.</string>
 </resources>

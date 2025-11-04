@@ -597,7 +597,7 @@ private fun AssignmentListItemView(
                             toggleCheckpointsExpanded(item.assignment.id)
                         }
                         .semantics {
-                            testTag = "expandDiscussionCheckpoint"
+                            testTag = "expandDiscussionCheckpoints"
                             role = Role.Button
                         }
                 ) {

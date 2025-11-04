@@ -500,4 +500,5 @@
         <item quantity="one">%d Mnt</item>
         <item quantity="other">%d Mnt</item>
     </plurals>
+    <string name="notATeacherDescription">Salah satu app kami yang lain mungkin lebih cocok. Ketuk ikon untuk login di sana.</string>
 </resources>

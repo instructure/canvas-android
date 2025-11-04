@@ -1375,6 +1375,11 @@
         <item quantity="other">%s unread notifications</item>
     </plurals>
 
+    <plurals name="a11y_todoBadgeCount">
+        <item quantity="one">%s to do item</item>
+        <item quantity="other">%s to do items</item>
+    </plurals>
+
     <string name="noAnnotationSelected">No annotation selected</string>
 
     <string name="emailNotifications">Email Notifications</string>
@@ -2163,6 +2168,8 @@
     <string name="a11y_discussion_checkpoints">Discussion Checkpoints</string>
     <string name="multipleDueDates">Multiple Due Dates</string>
     <string name="courseConcludedError">Course concluded. Unable to send messages!</string>
+    <string name="openInDetailView">Open in Detail View</string>
+    <string name="immersiveView">Immersive view</string>
     <string name="statuses">Statuses</string>
     <string name="precise_filtering">Precise filtering</string>
     <string name="differentiation_tags">Differentiation tags</string>
@@ -2177,4 +2184,8 @@
     <string name="scored_less_than_with_max">Scored Less than / %s pts</string>
     <string name="scored_between_values">Scored %1$s - %2$s</string>
     <string name="multiple_filters">Multiple filters</string>
+    <string name="a11y_contentDescriptionToDoFilter">Filter</string>
+    <string name="errorLoadingToDos">There was an error loading your to-do items. Please check your connection and try again.</string>
+    <string name="noToDosForNow">No To Dos for now!</string>
+    <string name="noToDosForNowSubtext">It looks like a great time to rest, relax, and recharge.</string>
 </resources>

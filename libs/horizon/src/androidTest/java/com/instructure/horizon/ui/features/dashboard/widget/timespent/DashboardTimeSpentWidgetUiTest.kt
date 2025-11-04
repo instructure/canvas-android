@@ -16,7 +16,6 @@
  */
 package com.instructure.horizon.ui.features.dashboard.widget.timespent
 
-import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
@@ -47,8 +46,6 @@ class DashboardTimeSpentWidgetUiTest {
             DashboardTimeSpentSection(state)
         }
 
-        // Loading state should render without crashing
-        // Shimmer effects don't have testable text/content descriptions
         composeTestRule.waitForIdle()
     }
 
@@ -67,28 +64,24 @@ class DashboardTimeSpentWidgetUiTest {
             DashboardTimeSpentSection(state)
         }
 
-        // Verify title is displayed
-        composeTestRule.onNodeWithText("Time").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Time learning").assertIsDisplayed()
 
-        // Verify error message is displayed
         composeTestRule.onNodeWithText("We weren't able to load this content.\nPlease try again.", substring = true)
             .assertIsDisplayed()
 
-        // Verify retry button is displayed and clickable
-        composeTestRule.onNodeWithText("Refresh")
+        composeTestRule.onNodeWithText("Refresh", useUnmergedTree = true)
             .assertIsDisplayed()
-            .assertHasClickAction()
             .performClick()
 
         assert(refreshCalled) { "Refresh callback should be called when retry button is clicked" }
     }
 
     @Test
-    fun testSuccessStateDisplaysHoursAndTitle() {
+    fun testSuccessStateDisplaysHoursAndTitleWithMultipleCourse() {
         val state = DashboardTimeSpentUiState(
             state = DashboardItemState.SUCCESS,
             cardState = DashboardTimeSpentCardState(
-                hours = 12.5,
+                hours = 12,
                 courses = listOf(
                     CourseOption(id = 1L, name = "Math 101"),
                     CourseOption(id = 2L, name = "Science 201")
@@ -100,25 +93,153 @@ class DashboardTimeSpentWidgetUiTest {
             DashboardTimeSpentSection(state)
         }
 
-        // Verify title is displayed
-        composeTestRule.onNodeWithText("Time").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Time learning").assertIsDisplayed()
 
-        // Verify hours (rounded to 13) is displayed
-        composeTestRule.onNodeWithText("13").assertIsDisplayed()
+        composeTestRule.onNodeWithText("12", useUnmergedTree = true).assertIsDisplayed()
 
-        // Verify "hours in" text is displayed for multiple courses
-        composeTestRule.onNodeWithText("hours in").assertIsDisplayed()
+        composeTestRule.onNodeWithText("hours", useUnmergedTree = true).assertIsDisplayed()
 
-        // Verify dropdown shows "all courses" by default
-        composeTestRule.onNodeWithText("all courses", useUnmergedTree = true).assertIsDisplayed()
+        composeTestRule.onNodeWithText("total", useUnmergedTree = true).assertIsDisplayed()
     }
 
     @Test
-    fun testSuccessStateWithZeroHoursDisplaysZero() {
+    fun testSuccessStateDisplaysMinutesAndTitleWithMultipleCourse() {
         val state = DashboardTimeSpentUiState(
             state = DashboardItemState.SUCCESS,
             cardState = DashboardTimeSpentCardState(
-                hours = 0.0,
+                minutes = 12,
+                courses = listOf(
+                    CourseOption(id = 1L, name = "Math 101"),
+                    CourseOption(id = 2L, name = "Science 201")
+                )
+            )
+        )
+
+        composeTestRule.setContent {
+            DashboardTimeSpentSection(state)
+        }
+
+        composeTestRule.onNodeWithText("Time learning").assertIsDisplayed()
+
+        composeTestRule.onNodeWithText("12", useUnmergedTree = true).assertIsDisplayed()
+
+        composeTestRule.onNodeWithText("minutes", useUnmergedTree = true).assertIsDisplayed()
+
+        composeTestRule.onNodeWithText("total", useUnmergedTree = true).assertIsDisplayed()
+    }
+
+    @Test
+    fun testSuccessStateDisplaysHoursAndMinutesAndTitleWithMultipleCourse() {
+        val state = DashboardTimeSpentUiState(
+            state = DashboardItemState.SUCCESS,
+            cardState = DashboardTimeSpentCardState(
+                hours = 8,
+                minutes = 12,
+                courses = listOf(
+                    CourseOption(id = 1L, name = "Math 101"),
+                    CourseOption(id = 2L, name = "Science 201")
+                )
+            )
+        )
+
+        composeTestRule.setContent {
+            DashboardTimeSpentSection(state)
+        }
+
+        composeTestRule.onNodeWithText("Time learning").assertIsDisplayed()
+
+        composeTestRule.onNodeWithText("8", useUnmergedTree = true).assertIsDisplayed()
+
+        composeTestRule.onNodeWithText("12", useUnmergedTree = true).assertIsDisplayed()
+
+        composeTestRule.onNodeWithText("hrs", useUnmergedTree = true).assertIsDisplayed()
+
+        composeTestRule.onNodeWithText("mins", useUnmergedTree = true).assertIsDisplayed()
+
+        composeTestRule.onNodeWithText("total", useUnmergedTree = true).assertIsDisplayed()
+    }
+
+    @Test
+    fun testSuccessStateDisplaysHoursAndTitleWithSingleCourse() {
+        val state = DashboardTimeSpentUiState(
+            state = DashboardItemState.SUCCESS,
+            cardState = DashboardTimeSpentCardState(
+                hours = 12,
+                courses = listOf(
+                    CourseOption(id = 1L, name = "Math 101"),
+                )
+            )
+        )
+
+        composeTestRule.setContent {
+            DashboardTimeSpentSection(state)
+        }
+
+        composeTestRule.onNodeWithText("Time learning").assertIsDisplayed()
+
+        composeTestRule.onNodeWithText("12", useUnmergedTree = true).assertIsDisplayed()
+
+        composeTestRule.onNodeWithText("hours", useUnmergedTree = true).assertIsDisplayed()
+    }
+
+    @Test
+    fun testSuccessStateDisplaysMinutesAndTitleWithSingleCourse() {
+        val state = DashboardTimeSpentUiState(
+            state = DashboardItemState.SUCCESS,
+            cardState = DashboardTimeSpentCardState(
+                minutes = 12,
+                courses = listOf(
+                    CourseOption(id = 1L, name = "Math 101"),
+                )
+            )
+        )
+
+        composeTestRule.setContent {
+            DashboardTimeSpentSection(state)
+        }
+
+        composeTestRule.onNodeWithText("Time learning").assertIsDisplayed()
+
+        composeTestRule.onNodeWithText("12", useUnmergedTree = true).assertIsDisplayed()
+
+        composeTestRule.onNodeWithText("minutes", useUnmergedTree = true).assertIsDisplayed()
+    }
+
+    @Test
+    fun testSuccessStateDisplaysHoursAndMinutesAndTitleWithSingleCourse() {
+        val state = DashboardTimeSpentUiState(
+            state = DashboardItemState.SUCCESS,
+            cardState = DashboardTimeSpentCardState(
+                hours = 8,
+                minutes = 12,
+                courses = listOf(
+                    CourseOption(id = 1L, name = "Math 101"),
+                )
+            )
+        )
+
+        composeTestRule.setContent {
+            DashboardTimeSpentSection(state)
+        }
+
+        composeTestRule.onNodeWithText("Time learning").assertIsDisplayed()
+
+        composeTestRule.onNodeWithText("8", useUnmergedTree = true).assertIsDisplayed()
+
+        composeTestRule.onNodeWithText("12", useUnmergedTree = true).assertIsDisplayed()
+
+        composeTestRule.onNodeWithText("hrs", useUnmergedTree = true).assertIsDisplayed()
+
+        composeTestRule.onNodeWithText("mins", useUnmergedTree = true).assertIsDisplayed()
+    }
+
+    @Test
+    fun testSuccessStateWithZeroHoursZeroMinutesDisplaysEmpty() {
+        val state = DashboardTimeSpentUiState(
+            state = DashboardItemState.SUCCESS,
+            cardState = DashboardTimeSpentCardState(
+                hours = 0,
+                minutes = 0,
                 courses = listOf(
                     CourseOption(id = 1L, name = "Course 1")
                 )
@@ -137,147 +258,5 @@ class DashboardTimeSpentWidgetUiTest {
 
         // Verify empty state message is displayed
         composeTestRule.onNodeWithText("This widget will update once data becomes available.").assertIsDisplayed()
-    }
-
-    @Test
-    fun testSuccessStateWithSingleCourseDisplaysDifferentText() {
-        val state = DashboardTimeSpentUiState(
-            state = DashboardItemState.SUCCESS,
-            cardState = DashboardTimeSpentCardState(
-                hours = 15.8,
-                courses = listOf(
-                    CourseOption(id = 1L, name = "History 101")
-                )
-            )
-        )
-
-        composeTestRule.setContent {
-            DashboardTimeSpentSection(state)
-        }
-
-        // Verify hours (rounded to 16) is displayed
-        composeTestRule.onNodeWithText("16").assertIsDisplayed()
-
-        // Verify single course text (no dropdown)
-        composeTestRule.onNodeWithText("hours in your course").assertIsDisplayed()
-
-        // Verify no dropdown exists (shouldn't find "all courses")
-        composeTestRule.onNodeWithText("all courses").assertDoesNotExist()
-    }
-
-    @Test
-    fun testSuccessStateWithMultipleCoursesShowsDropdown() {
-        val state = DashboardTimeSpentUiState(
-            state = DashboardItemState.SUCCESS,
-            cardState = DashboardTimeSpentCardState(
-                hours = 25.3,
-                courses = listOf(
-                    CourseOption(id = 1L, name = "Biology"),
-                    CourseOption(id = 2L, name = "Chemistry"),
-                    CourseOption(id = 3L, name = "Physics")
-                )
-            )
-        )
-
-        composeTestRule.setContent {
-            DashboardTimeSpentSection(state)
-        }
-
-        // Verify hours (rounded to 25) is displayed
-        composeTestRule.onNodeWithText("25").assertIsDisplayed()
-
-        // Verify "hours in" text is displayed
-        composeTestRule.onNodeWithText("hours in").assertIsDisplayed()
-
-        // Verify dropdown shows "all courses" by default
-        composeTestRule.onNodeWithText("all courses", useUnmergedTree = true).assertIsDisplayed()
-    }
-
-    @Test
-    fun testSuccessStateWithSelectedCourseDisplaysCourseName() {
-        val state = DashboardTimeSpentUiState(
-            state = DashboardItemState.SUCCESS,
-            cardState = DashboardTimeSpentCardState(
-                hours = 8.7,
-                courses = listOf(
-                    CourseOption(id = 1L, name = "English Literature"),
-                    CourseOption(id = 2L, name = "World History")
-                ),
-                selectedCourseId = 1L
-            )
-        )
-
-        composeTestRule.setContent {
-            DashboardTimeSpentSection(state)
-        }
-
-        // Verify hours (rounded to 9) is displayed
-        composeTestRule.onNodeWithText("9").assertIsDisplayed()
-
-        // Verify selected course name is displayed
-        composeTestRule.onNodeWithText("English Literature", useUnmergedTree = true).assertIsDisplayed()
-    }
-
-    @Test
-    fun testSuccessStateDisplaysCorrectRoundedDownHours() {
-        val state = DashboardTimeSpentUiState(
-            state = DashboardItemState.SUCCESS,
-            cardState = DashboardTimeSpentCardState(
-                hours = 24.4,
-                courses = listOf(CourseOption(id = 1L, name = "Course 1"))
-            )
-        )
-
-        composeTestRule.setContent {
-            DashboardTimeSpentSection(state)
-        }
-
-        composeTestRule.onNodeWithText("24").assertIsDisplayed()
-    }
-
-    @Test
-    fun testSuccessStateDisplaysCorrectRoundedUpHours() {
-        val state = DashboardTimeSpentUiState(
-            state = DashboardItemState.SUCCESS,
-            cardState = DashboardTimeSpentCardState(
-                hours = 24.6,
-                courses = listOf(CourseOption(id = 1L, name = "Course 1"))
-            )
-        )
-
-        composeTestRule.setContent {
-            DashboardTimeSpentSection(state)
-        }
-
-        composeTestRule.onNodeWithText("25").assertIsDisplayed()
-    }
-
-    @Test
-    fun testCourseDropdownInteraction() {
-        val state = DashboardTimeSpentUiState(
-            state = DashboardItemState.SUCCESS,
-            cardState = DashboardTimeSpentCardState(
-                hours = 18.5,
-                courses = listOf(
-                    CourseOption(id = 1L, name = "Computer Science"),
-                    CourseOption(id = 2L, name = "Data Structures")
-                ),
-                selectedCourseId = null,
-                onCourseSelected = { }
-            )
-        )
-
-        composeTestRule.setContent {
-            DashboardTimeSpentSection(state)
-        }
-
-        // Verify dropdown is displayed and clickable
-        composeTestRule.onNodeWithText("all courses", useUnmergedTree = true)
-            .assertIsDisplayed()
-            .performClick()
-
-        // After clicking dropdown, course options should appear
-        composeTestRule.onNodeWithText("Computer Science").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Data Structures").assertIsDisplayed()
     }
 }

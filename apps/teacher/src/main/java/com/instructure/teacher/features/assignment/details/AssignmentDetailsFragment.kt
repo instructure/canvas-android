@@ -46,6 +46,7 @@ import com.instructure.pandautils.features.speedgrader.SpeedGraderFragment
 import com.instructure.pandautils.features.speedgrader.SubmissionListFilter
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.AssignmentGradedEvent
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ThemePrefs
@@ -101,6 +102,9 @@ class AssignmentDetailsFragment : BasePresenterFragment<
 
     @Inject
     lateinit var assignmentsApi: AssignmentAPI.AssignmentInterface
+
+    @Inject
+    lateinit var featureFlagProvider: FeatureFlagProvider
 
     private var assignment: Assignment by ParcelableArg(Assignment(), ASSIGNMENT)
     private var course: Course by ParcelableArg(Course())
@@ -337,11 +341,25 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         }
 
         // Load description
-        loadHtmlJob = descriptionWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), assignment.description, {
-            descriptionWebViewWrapper.loadHtml(it, assignment.name, baseUrl = assignment.htmlUrl)
-        }) {
-            RouteMatcher.route(requireActivity(), LtiLaunchFragment.makeSessionlessLtiUrlRoute(requireActivity(), course, it))
-        }
+        loadHtmlJob = descriptionWebViewWrapper.webView.loadHtmlWithIframes(
+            requireContext(),
+            featureFlagProvider,
+            assignment.description,
+            {
+                descriptionWebViewWrapper.loadHtml(
+                    it,
+                    assignment.name,
+                    baseUrl = assignment.htmlUrl
+                )
+            },
+            onLtiButtonPressed = {
+                RouteMatcher.route(
+                    requireActivity(),
+                    LtiLaunchFragment.makeSessionlessLtiUrlRoute(requireActivity(), course, it)
+                )
+            },
+            courseId = course.id
+        )
     }
 
     private fun configureSubmissionDonuts(assignment: Assignment): Unit = with(binding) {

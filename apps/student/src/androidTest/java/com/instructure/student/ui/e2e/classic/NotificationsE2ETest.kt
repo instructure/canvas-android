@@ -25,6 +25,7 @@ import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
 import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.api.AssignmentsApi
+import com.instructure.dataseeding.api.ConversationsApi
 import com.instructure.dataseeding.api.QuizzesApi
 import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.model.GradingType
@@ -102,6 +103,23 @@ class NotificationsE2ETest : StudentTest() {
         } catch (e: AssertionError) {
             println("API may not work properly, so not all the notifications can be seen on the screen.")
         }
+
+        Log.d(PREPARATION_TAG, "Seed an inbox conversation from teacher to student: '${student.name}'.")
+        val seededConversation = ConversationsApi.createConversation(teacher.token, listOf(student.id.toString()))[0]
+
+        Log.d(STEP_TAG, "Navigate to Inbox page.")
+        dashboardPage.clickInboxTab()
+
+        Log.d(ASSERTION_TAG, "Assert that the conversation '${seededConversation.subject}' IS displayed in the Inbox.")
+        inboxPage.assertConversationDisplayed(seededConversation.subject)
+
+        Log.d(STEP_TAG, "Navigate back to Notifications page.")
+        dashboardPage.clickNotificationsTab()
+
+        Log.d(ASSERTION_TAG, "Refresh the Notifications Page and verify that the conversation '${seededConversation.subject}' is NOT displayed in the Notifications page.")
+        refresh()
+        sleep(3000) //wait here to be sure that the conversation notification does not appears.
+        notificationPage.assertNotificationNotDisplayed(seededConversation.subject)
 
         refresh()
         run submitAndGradeRepeat@{

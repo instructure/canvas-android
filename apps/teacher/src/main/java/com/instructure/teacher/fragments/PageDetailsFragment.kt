@@ -38,6 +38,7 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.features.file.download.FileDownloadWorker
 import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.fragments.BasePresenterFragment
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.PermissionUtils
 import com.instructure.pandautils.utils.StringArg
@@ -66,12 +67,15 @@ import com.instructure.teacher.utils.setupBackButtonWithExpandCollapseAndBack
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.utils.updateToolbarExpandCollapseIcon
 import com.instructure.teacher.viewinterface.PageDetailsView
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import javax.inject.Inject
 
 @PageView
+@AndroidEntryPoint
 @ScreenView(SCREEN_VIEW_PAGE_DETAILS)
 class PageDetailsFragment : BasePresenterFragment<
         PageDetailsPresenter,
@@ -88,6 +92,9 @@ class PageDetailsFragment : BasePresenterFragment<
     var downloadFileName: String? = null
 
     private var loadHtmlJob: Job? = null
+
+    @Inject
+    lateinit var featureFlagProvider: FeatureFlagProvider
 
     @PageViewUrl
     @Suppress("unused")
@@ -204,11 +211,11 @@ class PageDetailsFragment : BasePresenterFragment<
 
     override fun populatePageDetails(page: Page) {
         this.page = page
-        loadHtmlJob = binding.canvasWebViewWraper.webView.loadHtmlWithIframes(requireContext(), page.body, {
+        loadHtmlJob = binding.canvasWebViewWraper.webView.loadHtmlWithIframes(requireContext(), featureFlagProvider, page.body, {
             if (view != null) binding.canvasWebViewWraper.loadHtml(it, page.title, baseUrl = this.page.htmlUrl)
-        }) {
+        }, onLtiButtonPressed = {
             RouteMatcher.route(requireActivity(), LtiLaunchFragment.makeSessionlessLtiUrlRoute(requireActivity(), canvasContext, it))
-        }
+        }, courseId = canvasContext.id)
         setupToolbar()
     }
 

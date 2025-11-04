@@ -24,17 +24,21 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardItemState
+import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCardError
 import com.instructure.horizon.features.dashboard.widget.myprogress.card.DashboardMyProgressCardContent
-import com.instructure.horizon.features.dashboard.widget.myprogress.card.DashboardMyProgressCardError
+import com.instructure.horizon.horizonui.foundation.HorizonColors
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
 @Composable
 fun DashboardMyProgressWidget(
     shouldRefresh: Boolean,
-    refreshState: MutableStateFlow<List<Boolean>>
+    refreshState: MutableStateFlow<List<Boolean>>,
+    modifier: Modifier = Modifier
 ) {
     val viewModel = hiltViewModel<DashboardMyProgressViewModel>()
     val state by viewModel.uiState.collectAsState()
@@ -48,12 +52,13 @@ fun DashboardMyProgressWidget(
         }
     }
 
-    DashboardMyProgressSection(state)
+    DashboardMyProgressSection(state, modifier)
 }
 
 @Composable
 fun DashboardMyProgressSection(
-    state: DashboardMyProgressUiState
+    state: DashboardMyProgressUiState,
+    modifier: Modifier = Modifier
 ) {
     when (state.state) {
         DashboardItemState.LOADING -> {
@@ -63,13 +68,19 @@ fun DashboardMyProgressSection(
             ) {
                 DashboardMyProgressCardContent(
                     state.cardState,
-                    isLoading = true
+                    true,
+                    modifier
                 )
             }
         }
         DashboardItemState.ERROR -> {
-            DashboardMyProgressCardError(
-                { state.onRefresh {} }
+            DashboardWidgetCardError(
+                stringResource(R.string.dashboardMyProgressTitle),
+                R.drawable.trending_up,
+                HorizonColors.PrimitivesSky.sky12,
+                false,
+                { state.onRefresh {} },
+                modifier = modifier
             )
         }
         DashboardItemState.SUCCESS -> {
@@ -79,7 +90,8 @@ fun DashboardMyProgressSection(
             ) {
                 DashboardMyProgressCardContent(
                     state.cardState,
-                    isLoading = false
+                    false,
+                    modifier
                 )
             }
         }

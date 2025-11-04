@@ -49,6 +49,7 @@ import com.instructure.pandautils.features.speedgrader.SubmissionListFilter
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.AssignmentGradedEvent
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.NullableParcelableArg
 import com.instructure.pandautils.utils.ParcelableArg
@@ -85,6 +86,7 @@ import com.instructure.teacher.utils.shuffleAnswersDisplayable
 import com.instructure.teacher.utils.updateToolbarExpandCollapseIcon
 import com.instructure.teacher.view.QuizSubmissionGradedEvent
 import com.instructure.teacher.viewinterface.QuizDetailsView
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -93,8 +95,10 @@ import java.io.UnsupportedEncodingException
 import java.net.URI
 import java.net.URL
 import java.util.Date
+import javax.inject.Inject
 
 @PageView
+@AndroidEntryPoint
 @ScreenView(SCREEN_VIEW_EDIT_QUIZ_DETAILS)
 class QuizDetailsFragment : BasePresenterFragment<
         QuizDetailsPresenter,
@@ -102,6 +106,9 @@ class QuizDetailsFragment : BasePresenterFragment<
         FragmentQuizDetailsBinding>(),
     QuizDetailsView,
     Identity {
+
+    @Inject
+    lateinit var featureFlagProvider: FeatureFlagProvider
 
     private var canvasContext: CanvasContext? by NullableParcelableArg(key = Const.CANVAS_CONTEXT)
 
@@ -442,11 +449,11 @@ class QuizDetailsFragment : BasePresenterFragment<
         instructionsWebViewWrapper.setBackgroundResource(android.R.color.transparent)
 
         // Load instructions
-        loadHtmlJob = instructionsWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), quiz.description, {
+        loadHtmlJob = instructionsWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), featureFlagProvider, quiz.description, {
             instructionsWebViewWrapper.loadHtml(it, quiz.title, baseUrl = this@QuizDetailsFragment.quiz.htmlUrl)
-        }) {
+        }, onLtiButtonPressed = {
             RouteMatcher.route(requireActivity(), LtiLaunchFragment.makeSessionlessLtiUrlRoute(requireActivity(), canvasContext, it))
-        }
+        }, courseId = canvasContext?.id)
     }
 
     private fun setupListeners(quiz: Quiz) = with(binding) {

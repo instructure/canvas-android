@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.dashboard.course.card
+package com.instructure.horizon.features.dashboard.widget.course.card
 
 import android.graphics.drawable.Drawable
 import androidx.compose.foundation.background
@@ -84,6 +84,7 @@ import com.instructure.horizon.horizonui.molecules.ProgressBarSmall
 import com.instructure.horizon.horizonui.molecules.ProgressBarStyle
 import com.instructure.horizon.horizonui.molecules.StatusChip
 import com.instructure.horizon.horizonui.molecules.StatusChipState
+import com.instructure.horizon.model.LearningObjectType
 import com.instructure.pandautils.utils.localisedFormatMonthDay
 import java.util.Date
 import kotlin.math.roundToInt
@@ -121,13 +122,13 @@ fun DashboardCourseCardContent(
                     Spacer(Modifier.height(16.dp))
                     TitleText(state.title)
                 }
-                if (!state.description.isNullOrEmpty()) {
-                    Spacer(Modifier.height(16.dp))
-                    DescriptionText(state.description)
-                }
                 if (state.progress != null) {
                     Spacer(Modifier.height(12.dp))
                     CourseProgress(state.progress)
+                }
+                if (!state.description.isNullOrEmpty()) {
+                    Spacer(Modifier.height(16.dp))
+                    DescriptionText(state.description)
                 }
                 if (state.moduleItem != null) {
                     Spacer(Modifier.height(16.dp))
@@ -396,7 +397,7 @@ private fun DashboardCourseCardWithModulePreview() {
         progress = 45.0,
         moduleItem = DashboardCourseCardModuleItemState(
             moduleItemTitle = "Module Item Title That Might Be Really Long and Go On Two Lines",
-            moduleItemType = com.instructure.horizon.model.LearningObjectType.ASSIGNMENT,
+            moduleItemType = LearningObjectType.ASSIGNMENT,
             dueDate = Date(),
             estimatedDuration = "5 mins",
             onClickAction = CardClickAction.Action({})

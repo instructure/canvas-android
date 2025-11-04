@@ -69,6 +69,7 @@ import com.instructure.pandautils.features.discussion.details.DiscussionDetailsW
 import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.utils.BooleanArg
 import com.instructure.pandautils.utils.DiscussionEntryEvent
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.NullableParcelableArg
@@ -132,6 +133,9 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
     @Inject
     lateinit var networkStateProvider: NetworkStateProvider
+
+    @Inject
+    lateinit var featureFlagProvider: FeatureFlagProvider
 
     // Bundle args
     @get:PageViewUrlParam("canvasContext")
@@ -786,11 +790,11 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         replyToDiscussionTopic.setVisible(discussionTopicHeader.permissions?.reply ?: false)
         replyToDiscussionTopic.onClick { showReplyView(discussionTopicHeader.id) }
 
-        discussionTopicHeaderWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), discussionTopicHeader.message, {
+        discussionTopicHeaderWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), featureFlagProvider, discussionTopicHeader.message, {
             if (view != null) loadHTMLTopic(it, discussionTopicHeader.title)
         }, onLtiButtonPressed = {
             RouteMatcher.route(requireActivity(), LtiLaunchFragment.makeSessionlessLtiUrlRoute(requireActivity(), canvasContext, it))
-        })
+        }, courseId = canvasContext.id)
 
         attachmentIcon.setVisible(discussionTopicHeader.attachments.isNotEmpty())
         attachmentIcon.onClick {
@@ -811,9 +815,31 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
         setupRepliesWebView()
 
-        discussionRepliesWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), html, { formattedHtml ->
-            discussionRepliesWebViewWrapper.loadDataWithBaseUrl(CanvasWebView.getReferrer(true), formattedHtml, "text/html", "UTF-8", null)
-        }, onLtiButtonPressed = { RouteMatcher.route(requireActivity(), LtiLaunchFragment.makeSessionlessLtiUrlRoute(requireActivity(), canvasContext, it)) })
+        discussionRepliesWebViewWrapper.webView.loadHtmlWithIframes(
+            requireContext(),
+            featureFlagProvider,
+            html,
+            { formattedHtml ->
+                discussionRepliesWebViewWrapper.loadDataWithBaseUrl(
+                    CanvasWebView.getReferrer(true),
+                    formattedHtml,
+                    "text/html",
+                    "UTF-8",
+                    null
+                )
+            },
+            onLtiButtonPressed = {
+                RouteMatcher.route(
+                    requireActivity(),
+                    LtiLaunchFragment.makeSessionlessLtiUrlRoute(
+                        requireActivity(),
+                        canvasContext,
+                        it
+                    )
+                )
+            },
+            courseId = canvasContext.id
+        )
 
         swipeRefreshLayout.isRefreshing = false
         discussionTopicRepliesTitle.setVisible(discussionTopicHeader.shouldShowReplies)

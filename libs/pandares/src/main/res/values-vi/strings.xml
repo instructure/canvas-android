@@ -1042,6 +1042,10 @@
     <string name="downloadFailed">Tải xuống thất bại</string>
     <string name="downloadSuccessful">Tải xuống thành công</string>
 
+    <string name="downloading">Đang tải xuống</string>
+    <string name="downloadComplete">Tải xuống thành công</string>
+    <string name="notificationChannelNameFileDownloadsName">Thông Báo Tải Xuống</string>
+    <string name="notificationChannelNameFileDownloadsDescription">Thông báo Canvas cho các mục tải xuống đang diễn ra.</string>
     <string name="full_due_date_details">Thông Tin Chi Tiết Ngày Đến Hạn Đầy Đủ</string>
     <string name="submissions">Nộp</string>
     <string name="attachment">Tập Tin Đính Kèm</string>
@@ -2132,4 +2136,9 @@
     <string name="daysLateHint">Ghi số ngày trễ</string>
     <string name="reply_to_topic">Trả lời chủ đề</string>
     <string name="additional_replies">Các phản hồi bổ sung (%d)</string>
+    <string name="reply_to_topic_due">Phản hồi chủ đề đến hạn</string>
+    <string name="additional_replies_due">Các phản hồi bổ sung (%d) đến hạn</string>
+    <string name="a11y_discussion_checkpoints">Điểm Kiểm Tra Thảo Luận</string>
+    <string name="multipleDueDates">Nhiều Ngày Đến Hạn</string>
+    <string name="courseConcludedError">Các khóa học đã kết thúc. Không thể gửi tin nhắn!</string>
 </resources>

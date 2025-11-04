@@ -89,7 +89,6 @@ class HorizonHomeInteractionTest : HorizonTest() {
         homePage.assertBottomNavigationVisible()
         homePage.clickLearnTab()
         homePage.clickHomeTab()
-        homePage.clickAccountTab()
         homePage.clickHomeTab()
     }
 }

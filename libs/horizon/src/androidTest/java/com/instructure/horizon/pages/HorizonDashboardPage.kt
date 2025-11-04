@@ -32,28 +32,15 @@ import kotlin.math.roundToInt
 
 class HorizonDashboardPage(private val composeTestRule: ComposeTestRule) {
     fun assertNotStartedProgramDisplayed(programName: String) {
-        composeTestRule.onNodeWithText(programName)
+        composeTestRule.onNodeWithText(programName, substring = true)
             .assertIsDisplayed()
 
-        composeTestRule.onNodeWithText(programName)
-            .onParent()
-            .onChildren()
-            .filterToOne(hasText("Welcome! View your program to enroll in your first course."))
+        composeTestRule.onNodeWithText("Program details", useUnmergedTree = true)
             .assertIsDisplayed()
-
-        composeTestRule.onNodeWithText(programName)
-            .onParent()
-            .onChildren()
-            .filterToOne(hasAnyDescendant(hasText("Program details")))
-            .assertIsDisplayed()
-            .assertHasClickAction()
     }
 
     fun clickProgramDetails(programName: String) {
-        composeTestRule.onNodeWithText(programName)
-            .onParent()
-            .onChildren()
-            .filterToOne(hasAnyDescendant(hasText("Program details")))
+        composeTestRule.onNodeWithText("Program details", useUnmergedTree = true)
             .assertIsDisplayed()
             .performClick()
     }
@@ -82,7 +69,7 @@ class HorizonDashboardPage(private val composeTestRule: ComposeTestRule) {
 
         if (progress != null) {
             courseCardParent.onChildren()
-                .filterToOne(hasAnyDescendant(hasText(progress.roundToInt().toString(), substring = true)))
+                .filterToOne(hasAnyDescendant(hasText(progress.roundToInt().toString() + "%", substring = true)))
                 .assertIsDisplayed()
         }
 
@@ -111,12 +98,6 @@ class HorizonDashboardPage(private val composeTestRule: ComposeTestRule) {
             .onChildren().onFirst()
             .assertIsDisplayed()
             .performClick()
-    }
-
-    fun selectCourseCardAtIndex(index: Int, courseCount: Int) {
-        composeTestRule.onNodeWithContentDescription(
-            "Course Card ${index + 1} of ${courseCount}"
-        ).performClick()
     }
 
     fun clickInboxButton() {

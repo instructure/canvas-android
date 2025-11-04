@@ -64,7 +64,7 @@ class PageDetailsViewModel @Inject constructor(
                 it.copy(loadingState = it.loadingState.copy(isLoading = true))
             }
             val pageDetails = pageDetailsRepository.getPageDetails(courseId, pageUrl)
-            val html = htmlContentFormatter.formatHtmlWithIframes(pageDetails.body.orEmpty())
+            val html = htmlContentFormatter.formatHtmlWithIframes(pageDetails.body.orEmpty(), courseId)
             val notes = try { // We don't want to fail the page load if fetching notes fails
                 pageDetailsRepository.getNotes(courseId, pageDetails.id)
             } catch (e: Exception) {

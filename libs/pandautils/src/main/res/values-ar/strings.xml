@@ -531,4 +531,5 @@
         <item quantity="many">%d من الدقائق</item>
         <item quantity="other">%d من الدقائق</item>
     </plurals>
+    <string name="notATeacherDescription">قد يكون أحد تطبيقاتنا الأخرى مناسبًا بشكل أفضل. اضغط على أيقونة لتسجيل الدخول هناك.</string>
 </resources>
