@@ -298,19 +298,6 @@ class ToDoListViewModelTest {
 
     // Callback tests
     @Test
-    fun `onItemClicked callback updates openToDoItemId in UiState`() = runTest {
-        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
-        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(emptyList())
-
-        val viewModel = getViewModel()
-
-        viewModel.uiState.value.onItemClicked("123")
-
-        val uiState = viewModel.uiState.value
-        assertEquals("123", uiState.openToDoItemId)
-    }
-
-    @Test
     fun `onRefresh callback triggers data reload with forceRefresh`() = runTest {
         val courses = listOf(Course(id = 1L, name = "Course 1", courseCode = "CS101"))
         val initialPlannerItems = listOf(createPlannerItem(id = 1L, title = "Assignment 1"))

@@ -15,9 +15,6 @@
  */
 package com.instructure.pandautils.features.todolist
 
-import android.os.Build
-import android.view.HapticFeedbackConstants
-import android.view.View
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -100,6 +97,8 @@ import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.modifiers.conditional
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.courseOrUserColor
+import com.instructure.pandautils.utils.performGestureHapticFeedback
+import com.instructure.pandautils.utils.performToggleHapticFeedback
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -110,32 +109,6 @@ import kotlin.math.abs
 import kotlin.math.roundToInt
 
 private const val SWIPE_THRESHOLD_DP = 150
-
-/**
- * Performs haptic feedback with appropriate constants based on API level.
- * Uses TOGGLE_ON/TOGGLE_OFF on API 34+ for marking done/undone, falls back to CONTEXT_CLICK on older versions.
- */
-private fun View.performToggleHapticFeedback(isMarkingAsDone: Boolean) {
-    val hapticConstant = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-        if (isMarkingAsDone) HapticFeedbackConstants.TOGGLE_ON else HapticFeedbackConstants.TOGGLE_OFF
-    } else {
-        HapticFeedbackConstants.CONTEXT_CLICK
-    }
-    performHapticFeedback(hapticConstant)
-}
-
-/**
- * Performs haptic feedback for gesture start/end with appropriate constants based on API level.
- * Uses GESTURE_START/GESTURE_END on API 34+, falls back to CONTEXT_CLICK on older versions.
- */
-private fun View.performGestureHapticFeedback(isStart: Boolean) {
-    val hapticConstant = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-        if (isStart) HapticFeedbackConstants.GESTURE_START else HapticFeedbackConstants.GESTURE_END
-    } else {
-        HapticFeedbackConstants.CONTEXT_CLICK
-    }
-    performHapticFeedback(hapticConstant)
-}
 
 private data class StickyHeaderState(
     val item: ToDoItemUiState?,
@@ -164,13 +137,6 @@ fun ToDoListScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
-    LaunchedEffect(uiState.openToDoItemId) {
-        uiState.openToDoItemId?.let { itemId ->
-            openToDoItem(itemId)
-            uiState.onOpenToDoItem()
-        }
-    }
-
     LaunchedEffect(uiState.snackbarMessage) {
         uiState.snackbarMessage?.let { message ->
             snackbarHostState.showSnackbar(message)
@@ -197,7 +163,6 @@ fun ToDoListScreen(
     LaunchedEffect(uiState.toDoCount) {
         uiState.toDoCount?.let { count ->
             onToDoCountChanged(count)
-            uiState.onToDoCountChanged()
         }
     }
 
@@ -241,7 +206,8 @@ fun ToDoListScreen(
                 .pullRefresh(pullRefreshState)
         ) {
             ToDoListContent(
-                uiState = uiState
+                uiState = uiState,
+                onOpenToDoItem = openToDoItem
             )
 
             PullRefreshIndicator(
@@ -258,6 +224,7 @@ fun ToDoListScreen(
 @Composable
 private fun ToDoListContent(
     uiState: ToDoListUiState,
+    onOpenToDoItem: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     when {
@@ -285,7 +252,7 @@ private fun ToDoListContent(
         else -> {
             ToDoItemsList(
                 itemsByDate = uiState.itemsByDate,
-                onItemClicked = uiState.onItemClicked,
+                onItemClicked = onOpenToDoItem,
                 modifier = modifier
             )
         }
@@ -986,7 +953,8 @@ fun ToDoListScreenPreview() {
                         )
                     )
                 )
-            )
+            ),
+            onOpenToDoItem = {}
         )
     }
 }
@@ -1026,7 +994,8 @@ fun ToDoListScreenWithPandasPreview() {
                         )
                     )
                 )
-            )
+            ),
+            onOpenToDoItem = {}
         )
     }
 }
@@ -1038,7 +1007,8 @@ fun ToDoListScreenEmptyPreview() {
     ContextKeeper.appContext = LocalContext.current
     CanvasTheme {
         ToDoListContent(
-            uiState = ToDoListUiState()
+            uiState = ToDoListUiState(),
+            onOpenToDoItem = {}
         )
     }
 }

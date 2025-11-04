@@ -52,13 +52,10 @@ class ToDoListViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ToDoListUiState(
-        onOpenToDoItem = { clearOpenToDoItem() },
         onSnackbarDismissed = { clearSnackbarMessage() },
         onUndoMarkAsDone = { handleUndoMarkAsDone() },
         onMarkedAsDoneSnackbarDismissed = { clearMarkedAsDoneItem() },
-        onItemClicked = { itemId -> handleItemClicked(itemId) },
-        onRefresh = { handleRefresh() },
-        onToDoCountChanged = { clearToDoCount() }
+        onRefresh = { handleRefresh() }
     ))
     val uiState = _uiState.asStateFlow()
 
@@ -289,16 +286,8 @@ class ToDoListViewModel @Inject constructor(
         return itemsByDate.values.flatten().count { !it.isChecked }
     }
 
-    private fun handleItemClicked(itemId: String) {
-        _uiState.update { it.copy(openToDoItemId = itemId) }
-    }
-
     private fun handleRefresh() {
         loadData(forceRefresh = true)
-    }
-
-    private fun clearOpenToDoItem() {
-        _uiState.update { it.copy(openToDoItemId = null) }
     }
 
     private fun clearSnackbarMessage() {
@@ -307,9 +296,5 @@ class ToDoListViewModel @Inject constructor(
 
     private fun clearMarkedAsDoneItem() {
         _uiState.update { it.copy(markedAsDoneItem = null) }
-    }
-
-    private fun clearToDoCount() {
-        _uiState.update { it.copy(toDoCount = null) }
     }
 }

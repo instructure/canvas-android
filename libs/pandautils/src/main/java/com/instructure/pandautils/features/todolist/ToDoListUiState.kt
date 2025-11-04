@@ -24,17 +24,13 @@ data class ToDoListUiState(
     val isError: Boolean = false,
     val isRefreshing: Boolean = false,
     val itemsByDate: Map<Date, List<ToDoItemUiState>> = emptyMap(),
-    val openToDoItemId: String? = null,
-    val onOpenToDoItem: () -> Unit = {},
     val snackbarMessage: String? = null,
     val onSnackbarDismissed: () -> Unit = {},
     val markedAsDoneItem: MarkedAsDoneItem? = null,
     val onUndoMarkAsDone: () -> Unit = {},
     val onMarkedAsDoneSnackbarDismissed: () -> Unit = {},
-    val onItemClicked: (String) -> Unit = {},
     val onRefresh: () -> Unit = {},
-    val toDoCount: Int? = null,
-    val onToDoCountChanged: () -> Unit = {}
+    val toDoCount: Int? = null
 )
 
 data class MarkedAsDoneItem(
