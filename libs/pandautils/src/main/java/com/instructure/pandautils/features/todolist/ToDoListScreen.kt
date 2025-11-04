@@ -61,6 +61,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -95,6 +96,7 @@ import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.modifiers.conditional
+import com.instructure.pandautils.features.todolist.filter.ToDoFilterScreen
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.courseOrUserColor
 import com.instructure.pandautils.utils.performGestureHapticFeedback
@@ -136,6 +138,7 @@ fun ToDoListScreen(
     val uiState by viewModel.uiState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
+    var showFilterScreen by remember { mutableStateOf(false) }
 
     LaunchedEffect(uiState.snackbarMessage) {
         uiState.snackbarMessage?.let { message ->
@@ -185,7 +188,7 @@ fun ToDoListScreen(
                 navIconContentDescription = stringResource(id = R.string.navigation_drawer_open),
                 navigationActionClick = navigationIconClick,
                 actions = {
-                    IconButton(onClick = { /* TODO: Implement filter - will be implemented in future story */ }) {
+                    IconButton(onClick = { showFilterScreen = true }) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_filter_outline),
                             contentDescription = stringResource(id = R.string.a11y_contentDescriptionToDoFilter)
@@ -223,6 +226,18 @@ fun ToDoListScreen(
                 contentColor = Color(ThemePrefs.brandColor)
             )
         }
+    }
+
+    if (showFilterScreen) {
+        ToDoFilterScreen(
+            onFiltersChanged = {
+                showFilterScreen = false
+            },
+            onDismiss = {
+                showFilterScreen = false
+            },
+            modifier = Modifier.fillMaxSize()
+        )
     }
 }
 
@@ -964,49 +979,7 @@ fun ToDoListScreenPreview() {
     }
 }
 
-@Preview(name = "With Pandas Light Mode", showBackground = true)
-@Preview(name = "With Pandas Dark Mode", showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun ToDoListScreenWithPandasPreview() {
-    ContextKeeper.appContext = LocalContext.current
-    val calendar = Calendar.getInstance()
-    CanvasTheme {
-        ToDoListContent(
-            uiState = ToDoListUiState(
-                itemsByDate = mapOf(
-                    Date(10) to listOf(
-                        ToDoItemUiState(
-                            id = "1",
-                            title = "Complete Force training assignment",
-                            date = calendar.apply { set(2024, 9, 22, 7, 59) }.time,
-                            dateLabel = "7:59 AM",
-                            contextLabel = "FORC 101",
-                            canvasContext = CanvasContext.defaultCanvasContext(),
-                            itemType = ToDoItemType.ASSIGNMENT,
-                            iconRes = R.drawable.ic_assignment,
-                            isChecked = false
-                        ),
-                        ToDoItemUiState(
-                            id = "2",
-                            title = "Read chapter on Jedi meditation techniques",
-                            date = calendar.apply { set(2024, 9, 22, 11, 59) }.time,
-                            dateLabel = "11:59 AM",
-                            contextLabel = "Introduction to Advanced Force Manipulation",
-                            canvasContext = CanvasContext.defaultCanvasContext(),
-                            itemType = ToDoItemType.QUIZ,
-                            iconRes = R.drawable.ic_quiz,
-                            isChecked = false
-                        )
-                    )
-                )
-            ),
-            onOpenToDoItem = {}
-        )
-    }
-}
-
 @Preview(name = "Empty Light Mode", showBackground = true)
-@Preview(name = "Empty Dark Mode", showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun ToDoListScreenEmptyPreview() {
     ContextKeeper.appContext = LocalContext.current
