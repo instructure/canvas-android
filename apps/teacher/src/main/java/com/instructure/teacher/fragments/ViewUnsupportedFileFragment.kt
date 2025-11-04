@@ -91,9 +91,7 @@ class ViewUnsupportedFileFragment : BaseCanvasFragment() {
     }
 
     private fun setupWindowInsets() = with(binding) {
-        if (isInModulesPager || (isTablet && toolbarColor != 0)) {
             toolbar.applyTopSystemBarInsets()
-        }
     }
 
     override fun onResume() {

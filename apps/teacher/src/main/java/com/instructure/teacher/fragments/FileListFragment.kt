@@ -52,6 +52,8 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.applyBottomAndRightSystemBarPadding
 import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyBottomSystemBarMargin
+import com.instructure.pandautils.utils.applySystemBarInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getDrawableCompat
@@ -316,8 +318,7 @@ class FileListFragment : BaseSyncFragment<
         ViewStyler.themeFAB(addFab)
         ViewStyler.themeFAB(addFileFab)
         ViewStyler.themeFAB(addFolderFab)
-        addFab.applyBottomAndRightSystemBarPadding()
-
+        addFab.applyBottomSystemBarMargin()
         addFab.setOnClickListener { animateFabs() }
         addFileFab.setOnClickListener {
             animateFabs()
