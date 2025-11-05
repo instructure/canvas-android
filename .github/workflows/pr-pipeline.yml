@@ -11,76 +11,39 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Determine which apps to build based on PR body
-  setup:
-    name: setup-matrix
-    runs-on: ubuntu-latest
-    outputs:
-      apps: ${{ steps.set-matrix.outputs.apps }}
-      should-run-build: ${{ steps.set-matrix.outputs.should-run-build }}
-      should-run-ui-tests: ${{ steps.set-matrix.outputs.should-run-ui-tests }}
-      should-run-e2e-tests: ${{ steps.set-matrix.outputs.should-run-e2e-tests }}
-    steps:
-      - name: Determine matrix
-        id: set-matrix
-        run: |
-          # Check which apps are mentioned in PR body
-          PR_BODY="${{ github.event.pull_request.body }}"
-          APPS="["
-          FIRST=true
-
-          if echo "$PR_BODY" | grep -q "Parent"; then
-            if [ "$FIRST" = false ]; then APPS="${APPS},"; fi
-            APPS="${APPS}{\"type\":\"Parent\",\"type-lower\":\"parent\"}"
-            FIRST=false
-          fi
-          if echo "$PR_BODY" | grep -q "Student"; then
-            if [ "$FIRST" = false ]; then APPS="${APPS},"; fi
-            APPS="${APPS}{\"type\":\"Student\",\"type-lower\":\"student\"}"
-            FIRST=false
-          fi
-          if echo "$PR_BODY" | grep -q "Teacher"; then
-            if [ "$FIRST" = false ]; then APPS="${APPS},"; fi
-            APPS="${APPS}{\"type\":\"Teacher\",\"type-lower\":\"teacher\"}"
-            FIRST=false
-          fi
-          APPS="${APPS}]"
-
-          echo "apps=$APPS" >> $GITHUB_OUTPUT
-
-          # Determine if we should run builds
-          if [[ "${{ github.event.action }}" == "opened" || "${{ github.event.action }}" == "synchronize" ]]; then
-            echo "should-run-build=true" >> $GITHUB_OUTPUT
-          elif [[ "${{ github.event.action }}" == "labeled" ]] && [[ "${{ contains(github.event.pull_request.labels.*.name, 'run-ui-tests') }}" == "true" || "${{ contains(github.event.pull_request.labels.*.name, 'run-e2e-tests') }}" == "true" ]]; then
-            echo "should-run-build=true" >> $GITHUB_OUTPUT
-          else
-            echo "should-run-build=false" >> $GITHUB_OUTPUT
-          fi
-
-          # Determine test types
-          if [[ "${{ contains(github.event.pull_request.labels.*.name, 'run-ui-tests') }}" == "true" ]]; then
-            echo "should-run-ui-tests=true" >> $GITHUB_OUTPUT
-          else
-            echo "should-run-ui-tests=false" >> $GITHUB_OUTPUT
-          fi
-
-          if [[ "${{ contains(github.event.pull_request.labels.*.name, 'run-e2e-tests') }}" == "true" ]]; then
-            echo "should-run-e2e-tests=true" >> $GITHUB_OUTPUT
-          else
-            echo "should-run-e2e-tests=false" >> $GITHUB_OUTPUT
-          fi
-
   build:
-    name: ${{ matrix.app.type-lower }}-build
+    name: ${{ matrix.app-type-lower }}-build
     runs-on: ubuntu-latest
-    needs: setup
-    if: needs.setup.outputs.should-run-build == 'true' && needs.setup.outputs.apps != '[]'
+    if: >-
+      (
+        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
+        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
+      ) && (
+        contains(github.event.pull_request.body, 'Parent') ||
+        contains(github.event.pull_request.body, 'Student') ||
+        contains(github.event.pull_request.body, 'Teacher')
+      )
     strategy:
       fail-fast: true
       matrix:
-        app: ${{ fromJson(needs.setup.outputs.apps) }}
+        include:
+          - app-type: Parent
+            app-type-lower: parent
+            should_run: ${{ contains(github.event.pull_request.body, 'Parent') }}
+          - app-type: Student  
+            app-type-lower: student
+            should_run: ${{ contains(github.event.pull_request.body, 'Student') }}
+          - app-type: Teacher
+            app-type-lower: teacher
+            should_run: ${{ contains(github.event.pull_request.body, 'Teacher') }}
     steps:
+      - name: Dump Pull Request Event Context
+        run: |
+          echo "body: ${{ github.event.pull_request.body }}"
+          echo "${{ toJson(github.event.pull_request) }}"
+
       - name: Checkout repository
+        if: ${{ matrix.should_run }}
         uses: actions/checkout@v4
         with:
           submodules: 'recursive'
@@ -88,12 +51,14 @@ jobs:
           token: ${{ secrets.ACCESS_TOKEN }}
 
       - name: Set up JDK 17
+        if: ${{ matrix.should_run }}
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
       - name: Cache Gradle packages
+        if: ${{ matrix.should_run }}
         uses: actions/cache@v4
         with:
           path: |
@@ -104,6 +69,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Cache Gradle Build Cache
+        if: ${{ matrix.should_run }}
         uses: actions/cache@v4
         with:
           path: |
@@ -113,54 +79,49 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-build-cache-
 
-      - name: Cache npm global packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-npm-global-firebase
-          restore-keys: |
-            ${{ runner.os }}-npm-global-
-
       - name: Decode Release Keystore
+        if: ${{ matrix.should_run }}
         run: |
           echo "${{ secrets.ANDROID_RELEASE_KEYSTORE_B64 }}" | base64 --decode > release.jks
 
       - name: Setup Service account
+        if: ${{ matrix.should_run }}
         env:
           FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
         run: |
           echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
 
       - name: Build Release Notes
-        id: get_release_notes
+        if: ${{ matrix.should_run }}
+        id: get_release_notes 
         run: |
           echo "RELEASE_NOTES<<EOF" >> $GITHUB_OUTPUT
           echo "${{ github.event.pull_request.title }}" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Install Firebase CLI
+        if: ${{ matrix.should_run }}
         run: npm install -g firebase-tools
 
-      - name: Setup Firebase App Id
-        run: |
-          case "${{ matrix.app.type }}" in
-            Parent)
-              echo "${{ secrets.FIREBASE_ANDROID_PARENT_APP_ID }}" > firebase_app_id.txt
-              ;;
-            Student)
-              echo "${{ secrets.FIREBASE_ANDROID_STUDENT_APP_ID }}" > firebase_app_id.txt
-              ;;
-            Teacher)
-              echo "${{ secrets.FIREBASE_ANDROID_TEACHER_APP_ID }}" > firebase_app_id.txt
-              ;;
-          esac
+      - name: Setup Parent Firebase App Id
+        if: ${{ matrix.should_run && matrix.app-type == 'Parent' }}
+        run: echo "${{ secrets.FIREBASE_ANDROID_PARENT_APP_ID }}" > firebase_app_id.txt
+
+      - name: Setup Student Firebase App Id
+        if: ${{ matrix.should_run && matrix.app-type == 'Student' }}
+        run: echo "${{ secrets.FIREBASE_ANDROID_STUDENT_APP_ID }}" > firebase_app_id.txt
+
+      - name: Setup Teacher Firebase App Id
+        if: ${{ matrix.should_run && matrix.app-type == 'Teacher' }}
+        run: echo "${{ secrets.FIREBASE_ANDROID_TEACHER_APP_ID }}" > firebase_app_id.txt
 
       # Building Artifacts
       - name: Build debug and test APKs
+        if: ${{ matrix.should_run }}
         run: |
-          ./gradle/gradlew -p apps :${{ matrix.app.type-lower }}:assembleQaDebug \
-            :${{ matrix.app.type-lower }}:assembleQaDebugAndroidTest \
-            :${{ matrix.app.type-lower }}:assembleDevDebugMinify \
+          ./gradle/gradlew -p apps :${{ matrix.app-type-lower }}:assembleQaDebug \
+            :${{ matrix.app-type-lower }}:assembleQaDebugAndroidTest \
+            :${{ matrix.app-type-lower }}:assembleDevDebugMinify \
             --build-cache \
             --parallel \
             --max-workers=4 \
@@ -170,46 +131,49 @@ jobs:
             -Pandroid.injected.signing.store.file=$(pwd)/release.jks
 
       # Uploading Artifacts to GitHub
-      - name: Upload APKs
+      - name: Upload QA debug APK
+        if: ${{ matrix.should_run }}
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.app.type-lower }}-apks
-          path: |
-            apps/${{ matrix.app.type-lower }}/build/outputs/apk/qa/debug/${{ matrix.app.type-lower }}-qa-debug.apk
-            apps/${{ matrix.app.type-lower }}/build/outputs/apk/androidTest/qa/debug/${{ matrix.app.type-lower }}-qa-debug-androidTest.apk
-            apps/${{ matrix.app.type-lower }}/build/outputs/apk/dev/debugMinify/${{ matrix.app.type-lower }}-dev-debugMinify.apk
-          compression-level: 6
-          retention-days: 5
+          name: ${{ matrix.app-type-lower }}-qa-debug.apk
+          path: apps/${{ matrix.app-type-lower }}/build/outputs/apk/qa/debug/${{ matrix.app-type-lower }}-qa-debug.apk
+
+      - name: Upload QA test APK
+        if: ${{ matrix.should_run }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.app-type-lower }}-qa-debug-androidTest.apk
+          path: apps/${{ matrix.app-type-lower }}/build/outputs/apk/androidTest/qa/debug/${{ matrix.app-type-lower }}-qa-debug-androidTest.apk
+
+      - name: Upload Dev debug APK
+        if: ${{ matrix.should_run }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.app-type-lower }}-dev-debugMinify.apk
+          path: apps/${{ matrix.app-type-lower }}/build/outputs/apk/dev/debugMinify/${{ matrix.app-type-lower }}-dev-debugMinify.apk
 
       # Uploading Artifacts to Firebase App Distribution
       - name: Distribute app to Firebase App Distribution
+        if: ${{ matrix.should_run }}
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/service-account-key.json
         run: |
           firebase --version
           FIREBASE_APP_ID=$(cat firebase_app_id.txt)
-          firebase appdistribution:distribute "apps/${{ matrix.app.type-lower }}/build/outputs/apk/dev/debugMinify/${{ matrix.app.type-lower }}-dev-debugMinify.apk" \
+          firebase appdistribution:distribute "apps/${{ matrix.app-type-lower }}/build/outputs/apk/dev/debugMinify/${{ matrix.app-type-lower }}-dev-debugMinify.apk" \
             --app "$FIREBASE_APP_ID" \
             --release-notes "${{ steps.get_release_notes.outputs.RELEASE_NOTES }}" \
             --groups "Testers" > result.txt
           cat result.txt
 
       - name: Prepare Comment Body
+        if: ${{ matrix.should_run }}
         id: prepare_comment
         run: |
           INSTALL_URL=$(cat result.txt | grep appdistribution.firebase | sed 's/.*\(https:.*\)/\1/')
-          # URL encode using printf and sed instead of jq
-          INSTALL_URL_ESCAPED=$(printf '%s' "$INSTALL_URL" | sed 's/:/%3A/g; s/\//%2F/g; s/?/%3F/g; s/=/%3D/g; s/&/%26/g')
+          INSTALL_URL_ESCAPED=$(printf "$INSTALL_URL" | jq -sRr '@uri')
           COMMENT_BODY=$(cat <<EOF
-          <!-- firebase-qr-${{ matrix.app.type-lower }} -->
-          ## 📱 ${{ matrix.app.type }} App - Firebase Distribution
-
-          <img src="https://api.qrserver.com/v1/create-qr-code/?data=${INSTALL_URL_ESCAPED}" width="200">
-
-          **[Open Install Page]($INSTALL_URL)**
-
-          _Last updated: $(date -u '+%Y-%m-%d %H:%M:%S UTC')_
-          _Build: [\`${{ github.sha }}\`](${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }})_
+          <p>${{ matrix.app-type }} Install Page</p><img src="https://api.qrserver.com/v1/create-qr-code/?data=${INSTALL_URL_ESCAPED}" width="200">
           EOF
           )
           echo "body<<EOF" >> $GITHUB_OUTPUT
@@ -217,14 +181,16 @@ jobs:
           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Find Previous Comment
+        if: ${{ matrix.should_run }}
         id: find_comment
         uses: peter-evans/find-comment@v2
         with:
           issue-number: ${{ github.event.number }}
           comment-author: 'github-actions[bot]'
-          body-includes: '<!-- firebase-qr-${{ matrix.app.type-lower }} -->'
+          body-includes: '${{ matrix.app-type }} Install Page'
 
       - name: Create or Update Comment
+        if: ${{ matrix.should_run }}
         uses: peter-evans/create-or-update-comment@v4
         with:
           comment-id: ${{ steps.find_comment.outputs.comment-id }}
@@ -235,14 +201,20 @@ jobs:
   submodule-build-and-test:
     name: submodule-build-and-test
     runs-on: ubuntu-latest
-    needs: setup
-    if: needs.setup.outputs.should-run-build == 'true' && needs.setup.outputs.apps != '[]'
+    if: >-
+      (
+        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
+        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
+      ) && (
+        contains(github.event.pull_request.body, 'Parent') ||
+        contains(github.event.pull_request.body, 'Student') ||
+        contains(github.event.pull_request.body, 'Teacher')
+      )
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           submodules: 'recursive'
-          fetch-depth: 1
           token: ${{ secrets.ACCESS_TOKEN }}
 
       - name: Set up JDK 17
@@ -257,49 +229,21 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/gradle-wrapper.properties') }}
+          key: ${{ runner.os }}-gradle-${{ hashFiles('apps/**/*.gradle*', 'gradle/**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-
-      - name: Cache Gradle Build Cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches/build-cache-*
-            .gradle
-          key: ${{ runner.os }}-gradle-build-cache-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-build-cache-
 
       # Building Artifacts
       - name: Build test and app APKs
         run: |
-          ./gradle/gradlew -p apps :pandautils:assembleDebugAndroidTest \
-            --build-cache \
-            --parallel \
-            --max-workers=4 \
-            --no-daemon \
-            -Dorg.gradle.jvmargs="-Xmx4g -XX:+HeapDumpOnOutOfMemoryError" \
-            -Dkotlin.compiler.execution.strategy=in-process
+          ./gradle/gradlew -p apps :pandautils:assembleDebugAndroidTest
           mv ./libs/pandautils/build/outputs/apk/androidTest/debug/pandautils-debug-androidTest.apk ./libs/pandautils/pandautils-test.apk
-          ./gradle/gradlew -p apps :pandautils:assembleDebugAndroidTest -DtestApplicationId=com.instructure.pandautils \
-            --build-cache \
-            --parallel \
-            --max-workers=4 \
-            --no-daemon \
-            -Dorg.gradle.jvmargs="-Xmx4g -XX:+HeapDumpOnOutOfMemoryError" \
-            -Dkotlin.compiler.execution.strategy=in-process
+          ./gradle/gradlew -p apps :pandautils:assembleDebugAndroidTest -DtestApplicationId=com.instructure.pandautils
           mv ./libs/pandautils/build/outputs/apk/androidTest/debug/pandautils-debug-androidTest.apk ./libs/pandautils/pandautils-app.apk
 
       - name: Run submodule unit tests
         run: |
-          ./gradle/gradlew -p apps testDebugUnitTest -x :dataseedingapi:test -x :teacher:test -x :student:test \
-            --build-cache \
-            --parallel \
-            --max-workers=4 \
-            --no-daemon \
-            -Dorg.gradle.jvmargs="-Xmx4g -XX:+HeapDumpOnOutOfMemoryError" \
-            -Dkotlin.compiler.execution.strategy=in-process
+          ./gradle/gradlew -p apps testDebugUnitTest -x :dataseedingapi:test -x :teacher:test -x :student:test
 
       # Uploading Artifacts to GitHub
       - name: Upload test APK
@@ -307,26 +251,41 @@ jobs:
         with:
           name: pandautils-test.apk
           path: libs/pandautils/pandautils-test.apk
-          retention-days: 5
 
       - name: Upload app APK
         uses: actions/upload-artifact@v4
         with:
           name: pandautils-app.apk
           path: libs/pandautils/pandautils-app.apk
-          retention-days: 5
-
+ 
   unit-tests:
-    name: ${{ matrix.app.type-lower }}-unit-tests
+    name: ${{ matrix.app-type-lower }}-unit-tests
     runs-on: ubuntu-latest
-    needs: setup
-    if: needs.setup.outputs.should-run-build == 'true' && needs.setup.outputs.apps != '[]'
+    if: >-
+      (
+        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
+        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
+      ) && (
+        contains(github.event.pull_request.body, 'Parent') ||
+        contains(github.event.pull_request.body, 'Student') ||
+        contains(github.event.pull_request.body, 'Teacher')
+      )
     strategy:
       fail-fast: true
       matrix:
-        app: ${{ fromJson(needs.setup.outputs.apps) }}
+        include:
+          - app-type: Parent
+            app-type-lower: parent
+            should_run: ${{ contains(github.event.pull_request.body, 'Parent') }}
+          - app-type: Student
+            app-type-lower: student
+            should_run: ${{ contains(github.event.pull_request.body, 'Student') }}
+          - app-type: Teacher
+            app-type-lower: teacher
+            should_run: ${{ contains(github.event.pull_request.body, 'Teacher') }}
     steps:
       - name: Checkout repository
+        if: ${{ matrix.should_run }}
         uses: actions/checkout@v4
         with:
           submodules: 'recursive'
@@ -334,86 +293,109 @@ jobs:
           token: ${{ secrets.ACCESS_TOKEN }}
 
       - name: Set up JDK 17
+        if: ${{ matrix.should_run }}
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
       - name: Cache Gradle packages
+        if: ${{ matrix.should_run }}
         uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/gradle-wrapper.properties') }}
+          key: ${{ runner.os }}-gradle-${{ hashFiles('apps/**/*.gradle*', 'gradle/**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Cache Gradle Build Cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches/build-cache-*
-            .gradle
-          key: ${{ runner.os }}-gradle-build-cache-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-build-cache-
-
       - name: Run unit tests
-        run: |
-          ./gradle/gradlew -p apps :${{ matrix.app.type-lower }}:testDevDebugUnitTest \
-            --build-cache \
-            --parallel \
-            --max-workers=4 \
-            --no-daemon \
-            -Dorg.gradle.jvmargs="-Xmx4g -XX:+HeapDumpOnOutOfMemoryError" \
-            -Dkotlin.compiler.execution.strategy=in-process
+        if: ${{ matrix.should_run }}
+        run: ./gradle/gradlew -p apps :${{ matrix.app-type-lower }}:testDevDebugUnitTest
 
   ui-tests:
-    name: ${{ matrix.app.type-lower }}-${{ matrix.orientation }}-ui-tests
+    name: ${{ matrix.app-type-lower }}-${{ matrix.test-type }}-ui-tests
     runs-on: ubuntu-latest
-    needs: [setup, build]
-    if: needs.setup.outputs.should-run-ui-tests == 'true' && needs.setup.outputs.apps != '[]'
+    if: >-
+      github.event.action == 'labeled' && contains(github.event.pull_request.labels.*.name, 'run-ui-tests') && 
+      (contains(github.event.pull_request.body, 'Parent') || 
+       contains(github.event.pull_request.body, 'Student') || 
+       contains(github.event.pull_request.body, 'Teacher'))
+    needs: [build, unit-tests]
     strategy:
       fail-fast: false
       matrix:
-        app: ${{ fromJson(needs.setup.outputs.apps) }}
-        orientation: [portrait, landscape]
+        include:
+          - app-type: Parent
+            app-type-lower: parent
+            test-type: portrait
+            should_run: ${{ contains(github.event.pull_request.body, 'Parent') }}
+          - app-type: Parent
+            app-type-lower: parent
+            test-type: landscape
+            should_run: ${{ contains(github.event.pull_request.body, 'Parent') }}
+          - app-type: Student
+            app-type-lower: student
+            test-type: portrait
+            should_run: ${{ contains(github.event.pull_request.body, 'Student') }}
+          - app-type: Student
+            app-type-lower: student
+            test-type: landscape
+            should_run: ${{ contains(github.event.pull_request.body, 'Student') }}
+          - app-type: Teacher
+            app-type-lower: teacher
+            test-type: portrait
+            should_run: ${{ contains(github.event.pull_request.body, 'Teacher') }}
+          - app-type: Teacher
+            app-type-lower: teacher
+            test-type: landscape
+            should_run: ${{ contains(github.event.pull_request.body, 'Teacher') }}
+
     steps:
       - name: Checkout repository
+        if: ${{ matrix.should_run }}
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
 
       - name: Download artifacts
+        if: ${{ matrix.should_run }}      
         uses: actions/download-artifact@v4
 
       - name: Setup Service account
+        if: ${{ matrix.should_run }}
         env:
           FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.GCLOUD_KEY }}
         run: echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
 
-      - name: Setup Flank config
-        run: |
-          if [ "${{ matrix.orientation }}" == "portrait" ]; then
-            cp ./apps/${{ matrix.app.type-lower }}/flank.yml ./flank.yml
-          else
-            cp ./apps/${{ matrix.app.type-lower }}/flank_landscape.yml ./flank.yml
-          fi
+      - name: Setup Portrait Flank config
+        if: ${{ matrix.should_run && matrix.test-type == 'portrait' }}
+        run: cp ./apps/${{ matrix.app-type-lower }}/flank.yml ./flank.yml
+
+      - name: Setup Landscape Flank config
+        if: ${{ matrix.should_run && matrix.test-type == 'landscape' }}
+        run: cp ./apps/${{ matrix.app-type-lower }}/flank_landscape.yml ./flank.yml
 
       - name: Copy APKs to expected locations
+        if: ${{ matrix.should_run }}
         run: |
-          if [ -d "${{ matrix.app.type-lower }}-apks" ]; then
-             mkdir -p apps/${{ matrix.app.type-lower }}/build/outputs/apk/qa/debug
-             mkdir -p apps/${{ matrix.app.type-lower }}/build/outputs/apk/androidTest/qa/debug
-             mkdir -p apps/${{ matrix.app.type-lower }}/build/outputs/apk/dev/debugMinify
-             find ${{ matrix.app.type-lower }}-apks -name "*-qa-debug.apk" -not -name "*androidTest*" -exec mv {} apps/${{ matrix.app.type-lower }}/build/outputs/apk/qa/debug/ \;
-             find ${{ matrix.app.type-lower }}-apks -name "*-qa-debug-androidTest.apk" -exec mv {} apps/${{ matrix.app.type-lower }}/build/outputs/apk/androidTest/qa/debug/ \;
-             find ${{ matrix.app.type-lower }}-apks -name "*-dev-debugMinify.apk" -exec mv {} apps/${{ matrix.app.type-lower }}/build/outputs/apk/dev/debugMinify/ \;
-             rm -rf ${{ matrix.app.type-lower }}-apks
+          if [ -d "${{ matrix.app-type-lower }}-qa-debug.apk" ]; then
+             mkdir -p apps/${{ matrix.app-type-lower }}/build/outputs/apk/qa/debug
+             mv ${{ matrix.app-type-lower }}-qa-debug.apk/${{ matrix.app-type-lower }}-qa-debug.apk apps/${{ matrix.app-type-lower }}/build/outputs/apk/qa/debug/
+             rm -rf ${{ matrix.app-type-lower }}-qa-debug.apk
+          fi
+          if [ -d "${{ matrix.app-type-lower }}-qa-debug-androidTest.apk" ]; then
+             mkdir -p apps/${{ matrix.app-type-lower }}/build/outputs/apk/androidTest/qa/debug
+             mv ${{ matrix.app-type-lower }}-qa-debug-androidTest.apk/${{ matrix.app-type-lower }}-qa-debug-androidTest.apk apps/${{ matrix.app-type-lower }}/build/outputs/apk/androidTest/qa/debug/
+             rm -rf ${{ matrix.app-type-lower }}-qa-debug-androidTest.apk
+          fi
+          if [ -d "${{ matrix.app-type-lower }}-dev-debugMinify.apk" ]; then
+             mkdir -p apps/${{ matrix.app-type-lower }}/build/outputs/apk/dev/debugMinify
+             mv ${{ matrix.app-type-lower }}-dev-debugMinify.apk/${{ matrix.app-type-lower }}-dev-debugMinify.apk apps/${{ matrix.app-type-lower }}/build/outputs/apk/dev/debugMinify/
+             rm -rf ${{ matrix.app-type-lower }}-dev-debugMinify.apk
           fi
 
-      - name: Run Flank UI tests
+      - name: Run Flank E2E tests
+        if: ${{ matrix.should_run }}
         uses: Flank/flank@v23.10.1
         with:
           version: 'v23.07.0'
@@ -422,7 +404,8 @@ jobs:
           flank_configuration_file: './flank.yml'
 
       - name: Report test results to Splunk
-        run: ./apps/postProcessTestRun.bash ${{ matrix.app.type-lower }} results/`ls results`
+        if: ${{ matrix.should_run }}
+        run: ./apps/postProcessTestRun.bash ${{ matrix.app-type-lower }} results/`ls results`
         env:
           SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
           OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
@@ -431,44 +414,68 @@ jobs:
           BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
   e2e-tests:
-    name: ${{ matrix.app.type-lower }}-e2e-tests
+    name: ${{ matrix.app-type-lower }}-${{ matrix.test-type }}-e2e-tests
     runs-on: ubuntu-latest
-    needs: [setup, build]
-    if: needs.setup.outputs.should-run-e2e-tests == 'true' && needs.setup.outputs.apps != '[]'
+    if: >-
+      github.event.action == 'labeled' && contains(github.event.pull_request.labels.*.name, 'run-e2e-tests') && 
+      (contains(github.event.pull_request.body, 'Parent') || 
+       contains(github.event.pull_request.body, 'Student') || 
+       contains(github.event.pull_request.body, 'Teacher'))
+    needs: [build, unit-tests]
     strategy:
       fail-fast: false
       matrix:
-        app: ${{ fromJson(needs.setup.outputs.apps) }}
+        include:
+          - app-type: Parent
+            app-type-lower: parent
+            should_run: ${{ contains(github.event.pull_request.body, 'Parent') }}
+          - app-type: Student
+            app-type-lower: student
+            should_run: ${{ contains(github.event.pull_request.body, 'Student') }}
+          - app-type: Teacher
+            app-type-lower: teacher
+            should_run: ${{ contains(github.event.pull_request.body, 'Teacher') }}
+
     steps:
       - name: Checkout repository
+        if: ${{ matrix.should_run }}
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
 
       - name: Download artifacts
+        if: ${{ matrix.should_run }}
         uses: actions/download-artifact@v4
 
       - name: Setup Service account
+        if: ${{ matrix.should_run }}
         env:
           FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.GCLOUD_KEY }}
         run: echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
 
       - name: Setup Flank config
-        run: cp ./apps/${{ matrix.app.type-lower }}/flank_e2e.yml ./flank.yml
+        if: ${{ matrix.should_run }}
+        run: cp ./apps/${{ matrix.app-type-lower }}/flank_e2e.yml ./flank.yml
 
       - name: Copy APKs to expected locations
+        if: ${{ matrix.should_run }}
         run: |
-          if [ -d "${{ matrix.app.type-lower }}-apks" ]; then
-             mkdir -p apps/${{ matrix.app.type-lower }}/build/outputs/apk/qa/debug
-             mkdir -p apps/${{ matrix.app.type-lower }}/build/outputs/apk/androidTest/qa/debug
-             mkdir -p apps/${{ matrix.app.type-lower }}/build/outputs/apk/dev/debugMinify
-             find ${{ matrix.app.type-lower }}-apks -name "*-qa-debug.apk" -not -name "*androidTest*" -exec mv {} apps/${{ matrix.app.type-lower }}/build/outputs/apk/qa/debug/ \;
-             find ${{ matrix.app.type-lower }}-apks -name "*-qa-debug-androidTest.apk" -exec mv {} apps/${{ matrix.app.type-lower }}/build/outputs/apk/androidTest/qa/debug/ \;
-             find ${{ matrix.app.type-lower }}-apks -name "*-dev-debugMinify.apk" -exec mv {} apps/${{ matrix.app.type-lower }}/build/outputs/apk/dev/debugMinify/ \;
-             rm -rf ${{ matrix.app.type-lower }}-apks
+          if [ -d "${{ matrix.app-type-lower }}-qa-debug.apk" ]; then
+             mkdir -p apps/${{ matrix.app-type-lower }}/build/outputs/apk/qa/debug
+             mv ${{ matrix.app-type-lower }}-qa-debug.apk/${{ matrix.app-type-lower }}-qa-debug.apk apps/${{ matrix.app-type-lower }}/build/outputs/apk/qa/debug/
+             rm -rf ${{ matrix.app-type-lower }}-qa-debug.apk
+          fi
+          if [ -d "${{ matrix.app-type-lower }}-qa-debug-androidTest.apk" ]; then
+             mkdir -p apps/${{ matrix.app-type-lower }}/build/outputs/apk/androidTest/qa/debug
+             mv ${{ matrix.app-type-lower }}-qa-debug-androidTest.apk/${{ matrix.app-type-lower }}-qa-debug-androidTest.apk apps/${{ matrix.app-type-lower }}/build/outputs/apk/androidTest/qa/debug/
+             rm -rf ${{ matrix.app-type-lower }}-qa-debug-androidTest.apk
+          fi
+          if [ -d "${{ matrix.app-type-lower }}-dev-debugMinify.apk" ]; then
+             mkdir -p apps/${{ matrix.app-type-lower }}/build/outputs/apk/dev/debugMinify
+             mv ${{ matrix.app-type-lower }}-dev-debugMinify.apk/${{ matrix.app-type-lower }}-dev-debugMinify.apk apps/${{ matrix.app-type-lower }}/build/outputs/apk/dev/debugMinify/
+             rm -rf ${{ matrix.app-type-lower }}-dev-debugMinify.apk
           fi
 
       - name: Run Flank E2E tests
+        if: ${{ matrix.should_run }}
         uses: Flank/flank@v23.10.1
         with:
           version: 'v23.07.0'
@@ -477,7 +484,8 @@ jobs:
           flank_configuration_file: './flank.yml'
 
       - name: Report test results to Splunk
-        run: ./apps/postProcessTestRun.bash ${{ matrix.app.type-lower }} results/`ls results`
+        if: ${{ matrix.should_run }}
+        run: ./apps/postProcessTestRun.bash ${{ matrix.app-type-lower }} results/`ls results`
         env:
           SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
           OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
@@ -488,13 +496,15 @@ jobs:
   submodule-ui-tests:
     name: submodule-ui-tests
     runs-on: ubuntu-latest
-    needs: [setup, submodule-build-and-test]
-    if: needs.setup.outputs.should-run-ui-tests == 'true' && needs.setup.outputs.apps != '[]'
+    if: >-
+      github.event.action == 'labeled' && contains(github.event.pull_request.labels.*.name, 'run-ui-tests') && 
+      (contains(github.event.pull_request.body, 'Parent') || 
+       contains(github.event.pull_request.body, 'Student') || 
+       contains(github.event.pull_request.body, 'Teacher'))
+    needs: submodule-build-and-test
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
 
       - name: Download test APK artifact
         uses: actions/download-artifact@v4
