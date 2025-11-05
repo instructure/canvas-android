@@ -83,13 +83,19 @@ jobs:
         if: ${{ matrix.should_run }}
         run: |
           echo "${{ secrets.ANDROID_RELEASE_KEYSTORE_B64 }}" | base64 --decode > release.jks
+          chmod 600 release.jks
 
       - name: Setup Service account
         if: ${{ matrix.should_run }}
         env:
           FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
         run: |
+          if [ -z "${FIREBASE_SERVICE_ACCOUNT_KEY}" ]; then
+            echo "Error: FIREBASE_SERVICE_ACCOUNT_KEY is not set"
+            exit 1
+          fi
           echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
+          chmod 600 service-account-key.json
 
       - name: Build Release Notes
         if: ${{ matrix.should_run }}
@@ -105,15 +111,30 @@ jobs:
 
       - name: Setup Parent Firebase App Id
         if: ${{ matrix.should_run && matrix.app-type == 'Parent' }}
-        run: echo "${{ secrets.FIREBASE_ANDROID_PARENT_APP_ID }}" > firebase_app_id.txt
+        run: |
+          if [ -z "${{ secrets.FIREBASE_ANDROID_PARENT_APP_ID }}" ]; then
+            echo "Error: FIREBASE_ANDROID_PARENT_APP_ID is not set"
+            exit 1
+          fi
+          echo "${{ secrets.FIREBASE_ANDROID_PARENT_APP_ID }}" > firebase_app_id.txt
 
       - name: Setup Student Firebase App Id
         if: ${{ matrix.should_run && matrix.app-type == 'Student' }}
-        run: echo "${{ secrets.FIREBASE_ANDROID_STUDENT_APP_ID }}" > firebase_app_id.txt
+        run: |
+          if [ -z "${{ secrets.FIREBASE_ANDROID_STUDENT_APP_ID }}" ]; then
+            echo "Error: FIREBASE_ANDROID_STUDENT_APP_ID is not set"
+            exit 1
+          fi
+          echo "${{ secrets.FIREBASE_ANDROID_STUDENT_APP_ID }}" > firebase_app_id.txt
 
       - name: Setup Teacher Firebase App Id
         if: ${{ matrix.should_run && matrix.app-type == 'Teacher' }}
-        run: echo "${{ secrets.FIREBASE_ANDROID_TEACHER_APP_ID }}" > firebase_app_id.txt
+        run: |
+          if [ -z "${{ secrets.FIREBASE_ANDROID_TEACHER_APP_ID }}" ]; then
+            echo "Error: FIREBASE_ANDROID_TEACHER_APP_ID is not set"
+            exit 1
+          fi
+          echo "${{ secrets.FIREBASE_ANDROID_TEACHER_APP_ID }}" > firebase_app_id.txt
 
       # Building Artifacts
       - name: Build debug and test APKs
@@ -160,26 +181,36 @@ jobs:
         run: |
           firebase --version
           FIREBASE_APP_ID=$(cat firebase_app_id.txt)
-          firebase appdistribution:distribute "apps/${{ matrix.app-type-lower }}/build/outputs/apk/dev/debugMinify/${{ matrix.app-type-lower }}-dev-debugMinify.apk" \
+
+          if ! firebase appdistribution:distribute "apps/${{ matrix.app-type-lower }}/build/outputs/apk/dev/debugMinify/${{ matrix.app-type-lower }}-dev-debugMinify.apk" \
             --app "$FIREBASE_APP_ID" \
             --release-notes "${{ steps.get_release_notes.outputs.RELEASE_NOTES }}" \
-            --groups "Testers" > result.txt
+            --groups "Testers" > result.txt 2>&1; then
+            echo "Firebase distribution failed:"
+            cat result.txt
+            exit 1
+          fi
           cat result.txt
 
       - name: Prepare Comment Body
         if: ${{ matrix.should_run }}
         id: prepare_comment
         run: |
-          INSTALL_URL=$(cat result.txt | grep appdistribution.firebase | sed 's/.*\(https:.*\)/\1/')
+          INSTALL_URL=$(grep -o 'https://appdistribution\.firebase[^[:space:]]*' result.txt | head -1)
+
+          if [ -z "$INSTALL_URL" ]; then
+            echo "Error: Could not extract install URL from Firebase output"
+            cat result.txt
+            exit 1
+          fi
+
           INSTALL_URL_ESCAPED=$(printf '%s' "$INSTALL_URL" | sed 's/:/%3A/g; s/\//%2F/g; s/?/%3F/g; s/=/%3D/g; s/&/%26/g')
-          COMMENT_BODY=$(cat <<EOF
-          <!-- qr-code-${{ matrix.app-type }} -->
-          <p>${{ matrix.app-type }} Install Page</p><img src="https://api.qrserver.com/v1/create-qr-code/?data=${INSTALL_URL_ESCAPED}" width="200">
-          EOF
-          )
-          echo "body<<EOF" >> $GITHUB_OUTPUT
-          echo "$COMMENT_BODY" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          {
+            echo "body<<EOF"
+            echo "<!-- qr-code-${{ matrix.app-type }} -->"
+            echo "<p>${{ matrix.app-type }} Install Page</p><img src=\"https://api.qrserver.com/v1/create-qr-code/?data=${INSTALL_URL_ESCAPED}\" width=\"200\">"
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
 
       - name: Find Previous Comment
         if: ${{ matrix.should_run }}
@@ -198,6 +229,14 @@ jobs:
           issue-number: ${{ github.event.number }}
           body: ${{ steps.prepare_comment.outputs.body }}
           edit-mode: replace
+
+      - name: Cleanup sensitive files
+        if: always() && matrix.should_run
+        run: |
+          rm -f release.jks
+          rm -f service-account-key.json
+          rm -f firebase_app_id.txt
+          rm -f result.txt
 
   submodule-build-and-test:
     name: submodule-build-and-test
@@ -406,7 +445,13 @@ jobs:
       - name: Setup Service account
         env:
           FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.GCLOUD_KEY }}
-        run: echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
+        run: |
+          if [ -z "${FIREBASE_SERVICE_ACCOUNT_KEY}" ]; then
+            echo "Error: GCLOUD_KEY secret is not set"
+            exit 1
+          fi
+          echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
+          chmod 600 service-account-key.json
 
       - name: Setup Flank config
         run: cp ./apps/parent/flank.yml ./flank.yml
@@ -445,6 +490,10 @@ jobs:
           BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
           BITRISE_GIT_BRANCH: ${{ github.ref_name }}
           BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Cleanup sensitive files
+        if: always()
+        run: rm -f service-account-key.json
 
   parent-landscape-ui-tests:
     name: parent-landscape-ui-tests
