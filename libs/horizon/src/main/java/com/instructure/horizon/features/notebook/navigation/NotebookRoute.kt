@@ -37,7 +37,7 @@ sealed class NotebookRoute(open val route: String) {
                 objectType: String? = null,
                 objectId: String? = null
             ): String {
-                return "$ROUTE?COURSE_ID=${courseId}&$OBJECT_TYPE=${objectType}&$OBJECT_ID=${objectId}"
+                return "$ROUTE?$COURSE_ID=${courseId}&$OBJECT_TYPE=${objectType}&$OBJECT_ID=${objectId}"
             }
         }
     }

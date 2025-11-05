@@ -41,17 +41,7 @@ class NotebookViewModel @Inject constructor(
     private var pageInfo: QueryNotesQuery.PageInfo? = null
 
     private var courseId: Long? = savedStateHandle.get<String>(NotebookRoute.Notebook.COURSE_ID)?.toLongOrNull()
-    private var objectTypeAndId: Pair<String, String>? = if (
-        savedStateHandle.get<String>(NotebookRoute.Notebook.OBJECT_TYPE) != null &&
-        savedStateHandle.get<String>(NotebookRoute.Notebook.OBJECT_ID) != null
-    ) {
-        Pair(
-            savedStateHandle.get<String>(NotebookRoute.Notebook.OBJECT_TYPE)!!,
-            savedStateHandle.get<String>(NotebookRoute.Notebook.OBJECT_ID)!!
-        )
-    } else {
-        null
-    }
+    private var objectTypeAndId: Pair<String, String>? = getObjectTypeAndId(savedStateHandle)
 
     private val _uiState = MutableStateFlow(NotebookUiState(
         loadPreviousPage = ::getPreviousPage,
@@ -152,5 +142,11 @@ class NotebookViewModel @Inject constructor(
         } else {
             _uiState.update { it.copy(showTopBar = true, showFilters = true) }
         }
+    }
+
+    private fun getObjectTypeAndId(savedStateHandle: SavedStateHandle): Pair<String, String>? {
+        val objectType = savedStateHandle.get<String>(NotebookRoute.Notebook.OBJECT_TYPE) ?: return null
+        val objectId = savedStateHandle.get<String>(NotebookRoute.Notebook.OBJECT_ID) ?: return null
+        return Pair(objectType, objectId)
     }
 }
