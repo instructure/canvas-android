@@ -39,6 +39,7 @@ jobs:
           prompt: |
             REPO: ${{ github.repository }}
             PR NUMBER: ${{ github.event.pull_request.number }}
+            EVENT ACTION: ${{ github.event.action }}
 
             Please review this pull request and provide inline feedback using the GitHub review system.
 
@@ -52,11 +53,37 @@ jobs:
             Use the repository's CLAUDE.md for guidance on style and conventions. Be constructive and helpful in your feedback.
 
             Instructions:
+            ${{ github.event.action == 'synchronize' && '
+            ## SYNCHRONIZE EVENT - UPDATE EXISTING REVIEW
+            This is an update to an existing PR. You must:
+            1. Use the GitHub MCP tools to fetch your previous reviews on this PR
+            2. Fetch the latest PR diff and identify what has changed since your last review
+            3. Update your EXISTING review comments - DO NOT create a new review summary
+            4. Use checkboxes to track progress on previously identified issues:
+               - [ ] Unresolved issue
+               - [x] Resolved issue
+            5. For each previously identified issue:
+               - If it has been addressed: Mark the checkbox as complete [x] and add a note
+               - If it is still present: Keep the checkbox unchecked [ ]
+               - If new issues are found: Add new checkboxes [ ]
+            6. Update inline comments:
+               - Resolve or update threads that have been addressed
+               - Add new inline comments ONLY for new issues that require changes
+               - Do NOT add inline comments for positive changes or improvements
+            7. Keep all positive feedback in the summary section only
+
+            DO NOT create a new review from scratch. Update the existing one.' || '
+            ## NEW REVIEW EVENT
+            This is a new PR or initial review. You must:
             1. Use the GitHub MCP tools to fetch the PR diff
-            2. Add inline comments using the appropriate MCP tools for each specific piece of feedback on particular lines
-            3. Submit the review with event type 'COMMENT' (not 'REQUEST_CHANGES') to publish as non-blocking feedback
+            2. Create a review summary with checkboxes for any issues found:
+               - [ ] Issue description and location
+            3. Add inline comments ONLY for specific code that needs changes
+            4. DO NOT add inline comments for positive feedback - include positive feedback in the summary section only
+            5. Submit the review with event type COMMENT (not REQUEST_CHANGES) to publish as non-blocking feedback
+            ' }}
 
           # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
           # or https://docs.claude.com/en/docs/claude-code/cli-reference for available options
-          claude_args: '--allowedTools "mcp__github__create_pending_pull_request_review,mcp__github__add_comment_to_pending_review,mcp__github__submit_pending_pull_request_review,mcp__github__get_pull_request_diff"'
+          claude_args: '--allowedTools "mcp__github__create_pending_pull_request_review,mcp__github__add_comment_to_pending_review,mcp__github__submit_pending_pull_request_review,mcp__github__get_pull_request_diff,mcp__github__list_reviews,mcp__github__get_review,mcp__github__list_review_comments,mcp__github__update_review_comment,mcp__github__create_or_update_pull_request_review_comment"'
 
