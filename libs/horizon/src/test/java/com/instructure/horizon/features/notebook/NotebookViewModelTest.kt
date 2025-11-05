@@ -16,6 +16,7 @@
  */
 package com.instructure.horizon.features.notebook
 
+import androidx.lifecycle.SavedStateHandle
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.redwood.QueryNotesQuery
 import io.mockk.coEvery
@@ -39,6 +40,7 @@ import java.util.Date
 @OptIn(ExperimentalCoroutinesApi::class)
 class NotebookViewModelTest {
     private val repository: NotebookRepository = mockk(relaxed = true)
+    private val savedStateHandle = SavedStateHandle()
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val testNotes = QueryNotesQuery.Notes(
@@ -197,6 +199,6 @@ class NotebookViewModelTest {
     }
 
     private fun getViewModel(): NotebookViewModel {
-        return NotebookViewModel(repository)
+        return NotebookViewModel(repository, savedStateHandle)
     }
 }
