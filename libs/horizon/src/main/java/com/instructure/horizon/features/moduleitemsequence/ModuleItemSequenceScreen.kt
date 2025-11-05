@@ -100,6 +100,7 @@ import com.instructure.horizon.features.moduleitemsequence.content.lti.ExternalT
 import com.instructure.horizon.features.moduleitemsequence.content.page.PageDetailsContentScreen
 import com.instructure.horizon.features.moduleitemsequence.content.page.PageDetailsViewModel
 import com.instructure.horizon.features.moduleitemsequence.progress.ProgressScreen
+import com.instructure.horizon.features.notebook.navigation.NotebookRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
@@ -120,7 +121,6 @@ import com.instructure.horizon.horizonui.molecules.PillType
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.molecules.SpinnerSize
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
-import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.pandautils.compose.modifiers.conditional
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
@@ -150,7 +150,15 @@ fun ModuleItemSequenceScreen(mainNavController: NavHostController, uiState: Modu
                 onPreviousClick = uiState.onPreviousClick,
                 onAssignmentToolsClick = uiState.onAssignmentToolsClick,
                 onAiAssistClick = { uiState.updateShowAiAssist(true) },
-                onNotebookClick = { mainNavController.navigate(MainNavigationRoute.Notebook.route) },
+                onNotebookClick = {
+                    mainNavController.navigate(
+                        NotebookRoute.Notebook.route(
+                            uiState.courseId.toString(),
+                            uiState.objectTypeAndId.first,
+                            uiState.objectTypeAndId.second
+                        )
+                    )
+                },
                 notebookEnabled = uiState.notebookButtonEnabled,
                 aiAssistEnabled = uiState.aiAssistButtonEnabled,
                 hasUnreadComments = uiState.hasUnreadComments

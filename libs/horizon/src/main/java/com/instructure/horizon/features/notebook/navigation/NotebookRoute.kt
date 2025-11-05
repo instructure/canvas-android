@@ -19,8 +19,28 @@ package com.instructure.horizon.features.notebook.navigation
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class NotebookRoute(val route: String) {
-    data object Notebook : NotebookRoute("notebook_list")
+sealed class NotebookRoute(open val route: String) {
+    data class Notebook(
+        val courseId: String? = null,
+        val objectType: String? = null,
+        val objectId: String? = null,
+    ) : NotebookRoute(route) {
+        companion object {
+            private const val ROUTE = "notebook_list"
+            const val COURSE_ID = "courseId"
+            const val OBJECT_TYPE = "objectType"
+            const val OBJECT_ID = "objectId"
+            const val route = "$ROUTE?$COURSE_ID={$COURSE_ID}&$OBJECT_TYPE={$OBJECT_TYPE}&$OBJECT_ID={$OBJECT_ID}"
+
+            fun route(
+                courseId: String? = null,
+                objectType: String? = null,
+                objectId: String? = null
+            ): String {
+                return "$ROUTE?COURSE_ID=${courseId}&$OBJECT_TYPE=${objectType}&$OBJECT_ID=${objectId}"
+            }
+        }
+    }
 
     @Serializable
     data class AddNotebook(

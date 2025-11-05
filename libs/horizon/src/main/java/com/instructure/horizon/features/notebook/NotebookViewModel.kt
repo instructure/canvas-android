@@ -16,12 +16,14 @@
  */
 package com.instructure.horizon.features.notebook
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.horizon.features.notebook.common.model.mapToNotes
+import com.instructure.horizon.features.notebook.navigation.NotebookRoute
 import com.instructure.redwood.QueryNotesQuery
 import com.instructure.redwood.type.OrderDirection
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,12 +35,23 @@ import javax.inject.Inject
 @HiltViewModel
 class NotebookViewModel @Inject constructor(
     private val repository: NotebookRepository,
+    savedStateHandle: SavedStateHandle,
 ): ViewModel() {
     private var cursorId: String? = null
     private var pageInfo: QueryNotesQuery.PageInfo? = null
 
-    private var courseId: Long? = null
-    private var objectTypeAndId: Pair<String, String>? = null
+    private var courseId: Long? = savedStateHandle.get<String>(NotebookRoute.Notebook.COURSE_ID)?.toLongOrNull()
+    private var objectTypeAndId: Pair<String, String>? = if (
+        savedStateHandle.get<String>(NotebookRoute.Notebook.OBJECT_TYPE) != null &&
+        savedStateHandle.get<String>(NotebookRoute.Notebook.OBJECT_ID) != null
+    ) {
+        Pair(
+            savedStateHandle.get<String>(NotebookRoute.Notebook.OBJECT_TYPE)!!,
+            savedStateHandle.get<String>(NotebookRoute.Notebook.OBJECT_ID)!!
+        )
+    } else {
+        null
+    }
 
     private val _uiState = MutableStateFlow(NotebookUiState(
         loadPreviousPage = ::getPreviousPage,
