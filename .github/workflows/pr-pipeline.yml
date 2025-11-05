@@ -516,7 +516,13 @@ jobs:
       - name: Setup Service account
         env:
           FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.GCLOUD_KEY }}
-        run: echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
+        run: |
+          if [ -z "${FIREBASE_SERVICE_ACCOUNT_KEY}" ]; then
+            echo "Error: GCLOUD_KEY secret is not set"
+            exit 1
+          fi
+          echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
+          chmod 600 service-account-key.json
 
       - name: Setup Flank config
         run: cp ./apps/parent/flank_landscape.yml ./flank.yml
@@ -556,6 +562,10 @@ jobs:
           BITRISE_GIT_BRANCH: ${{ github.ref_name }}
           BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
+      - name: Cleanup sensitive files
+        if: always()
+        run: rm -f service-account-key.json
+
   student-portrait-ui-tests:
     name: student-portrait-ui-tests
     runs-on: ubuntu-latest
@@ -577,7 +587,13 @@ jobs:
       - name: Setup Service account
         env:
           FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.GCLOUD_KEY }}
-        run: echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
+        run: |
+          if [ -z "${FIREBASE_SERVICE_ACCOUNT_KEY}" ]; then
+            echo "Error: GCLOUD_KEY secret is not set"
+            exit 1
+          fi
+          echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
+          chmod 600 service-account-key.json
 
       - name: Setup Flank config
         run: cp ./apps/student/flank.yml ./flank.yml
@@ -617,6 +633,10 @@ jobs:
           BITRISE_GIT_BRANCH: ${{ github.ref_name }}
           BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
+      - name: Cleanup sensitive files
+        if: always()
+        run: rm -f service-account-key.json
+
   student-landscape-ui-tests:
     name: student-landscape-ui-tests
     runs-on: ubuntu-latest
@@ -638,7 +658,13 @@ jobs:
       - name: Setup Service account
         env:
           FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.GCLOUD_KEY }}
-        run: echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
+        run: |
+          if [ -z "${FIREBASE_SERVICE_ACCOUNT_KEY}" ]; then
+            echo "Error: GCLOUD_KEY secret is not set"
+            exit 1
+          fi
+          echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
+          chmod 600 service-account-key.json
 
       - name: Setup Flank config
         run: cp ./apps/student/flank_landscape.yml ./flank.yml
@@ -678,6 +704,10 @@ jobs:
           BITRISE_GIT_BRANCH: ${{ github.ref_name }}
           BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
+      - name: Cleanup sensitive files
+        if: always()
+        run: rm -f service-account-key.json
+
   teacher-portrait-ui-tests:
     name: teacher-portrait-ui-tests
     runs-on: ubuntu-latest
@@ -699,7 +729,13 @@ jobs:
       - name: Setup Service account
         env:
           FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.GCLOUD_KEY }}
-        run: echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
+        run: |
+          if [ -z "${FIREBASE_SERVICE_ACCOUNT_KEY}" ]; then
+            echo "Error: GCLOUD_KEY secret is not set"
+            exit 1
+          fi
+          echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
+          chmod 600 service-account-key.json
 
       - name: Setup Flank config
         run: cp ./apps/teacher/flank.yml ./flank.yml
@@ -739,6 +775,10 @@ jobs:
           BITRISE_GIT_BRANCH: ${{ github.ref_name }}
           BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
+      - name: Cleanup sensitive files
+        if: always()
+        run: rm -f service-account-key.json
+
   teacher-landscape-ui-tests:
     name: teacher-landscape-ui-tests
     runs-on: ubuntu-latest
@@ -760,7 +800,13 @@ jobs:
       - name: Setup Service account
         env:
           FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.GCLOUD_KEY }}
-        run: echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
+        run: |
+          if [ -z "${FIREBASE_SERVICE_ACCOUNT_KEY}" ]; then
+            echo "Error: GCLOUD_KEY secret is not set"
+            exit 1
+          fi
+          echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
+          chmod 600 service-account-key.json
 
       - name: Setup Flank config
         run: cp ./apps/teacher/flank_landscape.yml ./flank.yml
@@ -800,6 +846,10 @@ jobs:
           BITRISE_GIT_BRANCH: ${{ github.ref_name }}
           BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
+      - name: Cleanup sensitive files
+        if: always()
+        run: rm -f service-account-key.json
+
   parent-e2e-tests:
     name: parent-e2e-tests
     runs-on: ubuntu-latest
@@ -821,7 +871,13 @@ jobs:
       - name: Setup Service account
         env:
           FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.GCLOUD_KEY }}
-        run: echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
+        run: |
+          if [ -z "${FIREBASE_SERVICE_ACCOUNT_KEY}" ]; then
+            echo "Error: GCLOUD_KEY secret is not set"
+            exit 1
+          fi
+          echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
+          chmod 600 service-account-key.json
 
       - name: Setup Flank config
         run: cp ./apps/parent/flank_e2e.yml ./flank.yml
@@ -861,6 +917,10 @@ jobs:
           BITRISE_GIT_BRANCH: ${{ github.ref_name }}
           BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
+      - name: Cleanup sensitive files
+        if: always()
+        run: rm -f service-account-key.json
+
   student-e2e-tests:
     name: student-e2e-tests
     runs-on: ubuntu-latest
@@ -882,7 +942,13 @@ jobs:
       - name: Setup Service account
         env:
           FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.GCLOUD_KEY }}
-        run: echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
+        run: |
+          if [ -z "${FIREBASE_SERVICE_ACCOUNT_KEY}" ]; then
+            echo "Error: GCLOUD_KEY secret is not set"
+            exit 1
+          fi
+          echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
+          chmod 600 service-account-key.json
 
       - name: Setup Flank config
         run: cp ./apps/student/flank_e2e.yml ./flank.yml
@@ -922,6 +988,10 @@ jobs:
           BITRISE_GIT_BRANCH: ${{ github.ref_name }}
           BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
+      - name: Cleanup sensitive files
+        if: always()
+        run: rm -f service-account-key.json
+
   teacher-e2e-tests:
     name: teacher-e2e-tests
     runs-on: ubuntu-latest
@@ -943,7 +1013,13 @@ jobs:
       - name: Setup Service account
         env:
           FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.GCLOUD_KEY }}
-        run: echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
+        run: |
+          if [ -z "${FIREBASE_SERVICE_ACCOUNT_KEY}" ]; then
+            echo "Error: GCLOUD_KEY secret is not set"
+            exit 1
+          fi
+          echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
+          chmod 600 service-account-key.json
 
       - name: Setup Flank config
         run: cp ./apps/teacher/flank_e2e.yml ./flank.yml
@@ -982,6 +1058,10 @@ jobs:
           BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
           BITRISE_GIT_BRANCH: ${{ github.ref_name }}
           BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Cleanup sensitive files
+        if: always()
+        run: rm -f service-account-key.json
 
   submodule-ui-tests:
     name: submodule-ui-tests
