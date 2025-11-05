@@ -126,7 +126,7 @@ jobs:
             --parallel \
             --max-workers=4 \
             --no-daemon \
-            -Dorg.gradle.jvmargs="-Xmx4g -XX:+HeapDumpOnOutOfMemoryError" \
+            -Dorg.gradle.jvmargs="-Xmx6g -XX:+HeapDumpOnOutOfMemoryError" \
             -Dkotlin.compiler.execution.strategy=in-process \
             -Pandroid.injected.signing.store.file=$(pwd)/release.jks
 
@@ -298,7 +298,7 @@ jobs:
             --parallel \
             --max-workers=4 \
             --no-daemon \
-            -Dorg.gradle.jvmargs="-Xmx4g -XX:+HeapDumpOnOutOfMemoryError" \
+            -Dorg.gradle.jvmargs="-Xmx6g -XX:+HeapDumpOnOutOfMemoryError" \
             -Dkotlin.compiler.execution.strategy=in-process
 
   student-unit-tests:
@@ -340,7 +340,7 @@ jobs:
             --parallel \
             --max-workers=4 \
             --no-daemon \
-            -Dorg.gradle.jvmargs="-Xmx4g -XX:+HeapDumpOnOutOfMemoryError" \
+            -Dorg.gradle.jvmargs="-Xmx6g -XX:+HeapDumpOnOutOfMemoryError" \
             -Dkotlin.compiler.execution.strategy=in-process
 
   teacher-unit-tests:
@@ -382,7 +382,7 @@ jobs:
             --parallel \
             --max-workers=4 \
             --no-daemon \
-            -Dorg.gradle.jvmargs="-Xmx4g -XX:+HeapDumpOnOutOfMemoryError" \
+            -Dorg.gradle.jvmargs="-Xmx6g -XX:+HeapDumpOnOutOfMemoryError" \
             -Dkotlin.compiler.execution.strategy=in-process
 
   parent-portrait-ui-tests:
