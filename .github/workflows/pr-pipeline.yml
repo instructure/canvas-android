@@ -171,8 +171,9 @@ jobs:
         id: prepare_comment
         run: |
           INSTALL_URL=$(cat result.txt | grep appdistribution.firebase | sed 's/.*\(https:.*\)/\1/')
-          INSTALL_URL_ESCAPED=$(printf "$INSTALL_URL" | jq -sRr '@uri')
+          INSTALL_URL_ESCAPED=$(printf '%s' "$INSTALL_URL" | sed 's/:/%3A/g; s/\//%2F/g; s/?/%3F/g; s/=/%3D/g; s/&/%26/g')
           COMMENT_BODY=$(cat <<EOF
+          <!-- qr-code-${{ matrix.app-type }} -->
           <p>${{ matrix.app-type }} Install Page</p><img src="https://api.qrserver.com/v1/create-qr-code/?data=${INSTALL_URL_ESCAPED}" width="200">
           EOF
           )
@@ -187,7 +188,7 @@ jobs:
         with:
           issue-number: ${{ github.event.number }}
           comment-author: 'github-actions[bot]'
-          body-includes: '${{ matrix.app-type }} Install Page'
+          body-includes: '<!-- qr-code-${{ matrix.app-type }} -->'
 
       - name: Create or Update Comment
         if: ${{ matrix.should_run }}
@@ -291,13 +292,14 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Run unit tests
-        run: ./gradle/gradlew -p apps :parent:testDevDebugUnitTest \
-          --build-cache \
-          --parallel \
-          --max-workers=4 \
-          --no-daemon \
-          -Dorg.gradle.jvmargs="-Xmx4g -XX:+HeapDumpOnOutOfMemoryError" \
-          -Dkotlin.compiler.execution.strategy=in-process
+        run: |
+          ./gradle/gradlew -p apps :parent:testDevDebugUnitTest \
+            --build-cache \
+            --parallel \
+            --max-workers=4 \
+            --no-daemon \
+            -Dorg.gradle.jvmargs="-Xmx4g -XX:+HeapDumpOnOutOfMemoryError" \
+            -Dkotlin.compiler.execution.strategy=in-process
 
   student-unit-tests:
     name: student-unit-tests
@@ -332,13 +334,14 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Run unit tests
-        run: ./gradle/gradlew -p apps :student:testDevDebugUnitTest \
-          --build-cache \
-          --parallel \
-          --max-workers=4 \
-          --no-daemon \
-          -Dorg.gradle.jvmargs="-Xmx4g -XX:+HeapDumpOnOutOfMemoryError" \
-          -Dkotlin.compiler.execution.strategy=in-process
+        run: |
+          ./gradle/gradlew -p apps :student:testDevDebugUnitTest \
+            --build-cache \
+            --parallel \
+            --max-workers=4 \
+            --no-daemon \
+            -Dorg.gradle.jvmargs="-Xmx4g -XX:+HeapDumpOnOutOfMemoryError" \
+            -Dkotlin.compiler.execution.strategy=in-process
 
   teacher-unit-tests:
     name: teacher-unit-tests
@@ -373,13 +376,14 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Run unit tests
-        run: ./gradle/gradlew -p apps :teacher:testDevDebugUnitTest \
-          --build-cache \
-          --parallel \
-          --max-workers=4 \
-          --no-daemon \
-          -Dorg.gradle.jvmargs="-Xmx4g -XX:+HeapDumpOnOutOfMemoryError" \
-          -Dkotlin.compiler.execution.strategy=in-process
+        run: |
+          ./gradle/gradlew -p apps :teacher:testDevDebugUnitTest \
+            --build-cache \
+            --parallel \
+            --max-workers=4 \
+            --no-daemon \
+            -Dorg.gradle.jvmargs="-Xmx4g -XX:+HeapDumpOnOutOfMemoryError" \
+            -Dkotlin.compiler.execution.strategy=in-process
 
   parent-portrait-ui-tests:
     name: parent-portrait-ui-tests
