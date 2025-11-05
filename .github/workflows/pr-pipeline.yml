@@ -385,8 +385,10 @@ jobs:
     name: parent-portrait-ui-tests
     runs-on: ubuntu-latest
     if: >-
-      github.event.action == 'labeled' && contains(github.event.pull_request.labels.*.name, 'run-ui-tests') &&
-      contains(github.event.pull_request.body, 'Parent')
+      (
+        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
+        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
+      ) && contains(github.event.pull_request.body, 'Parent')
     needs: [build, parent-unit-tests]
     steps:
       - name: Checkout repository
@@ -444,8 +446,10 @@ jobs:
     name: parent-landscape-ui-tests
     runs-on: ubuntu-latest
     if: >-
-      github.event.action == 'labeled' && contains(github.event.pull_request.labels.*.name, 'run-ui-tests') &&
-      contains(github.event.pull_request.body, 'Parent')
+      (
+        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
+        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
+      ) && contains(github.event.pull_request.body, 'Parent')
     needs: [build, parent-unit-tests]
     steps:
       - name: Checkout repository
@@ -503,8 +507,10 @@ jobs:
     name: student-portrait-ui-tests
     runs-on: ubuntu-latest
     if: >-
-      github.event.action == 'labeled' && contains(github.event.pull_request.labels.*.name, 'run-ui-tests') &&
-      contains(github.event.pull_request.body, 'Student')
+      (
+        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
+        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
+      ) && contains(github.event.pull_request.body, 'Student')
     needs: [build, student-unit-tests]
     steps:
       - name: Checkout repository
@@ -562,8 +568,10 @@ jobs:
     name: student-landscape-ui-tests
     runs-on: ubuntu-latest
     if: >-
-      github.event.action == 'labeled' && contains(github.event.pull_request.labels.*.name, 'run-ui-tests') &&
-      contains(github.event.pull_request.body, 'Student')
+      (
+        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
+        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
+      ) && contains(github.event.pull_request.body, 'Student')
     needs: [build, student-unit-tests]
     steps:
       - name: Checkout repository
@@ -621,8 +629,10 @@ jobs:
     name: teacher-portrait-ui-tests
     runs-on: ubuntu-latest
     if: >-
-      github.event.action == 'labeled' && contains(github.event.pull_request.labels.*.name, 'run-ui-tests') &&
-      contains(github.event.pull_request.body, 'Teacher')
+      (
+        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
+        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
+      ) && contains(github.event.pull_request.body, 'Teacher')
     needs: [build, teacher-unit-tests]
     steps:
       - name: Checkout repository
@@ -680,8 +690,10 @@ jobs:
     name: teacher-landscape-ui-tests
     runs-on: ubuntu-latest
     if: >-
-      github.event.action == 'labeled' && contains(github.event.pull_request.labels.*.name, 'run-ui-tests') &&
-      contains(github.event.pull_request.body, 'Teacher')
+      (
+        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
+        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
+      ) && contains(github.event.pull_request.body, 'Teacher')
     needs: [build, teacher-unit-tests]
     steps:
       - name: Checkout repository
@@ -739,8 +751,10 @@ jobs:
     name: parent-e2e-tests
     runs-on: ubuntu-latest
     if: >-
-      github.event.action == 'labeled' && contains(github.event.pull_request.labels.*.name, 'run-e2e-tests') &&
-      contains(github.event.pull_request.body, 'Parent')
+      (
+        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
+        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
+      ) && contains(github.event.pull_request.body, 'Parent') && contains(github.event.pull_request.body, 'Run E2E test suite')
     needs: [build, parent-unit-tests]
     steps:
       - name: Checkout repository
@@ -798,8 +812,10 @@ jobs:
     name: student-e2e-tests
     runs-on: ubuntu-latest
     if: >-
-      github.event.action == 'labeled' && contains(github.event.pull_request.labels.*.name, 'run-e2e-tests') &&
-      contains(github.event.pull_request.body, 'Student')
+      (
+        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
+        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
+      ) && contains(github.event.pull_request.body, 'Student') && contains(github.event.pull_request.body, 'Run E2E test suite')
     needs: [build, student-unit-tests]
     steps:
       - name: Checkout repository
@@ -857,8 +873,10 @@ jobs:
     name: teacher-e2e-tests
     runs-on: ubuntu-latest
     if: >-
-      github.event.action == 'labeled' && contains(github.event.pull_request.labels.*.name, 'run-e2e-tests') &&
-      contains(github.event.pull_request.body, 'Teacher')
+      (
+        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
+        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
+      ) && contains(github.event.pull_request.body, 'Teacher') && contains(github.event.pull_request.body, 'Run E2E test suite')
     needs: [build, teacher-unit-tests]
     steps:
       - name: Checkout repository
@@ -916,10 +934,14 @@ jobs:
     name: submodule-ui-tests
     runs-on: ubuntu-latest
     if: >-
-      github.event.action == 'labeled' && contains(github.event.pull_request.labels.*.name, 'run-ui-tests') && 
-      (contains(github.event.pull_request.body, 'Parent') || 
-       contains(github.event.pull_request.body, 'Student') || 
-       contains(github.event.pull_request.body, 'Teacher'))
+      (
+        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
+        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
+      ) && (
+        contains(github.event.pull_request.body, 'Parent') ||
+        contains(github.event.pull_request.body, 'Student') ||
+        contains(github.event.pull_request.body, 'Teacher')
+      )
     needs: submodule-build-and-test
     steps:
       - name: Checkout repository
