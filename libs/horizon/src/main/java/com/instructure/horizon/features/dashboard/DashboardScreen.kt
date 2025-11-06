@@ -65,6 +65,7 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
+import com.instructure.horizon.features.dashboard.widget.DashboardWidgetPageState
 import com.instructure.horizon.features.dashboard.widget.announcement.DashboardAnnouncementBannerWidget
 import com.instructure.horizon.features.dashboard.widget.course.DashboardCourseSection
 import com.instructure.horizon.features.dashboard.widget.myprogress.DashboardMyProgressWidget
@@ -191,7 +192,8 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                             refreshStateFlow
                         )
                         HorizonSpace(SpaceSize.SPACE_16)
-                        val pagerState = rememberPagerState{ 3 }
+                        val pageCount = 3
+                        val pagerState = rememberPagerState{ pageCount }
                         AnimatedHorizontalPager(
                             pagerState,
                             sizeAnimationRange = 0f,
@@ -204,6 +206,7 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                                     DashboardMyProgressWidget(
                                         shouldRefresh,
                                         refreshStateFlow,
+                                        DashboardWidgetPageState(index + 1, pageCount),
                                         modifier.padding(bottom = 16.dp)
                                     )
                                 }
@@ -211,6 +214,7 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                                     DashboardTimeSpentWidget(
                                         shouldRefresh,
                                         refreshStateFlow,
+                                        DashboardWidgetPageState(index + 1, pageCount),
                                         modifier.padding(bottom = 16.dp)
                                     )
                                 }
@@ -219,11 +223,9 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                                         homeNavController,
                                         shouldRefresh,
                                         refreshStateFlow,
+                                        DashboardWidgetPageState(index + 1, pageCount),
                                         modifier.padding(bottom = 16.dp)
                                     )
-                                }
-                                else -> {
-
                                 }
                             }
                         }

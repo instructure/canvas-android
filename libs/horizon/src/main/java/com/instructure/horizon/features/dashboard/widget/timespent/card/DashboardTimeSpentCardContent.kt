@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCard
+import com.instructure.horizon.features.dashboard.widget.DashboardWidgetPageState
 import com.instructure.horizon.horizonui.animation.shimmerEffect
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
@@ -56,6 +57,7 @@ import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSel
 fun DashboardTimeSpentCardContent(
     state: DashboardTimeSpentCardState,
     isLoading: Boolean,
+    pageState: DashboardWidgetPageState,
     modifier: Modifier = Modifier,
 ) {
     DashboardWidgetCard(
@@ -63,6 +65,7 @@ fun DashboardTimeSpentCardContent(
         R.drawable.schedule,
         HorizonColors.PrimitivesHoney.honey12(),
         modifier,
+        pageState,
         isLoading,
         false
     ) {
@@ -234,7 +237,8 @@ private fun DashboardTimeSpentCardContentPreview() {
             ),
             selectedCourseId = null
         ),
-        isLoading = false
+        isLoading = false,
+        DashboardWidgetPageState(1, 2)
     )
 }
 
@@ -251,7 +255,8 @@ private fun DashboardTimeSpentCardSelectedContentPreview() {
             ),
             selectedCourseId = 1
         ),
-        isLoading = false
+        isLoading = false,
+        DashboardWidgetPageState(1, 2)
     )
 }
 
@@ -266,7 +271,8 @@ private fun DashboardTimeSpentCardContentSingleCourseHoursPreview() {
             ),
             selectedCourseId = null
         ),
-        isLoading = false
+        isLoading = false,
+        DashboardWidgetPageState(1, 2)
     )
 }
 
@@ -281,7 +287,8 @@ private fun DashboardTimeSpentCardContentSingleCourseMinutesPreview() {
             ),
             selectedCourseId = null
         ),
-        isLoading = false
+        isLoading = false,
+        DashboardWidgetPageState(1, 2)
     )
 }
 
@@ -297,7 +304,8 @@ private fun DashboardTimeSpentCardContentSingleCourseCombinedPreview() {
             ),
             selectedCourseId = null
         ),
-        isLoading = false
+        isLoading = false,
+        DashboardWidgetPageState(1, 2)
     )
 }
 
@@ -311,7 +319,8 @@ private fun DashboardTimeSpentCardEmptyContentPreview() {
             ),
             selectedCourseId = null
         ),
-        isLoading = false
+        isLoading = false,
+        DashboardWidgetPageState(1, 2)
     )
 }
 
@@ -320,6 +329,7 @@ private fun DashboardTimeSpentCardEmptyContentPreview() {
 private fun DashboardTimeSpentCardLoadingPreview() {
     DashboardTimeSpentCardContent(
         state = DashboardTimeSpentCardState(),
-        isLoading = true
+        isLoading = true,
+        DashboardWidgetPageState(1, 2)
     )
 }

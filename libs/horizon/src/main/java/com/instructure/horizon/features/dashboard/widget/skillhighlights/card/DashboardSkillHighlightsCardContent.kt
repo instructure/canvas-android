@@ -67,7 +67,6 @@ fun DashboardSkillHighlightsCardContent(
     ) {
         if (state.skills.isEmpty()) {
             Column {
-                HorizonSpace(SpaceSize.SPACE_8)
                 Text(
                     text = stringResource(R.string.dashboardSkillHighlightsNoDataTitle),
                     style = HorizonTypography.h4,
@@ -83,7 +82,6 @@ fun DashboardSkillHighlightsCardContent(
                 )
             }
         } else {
-            HorizonSpace(SpaceSize.SPACE_8)
             Column(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {

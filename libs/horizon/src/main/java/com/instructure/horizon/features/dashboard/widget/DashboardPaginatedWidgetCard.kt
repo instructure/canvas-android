@@ -18,8 +18,6 @@ package com.instructure.horizon.features.dashboard.widget
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.rememberPagerState
@@ -38,15 +36,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
-import com.instructure.horizon.features.dashboard.DashboardCard
 import com.instructure.horizon.horizonui.animation.shimmerEffect
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
-import com.instructure.horizon.horizonui.molecules.StatusChip
-import com.instructure.horizon.horizonui.molecules.StatusChipColor
-import com.instructure.horizon.horizonui.molecules.StatusChipState
 import com.instructure.horizon.horizonui.organisms.AnimatedHorizontalPager
 import com.instructure.pandautils.utils.localisedFormat
 import java.util.Date
@@ -71,13 +65,22 @@ fun DashboardPaginatedWidgetCard(
             pageSpacing = 12.dp,
             verticalAlignment = Alignment.CenterVertically,
         ) { index, modifier ->
-            DashboardCard(
+            val item = state.items[index]
+            DashboardWidgetCard(
+                title = item.headerState.label,
+                iconRes = item.headerState.iconRes,
+                useMinWidth = false,
+                widgetColor = item.headerState.color,
+                pageState = DashboardWidgetPageState(
+                    currentPageNumber = pagerState.currentPage + 1,
+                    pageCount = state.items.size
+                ),
                 modifier = modifier.padding(bottom = 16.dp),
                 onClick = if (state.isLoading) {
                     null
                 } else {
                     {
-                        state.items[index].route?.let { route ->
+                        item.route?.let { route ->
                             when (route) {
                                 is DashboardPaginatedWidgetCardButtonRoute.HomeRoute -> {
                                     homeNavController.navigate(route.route)
@@ -96,19 +99,14 @@ fun DashboardPaginatedWidgetCard(
                     modifier = Modifier
                         .fillMaxWidth()
                 ) {
-                    HorizonSpace(SpaceSize.SPACE_24)
-
                     DashboardPaginatedWidgetCardItem(
-                        item = state.items[index],
+                        item = item,
                         isLoading = state.isLoading,
                         modifier = Modifier
-                            .padding(horizontal = 24.dp)
                             .semantics(mergeDescendants = true) {
                                 role = Role.Button
                             }
                     )
-
-                    HorizonSpace(SpaceSize.SPACE_24)
                 }
             }
         }
@@ -124,38 +122,6 @@ private fun DashboardPaginatedWidgetCardItem(
     Column(
         modifier = modifier.fillMaxWidth()
     ) {
-        if (item.chipState != null || item.pageState != null) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                item.chipState?.let { chipState ->
-                    StatusChip(
-                        state = StatusChipState(
-                            label = chipState.label,
-                            color = chipState.color,
-                            fill = true
-                        ),
-                        modifier = Modifier.shimmerEffect(
-                            isLoading,
-                            backgroundColor = chipState.color.fillColor.copy(0.8f),
-                            shimmerColor = chipState.color.fillColor.copy(0.5f)
-                        )
-                    )
-                }
-
-                Spacer(Modifier.weight(1f))
-
-                item.pageState?.let {
-                    Text(
-                        it,
-                        style = HorizonTypography.p2,
-                        color = HorizonColors.Text.dataPoint(),
-                    )
-                }
-            }
-            HorizonSpace(SpaceSize.SPACE_16)
-        }
         item.source?.let { source ->
             Text(
                 text = stringResource(
@@ -187,8 +153,6 @@ private fun DashboardPaginatedWidgetCardItem(
                     .fillMaxWidth()
                     .shimmerEffect(isLoading)
             )
-
-            HorizonSpace(SpaceSize.SPACE_16)
         }
     }
 }
@@ -201,9 +165,10 @@ private fun DashboardPaginatedWidgetCardAnnouncementContentPreview() {
         state = DashboardPaginatedWidgetCardState(
             items = listOf(
                 DashboardPaginatedWidgetCardItemState(
-                    chipState = DashboardPaginatedWidgetCardChipState(
+                    headerState = DashboardPaginatedWidgetCardHeaderState(
                         label = "Announcement",
-                        color = StatusChipColor.Sky
+                        color = HorizonColors.Surface.institution().copy(alpha = 0.1f),
+                        iconRes = R.drawable.ic_announcement
                     ),
                     title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Announcement title shown here.",
                     source = "Institution or Course Name Here",
@@ -211,9 +176,10 @@ private fun DashboardPaginatedWidgetCardAnnouncementContentPreview() {
                     route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
                 ),
                 DashboardPaginatedWidgetCardItemState(
-                    chipState = DashboardPaginatedWidgetCardChipState(
+                    headerState = DashboardPaginatedWidgetCardHeaderState(
                         label = "Announcement",
-                        color = StatusChipColor.Sky
+                        color = HorizonColors.Surface.institution().copy(alpha = 0.1f),
+                        iconRes = R.drawable.ic_announcement
                     ),
                     title = "Second announcement with different content to show pagination.",
                     source = "Another Course Name",
@@ -221,9 +187,10 @@ private fun DashboardPaginatedWidgetCardAnnouncementContentPreview() {
                     route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
                 ),
                 DashboardPaginatedWidgetCardItemState(
-                    chipState = DashboardPaginatedWidgetCardChipState(
+                    headerState = DashboardPaginatedWidgetCardHeaderState(
                         label = "Announcement",
-                        color = StatusChipColor.Sky
+                        color = HorizonColors.Surface.institution().copy(alpha = 0.1f),
+                        iconRes = R.drawable.ic_announcement
                     ),
                     title = "Third global announcement without a source.",
                     date = Date(),
@@ -241,21 +208,7 @@ private fun DashboardPaginatedWidgetCardAnnouncementContentPreview() {
 private fun DashboardPaginatedWidgetCardAnnouncementLoadingPreview() {
     ContextKeeper.appContext = LocalContext.current
     DashboardPaginatedWidgetCard(
-        state = DashboardPaginatedWidgetCardState(
-            items = listOf(
-                DashboardPaginatedWidgetCardItemState(
-                    chipState = DashboardPaginatedWidgetCardChipState(
-                        label = "Announcement",
-                        color = StatusChipColor.Sky
-                    ),
-                    title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Announcement title shown here.",
-                    source = "Institution or Course Name Here",
-                    date = Date(),
-                    route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
-                ),
-            ),
-            isLoading = true
-        ),
+        state = DashboardPaginatedWidgetCardState.Loading,
         rememberNavController(),
         rememberNavController(),
     )

@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCard
+import com.instructure.horizon.features.dashboard.widget.DashboardWidgetPageState
 import com.instructure.horizon.horizonui.animation.shimmerEffect
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
@@ -44,12 +45,14 @@ import com.instructure.horizon.horizonui.foundation.HorizonTypography
 fun DashboardMyProgressCardContent(
     state: DashboardMyProgressCardState,
     isLoading: Boolean,
+    pageState: DashboardWidgetPageState,
     modifier: Modifier = Modifier,
 ) {
     DashboardWidgetCard(
         stringResource(R.string.dashboardMyProgressTitle),
         R.drawable.trending_up,
         HorizonColors.PrimitivesSky.sky12,
+        pageState = pageState,
         useMinWidth = false,
         isLoading = isLoading,
         modifier = modifier
@@ -104,7 +107,8 @@ private fun DashboardMyProgressCardContentPreview() {
         state = DashboardMyProgressCardState(
             moduleCountCompleted = 24
         ),
-        false
+        false,
+        DashboardWidgetPageState(1, 2)
     )
 }
 
@@ -115,7 +119,8 @@ private fun DashboardMyProgressCardContentZeroPreview() {
         state = DashboardMyProgressCardState(
             moduleCountCompleted = 0
         ),
-        false
+        false,
+        DashboardWidgetPageState(1, 2)
     )
 }
 
@@ -126,6 +131,7 @@ private fun DashboardMyProgressLoadingPreview() {
         state = DashboardMyProgressCardState(
             moduleCountCompleted = 0
         ),
-        isLoading = true
+        isLoading = true,
+        DashboardWidgetPageState(1, 2)
     )
 }
