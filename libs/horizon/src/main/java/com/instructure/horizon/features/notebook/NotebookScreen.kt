@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -31,8 +32,11 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -48,7 +52,6 @@ import com.instructure.horizon.R
 import com.instructure.horizon.features.notebook.common.composable.NotebookAppBar
 import com.instructure.horizon.features.notebook.common.composable.NotebookHighlightedText
 import com.instructure.horizon.features.notebook.common.composable.NotebookPill
-import com.instructure.horizon.features.notebook.common.composable.NotebookTypeSelect
 import com.instructure.horizon.features.notebook.common.model.Note
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -58,6 +61,10 @@ import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.foundation.horizonShadow
+import com.instructure.horizon.horizonui.molecules.DropdownChip
+import com.instructure.horizon.horizonui.molecules.DropdownItem
+import com.instructure.horizon.horizonui.molecules.FilterDropdownChip
+import com.instructure.horizon.horizonui.molecules.FilterDropdownItem
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
@@ -99,73 +106,67 @@ fun NotebookScreen(
             }
         },
     ) { padding ->
-        LazyColumn(
-            state = scrollState,
+        Box(
+            contentAlignment = Alignment.TopCenter,
             modifier = Modifier
-                .padding(padding),
-            contentPadding = PaddingValues(24.dp)
+                .fillMaxSize()
+                .padding(paddingValues = padding)
+                .clip(HorizonCornerRadius.level5)
+                .background(HorizonColors.Surface.pageSecondary())
         ) {
-            if (state.showFilters && state.notes.isNotEmpty()) {
-                item {
-                    FilterContent(
-                        state.selectedFilter,
-                        state.onFilterSelected
-                    )
-                }
-            }
-
-            if (state.notes.isNotEmpty()){
-                item {
-                    Column {
-                        Text(
-                            text = stringResource(R.string.notebookNotesLabel),
-                            style = HorizonTypography.labelLargeBold,
-                            color = HorizonColors.Text.title()
+            LazyColumn(
+                state = scrollState,
+                modifier = Modifier,
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 24.dp)
+            ) {
+                if (state.showFilters && state.notes.isNotEmpty()) {
+                    item {
+                        FilterContent(
+                            state.selectedFilter,
+                            state.onFilterSelected
                         )
-
-                        HorizonSpace(SpaceSize.SPACE_12)
                     }
                 }
-            }
 
-            if (state.isLoading) {
-                item {
-                    LoadingContent()
-                }
-            } else if (state.notes.isEmpty()) {
-                item {
-                    EmptyContent()
-                }
-            } else {
-                items(state.notes) { note ->
-                    Column {
-                        NoteContent(note) {
-                            onNoteSelected?.invoke(note) ?: mainNavController.navigate(
-                                MainNavigationRoute.ModuleItemSequence(
-                                    courseId = note.courseId,
-                                    moduleItemAssetType = note.objectType.value,
-                                    moduleItemAssetId = note.objectId,
+                if (state.isLoading) {
+                    item {
+                        LoadingContent()
+                    }
+                } else if (state.notes.isEmpty()) {
+                    item {
+                        EmptyContent()
+                    }
+                } else {
+                    items(state.notes) { note ->
+                        Column {
+                            NoteContent(note) {
+                                onNoteSelected?.invoke(note) ?: mainNavController.navigate(
+                                    MainNavigationRoute.ModuleItemSequence(
+                                        courseId = note.courseId,
+                                        moduleItemAssetType = note.objectType.value,
+                                        moduleItemAssetId = note.objectId,
+                                    )
                                 )
+                            }
+
+                            if (state.notes.lastOrNull() != note) {
+                                HorizonSpace(SpaceSize.SPACE_4)
+                            }
+                        }
+                    }
+
+                    item {
+                        Column {
+                            HorizonSpace(SpaceSize.SPACE_24)
+
+                            NotesPager(
+                                canNavigateBack = state.hasPreviousPage,
+                                canNavigateForward = state.hasNextPage,
+                                isLoading = state.isLoading,
+                                onNavigateBack = state.loadPreviousPage,
+                                onNavigateForward = state.loadNextPage
                             )
                         }
-
-                        if (state.notes.lastOrNull() != note) {
-                            HorizonSpace(SpaceSize.SPACE_12)
-                        }
-                    }
-                }
-
-                item {
-                    Column {
-                        HorizonSpace(SpaceSize.SPACE_24)
-
-                        NotesPager(
-                            canNavigateBack = state.hasPreviousPage,
-                            canNavigateForward = state.hasNextPage,
-                            isLoading = state.isLoading,
-                            onNavigateBack = state.loadPreviousPage,
-                            onNavigateForward = state.loadNextPage
-                        )
                     }
                 }
             }
@@ -178,34 +179,63 @@ private fun FilterContent(
     selectedFilter: NotebookType?,
     onFilterSelected: (NotebookType?) -> Unit,
 ) {
-    Column {
-        Text(
-            text = stringResource(R.string.notebookFilterLabel),
-            style = HorizonTypography.labelLargeBold,
-            color = HorizonColors.Text.title()
-        )
+    val context = LocalContext.current
 
-        HorizonSpace(SpaceSize.SPACE_12)
+    val allNotesItem = DropdownItem(
+        value = null as NotebookType?,
+        label = context.getString(R.string.notebookTypeAllNotes),
+        iconRes = R.drawable.menu,
+        iconTint = HorizonColors.Icon.default()
+    )
+    val importantColor = HorizonColors.PrimitivesSea.sea12()
+    val confusingColor = HorizonColors.PrimitivesRed.red12()
 
-        Row {
-            NotebookTypeSelect(
-                type = NotebookType.Important,
-                isSelected = selectedFilter == NotebookType.Important,
-                onSelect = { onFilterSelected(if (selectedFilter == NotebookType.Important) null else NotebookType.Important) },
-                modifier = Modifier.weight(1f)
+    val typeItems = remember {
+
+        listOf(
+            allNotesItem,
+            DropdownItem(
+                value = NotebookType.Important,
+                label = context.getString(NotebookType.Important.labelRes),
+                iconRes = NotebookType.Important.iconRes,
+                iconTint = context.getColor(NotebookType.Important.color).let { Color(it) },
+                backgroundColor = importantColor
+            ),
+            DropdownItem(
+                value = NotebookType.Confusing,
+                label = context.getString(NotebookType.Confusing.labelRes),
+                iconRes = NotebookType.Confusing.iconRes,
+                iconTint = context.getColor(NotebookType.Confusing.color).let { androidx.compose.ui.graphics.Color(it) },
+                backgroundColor = confusingColor
             )
+        )
+    }
 
-            HorizonSpace(SpaceSize.SPACE_12)
+    val selectedTypeItem = if (selectedFilter == null) allNotesItem else typeItems.find { it.value == selectedFilter }
 
-            NotebookTypeSelect(
-                type = NotebookType.Confusing,
-                isSelected = selectedFilter == NotebookType.Confusing,
-                onSelect = { onFilterSelected(if (selectedFilter == NotebookType.Confusing) null else NotebookType.Confusing) },
+    Column {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            /*FilterDropdownChip(
+                items = emptyList(),
+                selectedItem = null,
+                onItemSelected = { },
+                placeholder = stringResource(R.string.notebookFilterCoursePlaceholder),
+                modifier = Modifier.weight(1f)
+            )*/
+
+            DropdownChip(
+                items = typeItems,
+                selectedItem = selectedTypeItem,
+                onItemSelected = { item -> onFilterSelected(item?.value) },
+                placeholder = stringResource(R.string.notebookFilterTypePlaceholder),
                 modifier = Modifier.weight(1f)
             )
         }
 
-        HorizonSpace(SpaceSize.SPACE_24)
+        HorizonSpace(SpaceSize.SPACE_16)
     }
 }
 
