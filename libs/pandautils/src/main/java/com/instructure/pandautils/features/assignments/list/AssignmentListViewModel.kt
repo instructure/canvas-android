@@ -264,12 +264,12 @@ class AssignmentListViewModel @Inject constructor(
                 AssignmentFilter.All -> filteredAssignments
                 AssignmentFilter.NotYetSubmitted -> filteredAssignments.filter { assignment ->
                     val parentNotSubmitted = !assignment.isSubmitted && assignment.isOnlineSubmissionType
-                    val hasUnsubmittedCheckpoint = assignment.hasAnyCheckpointWithoutGrade()
+                    val hasUnsubmittedCheckpoint = assignment.hasAnyCheckpointNotSubmitted()
                     parentNotSubmitted || hasUnsubmittedCheckpoint
                 }
                 AssignmentFilter.ToBeGraded -> filteredAssignments.filter { assignment ->
                     val parentToBeGraded = assignment.isSubmitted && !assignment.isGraded() && assignment.isOnlineSubmissionType
-                    val hasCheckpointToBeGraded = assignment.hasAnyCheckpointWithoutGrade()
+                    val hasCheckpointToBeGraded = assignment.hasAnyCheckpointSubmitted()
                     parentToBeGraded || (hasCheckpointToBeGraded && assignment.isOnlineSubmissionType)
                 }
                 AssignmentFilter.Graded -> filteredAssignments.filter { assignment ->
@@ -280,7 +280,7 @@ class AssignmentListViewModel @Inject constructor(
                     val notYetSubmitted = !assignment.isSubmitted && assignment.isOnlineSubmissionType
                     val toBeGraded = assignment.isSubmitted && !assignment.isGraded() && assignment.isOnlineSubmissionType
                     val graded = assignment.isGraded() && assignment.isOnlineSubmissionType
-                    val hasCheckpointNotYetSubmitted = assignment.hasAnyCheckpointWithoutGrade()
+                    val hasCheckpointNotYetSubmitted = assignment.hasAnyCheckpointNotSubmitted()
                     val hasCheckpointGraded = assignment.hasAnyCheckpointWithGrade()
 
                     notYetSubmitted || toBeGraded || graded || hasCheckpointNotYetSubmitted || hasCheckpointGraded
@@ -464,16 +464,23 @@ class AssignmentListViewModel @Inject constructor(
         }
     }
 
-    private fun Assignment.hasAnyCheckpointWithoutGrade(): Boolean {
+    private fun Assignment.hasAnyCheckpointSubmitted(): Boolean {
         return if (checkpoints.isNotEmpty()) {
-            submission?.subAssignmentSubmissions?.let { submissions ->
-                checkpoints.any { checkpoint ->
-                    val checkpointSubmission = submissions.find { it.subAssignmentTag == checkpoint.tag }
-                    checkpointSubmission?.grade == null && checkpointSubmission?.customGradeStatusId == null
-                }
-            } ?: true // If no submissions exist, all checkpoints are unsubmitted
+            submission?.subAssignmentSubmissions?.any {
+                it.submittedAt != null
+            }.orDefault()
         } else {
             false
+        }
+    }
+
+    private fun Assignment.hasAnyCheckpointNotSubmitted(): Boolean {
+        if (checkpoints.isEmpty()) return false
+        val submissions = submission?.subAssignmentSubmissions
+        return if (submissions.isNullOrEmpty()) {
+            true
+        } else {
+            submissions.any { it.submittedAt == null }
         }
     }
 }
