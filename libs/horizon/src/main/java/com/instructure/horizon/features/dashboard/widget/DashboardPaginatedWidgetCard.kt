@@ -30,6 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -128,6 +129,8 @@ private fun DashboardPaginatedWidgetCardItem(
                     R.string.dashboardAnnouncementBannerFrom,
                     source
                 ),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
                 style = HorizonTypography.p2,
                 color = HorizonColors.Text.dataPoint(),
                 modifier = Modifier.shimmerEffect(isLoading)
@@ -148,6 +151,8 @@ private fun DashboardPaginatedWidgetCardItem(
             Text(
                 text = title,
                 style = HorizonTypography.p1,
+                maxLines = 3,
+                overflow = TextOverflow.Ellipsis,
                 color = HorizonColors.Text.body(),
                 modifier = Modifier
                     .fillMaxWidth()
