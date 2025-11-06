@@ -104,7 +104,7 @@ private const val LIST_SPAN_COUNT = 1
 @ScreenView(SCREEN_VIEW_DASHBOARD)
 @PageView
 @AndroidEntryPoint
-class DashboardFragment : ParentFragment() {
+class OldDashboardFragment : ParentFragment() {
 
     @Inject
     lateinit var repository: DashboardRepository
@@ -261,7 +261,7 @@ class DashboardFragment : ParentFragment() {
         with (binding) {
             toolbar.title = title()
             // Styling done in attachNavigationDrawer
-            navigation?.attachNavigationDrawer(this@DashboardFragment, toolbar)
+            navigation?.attachNavigationDrawer(this@OldDashboardFragment, toolbar)
 
             recyclerAdapter?.notifyDataSetChanged()
         }
@@ -515,12 +515,12 @@ class DashboardFragment : ParentFragment() {
         super.onDestroy()
     }
 
-    companion object {
+    companion object Companion {
         fun newInstance(route: Route) =
-                DashboardFragment().apply {
+                OldDashboardFragment().apply {
                     arguments = route.canvasContext?.makeBundle(route.arguments) ?: route.arguments
                 }
 
-        fun makeRoute(canvasContext: CanvasContext?) = Route(DashboardFragment::class.java, canvasContext)
+        fun makeRoute(canvasContext: CanvasContext?) = Route(OldDashboardFragment::class.java, canvasContext)
     }
 }

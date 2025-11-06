@@ -19,25 +19,28 @@ package com.instructure.student.navigation
 import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.RemoteConfigParam
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.calendar.CalendarFragment
 import com.instructure.pandautils.utils.CanvasFont
 import com.instructure.student.R
-import com.instructure.student.fragment.DashboardFragment
+import com.instructure.student.features.dashboard.compose.DashboardFragment
+import com.instructure.student.fragment.OldDashboardFragment
 import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.fragment.ParentFragment
 
 class DefaultNavigationBehavior(private val apiPrefs: ApiPrefs) : NavigationBehavior {
 
     override val bottomNavBarFragments: List<Class<out Fragment>> = listOf(
-        DashboardFragment::class.java,
+        OldDashboardFragment::class.java,
         CalendarFragment::class.java,
         todoFragmentClass,
         NotificationListFragment::class.java,
         getInboxBottomBarFragment(apiPrefs)
     )
 
-    override val homeFragmentClass: Class<out ParentFragment> = DashboardFragment::class.java
+    override val homeFragmentClass: Class<out ParentFragment> = OldDashboardFragment::class.java
 
     override val visibleNavigationMenuItems: Set<NavigationMenuItem> = setOf(NavigationMenuItem.FILES, NavigationMenuItem.BOOKMARKS, NavigationMenuItem.SETTINGS)
 
@@ -51,10 +54,14 @@ class DefaultNavigationBehavior(private val apiPrefs: ApiPrefs) : NavigationBeha
     override val bottomBarMenu: Int = R.menu.bottom_bar_menu
 
     override fun createHomeFragmentRoute(canvasContext: CanvasContext?): Route {
-        return DashboardFragment.makeRoute(ApiPrefs.user)
+        return OldDashboardFragment.makeRoute(ApiPrefs.user)
     }
 
     override fun createHomeFragment(route: Route): ParentFragment {
-        return DashboardFragment.newInstance(route)
+        return if (RemoteConfigUtils.getBoolean(RemoteConfigParam.DASHBOARD_REDESIGN)) {
+            DashboardFragment.newInstance(route)
+        } else {
+            OldDashboardFragment.newInstance(route)
+        }
     }
 }
