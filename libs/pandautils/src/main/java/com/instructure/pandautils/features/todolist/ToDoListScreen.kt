@@ -422,7 +422,7 @@ private fun StickyDateBadge(
             modifier = Modifier
                 .width(44.dp)
                 .padding(end = 12.dp)
-                .background(colorResource(id = R.color.backgroundLightest)),
+                .background(Color.Transparent),
             contentAlignment = Alignment.TopCenter
         ) {
             DateBadge(dateBadgeData)
@@ -444,6 +444,17 @@ private fun ToDoItem(
     var itemWidth by remember { mutableFloatStateOf(0f) }
     val density = LocalDensity.current
     val view = LocalView.current
+
+    // Track the isChecked state that SwipeBackground should display
+    // Only update when item has settled back (offsetX is 0)
+    var swipeBackgroundIsChecked by remember { mutableStateOf(item.isChecked) }
+
+    // Update swipeBackgroundIsChecked only when offset is 0 and item.isChecked has changed
+    LaunchedEffect(animatedOffsetX.value, item.isChecked) {
+        if (animatedOffsetX.value == 0f && swipeBackgroundIsChecked != item.isChecked) {
+            swipeBackgroundIsChecked = item.isChecked
+        }
+    }
 
     val swipeThreshold = with(density) { SWIPE_THRESHOLD_DP.dp.toPx() }
 
@@ -504,7 +515,7 @@ private fun ToDoItem(
             }
     ) {
         SwipeBackground(
-            isChecked = item.isChecked,
+            isChecked = swipeBackgroundIsChecked,
             offsetX = animatedOffsetX.value
         )
 
