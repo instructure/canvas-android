@@ -6,13 +6,10 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.student.features.dashboard.compose.DashboardScreenContent
 import com.instructure.student.features.dashboard.compose.DashboardUiState
-import com.instructure.student.ui.utils.StudentComposeTest
-import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
 class DashboardScreenTest {
 
