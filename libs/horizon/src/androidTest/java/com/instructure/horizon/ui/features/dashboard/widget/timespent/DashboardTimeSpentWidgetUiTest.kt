@@ -22,6 +22,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.horizon.features.dashboard.DashboardItemState
+import com.instructure.horizon.features.dashboard.widget.DashboardWidgetPageState
 import com.instructure.horizon.features.dashboard.widget.timespent.DashboardTimeSpentSection
 import com.instructure.horizon.features.dashboard.widget.timespent.DashboardTimeSpentUiState
 import com.instructure.horizon.features.dashboard.widget.timespent.card.CourseOption
@@ -43,7 +44,7 @@ class DashboardTimeSpentWidgetUiTest {
         )
 
         composeTestRule.setContent {
-            DashboardTimeSpentSection(state)
+            DashboardTimeSpentSection(state, DashboardWidgetPageState.Empty)
         }
 
         composeTestRule.waitForIdle()
@@ -61,7 +62,7 @@ class DashboardTimeSpentWidgetUiTest {
         )
 
         composeTestRule.setContent {
-            DashboardTimeSpentSection(state)
+            DashboardTimeSpentSection(state, DashboardWidgetPageState.Empty)
         }
 
         composeTestRule.onNodeWithText("Time learning").assertIsDisplayed()
@@ -90,7 +91,7 @@ class DashboardTimeSpentWidgetUiTest {
         )
 
         composeTestRule.setContent {
-            DashboardTimeSpentSection(state)
+            DashboardTimeSpentSection(state, DashboardWidgetPageState.Empty)
         }
 
         composeTestRule.onNodeWithText("Time learning").assertIsDisplayed()
@@ -116,7 +117,7 @@ class DashboardTimeSpentWidgetUiTest {
         )
 
         composeTestRule.setContent {
-            DashboardTimeSpentSection(state)
+            DashboardTimeSpentSection(state, DashboardWidgetPageState.Empty)
         }
 
         composeTestRule.onNodeWithText("Time learning").assertIsDisplayed()
@@ -143,7 +144,7 @@ class DashboardTimeSpentWidgetUiTest {
         )
 
         composeTestRule.setContent {
-            DashboardTimeSpentSection(state)
+            DashboardTimeSpentSection(state, DashboardWidgetPageState.Empty)
         }
 
         composeTestRule.onNodeWithText("Time learning").assertIsDisplayed()
@@ -172,7 +173,7 @@ class DashboardTimeSpentWidgetUiTest {
         )
 
         composeTestRule.setContent {
-            DashboardTimeSpentSection(state)
+            DashboardTimeSpentSection(state, DashboardWidgetPageState.Empty)
         }
 
         composeTestRule.onNodeWithText("Time learning").assertIsDisplayed()
@@ -195,7 +196,7 @@ class DashboardTimeSpentWidgetUiTest {
         )
 
         composeTestRule.setContent {
-            DashboardTimeSpentSection(state)
+            DashboardTimeSpentSection(state, DashboardWidgetPageState.Empty)
         }
 
         composeTestRule.onNodeWithText("Time learning").assertIsDisplayed()
@@ -219,7 +220,7 @@ class DashboardTimeSpentWidgetUiTest {
         )
 
         composeTestRule.setContent {
-            DashboardTimeSpentSection(state)
+            DashboardTimeSpentSection(state, DashboardWidgetPageState.Empty)
         }
 
         composeTestRule.onNodeWithText("Time learning").assertIsDisplayed()
@@ -240,14 +241,11 @@ class DashboardTimeSpentWidgetUiTest {
             cardState = DashboardTimeSpentCardState(
                 hours = 0,
                 minutes = 0,
-                courses = listOf(
-                    CourseOption(id = 1L, name = "Course 1")
-                )
             )
         )
 
         composeTestRule.setContent {
-            DashboardTimeSpentSection(state)
+            DashboardTimeSpentSection(state, DashboardWidgetPageState.Empty)
         }
 
         // Verify zero hours is not displayed

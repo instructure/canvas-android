@@ -135,7 +135,7 @@ fun DashboardWidgetCard(
                     HorizonSpace(SpaceSize.SPACE_8)
                     Text(
                         stringResource(
-                            R.string.dsahboardPaginatedWidgetPagerMessage,
+                            R.string.dashboardPaginatedWidgetPagerMessage,
                             pageState.currentPageNumber,
                             pageState.pageCount
                         ),

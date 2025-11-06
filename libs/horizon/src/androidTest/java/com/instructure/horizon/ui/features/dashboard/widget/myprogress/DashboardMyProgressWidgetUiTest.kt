@@ -22,6 +22,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.horizon.features.dashboard.DashboardItemState
+import com.instructure.horizon.features.dashboard.widget.DashboardWidgetPageState
 import com.instructure.horizon.features.dashboard.widget.myprogress.DashboardMyProgressSection
 import com.instructure.horizon.features.dashboard.widget.myprogress.DashboardMyProgressUiState
 import com.instructure.horizon.features.dashboard.widget.myprogress.card.DashboardMyProgressCardState
@@ -42,7 +43,7 @@ class DashboardMyProgressWidgetUiTest {
         )
 
         composeTestRule.setContent {
-            DashboardMyProgressSection(state)
+            DashboardMyProgressSection(state, DashboardWidgetPageState.Empty)
         }
 
         composeTestRule.waitForIdle()
@@ -60,7 +61,7 @@ class DashboardMyProgressWidgetUiTest {
         )
 
         composeTestRule.setContent {
-            DashboardMyProgressSection(state)
+            DashboardMyProgressSection(state, DashboardWidgetPageState.Empty)
         }
 
         composeTestRule.onNodeWithText("Activities").assertIsDisplayed()
@@ -85,7 +86,7 @@ class DashboardMyProgressWidgetUiTest {
         )
 
         composeTestRule.setContent {
-            DashboardMyProgressSection(state)
+            DashboardMyProgressSection(state, DashboardWidgetPageState.Empty)
         }
 
         composeTestRule.onNodeWithText("Activities").assertIsDisplayed()
@@ -105,7 +106,7 @@ class DashboardMyProgressWidgetUiTest {
         )
 
         composeTestRule.setContent {
-            DashboardMyProgressSection(state)
+            DashboardMyProgressSection(state, DashboardWidgetPageState.Empty)
         }
 
         composeTestRule.onNodeWithText("This widget will update once data becomes available.")
