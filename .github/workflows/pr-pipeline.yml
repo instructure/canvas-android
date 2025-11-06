@@ -41,6 +41,11 @@ jobs:
         run: |
           echo "body: ${{ github.event.pull_request.body }}"
           echo "${{ toJson(github.event.pull_request) }}"
+          echo "should_run: ${{ matrix.should_run }}"
+
+      - name: Skip job if not needed
+        if: ${{ !matrix.should_run }}
+        run: echo "Skipping ${{ matrix.app-type }} build as it's not affected by this PR"
 
       - name: Checkout repository
         if: ${{ matrix.should_run }}
