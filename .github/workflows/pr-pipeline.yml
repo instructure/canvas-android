@@ -11,237 +11,56 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
-    name: ${{ matrix.app-type-lower }}-build
-    runs-on: ubuntu-latest
+  parent-build:
     if: >-
       (
         (github.event.action == 'opened' || github.event.action == 'synchronize') ||
         (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
-      ) && (
-        contains(github.event.pull_request.body, 'Parent') ||
-        contains(github.event.pull_request.body, 'Student') ||
-        contains(github.event.pull_request.body, 'Teacher')
-      )
-    strategy:
-      fail-fast: true
-      matrix:
-        include:
-          - app-type: Parent
-            app-type-lower: parent
-            should_run: ${{ contains(github.event.pull_request.body, 'Parent') }}
-          - app-type: Student  
-            app-type-lower: student
-            should_run: ${{ contains(github.event.pull_request.body, 'Student') }}
-          - app-type: Teacher
-            app-type-lower: teacher
-            should_run: ${{ contains(github.event.pull_request.body, 'Teacher') }}
-    steps:
-      - name: Dump Pull Request Event Context
-        run: |
-          echo "body: ${{ github.event.pull_request.body }}"
-          echo "${{ toJson(github.event.pull_request) }}"
-          echo "should_run: ${{ matrix.should_run }}"
+      ) && contains(github.event.pull_request.body, 'Parent')
+    uses: ./.github/workflows/build-app.yml
+    with:
+      app-type: Parent
+      app-type-lower: parent
+      firebase-app-id-secret: FIREBASE_ANDROID_PARENT_APP_ID
+    secrets:
+      ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+      ANDROID_RELEASE_KEYSTORE_B64: ${{ secrets.ANDROID_RELEASE_KEYSTORE_B64 }}
+      FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
+      FIREBASE_APP_ID: ${{ secrets.FIREBASE_ANDROID_PARENT_APP_ID }}
 
-      - name: Skip job if not needed
-        if: ${{ !matrix.should_run }}
-        run: echo "Skipping ${{ matrix.app-type }} build as it's not affected by this PR"
+  student-build:
+    if: >-
+      (
+        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
+        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
+      ) && contains(github.event.pull_request.body, 'Student')
+    uses: ./.github/workflows/build-app.yml
+    with:
+      app-type: Student
+      app-type-lower: student
+      firebase-app-id-secret: FIREBASE_ANDROID_STUDENT_APP_ID
+    secrets:
+      ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+      ANDROID_RELEASE_KEYSTORE_B64: ${{ secrets.ANDROID_RELEASE_KEYSTORE_B64 }}
+      FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
+      FIREBASE_APP_ID: ${{ secrets.FIREBASE_ANDROID_STUDENT_APP_ID }}
 
-      - name: Checkout repository
-        if: ${{ matrix.should_run }}
-        uses: actions/checkout@v4
-        with:
-          submodules: 'recursive'
-          fetch-depth: 1
-          token: ${{ secrets.ACCESS_TOKEN }}
-
-      - name: Set up JDK 17
-        if: ${{ matrix.should_run }}
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-
-      - name: Cache Gradle packages
-        if: ${{ matrix.should_run }}
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
-      - name: Cache Gradle Build Cache
-        if: ${{ matrix.should_run }}
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches/build-cache-*
-            .gradle
-          key: ${{ runner.os }}-gradle-build-cache-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-build-cache-
-
-      - name: Decode Release Keystore
-        if: ${{ matrix.should_run }}
-        run: |
-          echo "${{ secrets.ANDROID_RELEASE_KEYSTORE_B64 }}" | base64 --decode > release.jks
-          chmod 600 release.jks
-
-      - name: Setup Service account
-        if: ${{ matrix.should_run }}
-        env:
-          FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
-        run: |
-          if [ -z "${FIREBASE_SERVICE_ACCOUNT_KEY}" ]; then
-            echo "Error: FIREBASE_SERVICE_ACCOUNT_KEY is not set"
-            exit 1
-          fi
-          echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
-          chmod 600 service-account-key.json
-
-      - name: Build Release Notes
-        if: ${{ matrix.should_run }}
-        id: get_release_notes 
-        run: |
-          echo "RELEASE_NOTES<<EOF" >> $GITHUB_OUTPUT
-          echo "${{ github.event.pull_request.title }}" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-
-      - name: Install Firebase CLI
-        if: ${{ matrix.should_run }}
-        run: npm install -g firebase-tools
-
-      - name: Setup Parent Firebase App Id
-        if: ${{ matrix.should_run && matrix.app-type == 'Parent' }}
-        run: |
-          if [ -z "${{ secrets.FIREBASE_ANDROID_PARENT_APP_ID }}" ]; then
-            echo "Error: FIREBASE_ANDROID_PARENT_APP_ID is not set"
-            exit 1
-          fi
-          echo "${{ secrets.FIREBASE_ANDROID_PARENT_APP_ID }}" > firebase_app_id.txt
-
-      - name: Setup Student Firebase App Id
-        if: ${{ matrix.should_run && matrix.app-type == 'Student' }}
-        run: |
-          if [ -z "${{ secrets.FIREBASE_ANDROID_STUDENT_APP_ID }}" ]; then
-            echo "Error: FIREBASE_ANDROID_STUDENT_APP_ID is not set"
-            exit 1
-          fi
-          echo "${{ secrets.FIREBASE_ANDROID_STUDENT_APP_ID }}" > firebase_app_id.txt
-
-      - name: Setup Teacher Firebase App Id
-        if: ${{ matrix.should_run && matrix.app-type == 'Teacher' }}
-        run: |
-          if [ -z "${{ secrets.FIREBASE_ANDROID_TEACHER_APP_ID }}" ]; then
-            echo "Error: FIREBASE_ANDROID_TEACHER_APP_ID is not set"
-            exit 1
-          fi
-          echo "${{ secrets.FIREBASE_ANDROID_TEACHER_APP_ID }}" > firebase_app_id.txt
-
-      # Building Artifacts
-      - name: Build debug and test APKs
-        if: ${{ matrix.should_run }}
-        run: |
-          ./gradle/gradlew -p apps :${{ matrix.app-type-lower }}:assembleQaDebug \
-            :${{ matrix.app-type-lower }}:assembleQaDebugAndroidTest \
-            :${{ matrix.app-type-lower }}:assembleDevDebugMinify \
-            --build-cache \
-            --parallel \
-            --max-workers=4 \
-            --no-daemon \
-            -Dorg.gradle.jvmargs="-Xmx6g -XX:+HeapDumpOnOutOfMemoryError" \
-            -Dkotlin.compiler.execution.strategy=in-process \
-            -Pandroid.injected.signing.store.file=$(pwd)/release.jks
-
-      # Uploading Artifacts to GitHub
-      - name: Upload QA debug APK
-        if: ${{ matrix.should_run }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.app-type-lower }}-qa-debug.apk
-          path: apps/${{ matrix.app-type-lower }}/build/outputs/apk/qa/debug/${{ matrix.app-type-lower }}-qa-debug.apk
-
-      - name: Upload QA test APK
-        if: ${{ matrix.should_run }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.app-type-lower }}-qa-debug-androidTest.apk
-          path: apps/${{ matrix.app-type-lower }}/build/outputs/apk/androidTest/qa/debug/${{ matrix.app-type-lower }}-qa-debug-androidTest.apk
-
-      - name: Upload Dev debug APK
-        if: ${{ matrix.should_run }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.app-type-lower }}-dev-debugMinify.apk
-          path: apps/${{ matrix.app-type-lower }}/build/outputs/apk/dev/debugMinify/${{ matrix.app-type-lower }}-dev-debugMinify.apk
-
-      # Uploading Artifacts to Firebase App Distribution
-      - name: Distribute app to Firebase App Distribution
-        if: ${{ matrix.should_run }}
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/service-account-key.json
-        run: |
-          firebase --version
-          FIREBASE_APP_ID=$(cat firebase_app_id.txt)
-
-          if ! firebase appdistribution:distribute "apps/${{ matrix.app-type-lower }}/build/outputs/apk/dev/debugMinify/${{ matrix.app-type-lower }}-dev-debugMinify.apk" \
-            --app "$FIREBASE_APP_ID" \
-            --release-notes "${{ steps.get_release_notes.outputs.RELEASE_NOTES }}" \
-            --groups "Testers" > result.txt 2>&1; then
-            echo "Firebase distribution failed:"
-            cat result.txt
-            exit 1
-          fi
-          cat result.txt
-
-      - name: Prepare Comment Body
-        if: ${{ matrix.should_run }}
-        id: prepare_comment
-        run: |
-          INSTALL_URL=$(grep -o 'https://appdistribution\.firebase[^[:space:]]*' result.txt | head -1)
-
-          if [ -z "$INSTALL_URL" ]; then
-            echo "Error: Could not extract install URL from Firebase output"
-            cat result.txt
-            exit 1
-          fi
-
-          INSTALL_URL_ESCAPED=$(printf '%s' "$INSTALL_URL" | sed 's/:/%3A/g; s/\//%2F/g; s/?/%3F/g; s/=/%3D/g; s/&/%26/g')
-          {
-            echo "body<<EOF"
-            echo "<!-- qr-code-${{ matrix.app-type }} -->"
-            echo "<p>${{ matrix.app-type }} Install Page</p><img src=\"https://api.qrserver.com/v1/create-qr-code/?data=${INSTALL_URL_ESCAPED}\" width=\"200\">"
-            echo "EOF"
-          } >> $GITHUB_OUTPUT
-
-      - name: Find Previous Comment
-        if: ${{ matrix.should_run }}
-        id: find_comment
-        uses: peter-evans/find-comment@v2
-        with:
-          issue-number: ${{ github.event.number }}
-          comment-author: 'github-actions[bot]'
-          body-includes: '<!-- qr-code-${{ matrix.app-type }} -->'
-
-      - name: Create or Update Comment
-        if: ${{ matrix.should_run }}
-        uses: peter-evans/create-or-update-comment@v4
-        with:
-          comment-id: ${{ steps.find_comment.outputs.comment-id }}
-          issue-number: ${{ github.event.number }}
-          body: ${{ steps.prepare_comment.outputs.body }}
-          edit-mode: replace
-
-      - name: Cleanup sensitive files
-        if: always() && matrix.should_run
-        run: |
-          rm -f release.jks
-          rm -f service-account-key.json
-          rm -f firebase_app_id.txt
-          rm -f result.txt
+  teacher-build:
+    if: >-
+      (
+        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
+        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
+      ) && contains(github.event.pull_request.body, 'Teacher')
+    uses: ./.github/workflows/build-app.yml
+    with:
+      app-type: Teacher
+      app-type-lower: teacher
+      firebase-app-id-secret: FIREBASE_ANDROID_TEACHER_APP_ID
+    secrets:
+      ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+      ANDROID_RELEASE_KEYSTORE_B64: ${{ secrets.ANDROID_RELEASE_KEYSTORE_B64 }}
+      FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
+      FIREBASE_APP_ID: ${{ secrets.FIREBASE_ANDROID_TEACHER_APP_ID }}
 
   submodule-build-and-test:
     name: submodule-build-and-test
@@ -437,7 +256,7 @@ jobs:
         (github.event.action == 'opened' || github.event.action == 'synchronize') ||
         (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
       ) && contains(github.event.pull_request.body, 'Parent')
-    needs: [build, parent-unit-tests]
+    needs: [parent-build, parent-unit-tests]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -508,7 +327,7 @@ jobs:
         (github.event.action == 'opened' || github.event.action == 'synchronize') ||
         (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
       ) && contains(github.event.pull_request.body, 'Parent')
-    needs: [build, parent-unit-tests]
+    needs: [parent-build, parent-unit-tests]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -579,7 +398,7 @@ jobs:
         (github.event.action == 'opened' || github.event.action == 'synchronize') ||
         (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
       ) && contains(github.event.pull_request.body, 'Student')
-    needs: [build, student-unit-tests]
+    needs: [student-build, student-unit-tests]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -650,7 +469,7 @@ jobs:
         (github.event.action == 'opened' || github.event.action == 'synchronize') ||
         (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
       ) && contains(github.event.pull_request.body, 'Student')
-    needs: [build, student-unit-tests]
+    needs: [student-build, student-unit-tests]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -721,7 +540,7 @@ jobs:
         (github.event.action == 'opened' || github.event.action == 'synchronize') ||
         (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
       ) && contains(github.event.pull_request.body, 'Teacher')
-    needs: [build, teacher-unit-tests]
+    needs: [teacher-build, teacher-unit-tests]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -792,7 +611,7 @@ jobs:
         (github.event.action == 'opened' || github.event.action == 'synchronize') ||
         (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
       ) && contains(github.event.pull_request.body, 'Teacher')
-    needs: [build, teacher-unit-tests]
+    needs: [teacher-build, teacher-unit-tests]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -863,7 +682,7 @@ jobs:
         (github.event.action == 'opened' || github.event.action == 'synchronize') ||
         (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
       ) && contains(github.event.pull_request.body, 'Parent') && contains(github.event.pull_request.body, 'Run E2E test suite')
-    needs: [build, parent-unit-tests]
+    needs: [parent-build, parent-unit-tests]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -934,7 +753,7 @@ jobs:
         (github.event.action == 'opened' || github.event.action == 'synchronize') ||
         (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
       ) && contains(github.event.pull_request.body, 'Student') && contains(github.event.pull_request.body, 'Run E2E test suite')
-    needs: [build, student-unit-tests]
+    needs: [student-build, student-unit-tests]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -1005,7 +824,7 @@ jobs:
         (github.event.action == 'opened' || github.event.action == 'synchronize') ||
         (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
       ) && contains(github.event.pull_request.body, 'Teacher') && contains(github.event.pull_request.body, 'Run E2E test suite')
-    needs: [build, teacher-unit-tests]
+    needs: [teacher-build, teacher-unit-tests]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
