@@ -73,7 +73,7 @@ jobs:
           FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
         run: |
           if [ -z "${FIREBASE_SERVICE_ACCOUNT_KEY}" ]; then
-            echo "Error: FIREBASE_SERVICE_ACCOUNT_KEY is not set"
+            echo "Error: Firebase service account key is not configured"
             exit 1
           fi
           echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
@@ -92,7 +92,7 @@ jobs:
       - name: Setup Firebase App Id
         run: |
           if [ -z "${{ secrets.FIREBASE_APP_ID }}" ]; then
-            echo "Error: ${{ inputs.firebase-app-id-secret }} is not set"
+            echo "Error: Firebase App ID is not configured"
             exit 1
           fi
           echo "${{ secrets.FIREBASE_APP_ID }}" > firebase_app_id.txt
@@ -133,7 +133,7 @@ jobs:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/service-account-key.json
         run: |
           firebase --version
-          FIREBASE_APP_ID=$(cat firebase_app_id.txt)
+          FIREBASE_APP_ID="$(cat firebase_app_id.txt)"
 
           if ! firebase appdistribution:distribute "apps/${{ inputs.app-type-lower }}/build/outputs/apk/dev/debugMinify/${{ inputs.app-type-lower }}-dev-debugMinify.apk" \
             --app "$FIREBASE_APP_ID" \
