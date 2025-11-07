@@ -352,6 +352,7 @@ class ToDoListViewModel @Inject constructor(
             }
 
         val toDoCount = calculateToDoCount(itemsByDate)
+        val isFilterApplied = isFilterApplied(todoFilters)
 
         _uiState.update {
             it.copy(
@@ -359,8 +360,14 @@ class ToDoListViewModel @Inject constructor(
                 isRefreshing = false,
                 isError = false,
                 itemsByDate = itemsByDate,
-                toDoCount = toDoCount
+                toDoCount = toDoCount,
+                isFilterApplied = isFilterApplied
             )
         }
+    }
+
+    private fun isFilterApplied(filters: ToDoFilterEntity): Boolean {
+        return filters.personalTodos || filters.calendarEvents || filters.showCompleted || filters.favoriteCourses
+                || filters.pastDateRange != DateRangeSelection.ONE_WEEK.toString() || filters.futureDateRange != DateRangeSelection.ONE_WEEK.toString()
     }
 }
