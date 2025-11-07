@@ -85,7 +85,7 @@ import com.instructure.horizon.horizonui.organisms.AnimatedHorizontalPager
 import com.instructure.horizon.horizonui.organisms.CollapsableHeaderScreen
 import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.horizon.util.horizontalSafeDrawing
-import com.instructure.horizon.util.verticalSafeDrawing
+import com.instructure.horizon.util.topSafeDrawing
 import com.instructure.horizon.util.zeroScreenInsets
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -159,7 +159,7 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                 headerContent = {
                     Column(
                         modifier = Modifier
-                            .windowInsetsPadding(WindowInsets.verticalSafeDrawing)
+                            .windowInsetsPadding(WindowInsets.topSafeDrawing)
                     ) {
                         HomeScreenTopBar(
                             uiState,

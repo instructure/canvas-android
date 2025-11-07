@@ -22,10 +22,10 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.runtime.Composable
 
-val WindowInsetsSides.Companion.BottomHorizontalSides: WindowInsetsSides
+private val WindowInsetsSides.Companion.BottomHorizontalSides: WindowInsetsSides
     get() = WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom
 
-val WindowInsetsSides.Companion.TopHorizontalSides: WindowInsetsSides
+private val WindowInsetsSides.Companion.TopHorizontalSides: WindowInsetsSides
     get() = WindowInsetsSides.Horizontal + WindowInsetsSides.Top
 
 val WindowInsets.Companion.zeroScreenInsets: WindowInsets
@@ -46,6 +46,14 @@ val WindowInsets.Companion.horizontalSafeDrawing: WindowInsets
 val WindowInsets.Companion.verticalSafeDrawing: WindowInsets
     @Composable
     get() = WindowInsets.safeDrawing.only(WindowInsetsSides.Vertical)
+
+val WindowInsets.Companion.topSafeDrawing: WindowInsets
+    @Composable
+    get() = WindowInsets.safeDrawing.only(WindowInsetsSides.Top)
+
+val WindowInsets.Companion.bottomSafeDrawing: WindowInsets
+    @Composable
+    get() = WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom)
 
 val WindowInsets.Companion.fullScreenInsets: WindowInsets
     @Composable
