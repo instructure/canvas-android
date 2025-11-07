@@ -252,6 +252,12 @@ fun CalendarEventItem(
                 color = Color(ThemePrefs.brandColor),
                 modifier = Modifier.padding(vertical = 1.dp).testTag("eventStatus")
             )
+            if (eventUiState.hasConflict) Text(
+                text = "⚠️ ${stringResource(id = R.string.conflictedEvent)}",
+                fontSize = 14.sp,
+                color = colorResource(id = R.color.textDanger),
+                modifier = Modifier.padding(vertical = 1.dp).testTag("conflictWarning")
+            )
         }
         if (eventUiState.canCancel && onCancelReservation != null && eventUiState.reservationId != null) {
             IconButton(

@@ -101,7 +101,8 @@ data class EventUiState(
     val isReservation: Boolean = false,
     val reservationId: Long? = null,
     val appointmentGroupId: Long? = null,
-    val canCancel: Boolean = false
+    val canCancel: Boolean = false,
+    val hasConflict: Boolean = false
 )
 
 sealed class CalendarAction {

@@ -54,7 +54,8 @@ object AppointmentGroupsCalendarMapper {
             isReservation = true,
             reservationId = slot.myReservationId,
             appointmentGroupId = appointmentGroup.id,
-            canCancel = slot.isReservedByMe
+            canCancel = slot.isReservedByMe,
+            hasConflict = slot.conflictInfo?.hasConflict ?: false
         )
     }
 

@@ -2223,4 +2223,5 @@
     <!-- Appointment Groups Calendar -->
     <string name="calendarEventReserved">Reserved</string>
     <string name="a11y_reserveSlot">Reserve slot</string>
+    <string name="conflictedEvent">Conflicted Event</string>
 </resources>

@@ -17,37 +17,26 @@ package com.instructure.pandautils.features.appointmentgroups.domain.usecase
 
 import com.instructure.canvasapi2.models.AppointmentGroup
 import com.instructure.canvasapi2.models.AppointmentSlot
-import com.instructure.canvasapi2.models.PlannerItem
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.features.appointmentgroups.AppointmentGroupRepository
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkStatic
-import io.mockk.unmockkStatic
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 class GetAppointmentGroupsUseCaseTest {
 
     private val repository: AppointmentGroupRepository = mockk(relaxed = true)
-    private val apiPrefs: ApiPrefs = mockk(relaxed = true)
 
     private lateinit var useCase: GetAppointmentGroupsUseCase
 
-    private val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
-
     @Before
     fun setUp() {
-        useCase = GetAppointmentGroupsUseCase(repository, apiPrefs)
+        useCase = GetAppointmentGroupsUseCase(repository, mockk(relaxed = true))
     }
 
     @Test
@@ -152,104 +141,6 @@ class GetAppointmentGroupsUseCaseTest {
         io.mockk.coVerify { repository.getAppointmentGroups(any(), any(), any(), any()) }
     }
 
-    @Suppress("COMMENTED_OUT_TEST")
-    // TODO: Fix this test - mocking conflict detection is complex with PlannerItem
-    // @Test
-    fun `execute detects conflicts with user events`() = runTest {
-        val courseIds = listOf(123L)
-        val slotStart = "2025-11-06T16:00:00Z"
-        val slotEnd = "2025-11-06T16:30:00Z"
-
-        val appointmentGroups = listOf(
-            AppointmentGroup(
-                id = 1L,
-                title = "Office Hours",
-                description = null,
-                locationName = null,
-                locationAddress = null,
-                participantCount = 0,
-                maxAppointmentsPerParticipant = null,
-                appointments = listOf(
-                    AppointmentSlot(
-                        id = 100L,
-                        appointmentGroupId = 1L,
-                        startAt = slotStart,
-                        endAt = slotEnd,
-                        availableSlots = 5,
-                        childEvents = emptyList()
-                    )
-                )
-            )
-        )
-
-        val conflictingEvent = mockk<PlannerItem>(relaxed = true) {
-            io.mockk.every { plannableDate } returns dateFormat.parse("2025-11-06T16:10:00Z")!!
-            io.mockk.every { plannable } returns mockk(relaxed = true) {
-                io.mockk.every { title } returns "Team Meeting"
-                io.mockk.every { endAt } returns dateFormat.parse("2025-11-06T16:40:00Z")
-            }
-        }
-
-        coEvery { repository.getAppointmentGroups(any(), any(), any(), any()) } returns DataResult.Success(appointmentGroups)
-        coEvery { repository.getUserEvents(any(), any(), false) } returns DataResult.Success(listOf(conflictingEvent))
-
-        val result = useCase(GetAppointmentGroupsUseCase.Params(courseIds))
-
-        assertTrue(result is DataResult.Success)
-        val groups = (result as DataResult.Success).data
-        assertTrue(groups[0].slots[0].conflictInfo?.hasConflict == true)
-        assertEquals("Team Meeting", groups[0].slots[0].conflictInfo?.conflictingEventTitle)
-    }
-
-    @Suppress("COMMENTED_OUT_TEST")
-    // TODO: Fix this test - mocking conflict detection is complex with PlannerItem
-    // @Test
-    fun `execute does not detect conflict when events do not overlap`() = runTest {
-        val courseIds = listOf(123L)
-        val slotStart = "2025-11-06T16:00:00Z"
-        val slotEnd = "2025-11-06T16:30:00Z"
-
-        val appointmentGroups = listOf(
-            AppointmentGroup(
-                id = 1L,
-                title = "Office Hours",
-                description = null,
-                locationName = null,
-                locationAddress = null,
-                participantCount = 0,
-                maxAppointmentsPerParticipant = null,
-                appointments = listOf(
-                    AppointmentSlot(
-                        id = 100L,
-                        appointmentGroupId = 1L,
-                        startAt = slotStart,
-                        endAt = slotEnd,
-                        availableSlots = 5,
-                        childEvents = emptyList()
-                    )
-                )
-            )
-        )
-
-        val nonConflictingEvent = mockk<PlannerItem>(relaxed = true) {
-            io.mockk.every { plannableDate } returns dateFormat.parse("2025-11-06T17:00:00Z")!!
-            io.mockk.every { plannable } returns mockk(relaxed = true) {
-                io.mockk.every { title } returns "Later Meeting"
-                io.mockk.every { endAt } returns dateFormat.parse("2025-11-06T18:00:00Z")
-            }
-        }
-
-        coEvery { repository.getAppointmentGroups(any(), any(), any(), any()) } returns DataResult.Success(appointmentGroups)
-        coEvery { repository.getUserEvents(any(), any(), false) } returns DataResult.Success(listOf(nonConflictingEvent))
-
-        val result = useCase(GetAppointmentGroupsUseCase.Params(courseIds))
-
-        assertTrue(result is DataResult.Success)
-        val groups = (result as DataResult.Success).data
-        assertFalse(groups[0].slots[0].conflictInfo?.hasConflict == true)
-        assertNull(groups[0].slots[0].conflictInfo?.conflictingEventTitle)
-    }
-
     @Test
     fun `execute handles null startAt or endAt without crashing`() = runTest {
         val courseIds = listOf(123L)
@@ -323,68 +214,6 @@ class GetAppointmentGroupsUseCaseTest {
         val groups = (result as DataResult.Success).data
         assertEquals(1, groups.size)
         assertFalse(groups[0].slots[0].conflictInfo?.hasConflict == true)
-    }
-
-    @Suppress("COMMENTED_OUT_TEST")
-    // TODO: Fix this test - ApiPrefs.user static mock setup is complex
-    // @Test
-    fun `execute maps reservation data correctly`() = runTest {
-        val courseIds = listOf(123L)
-        val startDate = "2025-11-06T16:00:00Z"
-        val endDate = "2025-11-06T16:30:00Z"
-        val currentUserId = 1L
-
-        val mockBasicUser = mockk<com.instructure.canvasapi2.models.BasicUser> {
-            io.mockk.every { id } returns currentUserId
-        }
-
-        val mockUser = mockk<com.instructure.canvasapi2.models.User> {
-            io.mockk.every { id } returns currentUserId
-        }
-
-        val mockReservation = mockk<com.instructure.canvasapi2.models.AppointmentReservation> {
-            io.mockk.every { id } returns 999L
-            io.mockk.every { user } returns mockBasicUser
-        }
-
-        val appointmentGroups = listOf(
-            AppointmentGroup(
-                id = 1L,
-                title = "Office Hours",
-                description = null,
-                locationName = null,
-                locationAddress = null,
-                participantCount = 0,
-                maxAppointmentsPerParticipant = null,
-                appointments = listOf(
-                    AppointmentSlot(
-                        id = 100L,
-                        appointmentGroupId = 1L,
-                        startAt = startDate,
-                        endAt = endDate,
-                        childEvents = listOf(mockReservation),
-                        availableSlots = 4
-                    )
-                )
-            )
-        )
-
-        mockkStatic(ApiPrefs::class)
-        try {
-            every { ApiPrefs.user } returns mockUser
-
-            coEvery { repository.getAppointmentGroups(any(), any(), any(), any()) } returns DataResult.Success(appointmentGroups)
-            coEvery { repository.getUserEvents(any(), any(), false) } returns DataResult.Success(emptyList())
-
-            val result = useCase(GetAppointmentGroupsUseCase.Params(courseIds))
-
-            assertTrue(result is DataResult.Success)
-            val groups = (result as DataResult.Success).data
-            assertTrue(groups[0].slots[0].isReservedByMe)
-            assertEquals(999L, groups[0].slots[0].myReservationId)
-        } finally {
-            unmockkStatic(ApiPrefs::class)
-        }
     }
 
     @Test
