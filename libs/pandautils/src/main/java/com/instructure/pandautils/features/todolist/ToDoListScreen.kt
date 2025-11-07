@@ -276,6 +276,7 @@ private fun ToDoListContent(
             ToDoItemsList(
                 itemsByDate = uiState.itemsByDate,
                 onItemClicked = onOpenToDoItem,
+                removingItemIds = uiState.removingItemIds,
                 modifier = modifier
             )
         }
@@ -286,9 +287,15 @@ private fun ToDoListContent(
 private fun ToDoItemsList(
     itemsByDate: Map<Date, List<ToDoItemUiState>>,
     onItemClicked: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    removingItemIds: Set<String> = emptySet()
 ) {
-    val dateGroups = itemsByDate.entries.toList()
+    // Filter out items that are being removed
+    val filteredItemsByDate = itemsByDate.mapValues { (_, items) ->
+        items.filter { it.id !in removingItemIds }
+    }.filterValues { it.isNotEmpty() }
+
+    val dateGroups = filteredItemsByDate.entries.toList()
     val listState = rememberLazyListState()
     val itemPositions = remember { mutableStateMapOf<String, Float>() }
     val itemSizes = remember { mutableStateMapOf<String, Int>() }
@@ -339,10 +346,12 @@ private fun ToDoItemsList(
                             hideDate = index == 0 && stickyHeaderState.isVisible && stickyHeaderState.item?.id == item.id,
                             onCheckedChange = { item.onCheckboxToggle(!item.isChecked) },
                             onClick = { onItemClicked(item.id) },
-                            modifier = Modifier.onGloballyPositioned { coordinates ->
-                                itemPositions[item.id] = coordinates.positionInParent().y
-                                itemSizes[item.id] = coordinates.size.height
-                            }
+                            modifier = Modifier
+                                .animateItem()
+                                .onGloballyPositioned { coordinates ->
+                                    itemPositions[item.id] = coordinates.positionInParent().y
+                                    itemSizes[item.id] = coordinates.size.height
+                                }
                         )
                     }
                 }
@@ -456,8 +465,12 @@ private fun ToDoItem(
                 // Gesture end haptic feedback
                 view.performGestureHapticFeedback(isStart = false)
                 delay(300)
-                animateToCenter()
+
+                // Trigger the action
                 item.onSwipeToDone()
+
+                // Animate back to center - if item gets removed, it will disappear during/after animation
+                animateToCenter()
             } else {
                 animateToCenter()
             }

@@ -40,6 +40,8 @@ import com.instructure.pandautils.utils.isComplete
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -97,6 +99,10 @@ class ToDoListViewModel @Inject constructor(
 
     private val plannerItemsMap = mutableMapOf<String, PlannerItem>()
     private var courseMap = mapOf<Long, Course>()
+
+    // Track items removed via checkbox for debounced clearing
+    private val checkboxRemovedItems = mutableSetOf<String>()
+    private var checkboxDebounceJob: Job? = null
 
     init {
         loadData()
@@ -189,6 +195,21 @@ class ToDoListViewModel @Inject constructor(
             val currentIsChecked = plannerItem.isComplete()
             val newIsChecked = !currentIsChecked
 
+            // Check if we should show completed items
+            val todoFilters = toDoFilterDao.findByUser(
+                apiPrefs.fullDomain,
+                apiPrefs.user?.id.orDefault()
+            ) ?: ToDoFilterEntity(userDomain = apiPrefs.fullDomain, userId = apiPrefs.user?.id.orDefault())
+
+            val shouldRemoveFromList = newIsChecked && !todoFilters.showCompleted
+
+            // Immediately add to removing set for animation if item should be hidden
+            if (shouldRemoveFromList) {
+                _uiState.update {
+                    it.copy(removingItemIds = it.removingItemIds + itemId)
+                }
+            }
+
             val success = updateItemCompleteState(itemId, newIsChecked)
 
             // Show marked-as-done snackbar only when marking as done (not when undoing)
@@ -202,6 +223,13 @@ class ToDoListViewModel @Inject constructor(
                         )
                     )
                 }
+            } else {
+                // Remove from removing set if update failed
+                if (shouldRemoveFromList) {
+                    _uiState.update {
+                        it.copy(removingItemIds = it.removingItemIds - itemId)
+                    }
+                }
             }
         }
     }
@@ -211,8 +239,19 @@ class ToDoListViewModel @Inject constructor(
             val markedAsDoneItem = _uiState.value.confirmationSnackbarData ?: return@launch
             val itemId = markedAsDoneItem.itemId
 
-            // Clear the snackbar immediately
-            _uiState.update { it.copy(confirmationSnackbarData = null) }
+            // If this item was in checkbox-removed items, remove it and reset timer
+            if (itemId in checkboxRemovedItems) {
+                checkboxRemovedItems.remove(itemId)
+                startCheckboxDebounceTimer()
+            }
+
+            // Clear the snackbar immediately and restore item to list
+            _uiState.update {
+                it.copy(
+                    confirmationSnackbarData = null,
+                    removingItemIds = it.removingItemIds - itemId
+                )
+            }
 
             updateItemCompleteState(itemId, !markedAsDoneItem.markedAsDone)
         }
@@ -229,6 +268,30 @@ class ToDoListViewModel @Inject constructor(
 
             val plannerItem = plannerItemsMap[itemId] ?: return@launch
 
+            // Check if we should show completed items
+            val todoFilters = toDoFilterDao.findByUser(
+                apiPrefs.fullDomain,
+                apiPrefs.user?.id.orDefault()
+            ) ?: ToDoFilterEntity(userDomain = apiPrefs.fullDomain, userId = apiPrefs.user?.id.orDefault())
+
+            val shouldRemoveFromList = isChecked && !todoFilters.showCompleted
+
+            // Handle checkbox removal animation
+            if (shouldRemoveFromList) {
+                // Add to pending removal set (will be removed after debounce)
+                checkboxRemovedItems.add(itemId)
+            } else if (!isChecked && itemId in checkboxRemovedItems) {
+                // Unchecking - remove from pending removal
+                checkboxRemovedItems.remove(itemId)
+                // If item was already in removingItemIds, restore it
+                _uiState.update {
+                    it.copy(removingItemIds = it.removingItemIds - itemId)
+                }
+            }
+
+            // Reset debounce timer
+            startCheckboxDebounceTimer()
+
             val success = updateItemCompleteState(itemId, isChecked)
 
             // Show marked-as-done snackbar only when checking the box
@@ -242,7 +305,35 @@ class ToDoListViewModel @Inject constructor(
                         )
                     )
                 }
+            } else {
+                // Remove from pending removal if update failed
+                if (shouldRemoveFromList) {
+                    checkboxRemovedItems.remove(itemId)
+                }
             }
+        }
+    }
+
+    private fun startCheckboxDebounceTimer() {
+        // Cancel existing timer
+        checkboxDebounceJob?.cancel()
+
+        // Only start timer if there are items pending removal
+        if (checkboxRemovedItems.isEmpty()) {
+            return
+        }
+
+        // Start new 3-second timer
+        checkboxDebounceJob = viewModelScope.launch {
+            delay(1500)
+
+            // Add checkbox-removed items to removingItemIds for animation
+            _uiState.update { state ->
+                state.copy(
+                    removingItemIds = state.removingItemIds + checkboxRemovedItems
+                )
+            }
+            checkboxRemovedItems.clear()
         }
     }
 
@@ -318,7 +409,9 @@ class ToDoListViewModel @Inject constructor(
     }
 
     private fun clearMarkedAsDoneItem() {
-        _uiState.update { it.copy(confirmationSnackbarData = null) }
+        _uiState.update {
+            it.copy(confirmationSnackbarData = null)
+        }
     }
 
     private fun processAndUpdateItems(
@@ -326,6 +419,10 @@ class ToDoListViewModel @Inject constructor(
         filteredCourses: List<Course>,
         todoFilters: ToDoFilterEntity
     ) {
+        // Cancel checkbox debounce and clear tracked items when data reloads
+        checkboxDebounceJob?.cancel()
+        checkboxRemovedItems.clear()
+
         val filteredItems = plannerItems
             .filterByToDoFilters(todoFilters, filteredCourses)
             .sortedBy { it.comparisonDate }
@@ -348,7 +445,9 @@ class ToDoListViewModel @Inject constructor(
                 isError = false,
                 itemsByDate = itemsByDate,
                 toDoCount = toDoCount,
-                isFilterApplied = isFilterApplied
+                isFilterApplied = isFilterApplied,
+                removingItemIds = emptySet(), // Clear removing items when data is reprocessed
+                confirmationSnackbarData = null
             )
         }
     }

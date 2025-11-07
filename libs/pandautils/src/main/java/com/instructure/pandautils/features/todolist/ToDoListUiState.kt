@@ -33,7 +33,8 @@ data class ToDoListUiState(
     val toDoCount: Int? = null,
     val onToDoCountChanged: () -> Unit = {},
     val onFiltersChanged: (Boolean) -> Unit = {},
-    val isFilterApplied: Boolean = false
+    val isFilterApplied: Boolean = false,
+    val removingItemIds: Set<String> = emptySet()
 )
 
 data class ConfirmationSnackbarData(
