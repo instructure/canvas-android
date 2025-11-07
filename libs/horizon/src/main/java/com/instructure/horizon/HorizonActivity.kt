@@ -44,11 +44,10 @@ import com.instructure.pandautils.receivers.PushExternalReceiver
 import com.instructure.pandautils.utils.AppTheme
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.EdgeToEdgeHelper
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.Utils
-import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.WebViewAuthenticator
-import com.instructure.pandautils.utils.getActivityOrNull
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -62,6 +61,8 @@ class HorizonActivity : BaseCanvasActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        EdgeToEdgeHelper.enableEdgeToEdge(this, lightStatusBar = true, lightNavigationBar = true)
+
         val manager = getSystemService(ShortcutManager::class.java)
         manager?.removeAllDynamicShortcuts()
         if (ThemePrefs.appTheme != AppTheme.LIGHT.ordinal) {
@@ -71,8 +72,6 @@ class HorizonActivity : BaseCanvasActivity() {
         setContent {
             navController = rememberNavController()
 
-            val activity = LocalContext.current.getActivityOrNull()
-            if (activity != null) ViewStyler.setStatusBarColor(activity, ContextCompat.getColor(activity, R.color.surface_pagePrimary))
             HorizonTheme {
                 HorizonNavigation(navController)
             }

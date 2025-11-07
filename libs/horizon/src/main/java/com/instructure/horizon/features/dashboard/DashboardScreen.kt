@@ -26,9 +26,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -155,12 +158,14 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                 modifier = Modifier.padding(paddingValues),
                 headerContent = {
                     Column(
-                        modifier = Modifier.conditional(scrollState.canScrollBackward) {
-                            shadow(
-                                elevation = HorizonElevation.level3,
-                                spotColor = Color.Transparent,
-                            )
-                        }
+                        modifier = Modifier
+                            .windowInsetsPadding(WindowInsets.statusBars)
+                            .conditional(scrollState.canScrollBackward) {
+                                shadow(
+                                    elevation = HorizonElevation.level3,
+                                    spotColor = Color.Transparent,
+                                )
+                            }
                     ) {
                         HomeScreenTopBar(
                             uiState,
@@ -245,7 +250,8 @@ private fun HomeScreenTopBar(uiState: DashboardUiState, mainNavController: NavCo
 ) {
     Row(
         verticalAlignment = Alignment.Bottom,
-        modifier = modifier.padding(horizontal = 24.dp)
+        modifier = modifier
+            .padding(horizontal = 24.dp)
     ) {
         GlideImage(
             model = uiState.logoUrl,

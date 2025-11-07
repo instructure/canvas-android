@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -51,7 +52,6 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.utils.ContextKeeper
@@ -90,8 +90,6 @@ import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextAreaState
 import com.instructure.horizon.horizonui.organisms.inputs.textfield.TextField
 import com.instructure.horizon.horizonui.organisms.inputs.textfield.TextFieldInputSize
 import com.instructure.horizon.horizonui.organisms.inputs.textfield.TextFieldState
-import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.getActivityOrNull
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -109,14 +107,9 @@ fun HorizonInboxComposeScreen(
             }
         }
     }
-    val activity = LocalContext.current.getActivityOrNull()
-    LaunchedEffect(Unit) {
-        if (activity != null) {
-            ViewStyler.setStatusBarColor(activity, ContextCompat.getColor(activity, R.color.surface_pageSecondary))
-        }
-    }
 
     Scaffold(
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         containerColor = HorizonColors.Surface.pageSecondary(),
         topBar = {

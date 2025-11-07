@@ -29,10 +29,14 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
@@ -126,21 +130,18 @@ import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.pandautils.compose.modifiers.conditional
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.orDefault
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 
 @Composable
 fun ModuleItemSequenceScreen(mainNavController: NavHostController, uiState: ModuleItemSequenceUiState) {
-    val activity = LocalContext.current.getActivityOrNull()
-    if (activity != null) ViewStyler.setStatusBarColor(activity, ThemePrefs.brandColor, true)
     if (uiState.progressScreenState.visible) ProgressScreen(uiState.progressScreenState, uiState.loadingState)
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         containerColor = HorizonColors.Surface.institution(),
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         bottomBar = {
@@ -271,6 +272,7 @@ private fun ModuleItemSequenceContent(
             ModuleHeaderContainer(
                 uiState = uiState,
                 modifier = Modifier
+                    .windowInsetsPadding(WindowInsets.statusBars)
                     .padding(start = 24.dp, end = 24.dp, top = 16.dp, bottom = 24.dp)
                     .wrapContentHeight(),
                 onBackPressed = onBackPressed
@@ -546,7 +548,11 @@ private fun ModuleItemSequenceBottomBar(
     onNotebookClick: () -> Unit = {},
     hasUnreadComments: Boolean = false
 ) {
-    Surface(shadowElevation = HorizonElevation.level4, color = HorizonColors.Surface.pagePrimary()) {
+    Surface(
+        shadowElevation = HorizonElevation.level4,
+        color = HorizonColors.Surface.pagePrimary(),
+        modifier = Modifier.windowInsetsPadding(WindowInsets.navigationBars)
+    ) {
         Box(
             modifier = modifier
                 .fillMaxWidth()

@@ -20,9 +20,12 @@ package com.instructure.horizon.features.home
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.Scaffold
@@ -36,7 +39,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
@@ -54,7 +56,6 @@ import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.organisms.navelements.SelectableNavigationItem
 import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.getActivityOrNull
 
 data class BottomNavItem(
@@ -84,26 +85,30 @@ fun HomeScreen(parentNavController: NavHostController, viewModel: HomeViewModel)
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     val activity = LocalContext.current.getActivityOrNull()
-    if (activity != null) ViewStyler.setStatusBarColor(activity, ContextCompat.getColor(activity, R.color.surface_pagePrimary))
 
     LaunchedEffect(key1 = uiState.theme) {
         val theme = uiState.theme
         if (theme != null && activity != null && !ThemePrefs.isThemeApplied) ThemePrefs.applyCanvasTheme(theme, activity)
     }
-    Scaffold(content = { padding ->
-        if (uiState.initialDataLoading) {
-            val spinnerColor =
-                if (ThemePrefs.isThemeApplied) HorizonColors.Surface.institution() else HorizonColors.Surface.inverseSecondary()
-            Spinner(modifier = Modifier.fillMaxSize(), color = spinnerColor)
-        } else {
-            if (uiState.showAiAssist) {
-                AiAssistantScreen({ uiState.updateShowAiAssist(false) })
+    Scaffold(
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
+        content = { padding ->
+            if (uiState.initialDataLoading) {
+                val spinnerColor =
+                    if (ThemePrefs.isThemeApplied) HorizonColors.Surface.institution() else HorizonColors.Surface.inverseSecondary()
+                Spinner(modifier = Modifier.fillMaxSize(), color = spinnerColor)
+            } else {
+                if (uiState.showAiAssist) {
+                    AiAssistantScreen({ uiState.updateShowAiAssist(false) })
+                }
+                HomeNavigation(navController, parentNavController, Modifier.padding(padding))
             }
-            HomeNavigation(navController, parentNavController, Modifier.padding(padding))
+        },
+        containerColor = HorizonColors.Surface.pagePrimary(),
+        bottomBar = {
+            BottomNavigationBar(navController, currentDestination, !uiState.initialDataLoading, { uiState.updateShowAiAssist(it) })
         }
-    }, containerColor = HorizonColors.Surface.pagePrimary(), bottomBar = {
-        BottomNavigationBar(navController, currentDestination, !uiState.initialDataLoading, { uiState.updateShowAiAssist(it) })
-    })
+    )
 }
 
 @Composable
@@ -115,7 +120,10 @@ private fun BottomNavigationBar(
     modifier: Modifier = Modifier
 ) {
     Surface(shadowElevation = HorizonElevation.level5) {
-        NavigationBar(containerColor = HorizonColors.Surface.pageSecondary(), modifier = modifier) {
+        NavigationBar(
+            containerColor = HorizonColors.Surface.pageSecondary(),
+            modifier = modifier.windowInsetsPadding(WindowInsets.navigationBars)
+        ) {
             bottomNavItems.forEach { item ->
                 val selected = currentDestination?.hierarchy?.any { it.route == item.route } == true
                 if (item.route == null) {

@@ -21,10 +21,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.add
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -82,7 +86,7 @@ fun AccountScreen(
 @Composable
 private fun AccountContentScreen(state: AccountUiState, navController: NavController, onLogout: () -> Unit, switchExperience: () -> Unit) {
     LazyColumn(
-        contentPadding = PaddingValues(24.dp)
+        contentPadding = WindowInsets.statusBars.add(WindowInsets(24.dp, 24.dp, 24.dp, 24.dp)).asPaddingValues()
     ) {
         item {
             Column {
