@@ -59,7 +59,7 @@ import javax.inject.Inject
 @ScreenView(SCREEN_VIEW_TO_DO_LIST)
 @PageView
 @AndroidEntryPoint
-class ToDoListFragment : ParentFragment() {
+class OldToDoListFragment : ParentFragment() {
 
     private val binding by viewBinding(FragmentListTodoBinding::bind)
     private lateinit var recyclerViewBinding: PandaRecyclerRefreshLayoutBinding
@@ -250,13 +250,13 @@ class ToDoListFragment : ParentFragment() {
     }
 
     companion object {
-        fun makeRoute(canvasContext: CanvasContext): Route = Route(ToDoListFragment::class.java, canvasContext, Bundle())
+        fun makeRoute(canvasContext: CanvasContext): Route = Route(OldToDoListFragment::class.java, canvasContext, Bundle())
 
         private fun validateRoute(route: Route) = route.canvasContext != null
 
-        fun newInstance(route: Route): ToDoListFragment? {
+        fun newInstance(route: Route): OldToDoListFragment? {
             if (!validateRoute(route)) return null
-            return ToDoListFragment().withArgs(route.canvasContext!!.makeBundle())
+            return OldToDoListFragment().withArgs(route.canvasContext!!.makeBundle())
         }
 
     }

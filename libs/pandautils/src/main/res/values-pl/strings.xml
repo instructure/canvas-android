@@ -517,4 +517,5 @@
         <item quantity="many">%d min</item>
         <item quantity="other">%d min</item>
     </plurals>
+    <string name="notATeacherDescription">Jedna z innych naszych aplikacji może się okazać bardziej przydatna. Stuknij ikonę, aby się zalogować.</string>
 </resources>

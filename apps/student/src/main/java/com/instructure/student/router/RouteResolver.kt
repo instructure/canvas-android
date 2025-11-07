@@ -46,6 +46,7 @@ import com.instructure.student.features.pages.list.PageListFragment
 import com.instructure.student.features.people.details.PeopleDetailsFragment
 import com.instructure.student.features.people.list.PeopleListFragment
 import com.instructure.student.features.quiz.list.QuizListFragment
+import com.instructure.pandautils.features.todolist.ToDoListFragment
 import com.instructure.student.fragment.AccountPreferencesFragment
 import com.instructure.student.fragment.AnnouncementListFragment
 import com.instructure.student.fragment.AssignmentBasicFragment
@@ -58,7 +59,7 @@ import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.fragment.ProfileSettingsFragment
 import com.instructure.student.fragment.StudioWebViewFragment
-import com.instructure.student.fragment.ToDoListFragment
+import com.instructure.student.fragment.OldToDoListFragment
 import com.instructure.student.fragment.UnknownItemFragment
 import com.instructure.student.fragment.UnsupportedFeatureFragment
 import com.instructure.student.fragment.UnsupportedTabFragment
@@ -115,6 +116,7 @@ object RouteResolver {
         return when {
             cls.isA<DashboardFragment>() -> DashboardFragment.newInstance(route)
             cls.isA<ElementaryDashboardFragment>() -> ElementaryDashboardFragment.newInstance(route)
+            cls.isA<OldToDoListFragment>() -> OldToDoListFragment.newInstance(route)
             cls.isA<ToDoListFragment>() -> ToDoListFragment.newInstance(route)
             cls.isA<NotificationListFragment>() -> NotificationListFragment.newInstance(route)
             cls.isA<InboxFragment>() -> InboxFragment.newInstance(route)

@@ -14,15 +14,23 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.dashboard.course
+package com.instructure.student.di.feature
 
-import com.instructure.horizon.features.dashboard.DashboardItemState
-import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardState
-import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardState
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import com.instructure.pandautils.features.todolist.ToDoListRouter
+import com.instructure.student.features.todolist.StudentToDoListRouter
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.FragmentComponent
 
-data class DashboardCourseUiState(
-    val state: DashboardItemState = DashboardItemState.LOADING,
-    val programs: DashboardPaginatedWidgetCardState = DashboardPaginatedWidgetCardState(),
-    val courses: List<DashboardCourseCardState> = emptyList(),
-    val onRefresh: (onFinished: () -> Unit)-> Unit = { }
-)
+@Module
+@InstallIn(FragmentComponent::class)
+class ToDoListModule {
+
+    @Provides
+    fun provideToDoListRouter(activity: FragmentActivity, fragment: Fragment): ToDoListRouter {
+        return StudentToDoListRouter(activity, fragment)
+    }
+}

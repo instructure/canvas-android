@@ -24,6 +24,8 @@ import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.type.EnrollmentWorkflowState
 import com.instructure.horizon.features.dashboard.DashboardEventHandler
+import com.instructure.horizon.features.dashboard.widget.course.DashboardCourseRepository
+import com.instructure.horizon.features.dashboard.widget.course.DashboardCourseViewModel
 import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus
 import com.instructure.journey.type.ProgramVariantType
 import io.mockk.coEvery

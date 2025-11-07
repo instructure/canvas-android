@@ -20,7 +20,6 @@ import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -106,7 +105,7 @@ fun SingleSelect(
             InputDropDownPopup(
                 isMenuOpen = state.isMenuOpen,
                 options = state.options,
-                width = width,
+                width = if (state.isFullWidth) null else width,
                 verticalOffsetPx = heightInPx,
                 onMenuOpenChanged = state.onMenuOpenChanged,
                 onOptionSelected = { selectedOption ->
@@ -159,6 +158,7 @@ private fun SingleSelectContent(state: SingleSelectState) {
                 overflow = TextOverflow.Ellipsis,
                 style = HorizonTypography.p1,
                 color = HorizonColors.Text.body(),
+                modifier = Modifier.weight(1f)
             )
         } else if (state.placeHolderText != null) {
             Text(
@@ -167,10 +167,10 @@ private fun SingleSelectContent(state: SingleSelectState) {
                 overflow = TextOverflow.Ellipsis,
                 style = HorizonTypography.p1,
                 color = HorizonColors.Text.placeholder(),
+                modifier = Modifier.weight(1f)
             )
         }
 
-        Spacer(modifier = Modifier.weight(1f))
 
         Icon(
             painter = painterResource(R.drawable.keyboard_arrow_down),

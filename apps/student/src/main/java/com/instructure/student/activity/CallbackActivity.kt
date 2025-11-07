@@ -20,6 +20,7 @@ package com.instructure.student.activity
 import android.os.Bundle
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.StatusCallback
+import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.FeaturesManager
@@ -41,8 +42,12 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.RemoteConfigParam
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
+import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.canvasapi2.utils.pageview.PandataInfo
 import com.instructure.canvasapi2.utils.pageview.PandataManager
+import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
@@ -55,6 +60,7 @@ import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.SHA256
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.isComplete
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toast
 import com.instructure.student.BuildConfig
@@ -65,6 +71,7 @@ import com.instructure.student.util.StudentPrefs
 import com.instructure.student.widget.WidgetLogger
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
+import org.threeten.bp.LocalDate
 import retrofit2.Call
 import retrofit2.Response
 import sdk.pendo.io.Pendo
@@ -86,6 +93,9 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
     lateinit var userApi: UserAPI.UsersInterface
 
     @Inject
+    lateinit var plannerApi: PlannerAPI.PlannerInterface
+
+    @Inject
     lateinit var widgetLogger: WidgetLogger
 
     private var loadInitialDataJob: Job? = null
@@ -94,6 +104,7 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
     abstract fun updateUnreadCount(unreadCount: Int)
     abstract fun increaseUnreadCount(increaseBy: Int)
     abstract fun updateNotificationCount(notificationCount: Int)
+    abstract fun updateToDoCount(toDoCount: Int)
     abstract fun initialCoreDataLoadingComplete()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -178,6 +189,10 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
 
             getUnreadNotificationCount()
 
+            if (RemoteConfigUtils.getBoolean(RemoteConfigParam.TODO_REDESIGN)) {
+                getToDoCount()
+            }
+
             initialCoreDataLoadingComplete()
         } catch {
             initialCoreDataLoadingComplete()
@@ -204,6 +219,26 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
             val unreadCountInt = (it.unreadCount ?: "0").toInt()
             updateUnreadCount(unreadCountInt)
         }
+    }
+
+    private suspend fun getToDoCount() {
+        // TODO Implement correct filtering in MBL-19401
+        val now = LocalDate.now().atStartOfDay()
+        val startDate = now.minusDays(7).toApiString().orEmpty()
+        val endDate = now.plusDays(7).toApiString().orEmpty()
+
+        val restParams = RestParams(isForceReadFromNetwork = true, usePerPageQueryParam = true)
+        val plannerItems = plannerApi.getPlannerItems(
+            startDate = startDate,
+            endDate = endDate,
+            contextCodes = emptyList(),
+            restParams = restParams
+        ).depaginate { nextUrl ->
+            plannerApi.nextPagePlannerItems(nextUrl, restParams)
+        }
+
+        val todoCount = plannerItems.dataOrNull?.count { !it.isComplete() }.orDefault()
+        updateToDoCount(todoCount)
     }
 
     private fun getUnreadNotificationCount() {

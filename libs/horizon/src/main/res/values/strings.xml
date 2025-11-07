@@ -366,13 +366,13 @@
     <string name="dashboardCourseCardErrorMessage">Please try again.</string>
     <string name="dashboardCourseCardRefreshLabel">Refresh</string>
     <string name="dashboardNotStartedProgramDetailsLabel">Program details</string>
-    <string name="dashboardTimeSpentTitle">Time</string>
+    <string name="dashboardTimeSpentTitle">Time learning</string>
     <string name="dashboardTimeSpentEmptyMessage">This widget will update once data becomes available.</string>
     <string name="dashboardTimeSpentErrorMessage">We weren\'t able to load this content.\nPlease try again.</string>
     <string name="dashboardTimeSpentRetry">Refresh</string>
-    <string name="dashboardTimeSpentHoursIn">hours in</string>
+    <string name="dashboardTimeSpentHours">hours</string>
     <string name="dashboardTimeSpentHoursInYourCourse">hours in your course</string>
-    <string name="dashboardTimeSpentAllCourses">all courses</string>
+    <string name="dashboardTimeSpentTotal">total</string>
     <string name="dashboardSkillHighlightsTitle">Skill Highlights</string>
     <string name="dashboardSkillHighlightsNoDataTitle">No data yet</string>
     <string name="dashboardSkillHighlightsNoDataMessage">This widget will update once data becomes available.</string>
@@ -418,8 +418,26 @@
     <string name="a11y_dashboardMyProgressContentDescription">%1$d completed</string>
     <string name="a11y_dashboardSkillOverviewContentDescription">%1$d earned</string>
     <string name="a11y_dashboardTimeSpentMultipleCoursesContentDescription">%1$d hours in %2$s</string>
-    <string name="a11y_dashboardTimeSpentContentDescription">%1$d hours in your course</string>
+    <string name="a11y_dashboardTimeSpentContentDescription">%1$d %2$s in %3$s</string>
+    <string name="a11y_dashboardTimeSpentCombinedContentDescription">%1$d hours and %2$d minutes in %3$s</string>
+    <plurals name="dashboardTimeSpentHoursUnit">
+        <item quantity="one">hour</item>
+        <item quantity="other">hours</item>
+    </plurals>
+    <plurals name="dashboardTimeSpentHoursShortUnit">
+        <item quantity="one">hr</item>
+        <item quantity="other">hrs</item>
+    </plurals>
+    <plurals name="dashboardTimeSpentMinutesUnit">
+        <item quantity="one">minute</item>
+        <item quantity="other">minutes</item>
+    </plurals>
+    <plurals name="dashboardTimeSpentMinutesShortUnit">
+        <item quantity="one">min</item>
+        <item quantity="other">mins</item>
+    </plurals>
     <string name="dashboardAnnouncementRefreshMessage">Refresh</string>
     <string name="a11y_dashboardNextItemContentDescription">Next item</string>
     <string name="a11y_dashboardPreviousItemContentDescription">Previous item</string>
+    <string name="dsahboardPaginatedWidgetPagerMessage">%1$d of %2$d</string>
 </resources>

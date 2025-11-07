@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.dashboard.course.card
+package com.instructure.horizon.features.dashboard.widget.course.card
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,7 +44,6 @@ fun DashboardCourseCardLoading(
     val context = LocalContext.current
     DashboardCard(
         modifier
-            .padding(bottom = 8.dp)
             .clearAndSetSemantics {
                 contentDescription = context.getString(
                     R.string.a11y_dashboardWidgetLoadingContentDescription,

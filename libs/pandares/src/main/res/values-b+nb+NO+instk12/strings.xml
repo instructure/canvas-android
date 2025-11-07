@@ -1042,6 +1042,10 @@
     <string name="downloadFailed">Kunne ikke laste ned</string>
     <string name="downloadSuccessful">Lastet ned</string>
 
+    <string name="downloading">Laster ned</string>
+    <string name="downloadComplete">Nedlasting fullført</string>
+    <string name="notificationChannelNameFileDownloadsName">Last ned varslinger</string>
+    <string name="notificationChannelNameFileDownloadsDescription">Canvas-varslinger for pågående nedlastinger.</string>
     <string name="full_due_date_details">Fulle forfallsdato detaljer</string>
     <string name="submissions">Innleveringer</string>
     <string name="attachment">Vedlegg</string>
@@ -2132,4 +2136,9 @@
     <string name="daysLateHint">Angi dager for sent</string>
     <string name="reply_to_topic">Svar på tema</string>
     <string name="additional_replies">Ekstra svar (%d):</string>
+    <string name="reply_to_topic_due">Svar på emnet forfaller</string>
+    <string name="additional_replies_due">Ekstra svar (%d) forfaller</string>
+    <string name="a11y_discussion_checkpoints">Sjekkpunkter for diskusjon</string>
+    <string name="multipleDueDates">Flere forfallsdatoer</string>
+    <string name="courseConcludedError">Fag avsluttet. Kunne ikke sende meldinger!</string>
 </resources>
