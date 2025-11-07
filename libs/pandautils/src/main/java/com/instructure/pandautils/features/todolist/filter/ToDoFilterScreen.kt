@@ -56,7 +56,7 @@ import com.instructure.pandautils.utils.ThemePrefs
 
 @Composable
 fun ToDoFilterScreen(
-    onFiltersChanged: () -> Unit,
+    onFiltersChanged: (areDateFiltersChanged: Boolean) -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -65,7 +65,7 @@ fun ToDoFilterScreen(
 
     LaunchedEffect(uiState.shouldCloseAndApplyFilters) {
         if (uiState.shouldCloseAndApplyFilters) {
-            onFiltersChanged()
+            onFiltersChanged(uiState.areDateFiltersChanged)
             uiState.onFiltersApplied()
         }
     }
