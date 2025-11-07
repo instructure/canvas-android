@@ -27,7 +27,11 @@ sealed class ConferenceListViewState(open val isLaunchingInBrowser: Boolean) {
 sealed class ConferenceListItemViewState {
     object Empty : ConferenceListItemViewState()
     object Error : ConferenceListItemViewState()
-    data class ConferenceHeader(val title: String): ConferenceListItemViewState()
+    data class ConferenceHeader(
+        val title: String,
+        val headerType: com.instructure.student.mobius.conferences.conference_list.ConferenceHeaderType,
+        val isExpanded: Boolean
+    ): ConferenceListItemViewState()
     data class ConferenceItem(
         val tint: Int,
         val title: String,

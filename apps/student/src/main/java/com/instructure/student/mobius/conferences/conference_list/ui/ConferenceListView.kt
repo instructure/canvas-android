@@ -84,6 +84,10 @@ class ConferenceListView(
             }
 
             override fun reload() = output.accept(ConferenceListEvent.PullToRefresh)
+
+            override fun onHeaderClicked(headerType: com.instructure.student.mobius.conferences.conference_list.ConferenceHeaderType) {
+                output.accept(ConferenceListEvent.HeaderClicked(headerType))
+            }
         })
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = listAdapter
