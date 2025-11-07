@@ -72,6 +72,16 @@ data class ScheduleItem(
         @SerializedName("sub_assignment")
         val subAssignment: Assignment? = null,
 
+        // Appointment group and reservation fields
+        @SerializedName("own_reservation")
+        val ownReservation: Boolean? = null,
+        @SerializedName("appointment_group_id")
+        val appointmentGroupId: Long? = null,
+        @SerializedName("parent_event_id")
+        val parentEventId: Long? = null,
+        @SerializedName("reserved")
+        val reserved: Boolean? = null,
+
         // Not API related - Included here so they get parcelized
         var submissionTypes: List<Assignment.SubmissionType> = ArrayList(),
         var pointsPossible: Double = 0.0,
@@ -133,6 +143,9 @@ data class ScheduleItem(
 
     @IgnoredOnParcel
     val isRecurring: Boolean get() = !rrule.isNullOrEmpty()
+
+    @IgnoredOnParcel
+    val isAppointmentReservation: Boolean get() = ownReservation == true && appointmentGroupId != null
 
     val contextId: Long
         get() {

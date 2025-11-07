@@ -37,6 +37,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.pullrefresh.PullRefreshDefaults
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
@@ -153,9 +154,18 @@ fun CalendarEventsPage(
                     .fillMaxSize().testTag("calendarEventsList"), verticalArrangement = Arrangement.Top
             ) {
                 items(calendarEventsPageUiState.events) {
-                    CalendarEventItem(eventUiState = it, { id ->
-                        actionHandler(CalendarAction.EventSelected(id))
-                    }, Modifier.testTag("calendarEventItem"))
+                    CalendarEventItem(
+                        eventUiState = it,
+                        onEventClick = { id ->
+                            actionHandler(CalendarAction.EventSelected(id))
+                        },
+                        onCancelReservation = { reservationId ->
+                            if (it.appointmentGroupId != null) {
+                                actionHandler(CalendarAction.CancelReservation(reservationId, it.appointmentGroupId))
+                            }
+                        },
+                        modifier = Modifier.testTag("calendarEventItem")
+                    )
                 }
             }
         } else if (calendarEventsPageUiState.error) {
@@ -182,7 +192,12 @@ fun CalendarEventsPage(
 }
 
 @Composable
-fun CalendarEventItem(eventUiState: EventUiState, onEventClick: (Long) -> Unit, modifier: Modifier = Modifier) {
+fun CalendarEventItem(
+    eventUiState: EventUiState,
+    onEventClick: (Long) -> Unit,
+    onCancelReservation: ((Long) -> Unit)? = null,
+    modifier: Modifier = Modifier
+) {
     val contextColor = Color(eventUiState.canvasContext.courseOrUserColor)
     Row(
         modifier
@@ -191,7 +206,8 @@ fun CalendarEventItem(eventUiState: EventUiState, onEventClick: (Long) -> Unit, 
             .fillMaxWidth()
             .semantics {
                 role = Role.Button
-            }
+            },
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Spacer(modifier = Modifier.width(6.dp))
         Icon(
@@ -201,7 +217,7 @@ fun CalendarEventItem(eventUiState: EventUiState, onEventClick: (Long) -> Unit, 
             tint = contextColor
         )
         Spacer(modifier = Modifier.width(16.dp))
-        Column {
+        Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = eventUiState.contextName,
                 fontSize = 14.sp,
@@ -232,6 +248,22 @@ fun CalendarEventItem(eventUiState: EventUiState, onEventClick: (Long) -> Unit, 
                 color = Color(ThemePrefs.brandColor),
                 modifier = Modifier.padding(vertical = 1.dp).testTag("eventStatus")
             )
+        }
+        if (eventUiState.canCancel && onCancelReservation != null && eventUiState.reservationId != null) {
+            IconButton(
+                onClick = { onCancelReservation(eventUiState.reservationId) },
+                modifier = Modifier
+                    .padding(horizontal = 8.dp)
+                    .semantics {
+                        role = Role.Button
+                    }
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_close),
+                    contentDescription = stringResource(R.string.a11y_cancelReservation),
+                    tint = colorResource(id = R.color.textDanger)
+                )
+            }
         }
     }
 }
@@ -306,6 +338,19 @@ fun CalendarEventsPreview() {
                         "Due Jan 9 at 8:00 AM",
                         "Missing",
                         tag = "Additional replies (2)"
+                    ),
+                    EventUiState(
+                        3L,
+                        "Course",
+                        CanvasContext.defaultCanvasContext(),
+                        "Appointment Slot",
+                        R.drawable.ic_assignment,
+                        "Jan 15 at 2:00 PM",
+                        "Reserved",
+                        isReservation = true,
+                        reservationId = 3L,
+                        appointmentGroupId = 100L,
+                        canCancel = true
                     )
                 )
             )

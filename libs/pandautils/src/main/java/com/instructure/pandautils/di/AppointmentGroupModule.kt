@@ -13,11 +13,13 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.student.di
+package com.instructure.pandautils.di
 
 import com.instructure.canvasapi2.apis.AppointmentGroupAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
-import com.instructure.student.features.appointmentgroups.AppointmentGroupRepository
+import com.instructure.pandautils.features.appointmentgroups.AppointmentGroupRepository
+import com.instructure.pandautils.features.appointmentgroups.domain.usecase.CancelReservationUseCase
+import com.instructure.pandautils.features.appointmentgroups.domain.usecase.GetAppointmentGroupsUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,5 +35,20 @@ class AppointmentGroupModule {
         plannerApi: PlannerAPI.PlannerInterface
     ): AppointmentGroupRepository {
         return AppointmentGroupRepository(appointmentGroupApi, plannerApi)
+    }
+
+    @Provides
+    fun provideGetAppointmentGroupsUseCase(
+        repository: AppointmentGroupRepository,
+        apiPrefs: com.instructure.canvasapi2.utils.ApiPrefs
+    ): GetAppointmentGroupsUseCase {
+        return GetAppointmentGroupsUseCase(repository, apiPrefs)
+    }
+
+    @Provides
+    fun provideCancelReservationUseCase(
+        repository: AppointmentGroupRepository
+    ): CancelReservationUseCase {
+        return CancelReservationUseCase(repository)
     }
 }

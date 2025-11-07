@@ -19,8 +19,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.pandautils.features.appointmentgroups.domain.usecase.GetAppointmentGroupsUseCase
 import com.instructure.student.features.appointmentgroups.domain.usecase.CancelAppointmentReservationUseCase
-import com.instructure.student.features.appointmentgroups.domain.usecase.GetAppointmentGroupsUseCase
 import com.instructure.student.features.appointmentgroups.domain.usecase.ReserveAppointmentSlotUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -74,7 +74,7 @@ class AppointmentGroupsListViewModel @Inject constructor(
                 _uiState.update { it.copy(isLoading = true, isError = false) }
             }
 
-            when (val result = getAppointmentGroupsUseCase(GetAppointmentGroupsUseCase.Params(courseId, forceNetwork = isRefresh))) {
+            when (val result = getAppointmentGroupsUseCase(GetAppointmentGroupsUseCase.Params(listOf(courseId), forceNetwork = isRefresh))) {
                 is DataResult.Success -> {
                     val currentExpandedStates = _uiState.value.groups.associate { it.id to it.isExpanded }
                     val groups = uiMapper.mapToUiState(result.data).map { group ->

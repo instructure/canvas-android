@@ -13,19 +13,15 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.student.features.appointmentgroups.domain.usecase
+package com.instructure.canvasapi2.models
 
-import com.instructure.canvasapi2.utils.DataResult
-
-abstract class UseCase<in Params, out Result> {
-
-    suspend operator fun invoke(params: Params): DataResult<Result> {
-        return try {
-            execute(params)
-        } catch (e: Exception) {
-            DataResult.Fail()
-        }
-    }
-
-    protected abstract suspend fun execute(params: Params): DataResult<Result>
-}
+data class AppointmentGroupDomain(
+    val id: Long,
+    val title: String,
+    val description: String?,
+    val locationName: String?,
+    val locationAddress: String?,
+    val participantCount: Int,
+    val maxAppointmentsPerParticipant: Int?,
+    val slots: List<AppointmentSlotDomain>
+)

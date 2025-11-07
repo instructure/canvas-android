@@ -15,8 +15,8 @@
  */
 package com.instructure.student.features.appointmentgroups
 
-import com.instructure.student.features.appointmentgroups.domain.model.AppointmentGroupDomain
-import com.instructure.student.features.appointmentgroups.domain.model.AppointmentSlotDomain
+import com.instructure.canvasapi2.models.AppointmentGroupDomain
+import com.instructure.canvasapi2.models.AppointmentSlotDomain
 import java.text.SimpleDateFormat
 import java.util.Locale
 import javax.inject.Inject

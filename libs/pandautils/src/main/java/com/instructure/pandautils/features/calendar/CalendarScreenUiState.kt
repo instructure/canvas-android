@@ -96,7 +96,11 @@ data class EventUiState(
     @DrawableRes val iconRes: Int,
     val date: String? = null,
     val status: String? = null,
-    val tag: String? = null
+    val tag: String? = null,
+    val isReservation: Boolean = false,
+    val reservationId: Long? = null,
+    val appointmentGroupId: Long? = null,
+    val canCancel: Boolean = false
 )
 
 sealed class CalendarAction {
@@ -119,6 +123,7 @@ sealed class CalendarAction {
     data object RefreshCalendar : CalendarAction()
     data object PullToRefresh : CalendarAction()
     data object TodayTapHandled : CalendarAction()
+    data class CancelReservation(val reservationId: Long, val appointmentGroupId: Long) : CalendarAction()
 }
 
 sealed class CalendarViewModelAction {

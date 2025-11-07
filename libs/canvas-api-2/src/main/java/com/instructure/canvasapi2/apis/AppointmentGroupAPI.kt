@@ -19,6 +19,7 @@ import com.google.gson.annotations.SerializedName
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.AppointmentGroup
 import com.instructure.canvasapi2.models.ScheduleItem
+import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -26,6 +27,7 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 import retrofit2.http.Tag
+import retrofit2.http.Url
 
 interface AppointmentGroupAPI {
 
@@ -34,8 +36,15 @@ interface AppointmentGroupAPI {
         @Query("scope") scope: String = "reservable",
         @Query("context_codes[]") contextCodes: List<String>,
         @Query("include[]") include: List<String> = listOf("appointments", "child_events", "available_slots", "reserved_times"),
+        @Query("include_past_appointments") includePastAppointments: Boolean = false,
         @Tag restParams: RestParams
-    ): List<AppointmentGroup>
+    ): DataResult<List<AppointmentGroup>>
+
+    @GET
+    suspend fun getNextPageAppointmentGroups(
+        @Url nextPage: String,
+        @Tag restParams: RestParams
+    ): DataResult<List<AppointmentGroup>>
 
     @POST("calendar_events/{id}/reservations")
     suspend fun reserveAppointmentSlot(

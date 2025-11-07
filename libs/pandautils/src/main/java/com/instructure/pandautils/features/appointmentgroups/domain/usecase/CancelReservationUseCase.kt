@@ -13,21 +13,18 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.student.features.appointmentgroups.domain.usecase
+package com.instructure.pandautils.features.appointmentgroups.domain.usecase
 
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.features.appointmentgroups.AppointmentGroupRepository
-import com.instructure.pandautils.features.appointmentgroups.domain.usecase.UseCase
 import javax.inject.Inject
 
-class CancelAppointmentReservationUseCase @Inject constructor(
+class CancelReservationUseCase @Inject constructor(
     private val repository: AppointmentGroupRepository
-) : UseCase<CancelAppointmentReservationUseCase.Params, Unit>() {
+) : UseCase<CancelReservationUseCase.Params, Unit>() {
 
     override suspend fun execute(params: Params): DataResult<Unit> {
-        return repository.cancelReservation(
-            reservationId = params.reservationId
-        )
+        return repository.cancelReservation(params.reservationId)
     }
 
     data class Params(

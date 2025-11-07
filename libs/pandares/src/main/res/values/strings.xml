@@ -429,6 +429,7 @@
     <string name="a11y_openCoursePicker">Open Course Picker</string>
     <string name="a11y_closeCoursePicker">Close Course Picker</string>
     <string name="a11y_cancelNewMessage">Cancel new message</string>
+    <string name="a11y_cancelReservation">Cancel reservation</string>
     <string name="failedToLoadCoursesAndGroups">Failed to load Courses and Groups</string>
     <string name="failedToLoadRecipients">Failed to load recipients</string>
     <string name="noRecipientsAvailable">No recipients available</string>

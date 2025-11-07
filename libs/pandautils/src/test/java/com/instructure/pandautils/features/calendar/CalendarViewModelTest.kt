@@ -30,6 +30,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.appointmentgroups.domain.usecase.CancelReservationUseCase
 import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -70,6 +71,7 @@ class CalendarViewModelTest {
     private val calendarSharedEvents: CalendarSharedEvents = mockk(relaxed = true)
     private val calendarBehavior: CalendarBehavior = mockk(relaxed = true)
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
+    private val cancelReservationUseCase: CancelReservationUseCase = mockk(relaxed = true)
 
     private lateinit var viewModel: CalendarViewModel
 
@@ -1330,7 +1332,7 @@ class CalendarViewModelTest {
     }
 
     private fun initViewModel() {
-        viewModel = CalendarViewModel(context, calendarRepository, apiPrefs, clock, calendarPrefs, calendarStateMapper, calendarSharedEvents, calendarBehavior, savedStateHandle)
+        viewModel = CalendarViewModel(context, calendarRepository, apiPrefs, clock, calendarPrefs, calendarStateMapper, calendarSharedEvents, calendarBehavior, cancelReservationUseCase, savedStateHandle)
     }
 
     private fun createPlannerItem(

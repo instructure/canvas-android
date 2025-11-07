@@ -17,7 +17,8 @@ package com.instructure.student.features.appointmentgroups.domain.usecase
 
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.student.features.appointmentgroups.AppointmentGroupRepository
+import com.instructure.pandautils.features.appointmentgroups.AppointmentGroupRepository
+import com.instructure.pandautils.features.appointmentgroups.domain.usecase.UseCase
 import javax.inject.Inject
 
 class ReserveAppointmentSlotUseCase @Inject constructor(

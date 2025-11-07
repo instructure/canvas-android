@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.student.features.appointmentgroups
+package com.instructure.pandautils.features.appointmentgroups
 
 import com.instructure.canvasapi2.apis.AppointmentGroupAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
@@ -44,7 +44,7 @@ class AppointmentGroupRepositoryTest {
 
     @Test
     fun `getAppointmentGroups success returns Success with data`() = runTest {
-        val courseId = 123L
+        val courseIds = listOf(123L, 456L)
         val expectedGroups = listOf(
             AppointmentGroup(
                 id = 1L,
@@ -60,18 +60,20 @@ class AppointmentGroupRepositoryTest {
 
         coEvery {
             appointmentGroupApi.getAppointmentGroups(
-                contextCodes = listOf("course_$courseId"),
+                contextCodes = listOf("course_123", "course_456"),
+                includePastAppointments = false,
                 restParams = any()
             )
-        } returns expectedGroups
+        } returns DataResult.Success(expectedGroups)
 
-        val result = repository.getAppointmentGroups(courseId, forceNetwork = false)
+        val result = repository.getAppointmentGroups(courseIds, includePastAppointments = false, forceNetwork = false)
 
         assertTrue(result is DataResult.Success)
         assertEquals(expectedGroups, (result as DataResult.Success).data)
         coVerify {
             appointmentGroupApi.getAppointmentGroups(
-                contextCodes = listOf("course_$courseId"),
+                contextCodes = listOf("course_123", "course_456"),
+                includePastAppointments = false,
                 restParams = match { !it.isForceReadFromNetwork }
             )
         }
@@ -79,7 +81,7 @@ class AppointmentGroupRepositoryTest {
 
     @Test
     fun `getAppointmentGroups with forceNetwork passes correct RestParams`() = runTest {
-        val courseId = 123L
+        val courseIds = listOf(123L)
         val expectedGroups = listOf(
             AppointmentGroup(
                 id = 1L,
@@ -96,32 +98,70 @@ class AppointmentGroupRepositoryTest {
         coEvery {
             appointmentGroupApi.getAppointmentGroups(
                 contextCodes = any(),
+                includePastAppointments = any(),
                 restParams = any()
             )
-        } returns expectedGroups
+        } returns DataResult.Success(expectedGroups)
 
-        repository.getAppointmentGroups(courseId, forceNetwork = true)
+        repository.getAppointmentGroups(courseIds, includePastAppointments = false, forceNetwork = true)
 
         coVerify {
             appointmentGroupApi.getAppointmentGroups(
-                contextCodes = listOf("course_$courseId"),
+                contextCodes = listOf("course_123"),
+                includePastAppointments = false,
                 restParams = match { it.isForceReadFromNetwork }
             )
         }
     }
 
     @Test
-    fun `getAppointmentGroups failure returns Fail`() = runTest {
-        val courseId = 123L
+    fun `getAppointmentGroups with includePastAppointments true passes correct parameter`() = runTest {
+        val courseIds = listOf(123L)
+        val expectedGroups = listOf(
+            AppointmentGroup(
+                id = 1L,
+                title = "Office Hours",
+                description = null,
+                locationName = null,
+                locationAddress = null,
+                participantCount = 0,
+                maxAppointmentsPerParticipant = null,
+                appointments = emptyList()
+            )
+        )
 
         coEvery {
             appointmentGroupApi.getAppointmentGroups(
                 contextCodes = any(),
+                includePastAppointments = any(),
+                restParams = any()
+            )
+        } returns DataResult.Success(expectedGroups)
+
+        repository.getAppointmentGroups(courseIds, includePastAppointments = true, forceNetwork = false)
+
+        coVerify {
+            appointmentGroupApi.getAppointmentGroups(
+                contextCodes = listOf("course_123"),
+                includePastAppointments = true,
+                restParams = any()
+            )
+        }
+    }
+
+    @Test
+    fun `getAppointmentGroups failure returns Fail`() = runTest {
+        val courseIds = listOf(123L)
+
+        coEvery {
+            appointmentGroupApi.getAppointmentGroups(
+                contextCodes = any(),
+                includePastAppointments = any(),
                 restParams = any()
             )
         } throws Exception("Network error")
 
-        val result = repository.getAppointmentGroups(courseId, forceNetwork = false)
+        val result = repository.getAppointmentGroups(courseIds, forceNetwork = false)
 
         assertTrue(result is DataResult.Fail)
     }
@@ -266,8 +306,7 @@ class AppointmentGroupRepositoryTest {
 
         coEvery {
             appointmentGroupApi.cancelAppointReservation(
-                reservationId = reservationId,
-                cancelReason = null
+                reservationId = reservationId
             )
         } returns Unit
 
@@ -276,8 +315,7 @@ class AppointmentGroupRepositoryTest {
         assertTrue(result is DataResult.Success)
         coVerify {
             appointmentGroupApi.cancelAppointReservation(
-                reservationId = reservationId,
-                cancelReason = null
+                reservationId = reservationId
             )
         }
     }
@@ -288,8 +326,7 @@ class AppointmentGroupRepositoryTest {
 
         coEvery {
             appointmentGroupApi.cancelAppointReservation(
-                reservationId = any(),
-                cancelReason = any()
+                reservationId = any()
             )
         } throws Exception("Network error")
 

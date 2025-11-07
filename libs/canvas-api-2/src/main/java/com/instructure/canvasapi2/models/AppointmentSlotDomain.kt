@@ -13,15 +13,22 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.student.features.appointmentgroups.domain.model
+package com.instructure.canvasapi2.models
 
-data class AppointmentGroupDomain(
+import java.util.Date
+
+data class AppointmentSlotDomain(
     val id: Long,
-    val title: String,
-    val description: String?,
-    val locationName: String?,
-    val locationAddress: String?,
-    val participantCount: Int,
-    val maxAppointmentsPerParticipant: Int?,
-    val slots: List<AppointmentSlotDomain>
+    val appointmentGroupId: Long,
+    val startDate: Date?,
+    val endDate: Date?,
+    val availableSlots: Int,
+    val isReservedByMe: Boolean,
+    val myReservationId: Long?,
+    val conflictInfo: ConflictInfo?
+)
+
+data class ConflictInfo(
+    val hasConflict: Boolean,
+    val conflictingEventTitle: String?
 )

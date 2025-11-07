@@ -13,22 +13,19 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.student.features.appointmentgroups.domain.model
+package com.instructure.pandautils.features.appointmentgroups.domain.usecase
 
-import java.util.Date
+import com.instructure.canvasapi2.utils.DataResult
 
-data class AppointmentSlotDomain(
-    val id: Long,
-    val appointmentGroupId: Long,
-    val startDate: Date?,
-    val endDate: Date?,
-    val availableSlots: Int,
-    val isReservedByMe: Boolean,
-    val myReservationId: Long?,
-    val conflictInfo: ConflictInfo?
-)
+abstract class UseCase<in Params, out Result> {
 
-data class ConflictInfo(
-    val hasConflict: Boolean,
-    val conflictingEventTitle: String?
-)
+    suspend operator fun invoke(params: Params): DataResult<Result> {
+        return try {
+            execute(params)
+        } catch (e: Exception) {
+            DataResult.Fail()
+        }
+    }
+
+    protected abstract suspend fun execute(params: Params): DataResult<Result>
+}

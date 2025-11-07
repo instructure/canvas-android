@@ -31,6 +31,7 @@ import com.instructure.canvasapi2.utils.toDate
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.appointmentgroups.domain.usecase.CancelReservationUseCase
 import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
 import com.instructure.pandautils.utils.getIconForPlannerItem
 import com.instructure.pandautils.utils.getTagForPlannerItem
@@ -67,6 +68,7 @@ class CalendarViewModel @Inject constructor(
     private val calendarStateMapper: CalendarStateMapper,
     private val calendarSharedEvents: CalendarSharedEvents,
     private val calendarBehavior: CalendarBehavior,
+    private val cancelReservationUseCase: CancelReservationUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -435,6 +437,8 @@ class CalendarViewModel @Inject constructor(
                     calendarUiState = it.calendarUiState.copy(todayTapped = false)
                 )
             }
+
+            is CalendarAction.CancelReservation -> cancelReservation(calendarAction.reservationId, calendarAction.appointmentGroupId)
         }
     }
 
@@ -644,6 +648,35 @@ class CalendarViewModel @Inject constructor(
     private fun showFilters() {
         viewModelScope.launch {
             _events.send(CalendarViewModelAction.OpenFilters)
+        }
+    }
+
+    private fun cancelReservation(reservationId: Long, appointmentGroupId: Long) {
+        viewModelScope.launch {
+            // Find and store all items with matching reservationId for potential rollback
+            val removedItems = mutableListOf<Pair<LocalDate, PlannerItem>>()
+
+            for ((date, items) in eventsByDay) {
+                val toRemove = items.filter { it.plannable.id == reservationId }
+                toRemove.forEach { item ->
+                    removedItems.add(date to item)
+                    items.remove(item)
+                }
+            }
+
+            // Update UI optimistically
+            _uiState.emit(createNewUiState())
+
+            // Call the usecase to cancel via API
+            val result = cancelReservationUseCase.invoke(CancelReservationUseCase.Params(reservationId))
+
+            // If the cancellation failed, restore the removed items
+            if (result is DataResult.Fail) {
+                removedItems.forEach { (date, item) ->
+                    eventsByDay.getOrPut(date) { mutableListOf() }.add(item)
+                }
+                _uiState.emit(createNewUiState())
+            }
         }
     }
 }

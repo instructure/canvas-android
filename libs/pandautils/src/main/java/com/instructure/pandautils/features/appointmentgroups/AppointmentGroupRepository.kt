@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.student.features.appointmentgroups
+package com.instructure.pandautils.features.appointmentgroups
 
 import com.instructure.canvasapi2.apis.AppointmentGroupAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.models.AppointmentGroup
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.depaginate
 import javax.inject.Inject
 
 class AppointmentGroupRepository @Inject constructor(
@@ -29,14 +30,24 @@ class AppointmentGroupRepository @Inject constructor(
     private val plannerApi: PlannerAPI.PlannerInterface
 ) {
 
-    suspend fun getAppointmentGroups(courseId: Long, forceNetwork: Boolean = false): DataResult<List<AppointmentGroup>> {
+    suspend fun getAppointmentGroups(
+        courseIds: List<Long>,
+        includePastAppointments: Boolean = false,
+        forceNetwork: Boolean = false
+    ): DataResult<List<AppointmentGroup>> {
         return try {
-            val contextCode = "course_$courseId"
-            val groups = appointmentGroupApi.getAppointmentGroups(
-                contextCodes = listOf(contextCode),
-                restParams = RestParams(isForceReadFromNetwork = forceNetwork)
-            )
-            DataResult.Success(groups)
+            val params = RestParams(isForceReadFromNetwork = forceNetwork)
+            val contextCodes = courseIds.map { "course_$it" }
+            appointmentGroupApi.getAppointmentGroups(
+                contextCodes = contextCodes,
+                includePastAppointments = includePastAppointments,
+                restParams = params
+            ).depaginate {
+                appointmentGroupApi.getNextPageAppointmentGroups(
+                    it,
+                    params
+                )
+            }
         } catch (e: Exception) {
             DataResult.Fail()
         }

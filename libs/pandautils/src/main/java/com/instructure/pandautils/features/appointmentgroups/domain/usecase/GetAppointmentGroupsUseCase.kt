@@ -13,16 +13,16 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.student.features.appointmentgroups.domain.usecase
+package com.instructure.pandautils.features.appointmentgroups.domain.usecase
 
+import com.instructure.canvasapi2.models.AppointmentGroupDomain
+import com.instructure.canvasapi2.models.AppointmentSlotDomain
+import com.instructure.canvasapi2.models.ConflictInfo
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.toDate
-import com.instructure.student.features.appointmentgroups.AppointmentGroupRepository
-import com.instructure.student.features.appointmentgroups.domain.model.AppointmentGroupDomain
-import com.instructure.student.features.appointmentgroups.domain.model.AppointmentSlotDomain
-import com.instructure.student.features.appointmentgroups.domain.model.ConflictInfo
+import com.instructure.pandautils.features.appointmentgroups.AppointmentGroupRepository
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -34,7 +34,11 @@ class GetAppointmentGroupsUseCase @Inject constructor(
 ) : UseCase<GetAppointmentGroupsUseCase.Params, List<AppointmentGroupDomain>>() {
 
     override suspend fun execute(params: Params): DataResult<List<AppointmentGroupDomain>> {
-        val appointmentGroupsResult = repository.getAppointmentGroups(params.courseId, params.forceNetwork)
+        val appointmentGroupsResult = repository.getAppointmentGroups(
+            courseIds = params.courseIds,
+            includePastAppointments = params.includePastAppointments,
+            forceNetwork = params.forceNetwork
+        )
         if (appointmentGroupsResult is DataResult.Fail) {
             return DataResult.Fail()
         }
@@ -119,7 +123,8 @@ class GetAppointmentGroupsUseCase @Inject constructor(
     }
 
     data class Params(
-        val courseId: Long,
+        val courseIds: List<Long>,
+        val includePastAppointments: Boolean = false,
         val forceNetwork: Boolean = false
     )
 }
