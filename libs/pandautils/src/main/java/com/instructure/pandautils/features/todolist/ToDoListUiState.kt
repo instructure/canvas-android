@@ -30,7 +30,9 @@ data class ToDoListUiState(
     val onUndoMarkAsDoneUndoneAction: () -> Unit = {},
     val onMarkedAsDoneSnackbarDismissed: () -> Unit = {},
     val onRefresh: () -> Unit = {},
-    val toDoCount: Int? = null
+    val toDoCount: Int? = null,
+    val onToDoCountChanged: () -> Unit = {},
+    val onFiltersChanged: () -> Unit = {}
 )
 
 data class ConfirmationSnackbarData(

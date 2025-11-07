@@ -22,11 +22,16 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.isInvited
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.todolist.filter.DateRangeSelection
+import com.instructure.pandautils.room.appdatabase.daos.ToDoFilterDao
+import com.instructure.pandautils.room.appdatabase.entities.ToDoFilterEntity
 import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.pandautils.utils.filterByToDoFilters
 import com.instructure.pandautils.utils.getContextNameForPlannerItem
 import com.instructure.pandautils.utils.getDateTextForPlannerItem
 import com.instructure.pandautils.utils.getIconForPlannerItem
@@ -39,7 +44,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.threeten.bp.LocalDate
 import java.util.Date
 import javax.inject.Inject
 
@@ -48,7 +52,9 @@ class ToDoListViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val repository: ToDoListRepository,
     private val networkStateProvider: NetworkStateProvider,
-    private val firebaseCrashlytics: FirebaseCrashlytics
+    private val firebaseCrashlytics: FirebaseCrashlytics,
+    private val toDoFilterDao: ToDoFilterDao,
+    private val apiPrefs: ApiPrefs
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -56,8 +62,14 @@ class ToDoListViewModel @Inject constructor(
             onSnackbarDismissed = { clearSnackbarMessage() },
             onUndoMarkAsDoneUndoneAction = { handleUndoMarkAsDoneUndone() },
             onMarkedAsDoneSnackbarDismissed = { clearMarkedAsDoneItem() },
-            onRefresh = { handleRefresh() }
+            onRefresh = { handleRefresh() },
+            onFiltersChanged = { onFiltersChanged() }
         ))
+
+    private fun onFiltersChanged() {
+        loadData(forceRefresh = false)
+    }
+
     val uiState = _uiState.asStateFlow()
 
     private val plannerItemsMap = mutableMapOf<String, PlannerItem>()
@@ -71,9 +83,16 @@ class ToDoListViewModel @Inject constructor(
             try {
                 _uiState.update { it.copy(isLoading = !forceRefresh, isRefreshing = forceRefresh, isError = false) }
 
-                val now = LocalDate.now().atStartOfDay()
-                val startDate = now.minusDays(7).toApiString().orEmpty()
-                val endDate = now.plusDays(7).toApiString().orEmpty()
+                val todoFilters = toDoFilterDao.findByUser(
+                    apiPrefs.fullDomain,
+                    apiPrefs.user?.id.orDefault()
+                ) ?: ToDoFilterEntity(userDomain = apiPrefs.fullDomain, userId = apiPrefs.user?.id.orDefault())
+
+                val pastDateSelection = DateRangeSelection.valueOf(todoFilters.pastDateRange)
+                val futureDateSelection = DateRangeSelection.valueOf(todoFilters.futureDateRange)
+
+                val startDate = pastDateSelection.calculatePastDateRange().toApiString()
+                val endDate = futureDateSelection.calculateFutureDateRange().toApiString()
 
                 val courses = repository.getCourses(forceRefresh).dataOrThrow
                 val plannerItems = repository.getPlannerItems(startDate, endDate, forceRefresh).dataOrThrow
@@ -87,6 +106,7 @@ class ToDoListViewModel @Inject constructor(
                 // Filter planner items - exclude announcements, assessment requests
                 val filteredItems = plannerItems
                     .filter { it.plannableType != PlannableType.ANNOUNCEMENT && it.plannableType != PlannableType.ASSESSMENT_REQUEST }
+                    .filterByToDoFilters(todoFilters, filteredCourses)
                     .sortedBy { it.comparisonDate }
 
                 // Store planner items for later reference

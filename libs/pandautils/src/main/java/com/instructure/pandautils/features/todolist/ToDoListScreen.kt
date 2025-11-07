@@ -232,6 +232,7 @@ fun ToDoListScreen(
         ToDoFilterScreen(
             onFiltersChanged = {
                 showFilterScreen = false
+                uiState.onFiltersChanged()
             },
             onDismiss = {
                 showFilterScreen = false
