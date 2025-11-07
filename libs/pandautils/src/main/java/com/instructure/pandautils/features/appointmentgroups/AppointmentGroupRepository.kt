@@ -33,6 +33,7 @@ class AppointmentGroupRepository @Inject constructor(
     suspend fun getAppointmentGroups(
         courseIds: List<Long>,
         includePastAppointments: Boolean = false,
+        scope: String = "reservable",
         forceNetwork: Boolean = false
     ): DataResult<List<AppointmentGroup>> {
         return try {
@@ -41,6 +42,7 @@ class AppointmentGroupRepository @Inject constructor(
             appointmentGroupApi.getAppointmentGroups(
                 contextCodes = contextCodes,
                 includePastAppointments = includePastAppointments,
+                scope = scope,
                 restParams = params
             ).depaginate {
                 appointmentGroupApi.getNextPageAppointmentGroups(

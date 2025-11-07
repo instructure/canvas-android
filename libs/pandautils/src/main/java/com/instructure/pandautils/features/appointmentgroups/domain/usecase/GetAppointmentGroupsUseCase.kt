@@ -34,22 +34,38 @@ class GetAppointmentGroupsUseCase @Inject constructor(
 ) : UseCase<GetAppointmentGroupsUseCase.Params, List<AppointmentGroupDomain>>() {
 
     override suspend fun execute(params: Params): DataResult<List<AppointmentGroupDomain>> {
-        val appointmentGroupsResult = repository.getAppointmentGroups(
+        // Fetch reservable appointments (future only)
+        val reservableResult = repository.getAppointmentGroups(
             courseIds = params.courseIds,
-            includePastAppointments = params.includePastAppointments,
+            includePastAppointments = false,
+            scope = "reservable",
             forceNetwork = params.forceNetwork
         )
-        if (appointmentGroupsResult is DataResult.Fail) {
+
+        // Fetch manageable appointments (including past)
+        val manageableResult = repository.getAppointmentGroups(
+            courseIds = params.courseIds,
+            includePastAppointments = true,
+            scope = "manageable",
+            forceNetwork = params.forceNetwork
+        )
+
+        // Return fail if either call fails
+        if (reservableResult is DataResult.Fail || manageableResult is DataResult.Fail) {
             return DataResult.Fail()
         }
 
-        val appointmentGroups = (appointmentGroupsResult as DataResult.Success).data
+        val reservableGroups = (reservableResult as? DataResult.Success)?.data ?: emptyList()
+        val manageableGroups = (manageableResult as? DataResult.Success)?.data ?: emptyList()
 
-        val (startDate, endDate) = calculateDateRange(appointmentGroups)
+        // Merge the results: combine reservable with manageable past appointments
+        val mergedGroups = mergeAppointmentGroups(reservableGroups, manageableGroups)
+
+        val (startDate, endDate) = calculateDateRange(mergedGroups)
         val userEventsResult = repository.getUserEvents(startDate, endDate, params.forceNetwork)
         val userEvents = (userEventsResult as? DataResult.Success)?.data ?: emptyList()
 
-        val domainGroups = appointmentGroups.map { group ->
+        val domainGroups = mergedGroups.map { group ->
             AppointmentGroupDomain(
                 id = group.id,
                 title = group.title,
@@ -75,6 +91,26 @@ class GetAppointmentGroupsUseCase @Inject constructor(
         }
 
         return DataResult.Success(domainGroups)
+    }
+
+    private fun mergeAppointmentGroups(
+        reservableGroups: List<com.instructure.canvasapi2.models.AppointmentGroup>,
+        manageableGroups: List<com.instructure.canvasapi2.models.AppointmentGroup>
+    ): List<com.instructure.canvasapi2.models.AppointmentGroup> {
+        // Create a map of manageable groups by ID
+        val manageableMap = manageableGroups.associateBy { it.id }
+
+        // Start with all reservable groups
+        val merged = reservableGroups.toMutableList()
+
+        // For manageable groups that aren't in reservable, add them
+        manageableGroups.forEach { manageableGroup ->
+            if (manageableGroup !in merged) {
+                merged.add(manageableGroup)
+            }
+        }
+
+        return merged
     }
 
     private fun calculateDateRange(appointmentGroups: List<com.instructure.canvasapi2.models.AppointmentGroup>): Pair<String, String> {

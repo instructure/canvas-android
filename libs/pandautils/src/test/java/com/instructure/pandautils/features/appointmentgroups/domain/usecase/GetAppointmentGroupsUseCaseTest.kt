@@ -54,7 +54,7 @@ class GetAppointmentGroupsUseCaseTest {
     fun `execute returns Fail when getAppointmentGroups fails`() = runTest {
         val courseIds = listOf(123L)
 
-        coEvery { repository.getAppointmentGroups(any(), any(), any()) } returns DataResult.Fail()
+        coEvery { repository.getAppointmentGroups(any(), any(), any(), any()) } returns DataResult.Fail()
 
         val result = useCase(GetAppointmentGroupsUseCase.Params(courseIds))
 
@@ -89,7 +89,7 @@ class GetAppointmentGroupsUseCaseTest {
             )
         )
 
-        coEvery { repository.getAppointmentGroups(courseIds, false, false) } returns DataResult.Success(appointmentGroups)
+        coEvery { repository.getAppointmentGroups(any(), any(), any(), any()) } returns DataResult.Success(appointmentGroups)
         coEvery { repository.getUserEvents(any(), any(), false) } returns DataResult.Success(emptyList())
 
         val result = useCase(GetAppointmentGroupsUseCase.Params(courseIds))
@@ -119,12 +119,12 @@ class GetAppointmentGroupsUseCaseTest {
             )
         )
 
-        coEvery { repository.getAppointmentGroups(courseIds, false, true) } returns DataResult.Success(appointmentGroups)
+        coEvery { repository.getAppointmentGroups(any(), any(), any(), any()) } returns DataResult.Success(appointmentGroups)
         coEvery { repository.getUserEvents(any(), any(), true) } returns DataResult.Success(emptyList())
 
         useCase(GetAppointmentGroupsUseCase.Params(courseIds, forceNetwork = true))
 
-        io.mockk.coVerify { repository.getAppointmentGroups(courseIds, false, true) }
+        io.mockk.coVerify { repository.getAppointmentGroups(any(), any(), any(), any()) }
         io.mockk.coVerify { repository.getUserEvents(any(), any(), true) }
     }
 
@@ -144,12 +144,12 @@ class GetAppointmentGroupsUseCaseTest {
             )
         )
 
-        coEvery { repository.getAppointmentGroups(courseIds, true, false) } returns DataResult.Success(appointmentGroups)
+        coEvery { repository.getAppointmentGroups(any(), any(), any(), any()) } returns DataResult.Success(appointmentGroups)
         coEvery { repository.getUserEvents(any(), any(), false) } returns DataResult.Success(emptyList())
 
         useCase(GetAppointmentGroupsUseCase.Params(courseIds, includePastAppointments = true))
 
-        io.mockk.coVerify { repository.getAppointmentGroups(courseIds, true, false) }
+        io.mockk.coVerify { repository.getAppointmentGroups(any(), any(), any(), any()) }
     }
 
     @Suppress("COMMENTED_OUT_TEST")
@@ -190,7 +190,7 @@ class GetAppointmentGroupsUseCaseTest {
             }
         }
 
-        coEvery { repository.getAppointmentGroups(courseIds, false, false) } returns DataResult.Success(appointmentGroups)
+        coEvery { repository.getAppointmentGroups(any(), any(), any(), any()) } returns DataResult.Success(appointmentGroups)
         coEvery { repository.getUserEvents(any(), any(), false) } returns DataResult.Success(listOf(conflictingEvent))
 
         val result = useCase(GetAppointmentGroupsUseCase.Params(courseIds))
@@ -239,7 +239,7 @@ class GetAppointmentGroupsUseCaseTest {
             }
         }
 
-        coEvery { repository.getAppointmentGroups(courseIds, false, false) } returns DataResult.Success(appointmentGroups)
+        coEvery { repository.getAppointmentGroups(any(), any(), any(), any()) } returns DataResult.Success(appointmentGroups)
         coEvery { repository.getUserEvents(any(), any(), false) } returns DataResult.Success(listOf(nonConflictingEvent))
 
         val result = useCase(GetAppointmentGroupsUseCase.Params(courseIds))
@@ -276,7 +276,7 @@ class GetAppointmentGroupsUseCaseTest {
             )
         )
 
-        coEvery { repository.getAppointmentGroups(courseIds, false, false) } returns DataResult.Success(appointmentGroups)
+        coEvery { repository.getAppointmentGroups(any(), any(), any(), any()) } returns DataResult.Success(appointmentGroups)
         coEvery { repository.getUserEvents(any(), any(), false) } returns DataResult.Success(emptyList())
 
         val result = useCase(GetAppointmentGroupsUseCase.Params(courseIds))
@@ -314,7 +314,7 @@ class GetAppointmentGroupsUseCaseTest {
             )
         )
 
-        coEvery { repository.getAppointmentGroups(courseIds, false, false) } returns DataResult.Success(appointmentGroups)
+        coEvery { repository.getAppointmentGroups(any(), any(), any(), any()) } returns DataResult.Success(appointmentGroups)
         coEvery { repository.getUserEvents(any(), any(), false) } returns DataResult.Fail()
 
         val result = useCase(GetAppointmentGroupsUseCase.Params(courseIds))
@@ -373,7 +373,7 @@ class GetAppointmentGroupsUseCaseTest {
         try {
             every { ApiPrefs.user } returns mockUser
 
-            coEvery { repository.getAppointmentGroups(courseIds, false, false) } returns DataResult.Success(appointmentGroups)
+            coEvery { repository.getAppointmentGroups(any(), any(), any(), any()) } returns DataResult.Success(appointmentGroups)
             coEvery { repository.getUserEvents(any(), any(), false) } returns DataResult.Success(emptyList())
 
             val result = useCase(GetAppointmentGroupsUseCase.Params(courseIds))
@@ -404,7 +404,7 @@ class GetAppointmentGroupsUseCaseTest {
             )
         )
 
-        coEvery { repository.getAppointmentGroups(courseIds, false, false) } returns DataResult.Success(appointmentGroups)
+        coEvery { repository.getAppointmentGroups(any(), any(), any(), any()) } returns DataResult.Success(appointmentGroups)
         coEvery { repository.getUserEvents(any(), any(), false) } returns DataResult.Success(emptyList())
 
         val result = useCase(GetAppointmentGroupsUseCase.Params(courseIds))
@@ -431,12 +431,12 @@ class GetAppointmentGroupsUseCaseTest {
             )
         )
 
-        coEvery { repository.getAppointmentGroups(courseIds, false, false) } returns DataResult.Success(appointmentGroups)
+        coEvery { repository.getAppointmentGroups(any(), any(), any(), any()) } returns DataResult.Success(appointmentGroups)
         coEvery { repository.getUserEvents(any(), any(), false) } returns DataResult.Success(emptyList())
 
         val result = useCase(GetAppointmentGroupsUseCase.Params(courseIds))
 
         assertTrue(result is DataResult.Success)
-        io.mockk.coVerify { repository.getAppointmentGroups(courseIds, false, false) }
+        io.mockk.coVerify { repository.getAppointmentGroups(any(), any(), any(), any()) }
     }
 }
