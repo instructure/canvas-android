@@ -126,10 +126,9 @@ import com.instructure.horizon.horizonui.molecules.PillType
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.molecules.SpinnerSize
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
-import com.instructure.horizon.navigation.MainNavigationRoute
+import com.instructure.horizon.util.horizontalSafeDrawing
 import com.instructure.pandautils.compose.modifiers.conditional
 import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.orDefault
 import kotlinx.coroutines.launch
 import kotlin.math.abs
@@ -141,7 +140,7 @@ fun ModuleItemSequenceScreen(mainNavController: NavHostController, uiState: Modu
     val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
+        contentWindowInsets = WindowInsets.horizontalSafeDrawing,
         containerColor = HorizonColors.Surface.institution(),
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         bottomBar = {
@@ -551,11 +550,11 @@ private fun ModuleItemSequenceBottomBar(
     Surface(
         shadowElevation = HorizonElevation.level4,
         color = HorizonColors.Surface.pagePrimary(),
-        modifier = Modifier.windowInsetsPadding(WindowInsets.navigationBars)
     ) {
         Box(
             modifier = modifier
                 .fillMaxWidth()
+                .windowInsetsPadding(WindowInsets.navigationBars)
                 .padding(horizontal = 24.dp, vertical = 16.dp)
         ) {
             if (showPreviousButton) IconButton(

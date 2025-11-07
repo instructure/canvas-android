@@ -55,6 +55,7 @@ import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.organisms.navelements.SelectableNavigationItem
+import com.instructure.horizon.util.zeroScreenInsets
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.getActivityOrNull
 
@@ -91,7 +92,7 @@ fun HomeScreen(parentNavController: NavHostController, viewModel: HomeViewModel)
         if (theme != null && activity != null && !ThemePrefs.isThemeApplied) ThemePrefs.applyCanvasTheme(theme, activity)
     }
     Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
+        contentWindowInsets = WindowInsets.zeroScreenInsets,
         content = { padding ->
             if (uiState.initialDataLoading) {
                 val spinnerColor =
@@ -119,8 +120,12 @@ private fun BottomNavigationBar(
     updateShowAiAssist: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Surface(shadowElevation = HorizonElevation.level5) {
+    Surface(
+        shadowElevation = HorizonElevation.level5,
+        color = HorizonColors.Surface.pageSecondary()
+    ) {
         NavigationBar(
+            windowInsets = WindowInsets.zeroScreenInsets,
             containerColor = HorizonColors.Surface.pageSecondary(),
             modifier = modifier.windowInsetsPadding(WindowInsets.navigationBars)
         ) {

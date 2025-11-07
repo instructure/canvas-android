@@ -30,8 +30,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -84,6 +82,7 @@ import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.organisms.inputs.common.InputDropDownPopup
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
+import com.instructure.horizon.util.bottomNavigationScreenInsets
 import com.instructure.pandautils.compose.modifiers.conditional
 import kotlinx.coroutines.delay
 
@@ -101,7 +100,7 @@ fun LearnScreen(state: LearnUiState, mainNavController: NavHostController) {
     }
 
     Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
+        contentWindowInsets = WindowInsets.bottomNavigationScreenInsets,
         containerColor = HorizonColors.Surface.pagePrimary(),
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { padding ->
@@ -183,7 +182,6 @@ private fun LearnScreenWrapper(
     ) {
         Column(
             modifier = Modifier
-                .windowInsetsPadding(WindowInsets.statusBars)
                 .padding(top = 16.dp)
         ) {
             val selectedLearningItem = state.selectedLearningItem

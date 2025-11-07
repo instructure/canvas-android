@@ -21,8 +21,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.add
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -63,6 +65,8 @@ import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.navigation.MainNavigationRoute
+import com.instructure.horizon.util.topBarScreenInsets
+import com.instructure.horizon.util.zeroScreenInsets
 import com.instructure.pandautils.compose.modifiers.conditional
 import com.instructure.pandautils.utils.localisedFormat
 import java.util.Date
@@ -76,6 +80,7 @@ fun NotebookScreen(
 ) {
     val scrollState = rememberLazyListState()
     Scaffold(
+        contentWindowInsets = WindowInsets.zeroScreenInsets,
         containerColor = HorizonColors.Surface.pagePrimary(),
         topBar = {
             if (state.showTopBar) {
@@ -103,7 +108,7 @@ fun NotebookScreen(
             state = scrollState,
             modifier = Modifier
                 .padding(padding),
-            contentPadding = PaddingValues(24.dp)
+            contentPadding = WindowInsets.topBarScreenInsets.add(WindowInsets(24.dp, 24.dp, 24.dp, 24.dp)).asPaddingValues()
         ) {
             if (state.showFilters && state.notes.isNotEmpty()) {
                 item {

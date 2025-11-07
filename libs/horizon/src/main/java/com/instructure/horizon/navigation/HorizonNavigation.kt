@@ -52,6 +52,7 @@ import com.instructure.horizon.navigation.MainNavigationRoute.Companion.ASSIGNME
 import com.instructure.horizon.navigation.MainNavigationRoute.Companion.COURSE_ID
 import com.instructure.horizon.navigation.MainNavigationRoute.Companion.PAGE_ID
 import com.instructure.horizon.navigation.MainNavigationRoute.Companion.QUIZ_ID
+import com.instructure.horizon.util.zeroScreenInsets
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
@@ -88,7 +89,7 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
+        contentWindowInsets = WindowInsets.zeroScreenInsets,
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
     ) { innerPadding ->
         NavHost(

@@ -90,6 +90,7 @@ import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextAreaState
 import com.instructure.horizon.horizonui.organisms.inputs.textfield.TextField
 import com.instructure.horizon.horizonui.organisms.inputs.textfield.TextFieldInputSize
 import com.instructure.horizon.horizonui.organisms.inputs.textfield.TextFieldState
+import com.instructure.horizon.util.topBarScreenInsets
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -109,7 +110,7 @@ fun HorizonInboxComposeScreen(
     }
 
     Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
+        contentWindowInsets = WindowInsets.topBarScreenInsets,
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         containerColor = HorizonColors.Surface.pageSecondary(),
         topBar = {
