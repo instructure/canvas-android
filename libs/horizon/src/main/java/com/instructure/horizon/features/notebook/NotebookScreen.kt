@@ -63,8 +63,6 @@ import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.foundation.horizonShadow
 import com.instructure.horizon.horizonui.molecules.DropdownChip
 import com.instructure.horizon.horizonui.molecules.DropdownItem
-import com.instructure.horizon.horizonui.molecules.FilterDropdownChip
-import com.instructure.horizon.horizonui.molecules.FilterDropdownItem
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
@@ -185,10 +183,11 @@ private fun FilterContent(
         value = null as NotebookType?,
         label = context.getString(R.string.notebookTypeAllNotes),
         iconRes = R.drawable.menu,
-        iconTint = HorizonColors.Icon.default()
+        iconTint = HorizonColors.Icon.default(),
+        backgroundColor = HorizonColors.PrimitivesGrey.grey12()
     )
-    val importantColor = HorizonColors.PrimitivesSea.sea12()
-    val confusingColor = HorizonColors.PrimitivesRed.red12()
+    val importantBgColor = HorizonColors.PrimitivesSea.sea12()
+    val confusingBgColor = HorizonColors.PrimitivesRed.red12()
 
     val typeItems = remember {
 
@@ -198,15 +197,15 @@ private fun FilterContent(
                 value = NotebookType.Important,
                 label = context.getString(NotebookType.Important.labelRes),
                 iconRes = NotebookType.Important.iconRes,
-                iconTint = context.getColor(NotebookType.Important.color).let { Color(it) },
-                backgroundColor = importantColor
+                iconTint = Color(context.getColor(NotebookType.Important.color)),
+                backgroundColor = importantBgColor
             ),
             DropdownItem(
                 value = NotebookType.Confusing,
                 label = context.getString(NotebookType.Confusing.labelRes),
                 iconRes = NotebookType.Confusing.iconRes,
-                iconTint = context.getColor(NotebookType.Confusing.color).let { androidx.compose.ui.graphics.Color(it) },
-                backgroundColor = confusingColor
+                iconTint = Color(context.getColor(NotebookType.Confusing.color)),
+                backgroundColor = confusingBgColor
             )
         )
     }
@@ -231,7 +230,9 @@ private fun FilterContent(
                 selectedItem = selectedTypeItem,
                 onItemSelected = { item -> onFilterSelected(item?.value) },
                 placeholder = stringResource(R.string.notebookFilterTypePlaceholder),
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                dropdownWidth = 178.dp,
+                verticalPadding = 6.dp
             )
         }
 

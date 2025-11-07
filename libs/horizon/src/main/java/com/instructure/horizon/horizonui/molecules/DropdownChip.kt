@@ -16,42 +16,47 @@
 package com.instructure.horizon.horizonui.molecules
 
 import androidx.annotation.DrawableRes
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.DpOffset
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.PopupProperties
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonBorder
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
+import com.instructure.horizon.horizonui.organisms.inputs.common.InputDropDownPopup
+import com.instructure.pandautils.compose.modifiers.conditional
 
 data class DropdownItem<T>(
     val value: T,
@@ -66,100 +71,135 @@ fun <T> DropdownChip(
     items: List<DropdownItem<out T>>,
     selectedItem: DropdownItem<out T>?,
     onItemSelected: (DropdownItem<out T>?) -> Unit,
-    placeholder: String,
     modifier: Modifier = Modifier,
-    borderColor: Color = HorizonColors.LineAndBorder.containerStroke(),
-    contentColor: Color = HorizonColors.Text.body()
+    dropdownWidth: Dp? = null,
+    placeholder: String,
+    borderColor: Color = HorizonColors.LineAndBorder.lineStroke(),
+    contentColor: Color = HorizonColors.Text.body(),
+    verticalPadding: Dp = 0.dp
 ) {
-    var expanded by remember { mutableStateOf(true) }
+    var isMenuOpen by remember { mutableStateOf(false) }
+    val localDensity = LocalDensity.current
+    var heightInPx by remember { mutableIntStateOf(0) }
+    var width by remember { mutableStateOf(dropdownWidth) }
+    val iconRotation = animateIntAsState(
+        targetValue = if (isMenuOpen) 180 else 0,
+        label = "iconRotation"
+    )
 
-    Box(modifier = modifier) {
+    val expandedState = stringResource(R.string.a11y_expanded)
+    val collapsedState = stringResource(R.string.a11y_collapsed)
+
+    Column(modifier = modifier) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
+                .background(
+                    if (isMenuOpen) {
+                        HorizonColors.PrimitivesGrey.grey12()
+                    } else {
+                        HorizonColors.Surface.cardPrimary()
+                    }, shape = HorizonCornerRadius.level1
+                )
                 .border(
                     HorizonBorder.level1(color = borderColor),
                     HorizonCornerRadius.level1
                 )
-                .clickable { expanded = true }
+                .clip(HorizonCornerRadius.level1)
+                .clickable { isMenuOpen = !isMenuOpen }
                 .padding(horizontal = 8.dp, vertical = 2.dp)
+                .onGloballyPositioned {
+                    heightInPx = it.size.height
+                    if (dropdownWidth == null) {
+                        width = with(localDensity) { it.size.width.toDp() }
+                    }
+                }
+                .clearAndSetSemantics {
+                    role = Role.DropdownList
+                    stateDescription = if (isMenuOpen) expandedState else collapsedState
+                    contentDescription = selectedItem?.label ?: placeholder
+                }
         ) {
             Text(
                 text = selectedItem?.label ?: placeholder,
                 style = HorizonTypography.p2,
                 color = contentColor,
-                modifier = Modifier.padding(end = 2.dp)
+                modifier = Modifier.padding(
+                    end = 2.dp,
+                    top = verticalPadding,
+                    bottom = verticalPadding
+                )
             )
 
             Icon(
                 painter = painterResource(R.drawable.keyboard_arrow_down),
                 contentDescription = null,
-                modifier = Modifier.size(16.dp),
+                modifier = Modifier
+                    .size(16.dp)
+                    .rotate(iconRotation.value.toFloat()),
                 tint = contentColor
             )
         }
 
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
-            shape = RoundedCornerShape(16.dp),
-            border = BorderStroke(1.dp, HorizonColors.LineAndBorder.containerStroke()),
-            containerColor = HorizonColors.Surface.cardPrimary(),
-            offset = DpOffset(0.dp, 4.dp),
-            modifier = Modifier.wrapContentSize()
-        ) {
-            items.forEach { item ->
-                val isSelected = selectedItem?.value == item.value
-                DropdownMenuItem(
-                    text = {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .then(
-                                    if (/*isSelected*/ true && item.backgroundColor != null) {
-                                        Modifier.background(
-                                            item.backgroundColor
-                                        )
-                                    } else {
-                                        Modifier
-                                    }
-                                )
-                                .fillMaxSize()
-                                .padding(horizontal = 8.dp)
-                        ) {
-                            item.iconRes?.let { iconRes ->
-                                Icon(
-                                    painter = painterResource(iconRes),
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .size(20.dp)
-                                        .padding(end = 4.dp),
-                                    tint = item.iconTint ?: HorizonColors.Icon.default()
-                                )
-                            }
-                            Text(
-                                text = item.label,
-                                style = HorizonTypography.p2,
-                                color = if (isSelected && item.backgroundColor != null) {
-                                    item.iconTint ?: HorizonColors.Text.body()
-                                } else {
-                                    HorizonColors.Text.body()
-                                }
-                            )
-                        }
-                    },
-                    onClick = {
-                        onItemSelected(item)
-                        expanded = false
-                    },
-                    colors = MenuDefaults.itemColors(
-                        textColor = HorizonColors.Text.body()
-                    ),
-                    contentPadding = PaddingValues(0.dp),
-                    modifier = Modifier.background(item.backgroundColor ?: Color.Transparent)
+        InputDropDownPopup(
+            isMenuOpen = isMenuOpen,
+            options = items,
+            width = width,
+            verticalOffsetPx = heightInPx,
+            onMenuOpenChanged = { isMenuOpen = it },
+            onOptionSelected = { item ->
+                if (selectedItem != item) {
+                    onItemSelected(item)
+                }
+            },
+            item = { item ->
+                DropdownChipItem(item, selectedItem)
+            }
+        )
+    }
+}
+
+@Composable
+private fun <T> DropdownChipItem(
+    item: DropdownItem<out T>,
+    selectedItem: DropdownItem<out T>?
+) {
+    val isSelected = selectedItem?.value == item.value
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .conditional(isSelected && item.backgroundColor != null) {
+                background(
+                    item.backgroundColor!!,
                 )
             }
+            .padding(horizontal = 12.dp, vertical = 10.dp)
+    ) {
+        item.iconRes?.let { iconRes ->
+            Icon(
+                painter = painterResource(iconRes),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(24.dp)
+                    .padding(1.dp),
+                tint = if (isSelected) {
+                    item.iconTint ?: HorizonColors.Icon.default()
+                } else {
+                    HorizonColors.Icon.default()
+                }
+            )
         }
+        Text(
+            text = item.label,
+            style = HorizonTypography.p1,
+            color = if (isSelected && item.backgroundColor != null) {
+                item.iconTint ?: HorizonColors.Text.body()
+            } else {
+                HorizonColors.Text.body()
+            },
+            modifier = Modifier.padding(start = 4.dp)
+        )
     }
 }
 
@@ -172,7 +212,7 @@ private fun DropdownChipPreview() {
             label = "Important",
             iconRes = R.drawable.flag_2,
             iconTint = HorizonColors.Icon.action(),
-            backgroundColor = Color.Red
+            backgroundColor = HorizonColors.PrimitivesSea.sea12()
         ),
         DropdownItem(
             value = "unclear",
@@ -188,6 +228,8 @@ private fun DropdownChipPreview() {
         items = items,
         selectedItem = selectedItem,
         onItemSelected = { selectedItem = it },
+        dropdownWidth = 140.dp,
+        verticalPadding = 6.dp,
         placeholder = "Type"
     )
 }
