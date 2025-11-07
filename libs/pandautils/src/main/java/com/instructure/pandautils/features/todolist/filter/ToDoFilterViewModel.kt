@@ -18,14 +18,19 @@ package com.instructure.pandautils.features.todolist.filter
 import android.content.Context
 import android.text.format.DateFormat
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.R
+import com.instructure.pandautils.room.appdatabase.daos.ToDoFilterDao
+import com.instructure.pandautils.room.appdatabase.entities.ToDoFilterEntity
+import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
@@ -37,35 +42,66 @@ private const val FILTER_FAVORITE_COURSES = "favorite_courses"
 
 @HiltViewModel
 class ToDoFilterViewModel @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val apiPrefs: ApiPrefs,
+    private val toDoFilterDao: ToDoFilterDao
 ) : ViewModel() {
 
     private val checkboxStates = mutableMapOf(
         FILTER_PERSONAL_TODOS to false,
-        FILTER_CALENDAR_EVENTS to true,
+        FILTER_CALENDAR_EVENTS to false,
         FILTER_SHOW_COMPLETED to false,
         FILTER_FAVORITE_COURSES to false
     )
+
+    private var selectedPastOption = DateRangeSelection.ONE_WEEK
+    private var selectedFutureOption = DateRangeSelection.ONE_WEEK
 
     private val _uiState = MutableStateFlow(createInitialUiState())
     val uiState = _uiState.asStateFlow()
 
     init {
-        createInitialUiState()
+        loadFiltersFromDatabase()
+    }
+
+    private fun loadFiltersFromDatabase() {
+        viewModelScope.launch {
+            val savedFilters = toDoFilterDao.findByUser(
+                apiPrefs.fullDomain,
+                apiPrefs.user?.id.orDefault()
+            )
+
+            if (savedFilters != null) {
+                checkboxStates[FILTER_PERSONAL_TODOS] = savedFilters.personalTodos
+                checkboxStates[FILTER_CALENDAR_EVENTS] = savedFilters.calendarEvents
+                checkboxStates[FILTER_SHOW_COMPLETED] = savedFilters.showCompleted
+                checkboxStates[FILTER_FAVORITE_COURSES] = savedFilters.favoriteCourses
+                selectedPastOption = DateRangeSelection.valueOf(savedFilters.pastDateRange)
+                selectedFutureOption = DateRangeSelection.valueOf(savedFilters.futureDateRange)
+            }
+
+            _uiState.update { createInitialUiState() }
+        }
     }
 
     private fun createInitialUiState(): ToDoFilterUiState {
         return ToDoFilterUiState(
             checkboxItems = createCheckboxItems(),
             pastDateOptions = createPastDateOptions(),
-            selectedPastOption = DateRangeSelection.ONE_WEEK,
+            selectedPastOption = selectedPastOption,
             futureDateOptions = createFutureDateOptions(),
-            selectedFutureOption = DateRangeSelection.ONE_WEEK,
+            selectedFutureOption = selectedFutureOption,
             onPastDaysChanged = { handlePastDaysChanged(it) },
             onFutureDaysChanged = { handleFutureDaysChanged(it) },
             onDone = { handleDone() },
-            onDismiss = { handleDismiss() }
+            onFiltersApplied = { handleFiltersApplied() }
         )
+    }
+
+    private fun handleFiltersApplied() {
+        _uiState.update {
+            it.copy(shouldCloseAndApplyFilters = false)
+        }
     }
 
     private fun createCheckboxItems(): List<FilterCheckboxItem> {
@@ -101,77 +137,49 @@ class ToDoFilterViewModel @Inject constructor(
     }
 
     private fun handlePastDaysChanged(option: DateRangeSelection) {
+        selectedPastOption = option
         _uiState.update {
             it.copy(selectedPastOption = option)
         }
     }
 
     private fun handleFutureDaysChanged(option: DateRangeSelection) {
+        selectedFutureOption = option
         _uiState.update {
             it.copy(selectedFutureOption = option)
         }
     }
 
     private fun handleDone() {
+        viewModelScope.launch {
+            val savedFilters = toDoFilterDao.findByUser(
+                apiPrefs.fullDomain,
+                apiPrefs.user?.id.orDefault()
+            )
 
-    }
+            val areDateFiltersChanged = savedFilters?.let {
+                it.pastDateRange != selectedPastOption.name || it.futureDateRange != selectedFutureOption.name
+            } ?: true
 
-    private fun handleDismiss() {
-        // No need to apply changes when dismissing
-    }
+            val filterEntity = ToDoFilterEntity(
+                id = savedFilters?.id ?: 0,
+                userDomain = apiPrefs.fullDomain,
+                userId = apiPrefs.user?.id.orDefault(),
+                personalTodos = checkboxStates[FILTER_PERSONAL_TODOS] ?: false,
+                calendarEvents = checkboxStates[FILTER_CALENDAR_EVENTS] ?: false,
+                showCompleted = checkboxStates[FILTER_SHOW_COMPLETED] ?: false,
+                favoriteCourses = checkboxStates[FILTER_FAVORITE_COURSES] ?: false,
+                pastDateRange = selectedPastOption.name,
+                futureDateRange = selectedFutureOption.name
+            )
+            toDoFilterDao.insertOrUpdate(filterEntity)
 
-    // TODO maybe move these to some common place to be used on the ToDo screen and widget
-    fun calculatePastDateRange(selection: DateRangeSelection): Date {
-        val calendar = Calendar.getInstance().apply { time = Date() }
-
-        val weeksToAdd = when (selection) {
-            DateRangeSelection.TODAY -> return calendar.apply { setStartOfDay() }.time
-            DateRangeSelection.THIS_WEEK -> 0
-            DateRangeSelection.ONE_WEEK -> -1
-            DateRangeSelection.TWO_WEEKS -> -2
-            DateRangeSelection.THREE_WEEKS -> -3
-            DateRangeSelection.FOUR_WEEKS -> -4
+            _uiState.update {
+                it.copy(
+                    shouldCloseAndApplyFilters = true,
+                )
+            }
         }
-
-        return calendar.apply {
-            add(Calendar.WEEK_OF_YEAR, weeksToAdd)
-            set(Calendar.DAY_OF_WEEK, calendar.firstDayOfWeek)
-            setStartOfDay()
-        }.time
-    }
-
-    fun calculateFutureDateRange(selection: DateRangeSelection): Date {
-        val calendar = Calendar.getInstance().apply { time = Date() }
-
-        val weeksToAdd = when (selection) {
-            DateRangeSelection.TODAY -> return calendar.apply { setEndOfDay() }.time
-            DateRangeSelection.THIS_WEEK -> 0
-            DateRangeSelection.ONE_WEEK -> 1
-            DateRangeSelection.TWO_WEEKS -> 2
-            DateRangeSelection.THREE_WEEKS -> 3
-            DateRangeSelection.FOUR_WEEKS -> 4
-        }
-
-        return calendar.apply {
-            add(Calendar.WEEK_OF_YEAR, weeksToAdd)
-            set(Calendar.DAY_OF_WEEK, calendar.firstDayOfWeek)
-            add(Calendar.DAY_OF_YEAR, 6)
-            setEndOfDay()
-        }.time
-    }
-
-    private fun Calendar.setStartOfDay() {
-        set(Calendar.HOUR_OF_DAY, 0)
-        set(Calendar.MINUTE, 0)
-        set(Calendar.SECOND, 0)
-        set(Calendar.MILLISECOND, 0)
-    }
-
-    private fun Calendar.setEndOfDay() {
-        set(Calendar.HOUR_OF_DAY, 23)
-        set(Calendar.MINUTE, 59)
-        set(Calendar.SECOND, 59)
-        set(Calendar.MILLISECOND, 999)
     }
 
     private fun formatDateText(date: Date, isPast: Boolean): String {
@@ -187,7 +195,7 @@ class ToDoFilterViewModel @Inject constructor(
 
     private fun createPastDateOptions(): List<DateRangeOption> {
         return DateRangeSelection.entries.reversed().map { selection ->
-            val date = calculatePastDateRange(selection)
+            val date = selection.calculatePastDateRange()
             DateRangeOption(
                 selection = selection,
                 labelText = context.getString(selection.pastLabelResId),
@@ -198,7 +206,7 @@ class ToDoFilterViewModel @Inject constructor(
 
     private fun createFutureDateOptions(): List<DateRangeOption> {
         return DateRangeSelection.entries.map { selection ->
-            val date = calculateFutureDateRange(selection)
+            val date = selection.calculateFutureDateRange()
             DateRangeOption(
                 selection = selection,
                 labelText = context.getString(selection.futureLabelResId),

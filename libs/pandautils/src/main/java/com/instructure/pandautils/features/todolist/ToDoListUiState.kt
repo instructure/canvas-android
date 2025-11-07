@@ -34,7 +34,8 @@ data class ToDoListUiState(
     val onItemClicked: (String) -> Unit = {},
     val onRefresh: () -> Unit = {},
     val toDoCount: Int? = null,
-    val onToDoCountChanged: () -> Unit = {}
+    val onToDoCountChanged: () -> Unit = {},
+    val onFiltersChanged: () -> Unit = {}
 )
 
 data class MarkedAsDoneItem(

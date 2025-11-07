@@ -33,6 +33,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -62,6 +63,13 @@ fun ToDoFilterScreen(
     val viewModel = hiltViewModel<ToDoFilterViewModel>()
     val uiState by viewModel.uiState.collectAsState()
 
+    LaunchedEffect(uiState.shouldCloseAndApplyFilters) {
+        if (uiState.shouldCloseAndApplyFilters) {
+            onFiltersChanged()
+            uiState.onFiltersApplied()
+        }
+    }
+
     Scaffold(
         backgroundColor = colorResource(R.color.backgroundLightest),
         topBar = {
@@ -74,7 +82,6 @@ fun ToDoFilterScreen(
                     TextButton(
                         onClick = {
                             uiState.onDone()
-                            onDismiss()
                         }
                     ) {
                         Text(
@@ -127,7 +134,6 @@ private fun ToDoFilterContent(
                 options = uiState.pastDateOptions,
                 selectedOption = uiState.selectedPastOption,
                 onOptionSelected = uiState.onPastDaysChanged,
-                isPastRange = true,
                 showDivider = true
             )
         }
@@ -141,7 +147,6 @@ private fun ToDoFilterContent(
                 options = uiState.futureDateOptions,
                 selectedOption = uiState.selectedFutureOption,
                 onOptionSelected = uiState.onFutureDaysChanged,
-                isPastRange = false,
                 showDivider = false
             )
         }
@@ -210,7 +215,6 @@ private fun DateRangeOptions(
     options: List<DateRangeOption>,
     selectedOption: DateRangeSelection,
     onOptionSelected: (DateRangeSelection) -> Unit,
-    isPastRange: Boolean,
     showDivider: Boolean
 ) {
     Column {
@@ -218,8 +222,7 @@ private fun DateRangeOptions(
             DateRangeOptionItem(
                 option = option,
                 isSelected = selectedOption == option.selection,
-                onSelected = { onOptionSelected(option.selection) },
-                isPastRange = isPastRange
+                onSelected = { onOptionSelected(option.selection) }
             )
         }
 
@@ -233,8 +236,7 @@ private fun DateRangeOptions(
 private fun DateRangeOptionItem(
     option: DateRangeOption,
     isSelected: Boolean,
-    onSelected: () -> Unit,
-    isPastRange: Boolean
+    onSelected: () -> Unit
 ) {
     Row(
         modifier = Modifier

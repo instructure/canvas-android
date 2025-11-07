@@ -16,6 +16,8 @@
 package com.instructure.pandautils.features.todolist.filter
 
 import com.instructure.pandautils.R
+import java.util.Calendar
+import java.util.Date
 
 data class ToDoFilterUiState(
     val checkboxItems: List<FilterCheckboxItem> = emptyList(),
@@ -23,10 +25,11 @@ data class ToDoFilterUiState(
     val selectedPastOption: DateRangeSelection = DateRangeSelection.ONE_WEEK,
     val futureDateOptions: List<DateRangeOption> = emptyList(),
     val selectedFutureOption: DateRangeSelection = DateRangeSelection.ONE_WEEK,
+    val shouldCloseAndApplyFilters: Boolean = false,
     val onPastDaysChanged: (DateRangeSelection) -> Unit = {},
     val onFutureDaysChanged: (DateRangeSelection) -> Unit = {},
     val onDone: () -> Unit = {},
-    val onDismiss: () -> Unit = {}
+    val onFiltersApplied: () -> Unit = {}
 )
 
 data class FilterCheckboxItem(
@@ -47,5 +50,58 @@ enum class DateRangeSelection(val pastLabelResId: Int, val futureLabelResId: Int
     ONE_WEEK(R.string.todoFilterLastWeek, R.string.todoFilterNextWeek),
     TWO_WEEKS(R.string.todoFilterTwoWeeks, R.string.todoFilterInTwoWeeks),
     THREE_WEEKS(R.string.todoFilterThreeWeeks, R.string.todoFilterInThreeWeeks),
-    FOUR_WEEKS(R.string.todoFilterFourWeeks, R.string.todoFilterInFourWeeks)
+    FOUR_WEEKS(R.string.todoFilterFourWeeks, R.string.todoFilterInFourWeeks);
+
+    fun calculatePastDateRange(): Date {
+        val calendar = Calendar.getInstance().apply { time = Date() }
+
+        val weeksToAdd = when (this) {
+            TODAY -> return calendar.apply { setStartOfDay() }.time
+            THIS_WEEK -> 0
+            ONE_WEEK -> -1
+            TWO_WEEKS -> -2
+            THREE_WEEKS -> -3
+            FOUR_WEEKS -> -4
+        }
+
+        return calendar.apply {
+            add(Calendar.WEEK_OF_YEAR, weeksToAdd)
+            set(Calendar.DAY_OF_WEEK, calendar.firstDayOfWeek)
+            setStartOfDay()
+        }.time
+    }
+
+    fun calculateFutureDateRange(): Date {
+        val calendar = Calendar.getInstance().apply { time = Date() }
+
+        val weeksToAdd = when (this) {
+            TODAY -> return calendar.apply { setEndOfDay() }.time
+            THIS_WEEK -> 0
+            ONE_WEEK -> 1
+            TWO_WEEKS -> 2
+            THREE_WEEKS -> 3
+            FOUR_WEEKS -> 4
+        }
+
+        return calendar.apply {
+            add(Calendar.WEEK_OF_YEAR, weeksToAdd)
+            set(Calendar.DAY_OF_WEEK, calendar.firstDayOfWeek)
+            add(Calendar.DAY_OF_YEAR, 6)
+            setEndOfDay()
+        }.time
+    }
+}
+
+private fun Calendar.setStartOfDay() {
+    set(Calendar.HOUR_OF_DAY, 0)
+    set(Calendar.MINUTE, 0)
+    set(Calendar.SECOND, 0)
+    set(Calendar.MILLISECOND, 0)
+}
+
+private fun Calendar.setEndOfDay() {
+    set(Calendar.HOUR_OF_DAY, 23)
+    set(Calendar.MINUTE, 59)
+    set(Calendar.SECOND, 59)
+    set(Calendar.MILLISECOND, 999)
 }
