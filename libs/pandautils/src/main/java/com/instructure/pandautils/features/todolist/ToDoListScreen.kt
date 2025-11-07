@@ -190,7 +190,9 @@ fun ToDoListScreen(
                 actions = {
                     IconButton(onClick = { showFilterScreen = true }) {
                         Icon(
-                            painter = painterResource(id = R.drawable.ic_filter_outline),
+                            painter = painterResource(
+                                id = if (uiState.isFilterApplied) R.drawable.ic_filter_filled else R.drawable.ic_filter_outline
+                            ),
                             contentDescription = stringResource(id = R.string.a11y_contentDescriptionToDoFilter)
                         )
                     }
