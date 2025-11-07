@@ -198,45 +198,47 @@ fun CalendarScreen(
                 }
             },
             floatingActionButton = {
-                val fabExpandedState = remember { mutableStateOf(false) }
-                ExpandableFloatingActionButton(
-                    icon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_add),
-                            tint = colorResource(id = R.color.textLightest),
-                            contentDescription = stringResource(id = R.string.calendarAddNewCalendarItemContentDescription)
-                        )
-                    },
-                    expanded = fabExpandedState,
-                    expandedItems = listOfNotNull(
-                        {
-                            ExpandableFabItem(
-                                icon = painterResource(id = R.drawable.ic_todo),
-                                text = stringResource(id = R.string.calendarAddToDo),
-                                modifier = Modifier
-                                    .clickable {
-                                        fabExpandedState.value = false
-                                        actionHandler(CalendarAction.AddToDoTapped)
-                                    }
-                                    .semantics { traversalIndex = 1f }
+                if (!calendarScreenUiState.showAppointmentGroups) {
+                    val fabExpandedState = remember { mutableStateOf(false) }
+                    ExpandableFloatingActionButton(
+                        icon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_add),
+                                tint = colorResource(id = R.color.textLightest),
+                                contentDescription = stringResource(id = R.string.calendarAddNewCalendarItemContentDescription)
                             )
                         },
-                        if (calendarScreenUiState.showAddEventButton) {
+                        expanded = fabExpandedState,
+                        expandedItems = listOfNotNull(
                             {
                                 ExpandableFabItem(
-                                    icon = painterResource(id = R.drawable.ic_calendar_month_24),
-                                    text = stringResource(id = R.string.calendarAddEvent),
+                                    icon = painterResource(id = R.drawable.ic_todo),
+                                    text = stringResource(id = R.string.calendarAddToDo),
                                     modifier = Modifier
                                         .clickable {
                                             fabExpandedState.value = false
-                                            actionHandler(CalendarAction.AddEventTapped)
+                                            actionHandler(CalendarAction.AddToDoTapped)
                                         }
-                                        .semantics { traversalIndex = 2f }
+                                        .semantics { traversalIndex = 1f }
                                 )
-                            }
-                        } else null
+                            },
+                            if (calendarScreenUiState.showAddEventButton) {
+                                {
+                                    ExpandableFabItem(
+                                        icon = painterResource(id = R.drawable.ic_calendar_month_24),
+                                        text = stringResource(id = R.string.calendarAddEvent),
+                                        modifier = Modifier
+                                            .clickable {
+                                                fabExpandedState.value = false
+                                                actionHandler(CalendarAction.AddEventTapped)
+                                            }
+                                            .semantics { traversalIndex = 2f }
+                                    )
+                                }
+                            } else null
+                        )
                     )
-                )
+                }
             }
         )
     }

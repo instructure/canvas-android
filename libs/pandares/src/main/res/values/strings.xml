@@ -2219,4 +2219,8 @@
     <string name="todoMarkedAsNotDone">%s marked as not done</string>
     <string name="todoMarkedAsDoneSnackbarUndo">Undo</string>
     <string name="todoActionOffline">This action cannot be performed offline</string>
+
+    <!-- Appointment Groups Calendar -->
+    <string name="calendarEventReserved">Reserved</string>
+    <string name="a11y_reserveSlot">Reserve slot</string>
 </resources>

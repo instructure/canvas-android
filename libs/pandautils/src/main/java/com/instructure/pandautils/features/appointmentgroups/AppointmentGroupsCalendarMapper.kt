@@ -51,7 +51,7 @@ object AppointmentGroupsCalendarMapper {
             date = startTime,
             status = if (slot.isReservedByMe) "Reserved" else "Available",
             tag = appointmentGroup.title,
-            isReservation = slot.isReservedByMe,
+            isReservation = true,
             reservationId = slot.myReservationId,
             appointmentGroupId = appointmentGroup.id,
             canCancel = slot.isReservedByMe

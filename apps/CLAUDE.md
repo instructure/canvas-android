@@ -241,3 +241,5 @@ When creating a pull request, use the template located at `/PULL_REQUEST_TEMPLAT
 - Checklist (E2E tests, dark/light mode, landscape/tablet, accessibility, product approval)
 
 Use `gh pr create` with the template to create PRs from the command line.
+- New string resources should always go to the pandares module
+- only add comments if specifically asked to do so

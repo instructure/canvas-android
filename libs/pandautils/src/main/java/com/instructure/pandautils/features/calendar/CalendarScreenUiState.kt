@@ -125,6 +125,7 @@ sealed class CalendarAction {
     data object PullToRefresh : CalendarAction()
     data object TodayTapHandled : CalendarAction()
     data class CancelReservation(val reservationId: Long, val appointmentGroupId: Long) : CalendarAction()
+    data class ReserveAppointmentSlot(val slotId: Long) : CalendarAction()
     data class AppointmentGroupsToggled(val isEnabled: Boolean) : CalendarAction()
 }
 

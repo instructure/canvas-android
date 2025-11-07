@@ -34,6 +34,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.appointmentgroups.AppointmentGroupsCalendarMapper
 import com.instructure.pandautils.features.appointmentgroups.domain.usecase.CancelReservationUseCase
 import com.instructure.pandautils.features.appointmentgroups.domain.usecase.GetAppointmentGroupsUseCase
+import com.instructure.pandautils.features.appointmentgroups.domain.usecase.ReserveAppointmentSlotUseCase
 import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
 import com.instructure.pandautils.utils.getIconForPlannerItem
 import com.instructure.pandautils.utils.getTagForPlannerItem
@@ -72,6 +73,7 @@ class CalendarViewModel @Inject constructor(
     val calendarBehavior: CalendarBehavior,
     private val cancelReservationUseCase: CancelReservationUseCase,
     private val getAppointmentGroupsUseCase: GetAppointmentGroupsUseCase,
+    private val reserveAppointmentSlotUseCase: ReserveAppointmentSlotUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -449,6 +451,7 @@ class CalendarViewModel @Inject constructor(
 
             is CalendarAction.CancelReservation -> cancelReservation(calendarAction.reservationId, calendarAction.appointmentGroupId)
             is CalendarAction.AppointmentGroupsToggled -> handleAppointmentGroupsToggled(calendarAction.isEnabled)
+            is CalendarAction.ReserveAppointmentSlot -> reserveAppointmentSlot(calendarAction.slotId)
         }
     }
 
@@ -591,7 +594,14 @@ class CalendarViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.emit(createNewUiState(loadingMonths = true))
 
-            loadEventsForMonth(selectedDay, refresh = true)
+            if (showAppointmentGroups) {
+                awaitAll(
+                    async { loadEventsForMonth(selectedDay, refresh = true) },
+                    async { loadAppointmentGroups(forceNetwork = true) }
+                )
+            } else {
+                loadEventsForMonth(selectedDay, refresh = true)
+            }
 
             awaitAll(
                 async { loadEventsForMonth(selectedDay.plusMonths(1)) },
@@ -663,29 +673,45 @@ class CalendarViewModel @Inject constructor(
 
     private fun cancelReservation(reservationId: Long, appointmentGroupId: Long) {
         viewModelScope.launch {
-            // Find and store all items with matching reservationId for potential rollback
-            val removedItems = mutableListOf<Pair<LocalDate, PlannerItem>>()
+            var slotToCancel: EventUiState? = null
+            var slotDateKey: LocalDate? = null
+            val originalEvent: EventUiState?
 
-            for ((date, items) in eventsByDay) {
-                val toRemove = items.filter { it.plannable.id == reservationId }
-                toRemove.forEach { item ->
-                    removedItems.add(date to item)
-                    items.remove(item)
+            for ((date, events) in appointmentGroupEventsByDay) {
+                val found = events.find { it.reservationId == reservationId }
+                if (found != null) {
+                    slotToCancel = found
+                    slotDateKey = date
+                    break
                 }
             }
 
-            // Update UI optimistically
-            _uiState.emit(createNewUiState())
+            if (slotToCancel != null && slotDateKey != null) {
+                originalEvent = slotToCancel
+                val unReservedEvent = slotToCancel.copy(
+                    canCancel = false,
+                    status = "Available",
+                    reservationId = null
+                )
 
-            // Call the usecase to cancel via API
-            val result = cancelReservationUseCase.invoke(CancelReservationUseCase.Params(reservationId))
-
-            // If the cancellation failed, restore the removed items
-            if (result is DataResult.Fail) {
-                removedItems.forEach { (date, item) ->
-                    eventsByDay.getOrPut(date) { mutableListOf() }.add(item)
+                val eventList = appointmentGroupEventsByDay[slotDateKey]
+                val index = eventList?.indexOfFirst { it.reservationId == reservationId } ?: -1
+                if (index >= 0) {
+                    eventList?.set(index, unReservedEvent)
                 }
+
                 _uiState.emit(createNewUiState())
+
+                val result = cancelReservationUseCase.invoke(CancelReservationUseCase.Params(reservationId))
+
+                if (result is DataResult.Fail) {
+                    if (index >= 0) {
+                        eventList?.set(index, originalEvent)
+                    }
+                    _uiState.emit(createNewUiState().copy(snackbarMessage = context.getString(R.string.appointmentReservationError)))
+                } else {
+                    _uiState.emit(createNewUiState().copy(snackbarMessage = context.getString(R.string.appointmentCancelled)))
+                }
             }
         }
     }
@@ -702,6 +728,10 @@ class CalendarViewModel @Inject constructor(
     }
 
     private suspend fun fetchAppointmentGroups() {
+        loadAppointmentGroups(forceNetwork = false)
+    }
+
+    private suspend fun loadAppointmentGroups(forceNetwork: Boolean = false) {
         try {
             val result = calendarRepository.getCanvasContexts()
             if (result is DataResult.Success) {
@@ -716,7 +746,7 @@ class CalendarViewModel @Inject constructor(
                 }
 
                 val appointmentGroupsResult = getAppointmentGroupsUseCase.invoke(
-                    GetAppointmentGroupsUseCase.Params(courseIds = courseIds)
+                    GetAppointmentGroupsUseCase.Params(courseIds = courseIds, forceNetwork = forceNetwork)
                 )
 
                 if (appointmentGroupsResult is DataResult.Success) {
@@ -750,6 +780,65 @@ class CalendarViewModel @Inject constructor(
         } catch (e: Exception) {
             _uiState.update {
                 it.copy(showAppointmentGroups = false)
+            }
+        }
+    }
+
+    private fun reserveAppointmentSlot(slotId: Long) {
+        viewModelScope.launch {
+            var slotToReserve: EventUiState? = null
+            var slotDateKey: LocalDate? = null
+
+            for ((date, events) in appointmentGroupEventsByDay) {
+                val found = events.find { it.plannableId == slotId }
+                if (found != null) {
+                    slotToReserve = found
+                    slotDateKey = date
+                    break
+                }
+            }
+
+            if (slotToReserve == null || slotDateKey == null) return@launch
+
+            val originalEvent = slotToReserve
+            val reservedEvent = slotToReserve.copy(
+                isReservation = true,
+                canCancel = true,
+                reservationId = slotId,
+                status = context.getString(R.string.calendarEventReserved)
+            )
+
+            val eventList = appointmentGroupEventsByDay[slotDateKey]
+            val index = eventList?.indexOfFirst { it.plannableId == slotId } ?: -1
+            if (index >= 0) {
+                eventList?.set(index, reservedEvent)
+            }
+
+            _uiState.emit(createNewUiState())
+
+            val result = reserveAppointmentSlotUseCase.invoke(
+                ReserveAppointmentSlotUseCase.Params(
+                    appointmentId = slotId,
+                    comments = null
+                )
+            )
+
+            if (result is DataResult.Fail) {
+                if (index >= 0) {
+                    eventList?.set(index, originalEvent)
+                }
+                _uiState.emit(createNewUiState().copy(snackbarMessage = context.getString(R.string.appointmentReservationError)))
+            } else {
+                if (result is DataResult.Success) {
+                    val scheduleItem = result.data
+                    val finalReservedEvent = reservedEvent.copy(
+                        reservationId = scheduleItem.id
+                    )
+                    if (index >= 0) {
+                        eventList?.set(index, finalReservedEvent)
+                    }
+                }
+                _uiState.emit(createNewUiState().copy(snackbarMessage = context.getString(R.string.appointmentReserved)))
             }
         }
     }

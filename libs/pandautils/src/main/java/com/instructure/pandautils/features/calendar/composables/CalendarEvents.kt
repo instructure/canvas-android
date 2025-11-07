@@ -164,6 +164,9 @@ fun CalendarEventsPage(
                                 actionHandler(CalendarAction.CancelReservation(reservationId, it.appointmentGroupId))
                             }
                         },
+                        onReserveSlot = { slotId ->
+                            actionHandler(CalendarAction.ReserveAppointmentSlot(slotId))
+                        },
                         modifier = Modifier.testTag("calendarEventItem")
                     )
                 }
@@ -196,6 +199,7 @@ fun CalendarEventItem(
     eventUiState: EventUiState,
     onEventClick: (Long) -> Unit,
     onCancelReservation: ((Long) -> Unit)? = null,
+    onReserveSlot: ((Long) -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     val contextColor = Color(eventUiState.canvasContext.courseOrUserColor)
@@ -262,6 +266,21 @@ fun CalendarEventItem(
                     painter = painterResource(id = R.drawable.ic_close),
                     contentDescription = stringResource(R.string.a11y_cancelReservation),
                     tint = colorResource(id = R.color.textDanger)
+                )
+            }
+        } else if (eventUiState.isReservation && onReserveSlot != null && !eventUiState.canCancel) {
+            IconButton(
+                onClick = { onReserveSlot(eventUiState.plannableId) },
+                modifier = Modifier
+                    .padding(horizontal = 8.dp)
+                    .semantics {
+                        role = Role.Button
+                    }
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_add),
+                    contentDescription = stringResource(R.string.a11y_reserveSlot),
+                    tint = contextColor
                 )
             }
         }
