@@ -32,6 +32,7 @@ import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.appointmentgroups.domain.usecase.CancelReservationUseCase
 import com.instructure.pandautils.features.appointmentgroups.domain.usecase.GetAppointmentGroupsUseCase
+import com.instructure.pandautils.features.appointmentgroups.domain.usecase.ReserveAppointmentSlotUseCase
 import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -43,6 +44,7 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestCoroutineScheduler
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -74,6 +76,7 @@ class CalendarViewModelTest {
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val cancelReservationUseCase: CancelReservationUseCase = mockk(relaxed = true)
     private val getAppointmentGroupsUseCase: GetAppointmentGroupsUseCase = mockk(relaxed = true)
+    private val reserveAppointmentSlotUseCase: ReserveAppointmentSlotUseCase = mockk(relaxed = true)
 
     private lateinit var viewModel: CalendarViewModel
 
@@ -1334,7 +1337,7 @@ class CalendarViewModelTest {
     }
 
     private fun initViewModel() {
-        viewModel = CalendarViewModel(context, calendarRepository, apiPrefs, clock, calendarPrefs, calendarStateMapper, calendarSharedEvents, calendarBehavior, cancelReservationUseCase, getAppointmentGroupsUseCase, savedStateHandle)
+        viewModel = CalendarViewModel(context, calendarRepository, apiPrefs, clock, calendarPrefs, calendarStateMapper, calendarSharedEvents, calendarBehavior, cancelReservationUseCase, getAppointmentGroupsUseCase, reserveAppointmentSlotUseCase, savedStateHandle)
     }
 
     private fun createPlannerItem(
@@ -1398,5 +1401,29 @@ class CalendarViewModelTest {
         calendar.set(Calendar.HOUR_OF_DAY, hour)
         calendar.set(Calendar.MINUTE, 0)
         return calendar.time
+    }
+
+
+    @Test
+    fun `toggle appointment groups off clears appointment data`() = runTest {
+        initViewModel()
+
+        viewModel.handleAction(CalendarAction.AppointmentGroupsToggled(false))
+
+        advanceUntilIdle()
+
+        assertFalse(viewModel.uiState.value.showAppointmentGroups)
+    }
+
+    @Test
+    fun `pull to refresh does not include appointment groups when toggle is off`() = runTest {
+        initViewModel()
+
+        coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns emptyList()
+
+        viewModel.handleAction(CalendarAction.PullToRefresh)
+        advanceUntilIdle()
+
+        coVerify(exactly = 0) { getAppointmentGroupsUseCase(any()) }
     }
 }
