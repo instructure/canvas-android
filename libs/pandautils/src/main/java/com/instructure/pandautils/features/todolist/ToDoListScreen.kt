@@ -230,9 +230,9 @@ fun ToDoListScreen(
 
     if (showFilterScreen) {
         ToDoFilterScreen(
-            onFiltersChanged = {
+            onFiltersChanged = { dateFiltersChanged ->
                 showFilterScreen = false
-                uiState.onFiltersChanged()
+                uiState.onFiltersChanged(dateFiltersChanged)
             },
             onDismiss = {
                 showFilterScreen = false

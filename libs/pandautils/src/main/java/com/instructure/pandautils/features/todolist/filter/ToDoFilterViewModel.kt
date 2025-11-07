@@ -100,7 +100,7 @@ class ToDoFilterViewModel @Inject constructor(
 
     private fun handleFiltersApplied() {
         _uiState.update {
-            it.copy(shouldCloseAndApplyFilters = false)
+            it.copy(shouldCloseAndApplyFilters = false, areDateFiltersChanged = false)
         }
     }
 
@@ -177,6 +177,7 @@ class ToDoFilterViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     shouldCloseAndApplyFilters = true,
+                    areDateFiltersChanged = areDateFiltersChanged
                 )
             }
         }

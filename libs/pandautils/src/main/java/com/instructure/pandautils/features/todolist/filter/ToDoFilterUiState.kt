@@ -26,6 +26,7 @@ data class ToDoFilterUiState(
     val futureDateOptions: List<DateRangeOption> = emptyList(),
     val selectedFutureOption: DateRangeSelection = DateRangeSelection.ONE_WEEK,
     val shouldCloseAndApplyFilters: Boolean = false,
+    val areDateFiltersChanged: Boolean = false,
     val onPastDaysChanged: (DateRangeSelection) -> Unit = {},
     val onFutureDaysChanged: (DateRangeSelection) -> Unit = {},
     val onDone: () -> Unit = {},

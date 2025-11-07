@@ -63,16 +63,40 @@ class ToDoListViewModel @Inject constructor(
             onUndoMarkAsDoneUndoneAction = { handleUndoMarkAsDoneUndone() },
             onMarkedAsDoneSnackbarDismissed = { clearMarkedAsDoneItem() },
             onRefresh = { handleRefresh() },
-            onFiltersChanged = { onFiltersChanged() }
+            onFiltersChanged = { dateFiltersChanged -> onFiltersChanged(dateFiltersChanged) }
         ))
 
-    private fun onFiltersChanged() {
-        loadData(forceRefresh = false)
+    private fun onFiltersChanged(dateFiltersChanged: Boolean) {
+        if (dateFiltersChanged) {
+            loadData(forceRefresh = false)
+        } else {
+            applyFiltersLocally()
+        }
+    }
+
+    private fun applyFiltersLocally() {
+        viewModelScope.launch {
+            try {
+                val todoFilters = toDoFilterDao.findByUser(
+                    apiPrefs.fullDomain,
+                    apiPrefs.user?.id.orDefault()
+                ) ?: ToDoFilterEntity(userDomain = apiPrefs.fullDomain, userId = apiPrefs.user?.id.orDefault())
+
+                val allPlannerItems = plannerItemsMap.values.toList()
+                val filteredCourses = courseMap.values.toList()
+
+                processAndUpdateItems(allPlannerItems, filteredCourses, todoFilters)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                firebaseCrashlytics.recordException(e)
+            }
+        }
     }
 
     val uiState = _uiState.asStateFlow()
 
     private val plannerItemsMap = mutableMapOf<String, PlannerItem>()
+    private var courseMap = mapOf<Long, Course>()
 
     init {
         loadData()
@@ -96,43 +120,19 @@ class ToDoListViewModel @Inject constructor(
 
                 val courses = repository.getCourses(forceRefresh).dataOrThrow
                 val plannerItems = repository.getPlannerItems(startDate, endDate, forceRefresh).dataOrThrow
+                    .filter { it.plannableType != PlannableType.ANNOUNCEMENT && it.plannableType != PlannableType.ASSESSMENT_REQUEST }
+
+                // Store planner items for later reference
+                plannerItemsMap.clear()
+                plannerItems.forEach { plannerItemsMap[it.plannable.id.toString()] = it }
 
                 // Filter courses - exclude access restricted, invited
                 val filteredCourses = courses.filter {
                     !it.accessRestrictedByDate && !it.isInvited()
                 }
-                val courseMap = filteredCourses.associateBy { it.id }
+                courseMap = filteredCourses.associateBy { it.id }
 
-                // Filter planner items - exclude announcements, assessment requests
-                val filteredItems = plannerItems
-                    .filter { it.plannableType != PlannableType.ANNOUNCEMENT && it.plannableType != PlannableType.ASSESSMENT_REQUEST }
-                    .filterByToDoFilters(todoFilters, filteredCourses)
-                    .sortedBy { it.comparisonDate }
-
-                // Store planner items for later reference
-                plannerItemsMap.clear()
-                filteredItems.forEach { plannerItemsMap[it.plannable.id.toString()] = it }
-
-                // Group items by date
-                val itemsByDate = filteredItems
-                    .groupBy { DateHelper.getCleanDate(it.comparisonDate.time) }
-                    .mapValues { (_, items) ->
-                        items.map { plannerItem ->
-                            mapToUiState(plannerItem, courseMap)
-                        }
-                    }
-
-                val toDoCount = calculateToDoCount(itemsByDate)
-
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        isRefreshing = false,
-                        isError = false,
-                        itemsByDate = itemsByDate,
-                        toDoCount = toDoCount
-                    )
-                }
+                processAndUpdateItems(plannerItems, filteredCourses, todoFilters)
             } catch (e: Exception) {
                 e.printStackTrace()
                 firebaseCrashlytics.recordException(e)
@@ -319,5 +319,35 @@ class ToDoListViewModel @Inject constructor(
 
     private fun clearMarkedAsDoneItem() {
         _uiState.update { it.copy(confirmationSnackbarData = null) }
+    }
+
+    private fun processAndUpdateItems(
+        plannerItems: List<PlannerItem>,
+        filteredCourses: List<Course>,
+        todoFilters: ToDoFilterEntity
+    ) {
+        val filteredItems = plannerItems
+            .filterByToDoFilters(todoFilters, filteredCourses)
+            .sortedBy { it.comparisonDate }
+
+        val itemsByDate = filteredItems
+            .groupBy { DateHelper.getCleanDate(it.comparisonDate.time) }
+            .mapValues { (_, items) ->
+                items.map { plannerItem ->
+                    mapToUiState(plannerItem, courseMap)
+                }
+            }
+
+        val toDoCount = calculateToDoCount(itemsByDate)
+
+        _uiState.update {
+            it.copy(
+                isLoading = false,
+                isRefreshing = false,
+                isError = false,
+                itemsByDate = itemsByDate,
+                toDoCount = toDoCount
+            )
+        }
     }
 }
