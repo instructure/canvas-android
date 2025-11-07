@@ -23,7 +23,7 @@ import javax.inject.Inject
 class StudentCalendarBehavior @Inject constructor(
     private val featureFlagProvider: FeatureFlagProvider
 ) : CalendarBehavior {
-    
+
     override suspend fun shouldShowAddEventButton(): Boolean {
         return try {
             !featureFlagProvider.checkRestrictStudentAccessFlag()
@@ -31,4 +31,6 @@ class StudentCalendarBehavior @Inject constructor(
             true
         }
     }
+
+    override val shouldShowAppointmentGroupsButton: Boolean = true
 }

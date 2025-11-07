@@ -17,4 +17,6 @@ package com.instructure.pandautils.features.calendar
 
 interface CalendarBehavior {
     suspend fun shouldShowAddEventButton(): Boolean = true
+
+    val shouldShowAppointmentGroupsButton: Boolean get() = false
 }

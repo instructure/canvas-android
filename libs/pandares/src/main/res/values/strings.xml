@@ -73,6 +73,7 @@
     <string name="a11y_addReminder">Add reminder</string>
     <string name="a11y_removeReminder">Remove reminder</string>
     <string name="a11y_remove">Remove</string>
+    <string name="a11y_appointmentGroups">Appointment Groups</string>
     <string name="reminderBefore">%s Before</string>
     <plurals name="reminderMinute">
         <item quantity="one">1 Minute</item>

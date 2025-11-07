@@ -26,7 +26,8 @@ data class CalendarScreenUiState(
     val calendarUiState: CalendarUiState,
     val calendarEventsUiState: CalendarEventsUiState = CalendarEventsUiState(),
     val snackbarMessage: String? = null,
-    val showAddEventButton: Boolean = true
+    val showAddEventButton: Boolean = true,
+    val showAppointmentGroups: Boolean = false
 )
 
 data class CalendarUiState(
@@ -124,6 +125,7 @@ sealed class CalendarAction {
     data object PullToRefresh : CalendarAction()
     data object TodayTapHandled : CalendarAction()
     data class CancelReservation(val reservationId: Long, val appointmentGroupId: Long) : CalendarAction()
+    data class AppointmentGroupsToggled(val isEnabled: Boolean) : CalendarAction()
 }
 
 sealed class CalendarViewModelAction {

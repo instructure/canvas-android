@@ -79,9 +79,15 @@ open class BaseCalendarFragment : BaseCanvasFragment(), NavigationCallbacks, Fra
             setContent {
                 val uiState by viewModel.uiState.collectAsState()
                 val actionHandler = { action: CalendarAction -> viewModel.handleAction(action) }
-                CalendarScreen(title(), uiState, triggerCalendarScreenAccessibilityFocus.value, showToolbar(), actionHandler) {
-                    calendarRouter.openNavigationDrawer()
-                }
+                CalendarScreen(
+                    title = title(),
+                    calendarScreenUiState = uiState,
+                    triggerAccessibilityFocus = triggerCalendarScreenAccessibilityFocus.value,
+                    showToolbar = showToolbar(),
+                    actionHandler = actionHandler,
+                    navigationActionClick = { calendarRouter.openNavigationDrawer() },
+                    showAppointmentGroupsButton = viewModel.calendarBehavior.shouldShowAppointmentGroupsButton
+                )
             }
         }
     }

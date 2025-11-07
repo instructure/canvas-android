@@ -84,7 +84,8 @@ fun CalendarScreen(
     triggerAccessibilityFocus: Boolean,
     showToolbar: Boolean,
     actionHandler: (CalendarAction) -> Unit,
-    navigationActionClick: () -> Unit
+    navigationActionClick: () -> Unit,
+    showAppointmentGroupsButton: Boolean = false
 ) {
     val focusRequester = remember { FocusRequester() }
     val todayFocusRequester = remember { FocusRequester() }
@@ -110,6 +111,25 @@ fun CalendarScreen(
                     CanvasThemedAppBar(
                         title = title,
                         actions = {
+                            if (showAppointmentGroupsButton) {
+                                val iconId = if (calendarScreenUiState.showAppointmentGroups) {
+                                    R.drawable.ic_calendar
+                                } else {
+                                    R.drawable.ic_appointment
+                                }
+                                Box(contentAlignment = Alignment.Center, modifier = Modifier
+                                    .padding(horizontal = 12.dp)
+                                    .semantics(mergeDescendants = true) { }
+                                    .clickable {
+                                        actionHandler(CalendarAction.AppointmentGroupsToggled(!calendarScreenUiState.showAppointmentGroups))
+                                    }) {
+                                    Icon(
+                                        painterResource(id = iconId),
+                                        contentDescription = stringResource(id = R.string.a11y_appointmentGroups),
+                                        tint = Color(ThemePrefs.primaryTextColor)
+                                    )
+                                }
+                            }
                             if (calendarScreenUiState.calendarUiState.selectedDay != LocalDate.now()) {
                                 Box(contentAlignment = Alignment.Center, modifier = Modifier
                                     .padding(horizontal = 12.dp)
@@ -259,5 +279,10 @@ fun CalendarScreenPreview() {
                     )
                 )
             )
-        ), triggerAccessibilityFocus = false, showToolbar = true, actionHandler = {}) {}
+        ),
+        triggerAccessibilityFocus = false,
+        showToolbar = true,
+        actionHandler = {},
+        navigationActionClick = {}
+    )
 }

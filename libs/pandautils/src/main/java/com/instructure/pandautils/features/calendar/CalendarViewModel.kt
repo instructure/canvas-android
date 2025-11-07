@@ -31,7 +31,9 @@ import com.instructure.canvasapi2.utils.toDate
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.appointmentgroups.AppointmentGroupsCalendarMapper
 import com.instructure.pandautils.features.appointmentgroups.domain.usecase.CancelReservationUseCase
+import com.instructure.pandautils.features.appointmentgroups.domain.usecase.GetAppointmentGroupsUseCase
 import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
 import com.instructure.pandautils.utils.getIconForPlannerItem
 import com.instructure.pandautils.utils.getTagForPlannerItem
@@ -67,8 +69,9 @@ class CalendarViewModel @Inject constructor(
     private val calendarPrefs: CalendarPrefs,
     private val calendarStateMapper: CalendarStateMapper,
     private val calendarSharedEvents: CalendarSharedEvents,
-    private val calendarBehavior: CalendarBehavior,
+    val calendarBehavior: CalendarBehavior,
     private val cancelReservationUseCase: CancelReservationUseCase,
+    private val getAppointmentGroupsUseCase: GetAppointmentGroupsUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -83,8 +86,10 @@ class CalendarViewModel @Inject constructor(
     private var expandAllowed = true
     private var expanded = calendarPrefs.calendarExpanded && expandAllowed
     private var collapsing = false
+    private var showAppointmentGroups = false
 
     private val eventsByDay = mutableMapOf<LocalDate, MutableList<PlannerItem>>()
+    private val appointmentGroupEventsByDay = mutableMapOf<LocalDate, MutableList<EventUiState>>()
     private val loadingDays = mutableSetOf<LocalDate>()
     private val errorDays = mutableSetOf<LocalDate>()
     private val refreshingDays = mutableSetOf<LocalDate>()
@@ -289,22 +294,26 @@ class CalendarViewModel @Inject constructor(
     }
 
     private fun createEventsPageForDate(date: LocalDate): CalendarEventsPageUiState {
-        val eventUiStates = eventsByDay[date]
-            ?.filter { plannerItem ->
-                contextIdFilters.contains(plannerItem.canvasContext.contextId)
-            }
-            ?.map {
-                EventUiState(
-                    it.plannable.id,
-                    contextName = getContextNameForPlannerItem(it),
-                    canvasContext = it.canvasContext,
-                    iconRes = it.getIconForPlannerItem(),
-                    name = it.plannable.title,
-                    date = getDateForPlannerItem(it),
-                    status = getStatusForPlannerItem(it),
-                    tag = it.getTagForPlannerItem(context),
-                )
-            } ?: emptyList()
+        val eventUiStates = if (showAppointmentGroups) {
+            appointmentGroupEventsByDay[date] ?: emptyList()
+        } else {
+            eventsByDay[date]
+                ?.filter { plannerItem ->
+                    contextIdFilters.contains(plannerItem.canvasContext.contextId)
+                }
+                ?.map {
+                    EventUiState(
+                        it.plannable.id,
+                        contextName = getContextNameForPlannerItem(it),
+                        canvasContext = it.canvasContext,
+                        iconRes = it.getIconForPlannerItem(),
+                        name = it.plannable.title,
+                        date = getDateForPlannerItem(it),
+                        status = getStatusForPlannerItem(it),
+                        tag = it.getTagForPlannerItem(context),
+                    )
+                } ?: emptyList()
+        }
 
         return CalendarEventsPageUiState(
             date = date,
@@ -439,6 +448,7 @@ class CalendarViewModel @Inject constructor(
             }
 
             is CalendarAction.CancelReservation -> cancelReservation(calendarAction.reservationId, calendarAction.appointmentGroupId)
+            is CalendarAction.AppointmentGroupsToggled -> handleAppointmentGroupsToggled(calendarAction.isEnabled)
         }
     }
 
@@ -676,6 +686,70 @@ class CalendarViewModel @Inject constructor(
                     eventsByDay.getOrPut(date) { mutableListOf() }.add(item)
                 }
                 _uiState.emit(createNewUiState())
+            }
+        }
+    }
+
+    private fun handleAppointmentGroupsToggled(isEnabled: Boolean) {
+        showAppointmentGroups = isEnabled
+        viewModelScope.launch {
+            if (isEnabled) {
+                fetchAppointmentGroups()
+            } else {
+                _uiState.emit(createNewUiState().copy(showAppointmentGroups = false))
+            }
+        }
+    }
+
+    private suspend fun fetchAppointmentGroups() {
+        try {
+            val result = calendarRepository.getCanvasContexts()
+            if (result is DataResult.Success) {
+                val courses = result.data[CanvasContext.Type.COURSE] ?: emptyList()
+                val courseIds = courses.map { it.id.toLong() }
+
+                if (courseIds.isEmpty()) {
+                    _uiState.update {
+                        it.copy(showAppointmentGroups = false)
+                    }
+                    return
+                }
+
+                val appointmentGroupsResult = getAppointmentGroupsUseCase.invoke(
+                    GetAppointmentGroupsUseCase.Params(courseIds = courseIds)
+                )
+
+                if (appointmentGroupsResult is DataResult.Success) {
+                    appointmentGroupEventsByDay.clear()
+                    val appointmentGroups = appointmentGroupsResult.data
+                    appointmentGroups.forEach { group ->
+                        group.slots.forEach { slot ->
+                            val startDate = slot.startDate?.toLocalDate() ?: return@forEach
+                            val courseContext = courses.find { it.id.toLong() == group.id }
+                                ?: CanvasContext.defaultCanvasContext()
+                            val eventUiState = AppointmentGroupsCalendarMapper.mapAppointmentSlotToEventUiState(
+                                slot,
+                                group,
+                                courseContext
+                            )
+                            appointmentGroupEventsByDay.getOrPut(startDate) { mutableListOf() }.add(eventUiState)
+                        }
+                    }
+
+                    _uiState.emit(createNewUiState().copy(showAppointmentGroups = true))
+                } else {
+                    _uiState.update {
+                        it.copy(showAppointmentGroups = false)
+                    }
+                }
+            } else {
+                _uiState.update {
+                    it.copy(showAppointmentGroups = false)
+                }
+            }
+        } catch (e: Exception) {
+            _uiState.update {
+                it.copy(showAppointmentGroups = false)
             }
         }
     }
