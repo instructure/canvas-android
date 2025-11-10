@@ -20,8 +20,10 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater.from
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
@@ -621,15 +623,15 @@ object RouteMatcher : BaseRouteMatcher() {
 
                 override fun onCreateLoader(id: Int, args: Bundle?): Loader<OpenMediaAsyncTaskLoader.LoadedMedia> {
                     if (!activity.isFinishing) {
-                        val view = android.view.LayoutInflater.from(activity).inflate(com.instructure.pandautils.R.layout.dialog_loading_view, null)
+                        val view = from(activity).inflate(com.instructure.pandautils.R.layout.dialog_loading_view, null)
                         val loadingView = view.findViewById<com.instructure.pandautils.views.CanvasLoadingView>(com.instructure.pandautils.R.id.canvasLoadingView)
-                        val studentColor = androidx.core.content.ContextCompat.getColor(activity, com.instructure.pandares.R.color.login_studentAppTheme)
+                        val studentColor = getColor(activity, com.instructure.pandares.R.color.login_studentAppTheme)
                         loadingView?.setOverrideColor(studentColor)
 
                         dialog = AlertDialog.Builder(activity, com.instructure.pandautils.R.style.CustomViewAlertDialog)
                             .setView(view)
                             .create()
-                        dialog!!.show()
+                        dialog?.show()
                     }
                     return OpenMediaAsyncTaskLoader(activity, args)
                 }

@@ -618,7 +618,7 @@ object RouteMatcher : BaseRouteMatcher() {
                         dialog = AlertDialog.Builder(activity, com.instructure.pandautils.R.style.CustomViewAlertDialog)
                             .setView(view)
                             .create()
-                        dialog!!.show()
+                        dialog?.show()
                     }
                     return OpenMediaAsyncTaskLoader(activity, args)
                 }
