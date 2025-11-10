@@ -25,10 +25,9 @@ import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.features.dashboard.DashboardEvent
 import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.features.dashboard.DashboardItemState
+import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardState
 import com.instructure.horizon.features.dashboard.widget.course.card.CardClickAction
 import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCourseCardModuleItemState
-import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCourseCardState
-import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardState
 import com.instructure.horizon.model.LearningObjectType
 import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus
 import com.instructure.pandautils.utils.formatIsoDuration
@@ -110,22 +109,7 @@ class DashboardCourseViewModel @Inject constructor(
             nextModuleForCourse = { courseId ->
                 fetchNextModuleState(courseId, forceNetwork)
             },
-        ).map { state ->
-            if (state.buttonState?.onClickAction is CardClickAction.Action) {
-                state.copy(buttonState = state.buttonState.copy(
-                    onClickAction = CardClickAction.Action {
-                        viewModelScope.tryLaunch {
-                            updateCourseButtonState(state, isLoading = true)
-                            state.buttonState.action()
-                            onRefresh()
-                            updateCourseButtonState(state, isLoading = false)
-                        } catch {
-                            updateCourseButtonState(state, isLoading = false)
-                        }
-                    },
-                ))
-            } else state
-        }
+        )
 
         val programCardStates = programs
             .filter { program -> program.sortedRequirements.none { it.enrollmentStatus == ProgramProgressCourseEnrollmentStatus.ENROLLED } }
@@ -155,23 +139,5 @@ class DashboardCourseViewModel @Inject constructor(
             estimatedDuration = nextModuleItem.estimatedDuration?.formatIsoDuration(context),
             onClickAction = CardClickAction.NavigateToModuleItem(courseId, nextModuleItem.id)
         )
-    }
-
-    private fun updateCourseButtonState(state: DashboardCourseCardState, isLoading: Boolean) {
-        _uiState.update {
-            it.copy(
-                courses = it.courses.map { originalState ->
-                    if (originalState.title == state.title && originalState.parentPrograms == state.parentPrograms) {
-                        originalState.copy(
-                            buttonState = originalState.buttonState?.copy(
-                                isLoading = isLoading
-                            )
-                        )
-                    } else {
-                        originalState
-                    }
-                }
-            )
-        }
     }
 }
