@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.activities.BasePresenterActivity
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.EdgeToEdgeHelper
 import com.instructure.teacher.R
 import com.instructure.teacher.factory.InternalWebViewPresenterFactory
 import com.instructure.teacher.fragments.InternalWebViewFragment
@@ -39,6 +40,7 @@ class InternalWebViewActivity : BasePresenterActivity<InternalWebViewPresenter, 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        EdgeToEdgeHelper.enableEdgeToEdge(this)
         setContentView(R.layout.activity_internal_webview)
         handleIntentExtras(intent.getBundleExtra(Const.EXTRAS))
     }

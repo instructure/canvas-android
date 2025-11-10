@@ -22,8 +22,10 @@ import com.google.android.material.snackbar.Snackbar
 import com.instructure.loginapi.login.R
 import com.instructure.loginapi.login.databinding.ActivityAcceptableUsePolicyBinding
 import com.instructure.pandautils.base.BaseCanvasActivity
+import com.instructure.pandautils.utils.EdgeToEdgeHelper
 import com.instructure.pandautils.utils.ToolbarColorizeHelper
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applySystemBarInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.setMenu
 import com.instructure.pandautils.utils.setupAsCloseButton
@@ -43,11 +45,13 @@ class AcceptableUsePolicyActivity : BaseCanvasActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        EdgeToEdgeHelper.enableEdgeToEdge(this)
         binding = ActivityAcceptableUsePolicyBinding.inflate(layoutInflater)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
         setContentView(binding.root)
 
+        binding.root.applySystemBarInsets()
         binding.toolbar.applyTopSystemBarInsets()
         binding.toolbar.setTitle(R.string.acceptableUsePolicyTitle)
         binding.toolbar.setupAsCloseButton {

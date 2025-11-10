@@ -24,6 +24,7 @@ import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.fragments.HtmlContentFragment
 import com.instructure.pandautils.fragments.HtmlContentFragment.Companion.DARK_TOOLBAR
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.EdgeToEdgeHelper
 import com.instructure.parentapp.R
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -34,6 +35,7 @@ class HtmlContentActivity : BaseCanvasActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_html_content)
+        EdgeToEdgeHelper.enableEdgeToEdge(this)
 
         if (savedInstanceState == null) {
             val title = intent.getStringExtra(Const.TITLE).orEmpty()
