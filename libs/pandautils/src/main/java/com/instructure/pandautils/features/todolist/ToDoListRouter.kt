@@ -21,5 +21,7 @@ interface ToDoListRouter {
 
     fun attachNavigationDrawer()
 
-    fun openToDoItem(itemId: String)
+    fun openToDoItem(htmlUrl: String)
+
+    fun openCalendar(formattedDate: String)
 }

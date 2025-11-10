@@ -29,7 +29,11 @@ class DefaultToDoListRouter : ToDoListRouter {
         // No-op implementation
     }
 
-    override fun openToDoItem(itemId: String) {
+    override fun openToDoItem(htmlUrl: String) {
+        // No-op implementation
+    }
+
+    override fun openCalendar(formattedDate: String) {
         // No-op implementation
     }
 }

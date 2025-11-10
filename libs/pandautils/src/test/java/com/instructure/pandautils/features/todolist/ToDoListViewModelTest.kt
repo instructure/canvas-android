@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.models.PlannerOverride
 import com.instructure.canvasapi2.models.SubmissionState
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.R
@@ -55,6 +56,8 @@ class ToDoListViewModelTest {
     private val repository: ToDoListRepository = mockk(relaxed = true)
     private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
     private val firebaseCrashlytics: FirebaseCrashlytics = mockk(relaxed = true)
+
+    private val apiPrefs: ApiPrefs = mockk(relaxed = true)
 
     @Before
     fun setUp() {
@@ -706,7 +709,7 @@ class ToDoListViewModelTest {
 
     // Helper functions
     private fun getViewModel(): ToDoListViewModel {
-        return ToDoListViewModel(context, repository, networkStateProvider, firebaseCrashlytics)
+        return ToDoListViewModel(context, repository, networkStateProvider, firebaseCrashlytics, apiPrefs)
     }
 
     private fun createPlannerItem(

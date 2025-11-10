@@ -140,4 +140,5 @@ sealed class SharedCalendarAction(val delay: Long = 0L) {
     data object CloseEventScreen : SharedCalendarAction()
     data class TodayButtonVisible(val visible: Boolean) : SharedCalendarAction()
     data object TodayButtonTapped : SharedCalendarAction()
+    data class SelectDay(val date: LocalDate) : SharedCalendarAction(delay = 100)
 }

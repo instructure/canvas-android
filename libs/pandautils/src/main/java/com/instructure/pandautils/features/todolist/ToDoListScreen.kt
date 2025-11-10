@@ -130,6 +130,7 @@ fun ToDoListScreen(
     navigationIconClick: () -> Unit,
     openToDoItem: (String) -> Unit,
     onToDoCountChanged: (Int) -> Unit,
+    onDateClick: (Date) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val viewModel = hiltViewModel<ToDoListViewModel>()
@@ -212,7 +213,8 @@ fun ToDoListScreen(
         ) {
             ToDoListContent(
                 uiState = uiState,
-                onOpenToDoItem = openToDoItem
+                onOpenToDoItem = openToDoItem,
+                onDateClick = onDateClick
             )
 
             PullRefreshIndicator(
@@ -230,6 +232,7 @@ fun ToDoListScreen(
 private fun ToDoListContent(
     uiState: ToDoListUiState,
     onOpenToDoItem: (String) -> Unit,
+    onDateClick: (Date) -> Unit,
     modifier: Modifier = Modifier
 ) {
     when {
@@ -258,6 +261,7 @@ private fun ToDoListContent(
             ToDoItemsList(
                 itemsByDate = uiState.itemsByDate,
                 onItemClicked = onOpenToDoItem,
+                onDateClick = onDateClick,
                 modifier = modifier
             )
         }
@@ -268,6 +272,7 @@ private fun ToDoListContent(
 private fun ToDoItemsList(
     itemsByDate: Map<Date, List<ToDoItemUiState>>,
     onItemClicked: (String) -> Unit,
+    onDateClick: (Date) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val dateGroups = itemsByDate.entries.toList()
@@ -320,7 +325,8 @@ private fun ToDoItemsList(
                             showDateBadge = index == 0,
                             hideDate = index == 0 && stickyHeaderState.isVisible && stickyHeaderState.item?.id == item.id,
                             onCheckedChange = { item.onCheckboxToggle(!item.isChecked) },
-                            onClick = { onItemClicked(item.id) },
+                            onClick = { item.htmlUrl?.let { onItemClicked(it) } },
+                            onDateClick = onDateClick,
                             modifier = Modifier.onGloballyPositioned { coordinates ->
                                 itemPositions[item.id] = coordinates.positionInParent().y
                                 itemSizes[item.id] = coordinates.size.height
@@ -356,7 +362,8 @@ private fun ToDoItemsList(
             if (stickyHeaderState.isVisible) {
                 StickyDateBadge(
                     item = item,
-                    yOffset = stickyHeaderState.yOffset
+                    yOffset = stickyHeaderState.yOffset,
+                    onDateClick = onDateClick
                 )
             }
         }
@@ -366,7 +373,8 @@ private fun ToDoItemsList(
 @Composable
 private fun StickyDateBadge(
     item: ToDoItemUiState,
-    yOffset: Float
+    yOffset: Float,
+    onDateClick: (Date) -> Unit
 ) {
     val dateBadgeData = rememberDateBadgeData(item.date)
 
@@ -382,7 +390,7 @@ private fun StickyDateBadge(
                 .background(colorResource(id = R.color.backgroundLightest)),
             contentAlignment = Alignment.TopCenter
         ) {
-            DateBadge(dateBadgeData)
+            DateBadge(dateBadgeData, onClick = { onDateClick(item.date) })
         }
     }
 }
@@ -393,6 +401,7 @@ private fun ToDoItem(
     showDateBadge: Boolean,
     onCheckedChange: () -> Unit,
     onClick: () -> Unit,
+    onDateClick: (Date) -> Unit,
     modifier: Modifier = Modifier,
     hideDate: Boolean = false
 ) {
@@ -471,6 +480,7 @@ private fun ToDoItem(
             hideDate = hideDate,
             onCheckedChange = onCheckedChange,
             onClick = onClick,
+            onDateClick = onDateClick,
             modifier = Modifier.offset { IntOffset(animatedOffsetX.value.roundToInt(), 0) }
         )
     }
@@ -567,6 +577,7 @@ private fun ToDoItemContent(
     hideDate: Boolean,
     onCheckedChange: () -> Unit,
     onClick: () -> Unit,
+    onDateClick: (Date) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val dateBadgeData = rememberDateBadgeData(item.date)
@@ -587,7 +598,7 @@ private fun ToDoItemContent(
             contentAlignment = Alignment.TopCenter
         ) {
             if (showDateBadge && !hideDate) {
-                DateBadge(dateBadgeData)
+                DateBadge(dateBadgeData, onClick = { onDateClick(item.date) })
             }
         }
 
@@ -702,9 +713,13 @@ private fun rememberDateBadgeData(date: Date): DateBadgeData {
 }
 
 @Composable
-private fun DateBadge(dateBadgeData: DateBadgeData) {
+private fun DateBadge(
+    dateBadgeData: DateBadgeData,
+    onClick: () -> Unit = {}
+) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.clickable(onClick = onClick)
     ) {
         Text(
             text = dateBadgeData.dayOfWeek,
@@ -959,7 +974,8 @@ fun ToDoListScreenPreview() {
                     )
                 )
             ),
-            onOpenToDoItem = {}
+            onOpenToDoItem = {},
+            onDateClick = {}
         )
     }
 }
@@ -1000,7 +1016,8 @@ fun ToDoListScreenWithPandasPreview() {
                     )
                 )
             ),
-            onOpenToDoItem = {}
+            onOpenToDoItem = {},
+            onDateClick = {}
         )
     }
 }
@@ -1013,7 +1030,8 @@ fun ToDoListScreenEmptyPreview() {
     CanvasTheme {
         ToDoListContent(
             uiState = ToDoListUiState(),
-            onOpenToDoItem = {}
+            onOpenToDoItem = {},
+            onDateClick = {}
         )
     }
 }
