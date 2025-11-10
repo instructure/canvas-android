@@ -28,6 +28,7 @@ import com.instructure.canvasapi2.models.DiscussionParticipant
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Message
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.features.inbox.HorizonInboxItemType
 import com.instructure.horizon.features.inbox.InboxEventHandler
 import com.instructure.pandautils.room.appdatabase.daos.FileDownloadProgressDao
@@ -61,6 +62,7 @@ class HorizonInboxDetailsViewModelTest {
     private val fileDownloadProgressDao: FileDownloadProgressDao = mockk(relaxed = true)
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val inboxEventHandler: InboxEventHandler = InboxEventHandler()
+    private val dashboardEventHandler: DashboardEventHandler = DashboardEventHandler()
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val testConversation = Conversation(
@@ -304,7 +306,8 @@ class HorizonInboxDetailsViewModelTest {
             workManager,
             fileDownloadProgressDao,
             savedStateHandle,
-            inboxEventHandler
+            inboxEventHandler,
+            dashboardEventHandler
         )
     }
 }

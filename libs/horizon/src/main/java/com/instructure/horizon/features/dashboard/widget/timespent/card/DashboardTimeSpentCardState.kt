@@ -17,11 +17,16 @@
 package com.instructure.horizon.features.dashboard.widget.timespent.card
 
 data class DashboardTimeSpentCardState(
-    val hours: Double = -1.0,
+    val hours: Int = 0,
+    val minutes: Int = 0,
     val courses: List<CourseOption> = emptyList(),
     val selectedCourseId: Long? = null,
     val onCourseSelected: (String?) -> Unit = {}
-)
+) {
+    companion object {
+        val Loading = DashboardTimeSpentCardState(hours = 5, minutes = 30,)
+    }
+}
 
 data class CourseOption(
     val id: Long,

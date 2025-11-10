@@ -1,4 +1,4 @@
-package com.instructure.horizon.features.dashboard.course.card
+package com.instructure.horizon.features.dashboard.widget.course.card
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

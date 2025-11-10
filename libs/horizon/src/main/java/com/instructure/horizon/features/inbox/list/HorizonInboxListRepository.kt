@@ -30,9 +30,6 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.depaginate
-import com.instructure.canvasapi2.utils.toApiString
-import java.util.Calendar
-import java.util.Date
 import javax.inject.Inject
 
 class HorizonInboxListRepository @Inject constructor(
@@ -66,9 +63,6 @@ class HorizonInboxListRepository @Inject constructor(
         } else {
             announcementsApi.getFirstPageAnnouncements(
                 courseCode = courses.map { it.contextId }.toTypedArray(),
-                startDate = Calendar.getInstance()
-                    .apply { set(Calendar.YEAR, get(Calendar.YEAR) - 1) }.time.toApiString(),
-                endDate = Date().toApiString(),
                 params = params
             )
             .depaginate { announcementsApi.getNextPageAnnouncementsList(it, params) }

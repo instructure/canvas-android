@@ -1042,6 +1042,10 @@
     <string name="downloadFailed">S\'ha produït un error en la baixada</string>
     <string name="downloadSuccessful">S\'ha realitzat correctament la baixada</string>
 
+    <string name="downloading">S\'està baixant</string>
+    <string name="downloadComplete">S’ha completat la baixada</string>
+    <string name="notificationChannelNameFileDownloadsName">Notificacions sobre les baixades</string>
+    <string name="notificationChannelNameFileDownloadsDescription">Notificacions del Canvas sobre les baixades en curs.</string>
     <string name="full_due_date_details">Detalls complets sobre la data de lliurament</string>
     <string name="submissions">Entregues</string>
     <string name="attachment">Fitxer adjunt</string>
@@ -2132,4 +2136,9 @@
     <string name="daysLateHint">Anoteu els dies tard</string>
     <string name="reply_to_topic">Responeu al tema</string>
     <string name="additional_replies">Respostes addicionals (%d):</string>
+    <string name="reply_to_topic_due">Data de lliurament de la resposta al tema</string>
+    <string name="additional_replies_due">Data de lliurament de les respostes addicionals (%d)</string>
+    <string name="a11y_discussion_checkpoints">Ítems dels fòrums</string>
+    <string name="multipleDueDates">Dates de lliurament múltiples</string>
+    <string name="courseConcludedError">L’assignatura ha conclòs. No es poden enviar missatges.</string>
 </resources>

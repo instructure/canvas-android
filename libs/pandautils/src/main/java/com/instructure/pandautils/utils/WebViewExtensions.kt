@@ -40,12 +40,14 @@ import kotlinx.coroutines.Job
  */
 fun WebView.loadHtmlWithIframes(
     context: Context,
+    featureFlagProvider: FeatureFlagProvider,
     html: String?,
     loadHtml: (newHtml: String) -> Unit,
     onLtiButtonPressed: ((ltiUrl: String) -> Unit)? = null,
+    courseId: Long? = null,
 ): Job {
     return weave {
-        val formatter = HtmlContentFormatter(context, FirebaseCrashlytics.getInstance(), OAuthManager)
+        val formatter = HtmlContentFormatter(context, FirebaseCrashlytics.getInstance(), OAuthManager, featureFlagProvider)
 
         if (HtmlContentFormatter.hasExternalTools(html) && onLtiButtonPressed != null) {
             addJavascriptInterface(JsExternalToolInterface(onLtiButtonPressed), Const.LTI_TOOL)
@@ -55,7 +57,7 @@ fun WebView.loadHtmlWithIframes(
             addJavascriptInterface(JsGoogleDocsInterface(context), Const.GOOGLE_DOCS)
         }
 
-        loadHtml(formatter.formatHtmlWithIframes(html.orEmpty()))
+        loadHtml(formatter.formatHtmlWithIframes(html.orEmpty(), courseId))
     }
 }
 

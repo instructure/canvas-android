@@ -105,7 +105,7 @@ class PageDetailsViewModelTest {
         coEvery { repository.getPageDetails(any(), any()) } returns testPage
         coEvery { repository.getNotes(any(), any()) } returns testNotes
         coEvery { repository.authenticateUrl(any()) } returns "https://authenticated.url"
-        coEvery { htmlContentFormatter.formatHtmlWithIframes(any()) } answers { firstArg() }
+        coEvery { htmlContentFormatter.formatHtmlWithIframes(any(), any()) } answers { firstArg() }
         coEvery { addNoteRepository.addNote(any(), any(), any(), any(), any(), any()) } returns Unit
     }
 
@@ -128,12 +128,12 @@ class PageDetailsViewModelTest {
 
     @Test
     fun `Test HTML content is formatted`() = runTest {
-        coEvery { htmlContentFormatter.formatHtmlWithIframes(any()) } returns "formatted html"
+        coEvery { htmlContentFormatter.formatHtmlWithIframes(any(), any()) } returns "formatted html"
 
         val viewModel = getViewModel()
 
         assertEquals("formatted html", viewModel.uiState.value.pageHtmlContent)
-        coVerify { htmlContentFormatter.formatHtmlWithIframes("<p>Test content</p>") }
+        coVerify { htmlContentFormatter.formatHtmlWithIframes("<p>Test content</p>", courseId) }
     }
 
     @Test

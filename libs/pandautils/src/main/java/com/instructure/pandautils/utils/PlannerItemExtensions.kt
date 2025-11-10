@@ -18,9 +18,12 @@ package com.instructure.pandautils.utils
 
 import android.content.Context
 import androidx.annotation.DrawableRes
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.canvasapi2.utils.toDate
 import com.instructure.pandautils.R
 
 fun PlannerItem.todoHtmlUrl(apiPrefs: ApiPrefs): String {
@@ -39,6 +42,61 @@ fun PlannerItem.getIconForPlannerItem(): Int {
     }
 }
 
+fun PlannerItem.getDateTextForPlannerItem(context: Context): String? {
+    return when (plannableType) {
+        PlannableType.PLANNER_NOTE -> {
+            plannable.todoDate.toDate()?.let {
+                DateHelper.getFormattedTime(context, it)
+            }
+        }
+
+        PlannableType.CALENDAR_EVENT -> {
+            val startDate = plannable.startAt
+            val endDate = plannable.endAt
+            if (startDate != null && endDate != null) {
+                val startText = DateHelper.getFormattedTime(context, startDate).orEmpty()
+                val endText = DateHelper.getFormattedTime(context, endDate).orEmpty()
+
+                when {
+                    plannable.allDay == true -> context.getString(R.string.widgetAllDay)
+                    startDate == endDate -> startText
+                    else -> context.getString(R.string.widgetFromTo, startText, endText)
+                }
+            } else null
+        }
+
+        else -> {
+            plannable.dueAt?.let {
+                val timeText = DateHelper.getFormattedTime(context, it).orEmpty()
+                context.getString(R.string.widgetDueDate, timeText)
+            }
+        }
+    }
+}
+
+fun PlannerItem.getContextNameForPlannerItem(context: Context, courses: Collection<Course>): String {
+    val course = courses.find { it.id == canvasContext.id }
+    val hasNickname = course?.originalName != null
+    val courseTitle = if (hasNickname) course.name else course?.courseCode
+    return when (plannableType) {
+        PlannableType.PLANNER_NOTE -> {
+            if (contextName.isNullOrEmpty()) {
+                context.getString(R.string.userCalendarToDo)
+            } else {
+                context.getString(R.string.courseToDo, courseTitle ?: contextName)
+            }
+        }
+
+        else -> {
+            if (canvasContext is Course) {
+                courseTitle.orEmpty()
+            } else {
+                contextName.orEmpty()
+            }
+        }
+    }
+}
+
 fun PlannerItem.getTagForPlannerItem(context: Context): String? {
     return if (plannable.subAssignmentTag == Const.REPLY_TO_TOPIC) {
         context.getString(R.string.reply_to_topic)
@@ -49,5 +107,16 @@ fun PlannerItem.getTagForPlannerItem(context: Context): String? {
         )
     } else {
         null
+    }
+}
+
+fun PlannerItem.isComplete(): Boolean {
+    return plannerOverride?.markedComplete ?: if (plannableType == PlannableType.ASSIGNMENT
+        || plannableType == PlannableType.DISCUSSION_TOPIC
+        || plannableType == PlannableType.SUB_ASSIGNMENT
+    ) {
+        submissionState?.submitted == true
+    } else {
+        false
     }
 }

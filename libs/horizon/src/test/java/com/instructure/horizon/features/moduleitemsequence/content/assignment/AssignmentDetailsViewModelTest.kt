@@ -67,7 +67,7 @@ class AssignmentDetailsViewModelTest {
         coEvery { repository.getAssignment(any(), any(), any()) } returns testAssignment
         coEvery { repository.hasUnreadComments(any(), any()) } returns false
         coEvery { repository.authenticateUrl(any()) } returns "https://authenticated.url"
-        coEvery { htmlContentFormatter.formatHtmlWithIframes(any()) } returns "Formatted content"
+        coEvery { htmlContentFormatter.formatHtmlWithIframes(any(), any()) } returns "Formatted content"
         coEvery { aiAssistContextProvider.aiAssistContext } returns mockk(relaxed = true)
         coEvery { aiAssistContextProvider.aiAssistContext = any() } returns Unit
     }
@@ -207,7 +207,7 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel(savedStateHandle)
 
-        coVerify { htmlContentFormatter.formatHtmlWithIframes(testAssignment.description.orEmpty()) }
+        coVerify { htmlContentFormatter.formatHtmlWithIframes(testAssignment.description.orEmpty(), courseId) }
         assertEquals("Formatted content", viewModel.uiState.value.instructions)
     }
 

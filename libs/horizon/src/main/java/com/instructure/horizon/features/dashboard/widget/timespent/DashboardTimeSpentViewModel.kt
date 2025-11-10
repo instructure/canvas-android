@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.timespent.card.CourseOption
 import com.instructure.horizon.features.dashboard.widget.timespent.card.DashboardTimeSpentCardState
+import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -33,6 +34,9 @@ import javax.inject.Inject
 class DashboardTimeSpentViewModel @Inject constructor(
     private val repository: DashboardTimeSpentRepository
 ) : ViewModel() {
+
+    private var courses: List<CourseOption> = emptyList()
+    private var timeSpentData: TimeSpentWidgetData? = null
 
     private val _uiState = MutableStateFlow(
         DashboardTimeSpentUiState(
@@ -48,31 +52,41 @@ class DashboardTimeSpentViewModel @Inject constructor(
     private fun loadTimeSpentData(forceNetwork: Boolean = false) {
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(state = DashboardItemState.LOADING) }
-            val courses = repository.getCourses(forceNetwork).map {
+            courses = repository.getCourses(forceNetwork).map {
                 CourseOption(
                     id = it.courseId,
                     name = it.courseName,
                 )
             }
 
-            val data = repository.getTimeSpentData(uiState.value.cardState.selectedCourseId, forceNetwork)
-            val totalHours = data.data
-                .filter { courses.any { course -> course.id == it.courseId } }
-                .sumOf { it.minutesPerDay?.toDouble() ?: 0.0 } / 60
+            timeSpentData = repository.getTimeSpentData(null, forceNetwork)
+            updateTimeSpentWidgetState()
 
-            _uiState.update {
-                it.copy(
-                    state = DashboardItemState.SUCCESS,
-                    cardState = DashboardTimeSpentCardState(
-                        hours = totalHours,
-                        courses = courses,
-                        selectedCourseId = null,
-                        onCourseSelected = ::onCourseSelected
-                    )
-                )
-            }
         } catch {
             _uiState.update { it.copy(state = DashboardItemState.ERROR) }
+        }
+    }
+
+    private fun updateTimeSpentWidgetState() {
+        val totalMinutes = timeSpentData?.data
+            ?.filter { courses.any { course -> course.id == it.courseId } }
+            ?.filter { uiState.value.cardState.selectedCourseId == null || it.courseId == uiState.value.cardState.selectedCourseId }
+            ?.sumOf { it.minutesPerDay?.toDouble() ?: 0.0 }
+            .orDefault()
+        val hours = (totalMinutes / 60).toInt()
+        val minutes = (totalMinutes % 60).toInt()
+
+        _uiState.update {
+            it.copy(
+                state = DashboardItemState.SUCCESS,
+                cardState = DashboardTimeSpentCardState(
+                    hours = hours,
+                    minutes = minutes,
+                    courses = courses,
+                    selectedCourseId = it.cardState.selectedCourseId,
+                    onCourseSelected = ::onCourseSelected
+                )
+            )
         }
     }
 
@@ -83,9 +97,10 @@ class DashboardTimeSpentViewModel @Inject constructor(
                 cardState = it.cardState.copy(selectedCourseId = courseId)
             )
         }
+        updateTimeSpentWidgetState()
     }
 
-    private fun refresh(onComplete: () -> Unit) {
+    private fun refresh(onComplete: () -> Unit = {}) {
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(state = DashboardItemState.LOADING) }
             loadTimeSpentData(forceNetwork = true)
