@@ -87,6 +87,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.canvasapi2.utils.Logger
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasDivider
@@ -325,7 +326,13 @@ private fun ToDoItemsList(
                             showDateBadge = index == 0,
                             hideDate = index == 0 && stickyHeaderState.isVisible && stickyHeaderState.item?.id == item.id,
                             onCheckedChange = { item.onCheckboxToggle(!item.isChecked) },
-                            onClick = { item.htmlUrl?.let { onItemClicked(it) } },
+                            onClick = {
+                                if (item.htmlUrl != null) {
+                                    onItemClicked(item.htmlUrl)
+                                } else {
+                                    Logger.w("ToDoListScreen: Item clicked with null htmlUrl, id=${item.id}, title=${item.title}")
+                                }
+                            },
                             onDateClick = onDateClick,
                             modifier = Modifier.onGloballyPositioned { coordinates ->
                                 itemPositions[item.id] = coordinates.positionInParent().y

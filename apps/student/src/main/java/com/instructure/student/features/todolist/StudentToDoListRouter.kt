@@ -25,9 +25,9 @@ import com.instructure.pandautils.features.calendar.CalendarSharedEvents
 import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.features.todolist.ToDoListFragment
 import com.instructure.pandautils.features.todolist.ToDoListRouter
-import com.instructure.pandautils.utils.toLocalDateOrNull
 import com.instructure.student.activity.NavigationActivity
 import com.instructure.student.router.RouteMatcher
+import org.threeten.bp.LocalDate
 
 class StudentToDoListRouter(
     private val activity: FragmentActivity,
@@ -51,12 +51,10 @@ class StudentToDoListRouter(
         RouteMatcher.routeUrl(activity, htmlUrl)
     }
 
-    override fun openCalendar(formattedDate: String) {
+    override fun openCalendar(date: LocalDate) {
         val route = CalendarFragment.makeRoute()
         RouteMatcher.route(activity, route)
 
-        formattedDate.toLocalDateOrNull()?.let { date ->
-            calendarSharedEvents.sendEvent(activity.lifecycleScope, SharedCalendarAction.SelectDay(date))
-        }
+        calendarSharedEvents.sendEvent(activity.lifecycleScope, SharedCalendarAction.SelectDay(date))
     }
 }

@@ -15,6 +15,8 @@
  */
 package com.instructure.pandautils.features.todolist
 
+import org.threeten.bp.LocalDate
+
 /**
  * Default implementation of ToDoListRouter with no-op implementations.
  * Used when the app doesn't need custom routing behavior.
@@ -33,7 +35,7 @@ class DefaultToDoListRouter : ToDoListRouter {
         // No-op implementation
     }
 
-    override fun openCalendar(formattedDate: String) {
+    override fun openCalendar(date: LocalDate) {
         // No-op implementation
     }
 }

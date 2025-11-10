@@ -15,6 +15,8 @@
  */
 package com.instructure.pandautils.features.todolist
 
+import org.threeten.bp.LocalDate
+
 interface ToDoListRouter {
 
     fun openNavigationDrawer()
@@ -23,5 +25,5 @@ interface ToDoListRouter {
 
     fun openToDoItem(htmlUrl: String)
 
-    fun openCalendar(formattedDate: String)
+    fun openCalendar(date: LocalDate)
 }
