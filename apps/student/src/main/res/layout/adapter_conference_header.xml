@@ -43,7 +43,8 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginStart="8dp"
-        android:src="@drawable/ic_expand_more"
+        android:tint="@color/textDark"
+        android:src="@drawable/ic_expand"
         android:contentDescription="@string/a11y_expand_collapse" />
 
 </LinearLayout>
