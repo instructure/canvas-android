@@ -21,6 +21,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.student.fragment.ParentFragment
@@ -50,7 +51,10 @@ class DashboardFragment : ParentFragment() {
         navigation?.attachNavigationDrawer(this, null)
     }
 
-    companion object Companion {
+    companion object {
+        fun makeRoute(canvasContext: CanvasContext?) =
+            Route(DashboardFragment::class.java, canvasContext)
+
         fun newInstance(route: Route): DashboardFragment {
             val fragment = DashboardFragment()
             fragment.arguments = route.arguments

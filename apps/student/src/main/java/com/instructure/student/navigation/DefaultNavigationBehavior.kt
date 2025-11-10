@@ -30,17 +30,26 @@ import com.instructure.student.fragment.OldDashboardFragment
 import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.fragment.ParentFragment
 
-class DefaultNavigationBehavior(private val apiPrefs: ApiPrefs) : NavigationBehavior {
+class DefaultNavigationBehavior(apiPrefs: ApiPrefs) : NavigationBehavior {
+
+    private val dashboardFragmentClass: Class<out Fragment>
+        get() {
+            return if (RemoteConfigUtils.getBoolean(RemoteConfigParam.DASHBOARD_REDESIGN)) {
+                DashboardFragment::class.java
+            } else {
+                OldDashboardFragment::class.java
+            }
+        }
 
     override val bottomNavBarFragments: List<Class<out Fragment>> = listOf(
-        OldDashboardFragment::class.java,
+        dashboardFragmentClass,
         CalendarFragment::class.java,
         todoFragmentClass,
         NotificationListFragment::class.java,
         getInboxBottomBarFragment(apiPrefs)
     )
 
-    override val homeFragmentClass: Class<out ParentFragment> = OldDashboardFragment::class.java
+    override val homeFragmentClass: Class<out Fragment> = dashboardFragmentClass
 
     override val visibleNavigationMenuItems: Set<NavigationMenuItem> = setOf(NavigationMenuItem.FILES, NavigationMenuItem.BOOKMARKS, NavigationMenuItem.SETTINGS)
 
@@ -54,7 +63,11 @@ class DefaultNavigationBehavior(private val apiPrefs: ApiPrefs) : NavigationBeha
     override val bottomBarMenu: Int = R.menu.bottom_bar_menu
 
     override fun createHomeFragmentRoute(canvasContext: CanvasContext?): Route {
-        return OldDashboardFragment.makeRoute(ApiPrefs.user)
+        return if (RemoteConfigUtils.getBoolean(RemoteConfigParam.DASHBOARD_REDESIGN)) {
+            DashboardFragment.makeRoute(ApiPrefs.user)
+        } else {
+            OldDashboardFragment.makeRoute(ApiPrefs.user)
+        }
     }
 
     override fun createHomeFragment(route: Route): ParentFragment {

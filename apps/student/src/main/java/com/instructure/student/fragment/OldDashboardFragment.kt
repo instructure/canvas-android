@@ -515,7 +515,7 @@ class OldDashboardFragment : ParentFragment() {
         super.onDestroy()
     }
 
-    companion object Companion {
+    companion object {
         fun newInstance(route: Route) =
                 OldDashboardFragment().apply {
                     arguments = route.canvasContext?.makeBundle(route.arguments) ?: route.arguments

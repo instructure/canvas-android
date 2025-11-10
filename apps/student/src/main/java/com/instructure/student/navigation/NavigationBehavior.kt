@@ -35,7 +35,7 @@ interface NavigationBehavior {
     /** 'Root' fragments that should include the bottom nav bar */
     val bottomNavBarFragments: List<Class<out Fragment>>
 
-    val homeFragmentClass: Class<out ParentFragment>
+    val homeFragmentClass: Class<out Fragment>
 
     val visibleNavigationMenuItems: Set<NavigationMenuItem>
 
