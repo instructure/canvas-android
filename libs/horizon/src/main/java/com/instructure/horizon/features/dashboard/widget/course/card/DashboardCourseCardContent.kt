@@ -21,6 +21,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -31,6 +32,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -70,11 +72,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
-import com.instructure.horizon.horizonui.molecules.ButtonColor
-import com.instructure.horizon.horizonui.molecules.ButtonHeight
-import com.instructure.horizon.horizonui.molecules.ButtonIconPosition
-import com.instructure.horizon.horizonui.molecules.ButtonWidth
-import com.instructure.horizon.horizonui.molecules.LoadingButton
+import com.instructure.horizon.horizonui.isWideLayout
 import com.instructure.horizon.horizonui.molecules.Pill
 import com.instructure.horizon.horizonui.molecules.PillCase
 import com.instructure.horizon.horizonui.molecules.PillSize
@@ -82,8 +80,6 @@ import com.instructure.horizon.horizonui.molecules.PillStyle
 import com.instructure.horizon.horizonui.molecules.PillType
 import com.instructure.horizon.horizonui.molecules.ProgressBarSmall
 import com.instructure.horizon.horizonui.molecules.ProgressBarStyle
-import com.instructure.horizon.horizonui.molecules.StatusChip
-import com.instructure.horizon.horizonui.molecules.StatusChipState
 import com.instructure.horizon.model.LearningObjectType
 import com.instructure.pandautils.utils.localisedFormatMonthDay
 import java.util.Date
@@ -93,6 +89,7 @@ import kotlin.math.roundToInt
 fun DashboardCourseCardContent(
     state: DashboardCourseCardState,
     handleOnClickAction: (CardClickAction?) -> Unit,
+    isLoading: Boolean,
     modifier: Modifier = Modifier
 ) {
     DashboardCard(modifier) {
@@ -103,51 +100,115 @@ fun DashboardCourseCardContent(
                     handleOnClickAction(state.onClickAction)
                 }
         ) {
-            if (state.imageState != null) {
-                CourseImage(state.imageState)
-            }
-            Column(
-                modifier = Modifier
-                    .padding(horizontal = 24.dp)
-            ) {
-                if (state.chipState != null) {
-                    Spacer(Modifier.height(24.dp))
-                    CardChip(state.chipState)
-                }
-                if (!state.parentPrograms.isNullOrEmpty()) {
-                    Spacer(Modifier.height(16.dp))
-                    ProgramsText(state.parentPrograms, handleOnClickAction)
-                }
-                if (!state.title.isNullOrEmpty()) {
-                    Spacer(Modifier.height(16.dp))
-                    TitleText(state.title)
-                }
-                if (state.progress != null) {
-                    Spacer(Modifier.height(12.dp))
-                    CourseProgress(state.progress)
-                }
-                if (!state.description.isNullOrEmpty()) {
-                    Spacer(Modifier.height(16.dp))
-                    DescriptionText(state.description)
-                }
-                if (state.moduleItem != null) {
-                    Spacer(Modifier.height(16.dp))
-                    ModuleItemCard(state.moduleItem, handleOnClickAction)
-                }
-                if (state.buttonState != null) {
-                    Spacer(Modifier.height(16.dp))
-                    DashboardCardButton(state.buttonState, handleOnClickAction)
+            BoxWithConstraints {
+                if (this.isWideLayout) {
+                    DashboardCourseCardWideContent(state, isLoading, handleOnClickAction)
+                } else {
+                    DashboardCourseCardCompactContent(state, isLoading, handleOnClickAction)
                 }
             }
-            Spacer(Modifier.height(24.dp))
+        }
+    }
+}
+
+@Composable
+private fun DashboardCourseCardCompactContent(
+    state: DashboardCourseCardState,
+    isLoading: Boolean,
+    handleOnClickAction: (CardClickAction?) -> Unit,
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ){
+        if (state.imageState != null) {
+            CourseImage(state.imageState, isLoading, Modifier.fillMaxWidth())
+        }
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 24.dp)
+        ) {
+            if (!state.parentPrograms.isNullOrEmpty()) {
+                Spacer(Modifier.height(16.dp))
+                ProgramsText(state.parentPrograms, isLoading, handleOnClickAction)
+            }
+            if (!state.title.isNullOrEmpty()) {
+                Spacer(Modifier.height(16.dp))
+                TitleText(state.title, isLoading)
+            }
+            if (state.progress != null) {
+                Spacer(Modifier.height(12.dp))
+                CourseProgress(state.progress, isLoading)
+            }
+            if (!state.description.isNullOrEmpty()) {
+                Spacer(Modifier.height(16.dp))
+                DescriptionText(state.description, isLoading)
+            }
+            if (state.moduleItem != null) {
+                Spacer(Modifier.height(16.dp))
+                ModuleItemCard(state.moduleItem, isLoading, handleOnClickAction)
+            }
+        }
+        HorizonSpace(SpaceSize.SPACE_24)
+    }
+}
+
+@Composable
+private fun DashboardCourseCardWideContent(
+    state: DashboardCourseCardState,
+    isLoading: Boolean,
+    handleOnClickAction: (CardClickAction?) -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ){
+        if (state.imageState != null) {
+            CourseImage(
+                state.imageState,
+                isLoading,
+                Modifier
+                    .width(320.dp)
+                    .padding(start = 24.dp, top = 24.dp, bottom = 24.dp, end = 16.dp)
+                    .clip(HorizonCornerRadius.level2)
+            )
+        }
+        Column(
+            modifier = Modifier
+                .padding(end = 24.dp, bottom = 24.dp)
+        ) {
+            if (!state.parentPrograms.isNullOrEmpty()) {
+                Spacer(Modifier.height(16.dp))
+                ProgramsText(state.parentPrograms, isLoading, handleOnClickAction)
+            }
+            if (!state.title.isNullOrEmpty()) {
+                Spacer(Modifier.height(16.dp))
+                TitleText(state.title, isLoading)
+            }
+            if (state.progress != null) {
+                Spacer(Modifier.height(12.dp))
+                CourseProgress(state.progress, isLoading)
+            }
+            if (!state.description.isNullOrEmpty()) {
+                Spacer(Modifier.height(16.dp))
+                DescriptionText(state.description, isLoading)
+            }
+            if (state.moduleItem != null) {
+                Spacer(Modifier.height(16.dp))
+                ModuleItemCard(state.moduleItem, isLoading, handleOnClickAction)
+            }
         }
     }
 }
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-private fun CourseImage(state: DashboardCourseCardImageState) {
-    var isLoading by rememberSaveable { mutableStateOf(true) }
+private fun CourseImage(
+    state: DashboardCourseCardImageState,
+    isLoading: Boolean,
+    modifier: Modifier = Modifier
+) {
+    var isImageLoading by rememberSaveable { mutableStateOf(true) }
     if (!state.imageUrl.isNullOrEmpty()) {
         GlideImage(
             state.imageUrl,
@@ -161,7 +222,7 @@ private fun CourseImage(state: DashboardCourseCardImageState) {
                         target: Target<Drawable>,
                         isFirstResource: Boolean
                     ): Boolean {
-                        isLoading = false
+                        isImageLoading = false
                         return false
                     }
 
@@ -172,25 +233,24 @@ private fun CourseImage(state: DashboardCourseCardImageState) {
                         dataSource: DataSource,
                         isFirstResource: Boolean
                     ): Boolean {
-                        isLoading = false
+                        isImageLoading = false
                         return false
                     }
 
                 })
             },
-            modifier = Modifier
-                .fillMaxWidth()
+            modifier = modifier
                 .aspectRatio(1.69f)
-                .shimmerEffect(isLoading)
+                .shimmerEffect(isLoading || isImageLoading)
         )
     } else {
         if (state.showPlaceholder) {
             Box(
                 contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
+                modifier = modifier
                     .aspectRatio(1.69f)
                     .background(HorizonColors.Surface.institution().copy(alpha = 0.1f))
+                    .shimmerEffect(isLoading || isImageLoading)
             ) {
                 Icon(
                     painterResource(R.drawable.book_2_filled),
@@ -204,20 +264,9 @@ private fun CourseImage(state: DashboardCourseCardImageState) {
 }
 
 @Composable
-private fun CardChip(state: DashboardCourseCardChipState) {
-    StatusChip(
-        StatusChipState(
-            label = state.label,
-            color = state.color,
-            fill = true,
-            iconRes = null
-        )
-    )
-}
-
-@Composable
 private fun ProgramsText(
     programs: List<DashboardCourseCardParentProgramState>,
+    isLoading: Boolean,
     handleOnClickAction: (CardClickAction?) -> Unit,
 ) {
     val programsAnnotated = buildAnnotatedString {
@@ -248,36 +297,54 @@ private fun ProgramsText(
     }
 
     Text(
-        modifier = Modifier.semantics(mergeDescendants = true) {},
+        text = fullText,
         style = HorizonTypography.p1,
-        text = fullText
+        modifier = Modifier
+            .semantics(mergeDescendants = true) {}
+            .shimmerEffect(isLoading)
     )
 }
 
 @Composable
-private fun TitleText(title: String) {
+private fun TitleText(
+    title: String,
+    isLoading: Boolean,
+) {
     Text(
         text = title,
         style = HorizonTypography.h4,
         color = HorizonColors.Text.title(),
         maxLines = 2,
-        overflow = TextOverflow.Ellipsis
+        overflow = TextOverflow.Ellipsis,
+        modifier = Modifier.shimmerEffect(isLoading)
     )
 }
 
 @Composable
-private fun DescriptionText(description: String) {
+private fun DescriptionText(
+    description: String,
+    isLoading: Boolean,
+) {
     Text(
         text = description,
         style = HorizonTypography.p1,
         color = HorizonColors.Text.body(),
+        modifier = Modifier.shimmerEffect(isLoading)
     )
 }
 
 @Composable
-private fun CourseProgress(progress: Double) {
+private fun CourseProgress(
+    progress: Double,
+    isLoading: Boolean,
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.shimmerEffect(
+            isLoading,
+            backgroundColor = HorizonColors.Surface.institution().copy(0.1f),
+            shimmerColor = HorizonColors.Surface.institution().copy(0.05f),
+        )
     ) {
         ProgressBarSmall(
             progress = progress,
@@ -300,6 +367,7 @@ private fun CourseProgress(progress: Double) {
 @Composable
 private fun ModuleItemCard(
     state: DashboardCourseCardModuleItemState,
+    isLoading: Boolean,
     handleOnClickAction: (CardClickAction?) -> Unit,
 ) {
     Box(
@@ -313,6 +381,11 @@ private fun ModuleItemCard(
             )
             .clip(HorizonCornerRadius.level2)
             .clickable { handleOnClickAction(state.onClickAction) }
+            .shimmerEffect(
+                isLoading,
+                backgroundColor = HorizonColors.Surface.institution().copy(0.1f),
+                shimmerColor = HorizonColors.Surface.institution().copy(0.05f),
+            )
             .padding(16.dp)
     ) {
         Column {
@@ -362,23 +435,6 @@ private fun ModuleItemCard(
 }
 
 @Composable
-private fun DashboardCardButton(
-    state: DashboardCourseCardButtonState,
-    handleOnClickAction: (CardClickAction?) -> Unit
-) {
-    LoadingButton(
-        label = state.label,
-        height = ButtonHeight.SMALL,
-        width = ButtonWidth.RELATIVE,
-        color = ButtonColor.Black,
-        iconPosition = ButtonIconPosition.NoIcon,
-        onClick = { handleOnClickAction(state.onClickAction) },
-        contentAlignment = Alignment.Center,
-        loading = state.isLoading,
-    )
-}
-
-@Composable
 @Preview
 private fun DashboardCourseCardWithModulePreview() {
     ContextKeeper.appContext = LocalContext.current
@@ -402,11 +458,7 @@ private fun DashboardCourseCardWithModulePreview() {
             estimatedDuration = "5 mins",
             onClickAction = CardClickAction.Action({})
         ),
-        buttonState = DashboardCourseCardButtonState(
-            label = "Go to Course",
-            onClickAction = CardClickAction.Action({})
-        ),
         onClickAction = CardClickAction.Action({})
     )
-    DashboardCourseCardContent(state, {})
+    DashboardCourseCardContent(state, {}, false)
 }

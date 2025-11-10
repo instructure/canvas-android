@@ -19,12 +19,15 @@ package com.instructure.horizon.features.dashboard.widget.skillhighlights.card
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
@@ -44,6 +47,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.isWideLayout
 import com.instructure.horizon.horizonui.molecules.Pill
 import com.instructure.horizon.horizonui.molecules.PillCase
 import com.instructure.horizon.horizonui.molecules.PillSize
@@ -84,20 +88,47 @@ fun DashboardSkillHighlightsCardContent(
             }
         } else {
             HorizonSpace(SpaceSize.SPACE_8)
-            Column(
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-            ) {
-                state.skills.forEach { skill ->
-                    SkillCard(
-                        skill,
-                        skill.proficiencyLevel.opacity(),
-                        homeNavController,
-                        modifier = Modifier.shimmerEffect(
-                            isLoading,
-                            backgroundColor = HorizonColors.PrimitivesGreen.green12().copy(alpha = 0.8f),
-                            shimmerColor = HorizonColors.PrimitivesGreen.green12().copy(alpha = 0.5f)
-                        )
-                    )
+
+            BoxWithConstraints {
+                if (this.isWideLayout) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    ) {
+                        state.skills.forEach { skill ->
+                            SkillCard(
+                                skill,
+                                skill.proficiencyLevel.opacity(),
+                                homeNavController,
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .shimmerEffect(
+                                        isLoading,
+                                        backgroundColor = HorizonColors.PrimitivesGreen.green12().copy(alpha = 0.8f),
+                                        shimmerColor = HorizonColors.PrimitivesGreen.green12().copy(alpha = 0.5f)
+                                    )
+                            )
+                        }
+                    }
+                } else {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                    ) {
+                        state.skills.forEach { skill ->
+                            SkillCard(
+                                skill,
+                                skill.proficiencyLevel.opacity(),
+                                homeNavController,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .shimmerEffect(
+                                        isLoading,
+                                        backgroundColor = HorizonColors.PrimitivesGreen.green12().copy(alpha = 0.8f),
+                                        shimmerColor = HorizonColors.PrimitivesGreen.green12().copy(alpha = 0.5f)
+                                    )
+                            )
+                        }
+                    }
                 }
             }
         }

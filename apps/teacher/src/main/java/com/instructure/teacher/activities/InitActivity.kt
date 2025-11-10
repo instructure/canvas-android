@@ -164,6 +164,9 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
     private var drawerItemSelectedJob: Job? = null
 
     private val mTabSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+        // Cancel any active drag on dashboard before switching tabs
+        (supportFragmentManager.findFragmentByTag(DashboardFragment::class.java.simpleName) as? DashboardFragment)?.cancelCardDrag()
+
         selectedTab = when (item.itemId) {
             R.id.tab_courses -> {
                 addCoursesFragment()

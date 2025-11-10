@@ -1,0 +1,939 @@
+name: Pull Request
+
+on:
+  pull_request:
+    types: [opened, synchronize, labeled]
+    branches-ignore:
+      - 'release/**'
+
+concurrency:
+  group: ${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  parent-build:
+    if: >-
+      (
+        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
+        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
+      ) && contains(github.event.pull_request.body, 'Parent')
+    uses: ./.github/workflows/build-app.yml
+    with:
+      app-type: Parent
+      app-type-lower: parent
+      firebase-app-id-secret: FIREBASE_ANDROID_PARENT_APP_ID
+    secrets:
+      ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+      ANDROID_RELEASE_KEYSTORE_B64: ${{ secrets.ANDROID_RELEASE_KEYSTORE_B64 }}
+      FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
+      FIREBASE_APP_ID: ${{ secrets.FIREBASE_ANDROID_PARENT_APP_ID }}
+
+  student-build:
+    if: >-
+      (
+        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
+        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
+      ) && contains(github.event.pull_request.body, 'Student')
+    uses: ./.github/workflows/build-app.yml
+    with:
+      app-type: Student
+      app-type-lower: student
+      firebase-app-id-secret: FIREBASE_ANDROID_STUDENT_APP_ID
+    secrets:
+      ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+      ANDROID_RELEASE_KEYSTORE_B64: ${{ secrets.ANDROID_RELEASE_KEYSTORE_B64 }}
+      FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
+      FIREBASE_APP_ID: ${{ secrets.FIREBASE_ANDROID_STUDENT_APP_ID }}
+
+  teacher-build:
+    if: >-
+      (
+        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
+        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
+      ) && contains(github.event.pull_request.body, 'Teacher')
+    uses: ./.github/workflows/build-app.yml
+    with:
+      app-type: Teacher
+      app-type-lower: teacher
+      firebase-app-id-secret: FIREBASE_ANDROID_TEACHER_APP_ID
+    secrets:
+      ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+      ANDROID_RELEASE_KEYSTORE_B64: ${{ secrets.ANDROID_RELEASE_KEYSTORE_B64 }}
+      FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_KEY }}
+      FIREBASE_APP_ID: ${{ secrets.FIREBASE_ANDROID_TEACHER_APP_ID }}
+
+  submodule-build-and-test:
+    name: submodule-build-and-test
+    runs-on: ubuntu-latest
+    if: >-
+      (
+        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
+        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
+      ) && (
+        contains(github.event.pull_request.body, 'Parent') ||
+        contains(github.event.pull_request.body, 'Student') ||
+        contains(github.event.pull_request.body, 'Teacher')
+      )
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+          token: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      # Building Artifacts
+      - name: Build test and app APKs
+        run: |
+          ./gradle/gradlew -p apps :pandautils:assembleDebugAndroidTest
+          mv ./libs/pandautils/build/outputs/apk/androidTest/debug/pandautils-debug-androidTest.apk ./libs/pandautils/pandautils-test.apk
+          ./gradle/gradlew -p apps :pandautils:assembleDebugAndroidTest -DtestApplicationId=com.instructure.pandautils
+          mv ./libs/pandautils/build/outputs/apk/androidTest/debug/pandautils-debug-androidTest.apk ./libs/pandautils/pandautils-app.apk
+
+      - name: Run submodule unit tests
+        run: |
+          ./gradle/gradlew -p apps testDebugUnitTest -x :dataseedingapi:test -x :teacher:test -x :student:test
+
+      # Uploading Artifacts to GitHub
+      - name: Upload test APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: pandautils-test.apk
+          path: libs/pandautils/pandautils-test.apk
+
+      - name: Upload app APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: pandautils-app.apk
+          path: libs/pandautils/pandautils-app.apk
+ 
+  parent-unit-tests:
+    name: parent-unit-tests
+    runs-on: ubuntu-latest
+    if: >-
+      (
+        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
+        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
+      ) && contains(github.event.pull_request.body, 'Parent')
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+          fetch-depth: 1
+          token: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Run unit tests
+        run: |
+          ./gradle/gradlew -p apps :parent:testDevDebugUnitTest \
+            --build-cache \
+            --parallel \
+            --max-workers=4 \
+            --no-daemon \
+            -Dorg.gradle.jvmargs="-Xmx6g -XX:+HeapDumpOnOutOfMemoryError" \
+            -Dkotlin.compiler.execution.strategy=in-process
+
+  student-unit-tests:
+    name: student-unit-tests
+    runs-on: ubuntu-latest
+    if: >-
+      (
+        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
+        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
+      ) && contains(github.event.pull_request.body, 'Student')
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+          fetch-depth: 1
+          token: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Run unit tests
+        run: |
+          ./gradle/gradlew -p apps :student:testDevDebugUnitTest \
+            --build-cache \
+            --parallel \
+            --max-workers=4 \
+            --no-daemon \
+            -Dorg.gradle.jvmargs="-Xmx6g -XX:+HeapDumpOnOutOfMemoryError" \
+            -Dkotlin.compiler.execution.strategy=in-process
+
+  teacher-unit-tests:
+    name: teacher-unit-tests
+    runs-on: ubuntu-latest
+    if: >-
+      (
+        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
+        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
+      ) && contains(github.event.pull_request.body, 'Teacher')
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+          fetch-depth: 1
+          token: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Run unit tests
+        run: |
+          ./gradle/gradlew -p apps :teacher:testDevDebugUnitTest \
+            --build-cache \
+            --parallel \
+            --max-workers=4 \
+            --no-daemon \
+            -Dorg.gradle.jvmargs="-Xmx6g -XX:+HeapDumpOnOutOfMemoryError" \
+            -Dkotlin.compiler.execution.strategy=in-process
+
+  parent-portrait-ui-tests:
+    name: parent-portrait-ui-tests
+    runs-on: ubuntu-latest
+    if: >-
+      (
+        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
+        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
+      ) && contains(github.event.pull_request.body, 'Parent')
+    needs: [parent-build, parent-unit-tests]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Setup Service account
+        env:
+          FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.GCLOUD_KEY }}
+        run: |
+          if [ -z "${FIREBASE_SERVICE_ACCOUNT_KEY}" ]; then
+            echo "Error: GCLOUD_KEY secret is not set"
+            exit 1
+          fi
+          echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
+          chmod 600 service-account-key.json
+
+      - name: Setup Flank config
+        run: cp ./apps/parent/flank.yml ./flank.yml
+
+      - name: Copy APKs to expected locations
+        run: |
+          if [ -d "parent-qa-debug.apk" ]; then
+             mkdir -p apps/parent/build/outputs/apk/qa/debug
+             mv parent-qa-debug.apk/parent-qa-debug.apk apps/parent/build/outputs/apk/qa/debug/
+             rm -rf parent-qa-debug.apk
+          fi
+          if [ -d "parent-qa-debug-androidTest.apk" ]; then
+             mkdir -p apps/parent/build/outputs/apk/androidTest/qa/debug
+             mv parent-qa-debug-androidTest.apk/parent-qa-debug-androidTest.apk apps/parent/build/outputs/apk/androidTest/qa/debug/
+             rm -rf parent-qa-debug-androidTest.apk
+          fi
+          if [ -d "parent-dev-debugMinify.apk" ]; then
+             mkdir -p apps/parent/build/outputs/apk/dev/debugMinify
+             mv parent-dev-debugMinify.apk/parent-dev-debugMinify.apk apps/parent/build/outputs/apk/dev/debugMinify/
+             rm -rf parent-dev-debugMinify.apk
+          fi
+
+      - name: Run Flank UI tests
+        uses: Flank/flank@v23.10.1
+        with:
+          version: 'v23.07.0'
+          platform: 'android'
+          service_account: './service-account-key.json'
+          flank_configuration_file: './flank.yml'
+
+      - name: Report test results to Splunk
+        run: ./apps/postProcessTestRun.bash parent results/`ls results`
+        env:
+          SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
+          OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
+          BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
+          BITRISE_GIT_BRANCH: ${{ github.ref_name }}
+          BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Cleanup sensitive files
+        if: always()
+        run: rm -f service-account-key.json
+
+  parent-landscape-ui-tests:
+    name: parent-landscape-ui-tests
+    runs-on: ubuntu-latest
+    if: >-
+      (
+        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
+        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
+      ) && contains(github.event.pull_request.body, 'Parent')
+    needs: [parent-build, parent-unit-tests]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Setup Service account
+        env:
+          FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.GCLOUD_KEY }}
+        run: |
+          if [ -z "${FIREBASE_SERVICE_ACCOUNT_KEY}" ]; then
+            echo "Error: GCLOUD_KEY secret is not set"
+            exit 1
+          fi
+          echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
+          chmod 600 service-account-key.json
+
+      - name: Setup Flank config
+        run: cp ./apps/parent/flank_landscape.yml ./flank.yml
+
+      - name: Copy APKs to expected locations
+        run: |
+          if [ -d "parent-qa-debug.apk" ]; then
+             mkdir -p apps/parent/build/outputs/apk/qa/debug
+             mv parent-qa-debug.apk/parent-qa-debug.apk apps/parent/build/outputs/apk/qa/debug/
+             rm -rf parent-qa-debug.apk
+          fi
+          if [ -d "parent-qa-debug-androidTest.apk" ]; then
+             mkdir -p apps/parent/build/outputs/apk/androidTest/qa/debug
+             mv parent-qa-debug-androidTest.apk/parent-qa-debug-androidTest.apk apps/parent/build/outputs/apk/androidTest/qa/debug/
+             rm -rf parent-qa-debug-androidTest.apk
+          fi
+          if [ -d "parent-dev-debugMinify.apk" ]; then
+             mkdir -p apps/parent/build/outputs/apk/dev/debugMinify
+             mv parent-dev-debugMinify.apk/parent-dev-debugMinify.apk apps/parent/build/outputs/apk/dev/debugMinify/
+             rm -rf parent-dev-debugMinify.apk
+          fi
+
+      - name: Run Flank UI tests
+        uses: Flank/flank@v23.10.1
+        with:
+          version: 'v23.07.0'
+          platform: 'android'
+          service_account: './service-account-key.json'
+          flank_configuration_file: './flank.yml'
+
+      - name: Report test results to Splunk
+        run: ./apps/postProcessTestRun.bash parent results/`ls results`
+        env:
+          SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
+          OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
+          BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
+          BITRISE_GIT_BRANCH: ${{ github.ref_name }}
+          BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Cleanup sensitive files
+        if: always()
+        run: rm -f service-account-key.json
+
+  student-portrait-ui-tests:
+    name: student-portrait-ui-tests
+    runs-on: ubuntu-latest
+    if: >-
+      (
+        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
+        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
+      ) && contains(github.event.pull_request.body, 'Student')
+    needs: [student-build, student-unit-tests]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Setup Service account
+        env:
+          FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.GCLOUD_KEY }}
+        run: |
+          if [ -z "${FIREBASE_SERVICE_ACCOUNT_KEY}" ]; then
+            echo "Error: GCLOUD_KEY secret is not set"
+            exit 1
+          fi
+          echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
+          chmod 600 service-account-key.json
+
+      - name: Setup Flank config
+        run: cp ./apps/student/flank.yml ./flank.yml
+
+      - name: Copy APKs to expected locations
+        run: |
+          if [ -d "student-qa-debug.apk" ]; then
+             mkdir -p apps/student/build/outputs/apk/qa/debug
+             mv student-qa-debug.apk/student-qa-debug.apk apps/student/build/outputs/apk/qa/debug/
+             rm -rf student-qa-debug.apk
+          fi
+          if [ -d "student-qa-debug-androidTest.apk" ]; then
+             mkdir -p apps/student/build/outputs/apk/androidTest/qa/debug
+             mv student-qa-debug-androidTest.apk/student-qa-debug-androidTest.apk apps/student/build/outputs/apk/androidTest/qa/debug/
+             rm -rf student-qa-debug-androidTest.apk
+          fi
+          if [ -d "student-dev-debugMinify.apk" ]; then
+             mkdir -p apps/student/build/outputs/apk/dev/debugMinify
+             mv student-dev-debugMinify.apk/student-dev-debugMinify.apk apps/student/build/outputs/apk/dev/debugMinify/
+             rm -rf student-dev-debugMinify.apk
+          fi
+
+      - name: Run Flank UI tests
+        uses: Flank/flank@v23.10.1
+        with:
+          version: 'v23.07.0'
+          platform: 'android'
+          service_account: './service-account-key.json'
+          flank_configuration_file: './flank.yml'
+
+      - name: Report test results to Splunk
+        run: ./apps/postProcessTestRun.bash student results/`ls results`
+        env:
+          SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
+          OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
+          BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
+          BITRISE_GIT_BRANCH: ${{ github.ref_name }}
+          BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Cleanup sensitive files
+        if: always()
+        run: rm -f service-account-key.json
+
+  student-landscape-ui-tests:
+    name: student-landscape-ui-tests
+    runs-on: ubuntu-latest
+    if: >-
+      (
+        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
+        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
+      ) && contains(github.event.pull_request.body, 'Student')
+    needs: [student-build, student-unit-tests]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Setup Service account
+        env:
+          FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.GCLOUD_KEY }}
+        run: |
+          if [ -z "${FIREBASE_SERVICE_ACCOUNT_KEY}" ]; then
+            echo "Error: GCLOUD_KEY secret is not set"
+            exit 1
+          fi
+          echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
+          chmod 600 service-account-key.json
+
+      - name: Setup Flank config
+        run: cp ./apps/student/flank_landscape.yml ./flank.yml
+
+      - name: Copy APKs to expected locations
+        run: |
+          if [ -d "student-qa-debug.apk" ]; then
+             mkdir -p apps/student/build/outputs/apk/qa/debug
+             mv student-qa-debug.apk/student-qa-debug.apk apps/student/build/outputs/apk/qa/debug/
+             rm -rf student-qa-debug.apk
+          fi
+          if [ -d "student-qa-debug-androidTest.apk" ]; then
+             mkdir -p apps/student/build/outputs/apk/androidTest/qa/debug
+             mv student-qa-debug-androidTest.apk/student-qa-debug-androidTest.apk apps/student/build/outputs/apk/androidTest/qa/debug/
+             rm -rf student-qa-debug-androidTest.apk
+          fi
+          if [ -d "student-dev-debugMinify.apk" ]; then
+             mkdir -p apps/student/build/outputs/apk/dev/debugMinify
+             mv student-dev-debugMinify.apk/student-dev-debugMinify.apk apps/student/build/outputs/apk/dev/debugMinify/
+             rm -rf student-dev-debugMinify.apk
+          fi
+
+      - name: Run Flank UI tests
+        uses: Flank/flank@v23.10.1
+        with:
+          version: 'v23.07.0'
+          platform: 'android'
+          service_account: './service-account-key.json'
+          flank_configuration_file: './flank.yml'
+
+      - name: Report test results to Splunk
+        run: ./apps/postProcessTestRun.bash student results/`ls results`
+        env:
+          SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
+          OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
+          BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
+          BITRISE_GIT_BRANCH: ${{ github.ref_name }}
+          BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Cleanup sensitive files
+        if: always()
+        run: rm -f service-account-key.json
+
+  teacher-portrait-ui-tests:
+    name: teacher-portrait-ui-tests
+    runs-on: ubuntu-latest
+    if: >-
+      (
+        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
+        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
+      ) && contains(github.event.pull_request.body, 'Teacher')
+    needs: [teacher-build, teacher-unit-tests]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Setup Service account
+        env:
+          FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.GCLOUD_KEY }}
+        run: |
+          if [ -z "${FIREBASE_SERVICE_ACCOUNT_KEY}" ]; then
+            echo "Error: GCLOUD_KEY secret is not set"
+            exit 1
+          fi
+          echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
+          chmod 600 service-account-key.json
+
+      - name: Setup Flank config
+        run: cp ./apps/teacher/flank.yml ./flank.yml
+
+      - name: Copy APKs to expected locations
+        run: |
+          if [ -d "teacher-qa-debug.apk" ]; then
+             mkdir -p apps/teacher/build/outputs/apk/qa/debug
+             mv teacher-qa-debug.apk/teacher-qa-debug.apk apps/teacher/build/outputs/apk/qa/debug/
+             rm -rf teacher-qa-debug.apk
+          fi
+          if [ -d "teacher-qa-debug-androidTest.apk" ]; then
+             mkdir -p apps/teacher/build/outputs/apk/androidTest/qa/debug
+             mv teacher-qa-debug-androidTest.apk/teacher-qa-debug-androidTest.apk apps/teacher/build/outputs/apk/androidTest/qa/debug/
+             rm -rf teacher-qa-debug-androidTest.apk
+          fi
+          if [ -d "teacher-dev-debugMinify.apk" ]; then
+             mkdir -p apps/teacher/build/outputs/apk/dev/debugMinify
+             mv teacher-dev-debugMinify.apk/teacher-dev-debugMinify.apk apps/teacher/build/outputs/apk/dev/debugMinify/
+             rm -rf teacher-dev-debugMinify.apk
+          fi
+
+      - name: Run Flank UI tests
+        uses: Flank/flank@v23.10.1
+        with:
+          version: 'v23.07.0'
+          platform: 'android'
+          service_account: './service-account-key.json'
+          flank_configuration_file: './flank.yml'
+
+      - name: Report test results to Splunk
+        run: ./apps/postProcessTestRun.bash teacher results/`ls results`
+        env:
+          SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
+          OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
+          BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
+          BITRISE_GIT_BRANCH: ${{ github.ref_name }}
+          BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Cleanup sensitive files
+        if: always()
+        run: rm -f service-account-key.json
+
+  teacher-landscape-ui-tests:
+    name: teacher-landscape-ui-tests
+    runs-on: ubuntu-latest
+    if: >-
+      (
+        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
+        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
+      ) && contains(github.event.pull_request.body, 'Teacher')
+    needs: [teacher-build, teacher-unit-tests]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Setup Service account
+        env:
+          FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.GCLOUD_KEY }}
+        run: |
+          if [ -z "${FIREBASE_SERVICE_ACCOUNT_KEY}" ]; then
+            echo "Error: GCLOUD_KEY secret is not set"
+            exit 1
+          fi
+          echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
+          chmod 600 service-account-key.json
+
+      - name: Setup Flank config
+        run: cp ./apps/teacher/flank_landscape.yml ./flank.yml
+
+      - name: Copy APKs to expected locations
+        run: |
+          if [ -d "teacher-qa-debug.apk" ]; then
+             mkdir -p apps/teacher/build/outputs/apk/qa/debug
+             mv teacher-qa-debug.apk/teacher-qa-debug.apk apps/teacher/build/outputs/apk/qa/debug/
+             rm -rf teacher-qa-debug.apk
+          fi
+          if [ -d "teacher-qa-debug-androidTest.apk" ]; then
+             mkdir -p apps/teacher/build/outputs/apk/androidTest/qa/debug
+             mv teacher-qa-debug-androidTest.apk/teacher-qa-debug-androidTest.apk apps/teacher/build/outputs/apk/androidTest/qa/debug/
+             rm -rf teacher-qa-debug-androidTest.apk
+          fi
+          if [ -d "teacher-dev-debugMinify.apk" ]; then
+             mkdir -p apps/teacher/build/outputs/apk/dev/debugMinify
+             mv teacher-dev-debugMinify.apk/teacher-dev-debugMinify.apk apps/teacher/build/outputs/apk/dev/debugMinify/
+             rm -rf teacher-dev-debugMinify.apk
+          fi
+
+      - name: Run Flank UI tests
+        uses: Flank/flank@v23.10.1
+        with:
+          version: 'v23.07.0'
+          platform: 'android'
+          service_account: './service-account-key.json'
+          flank_configuration_file: './flank.yml'
+
+      - name: Report test results to Splunk
+        run: ./apps/postProcessTestRun.bash teacher results/`ls results`
+        env:
+          SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
+          OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
+          BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
+          BITRISE_GIT_BRANCH: ${{ github.ref_name }}
+          BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Cleanup sensitive files
+        if: always()
+        run: rm -f service-account-key.json
+
+  parent-e2e-tests:
+    name: parent-e2e-tests
+    runs-on: ubuntu-latest
+    if: >-
+      (
+        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
+        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
+      ) && contains(github.event.pull_request.body, 'Parent') && contains(github.event.pull_request.body, 'Run E2E test suite')
+    needs: [parent-build, parent-unit-tests]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Setup Service account
+        env:
+          FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.GCLOUD_KEY }}
+        run: |
+          if [ -z "${FIREBASE_SERVICE_ACCOUNT_KEY}" ]; then
+            echo "Error: GCLOUD_KEY secret is not set"
+            exit 1
+          fi
+          echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
+          chmod 600 service-account-key.json
+
+      - name: Setup Flank config
+        run: cp ./apps/parent/flank_e2e.yml ./flank.yml
+
+      - name: Copy APKs to expected locations
+        run: |
+          if [ -d "parent-qa-debug.apk" ]; then
+             mkdir -p apps/parent/build/outputs/apk/qa/debug
+             mv parent-qa-debug.apk/parent-qa-debug.apk apps/parent/build/outputs/apk/qa/debug/
+             rm -rf parent-qa-debug.apk
+          fi
+          if [ -d "parent-qa-debug-androidTest.apk" ]; then
+             mkdir -p apps/parent/build/outputs/apk/androidTest/qa/debug
+             mv parent-qa-debug-androidTest.apk/parent-qa-debug-androidTest.apk apps/parent/build/outputs/apk/androidTest/qa/debug/
+             rm -rf parent-qa-debug-androidTest.apk
+          fi
+          if [ -d "parent-dev-debugMinify.apk" ]; then
+             mkdir -p apps/parent/build/outputs/apk/dev/debugMinify
+             mv parent-dev-debugMinify.apk/parent-dev-debugMinify.apk apps/parent/build/outputs/apk/dev/debugMinify/
+             rm -rf parent-dev-debugMinify.apk
+          fi
+
+      - name: Run Flank E2E tests
+        uses: Flank/flank@v23.10.1
+        with:
+          version: 'v23.07.0'
+          platform: 'android'
+          service_account: './service-account-key.json'
+          flank_configuration_file: './flank.yml'
+
+      - name: Report test results to Splunk
+        run: ./apps/postProcessTestRun.bash parent results/`ls results`
+        env:
+          SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
+          OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
+          BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
+          BITRISE_GIT_BRANCH: ${{ github.ref_name }}
+          BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Cleanup sensitive files
+        if: always()
+        run: rm -f service-account-key.json
+
+  student-e2e-tests:
+    name: student-e2e-tests
+    runs-on: ubuntu-latest
+    if: >-
+      (
+        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
+        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
+      ) && contains(github.event.pull_request.body, 'Student') && contains(github.event.pull_request.body, 'Run E2E test suite')
+    needs: [student-build, student-unit-tests]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Setup Service account
+        env:
+          FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.GCLOUD_KEY }}
+        run: |
+          if [ -z "${FIREBASE_SERVICE_ACCOUNT_KEY}" ]; then
+            echo "Error: GCLOUD_KEY secret is not set"
+            exit 1
+          fi
+          echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
+          chmod 600 service-account-key.json
+
+      - name: Setup Flank config
+        run: cp ./apps/student/flank_e2e.yml ./flank.yml
+
+      - name: Copy APKs to expected locations
+        run: |
+          if [ -d "student-qa-debug.apk" ]; then
+             mkdir -p apps/student/build/outputs/apk/qa/debug
+             mv student-qa-debug.apk/student-qa-debug.apk apps/student/build/outputs/apk/qa/debug/
+             rm -rf student-qa-debug.apk
+          fi
+          if [ -d "student-qa-debug-androidTest.apk" ]; then
+             mkdir -p apps/student/build/outputs/apk/androidTest/qa/debug
+             mv student-qa-debug-androidTest.apk/student-qa-debug-androidTest.apk apps/student/build/outputs/apk/androidTest/qa/debug/
+             rm -rf student-qa-debug-androidTest.apk
+          fi
+          if [ -d "student-dev-debugMinify.apk" ]; then
+             mkdir -p apps/student/build/outputs/apk/dev/debugMinify
+             mv student-dev-debugMinify.apk/student-dev-debugMinify.apk apps/student/build/outputs/apk/dev/debugMinify/
+             rm -rf student-dev-debugMinify.apk
+          fi
+
+      - name: Run Flank E2E tests
+        uses: Flank/flank@v23.10.1
+        with:
+          version: 'v23.07.0'
+          platform: 'android'
+          service_account: './service-account-key.json'
+          flank_configuration_file: './flank.yml'
+
+      - name: Report test results to Splunk
+        run: ./apps/postProcessTestRun.bash student results/`ls results`
+        env:
+          SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
+          OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
+          BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
+          BITRISE_GIT_BRANCH: ${{ github.ref_name }}
+          BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Cleanup sensitive files
+        if: always()
+        run: rm -f service-account-key.json
+
+  teacher-e2e-tests:
+    name: teacher-e2e-tests
+    runs-on: ubuntu-latest
+    if: >-
+      (
+        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
+        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
+      ) && contains(github.event.pull_request.body, 'Teacher') && contains(github.event.pull_request.body, 'Run E2E test suite')
+    needs: [teacher-build, teacher-unit-tests]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Setup Service account
+        env:
+          FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.GCLOUD_KEY }}
+        run: |
+          if [ -z "${FIREBASE_SERVICE_ACCOUNT_KEY}" ]; then
+            echo "Error: GCLOUD_KEY secret is not set"
+            exit 1
+          fi
+          echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
+          chmod 600 service-account-key.json
+
+      - name: Setup Flank config
+        run: cp ./apps/teacher/flank_e2e.yml ./flank.yml
+
+      - name: Copy APKs to expected locations
+        run: |
+          if [ -d "teacher-qa-debug.apk" ]; then
+             mkdir -p apps/teacher/build/outputs/apk/qa/debug
+             mv teacher-qa-debug.apk/teacher-qa-debug.apk apps/teacher/build/outputs/apk/qa/debug/
+             rm -rf teacher-qa-debug.apk
+          fi
+          if [ -d "teacher-qa-debug-androidTest.apk" ]; then
+             mkdir -p apps/teacher/build/outputs/apk/androidTest/qa/debug
+             mv teacher-qa-debug-androidTest.apk/teacher-qa-debug-androidTest.apk apps/teacher/build/outputs/apk/androidTest/qa/debug/
+             rm -rf teacher-qa-debug-androidTest.apk
+          fi
+          if [ -d "teacher-dev-debugMinify.apk" ]; then
+             mkdir -p apps/teacher/build/outputs/apk/dev/debugMinify
+             mv teacher-dev-debugMinify.apk/teacher-dev-debugMinify.apk apps/teacher/build/outputs/apk/dev/debugMinify/
+             rm -rf teacher-dev-debugMinify.apk
+          fi
+
+      - name: Run Flank E2E tests
+        uses: Flank/flank@v23.10.1
+        with:
+          version: 'v23.07.0'
+          platform: 'android'
+          service_account: './service-account-key.json'
+          flank_configuration_file: './flank.yml'
+
+      - name: Report test results to Splunk
+        run: ./apps/postProcessTestRun.bash teacher results/`ls results`
+        env:
+          SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
+          OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
+          BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
+          BITRISE_GIT_BRANCH: ${{ github.ref_name }}
+          BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Cleanup sensitive files
+        if: always()
+        run: rm -f service-account-key.json
+
+  submodule-ui-tests:
+    name: submodule-ui-tests
+    runs-on: ubuntu-latest
+    if: >-
+      (
+        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
+        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
+      ) && (
+        contains(github.event.pull_request.body, 'Parent') ||
+        contains(github.event.pull_request.body, 'Student') ||
+        contains(github.event.pull_request.body, 'Teacher')
+      )
+    needs: submodule-build-and-test
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download test APK artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: pandautils-test.apk
+          path: .
+
+      - name: Download app APK artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: pandautils-app.apk
+          path: .
+
+      - name: Setup Service account
+        env:
+          FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.GCLOUD_KEY }}
+        run: echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
+
+      - name: Setup Flank config
+        run: cp ./libs/pandautils/flank.yml ./flank.yml
+
+      - name: Copy APKs to expected locations
+        run: |
+          mkdir -p libs/pandautils
+          mv pandautils-test.apk libs/pandautils/
+          mv pandautils-app.apk libs/pandautils/
+
+      - name: Run Flank E2E tests
+        uses: Flank/flank@v23.10.1
+        with:
+          version: 'v23.07.0'
+          platform: 'android'
+          service_account: './service-account-key.json'
+          flank_configuration_file: './flank.yml'
