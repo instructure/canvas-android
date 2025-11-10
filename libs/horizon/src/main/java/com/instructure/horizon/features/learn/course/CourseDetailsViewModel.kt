@@ -17,7 +17,7 @@ package com.instructure.horizon.features.learn.course
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.instructure.canvasapi2.managers.CourseWithProgress
+import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

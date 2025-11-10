@@ -1,3 +1,4 @@
+
 /*
  * Copyright (C) 2023 - present Instructure, Inc.
  *
@@ -30,11 +31,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Checkpoint
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseSettings
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.LockInfo
 import com.instructure.canvasapi2.models.Quiz
+import com.instructure.canvasapi2.models.SubAssignmentSubmission
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.Analytics
@@ -112,6 +116,7 @@ class AssignmentDetailsViewModelTest {
 
         every { savedStateHandle.get<Long>(Const.COURSE_ID) } returns 0L
         every { savedStateHandle.get<Long>(Const.ASSIGNMENT_ID) } returns 0L
+        every { savedStateHandle.get<Long>(Const.SUBMISSION_ID) } returns 0L
 
         every { apiPrefs.user } returns User(id = 1)
         every { themePrefs.textButtonColor } returns 0
@@ -298,9 +303,9 @@ class AssignmentDetailsViewModelTest {
     fun `Missing submission`() {
         val expectedLabelText = "Missing"
         val expectedTint = R.color.textDanger
-        val expectedIcon = R.drawable.ic_no
+        val expectedIcon = R.drawable.ic_unpublish
 
-        every { resources.getString(R.string.missingAssignment) } returns expectedLabelText
+        every { resources.getString(R.string.missingSubmissionLabel) } returns expectedLabelText
 
         val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
         coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
@@ -322,8 +327,8 @@ class AssignmentDetailsViewModelTest {
     @Test
     fun `Not submitted submission`() {
         val expectedLabelText = "Not submitted"
-        val expectedTint = R.color.textDark
-        val expectedIcon = R.drawable.ic_no
+        val expectedTint = R.color.backgroundDark
+        val expectedIcon = R.drawable.ic_unpublish
 
         every { resources.getString(R.string.notSubmitted) } returns expectedLabelText
 
@@ -373,7 +378,7 @@ class AssignmentDetailsViewModelTest {
     fun `Submitted submission`() {
         val expectedLabelText = "Submitted"
         val expectedTint = R.color.textSuccess
-        val expectedIcon = R.drawable.ic_complete_solid
+        val expectedIcon = R.drawable.ic_complete
 
         every { resources.getString(R.string.submitted) } returns expectedLabelText
 
@@ -495,7 +500,8 @@ class AssignmentDetailsViewModelTest {
             isObserver = false,
             selectedSubmissionAttempt = null,
             assignmentUrl = "https://assignment.url",
-            isAssignmentEnhancementEnabled = true
+            isAssignmentEnhancementEnabled = true,
+            isQuiz = false
         )
         assertEquals(expected, viewModel.events.value?.peekContent())
     }
@@ -797,8 +803,71 @@ class AssignmentDetailsViewModelTest {
         val viewModel = getViewModel(realReminderManager)
 
         assertEquals(
-            reminderEntities.map { ReminderViewData(it.id, it.text) },
-            viewModel.data.value?.reminders?.map { it.data }
+            reminderEntities.map { it.id },
+            viewModel.dueDateReminderViewStates[0].reminders.map { it.id }
+        )
+    }
+
+    @Test
+    fun `Reminders map correctly for discussion checkpoints`() {
+        val reminderEntities = listOf(
+            ReminderEntity(1, 1, 1, "htmlUrl1", "Assignment 1", "1 day", 1000, "reply_to_topic"),
+            ReminderEntity(2, 1, 1, "htmlUrl2", "Assignment 2", "2 days", 2000, "reply_to_topic"),
+            ReminderEntity(3, 1, 1, "htmlUrl3", "Assignment 3", "3 days", 3000, "reply_to_entry")
+        )
+        val dateTimePicker: DateTimePicker = mockk(relaxed = true)
+        val reminderRepository: ReminderRepository = mockk(relaxed = true)
+        val realReminderManager = ReminderManager(dateTimePicker, reminderRepository, analytics)
+
+        every { reminderRepository.findByAssignmentIdLiveData(any(), any()) } returns MutableLiveData(reminderEntities)
+        every { resources.getString(eq(R.string.reminderBefore), any()) } answers { call -> "${(call.invocation.args[1] as Array<*>)[0]} Before" }
+
+        val course =
+            Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        val checkpoint1 = Checkpoint(
+            tag = "reply_to_topic",
+            dueAt = Calendar.getInstance()
+                .apply { add(Calendar.DAY_OF_MONTH, 1) }.time.toApiString()
+        )
+        val checkpoint2 = Checkpoint(
+            tag = "reply_to_entry",
+            dueAt = Calendar.getInstance()
+                .apply { add(Calendar.DAY_OF_MONTH, 2) }.time.toApiString()
+        )
+
+        val subSubmission1 = SubAssignmentSubmission(
+            subAssignmentTag = "reply_to_topic",
+
+            )
+        val subSubmission2 = SubAssignmentSubmission(subAssignmentTag = "reply_to_entry")
+
+        val assignment = Assignment(
+            checkpoints = listOf(checkpoint1, checkpoint2),
+            submission = Submission(
+                subAssignmentSubmissions = arrayListOf(subSubmission1, subSubmission2)
+            )
+        )
+        coEvery {
+            assignmentDetailsRepository.getAssignment(
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns assignment
+
+        val viewModel = getViewModel(realReminderManager)
+
+        assertEquals(
+            reminderEntities.filter { it.tag == "reply_to_topic" }.map { it.id },
+            viewModel.dueDateReminderViewStates[0].reminders.map { it.id }
+        )
+
+        assertEquals(
+            reminderEntities.filter { it.tag == "reply_to_entry" }.map { it.id },
+            viewModel.dueDateReminderViewStates[1].reminders.map { it.id }
         )
     }
 
@@ -822,11 +891,80 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel(realReminderManager)
 
-        assertEquals(0, viewModel.data.value?.reminders?.size)
+        assertEquals(0, viewModel.dueDateReminderViewStates[0].reminders.size)
 
         remindersLiveData.value = listOf(ReminderEntity(1, 1, 1, "htmlUrl1", "Assignment 1", "1 day", 1000))
 
-        assertEquals(ReminderViewData(1, "1 day"), viewModel.data.value?.reminders?.first()?.data)
+        assertEquals(
+            listOf(1L),
+            viewModel.dueDateReminderViewStates[0].reminders.map { it.id }
+        )
+    }
+
+    @Test
+    fun `Reminders update correctly for discussion checkpoints`() {
+        val remindersLiveData = MutableLiveData<List<ReminderEntity>>()
+        val dateTimePicker: DateTimePicker = mockk(relaxed = true)
+        val reminderRepository: ReminderRepository = mockk(relaxed = true)
+        val realReminderManager = ReminderManager(dateTimePicker, reminderRepository, analytics)
+        every { reminderRepository.findByAssignmentIdLiveData(any(), any()) } returns remindersLiveData
+        every { resources.getString(eq(R.string.reminderBefore), any()) } answers { call -> "${(call.invocation.args[1] as Array<*>)[0]} Before" }
+
+        val course =
+            Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        val checkpoint1 = Checkpoint(
+            tag = "reply_to_topic",
+            dueAt = Calendar.getInstance()
+                .apply { add(Calendar.DAY_OF_MONTH, 1) }.time.toApiString()
+        )
+        val checkpoint2 = Checkpoint(
+            tag = "reply_to_entry",
+            dueAt = Calendar.getInstance()
+                .apply { add(Calendar.DAY_OF_MONTH, 2) }.time.toApiString()
+        )
+
+        val subSubmission1 = SubAssignmentSubmission(
+            subAssignmentTag = "reply_to_topic",
+
+            )
+        val subSubmission2 = SubAssignmentSubmission(subAssignmentTag = "reply_to_entry")
+
+        val assignment = Assignment(
+            checkpoints = listOf(checkpoint1, checkpoint2),
+            submission = Submission(
+                subAssignmentSubmissions = arrayListOf(subSubmission1, subSubmission2)
+            )
+        )
+        coEvery {
+            assignmentDetailsRepository.getAssignment(
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns assignment
+
+        val viewModel = getViewModel(realReminderManager)
+
+        assertEquals(0, viewModel.dueDateReminderViewStates[0].reminders.size)
+        assertEquals(0, viewModel.dueDateReminderViewStates[1].reminders.size)
+
+        remindersLiveData.value = listOf(
+            ReminderEntity(1, 1, 1, "htmlUrl1", "Assignment 1", "1 day", 1000, "reply_to_topic"),
+            ReminderEntity(2, 1, 1, "htmlUrl1", "Assignment 1", "2 day", 2000, "reply_to_entry")
+        )
+
+        assertEquals(
+            listOf(1L),
+            viewModel.dueDateReminderViewStates[0].reminders.map { it.id }
+        )
+
+        assertEquals(
+            listOf(2L),
+            viewModel.dueDateReminderViewStates[1].reminders.map { it.id }
+        )
     }
 
     @Test
@@ -1007,5 +1145,244 @@ class AssignmentDetailsViewModelTest {
                 0
             )
         }
+    }
+
+    @Test
+    fun `loadData navigates to submission screen when submissionId is provided and matches`() {
+        val submissionId = 12345L
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        val submission = Submission(id = submissionId, attempt = 2, submissionType = "online_text_entry")
+        val assignment = Assignment(id = 1L, htmlUrl = "https://assignment.url", submission = submission)
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+        coEvery { assignmentDetailsRepository.isAssignmentEnhancementEnabled(any(), any()) } returns true
+
+        every { savedStateHandle.get<Long>(Const.SUBMISSION_ID) } returns submissionId
+
+        val viewModel = getViewModel()
+
+        val expected = AssignmentDetailAction.NavigateToSubmissionScreen(
+            isObserver = false,
+            selectedSubmissionAttempt = 2L,
+            assignmentUrl = "https://assignment.url",
+            isAssignmentEnhancementEnabled = true,
+            isQuiz = false
+        )
+        assertEquals(expected, viewModel.events.value?.peekContent())
+    }
+
+    @Test
+    fun `loadData does not navigate when submissionId is not provided`() {
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        val submission = Submission(id = 12345L, attempt = 2, submissionType = "online_text_entry")
+        val assignment = Assignment(id = 1L, htmlUrl = "https://assignment.url", submission = submission)
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+        coEvery { assignmentDetailsRepository.isAssignmentEnhancementEnabled(any(), any()) } returns true
+
+        every { savedStateHandle.get<Long>(Const.SUBMISSION_ID) } returns null
+
+        val viewModel = getViewModel()
+
+        assertFalse(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToSubmissionScreen)
+    }
+
+    @Test
+    fun `loadData does not navigate when submissionId does not match`() {
+        val submissionId = 99999L
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        val submission = Submission(id = 12345L, attempt = 2, submissionType = "online_text_entry")
+        val assignment = Assignment(id = 1L, htmlUrl = "https://assignment.url", submission = submission)
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+        coEvery { assignmentDetailsRepository.isAssignmentEnhancementEnabled(any(), any()) } returns true
+
+        every { savedStateHandle.get<Long>(Const.SUBMISSION_ID) } returns submissionId
+
+        val viewModel = getViewModel()
+
+        assertFalse(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToSubmissionScreen)
+    }
+
+    @Test
+    fun `loadData does not navigate when submission is null`() {
+        val submissionId = 12345L
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        val assignment = Assignment(id = 1L, htmlUrl = "https://assignment.url", submission = null)
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+        coEvery { assignmentDetailsRepository.isAssignmentEnhancementEnabled(any(), any()) } returns true
+
+        every { savedStateHandle.get<Long>(Const.SUBMISSION_ID) } returns submissionId
+
+        val viewModel = getViewModel()
+
+        assertFalse(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToSubmissionScreen)
+    }
+
+    @Test
+    fun `loadData does not navigate when submission type is not_graded`() {
+        val submissionId = 12345L
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        val submission = Submission(id = submissionId, attempt = 2, submissionType = "not_graded")
+        val assignment = Assignment(id = 1L, htmlUrl = "https://assignment.url", submission = submission)
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+        coEvery { assignmentDetailsRepository.isAssignmentEnhancementEnabled(any(), any()) } returns true
+
+        every { savedStateHandle.get<Long>(Const.SUBMISSION_ID) } returns submissionId
+
+        val viewModel = getViewModel()
+
+        assertFalse(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToSubmissionScreen)
+    }
+
+    @Test
+    fun `loadData does not navigate when submission type is on_paper`() {
+        val submissionId = 12345L
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        val submission = Submission(id = submissionId, attempt = 2, submissionType = "on_paper")
+        val assignment = Assignment(id = 1L, htmlUrl = "https://assignment.url", submission = submission)
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+        coEvery { assignmentDetailsRepository.isAssignmentEnhancementEnabled(any(), any()) } returns true
+
+        every { savedStateHandle.get<Long>(Const.SUBMISSION_ID) } returns submissionId
+
+        val viewModel = getViewModel()
+
+        assertFalse(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToSubmissionScreen)
+    }
+
+    @Test
+    fun `Assignment with checkpoints and subAssignmentSubmissions maps dueDateReminderViewStates correctly`() {
+        val course =
+            Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        val checkpoint1 = Checkpoint(
+            tag = "reply_to_topic",
+            dueAt = Calendar.getInstance()
+                .apply { add(Calendar.DAY_OF_MONTH, 1) }.time.toApiString()
+        )
+        val checkpoint2 = Checkpoint(
+            tag = "reply_to_entry",
+            dueAt = Calendar.getInstance()
+                .apply { add(Calendar.DAY_OF_MONTH, 2) }.time.toApiString()
+        )
+
+        val subSubmission1 = SubAssignmentSubmission(
+            subAssignmentTag = "reply_to_topic",
+
+            )
+        val subSubmission2 = SubAssignmentSubmission(subAssignmentTag = "reply_to_entry")
+
+
+        val assignment = Assignment(
+            checkpoints = listOf(checkpoint1, checkpoint2),
+            submission = Submission(
+                subAssignmentSubmissions = arrayListOf(subSubmission1, subSubmission2)
+            )
+        )
+        coEvery {
+            assignmentDetailsRepository.getAssignment(
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns assignment
+
+        val viewModel = getViewModel()
+
+        assertEquals(2, viewModel.dueDateReminderViewStates.size)
+        assertEquals("reply_to_topic", viewModel.dueDateReminderViewStates[0].tag)
+        assertEquals("reply_to_entry", viewModel.dueDateReminderViewStates[1].tag)
+
+        assertTrue(viewModel.dueDateReminderViewStates[0].reminders.isEmpty())
+        assertTrue(viewModel.dueDateReminderViewStates[1].reminders.isEmpty())
+    }
+
+    @Test
+    fun `Assignment with checkpoints maps discussionCheckpoints correctly`() {
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+        every { colorProvider.getContentColor(any()) } returns colorKeeper.getOrGenerateColor(course)
+        every { application.getString(R.string.reply_to_topic) } returns "Reply to topic"
+        every { application.getString(R.string.additional_replies, any()) } returns "Additional replies (3)"
+        every { resources.getString(R.string.gradedSubmissionLabel) } returns "Graded"
+        every { resources.getString(R.string.lateSubmissionLabel) } returns "Late"
+        every { resources.getString(R.string.gradeFormatScoreOutOfPointsPossible, "5", "5") } returns "5 / 5 pts"
+        every { resources.getString(R.string.gradeFormatScoreOutOfPointsPossible, "3", "5") } returns "3 / 5 pts"
+
+        val checkpoint1 = Checkpoint(
+            tag = "reply_to_topic",
+            pointsPossible = 5.0,
+            dueAt = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 1) }.time.toApiString()
+        )
+        val checkpoint2 = Checkpoint(
+            tag = "reply_to_entry",
+            pointsPossible = 5.0,
+            dueAt = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 2) }.time.toApiString()
+        )
+
+        val subSubmission1 = SubAssignmentSubmission(
+            subAssignmentTag = "reply_to_topic",
+            grade = "5",
+            score = 5.0
+        )
+        val subSubmission2 = SubAssignmentSubmission(
+            subAssignmentTag = "reply_to_entry",
+            grade = "3",
+            score = 3.0,
+            late = true
+        )
+
+        val assignment = Assignment(
+            checkpoints = listOf(checkpoint1, checkpoint2),
+            discussionTopicHeader = DiscussionTopicHeader(replyRequiredCount = 3),
+            submission = Submission(
+                subAssignmentSubmissions = arrayListOf(subSubmission1, subSubmission2)
+            )
+        )
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+
+        val viewModel = getViewModel()
+
+        assertEquals(2, viewModel.discussionCheckpoints.value.size)
+
+        // First checkpoint - graded
+        assertEquals("Reply to topic", viewModel.discussionCheckpoints.value[0].name)
+        assertEquals("5 / 5 pts", viewModel.discussionCheckpoints.value[0].grade)
+        assertTrue(viewModel.discussionCheckpoints.value[0].stateLabel is com.instructure.pandautils.features.grades.SubmissionStateLabel.Predefined)
+        assertEquals(R.string.gradedSubmissionLabel, (viewModel.discussionCheckpoints.value[0].stateLabel as com.instructure.pandautils.features.grades.SubmissionStateLabel.Predefined).labelRes)
+
+        // Second checkpoint - late
+        assertEquals("Additional replies (3)", viewModel.discussionCheckpoints.value[1].name)
+        assertEquals("3 / 5 pts", viewModel.discussionCheckpoints.value[1].grade)
+        assertTrue(viewModel.discussionCheckpoints.value[1].stateLabel is com.instructure.pandautils.features.grades.SubmissionStateLabel.Predefined)
+        assertEquals(R.string.lateSubmissionLabel, (viewModel.discussionCheckpoints.value[1].stateLabel as com.instructure.pandautils.features.grades.SubmissionStateLabel.Predefined).labelRes)
+    }
+
+    @Test
+    fun `Assignment without checkpoints has empty discussionCheckpoints list`() {
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        val assignment = Assignment(
+            name = "Regular assignment",
+            dueAt = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 1) }.time.toApiString()
+        )
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+
+        val viewModel = getViewModel()
+
+        assertTrue(viewModel.discussionCheckpoints.value.isEmpty())
     }
 }

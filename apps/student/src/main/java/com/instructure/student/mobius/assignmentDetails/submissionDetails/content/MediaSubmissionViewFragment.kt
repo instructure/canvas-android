@@ -116,7 +116,7 @@ class MediaSubmissionViewFragment : BaseCanvasFragment() {
 
     private fun fetchMediaUri() {
         lifecycleScope.launch {
-            mediaUri = RouteUtils.getRedirectUrl(uri)
+            mediaUri = RouteUtils.getMediaUri(uri)
             if (isResumed) {
                 attachMediaPlayer()
             }

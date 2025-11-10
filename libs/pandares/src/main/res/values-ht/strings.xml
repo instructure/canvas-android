@@ -1042,6 +1042,10 @@
     <string name="downloadFailed">Echèk telechajan</string>
     <string name="downloadSuccessful">Telechajman reyisi</string>
 
+    <string name="downloading">Telechajman</string>
+    <string name="downloadComplete">Telechajman fini</string>
+    <string name="notificationChannelNameFileDownloadsName">Avi Telechajman</string>
+    <string name="notificationChannelNameFileDownloadsDescription">Notifikasyon Canvas pou telechajman k ap fèt yo</string>
     <string name="full_due_date_details">Tout detay delè</string>
     <string name="submissions">Soumisyon</string>
     <string name="attachment">Atachman</string>
@@ -2131,4 +2135,9 @@
     <string name="daysLateHint">Ekri jou reta yo</string>
     <string name="reply_to_topic">Reponn a sijè</string>
     <string name="additional_replies">Plis repons (%d)</string>
+    <string name="reply_to_topic_due">Reponn sijè a anvan dat limit</string>
+    <string name="additional_replies_due">Plis repons (%d) nan dat limit</string>
+    <string name="a11y_discussion_checkpoints">Pwen Kontwòl Diskisyon yo</string>
+    <string name="multipleDueDates">Plizyè Delè</string>
+    <string name="courseConcludedError">Kou a fini. Enposib pou voye mesaj!</string>
 </resources>

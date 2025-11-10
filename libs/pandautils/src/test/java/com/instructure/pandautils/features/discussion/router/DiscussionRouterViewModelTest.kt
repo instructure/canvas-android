@@ -184,6 +184,95 @@ class DiscussionRouterViewModelTest {
         )
     }
 
+    @Test
+    fun `Route to web view when redesign is enabled and topic header is null`() {
+        val course = Course()
+
+        coEvery { discussionRouteHelper.shouldShowDiscussionRedesign() } returns true
+        coEvery { discussionRouteHelper.getDiscussionHeader(any(), any()) } returns null
+
+        viewModel.events.observe(lifecycleOwner) {}
+
+        viewModel.route(course, null, 1L, false)
+
+        assertEquals(
+            DiscussionRouterAction.RouteToDiscussionWebView(course, 1L),
+            viewModel.events.value?.getContentIfNotHandled()
+        )
+    }
+
+    @Test
+    fun `Route to web view when redesign is enabled and topic header is null for announcement`() {
+        val course = Course()
+
+        coEvery { discussionRouteHelper.shouldShowDiscussionRedesign() } returns true
+        coEvery { discussionRouteHelper.getDiscussionHeader(any(), any()) } returns null
+
+        viewModel.events.observe(lifecycleOwner) {}
+
+        viewModel.route(course, null, 1L, true)
+
+        assertEquals(
+            DiscussionRouterAction.RouteToDiscussionWebView(course, 1L),
+            viewModel.events.value?.getContentIfNotHandled()
+        )
+    }
+
+    @Test
+    fun `Show toast when redesign is disabled and topic header is null`() {
+        val course = Course()
+
+        coEvery { discussionRouteHelper.shouldShowDiscussionRedesign() } returns false
+        coEvery { discussionRouteHelper.getDiscussionHeader(any(), any()) } returns null
+
+        viewModel.events.observe(lifecycleOwner) {}
+
+        viewModel.route(course, null, 1L, false)
+
+        assertEquals(
+            DiscussionRouterAction.ShowToast("Error occurred. The topic may no longer be available."),
+            viewModel.events.value?.getContentIfNotHandled()
+        )
+    }
+
+    @Test
+    fun `Route to parent discussion when group discussion header is null and redesign is enabled`() {
+        val group = Group(1L)
+        val discussionTopicHeader = DiscussionTopicHeader(1L, groupTopicChildren = listOf(GroupTopicChild(2L, 1L)))
+
+        coEvery { discussionRouteHelper.shouldShowDiscussionRedesign() } returns true
+        coEvery { discussionRouteHelper.getDiscussionGroup(discussionTopicHeader) } returns Pair(group, 2L)
+        coEvery { discussionRouteHelper.getDiscussionHeader(group, 2L) } returns null
+
+        viewModel.events.observe(lifecycleOwner) {}
+
+        viewModel.route(group, discussionTopicHeader, 1L, false)
+
+        assertEquals(
+            DiscussionRouterAction.RouteToDiscussion(group, true, discussionTopicHeader, false),
+            viewModel.events.value?.getContentIfNotHandled()
+        )
+    }
+
+    @Test
+    fun `Route to parent discussion when group discussion header is null and redesign is disabled`() {
+        val group = Group(1L)
+        val discussionTopicHeader = DiscussionTopicHeader(1L, groupTopicChildren = listOf(GroupTopicChild(2L, 1L)))
+
+        coEvery { discussionRouteHelper.shouldShowDiscussionRedesign() } returns false
+        coEvery { discussionRouteHelper.getDiscussionGroup(discussionTopicHeader) } returns Pair(group, 2L)
+        coEvery { discussionRouteHelper.getDiscussionHeader(group, 2L) } returns null
+
+        viewModel.events.observe(lifecycleOwner) {}
+
+        viewModel.route(group, discussionTopicHeader, 1L, false)
+
+        assertEquals(
+            DiscussionRouterAction.RouteToDiscussion(group, false, discussionTopicHeader, false),
+            viewModel.events.value?.getContentIfNotHandled()
+        )
+    }
+
     private fun setupStrings() {
         every { resources.getString(R.string.discussionErrorToast) } returns "Error occurred. The topic may no longer be available."
     }

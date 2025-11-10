@@ -1105,6 +1105,10 @@
     <string name="downloadFailed">فشل التنزيل</string>
     <string name="downloadSuccessful">نجح التنزيل</string>
 
+    <string name="downloading">جارٍ التنزيل</string>
+    <string name="downloadComplete">اكتمل التنزيل</string>
+    <string name="notificationChannelNameFileDownloadsName">إعلامات التنزيل</string>
+    <string name="notificationChannelNameFileDownloadsDescription">إعلامات Canvas لعمليات التنزيل الجارية.</string>
     <string name="full_due_date_details">التفاصيل الكاملة لتاريخ الاستحقاق</string>
     <string name="submissions">الإرسالات</string>
     <string name="attachment">المرفق</string>
@@ -2274,4 +2278,9 @@
     <string name="daysLateHint">اكتب أيام التأخير</string>
     <string name="reply_to_topic">الرد على الموضوع</string>
     <string name="additional_replies">ردود إضافية (%d)</string>
+    <string name="reply_to_topic_due">الرد على الموضوع مستحق</string>
+    <string name="additional_replies_due">ردود إضافية (%d) مستحقة</string>
+    <string name="a11y_discussion_checkpoints">نقاط تحقق النقاش</string>
+    <string name="multipleDueDates">تواريخ استحقاق متعددة</string>
+    <string name="courseConcludedError">انتهى المساق. يتعذر إرسال الرسائل!</string>
 </resources>

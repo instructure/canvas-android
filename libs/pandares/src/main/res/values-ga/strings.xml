@@ -1043,6 +1043,10 @@
     <string name="downloadFailed">Theip ar an íoslódáil</string>
     <string name="downloadSuccessful">Íoslódáil an rath</string>
 
+    <string name="downloading">Ag íoslódáil</string>
+    <string name="downloadComplete">Íoslódáil críochnaithe</string>
+    <string name="notificationChannelNameFileDownloadsName">Fógraí Íoslódála</string>
+    <string name="notificationChannelNameFileDownloadsDescription">Fógraí Canbhás le haghaidh íoslódálacha atá ar siúl.</string>
     <string name="full_due_date_details">Sonraí iomlána faoin dáta dlite</string>
     <string name="submissions">Uaslódálacha</string>
     <string name="attachment">Ceangaltán</string>
@@ -2143,4 +2147,12 @@
     <string name="a11y_collapsed">Leacaigh</string>
     <string name="excuseStudent">Ná bac leis an Mac Léinn</string>
     <string name="detailsEmptyMessage">Níl tuilleadh sonraí againn don Mhac Léinn agus don Tasc seo</string>
+    <string name="daysLateHint">Scríobh lá déanach</string>
+    <string name="reply_to_topic">Freagra ar an ábhar</string>
+    <string name="additional_replies">Freagraí breise (%d)</string>
+    <string name="reply_to_topic_due">Freagra ar an topaic dlite</string>
+    <string name="additional_replies_due">Freagraí breise (%d) dlite</string>
+    <string name="a11y_discussion_checkpoints">Seicphointí Fóraim</string>
+    <string name="multipleDueDates">Dáta Dlite Iolracha</string>
+    <string name="courseConcludedError">Críochnaíodh an cúrsa. Ní féidir teachtaireachtaí a sheoladh!</string>
 </resources>

@@ -491,4 +491,5 @@
     <plurals name="durationMins">
         <item quantity="other">%d分</item>
     </plurals>
+    <string name="notATeacherDescription">私たちの他のもひとつのアプリのほうが、もっと合うかもしれません。アイコンをタップしてログインしてください。</string>
 </resources>

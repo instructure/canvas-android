@@ -16,16 +16,13 @@
 package com.instructure.pandautils.compose.composables
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Checkbox
 import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,17 +40,17 @@ fun CheckboxText(
     color: Color,
     onCheckedChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
+    subtitle: String? = null,
     testTag: String = "checkboxText"
 ) {
-    var checked by remember { mutableStateOf(selected) }
-    Row (
-        modifier = modifier.clickable { checked = !checked }.padding(vertical = 8.dp, horizontal = 16.dp),
-        verticalAlignment = Alignment.CenterVertically
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .clickable { onCheckedChanged(!selected) }
     ) {
         Checkbox(
-            checked = checked,
+            checked = selected,
             onCheckedChange = {
-                checked = it
                 onCheckedChanged(it)
             },
             colors = CheckboxDefaults.colors(
@@ -62,12 +59,22 @@ fun CheckboxText(
             ),
             modifier = Modifier.testTag(testTag)
         )
-        Text(
-            text = text,
-            fontSize = 16.sp,
-            lineHeight = 21.sp,
-            color = colorResource(R.color.textDarkest)
-        )
+        Column {
+            subtitle?.let {
+                Text(
+                    text = it,
+                    fontSize = 14.sp,
+                    lineHeight = 18.sp,
+                    color = colorResource(R.color.textDark)
+                )
+            }
+            Text(
+                text = text,
+                fontSize = 16.sp,
+                lineHeight = 21.sp,
+                color = colorResource(R.color.textDarkest)
+            )
+        }
     }
 }
 

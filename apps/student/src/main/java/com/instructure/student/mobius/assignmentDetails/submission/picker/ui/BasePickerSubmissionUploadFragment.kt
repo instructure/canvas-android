@@ -35,7 +35,9 @@ import com.instructure.student.mobius.assignmentDetails.submission.picker.Picker
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadModel
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadPresenter
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadUpdate
+import com.instructure.pandautils.utils.NullableStringArg
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadFragment.Companion.INVALID_ATTEMPT
+import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadFragment.Companion.MEDIA_SOURCE
 import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.PickerSubmissionUploadFragment.Companion.PICKER_MODE
 import com.instructure.student.mobius.common.ui.MobiusFragment
 
@@ -48,6 +50,7 @@ abstract class BasePickerSubmissionUploadFragment :
     private val mode by SerializableArg(key = PICKER_MODE, default = PickerSubmissionMode.FileSubmission)
     private val mediaUri by NullableParcelableArg<Uri>(key = Const.PASSED_URI, default = null)
     private var attemptId by LongArg(key = Const.SUBMISSION_ATTEMPT)
+    private val initialMediaSource by NullableStringArg(key = MEDIA_SOURCE)
 
     override fun makeUpdate() = PickerSubmissionUploadUpdate()
 
@@ -64,6 +67,7 @@ abstract class BasePickerSubmissionUploadFragment :
         if (mode.isForComment || mode.isMediaSubmission) emptyList() else assignment.allowedExtensions,
         mode,
         mediaUri,
-        attemptId = attemptId.takeIf { it != INVALID_ATTEMPT }
+        attemptId = attemptId.takeIf { it != INVALID_ATTEMPT },
+        mediaSource = initialMediaSource
     )
 }

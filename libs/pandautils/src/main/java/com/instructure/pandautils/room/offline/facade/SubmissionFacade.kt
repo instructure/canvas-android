@@ -32,7 +32,8 @@ class SubmissionFacade(
     private val submissionCommentDao: SubmissionCommentDao,
     private val attachmentDao: AttachmentDao,
     private val authorDao: AuthorDao,
-    private val rubricCriterionAssessmentDao: RubricCriterionAssessmentDao
+    private val rubricCriterionAssessmentDao: RubricCriterionAssessmentDao,
+    private val subAssignmentSubmissionDao: SubAssignmentSubmissionDao
 ) {
 
     suspend fun insertSubmission(submission: Submission) {
@@ -75,6 +76,10 @@ class SubmissionFacade(
         submission.submissionHistory.forEach { submissionHistoryItem ->
             submissionHistoryItem?.let { insertSubmission(it) }
         }
+
+        subAssignmentSubmissionDao.insertAll(submission.subAssignmentSubmissions.map {
+            SubAssignmentSubmissionEntity(it, submission.id, submission.attempt)
+        })
     }
 
     suspend fun getSubmissionById(id: Long): Submission? {
@@ -93,6 +98,7 @@ class SubmissionFacade(
         val submissionCommentEntities = submissionCommentDao.findBySubmissionId(submissionEntity.id)
         val attachmentEntities = attachmentDao.findBySubmissionId(submissionEntity.id)
         val rubricCriterionAssessmentEntities = rubricCriterionAssessmentDao.findByAssignmentId(submissionEntity.assignmentId)
+        val subAssignmentSubmissionEntities = subAssignmentSubmissionDao.findBySubmissionIdAndAttempt(submissionEntity.id, submissionEntity.attempt)
 
         return submissionEntity.toApiModel(
             mediaComment = mediaCommentEntity?.toApiModel(),
@@ -100,7 +106,8 @@ class SubmissionFacade(
             group = groupEntity?.toApiModel(),
             submissionComments = submissionCommentEntities.map { it.toApiModel() },
             attachments = attachmentEntities.filter { it.attempt == submissionEntity.attempt }.map { it.toApiModel() },
-            rubricAssessment = HashMap(rubricCriterionAssessmentEntities.associateBy({ it.id }, { it.toApiModel() }))
+            rubricAssessment = HashMap(rubricCriterionAssessmentEntities.associateBy({ it.id }, { it.toApiModel() })),
+            subAssignmentSubmissions = ArrayList(subAssignmentSubmissionEntities.map { it.toApiModel() })
         )
     }
 

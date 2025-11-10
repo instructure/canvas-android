@@ -24,7 +24,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.instructure.composeTest.hasDrawable
+import com.instructure.composetest.hasDrawable
 import com.instructure.espresso.assertTextColor
 import com.instructure.pandares.R
 import com.instructure.pandautils.features.grades.AssignmentItem

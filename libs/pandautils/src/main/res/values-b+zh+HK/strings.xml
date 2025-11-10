@@ -491,4 +491,5 @@
     <plurals name="durationMins">
         <item quantity="other">%d 分鐘</item>
     </plurals>
+    <string name="notATeacherDescription">我們的其中一個其他應用程式可能更適合您。點選圖示即可登入。</string>
 </resources>

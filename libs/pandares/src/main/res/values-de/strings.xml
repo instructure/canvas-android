@@ -1042,6 +1042,10 @@
     <string name="downloadFailed">Download fehlgeschlagen</string>
     <string name="downloadSuccessful">Download erfolgreich</string>
 
+    <string name="downloading">Wird heruntergeladen</string>
+    <string name="downloadComplete">Download abgeschlossen</string>
+    <string name="notificationChannelNameFileDownloadsName">Download-Benachrichtigungen</string>
+    <string name="notificationChannelNameFileDownloadsDescription">Canvas-Benachrichtigungen für laufende Downloads.</string>
     <string name="full_due_date_details">Vollständige Details zum Abgabedatum</string>
     <string name="submissions">Übermittlungen</string>
     <string name="attachment">Anhang</string>
@@ -2131,4 +2135,9 @@
     <string name="daysLateHint">Verspätete Tage eingeben</string>
     <string name="reply_to_topic">Auf Thema antworten</string>
     <string name="additional_replies">Zusätzliche Antworten (%d)</string>
+    <string name="reply_to_topic_due">Antwort auf Thema fällig</string>
+    <string name="additional_replies_due">Zusätzliche Antworten (%d) fällig</string>
+    <string name="a11y_discussion_checkpoints">Kontrollpunkte für Diskussionen</string>
+    <string name="multipleDueDates">Mehrere Abgabetermine</string>
+    <string name="courseConcludedError">Kurs abgeschlossen. Nachrichten können nicht gesendet werden!</string>
 </resources>

@@ -150,7 +150,7 @@ class EventViewModel @Inject constructor(
                 recurrence = scheduleItem.seriesNaturalLanguage.orEmpty(),
                 location = scheduleItem.locationName.orEmpty(),
                 address = scheduleItem.locationAddress.orEmpty(),
-                formattedDescription = htmlContentFormatter.formatHtmlWithIframes(scheduleItem.description.orEmpty()),
+                formattedDescription = htmlContentFormatter.formatHtmlWithIframes(scheduleItem.description.orEmpty(), scheduleItem.courseId),
                 isSeriesEvent = scheduleItem.isRecurring,
                 isSeriesHead = scheduleItem.seriesHead,
                 isMessageFabEnabled = eventViewModelBehavior.shouldShowMessageFab && scheduleItem.contextType == CanvasContext.Type.COURSE

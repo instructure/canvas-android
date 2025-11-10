@@ -1,11 +1,11 @@
 package com.instructure.horizon.features.notebook.common.model
 
 import com.google.gson.Gson
-import com.instructure.canvasapi2.managers.NoteHighlightedData
-import com.instructure.canvasapi2.managers.NoteHighlightedDataRange
-import com.instructure.canvasapi2.managers.NoteHighlightedDataTextPosition
-import com.instructure.canvasapi2.managers.NoteObjectType
-import com.instructure.canvasapi2.managers.NoteReaction
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedData
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedDataRange
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedDataTextPosition
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteObjectType
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteReaction
 import com.instructure.pandautils.utils.toJson
 import com.instructure.redwood.QueryNotesQuery
 import java.util.Date

@@ -71,25 +71,26 @@
                 style="@style/AdapterItemDescriptionText"
                 tools:text="An assignment description with some length so we can ensure it looks amazing on every device!" />
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/date"
+                style="@style/AdapterItemDescriptionText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                tools:text="Due Feb 12 at 11:59 PM"/>
 
-                <TextView
-                    android:id="@+id/date"
-                    style="@style/AdapterItemDescriptionText"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    tools:text="No Due Date"/>
+            <LinearLayout
+                android:id="@+id/checkpointDatesContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"/>
 
-                <TextView
-                    android:id="@+id/points"
-                    style="@style/AdapterItemDescriptionText"
-                    tools:text="-/100"/>
-
-            </LinearLayout>
+            <TextView
+                android:id="@+id/points"
+                style="@style/AdapterItemDescriptionText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="100 pts"/>
 
         </LinearLayout>
 

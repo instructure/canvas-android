@@ -499,4 +499,5 @@
         <item quantity="one">%d minuto</item>
         <item quantity="other">%d minutos</item>
     </plurals>
+    <string name="notATeacherDescription">Una de nuestras otras aplicaciones podría ser más adecuada. Toque un ícono para iniciar sesión allí.</string>
 </resources>

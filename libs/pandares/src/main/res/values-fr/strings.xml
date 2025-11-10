@@ -1042,6 +1042,10 @@
     <string name="downloadFailed">Échec du téléchargement</string>
     <string name="downloadSuccessful">Téléchargement réussi</string>
 
+    <string name="downloading">Téléchargement</string>
+    <string name="downloadComplete">Téléchargement terminé</string>
+    <string name="notificationChannelNameFileDownloadsName">Télécharger les notifications</string>
+    <string name="notificationChannelNameFileDownloadsDescription">Notifications Canvas pour les téléchargements en cours.</string>
     <string name="full_due_date_details">Détails complets de la date limite de rendu</string>
     <string name="submissions">Soumissions</string>
     <string name="attachment">Pièce jointe</string>
@@ -2131,4 +2135,9 @@
     <string name="daysLateHint">Jours de retard d’écriture</string>
     <string name="reply_to_topic">Répondre au sujet</string>
     <string name="additional_replies">Réponses supplémentaires (%d)</string>
+    <string name="reply_to_topic_due">Réponse au sujet attendue</string>
+    <string name="additional_replies_due">Réponses supplémentaires (%d) attendues</string>
+    <string name="a11y_discussion_checkpoints">Points de contrôle des discussions</string>
+    <string name="multipleDueDates">Dates limites multiples</string>
+    <string name="courseConcludedError">Cours terminés. Impossible d’envoyer des messages !</string>
 </resources>

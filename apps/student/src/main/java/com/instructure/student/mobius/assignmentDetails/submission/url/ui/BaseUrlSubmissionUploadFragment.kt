@@ -43,6 +43,7 @@ abstract class BaseUrlSubmissionUploadFragment : MobiusFragment<UrlSubmissionUpl
     private val initialUrl by StringArg(key = Const.URL)
     private val assignmentName by StringArg(key = Const.ASSIGNMENT_NAME)
     private val isFailure by BooleanArg(key = Const.IS_FAILURE)
+    private val attempt by LongArg(key = Const.SUBMISSION_ATTEMPT, default = 1L)
 
     override fun makeUpdate(): UpdateInit<UrlSubmissionUploadModel, UrlSubmissionUploadEvent, UrlSubmissionUploadEffect> = UrlSubmissionUploadUpdate()
 
@@ -50,5 +51,5 @@ abstract class BaseUrlSubmissionUploadFragment : MobiusFragment<UrlSubmissionUpl
 
     override fun makePresenter(): Presenter<UrlSubmissionUploadModel, UrlSubmissionUploadViewState> = UrlSubmissionUploadPresenter
 
-    override fun makeInitModel(): UrlSubmissionUploadModel = UrlSubmissionUploadModel(course, assignmentId, assignmentName, initialUrl, isFailure)
+    override fun makeInitModel(): UrlSubmissionUploadModel = UrlSubmissionUploadModel(course, assignmentId, assignmentName, initialUrl, isFailure, attempt = attempt)
 }

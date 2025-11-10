@@ -29,7 +29,7 @@ import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.SmartSearchContentType
-import com.instructure.composeTest.hasSiblingWithText
+import com.instructure.composetest.hasSiblingWithText
 import com.instructure.pandautils.features.smartsearch.SmartSearchResultUiState
 import com.instructure.pandautils.features.smartsearch.SmartSearchScreen
 import com.instructure.pandautils.features.smartsearch.SmartSearchSortType

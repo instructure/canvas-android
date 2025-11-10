@@ -468,7 +468,7 @@
     <!-- Groups -->
     <string name="groupDialogTitle">Hópskilaboð?</string>
     <string name="groupDialogMessage">Bæta öllum við eitt hópsamtal eða senda skilaboð á alla hvern fyrir sig?</string>
-    <string name="group">Hópur</string>
+    <string name="group">Verkefnaflokkur</string>
     <string name="groups">Hópar</string>
     <string name="groupMembers">Hópmeðlimir</string>
 
@@ -987,7 +987,7 @@
     <string name="updating_module_info">Uppfæri einingaupplýsingar&#8230;</string>
     <string name="pending_review">Bíður mats</string>
     <string name="totalPoints">%s punktar</string>
-    <string name="totalPointsText">Heildarpunktar</string>
+    <string name="totalPointsText">Heildarstig</string>
     <string name="contentDescriptionPoints">%s punktar</string>
     <string name="score">Einkunn</string>
     <string name="rangedRubricTotal" formatted="false">%s / %s punktar</string>
@@ -1042,6 +1042,10 @@
     <string name="downloadFailed">Niðurhal mistókst</string>
     <string name="downloadSuccessful">Niðurhal tókst</string>
 
+    <string name="downloading">Hleðst niður</string>
+    <string name="downloadComplete">Niðurhleðslu lokið</string>
+    <string name="notificationChannelNameFileDownloadsName">Niðurhalstilkynningar</string>
+    <string name="notificationChannelNameFileDownloadsDescription">Canvas-tilkynningar fyrir niðurhal sem er í gangi.</string>
     <string name="full_due_date_details">Upplýsingar um skiladag</string>
     <string name="submissions">Skil</string>
     <string name="attachment">Viðhengi</string>
@@ -1896,7 +1900,7 @@
     <string name="gradesBasedOnGraded">Byggt á verkefnum með einkunnum</string>
     <string name="lateSubmissionLabel">Seint</string>
     <string name="sortByDueDate">Skiladagur</string>
-    <string name="sortByGroup">Hópur</string>
+    <string name="sortByGroup">Verkefnaflokkur</string>
     <string name="gradePreferencesScreenTitle">Kjörstillingar fyrir einkunnir</string>
     <string name="gradePreferencesHeaderGradingPeriod">Einkunnatímabil</string>
     <string name="gradePreferencesHeaderSortBy">Raða eftir</string>
@@ -2112,7 +2116,7 @@
     <string name="speedGraderSubmissionDetails">Upplýsingar um skil</string>
     <string name="speedGraderSubmissionDetailsLoading">Hleður skilaupplýsingum</string>
     <string name="speedGraderWordCount">Orðafjöldi</string>
-    <string name="rubricsTitle">Matskvarði</string>
+    <string name="rubricsTitle">Matskvarðar</string>
     <string name="rubricScore">Einkunn</string>
     <string name="rubricScoreHint">Skrifaðu einkunn hér</string>
     <string name="speedGraderCommentsTitle">Athugasemdir (%s)</string>
@@ -2131,4 +2135,9 @@
     <string name="daysLateHint">Skrifa dögum of seint</string>
     <string name="reply_to_topic">Svar við efni</string>
     <string name="additional_replies">Viðbótarsvör (%d)</string>
+    <string name="reply_to_topic_due">Komið að svari við efni</string>
+    <string name="additional_replies_due">Komið að viðbótarsvörum (%d)</string>
+    <string name="a11y_discussion_checkpoints">Umræðuvörður</string>
+    <string name="multipleDueDates">Margir skiladagar</string>
+    <string name="courseConcludedError">Námskeiði lokið. Ekki var hægt að senda skilaboð!</string>
 </resources>

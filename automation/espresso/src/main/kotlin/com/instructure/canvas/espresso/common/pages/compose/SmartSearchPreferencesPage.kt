@@ -40,6 +40,12 @@ class SmartSearchPreferencesPage(private val composeTestRule: ComposeTestRule) {
     }
 
     fun applyFilters() {
+        composeTestRule.onNodeWithTag("doneButton", useUnmergedTree = true)
+            .performClick()
+        composeTestRule.waitForIdle()
+    }
+
+    fun cancelFilters() {
         composeTestRule.onNodeWithTag("navigationButton", useUnmergedTree = true)
             .performClick()
         composeTestRule.waitForIdle()

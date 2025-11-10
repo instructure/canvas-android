@@ -29,6 +29,8 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
 import com.instructure.horizon.features.inbox.HorizonInboxItemType
+import com.instructure.horizon.features.inbox.InboxEvent
+import com.instructure.horizon.features.inbox.InboxEventHandler
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -40,13 +42,15 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @OptIn(FlowPreview::class)
 @HiltViewModel
 class HorizonInboxListViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val repository: HorizonInboxListRepository
+    private val repository: HorizonInboxListRepository,
+    private val inboxEventHandler: InboxEventHandler
 ): ViewModel() {
     private val _uiState = MutableStateFlow(
         HorizonInboxListUiState(
@@ -80,6 +84,19 @@ class HorizonInboxListViewModel @Inject constructor(
                 }
         } catch {
             showErrorState()
+        }
+
+        viewModelScope.launch {
+            inboxEventHandler.events.collect { event ->
+                when (event) {
+                    is InboxEvent.RefreshRequested -> refresh()
+                    is InboxEvent.AnnouncementRead -> refresh()
+                    is InboxEvent.ConversationCreated -> {
+                        refresh()
+                        showSnackbar(event.message)
+                    }
+                }
+            }
         }
     }
 
@@ -170,7 +187,7 @@ class HorizonInboxListViewModel @Inject constructor(
                             title = context.getString(R.string.inboxAnnouncementTitle),
                             description = it.subject,
                             date = it.startDate,
-                            isUnread = true
+                            isUnread = !it.closed
                         )
                     }
             )

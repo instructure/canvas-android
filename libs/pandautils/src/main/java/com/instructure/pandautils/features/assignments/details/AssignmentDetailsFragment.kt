@@ -33,7 +33,6 @@ import android.view.ViewGroup
 import android.webkit.WebView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.snackbar.Snackbar
@@ -53,7 +52,8 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.databinding.FragmentAssignmentDetailsBinding
-import com.instructure.pandautils.features.reminder.composables.ReminderView
+import com.instructure.pandautils.features.assignments.details.composables.DiscussionCheckpointLayout
+import com.instructure.pandautils.features.assignments.details.composables.DueDateReminderLayout
 import com.instructure.pandautils.features.shareextension.ShareFileSubmissionTarget
 import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.Const
@@ -93,6 +93,8 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
     @get:PageViewUrlParam(name = "courseId")
     val courseId by LongArg(key = Const.COURSE_ID, default = 0)
 
+    val submissionId by LongArg(key = Const.SUBMISSION_ID, default = -1)
+
     private var binding: FragmentAssignmentDetailsBinding? = null
     private val viewModel: AssignmentDetailsViewModel by viewModels()
 
@@ -101,7 +103,8 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
         val assignment = viewModel.assignment
         val course = viewModel.course.value
         if (assignment != null && captureVideoUri != null && it && course != null) {
-            assignmentDetailsRouter.navigateToAssignmentUploadPicker(requireActivity(), course, assignment, captureVideoUri!!)
+            val nextAttempt = (assignment.submission?.attempt ?: 0) + 1
+            assignmentDetailsRouter.navigateToAssignmentUploadPicker(requireActivity(), course, assignment, captureVideoUri!!, nextAttempt.toLong(), "camera")
         } else {
             toast(R.string.videoRecordingError)
         }
@@ -111,7 +114,8 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
         val assignment = viewModel.assignment
         val course = viewModel.course.value
         if (assignment != null && it != null && course != null) {
-            assignmentDetailsRouter.navigateToAssignmentUploadPicker(requireActivity(), course, assignment, it)
+            val nextAttempt = (assignment.submission?.attempt ?: 0) + 1
+            assignmentDetailsRouter.navigateToAssignmentUploadPicker(requireActivity(), course, assignment, it, nextAttempt.toLong(), "library")
         } else {
             toast(R.string.unexpectedErrorOpeningFile)
         }
@@ -144,16 +148,27 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
         viewModel.course.value?.let {
             viewModel.updateReminderColor(assignmentDetailsBehaviour.getThemeColor(it))
         }
-        binding?.reminderComposeView?.setContent {
-            val state by viewModel.reminderViewState.collectAsState()
-            ReminderView(
-                viewState = state,
-                onAddClick = { checkAlarmPermission() },
+
+        binding?.dueComposeView?.setContent {
+            val states = viewModel.dueDateReminderViewStates
+            DueDateReminderLayout(
+                states,
+                onAddClick = { tag -> checkAlarmPermission(tag) },
                 onRemoveClick = { reminderId ->
-                    viewModel.showDeleteReminderConfirmationDialog(requireContext(), reminderId, assignmentDetailsBehaviour.dialogColor)
+                    viewModel.showDeleteReminderConfirmationDialog(
+                        requireContext(),
+                        reminderId,
+                        assignmentDetailsBehaviour.dialogColor
+                    )
                 }
             )
         }
+
+        binding?.checkpointGradesComposeView?.setContent {
+            val checkpoints = viewModel.discussionCheckpoints.collectAsState()
+            DiscussionCheckpointLayout(checkpoints.value)
+        }
+
         return binding?.root
     }
 
@@ -213,7 +228,8 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
                     action.assignmentUrl,
                     action.isAssignmentEnhancementEnabled,
                     action.isObserver,
-                    action.selectedSubmissionAttempt
+                    action.selectedSubmissionAttempt,
+                    action.isQuiz
                 )
             }
             is AssignmentDetailAction.NavigateToQuizScreen -> {
@@ -365,14 +381,14 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
         }
     }
 
-    private fun checkAlarmPermission() {
+    private fun checkAlarmPermission(tag: String? = null) {
         val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && requireActivity().checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
             viewModel.checkingNotificationPermission = true
             notificationsPermissionContract.launch(Manifest.permission.POST_NOTIFICATIONS)
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             if (alarmManager.canScheduleExactAlarms()) {
-                viewModel.showCreateReminderDialog(requireActivity(), assignmentDetailsBehaviour.dialogColor)
+                viewModel.showCreateReminderDialog(requireActivity(), assignmentDetailsBehaviour.dialogColor, tag)
             } else {
                 viewModel.checkingReminderPermission = true
                 startActivity(
@@ -383,7 +399,7 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
                 )
             }
         } else {
-            viewModel.showCreateReminderDialog(requireActivity(), assignmentDetailsBehaviour.dialogColor)
+            viewModel.showCreateReminderDialog(requireActivity(), assignmentDetailsBehaviour.dialogColor, tag)
         }
     }
 
@@ -432,7 +448,7 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
             if (route.paramsHash.containsKey(RouterParams.SUBMISSION_ID)) {
                 // Indicate that we want to route to the Submission Details page - this will give us a small backstack, allowing the user to hit back and go to Assignment Details instead
                 // of closing the app (in the case of when the app isn't running and the user hits a push notification that takes them to Submission Details)
-                route.arguments.putString(Const.SUBMISSION_ID, route.paramsHash[RouterParams.SUBMISSION_ID])
+                route.arguments.putLong(Const.SUBMISSION_ID, route.paramsHash[RouterParams.SUBMISSION_ID]?.toLong().orDefault())
             }
 
             if (route.paramsHash.containsKey(RouterParams.COURSE_ID)) {

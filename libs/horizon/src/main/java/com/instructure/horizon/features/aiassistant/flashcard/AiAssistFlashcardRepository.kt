@@ -16,7 +16,7 @@
  */
 package com.instructure.horizon.features.aiassistant.flashcard
 
-import com.instructure.canvasapi2.managers.CedarApiManager
+import com.instructure.canvasapi2.managers.graphql.horizon.cedar.CedarApiManager
 import com.instructure.cedar.type.DocumentBlock
 import kotlinx.serialization.json.Json
 import javax.inject.Inject

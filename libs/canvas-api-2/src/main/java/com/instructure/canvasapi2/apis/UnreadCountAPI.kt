@@ -24,6 +24,9 @@ object UnreadCountAPI {
         @GET("users/self/activity_stream/summary?only_active_courses=true")
         fun getNotificationsCount(): Call<List<UnreadNotificationCount>>
 
+        @GET("users/self/activity_stream/summary?only_active_courses=true")
+        suspend fun getNotificationsCount(@Tag params: RestParams): DataResult<List<UnreadNotificationCount>>
+
         @GET("users/self/observer_alerts/unread_count")
         fun getUnreadAlertCount(@Query("student_id") studentId: Long): Call<UnreadCount>
 

@@ -30,7 +30,8 @@ data class AccountNotification(
         val startAt: String = "",
         @SerializedName("end_at")
         val endAt: String = "",
-        val icon: String = ""
+        val icon: String = "",
+        val closed: Boolean = false
 ) : CanvasModel<AccountNotification>() {
     override val comparisonString get() = subject
     override val comparisonDate get() = startDate
