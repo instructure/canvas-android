@@ -269,7 +269,7 @@ class AssignmentListViewModel @Inject constructor(
                 }
                 AssignmentFilter.ToBeGraded -> filteredAssignments.filter { assignment ->
                     val parentToBeGraded = assignment.isSubmitted && !assignment.isGraded() && assignment.isOnlineSubmissionType
-                    val hasCheckpointToBeGraded = assignment.hasAnyCheckpointSubmitted()
+                    val hasCheckpointToBeGraded = assignment.hasAnyCheckpointToBeGraded()
                     parentToBeGraded || (hasCheckpointToBeGraded && assignment.isOnlineSubmissionType)
                 }
                 AssignmentFilter.Graded -> filteredAssignments.filter { assignment ->
@@ -464,10 +464,15 @@ class AssignmentListViewModel @Inject constructor(
         }
     }
 
-    private fun Assignment.hasAnyCheckpointSubmitted(): Boolean {
+    private fun Assignment.hasAnyCheckpointToBeGraded(): Boolean {
         return if (checkpoints.isNotEmpty()) {
-            submission?.subAssignmentSubmissions?.any {
-                it.submittedAt != null
+            submission?.subAssignmentSubmissions?.let { submissions ->
+                checkpoints.any { checkpoint ->
+                    val checkpointSubmission = submissions.find { it.subAssignmentTag == checkpoint.tag }
+                    checkpointSubmission?.submittedAt != null &&
+                            checkpointSubmission.grade == null &&
+                            checkpointSubmission.customGradeStatusId == null
+                }
             }.orDefault()
         } else {
             false
@@ -475,12 +480,15 @@ class AssignmentListViewModel @Inject constructor(
     }
 
     private fun Assignment.hasAnyCheckpointNotSubmitted(): Boolean {
-        if (checkpoints.isEmpty()) return false
-        val submissions = submission?.subAssignmentSubmissions
-        return if (submissions.isNullOrEmpty()) {
-            true
+        return if (checkpoints.isNotEmpty()) {
+            submission?.subAssignmentSubmissions?.let { submissions ->
+                checkpoints.any { checkpoint ->
+                    val checkpointSubmission = submissions.find { it.subAssignmentTag == checkpoint.tag }
+                    checkpointSubmission?.submittedAt == null
+                }
+            } ?: true
         } else {
-            submissions.any { it.submittedAt == null }
+            false
         }
     }
 }
