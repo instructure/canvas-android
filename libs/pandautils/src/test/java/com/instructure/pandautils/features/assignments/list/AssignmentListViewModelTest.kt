@@ -890,11 +890,13 @@ class AssignmentListViewModelTest {
                 subAssignmentSubmissions = arrayListOf(
                     SubAssignmentSubmission(
                         grade = "A",
-                        subAssignmentTag = Const.REPLY_TO_TOPIC
+                        subAssignmentTag = Const.REPLY_TO_TOPIC,
+                        submittedAt = Date()
                     ),
                     SubAssignmentSubmission(
                         grade = null, // Not graded
-                        subAssignmentTag = Const.REPLY_TO_ENTRY
+                        subAssignmentTag = Const.REPLY_TO_ENTRY,
+                        submittedAt = Date() // Submitted but not graded
                     )
                 )
             )
@@ -954,12 +956,14 @@ class AssignmentListViewModelTest {
                     SubAssignmentSubmission(
                         grade = null,
                         customGradeStatusId = null,
-                        subAssignmentTag = Const.REPLY_TO_TOPIC
+                        subAssignmentTag = Const.REPLY_TO_TOPIC,
+                        submittedAt = null // Not submitted
                     ),
                     SubAssignmentSubmission(
                         grade = "A",
                         customGradeStatusId = null,
-                        subAssignmentTag = Const.REPLY_TO_ENTRY
+                        subAssignmentTag = Const.REPLY_TO_ENTRY,
+                        submittedAt = Date() // Submitted and graded
                     )
                 )
             )
