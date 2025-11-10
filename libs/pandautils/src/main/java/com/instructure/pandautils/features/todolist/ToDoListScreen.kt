@@ -789,7 +789,7 @@ private fun rememberStickyHeaderState(
     itemPositions: Map<String, Float>,
     density: Density
 ): StickyHeaderState {
-    return remember {
+    return remember(dateGroups) {
         derivedStateOf {
             calculateStickyHeaderState(dateGroups, listState, itemPositions, density)
         }
