@@ -15,12 +15,21 @@
  */
 package com.instructure.student.ui.interaction
 
+import android.Manifest
+import android.app.Activity
+import android.app.Instrumentation
+import android.content.Intent
 import android.net.Uri
+import android.provider.MediaStore
 import androidx.compose.ui.platform.ComposeView
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.UiSelector
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
 import com.google.android.apps.common.testing.accessibility.framework.checks.SpeakableTextPresentCheck
 import com.instructure.canvas.espresso.FeatureCategory
@@ -141,7 +150,7 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
         routeTo("courses/${course.id}/assignments", data.domain)
 
         val fileName = "test.txt"
-        androidx.test.espresso.intent.Intents.init()
+        Intents.init()
         try {
             stubFilePickerIntent(fileName)
             setupFileOnDevice(fileName)
@@ -154,7 +163,7 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
             pickerSubmissionUploadPage.submit()
             assignmentDetailsPage.assertStatusSubmitted()
         } finally {
-            androidx.test.espresso.intent.Intents.release()
+            Intents.release()
         }
     }
 
@@ -179,33 +188,25 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
         routeTo("courses/${course.id}/assignments", data.domain)
 
         val activity = activityRule.activity
-
-        androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().uiAutomation.grantRuntimePermission(
-            activity.packageName,
-            android.Manifest.permission.CAMERA
-        )
-        androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().uiAutomation.grantRuntimePermission(
-            activity.packageName,
-            android.Manifest.permission.RECORD_AUDIO
-        )
+        grantPermissions(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO)
 
         val fileName = "test_video.mp4"
         copyAssetFileToExternalCache(activity, fileName)
 
-        val resultData = android.content.Intent()
+        val resultData = Intent()
         val dir = activity.externalCacheDir
         val file = File(dir?.path, fileName)
         val uri = Uri.fromFile(file)
         resultData.data = uri
-        val activityResult = android.app.Instrumentation.ActivityResult(android.app.Activity.RESULT_OK, resultData)
+        val activityResult = Instrumentation.ActivityResult(Activity.RESULT_OK, resultData)
 
-        androidx.test.espresso.intent.Intents.init()
+        Intents.init()
         try {
-            androidx.test.espresso.intent.Intents.intending(
+            Intents.intending(
                 Matchers.anyOf(
-                    androidx.test.espresso.intent.matcher.IntentMatchers.hasAction(android.content.Intent.ACTION_GET_CONTENT),
-                    androidx.test.espresso.intent.matcher.IntentMatchers.hasAction(android.content.Intent.ACTION_PICK),
-                    androidx.test.espresso.intent.matcher.IntentMatchers.hasAction(android.content.Intent.ACTION_OPEN_DOCUMENT)
+                    IntentMatchers.hasAction(Intent.ACTION_GET_CONTENT),
+                    IntentMatchers.hasAction(Intent.ACTION_PICK),
+                    IntentMatchers.hasAction(Intent.ACTION_OPEN_DOCUMENT)
                 )
             ).respondWith(activityResult)
 
@@ -219,7 +220,7 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
             pickerSubmissionUploadPage.submit()
             assignmentDetailsPage.assertStatusSubmitted()
         } finally {
-            androidx.test.espresso.intent.Intents.release()
+            Intents.release()
         }
     }
 
@@ -244,32 +245,24 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
         routeTo("courses/${course.id}/assignments", data.domain)
 
         val activity = activityRule.activity
-
-        androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().uiAutomation.grantRuntimePermission(
-            activity.packageName,
-            android.Manifest.permission.CAMERA
-        )
-        androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().uiAutomation.grantRuntimePermission(
-            activity.packageName,
-            android.Manifest.permission.RECORD_AUDIO
-        )
+        grantPermissions(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO)
 
         val testVideoFile = "test_video.mp4"
         copyAssetFileToExternalCache(activity, testVideoFile)
 
         var capturedVideoUri: Uri? = null
 
-        androidx.test.espresso.intent.Intents.init()
-        androidx.test.espresso.intent.Intents.intending(
+        Intents.init()
+        Intents.intending(
             Matchers.allOf(
-                androidx.test.espresso.intent.matcher.IntentMatchers.hasAction(android.provider.MediaStore.ACTION_VIDEO_CAPTURE),
-                androidx.test.espresso.intent.matcher.IntentMatchers.hasExtraWithKey(android.provider.MediaStore.EXTRA_OUTPUT)
+                IntentMatchers.hasAction(MediaStore.ACTION_VIDEO_CAPTURE),
+                IntentMatchers.hasExtraWithKey(MediaStore.EXTRA_OUTPUT)
             )
         ).respondWithFunction { intent ->
-            val outputUri = intent.extras?.get(android.provider.MediaStore.EXTRA_OUTPUT) as? Uri
+            val outputUri = intent.extras?.get(MediaStore.EXTRA_OUTPUT) as? Uri
             capturedVideoUri = outputUri
             if (outputUri != null) {
-                val context = androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().targetContext
+                val context = InstrumentationRegistry.getInstrumentation().targetContext
                 val dir = context.externalCacheDir
                 val sampleFile = File(dir, testVideoFile)
                 if (outputUri.scheme == "file") {
@@ -284,14 +277,14 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
                     }
                 }
             }
-            android.app.Instrumentation.ActivityResult(android.app.Activity.RESULT_OK, android.content.Intent())
+            Instrumentation.ActivityResult(Activity.RESULT_OK, Intent())
         }
 
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.clickSubmit()
         onView(withId(R.id.submissionEntryVideo)).perform(click())
 
-        androidx.test.espresso.intent.Intents.release()
+        Intents.release()
 
         pickerSubmissionUploadPage.waitForSubmitButtonToAppear()
 
@@ -323,16 +316,12 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
         routeTo("courses/${course.id}/assignments", data.domain)
 
         val activity = activityRule.activity
-
-        androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().uiAutomation.grantRuntimePermission(
-            activity.packageName,
-            android.Manifest.permission.RECORD_AUDIO
-        )
+        grantPermissions(Manifest.permission.RECORD_AUDIO)
 
         val testAudioFileName = "test_audio.mp3"
         copyAssetFileToExternalCache(activity, testAudioFileName)
 
-        val context = androidx.test.platform.app.InstrumentationRegistry.getInstrumentation().targetContext
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
         val recordingFile = File(context.externalCacheDir, "audio.amr")
         val testAudioFile = File(context.externalCacheDir, testAudioFileName)
         testAudioFile.copyTo(recordingFile, overwrite = true)
@@ -341,13 +330,13 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
         assignmentDetailsPage.clickSubmit()
         onView(withId(R.id.submissionEntryAudio)).perform(click())
 
-        device.findObject(androidx.test.uiautomator.UiSelector().resourceIdMatches(".*recordAudioButton")).click()
+        device.findObject(UiSelector().resourceIdMatches(".*recordAudioButton")).click()
 
         testAudioFile.copyTo(recordingFile, overwrite = true)
 
-        device.findObject(androidx.test.uiautomator.UiSelector().resourceIdMatches(".*stopButton")).click()
+        device.findObject(UiSelector().resourceIdMatches(".*stopButton")).click()
 
-        device.findObject(androidx.test.uiautomator.UiSelector().resourceIdMatches(".*sendAudioButton")).click()
+        device.findObject(UiSelector().resourceIdMatches(".*sendAudioButton")).click()
 
         refresh()
         assignmentDetailsPage.assertStatusSubmitted()
@@ -956,6 +945,16 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
         data.addSubmissionForAssignment(assignment.id, student.id, Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString, grade = grade, score = score, excused = excused)
 
         return assignment
+    }
+
+    private fun grantPermissions(vararg permissions: String) {
+        val activity = activityRule.activity
+        permissions.forEach { permission ->
+            InstrumentationRegistry.getInstrumentation().uiAutomation.grantRuntimePermission(
+                activity.packageName,
+                permission
+            )
+        }
     }
 
     override fun enableAndConfigureAccessibilityChecks() {
