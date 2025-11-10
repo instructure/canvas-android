@@ -42,18 +42,23 @@ class NotebookViewModel @Inject constructor(
 
     private var courseId: Long? = savedStateHandle.get<String>(NotebookRoute.Notebook.COURSE_ID)?.toLongOrNull()
     private var objectTypeAndId: Pair<String, String>? = getObjectTypeAndId(savedStateHandle)
+    private var showTopBar: Boolean = savedStateHandle.get<Boolean>(NotebookRoute.Notebook.SHOW_TOP_BAR) ?: false
+    private var showFilters: Boolean = savedStateHandle.get<Boolean>(NotebookRoute.Notebook.SHOW_FILTERS) ?: false
+    private var navigateToEdit: Boolean = savedStateHandle.get<Boolean>(NotebookRoute.Notebook.NAVIGATE_TO_EDIT) ?: false
 
     private val _uiState = MutableStateFlow(NotebookUiState(
         loadPreviousPage = ::getPreviousPage,
         loadNextPage = ::getNextPage,
         onFilterSelected = ::onFilterSelected,
-        updateContent = ::updateContent
+        updateContent = ::updateContent,
+        showTopBar = showTopBar,
+        showFilters = showFilters,
+        navigateToEdit = navigateToEdit,
     ))
     val uiState = _uiState.asStateFlow()
 
     init {
         loadData()
-        updateScreenState()
     }
 
     private fun loadData(
@@ -120,28 +125,18 @@ class NotebookViewModel @Inject constructor(
             this.objectTypeAndId = objectTypeAndId
             loadData()
         }
-        updateScreenState()
     }
 
-    fun updateCourseId(courseId: Long?) {
+    fun updateFilters(courseId: Long? = null, objectTypeAndId: Pair<String, String>? = null) {
         if (courseId != this.courseId) {
             this.courseId = courseId
+            this.objectTypeAndId = objectTypeAndId
             loadData()
         }
-        updateScreenState()
     }
 
-    private fun updateScreenState() {
-        if (courseId != null) {
-            _uiState.update { it.copy(showTopBar = false) }
-            if (objectTypeAndId != null) {
-                _uiState.update { it.copy(showFilters = false) }
-            } else {
-                _uiState.update { it.copy(showFilters = true) }
-            }
-        } else {
-            _uiState.update { it.copy(showTopBar = true, showFilters = true) }
-        }
+    fun updateScreenState(showFilters: Boolean = false, showTopBar: Boolean = false) {
+        _uiState.update { it.copy(showTopBar = showTopBar, showFilters = showFilters) }
     }
 
     private fun getObjectTypeAndId(savedStateHandle: SavedStateHandle): Pair<String, String>? {

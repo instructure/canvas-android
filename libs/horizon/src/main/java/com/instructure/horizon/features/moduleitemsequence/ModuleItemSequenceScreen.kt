@@ -155,7 +155,10 @@ fun ModuleItemSequenceScreen(mainNavController: NavHostController, uiState: Modu
                         NotebookRoute.Notebook.route(
                             uiState.courseId.toString(),
                             uiState.objectTypeAndId.first,
-                            uiState.objectTypeAndId.second
+                            uiState.objectTypeAndId.second,
+                            true,
+                            false,
+                            true
                         )
                     )
                 },
