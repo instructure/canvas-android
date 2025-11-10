@@ -35,6 +35,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.DiscussionCheckpointUiState
 import com.instructure.pandautils.features.grades.gradepreferences.SortBy
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.debounce
 import com.instructure.pandautils.utils.filterHiddenAssignments
 import com.instructure.pandautils.utils.getAssignmentIcon
 import com.instructure.pandautils.utils.getGrade
@@ -79,6 +80,16 @@ class GradesViewModel @Inject constructor(
 
     private var customStatuses = listOf<CustomGradeStatusesQuery.Node>()
     private var allItems = emptyList<AssignmentGroupUiState>()
+
+    private val debouncedSearch = debounce<String>(
+        waitMs = 500L,
+        coroutineScope = viewModelScope
+    ) { query ->
+        val filteredItems = filterItems(allItems, query)
+        _uiState.update {
+            it.copy(items = filteredItems)
+        }
+    }
 
     init {
         loadGrades(
@@ -382,13 +393,10 @@ class GradesViewModel @Inject constructor(
             }
 
             is GradesAction.SearchQueryChanged -> {
-                val filteredItems = filterItems(allItems, action.query)
                 _uiState.update {
-                    it.copy(
-                        searchQuery = action.query,
-                        items = filteredItems
-                    )
+                    it.copy(searchQuery = action.query)
                 }
+                debouncedSearch(action.query)
             }
         }
     }

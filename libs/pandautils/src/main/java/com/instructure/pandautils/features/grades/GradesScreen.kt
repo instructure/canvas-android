@@ -21,6 +21,8 @@ import android.content.res.Configuration
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
@@ -73,6 +75,8 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -297,7 +301,19 @@ private fun GradesScreenContent(
                     )
                 }
 
-                if (uiState.isSearchExpanded) {
+                AnimatedVisibility(
+                    visible = uiState.isSearchExpanded,
+                    enter = slideInVertically() + fadeIn(),
+                    exit = slideOutVertically() + fadeOut()
+                ) {
+                    val focusRequester = remember { FocusRequester() }
+
+                    LaunchedEffect(uiState.isSearchExpanded) {
+                        if (uiState.isSearchExpanded) {
+                            focusRequester.requestFocus()
+                        }
+                    }
+
                     SearchBar(
                         icon = R.drawable.ic_search_white_24dp,
                         searchQuery = uiState.searchQuery,
@@ -313,12 +329,18 @@ private fun GradesScreenContent(
                         onQueryChange = {
                             actionHandler(GradesAction.SearchQueryChanged(it))
                         },
-                        modifier = Modifier.testTag("searchField")
+                        modifier = Modifier
+                            .testTag("searchField")
+                            .focusRequester(focusRequester)
                     )
                 }
 
                 if (uiState.items.isEmpty()) {
-                    EmptyContent()
+                    if (uiState.searchQuery.isNotEmpty() && uiState.searchQuery.length >= 3) {
+                        EmptySearchContent()
+                    } else {
+                        EmptyContent()
+                    }
                 }
             }
 
@@ -472,6 +494,18 @@ private fun EmptyContent() {
     EmptyContent(
         emptyTitle = stringResource(id = R.string.gradesEmptyTitle),
         emptyMessage = stringResource(id = R.string.gradesEmptyMessage),
+        imageRes = R.drawable.ic_panda_space,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 32.dp, horizontal = 16.dp)
+    )
+}
+
+@Composable
+private fun EmptySearchContent() {
+    EmptyContent(
+        emptyTitle = stringResource(id = R.string.noMatchingAssignments),
+        emptyMessage = stringResource(id = R.string.noMatchingAssignmentsDescription),
         imageRes = R.drawable.ic_panda_space,
         modifier = Modifier
             .fillMaxWidth()
