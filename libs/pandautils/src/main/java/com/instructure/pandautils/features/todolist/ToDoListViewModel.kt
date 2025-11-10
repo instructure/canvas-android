@@ -323,9 +323,9 @@ class ToDoListViewModel @Inject constructor(
             return
         }
 
-        // Start new 3-second timer
+        // Start new 1-second timer
         checkboxDebounceJob = viewModelScope.launch {
-            delay(1500)
+            delay(1000)
 
             // Add checkbox-removed items to removingItemIds for animation
             _uiState.update { state ->
