@@ -30,6 +30,7 @@ import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCardError
 import com.instructure.horizon.features.dashboard.widget.skillhighlights.card.DashboardSkillHighlightsCardContent
+import com.instructure.horizon.features.dashboard.widget.skillhighlights.card.DashboardSkillHighlightsCardState
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -65,7 +66,7 @@ fun DashboardSkillHighlightsSection(
     when (state.state) {
         DashboardItemState.LOADING -> {
             DashboardSkillHighlightsCardContent(
-                state.cardState,
+                DashboardSkillHighlightsCardState.Loading,
                 homeNavController,
                 true,
                 modifier.padding(horizontal = 24.dp),

@@ -18,4 +18,8 @@ package com.instructure.horizon.features.dashboard.widget.myprogress.card
 
 data class DashboardMyProgressCardState(
     val moduleCountCompleted: Int = 0
-)
+) {
+    companion object {
+        val Loading = DashboardMyProgressCardState(5)
+    }
+}

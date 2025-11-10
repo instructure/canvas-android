@@ -15,6 +15,7 @@
  */
 package com.instructure.pandautils.features.todolist
 
+import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.builders.RestParams
@@ -77,5 +78,9 @@ class ToDoListRepository @Inject constructor(
             markedComplete = markedComplete
         )
         return plannerApi.createPlannerOverride(override, restParams)
+    }
+
+    fun invalidateCachedResponses() {
+        CanvasRestAdapter.clearCacheUrls("planner")
     }
 }
