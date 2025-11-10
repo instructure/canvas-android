@@ -30,6 +30,7 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
@@ -142,11 +143,12 @@ fun ModuleItemSequenceScreen(mainNavController: NavHostController, uiState: Modu
 
     HorizonEdgeToEdgeSystemBars(
         statusBarColor = HorizonColors.Surface.institution(),
-        navigationBarColor = HorizonColors.Surface.pagePrimary()
+        navigationBarColor = HorizonColors.Surface.pagePrimary(),
+        modifier = Modifier.padding(WindowInsets.horizontalSafeDrawing.asPaddingValues())
     ){
         Scaffold(
             contentWindowInsets = WindowInsets.horizontalSafeDrawing,
-            containerColor = HorizonColors.Surface.institution(),
+            containerColor = HorizonColors.Surface.pagePrimary(),
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
             bottomBar = {
                 ModuleItemSequenceBottomBar(
@@ -283,6 +285,7 @@ private fun ModuleItemSequenceContent(
             ModuleHeaderContainer(
                 uiState = uiState,
                 modifier = Modifier
+                    .background(HorizonColors.Surface.institution())
                     .windowInsetsPadding(WindowInsets.statusBars)
                     .padding(start = 24.dp, end = 24.dp, top = 16.dp, bottom = 24.dp)
                     .wrapContentHeight(),
@@ -401,7 +404,7 @@ private fun ModuleItemPager(pagerState: PagerState, modifier: Modifier = Modifie
         state = pagerState,
         beyondViewportPageCount = 0,
         pageSize = PageSize.Fill,
-        modifier = modifier,
+        modifier = modifier.background(HorizonColors.Surface.institution()),
         userScrollEnabled = false
     ) { page ->
         Column(

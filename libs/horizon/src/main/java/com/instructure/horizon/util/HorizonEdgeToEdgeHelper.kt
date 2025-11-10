@@ -28,24 +28,46 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 
 @Composable
 fun HorizonEdgeToEdgeSystemBars(
     statusBarColor: Color? = HorizonColors.Surface.pagePrimary(),
     navigationBarColor: Color? = null,
+    modifier: Modifier = Modifier,
     statusBarAlpha: Float = 0.8f,
     navigationBarAlpha: Float = 0.8f,
     content: @Composable () -> Unit
 ) {
+    val view = LocalView.current
+
+    SideEffect {
+        val window = (view.context as? android.app.Activity)?.window ?: return@SideEffect
+        val insetsController = WindowCompat.getInsetsController(window, view)
+
+        statusBarColor?.let { color ->
+            val isLight = color.luminance() > 0.5f
+            insetsController.isAppearanceLightStatusBars = isLight
+        }
+
+        navigationBarColor?.let { color ->
+            val isLight = color.luminance() > 0.5f
+            insetsController.isAppearanceLightNavigationBars = isLight
+        }
+    }
+
     Box {
         content()
         statusBarColor?.let {
             Box(
-                modifier = Modifier
+                modifier = modifier
                     .align(Alignment.TopCenter)
                     .fillMaxWidth()
                     .windowInsetsTopHeight(WindowInsets.statusBars)
@@ -55,7 +77,7 @@ fun HorizonEdgeToEdgeSystemBars(
 
         navigationBarColor?.let {
             Box(
-                modifier = Modifier
+                modifier = modifier
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
                     .windowInsetsBottomHeight(WindowInsets.navigationBars)
