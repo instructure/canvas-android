@@ -65,6 +65,7 @@ import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.navigation.MainNavigationRoute
+import com.instructure.horizon.util.HorizonEdgeToEdgeSystemBars
 import com.instructure.horizon.util.topBarScreenInsets
 import com.instructure.horizon.util.zeroScreenInsets
 import com.instructure.pandautils.compose.modifiers.conditional
@@ -79,98 +80,110 @@ fun NotebookScreen(
     onNoteSelected: ((Note) -> Unit)? = null,
 ) {
     val scrollState = rememberLazyListState()
-    Scaffold(
-        contentWindowInsets = WindowInsets.zeroScreenInsets,
-        containerColor = HorizonColors.Surface.pagePrimary(),
-        topBar = {
-            if (state.showTopBar) {
-                NotebookAppBar(
-                    navigateBack = { mainNavController.popBackStack() },
-                    modifier = Modifier.conditional(scrollState.canScrollBackward) {
-                        horizonShadow(
-                            elevation = HorizonElevation.level2,
-                        )
-                    }
-                )
-            } else if (onDismiss != null) {
-                NotebookAppBar(
-                    onClose = { onDismiss() },
-                    modifier = Modifier.conditional(scrollState.canScrollBackward) {
-                        horizonShadow(
-                            elevation = HorizonElevation.level2,
-                        )
-                    }
-                )
-            }
-        },
-    ) { padding ->
-        LazyColumn(
-            state = scrollState,
-            modifier = Modifier
-                .padding(padding),
-            contentPadding = WindowInsets.topBarScreenInsets.add(WindowInsets(24.dp, 24.dp, 24.dp, 24.dp)).asPaddingValues()
-        ) {
-            if (state.showFilters && state.notes.isNotEmpty()) {
-                item {
-                    FilterContent(
-                        state.selectedFilter,
-                        state.onFilterSelected
-                    )
-                }
-            }
-
-            if (state.notes.isNotEmpty()){
-                item {
-                    Column {
-                        Text(
-                            text = stringResource(R.string.notebookNotesLabel),
-                            style = HorizonTypography.labelLargeBold,
-                            color = HorizonColors.Text.title()
-                        )
-
-                        HorizonSpace(SpaceSize.SPACE_12)
-                    }
-                }
-            }
-
-            if (state.isLoading) {
-                item {
-                    LoadingContent()
-                }
-            } else if (state.notes.isEmpty()) {
-                item {
-                    EmptyContent()
-                }
-            } else {
-                items(state.notes) { note ->
-                    Column {
-                        NoteContent(note) {
-                            onNoteSelected?.invoke(note) ?: mainNavController.navigate(
-                                MainNavigationRoute.ModuleItemSequence(
-                                    courseId = note.courseId,
-                                    moduleItemAssetType = note.objectType.value,
-                                    moduleItemAssetId = note.objectId,
-                                )
+    HorizonEdgeToEdgeSystemBars(
+        null,
+        HorizonColors.Surface.pagePrimary()
+    ){
+        Scaffold(
+            contentWindowInsets = WindowInsets.zeroScreenInsets,
+            containerColor = HorizonColors.Surface.pagePrimary(),
+            topBar = {
+                if (state.showTopBar) {
+                    NotebookAppBar(
+                        navigateBack = { mainNavController.popBackStack() },
+                        modifier = Modifier.conditional(scrollState.canScrollBackward) {
+                            horizonShadow(
+                                elevation = HorizonElevation.level2,
                             )
                         }
+                    )
+                } else if (onDismiss != null) {
+                    NotebookAppBar(
+                        onClose = { onDismiss() },
+                        modifier = Modifier.conditional(scrollState.canScrollBackward) {
+                            horizonShadow(
+                                elevation = HorizonElevation.level2,
+                            )
+                        }
+                    )
+                }
+            },
+        ) { padding ->
+            LazyColumn(
+                state = scrollState,
+                modifier = Modifier
+                    .padding(padding),
+                contentPadding = WindowInsets.topBarScreenInsets.add(
+                    WindowInsets(
+                        24.dp,
+                        24.dp,
+                        24.dp,
+                        24.dp
+                    )
+                ).asPaddingValues()
+            ) {
+                if (state.showFilters && state.notes.isNotEmpty()) {
+                    item {
+                        FilterContent(
+                            state.selectedFilter,
+                            state.onFilterSelected
+                        )
+                    }
+                }
 
-                        if (state.notes.lastOrNull() != note) {
+                if (state.notes.isNotEmpty()) {
+                    item {
+                        Column {
+                            Text(
+                                text = stringResource(R.string.notebookNotesLabel),
+                                style = HorizonTypography.labelLargeBold,
+                                color = HorizonColors.Text.title()
+                            )
+
                             HorizonSpace(SpaceSize.SPACE_12)
                         }
                     }
                 }
 
-                item {
-                    Column {
-                        HorizonSpace(SpaceSize.SPACE_24)
+                if (state.isLoading) {
+                    item {
+                        LoadingContent()
+                    }
+                } else if (state.notes.isEmpty()) {
+                    item {
+                        EmptyContent()
+                    }
+                } else {
+                    items(state.notes) { note ->
+                        Column {
+                            NoteContent(note) {
+                                onNoteSelected?.invoke(note) ?: mainNavController.navigate(
+                                    MainNavigationRoute.ModuleItemSequence(
+                                        courseId = note.courseId,
+                                        moduleItemAssetType = note.objectType.value,
+                                        moduleItemAssetId = note.objectId,
+                                    )
+                                )
+                            }
 
-                        NotesPager(
-                            canNavigateBack = state.hasPreviousPage,
-                            canNavigateForward = state.hasNextPage,
-                            isLoading = state.isLoading,
-                            onNavigateBack = state.loadPreviousPage,
-                            onNavigateForward = state.loadNextPage
-                        )
+                            if (state.notes.lastOrNull() != note) {
+                                HorizonSpace(SpaceSize.SPACE_12)
+                            }
+                        }
+                    }
+
+                    item {
+                        Column {
+                            HorizonSpace(SpaceSize.SPACE_24)
+
+                            NotesPager(
+                                canNavigateBack = state.hasPreviousPage,
+                                canNavigateForward = state.hasNextPage,
+                                isLoading = state.isLoading,
+                                onNavigateBack = state.loadPreviousPage,
+                                onNavigateForward = state.loadNextPage
+                            )
+                        }
                     }
                 }
             }

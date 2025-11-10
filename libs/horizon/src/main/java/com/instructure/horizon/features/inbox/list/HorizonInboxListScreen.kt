@@ -82,6 +82,7 @@ import com.instructure.horizon.horizonui.organisms.inputs.multiselectsearch.Mult
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelect
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectInputSize
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectState
+import com.instructure.horizon.util.HorizonEdgeToEdgeSystemBars
 import com.instructure.horizon.util.fullScreenInsets
 import com.instructure.horizon.util.zeroScreenInsets
 import com.instructure.pandautils.utils.localisedFormat
@@ -102,16 +103,21 @@ fun HorizonInboxListScreen(
         }
     }
 
-    Scaffold(
-        contentWindowInsets = WindowInsets.zeroScreenInsets,
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-        containerColor = HorizonColors.Surface.pagePrimary(),
-    ) { padding ->
-        InboxStateWrapper(
-            state,
-            navController,
-            Modifier.padding(padding)
-        )
+    HorizonEdgeToEdgeSystemBars(
+        statusBarColor = HorizonColors.Surface.pagePrimary(),
+        navigationBarColor = HorizonColors.Surface.cardPrimary(),
+    ) {
+        Scaffold(
+            contentWindowInsets = WindowInsets.zeroScreenInsets,
+            snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+            containerColor = HorizonColors.Surface.pagePrimary(),
+        ) { padding ->
+            InboxStateWrapper(
+                state,
+                navController,
+                Modifier.padding(padding)
+            )
+        }
     }
 }
 

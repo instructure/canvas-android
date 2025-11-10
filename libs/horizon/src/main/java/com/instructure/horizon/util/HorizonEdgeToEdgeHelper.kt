@@ -16,11 +16,54 @@
  */
 package com.instructure.horizon.util
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsBottomHeight
+import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import com.instructure.horizon.horizonui.foundation.HorizonColors
+
+@Composable
+fun HorizonEdgeToEdgeSystemBars(
+    statusBarColor: Color? = HorizonColors.Surface.pagePrimary(),
+    navigationBarColor: Color? = null,
+    statusBarAlpha: Float = 0.8f,
+    navigationBarAlpha: Float = 0.8f,
+    content: @Composable () -> Unit
+) {
+    Box {
+        content()
+        statusBarColor?.let {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .fillMaxWidth()
+                    .windowInsetsTopHeight(WindowInsets.statusBars)
+                    .background(statusBarColor.copy(alpha = statusBarAlpha))
+            )
+        }
+
+        navigationBarColor?.let {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .windowInsetsBottomHeight(WindowInsets.navigationBars)
+                    .background(navigationBarColor.copy(alpha = navigationBarAlpha))
+            )
+        }
+    }
+}
 
 private val WindowInsetsSides.Companion.BottomHorizontalSides: WindowInsetsSides
     get() = WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom

@@ -19,15 +19,17 @@ import android.content.Intent
 import android.content.pm.ShortcutManager
 import android.content.res.Configuration
 import android.os.Bundle
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.ContextCompat
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDeepLinkRequest
@@ -44,7 +46,6 @@ import com.instructure.pandautils.receivers.PushExternalReceiver
 import com.instructure.pandautils.utils.AppTheme
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.EdgeToEdgeHelper
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.Utils
 import com.instructure.pandautils.utils.WebViewAuthenticator
@@ -61,13 +62,15 @@ class HorizonActivity : BaseCanvasActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        EdgeToEdgeHelper.enableEdgeToEdge(this, lightStatusBar = true, lightNavigationBar = true)
-
         val manager = getSystemService(ShortcutManager::class.java)
         manager?.removeAllDynamicShortcuts()
         if (ThemePrefs.appTheme != AppTheme.LIGHT.ordinal) {
             setLightTheme() // Force the light theme for Horizon experience to avoid any glitches.
         }
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.light(Color.Transparent.toArgb(), Color.Transparent.toArgb()),
+            navigationBarStyle = SystemBarStyle.light(Color.Transparent.toArgb(), Color.Transparent.toArgb())
+        )
 
         setContent {
             navController = rememberNavController()

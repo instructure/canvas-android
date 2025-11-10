@@ -82,6 +82,7 @@ import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextArea
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextAreaState
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
+import com.instructure.horizon.util.HorizonEdgeToEdgeSystemBars
 import com.instructure.horizon.util.topBarScreenInsets
 import com.instructure.horizon.util.zeroScreenInsets
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebViewWrapper
@@ -100,48 +101,61 @@ fun HorizonInboxDetailsScreen(
     state: HorizonInboxDetailsUiState,
     navController: NavHostController
 ) {
-    Scaffold(
-        contentWindowInsets = WindowInsets.zeroScreenInsets,
-        containerColor = HorizonColors.Surface.pagePrimary(),
-        topBar = { HorizonInboxDetailsHeader(state.title, state.titleIcon, state, navController) },
-    ) { innerPadding ->
-        LoadingStateWrapper(
-            state.loadingState,
-        ) {
-            BackHandler { onExit(state, navController) }
-
-            state.replyState?.let { replyState ->
-                val viewModel: HorizonInboxAttachmentPickerViewModel = hiltViewModel()
-                val pickerState by viewModel.uiState.collectAsState()
-                HorizonInboxAttachmentPicker(
-                    showBottomSheet = replyState.showAttachmentPicker,
-                    onDismissBottomSheet = { replyState.onShowAttachmentPickerChanged(false) },
-                    state = pickerState,
-                    onFilesChanged = replyState.onAttachmentsChanged
+    HorizonEdgeToEdgeSystemBars(null, null) {
+        Scaffold(
+            contentWindowInsets = WindowInsets.zeroScreenInsets,
+            containerColor = HorizonColors.Surface.pagePrimary(),
+            topBar = {
+                HorizonInboxDetailsHeader(
+                    state.title,
+                    state.titleIcon,
+                    state,
+                    navController
                 )
+            },
+        ) { innerPadding ->
+            LoadingStateWrapper(
+                state.loadingState,
+            ) {
+                BackHandler { onExit(state, navController) }
 
-                if (replyState.showExitConfirmationDialog) {
-                    Modal(
-                        dialogState = ModalDialogState(
-                            title = stringResource(R.string.exitConfirmationTitle),
-                            message = stringResource(R.string.exitConfirmationMessage),
-                            primaryButtonTitle = stringResource(R.string.exitConfirmationExitButtonLabel),
-                            secondaryButtonTitle = stringResource(R.string.exitConfirmationCancelButtonLabel),
-                            primaryButtonClick = {
-                                replyState.updateShowExitConfirmationDialog(false)
-                                navController.popBackStack()
-                            },
-                            secondaryButtonClick = { replyState.updateShowExitConfirmationDialog(false) }
-                        )
+                state.replyState?.let { replyState ->
+                    val viewModel: HorizonInboxAttachmentPickerViewModel = hiltViewModel()
+                    val pickerState by viewModel.uiState.collectAsState()
+                    HorizonInboxAttachmentPicker(
+                        showBottomSheet = replyState.showAttachmentPicker,
+                        onDismissBottomSheet = { replyState.onShowAttachmentPickerChanged(false) },
+                        state = pickerState,
+                        onFilesChanged = replyState.onAttachmentsChanged
                     )
-                }
-            }
 
-            HorizonInboxDetailsContent(
-                state,
-                Modifier
-                    .padding(innerPadding)
-            )
+                    if (replyState.showExitConfirmationDialog) {
+                        Modal(
+                            dialogState = ModalDialogState(
+                                title = stringResource(R.string.exitConfirmationTitle),
+                                message = stringResource(R.string.exitConfirmationMessage),
+                                primaryButtonTitle = stringResource(R.string.exitConfirmationExitButtonLabel),
+                                secondaryButtonTitle = stringResource(R.string.exitConfirmationCancelButtonLabel),
+                                primaryButtonClick = {
+                                    replyState.updateShowExitConfirmationDialog(false)
+                                    navController.popBackStack()
+                                },
+                                secondaryButtonClick = {
+                                    replyState.updateShowExitConfirmationDialog(
+                                        false
+                                    )
+                                }
+                            )
+                        )
+                    }
+                }
+
+                HorizonInboxDetailsContent(
+                    state,
+                    Modifier
+                        .padding(innerPadding)
+                )
+            }
         }
     }
 }

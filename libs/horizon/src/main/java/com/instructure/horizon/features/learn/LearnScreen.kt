@@ -82,6 +82,7 @@ import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.organisms.inputs.common.InputDropDownPopup
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
+import com.instructure.horizon.util.HorizonEdgeToEdgeSystemBars
 import com.instructure.horizon.util.bottomNavigationScreenInsets
 import com.instructure.pandautils.compose.modifiers.conditional
 import kotlinx.coroutines.delay
@@ -99,25 +100,31 @@ fun LearnScreen(state: LearnUiState, mainNavController: NavHostController) {
         }
     }
 
-    Scaffold(
-        contentWindowInsets = WindowInsets.bottomNavigationScreenInsets,
-        containerColor = HorizonColors.Surface.pagePrimary(),
-        snackbarHost = { SnackbarHost(snackbarHostState) }
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            when {
-                state.screenState.isError -> ErrorContent(state.screenState, state.screenState.errorMessage.orEmpty())
-                state.screenState.isLoading -> LoadingContent()
-                else -> if (state.learningItems.isEmpty()) {
-                    LearnScreenEmptyContent(state)
-                } else {
-                    LearnScreenWrapper(state, mainNavController, Modifier.fillMaxSize())
+    HorizonEdgeToEdgeSystemBars(null, null) {
+        Scaffold(
+            contentWindowInsets = WindowInsets.bottomNavigationScreenInsets,
+            containerColor = HorizonColors.Surface.pagePrimary(),
+            snackbarHost = { SnackbarHost(snackbarHostState) }
+        ) { padding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                when {
+                    state.screenState.isError -> ErrorContent(
+                        state.screenState,
+                        state.screenState.errorMessage.orEmpty()
+                    )
+
+                    state.screenState.isLoading -> LoadingContent()
+                    else -> if (state.learningItems.isEmpty()) {
+                        LearnScreenEmptyContent(state)
+                    } else {
+                        LearnScreenWrapper(state, mainNavController, Modifier.fillMaxSize())
+                    }
                 }
             }
         }

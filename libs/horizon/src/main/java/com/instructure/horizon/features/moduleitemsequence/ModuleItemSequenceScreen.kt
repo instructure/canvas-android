@@ -126,6 +126,7 @@ import com.instructure.horizon.horizonui.molecules.PillType
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.molecules.SpinnerSize
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
+import com.instructure.horizon.util.HorizonEdgeToEdgeSystemBars
 import com.instructure.horizon.util.horizontalSafeDrawing
 import com.instructure.pandautils.compose.modifiers.conditional
 import com.instructure.pandautils.utils.Const
@@ -139,55 +140,64 @@ fun ModuleItemSequenceScreen(mainNavController: NavHostController, uiState: Modu
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    Scaffold(
-        contentWindowInsets = WindowInsets.horizontalSafeDrawing,
-        containerColor = HorizonColors.Surface.institution(),
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-        bottomBar = {
-            ModuleItemSequenceBottomBar(
-                showNextButton = uiState.currentPosition < uiState.items.size - 1,
-                showPreviousButton = uiState.currentPosition > 0,
-                showNotebookButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Page,
-                showAssignmentToolsButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Assignment,
-                onNextClick = uiState.onNextClick,
-                onPreviousClick = uiState.onPreviousClick,
-                onAssignmentToolsClick = uiState.onAssignmentToolsClick,
-                onAiAssistClick = { uiState.updateShowAiAssist(true) },
-                onNotebookClick = { uiState.updateShowNotebook(true) },
-                notebookEnabled = uiState.notebookButtonEnabled,
-                aiAssistEnabled = uiState.aiAssistButtonEnabled,
-                hasUnreadComments = uiState.hasUnreadComments
-            )
-        }
-    ) { contentPadding ->
-        Box(modifier = Modifier.padding(contentPadding)) {
-            if (uiState.showAiAssist) {
-                AiAssistantScreen(
-                    onDismiss = { uiState.updateShowAiAssist(false) },
+    HorizonEdgeToEdgeSystemBars(
+        statusBarColor = HorizonColors.Surface.institution(),
+        navigationBarColor = HorizonColors.Surface.pagePrimary()
+    ){
+        Scaffold(
+            contentWindowInsets = WindowInsets.horizontalSafeDrawing,
+            containerColor = HorizonColors.Surface.institution(),
+            snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+            bottomBar = {
+                ModuleItemSequenceBottomBar(
+                    showNextButton = uiState.currentPosition < uiState.items.size - 1,
+                    showPreviousButton = uiState.currentPosition > 0,
+                    showNotebookButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Page,
+                    showAssignmentToolsButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Assignment,
+                    onNextClick = uiState.onNextClick,
+                    onPreviousClick = uiState.onPreviousClick,
+                    onAssignmentToolsClick = uiState.onAssignmentToolsClick,
+                    onAiAssistClick = { uiState.updateShowAiAssist(true) },
+                    onNotebookClick = { uiState.updateShowNotebook(true) },
+                    notebookEnabled = uiState.notebookButtonEnabled,
+                    aiAssistEnabled = uiState.aiAssistButtonEnabled,
+                    hasUnreadComments = uiState.hasUnreadComments
                 )
             }
-            if (uiState.showNotebook) {
-                NotebookBottomDialog(
-                    uiState.courseId,
-                    uiState.objectTypeAndId,
-                    { snackbarMessage, onDismiss ->
-                        scope.launch {
-                            if (snackbarMessage != null) {
-                                val result = snackbarHostState.showSnackbar(snackbarMessage)
-                                if (result == SnackbarResult.Dismissed) {
-                                    onDismiss()
+        ) { contentPadding ->
+            Box(modifier = Modifier.padding(contentPadding)) {
+                if (uiState.showAiAssist) {
+                    AiAssistantScreen(
+                        onDismiss = { uiState.updateShowAiAssist(false) },
+                    )
+                }
+                if (uiState.showNotebook) {
+                    NotebookBottomDialog(
+                        uiState.courseId,
+                        uiState.objectTypeAndId,
+                        { snackbarMessage, onDismiss ->
+                            scope.launch {
+                                if (snackbarMessage != null) {
+                                    val result = snackbarHostState.showSnackbar(snackbarMessage)
+                                    if (result == SnackbarResult.Dismissed) {
+                                        onDismiss()
+                                    }
                                 }
                             }
-                        } },
-                    { uiState.updateShowNotebook(false) }
-                )
-            }
-            ModuleItemSequenceContent(uiState = uiState, mainNavController = mainNavController, onBackPressed = {
-                mainNavController.popBackStack()
-            })
-            val markAsDoneState = uiState.currentItem?.markAsDoneUiState
-            if (markAsDoneState != null && !uiState.currentItem.isLoading) {
-                MarkAsDoneButton(markAsDoneState)
+                        },
+                        { uiState.updateShowNotebook(false) }
+                    )
+                }
+                ModuleItemSequenceContent(
+                    uiState = uiState,
+                    mainNavController = mainNavController,
+                    onBackPressed = {
+                        mainNavController.popBackStack()
+                    })
+                val markAsDoneState = uiState.currentItem?.markAsDoneUiState
+                if (markAsDoneState != null && !uiState.currentItem.isLoading) {
+                    MarkAsDoneButton(markAsDoneState)
+                }
             }
         }
     }
@@ -264,7 +274,9 @@ private fun ModuleItemSequenceContent(
                         moduleHeaderHeight = coordinates.size.height
                         val temp = nestedScrollConnection.appBarOffset
                         nestedScrollConnection =
-                            CollapsingAppBarNestedScrollConnection(moduleHeaderHeight).apply { appBarOffset = temp }
+                            CollapsingAppBarNestedScrollConnection(moduleHeaderHeight).apply {
+                                appBarOffset = temp
+                            }
                     }
                 }
         ) {
@@ -283,7 +295,10 @@ private fun ModuleItemSequenceContent(
             containerColor = Color.Transparent,
             modifier = Modifier
                 .conditional(uiState.loadingState.isLoading || uiState.loadingState.isError) {
-                    background(color = HorizonColors.Surface.pageSecondary(), shape = HorizonCornerRadius.level5)
+                    background(
+                        color = HorizonColors.Surface.pageSecondary(),
+                        shape = HorizonCornerRadius.level5
+                    )
                 }
                 .padding(top = moduleHeaderHeight)
         ) {

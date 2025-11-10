@@ -51,6 +51,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.HorizonDivider
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
+import com.instructure.horizon.util.HorizonEdgeToEdgeSystemBars
 import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.getActivityOrNull
 
@@ -78,7 +79,11 @@ fun AccountScreen(
     }
 
     LoadingStateWrapper(state.screenState) {
-        AccountContentScreen(state, navController, state.performLogout, state.switchExperience)
+        HorizonEdgeToEdgeSystemBars(
+            statusBarColor = HorizonColors.Surface.pagePrimary(),
+        ) {
+            AccountContentScreen(state, navController, state.performLogout, state.switchExperience)
+        }
     }
 }
 

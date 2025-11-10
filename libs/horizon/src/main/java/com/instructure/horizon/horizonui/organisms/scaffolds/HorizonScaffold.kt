@@ -40,7 +40,6 @@ fun HorizonScaffold(
     content: @Composable (Modifier) -> Unit,
 ) {
     Scaffold(
-//        contentWindowInsets = WindowInsets.safeDrawing,
         topBar = { HorizonTopAppBar(title, onBackPressed) },
         snackbarHost = snackbarHost,
         contentColor = HorizonColors.Surface.pagePrimary()

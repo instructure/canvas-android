@@ -139,7 +139,8 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
                 ),
                 deepLinks = listOf(
                     navDeepLink {
-                        uriPattern = "${ApiPrefs.fullDomain}/courses/{${COURSE_ID}}/assignments/{${ASSIGNMENT_ID}}"
+                        uriPattern =
+                            "${ApiPrefs.fullDomain}/courses/{${COURSE_ID}}/assignments/{${ASSIGNMENT_ID}}"
                     }
                 )
             ) { backStackEntry ->
@@ -158,7 +159,9 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
                             moduleItemAssetId = assignmentId?.toString()
                         )
                     ) {
-                        popUpTo(MainNavigationRoute.AssignmentDetailsDeepLink.route) { inclusive = true }
+                        popUpTo(MainNavigationRoute.AssignmentDetailsDeepLink.route) {
+                            inclusive = true
+                        }
                     }
                 }
             }
@@ -176,7 +179,8 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
                 ),
                 deepLinks = listOf(
                     navDeepLink {
-                        uriPattern = "${ApiPrefs.fullDomain}/courses/{${COURSE_ID}}/quizzes/{${QUIZ_ID}}"
+                        uriPattern =
+                            "${ApiPrefs.fullDomain}/courses/{${COURSE_ID}}/quizzes/{${QUIZ_ID}}"
                     }
                 )
             ) { backStackEntry ->
@@ -195,7 +199,9 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
                             moduleItemAssetId = quizId?.toString()
                         )
                     ) {
-                        popUpTo(MainNavigationRoute.QuizDetailsDeepLink.route) { inclusive = true }
+                        popUpTo(MainNavigationRoute.QuizDetailsDeepLink.route) {
+                            inclusive = true
+                        }
                     }
                 }
             }
@@ -213,7 +219,8 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
                 ),
                 deepLinks = listOf(
                     navDeepLink {
-                        uriPattern = "${ApiPrefs.fullDomain}/courses/{${COURSE_ID}}/pages/{${PAGE_ID}}"
+                        uriPattern =
+                            "${ApiPrefs.fullDomain}/courses/{${COURSE_ID}}/pages/{${PAGE_ID}}"
                     }
                 )
             ) { backStackEntry ->
@@ -230,7 +237,9 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
                             moduleItemAssetId = pageId
                         )
                     ) {
-                        popUpTo(MainNavigationRoute.PageDetailsDeepLink.route) { inclusive = true }
+                        popUpTo(MainNavigationRoute.PageDetailsDeepLink.route) {
+                            inclusive = true
+                        }
                     }
                 }
             }

@@ -64,6 +64,7 @@ import com.instructure.horizon.horizonui.molecules.StatusChipState
 import com.instructure.horizon.horizonui.organisms.scaffolds.HorizonScaffold
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
+import com.instructure.horizon.util.HorizonEdgeToEdgeSystemBars
 import com.instructure.pandautils.utils.isPreviousDay
 import com.instructure.pandautils.utils.isSameDay
 import com.instructure.pandautils.utils.isSameWeek
@@ -80,20 +81,25 @@ fun NotificationScreen(state: NotificationUiState, mainNavController: NavHostCon
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
-    HorizonScaffold(
-        title = stringResource(R.string.notificationsTitle),
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-        onBackPressed = { mainNavController.popBackStack() },
-    ) { modifier ->
-        LoadingStateWrapper(state.screenState) {
-            NotificationContent(
-                mainNavController,
-                state,
-                showSnackbar = { message ->
-                    scope.launch { snackbarHostState.showSnackbar(message) }
-                },
-                modifier
-            )
+    HorizonEdgeToEdgeSystemBars(
+        null,
+        HorizonColors.Surface.cardPrimary()
+    ){
+        HorizonScaffold(
+            title = stringResource(R.string.notificationsTitle),
+            snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+            onBackPressed = { mainNavController.popBackStack() },
+        ) { modifier ->
+            LoadingStateWrapper(state.screenState) {
+                NotificationContent(
+                    mainNavController,
+                    state,
+                    showSnackbar = { message ->
+                        scope.launch { snackbarHostState.showSnackbar(message) }
+                    },
+                    modifier
+                )
+            }
         }
     }
 }

@@ -84,8 +84,9 @@ import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.organisms.AnimatedHorizontalPager
 import com.instructure.horizon.horizonui.organisms.CollapsableHeaderScreen
 import com.instructure.horizon.navigation.MainNavigationRoute
+import com.instructure.horizon.util.HorizonEdgeToEdgeSystemBars
+import com.instructure.horizon.util.bottomNavigationScreenInsets
 import com.instructure.horizon.util.horizontalSafeDrawing
-import com.instructure.horizon.util.topSafeDrawing
 import com.instructure.horizon.util.zeroScreenInsets
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -130,112 +131,117 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
         }
     }
 
-    Scaffold(
-        contentWindowInsets = WindowInsets.zeroScreenInsets,
-        containerColor = HorizonColors.Surface.pagePrimary(),
-        snackbarHost = { SnackbarHost(snackbarHostState) }
-    ) { paddingValues ->
-        val pullToRefreshState = rememberPullToRefreshState()
-        val isRefreshing = refreshState.any { it }
-        PullToRefreshBox(
-            isRefreshing = isRefreshing,
-            onRefresh = { shouldRefresh = true },
-            state = pullToRefreshState,
-            indicator = {
-                Indicator(
-                    modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .padding(top = 56.dp),
-                    isRefreshing = isRefreshing,
-                    containerColor = HorizonColors.Surface.pageSecondary(),
-                    color = HorizonColors.Surface.institution(),
-                    state = pullToRefreshState
-                )
-            }
-        ){
-            val scrollState = rememberScrollState()
-            CollapsableHeaderScreen(
-                modifier = Modifier.padding(paddingValues),
-                headerContent = {
-                    Column(
+    HorizonEdgeToEdgeSystemBars {
+        Scaffold(
+            contentWindowInsets = WindowInsets.zeroScreenInsets,
+            containerColor = HorizonColors.Surface.pagePrimary(),
+            snackbarHost = { SnackbarHost(snackbarHostState) }
+        ) { paddingValues ->
+            val pullToRefreshState = rememberPullToRefreshState()
+            val isRefreshing = refreshState.any { it }
+            PullToRefreshBox(
+                isRefreshing = isRefreshing,
+                onRefresh = { shouldRefresh = true },
+                state = pullToRefreshState,
+                indicator = {
+                    Indicator(
                         modifier = Modifier
-                            .windowInsetsPadding(WindowInsets.topSafeDrawing)
-                    ) {
-                        HomeScreenTopBar(
-                            uiState,
-                            mainNavController,
+                            .align(Alignment.TopCenter)
+                            .padding(top = 56.dp),
+                        isRefreshing = isRefreshing,
+                        containerColor = HorizonColors.Surface.pageSecondary(),
+                        color = HorizonColors.Surface.institution(),
+                        state = pullToRefreshState
+                    )
+                }
+            ) {
+                val scrollState = rememberScrollState()
+                CollapsableHeaderScreen(
+                    modifier = Modifier.padding(paddingValues),
+                    headerContent = {
+                        Column(
                             modifier = Modifier
-                                .height(56.dp)
-                                .padding(bottom = 12.dp)
-                        )
-                    }
-                },
-                bodyContent = {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier
-                            .windowInsetsPadding(WindowInsets.horizontalSafeDrawing)
-                            .verticalScroll(scrollState)
-                    ) {
-                        HorizonSpace(SpaceSize.SPACE_12)
-                        DashboardAnnouncementBannerWidget(
-                            mainNavController,
-                            homeNavController,
-                            shouldRefresh,
-                            refreshStateFlow
-                        )
-                        DashboardCourseSection(
-                            mainNavController,
-                            homeNavController,
-                            shouldRefresh,
-                            refreshStateFlow
-                        )
-                        HorizonSpace(SpaceSize.SPACE_16)
-                        val pagerState = rememberPagerState{ 3 }
-                        AnimatedHorizontalPager(
-                            pagerState,
-                            sizeAnimationRange = 0f,
-                            contentPadding = PaddingValues(horizontal = 24.dp),
-                            pageSpacing = 12.dp,
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) { index, modifier ->
-                            when (index) {
-                                0 -> {
-                                    DashboardMyProgressWidget(
-                                        shouldRefresh,
-                                        refreshStateFlow,
-                                        modifier.padding(bottom = 16.dp)
-                                    )
-                                }
-                                1 -> {
-                                    DashboardTimeSpentWidget(
-                                        shouldRefresh,
-                                        refreshStateFlow,
-                                        modifier.padding(bottom = 16.dp)
-                                    )
-                                }
-                                2 -> {
-                                    DashboardSkillOverviewWidget(
-                                        homeNavController,
-                                        shouldRefresh,
-                                        refreshStateFlow,
-                                        modifier.padding(bottom = 16.dp)
-                                    )
-                                }
-                                else -> {
+                                .windowInsetsPadding(WindowInsets.bottomNavigationScreenInsets)
+                        ) {
+                            HomeScreenTopBar(
+                                uiState,
+                                mainNavController,
+                                modifier = Modifier
+                                    .height(56.dp)
+                                    .padding(bottom = 12.dp)
+                            )
+                        }
+                    },
+                    bodyContent = {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier
+                                .windowInsetsPadding(WindowInsets.horizontalSafeDrawing)
+                                .verticalScroll(scrollState)
+                        ) {
+                            HorizonSpace(SpaceSize.SPACE_12)
+                            DashboardAnnouncementBannerWidget(
+                                mainNavController,
+                                homeNavController,
+                                shouldRefresh,
+                                refreshStateFlow
+                            )
+                            DashboardCourseSection(
+                                mainNavController,
+                                homeNavController,
+                                shouldRefresh,
+                                refreshStateFlow
+                            )
+                            HorizonSpace(SpaceSize.SPACE_16)
+                            val pagerState = rememberPagerState { 3 }
+                            AnimatedHorizontalPager(
+                                pagerState,
+                                sizeAnimationRange = 0f,
+                                contentPadding = PaddingValues(horizontal = 24.dp),
+                                pageSpacing = 12.dp,
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) { index, modifier ->
+                                when (index) {
+                                    0 -> {
+                                        DashboardMyProgressWidget(
+                                            shouldRefresh,
+                                            refreshStateFlow,
+                                            modifier.padding(bottom = 16.dp)
+                                        )
+                                    }
 
+                                    1 -> {
+                                        DashboardTimeSpentWidget(
+                                            shouldRefresh,
+                                            refreshStateFlow,
+                                            modifier.padding(bottom = 16.dp)
+                                        )
+                                    }
+
+                                    2 -> {
+                                        DashboardSkillOverviewWidget(
+                                            homeNavController,
+                                            shouldRefresh,
+                                            refreshStateFlow,
+                                            modifier.padding(bottom = 16.dp)
+                                        )
+                                    }
+
+                                    else -> {
+
+                                    }
                                 }
                             }
+                            DashboardSkillHighlightsWidget(
+                                homeNavController,
+                                shouldRefresh,
+                                refreshStateFlow
+                            )
+                            HorizonSpace(SpaceSize.SPACE_24)
                         }
-                        DashboardSkillHighlightsWidget(
-                            homeNavController,
-                            shouldRefresh,
-                            refreshStateFlow
-                        )
-                        HorizonSpace(SpaceSize.SPACE_24)
                     }
-                }
-            )
+                )
+            }
         }
     }
 }
