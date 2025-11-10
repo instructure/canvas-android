@@ -1375,6 +1375,11 @@
         <item quantity="other">%s unread notifications</item>
     </plurals>
 
+    <plurals name="a11y_todoBadgeCount">
+        <item quantity="one">%s to do item</item>
+        <item quantity="other">%s to do items</item>
+    </plurals>
+
     <string name="noAnnotationSelected">No annotation selected</string>
 
     <string name="emailNotifications">Email Notifications</string>
@@ -2181,4 +2186,15 @@
     <string name="scored_less_than_with_max">Scored Less than / %s pts</string>
     <string name="scored_between_values">Scored %1$s - %2$s</string>
     <string name="multiple_filters">Multiple filters</string>
+    <string name="a11y_contentDescriptionToDoFilter">Filter</string>
+    <string name="errorLoadingToDos">There was an error loading your to-do items. Please check your connection and try again.</string>
+    <string name="errorUpdatingToDo">There was an error updating the to-do item. Please check your connection and try again.</string>
+    <string name="noToDosForNow">No To Dos for now!</string>
+    <string name="noToDosForNowSubtext">It looks like a great time to rest, relax, and recharge.</string>
+    <string name="todoSwipeDone">Done</string>
+    <string name="todoSwipeUndo">Undo</string>
+    <string name="todoMarkedAsDone">%s marked as done</string>
+    <string name="todoMarkedAsNotDone">%s marked as not done</string>
+    <string name="todoMarkedAsDoneSnackbarUndo">Undo</string>
+    <string name="todoActionOffline">This action cannot be performed offline</string>
 </resources>

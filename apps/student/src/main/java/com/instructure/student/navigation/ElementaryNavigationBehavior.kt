@@ -25,7 +25,6 @@ import com.instructure.pandautils.utils.CanvasFont
 import com.instructure.student.R
 import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.fragment.ParentFragment
-import com.instructure.student.fragment.ToDoListFragment
 import com.instructure.student.mobius.elementary.ElementaryDashboardFragment
 
 class ElementaryNavigationBehavior(private val apiPrefs: ApiPrefs) : NavigationBehavior {
@@ -33,7 +32,7 @@ class ElementaryNavigationBehavior(private val apiPrefs: ApiPrefs) : NavigationB
     override val bottomNavBarFragments: List<Class<out Fragment>> = listOf(
         ElementaryDashboardFragment::class.java,
         CalendarFragment::class.java,
-        ToDoListFragment::class.java,
+        todoFragmentClass,
         NotificationListFragment::class.java,
         getInboxBottomBarFragment(apiPrefs)
     )

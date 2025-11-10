@@ -33,6 +33,8 @@ import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.RemoteConfigParam
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.interactions.router.BaseRouteMatcher
@@ -80,15 +82,16 @@ import com.instructure.student.features.pages.list.PageListFragment
 import com.instructure.student.features.people.details.PeopleDetailsFragment
 import com.instructure.student.features.people.list.PeopleListFragment
 import com.instructure.student.features.quiz.list.QuizListFragment
+import com.instructure.pandautils.features.todolist.ToDoListFragment
 import com.instructure.student.fragment.AnnouncementListFragment
 import com.instructure.student.fragment.BasicQuizViewFragment
 import com.instructure.student.fragment.CourseSettingsFragment
 import com.instructure.student.fragment.DashboardFragment
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.fragment.NotificationListFragment
+import com.instructure.student.fragment.OldToDoListFragment
 import com.instructure.student.fragment.ProfileSettingsFragment
 import com.instructure.student.fragment.StudioWebViewFragment
-import com.instructure.student.fragment.ToDoListFragment
 import com.instructure.student.fragment.UnsupportedFeatureFragment
 import com.instructure.student.fragment.UnsupportedTabFragment
 import com.instructure.student.fragment.ViewHtmlFragment
@@ -343,7 +346,12 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route("/todos/:${ToDoFragment.PLANNABLE_ID}", ToDoFragment::class.java))
 
         // To Do List
-        routes.add(Route("/todolist", ToDoListFragment::class.java).copy(canvasContext = ApiPrefs.user))
+        val todoListFragmentClass = if (RemoteConfigUtils.getBoolean(RemoteConfigParam.TODO_REDESIGN)) {
+            ToDoListFragment::class.java
+        } else {
+            OldToDoListFragment::class.java
+        }
+        routes.add(Route("/todolist", todoListFragmentClass).copy(canvasContext = ApiPrefs.user))
 
         // Syllabus
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/syllabus"), SyllabusRepositoryFragment::class.java))

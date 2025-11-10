@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.canvas.espresso.mockCanvas.endpoints
+package com.instructure.canvas.espresso.mockcanvas.endpoints
 
 import com.instructure.canvas.espresso.mockcanvas.Endpoint
 import com.instructure.canvas.espresso.mockcanvas.utils.Segment
