@@ -496,9 +496,9 @@ class InboxComposeViewModelTest {
     @Test
     fun `Attachment removed`() {
         val viewmodel = getViewModel()
-        val attachment = Attachment()
+        val attachment = Attachment(id = 1)
         val attachmentEntity = com.instructure.pandautils.room.appdatabase.entities.AttachmentEntity(attachment)
-        val attachmentCardItem = AttachmentCardItem(Attachment(), AttachmentStatus.UPLOADED, false)
+        val attachmentCardItem = AttachmentCardItem(attachment, AttachmentStatus.UPLOADED, false)
         val uuid = UUID.randomUUID()
         coEvery { attachmentDao.findByParentId(uuid.toString()) } returns listOf(attachmentEntity)
         viewmodel.updateAttachments(uuid, WorkInfo(UUID.randomUUID(), WorkInfo.State.SUCCEEDED, setOf("")))
@@ -508,6 +508,301 @@ class InboxComposeViewModelTest {
         viewmodel.handleAction(InboxComposeActionHandler.RemoveAttachment(attachmentCardItem))
 
         assertEquals(0, viewmodel.uiState.value.attachments.size)
+    }
+
+    @Test
+    fun `Attachment added with UPLOADING status on ENQUEUED state`() {
+        val viewmodel = getViewModel()
+        val filePaths = listOf("/storage/test.pdf")
+
+        viewmodel.addUploadingAttachments(filePaths)
+
+        assertEquals(1, viewmodel.uiState.value.attachments.size)
+        assertEquals(AttachmentStatus.UPLOADING, viewmodel.uiState.value.attachments.first().status)
+        assertEquals("test.pdf", viewmodel.uiState.value.attachments.first().attachment.displayName)
+    }
+
+    @Test
+    fun `Attachment added with UPLOADING status on RUNNING state`() {
+        val viewmodel = getViewModel()
+        val filePaths = listOf("/storage/test.pdf")
+
+        viewmodel.addUploadingAttachments(filePaths)
+
+        assertEquals(1, viewmodel.uiState.value.attachments.size)
+        assertEquals(AttachmentStatus.UPLOADING, viewmodel.uiState.value.attachments.first().status)
+        assertEquals("test.pdf", viewmodel.uiState.value.attachments.first().attachment.displayName)
+    }
+
+    @Test
+    fun `Send button disabled when attachment is uploading`() {
+        val viewmodel = getViewModel()
+
+        // Set up required fields for sending
+        viewmodel.handleAction(ContextPickerActionHandler.ContextClicked(Course(id = 1, name = "Test Course")))
+        viewmodel.handleAction(InboxComposeActionHandler.AddRecipient(Recipient(stringId = "1", name = "Test User")))
+        viewmodel.handleAction(InboxComposeActionHandler.SubjectChanged(TextFieldValue("Test Subject")))
+        viewmodel.handleAction(InboxComposeActionHandler.BodyChanged(TextFieldValue("Test Body")))
+
+        // At this point, send button should be enabled
+        assertEquals(true, viewmodel.uiState.value.isSendButtonEnabled)
+
+        // Add uploading placeholder attachment
+        viewmodel.addUploadingAttachments(listOf("/storage/test.pdf"))
+
+        // Send button should now be disabled
+        assertEquals(false, viewmodel.uiState.value.isSendButtonEnabled)
+    }
+
+    @Test
+    fun `Send button enabled when all attachments uploaded`() {
+        val viewmodel = getViewModel()
+        val attachment = Attachment(id = 1, displayName = "test.pdf")
+        val attachmentEntity = com.instructure.pandautils.room.appdatabase.entities.AttachmentEntity(attachment)
+        val uuid = UUID.randomUUID()
+
+        // Set up required fields for sending
+        viewmodel.handleAction(ContextPickerActionHandler.ContextClicked(Course(id = 1, name = "Test Course")))
+        viewmodel.handleAction(InboxComposeActionHandler.AddRecipient(Recipient(stringId = "1", name = "Test User")))
+        viewmodel.handleAction(InboxComposeActionHandler.SubjectChanged(TextFieldValue("Test Subject")))
+        viewmodel.handleAction(InboxComposeActionHandler.BodyChanged(TextFieldValue("Test Body")))
+
+        coEvery { attachmentDao.findByParentId(uuid.toString()) } returns listOf(attachmentEntity)
+
+        // Start upload with placeholder
+        viewmodel.addUploadingAttachments(listOf("/storage/test.pdf"))
+        assertEquals(false, viewmodel.uiState.value.isSendButtonEnabled)
+
+        // Complete upload - replaces placeholder with real attachment
+        viewmodel.updateAttachments(uuid, WorkInfo(UUID.randomUUID(), WorkInfo.State.SUCCEEDED, setOf("")))
+        assertEquals(true, viewmodel.uiState.value.isSendButtonEnabled)
+    }
+
+    @Test
+    fun `Attachment status updates from UPLOADING to UPLOADED on success`() {
+        val viewmodel = getViewModel()
+        val attachment = Attachment(id = 1, displayName = "test.pdf")
+        val attachmentEntity = com.instructure.pandautils.room.appdatabase.entities.AttachmentEntity(attachment)
+        val uuid = UUID.randomUUID()
+
+        coEvery { attachmentDao.findByParentId(uuid.toString()) } returns listOf(attachmentEntity)
+
+        // Start upload with placeholder
+        viewmodel.addUploadingAttachments(listOf("/storage/test.pdf"))
+        assertEquals(AttachmentStatus.UPLOADING, viewmodel.uiState.value.attachments.first().status)
+
+        // Complete upload - replaces placeholder
+        viewmodel.updateAttachments(uuid, WorkInfo(UUID.randomUUID(), WorkInfo.State.SUCCEEDED, setOf("")))
+        assertEquals(AttachmentStatus.UPLOADED, viewmodel.uiState.value.attachments.first().status)
+    }
+
+    @Test
+    fun `Attachment status updates from UPLOADING to FAILED on failure`() {
+        val viewmodel = getViewModel()
+
+        // Start upload with placeholder
+        viewmodel.addUploadingAttachments(listOf("/storage/test.pdf"))
+        assertEquals(AttachmentStatus.UPLOADING, viewmodel.uiState.value.attachments.first().status)
+
+        // Upload fails - updates placeholder status
+        viewmodel.updateAttachments(UUID.randomUUID(), WorkInfo(UUID.randomUUID(), WorkInfo.State.FAILED, setOf("")))
+        assertEquals(AttachmentStatus.FAILED, viewmodel.uiState.value.attachments.first().status)
+    }
+
+    @Test
+    fun `Multiple attachments with mixed upload states`() {
+        val viewmodel = getViewModel()
+        val attachment1 = Attachment(id = 1, displayName = "test1.pdf")
+        val attachment2 = Attachment(id = 2, displayName = "test2.pdf")
+        val attachmentEntity1 = com.instructure.pandautils.room.appdatabase.entities.AttachmentEntity(attachment1)
+        val attachmentEntity2 = com.instructure.pandautils.room.appdatabase.entities.AttachmentEntity(attachment2)
+        val uuid1 = UUID.randomUUID()
+        val uuid2 = UUID.randomUUID()
+
+        // Set up required fields for sending
+        viewmodel.handleAction(ContextPickerActionHandler.ContextClicked(Course(id = 1, name = "Test Course")))
+        viewmodel.handleAction(InboxComposeActionHandler.AddRecipient(Recipient(stringId = "1", name = "Test User")))
+        viewmodel.handleAction(InboxComposeActionHandler.SubjectChanged(TextFieldValue("Test Subject")))
+        viewmodel.handleAction(InboxComposeActionHandler.BodyChanged(TextFieldValue("Test Body")))
+
+        coEvery { attachmentDao.findByParentId(uuid1.toString()) } returns listOf(attachmentEntity1)
+        coEvery { attachmentDao.findByParentId(uuid2.toString()) } returns listOf(attachmentEntity2)
+
+        // Start both uploads with placeholders
+        viewmodel.addUploadingAttachments(listOf("/storage/test1.pdf"))
+        viewmodel.addUploadingAttachments(listOf("/storage/test2.pdf"))
+
+        assertEquals(2, viewmodel.uiState.value.attachments.size)
+        assertEquals(false, viewmodel.uiState.value.isSendButtonEnabled)
+
+        // First upload completes - replaces first placeholder
+        viewmodel.updateAttachments(uuid1, WorkInfo(UUID.randomUUID(), WorkInfo.State.SUCCEEDED, setOf("")))
+
+        // Send button still disabled (second placeholder still uploading)
+        assertEquals(false, viewmodel.uiState.value.isSendButtonEnabled)
+        assertEquals(1, viewmodel.uiState.value.attachments.count { it.status == AttachmentStatus.UPLOADED })
+        assertEquals(1, viewmodel.uiState.value.attachments.count { it.status == AttachmentStatus.UPLOADING })
+
+        // Second upload completes
+        viewmodel.updateAttachments(uuid2, WorkInfo(UUID.randomUUID(), WorkInfo.State.SUCCEEDED, setOf("")))
+
+        // Now send button should be enabled
+        assertEquals(true, viewmodel.uiState.value.isSendButtonEnabled)
+        assertEquals(2, viewmodel.uiState.value.attachments.count { it.status == AttachmentStatus.UPLOADED })
+    }
+
+    @Test
+    fun `No duplicate attachments added on multiple state updates`() {
+        val viewmodel = getViewModel()
+
+        // Add placeholder once
+        viewmodel.addUploadingAttachments(listOf("/storage/test.pdf"))
+        assertEquals(1, viewmodel.uiState.value.attachments.size)
+
+        // Multiple state updates should not add duplicates (placeholders already added)
+        viewmodel.updateAttachments(UUID.randomUUID(), WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
+        viewmodel.updateAttachments(UUID.randomUUID(), WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
+
+        // Should still only have one attachment
+        assertEquals(1, viewmodel.uiState.value.attachments.size)
+    }
+
+    @Test
+    fun `Concurrent uploads - one fails, other continues successfully`() {
+        val viewmodel = getViewModel()
+        val attachment1 = Attachment(id = 1, displayName = "test1.pdf")
+        val attachment2 = Attachment(id = 2, displayName = "test2.pdf")
+        val attachmentEntity1 = com.instructure.pandautils.room.appdatabase.entities.AttachmentEntity(attachment1)
+        val attachmentEntity2 = com.instructure.pandautils.room.appdatabase.entities.AttachmentEntity(attachment2)
+        val uuid1 = UUID.randomUUID()
+        val uuid2 = UUID.randomUUID()
+
+        coEvery { attachmentDao.findByParentId(uuid1.toString()) } returns listOf(attachmentEntity1)
+        coEvery { attachmentDao.findByParentId(uuid2.toString()) } returns listOf(attachmentEntity2)
+
+        // Start both uploads with placeholders
+        viewmodel.addUploadingAttachments(listOf("/storage/test1.pdf"))
+        viewmodel.addUploadingAttachments(listOf("/storage/test2.pdf"))
+
+        // Assign workerIds to placeholders
+        viewmodel.updateAttachments(uuid1, WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
+        viewmodel.updateAttachments(uuid2, WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
+
+        assertEquals(2, viewmodel.uiState.value.attachments.size)
+        assertEquals(AttachmentStatus.UPLOADING, viewmodel.uiState.value.attachments[0].status)
+        assertEquals(AttachmentStatus.UPLOADING, viewmodel.uiState.value.attachments[1].status)
+
+        // First upload FAILS
+        viewmodel.updateAttachments(uuid1, WorkInfo(UUID.randomUUID(), WorkInfo.State.FAILED, setOf("")))
+
+        // Verify: First attachment is FAILED, second is still UPLOADING
+        assertEquals(2, viewmodel.uiState.value.attachments.size)
+        assertEquals(AttachmentStatus.FAILED, viewmodel.uiState.value.attachments.first { it.workerId == uuid1.toString() }.status)
+        assertEquals(AttachmentStatus.UPLOADING, viewmodel.uiState.value.attachments.first { it.workerId == uuid2.toString() }.status)
+
+        // Second upload SUCCEEDS
+        viewmodel.updateAttachments(uuid2, WorkInfo(UUID.randomUUID(), WorkInfo.State.SUCCEEDED, setOf("")))
+
+        // Verify: First attachment still FAILED, second is UPLOADED
+        assertEquals(2, viewmodel.uiState.value.attachments.size)
+        assertEquals(AttachmentStatus.FAILED, viewmodel.uiState.value.attachments.first { it.workerId == uuid1.toString() }.status)
+        assertEquals(AttachmentStatus.UPLOADED, viewmodel.uiState.value.attachments.first { it.attachment.id == 2L }.status)
+    }
+
+    @Test
+    fun `Concurrent uploads - both fail independently`() {
+        val viewmodel = getViewModel()
+        val uuid1 = UUID.randomUUID()
+        val uuid2 = UUID.randomUUID()
+
+        // Start both uploads with placeholders
+        viewmodel.addUploadingAttachments(listOf("/storage/test1.pdf"))
+        viewmodel.addUploadingAttachments(listOf("/storage/test2.pdf"))
+
+        // Assign workerIds to placeholders
+        viewmodel.updateAttachments(uuid1, WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
+        viewmodel.updateAttachments(uuid2, WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
+
+        assertEquals(2, viewmodel.uiState.value.attachments.size)
+
+        // First upload fails
+        viewmodel.updateAttachments(uuid1, WorkInfo(UUID.randomUUID(), WorkInfo.State.FAILED, setOf("")))
+
+        // Verify: Only first attachment is FAILED, second is still UPLOADING
+        assertEquals(AttachmentStatus.FAILED, viewmodel.uiState.value.attachments.first { it.workerId == uuid1.toString() }.status)
+        assertEquals(AttachmentStatus.UPLOADING, viewmodel.uiState.value.attachments.first { it.workerId == uuid2.toString() }.status)
+
+        // Second upload also fails
+        viewmodel.updateAttachments(uuid2, WorkInfo(UUID.randomUUID(), WorkInfo.State.FAILED, setOf("")))
+
+        // Verify: Both attachments are FAILED
+        assertEquals(2, viewmodel.uiState.value.attachments.size)
+        assertEquals(AttachmentStatus.FAILED, viewmodel.uiState.value.attachments.first { it.workerId == uuid1.toString() }.status)
+        assertEquals(AttachmentStatus.FAILED, viewmodel.uiState.value.attachments.first { it.workerId == uuid2.toString() }.status)
+    }
+
+    @Test
+    fun `Concurrent uploads - both succeed independently`() {
+        val viewmodel = getViewModel()
+        val attachment1 = Attachment(id = 1, displayName = "test1.pdf")
+        val attachment2 = Attachment(id = 2, displayName = "test2.pdf")
+        val attachmentEntity1 = com.instructure.pandautils.room.appdatabase.entities.AttachmentEntity(attachment1)
+        val attachmentEntity2 = com.instructure.pandautils.room.appdatabase.entities.AttachmentEntity(attachment2)
+        val uuid1 = UUID.randomUUID()
+        val uuid2 = UUID.randomUUID()
+
+        coEvery { attachmentDao.findByParentId(uuid1.toString()) } returns listOf(attachmentEntity1)
+        coEvery { attachmentDao.findByParentId(uuid2.toString()) } returns listOf(attachmentEntity2)
+
+        // Start both uploads with placeholders
+        viewmodel.addUploadingAttachments(listOf("/storage/test1.pdf"))
+        viewmodel.addUploadingAttachments(listOf("/storage/test2.pdf"))
+
+        // Assign workerIds
+        viewmodel.updateAttachments(uuid1, WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
+        viewmodel.updateAttachments(uuid2, WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
+
+        assertEquals(2, viewmodel.uiState.value.attachments.size)
+
+        // First upload succeeds
+        viewmodel.updateAttachments(uuid1, WorkInfo(UUID.randomUUID(), WorkInfo.State.SUCCEEDED, setOf("")))
+
+        // Verify: First replaced with real attachment, second still uploading
+        assertEquals(2, viewmodel.uiState.value.attachments.size)
+        assertEquals(1, viewmodel.uiState.value.attachments.count { it.status == AttachmentStatus.UPLOADED })
+        assertEquals(1, viewmodel.uiState.value.attachments.count { it.status == AttachmentStatus.UPLOADING })
+
+        // Second upload succeeds
+        viewmodel.updateAttachments(uuid2, WorkInfo(UUID.randomUUID(), WorkInfo.State.SUCCEEDED, setOf("")))
+
+        // Verify: Both replaced with real attachments
+        assertEquals(2, viewmodel.uiState.value.attachments.size)
+        assertEquals(2, viewmodel.uiState.value.attachments.count { it.status == AttachmentStatus.UPLOADED })
+        assertEquals(1L, viewmodel.uiState.value.attachments.first { it.attachment.id == 1L }.attachment.id)
+        assertEquals(2L, viewmodel.uiState.value.attachments.first { it.attachment.id == 2L }.attachment.id)
+    }
+
+    @Test
+    fun `WorkerId assigned to placeholders tracks uploads independently`() {
+        val viewmodel = getViewModel()
+        val uuid1 = UUID.randomUUID()
+        val uuid2 = UUID.randomUUID()
+
+        // Start both uploads
+        viewmodel.addUploadingAttachments(listOf("/storage/test1.pdf", "/storage/test2.pdf"))
+
+        // Assign workerIds
+        viewmodel.updateAttachments(uuid1, WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
+        viewmodel.updateAttachments(uuid2, WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
+
+        // Both should have workerIds assigned
+        assertEquals(2, viewmodel.uiState.value.attachments.size)
+        assertEquals(uuid1.toString(), viewmodel.uiState.value.attachments[0].workerId)
+        assertEquals(uuid2.toString(), viewmodel.uiState.value.attachments[1].workerId)
+
+        // Both attachments should be UPLOADING
+        assertEquals(AttachmentStatus.UPLOADING, viewmodel.uiState.value.attachments[0].status)
+        assertEquals(AttachmentStatus.UPLOADING, viewmodel.uiState.value.attachments[1].status)
     }
 
     @Test
@@ -896,6 +1191,138 @@ class InboxComposeViewModelTest {
 
         assertEquals(true, viewmodel.uiState.value.isSendIndividualEnabled)
         assertEquals(true, viewmodel.uiState.value.sendIndividual)
+    }
+
+    // endregion
+
+    // region Concluded Course Validation
+
+    @Test
+    fun `Send message fails when course is concluded`() = runTest {
+        val concludedCourse = Course(id = 1, name = "Concluded Course", workflowState = Course.WorkflowState.COMPLETED)
+
+        coEvery { inboxComposeRepository.getCourses(any()) } returns DataResult.Success(listOf(concludedCourse))
+        coEvery { inboxComposeRepository.getGroups(any()) } returns DataResult.Success(emptyList())
+        coEvery { context.getString(R.string.courseConcludedError) } returns "This course has concluded. You can no longer send messages."
+
+        val viewmodel = getViewModel()
+
+        val events = mutableListOf<InboxComposeViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewmodel.events.toList(events)
+        }
+
+        viewmodel.handleAction(ContextPickerActionHandler.ContextClicked(concludedCourse))
+        viewmodel.handleAction(InboxComposeActionHandler.AddRecipient(Recipient(stringId = "1")))
+        viewmodel.handleAction(InboxComposeActionHandler.SubjectChanged(TextFieldValue("Subject")))
+        viewmodel.handleAction(InboxComposeActionHandler.BodyChanged(TextFieldValue("Body")))
+        viewmodel.handleAction(InboxComposeActionHandler.SendClicked)
+
+        coVerify(exactly = 0) { inboxComposeRepository.createConversation(any(), any(), any(), any(), any(), any()) }
+        assertEquals(InboxComposeViewModelAction.ShowScreenResult("This course has concluded. You can no longer send messages."), events.last())
+    }
+
+    @Test
+    fun `Send message succeeds when course is active`() = runTest {
+        val activeCourse = Course(id = 1, name = "Active Course", workflowState = Course.WorkflowState.AVAILABLE)
+
+        coEvery { inboxComposeRepository.getCourses(any()) } returns DataResult.Success(listOf(activeCourse))
+        coEvery { inboxComposeRepository.getGroups(any()) } returns DataResult.Success(emptyList())
+        coEvery { inboxComposeRepository.createConversation(any(), any(), any(), any(), any(), any()) } returns DataResult.Success(mockk())
+
+        val viewmodel = getViewModel()
+
+        val events = mutableListOf<InboxComposeViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewmodel.events.toList(events)
+        }
+
+        viewmodel.handleAction(ContextPickerActionHandler.ContextClicked(activeCourse))
+        viewmodel.handleAction(InboxComposeActionHandler.AddRecipient(Recipient(stringId = "1")))
+        viewmodel.handleAction(InboxComposeActionHandler.SubjectChanged(TextFieldValue("Subject")))
+        viewmodel.handleAction(InboxComposeActionHandler.BodyChanged(TextFieldValue("Body")))
+        viewmodel.handleAction(InboxComposeActionHandler.SendClicked)
+
+        coVerify(exactly = 1) { inboxComposeRepository.createConversation(any(), any(), any(), any(), any(), any()) }
+        assertEquals(3, events.size)
+        assertEquals(InboxComposeViewModelAction.UpdateParentFragment, events[0])
+        assertEquals(InboxComposeViewModelAction.ShowScreenResult(context.getString(R.string.messageSentSuccessfully)), events[1])
+        assertEquals(InboxComposeViewModelAction.NavigateBack, events[2])
+    }
+
+    @Test
+    fun `Reply message fails when course is concluded`() = runTest {
+        val concludedCourse = Course(id = 1, name = "Concluded Course", workflowState = Course.WorkflowState.COMPLETED)
+        val conversation = Conversation(id = 2)
+        val messages = listOf(Message(id = 2), Message(id = 3))
+
+        coEvery { inboxComposeRepository.getCourses(any()) } returns DataResult.Success(listOf(concludedCourse))
+        coEvery { inboxComposeRepository.getGroups(any()) } returns DataResult.Success(emptyList())
+        coEvery { context.getString(R.string.courseConcludedError) } returns "This course has concluded. You can no longer send messages."
+
+        val savedStateHandle = mockk<SavedStateHandle>(relaxed = true)
+        coEvery { savedStateHandle.get<InboxComposeOptions>(InboxComposeOptions.COMPOSE_PARAMETERS) } returns InboxComposeOptions(
+            mode = InboxComposeOptionsMode.REPLY,
+            previousMessages = InboxComposeOptionsPreviousMessages(conversation, messages),
+            defaultValues = InboxComposeOptionsDefaultValues(
+                contextCode = concludedCourse.contextId,
+                contextName = concludedCourse.name
+            )
+        )
+
+        val viewmodelWithReply = InboxComposeViewModel(savedStateHandle, context, mockk(relaxed = true), inboxComposeRepository, attachmentDao, featureFlagProvider, inboxComposeBehavior)
+
+        val events = mutableListOf<InboxComposeViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewmodelWithReply.events.toList(events)
+        }
+
+        viewmodelWithReply.handleAction(ContextPickerActionHandler.ContextClicked(concludedCourse))
+        viewmodelWithReply.handleAction(InboxComposeActionHandler.AddRecipient(Recipient(stringId = "1")))
+        viewmodelWithReply.handleAction(InboxComposeActionHandler.BodyChanged(TextFieldValue("Reply Body")))
+        viewmodelWithReply.handleAction(InboxComposeActionHandler.SendClicked)
+
+        coVerify(exactly = 0) { inboxComposeRepository.addMessage(any(), any(), any(), any(), any(), any()) }
+        assertEquals(InboxComposeViewModelAction.ShowScreenResult("This course has concluded. You can no longer send messages."), events.last())
+    }
+
+    @Test
+    fun `Reply message succeeds when course is active`() = runTest {
+        val activeCourse = Course(id = 1, name = "Active Course", workflowState = Course.WorkflowState.AVAILABLE)
+        val conversation = Conversation(id = 2)
+        val messages = listOf(Message(id = 2), Message(id = 3))
+
+        coEvery { inboxComposeRepository.getCourses(any()) } returns DataResult.Success(listOf(activeCourse))
+        coEvery { inboxComposeRepository.getGroups(any()) } returns DataResult.Success(emptyList())
+        coEvery { inboxComposeRepository.addMessage(any(), any(), any(), any(), any(), any()) } returns DataResult.Success(mockk())
+
+        val savedStateHandle = mockk<SavedStateHandle>(relaxed = true)
+        coEvery { savedStateHandle.get<InboxComposeOptions>(InboxComposeOptions.COMPOSE_PARAMETERS) } returns InboxComposeOptions(
+            mode = InboxComposeOptionsMode.REPLY,
+            previousMessages = InboxComposeOptionsPreviousMessages(conversation, messages),
+            defaultValues = InboxComposeOptionsDefaultValues(
+                contextCode = activeCourse.contextId,
+                contextName = activeCourse.name
+            )
+        )
+
+        val viewmodelWithReply = InboxComposeViewModel(savedStateHandle, context, mockk(relaxed = true), inboxComposeRepository, attachmentDao, featureFlagProvider, inboxComposeBehavior)
+
+        val events = mutableListOf<InboxComposeViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewmodelWithReply.events.toList(events)
+        }
+
+        viewmodelWithReply.handleAction(ContextPickerActionHandler.ContextClicked(activeCourse))
+        viewmodelWithReply.handleAction(InboxComposeActionHandler.AddRecipient(Recipient(stringId = "1")))
+        viewmodelWithReply.handleAction(InboxComposeActionHandler.BodyChanged(TextFieldValue("Reply Body")))
+        viewmodelWithReply.handleAction(InboxComposeActionHandler.SendClicked)
+
+        coVerify(exactly = 1) { inboxComposeRepository.addMessage(any(), any(), any(), any(), any(), any()) }
+        assertEquals(3, events.size)
+        assertEquals(InboxComposeViewModelAction.UpdateParentFragment, events[0])
+        assertEquals(InboxComposeViewModelAction.ShowScreenResult(context.getString(R.string.messageSentSuccessfully)), events[1])
+        assertEquals(InboxComposeViewModelAction.NavigateBack, events[2])
     }
 
     // endregion

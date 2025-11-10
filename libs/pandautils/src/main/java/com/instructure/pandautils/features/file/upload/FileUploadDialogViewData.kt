@@ -42,6 +42,6 @@ sealed class FileUploadAction {
     object UploadStarted : FileUploadAction()
     data class ShowToast(val toast: String) : FileUploadAction()
     data class AttachmentSelectedAction(val event: Int, val attachment: FileSubmitObject?) : FileUploadAction()
-    data class UploadStartedAction(val id: UUID, val liveData: LiveData<WorkInfo>, val selectedUris: List<String>) : FileUploadAction()
+    data class UploadStartedAction(val id: UUID, val liveData: LiveData<WorkInfo?>, val selectedUris: List<String>) : FileUploadAction()
 }
 

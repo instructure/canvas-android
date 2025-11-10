@@ -7,7 +7,7 @@ pluginManagement {
             }
         }
         dependencies {
-            classpath("com.android.tools:r8:8.2.47")
+            classpath("com.android.tools:r8:8.13.6")
         }
     }
 }
@@ -29,7 +29,6 @@ include ':pandautils'
 include ':rceditor'
 include ':recyclerview'
 include ':pandares'
-include ':DocumentScanner'
 include ':horizon'
 
 project(':annotations').projectDir = new File(rootProject.projectDir, '/../libs/annotations')
@@ -43,5 +42,4 @@ project(':pandautils').projectDir = new File(rootProject.projectDir, '/../libs/p
 project(':rceditor').projectDir = new File(rootProject.projectDir, '/../libs/rceditor')
 project(':recyclerview').projectDir = new File(rootProject.projectDir, '/../libs/recyclerview')
 project(':pandares').projectDir = new File(rootProject.projectDir, '/../libs/pandares')
-project(':DocumentScanner').projectDir = new File(rootProject.projectDir, '/../libs/DocumentScanner')
 project(':horizon').projectDir = new File(rootProject.projectDir, '/../libs/horizon')

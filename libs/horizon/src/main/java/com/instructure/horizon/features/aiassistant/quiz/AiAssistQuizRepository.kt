@@ -16,8 +16,8 @@
  */
 package com.instructure.horizon.features.aiassistant.quiz
 
-import com.instructure.canvasapi2.managers.CedarApiManager
-import com.instructure.canvasapi2.managers.GeneratedQuiz
+import com.instructure.canvasapi2.managers.graphql.horizon.cedar.CedarApiManager
+import com.instructure.canvasapi2.managers.graphql.horizon.cedar.GeneratedQuiz
 import javax.inject.Inject
 
 class AiAssistQuizRepository @Inject constructor(

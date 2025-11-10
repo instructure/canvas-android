@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.fragment.SubmissionFields
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocSessionResponseBody
 import com.instructure.canvasapi2.type.SubmissionState
 import com.instructure.canvasapi2.type.SubmissionType
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandares.R
 import com.instructure.pandautils.features.grades.SubmissionStateLabel
@@ -68,6 +69,7 @@ class SpeedGraderContentViewModelTest {
     private val assignment = mockk<SubmissionFields.Assignment>(relaxed = true)
     private val resources = mockk<Resources>(relaxed = true)
     private val gradingEventHandler = SpeedGraderGradingEventHandler()
+    private val apiPrefs = mockk<ApiPrefs>(relaxed = true)
 
     @Before
     fun setup() {
@@ -107,7 +109,7 @@ class SpeedGraderContentViewModelTest {
     }
 
     private fun createViewModel() {
-        viewModel = SpeedGraderContentViewModel(savedStateHandle, repository, resources, selectedAttemptHolder, gradingEventHandler)
+        viewModel = SpeedGraderContentViewModel(savedStateHandle, apiPrefs, repository, resources, selectedAttemptHolder, gradingEventHandler)
     }
 
     @Test

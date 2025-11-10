@@ -29,6 +29,7 @@ import com.instructure.pandautils.features.assignments.details.AssignmentDetails
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRouter
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsSubmissionHandler
 import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.FileDownloader
 import com.instructure.parentapp.features.assignment.details.ParentAssignmentDetailsBehaviour
 import com.instructure.parentapp.features.assignment.details.ParentAssignmentDetailsColorProvider
 import com.instructure.parentapp.features.assignment.details.ParentAssignmentDetailsRepository
@@ -50,9 +51,10 @@ class AssignmentDetailsFragmentModule {
         navigation: Navigation,
         parentPrefs: ParentPrefs,
         apiPrefs: ApiPrefs,
-        analytics: Analytics
+        analytics: Analytics,
+        fileDownloader: FileDownloader
     ): AssignmentDetailsRouter {
-        return ParentAssignmentDetailsRouter(navigation, parentPrefs, apiPrefs, analytics)
+        return ParentAssignmentDetailsRouter(navigation, parentPrefs, apiPrefs, analytics, fileDownloader)
     }
 
     @Provides

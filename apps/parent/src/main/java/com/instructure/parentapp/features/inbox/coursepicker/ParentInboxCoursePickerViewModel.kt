@@ -66,11 +66,14 @@ class ParentInboxCoursePickerViewModel @Inject constructor(
                 return@launch
             }
 
-            val studentContextItems = enrollments.mapNotNull { enrollment ->
-                val course = courses.find { it.id == enrollment.courseId } ?: return@mapNotNull null
-                val user = enrollment.observedUser ?: return@mapNotNull null
-                StudentContextItem(course, user)
-            }
+            val studentContextItems = enrollments
+                .filter { it.enrollmentState in listOf("active", "invited", "creation_pending") }
+                .mapNotNull { enrollment ->
+                    val course = courses.find { it.id == enrollment.courseId } ?: return@mapNotNull null
+                    val user = enrollment.observedUser ?: return@mapNotNull null
+                    StudentContextItem(course, user)
+                }
+                .filter { !it.course.isPastEnrolment() }
 
             _uiState.update { it.copy(screenState = ScreenState.Content, studentContextItems = studentContextItems.distinct()) }
         }

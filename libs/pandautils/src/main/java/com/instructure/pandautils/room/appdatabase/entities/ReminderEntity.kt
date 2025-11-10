@@ -30,5 +30,6 @@ data class ReminderEntity(
     val htmlUrl: String,
     val name: String,
     val text: String,
-    val time: Long
+    val time: Long,
+    val tag: String? = null
 )

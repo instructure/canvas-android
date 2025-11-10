@@ -69,5 +69,9 @@ val appDatabaseMigrations = arrayOf(
 
     createMigration(11, 12) { database ->
         database.execSQL("CREATE TABLE IF NOT EXISTS FileDownloadProgressEntity (workerId TEXT NOT NULL, fileName TEXT NOT NULL, progress INTEGER NOT NULL, progressState TEXT NOT NULL, filePath TEXT NOT NULL, PRIMARY KEY(workerId))")
-    }
+    },
+
+    createMigration(12, 13) { database ->
+        database.execSQL("ALTER TABLE ReminderEntity ADD COLUMN tag TEXT")
+    },
 )

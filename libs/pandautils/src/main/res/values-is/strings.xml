@@ -499,4 +499,5 @@
         <item quantity="one">%d mín.</item>
         <item quantity="other">%d mín.</item>
     </plurals>
+    <string name="notATeacherDescription">Eitthvað af hinum öppunum okkar gæti hentað betur. Pikkaðu á tákn til að skrá þig inn þar.</string>
 </resources>

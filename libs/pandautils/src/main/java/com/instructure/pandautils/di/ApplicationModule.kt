@@ -36,6 +36,7 @@ import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.LocalFileDao
 import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.StorageUtils
@@ -82,9 +83,10 @@ class ApplicationModule {
     fun provideHtmlContentFormatter(
         @ApplicationContext context: Context,
         oAuthManager: OAuthManager,
-        firebaseCrashlytics: FirebaseCrashlytics
+        firebaseCrashlytics: FirebaseCrashlytics,
+        featureFlagProvider: FeatureFlagProvider
     ): HtmlContentFormatter {
-        return HtmlContentFormatter(context, firebaseCrashlytics, oAuthManager)
+        return HtmlContentFormatter(context, firebaseCrashlytics, oAuthManager, featureFlagProvider )
     }
 
     @Provides

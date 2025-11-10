@@ -132,4 +132,17 @@ class LtiLaunchRepositoryTest {
 
         assertEquals(url, result)
     }
+
+    @Test
+    fun `Get lti from authentication url uses contextId when courseId is 0`() = runTest {
+        val url = "https://www.instructure.com"
+        val ltiTool = LTITool(courseId = 0, contextId = 123, id = 2, assignmentId = 3)
+        val expected = LTITool()
+        coEvery { assignmentApi.getExternalToolLaunchUrl(123, ltiTool.id, ltiTool.assignmentId, any(), any()) } returns DataResult.Success(expected)
+
+        val result = repository.getLtiFromAuthenticationUrl(url, ltiTool)
+
+        coVerify { assignmentApi.getExternalToolLaunchUrl(123, ltiTool.id, ltiTool.assignmentId, any(), any()) }
+        assertEquals(expected, result)
+    }
 }

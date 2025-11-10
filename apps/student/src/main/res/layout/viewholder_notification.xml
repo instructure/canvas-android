@@ -41,15 +41,22 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/course"
+            style="@style/AdapterItemCourseNameText"
+            tools:text="Course Abc" />
+
+        <TextView
             android:id="@+id/title"
             style="@style/AdapterItemTitleText"
             android:textAlignment="viewStart"
             tools:text="Course Notification Title" />
 
         <TextView
-            android:id="@+id/course"
-            style="@style/AdapterItemCourseNameText"
-            tools:text="Course Abc" />
+            android:id="@+id/checkpointLabel"
+            style="@style/AdapterItemDescriptionText"
+            android:textAlignment="viewStart"
+            android:visibility="gone"
+            tools:text="Reply to topic" />
 
         <TextView
             android:id="@+id/description"

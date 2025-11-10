@@ -86,7 +86,8 @@ data class DiscussionTopicHeaderEntity(
     var lockAt: Date?,
     var userCanSeePosts: Boolean,
     var specificSections: String?,
-    var anonymousState: String?
+    var anonymousState: String?,
+    var replyRequiredCount: Int?
 ) {
     constructor(discussionTopicHeader: DiscussionTopicHeader, courseId: Long, permissionId: Long? = null) : this(
         discussionTopicHeader.id,
@@ -121,7 +122,8 @@ data class DiscussionTopicHeaderEntity(
         discussionTopicHeader.lockAt,
         discussionTopicHeader.userCanSeePosts,
         discussionTopicHeader.specificSections,
-        discussionTopicHeader.anonymousState
+        discussionTopicHeader.anonymousState,
+        discussionTopicHeader.replyRequiredCount
     )
 
     fun toApiModel(
@@ -170,5 +172,6 @@ data class DiscussionTopicHeaderEntity(
         //TODO
         sections = null,
         anonymousState = anonymousState,
+        replyRequiredCount = replyRequiredCount
     )
 }

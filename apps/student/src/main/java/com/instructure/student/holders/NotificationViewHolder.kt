@@ -28,6 +28,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.StreamItem
 import com.instructure.canvasapi2.utils.convertScoreToLetterGrade
 import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.orDefault
@@ -103,8 +104,29 @@ class NotificationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
                 icon.contentDescription = context.getString(R.string.announcementIcon)
             }
             StreamItem.Type.SUBMISSION -> {
-                drawableResId = R.drawable.ic_assignment
-                icon.contentDescription = context.getString(R.string.assignmentIcon)
+                val subAssignmentTag = item.assignment?.subAssignmentTag
+                val isCheckpointSubmission = !subAssignmentTag.isNullOrEmpty()
+
+                if (isCheckpointSubmission) {
+                    drawableResId = R.drawable.ic_discussion
+                    icon.contentDescription = context.getString(R.string.discussionIcon)
+
+                    checkpointLabel.text = when (subAssignmentTag) {
+                        Const.REPLY_TO_TOPIC -> {
+                            context.getString(R.string.reply_to_topic)
+                        }
+                        Const.REPLY_TO_ENTRY -> {
+                            val count = item.assignment?.discussionTopicHeader?.replyRequiredCount ?: 0
+                            context.getString(R.string.additional_replies, count)
+                        }
+                        else -> ""
+                    }
+                    checkpointLabel.setVisible()
+                } else {
+                    drawableResId = R.drawable.ic_assignment
+                    icon.contentDescription = context.getString(R.string.assignmentIcon)
+                    checkpointLabel.setGone()
+                }
 
                 val course = item.canvasContext as? Course
                 val restrictQuantitativeData = course?.settings?.restrictQuantitativeData.orDefault()

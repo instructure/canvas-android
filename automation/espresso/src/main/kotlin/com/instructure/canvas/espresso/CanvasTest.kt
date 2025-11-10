@@ -114,7 +114,8 @@ abstract class CanvasTest : InstructureTestingContract {
         }
 
         val application = originalActivity.application as? TestAppManager
-        application?.workerFactory = workerFactory
+        application?.workerFactory = this.workerFactory
+        application?.initWorkManager(application)
     }
 
     @Before
@@ -137,24 +138,24 @@ abstract class CanvasTest : InstructureTestingContract {
                 Log.d("TEST RETRY", "testMethod: $testMethod, error=$error, stacktrace=${error.stackTrace.joinToString("\n")} cause=${error.cause}")
             }
 
-            // Grab the Splunk-mobile token from Bitrise
-            val splunkToken = InstrumentationRegistry.getArguments().getString("SPLUNK_MOBILE_TOKEN")
+            // Grab the Observe-mobile token from Bitrise
+            val observeToken = InstrumentationRegistry.getArguments().getString("OBSERVE_MOBILE_TOKEN")
 
             // Only continue if we're on Bitrise
             // (More accurately, if we are on FTL launched from Bitrise.)
-            if(splunkToken != null && !splunkToken.isEmpty()) {
-                 val networkCapabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+            if(!observeToken.isNullOrEmpty()) {
+                val networkCapabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
                 val hasActiveNetwork = networkCapabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) ?: false
 
                 if (hasActiveNetwork) {
-                    reportToSplunk(disposition, testMethod, testClass, error, splunkToken)
+                    reportToObserve(disposition, testMethod, testClass, error, observeToken)
                 } else {
                     turnOnConnectionViaADB()
                     connectivityManager.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
                         override fun onAvailable(network: Network) {
                             super.onAvailable(network)
                             connectivityManager.unregisterNetworkCallback(this)
-                            reportToSplunk(disposition, testMethod, testClass, error, splunkToken)
+                            reportToObserve(disposition, testMethod, testClass, error, observeToken)
                         }
                     })
                 }
@@ -167,12 +168,12 @@ abstract class CanvasTest : InstructureTestingContract {
 
     }
 
-    private fun reportToSplunk(
+    private fun reportToObserve(
         disposition: String,
         testMethod: String,
         testClass: String,
         error: Throwable,
-        splunkToken: String?
+        observeToken: String?
     ) {
         val bitriseWorkflow =
             InstrumentationRegistry.getArguments().getString("BITRISE_TRIGGERED_WORKFLOW_ID")
@@ -185,21 +186,24 @@ abstract class CanvasTest : InstructureTestingContract {
         eventObject.put("workflow", bitriseWorkflow)
         eventObject.put("branch", bitriseBranch)
         eventObject.put("bitriseApp", bitriseApp)
+        eventObject.put("buildNumber", bitriseBuildNumber)
         eventObject.put("status", disposition)
         eventObject.put("testName", testMethod)
         eventObject.put("testClass", testClass)
         eventObject.put("stackTrace", error.stackTrace.take(15).joinToString(", "))
         eventObject.put("osVersion", Build.VERSION.SDK_INT.toString())
+        eventObject.put("sourcetype", "mobile-android-qa-testresult")
         // Limit our error message to 4096 chars; they can be unreasonably long (e.g., 137K!) when
         // they contain a view hierarchy, and there is typically not much useful info after the
         // first few lines.
         eventObject.put("message", error.toString().take(4096))
 
         val payloadObject = JSONObject()
-        payloadObject.put("sourcetype", "mobile-android-qa-testresult")
-        payloadObject.put("event", eventObject)
+
+        payloadObject.put("data", eventObject)
 
         val payload = payloadObject.toString()
+        val payloadBytes = payload.toByteArray(Charsets.UTF_8)
         Log.d("CanvasTest", "payload = $payload")
 
         // Can't run a curl command from FTL, so let's do this the hard way
@@ -210,11 +214,12 @@ abstract class CanvasTest : InstructureTestingContract {
         try {
 
             // Set up our url/connection
-            val url = URL("https://http-inputs-inst.splunkcloud.com:443/services/collector")
+            val url = URL("https://103443579803.collect.observeinc.com/v1/http")
             conn = url.openConnection() as HttpURLConnection
             conn.requestMethod = "POST"
-            conn.setRequestProperty("Authorization", "Splunk $splunkToken")
+            conn.setRequestProperty("Authorization", "Bearer $observeToken")
             conn.setRequestProperty("Content-Type", "application/json; utf-8")
+            conn.setRequestProperty("Content-Length", payloadBytes.size.toString())
             conn.setRequestProperty("Accept", "application/json")
             conn.setDoInput(true)
             conn.setDoOutput(true)
@@ -233,7 +238,7 @@ abstract class CanvasTest : InstructureTestingContract {
                 "Response code: ${conn.responseCode}, message: ${conn.responseMessage}"
             )
 
-            // Report the splunk result JSON
+            // Report the Observe result JSON
             inputStream = conn.inputStream
             val content = inputStream.bufferedReader().use(BufferedReader::readText)
             Log.d("CanvasTest", "Response: $content")
@@ -271,7 +276,7 @@ abstract class CanvasTest : InstructureTestingContract {
                 // Suppression (exclusion) rules
                 ?.setSuppressingResultMatcher(
                         anyOf(
-                            // Extra supressions that can be adde to individual tests
+                            // Extra suppressions that can be added to individual tests
                             extraAccessibilitySupressions,
                             // Suppress issues in PsPDFKit, date/time picker, calendar grid
                             isExcludedNamedView( listOf("pspdf", "_picker_", "timePicker", "calendar1")),
@@ -345,18 +350,18 @@ abstract class CanvasTest : InstructureTestingContract {
                             // Weeding out id == -1 will filter out a lot of lines from our logs
                             if(view.id != -1) {
                                 try {
-                                    var resourceName = view.context.resources.getResourceName(view.id)
+                                    val resourceName = view.context.resources.getResourceName(view.id)
                                     for (excludedName in excludes) {
                                         if (resourceName.contains(excludedName)) {
                                             //Log.v("AccessibilityExclude", "Caught $resourceName")
                                             return true
                                         }
                                     }
-                                } catch (e: Resources.NotFoundException) {
+                                } catch (_: Resources.NotFoundException) {
                                 }
                             }
 
-                            var parent = view.parent
+                            val parent = view.parent
                             when(parent) {
                                 is View -> view = parent
                                 else -> view = null
@@ -392,7 +397,7 @@ abstract class CanvasTest : InstructureTestingContract {
     // in action bars being to narrow.
     fun withOnlyWidthLessThan(dimInDp: Int) : BaseMatcher<AccessibilityViewCheckResult>
     {
-        var activity = activityRule.activity
+        val activity = activityRule.activity
         val densityDpi = activity.resources.displayMetrics.densityDpi
         val dim_f = dimInDp * (densityDpi.toDouble() / DisplayMetrics.DENSITY_DEFAULT.toDouble())
         val dim = dim_f.toInt()
@@ -431,7 +436,7 @@ abstract class CanvasTest : InstructureTestingContract {
                 when(item) {
                     is AccessibilityViewCheckResult -> {
                         val contentDescription = item.view?.contentDescription
-                        var result = (contentDescription?.contains("Overflow", ignoreCase = true) ?: false) || (contentDescription?.contains("More options", ignoreCase = true) ?: false)
+                        val result = (contentDescription?.contains("Overflow", ignoreCase = true) ?: false) || (contentDescription?.contains("More options", ignoreCase = true) ?: false)
                         //Log.v("overflowWidth", "isOverflowMenu: contentDescription=${item.view?.contentDescription ?: "unknown"}, result=$result ")
                         return result
                     }
@@ -473,7 +478,7 @@ abstract class CanvasTest : InstructureTestingContract {
                                       (v.width < 48 && v.width < v.minimumWidth) )
 
                         if(toss) {
-                            var resourceName = getResourceName(v)
+                            val resourceName = getResourceName(v)
                             Log.v("underMinSizeOnLowRes",
                                     "Tossing $resourceName, w=${v.width}, h=${v.height}, mw=${v.minimumWidth}, mh=${v.minimumHeight}")
                             return true
@@ -516,7 +521,7 @@ abstract class CanvasTest : InstructureTestingContract {
             inputStream.copyTo(outputStream)
         }
         finally {
-            if(inputStream != null) inputStream.close()
+            inputStream?.close()
             if(outputStream != null) {
                 outputStream.flush()
                 outputStream.close()

@@ -75,7 +75,7 @@ object CourseAPI {
         @get:GET("courses?include[]=term&include[]=syllabus_body&include[]=license&include[]=is_public&include[]=permissions&enrollment_state=active")
         val firstPageCoursesWithSyllabusWithActiveEnrollment: Call<List<Course>>
 
-        @get:GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&include[]=settings&state[]=completed&state[]=available&state[]=unpublished")
+        @get:GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&include[]=settings&state[]=completed&state[]=available&state[]=unpublished&include[]=tabs")
         val firstPageCoursesTeacher: Call<List<Course>>
 
         @GET("courses/{courseId}?include[]=term&include[]=permissions&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=course_image")
@@ -120,7 +120,7 @@ object CourseAPI {
         @GET("courses?state[]=completed&state[]=available&state[]=unpublished")
         fun getCoursesByEnrollmentType(@Query("enrollment_type") type: String): Call<List<Course>>
 
-        @GET("courses?state[]=completed&state[]=available")
+        @GET("courses?state[]=completed&state[]=available&include[]=term")
         suspend fun getCoursesByEnrollmentType(@Query("enrollment_type") type: String, @Tag params: RestParams): DataResult<List<Course>>
 
         // TODO: Set up pagination when API is fixed and remove per_page query parameterø
