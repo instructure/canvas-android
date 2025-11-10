@@ -55,6 +55,7 @@ import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -64,6 +65,7 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -85,6 +87,8 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ContextKeeper
@@ -132,13 +136,22 @@ fun ToDoListScreen(
     navigationIconClick: () -> Unit,
     openToDoItem: (String) -> Unit,
     onToDoCountChanged: (Int) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onFilterScreenVisibilityChanged: (isShowing: Boolean, closeCallback: () -> Unit) -> Unit = { _, _ -> }
 ) {
     val viewModel = hiltViewModel<ToDoListViewModel>()
     val uiState by viewModel.uiState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
-    var showFilterScreen by remember { mutableStateOf(false) }
+    var showFilterScreen by rememberSaveable { mutableStateOf(false) }
+
+    // Notify fragment when filter screen visibility changes
+    // Use SideEffect for synchronous state updates (runs after every successful composition)
+    SideEffect {
+        onFilterScreenVisibilityChanged(showFilterScreen) {
+            showFilterScreen = false
+        }
+    }
 
     LaunchedEffect(uiState.snackbarMessage) {
         uiState.snackbarMessage?.let { message ->
@@ -231,16 +244,23 @@ fun ToDoListScreen(
     }
 
     if (showFilterScreen) {
-        ToDoFilterScreen(
-            onFiltersChanged = { dateFiltersChanged ->
-                showFilterScreen = false
-                uiState.onFiltersChanged(dateFiltersChanged)
-            },
-            onDismiss = {
-                showFilterScreen = false
-            },
-            modifier = Modifier.fillMaxSize()
-        )
+        Dialog(
+            onDismissRequest = { showFilterScreen = false },
+            properties = DialogProperties(
+                usePlatformDefaultWidth = false
+            )
+        ) {
+            ToDoFilterScreen(
+                onFiltersChanged = { dateFiltersChanged ->
+                    showFilterScreen = false
+                    uiState.onFiltersChanged(dateFiltersChanged)
+                },
+                onDismiss = {
+                    showFilterScreen = false
+                },
+                modifier = Modifier.fillMaxSize()
+            )
+        }
     }
 }
 
