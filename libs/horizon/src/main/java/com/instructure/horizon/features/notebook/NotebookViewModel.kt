@@ -41,7 +41,6 @@ class NotebookViewModel @Inject constructor(
     private var objectTypeAndId: Pair<String, String>? = null
 
     private val _uiState = MutableStateFlow(NotebookUiState(
-        loadPreviousPage = ::getPreviousPage,
         loadNextPage = ::getNextPage,
         onFilterSelected = ::onFilterSelected,
         updateContent = ::updateContent
@@ -55,17 +54,21 @@ class NotebookViewModel @Inject constructor(
 
     private fun loadData(
         after: String? = null,
-        before: String? = null,
         courseId: Long? = this.courseId,
+        isLoadingMore: Boolean = false
     ) {
         viewModelScope.tryLaunch {
             _uiState.update {
-                it.copy(isLoading = true)
+                if (isLoadingMore) {
+                    it.copy(isLoadingMore = true)
+                } else {
+                    it.copy(isLoading = true)
+                }
             }
 
             val notesResponse = repository.getNotes(
                 after = after,
-                before = before,
+                before = null,
                 filterType = uiState.value.selectedFilter,
                 courseId = courseId,
                 objectTypeAndId = objectTypeAndId,
@@ -74,13 +77,13 @@ class NotebookViewModel @Inject constructor(
             cursorId = notesResponse.edges?.firstOrNull()?.cursor
             pageInfo = notesResponse.pageInfo
 
-            val notes = notesResponse.mapToNotes()
+            val newNotes = notesResponse.mapToNotes()
 
             _uiState.update {
                 it.copy(
                     isLoading = false,
-                    notes = notes,
-                    hasPreviousPage = notesResponse.pageInfo.hasPreviousPage,
+                    isLoadingMore = false,
+                    notes = if (isLoadingMore) it.notes + newNotes else newNotes,
                     hasNextPage = notesResponse.pageInfo.hasNextPage,
                 )
             }
@@ -88,8 +91,7 @@ class NotebookViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     isLoading = false,
-                    notes = emptyList(),
-                    hasPreviousPage = false,
+                    isLoadingMore = false,
                     hasNextPage = false,
                 )
             }
@@ -97,11 +99,9 @@ class NotebookViewModel @Inject constructor(
     }
 
     private fun getNextPage() {
-        loadData(after = pageInfo?.endCursor)
-    }
-
-    private fun getPreviousPage() {
-        loadData(before = pageInfo?.startCursor)
+        if (!uiState.value.isLoadingMore && uiState.value.hasNextPage) {
+            loadData(after = pageInfo?.endCursor, isLoadingMore = true)
+        }
     }
 
     private fun onFilterSelected(newFilter: NotebookType?) {

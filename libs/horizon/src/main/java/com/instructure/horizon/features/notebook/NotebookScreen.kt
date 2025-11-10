@@ -32,6 +32,8 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -63,9 +65,6 @@ import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.foundation.horizonShadow
 import com.instructure.horizon.horizonui.molecules.DropdownChip
 import com.instructure.horizon.horizonui.molecules.DropdownItem
-import com.instructure.horizon.horizonui.molecules.IconButton
-import com.instructure.horizon.horizonui.molecules.IconButtonColor
-import com.instructure.horizon.horizonui.molecules.IconButtonSize
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.pandautils.compose.modifiers.conditional
@@ -153,19 +152,31 @@ fun NotebookScreen(
                         }
                     }
 
-                    item {
-                        Column {
-                            HorizonSpace(SpaceSize.SPACE_24)
-
-                            NotesPager(
-                                canNavigateBack = state.hasPreviousPage,
-                                canNavigateForward = state.hasNextPage,
-                                isLoading = state.isLoading,
-                                onNavigateBack = state.loadPreviousPage,
-                                onNavigateForward = state.loadNextPage
-                            )
+                    if (state.isLoadingMore) {
+                        item {
+                            LoadingContent()
                         }
                     }
+                }
+            }
+
+            // Infinite scroll: Load more when scrolled near bottom
+            val shouldLoadMore = remember(state) {
+                derivedStateOf {
+                    val lastVisibleItem = scrollState.layoutInfo.visibleItemsInfo.lastOrNull()
+                    val totalItems = scrollState.layoutInfo.totalItemsCount
+                    lastVisibleItem != null &&
+                    lastVisibleItem.index >= totalItems - 1 &&
+                    state.hasNextPage &&
+                    !state.isLoadingMore &&
+                    !state.isLoading &&
+                    state.notes.isNotEmpty()
+                }
+            }
+
+            LaunchedEffect(shouldLoadMore.value) {
+                if (shouldLoadMore.value) {
+                    state.loadNextPage()
                 }
             }
         }
@@ -210,7 +221,8 @@ private fun FilterContent(
         )
     }
 
-    val selectedTypeItem = if (selectedFilter == null) allNotesItem else typeItems.find { it.value == selectedFilter }
+    val selectedTypeItem =
+        if (selectedFilter == null) allNotesItem else typeItems.find { it.value == selectedFilter }
 
     Column {
         Row(
@@ -336,40 +348,6 @@ private fun EmptyContent(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun NotesPager(
-    canNavigateBack: Boolean,
-    canNavigateForward: Boolean,
-    isLoading: Boolean,
-    onNavigateBack: () -> Unit,
-    onNavigateForward: () -> Unit,
-) {
-    if (canNavigateBack || canNavigateForward) {
-        Row(
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            IconButton(
-                iconRes = R.drawable.chevron_left,
-                color = IconButtonColor.Black,
-                size = IconButtonSize.SMALL,
-                onClick = onNavigateBack,
-                enabled = canNavigateBack && !isLoading
-            )
-
-            HorizonSpace(SpaceSize.SPACE_8)
-
-            IconButton(
-                iconRes = R.drawable.chevron_right,
-                color = IconButtonColor.Black,
-                size = IconButtonSize.SMALL,
-                onClick = onNavigateForward,
-                enabled = canNavigateForward && !isLoading
-            )
-        }
-    }
-}
-
-@Composable
 @Preview
 private fun NotebookScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
@@ -385,7 +363,11 @@ private fun NotebookScreenPreview() {
                 objectId = "456",
                 objectType = NoteObjectType.PAGE,
                 userText = "This is a note about an assignment.",
-                highlightedText = NoteHighlightedData("Important part of the assignment.", NoteHighlightedDataRange(0, 0, "", ""), NoteHighlightedDataTextPosition(0, 0)),
+                highlightedText = NoteHighlightedData(
+                    "Important part of the assignment.",
+                    NoteHighlightedDataRange(0, 0, "", ""),
+                    NoteHighlightedDataTextPosition(0, 0)
+                ),
                 updatedAt = Date(),
                 type = NotebookType.Important
             ),
@@ -395,7 +377,11 @@ private fun NotebookScreenPreview() {
                 objectId = "789",
                 objectType = NoteObjectType.PAGE,
                 userText = "This is a note about another assignment.",
-                highlightedText = NoteHighlightedData("Confusing part of the assignment.", NoteHighlightedDataRange(0, 0, "", ""), NoteHighlightedDataTextPosition(0, 0)),
+                highlightedText = NoteHighlightedData(
+                    "Confusing part of the assignment.",
+                    NoteHighlightedDataRange(0, 0, "", ""),
+                    NoteHighlightedDataTextPosition(0, 0)
+                ),
                 updatedAt = Date(),
                 type = NotebookType.Confusing
             )
