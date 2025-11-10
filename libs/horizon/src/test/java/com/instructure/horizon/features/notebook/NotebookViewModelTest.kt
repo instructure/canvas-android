@@ -161,41 +161,11 @@ class NotebookViewModelTest {
     fun `Test update course id reloads data`() = runTest {
         val viewModel = getViewModel()
 
-        viewModel.updateCourseId(123L)
-        viewModel.updateCourseId(1234L)
-        viewModel.updateCourseId(123L)
+        viewModel.updateFilters(123L)
+        viewModel.updateFilters(1234L)
+        viewModel.updateFilters(123L)
 
         coVerify(exactly = 2) { repository.getNotes(any(), any(), any(), any(), 123L, any(), any()) }
-    }
-
-    @Test
-    fun `Test update content with course id hides top bar`() = runTest {
-        val viewModel = getViewModel()
-
-        viewModel.uiState.value.updateContent(123L, null)
-
-        assertFalse(viewModel.uiState.value.showTopBar)
-        assertTrue(viewModel.uiState.value.showFilters)
-    }
-
-    @Test
-    fun `Test update content with object type hides filters`() = runTest {
-        val viewModel = getViewModel()
-
-        viewModel.uiState.value.updateContent(123L, Pair("Assignment", "456"))
-
-        assertFalse(viewModel.uiState.value.showTopBar)
-        assertFalse(viewModel.uiState.value.showFilters)
-    }
-
-    @Test
-    fun `Test update content without course id shows top bar and filters`() = runTest {
-        val viewModel = getViewModel()
-
-        viewModel.uiState.value.updateContent(null, null)
-
-        assertTrue(viewModel.uiState.value.showTopBar)
-        assertTrue(viewModel.uiState.value.showFilters)
     }
 
     private fun getViewModel(): NotebookViewModel {
