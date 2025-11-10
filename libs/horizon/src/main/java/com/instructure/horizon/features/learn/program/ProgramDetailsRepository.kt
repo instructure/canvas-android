@@ -15,10 +15,10 @@
  */
 package com.instructure.horizon.features.learn.program
 
-import com.instructure.canvasapi2.managers.CourseWithModuleItemDurations
-import com.instructure.canvasapi2.managers.HorizonGetCoursesManager
-import com.instructure.canvasapi2.managers.graphql.JourneyApiManager
-import com.instructure.canvasapi2.managers.graphql.Program
+import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithModuleItemDurations
+import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetProgramsManager
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
 import com.instructure.canvasapi2.utils.DataResult
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -26,11 +26,11 @@ import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 
 class ProgramDetailsRepository @Inject constructor(
-    private val journeyApiManager: JourneyApiManager,
+    private val getProgramsManager: GetProgramsManager,
     private val getCoursesManager: HorizonGetCoursesManager
 ) {
     suspend fun getProgramDetails(programId: String, forceNetwork: Boolean = false): Program {
-        val program = journeyApiManager.getPrograms(forceNetwork).find { it.id == programId }
+        val program = getProgramsManager.getPrograms(forceNetwork).find { it.id == programId }
             ?: throw IllegalArgumentException("Program with id $programId not found")
         return program
     }
@@ -42,6 +42,6 @@ class ProgramDetailsRepository @Inject constructor(
     }
 
     suspend fun enrollCourse(progressId: String): DataResult<Unit> {
-        return journeyApiManager.enrollCourse(progressId)
+        return getProgramsManager.enrollCourse(progressId)
     }
 }

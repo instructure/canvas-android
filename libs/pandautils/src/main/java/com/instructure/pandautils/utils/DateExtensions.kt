@@ -71,6 +71,14 @@ fun Date.isPreviousDay(date: Date?): Boolean {
     return calendar.time.isSameDay(this)
 }
 
+fun Date.isSameWeek(date: Date?): Boolean {
+    if (date == null) return false
+    val calendar = Calendar.getInstance()
+    calendar.time = date
+    calendar.add(Calendar.WEEK_OF_YEAR, -1)
+    return this.after(calendar.time)
+}
+
 fun Date.getLastSunday(): Date {
     val calendar = Calendar.getInstance()
     calendar.time = this

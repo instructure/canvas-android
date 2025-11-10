@@ -1,18 +1,24 @@
 package com.instructure.horizon.features.notification
 
+import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.platform.LoadingState
+import java.util.Date
 
 data class NotificationUiState(
     val screenState: LoadingState,
-    val allNotificationItems: List<NotificationItem> = emptyList(),
-    val pagedNotificationItems: List<List<NotificationItem>> = emptyList(),
-    val currentPageIndex: Int = 0,
-    val decreasePageIndex: () -> Unit = {},
-    val increasePageIndex: () -> Unit = {},
+    val notificationItems: List<NotificationItem> = emptyList(),
 )
 
 data class NotificationItem(
-    val categoryLabel: String,
+    val category: NotificationItemCategory,
+    val courseLabel: String?,
     val title: String,
-    val date: String,
+    val date: Date?,
+    val isRead: Boolean,
+    val deepLink: String,
+)
+
+data class NotificationItemCategory(
+    val label: String,
+    val color: StatusChipColor,
 )

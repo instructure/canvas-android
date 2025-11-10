@@ -29,7 +29,7 @@ import com.instructure.pandautils.room.studentdb.entities.daos.CreatePendingSubm
 import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionCommentFileDao
 
 @Database(
-    version = 5,
+    version = 6,
     entities = [
         CreateSubmissionEntity::class,
         CreatePendingSubmissionCommentEntity::class,

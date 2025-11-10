@@ -25,6 +25,7 @@ import com.instructure.dataseeding.model.DiscussionTopicEntryRequest
 import com.instructure.dataseeding.model.DiscussionTopicEntryResponse
 import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.Randomizer
+import com.instructure.dataseedingapi.type.DiscussionTopicContextType
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -70,6 +71,50 @@ object DiscussionTopicsApi {
                 .body()!!
     }
 
+    fun createDiscussionTopicWithCheckpoints(courseId: Long, token: String, discussionTitle: String, assignmentName: String) {
+        val apolloClient = CanvasNetworkAdapter.getApolloClient(token)
+
+        val dates = listOf(
+            com.instructure.dataseedingapi.type.DiscussionCheckpointDate(
+                type = com.instructure.dataseedingapi.type.DiscussionCheckpointDateType.everyone,
+            )
+        )
+
+        val checkpoints = listOf(
+            com.instructure.dataseedingapi.type.DiscussionCheckpoints(
+                checkpointLabel = com.instructure.dataseedingapi.type.CheckpointLabelType.reply_to_topic,
+                pointsPossible = 10.0,
+                dates = dates,
+                repliesRequired = com.apollographql.apollo.api.Optional.present(1)
+            ),
+            com.instructure.dataseedingapi.type.DiscussionCheckpoints(
+                checkpointLabel = com.instructure.dataseedingapi.type.CheckpointLabelType.reply_to_entry,
+                pointsPossible = 5.0,
+                dates = dates,
+                repliesRequired = com.apollographql.apollo.api.Optional.present(2)
+            )
+        )
+
+        val assignment = com.instructure.dataseedingapi.type.AssignmentCreate(
+            name = assignmentName,
+            courseId = courseId.toString(),
+            gradingType = com.apollographql.apollo.api.Optional.present(com.instructure.dataseedingapi.type.GradingType.points),
+            forCheckpoints = com.apollographql.apollo.api.Optional.present(true),
+        )
+
+        val mutation = com.instructure.dataseedingapi.CreateDiscussionTopicMinimalMutation(
+            contextId = courseId.toString(),
+            contextType = DiscussionTopicContextType.Course,
+            title = discussionTitle,
+            assignment = assignment,
+            checkpoints = checkpoints
+        )
+
+        kotlinx.coroutines.runBlocking {
+                apolloClient.mutation(mutation).execute()
+        }
+    }
+
     fun createAnnouncement(courseId: Long, token: String, lockedForUser: Boolean = false, locked: Boolean = false, announcementTitle: String? = null): DiscussionApiModel {
         val discussion = createDiscussion(courseId, token, true, lockedForUser, locked, announcementTitle)
 
@@ -93,4 +138,9 @@ object DiscussionTopicsApi {
             locked = true
         )
     }
+
+    data class CreateDiscussionTopicGraphQLRequest(
+        val query: String,
+        val variables: Map<String, Any>
+    )
 }

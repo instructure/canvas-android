@@ -16,6 +16,8 @@
  */
 package com.instructure.student.features.modules.list
 
+import com.instructure.canvasapi2.managers.graphql.ModuleItemCheckpoint
+import com.instructure.canvasapi2.managers.graphql.ModuleItemWithCheckpoints
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.ModuleItem
@@ -208,5 +210,67 @@ class ModuleListRepositoryTest {
         val result = repository.loadCourseSettings(1, true)
 
         Assert.assertFalse(result!!.restrictQuantitativeData)
+    }
+
+    @Test
+    fun `Get module item checkpoints from network when device is online`() = runTest {
+        val networkCheckpoints = listOf(
+            ModuleItemWithCheckpoints(
+                "1",
+                listOf(
+                    ModuleItemCheckpoint(null, "reply_to_topic", 5.0),
+                    ModuleItemCheckpoint(null, "reply_to_entry", 5.0)
+                )
+            )
+        )
+        coEvery { networkDataSource.getModuleItemCheckpoints(any(), any()) } returns networkCheckpoints
+        coEvery { networkStateProvider.isOnline() } returns true
+
+        val result = repository.getModuleItemCheckpoints("1", true)
+
+        Assert.assertEquals(1, result.size)
+        Assert.assertEquals("1", result[0].moduleItemId)
+        Assert.assertEquals(2, result[0].checkpoints.size)
+    }
+
+    @Test
+    fun `Get module item checkpoints from local when device is offline`() = runTest {
+        val localCheckpoints = listOf(
+            ModuleItemWithCheckpoints(
+                "2",
+                listOf(
+                    ModuleItemCheckpoint(null, "reply_to_topic", 10.0)
+                )
+            )
+        )
+        coEvery { localDataSource.getModuleItemCheckpoints(any(), any()) } returns localCheckpoints
+        coEvery { networkStateProvider.isOnline() } returns false
+
+        val result = repository.getModuleItemCheckpoints("2", true)
+
+        Assert.assertEquals(1, result.size)
+        Assert.assertEquals("2", result[0].moduleItemId)
+    }
+
+    @Test
+    fun `Checkpoints are sorted by tag with reply_to_topic first, reply_to_entry second, others last`() = runTest {
+        val unsortedCheckpoints = listOf(
+            ModuleItemWithCheckpoints(
+                "1",
+                listOf(
+                    ModuleItemCheckpoint(null, "reply_to_entry", 5.0),
+                    ModuleItemCheckpoint(null, "other", 5.0),
+                    ModuleItemCheckpoint(null, "reply_to_topic", 5.0)
+                )
+            )
+        )
+        coEvery { networkDataSource.getModuleItemCheckpoints(any(), any()) } returns unsortedCheckpoints
+        coEvery { networkStateProvider.isOnline() } returns true
+
+        val result = repository.getModuleItemCheckpoints("1", true)
+
+        Assert.assertEquals("reply_to_topic", result[0].checkpoints[0].tag)
+        Assert.assertEquals("reply_to_entry", result[0].checkpoints[1].tag)
+        Assert.assertEquals("other", result[0].checkpoints[2].tag)
     }
 }

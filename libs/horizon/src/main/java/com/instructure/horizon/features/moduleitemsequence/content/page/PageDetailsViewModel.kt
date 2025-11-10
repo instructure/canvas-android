@@ -18,7 +18,7 @@ package com.instructure.horizon.features.moduleitemsequence.content.page
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.instructure.canvasapi2.managers.NoteHighlightedData
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedData
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemContent
@@ -64,7 +64,7 @@ class PageDetailsViewModel @Inject constructor(
                 it.copy(loadingState = it.loadingState.copy(isLoading = true))
             }
             val pageDetails = pageDetailsRepository.getPageDetails(courseId, pageUrl)
-            val html = htmlContentFormatter.formatHtmlWithIframes(pageDetails.body.orEmpty())
+            val html = htmlContentFormatter.formatHtmlWithIframes(pageDetails.body.orEmpty(), courseId)
             val notes = try { // We don't want to fail the page load if fetching notes fails
                 pageDetailsRepository.getNotes(courseId, pageDetails.id)
             } catch (e: Exception) {

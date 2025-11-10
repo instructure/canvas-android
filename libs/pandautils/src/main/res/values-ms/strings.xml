@@ -500,4 +500,5 @@
         <item quantity="one">%d Minit</item>
         <item quantity="other">%d Minit</item>
     </plurals>
+    <string name="notATeacherDescription">Salah satu daripada aplikasi kami yang lain mungkin lebih sesuai. Ketik ikon untuk log masuk di sana.</string>
 </resources>

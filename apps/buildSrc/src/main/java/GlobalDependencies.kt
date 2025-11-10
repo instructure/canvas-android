@@ -8,7 +8,7 @@ object Versions {
 
     /* Build/tooling */
     const val ANDROID_GRADLE_TOOLS = "8.6.1"
-    const val BUILD_TOOLS = "34.0.0"
+    const val BUILD_TOOLS = "35.0.0"
 
     /* Testing */
     const val JUNIT = "4.13.2"
@@ -18,32 +18,34 @@ object Versions {
     /* Kotlin */
     const val KOTLIN = "2.0.21"
     const val KOTLIN_COROUTINES = "1.9.0"
+    const val KSP = "2.0.21-1.0.27"
 
     /* Google, Play Services */
-    const val GOOGLE_SERVICES = "4.4.2"
+    const val GOOGLE_SERVICES = "4.4.3"
 
     /* Others */
-    const val APOLLO = "4.1.1"
-    const val PSPDFKIT = "2024.3.1"
+    const val APOLLO = "4.3.3"
+    const val NUTRIENT = "10.7.0"
     const val PHOTO_VIEW = "2.3.0"
     const val MOBIUS = "1.2.1"
-    const val HILT = "2.52"
-    const val HILT_ANDROIDX = "1.2.0"
-    const val LIFECYCLE = "2.8.6"
-    const val FRAGMENT = "1.8.4"
-    const val WORK_MANAGER = "2.9.1"
-    const val GLIDE_VERSION = "4.16.0"
+    const val HILT = "2.57.2"
+    const val HILT_ANDROIDX = "1.3.0"
+    const val LIFECYCLE = "2.9.4"
+    const val FRAGMENT = "1.8.9"
+    const val WORK_MANAGER = "2.10.5"
+    const val GLIDE_VERSION = "5.0.5"
     const val RETROFIT = "2.11.0"
     const val OKHTTP = "4.12.0"
-    const val ROOM = "2.6.1"
-    const val HAMCREST = "2.2"
-    const val NAVIGATION = "2.8.3"
-    const val MEDIA3 = "1.6.1"
-    const val DATASTORE = "1.1.1"
-    const val LOTTIE = "6.5.2"
-    const val ENCRYPTED_SHARED_PREFERENCES = "1.0.0"
+    const val ROOM = "2.7.0"
+    const val HAMCREST = "3.0"
+    const val NAVIGATION = "2.9.5"
+    const val MEDIA3 = "1.8.0"
+    const val DATASTORE = "1.1.7"
+    const val LOTTIE = "6.6.6"
+    const val ENCRYPTED_SHARED_PREFERENCES = "1.1.0"
     const val JAVA_JWT = "4.5.0"
     const val GLANCE = "1.1.1"
+    const val LIVEDATA = "1.9.0"
 }
 
 object Libs {
@@ -63,27 +65,27 @@ object Libs {
     const val ANDROIDX_APPCOMPAT = "androidx.appcompat:appcompat:1.7.0"
     const val ANDROIDX_BROWSER = "androidx.browser:browser:1.8.0"
     const val ANDROIDX_CARDVIEW = "androidx.cardview:cardview:1.0.0"
-    const val ANDROIDX_CONSTRAINT_LAYOUT = "androidx.constraintlayout:constraintlayout:2.1.4"
+    const val ANDROIDX_CONSTRAINT_LAYOUT = "androidx.constraintlayout:constraintlayout:2.2.0"
     const val ANDROIDX_EXIF = "androidx.exifinterface:exifinterface:1.3.7"
     const val ANDROIDX_FRAGMENT = "androidx.fragment:fragment:${Versions.FRAGMENT}"
     const val ANDROIDX_FRAGMENT_KTX = "androidx.fragment:fragment-ktx:${Versions.FRAGMENT}"
     const val ANDROIDX_PALETTE = "androidx.palette:palette:1.0.0"
     const val ANDROIDX_PERCENT = "androidx.percentlayout:percentlayout:1.0.0"
-    const val ANDROIDX_RECYCLERVIEW = "androidx.recyclerview:recyclerview:1.3.2"
+    const val ANDROIDX_RECYCLERVIEW = "androidx.recyclerview:recyclerview:1.4.0"
     const val ANDROIDX_VECTOR = "androidx.vectordrawable:vectordrawable:1.2.0"
     const val ANDROIDX_SWIPE_REFRESH_LAYOUT = "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
     const val ANDROIDX_CORE_TESTING = "androidx.arch.core:core-testing:2.2.0"
     const val ANDROIDX_WORK_MANAGER = "androidx.work:work-runtime:${Versions.WORK_MANAGER}"
     const val ANDROIDX_WORK_MANAGER_KTX = "androidx.work:work-runtime-ktx:${Versions.WORK_MANAGER}"
-    const val ANDROIDX_WEBKIT = "androidx.webkit:webkit:1.9.0"
-    const val ANDROIDX_DATABINDING_COMPILER = "androidx.databinding:databinding-compiler:${Versions.ANDROID_GRADLE_TOOLS}" // This is bundled with the gradle plugin so we use the same version
-    const val ANDROIDX_COMPOSE_ACTIVITY = "androidx.activity:activity-compose:1.9.0"
+    const val ANDROIDX_WORK_TEST = "androidx.work:work-testing:${Versions.WORK_MANAGER}"
+    const val ANDROIDX_WEBKIT = "androidx.webkit:webkit:1.12.0"
+    const val ANDROIDX_COMPOSE_ACTIVITY = "androidx.activity:activity-compose:1.10.0"
     const val DATASTORE = "androidx.datastore:datastore-preferences:${Versions.DATASTORE}"
     const val ENCRYPTED_SHARED_PREFERENCES = "androidx.security:security-crypto:${Versions.ENCRYPTED_SHARED_PREFERENCES}"
     const val JAVA_JWT = "com.auth0:java-jwt:${Versions.JAVA_JWT}"
 
     /* Firebase */
-    const val FIREBASE_BOM = "com.google.firebase:firebase-bom:33.4.0"
+    const val FIREBASE_BOM = "com.google.firebase:firebase-bom:34.3.0"
     const val FIREBASE_CRASHLYTICS = "com.google.firebase:firebase-crashlytics"
     const val FIREBASE_MESSAGING = "com.google.firebase:firebase-messaging"
     const val FIREBASE_CONFIG = "com.google.firebase:firebase-config"
@@ -92,7 +94,7 @@ object Libs {
     /* Google Dependencies */
     const val PLAY_IN_APP_UPDATES = "com.google.android.play:app-update:2.1.0"
     const val FLEXBOX_LAYOUT = "com.google.android.flexbox:flexbox:3.0.0"
-    const val MATERIAL_DESIGN = "com.google.android.material:material:1.12.0"
+    const val MATERIAL_DESIGN = "com.google.android.material:material:1.13.0"
 
     /* Mobius */
     const val MOBIUS_CORE = "com.spotify.mobius:mobius-core:${Versions.MOBIUS}"
@@ -129,9 +131,8 @@ object Libs {
     const val LIFECYCLE_COMPILER = "androidx.lifecycle:lifecycle-compiler:${Versions.LIFECYCLE}"
     const val COMPOSE_VIEW_MODEL = "androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.LIFECYCLE}"
     const val COMPOSE_NAVIGATION = "androidx.navigation:navigation-compose:2.8.9"
-
     /* Media and content handling */
-    const val PSPDFKIT = "com.pspdfkit:pspdfkit:${Versions.PSPDFKIT}"
+    const val NUTRIENT = "io.nutrient:nutrient:${Versions.NUTRIENT}"
     const val MEDIA3 = "androidx.media3:media3-exoplayer:${Versions.MEDIA3}"
     const val MEDIA3_UI = "androidx.media3:media3-ui:${Versions.MEDIA3}"
     const val MEDIA3_HLS = "androidx.media3:media3-exoplayer-hls:${Versions.MEDIA3}"
@@ -169,7 +170,7 @@ object Libs {
     const val APACHE_COMMONS_TEXT = "org.apache.commons:commons-text:1.12.0"
     const val CAMERA_VIEW = "com.otaliastudios:cameraview:2.7.2"
 
-    const val PENDO = "sdk.pendo.io:pendoIO:3.6+"
+    const val PENDO = "sdk.pendo.io:pendoIO:3.7.+"
 
     const val ROOM = "androidx.room:room-runtime:${Versions.ROOM}"
     const val ROOM_COMPILER = "androidx.room:room-compiler:${Versions.ROOM}"
@@ -181,7 +182,7 @@ object Libs {
     const val RRULE = "org.scala-saddle:google-rfc-2445:20110304"
 
     // Compose
-    const val COMPOSE_BOM = "androidx.compose:compose-bom:2024.09.02"
+    const val COMPOSE_BOM = "androidx.compose:compose-bom:2025.09.01"
     const val COMPOSE_MATERIAL = "androidx.compose.material:material"
     const val COMPOSE_MATERIAL_ICONS = "androidx.compose.material:material-icons-core"
     const val COMPOSE_PREVIEW = "androidx.compose.ui:ui-tooling-preview"
@@ -189,11 +190,11 @@ object Libs {
     const val COMPOSE_UI = "androidx.compose.ui:ui-android"
     const val COMPOSE_UI_TEST = "androidx.compose.ui:ui-test-junit4"
     const val COMPOSE_UI_TEST_MANIFEST = "androidx.compose.ui:ui-test-manifest"
-    const val COMPOSE_MATERIAL_3 = "androidx.compose.material3:material3:1.4.0-alpha12"
+    const val COMPOSE_MATERIAL_3 = "androidx.compose.material3:material3:1.4.0"
     const val COMPOSE_ADAPTIVE = "androidx.compose.material3.adaptive:adaptive"
     const val COMPOSE_MATERIAL3_WINDOW_SIZE = "androidx.compose.material3:material3-window-size-class"
-    const val COMPOSE_NAVIGATION_HILT = "androidx.hilt:hilt-navigation-compose:1.2.0"
-    const val COMPOSE_FRAGMENT = "androidx.fragment:fragment-compose:1.8.6"
+    const val COMPOSE_NAVIGATION_HILT = "androidx.hilt:hilt-navigation-compose:1.3.0"
+    const val COMPOSE_FRAGMENT = "androidx.fragment:fragment-compose:1.8.9"
 
     // Glance
     const val GLANCE = "androidx.glance:glance:${Versions.GLANCE}"
@@ -218,4 +219,5 @@ object Plugins {
     const val GOOGLE_SERVICES = "com.google.gms:google-services:${Versions.GOOGLE_SERVICES}"
     const val JACOCO_ANDROID = "com.dicedmelon.gradle:jacoco-android:${Versions.JACOCO_ANDROID}"
     const val HILT = "com.google.dagger:hilt-android-gradle-plugin:${Versions.HILT}"
+    const val KSP = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:${Versions.KSP}"
 }

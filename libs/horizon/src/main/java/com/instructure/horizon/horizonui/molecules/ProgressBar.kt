@@ -105,6 +105,12 @@ sealed class ProgressBarStyle(
 
     data class WhiteBackground(val overrideProgressColor: Color = HorizonColors.Surface.pageSecondary()) :
         ProgressBarStyle(HorizonColors.Text.title(), overrideProgressColor, HorizonColors.Surface.pageSecondary())
+
+    data object Institution: ProgressBarStyle(
+        HorizonColors.Surface.institution(),
+        HorizonColors.Surface.institution(),
+        HorizonColors.Surface.institution().copy(alpha = 0.1f)
+    )
 }
 
 @Composable
@@ -115,7 +121,7 @@ fun ProgressBarSmall(
     style: ProgressBarStyle = ProgressBarStyle.Dark(),
     showLabels: Boolean = true
 ) {
-    Column {
+    Column(modifier) {
         if (showLabels) {
             Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = modifier.fillMaxWidth()) {
                 if (label != null) {
@@ -133,7 +139,7 @@ fun ProgressBarSmall(
             }
         }
         Box(
-            modifier
+            Modifier
                 .background(shape = HorizonCornerRadius.level1, color = style.backgroundColor)
                 .fillMaxWidth()
                 .height(8.dp)

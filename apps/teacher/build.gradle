@@ -16,7 +16,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
-apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-kapt'  // Keep kapt for Data Binding
+apply plugin: 'com.google.devtools.ksp'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'dagger.hilt.android.plugin'
 apply plugin: 'org.jetbrains.kotlin.plugin.compose'
@@ -32,13 +33,32 @@ android {
         exclude 'META-INF/rxjava.properties'
     }
 
+    packaging {
+        resources {
+            pickFirsts += [
+                'META-INF/INDEX.LIST',
+                'META-INF/io.netty.versions.properties'
+            ]
+            excludes += [
+                'META-INF/DEPENDENCIES',
+                'META-INF/LICENSE',
+                'META-INF/LICENSE.txt',
+                'META-INF/NOTICE',
+                'META-INF/NOTICE.txt',
+                'META-INF/maven/com.google.guava/guava/pom.properties',
+                'META-INF/maven/com.google.guava/guava/pom.xml',
+                'META-INF/rxjava.properties'
+            ]
+        }
+    }
+
     defaultConfig {
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 83
-        versionName = '2.1.0'
+        versionCode = 84
+        versionName = '2.2.0'
         vectorDrawables.useSupportLibrary = true
-        testInstrumentationRunner 'com.instructure.teacher.ui.espresso.TeacherHiltTestRunner'
+        testInstrumentationRunner 'com.instructure.teacher.espresso.TeacherHiltTestRunner'
         testInstrumentationRunnerArguments disableAnalytics: 'true'
 
         /* BuildConfig fields */
@@ -262,6 +282,9 @@ dependencies {
     implementation Libs.ANDROIDX_VECTOR
     implementation Libs.PLAY_IN_APP_UPDATES
 
+    /* Analytics */
+    implementation Libs.PENDO
+
     /* Firebase */
     implementation platform(Libs.FIREBASE_BOM) {
         exclude group: 'com.google.firebase', module: 'firebase-analytics'
@@ -271,36 +294,28 @@ dependencies {
         transitive = true
     }
 
+    implementation Libs.CAMERA_VIEW
+
     testImplementation Libs.ANDROIDX_CORE_TESTING
+
+    /* DI */
+    implementation Libs.HILT
+    ksp Libs.HILT_COMPILER
+    androidTestImplementation Libs.HILT_TESTING
+    kspAndroidTest Libs.HILT_TESTING_COMPILER
+    implementation Libs.HILT_ANDROIDX_WORK
+    ksp Libs.HILT_ANDROIDX_COMPILER
 
     /* AAC */
     implementation Libs.VIEW_MODEL
     implementation Libs.LIVE_DATA
     implementation Libs.VIEW_MODE_SAVED_STATE
     implementation Libs.ANDROIDX_FRAGMENT_KTX
-    kapt Libs.LIFECYCLE_COMPILER
+    kapt Libs.LIFECYCLE_COMPILER  // Keep kapt for lifecycle if it includes Data Binding
 
-    /* DI */
-    implementation Libs.HILT
-    kapt Libs.HILT_COMPILER
-    androidTestImplementation Libs.HILT_TESTING
-    kaptAndroidTestQa Libs.HILT_TESTING_COMPILER
-    implementation Libs.HILT_ANDROIDX_WORK
-    kapt Libs.HILT_ANDROIDX_COMPILER
-
-    androidTestImplementation Libs.UI_AUTOMATOR
-
-    /* WorkManager */
-    implementation Libs.ANDROIDX_WORK_MANAGER
-    implementation Libs.ANDROIDX_WORK_MANAGER_KTX
-
-    implementation Libs.PENDO
-
-    implementation Libs.CAMERA_VIEW
-
-    /* ROOM */
+    /* Room */
     implementation Libs.ROOM
-    kapt Libs.ROOM_COMPILER
+    ksp Libs.ROOM_COMPILER
     implementation Libs.ROOM_COROUTINES
 
     testImplementation Libs.HAMCREST

@@ -1,59 +1,30 @@
 /*
  * Copyright (C) 2025 - present Instructure, Inc.
  *
- *     Licensed under the Apache License, Version 2.0 (the "License");
- *     you may not use this file except in compliance with the License.
- *     You may obtain a copy of the License at
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, version 3 of the License.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
  *
- *     Unless required by applicable law or agreed to in writing, software
- *     distributed under the License is distributed on an "AS IS" BASIS,
- *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *     See the License for the specific language governing permissions and
- *     limitations under the License.
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 package com.instructure.horizon.features.dashboard
 
-import com.instructure.canvasapi2.apis.EnrollmentAPI
-import com.instructure.canvasapi2.apis.ModuleAPI
+import com.instructure.canvasapi2.apis.UnreadCountAPI
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.managers.DashboardContent
-import com.instructure.canvasapi2.managers.HorizonGetCoursesManager
-import com.instructure.canvasapi2.managers.graphql.JourneyApiManager
-import com.instructure.canvasapi2.managers.graphql.Program
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.ModuleObject
-import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.models.UnreadNotificationCount
 import javax.inject.Inject
 
 class DashboardRepository @Inject constructor(
-    private val horizonGetCoursesManager: HorizonGetCoursesManager,
-    private val moduleApi: ModuleAPI.ModuleInterface,
-    private val apiPrefs: ApiPrefs,
-    private val enrollmentApi: EnrollmentAPI.EnrollmentInterface,
-    private val journeyApiManager: JourneyApiManager,
+    private val unreadCountApi: UnreadCountAPI.UnreadCountsInterface,
 ) {
-    suspend fun getDashboardContent(forceNetwork: Boolean): DataResult<DashboardContent> {
-        return horizonGetCoursesManager.getDashboardContent(apiPrefs.user?.id ?: -1, forceNetwork)
-    }
-
-    suspend fun getFirstPageModulesWithItems(courseId: Long, forceNetwork: Boolean): DataResult<List<ModuleObject>> {
-        val params = RestParams(isForceReadFromNetwork = forceNetwork)
-        return moduleApi.getFirstPageModulesWithItems(
-            CanvasContext.Type.COURSE.apiString,
-            courseId,
-            params,
-            includes = listOf("estimated_durations")
-        )
-    }
-
-    suspend fun acceptInvite(courseId: Long, enrollmentId: Long) {
-        return enrollmentApi.acceptInvite(courseId, enrollmentId, RestParams()).dataOrThrow
-    }
-
-    suspend fun getPrograms(forceNetwork: Boolean = false): List<Program> {
-        return journeyApiManager.getPrograms(forceNetwork)
+    suspend fun getUnreadCounts(forceNetwork: Boolean): List<UnreadNotificationCount> {
+        return unreadCountApi.getNotificationsCount(RestParams(isForceReadFromNetwork = forceNetwork)).dataOrNull.orEmpty()
     }
 }

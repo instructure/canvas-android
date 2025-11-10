@@ -77,7 +77,7 @@ class HomeroomViewModelTest {
     fun setUp() {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
-        coEvery { htmlContentFormatter.formatHtmlWithIframes(any()) } returnsArgument 0
+        coEvery { htmlContentFormatter.formatHtmlWithIframes(any(), any()) } returnsArgument 0
 
         ContextKeeper.appContext = mockk(relaxed = true)
         every { courseManager.getDashboardCoursesAsync(any()) } returns mockk {

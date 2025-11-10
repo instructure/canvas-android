@@ -1042,6 +1042,10 @@
     <string name="downloadFailed">Wedi methu llwytho i lawr</string>
     <string name="downloadSuccessful">Wedi llwyddo i lwytho i lawr</string>
 
+    <string name="downloading">Llwytho i lawr</string>
+    <string name="downloadComplete">Wedi gorffen llwytho i lawr</string>
+    <string name="notificationChannelNameFileDownloadsName">Hysbysiadau llwytho i lawr</string>
+    <string name="notificationChannelNameFileDownloadsDescription">Hysbysiadau Canvas ar gyfer ffeiliau sy’n cael eu llwytho i lawr ar hyn o bryd.</string>
     <string name="full_due_date_details">Manylion llawn dyddiad erbyn</string>
     <string name="submissions">Cyflwyniadau</string>
     <string name="attachment">Atodiad</string>
@@ -2131,4 +2135,9 @@
     <string name="daysLateHint">Rhowch nifer y \'diwrnodau yn hwyr\'.</string>
     <string name="reply_to_topic">Ateb pwnc</string>
     <string name="additional_replies">Ymatebion ychwanegol (%d)</string>
+    <string name="reply_to_topic_due">Ymateb i’r pwnc erbyn</string>
+    <string name="additional_replies_due">Ymatebion ychwanegol (%d) erbyn</string>
+    <string name="a11y_discussion_checkpoints">Pwyntiau Gwirio Trafodaeth</string>
+    <string name="multipleDueDates">Mwy nag un dyddiad cau</string>
+    <string name="courseConcludedError">Cwrs wedi dod i ben. Methu anfon negeseuon!</string>
 </resources>

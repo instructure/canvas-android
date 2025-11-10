@@ -10,6 +10,8 @@ data class SingleSelectState(
     val enabled: Boolean = true,
     val isMenuOpen: Boolean = false,
     val errorText: String? = null,
+    val isSingleLineOptions: Boolean = false,
+    val isFullWidth: Boolean = false,
     val required: InputLabelRequired = InputLabelRequired.Regular,
     val size: SingleSelectInputSize,
     val options: List<String>,

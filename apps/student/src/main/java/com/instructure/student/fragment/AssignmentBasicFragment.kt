@@ -32,6 +32,7 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.OnBackStackChangedEvent
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
@@ -44,6 +45,7 @@ import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentAssignmentBasicBinding
 import com.instructure.student.router.RouteMatcher
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -51,9 +53,14 @@ import org.greenrobot.eventbus.ThreadMode
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import javax.inject.Inject
 
+@AndroidEntryPoint
 @ScreenView(SCREEN_VIEW_ASSIGNMENT_BASIC)
 class AssignmentBasicFragment : ParentFragment() {
+
+    @Inject
+    lateinit var featureFlagProvider: FeatureFlagProvider
 
     private val binding by viewBinding(FragmentAssignmentBasicBinding::bind)
 
@@ -150,11 +157,11 @@ class AssignmentBasicFragment : ParentFragment() {
             description = "<p>" + getString(R.string.noDescription) + "</p>"
         }
 
-        loadHtmlJob = assignmentWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), description, {
+        loadHtmlJob = assignmentWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), featureFlagProvider, description, {
             assignmentWebViewWrapper.loadHtml(it, assignment.name)
         }, {
             RouteMatcher.route(requireActivity(), LtiLaunchFragment.makeSessionlessLtiUrlRoute(requireActivity(), canvasContext, it))
-        })
+        }, courseId = canvasContext.id)
     }
 
     //endregion

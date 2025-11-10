@@ -17,11 +17,13 @@ package com.instructure.parentapp.features.assignment.details
 
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.RemoteFile
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRouter
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
+import com.instructure.pandautils.utils.FileDownloader
 import com.instructure.parentapp.R
 import com.instructure.parentapp.util.ParentPrefs
 import com.instructure.parentapp.util.navigation.Navigation
@@ -30,7 +32,8 @@ class ParentAssignmentDetailsRouter(
     private val navigation: Navigation,
     private val parentPrefs: ParentPrefs,
     private val apiPrefs: ApiPrefs,
-    private val analytics: Analytics
+    private val analytics: Analytics,
+    private val fileDownloader: FileDownloader
 ) : AssignmentDetailsRouter() {
     override fun navigateToSendMessage(activity: FragmentActivity, options: InboxComposeOptions) {
         val route = navigation.inboxComposeRoute(options)
@@ -44,13 +47,14 @@ class ParentAssignmentDetailsRouter(
         assignmentUrl: String?,
         isAssignmentEnhancementEnabled: Boolean,
         isObserver: Boolean,
-        initialSelectedSubmissionAttempt: Long?
+        initialSelectedSubmissionAttempt: Long?,
+        isQuiz: Boolean
     ) {
         assignmentUrl ?: return
         val parentId = apiPrefs.user?.id ?: return
         val currentStudentId = parentPrefs.currentStudent?.id ?: return
         val cookies = mapOf("k5_observed_user_for_$parentId" to "$currentStudentId")
-        val url = if (isAssignmentEnhancementEnabled) {
+        val url = if (isAssignmentEnhancementEnabled && !isQuiz) {
             assignmentUrl
         } else {
             "$assignmentUrl/submissions/$currentStudentId"
@@ -65,5 +69,13 @@ class ParentAssignmentDetailsRouter(
                 initialCookies = cookies
             )
         )
+    }
+
+    override fun navigateToDiscussionAttachmentScreen(
+        activity: FragmentActivity,
+        canvasContext: CanvasContext,
+        attachment: RemoteFile
+    ) {
+        fileDownloader.downloadFileToDevice(attachment.url, attachment.fileName, attachment.contentType)
     }
 }

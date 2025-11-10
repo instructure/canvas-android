@@ -44,7 +44,6 @@ import com.instructure.horizon.features.learn.program.components.ProgramProgress
 import com.instructure.horizon.features.learn.program.components.ProgramProgressState
 import com.instructure.horizon.features.learn.program.components.ProgramsProgressBar
 import com.instructure.horizon.features.learn.program.components.SequentialProgramProgressProperties
-import com.instructure.horizon.features.moduleitemsequence.SHOULD_REFRESH_DASHBOARD
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
@@ -63,15 +62,6 @@ fun ProgramDetailsScreen(uiState: ProgramDetailsUiState, mainNavController: NavH
         uiState.navigateToCourseId?.let { courseId ->
             onCourseSelected(courseId)
             uiState.onNavigateToCourse()
-        }
-    }
-
-    val homeEntry =
-        remember(mainNavController.currentBackStackEntry) { mainNavController.getBackStackEntry(MainNavigationRoute.Home.route) }
-    LaunchedEffect(uiState.shouldRefreshDashboard) {
-        if (uiState.shouldRefreshDashboard) {
-            homeEntry.savedStateHandle[SHOULD_REFRESH_DASHBOARD] = true
-            uiState.onDashboardRefreshed()
         }
     }
 

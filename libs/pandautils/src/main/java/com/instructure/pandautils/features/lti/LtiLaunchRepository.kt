@@ -30,7 +30,8 @@ class LtiLaunchRepository(
     suspend fun getLtiFromAuthenticationUrl(url: String, ltiTool: LTITool?): LTITool {
         val params = RestParams(isForceReadFromNetwork = true)
         return ltiTool?.let {
-            assignmentApi.getExternalToolLaunchUrl(ltiTool.courseId, ltiTool.id, ltiTool.assignmentId, restParams = params).dataOrNull
+            val courseId = if (ltiTool.courseId == 0L) ltiTool.contextId ?: 0L else ltiTool.courseId
+            assignmentApi.getExternalToolLaunchUrl(courseId, ltiTool.id, ltiTool.assignmentId, restParams = params).dataOrNull
         } ?: launchDefinitionsApi.getLtiFromAuthenticationUrl(url, RestParams(isForceReadFromNetwork = true)).dataOrThrow
     }
 

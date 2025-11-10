@@ -24,31 +24,27 @@ import com.instructure.canvasapi2.managers.CourseManager.createCourseMap
 import com.instructure.canvasapi2.managers.CourseManager.getCoursesWithGradingScheme
 import com.instructure.canvasapi2.managers.GroupManager.createGroupMap
 import com.instructure.canvasapi2.managers.GroupManager.getAllGroups
-import com.instructure.canvasapi2.managers.InboxManager.getConversation
 import com.instructure.canvasapi2.managers.StreamManager.getCourseStream
 import com.instructure.canvasapi2.managers.StreamManager.getUserStream
 import com.instructure.canvasapi2.managers.StreamManager.hideStreamItem
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.HiddenStreamItem
 import com.instructure.canvasapi2.models.StreamItem
 import com.instructure.canvasapi2.utils.APIHelper.hasNetworkConnection
-import com.instructure.canvasapi2.utils.ApiPrefs.user
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.pandarecycler.util.GroupSortedList.GroupComparatorCallback
 import com.instructure.pandarecycler.util.GroupSortedList.ItemComparatorCallback
 import com.instructure.pandarecycler.util.Types
-import com.instructure.student.R
 import com.instructure.student.holders.ExpandableViewHolder
 import com.instructure.student.holders.NotificationViewHolder
 import com.instructure.student.interfaces.NotificationAdapterToFragmentCallback
 import retrofit2.Call
 import retrofit2.Response
-import java.util.*
+import java.util.Date
 
 class NotificationListRecyclerAdapter(
     context: Context,
@@ -271,47 +267,10 @@ class NotificationListRecyclerAdapter(
         // Wait until all calls return;
         if (courseMap == null || groupMap == null || streamItems == null) return
         for (streamItem in streamItems!!) {
+            // Skip conversation type items from notification list.
+            if (streamItem.getStreamItemType() === StreamItem.Type.CONVERSATION) continue
+
             streamItem.setCanvasContextFromMap(courseMap!!, groupMap!!)
-
-            // Load conversations if needed
-            if (streamItem.getStreamItemType() === StreamItem.Type.CONVERSATION && user != null) {
-                getConversation(
-                    streamItem.conversationId,
-                    false,
-                    object : StatusCallback<Conversation>() {
-                        override fun onResponse(
-                            response: Response<Conversation>,
-                            linkHeaders: LinkHeaders,
-                            type: ApiType
-                        ) {
-                            // Need to make sure the user isn't null
-                            if (user != null) {
-                                streamItem.setConversation(
-                                    context,
-                                    response.body(),
-                                    user!!.id,
-                                    context.getString(R.string.monologue)
-                                )
-                                notifyDataSetChanged()
-                            }
-                        }
-
-                        override fun onFail(call: Call<Conversation>?, error: Throwable, response: Response<*>?) {
-                            // Show crouton if it's a network error
-                            if (!hasNetworkConnection()) {
-                                adapterToFragmentCallback.onShowErrorCrouton(R.string.noDataConnection)
-                            } else if (user != null) {
-                                val conversation = Conversation()
-                                conversation.isDeleted = true
-                                conversation.deletedString = context.getString(R.string.deleted)
-                                streamItem.setConversation(context, conversation, user!!.id, context.getString(R.string.monologue))
-                                notifyDataSetChanged()
-                            }
-                        }
-                    },
-                    false
-                )
-            }
 
             // Make sure there's something there
             if (streamItem.updatedDate == null) continue

@@ -33,6 +33,7 @@ object PlannerAPI {
             @Query("start_date") startDate: String?,
             @Query("end_date") endDate: String?,
             @Query(value = "context_codes[]", encoded = true) contextCodes: List<String>,
+            @Query("filter") filter: String? = null,
             @Tag restParams: RestParams
         ): DataResult<List<PlannerItem>>
 

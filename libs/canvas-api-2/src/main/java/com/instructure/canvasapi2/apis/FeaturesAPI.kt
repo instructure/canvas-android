@@ -21,6 +21,7 @@ package com.instructure.canvasapi2.apis
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.CanvasFeatureFlag
 import com.instructure.canvasapi2.models.EnvironmentSettings
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.DataResult
@@ -46,6 +47,9 @@ object FeaturesAPI {
 
         @GET("settings/environment")
         suspend fun getAccountSettingsFeatures(@Tag restParams: RestParams): DataResult<EnvironmentSettings>
+
+        @GET("courses/{courseId}/features/flags/rce_studio_embed_improvements")
+        suspend fun getStudioEmbedImprovementsFlag(@Path("courseId") courseId: Long, @Tag params: RestParams): DataResult<CanvasFeatureFlag.Flag>
     }
 
     fun getEnabledFeaturesForCourse(adapter: RestBuilder, courseId: Long, callback: StatusCallback<List<String>>, params: RestParams) {

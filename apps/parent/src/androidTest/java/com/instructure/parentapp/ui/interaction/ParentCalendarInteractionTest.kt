@@ -21,18 +21,18 @@ import com.google.android.apps.common.testing.accessibility.framework.Accessibil
 import com.google.android.apps.common.testing.accessibility.framework.checks.SpeakableTextPresentCheck
 import com.instructure.canvas.espresso.common.interaction.CalendarInteractionTest
 import com.instructure.canvas.espresso.common.pages.AssignmentDetailsPage
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.fakes.FakeCustomGradeStatusesManager
-import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.mockcanvas.MockCanvas
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeCustomGradeStatusesManager
+import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvasapi2.di.graphql.CustomGradeStatusModule
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.models.User
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.parentapp.BuildConfig
 import com.instructure.parentapp.features.login.LoginActivity
-import com.instructure.parentapp.ui.pages.DashboardPage
+import com.instructure.parentapp.ui.pages.classic.DashboardPage
 import com.instructure.parentapp.utils.ParentActivityTestRule
-import com.instructure.parentapp.utils.tokenLogin
+import com.instructure.parentapp.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
@@ -51,7 +51,7 @@ class ParentCalendarInteractionTest : CalendarInteractionTest() {
     override val activityRule = ParentActivityTestRule(LoginActivity::class.java)
 
     private val dashboardPage = DashboardPage()
-    private val assignmentDetailsPage = AssignmentDetailsPage(ModuleItemInteractions())
+    private val assignmentDetailsPage = AssignmentDetailsPage(ModuleItemInteractions(), composeTestRule)
 
     override fun goToCalendar(data: MockCanvas) {
         val parent = data.parents.first()

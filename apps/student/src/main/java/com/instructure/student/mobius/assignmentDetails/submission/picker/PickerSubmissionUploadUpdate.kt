@@ -26,7 +26,8 @@ class PickerSubmissionUploadUpdate :
         return if (model.mediaFileUri == null) {
             First.first(model)
         } else {
-            First.first(model.copy(isLoadingFile = true), setOf(PickerSubmissionUploadEffect.LoadFileContents(model.mediaFileUri, model.allowedExtensions)))
+            val source = model.mediaSource ?: "camera"
+            First.first(model.copy(isLoadingFile = true, mediaSource = source), setOf(PickerSubmissionUploadEffect.LoadFileContents(model.mediaFileUri, model.allowedExtensions)))
         }
     }
 
@@ -35,10 +36,9 @@ class PickerSubmissionUploadUpdate :
         event: PickerSubmissionUploadEvent
     ): Next<PickerSubmissionUploadModel, PickerSubmissionUploadEffect> = when (event) {
         PickerSubmissionUploadEvent.SubmitClicked -> Next.dispatch(setOf(PickerSubmissionUploadEffect.HandleSubmit(model)))
-        PickerSubmissionUploadEvent.CameraClicked -> Next.dispatch(setOf(PickerSubmissionUploadEffect.LaunchCamera))
-        PickerSubmissionUploadEvent.GalleryClicked -> Next.dispatch(setOf(PickerSubmissionUploadEffect.LaunchGallery))
-        PickerSubmissionUploadEvent.SelectFileClicked -> Next.dispatch(setOf(PickerSubmissionUploadEffect.LaunchSelectFile))
-        PickerSubmissionUploadEvent.DocumentScanningClicked -> Next.dispatch(setOf(PickerSubmissionUploadEffect.LaunchDocumentScanning))
+        PickerSubmissionUploadEvent.CameraClicked -> Next.next(model.copy(mediaSource = "camera"), setOf(PickerSubmissionUploadEffect.LaunchCamera))
+        PickerSubmissionUploadEvent.GalleryClicked -> Next.next(model.copy(mediaSource = "library"), setOf(PickerSubmissionUploadEffect.LaunchGallery))
+        PickerSubmissionUploadEvent.SelectFileClicked -> Next.next(model.copy(mediaSource = "files"), setOf(PickerSubmissionUploadEffect.LaunchSelectFile))
         is PickerSubmissionUploadEvent.OnFileSelected -> {
             Next.next(
                 model.copy(isLoadingFile = true),

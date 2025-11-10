@@ -1042,6 +1042,10 @@
     <string name="downloadFailed">Falha do download</string>
     <string name="downloadSuccessful">Download bem-sucedido</string>
 
+    <string name="downloading">Baixando</string>
+    <string name="downloadComplete">Download concluído</string>
+    <string name="notificationChannelNameFileDownloadsName">Baixar notificações</string>
+    <string name="notificationChannelNameFileDownloadsDescription">Notificações do Canvas para downloads em curso.</string>
     <string name="full_due_date_details">Detalhes completos do prazo de entrega</string>
     <string name="submissions">Envios</string>
     <string name="attachment">Anexo</string>
@@ -2131,4 +2135,9 @@
     <string name="daysLateHint">Escrever com dias de atraso</string>
     <string name="reply_to_topic">Responder ao tópico</string>
     <string name="additional_replies">Respostas adicionais (%d)</string>
+    <string name="reply_to_topic_due">Responder ao tópico devido</string>
+    <string name="additional_replies_due">Respostas adicionais (%d) devidas</string>
+    <string name="a11y_discussion_checkpoints">Checkpoints de discussão</string>
+    <string name="multipleDueDates">Várias datas de entrega</string>
+    <string name="courseConcludedError">Curso concluído. Não é possível enviar mensagens!</string>
 </resources>
