@@ -278,20 +278,27 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
 
     private fun setupWindowInsets() = with(binding) {
         ViewCompat.setOnApplyWindowInsetsListener(container) { view, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val navigationBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+            val displayCutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
+
+            // Apply both navigation bar and display cutout insets
+            // This ensures content is not hidden behind the navigation bar OR the hole punch camera
+            val leftPadding = maxOf(navigationBars.left, displayCutout.left)
+            val rightPadding = maxOf(navigationBars.right, displayCutout.right)
+
             view.setPadding(
-                systemBars.left,
+                leftPadding,
                 0,
-                systemBars.right,
+                rightPadding,
                 0
             )
             insets
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(bottomBar) { view, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val navigationBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
             view.updateLayoutParams<RelativeLayout.LayoutParams> {
-                bottomMargin = systemBars.bottom
+                bottomMargin = navigationBars.bottom
             }
             insets
         }

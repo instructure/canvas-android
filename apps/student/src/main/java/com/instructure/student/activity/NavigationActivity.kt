@@ -417,10 +417,17 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     private fun setupWindowInsets() = with(binding) {
         ViewCompat.setOnApplyWindowInsetsListener(fullscreen) { view, insets ->
             val navigationBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+            val displayCutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
+
+            // Apply both navigation bar and display cutout insets
+            // This ensures content is not hidden behind the navigation bar OR the hole punch camera
+            val leftPadding = maxOf(navigationBars.left, displayCutout.left)
+            val rightPadding = maxOf(navigationBars.right, displayCutout.right)
+
             view.setPadding(
-                navigationBars.left,
+                leftPadding,
                 0,
-                navigationBars.right,
+                rightPadding,
                 0
             )
             insets
