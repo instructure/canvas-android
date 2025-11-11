@@ -199,11 +199,13 @@ private fun ImageWithProgramChips(
         CourseImage(state.imageState, isLoading)
 
         Column(
+            verticalArrangement = Arrangement.spacedBy(4.dp),
             modifier = Modifier
                 .padding(24.dp)
         ) {
+            // Display only 3 programs at most
             state.parentPrograms?.take(3)?.forEach { program ->
-                ProgramChip(program)
+                ProgramChip(program, isLoading)
             }
         }
     }
@@ -446,7 +448,10 @@ private fun ModuleItemCard(
 }
 
 @Composable
-private fun ProgramChip(program: DashboardCourseCardParentProgramState) {
+private fun ProgramChip(
+    program: DashboardCourseCardParentProgramState,
+    isLoading: Boolean
+) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(2.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -457,6 +462,7 @@ private fun ProgramChip(program: DashboardCourseCardParentProgramState) {
             )
             .border(1.dp, HorizonColors.LineAndBorder.lineStroke(), HorizonCornerRadius.level1)
             .padding(horizontal = 12.dp, vertical = 2.dp)
+            .shimmerEffect(isLoading)
     ) {
         Text(
             stringResource(R.string.dashboardCourseCardProgramPrefix),
