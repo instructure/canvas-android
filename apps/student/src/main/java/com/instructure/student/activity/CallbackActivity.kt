@@ -236,8 +236,7 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
         }
     }
 
-    private suspend fun getToDoCount() {
-        // TODO Implement correct filtering in MBL-19401
+    protected suspend fun getToDoCount() {
         val todoFilters = toDoFilterDao.findByUser(
             apiPrefs.fullDomain,
             apiPrefs.user?.id.orDefault()

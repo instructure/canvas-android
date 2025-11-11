@@ -81,6 +81,8 @@ import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.analytics.OfflineAnalyticsManager
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.calendar.CalendarFragment
+import com.instructure.pandautils.features.calendar.CalendarSharedEvents
+import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
@@ -222,6 +224,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     @Inject
     lateinit var webViewAuthenticator: WebViewAuthenticator
+
+    @Inject
+    lateinit var calendarSharedEvents: CalendarSharedEvents
 
     private var routeJob: WeaveJob? = null
     private var debounceJob: Job? = null
@@ -405,6 +410,33 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         scheduleAlarms()
 
         WidgetUpdater.updateWidgets()
+
+        observeCalendarSharedEvents()
+    }
+
+    private fun observeCalendarSharedEvents() {
+        lifecycleScope.launch {
+            calendarSharedEvents.events.collect { action ->
+                when (action) {
+                    is SharedCalendarAction.RefreshToDoList -> {
+                        handleToDoListRefresh()
+                    }
+
+                    else -> {} // Ignore other actions
+                }
+            }
+        }
+    }
+
+    private fun handleToDoListRefresh() {
+        // Update To Do badge
+        lifecycleScope.launch {
+            tryWeave {
+                getToDoCount()
+            } catch {
+                firebaseCrashlytics.recordException(it)
+            }
+        }
     }
 
     private fun logOfflineEvents(isOnline: Boolean) {
