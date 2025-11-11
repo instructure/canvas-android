@@ -17,8 +17,6 @@
 package com.instructure.student.features.dashboard.widget.di
 
 import android.content.Context
-import com.instructure.student.features.dashboard.widget.WidgetRegistry
-import com.instructure.student.features.dashboard.widget.WidgetRegistryImpl
 import com.instructure.student.features.dashboard.widget.db.WidgetConfigDao
 import com.instructure.student.features.dashboard.widget.db.WidgetDatabase
 import com.instructure.student.features.dashboard.widget.db.WidgetMetadataDao
@@ -51,12 +49,6 @@ class WidgetModule {
     @Singleton
     fun provideWidgetMetadataDao(database: WidgetDatabase): WidgetMetadataDao {
         return database.widgetMetadataDao()
-    }
-
-    @Provides
-    @Singleton
-    fun provideWidgetRegistry(): WidgetRegistry {
-        return WidgetRegistryImpl()
     }
 
     @Provides
