@@ -102,29 +102,25 @@ Complete the following items before marking PR as ready:
 ### Example PR for Student App Only
 
 ```markdown
-## Test plan
+Test plan:
 1. Navigate to Dashboard
 2. Verify widgets are displayed correctly
 3. Test widget reordering
 
 refs: MBL-19453
 affects: Student
-
-## Release note
-Students can now customize their dashboard with widgets
+release note: Students can now customize their dashboard with widgets
 ```
 
 ### Example PR for Multiple Apps
 
 ```markdown
-## Test plan
+Test plan:
 1. Open any course
 2. Verify discussion loading
 3. Test comment threading
 
 refs: MBL-12345
 affects: Student, Teacher
-
-## Release note
-Improved discussion loading performance
+release note: Improved discussion loading performance
 ```
