@@ -139,6 +139,7 @@ fun DashboardWidgetCard(
                         ),
                         style = HorizonTypography.p2,
                         color = HorizonColors.Text.dataPoint(),
+                        modifier = Modifier.shimmerEffect(isLoading)
                     )
                 }
             }
