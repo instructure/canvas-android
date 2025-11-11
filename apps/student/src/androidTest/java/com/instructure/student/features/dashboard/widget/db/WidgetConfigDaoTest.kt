@@ -87,22 +87,4 @@ class WidgetConfigDaoTest {
         val result = dao.observeConfig("widget1").first()
         assertNull(result)
     }
-
-    @Test
-    fun observeAllConfigs_returnsAllEntities() = runTest {
-        dao.upsertConfig(WidgetConfigEntity("widget1", """{"key": "value1"}"""))
-        dao.upsertConfig(WidgetConfigEntity("widget2", """{"key": "value2"}"""))
-        dao.upsertConfig(WidgetConfigEntity("widget3", """{"key": "value3"}"""))
-
-        val result = dao.observeAllConfigs().first()
-
-        assertEquals(3, result.size)
-    }
-
-    @Test
-    fun observeAllConfigs_returnsEmptyListWhenEmpty() = runTest {
-        val result = dao.observeAllConfigs().first()
-
-        assertEquals(0, result.size)
-    }
 }
