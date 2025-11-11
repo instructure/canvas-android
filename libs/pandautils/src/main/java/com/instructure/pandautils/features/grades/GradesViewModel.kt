@@ -82,7 +82,6 @@ class GradesViewModel @Inject constructor(
     private var allItems = emptyList<AssignmentGroupUiState>()
 
     private val debouncedSearch = debounce<String>(
-        waitMs = 500L,
         coroutineScope = viewModelScope
     ) { query ->
         val filteredItems = filterItems(allItems, query)

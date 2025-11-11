@@ -336,7 +336,7 @@ private fun GradesScreenContent(
                 }
 
                 if (uiState.items.isEmpty()) {
-                    if (uiState.searchQuery.isNotEmpty() && uiState.searchQuery.length >= 3) {
+                    if (uiState.searchQuery.length >= 3) {
                         EmptySearchContent()
                     } else {
                         EmptyContent()
