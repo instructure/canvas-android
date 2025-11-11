@@ -105,7 +105,7 @@ fun ToDoFilterScreen(
 }
 
 @Composable
-private fun ToDoFilterContent(
+fun ToDoFilterContent(
     uiState: ToDoFilterUiState,
     modifier: Modifier = Modifier
 ) {
