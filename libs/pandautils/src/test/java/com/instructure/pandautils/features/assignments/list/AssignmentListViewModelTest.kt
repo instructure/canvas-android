@@ -655,7 +655,7 @@ class AssignmentListViewModelTest {
             DiscussionCheckpointUiState(
                 name = "Additional replies (3)",
                 dueDate = "No due date",
-                submissionStateLabel = SubmissionStateLabel.None,
+                submissionStateLabel = SubmissionStateLabel.NotSubmitted,
                 displayGrade = DisplayGrade(),
                 pointsPossible = 5
             )
