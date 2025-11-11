@@ -460,7 +460,7 @@ class GradesViewModelTest {
                                 DiscussionCheckpointUiState(
                                     name = "Additional replies (3)",
                                     dueDate = getFormattedDate(today.plusDays(2)),
-                                    submissionStateLabel = SubmissionStateLabel.None,
+                                    submissionStateLabel = SubmissionStateLabel.NotSubmitted,
                                     displayGrade = DisplayGrade(),
                                     pointsPossible = 5
                                 )
@@ -699,7 +699,7 @@ class GradesViewModelTest {
                                 DiscussionCheckpointUiState(
                                     name = "Additional replies (3)",
                                     dueDate = "No due date",
-                                    submissionStateLabel = SubmissionStateLabel.None,
+                                    submissionStateLabel = SubmissionStateLabel.NotSubmitted,
                                     displayGrade = DisplayGrade(),
                                     pointsPossible = 5
                                 )
