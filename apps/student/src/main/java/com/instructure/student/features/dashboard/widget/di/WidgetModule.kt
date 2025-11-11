@@ -17,6 +17,8 @@
 package com.instructure.student.features.dashboard.widget.di
 
 import android.content.Context
+import androidx.room.Room
+import androidx.room.RoomDatabase
 import com.instructure.student.features.dashboard.widget.db.WidgetConfigDao
 import com.instructure.student.features.dashboard.widget.db.WidgetDatabase
 import com.instructure.student.features.dashboard.widget.db.WidgetMetadataDao
@@ -36,7 +38,8 @@ class WidgetModule {
     @Provides
     @Singleton
     fun provideWidgetDatabase(@ApplicationContext context: Context): WidgetDatabase {
-        return WidgetDatabase.getInstance(context)
+        return Room.databaseBuilder(context, WidgetDatabase::class.java, "widget_database")
+            .build()
     }
 
     @Provides
