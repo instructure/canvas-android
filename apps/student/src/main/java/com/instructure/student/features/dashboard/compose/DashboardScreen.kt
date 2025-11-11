@@ -51,6 +51,7 @@ import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.student.R
 import com.instructure.student.activity.NavigationActivity
 import com.instructure.student.features.dashboard.widget.WidgetMetadata
+import com.instructure.student.features.dashboard.widget.welcome.WelcomeWidget
 import kotlinx.coroutines.flow.SharedFlow
 
 @Composable
@@ -165,20 +166,18 @@ private fun WidgetGrid(
         verticalItemSpacing = 16.dp
     ) {
         items(widgets) { metadata ->
-            val widgetComposable = getWidgetComposable(metadata.id, refreshSignal)
-            widgetComposable?.invoke()
+            GetWidgetComposable(metadata.id, refreshSignal)
         }
     }
 }
 
 @Composable
-private fun getWidgetComposable(
+private fun GetWidgetComposable(
     widgetId: String,
     refreshSignal: SharedFlow<Unit>
-): (@Composable () -> Unit)? {
+) {
     return when (widgetId) {
-        // Widget composables will be added here as they are implemented
-        // Example: "welcome" -> { WelcomeWidget(refreshSignal = refreshSignal) }
-        else -> null
+        "welcome" -> WelcomeWidget(refreshSignal = refreshSignal)
+        else -> {}
     }
 }
