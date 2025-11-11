@@ -246,7 +246,7 @@ class PlannerItemExtensionsTest {
     }
 
     @Test
-    fun `getDateTextForPlannerItem returns due date text for ASSIGNMENT with dueAt`() {
+    fun `getDateTextForPlannerItem returns formatted time for ASSIGNMENT with dueAt`() {
         val plannable = createPlannable(dueAt = TEST_DATE)
         val plannerItem = createPlannerItem(
             plannableType = PlannableType.ASSIGNMENT,
@@ -254,11 +254,10 @@ class PlannerItemExtensionsTest {
         )
 
         every { DateHelper.getFormattedTime(context, TEST_DATE) } returns "2:30 PM"
-        every { context.getString(R.string.widgetDueDate, "2:30 PM") } returns "Due: 2:30 PM"
 
         val result = plannerItem.getDateTextForPlannerItem(context)
 
-        assertEquals("Due: 2:30 PM", result)
+        assertEquals("2:30 PM", result)
     }
 
     @Test
@@ -609,7 +608,7 @@ class PlannerItemExtensionsTest {
     }
 
     @Test
-    fun `filterByToDoFilters filters out items with no matching course when favoriteCourses is true`() {
+    fun `filterByToDoFilters includes items with no matching course when favoriteCourses is true`() {
         val filters = createToDoFilterEntity(favoriteCourses = true)
         val courses = listOf(
             Course(id = 1L, isFavorite = true)
@@ -621,8 +620,10 @@ class PlannerItemExtensionsTest {
 
         val result = items.filterByToDoFilters(filters, courses)
 
-        assertEquals(1, result.size)
+        // Both items should be included: favorite course and item with no matching course
+        assertEquals(2, result.size)
         assertEquals(1L, result[0].courseId)
+        assertEquals(999L, result[1].courseId)
     }
 
     @Test
@@ -710,7 +711,7 @@ class PlannerItemExtensionsTest {
     }
 
     @Test
-    fun `filterByToDoFilters handles null courseId when filtering favorites`() {
+    fun `filterByToDoFilters includes null courseId items when filtering favorites`() {
         val filters = createToDoFilterEntity(favoriteCourses = true)
         val courses = listOf(Course(id = 1L, isFavorite = true))
         val items = listOf(
@@ -720,8 +721,10 @@ class PlannerItemExtensionsTest {
 
         val result = items.filterByToDoFilters(filters, courses)
 
-        assertEquals(1, result.size)
-        assertEquals(1L, result[0].courseId)
+        // Both items should be included: null courseId and favorite course
+        assertEquals(2, result.size)
+        assertEquals(null, result[0].courseId)
+        assertEquals(1L, result[1].courseId)
     }
 
     @Test

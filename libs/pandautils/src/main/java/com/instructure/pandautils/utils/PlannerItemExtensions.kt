@@ -68,8 +68,7 @@ fun PlannerItem.getDateTextForPlannerItem(context: Context): String? {
 
         else -> {
             plannable.dueAt?.let {
-                val timeText = DateHelper.getFormattedTime(context, it).orEmpty()
-                context.getString(R.string.widgetDueDate, timeText)
+                return DateHelper.getFormattedTime(context, it).orEmpty()
             }
         }
     }
@@ -141,7 +140,7 @@ fun List<PlannerItem>.filterByToDoFilters(
 
         if (filters.favoriteCourses) {
             val course = courses.find { it.id == item.courseId }
-            if (course == null || !course.isFavorite) {
+            if (course != null && !course.isFavorite) {
                 return@filter false
             }
         }
