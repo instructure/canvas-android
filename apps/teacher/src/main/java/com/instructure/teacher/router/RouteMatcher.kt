@@ -71,6 +71,7 @@ import com.instructure.pandautils.utils.LoaderUtils
 import com.instructure.pandautils.utils.RouteUtils
 import com.instructure.pandautils.utils.argsWithContext
 import com.instructure.pandautils.utils.nonNullArgs
+import com.instructure.pandautils.views.CanvasLoadingView
 import com.instructure.teacher.PSPDFKit.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.BottomSheetActivity
@@ -610,12 +611,12 @@ object RouteMatcher : BaseRouteMatcher() {
 
                 override fun onCreateLoader(id: Int, args: Bundle?): Loader<OpenMediaAsyncTaskLoader.LoadedMedia> {
                     if (!activity.isFinishing) {
-                        val view = android.view.LayoutInflater.from(activity).inflate(com.instructure.pandautils.R.layout.dialog_loading_view, null)
-                        val loadingView = view.findViewById<com.instructure.pandautils.views.CanvasLoadingView>(com.instructure.pandautils.R.id.canvasLoadingView)
-                        val teacherColor = androidx.core.content.ContextCompat.getColor(activity, com.instructure.pandares.R.color.login_teacherAppTheme)
+                        val view = android.view.LayoutInflater.from(activity).inflate(R.layout.dialog_loading_view, null)
+                        val loadingView = view.findViewById<CanvasLoadingView>(R.id.canvasLoadingView)
+                        val teacherColor = androidx.core.content.ContextCompat.getColor(activity, R.color.login_teacherAppTheme)
                         loadingView?.setOverrideColor(teacherColor)
 
-                        dialog = AlertDialog.Builder(activity, com.instructure.pandautils.R.style.CustomViewAlertDialog)
+                        dialog = AlertDialog.Builder(activity, R.style.CustomViewAlertDialog)
                             .setView(view)
                             .create()
                         dialog?.show()
