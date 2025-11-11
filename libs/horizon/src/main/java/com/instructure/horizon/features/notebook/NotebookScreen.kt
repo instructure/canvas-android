@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -45,6 +46,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
 import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedData
 import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedDataRange
 import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedDataTextPosition
@@ -65,9 +67,9 @@ import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.foundation.horizonShadow
 import com.instructure.horizon.horizonui.molecules.DropdownChip
 import com.instructure.horizon.horizonui.molecules.DropdownItem
+import com.instructure.horizon.horizonui.molecules.HorizonDivider
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.navigation.MainNavigationRoute
-import com.instructure.pandautils.compose.modifiers.conditional
 import com.instructure.pandautils.utils.localisedFormat
 import java.util.Date
 
@@ -85,45 +87,54 @@ fun NotebookScreen(
             if (state.showTopBar) {
                 NotebookAppBar(
                     navigateBack = { mainNavController.popBackStack() },
-                    modifier = Modifier.conditional(scrollState.canScrollBackward) {
-                        horizonShadow(
-                            elevation = HorizonElevation.level2,
-                        )
-                    }
+                    centeredTitle = true
                 )
             } else if (onDismiss != null) {
                 NotebookAppBar(
                     onClose = { onDismiss() },
-                    modifier = Modifier.conditional(scrollState.canScrollBackward) {
-                        horizonShadow(
-                            elevation = HorizonElevation.level2,
-                        )
-                    }
+                    containerColor = HorizonColors.Surface.pageSecondary()
                 )
             }
         },
     ) { padding ->
-        Box(
-            contentAlignment = Alignment.TopCenter,
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues = padding)
-                .clip(HorizonCornerRadius.level5)
-                .background(HorizonColors.Surface.pageSecondary())
         ) {
+            if ((state.showNoteTypeFilter || state.showCourseFilter) && state.notes.isNotEmpty()) {
+                Box {
+                    FilterContent(
+                        modifier = Modifier
+                            .clip(HorizonCornerRadius.level5)
+                            .background(HorizonColors.Surface.pageSecondary()),
+                        selectedFilter = state.selectedFilter,
+                        onFilterSelected = state.onFilterSelected,
+                        selectedCourse = state.selectedCourse,
+                        onCourseSelected = state.onCourseSelected,
+                        courses = state.courses,
+                        showNoteTypeFilter = state.showNoteTypeFilter,
+                        showCourseTypeFilter = state.showCourseFilter
+                    )
+                }
+                if (scrollState.canScrollBackward) {
+                    HorizonDivider()
+                }
+            }
+
             LazyColumn(
                 state = scrollState,
-                modifier = Modifier,
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 24.dp)
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .background(HorizonColors.Surface.pageSecondary()),
+                contentPadding = PaddingValues(
+                    start = 16.dp,
+                    end = 16.dp,
+                    top = 16.dp,
+                    bottom = 16.dp
+                )
             ) {
-                if (state.showFilters && state.notes.isNotEmpty()) {
-                    item {
-                        FilterContent(
-                            state.selectedFilter,
-                            state.onFilterSelected
-                        )
-                    }
-                }
 
                 if (state.isLoading) {
                     item {
@@ -166,11 +177,11 @@ fun NotebookScreen(
                     val lastVisibleItem = scrollState.layoutInfo.visibleItemsInfo.lastOrNull()
                     val totalItems = scrollState.layoutInfo.totalItemsCount
                     lastVisibleItem != null &&
-                    lastVisibleItem.index >= totalItems - 1 &&
-                    state.hasNextPage &&
-                    !state.isLoadingMore &&
-                    !state.isLoading &&
-                    state.notes.isNotEmpty()
+                            lastVisibleItem.index >= totalItems - 1 &&
+                            state.hasNextPage &&
+                            !state.isLoadingMore &&
+                            !state.isLoading &&
+                            state.notes.isNotEmpty()
                 }
             }
 
@@ -185,11 +196,18 @@ fun NotebookScreen(
 
 @Composable
 private fun FilterContent(
+    modifier: Modifier = Modifier,
     selectedFilter: NotebookType?,
     onFilterSelected: (NotebookType?) -> Unit,
+    selectedCourse: CourseWithProgress?,
+    onCourseSelected: (CourseWithProgress?) -> Unit,
+    courses: List<CourseWithProgress>,
+    showNoteTypeFilter: Boolean = true,
+    showCourseTypeFilter: Boolean = true,
 ) {
     val context = LocalContext.current
 
+    // Type filter items
     val allNotesItem = DropdownItem(
         value = null as NotebookType?,
         label = context.getString(R.string.notebookTypeAllNotes),
@@ -201,7 +219,6 @@ private fun FilterContent(
     val confusingBgColor = HorizonColors.PrimitivesRed.red12()
 
     val typeItems = remember {
-
         listOf(
             allNotesItem,
             DropdownItem(
@@ -221,34 +238,60 @@ private fun FilterContent(
         )
     }
 
+    // Course filter items
+    val allCoursesItem = DropdownItem(
+        value = null as CourseWithProgress?,
+        label = context.getString(R.string.notebookFilterCoursePlaceholder),
+        iconRes = null,
+        iconTint = null,
+        backgroundColor = HorizonColors.PrimitivesGrey.grey12()
+    )
+
+    val courseItems = remember(courses) {
+        listOf(allCoursesItem) + courses.map { course ->
+            DropdownItem(
+                value = course,
+                label = course.courseName,
+                iconRes = null,
+                iconTint = null
+            )
+        }
+    }
+
     val selectedTypeItem =
         if (selectedFilter == null) allNotesItem else typeItems.find { it.value == selectedFilter }
 
-    Column {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            /*FilterDropdownChip(
-                items = emptyList(),
-                selectedItem = null,
-                onItemSelected = { },
-                placeholder = stringResource(R.string.notebookFilterCoursePlaceholder),
-                modifier = Modifier.weight(1f)
-            )*/
+    val selectedCourseItem =
+        if (selectedCourse == null) allCoursesItem else courseItems.find { it.value == selectedCourse }
 
+
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        if (showCourseTypeFilter) {
             DropdownChip(
-                items = typeItems,
-                selectedItem = selectedTypeItem,
-                onItemSelected = { item -> onFilterSelected(item?.value) },
-                placeholder = stringResource(R.string.notebookFilterTypePlaceholder),
-                modifier = Modifier.weight(1f),
+                items = courseItems,
+                selectedItem = selectedCourseItem,
+                onItemSelected = { item -> onCourseSelected(item?.value) },
+                placeholder = stringResource(R.string.notebookFilterCoursePlaceholder),
                 dropdownWidth = 178.dp,
                 verticalPadding = 6.dp
             )
         }
 
-        HorizonSpace(SpaceSize.SPACE_16)
+        if (showNoteTypeFilter) {
+            DropdownChip(
+                items = typeItems,
+                selectedItem = selectedTypeItem,
+                onItemSelected = { item -> onFilterSelected(item?.value) },
+                placeholder = stringResource(R.string.notebookFilterTypePlaceholder),
+                dropdownWidth = 178.dp,
+                verticalPadding = 6.dp
+            )
+        }
     }
 }
 
@@ -353,7 +396,8 @@ private fun NotebookScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
     val state = NotebookUiState(
         isLoading = false,
-        showFilters = true,
+        showNoteTypeFilter = true,
+        showCourseFilter = true,
         showTopBar = true,
         selectedFilter = NotebookType.Important,
         notes = listOf(

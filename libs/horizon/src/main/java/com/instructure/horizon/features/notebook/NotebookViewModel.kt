@@ -18,6 +18,8 @@ package com.instructure.horizon.features.notebook
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.features.notebook.common.model.NotebookType
@@ -28,6 +30,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,13 +46,28 @@ class NotebookViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(NotebookUiState(
         loadNextPage = ::getNextPage,
         onFilterSelected = ::onFilterSelected,
+        onCourseSelected = ::onCourseSelected,
         updateContent = ::updateContent
     ))
     val uiState = _uiState.asStateFlow()
 
     init {
+        loadCourses()
         loadData()
         updateScreenState()
+    }
+
+    private fun loadCourses() {
+        viewModelScope.launch {
+            when (val result = repository.getCourses()) {
+                is DataResult.Success -> {
+                    _uiState.update { it.copy(courses = result.data) }
+                }
+                is DataResult.Fail -> {
+                    _uiState.update { it.copy(courses = emptyList()) }
+                }
+            }
+        }
     }
 
     private fun loadData(
@@ -111,6 +129,14 @@ class NotebookViewModel @Inject constructor(
         loadData()
     }
 
+    private fun onCourseSelected(course: CourseWithProgress?) {
+        _uiState.update { currentState ->
+            currentState.copy(selectedCourse = course)
+        }
+        courseId = course?.courseId
+        loadData(courseId = courseId)
+    }
+
     private fun updateContent(courseId: Long?, objectTypeAndId: Pair<String, String>?) {
         if (courseId != this.courseId || objectTypeAndId != this.objectTypeAndId) {
             this.courseId = courseId
@@ -132,12 +158,12 @@ class NotebookViewModel @Inject constructor(
         if (courseId != null) {
             _uiState.update { it.copy(showTopBar = false) }
             if (objectTypeAndId != null) {
-                _uiState.update { it.copy(showFilters = false) }
+                _uiState.update { it.copy(showNoteTypeFilter = false, showCourseFilter = false) }
             } else {
-                _uiState.update { it.copy(showFilters = true) }
+                _uiState.update { it.copy(showNoteTypeFilter = true, showCourseFilter = false) }
             }
         } else {
-            _uiState.update { it.copy(showTopBar = true, showFilters = true) }
+            _uiState.update { it.copy(showTopBar = true, showNoteTypeFilter = true, showCourseFilter = true) }
         }
     }
 }

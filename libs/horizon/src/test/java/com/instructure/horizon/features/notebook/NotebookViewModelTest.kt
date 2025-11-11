@@ -173,7 +173,7 @@ class NotebookViewModelTest {
         viewModel.uiState.value.updateContent(123L, null)
 
         assertFalse(viewModel.uiState.value.showTopBar)
-        assertTrue(viewModel.uiState.value.showFilters)
+        assertTrue(viewModel.uiState.value.showNoteTypeFilter)
     }
 
     @Test
@@ -183,7 +183,7 @@ class NotebookViewModelTest {
         viewModel.uiState.value.updateContent(123L, Pair("Assignment", "456"))
 
         assertFalse(viewModel.uiState.value.showTopBar)
-        assertFalse(viewModel.uiState.value.showFilters)
+        assertFalse(viewModel.uiState.value.showNoteTypeFilter)
     }
 
     @Test
@@ -193,7 +193,7 @@ class NotebookViewModelTest {
         viewModel.uiState.value.updateContent(null, null)
 
         assertTrue(viewModel.uiState.value.showTopBar)
-        assertTrue(viewModel.uiState.value.showFilters)
+        assertTrue(viewModel.uiState.value.showNoteTypeFilter)
     }
 
     private fun getViewModel(): NotebookViewModel {

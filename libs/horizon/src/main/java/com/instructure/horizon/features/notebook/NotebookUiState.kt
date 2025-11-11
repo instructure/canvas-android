@@ -16,6 +16,7 @@
  */
 package com.instructure.horizon.features.notebook
 
+import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
 import com.instructure.horizon.features.notebook.common.model.Note
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 
@@ -24,10 +25,14 @@ data class NotebookUiState(
     val isLoadingMore: Boolean = false,
     val selectedFilter: NotebookType? = null,
     val onFilterSelected: (NotebookType?) -> Unit = {},
+    val selectedCourse: CourseWithProgress? = null,
+    val onCourseSelected: (CourseWithProgress?) -> Unit = {},
+    val courses: List<CourseWithProgress> = emptyList(),
     val notes: List<Note> = emptyList(),
     val hasNextPage: Boolean = false,
     val loadNextPage: () -> Unit = {},
     val updateContent: (Long?, Pair<String, String>?) -> Unit,
     val showTopBar: Boolean = false,
-    val showFilters: Boolean = false,
+    val showNoteTypeFilter: Boolean = false,
+    val showCourseFilter: Boolean = false,
 )
