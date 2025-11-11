@@ -625,6 +625,9 @@ object RouteMatcher : BaseRouteMatcher() {
                 }
 
                 override fun onLoadFinished(loader: Loader<OpenMediaAsyncTaskLoader.LoadedMedia>, loadedMedia: OpenMediaAsyncTaskLoader.LoadedMedia) {
+                    if (dialog == null || dialog?.isShowing == false) {
+                        return // The user doesn't actually want to load the thing
+                    }
                     dialog?.dismiss()
                     try {
                         if (loadedMedia.isError) {
