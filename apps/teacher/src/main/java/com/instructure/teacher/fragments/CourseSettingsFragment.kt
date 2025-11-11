@@ -94,7 +94,7 @@ class CourseSettingsFragment : BasePresenterFragment<
         }
 
         editCourseHomepage.root.onClickWithRequireNetwork {
-            presenter.editCourseHomePageClicked()
+            presenter.editCourseHomePageClicked(course)
         }
     }
 
@@ -113,10 +113,23 @@ class CourseSettingsFragment : BasePresenterFragment<
         dialog.show(requireActivity().supportFragmentManager, EditCourseNameDialog::class.java.simpleName)
     }
 
-    override fun showEditCourseHomePageDialog() {
+    override fun showEditCourseHomePageDialog(hasFrontPage: Boolean) {
         val (keys, values) = mHomePages.toList().unzip()
         val selectedIdx = keys.indexOf(course.homePage?.apiString)
-        val dialog = RadioButtonDialog.getInstance(requireActivity().supportFragmentManager, getString(R.string.set_home_to), values as ArrayList<String>, selectedIdx) { idx ->
+
+        val disabledIndices = if (!hasFrontPage) {
+            listOf(keys.indexOf("wiki"))
+        } else {
+            emptyList()
+        }
+
+        val dialog = RadioButtonDialog.getInstance(
+            requireActivity().supportFragmentManager,
+            getString(R.string.set_home_to),
+            values as ArrayList<String>,
+            selectedIdx,
+            disabledIndices
+        ) { idx ->
             presenter.editCourseHomePage(keys[idx], course)
         }
 

@@ -18,7 +18,9 @@ package com.instructure.teacher.presenters
 
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.CourseManager
+import com.instructure.canvasapi2.managers.PageManager
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.teacher.events.CourseUpdatedEvent
@@ -75,7 +77,19 @@ class CourseSettingsFragmentPresenter : FragmentPresenter<CourseSettingsFragment
         viewCallback?.showEditCourseNameDialog()
     }
 
-    fun editCourseHomePageClicked() {
-        viewCallback?.showEditCourseHomePageDialog()
+    fun editCourseHomePageClicked(course: Course) {
+        PageManager.getFrontPage(course, true, mCheckFrontPageCallback)
+    }
+
+    private val mCheckFrontPageCallback = object : StatusCallback<Page>() {
+        override fun onResponse(response: Response<Page>, linkHeaders: LinkHeaders, type: ApiType) {
+            val hasFrontPage = response.isSuccessful && response.body() != null
+            viewCallback?.showEditCourseHomePageDialog(hasFrontPage)
+        }
+
+        override fun onFail(call: retrofit2.Call<Page>?, error: Throwable, response: Response<*>?) {
+            // If the API call fails (e.g., 404 means no front page), show dialog with disabled state
+            viewCallback?.showEditCourseHomePageDialog(false)
+        }
     }
 }

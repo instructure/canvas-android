@@ -56,6 +56,7 @@ class RadioButtonDialog : BaseCanvasAppCompatDialogFragment() {
     private var mOptions by SerializableListArg<String>(emptyList(), Const.OPTIONS)
     private var mCallback by BlindSerializableArg<OnRadioButtonSelected>()
     private var mTitle by StringArg(key = Const.TITLE)
+    private var mDisabledIndices by SerializableListArg<Int>(emptyList(), DISABLED_INDICES)
 
     private var currentSelectionIdx: Int = -1
 
@@ -91,6 +92,10 @@ class RadioButtonDialog : BaseCanvasAppCompatDialogFragment() {
             radioButton.text = option
             radioButton.setTextSize(TypedValue.COMPLEX_UNIT_PX, resources.getDimension(R.dimen.dialogRadioButtonTextSize))
             radioButton.id = index + 1
+
+            // Disable the radio button if it's in the disabled indices list
+            val isDisabled = mDisabledIndices.contains(index)
+            radioButton.isEnabled = !isDisabled
 
             radioGroup.addView(radioButton)
 
@@ -134,9 +139,17 @@ class RadioButtonDialog : BaseCanvasAppCompatDialogFragment() {
     }
 
     companion object {
+        private const val DISABLED_INDICES = "disabledIndices"
 
         fun getInstance(manager: FragmentManager, title: String, options: ArrayList<String>,
                         selectedIdx: Int,
+                        callback: OnRadioButtonSelected): RadioButtonDialog {
+            return getInstance(manager, title, options, selectedIdx, emptyList(), callback)
+        }
+
+        fun getInstance(manager: FragmentManager, title: String, options: ArrayList<String>,
+                        selectedIdx: Int,
+                        disabledIndices: List<Int>,
                         callback: OnRadioButtonSelected): RadioButtonDialog {
             manager.dismissExisting<RadioButtonDialog>()
             val dialog = RadioButtonDialog()
@@ -144,6 +157,7 @@ class RadioButtonDialog : BaseCanvasAppCompatDialogFragment() {
             args.putString(Const.TITLE, title)
             args.putStringArrayList(Const.OPTIONS, options)
             args.putInt(Const.SELECTED_ITEM, selectedIdx)
+            args.putIntegerArrayList(DISABLED_INDICES, ArrayList(disabledIndices))
             dialog.arguments = args
             dialog.mCallback = callback
             return dialog
