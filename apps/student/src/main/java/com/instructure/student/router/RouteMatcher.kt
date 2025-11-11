@@ -86,7 +86,7 @@ import com.instructure.pandautils.features.todolist.ToDoListFragment
 import com.instructure.student.fragment.AnnouncementListFragment
 import com.instructure.student.fragment.BasicQuizViewFragment
 import com.instructure.student.fragment.CourseSettingsFragment
-import com.instructure.student.fragment.DashboardFragment
+import com.instructure.student.fragment.OldDashboardFragment
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.fragment.OldToDoListFragment
@@ -122,7 +122,7 @@ object RouteMatcher : BaseRouteMatcher() {
     // Be sensitive to the order of items. It really, really matters.
     @androidx.annotation.OptIn(com.google.android.material.badge.ExperimentalBadgeUtils::class)
     private fun initRoutes() {
-        routes.add(Route("/", DashboardFragment::class.java))
+        routes.add(Route("/", OldDashboardFragment::class.java))
         // region Conversations
         routes.add(Route("/conversations", InboxFragment::class.java))
         routes.add(Route("/conversations/:${InboxDetailsFragment.CONVERSATION_ID}", InboxDetailsFragment::class.java))
@@ -132,7 +132,7 @@ object RouteMatcher : BaseRouteMatcher() {
         //////////////////////////
         // Courses
         //////////////////////////
-        routes.add(Route(courseOrGroup("/"), DashboardFragment::class.java))
+        routes.add(Route(courseOrGroup("/"), OldDashboardFragment::class.java))
         routes.add(
             Route(
                 courseOrGroup("/:${RouterParams.COURSE_ID}"),
