@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 - present Instructure, Inc.
+ * Copyright (C) 2025 - present Instructure, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,6 +20,7 @@ import com.instructure.student.features.dashboard.widget.WidgetConfig
 import com.instructure.student.features.dashboard.widget.db.WidgetConfigDao
 import com.instructure.student.features.dashboard.widget.db.WidgetConfigEntity
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 abstract class BaseWidgetConfigRepository<T : WidgetConfig>(
@@ -40,8 +41,7 @@ abstract class BaseWidgetConfigRepository<T : WidgetConfig>(
     }
 
     override suspend fun deleteConfig(widgetId: String) {
-        dao.observeConfig(widgetId).map { entity ->
-            entity?.let { dao.deleteConfig(it) }
-        }
+        val entity = dao.observeConfig(widgetId).first()
+        entity?.let { dao.deleteConfig(it) }
     }
 }

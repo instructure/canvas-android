@@ -21,6 +21,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.student.features.dashboard.widget.WidgetMetadata
+import com.instructure.student.features.dashboard.widget.usecase.EnsureDefaultWidgetsUseCase
+import com.instructure.student.features.dashboard.widget.usecase.ObserveWidgetMetadataUseCase
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
@@ -29,6 +34,7 @@ import junit.framework.Assert.assertFalse
 import junit.framework.Assert.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -49,6 +55,8 @@ class DashboardViewModelTest {
 
     private val testDispatcher = UnconfinedTestDispatcher()
     private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
+    private val ensureDefaultWidgetsUseCase: EnsureDefaultWidgetsUseCase = mockk(relaxed = true)
+    private val observeWidgetMetadataUseCase: ObserveWidgetMetadataUseCase = mockk(relaxed = true)
 
     private lateinit var viewModel: DashboardViewModel
 
@@ -58,8 +66,9 @@ class DashboardViewModelTest {
         Dispatchers.setMain(testDispatcher)
 
         every { networkStateProvider.isOnline() } returns true
+        coEvery { observeWidgetMetadataUseCase(Unit) } returns flowOf(emptyList())
 
-        viewModel = DashboardViewModel(networkStateProvider)
+        viewModel = DashboardViewModel(networkStateProvider, ensureDefaultWidgetsUseCase, observeWidgetMetadataUseCase)
     }
 
     @After
@@ -109,5 +118,53 @@ class DashboardViewModelTest {
 
         assertTrue(state.onRefresh != null)
         assertTrue(state.onRetry != null)
+    }
+
+    @Test
+    fun testEnsureDefaultWidgetsCalledOnInit() = runTest {
+        coVerify { ensureDefaultWidgetsUseCase(Unit) }
+    }
+
+    @Test
+    fun testWidgetsLoadedFromUseCase() = runTest {
+        val widgets = listOf(
+            WidgetMetadata("widget1", "Widget 1", 0, true),
+            WidgetMetadata("widget2", "Widget 2", 1, true)
+        )
+        coEvery { observeWidgetMetadataUseCase(Unit) } returns flowOf(widgets)
+
+        viewModel = DashboardViewModel(networkStateProvider, ensureDefaultWidgetsUseCase, observeWidgetMetadataUseCase)
+
+        val state = viewModel.uiState.value
+        assertEquals(2, state.widgets.size)
+        assertEquals("widget1", state.widgets[0].id)
+        assertEquals("widget2", state.widgets[1].id)
+    }
+
+    @Test
+    fun testOnlyVisibleWidgetsShown() = runTest {
+        val widgets = listOf(
+            WidgetMetadata("widget1", "Widget 1", 0, true),
+            WidgetMetadata("widget2", "Widget 2", 1, false),
+            WidgetMetadata("widget3", "Widget 3", 2, true)
+        )
+        coEvery { observeWidgetMetadataUseCase(Unit) } returns flowOf(widgets)
+
+        viewModel = DashboardViewModel(networkStateProvider, ensureDefaultWidgetsUseCase, observeWidgetMetadataUseCase)
+
+        val state = viewModel.uiState.value
+        assertEquals(2, state.widgets.size)
+        assertEquals("widget1", state.widgets[0].id)
+        assertEquals("widget3", state.widgets[1].id)
+    }
+
+    @Test
+    fun testEmptyWidgetsList() = runTest {
+        coEvery { observeWidgetMetadataUseCase(Unit) } returns flowOf(emptyList())
+
+        viewModel = DashboardViewModel(networkStateProvider, ensureDefaultWidgetsUseCase, observeWidgetMetadataUseCase)
+
+        val state = viewModel.uiState.value
+        assertEquals(0, state.widgets.size)
     }
 }
