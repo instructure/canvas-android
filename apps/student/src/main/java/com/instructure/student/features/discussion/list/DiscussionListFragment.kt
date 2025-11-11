@@ -52,6 +52,8 @@ import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.addSearch
+import com.instructure.pandautils.utils.applyBottomAndRightSystemBarMargin
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.closeSearch
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.isTablet
@@ -183,6 +185,7 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
             })
 
             createNewDiscussion.apply {
+                applyBottomAndRightSystemBarMargin()
                 setGone()
                 backgroundTintList = ViewStyler.makeColorStateListForButton()
                 setImageDrawable(ColorUtils.colorIt(ThemePrefs.buttonTextColor, drawable))
@@ -246,6 +249,7 @@ open class DiscussionListFragment : ParentFragment(), Bookmarkable {
     override fun applyTheme() {
         with(binding) {
             setupToolbarMenu(discussionListToolbar)
+            discussionListToolbar.applyTopSystemBarInsets()
             discussionListToolbar.title = title()
             discussionListToolbar.setupAsBackButton(this@DiscussionListFragment)
             val searchHint =

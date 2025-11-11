@@ -338,9 +338,6 @@ dependencies {
     implementation Libs.GLANCE_APPWIDGET_PREVIEW
 }
 
-// Comment out this line if the reporting logic starts going wonky.
-gradle.addListener new TimingsListener(project)
-
 apply plugin: 'com.google.gms.google-services'
 
 if (coverageEnabled) {

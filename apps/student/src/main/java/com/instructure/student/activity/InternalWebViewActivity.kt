@@ -24,7 +24,9 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.CanvasContext.Companion.emptyCourseContext
 import com.instructure.pandautils.activities.BaseActionBarActivity
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.EdgeToEdgeHelper
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
@@ -35,7 +37,9 @@ import com.instructure.student.fragment.InternalWebviewFragment.Companion.newIns
 class InternalWebViewActivity : BaseActionBarActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        EdgeToEdgeHelper.enableEdgeToEdge(this)
         toolbar?.let { ViewStyler.themeToolbarLight(this, it) }
+        toolbar?.applyTopSystemBarInsets()
         if (savedInstanceState == null) {
             val bundle = intent.getBundleExtra(Const.EXTRAS)
             bundle?.getString(Const.ACTION_BAR_TITLE)?.let { toolbar?.title = it }

@@ -117,6 +117,7 @@ class SimpleWebViewFragment : BaseCanvasFragment(), NavigationCallbacks {
     }
 
     private fun applyTheme() = with(binding) {
+        webView.setPadding(0, 0, 0, 0)
         toolbar.applyTopSystemBarInsets()
         toolbar.title = title.orEmpty()
         toolbar.setupAsBackButton(this@SimpleWebViewFragment)

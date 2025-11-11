@@ -15,10 +15,15 @@
  */
 package com.instructure.pandautils.features.todolist
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -39,24 +44,36 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Snackbar
+import androidx.compose.material.SnackbarDuration
+import androidx.compose.material.SnackbarHost
+import androidx.compose.material.SnackbarHostState
+import androidx.compose.material.SnackbarResult
 import androidx.compose.material.Text
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -67,11 +84,13 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasDivider
+import com.instructure.pandautils.compose.composables.CanvasScaffold
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
@@ -79,11 +98,18 @@ import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.modifiers.conditional
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.courseOrUserColor
+import com.instructure.pandautils.utils.performGestureHapticFeedback
+import com.instructure.pandautils.utils.performToggleHapticFeedback
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import kotlin.math.abs
 import kotlin.math.roundToInt
+
+private const val SWIPE_THRESHOLD_DP = 150
 
 private data class StickyHeaderState(
     val item: ToDoItemUiState?,
@@ -102,17 +128,56 @@ private data class DateBadgeData(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ToDoListScreen(
-    uiState: ToDoListUiState,
-    actionHandler: (ToDoListActionHandler) -> Unit,
-    modifier: Modifier = Modifier,
-    navigationIconClick: () -> Unit = {}
+    navigationIconClick: () -> Unit,
+    openToDoItem: (String) -> Unit,
+    onToDoCountChanged: (Int) -> Unit,
+    modifier: Modifier = Modifier
 ) {
+    val viewModel = hiltViewModel<ToDoListViewModel>()
+    val uiState by viewModel.uiState.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
+
+    LaunchedEffect(uiState.snackbarMessage) {
+        uiState.snackbarMessage?.let { message ->
+            snackbarHostState.showSnackbar(message)
+            uiState.onSnackbarDismissed()
+        }
+    }
+
+    LaunchedEffect(uiState.confirmationSnackbarData) {
+        uiState.confirmationSnackbarData?.let { item ->
+            val messageRes = if (item.markedAsDone) {
+                R.string.todoMarkedAsDone
+            } else {
+                R.string.todoMarkedAsNotDone
+            }
+            val message = context.getString(messageRes, item.title)
+            val result = snackbarHostState.showSnackbar(
+                message = message,
+                actionLabel = context.getString(R.string.todoMarkedAsDoneSnackbarUndo),
+                duration = SnackbarDuration.Long
+            )
+            if (result == SnackbarResult.ActionPerformed) {
+                uiState.onUndoMarkAsDoneUndoneAction()
+            } else {
+                uiState.onMarkedAsDoneSnackbarDismissed()
+            }
+        }
+    }
+
+    LaunchedEffect(uiState.toDoCount) {
+        uiState.toDoCount?.let { count ->
+            onToDoCountChanged(count)
+        }
+    }
+
     val pullRefreshState = rememberPullRefreshState(
         refreshing = uiState.isRefreshing,
-        onRefresh = { actionHandler(ToDoListActionHandler.Refresh) }
+        onRefresh = uiState.onRefresh
     )
 
-    Scaffold(
+    CanvasScaffold(
         backgroundColor = colorResource(R.color.backgroundLightest),
         topBar = {
             CanvasThemedAppBar(
@@ -121,7 +186,7 @@ fun ToDoListScreen(
                 navIconContentDescription = stringResource(id = R.string.navigation_drawer_open),
                 navigationActionClick = navigationIconClick,
                 actions = {
-                    IconButton(onClick = { actionHandler(ToDoListActionHandler.FilterClicked) }) {
+                    IconButton(onClick = { /* TODO: Implement filter - will be implemented in future story */ }) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_filter_outline),
                             contentDescription = stringResource(id = R.string.a11y_contentDescriptionToDoFilter)
@@ -129,6 +194,14 @@ fun ToDoListScreen(
                     }
                 }
             )
+        },
+        snackbarHost = {
+            SnackbarHost(snackbarHostState) { data ->
+                Snackbar(
+                    snackbarData = data,
+                    actionColor = Color(ThemePrefs.textButtonColor)
+                )
+            }
         },
         modifier = modifier
     ) { padding ->
@@ -138,35 +211,10 @@ fun ToDoListScreen(
                 .padding(padding)
                 .pullRefresh(pullRefreshState)
         ) {
-            when {
-                uiState.isLoading -> {
-                    Loading(modifier = Modifier.align(Alignment.Center))
-                }
-
-                uiState.isError -> {
-                    ErrorContent(
-                        errorMessage = stringResource(id = R.string.errorLoadingToDos),
-                        retryClick = { actionHandler(ToDoListActionHandler.Refresh) },
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
-
-                uiState.itemsByDate.isEmpty() -> {
-                    EmptyContent(
-                        emptyTitle = stringResource(id = R.string.noToDosForNow),
-                        emptyMessage = stringResource(id = R.string.noToDosForNowSubtext),
-                        imageRes = R.drawable.ic_no_events,
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
-
-                else -> {
-                    ToDoListContent(
-                        itemsByDate = uiState.itemsByDate,
-                        actionHandler = actionHandler
-                    )
-                }
-            }
+            ToDoListContent(
+                uiState = uiState,
+                onOpenToDoItem = openToDoItem
+            )
 
             PullRefreshIndicator(
                 refreshing = uiState.isRefreshing,
@@ -181,8 +229,46 @@ fun ToDoListScreen(
 
 @Composable
 private fun ToDoListContent(
+    uiState: ToDoListUiState,
+    onOpenToDoItem: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    when {
+        uiState.isLoading -> {
+            Loading(modifier = modifier.fillMaxSize())
+        }
+
+        uiState.isError -> {
+            ErrorContent(
+                errorMessage = stringResource(id = R.string.errorLoadingToDos),
+                retryClick = uiState.onRefresh,
+                modifier = modifier.fillMaxSize()
+            )
+        }
+
+        uiState.itemsByDate.isEmpty() -> {
+            EmptyContent(
+                emptyTitle = stringResource(id = R.string.noToDosForNow),
+                emptyMessage = stringResource(id = R.string.noToDosForNowSubtext),
+                imageRes = R.drawable.ic_no_events,
+                modifier = modifier.fillMaxSize()
+            )
+        }
+
+        else -> {
+            ToDoItemsList(
+                itemsByDate = uiState.itemsByDate,
+                onItemClicked = onOpenToDoItem,
+                modifier = modifier
+            )
+        }
+    }
+}
+
+@Composable
+private fun ToDoItemsList(
     itemsByDate: Map<Date, List<ToDoItemUiState>>,
-    actionHandler: (ToDoListActionHandler) -> Unit,
+    onItemClicked: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val dateGroups = itemsByDate.entries.toList()
@@ -234,8 +320,8 @@ private fun ToDoListContent(
                             item = item,
                             showDateBadge = index == 0,
                             hideDate = index == 0 && stickyHeaderState.isVisible && stickyHeaderState.item?.id == item.id,
-                            onCheckedChange = { actionHandler(ToDoListActionHandler.ToggleItemChecked(item.id)) },
-                            onClick = { actionHandler(ToDoListActionHandler.ItemClicked(item.id)) },
+                            onCheckedChange = { item.onCheckboxToggle(!item.isChecked) },
+                            onClick = { onItemClicked(item.id) },
                             modifier = Modifier.onGloballyPositioned { coordinates ->
                                 itemPositions[item.id] = coordinates.positionInParent().y
                                 itemSizes[item.id] = coordinates.size.height
@@ -311,11 +397,186 @@ private fun ToDoItem(
     modifier: Modifier = Modifier,
     hideDate: Boolean = false
 ) {
+    val coroutineScope = rememberCoroutineScope()
+    val animatedOffsetX = remember { Animatable(0f) }
+    var itemWidth by remember { mutableFloatStateOf(0f) }
+    val density = LocalDensity.current
+    val view = LocalView.current
+
+    val swipeThreshold = with(density) { SWIPE_THRESHOLD_DP.dp.toPx() }
+
+    fun animateToCenter() {
+        coroutineScope.launch {
+            animatedOffsetX.animateTo(
+                targetValue = 0f,
+                animationSpec = tween(durationMillis = 300)
+            )
+        }
+    }
+
+    fun handleSwipeEnd() {
+        coroutineScope.launch {
+            val currentOffset = animatedOffsetX.value
+            val absOffset = abs(currentOffset)
+            if (absOffset >= swipeThreshold) {
+                val targetOffset = if (currentOffset > 0) itemWidth else -itemWidth
+                animatedOffsetX.animateTo(
+                    targetValue = targetOffset,
+                    animationSpec = tween(durationMillis = 200)
+                )
+
+                // Gesture end haptic feedback
+                view.performGestureHapticFeedback(isStart = false)
+                delay(300)
+                animateToCenter()
+                item.onSwipeToDone()
+            } else {
+                animateToCenter()
+            }
+        }
+    }
+
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .onGloballyPositioned { coordinates ->
+                itemWidth = coordinates.size.width.toFloat()
+            }
+            .pointerInput(Unit) {
+                detectHorizontalDragGestures(
+                    onDragStart = {
+                        // Gesture start haptic feedback when user begins dragging
+                        view.performGestureHapticFeedback(isStart = true)
+                    },
+                    onDragEnd = { handleSwipeEnd() },
+                    onDragCancel = {
+                        animateToCenter()
+                    },
+                    onHorizontalDrag = { _, dragAmount ->
+                        coroutineScope.launch {
+                            val newOffset = (animatedOffsetX.value + dragAmount).coerceIn(-itemWidth, itemWidth)
+                            animatedOffsetX.snapTo(newOffset)
+                        }
+                    }
+                )
+            }
+    ) {
+        SwipeBackground(
+            isChecked = item.isChecked,
+            offsetX = animatedOffsetX.value
+        )
+
+        ToDoItemContent(
+            item = item,
+            showDateBadge = showDateBadge,
+            hideDate = hideDate,
+            onCheckedChange = onCheckedChange,
+            onClick = onClick,
+            modifier = Modifier.offset { IntOffset(animatedOffsetX.value.roundToInt(), 0) }
+        )
+    }
+}
+
+@Composable
+private fun BoxScope.SwipeBackground(isChecked: Boolean, offsetX: Float) {
+    val backgroundColor = if (isChecked) {
+        colorResource(R.color.backgroundDark)
+    } else {
+        colorResource(R.color.backgroundSuccess)
+    }
+
+    val text = if (isChecked) {
+        stringResource(id = R.string.todoSwipeUndo)
+    } else {
+        stringResource(id = R.string.todoSwipeDone)
+    }
+
+    val icon = if (isChecked) {
+        R.drawable.ic_reply
+    } else {
+        R.drawable.ic_checkmark_lined
+    }
+
+    // Calculate alpha based on swipe progress with ease-in curve
+    val density = LocalDensity.current
+    val swipeThreshold = with(density) { SWIPE_THRESHOLD_DP.dp.toPx() }
+    val progress = (abs(offsetX) / swipeThreshold).coerceIn(0f, 1f)
+    // Apply ease-in cubic easing for gradual fade-in that accelerates near threshold
+    val alpha = progress * progress * progress
+
+    Box(
+        modifier = Modifier
+            .matchParentSize()
+            .background(backgroundColor)
+    ) {
+        if (offsetX > 0) {
+            Row(
+                modifier = Modifier
+                    .align(Alignment.CenterStart)
+                    .padding(start = 16.dp)
+                    .alpha(alpha),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
+            ) {
+                Icon(
+                    painter = painterResource(id = icon),
+                    contentDescription = null,
+                    tint = colorResource(R.color.textLightest),
+                    modifier = Modifier.size(24.dp)
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Text(
+                    text = text,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = colorResource(R.color.textLightest)
+                )
+            }
+        }
+
+        if (offsetX < 0) {
+            Row(
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .padding(end = 16.dp)
+                    .alpha(alpha),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End
+            ) {
+                Text(
+                    text = text,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = colorResource(R.color.textLightest)
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Icon(
+                    painter = painterResource(id = icon),
+                    contentDescription = null,
+                    tint = colorResource(R.color.textLightest),
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ToDoItemContent(
+    item: ToDoItemUiState,
+    showDateBadge: Boolean,
+    hideDate: Boolean,
+    onCheckedChange: () -> Unit,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     val dateBadgeData = rememberDateBadgeData(item.date)
+    val view = LocalView.current
 
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .background(colorResource(id = R.color.backgroundLightest))
             .clickable(onClick = onClick)
             .padding(start = 12.dp, end = 16.dp, top = 8.dp, bottom = 8.dp),
         verticalAlignment = Alignment.Top
@@ -394,7 +655,11 @@ private fun ToDoItem(
 
             Checkbox(
                 checked = item.isChecked,
-                onCheckedChange = { onCheckedChange() },
+                onCheckedChange = {
+                    // Determine if marking as done or undone based on the new checked state
+                    view.performToggleHapticFeedback(it)
+                    onCheckedChange()
+                },
                 colors = CheckboxDefaults.colors(
                     checkedColor = Color(ThemePrefs.brandColor),
                     uncheckedColor = colorResource(id = R.color.textDark)
@@ -595,7 +860,7 @@ fun ToDoListScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
     val calendar = Calendar.getInstance()
     CanvasTheme {
-        ToDoListScreen(
+        ToDoListContent(
             uiState = ToDoListUiState(
                 itemsByDate = mapOf(
                     Date(10) to listOf(
@@ -695,7 +960,7 @@ fun ToDoListScreenPreview() {
                     )
                 )
             ),
-            actionHandler = {}
+            onOpenToDoItem = {}
         )
     }
 }
@@ -707,7 +972,7 @@ fun ToDoListScreenWithPandasPreview() {
     ContextKeeper.appContext = LocalContext.current
     val calendar = Calendar.getInstance()
     CanvasTheme {
-        ToDoListScreen(
+        ToDoListContent(
             uiState = ToDoListUiState(
                 itemsByDate = mapOf(
                     Date(10) to listOf(
@@ -736,7 +1001,7 @@ fun ToDoListScreenWithPandasPreview() {
                     )
                 )
             ),
-            actionHandler = {}
+            onOpenToDoItem = {}
         )
     }
 }
@@ -747,9 +1012,9 @@ fun ToDoListScreenWithPandasPreview() {
 fun ToDoListScreenEmptyPreview() {
     ContextKeeper.appContext = LocalContext.current
     CanvasTheme {
-        ToDoListScreen(
+        ToDoListContent(
             uiState = ToDoListUiState(),
-            actionHandler = {}
+            onOpenToDoItem = {}
         )
     }
 }

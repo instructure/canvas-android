@@ -41,12 +41,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import android.widget.LinearLayout
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuItemCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
@@ -95,6 +93,8 @@ import com.instructure.pandautils.features.notification.preferences.PushNotifica
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
 import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.features.settings.SettingsFragment
+import com.instructure.pandautils.features.todolist.OnToDoCountChanged
+import com.instructure.pandautils.features.todolist.ToDoListFragment
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
@@ -107,7 +107,6 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.EdgeToEdgeHelper
 import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.NetworkStateProvider
-import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.pandautils.utils.OnActivityResults
 import com.instructure.pandautils.utils.OnBackStackChangedEvent
 import com.instructure.pandautils.utils.PermissionReceiver
@@ -118,6 +117,7 @@ import com.instructure.pandautils.utils.RequestCodes.PICK_IMAGE_GALLERY
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.WebViewAuthenticator
+import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.pandautils.utils.applyTheme
 import com.instructure.pandautils.utils.hideKeyboard
 import com.instructure.pandautils.utils.isAccessibilityEnabled
@@ -142,7 +142,6 @@ import com.instructure.student.events.UserUpdatedEvent
 import com.instructure.student.features.files.list.FileListFragment
 import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
 import com.instructure.student.features.navigation.NavigationRepository
-import com.instructure.student.features.todolist.ToDoListFragment
 import com.instructure.student.fragment.BookmarksFragment
 import com.instructure.student.fragment.DashboardFragment
 import com.instructure.student.fragment.NotificationListFragment
@@ -180,7 +179,7 @@ private const val BOTTOM_SCREENS_BUNDLE_KEY = "bottomScreens"
 @AndroidEntryPoint
 @Suppress("DELEGATED_MEMBER_HIDES_SUPERTYPE_OVERRIDE")
 class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.OnMasqueradingSet,
-    FullScreenInteractions, ActivityCompat.OnRequestPermissionsResultCallback by PermissionReceiver() {
+    FullScreenInteractions, ActivityCompat.OnRequestPermissionsResultCallback by PermissionReceiver(), OnToDoCountChanged {
 
     private val binding by viewBinding(ActivityNavigationBinding::inflate)
     private lateinit var navigationDrawerBinding: NavigationDrawerBinding
@@ -418,23 +417,30 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     private fun setupWindowInsets() = with(binding) {
         ViewCompat.setOnApplyWindowInsetsListener(fullscreen) { view, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val navigationBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+            val displayCutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
+
+            // Apply both navigation bar and display cutout insets
+            // This ensures content is not hidden behind the navigation bar OR the hole punch camera
+            val leftPadding = maxOf(navigationBars.left, displayCutout.left)
+            val rightPadding = maxOf(navigationBars.right, displayCutout.right)
+
             view.setPadding(
-                systemBars.left,
+                leftPadding,
                 0,
-                systemBars.right,
+                rightPadding,
                 0
             )
             insets
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(bottomBar) { view, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val navigationBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
             view.setPadding(
                 view.paddingLeft,
                 view.paddingTop,
                 view.paddingRight,
-                systemBars.bottom
+                navigationBars.bottom
             )
             insets
         }
@@ -1307,6 +1313,10 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     override fun updateToDoCount(toDoCount: Int) {
         updateBottomBarBadge(R.id.bottomNavigationToDo, toDoCount, R.plurals.a11y_todoBadgeCount)
+    }
+
+    override fun onToDoCountChanged(count: Int) {
+        updateToDoCount(count)
     }
 
     private fun updateBottomBarBadge(@IdRes menuItemId: Int, count: Int, @PluralsRes quantityContentDescription: Int? = null) = with(binding) {
