@@ -58,21 +58,23 @@ jobs:
             This is an update to an existing PR. You must:
             1. Use the GitHub MCP tools to fetch your previous reviews on this PR
             2. Fetch the latest PR diff and identify what has changed since your last review
-            3. Update your EXISTING review comments - DO NOT create a new review summary
-            4. Use checkboxes to track progress on previously identified issues:
-               - [ ] Unresolved issue
-               - [x] Resolved issue
-            5. For each previously identified issue:
-               - If it has been addressed: Mark the checkbox as complete [x] and add a note
-               - If it is still present: Keep the checkbox unchecked [ ]
-               - If new issues are found: Add new checkboxes [ ]
-            6. Update inline comments:
-               - Resolve or update threads that have been addressed
-               - Add new inline comments ONLY for new issues that require changes
-               - Do NOT add inline comments for positive changes or improvements
-            7. Keep all positive feedback in the summary section only
+            3. Find your previous review summary comment (the one that starts with "## PR Review Summary" or similar)
+            4. Post a NEW PR comment (not a review) with an update status that includes:
+               - Reference to your previous review
+               - Progress update using checkboxes:
+                 - [x] Previously identified issues that have been resolved
+                 - [ ] Previously identified issues still present
+                 - [ ] New issues found in this update
+               - Brief summary of what changed
+               - Any new concerns or positive feedback
+            5. For inline review comments:
+               - Resolve threads where the issue has been fixed
+               - Update existing review comment threads if partially addressed
+               - Add new inline review comments ONLY for new issues that require changes
+               - Do NOT add inline comments for positive feedback
+            6. DO NOT create a new review summary - only post a progress update comment
 
-            DO NOT create a new review from scratch. Update the existing one.' || '
+            Use mcp__github__create_or_update_issue_comment to post the update.' || '
             ## NEW REVIEW EVENT
             This is a new PR or initial review. You must:
             1. Use the GitHub MCP tools to fetch the PR diff
@@ -85,5 +87,5 @@ jobs:
 
           # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
           # or https://docs.claude.com/en/docs/claude-code/cli-reference for available options
-          claude_args: '--allowedTools "mcp__github__create_pending_pull_request_review,mcp__github__add_comment_to_pending_review,mcp__github__submit_pending_pull_request_review,mcp__github__get_pull_request_diff,mcp__github__list_reviews,mcp__github__get_review,mcp__github__list_review_comments,mcp__github__update_review_comment,mcp__github__create_or_update_pull_request_review_comment"'
+          claude_args: '--allowedTools "mcp__github__create_pending_pull_request_review,mcp__github__add_comment_to_pending_review,mcp__github__submit_pending_pull_request_review,mcp__github__get_pull_request_diff,mcp__github__list_reviews,mcp__github__get_review,mcp__github__list_review_comments,mcp__github__update_review_comment,mcp__github__create_or_update_pull_request_review_comment,mcp__github__create_or_update_issue_comment,mcp__github__list_issue_comments,mcp__github__resolve_review_thread"'
 

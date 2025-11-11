@@ -249,12 +249,12 @@ class DashboardTimeSpentWidgetUiTest {
         }
 
         // Verify zero hours is not displayed
-        composeTestRule.onNodeWithText("0").assertDoesNotExist()
+        composeTestRule.onNodeWithText("0", useUnmergedTree = true).assertDoesNotExist()
 
         // Verify single course text is not displayed
-        composeTestRule.onNodeWithText("hours in your course").assertDoesNotExist()
+        composeTestRule.onNodeWithText("hours", useUnmergedTree = true).assertDoesNotExist()
 
         // Verify empty state message is displayed
-        composeTestRule.onNodeWithText("This widget will update once data becomes available.").assertIsDisplayed()
+        composeTestRule.onNodeWithText("This widget will update once data becomes available.", useUnmergedTree = true).assertIsDisplayed()
     }
 }

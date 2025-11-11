@@ -16,13 +16,10 @@
  */
 package com.instructure.horizon.features.dashboard.widget.myprogress
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -31,6 +28,7 @@ import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCardError
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetPageState
 import com.instructure.horizon.features.dashboard.widget.myprogress.card.DashboardMyProgressCardContent
+import com.instructure.horizon.features.dashboard.widget.myprogress.card.DashboardMyProgressCardState
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -65,17 +63,12 @@ fun DashboardMyProgressSection(
 ) {
     when (state.state) {
         DashboardItemState.LOADING -> {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                DashboardMyProgressCardContent(
-                    state.cardState,
-                    true,
-                    pageState,
-                    modifier
-                )
-            }
+            DashboardMyProgressCardContent(
+                DashboardMyProgressCardState.Loading,
+                true,
+                pageState,
+                modifier
+            )
         }
         DashboardItemState.ERROR -> {
             DashboardWidgetCardError(
@@ -89,17 +82,12 @@ fun DashboardMyProgressSection(
             )
         }
         DashboardItemState.SUCCESS -> {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                DashboardMyProgressCardContent(
-                    state.cardState,
-                    false,
-                    pageState,
-                    modifier
-                )
-            }
+            DashboardMyProgressCardContent(
+                state.cardState,
+                false,
+                pageState,
+                modifier
+            )
         }
     }
 }

@@ -93,7 +93,6 @@ private fun GetCoursesQuery.Enrollment.mapCompleted(context: Context, programs: 
         description = context.getString(R.string.dashboardCompletedCourseDetails),
         progress = this.course?.usersConnection?.nodes?.firstOrNull()?.courseProgression?.requirements?.completionPercentage ?: 0.0,
         moduleItem = null,
-        buttonState = null,
         onClickAction = CardClickAction.NavigateToCourse(this.course?.id?.toLongOrNull() ?: -1L)
     )
 }
@@ -120,8 +119,6 @@ private suspend fun GetCoursesQuery.Enrollment.mapActive(
         description = null,
         progress = this.course?.usersConnection?.nodes?.firstOrNull()?.courseProgression?.requirements?.completionPercentage ?: 0.0,
         moduleItem = nextModuleForCourse(this.course?.id?.toLongOrNull()),
-        buttonState = null,
         onClickAction = CardClickAction.NavigateToCourse(this.course?.id?.toLongOrNull() ?: -1L),
-        lastAccessed = this.lastActivityAt
     )
 }

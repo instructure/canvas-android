@@ -11,23 +11,10 @@ data class DashboardPaginatedWidgetCardState(
     val isLoading: Boolean = false,
 ) {
     companion object {
-        val Loading: DashboardPaginatedWidgetCardState
-            get() = DashboardPaginatedWidgetCardState(
-                items = listOf(
-                    DashboardPaginatedWidgetCardItemState(
-                        headerState = DashboardPaginatedWidgetCardHeaderState(
-                            label = "Announcement",
-                            color = HorizonColors.Surface.institution().copy(alpha = 0.1f),
-                            iconRes = R.drawable.ic_announcement
-                        ),
-                        title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Announcement title shown here.",
-                        source = "Institution or Course Name Here",
-                        date = Date(),
-                        route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
-                    ),
-                ),
-                isLoading = true
-            )
+        val Loading = DashboardPaginatedWidgetCardState(
+            items = listOf(DashboardPaginatedWidgetCardItemState.Loading),
+            isLoading = true
+        )
     }
 }
 
@@ -37,7 +24,21 @@ data class DashboardPaginatedWidgetCardItemState(
     val date: Date? = null,
     val title: String? = null,
     val route: DashboardPaginatedWidgetCardButtonRoute? = null
-)
+) {
+    companion object {
+        val Loading = DashboardPaginatedWidgetCardItemState(
+            headerState = DashboardPaginatedWidgetCardHeaderState(
+                label = "Announcement",
+                color = HorizonColors.PrimitivesSky.sky12,
+                iconRes = R.drawable.campaign
+            ),
+            title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Announcement title shown here.",
+            source = "Institution or Course Name Here",
+            date = Date(),
+            route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
+        )
+    }
+}
 
 data class DashboardPaginatedWidgetCardHeaderState(
     val label: String,
