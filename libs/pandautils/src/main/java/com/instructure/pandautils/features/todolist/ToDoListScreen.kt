@@ -85,9 +85,9 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ContextKeeper
-import com.instructure.canvasapi2.utils.Logger
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasDivider
@@ -330,7 +330,9 @@ private fun ToDoItemsList(
                                 if (item.htmlUrl != null) {
                                     onItemClicked(item.htmlUrl)
                                 } else {
-                                    Logger.w("ToDoListScreen: Item clicked with null htmlUrl, id=${item.id}, title=${item.title}")
+                                    FirebaseCrashlytics.getInstance().recordException(
+                                        IllegalStateException("ToDoListScreen: Item clicked with null htmlUrl, id=${item.id}, title=${item.title}")
+                                    )
                                 }
                             },
                             onDateClick = onDateClick,

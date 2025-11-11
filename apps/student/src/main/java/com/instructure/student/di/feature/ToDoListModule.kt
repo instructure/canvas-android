@@ -18,7 +18,6 @@ package com.instructure.student.di.feature
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.calendar.CalendarSharedEvents
 import com.instructure.pandautils.features.todolist.ToDoListRouter
 import com.instructure.student.features.todolist.StudentToDoListRouter
@@ -35,9 +34,8 @@ class ToDoListModule {
     fun provideToDoListRouter(
         activity: FragmentActivity,
         fragment: Fragment,
-        apiPrefs: ApiPrefs,
         calendarSharedEvents: CalendarSharedEvents
     ): ToDoListRouter {
-        return StudentToDoListRouter(activity, fragment, apiPrefs, calendarSharedEvents)
+        return StudentToDoListRouter(activity, fragment, calendarSharedEvents)
     }
 }

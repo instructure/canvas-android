@@ -19,7 +19,6 @@ package com.instructure.student.features.todolist
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.calendar.CalendarFragment
 import com.instructure.pandautils.features.calendar.CalendarSharedEvents
 import com.instructure.pandautils.features.calendar.SharedCalendarAction
@@ -32,7 +31,6 @@ import org.threeten.bp.LocalDate
 class StudentToDoListRouter(
     private val activity: FragmentActivity,
     private val fragment: Fragment,
-    private val apiPrefs: ApiPrefs,
     private val calendarSharedEvents: CalendarSharedEvents
 ) : ToDoListRouter {
 
