@@ -38,6 +38,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.draw.clip
 import androidx.compose.material.Checkbox
 import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.ExperimentalMaterialApi
@@ -396,10 +397,12 @@ private fun StickyDateBadge(
             modifier = Modifier
                 .width(44.dp)
                 .padding(end = 12.dp)
-                .background(colorResource(id = R.color.backgroundLightest)),
+                .background(colorResource(id = R.color.backgroundLightest))
+                .clip(CircleShape)
+                .clickable { onDateClick(item.date) },
             contentAlignment = Alignment.TopCenter
         ) {
-            DateBadge(dateBadgeData, onClick = { onDateClick(item.date) })
+            DateBadge(dateBadgeData)
         }
     }
 }
@@ -603,11 +606,13 @@ private fun ToDoItemContent(
         Box(
             modifier = Modifier
                 .width(44.dp)
-                .padding(end = 12.dp),
+                .padding(end = 12.dp)
+                .clip(CircleShape)
+                .clickable { onDateClick(item.date) },
             contentAlignment = Alignment.TopCenter
         ) {
             if (showDateBadge && !hideDate) {
-                DateBadge(dateBadgeData, onClick = { onDateClick(item.date) })
+                DateBadge(dateBadgeData)
             }
         }
 
@@ -723,12 +728,10 @@ private fun rememberDateBadgeData(date: Date): DateBadgeData {
 
 @Composable
 private fun DateBadge(
-    dateBadgeData: DateBadgeData,
-    onClick: () -> Unit = {}
+    dateBadgeData: DateBadgeData
 ) {
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.clickable(onClick = onClick)
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             text = dateBadgeData.dayOfWeek,
