@@ -38,7 +38,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Checkbox
 import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.ExperimentalMaterialApi
@@ -89,6 +91,9 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ContextKeeper
@@ -245,16 +250,21 @@ fun ToDoListScreen(
         FullScreenDialog(
             onDismissRequest = { showFilterScreen = false }
         ) {
-            ToDoFilterScreen(
-                onFiltersChanged = { dateFiltersChanged ->
-                    showFilterScreen = false
-                    uiState.onFiltersChanged(dateFiltersChanged)
-                },
-                onDismiss = {
-                    showFilterScreen = false
-                },
-                modifier = Modifier.fillMaxSize()
-            )
+            // We need a NavHost here so the ViewModel would not persist across multiple openings of the filter screen
+            NavHost(rememberNavController(), startDestination = "filter") {
+                composable("filter") {
+                    ToDoFilterScreen(
+                        onFiltersChanged = { dateFiltersChanged ->
+                            showFilterScreen = false
+                            uiState.onFiltersChanged(dateFiltersChanged)
+                        },
+                        onDismiss = {
+                            showFilterScreen = false
+                        },
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+            }
         }
     }
 }
@@ -284,7 +294,9 @@ private fun ToDoListContent(
                 emptyTitle = stringResource(id = R.string.noToDosForNow),
                 emptyMessage = stringResource(id = R.string.noToDosForNowSubtext),
                 imageRes = R.drawable.ic_no_events,
-                modifier = modifier.fillMaxSize()
+                modifier = modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
             )
         }
 
@@ -328,7 +340,7 @@ private fun ToDoItemsList(
     )
 
     // Calculate content height from last item's position + size
-    val listContentHeight by remember {
+    val listContentHeight by remember(dateGroups) {
         derivedStateOf {
             if (dateGroups.isEmpty()) return@derivedStateOf 0
             val lastGroup = dateGroups.last()
