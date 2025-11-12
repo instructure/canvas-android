@@ -43,15 +43,9 @@ import com.instructure.pandautils.utils.nonNullArgs
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.PeopleFilterAdapter
 import kotlinx.coroutines.Job
-import kotlin.properties.Delegates
 
 class PeopleListFilterDialog : BaseCanvasAppCompatDialogFragment() {
-    init {
-        retainInstance = true
-    }
-
     private var recyclerView: RecyclerView? = null
-    private var finishedCallback: (canvasContexts: ArrayList<CanvasContext>) -> Unit by Delegates.notNull()
     private var canvasContext: CanvasContext? = null
     private var canvasContextMap: HashMap<CanvasContext, Boolean> = HashMap()
     private var canvasContextIdList: ArrayList<Long> = ArrayList()
@@ -81,8 +75,11 @@ class PeopleListFilterDialog : BaseCanvasAppCompatDialogFragment() {
                 .setTitle(getString(R.string.filterBy))
                 .setView(view)
                 .setPositiveButton(getString(android.R.string.ok)) { _, _ ->
-                    // Get the list of checked Canvas Contexts from the map
-                    finishedCallback(canvasContextMap.filter { it.value }.keys.toMutableList() as ArrayList<CanvasContext>)
+                    val selectedContexts = canvasContextMap.filter { it.value }.keys.toMutableList() as ArrayList<CanvasContext>
+                    val result = Bundle().apply {
+                        putParcelableArrayList(RESULT_SELECTED_CONTEXTS, selectedContexts)
+                    }
+                    parentFragmentManager.setFragmentResult(REQUEST_KEY, result)
                 }
             .setNegativeButton(getString(R.string.cancel), null)
                 .create()
@@ -158,14 +155,15 @@ class PeopleListFilterDialog : BaseCanvasAppCompatDialogFragment() {
     }
 
     override fun onDestroyView() {
-        // Fix for rotation bug
         mApiCalls?.cancel()
-        dialog?.let { if (retainInstance) it.setDismissMessage(null) }
         super.onDestroyView()
     }
 
     companion object {
-        fun getInstance(manager: FragmentManager, canvasContextIdList: ArrayList<Long>, canvasContext: CanvasContext, shouldIncludeGroups: Boolean, callback: (canvasContexts: ArrayList<CanvasContext>) -> Unit) : PeopleListFilterDialog {
+        const val REQUEST_KEY = "PeopleListFilterDialog"
+        const val RESULT_SELECTED_CONTEXTS = "selected_contexts"
+
+        fun getInstance(manager: FragmentManager, canvasContextIdList: ArrayList<Long>, canvasContext: CanvasContext, shouldIncludeGroups: Boolean) : PeopleListFilterDialog {
             manager.dismissExisting<PeopleListFilterDialog>()
             val args = Bundle().apply {
                 putParcelable(Const.CANVAS_CONTEXT, canvasContext)
@@ -174,7 +172,6 @@ class PeopleListFilterDialog : BaseCanvasAppCompatDialogFragment() {
             val dialog = PeopleListFilterDialog()
             dialog.canvasContextIdList = canvasContextIdList
             dialog.arguments = args
-            dialog.finishedCallback = callback
             return dialog
         }
     }
