@@ -445,7 +445,18 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             insets
         }
 
-        navigationDrawerBinding.navigationDrawer.applyHorizontalSystemBarInsets()
+        ViewCompat.setOnApplyWindowInsetsListener(navigationDrawerBinding.navigationDrawer) { view, windowInsets ->
+            val insets = windowInsets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+            view.setPadding(
+                insets.left,
+                view.paddingTop,
+                insets.right,
+                insets.bottom
+            )
+            windowInsets
+        }
     }
 
     private fun logOfflineEvents(isOnline: Boolean) {
