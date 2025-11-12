@@ -16,7 +16,6 @@
 package com.instructure.pandautils.features.todolist
 
 import android.content.Context
-import android.os.Bundle
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Plannable
@@ -25,9 +24,6 @@ import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.models.PlannerOverride
 import com.instructure.canvasapi2.models.SubmissionState
 import com.instructure.canvasapi2.models.User
-import com.instructure.canvasapi2.utils.Analytics
-import com.instructure.canvasapi2.utils.AnalyticsEventConstants
-import com.instructure.canvasapi2.utils.AnalyticsParamConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DataResult
@@ -41,10 +37,7 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkConstructor
-import io.mockk.slot
 import io.mockk.unmockkAll
-import io.mockk.unmockkConstructor
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -71,33 +64,14 @@ class ToDoListViewModelTest {
     private val firebaseCrashlytics: FirebaseCrashlytics = mockk(relaxed = true)
     private val toDoFilterDao: ToDoFilterDao = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
-    private val analytics: Analytics = mockk(relaxed = true)
 
     private val testUser = User(id = 123L, name = "Test User")
     private val testDomain = "test.instructure.com"
-
-    // Track Bundle values for analytics tests
-    private val bundleStorage = mutableMapOf<String, String?>()
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
         ContextKeeper.appContext = context
-
-        // Clear bundle storage for each test
-        bundleStorage.clear()
-
-        // Mock Bundle constructor for analytics tests
-        mockkConstructor(Bundle::class)
-        every { anyConstructed<Bundle>().putString(any(), any()) } answers {
-            val key = firstArg<String>()
-            val value = secondArg<String>()
-            bundleStorage[key] = value
-        }
-        every { anyConstructed<Bundle>().getString(any()) } answers {
-            val key = firstArg<String>()
-            bundleStorage[key]
-        }
 
         // Setup default filter DAO and ApiPrefs behavior
         every { apiPrefs.user } returns testUser
@@ -121,7 +95,6 @@ class ToDoListViewModelTest {
     @After
     fun tearDown() {
         Dispatchers.resetMain()
-        unmockkConstructor(Bundle::class)
         unmockkAll()
     }
 
@@ -1180,213 +1153,9 @@ class ToDoListViewModelTest {
         assertFalse(viewModel.uiState.value.isFilterApplied)
     }
 
-    // Analytics tracking tests
-    @Test
-    fun `Analytics event is logged when item is marked as done`() = runTest {
-        val plannerItem = createPlannerItem(id = 1L, title = "Assignment", submitted = false)
-        val plannerOverride = PlannerOverride(id = 100L, plannableId = 1L, plannableType = PlannableType.ASSIGNMENT, markedComplete = true)
-
-        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
-        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(listOf(plannerItem))
-        coEvery { repository.createPlannerOverride(any(), any(), any()) } returns DataResult.Success(plannerOverride)
-        every { networkStateProvider.isOnline() } returns true
-
-        val viewModel = getViewModel()
-
-        val item = viewModel.uiState.value.itemsByDate.values.flatten().first()
-        item.onCheckboxToggle(true)
-
-        verify { analytics.logEvent(AnalyticsEventConstants.TODO_ITEM_MARKED_DONE) }
-    }
-
-    @Test
-    fun `Analytics event is logged when item is marked as undone`() = runTest {
-        val plannerOverride = PlannerOverride(id = 100L, plannableId = 1L, plannableType = PlannableType.ASSIGNMENT, markedComplete = true)
-        val plannerItem = createPlannerItem(id = 1L, title = "Assignment", submitted = false).copy(
-            plannerOverride = plannerOverride
-        )
-        val updatedOverride = plannerOverride.copy(markedComplete = false)
-
-        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
-        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(listOf(plannerItem))
-        coEvery { repository.updatePlannerOverride(any(), any()) } returns DataResult.Success(updatedOverride)
-        every { networkStateProvider.isOnline() } returns true
-
-        val viewModel = getViewModel()
-
-        val item = viewModel.uiState.value.itemsByDate.values.flatten().first()
-        item.onCheckboxToggle(false)
-
-        verify { analytics.logEvent(AnalyticsEventConstants.TODO_ITEM_MARKED_UNDONE) }
-    }
-
-    @Test
-    fun `Analytics event is logged when item is marked as done via swipe`() = runTest {
-        val plannerItem = createPlannerItem(id = 1L, title = "Assignment", submitted = false)
-        val plannerOverride = PlannerOverride(id = 100L, plannableId = 1L, plannableType = PlannableType.ASSIGNMENT, markedComplete = true)
-
-        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
-        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(listOf(plannerItem))
-        coEvery { repository.createPlannerOverride(any(), any(), any()) } returns DataResult.Success(plannerOverride)
-        every { networkStateProvider.isOnline() } returns true
-
-        val viewModel = getViewModel()
-
-        val item = viewModel.uiState.value.itemsByDate.values.flatten().first()
-        item.onSwipeToDone()
-
-        verify { analytics.logEvent(AnalyticsEventConstants.TODO_ITEM_MARKED_DONE) }
-    }
-
-    @Test
-    fun `Analytics event is not logged when item update fails`() = runTest {
-        val plannerItem = createPlannerItem(id = 1L, title = "Assignment", submitted = false)
-
-        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
-        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(listOf(plannerItem))
-        coEvery { repository.createPlannerOverride(any(), any(), any()) } returns DataResult.Fail()
-        every { networkStateProvider.isOnline() } returns true
-        every { context.getString(R.string.errorUpdatingToDo) } returns "Error updating to-do"
-
-        val viewModel = getViewModel()
-
-        val item = viewModel.uiState.value.itemsByDate.values.flatten().first()
-        item.onCheckboxToggle(true)
-
-        verify(exactly = 0) { analytics.logEvent(AnalyticsEventConstants.TODO_ITEM_MARKED_DONE) }
-        verify(exactly = 0) { analytics.logEvent(AnalyticsEventConstants.TODO_ITEM_MARKED_UNDONE) }
-    }
-
-    @Test
-    fun `Analytics event is logged for default filter on init`() = runTest {
-        val filters = ToDoFilterEntity(
-            userDomain = testDomain,
-            userId = testUser.id,
-            personalTodos = false,
-            calendarEvents = false,
-            showCompleted = false,
-            favoriteCourses = false,
-            pastDateRange = DateRangeSelection.ONE_WEEK,
-            futureDateRange = DateRangeSelection.ONE_WEEK
-        )
-
-        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
-        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(emptyList())
-        coEvery { toDoFilterDao.findByUser(testDomain, testUser.id) } returns filters
-
-        getViewModel()
-
-        verify { analytics.logEvent(AnalyticsEventConstants.TODO_LIST_LOADED_DEFAULT_FILTER) }
-    }
-
-    @Test
-    fun `Analytics event is logged for custom filter with personal todos enabled`() = runTest {
-        val filters = ToDoFilterEntity(
-            userDomain = testDomain,
-            userId = testUser.id,
-            personalTodos = true,
-            calendarEvents = false,
-            showCompleted = false,
-            favoriteCourses = false,
-            pastDateRange = DateRangeSelection.ONE_WEEK,
-            futureDateRange = DateRangeSelection.ONE_WEEK
-        )
-
-        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
-        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(emptyList())
-        coEvery { toDoFilterDao.findByUser(testDomain, testUser.id) } returns filters
-
-        getViewModel()
-
-        val bundleSlot = slot<Bundle>()
-        verify {
-            analytics.logEvent(
-                AnalyticsEventConstants.TODO_LIST_LOADED_CUSTOM_FILTER,
-                capture(bundleSlot)
-            )
-        }
-
-        assertEquals("true", bundleSlot.captured.getString(AnalyticsParamConstants.FILTER_PERSONAL_TODOS))
-        assertEquals("false", bundleSlot.captured.getString(AnalyticsParamConstants.FILTER_CALENDAR_EVENTS))
-        assertEquals("false", bundleSlot.captured.getString(AnalyticsParamConstants.FILTER_SHOW_COMPLETED))
-        assertEquals("false", bundleSlot.captured.getString(AnalyticsParamConstants.FILTER_FAVOURITE_COURSES))
-        assertEquals("one_week", bundleSlot.captured.getString(AnalyticsParamConstants.FILTER_SELECTED_DATE_RANGE_PAST))
-        assertEquals("one_week", bundleSlot.captured.getString(AnalyticsParamConstants.FILTER_SELECTED_DATE_RANGE_FUTURE))
-    }
-
-    @Test
-    fun `Analytics event is logged for custom filter with all options enabled`() = runTest {
-        val filters = ToDoFilterEntity(
-            userDomain = testDomain,
-            userId = testUser.id,
-            personalTodos = true,
-            calendarEvents = true,
-            showCompleted = true,
-            favoriteCourses = true,
-            pastDateRange = DateRangeSelection.TWO_WEEKS,
-            futureDateRange = DateRangeSelection.THREE_WEEKS
-        )
-
-        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
-        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(emptyList())
-        coEvery { toDoFilterDao.findByUser(testDomain, testUser.id) } returns filters
-
-        getViewModel()
-
-        val bundleSlot = slot<Bundle>()
-        verify {
-            analytics.logEvent(
-                AnalyticsEventConstants.TODO_LIST_LOADED_CUSTOM_FILTER,
-                capture(bundleSlot)
-            )
-        }
-
-        assertEquals("true", bundleSlot.captured.getString(AnalyticsParamConstants.FILTER_PERSONAL_TODOS))
-        assertEquals("true", bundleSlot.captured.getString(AnalyticsParamConstants.FILTER_CALENDAR_EVENTS))
-        assertEquals("true", bundleSlot.captured.getString(AnalyticsParamConstants.FILTER_SHOW_COMPLETED))
-        assertEquals("true", bundleSlot.captured.getString(AnalyticsParamConstants.FILTER_FAVOURITE_COURSES))
-        assertEquals("two_weeks", bundleSlot.captured.getString(AnalyticsParamConstants.FILTER_SELECTED_DATE_RANGE_PAST))
-        assertEquals("three_weeks", bundleSlot.captured.getString(AnalyticsParamConstants.FILTER_SELECTED_DATE_RANGE_FUTURE))
-    }
-
-    @Test
-    fun `Analytics event is logged for custom filter with custom date ranges`() = runTest {
-        val filters = ToDoFilterEntity(
-            userDomain = testDomain,
-            userId = testUser.id,
-            personalTodos = false,
-            calendarEvents = false,
-            showCompleted = false,
-            favoriteCourses = false,
-            pastDateRange = DateRangeSelection.FOUR_WEEKS,
-            futureDateRange = DateRangeSelection.FOUR_WEEKS
-        )
-
-        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
-        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(emptyList())
-        coEvery { toDoFilterDao.findByUser(testDomain, testUser.id) } returns filters
-
-        getViewModel()
-
-        val bundleSlot = slot<Bundle>()
-        verify {
-            analytics.logEvent(
-                AnalyticsEventConstants.TODO_LIST_LOADED_CUSTOM_FILTER,
-                capture(bundleSlot)
-            )
-        }
-
-        assertEquals("false", bundleSlot.captured.getString(AnalyticsParamConstants.FILTER_PERSONAL_TODOS))
-        assertEquals("false", bundleSlot.captured.getString(AnalyticsParamConstants.FILTER_CALENDAR_EVENTS))
-        assertEquals("false", bundleSlot.captured.getString(AnalyticsParamConstants.FILTER_SHOW_COMPLETED))
-        assertEquals("false", bundleSlot.captured.getString(AnalyticsParamConstants.FILTER_FAVOURITE_COURSES))
-        assertEquals("four_weeks", bundleSlot.captured.getString(AnalyticsParamConstants.FILTER_SELECTED_DATE_RANGE_PAST))
-        assertEquals("four_weeks", bundleSlot.captured.getString(AnalyticsParamConstants.FILTER_SELECTED_DATE_RANGE_FUTURE))
-    }
-
     // Helper functions
     private fun getViewModel(): ToDoListViewModel {
-        return ToDoListViewModel(context, repository, networkStateProvider, firebaseCrashlytics, toDoFilterDao, apiPrefs, analytics)
+        return ToDoListViewModel(context, repository, networkStateProvider, firebaseCrashlytics, toDoFilterDao, apiPrefs)
     }
 
     private fun createPlannerItem(

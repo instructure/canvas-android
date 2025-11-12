@@ -16,16 +16,12 @@
 package com.instructure.pandautils.features.todolist
 
 import android.content.Context
-import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
-import com.instructure.canvasapi2.utils.Analytics
-import com.instructure.canvasapi2.utils.AnalyticsEventConstants
-import com.instructure.canvasapi2.utils.AnalyticsParamConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.isInvited
@@ -61,8 +57,7 @@ class ToDoListViewModel @Inject constructor(
     private val networkStateProvider: NetworkStateProvider,
     private val firebaseCrashlytics: FirebaseCrashlytics,
     private val toDoFilterDao: ToDoFilterDao,
-    private val apiPrefs: ApiPrefs,
-    private val analytics: Analytics
+    private val apiPrefs: ApiPrefs
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -142,9 +137,6 @@ class ToDoListViewModel @Inject constructor(
                 courseMap = filteredCourses.associateBy { it.id }
 
                 processAndUpdateItems(plannerItems, filteredCourses, todoFilters)
-
-                // Track analytics event for filter loading
-                trackFilterLoadingEvent(todoFilters)
             } catch (e: Exception) {
                 e.printStackTrace()
                 firebaseCrashlytics.recordException(e)
@@ -373,13 +365,6 @@ class ToDoListViewModel @Inject constructor(
             // Invalidate planner cache
             repository.invalidateCachedResponses()
 
-            // Track analytics event
-            if (newIsChecked) {
-                analytics.logEvent(AnalyticsEventConstants.TODO_ITEM_MARKED_DONE)
-            } else {
-                analytics.logEvent(AnalyticsEventConstants.TODO_ITEM_MARKED_UNDONE)
-            }
-
             true
         } catch (e: Exception) {
             e.printStackTrace()
@@ -463,29 +448,6 @@ class ToDoListViewModel @Inject constructor(
                 removingItemIds = emptySet(), // Clear removing items when data is reprocessed
                 confirmationSnackbarData = null
             )
-        }
-    }
-
-    private fun trackFilterLoadingEvent(filters: ToDoFilterEntity) {
-        val isDefaultFilter = !filters.personalTodos &&
-                !filters.calendarEvents &&
-                !filters.showCompleted &&
-                !filters.favoriteCourses &&
-                filters.pastDateRange == DateRangeSelection.ONE_WEEK &&
-                filters.futureDateRange == DateRangeSelection.ONE_WEEK
-
-        if (isDefaultFilter) {
-            analytics.logEvent(AnalyticsEventConstants.TODO_LIST_LOADED_DEFAULT_FILTER)
-        } else {
-            val bundle = Bundle().apply {
-                putString(AnalyticsParamConstants.FILTER_PERSONAL_TODOS, filters.personalTodos.toString())
-                putString(AnalyticsParamConstants.FILTER_CALENDAR_EVENTS, filters.calendarEvents.toString())
-                putString(AnalyticsParamConstants.FILTER_SHOW_COMPLETED, filters.showCompleted.toString())
-                putString(AnalyticsParamConstants.FILTER_FAVOURITE_COURSES, filters.favoriteCourses.toString())
-                putString(AnalyticsParamConstants.FILTER_SELECTED_DATE_RANGE_PAST, filters.pastDateRange.name.lowercase())
-                putString(AnalyticsParamConstants.FILTER_SELECTED_DATE_RANGE_FUTURE, filters.futureDateRange.name.lowercase())
-            }
-            analytics.logEvent(AnalyticsEventConstants.TODO_LIST_LOADED_CUSTOM_FILTER, bundle)
         }
     }
 
