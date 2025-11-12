@@ -91,6 +91,8 @@ import com.instructure.pandautils.features.notification.preferences.PushNotifica
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
 import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.features.settings.SettingsFragment
+import com.instructure.pandautils.features.todolist.OnToDoCountChanged
+import com.instructure.pandautils.features.todolist.ToDoListFragment
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
@@ -136,9 +138,8 @@ import com.instructure.student.events.UserUpdatedEvent
 import com.instructure.student.features.files.list.FileListFragment
 import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
 import com.instructure.student.features.navigation.NavigationRepository
-import com.instructure.student.features.todolist.ToDoListFragment
 import com.instructure.student.fragment.BookmarksFragment
-import com.instructure.student.fragment.DashboardFragment
+import com.instructure.student.fragment.OldDashboardFragment
 import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.fragment.OldToDoListFragment
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffectHandler
@@ -174,7 +175,7 @@ private const val BOTTOM_SCREENS_BUNDLE_KEY = "bottomScreens"
 @AndroidEntryPoint
 @Suppress("DELEGATED_MEMBER_HIDES_SUPERTYPE_OVERRIDE")
 class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.OnMasqueradingSet,
-    FullScreenInteractions, ActivityCompat.OnRequestPermissionsResultCallback by PermissionReceiver() {
+    FullScreenInteractions, ActivityCompat.OnRequestPermissionsResultCallback by PermissionReceiver(), OnToDoCountChanged {
 
     private val binding by viewBinding(ActivityNavigationBinding::inflate)
     private lateinit var navigationDrawerBinding: NavigationDrawerBinding
@@ -1012,7 +1013,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     private fun selectBottomNavFragment(fragmentClass: Class<out Fragment>) {
         val selectedFragment = supportFragmentManager.findFragmentByTag(fragmentClass.name)
 
-        (topFragment as? DashboardFragment)?.cancelCardDrag()
+        (topFragment as? OldDashboardFragment)?.cancelCardDrag()
 
         if (selectedFragment == null) {
             val fragment = createBottomNavFragment(fragmentClass.name)
@@ -1271,6 +1272,10 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     override fun updateToDoCount(toDoCount: Int) {
         updateBottomBarBadge(R.id.bottomNavigationToDo, toDoCount, R.plurals.a11y_todoBadgeCount)
+    }
+
+    override fun onToDoCountChanged(count: Int) {
+        updateToDoCount(count)
     }
 
     private fun updateBottomBarBadge(@IdRes menuItemId: Int, count: Int, @PluralsRes quantityContentDescription: Int? = null) = with(binding) {

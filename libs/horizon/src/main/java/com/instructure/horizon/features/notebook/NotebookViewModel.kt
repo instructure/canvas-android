@@ -16,6 +16,7 @@
  */
 package com.instructure.horizon.features.notebook
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
@@ -24,6 +25,7 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.horizon.features.notebook.common.model.mapToNotes
+import com.instructure.horizon.features.notebook.navigation.NotebookRoute
 import com.instructure.redwood.QueryNotesQuery
 import com.instructure.redwood.type.OrderDirection
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,25 +38,31 @@ import javax.inject.Inject
 @HiltViewModel
 class NotebookViewModel @Inject constructor(
     private val repository: NotebookRepository,
+    savedStateHandle: SavedStateHandle,
 ): ViewModel() {
     private var cursorId: String? = null
     private var pageInfo: QueryNotesQuery.PageInfo? = null
 
-    private var courseId: Long? = null
-    private var objectTypeAndId: Pair<String, String>? = null
+    private var courseId: Long? = savedStateHandle.get<String>(NotebookRoute.Notebook.COURSE_ID)?.toLongOrNull()
+    private var objectTypeAndId: Pair<String, String>? = getObjectTypeAndId(savedStateHandle)
+    private var showTopBar: Boolean = savedStateHandle.get<Boolean>(NotebookRoute.Notebook.SHOW_TOP_BAR) ?: false
+    private var showFilters: Boolean = savedStateHandle.get<Boolean>(NotebookRoute.Notebook.SHOW_FILTERS) ?: false
+    private var navigateToEdit: Boolean = savedStateHandle.get<Boolean>(NotebookRoute.Notebook.NAVIGATE_TO_EDIT) ?: false
 
     private val _uiState = MutableStateFlow(NotebookUiState(
         loadNextPage = ::getNextPage,
         onFilterSelected = ::onFilterSelected,
         onCourseSelected = ::onCourseSelected,
-        updateContent = ::updateContent
+        updateContent = ::updateContent,
+        showTopBar = showTopBar,
+        showFilters = showFilters,
+        navigateToEdit = navigateToEdit,
     ))
     val uiState = _uiState.asStateFlow()
 
     init {
         loadCourses()
         loadData()
-        updateScreenState()
     }
 
     private fun loadCourses() {
@@ -143,27 +151,32 @@ class NotebookViewModel @Inject constructor(
             this.objectTypeAndId = objectTypeAndId
             loadData()
         }
-        updateScreenState()
     }
 
-    fun updateCourseId(courseId: Long?) {
+    fun updateFilters(courseId: Long? = null, objectTypeAndId: Pair<String, String>? = null) {
         if (courseId != this.courseId) {
             this.courseId = courseId
+            this.objectTypeAndId = objectTypeAndId
             loadData()
         }
-        updateScreenState()
     }
 
     private fun updateScreenState() {
         if (courseId != null) {
             _uiState.update { it.copy(showTopBar = false) }
             if (objectTypeAndId != null) {
-                _uiState.update { it.copy(showNoteTypeFilter = false, showCourseFilter = false) }
+                _uiState.update { it.copy(showFilters = false) }
             } else {
-                _uiState.update { it.copy(showNoteTypeFilter = true, showCourseFilter = false) }
+                _uiState.update { it.copy(showFilters = true) }
             }
         } else {
-            _uiState.update { it.copy(showTopBar = true, showNoteTypeFilter = true, showCourseFilter = true) }
+            _uiState.update { it.copy(showTopBar = true, showFilters = true) }
         }
+    }
+
+    private fun getObjectTypeAndId(savedStateHandle: SavedStateHandle): Pair<String, String>? {
+        val objectType = savedStateHandle.get<String>(NotebookRoute.Notebook.OBJECT_TYPE) ?: return null
+        val objectId = savedStateHandle.get<String>(NotebookRoute.Notebook.OBJECT_ID) ?: return null
+        return Pair(objectType, objectId)
     }
 }

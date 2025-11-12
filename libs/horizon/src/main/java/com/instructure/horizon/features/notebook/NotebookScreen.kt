@@ -34,6 +34,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -45,6 +46,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
 import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedData
@@ -58,6 +60,7 @@ import com.instructure.horizon.features.notebook.common.composable.NotebookHighl
 import com.instructure.horizon.features.notebook.common.composable.NotebookPill
 import com.instructure.horizon.features.notebook.common.model.Note
 import com.instructure.horizon.features.notebook.common.model.NotebookType
+import com.instructure.horizon.features.notebook.navigation.NotebookRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
@@ -74,6 +77,9 @@ import com.instructure.horizon.horizonui.molecules.DropdownItem
 import com.instructure.horizon.horizonui.molecules.HorizonDivider
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.navigation.MainNavigationRoute
+import com.instructure.pandautils.compose.modifiers.conditional
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.localisedFormat
 import java.util.Date
 
@@ -81,9 +87,12 @@ import java.util.Date
 fun NotebookScreen(
     mainNavController: NavHostController,
     state: NotebookUiState,
-    onDismiss: (() -> Unit)? = null,
-    onNoteSelected: ((Note) -> Unit)? = null,
 ) {
+    val activity = LocalContext.current.getActivityOrNull()
+    LaunchedEffect(Unit) {
+        if (activity != null) ViewStyler.setStatusBarColor(activity, ContextCompat.getColor(activity, R.color.surface_pagePrimary))
+    }
+
     val scrollState = rememberLazyListState()
     Scaffold(
         containerColor = HorizonColors.Surface.pagePrimary(),
@@ -92,11 +101,6 @@ fun NotebookScreen(
                 NotebookAppBar(
                     navigateBack = { mainNavController.popBackStack() },
                     centeredTitle = true
-                )
-            } else if (onDismiss != null) {
-                NotebookAppBar(
-                    onClose = { onDismiss() },
-                    containerColor = HorizonColors.Surface.pageSecondary()
                 )
             }
         },
@@ -136,26 +140,43 @@ fun NotebookScreen(
                     )
                 ) {
 
-                    if (state.isLoading) {
-                        item {
-                            LoadingContent()
-                        }
-                    } else if (state.notes.isEmpty()) {
-                        item {
-                            EmptyContent()
-                        }
-                    } else {
-                        items(state.notes) { note ->
-                            Column {
-                                NoteContent(note) {
-                                    onNoteSelected?.invoke(note) ?: mainNavController.navigate(
-                                        MainNavigationRoute.ModuleItemSequence(
-                                            courseId = note.courseId,
-                                            moduleItemAssetType = note.objectType.value,
-                                            moduleItemAssetId = note.objectId,
-                                        )
+            if (state.isLoading) {
+                item {
+                    LoadingContent()
+                }
+            } else if (state.notes.isEmpty()) {
+                item {
+                    EmptyContent()
+                }
+            } else {
+                items(state.notes) { note ->
+                    Column {
+                        NoteContent(note) {
+                            if (state.navigateToEdit) {
+                                mainNavController.navigate(
+                                    NotebookRoute.EditNotebook(
+                                        noteId = note.id,
+                                        highlightedTextStartOffset = note.highlightedText.range.startOffset,
+                                        highlightedTextEndOffset = note.highlightedText.range.endOffset,
+                                        highlightedTextStartContainer = note.highlightedText.range.startContainer,
+                                        highlightedTextEndContainer = note.highlightedText.range.endContainer,
+                                        textSelectionStart = note.highlightedText.textPosition.start,
+                                        textSelectionEnd = note.highlightedText.textPosition.end,
+                                        highlightedText = note.highlightedText.selectedText,
+                                        noteType = note.type.name,
+                                        userComment = note.userText
                                     )
-                                }
+                                )
+                            } else {
+                                mainNavController.navigate(
+                                    MainNavigationRoute.ModuleItemSequence(
+                                        courseId = note.courseId,
+                                        moduleItemAssetType = note.objectType.value,
+                                        moduleItemAssetId = note.objectId,
+                                    )
+                                )
+                            }
+                        }
 
                                 if (state.notes.lastOrNull() != note) {
                                     HorizonSpace(SpaceSize.SPACE_4)
@@ -214,7 +235,7 @@ private fun FilterContent(
         iconTint = HorizonColors.Icon.default(),
         backgroundColor = defaultBackgroundColor
     )
-    
+
     val typeItems = remember {
         listOf(
             allNotesItem,

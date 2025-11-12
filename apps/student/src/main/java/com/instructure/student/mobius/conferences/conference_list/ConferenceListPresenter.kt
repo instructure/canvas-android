@@ -58,26 +58,38 @@ object ConferenceListPresenter : Presenter<ConferenceListModel, ConferenceListVi
             if (new.isNotEmpty()) {
                 // Header
                 itemStates.add(
-                    ConferenceListItemViewState.ConferenceHeader(context.getString(R.string.newConferences))
+                    ConferenceListItemViewState.ConferenceHeader(
+                        context.getString(R.string.newConferences),
+                        ConferenceHeaderType.NEW_CONFERENCES,
+                        model.isNewConferencesExpanded
+                    )
                 )
 
-                // Conferences
-                itemStates.addAll(new.map {
-                    mapItemState(color, it, context)
-                })
+                // Conferences - only add if expanded
+                if (model.isNewConferencesExpanded) {
+                    itemStates.addAll(new.map {
+                        mapItemState(color, it, context)
+                    })
+                }
             }
 
             // Set up 'Concluded Conferences' list items
             if (concluded.isNotEmpty()) {
                 // Header
                 itemStates.add(
-                    ConferenceListItemViewState.ConferenceHeader(context.getString(R.string.concludedConferences))
+                    ConferenceListItemViewState.ConferenceHeader(
+                        context.getString(R.string.concludedConferences),
+                        ConferenceHeaderType.CONCLUDED_CONFERENCES,
+                        model.isConcludedConferencesExpanded
+                    )
                 )
 
-                // Conferences
-                itemStates.addAll(concluded.map {
-                    mapItemState(color, it, context)
-                })
+                // Conferences - only add if expanded
+                if (model.isConcludedConferencesExpanded) {
+                    itemStates.addAll(concluded.map {
+                        mapItemState(color, it, context)
+                    })
+                }
             }
 
             return ConferenceListViewState.Loaded(model.isLaunchingInBrowser, itemStates)

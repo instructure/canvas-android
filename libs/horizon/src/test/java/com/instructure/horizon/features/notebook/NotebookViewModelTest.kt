@@ -16,6 +16,7 @@
  */
 package com.instructure.horizon.features.notebook
 
+import androidx.lifecycle.SavedStateHandle
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.redwood.QueryNotesQuery
 import io.mockk.coEvery
@@ -39,6 +40,7 @@ import java.util.Date
 @OptIn(ExperimentalCoroutinesApi::class)
 class NotebookViewModelTest {
     private val repository: NotebookRepository = mockk(relaxed = true)
+    private val savedStateHandle = SavedStateHandle()
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val testNotes = QueryNotesQuery.Notes(
@@ -159,44 +161,14 @@ class NotebookViewModelTest {
     fun `Test update course id reloads data`() = runTest {
         val viewModel = getViewModel()
 
-        viewModel.updateCourseId(123L)
-        viewModel.updateCourseId(1234L)
-        viewModel.updateCourseId(123L)
+        viewModel.updateFilters(123L)
+        viewModel.updateFilters(1234L)
+        viewModel.updateFilters(123L)
 
         coVerify(exactly = 2) { repository.getNotes(any(), any(), any(), any(), 123L, any(), any()) }
     }
 
-    @Test
-    fun `Test update content with course id hides top bar`() = runTest {
-        val viewModel = getViewModel()
-
-        viewModel.uiState.value.updateContent(123L, null)
-
-        assertFalse(viewModel.uiState.value.showTopBar)
-        assertTrue(viewModel.uiState.value.showNoteTypeFilter)
-    }
-
-    @Test
-    fun `Test update content with object type hides filters`() = runTest {
-        val viewModel = getViewModel()
-
-        viewModel.uiState.value.updateContent(123L, Pair("Assignment", "456"))
-
-        assertFalse(viewModel.uiState.value.showTopBar)
-        assertFalse(viewModel.uiState.value.showNoteTypeFilter)
-    }
-
-    @Test
-    fun `Test update content without course id shows top bar and filters`() = runTest {
-        val viewModel = getViewModel()
-
-        viewModel.uiState.value.updateContent(null, null)
-
-        assertTrue(viewModel.uiState.value.showTopBar)
-        assertTrue(viewModel.uiState.value.showNoteTypeFilter)
-    }
-
     private fun getViewModel(): NotebookViewModel {
-        return NotebookViewModel(repository)
+        return NotebookViewModel(repository, savedStateHandle)
     }
 }

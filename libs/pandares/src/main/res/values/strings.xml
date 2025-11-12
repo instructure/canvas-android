@@ -1929,6 +1929,8 @@
     <string name="gradePreferencesHeaderSortBy">Sort By</string>
     <string name="gradesEmptyTitle">No Assignments</string>
     <string name="gradesEmptyMessage">It looks like assignments haven\'t been created in this space yet.</string>
+    <string name="noMatchingAssignments">No Matching Assignments</string>
+    <string name="noMatchingAssignmentsDescription">No assignments match your search. Try a different search term.</string>
     <string name="errorLoadingGrades">We\'re having trouble loading your student\'s grades. Please try reloading the page or check back later.</string>
     <string name="errorLoadingCourse">We\'re having trouble loading your student\'s course details. Please try reloading the page or check back later.</string>
     <string name="gradesFilterContentDescription">Filter</string>
@@ -2186,6 +2188,13 @@
     <string name="multiple_filters">Multiple filters</string>
     <string name="a11y_contentDescriptionToDoFilter">Filter</string>
     <string name="errorLoadingToDos">There was an error loading your to-do items. Please check your connection and try again.</string>
+    <string name="errorUpdatingToDo">There was an error updating the to-do item. Please check your connection and try again.</string>
     <string name="noToDosForNow">No To Dos for now!</string>
     <string name="noToDosForNowSubtext">It looks like a great time to rest, relax, and recharge.</string>
+    <string name="todoSwipeDone">Done</string>
+    <string name="todoSwipeUndo">Undo</string>
+    <string name="todoMarkedAsDone">%s marked as done</string>
+    <string name="todoMarkedAsNotDone">%s marked as not done</string>
+    <string name="todoMarkedAsDoneSnackbarUndo">Undo</string>
+    <string name="todoActionOffline">This action cannot be performed offline</string>
 </resources>

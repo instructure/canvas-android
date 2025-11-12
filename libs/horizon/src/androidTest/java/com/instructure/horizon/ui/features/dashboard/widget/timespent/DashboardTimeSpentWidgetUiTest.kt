@@ -237,13 +237,7 @@ class DashboardTimeSpentWidgetUiTest {
     fun testSuccessStateWithZeroHoursZeroMinutesDisplaysEmpty() {
         val state = DashboardTimeSpentUiState(
             state = DashboardItemState.SUCCESS,
-            cardState = DashboardTimeSpentCardState(
-                hours = 0,
-                minutes = 0,
-                courses = listOf(
-                    CourseOption(id = 1L, name = "Course 1")
-                )
-            )
+            cardState = DashboardTimeSpentCardState()
         )
 
         composeTestRule.setContent {
@@ -251,12 +245,12 @@ class DashboardTimeSpentWidgetUiTest {
         }
 
         // Verify zero hours is not displayed
-        composeTestRule.onNodeWithText("0").assertDoesNotExist()
+        composeTestRule.onNodeWithText("0", useUnmergedTree = true).assertDoesNotExist()
 
         // Verify single course text is not displayed
-        composeTestRule.onNodeWithText("hours in your course").assertDoesNotExist()
+        composeTestRule.onNodeWithText("hours", useUnmergedTree = true).assertDoesNotExist()
 
         // Verify empty state message is displayed
-        composeTestRule.onNodeWithText("This widget will update once data becomes available.").assertIsDisplayed()
+        composeTestRule.onNodeWithText("This widget will update once data becomes available.", useUnmergedTree = true).assertIsDisplayed()
     }
 }

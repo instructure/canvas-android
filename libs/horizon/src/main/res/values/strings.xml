@@ -278,8 +278,8 @@
     <string name="inboxNoMessagesLabel">No messages yet.</string>
     <string name="notesActionMenuCopy">Copy</string>
     <string name="notesActionMenuAddNote">Add note</string>
-    <string name="notesActionMenuAddImportantNote">Important</string>
-    <string name="notesActionMenuAddConfusingNote">Confusing</string>
+    <string name="notesActionMenuMarkImportantNote">Mark important</string>
+    <string name="notesActionMenuMarkConfusingNote">Mark confusing</string>
     <string name="attemptCard_score">Score: %1$s/%2$s</string>
     <string name="attemptBottomSheet_header">Attempts</string>
     <string name="attemptBottomSheet_noAttempts">This assignment allows multiple attempts. Once you\'ve made a submission, you can view it here.</string>

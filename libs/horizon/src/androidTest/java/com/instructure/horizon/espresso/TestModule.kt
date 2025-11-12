@@ -298,4 +298,9 @@ object HorizonTestModule {
     fun provideToDoViewModelBehavior(): com.instructure.pandautils.features.calendartodo.details.ToDoViewModelBehavior {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
+
+    @Provides
+    fun provideToDoListRouter(): com.instructure.pandautils.features.todolist.ToDoListRouter {
+        throw NotImplementedError("This is a test module. Implementation not required.")
+    }
 }

@@ -30,6 +30,28 @@ fun PlannerItem.todoHtmlUrl(apiPrefs: ApiPrefs): String {
     return "${apiPrefs.fullDomain}/todos/${this.plannable.id}"
 }
 
+fun PlannerItem.getUrl(apiPrefs: ApiPrefs): String {
+    val url = when (plannableType) {
+        PlannableType.CALENDAR_EVENT -> {
+            "/${canvasContext.type.apiString}/${canvasContext.id}/calendar_events/${plannable.id}"
+        }
+
+        PlannableType.PLANNER_NOTE -> {
+            "/todos/${plannable.id}"
+        }
+
+        else -> {
+            htmlUrl.orEmpty()
+        }
+    }
+
+    return if (url.startsWith("/")) {
+        apiPrefs.fullDomain + url
+    } else {
+        url
+    }
+}
+
 @DrawableRes
 fun PlannerItem.getIconForPlannerItem(): Int {
     return when (this.plannableType) {
@@ -107,5 +129,16 @@ fun PlannerItem.getTagForPlannerItem(context: Context): String? {
         )
     } else {
         null
+    }
+}
+
+fun PlannerItem.isComplete(): Boolean {
+    return plannerOverride?.markedComplete ?: if (plannableType == PlannableType.ASSIGNMENT
+        || plannableType == PlannableType.DISCUSSION_TOPIC
+        || plannableType == PlannableType.SUB_ASSIGNMENT
+    ) {
+        submissionState?.submitted == true
+    } else {
+        false
     }
 }
