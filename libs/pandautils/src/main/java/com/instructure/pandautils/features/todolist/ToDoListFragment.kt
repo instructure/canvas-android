@@ -37,8 +37,8 @@ class ToDoListFragment : BaseCanvasFragment(), FragmentInteractions, NavigationC
     private var onToDoCountChanged: OnToDoCountChanged? = null
 
     // Track filter screen state for back handling
-    var isFilterScreenShowing = false
-    var closeFilterScreen: (() -> Unit)? = null
+    private var isFilterScreenShowing = false
+    private var closeFilterScreen: (() -> Unit)? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
