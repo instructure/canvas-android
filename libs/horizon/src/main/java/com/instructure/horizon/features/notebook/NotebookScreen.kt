@@ -65,6 +65,10 @@ import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.foundation.horizonShadow
+import com.instructure.horizon.horizonui.molecules.Button
+import com.instructure.horizon.horizonui.molecules.ButtonColor
+import com.instructure.horizon.horizonui.molecules.ButtonHeight
+import com.instructure.horizon.horizonui.molecules.ButtonWidth
 import com.instructure.horizon.horizonui.molecules.DropdownChip
 import com.instructure.horizon.horizonui.molecules.DropdownItem
 import com.instructure.horizon.horizonui.molecules.HorizonDivider
@@ -104,90 +108,82 @@ fun NotebookScreen(
                 .padding(paddingValues = padding)
         ) {
             if ((state.showNoteTypeFilter || state.showCourseFilter) && state.notes.isNotEmpty()) {
-                Box {
-                    FilterContent(
-                        modifier = Modifier
-                            .clip(HorizonCornerRadius.level5)
-                            .background(HorizonColors.Surface.pageSecondary()),
-                        selectedFilter = state.selectedFilter,
-                        onFilterSelected = state.onFilterSelected,
-                        selectedCourse = state.selectedCourse,
-                        onCourseSelected = state.onCourseSelected,
-                        courses = state.courses,
-                        showNoteTypeFilter = state.showNoteTypeFilter,
-                        showCourseTypeFilter = state.showCourseFilter
-                    )
-                }
-                if (scrollState.canScrollBackward) {
-                    HorizonDivider()
-                }
+                FilterContent(
+                    modifier = Modifier
+                        .clip(HorizonCornerRadius.level5)
+                        .background(HorizonColors.Surface.pageSecondary()),
+                    selectedFilter = state.selectedFilter,
+                    onFilterSelected = state.onFilterSelected,
+                    selectedCourse = state.selectedCourse,
+                    onCourseSelected = state.onCourseSelected,
+                    courses = state.courses,
+                    showNoteTypeFilter = state.showNoteTypeFilter,
+                    showCourseTypeFilter = state.showCourseFilter
+                )
             }
 
-            LazyColumn(
-                state = scrollState,
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .background(HorizonColors.Surface.pageSecondary()),
-                contentPadding = PaddingValues(
-                    start = 16.dp,
-                    end = 16.dp,
-                    top = 16.dp,
-                    bottom = 16.dp
-                )
-            ) {
+            Box {
+                LazyColumn(
+                    state = scrollState,
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .background(HorizonColors.Surface.pageSecondary()),
+                    contentPadding = PaddingValues(
+                        start = 16.dp,
+                        end = 16.dp,
+                        top = 16.dp,
+                        bottom = 16.dp
+                    )
+                ) {
 
-                if (state.isLoading) {
-                    item {
-                        LoadingContent()
-                    }
-                } else if (state.notes.isEmpty()) {
-                    item {
-                        EmptyContent()
-                    }
-                } else {
-                    items(state.notes) { note ->
-                        Column {
-                            NoteContent(note) {
-                                onNoteSelected?.invoke(note) ?: mainNavController.navigate(
-                                    MainNavigationRoute.ModuleItemSequence(
-                                        courseId = note.courseId,
-                                        moduleItemAssetType = note.objectType.value,
-                                        moduleItemAssetId = note.objectId,
-                                    )
-                                )
-                            }
-
-                            if (state.notes.lastOrNull() != note) {
-                                HorizonSpace(SpaceSize.SPACE_4)
-                            }
-                        }
-                    }
-
-                    if (state.isLoadingMore) {
+                    if (state.isLoading) {
                         item {
                             LoadingContent()
                         }
+                    } else if (state.notes.isEmpty()) {
+                        item {
+                            EmptyContent()
+                        }
+                    } else {
+                        items(state.notes) { note ->
+                            Column {
+                                NoteContent(note) {
+                                    onNoteSelected?.invoke(note) ?: mainNavController.navigate(
+                                        MainNavigationRoute.ModuleItemSequence(
+                                            courseId = note.courseId,
+                                            moduleItemAssetType = note.objectType.value,
+                                            moduleItemAssetId = note.objectId,
+                                        )
+                                    )
+                                }
+
+                                if (state.notes.lastOrNull() != note) {
+                                    HorizonSpace(SpaceSize.SPACE_4)
+                                }
+                            }
+                        }
+
+                        if (state.hasNextPage) {
+                            item {
+                                if (state.isLoadingMore) {
+                                    LoadingContent()
+                                } else {
+                                    Button(
+                                        label = stringResource(R.string.showMore),
+                                        height = ButtonHeight.SMALL,
+                                        width = ButtonWidth.FILL,
+                                        color = ButtonColor.WhiteWithOutline,
+                                        onClick = { state.loadNextPage() },
+                                        modifier = Modifier.padding(vertical = 24.dp)
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
-            }
 
-            // Infinite scroll: Load more when scrolled near bottom
-            val shouldLoadMore = remember(state) {
-                derivedStateOf {
-                    val lastVisibleItem = scrollState.layoutInfo.visibleItemsInfo.lastOrNull()
-                    val totalItems = scrollState.layoutInfo.totalItemsCount
-                    lastVisibleItem != null &&
-                            lastVisibleItem.index >= totalItems - 1 &&
-                            state.hasNextPage &&
-                            !state.isLoadingMore &&
-                            !state.isLoading &&
-                            state.notes.isNotEmpty()
-                }
-            }
-
-            LaunchedEffect(shouldLoadMore.value) {
-                if (shouldLoadMore.value) {
-                    state.loadNextPage()
+                if (scrollState.canScrollBackward) {
+                    HorizonDivider()
                 }
             }
         }
@@ -206,6 +202,9 @@ private fun FilterContent(
     showCourseTypeFilter: Boolean = true,
 ) {
     val context = LocalContext.current
+    val defaultBackgroundColor = HorizonColors.PrimitivesGrey.grey12()
+    val importantBgColor = HorizonColors.PrimitivesSea.sea12()
+    val confusingBgColor = HorizonColors.PrimitivesRed.red12()
 
     // Type filter items
     val allNotesItem = DropdownItem(
@@ -213,11 +212,9 @@ private fun FilterContent(
         label = context.getString(R.string.notebookTypeAllNotes),
         iconRes = R.drawable.menu,
         iconTint = HorizonColors.Icon.default(),
-        backgroundColor = HorizonColors.PrimitivesGrey.grey12()
+        backgroundColor = defaultBackgroundColor
     )
-    val importantBgColor = HorizonColors.PrimitivesSea.sea12()
-    val confusingBgColor = HorizonColors.PrimitivesRed.red12()
-
+    
     val typeItems = remember {
         listOf(
             allNotesItem,
@@ -244,7 +241,7 @@ private fun FilterContent(
         label = context.getString(R.string.notebookFilterCoursePlaceholder),
         iconRes = null,
         iconTint = null,
-        backgroundColor = HorizonColors.PrimitivesGrey.grey12()
+        backgroundColor = defaultBackgroundColor
     )
 
     val courseItems = remember(courses) {
@@ -253,7 +250,8 @@ private fun FilterContent(
                 value = course,
                 label = course.courseName,
                 iconRes = null,
-                iconTint = null
+                iconTint = null,
+                backgroundColor = defaultBackgroundColor
             )
         }
     }
