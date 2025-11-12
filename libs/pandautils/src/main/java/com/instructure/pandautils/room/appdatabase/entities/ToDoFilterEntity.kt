@@ -17,6 +17,7 @@ package com.instructure.pandautils.room.appdatabase.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.instructure.pandautils.features.todolist.filter.DateRangeSelection
 
 @Entity(tableName = "todo_filter")
 data class ToDoFilterEntity(
@@ -27,6 +28,6 @@ data class ToDoFilterEntity(
     val calendarEvents: Boolean = false,
     val showCompleted: Boolean = false,
     val favoriteCourses: Boolean = false,
-    val pastDateRange: String = "ONE_WEEK",
-    val futureDateRange: String = "ONE_WEEK"
+    val pastDateRange: DateRangeSelection = DateRangeSelection.ONE_WEEK,
+    val futureDateRange: DateRangeSelection = DateRangeSelection.ONE_WEEK
 )

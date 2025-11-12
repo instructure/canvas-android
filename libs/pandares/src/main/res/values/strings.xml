@@ -2219,4 +2219,6 @@
     <string name="todoFilterInFourWeeks">In 4 Weeks</string>
     <string name="todoFilterFromDate">From %s</string>
     <string name="todoFilterUntilDate">Until %s</string>
+    <string name="a11y_buttonSelectionSelected">selected</string>
+    <string name="a11y_buttonSelectionNotSelected">not selected</string>
 </resources>

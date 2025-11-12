@@ -242,11 +242,8 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
             apiPrefs.user?.id.orDefault()
         ) ?: ToDoFilterEntity(userDomain = apiPrefs.fullDomain, userId = apiPrefs.user?.id.orDefault())
 
-        val pastDateSelection = DateRangeSelection.valueOf(todoFilters.pastDateRange)
-        val futureDateSelection = DateRangeSelection.valueOf(todoFilters.futureDateRange)
-
-        val startDate = pastDateSelection.calculatePastDateRange().toApiString()
-        val endDate = futureDateSelection.calculateFutureDateRange().toApiString()
+        val startDate = todoFilters.pastDateRange.calculatePastDateRange().toApiString()
+        val endDate = todoFilters.futureDateRange.calculateFutureDateRange().toApiString()
 
         val restParams = RestParams(isForceReadFromNetwork = true, usePerPageQueryParam = true)
         val plannerItems = plannerApi.getPlannerItems(
@@ -263,7 +260,7 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
             val courses = courseApi.getFavoriteCourses(restParams).depaginate { nextUrl ->
                 courseApi.next(nextUrl, restParams)
             }
-            courses.dataOrNull?.filter { it.isFavorite } ?: emptyList()
+            courses.dataOrNull ?: emptyList()
         } else {
             emptyList()
         }

@@ -19,14 +19,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Checkbox
-import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.RadioButton
 import androidx.compose.material.RadioButtonDefaults
 import androidx.compose.material.Scaffold
@@ -43,6 +42,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -53,6 +55,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasDivider
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
+import com.instructure.pandautils.compose.composables.CheckboxText
 import com.instructure.pandautils.utils.ThemePrefs
 
 @Composable
@@ -180,30 +183,16 @@ private fun CheckboxItem(
     showDivider: Boolean = false
 ) {
     Column {
-        Row(
+        CheckboxText(
+            text = title,
+            selected = checked,
+            color = Color(ThemePrefs.brandColor),
+            onCheckedChanged = onCheckedChange,
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { onCheckedChange(!checked) }
-                .padding(horizontal = 16.dp, vertical = 12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Checkbox(
-                checked = checked,
-                onCheckedChange = onCheckedChange,
-                colors = CheckboxDefaults.colors(
-                    checkedColor = Color(ThemePrefs.brandColor),
-                    uncheckedColor = Color(ThemePrefs.brandColor)
-                )
-            )
-
-            Spacer(modifier = Modifier.width(16.dp))
-
-            Text(
-                text = title,
-                fontSize = 16.sp,
-                color = colorResource(id = R.color.textDarkest)
-            )
-        }
+                .defaultMinSize(minHeight = 56.dp)
+                .padding(horizontal = 4.dp)
+        )
 
         if (showDivider) {
             CanvasDivider(modifier = Modifier.fillMaxWidth())
@@ -242,8 +231,13 @@ private fun DateRangeOptionItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .defaultMinSize(minHeight = 56.dp)
             .clickable(onClick = onSelected)
-            .padding(horizontal = 16.dp, vertical = 12.dp),
+            .padding(start = 16.dp, end = 4.dp)
+            .semantics(mergeDescendants = true) {
+                contentDescription = "${option.labelText}, ${option.dateText}"
+                stateDescription = if (isSelected) "selected" else "not selected"
+            },
         verticalAlignment = Alignment.CenterVertically
     ) {
         RadioButton(

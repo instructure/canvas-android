@@ -131,8 +131,8 @@ class ToDoFilterViewModelTest {
             calendarEvents = true,
             showCompleted = false,
             favoriteCourses = true,
-            pastDateRange = DateRangeSelection.TWO_WEEKS.name,
-            futureDateRange = DateRangeSelection.THREE_WEEKS.name
+            pastDateRange = DateRangeSelection.TWO_WEEKS,
+            futureDateRange = DateRangeSelection.THREE_WEEKS
         )
         coEvery { toDoFilterDao.findByUser(testDomain, testUser.id) } returns savedFilters
 
@@ -211,12 +211,12 @@ class ToDoFilterViewModelTest {
             toDoFilterDao.insertOrUpdate(match { entity ->
                 entity.userDomain == testDomain &&
                 entity.userId == testUser.id &&
-                entity.personalTodos == true &&
-                entity.calendarEvents == false &&
-                entity.showCompleted == true &&
-                entity.favoriteCourses == false &&
-                entity.pastDateRange == DateRangeSelection.TWO_WEEKS.name &&
-                entity.futureDateRange == DateRangeSelection.THREE_WEEKS.name
+                entity.personalTodos &&
+                !entity.calendarEvents &&
+                entity.showCompleted &&
+                !entity.favoriteCourses &&
+                entity.pastDateRange == DateRangeSelection.TWO_WEEKS &&
+                entity.futureDateRange == DateRangeSelection.THREE_WEEKS
             })
         }
     }
@@ -243,8 +243,8 @@ class ToDoFilterViewModelTest {
             calendarEvents = false,
             showCompleted = false,
             favoriteCourses = false,
-            pastDateRange = DateRangeSelection.ONE_WEEK.name,
-            futureDateRange = DateRangeSelection.ONE_WEEK.name
+            pastDateRange = DateRangeSelection.ONE_WEEK,
+            futureDateRange = DateRangeSelection.ONE_WEEK
         )
         coEvery { toDoFilterDao.findByUser(testDomain, testUser.id) } returns savedFilters
         coEvery { toDoFilterDao.insertOrUpdate(any()) } returns Unit
@@ -269,8 +269,8 @@ class ToDoFilterViewModelTest {
             calendarEvents = false,
             showCompleted = false,
             favoriteCourses = false,
-            pastDateRange = DateRangeSelection.ONE_WEEK.name,
-            futureDateRange = DateRangeSelection.ONE_WEEK.name
+            pastDateRange = DateRangeSelection.ONE_WEEK,
+            futureDateRange = DateRangeSelection.ONE_WEEK
         )
         coEvery { toDoFilterDao.findByUser(testDomain, testUser.id) } returns savedFilters
         coEvery { toDoFilterDao.insertOrUpdate(any()) } returns Unit

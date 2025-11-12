@@ -57,11 +57,11 @@ class ToDoFilterDaoTest {
             calendarEvents = true,
             showCompleted = false,
             favoriteCourses = false,
-            pastDateRange = DateRangeSelection.ONE_WEEK.name,
-            futureDateRange = DateRangeSelection.TWO_WEEKS.name
+            pastDateRange = DateRangeSelection.ONE_WEEK,
+            futureDateRange = DateRangeSelection.TWO_WEEKS
         )
 
-        toDoFilterDao.insert(filter)
+        toDoFilterDao.insertOrUpdate(filter)
 
         val foundFilter = toDoFilterDao.findByUser("test.instructure.com", 123L)
 
@@ -76,7 +76,7 @@ class ToDoFilterDaoTest {
             personalTodos = true
         )
 
-        toDoFilterDao.insert(filter)
+        toDoFilterDao.insertOrUpdate(filter)
 
         val foundFilter = toDoFilterDao.findByUser("other.instructure.com", 123L)
 
@@ -100,8 +100,8 @@ class ToDoFilterDaoTest {
             calendarEvents = true
         )
 
-        toDoFilterDao.insert(filter1)
-        toDoFilterDao.insert(filter2)
+        toDoFilterDao.insertOrUpdate(filter1)
+        toDoFilterDao.insertOrUpdate(filter2)
 
         val foundFilter1 = toDoFilterDao.findByUser("test.instructure.com", 123L)
         val foundFilter2 = toDoFilterDao.findByUser("other.instructure.com", 456L)
@@ -135,18 +135,18 @@ class ToDoFilterDaoTest {
             calendarEvents = false,
             showCompleted = false,
             favoriteCourses = false,
-            pastDateRange = DateRangeSelection.ONE_WEEK.name,
-            futureDateRange = DateRangeSelection.ONE_WEEK.name
+            pastDateRange = DateRangeSelection.ONE_WEEK,
+            futureDateRange = DateRangeSelection.ONE_WEEK
         )
 
-        toDoFilterDao.insert(filter1)
+        toDoFilterDao.insertOrUpdate(filter1)
 
         val filter2 = filter1.copy(
             id = 1,
             personalTodos = true,
             calendarEvents = true,
             showCompleted = true,
-            pastDateRange = DateRangeSelection.THREE_WEEKS.name
+            pastDateRange = DateRangeSelection.THREE_WEEKS
         )
 
         toDoFilterDao.insertOrUpdate(filter2)
@@ -170,8 +170,8 @@ class ToDoFilterDaoTest {
             personalTodos = false
         )
 
-        toDoFilterDao.insert(filter1)
-        toDoFilterDao.insert(filter2)
+        toDoFilterDao.insertOrUpdate(filter1)
+        toDoFilterDao.insertOrUpdate(filter2)
 
         toDoFilterDao.deleteByUser("test.instructure.com", 123L)
 
@@ -190,7 +190,7 @@ class ToDoFilterDaoTest {
             personalTodos = true
         )
 
-        toDoFilterDao.insert(filter)
+        toDoFilterDao.insertOrUpdate(filter)
 
         toDoFilterDao.deleteByUser("other.instructure.com", 999L)
 
@@ -205,26 +205,26 @@ class ToDoFilterDaoTest {
             userDomain = "test.instructure.com",
             userId = 123L,
             personalTodos = true,
-            pastDateRange = DateRangeSelection.ONE_WEEK.name
+            pastDateRange = DateRangeSelection.ONE_WEEK
         )
 
         val filter2 = ToDoFilterEntity(
             userDomain = "test.instructure.com",
             userId = 456L,
             personalTodos = false,
-            pastDateRange = DateRangeSelection.TWO_WEEKS.name
+            pastDateRange = DateRangeSelection.TWO_WEEKS
         )
 
         val filter3 = ToDoFilterEntity(
             userDomain = "other.instructure.com",
             userId = 123L,
             personalTodos = true,
-            pastDateRange = DateRangeSelection.THREE_WEEKS.name
+            pastDateRange = DateRangeSelection.THREE_WEEKS
         )
 
-        toDoFilterDao.insert(filter1)
-        toDoFilterDao.insert(filter2)
-        toDoFilterDao.insert(filter3)
+        toDoFilterDao.insertOrUpdate(filter1)
+        toDoFilterDao.insertOrUpdate(filter2)
+        toDoFilterDao.insertOrUpdate(filter3)
 
         val found1 = toDoFilterDao.findByUser("test.instructure.com", 123L)
         val found2 = toDoFilterDao.findByUser("test.instructure.com", 456L)
@@ -242,7 +242,7 @@ class ToDoFilterDaoTest {
             userId = 123L
         )
 
-        toDoFilterDao.insert(filter)
+        toDoFilterDao.insertOrUpdate(filter)
 
         val foundFilter = toDoFilterDao.findByUser("test.instructure.com", 123L)
 
@@ -250,7 +250,7 @@ class ToDoFilterDaoTest {
         assertEquals(false, foundFilter?.calendarEvents)
         assertEquals(false, foundFilter?.showCompleted)
         assertEquals(false, foundFilter?.favoriteCourses)
-        assertEquals("ONE_WEEK", foundFilter?.pastDateRange)
-        assertEquals("ONE_WEEK", foundFilter?.futureDateRange)
+        assertEquals(DateRangeSelection.ONE_WEEK, foundFilter?.pastDateRange)
+        assertEquals(DateRangeSelection.ONE_WEEK, foundFilter?.futureDateRange)
     }
 }

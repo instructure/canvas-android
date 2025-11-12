@@ -119,11 +119,8 @@ class ToDoListViewModel @Inject constructor(
                     apiPrefs.user?.id.orDefault()
                 ) ?: ToDoFilterEntity(userDomain = apiPrefs.fullDomain, userId = apiPrefs.user?.id.orDefault())
 
-                val pastDateSelection = DateRangeSelection.valueOf(todoFilters.pastDateRange)
-                val futureDateSelection = DateRangeSelection.valueOf(todoFilters.futureDateRange)
-
-                val startDate = pastDateSelection.calculatePastDateRange().toApiString()
-                val endDate = futureDateSelection.calculateFutureDateRange().toApiString()
+                val startDate = todoFilters.pastDateRange.calculatePastDateRange().toApiString()
+                val endDate = todoFilters.futureDateRange.calculateFutureDateRange().toApiString()
 
                 val courses = repository.getCourses(forceRefresh).dataOrThrow
                 val plannerItems = repository.getPlannerItems(startDate, endDate, forceRefresh).dataOrThrow
@@ -456,6 +453,6 @@ class ToDoListViewModel @Inject constructor(
 
     private fun isFilterApplied(filters: ToDoFilterEntity): Boolean {
         return filters.personalTodos || filters.calendarEvents || filters.showCompleted || filters.favoriteCourses
-                || filters.pastDateRange != DateRangeSelection.ONE_WEEK.toString() || filters.futureDateRange != DateRangeSelection.ONE_WEEK.toString()
+                || filters.pastDateRange != DateRangeSelection.ONE_WEEK || filters.futureDateRange != DateRangeSelection.ONE_WEEK
     }
 }

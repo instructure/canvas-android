@@ -76,8 +76,8 @@ class ToDoFilterViewModel @Inject constructor(
                 checkboxStates[FILTER_CALENDAR_EVENTS] = savedFilters.calendarEvents
                 checkboxStates[FILTER_SHOW_COMPLETED] = savedFilters.showCompleted
                 checkboxStates[FILTER_FAVORITE_COURSES] = savedFilters.favoriteCourses
-                selectedPastOption = DateRangeSelection.valueOf(savedFilters.pastDateRange)
-                selectedFutureOption = DateRangeSelection.valueOf(savedFilters.futureDateRange)
+                selectedPastOption = savedFilters.pastDateRange
+                selectedFutureOption = savedFilters.futureDateRange
             }
 
             _uiState.update { createInitialUiState() }
@@ -158,7 +158,7 @@ class ToDoFilterViewModel @Inject constructor(
             )
 
             val areDateFiltersChanged = savedFilters?.let {
-                it.pastDateRange != selectedPastOption.name || it.futureDateRange != selectedFutureOption.name
+                it.pastDateRange != selectedPastOption || it.futureDateRange != selectedFutureOption
             } ?: true
 
             val filterEntity = ToDoFilterEntity(
@@ -169,8 +169,8 @@ class ToDoFilterViewModel @Inject constructor(
                 calendarEvents = checkboxStates[FILTER_CALENDAR_EVENTS] ?: false,
                 showCompleted = checkboxStates[FILTER_SHOW_COMPLETED] ?: false,
                 favoriteCourses = checkboxStates[FILTER_FAVORITE_COURSES] ?: false,
-                pastDateRange = selectedPastOption.name,
-                futureDateRange = selectedFutureOption.name
+                pastDateRange = selectedPastOption,
+                futureDateRange = selectedFutureOption
             )
             toDoFilterDao.insertOrUpdate(filterEntity)
 

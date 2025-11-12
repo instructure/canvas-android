@@ -25,9 +25,6 @@ import com.instructure.pandautils.room.appdatabase.entities.ToDoFilterEntity
 @Dao
 interface ToDoFilterDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(filter: ToDoFilterEntity)
-
     @Upsert
     suspend fun insertOrUpdate(filter: ToDoFilterEntity)
 
