@@ -15,6 +15,7 @@
  */
 package com.instructure.pandautils.features.todolist
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -55,7 +56,6 @@ import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -88,8 +88,6 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.CanvasContext
@@ -100,6 +98,7 @@ import com.instructure.pandautils.compose.composables.CanvasDivider
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
+import com.instructure.pandautils.compose.composables.FullScreenDialog
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.modifiers.conditional
 import com.instructure.pandautils.features.todolist.filter.ToDoFilterScreen
@@ -139,8 +138,7 @@ fun ToDoListScreen(
     openToDoItem: (String) -> Unit,
     onToDoCountChanged: (Int) -> Unit,
     onDateClick: (Date) -> Unit,
-    modifier: Modifier = Modifier,
-    onFilterScreenVisibilityChanged: (isShowing: Boolean, closeCallback: () -> Unit) -> Unit = { _, _ -> }
+    modifier: Modifier = Modifier
 ) {
     val viewModel = hiltViewModel<ToDoListViewModel>()
     val uiState by viewModel.uiState.collectAsState()
@@ -148,12 +146,8 @@ fun ToDoListScreen(
     val context = LocalContext.current
     var showFilterScreen by rememberSaveable { mutableStateOf(false) }
 
-    // Notify fragment when filter screen visibility changes
-    // Use SideEffect for synchronous state updates (runs after every successful composition)
-    SideEffect {
-        onFilterScreenVisibilityChanged(showFilterScreen) {
-            showFilterScreen = false
-        }
+    BackHandler(showFilterScreen) {
+        showFilterScreen = false
     }
 
     LaunchedEffect(uiState.snackbarMessage) {
@@ -248,11 +242,8 @@ fun ToDoListScreen(
     }
 
     if (showFilterScreen) {
-        Dialog(
-            onDismissRequest = { showFilterScreen = false },
-            properties = DialogProperties(
-                usePlatformDefaultWidth = false
-            )
+        FullScreenDialog(
+            onDismissRequest = { showFilterScreen = false }
         ) {
             ToDoFilterScreen(
                 onFiltersChanged = { dateFiltersChanged ->
@@ -352,8 +343,8 @@ private fun ToDoItemsList(
     val availableSpacePx = listHeight - listContentHeight
     val minSpaceForPandasPx = with(density) { 140.dp.toPx() }
     val showPandas = listHeight > 0 && listContentHeight > 0 &&
-                     availableSpacePx >= minSpaceForPandasPx &&
-                     itemsByDate.isNotEmpty()
+            availableSpacePx >= minSpaceForPandasPx &&
+            itemsByDate.isNotEmpty()
 
     Box(modifier = modifier.fillMaxSize()) {
         LazyColumn(
@@ -385,9 +376,9 @@ private fun ToDoItemsList(
                             modifier = Modifier
                                 .animateItem()
                                 .onGloballyPositioned { coordinates ->
-                                itemPositions[item.id] = coordinates.positionInParent().y
-                                itemSizes[item.id] = coordinates.size.height
-                            }
+                                    itemPositions[item.id] = coordinates.positionInParent().y
+                                    itemSizes[item.id] = coordinates.size.height
+                                }
                         )
                     }
                 }

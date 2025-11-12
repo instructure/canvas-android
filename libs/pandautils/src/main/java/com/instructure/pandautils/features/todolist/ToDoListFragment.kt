@@ -36,10 +36,6 @@ class ToDoListFragment : BaseCanvasFragment(), FragmentInteractions, NavigationC
 
     private var onToDoCountChanged: OnToDoCountChanged? = null
 
-    // Track filter screen state for back handling
-    private var isFilterScreenShowing = false
-    private var closeFilterScreen: (() -> Unit)? = null
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
         onToDoCountChanged = context as? OnToDoCountChanged
@@ -67,10 +63,6 @@ class ToDoListFragment : BaseCanvasFragment(), FragmentInteractions, NavigationC
                         },
                         onDateClick = { date ->
                             toDoListRouter.openCalendar(date.toLocalDate())
-                        },
-                        onFilterScreenVisibilityChanged = { isShowing, closeCallback ->
-                            isFilterScreenShowing = isShowing
-                            closeFilterScreen = if (isShowing) closeCallback else null
                         }
                     )
                 }
@@ -90,14 +82,7 @@ class ToDoListFragment : BaseCanvasFragment(), FragmentInteractions, NavigationC
 
     override fun getFragment(): Fragment = this
 
-    override fun onHandleBackPressed(): Boolean {
-        // Intercept back press if filter screen is showing
-        if (isFilterScreenShowing) {
-            closeFilterScreen?.invoke()
-            return true
-        }
-        return false
-    }
+    override fun onHandleBackPressed() = false
 
     companion object {
         fun makeRoute(canvasContext: CanvasContext): Route = Route(ToDoListFragment::class.java, canvasContext, Bundle())
