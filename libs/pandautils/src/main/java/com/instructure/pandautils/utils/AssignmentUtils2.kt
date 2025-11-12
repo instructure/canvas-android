@@ -18,6 +18,9 @@
 package com.instructure.pandautils.utils
 
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.AssignmentDueDate
+import com.instructure.canvasapi2.models.AssignmentOverride
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Submission
 import java.util.*
 
@@ -126,4 +129,67 @@ object AssignmentUtils2 {
             }
         }
     }
+}
+
+fun Assignment.isAllowedToSubmitWithOverrides(course: Course?): Boolean {
+    val submissionTypes = getSubmissionTypes()
+
+    if (!expectsSubmissions() ||
+        submissionTypes.contains(Assignment.SubmissionType.ONLINE_QUIZ) ||
+        submissionTypes.contains(Assignment.SubmissionType.ATTENDANCE)) {
+        return false
+    }
+
+    if (!lockedForUser) {
+        return true
+    }
+
+    if (!hasOverrides || course?.enrollments.isNullOrEmpty()) {
+        return false
+    }
+
+    val userSectionIds = course?.enrollments
+        ?.filter { it.isStudent }
+        ?.map { it.courseSectionId }
+        ?.filter { it != 0L }
+        ?: emptyList()
+
+    if (userSectionIds.isEmpty()) {
+        return false
+    }
+
+    val currentTime = Date()
+
+    val sectionOverrides = overrides?.filter { override ->
+        userSectionIds.contains(override.courseSectionId)
+    } ?: emptyList()
+
+    if (sectionOverrides.isNotEmpty()) {
+        return sectionOverrides.any { override ->
+            isAccessibleWithinDateRange(currentTime, override.unlockAt, override.lockAt)
+        }
+    }
+
+    val sectionDueDates = allDates.filter { dueDate ->
+        val matchingOverride = overrides?.find { it.id == dueDate.id }
+        matchingOverride != null && userSectionIds.contains(matchingOverride.courseSectionId)
+    }
+
+    return sectionDueDates.any { dueDate ->
+        isAccessibleWithinDateRange(currentTime, dueDate.unlockDate, dueDate.lockDate)
+    }
+}
+
+private fun isAccessibleWithinDateRange(currentTime: Date, unlockDate: Date?, lockDate: Date?): Boolean {
+    val afterUnlock = unlockDate == null || currentTime.after(unlockDate) || currentTime == unlockDate
+    val beforeLock = lockDate == null || currentTime.before(lockDate)
+    return afterUnlock && beforeLock
+}
+
+private fun Assignment.expectsSubmissions(): Boolean {
+    val submissionTypes = getSubmissionTypes()
+    return submissionTypes.isNotEmpty() &&
+           !submissionTypes.contains(Assignment.SubmissionType.NONE) &&
+           !submissionTypes.contains(Assignment.SubmissionType.NOT_GRADED) &&
+           !submissionTypes.contains(Assignment.SubmissionType.ON_PAPER)
 }
