@@ -42,7 +42,6 @@ import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.accessibilityClassName
-import com.instructure.pandautils.utils.applyBottomSystemBarInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.children
 import com.instructure.pandautils.utils.isTablet
@@ -130,7 +129,6 @@ class OldToDoListFragment : ParentFragment() {
         }
 
         recyclerViewBinding.listView.isSelectionEnabled = false
-        recyclerViewBinding.swipeRefreshLayout.applyBottomSystemBarInsets()
 
         binding.confirmButton.text = getString(R.string.markAsDone)
         binding.confirmButton.setOnClickListener { recyclerAdapter?.confirmButtonClicked() }

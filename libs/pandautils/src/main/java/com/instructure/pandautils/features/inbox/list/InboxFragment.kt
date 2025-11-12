@@ -352,6 +352,7 @@ class InboxFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInterac
         if (requireContext().packageName == AppType.PARENT.packageName) {
             binding.addMessage.applyBottomAndRightSystemBarMargin()
         } else {
+            binding.swipeRefreshLayout.applyBottomSystemBarInsets()
             binding.addMessage.applyBottomAndRightSystemBarPadding()
         }
 
@@ -360,7 +361,6 @@ class InboxFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInterac
         inboxRouter.attachNavigationIcon(binding.toolbar)
         binding.toolbar.applyTopSystemBarInsets()
         binding.editToolbar.applyTopSystemBarInsets()
-        binding.swipeRefreshLayout.applyBottomSystemBarInsets()
     }
 
     override fun getFragment(): Fragment? = this
