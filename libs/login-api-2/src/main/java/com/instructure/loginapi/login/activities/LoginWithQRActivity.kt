@@ -37,6 +37,7 @@ import com.instructure.pandautils.utils.setupAsBackButton
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import com.instructure.pandautils.utils.EdgeToEdgeHelper
 
 abstract class LoginWithQRActivity : BaseCanvasActivity() {
 
@@ -46,10 +47,26 @@ abstract class LoginWithQRActivity : BaseCanvasActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        EdgeToEdgeHelper.enableEdgeToEdge(this)
         setContentView(binding.root)
 
+        setupWindowInsets()
         bindViews()
     }
+
+    private fun setupWindowInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
+            val insets = windowInsets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+            view.updatePadding(
+                left = insets.left,
+                right = insets.right
+            )
+            windowInsets
+        }
+    }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         val result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
@@ -57,7 +74,7 @@ abstract class LoginWithQRActivity : BaseCanvasActivity() {
         // Capture the results from the QR scanner
         if (result?.contents != null) {
             val loginUri = Uri.parse(result.contents)
-            if(QRLogin.verifySSOLoginUri(loginUri)) {
+            if (QRLogin.verifySSOLoginUri(loginUri)) {
                 // Valid link, let's launch it
                 launchApplicationWithQRLogin(loginUri)
             } else {
