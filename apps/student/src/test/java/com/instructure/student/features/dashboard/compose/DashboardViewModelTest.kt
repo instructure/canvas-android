@@ -1,0 +1,113 @@
+/*
+ * Copyright (C) 2024 - present Instructure, Inc.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, version 3 of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package com.instructure.student.features.dashboard.compose
+
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
+import com.instructure.pandautils.utils.NetworkStateProvider
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.unmockkAll
+import junit.framework.Assert.assertEquals
+import junit.framework.Assert.assertFalse
+import junit.framework.Assert.assertTrue
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
+import org.junit.After
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+
+@ExperimentalCoroutinesApi
+class DashboardViewModelTest {
+
+    @get:Rule
+    var instantExecutorRule = InstantTaskExecutorRule()
+
+    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
+    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
+
+    private val testDispatcher = UnconfinedTestDispatcher()
+    private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
+
+    private lateinit var viewModel: DashboardViewModel
+
+    @Before
+    fun setUp() {
+        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
+        Dispatchers.setMain(testDispatcher)
+
+        every { networkStateProvider.isOnline() } returns true
+
+        viewModel = DashboardViewModel(networkStateProvider)
+    }
+
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
+        unmockkAll()
+    }
+
+    @Test
+    fun testInitialState() = runTest {
+        val state = viewModel.uiState.value
+
+        assertFalse(state.loading)
+        assertEquals(null, state.error)
+        assertFalse(state.refreshing)
+    }
+
+    @Test
+    fun testLoadDashboardSuccess() = runTest {
+        val state = viewModel.uiState.value
+
+        assertEquals(false, state.loading)
+        assertEquals(null, state.error)
+    }
+
+    @Test
+    fun testRefresh() = runTest {
+        viewModel.uiState.value.onRefresh()
+
+        val state = viewModel.uiState.value
+        assertFalse(state.refreshing)
+        assertEquals(null, state.error)
+    }
+
+    @Test
+    fun testRetry() = runTest {
+        viewModel.uiState.value.onRetry()
+
+        val state = viewModel.uiState.value
+        assertFalse(state.loading)
+        assertEquals(null, state.error)
+    }
+
+    @Test
+    fun testCallbacksExist() {
+        val state = viewModel.uiState.value
+
+        assertTrue(state.onRefresh != null)
+        assertTrue(state.onRetry != null)
+    }
+}

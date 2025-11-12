@@ -80,4 +80,16 @@ class CalendarSharedEventsTest {
         val expectedEvent = SharedCalendarAction.FiltersClosed(false)
         assertEquals(expectedEvent, event)
     }
+
+    @Test
+    fun `Send event when selecting a day from navigation`() = runTest {
+        val selectedDate = LocalDate.of(2025, 1, 15)
+
+        sharedEvents.sendEvent(this, SharedCalendarAction.SelectDay(selectedDate))
+
+        val event = sharedEvents.events.first()
+
+        val expectedEvent = SharedCalendarAction.SelectDay(selectedDate)
+        assertEquals(expectedEvent, event)
+    }
 }

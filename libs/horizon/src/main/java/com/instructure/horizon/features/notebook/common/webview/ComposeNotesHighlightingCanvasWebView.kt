@@ -121,7 +121,7 @@ fun ComposeNotesHighlightingCanvasWebView(
                                 )
                                 if (notes.none { intersects(it.highlightedText.textPosition.start to it.highlightedText.textPosition.end, selectedTextStart to selectedTextEnd) }){
                                     add(
-                                        ActionMenuItem(2, context.getString(R.string.notesActionMenuAddImportantNote)) {
+                                        ActionMenuItem(2, context.getString(R.string.notesActionMenuMarkImportantNote)) {
                                             notesCallback.onNoteAdded(
                                                 selectedText,
                                                 NotebookType.Important.name,
@@ -135,24 +135,10 @@ fun ComposeNotesHighlightingCanvasWebView(
                                         }
                                     )
                                     add(
-                                        ActionMenuItem(3, context.getString(R.string.notesActionMenuAddConfusingNote)) {
+                                        ActionMenuItem(3, context.getString(R.string.notesActionMenuMarkConfusingNote)) {
                                             notesCallback.onNoteAdded(
                                                 selectedText,
                                                 NotebookType.Confusing.name,
-                                                selectedTextRangeStartContainer,
-                                                selectedTextRangeStartOffset,
-                                                selectedTextRangeEndContainer,
-                                                selectedTextRangeEndOffset,
-                                                selectedTextStart,
-                                                selectedTextEnd
-                                            )
-                                        }
-                                    )
-                                    add(
-                                        ActionMenuItem(4, context.getString(R.string.notesActionMenuAddNote)) {
-                                            notesCallback.onNoteAdded(
-                                                selectedText,
-                                                null,
                                                 selectedTextRangeStartContainer,
                                                 selectedTextRangeStartOffset,
                                                 selectedTextRangeEndContainer,

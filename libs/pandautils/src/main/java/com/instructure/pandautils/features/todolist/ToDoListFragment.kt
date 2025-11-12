@@ -21,6 +21,7 @@ import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.toLocalDate
 import com.instructure.pandautils.utils.withArgs
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -55,9 +56,18 @@ class ToDoListFragment : BaseCanvasFragment(), FragmentInteractions, NavigationC
             setContent {
                 CanvasTheme {
                     ToDoListScreen(
-                        navigationIconClick = { toDoListRouter.openNavigationDrawer() },
-                        openToDoItem = { itemId -> toDoListRouter.openToDoItem(itemId) },
-                        onToDoCountChanged = { count -> onToDoCountChanged?.onToDoCountChanged(count) },
+                        navigationIconClick = {
+                            toDoListRouter.openNavigationDrawer()
+                        },
+                        openToDoItem = { itemId ->
+                            toDoListRouter.openToDoItem(itemId)
+                        },
+                        onToDoCountChanged = { count ->
+                            onToDoCountChanged?.onToDoCountChanged(count)
+                        },
+                        onDateClick = { date ->
+                            toDoListRouter.openCalendar(date.toLocalDate())
+                        },
                         onFilterScreenVisibilityChanged = { isShowing, closeCallback ->
                             isFilterScreenShowing = isShowing
                             closeFilterScreen = if (isShowing) closeCallback else null

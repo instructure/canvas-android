@@ -141,7 +141,7 @@ import com.instructure.student.features.files.list.FileListFragment
 import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
 import com.instructure.student.features.navigation.NavigationRepository
 import com.instructure.student.fragment.BookmarksFragment
-import com.instructure.student.fragment.DashboardFragment
+import com.instructure.student.fragment.OldDashboardFragment
 import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.fragment.OldToDoListFragment
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffectHandler
@@ -1045,7 +1045,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     private fun selectBottomNavFragment(fragmentClass: Class<out Fragment>) {
         val selectedFragment = supportFragmentManager.findFragmentByTag(fragmentClass.name)
 
-        (topFragment as? DashboardFragment)?.cancelCardDrag()
+        (topFragment as? OldDashboardFragment)?.cancelCardDrag()
 
         if (selectedFragment == null) {
             val fragment = createBottomNavFragment(fragmentClass.name)

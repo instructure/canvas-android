@@ -1,256 +1,157 @@
 /*
  * Copyright (C) 2025 - present Instructure, Inc.
  *
- *     Licensed under the Apache License, Version 2.0 (the "License");
- *     you may not use this file except in compliance with the License.
- *     You may obtain a copy of the License at
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, version 3 of the License.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
  *
- *     Unless required by applicable law or agreed to in writing, software
- *     distributed under the License is distributed on an "AS IS" BASIS,
- *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *     See the License for the specific language governing permissions and
- *     limitations under the License.
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 package com.instructure.pandautils.utils
 
-import android.content.Context
-import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Plannable
 import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
-import com.instructure.canvasapi2.models.PlannerItemDetails
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.DateHelper
-import com.instructure.canvasapi2.utils.toApiString
-import com.instructure.pandautils.R
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkObject
-import io.mockk.unmockkAll
-import org.junit.After
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
-import java.util.Calendar
 import java.util.Date
 
 class PlannerItemExtensionsTest {
 
-    private val context: Context = mockk(relaxed = true)
+    private lateinit var apiPrefs: ApiPrefs
 
     @Before
     fun setup() {
-        mockkObject(ApiPrefs)
-        every { ApiPrefs.fullDomain } returns "https://test.instructure.com"
-
-        mockkObject(DateHelper)
+        apiPrefs = mockk(relaxed = true)
+        every { apiPrefs.fullDomain } returns "https://example.instructure.com"
     }
 
-    @After
-    fun tearDown() {
-        unmockkAll()
-    }
-
-    companion object {
-        // Static dates for predictable testing
-        private val TEST_DATE = createDate(2025, Calendar.JANUARY, 15, 14, 30) // Jan 15, 2025 at 2:30 PM
-        private val TEST_DATE_2 = createDate(2025, Calendar.JANUARY, 15, 15, 30) // Jan 15, 2025 at 3:30 PM
-
-        private fun createDate(year: Int, month: Int, day: Int, hour: Int = 0, minute: Int = 0): Date {
-            return Calendar.getInstance().apply {
-                set(year, month, day, hour, minute, 0)
-                set(Calendar.MILLISECOND, 0)
-            }.time
-        }
-    }
-
-    // todoHtmlUrl tests
-    @Test
-    fun `todoHtmlUrl returns correct URL`() {
-        val plannerItem = createPlannerItem(plannableId = 12345L)
-
-        val result = plannerItem.todoHtmlUrl(ApiPrefs)
-
-        assertEquals("https://test.instructure.com/todos/12345", result)
-    }
-
-    // getIconForPlannerItem tests
-    @Test
-    fun `getIconForPlannerItem returns assignment icon for ASSIGNMENT type`() {
-        val plannerItem = createPlannerItem(plannableType = PlannableType.ASSIGNMENT)
-
-        val result = plannerItem.getIconForPlannerItem()
-
-        assertEquals(R.drawable.ic_assignment, result)
-    }
-
-    @Test
-    fun `getIconForPlannerItem returns quiz icon for QUIZ type`() {
-        val plannerItem = createPlannerItem(plannableType = PlannableType.QUIZ)
-
-        val result = plannerItem.getIconForPlannerItem()
-
-        assertEquals(R.drawable.ic_quiz, result)
-    }
-
-    @Test
-    fun `getIconForPlannerItem returns calendar icon for CALENDAR_EVENT type`() {
-        val plannerItem = createPlannerItem(plannableType = PlannableType.CALENDAR_EVENT)
-
-        val result = plannerItem.getIconForPlannerItem()
-
-        assertEquals(R.drawable.ic_calendar, result)
-    }
-
-    @Test
-    fun `getIconForPlannerItem returns discussion icon for DISCUSSION_TOPIC type`() {
-        val plannerItem = createPlannerItem(plannableType = PlannableType.DISCUSSION_TOPIC)
-
-        val result = plannerItem.getIconForPlannerItem()
-
-        assertEquals(R.drawable.ic_discussion, result)
-    }
-
-    @Test
-    fun `getIconForPlannerItem returns discussion icon for SUB_ASSIGNMENT type`() {
-        val plannerItem = createPlannerItem(plannableType = PlannableType.SUB_ASSIGNMENT)
-
-        val result = plannerItem.getIconForPlannerItem()
-
-        assertEquals(R.drawable.ic_discussion, result)
-    }
-
-    @Test
-    fun `getIconForPlannerItem returns todo icon for PLANNER_NOTE type`() {
-        val plannerItem = createPlannerItem(plannableType = PlannableType.PLANNER_NOTE)
-
-        val result = plannerItem.getIconForPlannerItem()
-
-        assertEquals(R.drawable.ic_todo, result)
-    }
-
-    @Test
-    fun `getIconForPlannerItem returns calendar icon for unknown type`() {
-        val plannerItem = createPlannerItem(plannableType = PlannableType.ANNOUNCEMENT)
-
-        val result = plannerItem.getIconForPlannerItem()
-
-        assertEquals(R.drawable.ic_calendar, result)
-    }
-
-    // getDateTextForPlannerItem tests
-    @Test
-    fun `getDateTextForPlannerItem returns formatted time for PLANNER_NOTE with todoDate`() {
-        val plannable = createPlannable(todoDate = TEST_DATE.toApiString())
-        val plannerItem = createPlannerItem(
-            plannableType = PlannableType.PLANNER_NOTE,
-            plannable = plannable
-        )
-
-        every { DateHelper.getFormattedTime(context, TEST_DATE) } returns "2:30 PM"
-
-        val result = plannerItem.getDateTextForPlannerItem(context)
-
-        assertEquals("2:30 PM", result)
-    }
-
-    @Test
-    fun `getDateTextForPlannerItem returns null for PLANNER_NOTE without todoDate`() {
-        val plannable = createPlannable(todoDate = null)
-        val plannerItem = createPlannerItem(
-            plannableType = PlannableType.PLANNER_NOTE,
-            plannable = plannable
-        )
-
-        val result = plannerItem.getDateTextForPlannerItem(context)
-
-        assertNull(result)
-    }
-
-    @Test
-    fun `getDateTextForPlannerItem returns all day text for all-day CALENDAR_EVENT`() {
-        val plannable = createPlannable(
-            startAt = TEST_DATE,
-            endAt = TEST_DATE,
-            allDay = true
-        )
-        val plannerItem = createPlannerItem(
-            plannableType = PlannableType.CALENDAR_EVENT,
-            plannable = plannable
-        )
-
-        every { context.getString(R.string.widgetAllDay) } returns "All Day"
-
-        val result = plannerItem.getDateTextForPlannerItem(context)
-
-        assertEquals("All Day", result)
-    }
-
-    @Test
-    fun `getDateTextForPlannerItem returns single time for CALENDAR_EVENT with same start and end`() {
-        val plannable = createPlannable(
-            startAt = TEST_DATE,
-            endAt = TEST_DATE,
-            allDay = false
-        )
-        val plannerItem = createPlannerItem(
-            plannableType = PlannableType.CALENDAR_EVENT,
-            plannable = plannable
-        )
-
-        every { DateHelper.getFormattedTime(context, TEST_DATE) } returns "2:30 PM"
-
-        val result = plannerItem.getDateTextForPlannerItem(context)
-
-        assertEquals("2:30 PM", result)
-    }
-
-    @Test
-    fun `getDateTextForPlannerItem returns time range for CALENDAR_EVENT with different times`() {
-        val plannable = createPlannable(
-            startAt = TEST_DATE,
-            endAt = TEST_DATE_2,
-            allDay = false
-        )
-        val plannerItem = createPlannerItem(
-            plannableType = PlannableType.CALENDAR_EVENT,
-            plannable = plannable
-        )
-
-        every { DateHelper.getFormattedTime(context, TEST_DATE) } returns "2:30 PM"
-        every { DateHelper.getFormattedTime(context, TEST_DATE_2) } returns "3:30 PM"
-        every { context.getString(R.string.widgetFromTo, "2:30 PM", "3:30 PM") } returns "2:30 PM - 3:30 PM"
-
-        val result = plannerItem.getDateTextForPlannerItem(context)
-
-        assertEquals("2:30 PM - 3:30 PM", result)
-    }
-
-    @Test
-    fun `getDateTextForPlannerItem returns null for CALENDAR_EVENT without dates`() {
-        val plannable = createPlannable(
+    private fun createPlannerItem(
+        courseId: Long? = null,
+        groupId: Long? = null,
+        userId: Long? = null,
+        plannableType: PlannableType,
+        plannableId: Long,
+        htmlUrl: String? = null
+    ): PlannerItem {
+        val plannable = Plannable(
+            id = plannableId,
+            title = "Test Item",
+            courseId = courseId,
+            groupId = groupId,
+            userId = userId,
+            pointsPossible = null,
+            dueAt = null,
+            assignmentId = null,
+            todoDate = null,
             startAt = null,
-            endAt = null
+            endAt = null,
+            details = null,
+            allDay = null
         )
+
+        return PlannerItem(
+            courseId = courseId,
+            groupId = groupId,
+            userId = userId,
+            contextType = null,
+            contextName = null,
+            plannableType = plannableType,
+            plannable = plannable,
+            plannableDate = Date(),
+            htmlUrl = htmlUrl,
+            submissionState = null,
+            newActivity = null
+        )
+    }
+
+    @Test
+    fun `getUrl returns full URL for calendar event`() {
         val plannerItem = createPlannerItem(
+            courseId = 123,
             plannableType = PlannableType.CALENDAR_EVENT,
-            plannable = plannable
+            plannableId = 456
         )
 
-        val result = plannerItem.getDateTextForPlannerItem(context)
+        val result = plannerItem.getUrl(apiPrefs)
 
-        assertNull(result)
+        assertEquals("https://example.instructure.com/courses/123/calendar_events/456", result)
+    }
+
+    @Test
+    fun `getUrl returns full URL for planner note`() {
+        val plannerItem = createPlannerItem(
+            userId = 1,
+            plannableType = PlannableType.PLANNER_NOTE,
+            plannableId = 789
+        )
+
+        val result = plannerItem.getUrl(apiPrefs)
+
+        assertEquals("https://example.instructure.com/todos/789", result)
+    }
+
+    @Test
+    fun `getUrl returns htmlUrl for assignment when htmlUrl is set`() {
+        val plannerItem = createPlannerItem(
+            courseId = 123,
+            plannableType = PlannableType.ASSIGNMENT,
+            plannableId = 456,
+            htmlUrl = "https://example.instructure.com/courses/123/assignments/456"
+        )
+
+        val result = plannerItem.getUrl(apiPrefs)
+
+        assertEquals("https://example.instructure.com/courses/123/assignments/456", result)
+    }
+
+    @Test
+    fun `getUrl returns htmlUrl for quiz when htmlUrl is set`() {
+        val plannerItem = createPlannerItem(
+            courseId = 123,
+            plannableType = PlannableType.QUIZ,
+            plannableId = 456,
+            htmlUrl = "https://example.instructure.com/courses/123/quizzes/456"
+        )
+
+        val result = plannerItem.getUrl(apiPrefs)
+
+        assertEquals("https://example.instructure.com/courses/123/quizzes/456", result)
+    }
+
+    @Test
+    fun `getUrl returns htmlUrl for discussion when htmlUrl is set`() {
+        val plannerItem = createPlannerItem(
+            courseId = 123,
+            plannableType = PlannableType.DISCUSSION_TOPIC,
+            plannableId = 456,
+            htmlUrl = "https://example.instructure.com/courses/123/discussion_topics/456"
+        )
+
+        val result = plannerItem.getUrl(apiPrefs)
+
+        assertEquals("https://example.instructure.com/courses/123/discussion_topics/456", result)
     }
 
     @Test
     fun `getDateTextForPlannerItem returns formatted time for ASSIGNMENT with dueAt`() {
         val plannable = createPlannable(dueAt = TEST_DATE)
         val plannerItem = createPlannerItem(
+            courseId = 123,
             plannableType = PlannableType.ASSIGNMENT,
-            plannable = plannable
+            plannableId = 456,
+            htmlUrl = null
         )
 
         every { DateHelper.getFormattedTime(context, TEST_DATE) } returns "2:30 PM"
@@ -261,100 +162,59 @@ class PlannerItemExtensionsTest {
     }
 
     @Test
-    fun `getDateTextForPlannerItem returns null for ASSIGNMENT without dueAt`() {
-        val plannable = createPlannable(dueAt = null)
+    fun `getUrl returns empty string when htmlUrl is null for assignment`() {
         val plannerItem = createPlannerItem(
+            courseId = 123,
             plannableType = PlannableType.ASSIGNMENT,
-            plannable = plannable
+            plannableId = 456,
+            htmlUrl = null
         )
 
-        val result = plannerItem.getDateTextForPlannerItem(context)
-
-        assertNull(result)
-    }
-
-    // getContextNameForPlannerItem tests
-    @Test
-    fun `getContextNameForPlannerItem returns User To-Do for PLANNER_NOTE without contextName`() {
-        val plannerItem = createPlannerItem(
-            plannableType = PlannableType.PLANNER_NOTE,
-            contextName = null
-        )
-
-        every { context.getString(R.string.userCalendarToDo) } returns "User To-Do"
-
-        val result = plannerItem.getContextNameForPlannerItem(context, emptyList())
-
-        assertEquals("User To-Do", result)
-    }
-
-    @Test
-    fun `getContextNameForPlannerItem returns course todo for PLANNER_NOTE with contextName`() {
-        val course = Course(id = 123L, courseCode = "CS101")
-        val plannerItem = createPlannerItem(
-            plannableType = PlannableType.PLANNER_NOTE,
-            courseId = 123L,
-            contextName = "Computer Science"
-        )
-
-        every { context.getString(R.string.courseToDo, "CS101") } returns "CS101 To-Do"
-
-        val result = plannerItem.getContextNameForPlannerItem(context, listOf(course))
-
-        assertEquals("CS101 To-Do", result)
-    }
-
-    @Test
-    fun `getContextNameForPlannerItem returns course code for Course context`() {
-        val course = Course(id = 123L, courseCode = "CS101")
-        val plannerItem = createPlannerItem(
-            plannableType = PlannableType.ASSIGNMENT,
-            courseId = 123L
-        )
-
-        val result = plannerItem.getContextNameForPlannerItem(context, listOf(course))
-
-        assertEquals("CS101", result)
-    }
-
-    @Test
-    fun `getContextNameForPlannerItem returns empty string for Course context without matching course`() {
-        val course = Course(id = 999L, courseCode = "CS101")
-        val plannerItem = createPlannerItem(
-            plannableType = PlannableType.ASSIGNMENT,
-            courseId = 123L
-        )
-
-        val result = plannerItem.getContextNameForPlannerItem(context, listOf(course))
+        val result = plannerItem.getUrl(apiPrefs)
 
         assertEquals("", result)
     }
 
     @Test
-    fun `getContextNameForPlannerItem returns contextName for non-Course context`() {
+    fun `getUrl handles calendar event with group context`() {
         val plannerItem = createPlannerItem(
-            plannableType = PlannableType.ASSIGNMENT,
-            userId = 456L,
-            contextName = "Personal"
+            groupId = 789,
+            plannableType = PlannableType.CALENDAR_EVENT,
+            plannableId = 456
         )
 
-        val result = plannerItem.getContextNameForPlannerItem(context, emptyList())
+        val result = plannerItem.getUrl(apiPrefs)
 
-        assertEquals("Personal", result)
+        assertEquals("https://example.instructure.com/groups/789/calendar_events/456", result)
     }
 
-    // getTagForPlannerItem tests
     @Test
-    fun `getTagForPlannerItem returns reply to topic for REPLY_TO_TOPIC tag`() {
-        val plannable = createPlannable(subAssignmentTag = Const.REPLY_TO_TOPIC)
-        val plannerItem = createPlannerItem(plannable = plannable)
+    fun `getUrl handles planner note with relative path correctly`() {
+        val plannerItem = createPlannerItem(
+            userId = 1,
+            plannableType = PlannableType.PLANNER_NOTE,
+            plannableId = 123
+        )
 
-        every { context.getString(R.string.reply_to_topic) } returns "Reply to Topic"
+        val result = plannerItem.getUrl(apiPrefs)
 
-        val result = plannerItem.getTagForPlannerItem(context)
-
-        assertEquals("Reply to Topic", result)
+        assertEquals("https://example.instructure.com/todos/123", result)
     }
+
+    @Test
+    fun `getUrl does not double-prepend domain when htmlUrl already contains domain`() {
+        val plannerItem = createPlannerItem(
+            courseId = 123,
+            plannableType = PlannableType.ASSIGNMENT,
+            plannableId = 456,
+            htmlUrl = "https://example.instructure.com/courses/123/assignments/456"
+        )
+
+        val result = plannerItem.getUrl(apiPrefs)
+
+        assertEquals("https://example.instructure.com/courses/123/assignments/456", result)
+    }
+}
 
     @Test
     fun `getTagForPlannerItem returns additional replies for REPLY_TO_ENTRY with count`() {

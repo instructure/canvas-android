@@ -68,6 +68,8 @@ class ToDoListViewModelTest {
     private val testUser = User(id = 123L, name = "Test User")
     private val testDomain = "test.instructure.com"
 
+    private val apiPrefs: ApiPrefs = mockk(relaxed = true)
+
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)

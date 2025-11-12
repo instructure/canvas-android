@@ -21,12 +21,25 @@ import com.instructure.horizon.R
 
 data class DashboardSkillHighlightsCardState(
     val skills: List<SkillHighlight> = emptyList()
-)
+) {
+    companion object {
+        val Loading = DashboardSkillHighlightsCardState(
+            skills = List(3) { SkillHighlight.Loading }
+        )
+    }
+}
 
 data class SkillHighlight(
     val name: String,
     val proficiencyLevel: SkillHighlightProficiencyLevel
-)
+) {
+    companion object {
+        val Loading = SkillHighlight(
+            name = "Lorem Ipsum Dolor",
+            proficiencyLevel = SkillHighlightProficiencyLevel.BEGINNER
+        )
+    }
+}
 
 enum class SkillHighlightProficiencyLevel(
     @StringRes val skillProficiencyLevelRes: Int,

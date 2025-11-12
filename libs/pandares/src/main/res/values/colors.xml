@@ -105,7 +105,6 @@
     <color name="blueHighlightAnnotation">#80D0FF</color>
     <color name="pinkHighlightAnnotation">#FFB9F1</color>
 
-
     <!-- App theme colors -->
     <color name="login_teacherAppTheme">#9E58BD</color>
     <color name="login_parentAppTheme">#2573DF</color>

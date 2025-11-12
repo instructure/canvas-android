@@ -63,6 +63,16 @@ class ConferenceListUpdate : UpdateInit<ConferenceListModel, ConferenceListEvent
                 )
             }
             ConferenceListEvent.LaunchInBrowserFinished -> Next.next(model.copy(isLaunchingInBrowser = false))
+            is ConferenceListEvent.HeaderClicked -> {
+                when (event.headerType) {
+                    ConferenceHeaderType.NEW_CONFERENCES -> {
+                        Next.next(model.copy(isNewConferencesExpanded = !model.isNewConferencesExpanded))
+                    }
+                    ConferenceHeaderType.CONCLUDED_CONFERENCES -> {
+                        Next.next(model.copy(isConcludedConferencesExpanded = !model.isConcludedConferencesExpanded))
+                    }
+                }
+            }
         }
     }
 }

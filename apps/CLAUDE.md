@@ -236,9 +236,10 @@ Apps support multiple languages. Translation tags are scanned at build time via 
 When creating a pull request, use the template located at `/PULL_REQUEST_TEMPLATE` in the repository root. The template includes:
 - Test plan description
 - Issue references (refs:)
-- Impact scope (affects:)
+- Impact scope (affects: - only Student, Teacher, or Parent; can be multiple if affecting multiple apps)
 - Release note
-- Screenshots table (Before/After)
-- Checklist (E2E tests, dark/light mode, landscape/tablet, accessibility, product approval)
+- Checklist (dark/light mode, landscape/tablet, accessibility, product approval)
+
+Note: Do not include E2E tests or screenshots sections in the PR description unless specifically needed.
 
 Use `gh pr create` with the template to create PRs from the command line.
