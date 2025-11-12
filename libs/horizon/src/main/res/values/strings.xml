@@ -443,4 +443,12 @@
     <string name="dashboardPaginatedWidgetPagerMessage">%1$d of %2$d</string>
     <string name="dashboardCourseCardModuleItemNoDueDateLabel">No due date</string>
     <string name="dashboardCourseCardProgramPrefix">Part of:</string>
+    <string name="dashboardCourseCardEnrolledCoursesMessage">You’re enrolled in %1$d courses.</string>
+    <string name="dashboardCourseCardEnrolledCoursesSeeAllLabel">See all</string>
+    <string name="dashboardSeeAllCoursesLabel">See all courses</string>
+    <string name="dashboardCourseListAllCoursesFilterLabel">All courses</string>
+    <string name="dashboardCourseListNotStartedFilterLabel">Not started</string>
+    <string name="dashboardCourseListInProgressFilterLabel">In progress</string>
+    <string name="dashboardCourseListCompletedFilterLabel">Completed</string>
+    <string name="dashboardCourseListTitle">All courses</string>
 </resources>

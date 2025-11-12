@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Text
@@ -27,8 +28,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -42,14 +47,24 @@ import com.instructure.horizon.features.dashboard.widget.course.card.CardClickAc
 import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCourseCardContent
 import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCourseCardError
 import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCourseCardState
+import com.instructure.horizon.features.dashboard.widget.course.card.DashboardMoreCourseCard
 import com.instructure.horizon.features.home.HomeNavigationRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
+import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
+import com.instructure.horizon.horizonui.foundation.horizonShadow
+import com.instructure.horizon.horizonui.molecules.Button
+import com.instructure.horizon.horizonui.molecules.ButtonColor
+import com.instructure.horizon.horizonui.molecules.ButtonIconPosition
+import com.instructure.horizon.horizonui.molecules.ButtonWidth
 import com.instructure.horizon.horizonui.organisms.AnimatedHorizontalPager
-import com.instructure.horizon.horizonui.organisms.AnimatedHorizontalPagerIndicator
 import com.instructure.horizon.navigation.MainNavigationRoute
+import com.instructure.horizon.navigation.MainNavigationRoute.CourseList
+import com.instructure.pandautils.utils.toDp
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
+import kotlin.math.min
 
 @Composable
 fun DashboardCourseSection(
@@ -103,7 +118,8 @@ private fun DashboardCourseSectionContent(
     mainNavController: NavHostController,
     homeNavController: NavHostController
 ) {
-    val pagerState = rememberPagerState { state.courses.size }
+    // Display 4 cards at most
+    val pagerState = rememberPagerState { min(4, state.courses.size) }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -117,6 +133,7 @@ private fun DashboardCourseSectionContent(
         }
 
         if (state.courses.isNotEmpty()) {
+            var maxCardHeight by remember { mutableStateOf(0) }
             AnimatedHorizontalPager(
                 pagerState,
                 beyondViewportPageCount = pagerState.pageCount,
@@ -124,17 +141,45 @@ private fun DashboardCourseSectionContent(
                 pageSpacing = 12.dp,
                 verticalAlignment = Alignment.CenterVertically,
             ) { index, modifier ->
-                DashboardCourseItem(
-                    state.courses[index],
-                    mainNavController,
-                    homeNavController,
-                    modifier.padding(bottom = 8.dp)
-                )
+                when (index) {
+                    in 0..2 -> {
+                        DashboardCourseItem(
+                            state.courses[index],
+                            mainNavController,
+                            homeNavController,
+                            modifier.padding(bottom = 12.dp)
+                                .onGloballyPositioned { coordinates ->
+                                    val cardHeight = coordinates.size.height
+                                    if (cardHeight > maxCardHeight) { maxCardHeight = cardHeight }
+                                }
+                        )
+                    }
+                    else -> {
+                        DashboardMoreCourseCard(
+                            state.courses.size,
+                            Modifier
+                                .padding(bottom = 12.dp)
+                                .height(maxCardHeight.toDp.dp)
+                        ) {
+                            mainNavController.navigate(CourseList.route)
+                        }
+                    }
+                }
+
             }
 
-            if (pagerState.pageCount >= 4) {
-                AnimatedHorizontalPagerIndicator(pagerState)
-            }
+            Button(
+                stringResource(R.string.dashboardSeeAllCoursesLabel),
+                onClick = {
+                    mainNavController.navigate(CourseList.route)
+                },
+                width = ButtonWidth.FILL,
+                color = ButtonColor.WhiteWithOutline,
+                iconPosition = ButtonIconPosition.End(R.drawable.arrow_forward),
+                modifier = Modifier
+                    .padding(horizontal = 24.dp)
+                    .horizonShadow(HorizonElevation.level4, HorizonCornerRadius.level6)
+            )
         } else {
             DashboardCard(
                 Modifier.padding(horizontal = 24.dp)
