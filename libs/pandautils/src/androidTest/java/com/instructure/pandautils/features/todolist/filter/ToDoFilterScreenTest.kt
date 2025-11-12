@@ -17,9 +17,12 @@ package com.instructure.pandautils.features.todolist.filter
 
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollToNode
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.pandautils.R
@@ -44,8 +47,11 @@ class ToDoFilterScreenTest {
             )
         }
 
+        composeTestRule.onNodeWithTag("ToDoFilterContent").performScrollToNode(hasText(context.getString(R.string.todoFilterVisibleItems)))
         composeTestRule.onNodeWithText(context.getString(R.string.todoFilterVisibleItems)).assertIsDisplayed()
+        composeTestRule.onNodeWithTag("ToDoFilterContent").performScrollToNode(hasText(context.getString(R.string.todoFilterShowTasksFrom)))
         composeTestRule.onNodeWithText(context.getString(R.string.todoFilterShowTasksFrom)).assertIsDisplayed()
+        composeTestRule.onNodeWithTag("ToDoFilterContent").performScrollToNode(hasText(context.getString(R.string.todoFilterShowTasksUntil)))
         composeTestRule.onNodeWithText(context.getString(R.string.todoFilterShowTasksUntil)).assertIsDisplayed()
     }
 
@@ -214,8 +220,12 @@ class ToDoFilterScreenTest {
         // Verify past section header exists
         composeTestRule.onNodeWithText(context.getString(R.string.todoFilterShowTasksFrom)).assertIsDisplayed()
 
+        composeTestRule.onNodeWithTag("ToDoFilterContent", useUnmergedTree = true)
+            .performScrollToNode(hasText(context.getString(R.string.todoFilterShowTasksUntil)))
+
         // Verify future section header exists
-        composeTestRule.onNodeWithText(context.getString(R.string.todoFilterShowTasksUntil)).assertIsDisplayed()
+        composeTestRule.onNodeWithText(context.getString(R.string.todoFilterShowTasksUntil), useUnmergedTree = true)
+            .assertIsDisplayed()
     }
 
     @Test
