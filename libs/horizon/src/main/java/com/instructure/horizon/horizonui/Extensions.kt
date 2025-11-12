@@ -45,4 +45,4 @@ fun SemanticsPropertyReceiver.selectable(context: Context, selected: Boolean) {
 }
 
 val BoxWithConstraintsScope.isWideLayout
-    get() = this.maxWidth >= 400.dp
+    get() = this.maxWidth >= 500.dp

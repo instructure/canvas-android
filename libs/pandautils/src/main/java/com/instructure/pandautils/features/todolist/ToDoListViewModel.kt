@@ -22,6 +22,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.isInvited
 import com.instructure.canvasapi2.utils.toApiString
@@ -31,6 +32,7 @@ import com.instructure.pandautils.utils.getContextNameForPlannerItem
 import com.instructure.pandautils.utils.getDateTextForPlannerItem
 import com.instructure.pandautils.utils.getIconForPlannerItem
 import com.instructure.pandautils.utils.getTagForPlannerItem
+import com.instructure.pandautils.utils.getUrl
 import com.instructure.pandautils.utils.isComplete
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -48,7 +50,8 @@ class ToDoListViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val repository: ToDoListRepository,
     private val networkStateProvider: NetworkStateProvider,
-    private val firebaseCrashlytics: FirebaseCrashlytics
+    private val firebaseCrashlytics: FirebaseCrashlytics,
+    private val apiPrefs: ApiPrefs
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -151,6 +154,7 @@ class ToDoListViewModel @Inject constructor(
             isChecked = plannerItem.isComplete(),
             iconRes = plannerItem.getIconForPlannerItem(),
             tag = plannerItem.getTagForPlannerItem(context),
+            htmlUrl = plannerItem.getUrl(apiPrefs),
             onSwipeToDone = { handleSwipeToDone(itemId) },
             onCheckboxToggle = { isChecked -> handleCheckboxToggle(itemId, isChecked) }
         )

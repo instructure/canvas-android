@@ -50,6 +50,7 @@ data class ToDoItemUiState(
     val isChecked: Boolean = false,
     val iconRes: Int = R.drawable.ic_calendar,
     val tag: String? = null,
+    val htmlUrl: String? = null,
     val onSwipeToDone: () -> Unit = {},
     val onCheckboxToggle: (Boolean) -> Unit = {}
 )
