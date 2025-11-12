@@ -142,4 +142,5 @@ sealed class SharedCalendarAction(val delay: Long = 0L) {
     data object TodayButtonTapped : SharedCalendarAction()
     // Delay is needed to ensure fragment navigation completes and the fragment subscribes to the event before it's emitted
     data class SelectDay(val date: LocalDate) : SharedCalendarAction(delay = 100)
+    data object RefreshToDoList : SharedCalendarAction(delay = 50)
 }
