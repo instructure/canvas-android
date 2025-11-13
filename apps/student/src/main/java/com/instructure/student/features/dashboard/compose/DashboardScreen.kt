@@ -50,7 +50,7 @@ import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.student.R
 import com.instructure.student.activity.NavigationActivity
-import com.instructure.student.features.dashboard.widget.WidgetMetadata
+import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.student.features.dashboard.widget.welcome.WelcomeWidget
 import kotlinx.coroutines.flow.SharedFlow
 

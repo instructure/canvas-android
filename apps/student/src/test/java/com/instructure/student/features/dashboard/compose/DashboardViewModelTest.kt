@@ -21,9 +21,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import com.instructure.pandautils.utils.NetworkStateProvider
-import com.instructure.student.features.dashboard.widget.WidgetMetadata
-import com.instructure.student.features.dashboard.widget.usecase.EnsureDefaultWidgetsUseCase
-import com.instructure.student.features.dashboard.widget.usecase.ObserveWidgetMetadataUseCase
+import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
+import com.instructure.pandautils.features.dashboard.widget.usecase.EnsureDefaultWidgetsUseCase
+import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetMetadataUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -128,8 +128,8 @@ class DashboardViewModelTest {
     @Test
     fun testWidgetsLoadedFromUseCase() = runTest {
         val widgets = listOf(
-            WidgetMetadata("widget1", "Widget 1", 0, true),
-            WidgetMetadata("widget2", "Widget 2", 1, true)
+            WidgetMetadata("widget1", 0, true),
+            WidgetMetadata("widget2", 1, true)
         )
         coEvery { observeWidgetMetadataUseCase(Unit) } returns flowOf(widgets)
 
@@ -144,9 +144,9 @@ class DashboardViewModelTest {
     @Test
     fun testOnlyVisibleWidgetsShown() = runTest {
         val widgets = listOf(
-            WidgetMetadata("widget1", "Widget 1", 0, true),
-            WidgetMetadata("widget2", "Widget 2", 1, false),
-            WidgetMetadata("widget3", "Widget 3", 2, true)
+            WidgetMetadata("widget1", 0, true),
+            WidgetMetadata("widget2", 1, false),
+            WidgetMetadata("widget3", 2, true)
         )
         coEvery { observeWidgetMetadataUseCase(Unit) } returns flowOf(widgets)
 
