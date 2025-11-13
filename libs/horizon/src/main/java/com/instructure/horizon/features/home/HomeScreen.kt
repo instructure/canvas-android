@@ -123,6 +123,8 @@ private fun BottomNavigationBar(
                         updateShowAiAssist(true)
                     })
                 } else {
+                    // Save/Restore screen state only when navigating between bottom nav states
+                    // Do not save/restore when navigating between other screens
                     val isCurrentDestinationInBottomNav = bottomNavItems.any {
                         currentDestination?.route == it.route
                     }

@@ -451,4 +451,6 @@
     <string name="dashboardCourseListInProgressFilterLabel">In progress</string>
     <string name="dashboardCourseListCompletedFilterLabel">Completed</string>
     <string name="dashboardCourseListTitle">All courses</string>
+    <string name="dashboardCourseListEmptyTitle">Nothing here yet</string>
+    <string name="dashboardCourseListEmptyMessage">Adjust your filters to see more.</string>
 </resources>

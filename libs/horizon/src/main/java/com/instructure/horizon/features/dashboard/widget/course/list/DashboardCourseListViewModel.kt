@@ -41,6 +41,8 @@ class DashboardCourseListViewModel @Inject constructor(
         )
     )
     val uiState = _uiState.asStateFlow()
+    private var allCourses: List<DashboardCourseListCourseState> = emptyList()
+
 
     init {
         loadData()
@@ -75,12 +77,35 @@ class DashboardCourseListViewModel @Inject constructor(
                 courseId = course.courseId,
                 progress = course.progress
             )
+        }.sortedByDescending { course ->
+            course.progress.run { if (this == 100.0) -1.0 else this } // Active courses first, then completed courses
         }
 
+        allCourses = courseStates
         _uiState.update {
             it.copy(
-                courses = courseStates
+                courses = filterCourses(it.selectedFilterOption, courseStates)
             )
+        }
+    }
+
+    private fun filterCourses(
+        filterOption: DashboardCourseListFilterOption,
+        allCourses: List<DashboardCourseListCourseState>
+    ): List<DashboardCourseListCourseState> {
+        return when (filterOption) {
+            DashboardCourseListFilterOption.All -> {
+                allCourses
+            }
+            DashboardCourseListFilterOption.NotStarted -> {
+                allCourses.filter { it.progress == 0.0 }
+            }
+            DashboardCourseListFilterOption.InProgress -> {
+                allCourses.filter { it.progress > 0.0 && it.progress < 100.0 }
+            }
+            DashboardCourseListFilterOption.Completed -> {
+                allCourses.filter { it.progress == 100.0 }
+            }
         }
     }
 
@@ -95,7 +120,12 @@ class DashboardCourseListViewModel @Inject constructor(
     }
 
     private fun onFilterOptionSelected(filterOption: DashboardCourseListFilterOption) {
-        _uiState.update { it.copy(selectedFilterOption = filterOption) }
+        _uiState.update {
+            it.copy(
+                courses = filterCourses(filterOption, allCourses),
+                selectedFilterOption = filterOption
+            )
+        }
     }
 
     private fun onDismissSnackbar() {

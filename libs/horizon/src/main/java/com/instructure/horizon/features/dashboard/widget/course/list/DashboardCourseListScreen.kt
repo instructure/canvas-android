@@ -88,8 +88,14 @@ fun DashboardCourseListScreen(
                 stickyHeader {
                     DashboardCourseListHeader(state)
                 }
-                items(state.courses) {
-                    CourseItemCard(it, homeNavController)
+                if (state.courses.isEmpty()) {
+                    item {
+                        EmptyCoursesMessage()
+                    }
+                } else {
+                    items(state.courses) {
+                        CourseItemCard(it, homeNavController)
+                    }
                 }
             }
         }
@@ -257,6 +263,25 @@ private fun CourseProgress(
             text = stringResource(R.string.progressBar_percent, progress.roundToInt()),
             style = HorizonTypography.p2,
             color = HorizonColors.Surface.institution(),
+        )
+    }
+}
+
+@Composable
+private fun EmptyCoursesMessage() {
+    Column {
+        Text(
+            stringResource(R.string.dashboardCourseListEmptyTitle),
+            style = HorizonTypography.h2,
+            color = HorizonColors.Text.body()
+        )
+
+        HorizonSpace(SpaceSize.SPACE_8)
+
+        Text(
+            stringResource(R.string.dashboardCourseListEmptyMessage),
+            style = HorizonTypography.p1,
+            color = HorizonColors.Text.body()
         )
     }
 }
