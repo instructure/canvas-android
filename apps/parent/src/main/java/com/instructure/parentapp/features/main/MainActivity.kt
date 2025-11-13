@@ -17,12 +17,16 @@
 
 package com.instructure.parentapp.features.main
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
@@ -77,6 +81,8 @@ class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated, Masqueradin
 
     private lateinit var navController: NavController
 
+    private val notificationsPermissionContract = registerForActivityResult(ActivityResultContracts.RequestPermission()) {}
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -85,6 +91,7 @@ class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated, Masqueradin
         setupNavigation()
         handleQrMasquerading()
         scheduleAlarms()
+        requestNotificationsPermission()
 
         RatingDialog.showRatingDialog(this, AppType.PARENT)
     }
@@ -202,6 +209,14 @@ class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated, Masqueradin
     private fun scheduleAlarms() {
         lifecycleScope.launch {
             alarmScheduler.scheduleAllAlarmsForCurrentUser()
+        }
+    }
+
+    private fun requestNotificationsPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                notificationsPermissionContract.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
         }
     }
 

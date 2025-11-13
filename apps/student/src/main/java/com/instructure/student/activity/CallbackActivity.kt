@@ -20,6 +20,7 @@ package com.instructure.student.activity
 import android.os.Bundle
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.StatusCallback
+import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
@@ -32,6 +33,7 @@ import com.instructure.canvasapi2.models.Account
 import com.instructure.canvasapi2.models.CanvasColor
 import com.instructure.canvasapi2.models.CanvasTheme
 import com.instructure.canvasapi2.models.LaunchDefinition
+import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.SelfRegistration
 import com.instructure.canvasapi2.models.TermsOfService
 import com.instructure.canvasapi2.models.UnreadConversationCount
@@ -54,12 +56,16 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandautils.dialogs.RatingDialog
 import com.instructure.pandautils.features.inbox.list.OnUnreadCountInvalidated
+import com.instructure.pandautils.features.todolist.filter.DateRangeSelection
+import com.instructure.pandautils.room.appdatabase.daos.ToDoFilterDao
+import com.instructure.pandautils.room.appdatabase.entities.ToDoFilterEntity
 import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.SHA256
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.filterByToDoFilters
 import com.instructure.pandautils.utils.isComplete
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toast
@@ -71,11 +77,11 @@ import com.instructure.student.util.StudentPrefs
 import com.instructure.student.widget.WidgetLogger
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
-import org.threeten.bp.LocalDate
 import retrofit2.Call
 import retrofit2.Response
 import sdk.pendo.io.Pendo
 import javax.inject.Inject
+import kotlin.collections.filter
 
 @AndroidEntryPoint
 abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, NotificationListFragment.OnNotificationCountInvalidated {
@@ -97,6 +103,15 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
 
     @Inject
     lateinit var widgetLogger: WidgetLogger
+
+    @Inject
+    lateinit var toDoFilterDao: ToDoFilterDao
+
+    @Inject
+    lateinit var apiPrefs: ApiPrefs
+
+    @Inject
+    lateinit var courseApi: CourseAPI.CoursesInterface
 
     private var loadInitialDataJob: Job? = null
 
@@ -221,11 +236,14 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
         }
     }
 
-    private suspend fun getToDoCount() {
-        // TODO Implement correct filtering in MBL-19401
-        val now = LocalDate.now().atStartOfDay()
-        val startDate = now.minusDays(7).toApiString().orEmpty()
-        val endDate = now.plusDays(7).toApiString().orEmpty()
+    protected suspend fun getToDoCount() {
+        val todoFilters = toDoFilterDao.findByUser(
+            apiPrefs.fullDomain,
+            apiPrefs.user?.id.orDefault()
+        ) ?: ToDoFilterEntity(userDomain = apiPrefs.fullDomain, userId = apiPrefs.user?.id.orDefault())
+
+        val startDate = todoFilters.pastDateRange.calculatePastDateRange().toApiString()
+        val endDate = todoFilters.futureDateRange.calculateFutureDateRange().toApiString()
 
         val restParams = RestParams(isForceReadFromNetwork = true, usePerPageQueryParam = true)
         val plannerItems = plannerApi.getPlannerItems(
@@ -237,7 +255,21 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
             plannerApi.nextPagePlannerItems(nextUrl, restParams)
         }
 
-        val todoCount = plannerItems.dataOrNull?.count { !it.isComplete() }.orDefault()
+        val filteredCourses = if (todoFilters.favoriteCourses) {
+            val restParams = RestParams(isForceReadFromNetwork = false)
+            val courses = courseApi.getFavoriteCourses(restParams).depaginate { nextUrl ->
+                courseApi.next(nextUrl, restParams)
+            }
+            courses.dataOrNull ?: emptyList()
+        } else {
+            emptyList()
+        }
+
+        // Filter planner items - exclude announcements, assessment requests, completed items
+        val todoCount = plannerItems.dataOrNull
+            ?.filter { it.plannableType != PlannableType.ANNOUNCEMENT && it.plannableType != PlannableType.ASSESSMENT_REQUEST && !it.isComplete() }
+            ?.filterByToDoFilters(todoFilters, filteredCourses)
+            ?.count() ?: 0
         updateToDoCount(todoCount)
     }
 

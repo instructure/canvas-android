@@ -25,9 +25,32 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.toDate
 import com.instructure.pandautils.R
+import com.instructure.pandautils.room.appdatabase.entities.ToDoFilterEntity
 
 fun PlannerItem.todoHtmlUrl(apiPrefs: ApiPrefs): String {
     return "${apiPrefs.fullDomain}/todos/${this.plannable.id}"
+}
+
+fun PlannerItem.getUrl(apiPrefs: ApiPrefs): String {
+    val url = when (plannableType) {
+        PlannableType.CALENDAR_EVENT -> {
+            "/${canvasContext.type.apiString}/${canvasContext.id}/calendar_events/${plannable.id}"
+        }
+
+        PlannableType.PLANNER_NOTE -> {
+            "/todos/${plannable.id}"
+        }
+
+        else -> {
+            htmlUrl.orEmpty()
+        }
+    }
+
+    return if (url.startsWith("/")) {
+        apiPrefs.fullDomain + url
+    } else {
+        url
+    }
 }
 
 @DrawableRes
@@ -67,8 +90,7 @@ fun PlannerItem.getDateTextForPlannerItem(context: Context): String? {
 
         else -> {
             plannable.dueAt?.let {
-                val timeText = DateHelper.getFormattedTime(context, it).orEmpty()
-                context.getString(R.string.widgetDueDate, timeText)
+                return DateHelper.getFormattedTime(context, it).orEmpty()
             }
         }
     }
@@ -118,5 +140,33 @@ fun PlannerItem.isComplete(): Boolean {
         submissionState?.submitted == true
     } else {
         false
+    }
+}
+
+fun List<PlannerItem>.filterByToDoFilters(
+    filters: ToDoFilterEntity,
+    courses: Collection<Course>
+): List<PlannerItem> {
+    return this.filter { item ->
+        if (!filters.personalTodos && item.plannableType == PlannableType.PLANNER_NOTE) {
+            return@filter false
+        }
+
+        if (!filters.calendarEvents && item.plannableType == PlannableType.CALENDAR_EVENT) {
+            return@filter false
+        }
+
+        if (!filters.showCompleted && item.isComplete()) {
+            return@filter false
+        }
+
+        if (filters.favoriteCourses) {
+            val course = courses.find { it.id == item.courseId }
+            if (course != null && !course.isFavorite) {
+                return@filter false
+            }
+        }
+
+        true
     }
 }

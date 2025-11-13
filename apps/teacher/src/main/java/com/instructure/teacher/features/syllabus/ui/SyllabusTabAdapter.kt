@@ -21,11 +21,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
-import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.utils.getFragmentActivity
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.pandautils.views.CanvasWebViewWrapper
 import com.instructure.teacher.R
@@ -58,8 +58,8 @@ class SyllabusTabAdapter(private val titles: List<String>) : PagerAdapter() {
     private fun isSyllabusPosition(position: Int) = position == SYLLABUS_TAB_POSITION
 
     private fun setupWebView(webView: CanvasWebView) {
-        val activity = (webView.context as? FragmentActivity)
-        activity?.let { webView.addVideoClient(it) }
+        val activity = webView.context.getFragmentActivity()
+        webView.addVideoClient(activity)
         webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {
                 RouteMatcher.openMedia(activity, url)
@@ -83,7 +83,7 @@ class SyllabusTabAdapter(private val titles: List<String>) : PagerAdapter() {
                 }
 
                 override fun launchInternalWebViewFragment(url: String) {
-                    activity?.startActivity(InternalWebViewActivity.createIntent(webView.context, url, "", true))
+                    activity.startActivity(InternalWebViewActivity.createIntent(webView.context, url, "", true))
                 }
             }
 

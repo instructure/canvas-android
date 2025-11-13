@@ -68,7 +68,6 @@ class ToDoWidgetUpdaterTest {
         ContextKeeper.appContext = mockk(relaxed = true)
         mockkObject(DateHelper)
         every { DateHelper.getPreferredTimeFormat(any()) } returns SimpleDateFormat("HH:mm", Locale.getDefault())
-        every { context.getString(R.string.widgetDueDate, any()) } answers { "Due at ${secondArg<Array<Any>>()[0]}" }
         every { context.getString(R.string.userCalendarToDo) } returns "To Do"
         every { context.getString(R.string.widgetAllDay) } returns "All day"
     }
@@ -155,7 +154,7 @@ class ToDoWidgetUpdaterTest {
                     assignmentItem.canvasContext.color,
                     "CODE",
                     "Plannable 1",
-                    "Due at 02:00",
+                    "02:00",
                     "https://htmlurl.com"
                 ),
                 WidgetPlannerItem(
@@ -261,7 +260,7 @@ class ToDoWidgetUpdaterTest {
                     subAssignmentItem.canvasContext.color,
                     "CODE",
                     "Plannable 1",
-                    "Due at 02:00",
+                    "02:00",
                     "https://htmlurl.com"
                 ),
                 WidgetPlannerItem(

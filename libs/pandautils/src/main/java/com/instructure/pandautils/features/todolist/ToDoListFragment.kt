@@ -21,6 +21,7 @@ import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.toLocalDate
 import com.instructure.pandautils.utils.withArgs
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -51,9 +52,18 @@ class ToDoListFragment : BaseCanvasFragment(), FragmentInteractions, NavigationC
             setContent {
                 CanvasTheme {
                     ToDoListScreen(
-                        navigationIconClick = { toDoListRouter.openNavigationDrawer() },
-                        openToDoItem = { itemId -> toDoListRouter.openToDoItem(itemId) },
-                        onToDoCountChanged = { count -> onToDoCountChanged?.onToDoCountChanged(count) }
+                        navigationIconClick = {
+                            toDoListRouter.openNavigationDrawer()
+                        },
+                        openToDoItem = { itemId ->
+                            toDoListRouter.openToDoItem(itemId)
+                        },
+                        onToDoCountChanged = { count ->
+                            onToDoCountChanged?.onToDoCountChanged(count)
+                        },
+                        onDateClick = { date ->
+                            toDoListRouter.openCalendar(date.toLocalDate())
+                        }
                     )
                 }
             }
@@ -72,9 +82,7 @@ class ToDoListFragment : BaseCanvasFragment(), FragmentInteractions, NavigationC
 
     override fun getFragment(): Fragment = this
 
-    override fun onHandleBackPressed(): Boolean {
-        return false
-    }
+    override fun onHandleBackPressed() = false
 
     companion object {
         fun makeRoute(canvasContext: CanvasContext): Route = Route(ToDoListFragment::class.java, canvasContext, Bundle())

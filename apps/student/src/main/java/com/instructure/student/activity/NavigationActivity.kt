@@ -83,6 +83,8 @@ import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.analytics.OfflineAnalyticsManager
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.calendar.CalendarFragment
+import com.instructure.pandautils.features.calendar.CalendarSharedEvents
+import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
@@ -143,7 +145,7 @@ import com.instructure.student.features.files.list.FileListFragment
 import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
 import com.instructure.student.features.navigation.NavigationRepository
 import com.instructure.student.fragment.BookmarksFragment
-import com.instructure.student.fragment.DashboardFragment
+import com.instructure.student.fragment.OldDashboardFragment
 import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.fragment.OldToDoListFragment
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffectHandler
@@ -226,6 +228,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     @Inject
     lateinit var webViewAuthenticator: WebViewAuthenticator
+
+    @Inject
+    lateinit var calendarSharedEvents: CalendarSharedEvents
 
     private var routeJob: WeaveJob? = null
     private var debounceJob: Job? = null
@@ -413,6 +418,33 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         scheduleAlarms()
 
         WidgetUpdater.updateWidgets()
+
+        observeCalendarSharedEvents()
+    }
+
+    private fun observeCalendarSharedEvents() {
+        lifecycleScope.launch {
+            calendarSharedEvents.events.collect { action ->
+                when (action) {
+                    is SharedCalendarAction.RefreshToDoList -> {
+                        handleToDoListRefresh()
+                    }
+
+                    else -> {} // Ignore other actions
+                }
+            }
+        }
+    }
+
+    private fun handleToDoListRefresh() {
+        // Update To Do badge
+        lifecycleScope.launch {
+            tryWeave {
+                getToDoCount()
+            } catch {
+                firebaseCrashlytics.recordException(it)
+            }
+        }
     }
 
     private fun setupWindowInsets() = with(binding) {
@@ -1065,7 +1097,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     private fun selectBottomNavFragment(fragmentClass: Class<out Fragment>) {
         val selectedFragment = supportFragmentManager.findFragmentByTag(fragmentClass.name)
 
-        (topFragment as? DashboardFragment)?.cancelCardDrag()
+        (topFragment as? OldDashboardFragment)?.cancelCardDrag()
 
         if (selectedFragment == null) {
             val fragment = createBottomNavFragment(fragmentClass.name)
