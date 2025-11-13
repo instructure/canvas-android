@@ -43,7 +43,7 @@ class DashboardCourseListViewModel @Inject constructor(
     )
     val uiState = _uiState.asStateFlow()
     private var allCourses: List<DashboardCourseListCourseState> = emptyList()
-    private val pageSize: Int = 3
+    private val pageSize: Int = 10
 
     init {
         loadData()
