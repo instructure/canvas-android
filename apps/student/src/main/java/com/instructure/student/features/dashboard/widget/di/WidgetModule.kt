@@ -17,10 +17,11 @@
 package com.instructure.student.features.dashboard.widget.di
 
 import android.content.Context
-import androidx.room.Room
-import androidx.room.RoomDatabase
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.student.features.dashboard.widget.db.WidgetConfigDao
 import com.instructure.student.features.dashboard.widget.db.WidgetDatabase
+import com.instructure.student.features.dashboard.widget.db.WidgetDatabaseProvider
 import com.instructure.student.features.dashboard.widget.db.WidgetMetadataDao
 import com.instructure.student.features.dashboard.widget.repository.WidgetMetadataRepository
 import com.instructure.student.features.dashboard.widget.repository.WidgetMetadataRepositoryImpl
@@ -37,19 +38,32 @@ class WidgetModule {
 
     @Provides
     @Singleton
-    fun provideWidgetDatabase(@ApplicationContext context: Context): WidgetDatabase {
-        return Room.databaseBuilder(context, WidgetDatabase::class.java, "widget_database")
-            .build()
+    fun provideWidgetDatabaseProvider(
+        @ApplicationContext context: Context,
+        firebaseCrashlytics: FirebaseCrashlytics
+    ): WidgetDatabaseProvider {
+        return WidgetDatabaseProvider(context, firebaseCrashlytics)
     }
 
     @Provides
-    @Singleton
+    fun provideWidgetDatabase(
+        widgetDatabaseProvider: WidgetDatabaseProvider,
+        apiPrefs: ApiPrefs
+    ): WidgetDatabase {
+        val userId = if (apiPrefs.isMasquerading || apiPrefs.isMasqueradingFromQRCode) {
+            apiPrefs.masqueradeId
+        } else {
+            apiPrefs.user?.id
+        }
+        return widgetDatabaseProvider.getDatabase(userId)
+    }
+
+    @Provides
     fun provideWidgetConfigDao(database: WidgetDatabase): WidgetConfigDao {
         return database.widgetConfigDao()
     }
 
     @Provides
-    @Singleton
     fun provideWidgetMetadataDao(database: WidgetDatabase): WidgetMetadataDao {
         return database.widgetMetadataDao()
     }
