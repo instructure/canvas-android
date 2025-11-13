@@ -76,6 +76,7 @@ class CourseSettingsFragment : BasePresenterFragment<
     override fun onReadySetGo(presenter: CourseSettingsFragmentPresenter) {
         setupToolbar()
         binding.courseImage.setCourseImage(course, course.color, !TeacherPrefs.hideCourseColorOverlay)
+        presenter.prefetchFrontPageStatus(course)
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {

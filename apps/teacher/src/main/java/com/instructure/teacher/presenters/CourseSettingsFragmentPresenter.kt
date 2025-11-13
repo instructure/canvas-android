@@ -23,13 +23,16 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
+import com.instructure.pandautils.blueprint.FragmentPresenter
 import com.instructure.teacher.events.CourseUpdatedEvent
 import com.instructure.teacher.viewinterface.CourseSettingsFragmentView
-import com.instructure.pandautils.blueprint.FragmentPresenter
 import org.greenrobot.eventbus.EventBus
 import retrofit2.Response
 
 class CourseSettingsFragmentPresenter : FragmentPresenter<CourseSettingsFragmentView>() {
+
+    private var hasFrontPage: Boolean? = null
+    private var shouldShowDialogAfterFetch = false
 
     override fun loadData(forceNetwork: Boolean) {
         // TODO: Load course data?
@@ -37,6 +40,11 @@ class CourseSettingsFragmentPresenter : FragmentPresenter<CourseSettingsFragment
 
     override fun refresh(forceNetwork: Boolean) {
         // TODO: Load course data?
+    }
+
+    fun prefetchFrontPageStatus(course: Course) {
+        shouldShowDialogAfterFetch = false
+        PageManager.getFrontPage(course, true, mCheckFrontPageCallback)
     }
 
     fun editCourseName(newName: String, course: Course) {
@@ -78,18 +86,33 @@ class CourseSettingsFragmentPresenter : FragmentPresenter<CourseSettingsFragment
     }
 
     fun editCourseHomePageClicked(course: Course) {
-        PageManager.getFrontPage(course, true, mCheckFrontPageCallback)
+        val cachedValue = hasFrontPage
+        if (cachedValue != null) {
+            // Data already loaded, show dialog immediately
+            viewCallback?.showEditCourseHomePageDialog(cachedValue)
+        } else {
+            // Fallback: fetch if not already loaded (e.g., prefetch failed or was skipped)
+            shouldShowDialogAfterFetch = true
+            PageManager.getFrontPage(course, true, mCheckFrontPageCallback)
+        }
     }
 
     private val mCheckFrontPageCallback = object : StatusCallback<Page>() {
         override fun onResponse(response: Response<Page>, linkHeaders: LinkHeaders, type: ApiType) {
-            val hasFrontPage = response.isSuccessful && response.body() != null
-            viewCallback?.showEditCourseHomePageDialog(hasFrontPage)
+            hasFrontPage = response.isSuccessful && response.body() != null
+            if (shouldShowDialogAfterFetch) {
+                viewCallback?.showEditCourseHomePageDialog(hasFrontPage!!)
+                shouldShowDialogAfterFetch = false
+            }
         }
 
         override fun onFail(call: retrofit2.Call<Page>?, error: Throwable, response: Response<*>?) {
-            // If the API call fails (e.g., 404 means no front page), show dialog with disabled state
-            viewCallback?.showEditCourseHomePageDialog(false)
+            // If the API call fails (e.g., 404 means no front page), cache as false
+            hasFrontPage = false
+            if (shouldShowDialogAfterFetch) {
+                viewCallback?.showEditCourseHomePageDialog(false)
+                shouldShowDialogAfterFetch = false
+            }
         }
     }
 }
