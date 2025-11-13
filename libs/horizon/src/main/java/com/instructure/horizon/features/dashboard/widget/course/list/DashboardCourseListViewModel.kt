@@ -37,12 +37,13 @@ class DashboardCourseListViewModel @Inject constructor(
                 onRefresh = ::onRefresh,
                 onSnackbarDismiss = ::onDismissSnackbar
             ),
-            onFilterOptionSelected = ::onFilterOptionSelected
+            onFilterOptionSelected = ::onFilterOptionSelected,
+            onShowMoreCourses = ::onShowMoreCourses
         )
     )
     val uiState = _uiState.asStateFlow()
     private var allCourses: List<DashboardCourseListCourseState> = emptyList()
-
+    private val pageSize: Int = 3
 
     init {
         loadData()
@@ -84,7 +85,8 @@ class DashboardCourseListViewModel @Inject constructor(
         allCourses = courseStates
         _uiState.update {
             it.copy(
-                courses = filterCourses(it.selectedFilterOption, courseStates)
+                courses = filterCourses(it.selectedFilterOption, courseStates),
+                visibleCourseCount = pageSize
             )
         }
     }
@@ -123,8 +125,15 @@ class DashboardCourseListViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 courses = filterCourses(filterOption, allCourses),
-                selectedFilterOption = filterOption
+                selectedFilterOption = filterOption,
+                visibleCourseCount = pageSize
             )
+        }
+    }
+
+    private fun onShowMoreCourses() {
+        _uiState.update {
+            it.copy(visibleCourseCount = it.visibleCourseCount + pageSize)
         }
     }
 

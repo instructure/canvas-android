@@ -58,6 +58,9 @@ import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.molecules.Button
+import com.instructure.horizon.horizonui.molecules.ButtonColor
+import com.instructure.horizon.horizonui.molecules.ButtonWidth
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
@@ -93,8 +96,21 @@ fun DashboardCourseListScreen(
                         EmptyCoursesMessage()
                     }
                 } else {
-                    items(state.courses) {
+                    val visibleCourses = state.courses.take(state.visibleCourseCount)
+                    items(visibleCourses) {
                         CourseItemCard(it, homeNavController)
+                    }
+
+                    if (state.courses.size > state.visibleCourseCount) {
+                        item {
+                            Button(
+                                label = stringResource(R.string.dashboardCourseListShowMore),
+                                width = ButtonWidth.FILL,
+                                color = ButtonColor.WhiteWithOutline,
+                                onClick = state.onShowMoreCourses,
+                                modifier = Modifier.padding(horizontal = 16.dp)
+                            )
+                        }
                     }
                 }
             }

@@ -26,8 +26,10 @@ data class DashboardCourseListUiState(
     val courses: List<DashboardCourseListCourseState> = emptyList(),
     val filterOptions: List<DashboardCourseListFilterOption> = DashboardCourseListFilterOption.entries,
     val selectedFilterOption: DashboardCourseListFilterOption = DashboardCourseListFilterOption.All,
+    val visibleCourseCount: Int = 10,
     val onFilterOptionSelected: (DashboardCourseListFilterOption) -> Unit = {},
     val onRefresh: () -> Unit = {},
+    val onShowMoreCourses: () -> Unit = {},
 )
 
 data class DashboardCourseListCourseState(
