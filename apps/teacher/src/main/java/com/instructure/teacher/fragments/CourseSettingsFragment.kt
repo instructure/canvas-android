@@ -115,12 +115,17 @@ class CourseSettingsFragment : BasePresenterFragment<
 
     override fun showEditCourseHomePageDialog(hasFrontPage: Boolean) {
         val (keys, values) = mHomePages.toList().unzip()
-        val selectedIdx = keys.indexOf(course.homePage?.apiString)
+        var selectedIdx = keys.indexOf(course.homePage?.apiString)
 
         val disabledIndices = if (!hasFrontPage) {
             listOf(keys.indexOf("wiki"))
         } else {
             emptyList()
+        }
+
+        // If the current selection is disabled, fall back to Course Activity Stream
+        if (disabledIndices.contains(selectedIdx)) {
+            selectedIdx = 0 // "feed" is at index 0
         }
 
         val dialog = RadioButtonDialog.getInstance(
