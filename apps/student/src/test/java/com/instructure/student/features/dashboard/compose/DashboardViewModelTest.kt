@@ -167,4 +167,15 @@ class DashboardViewModelTest {
         val state = viewModel.uiState.value
         assertEquals(0, state.widgets.size)
     }
+
+    @Test
+    fun testLoadDashboardError() = runTest {
+        coEvery { observeWidgetMetadataUseCase(Unit) } throws Exception("Test error")
+
+        viewModel = DashboardViewModel(networkStateProvider, ensureDefaultWidgetsUseCase, observeWidgetMetadataUseCase)
+
+        val state = viewModel.uiState.value
+        assertFalse(state.loading)
+        assertEquals("Test error", state.error)
+    }
 }

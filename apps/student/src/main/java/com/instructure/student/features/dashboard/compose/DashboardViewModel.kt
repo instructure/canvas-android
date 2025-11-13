@@ -56,10 +56,14 @@ class DashboardViewModel @Inject constructor(
     private fun loadDashboard() {
         viewModelScope.launch {
             _uiState.update { it.copy(loading = true, error = null) }
-            ensureDefaultWidgetsUseCase(Unit)
-            observeWidgetMetadataUseCase(Unit).collect { widgets ->
-                val visibleWidgets = widgets.filter { it.isVisible }
-                _uiState.update { it.copy(loading = false, error = null, widgets = visibleWidgets) }
+            try {
+                launch { ensureDefaultWidgetsUseCase(Unit) }
+                observeWidgetMetadataUseCase(Unit).collect { widgets ->
+                    val visibleWidgets = widgets.filter { it.isVisible }
+                    _uiState.update { it.copy(loading = false, error = null, widgets = visibleWidgets) }
+                }
+            } catch (e: Exception) {
+                _uiState.update { it.copy(loading = false, error = e.message) }
             }
         }
     }
