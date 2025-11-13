@@ -35,8 +35,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.horizon.features.dashboard.widget.course.list.DashboardCourseListScreen
-import com.instructure.horizon.features.dashboard.widget.course.list.DashboardCourseListViewModel
 import com.instructure.horizon.features.home.HomeScreen
 import com.instructure.horizon.features.home.HomeViewModel
 import com.instructure.horizon.features.inbox.navigation.horizonInboxNavigation
@@ -62,7 +60,6 @@ sealed class MainNavigationRoute(val route: String) {
     data object Notification : MainNavigationRoute("notification")
     data object Notebook : MainNavigationRoute("notebook")
     data object Inbox : MainNavigationRoute("inbox")
-    data object CourseList : MainNavigationRoute("courses")
 
     @Serializable
     data class ModuleItemSequence(
@@ -124,11 +121,6 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
                 val viewModel = hiltViewModel<NotificationViewModel>()
                 val uiState by viewModel.uiState.collectAsState()
                 NotificationScreen(uiState, navController)
-            }
-            composable(MainNavigationRoute.CourseList.route) {
-                val viewModel = hiltViewModel<DashboardCourseListViewModel>()
-                val uiState by viewModel.uiState.collectAsState()
-                DashboardCourseListScreen(uiState, navController)
             }
 
             // Assignment Details deep link

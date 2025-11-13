@@ -60,7 +60,6 @@ import com.instructure.horizon.horizonui.molecules.ButtonIconPosition
 import com.instructure.horizon.horizonui.molecules.ButtonWidth
 import com.instructure.horizon.horizonui.organisms.AnimatedHorizontalPager
 import com.instructure.horizon.navigation.MainNavigationRoute
-import com.instructure.horizon.navigation.MainNavigationRoute.CourseList
 import com.instructure.pandautils.utils.toDp
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -161,7 +160,7 @@ private fun DashboardCourseSectionContent(
                                 .padding(bottom = 12.dp)
                                 .height(maxCardHeight.toDp.dp)
                         ) {
-                            mainNavController.navigate(CourseList.route)
+                            homeNavController.navigate(HomeNavigationRoute.CourseList.route)
                         }
                     }
                 }
@@ -171,7 +170,7 @@ private fun DashboardCourseSectionContent(
             Button(
                 stringResource(R.string.dashboardSeeAllCoursesLabel),
                 onClick = {
-                    mainNavController.navigate(CourseList.route)
+                    homeNavController.navigate(HomeNavigationRoute.CourseList.route)
                 },
                 width = ButtonWidth.FILL,
                 color = ButtonColor.WhiteWithOutline,

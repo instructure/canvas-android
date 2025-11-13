@@ -16,12 +16,16 @@
  */
 package com.instructure.horizon.features.dashboard.widget.course.list
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -79,7 +83,7 @@ fun DashboardCourseListScreen(
         ) {
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier.padding(horizontal = 16.dp)
+                contentPadding = PaddingValues(top = 8.dp, bottom = 24.dp),
             ) {
                 stickyHeader {
                     DashboardCourseListHeader(state)
@@ -96,7 +100,10 @@ fun DashboardCourseListScreen(
 private fun DashboardCourseListHeader(state: DashboardCourseListUiState) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth().padding(16.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(HorizonColors.Surface.pagePrimary())
+            .padding(16.dp)
     ) {
         val context = LocalContext.current
         var isMenuOpen by remember { mutableStateOf(false) }
@@ -110,16 +117,18 @@ private fun DashboardCourseListHeader(state: DashboardCourseListUiState) {
                 onOptionSelected = {
                     state.onFilterOptionSelected(DashboardCourseListFilterOption.fromLabel(context, it))
                 },
-                size = SingleSelectInputSize.Small
-            )
+                size = SingleSelectInputSize.Small,
+                isFullWidth = false
+            ),
+            Modifier.width(IntrinsicSize.Max)
         )
 
         Spacer(Modifier.weight(1f))
 
         Text(
             text = state.courses.size.toString(),
-            style = HorizonTypography.p2,
-            color = HorizonColors.Text.title(),
+            style = HorizonTypography.p1,
+            color = HorizonColors.Text.dataPoint(),
         )
     }
 }
@@ -129,12 +138,20 @@ private fun CourseItemCard(
     courseState: DashboardCourseListCourseState,
     homeNavController: NavHostController
 ) {
-    DashboardCard {
+    DashboardCard(
+        modifier = Modifier.padding(horizontal = 16.dp),
+        onClick = {
+            homeNavController.navigate(HomeNavigationRoute.Learn.withCourse(courseState.courseId))
+        }
+    ) {
         Column(
             modifier = Modifier.padding(24.dp)
         ) {
-            ProgramsText(courseState.parentPrograms) {
-                homeNavController.navigate(HomeNavigationRoute.Learn.withProgram(it))
+            if (courseState.parentPrograms.isNotEmpty()) {
+                ProgramsText(courseState.parentPrograms) {
+                    homeNavController.navigate(HomeNavigationRoute.Learn.withProgram(it))
+                }
+                HorizonSpace(SpaceSize.SPACE_16)
             }
 
             Text(
@@ -142,6 +159,8 @@ private fun CourseItemCard(
                 style = HorizonTypography.labelLargeBold,
                 color = HorizonColors.Text.title(),
             )
+
+            HorizonSpace(SpaceSize.SPACE_12)
 
             CourseProgress(courseState.progress)
         }
