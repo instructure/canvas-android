@@ -17,14 +17,19 @@
 package com.instructure.horizon.features.notebook
 
 import androidx.lifecycle.SavedStateHandle
+import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.redwood.QueryNotesQuery
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertFalse
+import junit.framework.TestCase.assertNotNull
+import junit.framework.TestCase.assertNull
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -74,6 +79,7 @@ class NotebookViewModelTest {
     fun setup() {
         Dispatchers.setMain(testDispatcher)
         coEvery { repository.getNotes(any(), any(), any(), any(), any(), any(), any()) } returns testNotes
+        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
     }
 
     @After
@@ -112,7 +118,6 @@ class NotebookViewModelTest {
         val viewModel = getViewModel()
 
         assertTrue(viewModel.uiState.value.hasNextPage)
-        assertFalse(viewModel.uiState.value.hasPreviousPage)
     }
 
     @Test
@@ -144,20 +149,6 @@ class NotebookViewModelTest {
     }
 
     @Test
-    fun `Test load previous page uses start cursor`() = runTest {
-        val notesWithPrevious = testNotes.copy(
-            pageInfo = testNotes.pageInfo.copy(hasPreviousPage = true)
-        )
-        coEvery { repository.getNotes(any(), any(), any(), any(), any(), any(), any()) } returns notesWithPrevious
-
-        val viewModel = getViewModel()
-
-        viewModel.uiState.value.loadPreviousPage()
-
-        coVerify { repository.getNotes(after = null, before = "startCursor1", any(), any(), any(), any(), any()) }
-    }
-
-    @Test
     fun `Test update course id reloads data`() = runTest {
         val viewModel = getViewModel()
 
@@ -166,6 +157,118 @@ class NotebookViewModelTest {
         viewModel.updateFilters(123L)
 
         coVerify(exactly = 2) { repository.getNotes(any(), any(), any(), any(), 123L, any(), any()) }
+    }
+
+    @Test
+    fun `Test loadCourses success populates courses`() = runTest {
+        val mockCourses = listOf(
+            mockk<CourseWithProgress>(relaxed = true),
+            mockk<CourseWithProgress>(relaxed = true)
+        )
+        coEvery { repository.getCourses(any()) } returns DataResult.Success(mockCourses)
+
+        val viewModel = getViewModel()
+
+        assertEquals(mockCourses, viewModel.uiState.value.courses)
+    }
+
+    @Test
+    fun `Test loadCourses failure sets empty courses`() = runTest {
+        coEvery { repository.getCourses(any()) } returns DataResult.Fail()
+
+        val viewModel = getViewModel()
+
+        assertTrue(viewModel.uiState.value.courses.isEmpty())
+    }
+
+    @Test
+    fun `Test onCourseSelected updates state and reloads data`() = runTest {
+        val mockCourse = mockk<CourseWithProgress>(relaxed = true) {
+            every { courseId } returns 123L
+        }
+        val viewModel = getViewModel()
+
+        viewModel.uiState.value.onCourseSelected(mockCourse)
+
+        assertEquals(mockCourse, viewModel.uiState.value.selectedCourse)
+        coVerify(atLeast = 1) { repository.getNotes(any(), any(), any(), any(), 123L, any(), any()) }
+    }
+
+    @Test
+    fun `Test onCourseSelected with null clears course`() = runTest {
+        val viewModel = getViewModel()
+
+        viewModel.uiState.value.onCourseSelected(null)
+
+        assertNull(viewModel.uiState.value.selectedCourse)
+    }
+
+    @Test
+    fun `Test updateScreenState changes visibility flags`() = runTest {
+        val viewModel = getViewModel()
+
+        viewModel.updateScreenState(
+            showNoteTypeFilter = false,
+            showCourseFilter = true,
+            showTopBar = true
+        )
+
+        assertFalse(viewModel.uiState.value.showNoteTypeFilter)
+        assertTrue(viewModel.uiState.value.showCourseFilter)
+        assertTrue(viewModel.uiState.value.showTopBar)
+    }
+
+    @Test
+    fun `Test updateContent with different courseId reloads data`() = runTest {
+        val viewModel = getViewModel()
+
+        viewModel.uiState.value.updateContent(456L, Pair("Assignment", "123"))
+
+        coVerify(atLeast = 1) { repository.getNotes(any(), any(), any(), any(), 456L, Pair("Assignment", "123"), any()) }
+    }
+
+    @Test
+    fun `Test updateContent with same courseId does not reload data`() = runTest {
+        val viewModel = getViewModel()
+
+        viewModel.uiState.value.updateContent(null, null)
+
+        coVerify(exactly = 1) { repository.getNotes(any(), any(), any(), any(), any(), any(), any()) }
+    }
+
+    @Test
+    fun `Test loadNextPage triggers with valid next page`() = runTest {
+        coEvery { repository.getNotes(any(), any(), any(), any(), any(), any(), any()) } returns testNotes.copy(
+            pageInfo = testNotes.pageInfo.copy(hasNextPage = true)
+        )
+        val viewModel = getViewModel()
+
+        viewModel.uiState.value.loadNextPage()
+
+        coVerify(atLeast = 2) { repository.getNotes(any(), any(), any(), any(), any(), any(), any()) }
+    }
+
+    @Test
+    fun `Test loadNextPage does not trigger when no next page`() = runTest {
+        val notesWithoutNext = testNotes.copy(
+            pageInfo = testNotes.pageInfo.copy(hasNextPage = false)
+        )
+        coEvery { repository.getNotes(any(), any(), any(), any(), any(), any(), any()) } returns notesWithoutNext
+
+        val viewModel = getViewModel()
+
+        viewModel.uiState.value.loadNextPage()
+
+        coVerify(exactly = 1) { repository.getNotes(any(), any(), any(), any(), any(), any(), any()) }
+    }
+
+    @Test
+    fun `Test course filter is hidden when courseId is present`() = runTest {
+        savedStateHandle["courseId"] = "123"
+
+        val viewModel = getViewModel()
+
+        assertFalse(viewModel.uiState.value.showCourseFilter)
     }
 
     private fun getViewModel(): NotebookViewModel {
