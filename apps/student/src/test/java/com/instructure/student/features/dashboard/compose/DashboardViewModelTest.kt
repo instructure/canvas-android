@@ -68,7 +68,11 @@ class DashboardViewModelTest {
         every { networkStateProvider.isOnline() } returns true
         coEvery { observeWidgetMetadataUseCase(Unit) } returns flowOf(emptyList())
 
-        viewModel = DashboardViewModel(networkStateProvider, ensureDefaultWidgetsUseCase, observeWidgetMetadataUseCase)
+        viewModel = createViewModel()
+    }
+
+    private fun createViewModel(): DashboardViewModel {
+        return DashboardViewModel(networkStateProvider, ensureDefaultWidgetsUseCase, observeWidgetMetadataUseCase)
     }
 
     @After
@@ -133,7 +137,7 @@ class DashboardViewModelTest {
         )
         coEvery { observeWidgetMetadataUseCase(Unit) } returns flowOf(widgets)
 
-        viewModel = DashboardViewModel(networkStateProvider, ensureDefaultWidgetsUseCase, observeWidgetMetadataUseCase)
+        viewModel = createViewModel()
 
         val state = viewModel.uiState.value
         assertEquals(2, state.widgets.size)
@@ -150,7 +154,7 @@ class DashboardViewModelTest {
         )
         coEvery { observeWidgetMetadataUseCase(Unit) } returns flowOf(widgets)
 
-        viewModel = DashboardViewModel(networkStateProvider, ensureDefaultWidgetsUseCase, observeWidgetMetadataUseCase)
+        viewModel = createViewModel()
 
         val state = viewModel.uiState.value
         assertEquals(2, state.widgets.size)
@@ -162,7 +166,7 @@ class DashboardViewModelTest {
     fun testEmptyWidgetsList() = runTest {
         coEvery { observeWidgetMetadataUseCase(Unit) } returns flowOf(emptyList())
 
-        viewModel = DashboardViewModel(networkStateProvider, ensureDefaultWidgetsUseCase, observeWidgetMetadataUseCase)
+        viewModel = createViewModel()
 
         val state = viewModel.uiState.value
         assertEquals(0, state.widgets.size)
@@ -172,7 +176,7 @@ class DashboardViewModelTest {
     fun testLoadDashboardError() = runTest {
         coEvery { observeWidgetMetadataUseCase(Unit) } throws Exception("Test error")
 
-        viewModel = DashboardViewModel(networkStateProvider, ensureDefaultWidgetsUseCase, observeWidgetMetadataUseCase)
+        viewModel = createViewModel()
 
         val state = viewModel.uiState.value
         assertFalse(state.loading)
