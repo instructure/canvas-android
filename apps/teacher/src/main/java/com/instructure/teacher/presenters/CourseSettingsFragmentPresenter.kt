@@ -44,7 +44,23 @@ class CourseSettingsFragmentPresenter : FragmentPresenter<CourseSettingsFragment
 
     fun prefetchFrontPageStatus(course: Course) {
         shouldShowDialogAfterFetch = false
-        PageManager.getFrontPage(course, true, mCheckFrontPageCallback)
+        PageManager.getFrontPage(course, true, object : StatusCallback<Page>() {
+            override fun onResponse(response: Response<Page>, linkHeaders: LinkHeaders, type: ApiType) {
+                hasFrontPage = response.isSuccessful && response.body() != null
+                // If no front page exists but course home is set to wiki, automatically set it to course activity stream
+                if (!hasFrontPage!! && course.homePage?.apiString == "wiki") {
+                    editCourseHomePage("feed", course)
+                }
+            }
+
+            override fun onFail(call: retrofit2.Call<Page>?, error: Throwable, response: Response<*>?) {
+                hasFrontPage = false
+                // If no front page exists but course home is set to wiki, automatically set it to course activity stream
+                if (course.homePage?.apiString == "wiki") {
+                    editCourseHomePage("feed", course)
+                }
+            }
+        })
     }
 
     fun editCourseName(newName: String, course: Course) {
