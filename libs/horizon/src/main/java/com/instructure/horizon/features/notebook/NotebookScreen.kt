@@ -34,8 +34,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -77,7 +75,6 @@ import com.instructure.horizon.horizonui.molecules.DropdownItem
 import com.instructure.horizon.horizonui.molecules.HorizonDivider
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.navigation.MainNavigationRoute
-import com.instructure.pandautils.compose.modifiers.conditional
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.localisedFormat
@@ -90,7 +87,10 @@ fun NotebookScreen(
 ) {
     val activity = LocalContext.current.getActivityOrNull()
     LaunchedEffect(Unit) {
-        if (activity != null) ViewStyler.setStatusBarColor(activity, ContextCompat.getColor(activity, R.color.surface_pagePrimary))
+        if (activity != null) ViewStyler.setStatusBarColor(
+            activity,
+            ContextCompat.getColor(activity, R.color.surface_pagePrimary)
+        )
     }
 
     val scrollState = rememberLazyListState()
@@ -111,7 +111,7 @@ fun NotebookScreen(
                 .fillMaxSize()
                 .padding(paddingValues = padding)
         ) {
-            if ((state.showNoteTypeFilter || state.showCourseFilter) && state.notes.isNotEmpty()) {
+            if ((state.showNoteTypeFilter || state.showCourseFilter) && (state.courses.isNotEmpty() || state.selectedCourse != null || state.selectedFilter != null)) {
                 FilterContent(
                     modifier = Modifier
                         .clip(HorizonCornerRadius.level5)
@@ -122,7 +122,7 @@ fun NotebookScreen(
                     onCourseSelected = state.onCourseSelected,
                     courses = state.courses,
                     showNoteTypeFilter = state.showNoteTypeFilter,
-                    showCourseTypeFilter = state.showCourseFilter
+                    showCourseFilter = state.showCourseFilter
                 )
             }
 
@@ -140,43 +140,47 @@ fun NotebookScreen(
                     )
                 ) {
 
-            if (state.isLoading) {
-                item {
-                    LoadingContent()
-                }
-            } else if (state.notes.isEmpty()) {
-                item {
-                    EmptyContent()
-                }
-            } else {
-                items(state.notes) { note ->
-                    Column {
-                        NoteContent(note) {
-                            if (state.navigateToEdit) {
-                                mainNavController.navigate(
-                                    NotebookRoute.EditNotebook(
-                                        noteId = note.id,
-                                        highlightedTextStartOffset = note.highlightedText.range.startOffset,
-                                        highlightedTextEndOffset = note.highlightedText.range.endOffset,
-                                        highlightedTextStartContainer = note.highlightedText.range.startContainer,
-                                        highlightedTextEndContainer = note.highlightedText.range.endContainer,
-                                        textSelectionStart = note.highlightedText.textPosition.start,
-                                        textSelectionEnd = note.highlightedText.textPosition.end,
-                                        highlightedText = note.highlightedText.selectedText,
-                                        noteType = note.type.name,
-                                        userComment = note.userText
-                                    )
-                                )
-                            } else {
-                                mainNavController.navigate(
-                                    MainNavigationRoute.ModuleItemSequence(
-                                        courseId = note.courseId,
-                                        moduleItemAssetType = note.objectType.value,
-                                        moduleItemAssetId = note.objectId,
-                                    )
-                                )
+                    if (state.isLoading) {
+                        item {
+                            LoadingContent()
+                        }
+                    } else if (state.notes.isEmpty()) {
+                        if (state.selectedCourse != null || state.selectedFilter != null) {
+
+                        } else {
+                            item {
+                                EmptyContent()
                             }
                         }
+                    } else {
+                        items(state.notes) { note ->
+                            Column {
+                                NoteContent(note) {
+                                    if (state.navigateToEdit) {
+                                        mainNavController.navigate(
+                                            NotebookRoute.EditNotebook(
+                                                noteId = note.id,
+                                                highlightedTextStartOffset = note.highlightedText.range.startOffset,
+                                                highlightedTextEndOffset = note.highlightedText.range.endOffset,
+                                                highlightedTextStartContainer = note.highlightedText.range.startContainer,
+                                                highlightedTextEndContainer = note.highlightedText.range.endContainer,
+                                                textSelectionStart = note.highlightedText.textPosition.start,
+                                                textSelectionEnd = note.highlightedText.textPosition.end,
+                                                highlightedText = note.highlightedText.selectedText,
+                                                noteType = note.type.name,
+                                                userComment = note.userText
+                                            )
+                                        )
+                                    } else {
+                                        mainNavController.navigate(
+                                            MainNavigationRoute.ModuleItemSequence(
+                                                courseId = note.courseId,
+                                                moduleItemAssetType = note.objectType.value,
+                                                moduleItemAssetId = note.objectId,
+                                            )
+                                        )
+                                    }
+                                }
 
                                 if (state.notes.lastOrNull() != note) {
                                     HorizonSpace(SpaceSize.SPACE_4)
@@ -220,7 +224,7 @@ private fun FilterContent(
     onCourseSelected: (CourseWithProgress?) -> Unit,
     courses: List<CourseWithProgress>,
     showNoteTypeFilter: Boolean = true,
-    showCourseTypeFilter: Boolean = true,
+    showCourseFilter: Boolean = true,
 ) {
     val context = LocalContext.current
     val defaultBackgroundColor = HorizonColors.PrimitivesGrey.grey12()
@@ -290,7 +294,7 @@ private fun FilterContent(
             .padding(16.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        if (showCourseTypeFilter) {
+        if (showCourseFilter) {
             DropdownChip(
                 items = courseItems,
                 selectedItem = selectedCourseItem,

@@ -35,6 +35,6 @@ data class NotebookUiState(
     val showTopBar: Boolean = false,
     val showFilters: Boolean = false,
     val navigateToEdit: Boolean = false,
-    val showNoteTypeFilter: Boolean = false,
-    val showCourseFilter: Boolean = false,
+    val showNoteTypeFilter: Boolean = true,
+    val showCourseFilter: Boolean = true,
 )
