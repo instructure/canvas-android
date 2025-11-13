@@ -16,6 +16,7 @@
  */
 package com.instructure.horizon.features.dashboard.widget.course.list
 
+import android.content.Context
 import androidx.annotation.StringRes
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.platform.LoadingState
@@ -45,5 +46,15 @@ enum class DashboardCourseListFilterOption(@param:StringRes val labelRes: Int) {
     All(R.string.dashboardCourseListAllCoursesFilterLabel),
     NotStarted(R.string.dashboardCourseListNotStartedFilterLabel),
     InProgress(R.string.dashboardCourseListInProgressFilterLabel),
-    Completed(R.string.dashboardCourseListCompletedFilterLabel),
+    Completed(R.string.dashboardCourseListCompletedFilterLabel);
+
+    companion object {
+        fun fromLabelRes(@StringRes labelRes: Int): DashboardCourseListFilterOption {
+            return entries.firstOrNull { it.labelRes == labelRes } ?: All
+        }
+
+        fun fromLabel(context: Context, label: String): DashboardCourseListFilterOption {
+            return entries.firstOrNull { context.getString(it.labelRes) == label } ?: All
+        }
+    }
 }

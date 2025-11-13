@@ -16,43 +16,76 @@
  */
 package com.instructure.horizon.features.dashboard.widget.course.list
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardCard
+import com.instructure.horizon.features.home.HomeNavigationRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
+import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
+import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
+import com.instructure.horizon.horizonui.molecules.ProgressBarSmall
+import com.instructure.horizon.horizonui.molecules.ProgressBarStyle
+import com.instructure.horizon.horizonui.organisms.CollapsableScaffold
+import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelect
+import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectInputSize
+import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
+import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardCourseListScreen(
     state: DashboardCourseListUiState,
-    mainNavController: NavHostController,
+    homeNavController: NavHostController,
 ) {
     LoadingStateWrapper(state.loadingState) {
-        Scaffold(
+        CollapsableScaffold(
             containerColor = HorizonColors.Surface.pagePrimary(),
-            topBar = { DashboardCourseListTopBar(mainNavController) }
+            topBar = { DashboardCourseListTopBar(homeNavController) },
         ) {
-            LazyColumn {
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                modifier = Modifier.padding(horizontal = 16.dp)
+            ) {
+                stickyHeader {
+                    DashboardCourseListHeader(state)
+                }
                 items(state.courses) {
-                    CourseItemCard(it)
+                    CourseItemCard(it, homeNavController)
                 }
             }
         }
@@ -60,15 +93,64 @@ fun DashboardCourseListScreen(
 }
 
 @Composable
-private fun CourseItemCard(courseState: DashboardCourseListCourseState) {
+private fun DashboardCourseListHeader(state: DashboardCourseListUiState) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth().padding(16.dp)
+    ) {
+        val context = LocalContext.current
+        var isMenuOpen by remember { mutableStateOf(false) }
+
+        SingleSelect(
+            SingleSelectState(
+                isMenuOpen = isMenuOpen,
+                onMenuOpenChanged = { isMenuOpen = it },
+                options = state.filterOptions.map { stringResource(it.labelRes) },
+                selectedOption = stringResource(state.selectedFilterOption.labelRes),
+                onOptionSelected = {
+                    state.onFilterOptionSelected(DashboardCourseListFilterOption.fromLabel(context, it))
+                },
+                size = SingleSelectInputSize.Small
+            )
+        )
+
+        Spacer(Modifier.weight(1f))
+
+        Text(
+            text = state.courses.size.toString(),
+            style = HorizonTypography.p2,
+            color = HorizonColors.Text.title(),
+        )
+    }
+}
+
+@Composable
+private fun CourseItemCard(
+    courseState: DashboardCourseListCourseState,
+    homeNavController: NavHostController
+) {
     DashboardCard {
-        
+        Column(
+            modifier = Modifier.padding(24.dp)
+        ) {
+            ProgramsText(courseState.parentPrograms) {
+                homeNavController.navigate(HomeNavigationRoute.Learn.withProgram(it))
+            }
+
+            Text(
+                courseState.name,
+                style = HorizonTypography.labelLargeBold,
+                color = HorizonColors.Text.title(),
+            )
+
+            CourseProgress(courseState.progress)
+        }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun DashboardCourseListTopBar(mainNavController: NavHostController) {
+private fun DashboardCourseListTopBar(homeNavController: NavHostController) {
     CenterAlignedTopAppBar(
        colors = TopAppBarDefaults.topAppBarColors(
             containerColor = HorizonColors.Surface.pagePrimary(),
@@ -89,9 +171,73 @@ private fun DashboardCourseListTopBar(mainNavController: NavHostController) {
                 color = IconButtonColor.Inverse,
                 size = IconButtonSize.SMALL,
                 elevation = HorizonElevation.level4,
-                onClick = { mainNavController.popBackStack() },
+                onClick = { homeNavController.popBackStack() },
                 modifier = Modifier.padding(horizontal = 24.dp)
             )
         },
     )
+}
+
+@Composable
+private fun ProgramsText(
+    programs: List<DashboardCourseListParentProgramState>,
+    onProgramClicked: (String) -> Unit,
+) {
+    val programsAnnotated = buildAnnotatedString {
+        programs.forEachIndexed { i, program ->
+            if (i > 0) append(", ")
+            withLink(
+                LinkAnnotation.Clickable(
+                    tag = program.programId,
+                    styles = TextLinkStyles(
+                        style = SpanStyle(textDecoration = TextDecoration.Underline)
+                    ),
+                    linkInteractionListener = { _ -> onProgramClicked(program.programId) }
+                )
+            ) {
+                append(program.programName)
+            }
+        }
+    }
+
+    // String resource can't work with annotated string so we need a temporary placeholder
+    val template = stringResource(R.string.learnScreen_partOfProgram, "__PROGRAMS__")
+
+    val fullText = buildAnnotatedString {
+        val parts = template.split("__PROGRAMS__")
+        append(parts[0])
+        append(programsAnnotated)
+        if (parts.size > 1) append(parts[1])
+    }
+
+    Text(
+        text = fullText,
+        style = HorizonTypography.p1,
+        modifier = Modifier
+            .semantics(mergeDescendants = true) {}
+    )
+}
+
+@Composable
+private fun CourseProgress(
+    progress: Double,
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        ProgressBarSmall(
+            progress = progress,
+            style = ProgressBarStyle.Institution,
+            showLabels = false,
+            modifier = Modifier.weight(1f)
+        )
+
+        HorizonSpace(SpaceSize.SPACE_8)
+
+        Text(
+            text = stringResource(R.string.progressBar_percent, progress.roundToInt()),
+            style = HorizonTypography.p2,
+            color = HorizonColors.Surface.institution(),
+        )
+    }
 }

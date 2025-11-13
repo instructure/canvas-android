@@ -461,8 +461,8 @@ private fun ProgramChip(
                 shape = HorizonCornerRadius.level1
             )
             .border(1.dp, HorizonColors.LineAndBorder.lineStroke(), HorizonCornerRadius.level1)
-            .padding(horizontal = 12.dp, vertical = 2.dp)
             .shimmerEffect(isLoading)
+            .padding(horizontal = 12.dp, vertical = 2.dp)
     ) {
         Text(
             stringResource(R.string.dashboardCourseCardProgramPrefix),
