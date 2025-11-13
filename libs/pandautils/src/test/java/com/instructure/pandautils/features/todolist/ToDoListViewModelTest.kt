@@ -64,6 +64,7 @@ class ToDoListViewModelTest {
     private val firebaseCrashlytics: FirebaseCrashlytics = mockk(relaxed = true)
     private val toDoFilterDao: ToDoFilterDao = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
+    private val toDoListViewModelBehavior: ToDoListViewModelBehavior = mockk(relaxed = true)
 
     private val testUser = User(id = 123L, name = "Test User")
     private val testDomain = "test.instructure.com"
@@ -760,6 +761,7 @@ class ToDoListViewModelTest {
         // Verify data was reloaded
         coVerify(atLeast = 2) { repository.getCourses(any()) }
         coVerify(atLeast = 2) { repository.getPlannerItems(any(), any(), any()) }
+        verify { toDoListViewModelBehavior.updateWidget(false) }
     }
 
     @Test
@@ -776,7 +778,7 @@ class ToDoListViewModelTest {
         val viewModel = getViewModel()
 
         // Clear invocation counters after init
-        clearMocks(repository, answers = false)
+        clearMocks(repository, toDoListViewModelBehavior, answers = false)
         coEvery { repository.getCourses(any()) } returns DataResult.Success(courses)
         coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(plannerItems)
 
@@ -786,6 +788,7 @@ class ToDoListViewModelTest {
         // Verify data was NOT reloaded from repository (no additional calls)
         coVerify(exactly = 0) { repository.getCourses(any()) }
         coVerify(exactly = 0) { repository.getPlannerItems(any(), any(), any()) }
+        verify { toDoListViewModelBehavior.updateWidget(false) }
     }
 
     @Test
@@ -1155,7 +1158,7 @@ class ToDoListViewModelTest {
 
     // Helper functions
     private fun getViewModel(): ToDoListViewModel {
-        return ToDoListViewModel(context, repository, networkStateProvider, firebaseCrashlytics, toDoFilterDao, apiPrefs)
+        return ToDoListViewModel(context, repository, networkStateProvider, firebaseCrashlytics, toDoFilterDao, apiPrefs, toDoListViewModelBehavior)
     }
 
     private fun createPlannerItem(

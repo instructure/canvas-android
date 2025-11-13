@@ -19,24 +19,23 @@ package com.instructure.student.widget.todo
 
 import android.content.Context
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.utils.courseOrUserColor
+import com.instructure.pandautils.utils.filterByToDoFilters
 import com.instructure.pandautils.utils.getContextNameForPlannerItem
 import com.instructure.pandautils.utils.getDateTextForPlannerItem
 import com.instructure.pandautils.utils.getIconForPlannerItem
 import com.instructure.pandautils.utils.getTagForPlannerItem
 import com.instructure.pandautils.utils.getUrl
-import com.instructure.pandautils.utils.orDefault
+import com.instructure.pandautils.utils.isComplete
 import com.instructure.pandautils.utils.toLocalDate
 import com.instructure.student.widget.glance.WidgetState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import org.threeten.bp.LocalDate
 
 
 private const val PLANNER_DATE_RANGE_DAYS = 28L
@@ -45,7 +44,7 @@ class ToDoWidgetUpdater(
     private val repository: ToDoWidgetRepository,
     private val apiPrefs: ApiPrefs
 ) {
-    suspend fun updateData(context: Context): Flow<ToDoWidgetUiState> {
+    fun updateData(context: Context, forceNetwork: Boolean = true): Flow<ToDoWidgetUiState> {
         return flow {
             emit(ToDoWidgetUiState(WidgetState.Loading))
 
@@ -56,16 +55,13 @@ class ToDoWidgetUpdater(
             }
 
             try {
-                val courses = repository.getCourses(true)
-                val calendarFilters = repository.getCalendarFilters(apiPrefs.user?.id.orDefault(), apiPrefs.fullDomain)
+                val courses = repository.getCourses(forceNetwork)
+                val todoFilters = repository.getToDoFilters()
 
-                val now = LocalDate.now().atStartOfDay()
-                val plannerItemsDataResult = repository.getPlannerItems(
-                    now.minusDays(PLANNER_DATE_RANGE_DAYS).toApiString().orEmpty(),
-                    now.plusDays(PLANNER_DATE_RANGE_DAYS).toApiString().orEmpty(),
-                    calendarFilters?.filters.orEmpty().toList(),
-                    true
-                )
+                val startDate = todoFilters.pastDateRange.calculatePastDateRange().toApiString()
+                val endDate = todoFilters.futureDateRange.calculateFutureDateRange().toApiString()
+
+                val plannerItemsDataResult = repository.getPlannerItems(startDate, endDate, forceNetwork)
 
                 if (plannerItemsDataResult is DataResult.Fail && plannerItemsDataResult.failure is Failure.Authorization) {
                     emit(ToDoWidgetUiState(WidgetState.NotLoggedIn))
@@ -73,8 +69,9 @@ class ToDoWidgetUpdater(
                 }
                 // Other errors are handled in catch
                 val plannerItems = plannerItemsDataResult.dataOrThrow
-                    .filter { it.plannerOverride?.markedComplete != true }
-                    .filter { !isComplete(it) }
+                    .filterByToDoFilters(todoFilters, courses)
+                    .filter { !it.isComplete() }
+                    .sortedBy { it.comparisonDate }
 
                 val toDoWidgetUiState = ToDoWidgetUiState(
                     if (plannerItems.isEmpty()) {
@@ -91,17 +88,6 @@ class ToDoWidgetUpdater(
                 e.printStackTrace()
                 emit(ToDoWidgetUiState(WidgetState.Error))
             }
-        }
-    }
-
-    private fun isComplete(plannerItem: PlannerItem): Boolean {
-        return if (plannerItem.plannableType == PlannableType.ASSIGNMENT
-            || plannerItem.plannableType == PlannableType.DISCUSSION_TOPIC
-            || plannerItem.plannableType == PlannableType.SUB_ASSIGNMENT
-        ) {
-            plannerItem.submissionState?.submitted == true
-        } else {
-            false
         }
     }
 
