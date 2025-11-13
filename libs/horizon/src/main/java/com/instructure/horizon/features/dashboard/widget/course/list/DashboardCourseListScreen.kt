@@ -231,7 +231,11 @@ private fun ProgramsText(
                 LinkAnnotation.Clickable(
                     tag = program.programId,
                     styles = TextLinkStyles(
-                        style = SpanStyle(textDecoration = TextDecoration.Underline)
+                        style = SpanStyle(
+                            color = HorizonColors.Text.body(),
+                            fontStyle = HorizonTypography.labelMediumBold.fontStyle,
+                            textDecoration = TextDecoration.Underline,
+                        )
                     ),
                     linkInteractionListener = { _ -> onProgramClicked(program.programId) }
                 )
@@ -253,7 +257,8 @@ private fun ProgramsText(
 
     Text(
         text = fullText,
-        style = HorizonTypography.p1,
+        style = HorizonTypography.labelMediumBold,
+        color = HorizonColors.Text.timestamp(),
         modifier = Modifier
             .semantics(mergeDescendants = true) {}
     )
