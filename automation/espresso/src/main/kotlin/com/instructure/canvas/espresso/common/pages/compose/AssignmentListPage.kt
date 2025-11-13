@@ -18,6 +18,8 @@ package com.instructure.canvas.espresso.common.pages.compose
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
+import androidx.compose.ui.test.hasAnyAncestor
+import androidx.compose.ui.test.hasAnyChild
 import androidx.compose.ui.test.hasAnyDescendant
 import androidx.compose.ui.test.hasAnySibling
 import androidx.compose.ui.test.hasContentDescription
@@ -88,8 +90,8 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
         assertHasAssignmentCommon(assignment.name, assignment.dueAt, null)
     }
 
-    fun assertHasAssignment(assignment: AssignmentApiModel, expectedGrade: String? = null) {
-        assertHasAssignmentCommon(assignment.name, assignment.dueAt, expectedGrade)
+    fun assertHasAssignment(assignment: AssignmentApiModel, expectedGrade: String? = null, assignmentStatus: String? = null) {
+        assertHasAssignmentCommon(assignment.name, assignment.dueAt, expectedGrade, assignmentStatus)
     }
 
     fun assertHasAssignment(assignment: Assignment, expectedGrade: String? = null) {
@@ -127,7 +129,7 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
             .performClick()
     }
 
-    private fun assertHasAssignmentCommon(assignmentName: String, assignmentDueAt: String?, expectedLabel: String? = null) {
+    private fun assertHasAssignmentCommon(assignmentName: String, assignmentDueAt: String?, expectedGradeLabel: String? = null, assignmentStatus: String? = null) {
 
         // Check that either the assignment due date is present, or "No Due Date" is displayed
         if(assignmentDueAt != null) {
@@ -149,14 +151,24 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
 
         retryWithIncreasingDelay(times = 10, maxDelay = 4000, catchBlock = { refresh() }) {
             // Check that grade is present, if that is specified
-            if (expectedLabel != null) {
+            if (expectedGradeLabel != null) {
                 composeTestRule.onNode(
                     hasText(assignmentName).and(
-                        hasParent(hasAnyDescendant(hasText(expectedLabel, substring = true)))
+                        hasParent(hasAnyDescendant(hasText(expectedGradeLabel, substring = true)))
                     )
                 )
                     .assertIsDisplayed()
             }
+        }
+
+        if(assignmentStatus != null) {
+            composeTestRule.onNode(
+                hasText(assignmentStatus).and(
+                    hasAnyAncestor(hasAnyChild(hasText(assignmentName)))
+                ),
+                useUnmergedTree = true
+            )
+            .assertIsDisplayed()
         }
     }
 

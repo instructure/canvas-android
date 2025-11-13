@@ -1,4 +1,4 @@
-package com.instructure.student.ui.e2e.compose
+package com.instructure.parentapp.ui.e2e.compose
 
 import android.util.Log
 import com.instructure.canvas.espresso.FeatureCategory
@@ -15,14 +15,15 @@ import com.instructure.dataseeding.util.CanvasNetworkAdapter.adminToken
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
-import com.instructure.student.ui.utils.StudentComposeTest
-import com.instructure.student.ui.utils.extensions.seedData
-import com.instructure.student.ui.utils.extensions.tokenLogin
+import com.instructure.espresso.retryWithIncreasingDelay
+import com.instructure.parentapp.utils.ParentComposeTest
+import com.instructure.parentapp.utils.extensions.seedData
+import com.instructure.parentapp.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
 @HiltAndroidTest
-class CustomStatusesE2ETest: StudentComposeTest() {
+class CustomStatusesE2ETest: ParentComposeTest() {
 
     override fun displaysPageObjects() = Unit
 
@@ -34,10 +35,11 @@ class CustomStatusesE2ETest: StudentComposeTest() {
     fun testCustomStatusesE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
-        val data = seedData(teachers = 1, courses = 1, students = 1)
+        val data = seedData(students = 1, courses = 1, teachers = 1, parents = 1)
+        val course = data.coursesList[0]
+        val parent = data.parentsList[0]
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
-        val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG, "Seeding a custom status ('AMAZING') with the admin user.")
         val customStatusId = CustomStatusApi.upsertCustomGradeStatus(adminToken, name = "AMAZING", color = "#FF0000")
@@ -63,22 +65,24 @@ class CustomStatusesE2ETest: StudentComposeTest() {
             customGradeStatusId = customStatusId
         )
 
-        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
-        tokenLogin(student)
-        dashboardPage.waitForRender()
+        Log.d(STEP_TAG, "Login with user: '${parent.name}', login id: '${parent.loginId}'.")
+        tokenLogin(parent)
 
-        Log.d(STEP_TAG, "Select course: '${course.name}'.")
-        dashboardPage.selectCourse(course)
+        Log.d(STEP_TAG, "Click on the '${course.name}' course.")
+        coursesPage.clickCourseItem(course.name)
 
-        Log.d(STEP_TAG, "Navigate to course Assignments Page.")
-        courseBrowserPage.selectAssignments()
+        Log.d(ASSERTION_TAG, "Assert that the details of the course has opened.")
+        courseDetailsPage.assertCourseNameDisplayed(course)
 
-        Log.d(ASSERTION_TAG, "Assert that our assignments are present, along with any grade/date info.")
-        assignmentListPage.assertHasAssignment(testAssignment, assignmentStatus = "AMAZING")
+        Log.d(ASSERTION_TAG, "Assert that the assignment '${testAssignment.name}' is displayed with the custom status 'AMAZING' on Course Details Page.")
+        courseDetailsPage.assertAssignmentStatus(testAssignment.name, "AMAZING")
 
-        Log.d(STEP_TAG, "Click on assignment '${testAssignment.name}'.")
-        assignmentListPage.clickAssignment(testAssignment)
+        Log.d(STEP_TAG, "Click on the '${testAssignment.name}' assignment to open it's details.")
+        retryWithIncreasingDelay {
+            courseDetailsPage.clickAssignment(testAssignment.name)
+        }
 
+        Log.d(ASSERTION_TAG, "Assert that the Assignment Details Page is displayed with the custom status 'AMAZING'.")
         assignmentDetailsPage.assertCustomStatus("AMAZING")
         assignmentDetailsPage.assertSubmissionAndRubricLabel()
 
