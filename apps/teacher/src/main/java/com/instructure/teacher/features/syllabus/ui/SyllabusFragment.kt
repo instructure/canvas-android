@@ -16,6 +16,7 @@
  */
 package com.instructure.teacher.features.syllabus.ui
 
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.Course
@@ -53,6 +54,11 @@ abstract class SyllabusFragment : MobiusFragment<SyllabusModel, SyllabusEvent, S
     override fun makePresenter() = SyllabusPresenter()
 
     override fun makeInitModel() = SyllabusModel(canvasContext.id)
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = false
+    }
 
     override fun onStart() {
         super.onStart()
