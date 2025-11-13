@@ -96,6 +96,9 @@ class RadioButtonDialog : BaseCanvasAppCompatDialogFragment() {
             // Disable the radio button if it's in the disabled indices list
             val isDisabled = mDisabledIndices.contains(index)
             radioButton.isEnabled = !isDisabled
+            if (isDisabled) {
+                radioButton.alpha = 0.38f
+            }
 
             radioGroup.addView(radioButton)
 
