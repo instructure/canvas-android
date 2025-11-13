@@ -135,7 +135,7 @@ fun NotebookScreen(
                     contentPadding = PaddingValues(
                         start = 16.dp,
                         end = 16.dp,
-                        top = 16.dp,
+                        top = 2.dp,
                         bottom = 16.dp
                     )
                 ) {
@@ -145,10 +145,10 @@ fun NotebookScreen(
                             LoadingContent()
                         }
                     } else if (state.notes.isEmpty()) {
-                        if (state.selectedCourse != null || state.selectedFilter != null) {
-
-                        } else {
-                            item {
+                        item {
+                            if (state.selectedCourse != null || state.selectedFilter != null) {
+                                EmptyFilteredContent()
+                            } else {
                                 EmptyContent()
                             }
                         }
@@ -390,25 +390,40 @@ private fun NoteContent(
 
 @Composable
 private fun EmptyContent(modifier: Modifier = Modifier) {
-    Box(
-        contentAlignment = Alignment.Center,
+    Column(
+        horizontalAlignment = Alignment.Start,
         modifier = modifier
-            .fillMaxWidth()
-            .horizonShadow(
-                elevation = HorizonElevation.level4,
-                shape = HorizonCornerRadius.level2,
-                clip = true
-            )
-            .background(
-                color = HorizonColors.PrimitivesWhite.white10(),
-                shape = HorizonCornerRadius.level2,
-            )
     ) {
         Text(
-            text = stringResource(R.string.notebookEmptyContentMessage),
+            text = stringResource(R.string.notesEmptyContentTitle),
+            style = HorizonTypography.sh2,
+            color = HorizonColors.Text.body()
+        )
+        HorizonSpace(size = SpaceSize.SPACE_8)
+        Text(
+            text = stringResource(R.string.notesEmptyContentBody),
             style = HorizonTypography.p1,
-            color = HorizonColors.Text.body(),
-            modifier = Modifier.padding(vertical = 40.dp, horizontal = 36.dp)
+            color = HorizonColors.Text.dataPoint()
+        )
+    }
+}
+
+@Composable
+private fun EmptyFilteredContent(modifier: Modifier = Modifier) {
+    Column(
+        horizontalAlignment = Alignment.Start,
+        modifier = modifier
+    ) {
+        Text(
+            text = stringResource(R.string.notesEmptyFilteredContentTitle),
+            style = HorizonTypography.sh2,
+            color = HorizonColors.Text.body()
+        )
+        HorizonSpace(size = SpaceSize.SPACE_8)
+        Text(
+            text = stringResource(R.string.notesEmptyFilteredContentBody),
+            style = HorizonTypography.p1,
+            color = HorizonColors.Text.dataPoint()
         )
     }
 }
