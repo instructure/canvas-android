@@ -123,13 +123,16 @@ private fun BottomNavigationBar(
                         updateShowAiAssist(true)
                     })
                 } else {
+                    val isCurrentDestinationInBottomNav = bottomNavItems.any {
+                        currentDestination?.route == it.route
+                    }
                     SelectableNavigationItem(item, selected, buttonsEnabled, onClick = {
                         homeNavController.navigate(item.route) {
                             popUpTo(homeNavController.graph.findStartDestination().id) {
-                                saveState = true
+                                saveState = isCurrentDestinationInBottomNav
                             }
                             launchSingleTop = true
-                            restoreState = true
+                            restoreState = isCurrentDestinationInBottomNav
                         }
                     })
                 }
