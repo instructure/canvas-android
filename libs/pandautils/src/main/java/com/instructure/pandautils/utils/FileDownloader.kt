@@ -18,12 +18,10 @@ package com.instructure.pandautils.utils
 import android.Manifest
 import android.app.DownloadManager
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
-import android.provider.Settings
 import android.webkit.CookieManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
