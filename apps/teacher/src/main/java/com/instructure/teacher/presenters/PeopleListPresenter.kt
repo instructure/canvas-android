@@ -218,6 +218,13 @@ class PeopleListPresenter(private val mCanvasContext: CanvasContext?) : SyncPres
         canvasContextList.clear()
         canvasContextList.addAll(contexts)
         shouldApplyFilterAfterLoad = true
+
+        // Load group users for any group contexts
+        for (canvasContext in contexts) {
+            if (CanvasContext.Type.isGroup(canvasContext)) {
+                getGroupUsers(canvasContext)
+            }
+        }
     }
 
     private fun filterCanvasContexts() {
