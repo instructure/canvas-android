@@ -33,12 +33,14 @@ class WidgetDatabaseProvider(
         if (userId == null) {
             firebaseCrashlytics.recordException(IllegalStateException("You can't access the widget database while logged out"))
             return Room.databaseBuilder(context, WidgetDatabase::class.java, "dummy-widget-db")
+                .addMigrations(*widgetDatabaseMigrations)
                 .fallbackToDestructiveMigration()
                 .build()
         }
 
         return dbMap.getOrPut(userId) {
             Room.databaseBuilder(context, WidgetDatabase::class.java, "$WIDGET_DB_PREFIX$userId")
+                .addMigrations(*widgetDatabaseMigrations)
                 .fallbackToDestructiveMigration()
                 .build()
         }

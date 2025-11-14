@@ -49,7 +49,7 @@ class WidgetMetadataDaoTest {
 
     @Test
     fun upsertMetadata_insertsNewEntity() = runTest {
-        val entity = WidgetMetadataEntity("widget1", 0, true)
+        val entity = WidgetMetadataEntity("widget1", 0, true, true, false)
 
         dao.upsertMetadata(entity)
 
@@ -57,19 +57,23 @@ class WidgetMetadataDaoTest {
         assertEquals("widget1", result?.widgetId)
         assertEquals(0, result?.position)
         assertEquals(true, result?.isVisible)
+        assertEquals(true, result?.isEditable)
+        assertEquals(false, result?.isFullWidth)
     }
 
     @Test
     fun upsertMetadata_updatesExistingEntity() = runTest {
-        val entity1 = WidgetMetadataEntity("widget1", 0, true)
+        val entity1 = WidgetMetadataEntity("widget1", 0, true, true, false)
         dao.upsertMetadata(entity1)
 
-        val entity2 = WidgetMetadataEntity("widget1", 1, false)
+        val entity2 = WidgetMetadataEntity("widget1", 1, false, false, true)
         dao.upsertMetadata(entity2)
 
         val result = dao.observeMetadata("widget1").first()
         assertEquals(1, result?.position)
         assertEquals(false, result?.isVisible)
+        assertEquals(false, result?.isEditable)
+        assertEquals(true, result?.isFullWidth)
     }
 
     @Test

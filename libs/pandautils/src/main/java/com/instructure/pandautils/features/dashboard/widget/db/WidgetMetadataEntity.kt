@@ -24,5 +24,7 @@ data class WidgetMetadataEntity(
     @PrimaryKey
     val widgetId: String,
     val position: Int,
-    val isVisible: Boolean
+    val isVisible: Boolean,
+    val isEditable: Boolean = true,
+    val isFullWidth: Boolean = false
 )

@@ -49,8 +49,17 @@ class DashboardViewModel @Inject constructor(
     private val _refreshSignal = MutableSharedFlow<Unit>()
     val refreshSignal = _refreshSignal.asSharedFlow()
 
+    private val _snackbarMessage = MutableSharedFlow<SnackbarMessage>()
+    val snackbarMessage = _snackbarMessage.asSharedFlow()
+
     init {
         loadDashboard()
+    }
+
+    fun showSnackbar(message: String, actionLabel: String? = null, action: (() -> Unit)? = null) {
+        viewModelScope.launch {
+            _snackbarMessage.emit(SnackbarMessage(message, actionLabel, action))
+        }
     }
 
     private fun loadDashboard() {
