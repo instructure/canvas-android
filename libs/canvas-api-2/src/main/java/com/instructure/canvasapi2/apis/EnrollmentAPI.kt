@@ -83,8 +83,17 @@ object EnrollmentAPI {
                 @Query("type[]") types: List<String>?,
                 @Query("state[]") states: List<String>?): Call<List<Enrollment>>
 
+        @GET("users/self/enrollments")
+        suspend fun getFirstPageSelfEnrollments(
+                @Query("type[]") types: List<String>?,
+                @Query("state[]") states: List<String>?,
+                @Tag params: RestParams): DataResult<List<Enrollment>>
+
         @POST("courses/{courseId}/enrollments/{enrollmentId}/{action}")
         fun handleInvite(@Path("courseId") courseId: Long, @Path("enrollmentId") enrollmentId: Long, @Path("action") action: String): Call<Unit>
+
+        @POST("courses/{courseId}/enrollments/{enrollmentId}/{action}")
+        suspend fun handleInvite(@Path("courseId") courseId: Long, @Path("enrollmentId") enrollmentId: Long, @Path("action") action: String, @Tag params: RestParams): DataResult<Unit>
 
         @POST("courses/{courseId}/enrollments/{enrollmentId}/accept")
         suspend fun acceptInvite(@Path("courseId") courseId: Long, @Path("enrollmentId") enrollmentId: Long, @Tag params: RestParams): DataResult<Unit>
