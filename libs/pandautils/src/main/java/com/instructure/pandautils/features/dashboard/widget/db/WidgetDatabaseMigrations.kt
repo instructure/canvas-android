@@ -16,14 +16,11 @@
 
 package com.instructure.pandautils.features.dashboard.widget.db
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import com.instructure.pandautils.room.common.createMigration
 
-@Entity(tableName = "widget_metadata")
-data class WidgetMetadataEntity(
-    @PrimaryKey
-    val widgetId: String,
-    val position: Int,
-    val isVisible: Boolean,
-    val isEditable: Boolean = true
+val widgetDatabaseMigrations = arrayOf(
+
+    createMigration(1, 2) { database ->
+        database.execSQL("ALTER TABLE widget_metadata ADD COLUMN isEditable INTEGER NOT NULL DEFAULT 1")
+    }
 )

@@ -19,5 +19,6 @@ package com.instructure.pandautils.features.dashboard.widget
 data class WidgetMetadata(
     val id: String,
     val position: Int,
-    val isVisible: Boolean
+    val isVisible: Boolean,
+    val isEditable: Boolean = true
 )

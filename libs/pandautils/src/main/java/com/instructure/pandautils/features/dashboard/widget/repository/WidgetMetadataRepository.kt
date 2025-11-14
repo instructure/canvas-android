@@ -57,12 +57,14 @@ class WidgetMetadataRepositoryImpl @Inject constructor(
     private fun WidgetMetadataEntity.toMetadata() = WidgetMetadata(
         id = widgetId,
         position = position,
-        isVisible = isVisible
+        isVisible = isVisible,
+        isEditable = isEditable
     )
 
     private fun WidgetMetadata.toEntity() = WidgetMetadataEntity(
         widgetId = id,
         position = position,
-        isVisible = isVisible
+        isVisible = isVisible,
+        isEditable = isEditable
     )
 }
