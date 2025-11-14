@@ -30,7 +30,11 @@ data class ToDoListUiState(
     val onUndoMarkAsDoneUndoneAction: () -> Unit = {},
     val onMarkedAsDoneSnackbarDismissed: () -> Unit = {},
     val onRefresh: () -> Unit = {},
-    val toDoCount: Int? = null
+    val toDoCount: Int? = null,
+    val onToDoCountChanged: () -> Unit = {},
+    val onFiltersChanged: (Boolean) -> Unit = {},
+    val isFilterApplied: Boolean = false,
+    val removingItemIds: Set<String> = emptySet()
 )
 
 data class ConfirmationSnackbarData(
@@ -50,6 +54,7 @@ data class ToDoItemUiState(
     val isChecked: Boolean = false,
     val iconRes: Int = R.drawable.ic_calendar,
     val tag: String? = null,
+    val htmlUrl: String? = null,
     val onSwipeToDone: () -> Unit = {},
     val onCheckboxToggle: (Boolean) -> Unit = {}
 )

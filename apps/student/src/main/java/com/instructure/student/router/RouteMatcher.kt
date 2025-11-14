@@ -20,8 +20,10 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater.from
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
@@ -54,6 +56,7 @@ import com.instructure.pandautils.features.inbox.details.InboxDetailsFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.offline.sync.progress.SyncProgressFragment
 import com.instructure.pandautils.features.shareextension.ShareFileSubmissionTarget
+import com.instructure.pandautils.features.todolist.ToDoListFragment
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
 import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.utils.Const
@@ -63,6 +66,7 @@ import com.instructure.pandautils.utils.RouteUtils
 import com.instructure.pandautils.utils.nonNullArgs
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toast
+import com.instructure.pandautils.views.CanvasLoadingView
 import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity
 import com.instructure.student.activity.InterwebsToApplication
@@ -82,7 +86,6 @@ import com.instructure.student.features.pages.list.PageListFragment
 import com.instructure.student.features.people.details.PeopleDetailsFragment
 import com.instructure.student.features.people.list.PeopleListFragment
 import com.instructure.student.features.quiz.list.QuizListFragment
-import com.instructure.pandautils.features.todolist.ToDoListFragment
 import com.instructure.student.fragment.AnnouncementListFragment
 import com.instructure.student.fragment.BasicQuizViewFragment
 import com.instructure.student.fragment.CourseSettingsFragment
@@ -661,10 +664,15 @@ object RouteMatcher : BaseRouteMatcher() {
 
                 override fun onCreateLoader(id: Int, args: Bundle?): Loader<OpenMediaAsyncTaskLoader.LoadedMedia> {
                     if (!activity.isFinishing) {
-                        dialog = AlertDialog.Builder(activity, com.instructure.pandautils.R.style.CustomViewAlertDialog)
-                            .setView(com.instructure.pandautils.R.layout.dialog_loading_view)
+                        val view = from(activity).inflate(R.layout.dialog_loading_view, null)
+                        val loadingView = view.findViewById<CanvasLoadingView>(R.id.canvasLoadingView)
+                        val studentColor = getColor(activity, R.color.login_studentAppTheme)
+                        loadingView?.setOverrideColor(studentColor)
+
+                        dialog = AlertDialog.Builder(activity, R.style.CustomViewAlertDialog)
+                            .setView(view)
                             .create()
-                        dialog!!.show()
+                        dialog?.show()
                     }
                     return OpenMediaAsyncTaskLoader(activity, args)
                 }

@@ -15,6 +15,7 @@
  */
 package com.instructure.pandautils.features.todolist
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -37,7 +38,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Checkbox
 import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.ExperimentalMaterialApi
@@ -61,12 +64,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -85,6 +91,10 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
@@ -93,8 +103,10 @@ import com.instructure.pandautils.compose.composables.CanvasDivider
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
+import com.instructure.pandautils.compose.composables.FullScreenDialog
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.modifiers.conditional
+import com.instructure.pandautils.features.todolist.filter.ToDoFilterScreen
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.courseOrUserColor
 import com.instructure.pandautils.utils.performGestureHapticFeedback
@@ -130,12 +142,18 @@ fun ToDoListScreen(
     navigationIconClick: () -> Unit,
     openToDoItem: (String) -> Unit,
     onToDoCountChanged: (Int) -> Unit,
+    onDateClick: (Date) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val viewModel = hiltViewModel<ToDoListViewModel>()
     val uiState by viewModel.uiState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
+    var showFilterScreen by rememberSaveable { mutableStateOf(false) }
+
+    BackHandler(showFilterScreen) {
+        showFilterScreen = false
+    }
 
     LaunchedEffect(uiState.snackbarMessage) {
         uiState.snackbarMessage?.let { message ->
@@ -185,9 +203,11 @@ fun ToDoListScreen(
                 navIconContentDescription = stringResource(id = R.string.navigation_drawer_open),
                 navigationActionClick = navigationIconClick,
                 actions = {
-                    IconButton(onClick = { /* TODO: Implement filter - will be implemented in future story */ }) {
+                    IconButton(onClick = { showFilterScreen = true }) {
                         Icon(
-                            painter = painterResource(id = R.drawable.ic_filter_outline),
+                            painter = painterResource(
+                                id = if (uiState.isFilterApplied) R.drawable.ic_filter_filled else R.drawable.ic_filter_outline
+                            ),
                             contentDescription = stringResource(id = R.string.a11y_contentDescriptionToDoFilter)
                         )
                     }
@@ -212,7 +232,8 @@ fun ToDoListScreen(
         ) {
             ToDoListContent(
                 uiState = uiState,
-                onOpenToDoItem = openToDoItem
+                onOpenToDoItem = openToDoItem,
+                onDateClick = onDateClick
             )
 
             PullRefreshIndicator(
@@ -224,12 +245,35 @@ fun ToDoListScreen(
             )
         }
     }
+
+    if (showFilterScreen) {
+        FullScreenDialog(
+            onDismissRequest = { showFilterScreen = false }
+        ) {
+            // We need a NavHost here so the ViewModel would not persist across multiple openings of the filter screen
+            NavHost(rememberNavController(), startDestination = "filter") {
+                composable("filter") {
+                    ToDoFilterScreen(
+                        onFiltersChanged = { dateFiltersChanged ->
+                            showFilterScreen = false
+                            uiState.onFiltersChanged(dateFiltersChanged)
+                        },
+                        onDismiss = {
+                            showFilterScreen = false
+                        },
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+            }
+        }
+    }
 }
 
 @Composable
 private fun ToDoListContent(
     uiState: ToDoListUiState,
     onOpenToDoItem: (String) -> Unit,
+    onDateClick: (Date) -> Unit,
     modifier: Modifier = Modifier
 ) {
     when {
@@ -250,7 +294,9 @@ private fun ToDoListContent(
                 emptyTitle = stringResource(id = R.string.noToDosForNow),
                 emptyMessage = stringResource(id = R.string.noToDosForNowSubtext),
                 imageRes = R.drawable.ic_no_events,
-                modifier = modifier.fillMaxSize()
+                modifier = modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
             )
         }
 
@@ -258,6 +304,8 @@ private fun ToDoListContent(
             ToDoItemsList(
                 itemsByDate = uiState.itemsByDate,
                 onItemClicked = onOpenToDoItem,
+                onDateClick = onDateClick,
+                removingItemIds = uiState.removingItemIds,
                 modifier = modifier
             )
         }
@@ -268,9 +316,16 @@ private fun ToDoListContent(
 private fun ToDoItemsList(
     itemsByDate: Map<Date, List<ToDoItemUiState>>,
     onItemClicked: (String) -> Unit,
-    modifier: Modifier = Modifier
+    onDateClick: (Date) -> Unit,
+    modifier: Modifier = Modifier,
+    removingItemIds: Set<String> = emptySet()
 ) {
-    val dateGroups = itemsByDate.entries.toList()
+    // Filter out items that are being removed
+    val filteredItemsByDate = itemsByDate.mapValues { (_, items) ->
+        items.filter { it.id !in removingItemIds }
+    }.filterValues { it.isNotEmpty() }
+
+    val dateGroups = filteredItemsByDate.entries.toList()
     val listState = rememberLazyListState()
     val itemPositions = remember { mutableStateMapOf<String, Float>() }
     val itemSizes = remember { mutableStateMapOf<String, Int>() }
@@ -285,7 +340,7 @@ private fun ToDoItemsList(
     )
 
     // Calculate content height from last item's position + size
-    val listContentHeight by remember {
+    val listContentHeight by remember(dateGroups) {
         derivedStateOf {
             if (dateGroups.isEmpty()) return@derivedStateOf 0
             val lastGroup = dateGroups.last()
@@ -300,8 +355,8 @@ private fun ToDoItemsList(
     val availableSpacePx = listHeight - listContentHeight
     val minSpaceForPandasPx = with(density) { 140.dp.toPx() }
     val showPandas = listHeight > 0 && listContentHeight > 0 &&
-                     availableSpacePx >= minSpaceForPandasPx &&
-                     itemsByDate.isNotEmpty()
+            availableSpacePx >= minSpaceForPandasPx &&
+            itemsByDate.isNotEmpty()
 
     Box(modifier = modifier.fillMaxSize()) {
         LazyColumn(
@@ -320,11 +375,22 @@ private fun ToDoItemsList(
                             showDateBadge = index == 0,
                             hideDate = index == 0 && stickyHeaderState.isVisible && stickyHeaderState.item?.id == item.id,
                             onCheckedChange = { item.onCheckboxToggle(!item.isChecked) },
-                            onClick = { onItemClicked(item.id) },
-                            modifier = Modifier.onGloballyPositioned { coordinates ->
-                                itemPositions[item.id] = coordinates.positionInParent().y
-                                itemSizes[item.id] = coordinates.size.height
-                            }
+                            onClick = {
+                                if (item.htmlUrl != null) {
+                                    onItemClicked(item.htmlUrl)
+                                } else {
+                                    FirebaseCrashlytics.getInstance().recordException(
+                                        IllegalStateException("ToDoListScreen: Item clicked with null htmlUrl, id=${item.id}, title=${item.title}")
+                                    )
+                                }
+                            },
+                            onDateClick = onDateClick,
+                            modifier = Modifier
+                                .animateItem()
+                                .onGloballyPositioned { coordinates ->
+                                    itemPositions[item.id] = coordinates.positionInParent().y
+                                    itemSizes[item.id] = coordinates.size.height
+                                }
                         )
                     }
                 }
@@ -356,7 +422,8 @@ private fun ToDoItemsList(
             if (stickyHeaderState.isVisible) {
                 StickyDateBadge(
                     item = item,
-                    yOffset = stickyHeaderState.yOffset
+                    yOffset = stickyHeaderState.yOffset,
+                    onDateClick = onDateClick
                 )
             }
         }
@@ -366,7 +433,8 @@ private fun ToDoItemsList(
 @Composable
 private fun StickyDateBadge(
     item: ToDoItemUiState,
-    yOffset: Float
+    yOffset: Float,
+    onDateClick: (Date) -> Unit
 ) {
     val dateBadgeData = rememberDateBadgeData(item.date)
 
@@ -379,7 +447,9 @@ private fun StickyDateBadge(
             modifier = Modifier
                 .width(44.dp)
                 .padding(end = 12.dp)
-                .background(colorResource(id = R.color.backgroundLightest)),
+                .background(Color.Transparent)
+                .clip(CircleShape)
+                .clickable { onDateClick(item.date) },
             contentAlignment = Alignment.TopCenter
         ) {
             DateBadge(dateBadgeData)
@@ -393,6 +463,7 @@ private fun ToDoItem(
     showDateBadge: Boolean,
     onCheckedChange: () -> Unit,
     onClick: () -> Unit,
+    onDateClick: (Date) -> Unit,
     modifier: Modifier = Modifier,
     hideDate: Boolean = false
 ) {
@@ -401,6 +472,17 @@ private fun ToDoItem(
     var itemWidth by remember { mutableFloatStateOf(0f) }
     val density = LocalDensity.current
     val view = LocalView.current
+
+    // Track the isChecked state that SwipeBackground should display
+    // Only update when item has settled back (offsetX is 0)
+    var swipeBackgroundIsChecked by remember { mutableStateOf(item.isChecked) }
+
+    // Update swipeBackgroundIsChecked only when offset is 0 and item.isChecked has changed
+    LaunchedEffect(animatedOffsetX.value, item.isChecked) {
+        if (animatedOffsetX.value == 0f && swipeBackgroundIsChecked != item.isChecked) {
+            swipeBackgroundIsChecked = item.isChecked
+        }
+    }
 
     val swipeThreshold = with(density) { SWIPE_THRESHOLD_DP.dp.toPx() }
 
@@ -427,8 +509,12 @@ private fun ToDoItem(
                 // Gesture end haptic feedback
                 view.performGestureHapticFeedback(isStart = false)
                 delay(300)
-                animateToCenter()
+
+                // Trigger the action
                 item.onSwipeToDone()
+
+                // Animate back to center - if item gets removed, it will disappear during/after animation
+                animateToCenter()
             } else {
                 animateToCenter()
             }
@@ -461,7 +547,7 @@ private fun ToDoItem(
             }
     ) {
         SwipeBackground(
-            isChecked = item.isChecked,
+            isChecked = swipeBackgroundIsChecked,
             offsetX = animatedOffsetX.value
         )
 
@@ -471,6 +557,7 @@ private fun ToDoItem(
             hideDate = hideDate,
             onCheckedChange = onCheckedChange,
             onClick = onClick,
+            onDateClick = onDateClick,
             modifier = Modifier.offset { IntOffset(animatedOffsetX.value.roundToInt(), 0) }
         )
     }
@@ -567,6 +654,7 @@ private fun ToDoItemContent(
     hideDate: Boolean,
     onCheckedChange: () -> Unit,
     onClick: () -> Unit,
+    onDateClick: (Date) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val dateBadgeData = rememberDateBadgeData(item.date)
@@ -583,7 +671,9 @@ private fun ToDoItemContent(
         Box(
             modifier = Modifier
                 .width(44.dp)
-                .padding(end = 12.dp),
+                .padding(end = 12.dp)
+                .clip(CircleShape)
+                .clickable { onDateClick(item.date) },
             contentAlignment = Alignment.TopCenter
         ) {
             if (showDateBadge && !hideDate) {
@@ -702,7 +792,9 @@ private fun rememberDateBadgeData(date: Date): DateBadgeData {
 }
 
 @Composable
-private fun DateBadge(dateBadgeData: DateBadgeData) {
+private fun DateBadge(
+    dateBadgeData: DateBadgeData
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -747,7 +839,7 @@ private fun rememberStickyHeaderState(
     itemPositions: Map<String, Float>,
     density: Density
 ): StickyHeaderState {
-    return remember {
+    return remember(dateGroups) {
         derivedStateOf {
             calculateStickyHeaderState(dateGroups, listState, itemPositions, density)
         }
@@ -959,61 +1051,21 @@ fun ToDoListScreenPreview() {
                     )
                 )
             ),
-            onOpenToDoItem = {}
-        )
-    }
-}
-
-@Preview(name = "With Pandas Light Mode", showBackground = true)
-@Preview(name = "With Pandas Dark Mode", showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun ToDoListScreenWithPandasPreview() {
-    ContextKeeper.appContext = LocalContext.current
-    val calendar = Calendar.getInstance()
-    CanvasTheme {
-        ToDoListContent(
-            uiState = ToDoListUiState(
-                itemsByDate = mapOf(
-                    Date(10) to listOf(
-                        ToDoItemUiState(
-                            id = "1",
-                            title = "Complete Force training assignment",
-                            date = calendar.apply { set(2024, 9, 22, 7, 59) }.time,
-                            dateLabel = "7:59 AM",
-                            contextLabel = "FORC 101",
-                            canvasContext = CanvasContext.defaultCanvasContext(),
-                            itemType = ToDoItemType.ASSIGNMENT,
-                            iconRes = R.drawable.ic_assignment,
-                            isChecked = false
-                        ),
-                        ToDoItemUiState(
-                            id = "2",
-                            title = "Read chapter on Jedi meditation techniques",
-                            date = calendar.apply { set(2024, 9, 22, 11, 59) }.time,
-                            dateLabel = "11:59 AM",
-                            contextLabel = "Introduction to Advanced Force Manipulation",
-                            canvasContext = CanvasContext.defaultCanvasContext(),
-                            itemType = ToDoItemType.QUIZ,
-                            iconRes = R.drawable.ic_quiz,
-                            isChecked = false
-                        )
-                    )
-                )
-            ),
-            onOpenToDoItem = {}
+            onOpenToDoItem = {},
+            onDateClick = {}
         )
     }
 }
 
 @Preview(name = "Empty Light Mode", showBackground = true)
-@Preview(name = "Empty Dark Mode", showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun ToDoListScreenEmptyPreview() {
     ContextKeeper.appContext = LocalContext.current
     CanvasTheme {
         ToDoListContent(
             uiState = ToDoListUiState(),
-            onOpenToDoItem = {}
+            onOpenToDoItem = {},
+            onDateClick = {}
         )
     }
 }
