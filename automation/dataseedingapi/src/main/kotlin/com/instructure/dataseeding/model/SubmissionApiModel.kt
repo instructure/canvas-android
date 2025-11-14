@@ -78,7 +78,10 @@ data class GradeSubmission(
         val grade: String? = null,
 
         @SerializedName("excuse")
-        val excused: Boolean
+        val excused: Boolean,
+
+        @SerializedName("custom_grade_status_id")
+        val customGradeStatusId: String? = null
 )
 
 data class GradeSubmissionWrapper(
