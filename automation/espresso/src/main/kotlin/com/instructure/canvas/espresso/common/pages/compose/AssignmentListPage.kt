@@ -115,7 +115,7 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
     }
 
     fun assertHasAssignmentWithCheckpoints(assignmentName: String, dueAtString: String = "No due date", expectedGrade: String? = null) {
-        assertHasAssignmentCommon(assignmentName, dueAtString, expectedGrade, true)
+        assertHasAssignmentCommon(assignmentName, dueAtString, expectedGrade, hasCheckPoints = true)
     }
 
     fun assertAssignmentNotDisplayed(assignmentName: String) {
