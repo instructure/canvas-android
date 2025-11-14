@@ -36,6 +36,9 @@ object CourseAPI {
         @get:GET("users/self/favorites/courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=current_grading_period_scores&include[]=course_image&include[]=favorites")
         val favoriteCourses: Call<List<Course>>
 
+        @GET("users/self/favorites/courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=current_grading_period_scores&include[]=course_image&include[]=favorites&state[]=completed&state[]=available")
+        suspend fun getFavoriteCourses(@Tag restParams: RestParams): DataResult<List<Course>>
+
         @get:GET("dashboard/dashboard_cards")
         val dashboardCourses: Call<List<DashboardCard>>
 

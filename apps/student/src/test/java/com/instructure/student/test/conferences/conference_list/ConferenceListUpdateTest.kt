@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.models.Conference
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.student.mobius.conferences.conference_list.ConferenceHeaderType
 import com.instructure.student.mobius.conferences.conference_list.ConferenceListEffect
 import com.instructure.student.mobius.conferences.conference_list.ConferenceListEvent
 import com.instructure.student.mobius.conferences.conference_list.ConferenceListModel
@@ -149,6 +150,87 @@ class ConferenceListUpdateTest : Assert() {
             .then(
                 assertThatNext<ConferenceListModel, ConferenceListEffect>(
                     NextMatchers.hasModel(expectedModel)
+                )
+            )
+    }
+
+    @Test
+    fun `HeaderClicked event with NEW_CONFERENCES toggles isNewConferencesExpanded from true to false`() {
+        val inputModel = initModel.copy(isNewConferencesExpanded = true)
+        val expectedModel = inputModel.copy(isNewConferencesExpanded = false)
+        updateSpec
+            .given(inputModel)
+            .whenEvent(ConferenceListEvent.HeaderClicked(ConferenceHeaderType.NEW_CONFERENCES))
+            .then(
+                assertThatNext<ConferenceListModel, ConferenceListEffect>(
+                    NextMatchers.hasModel(expectedModel),
+                    NextMatchers.hasNoEffects()
+                )
+            )
+    }
+
+    @Test
+    fun `HeaderClicked event with NEW_CONFERENCES toggles isNewConferencesExpanded from false to true`() {
+        val inputModel = initModel.copy(isNewConferencesExpanded = false)
+        val expectedModel = inputModel.copy(isNewConferencesExpanded = true)
+        updateSpec
+            .given(inputModel)
+            .whenEvent(ConferenceListEvent.HeaderClicked(ConferenceHeaderType.NEW_CONFERENCES))
+            .then(
+                assertThatNext<ConferenceListModel, ConferenceListEffect>(
+                    NextMatchers.hasModel(expectedModel),
+                    NextMatchers.hasNoEffects()
+                )
+            )
+    }
+
+    @Test
+    fun `HeaderClicked event with CONCLUDED_CONFERENCES toggles isConcludedConferencesExpanded from true to false`() {
+        val inputModel = initModel.copy(isConcludedConferencesExpanded = true)
+        val expectedModel = inputModel.copy(isConcludedConferencesExpanded = false)
+        updateSpec
+            .given(inputModel)
+            .whenEvent(ConferenceListEvent.HeaderClicked(ConferenceHeaderType.CONCLUDED_CONFERENCES))
+            .then(
+                assertThatNext<ConferenceListModel, ConferenceListEffect>(
+                    NextMatchers.hasModel(expectedModel),
+                    NextMatchers.hasNoEffects()
+                )
+            )
+    }
+
+    @Test
+    fun `HeaderClicked event with CONCLUDED_CONFERENCES toggles isConcludedConferencesExpanded from false to true`() {
+        val inputModel = initModel.copy(isConcludedConferencesExpanded = false)
+        val expectedModel = inputModel.copy(isConcludedConferencesExpanded = true)
+        updateSpec
+            .given(inputModel)
+            .whenEvent(ConferenceListEvent.HeaderClicked(ConferenceHeaderType.CONCLUDED_CONFERENCES))
+            .then(
+                assertThatNext<ConferenceListModel, ConferenceListEffect>(
+                    NextMatchers.hasModel(expectedModel),
+                    NextMatchers.hasNoEffects()
+                )
+            )
+    }
+
+    @Test
+    fun `HeaderClicked event only toggles the targeted section`() {
+        val inputModel = initModel.copy(
+            isNewConferencesExpanded = true,
+            isConcludedConferencesExpanded = false
+        )
+        val expectedModel = inputModel.copy(
+            isNewConferencesExpanded = false,
+            isConcludedConferencesExpanded = false
+        )
+        updateSpec
+            .given(inputModel)
+            .whenEvent(ConferenceListEvent.HeaderClicked(ConferenceHeaderType.NEW_CONFERENCES))
+            .then(
+                assertThatNext<ConferenceListModel, ConferenceListEffect>(
+                    NextMatchers.hasModel(expectedModel),
+                    NextMatchers.hasNoEffects()
                 )
             )
     }

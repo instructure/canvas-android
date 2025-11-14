@@ -16,30 +16,41 @@
 package com.instructure.pandautils.features.todolist
 
 import android.content.Context
+import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
+import com.instructure.canvasapi2.utils.AnalyticsParamConstants
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.isInvited
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.todolist.filter.DateRangeSelection
+import com.instructure.pandautils.room.appdatabase.daos.ToDoFilterDao
+import com.instructure.pandautils.room.appdatabase.entities.ToDoFilterEntity
 import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.pandautils.utils.filterByToDoFilters
 import com.instructure.pandautils.utils.getContextNameForPlannerItem
 import com.instructure.pandautils.utils.getDateTextForPlannerItem
 import com.instructure.pandautils.utils.getIconForPlannerItem
 import com.instructure.pandautils.utils.getTagForPlannerItem
+import com.instructure.pandautils.utils.getUrl
 import com.instructure.pandautils.utils.isComplete
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.threeten.bp.LocalDate
 import java.util.Date
 import javax.inject.Inject
 
@@ -48,7 +59,11 @@ class ToDoListViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val repository: ToDoListRepository,
     private val networkStateProvider: NetworkStateProvider,
-    private val firebaseCrashlytics: FirebaseCrashlytics
+    private val firebaseCrashlytics: FirebaseCrashlytics,
+    private val toDoFilterDao: ToDoFilterDao,
+    private val apiPrefs: ApiPrefs,
+    private val analytics: Analytics,
+    private val toDoListViewModelBehavior: ToDoListViewModelBehavior,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -56,11 +71,47 @@ class ToDoListViewModel @Inject constructor(
             onSnackbarDismissed = { clearSnackbarMessage() },
             onUndoMarkAsDoneUndoneAction = { handleUndoMarkAsDoneUndone() },
             onMarkedAsDoneSnackbarDismissed = { clearMarkedAsDoneItem() },
-            onRefresh = { handleRefresh() }
+            onRefresh = { handleRefresh() },
+            onFiltersChanged = { dateFiltersChanged -> onFiltersChanged(dateFiltersChanged) }
         ))
+
+    private fun onFiltersChanged(dateFiltersChanged: Boolean) {
+        // Update widget
+        toDoListViewModelBehavior.updateWidget(false)
+        if (dateFiltersChanged) {
+            loadData(forceRefresh = false)
+        } else {
+            applyFiltersLocally()
+        }
+    }
+
+    private fun applyFiltersLocally() {
+        viewModelScope.launch {
+            try {
+                val todoFilters = toDoFilterDao.findByUser(
+                    apiPrefs.fullDomain,
+                    apiPrefs.user?.id.orDefault()
+                ) ?: ToDoFilterEntity(userDomain = apiPrefs.fullDomain, userId = apiPrefs.user?.id.orDefault())
+
+                val allPlannerItems = plannerItemsMap.values.toList()
+                val filteredCourses = courseMap.values.toList()
+
+                processAndUpdateItems(allPlannerItems, filteredCourses, todoFilters)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                firebaseCrashlytics.recordException(e)
+            }
+        }
+    }
+
     val uiState = _uiState.asStateFlow()
 
     private val plannerItemsMap = mutableMapOf<String, PlannerItem>()
+    private var courseMap = mapOf<Long, Course>()
+
+    // Track items removed via checkbox for debounced clearing
+    private val checkboxRemovedItems = mutableSetOf<String>()
+    private var checkboxDebounceJob: Job? = null
 
     init {
         loadData()
@@ -71,48 +122,32 @@ class ToDoListViewModel @Inject constructor(
             try {
                 _uiState.update { it.copy(isLoading = !forceRefresh, isRefreshing = forceRefresh, isError = false) }
 
-                val now = LocalDate.now().atStartOfDay()
-                val startDate = now.minusDays(7).toApiString().orEmpty()
-                val endDate = now.plusDays(7).toApiString().orEmpty()
+                val todoFilters = toDoFilterDao.findByUser(
+                    apiPrefs.fullDomain,
+                    apiPrefs.user?.id.orDefault()
+                ) ?: ToDoFilterEntity(userDomain = apiPrefs.fullDomain, userId = apiPrefs.user?.id.orDefault())
+
+                val startDate = todoFilters.pastDateRange.calculatePastDateRange().toApiString()
+                val endDate = todoFilters.futureDateRange.calculateFutureDateRange().toApiString()
 
                 val courses = repository.getCourses(forceRefresh).dataOrThrow
                 val plannerItems = repository.getPlannerItems(startDate, endDate, forceRefresh).dataOrThrow
+                    .filter { it.plannableType != PlannableType.ANNOUNCEMENT && it.plannableType != PlannableType.ASSESSMENT_REQUEST }
+
+                // Store planner items for later reference
+                plannerItemsMap.clear()
+                plannerItems.forEach { plannerItemsMap[it.plannable.id.toString()] = it }
 
                 // Filter courses - exclude access restricted, invited
                 val filteredCourses = courses.filter {
                     !it.accessRestrictedByDate && !it.isInvited()
                 }
-                val courseMap = filteredCourses.associateBy { it.id }
+                courseMap = filteredCourses.associateBy { it.id }
 
-                // Filter planner items - exclude announcements, assessment requests
-                val filteredItems = plannerItems
-                    .filter { it.plannableType != PlannableType.ANNOUNCEMENT && it.plannableType != PlannableType.ASSESSMENT_REQUEST }
-                    .sortedBy { it.comparisonDate }
+                processAndUpdateItems(plannerItems, filteredCourses, todoFilters)
 
-                // Store planner items for later reference
-                plannerItemsMap.clear()
-                filteredItems.forEach { plannerItemsMap[it.plannable.id.toString()] = it }
-
-                // Group items by date
-                val itemsByDate = filteredItems
-                    .groupBy { DateHelper.getCleanDate(it.comparisonDate.time) }
-                    .mapValues { (_, items) ->
-                        items.map { plannerItem ->
-                            mapToUiState(plannerItem, courseMap)
-                        }
-                    }
-
-                val toDoCount = calculateToDoCount(itemsByDate)
-
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        isRefreshing = false,
-                        isError = false,
-                        itemsByDate = itemsByDate,
-                        toDoCount = toDoCount
-                    )
-                }
+                // Track analytics event for filter loading
+                trackFilterLoadingEvent(todoFilters)
             } catch (e: Exception) {
                 e.printStackTrace()
                 firebaseCrashlytics.recordException(e)
@@ -151,6 +186,7 @@ class ToDoListViewModel @Inject constructor(
             isChecked = plannerItem.isComplete(),
             iconRes = plannerItem.getIconForPlannerItem(),
             tag = plannerItem.getTagForPlannerItem(context),
+            htmlUrl = plannerItem.getUrl(apiPrefs),
             onSwipeToDone = { handleSwipeToDone(itemId) },
             onCheckboxToggle = { isChecked -> handleCheckboxToggle(itemId, isChecked) }
         )
@@ -169,6 +205,21 @@ class ToDoListViewModel @Inject constructor(
             val currentIsChecked = plannerItem.isComplete()
             val newIsChecked = !currentIsChecked
 
+            // Check if we should show completed items
+            val todoFilters = toDoFilterDao.findByUser(
+                apiPrefs.fullDomain,
+                apiPrefs.user?.id.orDefault()
+            ) ?: ToDoFilterEntity(userDomain = apiPrefs.fullDomain, userId = apiPrefs.user?.id.orDefault())
+
+            val shouldRemoveFromList = newIsChecked && !todoFilters.showCompleted
+
+            // Immediately add to removing set for animation if item should be hidden
+            if (shouldRemoveFromList) {
+                _uiState.update {
+                    it.copy(removingItemIds = it.removingItemIds + itemId)
+                }
+            }
+
             val success = updateItemCompleteState(itemId, newIsChecked)
 
             // Show marked-as-done snackbar only when marking as done (not when undoing)
@@ -182,6 +233,13 @@ class ToDoListViewModel @Inject constructor(
                         )
                     )
                 }
+            } else {
+                // Remove from removing set if update failed
+                if (shouldRemoveFromList) {
+                    _uiState.update {
+                        it.copy(removingItemIds = it.removingItemIds - itemId)
+                    }
+                }
             }
         }
     }
@@ -191,8 +249,19 @@ class ToDoListViewModel @Inject constructor(
             val markedAsDoneItem = _uiState.value.confirmationSnackbarData ?: return@launch
             val itemId = markedAsDoneItem.itemId
 
-            // Clear the snackbar immediately
-            _uiState.update { it.copy(confirmationSnackbarData = null) }
+            // If this item was in checkbox-removed items, remove it and reset timer
+            if (itemId in checkboxRemovedItems) {
+                checkboxRemovedItems.remove(itemId)
+                startCheckboxDebounceTimer()
+            }
+
+            // Clear the snackbar immediately and restore item to list
+            _uiState.update {
+                it.copy(
+                    confirmationSnackbarData = null,
+                    removingItemIds = it.removingItemIds - itemId
+                )
+            }
 
             updateItemCompleteState(itemId, !markedAsDoneItem.markedAsDone)
         }
@@ -209,6 +278,30 @@ class ToDoListViewModel @Inject constructor(
 
             val plannerItem = plannerItemsMap[itemId] ?: return@launch
 
+            // Check if we should show completed items
+            val todoFilters = toDoFilterDao.findByUser(
+                apiPrefs.fullDomain,
+                apiPrefs.user?.id.orDefault()
+            ) ?: ToDoFilterEntity(userDomain = apiPrefs.fullDomain, userId = apiPrefs.user?.id.orDefault())
+
+            val shouldRemoveFromList = isChecked && !todoFilters.showCompleted
+
+            // Handle checkbox removal animation
+            if (shouldRemoveFromList) {
+                // Add to pending removal set (will be removed after debounce)
+                checkboxRemovedItems.add(itemId)
+            } else if (!isChecked && itemId in checkboxRemovedItems) {
+                // Unchecking - remove from pending removal
+                checkboxRemovedItems.remove(itemId)
+                // If item was already in removingItemIds, restore it
+                _uiState.update {
+                    it.copy(removingItemIds = it.removingItemIds - itemId)
+                }
+            }
+
+            // Reset debounce timer
+            startCheckboxDebounceTimer()
+
             val success = updateItemCompleteState(itemId, isChecked)
 
             // Show marked-as-done snackbar only when checking the box
@@ -222,7 +315,35 @@ class ToDoListViewModel @Inject constructor(
                         )
                     )
                 }
+            } else {
+                // Remove from pending removal if update failed
+                if (shouldRemoveFromList) {
+                    checkboxRemovedItems.remove(itemId)
+                }
             }
+        }
+    }
+
+    private fun startCheckboxDebounceTimer() {
+        // Cancel existing timer
+        checkboxDebounceJob?.cancel()
+
+        // Only start timer if there are items pending removal
+        if (checkboxRemovedItems.isEmpty()) {
+            return
+        }
+
+        // Start new 1-second timer
+        checkboxDebounceJob = viewModelScope.launch {
+            delay(1000)
+
+            // Add checkbox-removed items to removingItemIds for animation
+            _uiState.update { state ->
+                state.copy(
+                    removingItemIds = state.removingItemIds + checkboxRemovedItems
+                )
+            }
+            checkboxRemovedItems.clear()
         }
     }
 
@@ -254,6 +375,14 @@ class ToDoListViewModel @Inject constructor(
 
             // Invalidate planner cache
             repository.invalidateCachedResponses()
+            toDoListViewModelBehavior.updateWidget(true)
+
+            // Track analytics event
+            if (newIsChecked) {
+                analytics.logEvent(AnalyticsEventConstants.TODO_ITEM_MARKED_DONE)
+            } else {
+                analytics.logEvent(AnalyticsEventConstants.TODO_ITEM_MARKED_UNDONE)
+            }
 
             true
         } catch (e: Exception) {
@@ -298,6 +427,74 @@ class ToDoListViewModel @Inject constructor(
     }
 
     private fun clearMarkedAsDoneItem() {
-        _uiState.update { it.copy(confirmationSnackbarData = null) }
+        _uiState.update {
+            it.copy(confirmationSnackbarData = null)
+        }
+    }
+
+    private fun processAndUpdateItems(
+        plannerItems: List<PlannerItem>,
+        filteredCourses: List<Course>,
+        todoFilters: ToDoFilterEntity
+    ) {
+        // Cancel checkbox debounce and clear tracked items when data reloads
+        checkboxDebounceJob?.cancel()
+        checkboxRemovedItems.clear()
+
+        val filteredItems = plannerItems
+            .filterByToDoFilters(todoFilters, filteredCourses)
+            .sortedBy { it.comparisonDate }
+
+        val itemsByDate = filteredItems
+            .groupBy { DateHelper.getCleanDate(it.comparisonDate.time) }
+            .mapValues { (_, items) ->
+                items.map { plannerItem ->
+                    mapToUiState(plannerItem, courseMap)
+                }
+            }
+
+        val toDoCount = calculateToDoCount(itemsByDate)
+        val isFilterApplied = isFilterApplied(todoFilters)
+
+        _uiState.update {
+            it.copy(
+                isLoading = false,
+                isRefreshing = false,
+                isError = false,
+                itemsByDate = itemsByDate,
+                toDoCount = toDoCount,
+                isFilterApplied = isFilterApplied,
+                removingItemIds = emptySet(), // Clear removing items when data is reprocessed
+                confirmationSnackbarData = null
+            )
+        }
+    }
+
+    private fun trackFilterLoadingEvent(filters: ToDoFilterEntity) {
+        val isDefaultFilter = !filters.personalTodos &&
+                !filters.calendarEvents &&
+                !filters.showCompleted &&
+                !filters.favoriteCourses &&
+                filters.pastDateRange == DateRangeSelection.ONE_WEEK &&
+                filters.futureDateRange == DateRangeSelection.ONE_WEEK
+
+        if (isDefaultFilter) {
+            analytics.logEvent(AnalyticsEventConstants.TODO_LIST_LOADED_DEFAULT_FILTER)
+        } else {
+            val bundle = Bundle().apply {
+                putString(AnalyticsParamConstants.FILTER_PERSONAL_TODOS, filters.personalTodos.toString())
+                putString(AnalyticsParamConstants.FILTER_CALENDAR_EVENTS, filters.calendarEvents.toString())
+                putString(AnalyticsParamConstants.FILTER_SHOW_COMPLETED, filters.showCompleted.toString())
+                putString(AnalyticsParamConstants.FILTER_FAVOURITE_COURSES, filters.favoriteCourses.toString())
+                putString(AnalyticsParamConstants.FILTER_SELECTED_DATE_RANGE_PAST, filters.pastDateRange.name.lowercase())
+                putString(AnalyticsParamConstants.FILTER_SELECTED_DATE_RANGE_FUTURE, filters.futureDateRange.name.lowercase())
+            }
+            analytics.logEvent(AnalyticsEventConstants.TODO_LIST_LOADED_CUSTOM_FILTER, bundle)
+        }
+    }
+
+    private fun isFilterApplied(filters: ToDoFilterEntity): Boolean {
+        return filters.personalTodos || filters.calendarEvents || filters.showCompleted || filters.favoriteCourses
+                || filters.pastDateRange != DateRangeSelection.ONE_WEEK || filters.futureDateRange != DateRangeSelection.ONE_WEEK
     }
 }

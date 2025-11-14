@@ -35,12 +35,14 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.DiscussionCheckpointUiState
 import com.instructure.pandautils.features.grades.gradepreferences.SortBy
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.debounce
 import com.instructure.pandautils.utils.filterHiddenAssignments
 import com.instructure.pandautils.utils.getAssignmentIcon
 import com.instructure.pandautils.utils.getGrade
 import com.instructure.pandautils.utils.getSubAssignmentSubmissionGrade
 import com.instructure.pandautils.utils.getSubAssignmentSubmissionStateLabel
 import com.instructure.pandautils.utils.getSubmissionStateLabel
+import com.instructure.pandautils.utils.isAllowedToSubmitWithOverrides
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.orderedCheckpoints
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -78,6 +80,16 @@ class GradesViewModel @Inject constructor(
     private var courseGrade: CourseGrade? = null
 
     private var customStatuses = listOf<CustomGradeStatusesQuery.Node>()
+    private var allItems = emptyList<AssignmentGroupUiState>()
+
+    private val debouncedSearch = debounce<String>(
+        coroutineScope = viewModelScope
+    ) { query ->
+        val filteredItems = filterItems(allItems, query)
+        _uiState.update {
+            it.copy(items = filteredItems)
+        }
+    }
 
     init {
         loadGrades(
@@ -121,16 +133,18 @@ class GradesViewModel @Inject constructor(
 
             courseGrade = repository.getCourseGrade(course, repository.studentId, enrollments, selectedGradingPeriod?.id)
 
-            val items = when (sortBy) {
+            allItems = when (sortBy) {
                 SortBy.GROUP -> groupByAssignmentGroup(assignmentGroups)
                 SortBy.DUE_DATE -> groupByDueDate(assignmentGroups)
             }.filter {
                 it.assignments.isNotEmpty()
             }
 
+            val filteredItems = filterItems(allItems, _uiState.value.searchQuery)
+
             _uiState.update {
                 it.copy(
-                    items = items,
+                    items = filteredItems,
                     isLoading = false,
                     isRefreshing = false,
                     gradePreferencesUiState = it.gradePreferencesUiState.copy(
@@ -180,7 +194,7 @@ class GradesViewModel @Inject constructor(
                 val dueAt = assignment.dueAt ?: assignment.orderedCheckpoints.firstOrNull { it.dueAt != null }?.dueAt
                 val submission = assignment.submission
                 val isWithoutGradedSubmission = submission == null || submission.isWithoutGradedSubmission
-                val isOverdue = assignment.isAllowedToSubmit && isWithoutGradedSubmission
+                val isOverdue = assignment.isAllowedToSubmitWithOverrides(course) && isWithoutGradedSubmission
                 if (dueAt == null) {
                     undated.add(assignment)
                 } else {
@@ -280,6 +294,21 @@ class GradesViewModel @Inject constructor(
         context.getString(R.string.due, "$dateText $timeText")
     } ?: context.getString(R.string.gradesNoDueDate)
 
+    private fun filterItems(items: List<AssignmentGroupUiState>, query: String): List<AssignmentGroupUiState> {
+        if (query.length < 3) return items
+
+        return items.mapNotNull { group ->
+            val filteredAssignments = group.assignments.filter { assignment ->
+                assignment.name.contains(query, ignoreCase = true)
+            }
+            if (filteredAssignments.isEmpty()) {
+                null
+            } else {
+                group.copy(assignments = filteredAssignments)
+            }
+        }
+    }
+
     fun handleAction(action: GradesAction) {
         when (action) {
             is GradesAction.Refresh -> {
@@ -350,6 +379,24 @@ class GradesViewModel @Inject constructor(
                     )
                 }
                 _uiState.update { it.copy(items = items) }
+            }
+
+            is GradesAction.ToggleSearch -> {
+                val isExpanding = !uiState.value.isSearchExpanded
+                _uiState.update {
+                    it.copy(
+                        isSearchExpanded = isExpanding,
+                        searchQuery = if (!isExpanding) "" else it.searchQuery,
+                        items = if (!isExpanding) allItems else it.items
+                    )
+                }
+            }
+
+            is GradesAction.SearchQueryChanged -> {
+                _uiState.update {
+                    it.copy(searchQuery = action.query)
+                }
+                debouncedSearch(action.query)
             }
         }
     }

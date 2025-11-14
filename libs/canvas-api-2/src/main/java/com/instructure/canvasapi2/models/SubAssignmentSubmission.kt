@@ -19,6 +19,7 @@ package com.instructure.canvasapi2.models
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
+import java.util.Date
 
 @Parcelize
 data class SubAssignmentSubmission(
@@ -42,5 +43,7 @@ data class SubAssignmentSubmission(
     @SerializedName("user_id")
     val userId: Long = 0,
     @SerializedName("grade_matches_current_submission")
-    val isGradeMatchesCurrentSubmission: Boolean = false
+    val isGradeMatchesCurrentSubmission: Boolean = false,
+    @SerializedName("submitted_at")
+    val submittedAt: Date? = null
 ) : Parcelable

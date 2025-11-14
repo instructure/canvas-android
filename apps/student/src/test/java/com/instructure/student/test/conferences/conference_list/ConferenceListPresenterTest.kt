@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.utils.color
 import com.instructure.student.R
+import com.instructure.student.mobius.conferences.conference_list.ConferenceHeaderType
 import com.instructure.student.mobius.conferences.conference_list.ConferenceListModel
 import com.instructure.student.mobius.conferences.conference_list.ConferenceListPresenter
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListItemViewState
@@ -97,7 +98,11 @@ class ConferenceListPresenterTest : Assert() {
         // Generate state
         val state = ConferenceListPresenter.present(model, context) as ConferenceListViewState.Loaded
 
-        val expectedHeader = ConferenceListItemViewState.ConferenceHeader(context.getString(R.string.newConferences))
+        val expectedHeader = ConferenceListItemViewState.ConferenceHeader(
+            context.getString(R.string.newConferences),
+            ConferenceHeaderType.NEW_CONFERENCES,
+            true
+        )
         val expectedConferenceItem = ConferenceListPresenter.mapItemState(canvasContext.color, conference, context)
 
         // Should have two list items - one header and one conference
@@ -116,7 +121,11 @@ class ConferenceListPresenterTest : Assert() {
         // Generate state
         val state = ConferenceListPresenter.present(model, context) as ConferenceListViewState.Loaded
 
-        val expectedHeader = ConferenceListItemViewState.ConferenceHeader(context.getString(R.string.concludedConferences))
+        val expectedHeader = ConferenceListItemViewState.ConferenceHeader(
+            context.getString(R.string.concludedConferences),
+            ConferenceHeaderType.CONCLUDED_CONFERENCES,
+            true
+        )
         val expectedConferenceItem = ConferenceListPresenter.mapItemState(canvasContext.color, conference, context)
 
         // Should have two list items - one header and one conference
@@ -137,8 +146,16 @@ class ConferenceListPresenterTest : Assert() {
         // Generate state
         val state = ConferenceListPresenter.present(model, context) as ConferenceListViewState.Loaded
 
-        val newHeader = ConferenceListItemViewState.ConferenceHeader(context.getString(R.string.newConferences))
-        val concludedHeader = ConferenceListItemViewState.ConferenceHeader(context.getString(R.string.concludedConferences))
+        val newHeader = ConferenceListItemViewState.ConferenceHeader(
+            context.getString(R.string.newConferences),
+            ConferenceHeaderType.NEW_CONFERENCES,
+            true
+        )
+        val concludedHeader = ConferenceListItemViewState.ConferenceHeader(
+            context.getString(R.string.concludedConferences),
+            ConferenceHeaderType.CONCLUDED_CONFERENCES,
+            true
+        )
         val inProgressItem = ConferenceListPresenter.mapItemState(canvasContext.color, inProgress, context)
         val notStartedItem = ConferenceListPresenter.mapItemState(canvasContext.color, notStarted, context)
         val concludedItem = ConferenceListPresenter.mapItemState(canvasContext.color, concluded, context)
@@ -235,5 +252,82 @@ class ConferenceListPresenterTest : Assert() {
         )
 
         assertEquals(state, expected)
+    }
+
+    @Test
+    fun `Returns only header when new conferences section is collapsed`() {
+        // Set up model with a not-started conference but collapsed state
+        val conference = Conference()
+        val result = DataResult.Success(listOf(conference))
+        val model = ConferenceListModel(canvasContext, listResult = result, isNewConferencesExpanded = false)
+
+        // Generate state
+        val state = ConferenceListPresenter.present(model, context) as ConferenceListViewState.Loaded
+
+        val expectedHeader = ConferenceListItemViewState.ConferenceHeader(
+            context.getString(R.string.newConferences),
+            ConferenceHeaderType.NEW_CONFERENCES,
+            false
+        )
+
+        // Should have only the header, no conference items
+        assertEquals(state.itemStates.size, 1)
+        assertEquals(state.itemStates[0], expectedHeader)
+    }
+
+    @Test
+    fun `Returns only header when concluded conferences section is collapsed`() {
+        // Set up model with a concluded conference but collapsed state
+        val conference = Conference(startedAt = Date(), endedAt = Date())
+        val result = DataResult.Success(listOf(conference))
+        val model = ConferenceListModel(canvasContext, listResult = result, isConcludedConferencesExpanded = false)
+
+        // Generate state
+        val state = ConferenceListPresenter.present(model, context) as ConferenceListViewState.Loaded
+
+        val expectedHeader = ConferenceListItemViewState.ConferenceHeader(
+            context.getString(R.string.concludedConferences),
+            ConferenceHeaderType.CONCLUDED_CONFERENCES,
+            false
+        )
+
+        // Should have only the header, no conference items
+        assertEquals(state.itemStates.size, 1)
+        assertEquals(state.itemStates[0], expectedHeader)
+    }
+
+    @Test
+    fun `Sections can be collapsed independently`() {
+        // Set up model with both types but new conferences collapsed
+        val notStarted = Conference(startedAt = null, endedAt = null)
+        val concluded = Conference(startedAt = Date(), endedAt = Date())
+        val result = DataResult.Success(listOf(notStarted, concluded))
+        val model = ConferenceListModel(
+            canvasContext,
+            listResult = result,
+            isNewConferencesExpanded = false,
+            isConcludedConferencesExpanded = true
+        )
+
+        // Generate state
+        val state = ConferenceListPresenter.present(model, context) as ConferenceListViewState.Loaded
+
+        val newHeader = ConferenceListItemViewState.ConferenceHeader(
+            context.getString(R.string.newConferences),
+            ConferenceHeaderType.NEW_CONFERENCES,
+            false
+        )
+        val concludedHeader = ConferenceListItemViewState.ConferenceHeader(
+            context.getString(R.string.concludedConferences),
+            ConferenceHeaderType.CONCLUDED_CONFERENCES,
+            true
+        )
+        val concludedItem = ConferenceListPresenter.mapItemState(canvasContext.color, concluded, context)
+
+        // Should have collapsed new header (no items), expanded concluded header with item
+        assertEquals(state.itemStates.size, 3)
+        assertEquals(state.itemStates[0], newHeader)
+        assertEquals(state.itemStates[1], concludedHeader)
+        assertEquals(state.itemStates[2], concludedItem)
     }
 }

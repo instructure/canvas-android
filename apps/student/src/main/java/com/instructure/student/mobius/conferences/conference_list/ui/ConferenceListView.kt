@@ -39,6 +39,7 @@ import com.instructure.student.R
 import com.instructure.student.databinding.FragmentConferenceListBinding
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.instructure.student.mobius.conferences.conference_details.ui.ConferenceDetailsRepositoryFragment
+import com.instructure.student.mobius.conferences.conference_list.ConferenceHeaderType
 import com.instructure.student.mobius.conferences.conference_list.ConferenceListEvent
 import com.instructure.student.router.RouteMatcher
 import com.spotify.mobius.functions.Consumer
@@ -84,6 +85,10 @@ class ConferenceListView(
             }
 
             override fun reload() = output.accept(ConferenceListEvent.PullToRefresh)
+
+            override fun onHeaderClicked(headerType: ConferenceHeaderType) {
+                output.accept(ConferenceListEvent.HeaderClicked(headerType))
+            }
         })
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
         binding.recyclerView.adapter = listAdapter

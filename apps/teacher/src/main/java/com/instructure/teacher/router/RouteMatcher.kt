@@ -21,6 +21,7 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.loader.app.LoaderManager
@@ -70,6 +71,7 @@ import com.instructure.pandautils.utils.LoaderUtils
 import com.instructure.pandautils.utils.RouteUtils
 import com.instructure.pandautils.utils.argsWithContext
 import com.instructure.pandautils.utils.nonNullArgs
+import com.instructure.pandautils.views.CanvasLoadingView
 import com.instructure.teacher.PSPDFKit.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.BottomSheetActivity
@@ -605,11 +607,28 @@ object RouteMatcher : BaseRouteMatcher() {
     private fun getLoaderCallbacks(activity: FragmentActivity): LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia> {
         if (openMediaCallbacks == null) {
             openMediaCallbacks = object : LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia> {
+                var dialog: AlertDialog? = null
+
                 override fun onCreateLoader(id: Int, args: Bundle?): Loader<OpenMediaAsyncTaskLoader.LoadedMedia> {
+                    if (!activity.isFinishing) {
+                        val view = android.view.LayoutInflater.from(activity).inflate(R.layout.dialog_loading_view, null)
+                        val loadingView = view.findViewById<CanvasLoadingView>(R.id.canvasLoadingView)
+                        val teacherColor = androidx.core.content.ContextCompat.getColor(activity, R.color.login_teacherAppTheme)
+                        loadingView?.setOverrideColor(teacherColor)
+
+                        dialog = AlertDialog.Builder(activity, R.style.CustomViewAlertDialog)
+                            .setView(view)
+                            .create()
+                        dialog?.show()
+                    }
                     return OpenMediaAsyncTaskLoader(activity, args)
                 }
 
                 override fun onLoadFinished(loader: Loader<OpenMediaAsyncTaskLoader.LoadedMedia>, loadedMedia: OpenMediaAsyncTaskLoader.LoadedMedia) {
+                    if (dialog == null || dialog?.isShowing == false) {
+                        return // The user doesn't actually want to load the thing
+                    }
+                    dialog?.dismiss()
                     try {
                         if (loadedMedia.isError) {
                             if (loadedMedia.errorType == OpenMediaAsyncTaskLoader.ErrorType.NO_APPS) {
@@ -664,7 +683,9 @@ object RouteMatcher : BaseRouteMatcher() {
                     openMediaBundle = null
                 }
 
-                override fun onLoaderReset(loader: Loader<OpenMediaAsyncTaskLoader.LoadedMedia>) {}
+                override fun onLoaderReset(loader: Loader<OpenMediaAsyncTaskLoader.LoadedMedia>) {
+                    dialog?.dismiss()
+                }
             }
         }
         return openMediaCallbacks!!

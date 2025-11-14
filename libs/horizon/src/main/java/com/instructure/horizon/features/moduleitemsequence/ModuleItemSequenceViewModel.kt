@@ -85,7 +85,6 @@ class ModuleItemSequenceViewModel @Inject constructor(
                 onAssignmentToolsClick = ::onAssignmentToolsClicked,
                 assignmentToolsOpened = ::assignmentToolsOpened,
                 updateShowAiAssist = ::updateShowAiAssist,
-                updateShowNotebook = ::updateShowNotebook,
                 updateObjectTypeAndId = ::updateNotebookObjectTypeAndId,
                 updateAiAssistContext = ::updateAiAssistContext,
             )
@@ -548,10 +547,6 @@ class ModuleItemSequenceViewModel @Inject constructor(
 
     private fun updateShowAiAssist(show: Boolean) {
         _uiState.update { it.copy(showAiAssist = show) }
-    }
-
-    private fun updateShowNotebook(show: Boolean) {
-        _uiState.update { it.copy(showNotebook = show) }
     }
 
     private fun updateNotebookObjectTypeAndId(objectTypeAndId: Pair<String, String>) {
