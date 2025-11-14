@@ -293,7 +293,7 @@ jobs:
 
       - name: Run unit tests
         run: |
-          ./gradle/gradlew :libs:horizon:testDebugUnitTest \
+          ./gradle/gradlew -p apps :horizon:testDebugUnitTest \
             --build-cache \
             --parallel \
             --max-workers=4 \
@@ -346,7 +346,7 @@ jobs:
 
       - name: Build Horizon test APK
         run: |
-          ./gradle/gradlew :libs:horizon:assembleDebugAndroidTest \
+          ./gradle/gradlew -p apps :horizon:assembleDebugAndroidTest \
             --build-cache \
             --parallel \
             --max-workers=4 \
