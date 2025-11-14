@@ -62,7 +62,8 @@ class ToDoListViewModel @Inject constructor(
     private val firebaseCrashlytics: FirebaseCrashlytics,
     private val toDoFilterDao: ToDoFilterDao,
     private val apiPrefs: ApiPrefs,
-    private val analytics: Analytics
+    private val analytics: Analytics,
+    private val toDoListViewModelBehavior: ToDoListViewModelBehavior,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -75,6 +76,8 @@ class ToDoListViewModel @Inject constructor(
         ))
 
     private fun onFiltersChanged(dateFiltersChanged: Boolean) {
+        // Update widget
+        toDoListViewModelBehavior.updateWidget(false)
         if (dateFiltersChanged) {
             loadData(forceRefresh = false)
         } else {
@@ -372,6 +375,7 @@ class ToDoListViewModel @Inject constructor(
 
             // Invalidate planner cache
             repository.invalidateCachedResponses()
+            toDoListViewModelBehavior.updateWidget(true)
 
             // Track analytics event
             if (newIsChecked) {
