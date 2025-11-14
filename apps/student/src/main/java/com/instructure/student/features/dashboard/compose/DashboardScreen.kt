@@ -51,6 +51,7 @@ import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.student.R
 import com.instructure.student.activity.NavigationActivity
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
+import com.instructure.pandautils.features.dashboard.widget.courseinvitation.CourseInvitationsWidget
 import com.instructure.student.features.dashboard.widget.welcome.WelcomeWidget
 import kotlinx.coroutines.flow.SharedFlow
 
@@ -178,6 +179,7 @@ private fun GetWidgetComposable(
 ) {
     return when (widgetId) {
         "welcome" -> WelcomeWidget(refreshSignal = refreshSignal)
+        "course_invitations" -> CourseInvitationsWidget(refreshSignal = refreshSignal)
         else -> {}
     }
 }
