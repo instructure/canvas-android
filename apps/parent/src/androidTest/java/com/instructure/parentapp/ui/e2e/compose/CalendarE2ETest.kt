@@ -16,11 +16,14 @@
 package com.instructure.parentapp.ui.e2e.compose
 
 import android.util.Log
+import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
+import com.instructure.canvas.espresso.checkToastText
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.dataseeding.api.CalendarEventApi
@@ -29,8 +32,12 @@ import com.instructure.dataseeding.api.EnrollmentsApi
 import com.instructure.dataseeding.model.EnrollmentTypes.STUDENT_ENROLLMENT
 import com.instructure.dataseeding.model.EnrollmentTypes.TEACHER_ENROLLMENT
 import com.instructure.dataseeding.util.CanvasNetworkAdapter
+import com.instructure.dataseeding.util.days
+import com.instructure.dataseeding.util.fromNow
 import com.instructure.espresso.getDateInCanvasCalendarFormat
 import com.instructure.pandautils.features.calendar.CalendarPrefs
+import com.instructure.pandautils.utils.toFormattedString
+import com.instructure.parentapp.R
 import com.instructure.parentapp.utils.ParentComposeTest
 import com.instructure.parentapp.utils.extensions.seedData
 import com.instructure.parentapp.utils.extensions.tokenLogin
@@ -418,5 +425,507 @@ class CalendarE2ETest : ParentComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the '${testEventSecondStudent.title}' is displayed only.")
         calendarScreenPage.assertItemDisplayed(testEventSecondStudent.title.orEmpty())
         calendarScreenPage.assertItemNotDisplayed(testEventFirstStudent.title.orEmpty())
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.CALENDAR, TestCategory.E2E, SecondaryFeatureCategory.CALENDAR_EVENT_REMINDER)
+    fun testCalendarEventCustomReminderE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 2, parents = 1, courses = 1)
+        val parent = data.parentsList[0]
+        val futureDate = 2.days.fromNow
+
+        Log.d(STEP_TAG, "Login with user: '${parent.name}', login id: '${parent.loginId}'.")
+        tokenLogin(parent)
+
+        Log.d(ASSERTION_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
+        dashboardPage.waitForRender()
+        dashboardPage.assertPageObjects()
+
+        Log.d(STEP_TAG, "Click on the 'Calendar' bottom menu to navigate to the Calendar page.")
+        dashboardPage.clickCalendarBottomMenu()
+
+        Log.d(STEP_TAG, "Click on the 'Add' (FAB) button and 'Add Event' to create a new event.")
+        calendarScreenPage.clickOnAddButton()
+        calendarScreenPage.clickAddEvent()
+
+        Log.d(ASSERTION_TAG, "Assert that the Calendar Event Page is displayed and the title is 'New Event' as we are making a new one.")
+        calendarEventCreateEditPage.assertTitle("New Event")
+
+        val newEventTitle = "Test Event With Reminder"
+        Log.d(STEP_TAG, "Type '$newEventTitle' to the title input field.")
+        calendarEventCreateEditPage.typeTitle(newEventTitle)
+
+        val calendar = Calendar.getInstance().apply { timeInMillis = futureDate.timeInMillis }
+        Log.d(STEP_TAG, "Select a date which is 2 days in the future from today.")
+        calendarEventCreateEditPage.selectDate(calendar)
+
+        Log.d(STEP_TAG, "Click on 'Save' to create the event.")
+        calendarEventCreateEditPage.clickSave()
+
+        Log.d(STEP_TAG, "Swipe the calendar item 'body' to 2 days in the future from now.")
+        calendarScreenPage.swipeEventsLeft()
+        calendarScreenPage.swipeEventsLeft()
+
+        Log.d(ASSERTION_TAG, "Assert that the event is displayed on the calendar.")
+        calendarScreenPage.assertItemDisplayed(newEventTitle)
+
+        Log.d(STEP_TAG, "Click on the previously created '$newEventTitle' event.")
+        calendarScreenPage.clickOnItem(newEventTitle)
+
+        Log.d(ASSERTION_TAG, "Assert that the Calendar Event Details Page is displayed and the title is 'Event'.")
+        calendarEventDetailsPage.assertEventDetailsPageTitle()
+
+        Log.d(ASSERTION_TAG, "Assert that the reminder section is displayed.")
+        calendarReminderPage.assertReminderSectionDisplayed()
+
+        Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
+        calendarReminderPage.clickAddReminder()
+
+        val reminderDateOneHour = futureDate.apply { add(Calendar.HOUR, -1) }
+        Log.d(STEP_TAG, "Select '1 Hour Before' using custom date/time picker.")
+        calendarReminderPage.clickCustomReminderOption()
+        calendarReminderPage.selectDate(reminderDateOneHour)
+        calendarReminderPage.selectTime(reminderDateOneHour)
+
+        Log.d(ASSERTION_TAG, "Assert that the reminder has been picked up and displayed on the Event Details Page.")
+        calendarReminderPage.assertReminderDisplayedWithText(reminderDateOneHour.time.toFormattedString())
+
+        Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
+        calendarReminderPage.clickAddReminder()
+
+        Log.d(STEP_TAG, "Select '1 Hour Before' again.")
+        calendarReminderPage.clickCustomReminderOption()
+        calendarReminderPage.selectDate(reminderDateOneHour)
+        calendarReminderPage.selectTime(reminderDateOneHour)
+
+        Log.d(ASSERTION_TAG, "Assert that a toast message is occurring which warns that we cannot pick up the same time reminder twice.")
+        checkToastText(R.string.reminderAlreadySet, activityRule.activity)
+
+        Log.d(STEP_TAG, "Remove the '1 Hour Before' reminder and confirm the deletion dialog.")
+        calendarReminderPage.removeReminder()
+
+        Log.d(ASSERTION_TAG, "Assert that the '1 Hour Before' reminder is not displayed any more.")
+        calendarReminderPage.assertReminderNotDisplayedWithText(reminderDateOneHour.time.toFormattedString())
+        futureDate.apply { add(Calendar.HOUR, 1) }
+
+        Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
+        calendarReminderPage.clickAddReminder()
+
+        val reminderDateOneWeek = futureDate.apply { add(Calendar.WEEK_OF_YEAR, -1) }
+        Log.d(STEP_TAG, "Select '1 Week Before'.")
+        calendarReminderPage.clickCustomReminderOption()
+        calendarReminderPage.selectDate(reminderDateOneWeek)
+        calendarReminderPage.selectTime(reminderDateOneWeek)
+
+        Log.d(ASSERTION_TAG, "Assert that a toast message is occurring which warns that we cannot pick up a reminder which has already passed (for example cannot pick '1 Week Before' reminder for an event which ends in 2 days).")
+        calendarReminderPage.assertReminderNotDisplayedWithText(reminderDateOneWeek.time.toFormattedString())
+        checkToastText(R.string.reminderInPast, activityRule.activity)
+        futureDate.apply { add(Calendar.WEEK_OF_YEAR, 1) }
+
+        Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
+        calendarReminderPage.clickAddReminder()
+
+        val reminderDateOneDay = futureDate.apply { add(Calendar.DAY_OF_MONTH, -1) }.apply { add(Calendar.HOUR, -1) }
+        Log.d(STEP_TAG, "Select '1 Day Before and 1 hour before'.")
+        calendarReminderPage.clickCustomReminderOption()
+        calendarReminderPage.selectDate(reminderDateOneDay)
+        calendarReminderPage.selectTime(reminderDateOneDay)
+
+        Log.d(ASSERTION_TAG, "Assert that the reminder has been picked up and displayed on the Event Details Page.")
+        calendarReminderPage.assertReminderDisplayedWithText(reminderDateOneDay.time.toFormattedString())
+
+        Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
+        calendarReminderPage.clickAddReminder()
+
+        Log.d(STEP_TAG, "Select '1 Day Before' again.")
+        calendarReminderPage.clickCustomReminderOption()
+        calendarReminderPage.selectDate(reminderDateOneDay)
+        calendarReminderPage.selectTime(reminderDateOneDay)
+
+        Log.d(ASSERTION_TAG, "Assert that a toast message is occurring which warns that we cannot pick up the same time reminder twice. (Because 1 days and 24 hours is the same)")
+        checkToastText(R.string.reminderAlreadySet, activityRule.activity)
+        futureDate.apply { add(Calendar.DAY_OF_MONTH, 1) }
+
+        Log.d(STEP_TAG, "Navigate back to Calendar Screen Page.")
+        Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that the event is displayed on the calendar.")
+        calendarScreenPage.assertItemDisplayed(newEventTitle)
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.CALENDAR, TestCategory.E2E, SecondaryFeatureCategory.CALENDAR_EVENT_REMINDER)
+    fun testCalendarEventBeforeReminderE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 2, parents = 1, courses = 1)
+        val parent = data.parentsList[0]
+        val futureDate = 2.days.fromNow
+
+        Log.d(STEP_TAG, "Login with user: '${parent.name}', login id: '${parent.loginId}'.")
+        tokenLogin(parent)
+
+        Log.d(ASSERTION_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
+        dashboardPage.waitForRender()
+        dashboardPage.assertPageObjects()
+
+        Log.d(STEP_TAG, "Click on the 'Calendar' bottom menu to navigate to the Calendar page.")
+        dashboardPage.clickCalendarBottomMenu()
+
+        Log.d(STEP_TAG, "Click on the 'Add' (FAB) button and 'Add Event' to create a new event.")
+        calendarScreenPage.clickOnAddButton()
+        calendarScreenPage.clickAddEvent()
+
+        Log.d(ASSERTION_TAG, "Assert that the Calendar Event Page is displayed and the title is 'New Event' as we are making a new one.")
+        calendarEventCreateEditPage.assertTitle("New Event")
+
+        val newEventTitle = "Test Event With Reminder"
+        Log.d(STEP_TAG, "Type '$newEventTitle' to the title input field.")
+        calendarEventCreateEditPage.typeTitle(newEventTitle)
+
+        val calendar = Calendar.getInstance().apply { timeInMillis = futureDate.timeInMillis }
+        Log.d(STEP_TAG, "Select a date which is 2 days in the future from today.")
+        calendarEventCreateEditPage.selectDate(calendar)
+
+        Log.d(STEP_TAG, "Click on 'Save' to create the event.")
+        calendarEventCreateEditPage.clickSave()
+
+        Log.d(STEP_TAG, "Swipe the calendar item 'body' to 2 days in the future from now.")
+        calendarScreenPage.swipeEventsLeft()
+        calendarScreenPage.swipeEventsLeft()
+
+        Log.d(ASSERTION_TAG, "Assert that the event is displayed on the calendar.")
+        calendarScreenPage.assertItemDisplayed(newEventTitle)
+
+        Log.d(STEP_TAG, "Click on the previously created '$newEventTitle' event.")
+        calendarScreenPage.clickOnItem(newEventTitle)
+
+        Log.d(ASSERTION_TAG, "Assert that the Calendar Event Details Page is displayed and the title is 'Event'.")
+        calendarEventDetailsPage.assertEventDetailsPageTitle()
+
+        Log.d(ASSERTION_TAG, "Assert that the reminder section is displayed.")
+        calendarReminderPage.assertReminderSectionDisplayed()
+
+        Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
+        calendarReminderPage.clickAddReminder()
+
+        val reminderDateOneHour = futureDate.apply { add(Calendar.HOUR, -1) }
+        Log.d(STEP_TAG, "Select '1 Hour Before'.")
+        calendarReminderPage.clickBeforeReminderOption("1 Hour Before")
+
+        Log.d(ASSERTION_TAG, "Assert that the reminder has been picked up and displayed on the Event Details Page.")
+        calendarReminderPage.assertReminderDisplayedWithText(reminderDateOneHour.time.toFormattedString())
+
+        Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
+        calendarReminderPage.clickAddReminder()
+
+        Log.d(STEP_TAG, "Select '1 Hour Before' again.")
+        calendarReminderPage.clickBeforeReminderOption("1 Hour Before")
+
+        Log.d(ASSERTION_TAG, "Assert that a toast message is occurring which warns that we cannot pick up the same time reminder twice.")
+        checkToastText(R.string.reminderAlreadySet, activityRule.activity)
+
+        Log.d(STEP_TAG, "Remove the '1 Hour Before' reminder and confirm the deletion dialog.")
+        calendarReminderPage.removeReminder()
+
+        Log.d(ASSERTION_TAG, "Assert that the '1 Hour Before' reminder is not displayed any more.")
+        calendarReminderPage.assertReminderNotDisplayedWithText(reminderDateOneHour.time.toFormattedString())
+        futureDate.apply { add(Calendar.HOUR, 1) }
+
+        Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to add a new reminder.")
+        calendarReminderPage.clickAddReminder()
+
+        val reminderDateOneWeek = futureDate.apply { add(Calendar.WEEK_OF_YEAR, -1) }
+        Log.d(STEP_TAG, "Select '1 Week Before'.")
+        calendarReminderPage.clickBeforeReminderOption("1 Week Before")
+
+        Log.d(ASSERTION_TAG, "Assert that a toast message is occurring which warns that we cannot pick up a reminder which has already passed (for example cannot pick '1 Week Before' reminder for an event which ends in 2 days).")
+        calendarReminderPage.assertReminderNotDisplayedWithText(reminderDateOneWeek.time.toFormattedString())
+        checkToastText(R.string.reminderInPast, activityRule.activity)
+        futureDate.apply { add(Calendar.WEEK_OF_YEAR, 1) }
+
+        Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to add a new reminder.")
+        calendarReminderPage.clickAddReminder()
+
+        val reminderDateOneDay = futureDate.apply { add(Calendar.DAY_OF_MONTH, -1) }
+        Log.d(STEP_TAG, "Select '1 Day Before'.")
+        calendarReminderPage.clickBeforeReminderOption("1 Day Before")
+
+        Log.d(ASSERTION_TAG, "Assert that the reminder has been picked up and displayed on the Event Details Page.")
+        calendarReminderPage.assertReminderDisplayedWithText(reminderDateOneDay.time.toFormattedString())
+
+        Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
+        calendarReminderPage.clickAddReminder()
+
+        Log.d(STEP_TAG, "Select '1 Day Before' again.")
+        calendarReminderPage.clickBeforeReminderOption("1 Day Before")
+
+        Log.d(ASSERTION_TAG, "Assert that a toast message is occurring which warns that we cannot pick up the same time reminder twice. (Because 1 days and 24 hours is the same)")
+        checkToastText(R.string.reminderAlreadySet, activityRule.activity)
+        futureDate.apply { add(Calendar.DAY_OF_MONTH, 1) }
+
+        Log.d(STEP_TAG, "Navigate back to Calendar Screen Page.")
+        Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that the event is displayed on the calendar.")
+        calendarScreenPage.assertItemDisplayed(newEventTitle)
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.CALENDAR, TestCategory.E2E, SecondaryFeatureCategory.CALENDAR_TODO_REMINDER)
+    fun testCalendarToDoCustomReminderE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 2, parents = 1, courses = 1)
+        val parent = data.parentsList[0]
+        val futureDate = 2.days.fromNow
+
+        Log.d(STEP_TAG, "Login with user: '${parent.name}', login id: '${parent.loginId}'.")
+        tokenLogin(parent)
+
+        Log.d(ASSERTION_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
+        dashboardPage.waitForRender()
+        dashboardPage.assertPageObjects()
+
+        Log.d(STEP_TAG, "Click on the 'Calendar' bottom menu to navigate to the Calendar page.")
+        dashboardPage.clickCalendarBottomMenu()
+
+        Log.d(STEP_TAG, "Click on the 'Add' (FAB) button and 'Add To Do' to create a new To Do.")
+        calendarScreenPage.clickOnAddButton()
+        calendarScreenPage.clickAddTodo()
+
+        Log.d(ASSERTION_TAG, "Assert that the page title is 'New To Do' as we are clicked on the 'Add To Do' button to create a new one.")
+        calendarToDoCreateUpdatePage.assertPageTitle("New To Do")
+
+        val testTodoTitle = "Test ToDo With Reminder"
+        val testTodoDescription = "Details of ToDo"
+        Log.d(STEP_TAG, "Fill the title with '$testTodoTitle' and the description with '$testTodoDescription'.")
+        calendarToDoCreateUpdatePage.typeTodoTitle(testTodoTitle)
+        calendarToDoCreateUpdatePage.typeDetails(testTodoDescription)
+
+        val calendar = Calendar.getInstance().apply { timeInMillis = futureDate.timeInMillis }
+        Log.d(STEP_TAG, "Select a date which is 2 days in the future from today.")
+        calendarToDoCreateUpdatePage.selectDate(calendar)
+
+        Log.d(STEP_TAG, "Click on the 'Save' button.")
+        calendarToDoCreateUpdatePage.clickSave()
+
+        Log.d(STEP_TAG, "Swipe the calendar item 'body' to 2 days in the future from now.")
+        calendarScreenPage.swipeEventsLeft()
+        calendarScreenPage.swipeEventsLeft()
+
+        Log.d(ASSERTION_TAG, "Assert that the To Do item is displayed on the calendar.")
+        calendarScreenPage.assertItemDisplayed(testTodoTitle)
+
+        Log.d(STEP_TAG, "Click on the previously created '$testTodoTitle' To Do item.")
+        calendarScreenPage.clickOnItem(testTodoTitle)
+
+        Log.d(ASSERTION_TAG, "Assert that the title is '$testTodoTitle' and the context is 'To Do'.")
+        calendarToDoDetailsPage.assertTitle(testTodoTitle)
+        calendarToDoDetailsPage.assertPageTitle("To Do")
+
+        Log.d(ASSERTION_TAG, "Assert that the reminder section is displayed.")
+        calendarReminderPage.assertReminderSectionDisplayed()
+
+        Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
+        calendarReminderPage.clickAddReminder()
+
+        val reminderDateOneHour = futureDate.apply { add(Calendar.HOUR, -1) }
+        Log.d(STEP_TAG, "Select '1 Hour Before' using custom date/time picker.")
+        calendarReminderPage.clickCustomReminderOption()
+        calendarReminderPage.selectDate(reminderDateOneHour)
+        calendarReminderPage.selectTime(reminderDateOneHour)
+
+        Log.d(ASSERTION_TAG, "Assert that the reminder has been picked up and displayed on the To Do Details Page.")
+        calendarReminderPage.assertReminderDisplayedWithText(reminderDateOneHour.time.toFormattedString())
+
+        Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
+        calendarReminderPage.clickAddReminder()
+
+        Log.d(STEP_TAG, "Select '1 Hour Before' again.")
+        calendarReminderPage.clickCustomReminderOption()
+        calendarReminderPage.selectDate(reminderDateOneHour)
+        calendarReminderPage.selectTime(reminderDateOneHour)
+
+        Log.d(ASSERTION_TAG, "Assert that a toast message is occurring which warns that we cannot pick up the same time reminder twice.")
+        checkToastText(R.string.reminderAlreadySet, activityRule.activity)
+
+        Log.d(STEP_TAG, "Remove the '1 Hour Before' reminder and confirm the deletion dialog.")
+        calendarReminderPage.removeReminder()
+
+        Log.d(ASSERTION_TAG, "Assert that the '1 Hour Before' reminder is not displayed any more.")
+        calendarReminderPage.assertReminderNotDisplayedWithText(reminderDateOneHour.time.toFormattedString())
+        futureDate.apply { add(Calendar.HOUR, 1) }
+
+        Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
+        calendarReminderPage.clickAddReminder()
+
+        val reminderDateOneWeek = futureDate.apply { add(Calendar.WEEK_OF_YEAR, -1) }
+        Log.d(STEP_TAG, "Select '1 Week Before'.")
+        calendarReminderPage.clickCustomReminderOption()
+        calendarReminderPage.selectDate(reminderDateOneWeek)
+        calendarReminderPage.selectTime(reminderDateOneWeek)
+
+        Log.d(ASSERTION_TAG, "Assert that a toast message is occurring which warns that we cannot pick up a reminder which has already passed (for example cannot pick '1 Week Before' reminder for a To Do which is due in 2 days).")
+        calendarReminderPage.assertReminderNotDisplayedWithText(reminderDateOneWeek.time.toFormattedString())
+        checkToastText(R.string.reminderInPast, activityRule.activity)
+        futureDate.apply { add(Calendar.WEEK_OF_YEAR, 1) }
+
+        Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
+        calendarReminderPage.clickAddReminder()
+
+        val reminderDateOneDay = futureDate.apply { add(Calendar.DAY_OF_MONTH, -1) }.apply { add(Calendar.HOUR, -1) }
+        Log.d(STEP_TAG, "Select '1 Day Before and 1 hour before'.")
+        calendarReminderPage.clickCustomReminderOption()
+        calendarReminderPage.selectDate(reminderDateOneDay)
+        calendarReminderPage.selectTime(reminderDateOneDay)
+
+        Log.d(ASSERTION_TAG, "Assert that the reminder has been picked up and displayed on the To Do Details Page.")
+        calendarReminderPage.assertReminderDisplayedWithText(reminderDateOneDay.time.toFormattedString())
+
+        Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
+        calendarReminderPage.clickAddReminder()
+
+        Log.d(STEP_TAG, "Select '1 Day Before' again.")
+        calendarReminderPage.clickCustomReminderOption()
+        calendarReminderPage.selectDate(reminderDateOneDay)
+        calendarReminderPage.selectTime(reminderDateOneDay)
+
+        Log.d(ASSERTION_TAG, "Assert that a toast message is occurring which warns that we cannot pick up the same time reminder twice. (Because 1 days and 24 hours is the same)")
+        checkToastText(R.string.reminderAlreadySet, activityRule.activity)
+        futureDate.apply { add(Calendar.DAY_OF_MONTH, 1) }
+
+        Log.d(STEP_TAG, "Navigate back to Calendar Screen Page.")
+        Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that the To Do item is displayed on the calendar.")
+        calendarScreenPage.assertItemDisplayed(testTodoTitle)
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.CALENDAR, TestCategory.E2E, SecondaryFeatureCategory.CALENDAR_TODO_REMINDER)
+    fun testCalendarToDoBeforeReminderE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 2, parents = 1, courses = 1)
+        val parent = data.parentsList[0]
+        val futureDate = 2.days.fromNow
+
+        Log.d(STEP_TAG, "Login with user: '${parent.name}', login id: '${parent.loginId}'.")
+        tokenLogin(parent)
+
+        Log.d(ASSERTION_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
+        dashboardPage.waitForRender()
+        dashboardPage.assertPageObjects()
+
+        Log.d(STEP_TAG, "Click on the 'Calendar' bottom menu to navigate to the Calendar page.")
+        dashboardPage.clickCalendarBottomMenu()
+
+        Log.d(STEP_TAG, "Click on the 'Add' (FAB) button and 'Add To Do' to create a new To Do.")
+        calendarScreenPage.clickOnAddButton()
+        calendarScreenPage.clickAddTodo()
+
+        Log.d(ASSERTION_TAG, "Assert that the page title is 'New To Do' as we are clicked on the 'Add To Do' button to create a new one.")
+        calendarToDoCreateUpdatePage.assertPageTitle("New To Do")
+
+        val testTodoTitle = "Test ToDo With Reminder"
+        val testTodoDescription = "Details of ToDo"
+        Log.d(STEP_TAG, "Fill the title with '$testTodoTitle' and the description with '$testTodoDescription'.")
+        calendarToDoCreateUpdatePage.typeTodoTitle(testTodoTitle)
+        calendarToDoCreateUpdatePage.typeDetails(testTodoDescription)
+
+        val calendar = Calendar.getInstance().apply { timeInMillis = futureDate.timeInMillis }
+        Log.d(STEP_TAG, "Select a date which is 2 days in the future from today.")
+        calendarToDoCreateUpdatePage.selectDate(calendar)
+
+        Log.d(STEP_TAG, "Click on the 'Save' button.")
+        calendarToDoCreateUpdatePage.clickSave()
+
+        Log.d(STEP_TAG, "Swipe the calendar item 'body' to 2 days in the future from now.")
+        calendarScreenPage.swipeEventsLeft()
+        calendarScreenPage.swipeEventsLeft()
+
+        Log.d(ASSERTION_TAG, "Assert that the To Do item is displayed on the calendar.")
+        calendarScreenPage.assertItemDisplayed(testTodoTitle)
+
+        Log.d(STEP_TAG, "Click on the previously created '$testTodoTitle' To Do item.")
+        calendarScreenPage.clickOnItem(testTodoTitle)
+
+        Log.d(ASSERTION_TAG, "Assert that the title is '$testTodoTitle' and the context is 'To Do'.")
+        calendarToDoDetailsPage.assertTitle(testTodoTitle)
+        calendarToDoDetailsPage.assertPageTitle("To Do")
+
+        Log.d(ASSERTION_TAG, "Assert that the reminder section is displayed.")
+        calendarReminderPage.assertReminderSectionDisplayed()
+
+        Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
+        calendarReminderPage.clickAddReminder()
+
+        val reminderDateOneHour = futureDate.apply { add(Calendar.HOUR, -1) }
+        Log.d(STEP_TAG, "Select '1 Hour Before'.")
+        calendarReminderPage.clickBeforeReminderOption("1 Hour Before")
+
+        Log.d(ASSERTION_TAG, "Assert that the reminder has been picked up and displayed on the To Do Details Page.")
+        calendarReminderPage.assertReminderDisplayedWithText(reminderDateOneHour.time.toFormattedString())
+
+        Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
+        calendarReminderPage.clickAddReminder()
+
+        Log.d(STEP_TAG, "Select '1 Hour Before' again.")
+        calendarReminderPage.clickBeforeReminderOption("1 Hour Before")
+
+        Log.d(ASSERTION_TAG, "Assert that a toast message is occurring which warns that we cannot pick up the same time reminder twice.")
+        checkToastText(R.string.reminderAlreadySet, activityRule.activity)
+
+        Log.d(STEP_TAG, "Remove the '1 Hour Before' reminder and confirm the deletion dialog.")
+        calendarReminderPage.removeReminder()
+
+        Log.d(ASSERTION_TAG, "Assert that the '1 Hour Before' reminder is not displayed any more.")
+        calendarReminderPage.assertReminderNotDisplayedWithText(reminderDateOneHour.time.toFormattedString())
+        futureDate.apply { add(Calendar.HOUR, 1) }
+
+        Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to add a new reminder.")
+        calendarReminderPage.clickAddReminder()
+
+        val reminderDateOneWeek = futureDate.apply { add(Calendar.WEEK_OF_YEAR, -1) }
+        Log.d(STEP_TAG, "Select '1 Week Before'.")
+        calendarReminderPage.clickBeforeReminderOption("1 Week Before")
+
+        Log.d(ASSERTION_TAG, "Assert that a toast message is occurring which warns that we cannot pick up a reminder which has already passed (for example cannot pick '1 Week Before' reminder for a To Do which is due in 2 days).")
+        calendarReminderPage.assertReminderNotDisplayedWithText(reminderDateOneWeek.time.toFormattedString())
+        checkToastText(R.string.reminderInPast, activityRule.activity)
+        futureDate.apply { add(Calendar.WEEK_OF_YEAR, 1) }
+
+        Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to add a new reminder.")
+        calendarReminderPage.clickAddReminder()
+
+        val reminderDateOneDay = futureDate.apply { add(Calendar.DAY_OF_MONTH, -1) }
+        Log.d(STEP_TAG, "Select '1 Day Before'.")
+        calendarReminderPage.clickBeforeReminderOption("1 Day Before")
+
+        Log.d(ASSERTION_TAG, "Assert that the reminder has been picked up and displayed on the To Do Details Page.")
+        calendarReminderPage.assertReminderDisplayedWithText(reminderDateOneDay.time.toFormattedString())
+
+        Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
+        calendarReminderPage.clickAddReminder()
+
+        Log.d(STEP_TAG, "Select '1 Day Before' again.")
+        calendarReminderPage.clickBeforeReminderOption("1 Day Before")
+
+        Log.d(ASSERTION_TAG, "Assert that a toast message is occurring which warns that we cannot pick up the same time reminder twice. (Because 1 days and 24 hours is the same)")
+        checkToastText(R.string.reminderAlreadySet, activityRule.activity)
+        futureDate.apply { add(Calendar.DAY_OF_MONTH, 1) }
+
+        Log.d(STEP_TAG, "Navigate back to Calendar Screen Page.")
+        Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that the To Do item is displayed on the calendar.")
+        calendarScreenPage.assertItemDisplayed(testTodoTitle)
     }
 }

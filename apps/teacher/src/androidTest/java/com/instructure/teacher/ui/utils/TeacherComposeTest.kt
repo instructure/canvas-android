@@ -19,6 +19,7 @@
 package com.instructure.teacher.ui.utils
 
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import com.instructure.canvas.espresso.common.pages.CalendarReminderPage
 import com.instructure.canvas.espresso.common.pages.compose.AssignmentListPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarEventCreateEditPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarEventDetailsPage
@@ -52,6 +53,7 @@ abstract class TeacherComposeTest : TeacherTest() {
     val calendarToDoCreateUpdatePage = CalendarToDoCreateUpdatePage(composeTestRule)
     val calendarToDoDetailsPage = CalendarToDoDetailsPage(composeTestRule)
     val calendarFilterPage = CalendarFilterPage(composeTestRule)
+    val calendarReminderPage = CalendarReminderPage(composeTestRule)
     val progressPage = ProgressPage(composeTestRule)
     val settingsPage = SettingsPage(composeTestRule)
     val inboxDetailsPage = InboxDetailsPage(composeTestRule)
