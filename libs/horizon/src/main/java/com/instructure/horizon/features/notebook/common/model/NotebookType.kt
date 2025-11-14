@@ -11,5 +11,5 @@ enum class NotebookType(
     @ColorRes val color: Int
 ) {
     Confusing(R.string.notebookTypeConfusing, R.drawable.help, R.color.icon_error),
-    Important(R.string.notebookTypeImportant, R.drawable.flag_2, R.color.icon_action),
+    Important(R.string.notebookTypeImportant, R.drawable.keep_pin, R.color.icon_action),
 }

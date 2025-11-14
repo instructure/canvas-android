@@ -247,10 +247,13 @@
     <string name="assignmentDetails_submissionConfirmationMessage">Once you submit this attempt, you won’t be able to make any changes.</string>
     <string name="assignmentDetails_submissionConfirmationCancel">Cancel</string>
     <string name="assignmentDetails_submissionConfirmationConfirm">Submit attempt</string>
-    <string name="notebookTypeConfusing">Confusing</string>
+    <string name="notebookTypeConfusing">Unclear</string>
     <string name="notebookTypeImportant">Important</string>
+    <string name="notebookTypeAllNotes">All notes</string>
     <string name="notebookTitle">Notebook</string>
     <string name="notebookFilterLabel">Filter</string>
+    <string name="notebookFilterTypePlaceholder">All notes</string>
+    <string name="notebookFilterCoursePlaceholder">All courses</string>
     <string name="notebookNotesLabel">Notes</string>
     <string name="notebookEmptyContentMessage">This is where all your notes, taken directly within your learning objects, are stored and organized. It\'s your personal hub for keeping track of key insights, important excerpts, and reflections as you learn. Dive in to review or expand on your notes anytime!</string>
     <string name="addNoteHighlightlabel">Highlight</string>
@@ -440,4 +443,9 @@
     <string name="a11y_dashboardNextItemContentDescription">Next item</string>
     <string name="a11y_dashboardPreviousItemContentDescription">Previous item</string>
     <string name="dsahboardPaginatedWidgetPagerMessage">%1$d of %2$d</string>
+    <string name="showMore">Show more</string>
+    <string name="notesEmptyContentTitle">Start capturing your notes</string>
+    <string name="notesEmptyContentBody">Your notes from learning materials will appear here. Highlight key ideas, reflections, or questions as you learn—they\'ll all be saved in your Notebook for easy review later.</string>
+    <string name="notesEmptyFilteredContentTitle">Nothing here yet</string>
+    <string name="notesEmptyFilteredContentBody">Adjust your filters or create a new note to get started.</string>
 </resources>

@@ -39,7 +39,7 @@ fun CourseNotesScreen(
 
     LaunchedEffect(courseId) {
         viewModel.updateFilters(courseId)
-        viewModel.updateScreenState(true, false)
+        viewModel.updateScreenState(showNoteTypeFilter = true, showCourseFilter = false, showTopBar = false)
     }
 
     Box(

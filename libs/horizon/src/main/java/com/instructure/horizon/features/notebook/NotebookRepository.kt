@@ -17,7 +17,11 @@
 package com.instructure.horizon.features.notebook
 
 import com.apollographql.apollo.api.Optional
+import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
+import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
 import com.instructure.canvasapi2.managers.graphql.horizon.redwood.RedwoodApiManager
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.redwood.QueryNotesQuery
 import com.instructure.redwood.type.LearningObjectFilter
@@ -28,6 +32,8 @@ import javax.inject.Inject
 
 class NotebookRepository @Inject constructor(
     private val redwoodApiManager: RedwoodApiManager,
+    private val horizonGetCoursesManager: HorizonGetCoursesManager,
+    private val apiPrefs: ApiPrefs,
 ) {
     suspend fun getNotes(
         after: String? = null,
@@ -78,5 +84,12 @@ class NotebookRepository @Inject constructor(
             )
         }
 
+    }
+
+    suspend fun getCourses(forceNetwork: Boolean = false): DataResult<List<CourseWithProgress>> {
+        return horizonGetCoursesManager.getCoursesWithProgress(
+            userId = apiPrefs.user?.id ?: 0L,
+            forceNetwork = forceNetwork
+        )
     }
 }

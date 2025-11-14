@@ -17,7 +17,12 @@
 package com.instructure.horizon.features.notebook
 
 import com.apollographql.apollo.api.Optional
+import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
+import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
 import com.instructure.canvasapi2.managers.graphql.horizon.redwood.RedwoodApiManager
+import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.redwood.QueryNotesQuery
 import com.instructure.redwood.type.LearningObjectFilter
@@ -25,14 +30,24 @@ import com.instructure.redwood.type.NoteFilterInput
 import com.instructure.redwood.type.OrderDirection
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
+import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.test.runTest
+import org.junit.Before
 import org.junit.Test
 
 class NotebookRepositoryTest {
     private val redwoodApiManager: RedwoodApiManager = mockk(relaxed = true)
+    private val horizonGetCoursesManager: HorizonGetCoursesManager = mockk(relaxed = true)
+    private val apiPrefs: ApiPrefs = mockk(relaxed = true)
+
+    @Before
+    fun setup() {
+        every { apiPrefs.user } returns User(id = 123L)
+    }
 
     @Test
     fun `Test successful notes retrieval with filter`() = runTest {
@@ -141,7 +156,63 @@ class NotebookRepositoryTest {
         ), any(), any(), any(), any(), any()) }
     }
 
+    @Test
+    fun `Test error handling for notes retrieval`() = runTest {
+        coEvery { redwoodApiManager.getNotes(any(), any(), any(), any(), any(), any()) } throws Exception("Network error")
+
+        try {
+            getRepository().getNotes()
+            junit.framework.TestCase.fail("Expected exception to be thrown")
+        } catch (e: Exception) {
+            assertEquals("Network error", e.message)
+        }
+    }
+
+    @Test
+    fun `Test getCourses returns success`() = runTest {
+        val mockCourses = listOf(
+            mockk<CourseWithProgress>(relaxed = true)
+        )
+        coEvery { horizonGetCoursesManager.getCoursesWithProgress(any(), any()) } returns DataResult.Success(mockCourses)
+
+        val result = getRepository().getCourses()
+
+        assertTrue(result is DataResult.Success)
+        assertEquals(mockCourses, (result as DataResult.Success).data)
+    }
+
+    @Test
+    fun `Test getCourses with forceNetwork true`() = runTest {
+        val mockCourses = listOf(mockk<CourseWithProgress>(relaxed = true))
+        coEvery { horizonGetCoursesManager.getCoursesWithProgress(any(), any()) } returns DataResult.Success(mockCourses)
+
+        getRepository().getCourses(forceNetwork = true)
+
+        coVerify { horizonGetCoursesManager.getCoursesWithProgress(userId = 123L, forceNetwork = true) }
+    }
+
+    @Test
+    fun `Test getCourses with forceNetwork false`() = runTest {
+        val mockCourses = listOf(mockk<CourseWithProgress>(relaxed = true))
+        coEvery { horizonGetCoursesManager.getCoursesWithProgress(any(), any()) } returns DataResult.Success(mockCourses)
+
+        getRepository().getCourses(forceNetwork = false)
+
+        coVerify { horizonGetCoursesManager.getCoursesWithProgress(userId = 123L, forceNetwork = false) }
+    }
+
+    @Test
+    fun `Test getCourses handles missing user`() = runTest {
+        every { apiPrefs.user } returns null
+        val mockCourses = listOf(mockk<CourseWithProgress>(relaxed = true))
+        coEvery { horizonGetCoursesManager.getCoursesWithProgress(any(), any()) } returns DataResult.Success(mockCourses)
+
+        getRepository().getCourses()
+
+        coVerify { horizonGetCoursesManager.getCoursesWithProgress(userId = 0L, forceNetwork = false) }
+    }
+
     private fun getRepository(): NotebookRepository {
-        return NotebookRepository(redwoodApiManager)
+        return NotebookRepository(redwoodApiManager, horizonGetCoursesManager, apiPrefs)
     }
 }
