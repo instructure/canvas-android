@@ -370,7 +370,7 @@ class AssignmentListScreenTest {
 
         composeTestRule.onNodeWithText("Checkpoint 1")
             .assertIsDisplayed()
-        composeTestRule.onNode(hasTestTag("checkpointDueDate") and hasText("Due date 1"), true)
+        composeTestRule.onNode(hasTestTag("checkpointDueDate_Checkpoint 1") and hasText("Due date 1"), true)
             .assertIsDisplayed()
         composeTestRule.onNode(hasTestTag("checkpointSubmissionStateLabel") and hasText("Graded"), true)
             .assertIsDisplayed()
@@ -379,7 +379,7 @@ class AssignmentListScreenTest {
 
         composeTestRule.onNodeWithText("Checkpoint 2")
             .assertIsDisplayed()
-        composeTestRule.onNode(hasTestTag("checkpointDueDate") and hasText("Due date 2"), true)
+        composeTestRule.onNode(hasTestTag("checkpointDueDate_Checkpoint 2") and hasText("Due date 2"), true)
             .assertIsDisplayed()
         composeTestRule.onNode(hasTestTag("checkpointSubmissionStateLabel") and hasText("Missing"), true)
             .assertIsDisplayed()

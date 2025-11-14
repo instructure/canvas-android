@@ -38,7 +38,8 @@ fun CourseNotesScreen(
     val state by viewModel.uiState.collectAsState()
 
     LaunchedEffect(courseId) {
-        viewModel.updateCourseId(courseId)
+        viewModel.updateFilters(courseId)
+        viewModel.updateScreenState(true, false)
     }
 
     Box(

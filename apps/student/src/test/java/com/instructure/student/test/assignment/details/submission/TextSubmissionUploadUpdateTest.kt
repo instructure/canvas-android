@@ -117,7 +117,8 @@ class TextSubmissionUploadUpdateTest : Assert() {
                             text,
                             course,
                             assignment.id,
-                            assignment.name
+                            assignment.name,
+                            1L
                         )
                     )
                 )
@@ -138,7 +139,8 @@ class TextSubmissionUploadUpdateTest : Assert() {
                             text,
                             course,
                             assignment.id,
-                            assignment.name
+                            assignment.name,
+                            1L
                         )
                     )
                 )

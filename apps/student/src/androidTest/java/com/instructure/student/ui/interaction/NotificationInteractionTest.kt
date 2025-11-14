@@ -28,10 +28,13 @@ import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvasapi2.di.graphql.CustomGradeStatusModule
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Checkpoint
 import com.instructure.canvasapi2.models.CourseSettings
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.iso8601
+import com.instructure.pandautils.utils.Const
 import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.BindValue
@@ -238,13 +241,36 @@ class NotificationInteractionTest : StudentComposeTest() {
         notificationPage.assertExcused(assignment.name!!)
     }
 
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.NOTIFICATIONS, TestCategory.INTERACTION)
+    fun testNotificationList_showCheckpointLabelForReplyToTopic() {
+        val data = goToNotifications(checkpointTag = Const.REPLY_TO_TOPIC)
+
+        val assignment = data.assignments.values.first()
+
+        notificationPage.assertCheckpointLabel(assignment.name!!, "Reply to topic")
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.NOTIFICATIONS, TestCategory.INTERACTION)
+    fun testNotificationList_showCheckpointLabelForAdditionalReplies() {
+        val replyCount = 3
+        val data = goToNotifications(checkpointTag = Const.REPLY_TO_ENTRY, replyRequiredCount = replyCount)
+
+        val assignment = data.assignments.values.first()
+
+        notificationPage.assertCheckpointLabel(assignment.name!!, "Additional replies ($replyCount)")
+    }
+
     private fun goToNotifications(
         numSubmissions: Int = 1,
         restrictQuantitativeData: Boolean = false,
         gradingType: Assignment.GradingType = Assignment.GradingType.POINTS,
         score: Double = -1.0,
         grade: String? = null,
-        excused: Boolean = false
+        excused: Boolean = false,
+        checkpointTag: String? = null,
+        replyRequiredCount: Int = 0
     ): MockCanvas {
         val data = MockCanvas.init(courseCount = 1, favoriteCourseCount = 1, studentCount = 1, teacherCount = 1)
 
@@ -264,24 +290,63 @@ class NotificationInteractionTest : StudentComposeTest() {
             gradingSchemeRaw = gradingScheme)
 
         repeat(numSubmissions) {
+            val isCheckpoint = checkpointTag != null
+
+            val checkpoints = if (isCheckpoint) {
+                listOf(
+                    Checkpoint(
+                        name = if (checkpointTag == Const.REPLY_TO_TOPIC) "Reply to topic" else "Additional replies",
+                        tag = checkpointTag,
+                        pointsPossible = 10.0,
+                        dueAt = 1.days.ago.iso8601,
+                        overrides = emptyList()
+                    )
+                )
+            } else {
+                emptyList()
+            }
+
+            val submissionType = if (isCheckpoint) {
+                Assignment.SubmissionType.DISCUSSION_TOPIC
+            } else {
+                Assignment.SubmissionType.ONLINE_TEXT_ENTRY
+            }
+
             val assignment = data.addAssignment(
                 courseId = course.id,
-                submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY),
+                submissionTypeList = listOf(submissionType),
                 gradingType = Assignment.gradingTypeToAPIString(gradingType).orEmpty(),
-                pointsPossible = 20
+                pointsPossible = 20,
+                checkpoints = checkpoints
             )
+
+            val finalAssignment = if (isCheckpoint) {
+                assignment.copy(
+                    subAssignmentTag = checkpointTag,
+                    discussionTopicHeader = DiscussionTopicHeader(
+                        id = assignment.id,
+                        replyRequiredCount = replyRequiredCount
+                    )
+                )
+            } else {
+                assignment
+            }
+
+            if (isCheckpoint) {
+                data.assignments[assignment.id] = finalAssignment
+            }
 
             val submission = data.addSubmissionForAssignment(
                 assignmentId = assignment.id,
                 userId = student.id,
-                type = Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString,
-                body = "Some words + ${UUID.randomUUID()}"
+                type = submissionType.apiString,
+                body = if (isCheckpoint) "Discussion checkpoint submission" else "Some words + ${UUID.randomUUID()}"
             )
 
             data.addSubmissionStreamItem(
                 user = student,
                 course = course,
-                assignment = assignment,
+                assignment = finalAssignment,
                 submission = submission,
                 submittedAt = 1.days.ago.iso8601,
                 type = "submission",

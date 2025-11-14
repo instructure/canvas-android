@@ -1042,6 +1042,10 @@
     <string name="downloadFailed">Lataus epäonnistui</string>
     <string name="downloadSuccessful">Lataus onnistui</string>
 
+    <string name="downloading">Ladataan</string>
+    <string name="downloadComplete">Lataus valmis</string>
+    <string name="notificationChannelNameFileDownloadsName">Latausilmoitukset</string>
+    <string name="notificationChannelNameFileDownloadsDescription">Canvas-ilmoitukset meneillään oleville latauksille.</string>
     <string name="full_due_date_details">Täydelliset palautuspäivää koskevat tiedot</string>
     <string name="submissions">Lähetykset</string>
     <string name="attachment">Liite</string>
@@ -2131,4 +2135,9 @@
     <string name="daysLateHint">Kirjoita myöhässäolopäivien määrä</string>
     <string name="reply_to_topic">Vastaa aiheeseen</string>
     <string name="additional_replies">Ylimääräiset vastaukset (%d)</string>
+    <string name="reply_to_topic_due">Vastaa aiheeseen määräpäivään mennessä</string>
+    <string name="additional_replies_due">Lisävastausten määräpäivä (%d)</string>
+    <string name="a11y_discussion_checkpoints">Keskustelun tarkistuskohdat</string>
+    <string name="multipleDueDates">Useita määräpäiviä</string>
+    <string name="courseConcludedError">Kurssi on päättynyt. Viestien lähetys ei onnistu!</string>
 </resources>

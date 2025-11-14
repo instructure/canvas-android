@@ -20,8 +20,10 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater.from
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
@@ -33,6 +35,8 @@ import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.RemoteConfigParam
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.interactions.router.BaseRouteMatcher
@@ -52,6 +56,7 @@ import com.instructure.pandautils.features.inbox.details.InboxDetailsFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.offline.sync.progress.SyncProgressFragment
 import com.instructure.pandautils.features.shareextension.ShareFileSubmissionTarget
+import com.instructure.pandautils.features.todolist.ToDoListFragment
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
 import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.utils.Const
@@ -61,6 +66,7 @@ import com.instructure.pandautils.utils.RouteUtils
 import com.instructure.pandautils.utils.nonNullArgs
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toast
+import com.instructure.pandautils.views.CanvasLoadingView
 import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity
 import com.instructure.student.activity.InterwebsToApplication
@@ -83,12 +89,12 @@ import com.instructure.student.features.quiz.list.QuizListFragment
 import com.instructure.student.fragment.AnnouncementListFragment
 import com.instructure.student.fragment.BasicQuizViewFragment
 import com.instructure.student.fragment.CourseSettingsFragment
-import com.instructure.student.fragment.DashboardFragment
+import com.instructure.student.fragment.OldDashboardFragment
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.fragment.NotificationListFragment
+import com.instructure.student.fragment.OldToDoListFragment
 import com.instructure.student.fragment.ProfileSettingsFragment
 import com.instructure.student.fragment.StudioWebViewFragment
-import com.instructure.student.fragment.ToDoListFragment
 import com.instructure.student.fragment.UnsupportedFeatureFragment
 import com.instructure.student.fragment.UnsupportedTabFragment
 import com.instructure.student.fragment.ViewHtmlFragment
@@ -119,7 +125,7 @@ object RouteMatcher : BaseRouteMatcher() {
     // Be sensitive to the order of items. It really, really matters.
     @androidx.annotation.OptIn(com.google.android.material.badge.ExperimentalBadgeUtils::class)
     private fun initRoutes() {
-        routes.add(Route("/", DashboardFragment::class.java))
+        routes.add(Route("/", OldDashboardFragment::class.java))
         // region Conversations
         routes.add(Route("/conversations", InboxFragment::class.java))
         routes.add(Route("/conversations/:${InboxDetailsFragment.CONVERSATION_ID}", InboxDetailsFragment::class.java))
@@ -129,7 +135,7 @@ object RouteMatcher : BaseRouteMatcher() {
         //////////////////////////
         // Courses
         //////////////////////////
-        routes.add(Route(courseOrGroup("/"), DashboardFragment::class.java))
+        routes.add(Route(courseOrGroup("/"), OldDashboardFragment::class.java))
         routes.add(
             Route(
                 courseOrGroup("/:${RouterParams.COURSE_ID}"),
@@ -343,7 +349,12 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route("/todos/:${ToDoFragment.PLANNABLE_ID}", ToDoFragment::class.java))
 
         // To Do List
-        routes.add(Route("/todolist", ToDoListFragment::class.java).copy(canvasContext = ApiPrefs.user))
+        val todoListFragmentClass = if (RemoteConfigUtils.getBoolean(RemoteConfigParam.TODO_REDESIGN)) {
+            ToDoListFragment::class.java
+        } else {
+            OldToDoListFragment::class.java
+        }
+        routes.add(Route("/todolist", todoListFragmentClass).copy(canvasContext = ApiPrefs.user))
 
         // Syllabus
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/syllabus"), SyllabusRepositoryFragment::class.java))
@@ -401,6 +412,13 @@ object RouteMatcher : BaseRouteMatcher() {
             )
         )
 
+        // Studio Media Immersive View
+        routes.add(
+            Route(
+                "/media_attachments/:${RouterParams.ATTACHMENT_ID}/immersive_view",
+                InternalWebviewFragment::class.java
+            )
+        )
 
         // Submissions
         // :sliding_tab_type can be /rubric or /submissions (used to navigate to the nested fragment)
@@ -538,6 +556,31 @@ object RouteMatcher : BaseRouteMatcher() {
                 // No route, no problem
                 handleWebViewUrl(activity, route.uri.toString())
             }
+        } else if (route.primaryClass == InternalWebviewFragment::class.java && route.uri?.toString()?.contains("media_attachments") == true) {
+            // Handle studio media immersive view - pass the full URL and title to InternalWebviewFragment
+            val uri = route.uri!!
+            var urlString = uri.toString()
+
+            // Convert media_attachments_iframe to media_attachments (for iframe button)
+            urlString = urlString.replace("media_attachments_iframe", "media_attachments")
+
+            // Ensure embedded=true parameter is always present
+            if (!urlString.contains("embedded=true")) {
+                val separator = if (urlString.contains("?")) "&" else "?"
+                urlString = "$urlString${separator}embedded=true"
+            }
+
+            route.arguments.putString(Const.INTERNAL_URL, urlString)
+
+            // Extract title from URL query parameter if present, otherwise use fallback
+            val title = uri.getQueryParameter("title") ?: activity.getString(R.string.immersiveView)
+            route.arguments.putString(Const.ACTION_BAR_TITLE, title)
+
+            if (activity.resources.getBoolean(R.bool.isDeviceTablet)) {
+                handleTabletRoute(activity, route)
+            } else {
+                handleFullscreenRoute(activity, route)
+            }
         } else if (route.routeContext == RouteContext.FILE
             || route.primaryClass?.isAssignableFrom(FileListFragment::class.java) == true
             && route.queryParamsHash.containsKey(RouterParams.PREVIEW)
@@ -621,10 +664,15 @@ object RouteMatcher : BaseRouteMatcher() {
 
                 override fun onCreateLoader(id: Int, args: Bundle?): Loader<OpenMediaAsyncTaskLoader.LoadedMedia> {
                     if (!activity.isFinishing) {
-                        dialog = AlertDialog.Builder(activity, com.instructure.pandautils.R.style.CustomViewAlertDialog)
-                            .setView(com.instructure.pandautils.R.layout.dialog_loading_view)
+                        val view = from(activity).inflate(R.layout.dialog_loading_view, null)
+                        val loadingView = view.findViewById<CanvasLoadingView>(R.id.canvasLoadingView)
+                        val studentColor = getColor(activity, R.color.login_studentAppTheme)
+                        loadingView?.setOverrideColor(studentColor)
+
+                        dialog = AlertDialog.Builder(activity, R.style.CustomViewAlertDialog)
+                            .setView(view)
                             .create()
-                        dialog!!.show()
+                        dialog?.show()
                     }
                     return OpenMediaAsyncTaskLoader(activity, args)
                 }

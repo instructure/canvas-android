@@ -17,6 +17,8 @@ enum class RemoteConfigParam(val rc_name: String, val safeValueAsString: String)
     TEST_LONG("test_long", "42"),
     TEST_STRING("test_string", "hey there"),
     SPEEDGRADER_V2("speedgrader_v2", "true"),
+    TODO_REDESIGN("todo_redesign", "false"),
+    DASHBOARD_REDESIGN("dashboard_redesign", "false")
 }
 
 /**

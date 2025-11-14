@@ -21,14 +21,15 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -42,17 +43,16 @@ import com.instructure.horizon.horizonui.foundation.HorizonTypography
 @Composable
 fun DashboardMyProgressCardContent(
     state: DashboardMyProgressCardState,
+    isLoading: Boolean,
     modifier: Modifier = Modifier,
-    isLoading: Boolean = false
 ) {
     DashboardWidgetCard(
         stringResource(R.string.dashboardMyProgressTitle),
         R.drawable.trending_up,
         HorizonColors.PrimitivesSky.sky12,
+        useMinWidth = false,
         isLoading = isLoading,
         modifier = modifier
-            .widthIn(max = 300.dp)
-            .padding(bottom = 8.dp)
     ) {
         if(state.moduleCountCompleted == 0) {
             Text(
@@ -64,10 +64,18 @@ fun DashboardMyProgressCardContent(
                     .shimmerEffect(isLoading)
             )
         } else {
+            val context = LocalContext.current
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clearAndSetSemantics {
+                        contentDescription = context.getString(
+                            R.string.a11y_dashboardMyProgressContentDescription,
+                            state.moduleCountCompleted
+                        )
+                    }
             ) {
                 Text(
                     text = state.moduleCountCompleted.toString(),
@@ -95,7 +103,8 @@ private fun DashboardMyProgressCardContentPreview() {
     DashboardMyProgressCardContent(
         state = DashboardMyProgressCardState(
             moduleCountCompleted = 24
-        )
+        ),
+        false
     )
 }
 
@@ -105,7 +114,8 @@ private fun DashboardMyProgressCardContentZeroPreview() {
     DashboardMyProgressCardContent(
         state = DashboardMyProgressCardState(
             moduleCountCompleted = 0
-        )
+        ),
+        false
     )
 }
 

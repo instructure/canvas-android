@@ -1042,6 +1042,10 @@
     <string name="downloadFailed">डाउनलोड करना विफल रहा</string>
     <string name="downloadSuccessful">डाउनलोड करना सफल रहा</string>
 
+    <string name="downloading">डाउनलोड किया जा रहा है</string>
+    <string name="downloadComplete">डाउनलोड पूरा हुआ</string>
+    <string name="notificationChannelNameFileDownloadsName">सूचनाएं डाउनलोड करें</string>
+    <string name="notificationChannelNameFileDownloadsDescription">जारी डाउनलोड्स के लिए Canvas सूचनाएं।</string>
     <string name="full_due_date_details">नियत तिथि का पूरा ब्यौरा</string>
     <string name="submissions">सबमिशन</string>
     <string name="attachment">संलग्नक</string>
@@ -2139,4 +2143,9 @@
     <string name="daysLateHint">\'दिन देर से\' लिखें</string>
     <string name="reply_to_topic">विषय पर उत्तर दें</string>
     <string name="additional_replies">अतिरिक्त उत्तर (%d)</string>
+    <string name="reply_to_topic_due">विषय का उत्तर नियत है</string>
+    <string name="additional_replies_due">अतिरिक्त उत्तर (%d) नियत है</string>
+    <string name="a11y_discussion_checkpoints">चर्चा जांच बिंदु</string>
+    <string name="multipleDueDates">एकाधिक नियत तिथियां</string>
+    <string name="courseConcludedError">पाठ्यक्रम समाप्त हुआ। संदेश भेजने में असमर्थ!</string>
 </resources>

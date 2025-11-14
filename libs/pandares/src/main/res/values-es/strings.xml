@@ -1042,6 +1042,10 @@
     <string name="downloadFailed">No se pudo realizar la descarga</string>
     <string name="downloadSuccessful">La descarga se ha realizado correctamente</string>
 
+    <string name="downloading">Descargando</string>
+    <string name="downloadComplete">Descarga completada</string>
+    <string name="notificationChannelNameFileDownloadsName">Notificaciones de descarga</string>
+    <string name="notificationChannelNameFileDownloadsDescription">Notificaciones en Canvas sobre descargas en curso.</string>
     <string name="full_due_date_details">Detalles completos de la fecha de entrega</string>
     <string name="submissions">Entregas</string>
     <string name="attachment">Archivo adjunto</string>
@@ -2131,4 +2135,9 @@
     <string name="daysLateHint">Escribir los días de atraso</string>
     <string name="reply_to_topic">Responder al tema</string>
     <string name="additional_replies">Respuestas adicionales (%d)</string>
+    <string name="reply_to_topic_due">Respuesta al tema pendiente</string>
+    <string name="additional_replies_due">Respuestas adicionales (%d) pendientes</string>
+    <string name="a11y_discussion_checkpoints">Puntos de control del foro de discusión</string>
+    <string name="multipleDueDates">Varias fechas límite</string>
+    <string name="courseConcludedError">Curso finalizado. ¡No se pueden enviar mensajes!</string>
 </resources>

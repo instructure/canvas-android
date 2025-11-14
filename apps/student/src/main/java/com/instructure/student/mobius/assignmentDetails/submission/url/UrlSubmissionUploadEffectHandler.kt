@@ -28,7 +28,7 @@ class UrlSubmissionUploadEffectHandler(private val submissionHelper: SubmissionH
                 view?.showPreviewUrl(effect.url)
             }
             is UrlSubmissionUploadEffect.SubmitUrl -> {
-                submissionHelper.startUrlSubmission(effect.course, effect.assignmentId, effect.assignmentName, effect.url)
+                submissionHelper.startUrlSubmission(effect.course, effect.assignmentId, effect.assignmentName, effect.url, effect.attempt)
                 view?.goBack()
             }
             is UrlSubmissionUploadEffect.InitializeUrl -> {

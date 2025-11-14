@@ -222,6 +222,10 @@ android {
         enableExperimentalClasspathAggregation = true
     }
 
+    ksp {
+        arg("room.schemaLocation", "$projectDir/schemas".toString())
+    }
+
     sourceSets {
         debug.assets.srcDirs += files("$projectDir/schemas".toString())
     }
@@ -337,9 +341,6 @@ dependencies {
     implementation Libs.GLANCE_APPWIDGET
     implementation Libs.GLANCE_APPWIDGET_PREVIEW
 }
-
-// Comment out this line if the reporting logic starts going wonky.
-gradle.addListener new TimingsListener(project)
 
 apply plugin: 'com.google.gms.google-services'
 

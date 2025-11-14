@@ -18,6 +18,7 @@ package com.instructure.student.ui.pages.classic
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.NoMatchingViewException
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.refresh
@@ -44,6 +45,11 @@ class NotificationPage : BasePage() {
         onView(matcher).assertDisplayed()
     }
 
+    fun assertNotificationNotDisplayed(notificationTitle: String) {
+        val matcher = allOf(withText(notificationTitle), withAncestor(R.id.listView))
+        onView(matcher).check(doesNotExist())
+    }
+
     fun assertHasGrade(title: String, grade: String) {
         val matcher = allOf(containsTextCaseInsensitive(title.dropLast(1)) + hasSibling(withId(R.id.description) + withText("Grade: $grade")))
         onView(matcher).scrollTo().assertDisplayed()
@@ -56,6 +62,11 @@ class NotificationPage : BasePage() {
 
     fun assertExcused(title: String) {
         val matcher = allOf(containsTextCaseInsensitive(title.dropLast(1)) + hasSibling(withId(R.id.description) + withText("Excused")))
+        onView(matcher).scrollTo().assertDisplayed()
+    }
+
+    fun assertCheckpointLabel(title: String, checkpointLabel: String) {
+        val matcher = allOf(containsTextCaseInsensitive(title.dropLast(1)) + hasSibling(withId(R.id.checkpointLabel) + withText(checkpointLabel)))
         onView(matcher).scrollTo().assertDisplayed()
     }
 

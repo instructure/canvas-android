@@ -58,7 +58,7 @@ fun <T> InputDropDownPopup(
     isMenuOpen: Boolean,
     options: List<T>,
     verticalOffsetPx: Int,
-    width: Dp,
+    width: Dp?,
     onMenuOpenChanged: (Boolean) -> Unit,
     onOptionSelected: (T) -> Unit,
     modifier: Modifier = Modifier,
@@ -89,7 +89,12 @@ fun <T> InputDropDownPopup(
                 modifier = modifier
                     .padding(bottom = 8.dp)
                     .padding(horizontal = 8.dp)
-                    .width(width),
+                    .conditional(width == null) {
+                        fillMaxWidth()
+                    }
+                    .conditional(width != null) {
+                        width(width!!)
+                    },
                 shape = HorizonCornerRadius.level2,
                 colors = CardDefaults.cardColors()
                     .copy(containerColor = HorizonColors.Surface.pageSecondary()),

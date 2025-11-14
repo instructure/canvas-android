@@ -242,10 +242,11 @@ open class TodoListRecyclerAdapter : ExpandableRecyclerAdapter<Date, PlannerItem
         }
     }
 
-    private fun isComplete(plannerItem: PlannerItem): Boolean {
+    internal fun isComplete(plannerItem: PlannerItem): Boolean {
         return if (plannerItem.plannableType == PlannableType.ASSIGNMENT
             || plannerItem.plannableType == PlannableType.DISCUSSION_TOPIC
             || plannerItem.plannableType == PlannableType.SUB_ASSIGNMENT
+            || plannerItem.plannableType == PlannableType.QUIZ
         ) {
             plannerItem.submissionState?.submitted == true
         } else {

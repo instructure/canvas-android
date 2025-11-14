@@ -499,4 +499,5 @@
         <item quantity="one">%d min</item>
         <item quantity="other">%d min</item>
     </plurals>
+    <string name="notATeacherDescription">Morda bi bolj ustrezala kakšna druga aplikacija. Tapnite ikono, da se prijavite tam.</string>
 </resources>

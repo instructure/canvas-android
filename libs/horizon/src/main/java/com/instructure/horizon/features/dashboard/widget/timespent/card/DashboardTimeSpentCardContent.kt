@@ -16,13 +16,12 @@
  */
 package com.instructure.horizon.features.dashboard.widget.timespent.card
 
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Text
@@ -33,7 +32,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.hideFromAccessibility
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -47,26 +51,23 @@ import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelect
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectInputSize
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectState
-import kotlin.math.roundToInt
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun DashboardTimeSpentCardContent(
     state: DashboardTimeSpentCardState,
+    isLoading: Boolean,
     modifier: Modifier = Modifier,
-    isLoading: Boolean = false,
 ) {
     DashboardWidgetCard(
         stringResource(R.string.dashboardTimeSpentTitle),
         R.drawable.schedule,
         HorizonColors.PrimitivesHoney.honey12(),
-        modifier
-            .widthIn(max = 300.dp)
-            .padding(bottom = 8.dp),
-        isLoading
+        modifier,
+        isLoading,
+        false
     ) {
-
-        if (state.hours == 0.0) {
+        if (state.hours == 0 && state.minutes == 0 && state.courses.isEmpty()) {
             Text(
                 text = stringResource(R.string.dashboardTimeSpentEmptyMessage),
                 style = HorizonTypography.p2,
@@ -76,32 +77,44 @@ fun DashboardTimeSpentCardContent(
                     .shimmerEffect(isLoading)
             )
         } else {
-            FlowRow(
-                verticalArrangement = Arrangement.Center,
+            val courseValue = state.courses.firstOrNull { it.id == state.selectedCourseId }?.name
+                ?: stringResource(R.string.dashboardTimeSpentTotal)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
             ) {
-                Text(
-                    text = state.hours.roundToInt().toString(),
-                    style = HorizonTypography.h1.copy(fontSize = 38.sp, letterSpacing = 0.sp),
-                    color = HorizonColors.Text.body(),
-                    modifier = Modifier.shimmerEffect(isLoading)
-                )
+                if (state.minutes == 0) {
+                    DashboardTimeSpentSingleTimeUnit(
+                        state.hours,
+                        pluralStringResource(R.plurals.dashboardTimeSpentHoursUnit, state.hours),
+                        courseValue,
+                        isLoading
+                    )
+                } else if (state.hours == 0) {
+                    DashboardTimeSpentSingleTimeUnit(
+                        state.minutes,
+                        pluralStringResource(R.plurals.dashboardTimeSpentMinutesUnit, state.minutes),
+                        courseValue,
+                        isLoading
+                    )
+                } else {
+                    DashboardTimeSpentMultiTimeUnit(
+                        hours = state.hours,
+                        minutes = state.minutes,
+                        courseValue = courseValue,
+                        isLoading = isLoading
+                    )
+                }
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
-                        .width(IntrinsicSize.Max)
+                        .fillMaxWidth()
                 ) {
                     if (state.courses.size > 1) {
-                        Text(
-                            text = stringResource(R.string.dashboardTimeSpentHoursIn),
-                            style = HorizonTypography.labelMediumBold,
-                            color = HorizonColors.Text.title(),
-                            modifier = Modifier.shimmerEffect(isLoading)
-                        )
-
                         HorizonSpace(SpaceSize.SPACE_8)
 
                         var isMenuOpen by remember { mutableStateOf(false) }
@@ -109,22 +122,19 @@ fun DashboardTimeSpentCardContent(
                             isMenuOpen = isMenuOpen,
                             onMenuOpenChanged = { isMenuOpen = it },
                             size = SingleSelectInputSize.Medium,
-                            options = listOf(stringResource(R.string.dashboardTimeSpentAllCourses)) + state.courses.map { it.name },
-                            selectedOption = state.courses.firstOrNull { it.id == state.selectedCourseId }?.name
-                                ?: stringResource(R.string.dashboardTimeSpentAllCourses),
+                            isSingleLineOptions = true,
+                            isFullWidth = true,
+                            options = listOf(stringResource(R.string.dashboardTimeSpentTotal)) + state.courses.map { it.name },
+                            selectedOption = courseValue,
                             onOptionSelected = { state.onCourseSelected(it) }
                         )
 
                         SingleSelect(
                             courseSelectState,
-                            modifier = Modifier.shimmerEffect(isLoading)
-                        )
-                    } else {
-                        Text(
-                            text = stringResource(R.string.dashboardTimeSpentHoursInYourCourse),
-                            style = HorizonTypography.labelMediumBold,
-                            color = HorizonColors.Text.title(),
-                            modifier = Modifier.shimmerEffect(isLoading)
+                            modifier = Modifier
+                                .shimmerEffect(isLoading)
+                                .focusable()
+                                .widthIn(min = 100.dp)
                         )
                     }
                 }
@@ -134,11 +144,91 @@ fun DashboardTimeSpentCardContent(
 }
 
 @Composable
+private fun DashboardTimeSpentSingleTimeUnit(
+    timeValue: Int,
+    timeUnitValue: String,
+    courseValue: String,
+    isLoading: Boolean,
+) {
+    val widgetContentDescription = stringResource(
+        R.string.a11y_dashboardTimeSpentContentDescription,
+        timeValue,
+        timeUnitValue,
+        courseValue
+    )
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .clearAndSetSemantics {
+                contentDescription = widgetContentDescription
+            }
+    ) {
+        Text(
+            text = timeValue.toString(),
+            style = HorizonTypography.h1.copy(fontSize = 38.sp, letterSpacing = 0.sp),
+            color = HorizonColors.Text.body(),
+            modifier = Modifier
+                .shimmerEffect(isLoading)
+                .semantics {
+                    hideFromAccessibility()
+                }
+        )
+        HorizonSpace(SpaceSize.SPACE_8)
+        Text(
+            text = timeUnitValue,
+            style = HorizonTypography.labelMediumBold,
+            color = HorizonColors.Text.title(),
+            modifier = Modifier
+                .shimmerEffect(isLoading)
+                .semantics {
+                    hideFromAccessibility()
+                }
+        )
+    }
+}
+
+@Composable
+private fun DashboardTimeSpentMultiTimeUnit(
+    hours: Int,
+    minutes: Int,
+    courseValue: String,
+    isLoading: Boolean,
+) {
+    val widgetContentDescription = stringResource(
+        R.string.a11y_dashboardTimeSpentCombinedContentDescription,
+        hours,
+        minutes,
+        courseValue
+    )
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .clearAndSetSemantics {
+                contentDescription = widgetContentDescription
+            }
+    ) {
+        DashboardTimeSpentSingleTimeUnit(
+            timeValue = hours,
+            timeUnitValue = pluralStringResource(R.plurals.dashboardTimeSpentHoursShortUnit, hours),
+            courseValue = courseValue,
+            isLoading = isLoading
+        )
+        HorizonSpace(SpaceSize.SPACE_8)
+        DashboardTimeSpentSingleTimeUnit(
+            timeValue = minutes,
+            timeUnitValue = pluralStringResource(R.plurals.dashboardTimeSpentMinutesShortUnit, minutes),
+            courseValue = courseValue,
+            isLoading = isLoading
+        )
+    }
+}
+
+@Composable
 @Preview
 private fun DashboardTimeSpentCardContentPreview() {
     DashboardTimeSpentCardContent(
         state = DashboardTimeSpentCardState(
-            hours = 24.5,
+            hours = 20,
             courses = listOf(
                 CourseOption(1, "Introduction to Computer Science"),
                 CourseOption(2, "Advanced Mathematics"),
@@ -155,7 +245,7 @@ private fun DashboardTimeSpentCardContentPreview() {
 private fun DashboardTimeSpentCardSelectedContentPreview() {
     DashboardTimeSpentCardContent(
         state = DashboardTimeSpentCardState(
-            hours = 24.5,
+            hours = 20,
             courses = listOf(
                 CourseOption(1, "Introduction to Computer Science"),
                 CourseOption(2, "Advanced Mathematics"),
@@ -169,10 +259,41 @@ private fun DashboardTimeSpentCardSelectedContentPreview() {
 
 @Composable
 @Preview
-private fun DashboardTimeSpentCardContentSingleCoursePreview() {
+private fun DashboardTimeSpentCardContentSingleCourseHoursPreview() {
     DashboardTimeSpentCardContent(
         state = DashboardTimeSpentCardState(
-            hours = 12.0,
+            hours = 20,
+            courses = listOf(
+                CourseOption(1, "Introduction to Computer Science")
+            ),
+            selectedCourseId = null
+        ),
+        isLoading = false
+    )
+}
+
+@Composable
+@Preview
+private fun DashboardTimeSpentCardContentSingleCourseMinutesPreview() {
+    DashboardTimeSpentCardContent(
+        state = DashboardTimeSpentCardState(
+            minutes = 20,
+            courses = listOf(
+                CourseOption(1, "Introduction to Computer Science")
+            ),
+            selectedCourseId = null
+        ),
+        isLoading = false
+    )
+}
+
+@Composable
+@Preview
+private fun DashboardTimeSpentCardContentSingleCourseCombinedPreview() {
+    DashboardTimeSpentCardContent(
+        state = DashboardTimeSpentCardState(
+            hours = 10,
+            minutes = 20,
             courses = listOf(
                 CourseOption(1, "Introduction to Computer Science")
             ),
@@ -187,7 +308,6 @@ private fun DashboardTimeSpentCardContentSingleCoursePreview() {
 private fun DashboardTimeSpentCardEmptyContentPreview() {
     DashboardTimeSpentCardContent(
         state = DashboardTimeSpentCardState(
-            hours = 0.0,
             courses = listOf(
                 CourseOption(1, "Introduction to Computer Science")
             ),

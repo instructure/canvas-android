@@ -499,4 +499,5 @@
         <item quantity="one">%d मिनट</item>
         <item quantity="other">%d मिनट</item>
     </plurals>
+    <string name="notATeacherDescription">हमारा कोई अन्य ऐप बेहतर विकल्प हो सकता है। वहां लॉग इन करने के लिए एक आइकन पर टैप करें।</string>
 </resources>

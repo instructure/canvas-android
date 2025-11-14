@@ -66,7 +66,10 @@ import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
 import com.instructure.pandautils.utils.AssignmentUtils2
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.isAllowedToSubmitWithOverrides
 import com.instructure.pandautils.utils.HtmlContentFormatter
+import com.instructure.pandautils.utils.getSubAssignmentSubmissionGrade
+import com.instructure.pandautils.utils.getSubAssignmentSubmissionStateLabel
 import com.instructure.pandautils.utils.getSubmissionStateLabel
 import com.instructure.pandautils.utils.isAudioVisualExtension
 import com.instructure.pandautils.utils.orDefault
@@ -74,6 +77,9 @@ import com.instructure.pandautils.utils.orderedCheckpoints
 import com.instructure.pandautils.utils.toFormattedString
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.io.File
 import java.text.DateFormat
@@ -138,6 +144,9 @@ class AssignmentDetailsViewModel @Inject constructor(
     private val _dueDateReminderViewStates = mutableStateListOf<ReminderViewState>()
     val dueDateReminderViewStates: List<ReminderViewState>
         get() = _dueDateReminderViewStates
+
+    private val _discussionCheckpoints = MutableStateFlow<List<DiscussionCheckpointViewState>>(emptyList())
+    val discussionCheckpoints: StateFlow<List<DiscussionCheckpointViewState>> = _discussionCheckpoints.asStateFlow()
 
     var checkingReminderPermission = false
     var checkingNotificationPermission = false
@@ -246,6 +255,7 @@ class AssignmentDetailsViewModel @Inject constructor(
 
                 if (assignment?.checkpoints?.isNotEmpty() == true) {
                     _dueDateReminderViewStates.clear()
+                    val checkpointsList = mutableListOf<DiscussionCheckpointViewState>()
                     assignment?.orderedCheckpoints?.forEach { checkpoint ->
                         val dueLabel = when (checkpoint.tag) {
                             Const.REPLY_TO_TOPIC -> application.getString(R.string.reply_to_topic_due)
@@ -268,9 +278,38 @@ class AssignmentDetailsViewModel @Inject constructor(
                                 reminders = getReminderItems(checkpoint.tag)
                             )
                         )
+
+                        val checkpointName = when (checkpoint.tag) {
+                            Const.REPLY_TO_TOPIC -> application.getString(R.string.reply_to_topic)
+                            Const.REPLY_TO_ENTRY -> application.getString(
+                                R.string.additional_replies,
+                                assignment?.discussionTopicHeader?.replyRequiredCount.orDefault()
+                            )
+                            else -> checkpoint.name.orEmpty()
+                        }
+                        val stateLabel = assignmentResult.getSubAssignmentSubmissionStateLabel(subAssignment, customStatuses)
+                        val grade = assignmentResult.getSubAssignmentSubmissionGrade(
+                            checkpoint.pointsPossible.orDefault(),
+                            subAssignment,
+                            resources,
+                            restrictQuantitativeData,
+                            gradingScheme,
+                            showZeroPossiblePoints = true,
+                            showNotGraded = true
+                        )
+                        checkpointsList.add(
+                            DiscussionCheckpointViewState(
+                                name = checkpointName,
+                                stateLabel = stateLabel,
+                                grade = grade.text,
+                                courseColor = assignmentDetailsColorProvider.getContentColor(course.value).color()
+                            )
+                        )
                     }
+                    _discussionCheckpoints.value = checkpointsList
                 } else {
                     _dueDateReminderViewStates.clear()
+                    _discussionCheckpoints.value = emptyList()
                     _dueDateReminderViewStates.add(
                         ReminderViewState(
                             dueLabel = application.getString(R.string.dueLabel),
@@ -426,11 +465,10 @@ class AssignmentDetailsViewModel @Inject constructor(
         // Observers shouldn't see the submit button OR if the course is soft concluded
         val submitVisible = when {
             isObserver -> false
-            !course.value?.isBetweenValidDateRange().orDefault() -> false
             assignment.submission?.excused.orDefault() -> false
             else -> when (assignment.turnInType) {
-                Assignment.TurnInType.QUIZ, Assignment.TurnInType.DISCUSSION -> true
-                Assignment.TurnInType.ONLINE, Assignment.TurnInType.EXTERNAL_TOOL -> assignment.isAllowedToSubmit
+                Assignment.TurnInType.QUIZ, Assignment.TurnInType.DISCUSSION -> course.value?.isBetweenValidDateRange().orDefault()
+                Assignment.TurnInType.ONLINE, Assignment.TurnInType.EXTERNAL_TOOL -> assignment.isAllowedToSubmitWithOverrides(course.value)
                 else -> false
             }
         }
@@ -474,7 +512,8 @@ class AssignmentDetailsViewModel @Inject constructor(
                     "<body dir=\"rtl\">${it}</body>"
                 } else {
                     it
-                }
+                },
+                courseId
             )
         }.orEmpty()
 

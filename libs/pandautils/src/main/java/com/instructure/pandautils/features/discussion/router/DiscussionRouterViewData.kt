@@ -19,5 +19,10 @@ sealed class DiscussionRouterAction {
         val isRedesignEnabled: Boolean
     ) : DiscussionRouterAction()
 
+    data class RouteToDiscussionWebView(
+        val canvasContext: CanvasContext,
+        val discussionTopicHeaderId: Long
+    ) : DiscussionRouterAction()
+
     data class ShowToast(val toast: String) : DiscussionRouterAction()
 }

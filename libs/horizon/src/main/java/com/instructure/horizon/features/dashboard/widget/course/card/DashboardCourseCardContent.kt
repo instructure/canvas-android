@@ -1,0 +1,464 @@
+/*
+ * Copyright (C) 2025 - present Instructure, Inc.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, version 3 of the License.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+package com.instructure.horizon.features.dashboard.widget.course.card
+
+import android.graphics.drawable.Drawable
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withLink
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
+import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.horizon.R
+import com.instructure.horizon.features.dashboard.DashboardCard
+import com.instructure.horizon.horizonui.animation.shimmerEffect
+import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
+import com.instructure.horizon.horizonui.foundation.HorizonSpace
+import com.instructure.horizon.horizonui.foundation.HorizonTypography
+import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.isWideLayout
+import com.instructure.horizon.horizonui.molecules.Pill
+import com.instructure.horizon.horizonui.molecules.PillCase
+import com.instructure.horizon.horizonui.molecules.PillSize
+import com.instructure.horizon.horizonui.molecules.PillStyle
+import com.instructure.horizon.horizonui.molecules.PillType
+import com.instructure.horizon.horizonui.molecules.ProgressBarSmall
+import com.instructure.horizon.horizonui.molecules.ProgressBarStyle
+import com.instructure.horizon.model.LearningObjectType
+import com.instructure.pandautils.utils.localisedFormatMonthDay
+import java.util.Date
+import kotlin.math.roundToInt
+
+@Composable
+fun DashboardCourseCardContent(
+    state: DashboardCourseCardState,
+    handleOnClickAction: (CardClickAction?) -> Unit,
+    isLoading: Boolean,
+    modifier: Modifier = Modifier
+) {
+    DashboardCard(modifier) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(enabled = state.onClickAction != null) {
+                    handleOnClickAction(state.onClickAction)
+                }
+        ) {
+            BoxWithConstraints {
+                if (this.isWideLayout) {
+                    DashboardCourseCardWideContent(state, isLoading, handleOnClickAction)
+                } else {
+                    DashboardCourseCardCompactContent(state, isLoading, handleOnClickAction)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun DashboardCourseCardCompactContent(
+    state: DashboardCourseCardState,
+    isLoading: Boolean,
+    handleOnClickAction: (CardClickAction?) -> Unit,
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ){
+        if (state.imageState != null) {
+            CourseImage(state.imageState, isLoading, Modifier.fillMaxWidth())
+        }
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 24.dp)
+        ) {
+            if (!state.parentPrograms.isNullOrEmpty()) {
+                Spacer(Modifier.height(16.dp))
+                ProgramsText(state.parentPrograms, isLoading, handleOnClickAction)
+            }
+            if (!state.title.isNullOrEmpty()) {
+                Spacer(Modifier.height(16.dp))
+                TitleText(state.title, isLoading)
+            }
+            if (state.progress != null) {
+                Spacer(Modifier.height(12.dp))
+                CourseProgress(state.progress, isLoading)
+            }
+            if (!state.description.isNullOrEmpty()) {
+                Spacer(Modifier.height(16.dp))
+                DescriptionText(state.description, isLoading)
+            }
+            if (state.moduleItem != null) {
+                Spacer(Modifier.height(16.dp))
+                ModuleItemCard(state.moduleItem, isLoading, handleOnClickAction)
+            }
+        }
+        HorizonSpace(SpaceSize.SPACE_24)
+    }
+}
+
+@Composable
+private fun DashboardCourseCardWideContent(
+    state: DashboardCourseCardState,
+    isLoading: Boolean,
+    handleOnClickAction: (CardClickAction?) -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ){
+        if (state.imageState != null) {
+            CourseImage(
+                state.imageState,
+                isLoading,
+                Modifier
+                    .width(320.dp)
+                    .padding(start = 24.dp, top = 24.dp, bottom = 24.dp, end = 16.dp)
+                    .clip(HorizonCornerRadius.level2)
+            )
+        }
+        Column(
+            modifier = Modifier
+                .padding(end = 24.dp, bottom = 24.dp)
+        ) {
+            if (!state.parentPrograms.isNullOrEmpty()) {
+                Spacer(Modifier.height(16.dp))
+                ProgramsText(state.parentPrograms, isLoading, handleOnClickAction)
+            }
+            if (!state.title.isNullOrEmpty()) {
+                Spacer(Modifier.height(16.dp))
+                TitleText(state.title, isLoading)
+            }
+            if (state.progress != null) {
+                Spacer(Modifier.height(12.dp))
+                CourseProgress(state.progress, isLoading)
+            }
+            if (!state.description.isNullOrEmpty()) {
+                Spacer(Modifier.height(16.dp))
+                DescriptionText(state.description, isLoading)
+            }
+            if (state.moduleItem != null) {
+                Spacer(Modifier.height(16.dp))
+                ModuleItemCard(state.moduleItem, isLoading, handleOnClickAction)
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+private fun CourseImage(
+    state: DashboardCourseCardImageState,
+    isLoading: Boolean,
+    modifier: Modifier = Modifier
+) {
+    var isImageLoading by rememberSaveable { mutableStateOf(true) }
+    if (!state.imageUrl.isNullOrEmpty()) {
+        GlideImage(
+            state.imageUrl,
+            contentDescription = null,
+            contentScale = ContentScale.FillBounds,
+            requestBuilderTransform = {
+                it.addListener(object : RequestListener<Drawable> {
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        model: Any?,
+                        target: Target<Drawable>,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        isImageLoading = false
+                        return false
+                    }
+
+                    override fun onResourceReady(
+                        resource: Drawable,
+                        model: Any,
+                        target: Target<Drawable>?,
+                        dataSource: DataSource,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        isImageLoading = false
+                        return false
+                    }
+
+                })
+            },
+            modifier = modifier
+                .aspectRatio(1.69f)
+                .shimmerEffect(isLoading || isImageLoading)
+        )
+    } else {
+        if (state.showPlaceholder) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = modifier
+                    .aspectRatio(1.69f)
+                    .background(HorizonColors.Surface.institution().copy(alpha = 0.1f))
+                    .shimmerEffect(isLoading || isImageLoading)
+            ) {
+                Icon(
+                    painterResource(R.drawable.book_2_filled),
+                    contentDescription = null,
+                    tint = HorizonColors.Surface.institution(),
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ProgramsText(
+    programs: List<DashboardCourseCardParentProgramState>,
+    isLoading: Boolean,
+    handleOnClickAction: (CardClickAction?) -> Unit,
+) {
+    val programsAnnotated = buildAnnotatedString {
+        programs.forEachIndexed { i, program ->
+            if (i > 0) append(", ")
+            withLink(
+                LinkAnnotation.Clickable(
+                    tag = program.programId,
+                    styles = TextLinkStyles(
+                        style = SpanStyle(textDecoration = TextDecoration.Underline)
+                    ),
+                    linkInteractionListener = { _ -> handleOnClickAction(program.onClickAction) }
+                )
+            ) {
+                append(program.programName)
+            }
+        }
+    }
+
+    // String resource can't work with annotated string so we need a temporary placeholder
+    val template = stringResource(R.string.learnScreen_partOfProgram, "__PROGRAMS__")
+
+    val fullText = buildAnnotatedString {
+        val parts = template.split("__PROGRAMS__")
+        append(parts[0])
+        append(programsAnnotated)
+        if (parts.size > 1) append(parts[1])
+    }
+
+    Text(
+        text = fullText,
+        style = HorizonTypography.p1,
+        modifier = Modifier
+            .semantics(mergeDescendants = true) {}
+            .shimmerEffect(isLoading)
+    )
+}
+
+@Composable
+private fun TitleText(
+    title: String,
+    isLoading: Boolean,
+) {
+    Text(
+        text = title,
+        style = HorizonTypography.h4,
+        color = HorizonColors.Text.title(),
+        maxLines = 2,
+        overflow = TextOverflow.Ellipsis,
+        modifier = Modifier.shimmerEffect(isLoading)
+    )
+}
+
+@Composable
+private fun DescriptionText(
+    description: String,
+    isLoading: Boolean,
+) {
+    Text(
+        text = description,
+        style = HorizonTypography.p1,
+        color = HorizonColors.Text.body(),
+        modifier = Modifier.shimmerEffect(isLoading)
+    )
+}
+
+@Composable
+private fun CourseProgress(
+    progress: Double,
+    isLoading: Boolean,
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.shimmerEffect(
+            isLoading,
+            backgroundColor = HorizonColors.Surface.institution().copy(0.1f),
+            shimmerColor = HorizonColors.Surface.institution().copy(0.05f),
+        )
+    ) {
+        ProgressBarSmall(
+            progress = progress,
+            style = ProgressBarStyle.Institution,
+            showLabels = false,
+            modifier = Modifier.weight(1f)
+        )
+
+        HorizonSpace(SpaceSize.SPACE_8)
+
+        Text(
+            text = stringResource(R.string.progressBar_percent, progress.roundToInt()),
+            style = HorizonTypography.p2,
+            color = HorizonColors.Surface.institution(),
+        )
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun ModuleItemCard(
+    state: DashboardCourseCardModuleItemState,
+    isLoading: Boolean,
+    handleOnClickAction: (CardClickAction?) -> Unit,
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                color = HorizonColors.Surface
+                    .institution()
+                    .copy(alpha = 0.1f),
+                shape = HorizonCornerRadius.level2
+            )
+            .clip(HorizonCornerRadius.level2)
+            .clickable { handleOnClickAction(state.onClickAction) }
+            .shimmerEffect(
+                isLoading,
+                backgroundColor = HorizonColors.Surface.institution().copy(0.1f),
+                shimmerColor = HorizonColors.Surface.institution().copy(0.05f),
+            )
+            .padding(16.dp)
+    ) {
+        Column {
+            Text(
+                text = state.moduleItemTitle,
+                style = HorizonTypography.p1,
+                color = HorizonColors.Text.body()
+            )
+            Spacer(Modifier.height(12.dp))
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Pill(
+                    label = stringResource(state.moduleItemType.stringRes),
+                    size = PillSize.SMALL,
+                    style = PillStyle.SOLID,
+                    type = PillType.INVERSE,
+                    case = PillCase.TITLE,
+                    iconRes = state.moduleItemType.iconRes,
+                )
+
+                if (state.dueDate != null) {
+                    Pill(
+                        label = stringResource(R.string.learningobject_dueDate, state.dueDate.localisedFormatMonthDay()),
+                        size = PillSize.SMALL,
+                        style = PillStyle.SOLID,
+                        type = PillType.INVERSE,
+                        case = PillCase.TITLE,
+                        iconRes = R.drawable.calendar_today,
+                    )
+                }
+
+                if (state.estimatedDuration != null) {
+                    Pill(
+                        label = state.estimatedDuration,
+                        size = PillSize.SMALL,
+                        style = PillStyle.SOLID,
+                        type = PillType.INVERSE,
+                        case = PillCase.TITLE,
+                        iconRes = R.drawable.calendar_today,
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+@Preview
+private fun DashboardCourseCardWithModulePreview() {
+    ContextKeeper.appContext = LocalContext.current
+
+    val state = DashboardCourseCardState(
+        parentPrograms = listOf(
+            DashboardCourseCardParentProgramState(
+                programName = "Program Name",
+                programId = "1",
+                onClickAction = CardClickAction.Action({})
+            )
+        ),
+        imageState = null,
+        title = "Course Title That Might Be Really Long and Go On Two Lines",
+        description = "This is a description of the course. It might be really long and go on multiple lines.",
+        progress = 45.0,
+        moduleItem = DashboardCourseCardModuleItemState(
+            moduleItemTitle = "Module Item Title That Might Be Really Long and Go On Two Lines",
+            moduleItemType = LearningObjectType.ASSIGNMENT,
+            dueDate = Date(),
+            estimatedDuration = "5 mins",
+            onClickAction = CardClickAction.Action({})
+        ),
+        onClickAction = CardClickAction.Action({})
+    )
+    DashboardCourseCardContent(state, {}, false)
+}

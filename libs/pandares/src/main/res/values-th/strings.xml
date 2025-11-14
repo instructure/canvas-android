@@ -1042,6 +1042,10 @@
     <string name="downloadFailed">ดาวน์โหลดล้มเหลว</string>
     <string name="downloadSuccessful">ดาวน์โหลดเสร็จสิ้น</string>
 
+    <string name="downloading">ดาวน์โหลด</string>
+    <string name="downloadComplete">ดาวน์โหลดเสร็จสิ้น</string>
+    <string name="notificationChannelNameFileDownloadsName">ดาวน์โหลดข้อมูลที่แจ้ง</string>
+    <string name="notificationChannelNameFileDownloadsDescription">การแจ้งข้อมูลของ Canvas สำหรับการดาวน์โหลดที่กำลังดำเนินการ</string>
     <string name="full_due_date_details">รายละเอียดวันครบกำหนดทั้งหมด</string>
     <string name="submissions">ผลงานจัดส่ง</string>
     <string name="attachment">เอกสารแนบ</string>
@@ -2131,4 +2135,9 @@
     <string name="daysLateHint">เขียนจำนวนวันที่ล่าช้า</string>
     <string name="reply_to_topic">ตอบกลับไปยังหัวข้อ</string>
     <string name="additional_replies">การตอบกลับเพิ่มเติม (%d)</string>
+    <string name="reply_to_topic_due">กำหนดเวลาตอบกลับไปยังหัวข้อ</string>
+    <string name="additional_replies_due">กำหนดเวลาตอบกลับเพิ่มเติม (%d)</string>
+    <string name="a11y_discussion_checkpoints">จุดตรวจสอบส่วนการพูดคุย</string>
+    <string name="multipleDueDates">วันครบกำหนดหลายรายการ</string>
+    <string name="courseConcludedError">บทเรียนสิ้นสุดแล้ว ไม่สามารถส่งข้อความได้!</string>
 </resources>

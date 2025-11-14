@@ -30,7 +30,7 @@ sealed class TextSubmissionUploadEvent {
 }
 
 sealed class TextSubmissionUploadEffect {
-    data class SubmitText(val text: String, val canvasContext: CanvasContext, val assignmentId: Long, val assignmentName: String?) : TextSubmissionUploadEffect()
+    data class SubmitText(val text: String, val canvasContext: CanvasContext, val assignmentId: Long, val assignmentName: String?, val attempt: Long) : TextSubmissionUploadEffect()
     data class InitializeText(val text: String) : TextSubmissionUploadEffect()
     data class AddImage(val uri: Uri, val canvasContext: CanvasContext) : TextSubmissionUploadEffect()
     data class SaveDraft(val text: String, val canvasContext: CanvasContext, val assignmentId: Long, val assignmentName: String?) : TextSubmissionUploadEffect()
@@ -44,5 +44,6 @@ data class TextSubmissionUploadModel(
         val assignmentName: String?,
         val initialText: String? = null,
         val isFailure: Boolean = false,
-        val isSubmittable: Boolean = false
+        val isSubmittable: Boolean = false,
+        val attempt: Long = 1L
 )

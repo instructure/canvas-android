@@ -1042,6 +1042,10 @@
     <string name="downloadFailed">Pengunduhan gagal</string>
     <string name="downloadSuccessful">Unduhan berhasil</string>
 
+    <string name="downloading">Mengunduh</string>
+    <string name="downloadComplete">Pengunduhan selesai</string>
+    <string name="notificationChannelNameFileDownloadsName">Notifikasi Pengunduhan</string>
+    <string name="notificationChannelNameFileDownloadsDescription">Notifikasi Canvas untuk pengunduhan yang sedang berlangsung.</string>
     <string name="full_due_date_details">Detail tanggal batas lengkap</string>
     <string name="submissions">Penyerahan</string>
     <string name="attachment">Lampiran</string>
@@ -2134,4 +2138,9 @@
     <string name="daysLateHint">Tuliskan hari terlambat</string>
     <string name="reply_to_topic">Balas ke topik</string>
     <string name="additional_replies">Balasan tambahan (%d)</string>
+    <string name="reply_to_topic_due">Tanggal batas balas ke topik</string>
+    <string name="additional_replies_due">Tanggal batas balasan tambahan (%d)</string>
+    <string name="a11y_discussion_checkpoints">Checkpoint Diskusi</string>
+    <string name="multipleDueDates">Tanggal Batas Berganda</string>
+    <string name="courseConcludedError">Kursus selesai. Tidak dapat mengirim pesan!</string>
 </resources>

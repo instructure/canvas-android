@@ -26,10 +26,12 @@ import com.instructure.student.R
 import com.instructure.student.databinding.AdapterConferenceHeaderBinding
 import com.instructure.student.databinding.AdapterConferenceItemBinding
 import com.instructure.student.databinding.AdapterConferenceListErrorBinding
+import com.instructure.student.mobius.conferences.conference_list.ConferenceHeaderType
 
 interface ConferenceListAdapterCallback : BasicItemCallback {
     fun onConferenceClicked(conferenceId: Long)
     fun reload()
+    fun onHeaderClicked(headerType: ConferenceHeaderType)
 }
 
 class ConferenceListAdapter(callback: ConferenceListAdapterCallback) :
@@ -59,9 +61,18 @@ class ConferenceListErrorBinder : BasicItemBinder<ConferenceListItemViewState.Er
 
 class ConferenceListHeaderBinder : BasicItemBinder<ConferenceListItemViewState.ConferenceHeader, ConferenceListAdapterCallback>() {
     override val layoutResId = R.layout.adapter_conference_header
-    override val bindBehavior = Item {data, _, _ ->
+    override val bindBehavior = Item {data, callback, _ ->
         val binding = AdapterConferenceHeaderBinding.bind(this)
         binding.title.text = data.title
+
+        binding.expandIcon.animate()
+            .rotation(if (data.isExpanded) 180f else 0f)
+            .setDuration(200)
+            .start()
+
+        binding.headerContainer.onClick {
+            callback.onHeaderClicked(data.headerType)
+        }
     }
 }
 

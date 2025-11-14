@@ -3217,6 +3217,18 @@
               "deprecationReason": null
             },
             {
+              "name": "suppressAssignment",
+              "description": null,
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "defaultValue": null,
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "gradingStandardId",
               "description": null,
               "type": {
@@ -15138,26 +15150,6 @@
                   "kind": "SCALAR",
                   "name": "Boolean",
                   "ofType": null
-                }
-              },
-              "isDeprecated": false,
-              "deprecationReason": null
-            },
-            {
-              "name": "checkpoints",
-              "description": null,
-              "args": [],
-              "type": {
-                "kind": "LIST",
-                "name": null,
-                "ofType": {
-                  "kind": "NON_NULL",
-                  "name": null,
-                  "ofType": {
-                    "kind": "OBJECT",
-                    "name": "Checkpoint",
-                    "ofType": null
-                  }
                 }
               },
               "isDeprecated": false,

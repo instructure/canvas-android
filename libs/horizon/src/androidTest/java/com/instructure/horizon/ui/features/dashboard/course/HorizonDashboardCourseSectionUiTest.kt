@@ -23,13 +23,15 @@ import androidx.compose.ui.test.performScrollTo
 import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.horizon.features.dashboard.DashboardItemState
-import com.instructure.horizon.features.dashboard.course.DashboardCourseSection
-import com.instructure.horizon.features.dashboard.course.DashboardCourseUiState
-import com.instructure.horizon.features.dashboard.course.card.CardClickAction
-import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardButtonState
-import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardModuleItemState
-import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardParentProgramState
-import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardState
+import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardButtonRoute
+import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardItemState
+import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardState
+import com.instructure.horizon.features.dashboard.widget.course.DashboardCourseSection
+import com.instructure.horizon.features.dashboard.widget.course.DashboardCourseUiState
+import com.instructure.horizon.features.dashboard.widget.course.card.CardClickAction
+import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCourseCardModuleItemState
+import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCourseCardParentProgramState
+import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCourseCardState
 import com.instructure.horizon.model.LearningObjectType
 import org.junit.Rule
 import org.junit.Test
@@ -45,13 +47,11 @@ class HorizonDashboardCourseSectionUiTest {
     fun testProgramAndCourseCards() {
         val state = DashboardCourseUiState(
             state = DashboardItemState.SUCCESS,
-            programs = listOf(
-                DashboardCourseCardState(
-                    title = "Program 1",
-                    description = "Welcome!",
-                    buttonState = DashboardCourseCardButtonState(
-                        label = "Program details",
-                        onClickAction = CardClickAction.Action {}
+            programs = DashboardPaginatedWidgetCardState(
+                listOf(
+                    DashboardPaginatedWidgetCardItemState(
+                        title = "Program 1",
+                        route = DashboardPaginatedWidgetCardButtonRoute.HomeRoute("")
                     )
                 )
             ),
@@ -97,8 +97,6 @@ class HorizonDashboardCourseSectionUiTest {
         }
 
         composeTestRule.onNodeWithText("Program 1").assertExists()
-        composeTestRule.onNodeWithText("Welcome!").assertExists()
-        composeTestRule.onNodeWithText("Program details").assertExists().assertHasClickAction()
 
         composeTestRule.onNodeWithText("Course 1").performScrollTo().assertExists()
         composeTestRule.onNodeWithText("Program 11", true).assertExists()

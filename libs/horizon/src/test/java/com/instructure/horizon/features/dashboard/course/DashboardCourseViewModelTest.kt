@@ -24,6 +24,8 @@ import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.type.EnrollmentWorkflowState
 import com.instructure.horizon.features.dashboard.DashboardEventHandler
+import com.instructure.horizon.features.dashboard.widget.course.DashboardCourseRepository
+import com.instructure.horizon.features.dashboard.widget.course.DashboardCourseViewModel
 import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus
 import com.instructure.journey.type.ProgramVariantType
 import io.mockk.coEvery
@@ -188,7 +190,7 @@ class DashboardCourseViewModelTest {
         assertTrue(state.courses.any { it.title == "Course 4" })
         assertTrue(state.courses.none { it.title == "Course 3" })
 
-        assertEquals(1, state.programs.size)
+        assertEquals(1, state.programs.items.size)
     }
 
     @Test

@@ -19,6 +19,9 @@ package com.instructure.canvas.espresso.common.pages
 import android.view.View
 import android.widget.ScrollView
 import androidx.compose.ui.test.assertTextEquals
+import androidx.compose.ui.test.hasAnyAncestor
+import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithTag
@@ -72,7 +75,7 @@ import org.hamcrest.Matchers.anyOf
 import org.hamcrest.Matchers.anything
 import org.hamcrest.Matchers.not
 
-open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteractions, private val composeTestRule: ComposeTestRule) : BasePage(R.id.assignmentDetailsPage) {
+open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteractions, val composeTestRule: ComposeTestRule) : BasePage(R.id.assignmentDetailsPage) {
     val toolbar by OnViewWithId(R.id.toolbar)
     val points by OnViewWithId(R.id.points)
     val submissionTypes by OnViewWithId(R.id.submissionTypesTextView)
@@ -86,7 +89,7 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
     }
 
     fun assertDisplayToolbarSubtitle(courseNameText: String) {
-        onView(allOf(withText(courseNameText), withParent(R.id.toolbar))).assertDisplayed()
+        onView(allOf(withText(courseNameText), withParent(R.id.toolbar), withAncestor(R.id.assignmentDetailsPage))).assertDisplayed()
     }
 
     fun assertDisplaysDate(dateText: String, position: Int = 0) {
@@ -215,7 +218,7 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
     fun openOverflowMenu() {
         Espresso.onView(
             allOf(
-                ViewMatchers.withContentDescription(stringContainsTextCaseInsensitive("More options")),
+                withContentDescription(stringContainsTextCaseInsensitive("More options")),
                 isDisplayed()
             )).click()
     }
@@ -263,6 +266,21 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
 
     fun assertReminderViewDisplayed(position: Int = 0) {
         composeTestRule.onNodeWithTag("reminderView-$position").assertExists()
+    }
+
+    fun assertCheckpointDisplayed(position: Int, name: String, grade: String) {
+        composeTestRule.onNode(
+            hasTestTag("checkpointName")
+                .and(hasText(name))
+                .and(hasAnyAncestor(hasTestTag("checkpointItem-$position"))),
+            useUnmergedTree = true
+        ).assertExists()
+        composeTestRule.onNode(
+            hasTestTag("checkpointGrade")
+                .and(hasText(grade))
+                .and(hasAnyAncestor(hasTestTag("checkpointItem-$position"))),
+            useUnmergedTree = true
+        ).assertExists()
     }
 
     fun assertNoDescriptionViewDisplayed() {
