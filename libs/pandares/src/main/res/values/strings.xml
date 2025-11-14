@@ -2222,4 +2222,8 @@
     <string name="todoFilterUntilDate">Until %s</string>
     <string name="a11y_buttonSelectionSelected">selected</string>
     <string name="a11y_buttonSelectionNotSelected">not selected</string>
+
+    <!-- Course Invitations -->
+    <string name="courseInvitationAccepted">Invitation to %s accepted</string>
+    <string name="courseInvitationDeclined">Invitation to %s declined</string>
 </resources>
