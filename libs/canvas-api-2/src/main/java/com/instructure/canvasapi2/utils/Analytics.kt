@@ -171,6 +171,12 @@ object AnalyticsEventConstants {
     const val WIDGET_SINGLE_GRADE_WIDGET_DELETED = "widget_single_grade_deleted"
     const val WIDGET_SINGLE_GRADE_OPEN_ITEM_ACTION = "widget_single_grade_open_item_action"
     const val WIDGET_SINGLE_GRADE_OPEN_APP_ACTION = "widget_single_grade_open_app_action"
+
+    /* To Do List */
+    const val TODO_ITEM_MARKED_DONE = "todo_item_marked_done"
+    const val TODO_ITEM_MARKED_UNDONE = "todo_item_marked_undone"
+    const val TODO_LIST_LOADED_DEFAULT_FILTER = "todo_list_loaded_default_filter"
+    const val TODO_LIST_LOADED_CUSTOM_FILTER = "todo_list_loaded_custom_filter"
 }
 
 /**
@@ -190,4 +196,12 @@ object AnalyticsParamConstants {
     const val MEDIA_SOURCE = "media_source"
     const val MEDIA_TYPE = "media_type"
     const val ATTEMPT = "attempt"
+
+    //todo filters
+    const val FILTER_PERSONAL_TODOS = "filter_personal_todos"
+    const val FILTER_CALENDAR_EVENTS = "filter_calendar_events"
+    const val FILTER_SHOW_COMPLETED = "filter_show_completed"
+    const val FILTER_FAVOURITE_COURSES = "filter_favourite_courses"
+    const val FILTER_SELECTED_DATE_RANGE_PAST = "filter_selected_date_range_past"
+    const val FILTER_SELECTED_DATE_RANGE_FUTURE = "filter_selected_date_range_future"
 }

@@ -1046,6 +1046,7 @@
     <string name="downloadSuccessful">Download successful</string>
     <string name="downloading">Downloading</string>
     <string name="downloadComplete">Download complete</string>
+    <string name="fileDownloadNotificationPermissionDenied">Download started. Enable notifications to see progress.</string>
     <string name="notificationChannelNameFileDownloadsName">Download Notifications</string>
     <string name="notificationChannelNameFileDownloadsDescription">Canvas notifications for ongoing downloads.</string>
 
