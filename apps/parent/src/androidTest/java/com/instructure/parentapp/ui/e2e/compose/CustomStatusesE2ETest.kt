@@ -20,6 +20,7 @@ import com.instructure.parentapp.utils.ParentComposeTest
 import com.instructure.parentapp.utils.extensions.seedData
 import com.instructure.parentapp.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
+import org.junit.After
 import org.junit.Test
 
 @HiltAndroidTest
@@ -28,6 +29,8 @@ class CustomStatusesE2ETest: ParentComposeTest() {
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
+
+    private var customStatusId: String? = null
 
     @E2E
     @Test
@@ -85,8 +88,13 @@ class CustomStatusesE2ETest: ParentComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the Assignment Details Page is displayed with the custom status 'AMAZING'.")
         assignmentDetailsPage.assertCustomStatus("AMAZING")
         assignmentDetailsPage.assertSubmissionAndRubricLabel()
+    }
 
-        Log.d(PREPARATION_TAG, "Cleaning up the custom status we created with '$customStatusId' ID previously because 3 is the maximum limit of custom statuses.")
-        CustomStatusApi.deleteCustomGradeStatus(adminToken, customStatusId ?: "")
+    @After
+    fun tearDown() {
+        customStatusId?.let {
+            Log.d(PREPARATION_TAG, "Cleaning up the custom status we created with '$it' ID previously because 3 is the maximum limit of custom statuses.")
+            CustomStatusApi.deleteCustomGradeStatus(adminToken, it)
+        }
     }
 }

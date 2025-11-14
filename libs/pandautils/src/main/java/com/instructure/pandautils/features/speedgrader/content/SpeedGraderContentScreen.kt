@@ -308,7 +308,8 @@ private fun SubmissionStatus(
                 is SubmissionStateLabel.Custom -> submissionStatus.label
             },
             color = colorResource(id = submissionStatus.colorRes),
-            fontSize = 14.sp
+            fontSize = 14.sp,
+            modifier  = Modifier.testTag("submissionStatusLabel")
         )
     }
 }
