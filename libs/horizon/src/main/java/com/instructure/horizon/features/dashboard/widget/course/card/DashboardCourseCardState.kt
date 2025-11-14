@@ -1,16 +1,19 @@
 package com.instructure.horizon.features.dashboard.widget.course.card
 
+import com.instructure.horizon.features.dashboard.widget.DashboardWidgetPageState
 import com.instructure.horizon.model.LearningObjectType
 import java.util.Date
 
 data class DashboardCourseCardState(
     val parentPrograms: List<DashboardCourseCardParentProgramState>? = null,
-    val imageState: DashboardCourseCardImageState? = null,
+    val imageState: DashboardCourseCardImageState = DashboardCourseCardImageState(),
     val title: String? = null,
-    val description: String? = null,
+    val descriptionTitle: String? = null,
+    val descriptionState: DashboardCourseCardDescriptionState? = null,
     val progress: Double? = null,
     val moduleItem: DashboardCourseCardModuleItemState? = null,
     val onClickAction: CardClickAction? = null,
+    val pageState: DashboardWidgetPageState = DashboardWidgetPageState.Empty,
 ) {
     companion object {
         val Loading = DashboardCourseCardState(
@@ -43,7 +46,12 @@ data class DashboardCourseCardModuleItemState(
 
 data class DashboardCourseCardImageState(
     val imageUrl: String? = null,
-    val showPlaceholder: Boolean = false,
+    val showPlaceholder: Boolean = true,
+)
+
+data class DashboardCourseCardDescriptionState(
+    val descriptionTitle: String,
+    val description: String,
 )
 
 sealed class CardClickAction {
