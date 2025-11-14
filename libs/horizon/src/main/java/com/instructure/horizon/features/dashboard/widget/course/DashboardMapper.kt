@@ -22,7 +22,7 @@ import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
 import com.instructure.canvasapi2.type.EnrollmentWorkflowState
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardButtonRoute
-import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardChipState
+import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardHeaderState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardItemState
 import com.instructure.horizon.features.dashboard.widget.course.card.CardClickAction
 import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCourseCardImageState
@@ -30,7 +30,7 @@ import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCo
 import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCourseCardParentProgramState
 import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCourseCardState
 import com.instructure.horizon.features.home.HomeNavigationRoute
-import com.instructure.horizon.horizonui.molecules.StatusChipColor
+import com.instructure.horizon.horizonui.foundation.HorizonColors
 
 internal suspend fun List<GetCoursesQuery.Enrollment>.mapToDashboardCourseCardState(
     context: Context,
@@ -46,17 +46,13 @@ internal suspend fun List<GetCoursesQuery.Enrollment>.mapToDashboardCourseCardSt
 }
 
 internal fun List<Program>.mapToDashboardCourseCardState(context: Context): List<DashboardPaginatedWidgetCardItemState> {
-    return this.mapIndexed { itemIndex, program ->
+    return this.map { program ->
         DashboardPaginatedWidgetCardItemState(
-            chipState = DashboardPaginatedWidgetCardChipState(
+            headerState = DashboardPaginatedWidgetCardHeaderState(
                 label = context.getString(R.string.dashboardCourseCardProgramChipLabel),
-                color = StatusChipColor.Grey
+                color = HorizonColors.Surface.institution().copy(0.1f),
+                iconRes = R.drawable.book_2
             ),
-            pageState = if (size > 1) {
-                context.getString(R.string.dsahboardPaginatedWidgetPagerMessage, itemIndex + 1, size)
-            } else {
-                null
-            },
             title = context.getString(
                 R.string.dashboardCourseCardProgramDetailsMessage,
                 program.name

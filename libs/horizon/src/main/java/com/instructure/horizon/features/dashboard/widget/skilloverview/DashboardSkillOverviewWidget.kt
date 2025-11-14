@@ -28,6 +28,7 @@ import androidx.navigation.NavHostController
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCardError
+import com.instructure.horizon.features.dashboard.widget.DashboardWidgetPageState
 import com.instructure.horizon.features.dashboard.widget.skilloverview.card.DashboardSkillOverviewCardContent
 import com.instructure.horizon.features.dashboard.widget.skilloverview.card.DashboardSkillOverviewCardState
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -39,6 +40,7 @@ fun DashboardSkillOverviewWidget(
     homeNavController: NavHostController,
     shouldRefresh: Boolean,
     refreshState: MutableStateFlow<List<Boolean>>,
+    pageState: DashboardWidgetPageState,
     modifier: Modifier = Modifier
 ) {
     val viewModel = hiltViewModel<DashboardSkillOverviewViewModel>()
@@ -53,12 +55,13 @@ fun DashboardSkillOverviewWidget(
         }
     }
 
-    DashboardSkillOverviewSection(state, homeNavController, modifier)
+    DashboardSkillOverviewSection(state, pageState, homeNavController, modifier)
 }
 
 @Composable
 fun DashboardSkillOverviewSection(
     state: DashboardSkillOverviewUiState,
+    pageState: DashboardWidgetPageState,
     homeNavController: NavHostController,
     modifier: Modifier = Modifier
 ) {
@@ -68,6 +71,7 @@ fun DashboardSkillOverviewSection(
                 DashboardSkillOverviewCardState.Loading,
                 homeNavController,
                 true,
+                pageState,
                 modifier
             )
         }
@@ -77,6 +81,7 @@ fun DashboardSkillOverviewSection(
                 R.drawable.hub,
                 HorizonColors.PrimitivesGreen.green12(),
                 false,
+                pageState,
                 { state.onRefresh {} },
                 modifier = modifier
             )
@@ -86,6 +91,7 @@ fun DashboardSkillOverviewSection(
                 state.cardState,
                 homeNavController,
                 false,
+                pageState,
                 modifier
             )
         }

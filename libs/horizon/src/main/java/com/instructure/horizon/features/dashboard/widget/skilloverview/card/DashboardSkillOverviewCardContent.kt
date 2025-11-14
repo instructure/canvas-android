@@ -38,6 +38,7 @@ import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCard
+import com.instructure.horizon.features.dashboard.widget.DashboardWidgetPageState
 import com.instructure.horizon.features.home.HomeNavigationRoute
 import com.instructure.horizon.horizonui.animation.shimmerEffect
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -48,12 +49,14 @@ fun DashboardSkillOverviewCardContent(
     state: DashboardSkillOverviewCardState,
     homeNavController: NavHostController,
     isLoading: Boolean,
+    pageState: DashboardWidgetPageState,
     modifier: Modifier = Modifier,
 ) {
     DashboardWidgetCard(
         title = stringResource(R.string.dashboardSkillOverviewTitle),
         iconRes = R.drawable.hub,
         widgetColor = HorizonColors.PrimitivesGreen.green12(),
+        pageState = pageState,
         isLoading = isLoading,
         useMinWidth = false,
         onClick = {
@@ -114,7 +117,8 @@ private fun DashboardSkillOverviewCardContentPreview() {
     DashboardSkillOverviewCardContent(
         state = DashboardSkillOverviewCardState(completedSkillCount = 24),
         rememberNavController(),
-        false
+        false,
+        DashboardWidgetPageState(1, 2)
     )
 }
 
@@ -125,7 +129,8 @@ private fun DashboardSkillOverviewCardContentNoDataPreview() {
     DashboardSkillOverviewCardContent(
         state = DashboardSkillOverviewCardState(completedSkillCount = 0),
         rememberNavController(),
-        false
+        false,
+        DashboardWidgetPageState(1, 2)
     )
 }
 
@@ -136,7 +141,8 @@ private fun DashboardSkillOverviewLoadingPreview() {
     DashboardSkillOverviewCardContent(
         state = DashboardSkillOverviewCardState(completedSkillCount = 0),
         rememberNavController(),
-        isLoading = true
+        isLoading = true,
+        DashboardWidgetPageState(1, 2)
     )
 }
 

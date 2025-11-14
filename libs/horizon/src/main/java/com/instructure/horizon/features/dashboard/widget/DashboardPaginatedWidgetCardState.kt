@@ -1,6 +1,9 @@
 package com.instructure.horizon.features.dashboard.widget
 
-import com.instructure.horizon.horizonui.molecules.StatusChipColor
+import androidx.annotation.DrawableRes
+import androidx.compose.ui.graphics.Color
+import com.instructure.horizon.R
+import com.instructure.horizon.horizonui.foundation.HorizonColors
 import java.util.Date
 
 data class DashboardPaginatedWidgetCardState(
@@ -16,8 +19,7 @@ data class DashboardPaginatedWidgetCardState(
 }
 
 data class DashboardPaginatedWidgetCardItemState(
-    val chipState: DashboardPaginatedWidgetCardChipState? = null,
-    val pageState: String? = null,
+    val headerState: DashboardPaginatedWidgetCardHeaderState,
     val source: String? = null,
     val date: Date? = null,
     val title: String? = null,
@@ -25,9 +27,10 @@ data class DashboardPaginatedWidgetCardItemState(
 ) {
     companion object {
         val Loading = DashboardPaginatedWidgetCardItemState(
-            chipState = DashboardPaginatedWidgetCardChipState(
+            headerState = DashboardPaginatedWidgetCardHeaderState(
                 label = "Announcement",
-                color = StatusChipColor.Sky
+                color = HorizonColors.PrimitivesSky.sky12,
+                iconRes = R.drawable.campaign
             ),
             title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Announcement title shown here.",
             source = "Institution or Course Name Here",
@@ -37,9 +40,10 @@ data class DashboardPaginatedWidgetCardItemState(
     }
 }
 
-data class DashboardPaginatedWidgetCardChipState(
+data class DashboardPaginatedWidgetCardHeaderState(
     val label: String,
-    val color: StatusChipColor,
+    val color: Color,
+    @DrawableRes val iconRes: Int,
 )
 
 sealed class DashboardPaginatedWidgetCardButtonRoute {
