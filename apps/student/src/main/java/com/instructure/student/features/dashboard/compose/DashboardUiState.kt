@@ -26,3 +26,9 @@ data class DashboardUiState(
     val onRefresh: () -> Unit = {},
     val onRetry: () -> Unit = {}
 )
+
+data class SnackbarMessage(
+    val message: String,
+    val actionLabel: String? = null,
+    val action: (() -> Unit)? = null
+)

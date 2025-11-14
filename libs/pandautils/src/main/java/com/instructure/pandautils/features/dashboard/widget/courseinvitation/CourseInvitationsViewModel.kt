@@ -28,7 +28,8 @@ class CourseInvitationsViewModel @Inject constructor(
         CourseInvitationsUiState(
             onRefresh = ::loadInvitations,
             onAcceptInvitation = ::acceptInvitation,
-            onDeclineInvitation = ::declineInvitation
+            onDeclineInvitation = ::declineInvitation,
+            onClearSnackbar = ::clearSnackbar
         )
     )
     val uiState: StateFlow<CourseInvitationsUiState> = _uiState.asStateFlow()
@@ -66,6 +67,16 @@ class CourseInvitationsViewModel @Inject constructor(
 
     private fun declineInvitation(invitation: CourseInvitation) {
         handleInvitation(invitation, accept = false)
+    }
+
+    private fun clearSnackbar() {
+        _uiState.update {
+            it.copy(
+                snackbarMessage = null,
+                snackbarAction = null,
+                onClearSnackbar = ::clearSnackbar
+            )
+        }
     }
 
     private fun handleInvitation(invitation: CourseInvitation, accept: Boolean) {

@@ -10,5 +10,6 @@ data class CourseInvitationsUiState(
     val snackbarAction: (() -> Unit)? = null,
     val onRefresh: () -> Unit = {},
     val onAcceptInvitation: (CourseInvitation) -> Unit = {},
-    val onDeclineInvitation: (CourseInvitation) -> Unit = {}
+    val onDeclineInvitation: (CourseInvitation) -> Unit = {},
+    val onClearSnackbar: () -> Unit = {}
 )

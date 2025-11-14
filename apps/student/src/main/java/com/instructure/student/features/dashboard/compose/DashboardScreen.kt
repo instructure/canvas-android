@@ -32,12 +32,18 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -63,7 +69,9 @@ fun DashboardScreen() {
 
     DashboardScreenContent(
         uiState = uiState,
-        refreshSignal = viewModel.refreshSignal
+        refreshSignal = viewModel.refreshSignal,
+        snackbarMessageFlow = viewModel.snackbarMessage,
+        onShowSnackbar = viewModel::showSnackbar
     )
 }
 
@@ -71,13 +79,30 @@ fun DashboardScreen() {
 @Composable
 fun DashboardScreenContent(
     uiState: DashboardUiState,
-    refreshSignal: SharedFlow<Unit>
+    refreshSignal: SharedFlow<Unit>,
+    snackbarMessageFlow: SharedFlow<SnackbarMessage>,
+    onShowSnackbar: (String, String?, (() -> Unit)?) -> Unit
 ) {
     val activity = LocalActivity.current
     val pullRefreshState = rememberPullRefreshState(
         refreshing = uiState.refreshing,
         onRefresh = uiState.onRefresh
     )
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(Unit) {
+        snackbarMessageFlow.collect { snackbarMessage ->
+            val actionLabel = if (snackbarMessage.action != null) snackbarMessage.actionLabel else null
+            val result = snackbarHostState.showSnackbar(
+                message = snackbarMessage.message,
+                actionLabel = actionLabel,
+                duration = SnackbarDuration.Short
+            )
+            if (result == SnackbarResult.ActionPerformed) {
+                snackbarMessage.action?.invoke()
+            }
+        }
+    }
 
     Scaffold(
         modifier = Modifier.background(colorResource(R.color.backgroundLightest)),
@@ -88,6 +113,9 @@ fun DashboardScreenContent(
                 navIconContentDescription = stringResource(id = R.string.navigation_drawer_open),
                 navigationActionClick = { (activity as? NavigationActivity)?.openNavigationDrawer() }
             )
+        },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
         }
     ) { paddingValues ->
         Box(
@@ -128,6 +156,7 @@ fun DashboardScreenContent(
                     WidgetGrid(
                         widgets = uiState.widgets,
                         refreshSignal = refreshSignal,
+                        onShowSnackbar = onShowSnackbar,
                         modifier = Modifier.fillMaxSize()
                     )
                 }
@@ -149,6 +178,7 @@ fun DashboardScreenContent(
 private fun WidgetGrid(
     widgets: List<WidgetMetadata>,
     refreshSignal: SharedFlow<Unit>,
+    onShowSnackbar: (String, String?, (() -> Unit)?) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val activity = LocalActivity.current ?: return
@@ -178,7 +208,7 @@ private fun WidgetGrid(
                 }
             }
         ) { metadata ->
-            GetWidgetComposable(metadata.id, refreshSignal, columns)
+            GetWidgetComposable(metadata.id, refreshSignal, columns, onShowSnackbar)
         }
     }
 }
@@ -187,11 +217,16 @@ private fun WidgetGrid(
 private fun GetWidgetComposable(
     widgetId: String,
     refreshSignal: SharedFlow<Unit>,
-    columns: Int
+    columns: Int,
+    onShowSnackbar: (String, String?, (() -> Unit)?) -> Unit
 ) {
     return when (widgetId) {
         "welcome" -> WelcomeWidget(refreshSignal = refreshSignal)
-        "course_invitations" -> CourseInvitationsWidget(refreshSignal = refreshSignal, columns = columns)
+        "course_invitations" -> CourseInvitationsWidget(
+            refreshSignal = refreshSignal,
+            columns = columns,
+            onShowSnackbar = onShowSnackbar
+        )
         else -> {}
     }
 }

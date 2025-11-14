@@ -266,6 +266,30 @@ class CourseInvitationsViewModelTest {
         }
     }
 
+    @Test
+    fun `onClearSnackbar clears snackbar message and action`() = runTest {
+        val invitations = listOf(
+            CourseInvitation(1L, 100L, "Course 1", 10L)
+        )
+        coEvery { loadCourseInvitationsUseCase(LoadCourseInvitationsParams(forceRefresh = true)) } returns invitations
+        coEvery { handleCourseInvitationUseCase(any()) } returns Unit
+
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        viewModel.uiState.value.onAcceptInvitation(invitations[0])
+        advanceUntilIdle()
+
+        assertNotNull(viewModel.uiState.value.snackbarMessage)
+
+        viewModel.uiState.value.onClearSnackbar()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertNull(state.snackbarMessage)
+        assertNull(state.snackbarAction)
+    }
+
     private fun createViewModel(): CourseInvitationsViewModel {
         return CourseInvitationsViewModel(loadCourseInvitationsUseCase, handleCourseInvitationUseCase, resources)
     }

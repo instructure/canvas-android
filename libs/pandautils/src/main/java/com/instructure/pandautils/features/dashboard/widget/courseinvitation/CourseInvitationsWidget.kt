@@ -44,6 +44,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.launch
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -68,14 +69,24 @@ import kotlinx.coroutines.flow.SharedFlow
 fun CourseInvitationsWidget(
     refreshSignal: SharedFlow<Unit>,
     columns: Int,
+    onShowSnackbar: (String, String?, (() -> Unit)?) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val viewModel: CourseInvitationsViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
+    val retryLabel = stringResource(R.string.retry)
 
     LaunchedEffect(refreshSignal) {
         refreshSignal.collect {
             uiState.onRefresh()
+        }
+    }
+
+    LaunchedEffect(uiState.snackbarMessage) {
+        uiState.snackbarMessage?.let { message ->
+            val actionLabel = if (uiState.snackbarAction != null) retryLabel else null
+            onShowSnackbar(message, actionLabel, uiState.snackbarAction)
+            uiState.onClearSnackbar()
         }
     }
 
@@ -88,7 +99,7 @@ fun CourseInvitationsWidget(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun CourseInvitationsContent(
+fun CourseInvitationsContent(
     modifier: Modifier = Modifier,
     uiState: CourseInvitationsUiState,
     columns: Int
@@ -136,7 +147,7 @@ private fun CourseInvitationsContent(
                         modifier = Modifier.weight(1f)
                     )
                 }
-                // Add empty spaces to maintain card width when there are fewer cards than columns
+            // Add empty spaces to maintain card width when there are fewer cards than columns
                 repeat(columns - invitationsInPage.size) {
                     Spacer(modifier = Modifier.weight(1f))
                 }
@@ -243,7 +254,6 @@ private fun InvitationCard(
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                // Accept button
                 Button(
                     onClick = onAccept,
                     modifier = Modifier
@@ -269,7 +279,6 @@ private fun InvitationCard(
                     )
                 }
 
-                // Decline button
                 OutlinedButton(
                     onClick = onDecline,
                     modifier = Modifier
