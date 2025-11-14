@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "c66672c0a95325a211892bd9acb8c3aa",
+    "identityHash": "b05a9556c32a1727b88ef73144acf158",
     "entities": [
       {
         "tableName": "widget_config",
@@ -30,7 +30,7 @@
       },
       {
         "tableName": "widget_metadata",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`widgetId` TEXT NOT NULL, `position` INTEGER NOT NULL, `isVisible` INTEGER NOT NULL, `isEditable` INTEGER NOT NULL, PRIMARY KEY(`widgetId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`widgetId` TEXT NOT NULL, `position` INTEGER NOT NULL, `isVisible` INTEGER NOT NULL, `isEditable` INTEGER NOT NULL, `isFullWidth` INTEGER NOT NULL, PRIMARY KEY(`widgetId`))",
         "fields": [
           {
             "fieldPath": "widgetId",
@@ -55,6 +55,12 @@
             "columnName": "isEditable",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "isFullWidth",
+            "columnName": "isFullWidth",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -67,7 +73,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c66672c0a95325a211892bd9acb8c3aa')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b05a9556c32a1727b88ef73144acf158')"
     ]
   }
 }

@@ -72,6 +72,7 @@ import kotlinx.coroutines.flow.SharedFlow
 @Composable
 fun CourseInvitationsWidget(
     refreshSignal: SharedFlow<Unit>,
+    columns: Int,
     modifier: Modifier = Modifier
 ) {
     val viewModel: CourseInvitationsViewModel = hiltViewModel()
@@ -85,7 +86,8 @@ fun CourseInvitationsWidget(
 
     CourseInvitationsContent(
         modifier = modifier,
-        uiState = uiState
+        uiState = uiState,
+        columns = columns
     )
 }
 
@@ -93,7 +95,8 @@ fun CourseInvitationsWidget(
 @Composable
 private fun CourseInvitationsContent(
     modifier: Modifier = Modifier,
-    uiState: CourseInvitationsUiState
+    uiState: CourseInvitationsUiState,
+    columns: Int
 ) {
     // Hide widget when loading, error, or empty
     if (uiState.loading || uiState.error || uiState.invitations.isEmpty()) {
@@ -101,6 +104,9 @@ private fun CourseInvitationsContent(
     }
 
     var invitationToDecline by remember { mutableStateOf<CourseInvitation?>(null) }
+
+    // Chunk invitations into pages based on column count
+    val invitationPages = uiState.invitations.chunked(columns)
 
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
@@ -116,7 +122,7 @@ private fun CourseInvitationsContent(
         )
 
         // Carousel
-        val pagerState = rememberPagerState(pageCount = { uiState.invitations.size })
+        val pagerState = rememberPagerState(pageCount = { invitationPages.size })
 
         HorizontalPager(
             state = pagerState,
@@ -125,15 +131,23 @@ private fun CourseInvitationsContent(
             contentPadding = PaddingValues(start = 16.dp, end = 24.dp),
             beyondViewportPageCount = 1
         ) { page ->
-            val invitation = uiState.invitations[page]
-            InvitationCard(
-                invitation = invitation,
-                onAccept = { uiState.onAcceptInvitation(invitation) },
-                onDecline = { invitationToDecline = invitation }
-            )
+            val invitationsInPage = invitationPages[page]
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                invitationsInPage.forEach { invitation ->
+                    InvitationCard(
+                        invitation = invitation,
+                        onAccept = { uiState.onAcceptInvitation(invitation) },
+                        onDecline = { invitationToDecline = invitation },
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
         }
 
-        if (uiState.invitations.size > 1) {
+        if (invitationPages.size > 1) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -141,7 +155,7 @@ private fun CourseInvitationsContent(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                repeat(uiState.invitations.size) { index ->
+                repeat(invitationPages.size) { index ->
                     val isActive = pagerState.currentPage == index
                     Box(
                         modifier = Modifier
@@ -154,7 +168,7 @@ private fun CourseInvitationsContent(
                                 )
                             )
                     )
-                    if (index < uiState.invitations.size - 1) {
+                    if (index < invitationPages.size - 1) {
                         Spacer(modifier = Modifier.width(8.dp))
                     }
                 }
@@ -338,6 +352,7 @@ fun CourseInvitationsContentPreview() {
                     userId = 1
                 )
             )
-        )
+        ),
+        columns = 1
     )
 }

@@ -35,7 +35,8 @@ class EnsureDefaultWidgetsUseCase @Inject constructor(
                 id = "course_invitations",
                 position = 0,
                 isVisible = true,
-                isEditable = false
+                isEditable = false,
+                isFullWidth = true
             ),
             WidgetMetadata(
                 id = "welcome",

@@ -20,5 +20,6 @@ data class WidgetMetadata(
     val id: String,
     val position: Int,
     val isVisible: Boolean,
-    val isEditable: Boolean = true
+    val isEditable: Boolean = true,
+    val isFullWidth: Boolean = false
 )

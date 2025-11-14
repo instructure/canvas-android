@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
@@ -167,8 +168,17 @@ private fun WidgetGrid(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalItemSpacing = 16.dp
     ) {
-        items(widgets) { metadata ->
-            GetWidgetComposable(metadata.id, refreshSignal)
+        items(
+            items = widgets,
+            span = { metadata ->
+                if (metadata.isFullWidth) {
+                    StaggeredGridItemSpan.FullLine
+                } else {
+                    StaggeredGridItemSpan.SingleLane
+                }
+            }
+        ) { metadata ->
+            GetWidgetComposable(metadata.id, refreshSignal, columns)
         }
     }
 }
@@ -176,11 +186,12 @@ private fun WidgetGrid(
 @Composable
 private fun GetWidgetComposable(
     widgetId: String,
-    refreshSignal: SharedFlow<Unit>
+    refreshSignal: SharedFlow<Unit>,
+    columns: Int
 ) {
     return when (widgetId) {
         "welcome" -> WelcomeWidget(refreshSignal = refreshSignal)
-        "course_invitations" -> CourseInvitationsWidget(refreshSignal = refreshSignal)
+        "course_invitations" -> CourseInvitationsWidget(refreshSignal = refreshSignal, columns = columns)
         else -> {}
     }
 }

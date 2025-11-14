@@ -22,5 +22,6 @@ val widgetDatabaseMigrations = arrayOf(
 
     createMigration(1, 2) { database ->
         database.execSQL("ALTER TABLE widget_metadata ADD COLUMN isEditable INTEGER NOT NULL DEFAULT 1")
+        database.execSQL("ALTER TABLE widget_metadata ADD COLUMN isFullWidth INTEGER NOT NULL DEFAULT 0")
     }
 )
