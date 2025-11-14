@@ -19,6 +19,8 @@ package com.instructure.student.features.dashboard.compose
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.pandautils.features.dashboard.widget.usecase.EnsureDefaultWidgetsUseCase
+import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetMetadataUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,7 +33,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
-    private val networkStateProvider: NetworkStateProvider
+    private val networkStateProvider: NetworkStateProvider,
+    private val ensureDefaultWidgetsUseCase: EnsureDefaultWidgetsUseCase,
+    private val observeWidgetMetadataUseCase: ObserveWidgetMetadataUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -53,7 +57,11 @@ class DashboardViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update { it.copy(loading = true, error = null) }
             try {
-                _uiState.update { it.copy(loading = false, error = null) }
+                launch { ensureDefaultWidgetsUseCase(Unit) }
+                observeWidgetMetadataUseCase(Unit).collect { widgets ->
+                    val visibleWidgets = widgets.filter { it.isVisible }
+                    _uiState.update { it.copy(loading = false, error = null, widgets = visibleWidgets) }
+                }
             } catch (e: Exception) {
                 _uiState.update { it.copy(loading = false, error = e.message) }
             }

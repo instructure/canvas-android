@@ -222,6 +222,10 @@ android {
         enableExperimentalClasspathAggregation = true
     }
 
+    ksp {
+        arg("room.schemaLocation", "$projectDir/schemas".toString())
+    }
+
     sourceSets {
         debug.assets.srcDirs += files("$projectDir/schemas".toString())
     }

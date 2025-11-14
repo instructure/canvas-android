@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 - present Instructure, Inc.
+ * Copyright (C) 2025 - present Instructure, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,15 +14,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.student.features.dashboard.compose
+package com.instructure.pandautils.features.dashboard.widget.db
 
-import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-data class DashboardUiState(
-    val loading: Boolean = true,
-    val error: String? = null,
-    val refreshing: Boolean = false,
-    val widgets: List<WidgetMetadata> = emptyList(),
-    val onRefresh: () -> Unit = {},
-    val onRetry: () -> Unit = {}
+@Entity(tableName = "widget_config")
+data class WidgetConfigEntity(
+    @PrimaryKey
+    val widgetId: String,
+    val configJson: String
 )

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 - present Instructure, Inc.
+ * Copyright (C) 2025 - present Instructure, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,15 +14,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.student.features.dashboard.compose
+package com.instructure.pandautils.features.dashboard.widget.db
 
-import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Query
+import androidx.room.Upsert
+import kotlinx.coroutines.flow.Flow
 
-data class DashboardUiState(
-    val loading: Boolean = true,
-    val error: String? = null,
-    val refreshing: Boolean = false,
-    val widgets: List<WidgetMetadata> = emptyList(),
-    val onRefresh: () -> Unit = {},
-    val onRetry: () -> Unit = {}
-)
+@Dao
+interface WidgetConfigDao {
+
+    @Upsert
+    suspend fun upsertConfig(config: WidgetConfigEntity)
+
+    @Query("SELECT * FROM widget_config WHERE widgetId = :widgetId")
+    fun observeConfig(widgetId: String): Flow<WidgetConfigEntity?>
+
+    @Delete
+    suspend fun deleteConfig(config: WidgetConfigEntity)
+}

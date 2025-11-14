@@ -18,14 +18,22 @@ package com.instructure.student.features.dashboard.compose
 
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -34,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.EmptyContent
@@ -41,18 +50,27 @@ import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.student.R
 import com.instructure.student.activity.NavigationActivity
+import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
+import com.instructure.student.features.dashboard.widget.welcome.WelcomeWidget
+import kotlinx.coroutines.flow.SharedFlow
 
 @Composable
 fun DashboardScreen() {
     val viewModel: DashboardViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
 
-    DashboardScreenContent(uiState = uiState)
+    DashboardScreenContent(
+        uiState = uiState,
+        refreshSignal = viewModel.refreshSignal
+    )
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun DashboardScreenContent(uiState: DashboardUiState) {
+fun DashboardScreenContent(
+    uiState: DashboardUiState,
+    refreshSignal: SharedFlow<Unit>
+) {
     val activity = LocalActivity.current
     val pullRefreshState = rememberPullRefreshState(
         refreshing = uiState.refreshing,
@@ -94,13 +112,21 @@ fun DashboardScreenContent(uiState: DashboardUiState) {
                         .testTag("loading"))
                 }
 
-                else -> {
+                uiState.widgets.isEmpty() -> {
                     EmptyContent(
                         emptyMessage = stringResource(id = R.string.noCoursesSubtext),
                         imageRes = R.drawable.ic_panda_nocourses,
                         modifier = Modifier
                             .fillMaxSize()
                             .testTag("emptyContent")
+                    )
+                }
+
+                else -> {
+                    WidgetGrid(
+                        widgets = uiState.widgets,
+                        refreshSignal = refreshSignal,
+                        modifier = Modifier.fillMaxSize()
                     )
                 }
             }
@@ -113,5 +139,45 @@ fun DashboardScreenContent(uiState: DashboardUiState) {
                     .testTag("dashboardPullRefreshIndicator")
             )
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
+@Composable
+private fun WidgetGrid(
+    widgets: List<WidgetMetadata>,
+    refreshSignal: SharedFlow<Unit>,
+    modifier: Modifier = Modifier
+) {
+    val activity = LocalActivity.current ?: return
+    val windowSizeClass = calculateWindowSizeClass(activity = activity)
+
+    val columns = when (windowSizeClass.widthSizeClass) {
+        WindowWidthSizeClass.Compact, WindowWidthSizeClass.Medium -> 1
+        WindowWidthSizeClass.Expanded -> 2
+        else -> 1
+    }
+
+    LazyVerticalStaggeredGrid(
+        columns = StaggeredGridCells.Fixed(columns),
+        modifier = modifier,
+        contentPadding = PaddingValues(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        verticalItemSpacing = 16.dp
+    ) {
+        items(widgets) { metadata ->
+            GetWidgetComposable(metadata.id, refreshSignal)
+        }
+    }
+}
+
+@Composable
+private fun GetWidgetComposable(
+    widgetId: String,
+    refreshSignal: SharedFlow<Unit>
+) {
+    return when (widgetId) {
+        "welcome" -> WelcomeWidget(refreshSignal = refreshSignal)
+        else -> {}
     }
 }
