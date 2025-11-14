@@ -23,8 +23,9 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.navigation.compose.rememberNavController
+import com.instructure.horizon.R
 import com.instructure.horizon.features.aiassistant.navigation.AiAssistNavigation
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 
@@ -36,10 +37,10 @@ fun AiAssistantScreen(
     val navController = rememberNavController()
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     ModalBottomSheet(
-        containerColor = Color.White,
+        containerColor = colorResource(R.color.ai_gradient_start),
         onDismissRequest = { onDismiss() },
         dragHandle = null,
-        sheetState = bottomSheetState
+        sheetState = bottomSheetState,
     ) {
         Box(
             modifier = Modifier

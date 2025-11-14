@@ -69,6 +69,7 @@ import com.instructure.pandautils.compose.modifiers.conditional
 fun ProgressScreen(uiState: ProgressScreenUiState, loadingState: LoadingState, modifier: Modifier = Modifier) {
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     ModalBottomSheet(
+        containerColor = HorizonColors.Surface.pagePrimary(),
         sheetState = bottomSheetState,
         onDismissRequest = uiState.onCloseClick,
         dragHandle = null,

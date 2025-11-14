@@ -38,7 +38,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Divider
 import androidx.compose.material.IconButton
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -70,6 +69,7 @@ import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
+import com.instructure.pandautils.compose.composables.CanvasScaffold
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.LabelValueSwitch
 import com.instructure.pandautils.compose.composables.LabelValueVerticalItem
@@ -84,7 +84,7 @@ fun SettingsScreen(
     navigationActionClick: () -> Unit
 ) {
     CanvasTheme {
-        Scaffold(
+        CanvasScaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
             topBar = {
                 CanvasThemedAppBar(
@@ -93,7 +93,8 @@ fun SettingsScreen(
                         navigationActionClick()
                     }
                 )
-            }) { padding ->
+            }
+        ) { padding ->
             if (uiState.loading) {
                 Loading(modifier = Modifier.fillMaxSize())
             } else {

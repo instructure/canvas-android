@@ -27,6 +27,8 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -84,6 +86,7 @@ class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated, Masqueradin
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        setupWindowInsets()
         setupTheme()
         setupNavigation()
         handleQrMasquerading()
@@ -91,6 +94,26 @@ class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated, Masqueradin
         requestNotificationsPermission()
 
         RatingDialog.showRatingDialog(this, AppType.PARENT)
+    }
+
+    private fun setupWindowInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
+            val navigationBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+            val displayCutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
+
+            // Apply both navigation bar and display cutout insets
+            // This ensures content is not hidden behind the navigation bar OR the hole punch camera
+            val leftPadding = maxOf(navigationBars.left, displayCutout.left)
+            val rightPadding = maxOf(navigationBars.right, displayCutout.right)
+
+            view.setPadding(
+                leftPadding,
+                0,
+                rightPadding,
+                0
+            )
+            insets
+        }
     }
 
     override fun onResume() {

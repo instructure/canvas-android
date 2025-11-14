@@ -21,7 +21,6 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.google.android.material.tabs.TabLayout
@@ -32,7 +31,17 @@ import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ELEMENTARY_COURSE
 import com.instructure.pandautils.analytics.ScreenView
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.base.BaseCanvasFragment
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.StringArg
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
+import com.instructure.pandautils.utils.argsWithContext
+import com.instructure.pandautils.utils.isCourse
+import com.instructure.pandautils.utils.isTablet
+import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.student.databinding.FragmentElementaryCourseBinding
 import com.instructure.student.features.coursebrowser.CourseBrowserFragment
 import com.instructure.student.features.grades.GradesListFragment
@@ -89,6 +98,7 @@ class ElementaryCourseFragment : BaseCanvasFragment() {
             data?.let {
                 courseTabPager.offscreenPageLimit = it.tabs.size
                 courseTabPager.adapter = ElementaryCoursePagerAdapter(it.tabs)
+                courseTabPager.applyBottomSystemBarInsets()
 
                 val selectedTab = it.tabs.find { it.tabId == tabId }
                 val selectedTabPosition = it.tabs.indexOf(selectedTab)
@@ -112,6 +122,7 @@ class ElementaryCourseFragment : BaseCanvasFragment() {
     private fun applyTheme() = with(binding) {
         toolbar.title = canvasContext.name
         toolbar.setupAsBackButton(this@ElementaryCourseFragment)
+        toolbar.applyTopSystemBarInsets()
         ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
     }
 

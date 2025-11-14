@@ -50,6 +50,9 @@ import com.instructure.pandautils.utils.BooleanArg
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.ProfileUtils
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomAndRightSystemBarPadding
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.asStateList
 import com.instructure.pandautils.utils.children
 import com.instructure.pandautils.utils.color
@@ -150,6 +153,9 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
         setupScrollListener()
 
         // Toolbar setup
+        toolbar.applyTopSystemBarInsets()
+        contentContainer.applyBottomSystemBarInsets()
+
         if (activity is MasterDetailInteractions) {
             toolbar.setupBackButtonWithExpandCollapseAndBack(this@StudentContextFragment) {
                 toolbar.updateToolbarExpandCollapseIcon(this@StudentContextFragment)
@@ -166,6 +172,8 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
         // Message FAB
         messageButton.setVisible()
         ViewStyler.themeFAB(messageButton)
+        messageButton.applyBottomAndRightSystemBarPadding()
+
         messageButton.setOnClickListener {
             val recipient = Recipient(
                 stringId = student.id,

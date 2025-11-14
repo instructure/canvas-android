@@ -43,6 +43,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuItemCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
@@ -104,6 +106,7 @@ import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.update.UpdateManager
 import com.instructure.pandautils.utils.ActivityResult
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.EdgeToEdgeHelper
 import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.OnActivityResults
@@ -116,6 +119,7 @@ import com.instructure.pandautils.utils.RequestCodes.PICK_IMAGE_GALLERY
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.WebViewAuthenticator
+import com.instructure.pandautils.utils.applyHorizontalSystemBarInsets
 import com.instructure.pandautils.utils.applyTheme
 import com.instructure.pandautils.utils.hideKeyboard
 import com.instructure.pandautils.utils.isAccessibilityEnabled
@@ -362,12 +366,16 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        EdgeToEdgeHelper.enableEdgeToEdge(this)
         RouteMatcher.offlineDb = offlineDatabase
         RouteMatcher.networkStateProvider = networkStateProvider
         RouteMatcher.enabledTabs = enabledCourseTabs
         navigationDrawerBinding = NavigationDrawerBinding.bind(binding.root)
         canvasLoadingBinding = LoadingCanvasViewBinding.bind(binding.root)
         setContentView(binding.root)
+
+        setupWindowInsets()
+
         val masqueradingUserId: Long = intent.getLongExtra(Const.QR_CODE_MASQUERADE_ID, 0L)
         if (masqueradingUserId != 0L) {
             MasqueradeHelper.startMasquerading(masqueradingUserId, ApiPrefs.domain, NavigationActivity::class.java)
@@ -436,6 +444,50 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             } catch {
                 firebaseCrashlytics.recordException(it)
             }
+        }
+    }
+
+    private fun setupWindowInsets() = with(binding) {
+        ViewCompat.setOnApplyWindowInsetsListener(fullscreen) { view, insets ->
+            val navigationBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+            val displayCutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
+
+            // Apply both navigation bar and display cutout insets
+            // This ensures content is not hidden behind the navigation bar OR the hole punch camera
+            val leftPadding = maxOf(navigationBars.left, displayCutout.left)
+            val rightPadding = maxOf(navigationBars.right, displayCutout.right)
+
+            view.setPadding(
+                leftPadding,
+                0,
+                rightPadding,
+                0
+            )
+            insets
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(bottomBar) { view, insets ->
+            val navigationBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+            view.setPadding(
+                view.paddingLeft,
+                view.paddingTop,
+                view.paddingRight,
+                navigationBars.bottom
+            )
+            insets
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(navigationDrawerBinding.navigationDrawer) { view, windowInsets ->
+            val insets = windowInsets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+            view.setPadding(
+                insets.left,
+                view.paddingTop,
+                insets.right,
+                insets.bottom
+            )
+            windowInsets
         }
     }
 

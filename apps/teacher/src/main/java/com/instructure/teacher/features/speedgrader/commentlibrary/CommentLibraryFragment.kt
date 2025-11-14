@@ -27,6 +27,8 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyImeAndSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.teacher.databinding.FragmentCommentLibraryBinding
 import com.instructure.teacher.utils.setupCloseButton
 import dagger.hilt.android.AndroidEntryPoint
@@ -56,7 +58,15 @@ class CommentLibraryFragment : BaseCanvasFragment() {
             }
         }
 
+        setupWindowInsets()
+
         return binding.root
+    }
+
+    private fun setupWindowInsets() = with(binding) {
+        commentLibraryToolbar.applyTopSystemBarInsets()
+        commentLibraryRecyclerView.applyImeAndSystemBarInsets()
+        commentInputContainer.root.applyImeAndSystemBarInsets()
     }
 
     override fun onResume() {

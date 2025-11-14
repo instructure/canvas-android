@@ -50,6 +50,11 @@ import com.instructure.pandautils.utils.FileUploadEvent
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomAndRightSystemBarPadding
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyBottomSystemBarMargin
+import com.instructure.pandautils.utils.applySystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getDrawableCompat
 import com.instructure.pandautils.utils.isCourse
@@ -308,10 +313,12 @@ class FileListFragment : BaseSyncFragment<
     }
 
     private fun setupViews() = with(binding) {
+        swipeRefreshLayout.applyBottomSystemBarInsets()
+
         ViewStyler.themeFAB(addFab)
         ViewStyler.themeFAB(addFileFab)
         ViewStyler.themeFAB(addFolderFab)
-
+        addFab.applyBottomSystemBarMargin()
         addFab.setOnClickListener { animateFabs() }
         addFileFab.setOnClickListener {
             animateFabs()
@@ -354,6 +361,7 @@ class FileListFragment : BaseSyncFragment<
     }
 
     private fun setupToolbar() = with(binding) {
+        fileListToolbar.applyTopSystemBarInsets()
         fileListToolbar.setupBackButton(this@FileListFragment)
 
         fileListToolbar.subtitle = presenter.mCanvasContext.name

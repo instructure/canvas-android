@@ -31,6 +31,8 @@ import com.instructure.pandautils.databinding.FragmentSyncProgressBinding
 import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applySystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.items
 import com.instructure.pandautils.utils.setMenu
 import com.instructure.pandautils.utils.setupAsBackButton
@@ -81,6 +83,8 @@ class SyncProgressFragment : BaseCanvasFragment() {
     }
 
     private fun applyTheme() {
+        binding.toolbar.applyTopSystemBarInsets()
+        binding.recyclerView.applySystemBarInsets(bottom = true)
         ViewStyler.themeToolbarColored(
             requireActivity(),
             binding.toolbar,

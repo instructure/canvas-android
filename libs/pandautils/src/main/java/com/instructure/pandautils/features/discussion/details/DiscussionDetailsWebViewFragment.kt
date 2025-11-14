@@ -48,6 +48,8 @@ import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.PermissionRequester
 import com.instructure.pandautils.utils.PermissionUtils
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.enableAlgorithmicDarkening
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.utils.setMenu
@@ -190,6 +192,8 @@ class DiscussionDetailsWebViewFragment : BaseCanvasFragment() {
     }
 
     private fun setupToolbar(title: String) = with(binding) {
+        toolbar.applyTopSystemBarInsets()
+        discussionWebView.applyBottomSystemBarInsets()
         toolbar.title = title
 
         if (discussionDetailsWebViewFragmentBehavior.showBackButton) {

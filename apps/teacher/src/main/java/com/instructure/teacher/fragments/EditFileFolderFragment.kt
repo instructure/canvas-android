@@ -25,6 +25,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.AdapterView
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.TextView
@@ -54,6 +57,7 @@ import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ParcelableArrayListArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.descendants
 import com.instructure.pandautils.utils.postSticky
 import com.instructure.pandautils.utils.setGone
@@ -144,6 +148,19 @@ class EditFileFolderFragment : BasePresenterFragment<
         showUsageRights(presenter.usageRightsEnabled)
         setupToolbar()
         setupViews()
+        setupWindowInsets()
+    }
+
+    private fun setupWindowInsets() = with(binding) {
+        toolbar.applyTopSystemBarInsets()
+        ViewCompat.setOnApplyWindowInsetsListener(editFileFolderContentLayout) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.updatePadding(bottom = systemBars.bottom)
+            insets
+        }
+        if (editFileFolderScrollView.isAttachedToWindow) {
+            ViewCompat.requestApplyInsets(editFileFolderScrollView)
+        }
     }
 
     override fun getPresenterFactory() = EditFilePresenterFactory(currentFileOrFolder, usageRightsEnabled, licenseList, courseId)

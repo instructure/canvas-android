@@ -33,6 +33,8 @@ import com.instructure.pandautils.features.elementary.resources.ResourcesFragmen
 import com.instructure.pandautils.features.elementary.schedule.pager.SchedulePagerFragment
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.student.R
@@ -60,6 +62,7 @@ class ElementaryDashboardFragment : ParentFragment() {
 
     override fun applyTheme() {
         binding.toolbar.title = title()
+        binding.toolbar.applyTopSystemBarInsets()
         navigation?.attachNavigationDrawer(this, binding.toolbar)
     }
 
@@ -81,6 +84,7 @@ class ElementaryDashboardFragment : ParentFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         dashboardPager.adapter = ElementaryDashboardPagerAdapter(fragments, childFragmentManager)
+        dashboardPager.applyBottomSystemBarInsets()
         dashboardTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) = Unit
 
