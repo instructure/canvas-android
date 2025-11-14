@@ -154,15 +154,16 @@ private fun WidgetGrid(
     val windowSizeClass = calculateWindowSizeClass(activity = activity)
 
     val columns = when (windowSizeClass.widthSizeClass) {
-        WindowWidthSizeClass.Compact, WindowWidthSizeClass.Medium -> 1
-        WindowWidthSizeClass.Expanded -> 2
+        WindowWidthSizeClass.Compact -> 1
+        WindowWidthSizeClass.Medium -> 2
+        WindowWidthSizeClass.Expanded -> 3
         else -> 1
     }
 
     LazyVerticalStaggeredGrid(
         columns = StaggeredGridCells.Fixed(columns),
         modifier = modifier,
-        contentPadding = PaddingValues(16.dp),
+        contentPadding = PaddingValues(horizontal = 0.dp, vertical = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalItemSpacing = 16.dp
     ) {

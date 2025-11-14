@@ -2224,6 +2224,9 @@
     <string name="a11y_buttonSelectionNotSelected">not selected</string>
 
     <!-- Course Invitations -->
+    <string name="courseInvitationsTitle">Course Invitations (%d)</string>
     <string name="courseInvitationAccepted">Invitation to %s accepted</string>
     <string name="courseInvitationDeclined">Invitation to %s declined</string>
+    <string name="courseInvitationDeclineConfirmTitle">Decline Invitation</string>
+    <string name="courseInvitationDeclineConfirmMessage">Are you sure you want to decline the invitation to %s?</string>
 </resources>
