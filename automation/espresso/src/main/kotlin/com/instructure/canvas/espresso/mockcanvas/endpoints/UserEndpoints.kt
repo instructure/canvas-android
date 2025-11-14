@@ -155,7 +155,7 @@ object UserEndpoint : Endpoint(
                             }
                             val plannable = Plannable(plannableId, assignment.name
                                 ?: "", assignment.courseId, null, userId, null, assignment.dueDate, assignment.id, null, null, null, null, null)
-                            PlannerItem(assignment.courseId, null, userId, CanvasContext.Type.COURSE.apiString, contextName, plannableType, plannable, plannableDate, null, SubmissionState(), false)
+                            PlannerItem(assignment.courseId, null, userId, CanvasContext.Type.COURSE.apiString, contextName, plannableType, plannable, plannableDate, assignment.htmlUrl, SubmissionState(), false)
                         }
                         .plus(todos)
                         .plus(events)
