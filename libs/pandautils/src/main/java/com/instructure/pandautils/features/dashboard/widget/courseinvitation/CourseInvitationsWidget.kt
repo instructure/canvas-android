@@ -18,9 +18,7 @@ package com.instructure.pandautils.features.dashboard.widget.courseinvitation
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -28,10 +26,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -48,9 +44,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -64,6 +58,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.composables.PagerIndicator
 import com.instructure.pandautils.domain.models.enrollment.CourseInvitation
 import com.instructure.pandautils.utils.ThemePrefs
 import kotlinx.coroutines.flow.SharedFlow
@@ -98,14 +93,12 @@ private fun CourseInvitationsContent(
     uiState: CourseInvitationsUiState,
     columns: Int
 ) {
-    // Hide widget when loading, error, or empty
     if (uiState.loading || uiState.error || uiState.invitations.isEmpty()) {
         return
     }
 
     var invitationToDecline by remember { mutableStateOf<CourseInvitation?>(null) }
 
-    // Chunk invitations into pages based on column count
     val invitationPages = uiState.invitations.chunked(columns)
 
     Column(modifier = modifier.fillMaxWidth()) {
@@ -121,7 +114,6 @@ private fun CourseInvitationsContent(
             color = colorResource(R.color.textDarkest)
         )
 
-        // Carousel
         val pagerState = rememberPagerState(pageCount = { invitationPages.size })
 
         HorizontalPager(
@@ -144,35 +136,22 @@ private fun CourseInvitationsContent(
                         modifier = Modifier.weight(1f)
                     )
                 }
+                // Add empty spaces to maintain card width when there are fewer cards than columns
+                repeat(columns - invitationsInPage.size) {
+                    Spacer(modifier = Modifier.weight(1f))
+                }
             }
         }
 
         if (invitationPages.size > 1) {
-            Row(
+            PagerIndicator(
+                pagerState = pagerState,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 12.dp, bottom = 16.dp),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                repeat(invitationPages.size) { index ->
-                    val isActive = pagerState.currentPage == index
-                    Box(
-                        modifier = Modifier
-                            .height(8.dp)
-                            .width(if (isActive) 32.dp else 8.dp)
-                            .clip(if (isActive) RoundedCornerShape(4.dp) else CircleShape)
-                            .background(
-                                colorResource(R.color.textDarkest).copy(
-                                    alpha = if (isActive) 1f else 0.4f
-                                )
-                            )
-                    )
-                    if (index < invitationPages.size - 1) {
-                        Spacer(modifier = Modifier.width(8.dp))
-                    }
-                }
-            }
+                activeColor = colorResource(R.color.backgroundDarkest),
+                inactiveColor = colorResource(R.color.backgroundDarkest).copy(alpha = 0.4f)
+            )
         } else {
             Spacer(modifier = Modifier.height(16.dp))
         }
