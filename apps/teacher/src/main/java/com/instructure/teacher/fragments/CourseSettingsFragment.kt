@@ -76,6 +76,7 @@ class CourseSettingsFragment : BasePresenterFragment<
     override fun onReadySetGo(presenter: CourseSettingsFragmentPresenter) {
         setupToolbar()
         binding.courseImage.setCourseImage(course, course.color, !TeacherPrefs.hideCourseColorOverlay)
+        presenter.prefetchFrontPageStatus(course)
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -94,7 +95,7 @@ class CourseSettingsFragment : BasePresenterFragment<
         }
 
         editCourseHomepage.root.onClickWithRequireNetwork {
-            presenter.editCourseHomePageClicked()
+            presenter.editCourseHomePageClicked(course)
         }
     }
 
@@ -113,10 +114,28 @@ class CourseSettingsFragment : BasePresenterFragment<
         dialog.show(requireActivity().supportFragmentManager, EditCourseNameDialog::class.java.simpleName)
     }
 
-    override fun showEditCourseHomePageDialog() {
+    override fun showEditCourseHomePageDialog(hasFrontPage: Boolean) {
         val (keys, values) = mHomePages.toList().unzip()
-        val selectedIdx = keys.indexOf(course.homePage?.apiString)
-        val dialog = RadioButtonDialog.getInstance(requireActivity().supportFragmentManager, getString(R.string.set_home_to), values as ArrayList<String>, selectedIdx) { idx ->
+        var selectedIdx = keys.indexOf(course.homePage?.apiString)
+
+        val disabledIndices = if (!hasFrontPage) {
+            listOf(keys.indexOf("wiki"))
+        } else {
+            emptyList()
+        }
+
+        // If the current selection is disabled, fall back to Course Activity Stream
+        if (disabledIndices.contains(selectedIdx)) {
+            selectedIdx = 0 // "feed" is at index 0
+        }
+
+        val dialog = RadioButtonDialog.getInstance(
+            requireActivity().supportFragmentManager,
+            getString(R.string.set_home_to),
+            values as ArrayList<String>,
+            selectedIdx,
+            disabledIndices
+        ) { idx ->
             presenter.editCourseHomePage(keys[idx], course)
         }
 
