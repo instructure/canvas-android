@@ -20,7 +20,6 @@ package com.instructure.parentapp.utils
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import com.instructure.canvas.espresso.common.pages.AssignmentDetailsPage
 import com.instructure.canvas.espresso.common.pages.AssignmentReminderPage
-import com.instructure.canvas.espresso.common.pages.CalendarReminderPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarEventCreateEditPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarEventDetailsPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarFilterPage
@@ -83,7 +82,6 @@ abstract class ParentComposeTest : ParentTest() {
     protected val calendarToDoDetailsPage = CalendarToDoDetailsPage(composeTestRule)
     protected val calendarFilterPage = CalendarFilterPage(composeTestRule)
     protected val assignmentReminderPage = AssignmentReminderPage(composeTestRule)
-    protected val calendarReminderPage = CalendarReminderPage(composeTestRule)
     protected val inboxSignatureSettingsPage = InboxSignatureSettingsPage(composeTestRule)
     protected val assignmentDetailsPage = AssignmentDetailsPage(ModuleItemInteractions(), composeTestRule)
 
