@@ -32,14 +32,14 @@ class EnsureDefaultWidgetsUseCase @Inject constructor(
 
         val defaultWidgets = listOf(
             WidgetMetadata(
-                id = "course_invitations",
+                id = WidgetMetadata.WIDGET_ID_COURSE_INVITATIONS,
                 position = 0,
                 isVisible = true,
                 isEditable = false,
                 isFullWidth = true
             ),
             WidgetMetadata(
-                id = "welcome",
+                id = WidgetMetadata.WIDGET_ID_WELCOME,
                 position = 1,
                 isVisible = true
             )

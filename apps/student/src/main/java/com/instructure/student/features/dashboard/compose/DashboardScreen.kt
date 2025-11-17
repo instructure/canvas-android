@@ -51,14 +51,15 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.instructure.pandautils.compose.SnackbarMessage
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
-import com.instructure.student.R
-import com.instructure.student.activity.NavigationActivity
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.courseinvitation.CourseInvitationsWidget
+import com.instructure.student.R
+import com.instructure.student.activity.NavigationActivity
 import com.instructure.student.features.dashboard.widget.welcome.WelcomeWidget
 import kotlinx.coroutines.flow.SharedFlow
 
@@ -194,7 +195,7 @@ private fun WidgetGrid(
     LazyVerticalStaggeredGrid(
         columns = StaggeredGridCells.Fixed(columns),
         modifier = modifier,
-        contentPadding = PaddingValues(horizontal = 0.dp, vertical = 16.dp),
+        contentPadding = PaddingValues(vertical = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalItemSpacing = 16.dp
     ) {
@@ -221,8 +222,8 @@ private fun GetWidgetComposable(
     onShowSnackbar: (String, String?, (() -> Unit)?) -> Unit
 ) {
     return when (widgetId) {
-        "welcome" -> WelcomeWidget(refreshSignal = refreshSignal)
-        "course_invitations" -> CourseInvitationsWidget(
+        WidgetMetadata.WIDGET_ID_WELCOME -> WelcomeWidget(refreshSignal = refreshSignal)
+        WidgetMetadata.WIDGET_ID_COURSE_INVITATIONS -> CourseInvitationsWidget(
             refreshSignal = refreshSignal,
             columns = columns,
             onShowSnackbar = onShowSnackbar

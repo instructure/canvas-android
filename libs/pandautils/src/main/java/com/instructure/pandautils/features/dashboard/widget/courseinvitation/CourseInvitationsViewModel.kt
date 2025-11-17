@@ -20,6 +20,7 @@ import android.content.res.Resources
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.SnackbarMessage
 import com.instructure.pandautils.domain.models.enrollment.CourseInvitation
 import com.instructure.pandautils.domain.usecase.enrollment.HandleCourseInvitationParams
 import com.instructure.pandautils.domain.usecase.enrollment.HandleCourseInvitationUseCase
@@ -89,7 +90,6 @@ class CourseInvitationsViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 snackbarMessage = null,
-                snackbarAction = null,
                 onClearSnackbar = ::clearSnackbar
             )
         }
@@ -108,14 +108,14 @@ class CourseInvitationsViewModel @Inject constructor(
                         accept = accept
                     )
                 )
+                val message = if (accept) {
+                    resources.getString(R.string.courseInvitationAccepted, invitation.courseName)
+                } else {
+                    resources.getString(R.string.courseInvitationDeclined, invitation.courseName)
+                }
                 _uiState.update {
                     it.copy(
-                        snackbarMessage = if (accept) {
-                            resources.getString(R.string.courseInvitationAccepted, invitation.courseName)
-                        } else {
-                            resources.getString(R.string.courseInvitationDeclined, invitation.courseName)
-                        },
-                        snackbarAction = null
+                        snackbarMessage = SnackbarMessage(message = message)
                     )
                 }
             } catch (e: Exception) {
@@ -123,8 +123,11 @@ class CourseInvitationsViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         invitations = restoredInvitations,
-                        snackbarMessage = resources.getString(R.string.errorOccurred),
-                        snackbarAction = { handleInvitation(invitation, accept) }
+                        snackbarMessage = SnackbarMessage(
+                            message = resources.getString(R.string.errorOccurred),
+                            actionLabel = resources.getString(R.string.retry),
+                            action = { handleInvitation(invitation, accept) }
+                        )
                     )
                 }
             }

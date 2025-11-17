@@ -74,7 +74,6 @@ fun CourseInvitationsWidget(
 ) {
     val viewModel: CourseInvitationsViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
-    val retryLabel = stringResource(R.string.retry)
 
     LaunchedEffect(refreshSignal) {
         refreshSignal.collect {
@@ -83,9 +82,8 @@ fun CourseInvitationsWidget(
     }
 
     LaunchedEffect(uiState.snackbarMessage) {
-        uiState.snackbarMessage?.let { message ->
-            val actionLabel = if (uiState.snackbarAction != null) retryLabel else null
-            onShowSnackbar(message, actionLabel, uiState.snackbarAction)
+        uiState.snackbarMessage?.let { snackbarMessage ->
+            onShowSnackbar(snackbarMessage.message, snackbarMessage.actionLabel, snackbarMessage.action)
             uiState.onClearSnackbar()
         }
     }

@@ -76,6 +76,7 @@ class CourseInvitationsViewModelTest {
         every { resources.getString(R.string.courseInvitationAccepted, any()) } returns "Invitation accepted"
         every { resources.getString(R.string.courseInvitationDeclined, any()) } returns "Invitation declined"
         every { resources.getString(R.string.errorOccurred) } returns "An error occurred"
+        every { resources.getString(R.string.retry) } returns "Retry"
     }
 
     @After
@@ -159,8 +160,8 @@ class CourseInvitationsViewModelTest {
         assertEquals(1, state.invitations.size)
         assertEquals("Course 2", state.invitations[0].courseName)
         assertNotNull(state.snackbarMessage)
-        assertEquals("Invitation accepted", state.snackbarMessage)
-        assertNull(state.snackbarAction)
+        assertEquals("Invitation accepted", state.snackbarMessage?.message)
+        assertNull(state.snackbarMessage?.action)
         coVerify {
             handleCourseInvitationUseCase(
                 HandleCourseInvitationParams(
@@ -189,8 +190,8 @@ class CourseInvitationsViewModelTest {
         assertEquals(1, state.invitations.size)
         assertEquals("Course 1", state.invitations[0].courseName)
         assertNotNull(state.snackbarMessage)
-        assertEquals("Invitation declined", state.snackbarMessage)
-        assertNull(state.snackbarAction)
+        assertEquals("Invitation declined", state.snackbarMessage?.message)
+        assertNull(state.snackbarMessage?.action)
         coVerify {
             handleCourseInvitationUseCase(
                 HandleCourseInvitationParams(
@@ -222,7 +223,7 @@ class CourseInvitationsViewModelTest {
         assertEquals("Course 1", state.invitations[0].courseName)
         assertEquals("Course 2", state.invitations[1].courseName)
         assertNotNull(state.snackbarMessage)
-        assertNotNull(state.snackbarAction)
+        assertNotNull(state.snackbarMessage?.action)
     }
 
     @Test
@@ -243,7 +244,7 @@ class CourseInvitationsViewModelTest {
         val state = viewModel.uiState.value
         assertEquals(2, state.invitations.size)
         assertNotNull(state.snackbarMessage)
-        assertNotNull(state.snackbarAction)
+        assertNotNull(state.snackbarMessage?.action)
     }
 
     @Test
@@ -261,7 +262,7 @@ class CourseInvitationsViewModelTest {
         viewModel.uiState.value.onAcceptInvitation(invitations[0])
         advanceUntilIdle()
 
-        val retryAction = viewModel.uiState.value.snackbarAction
+        val retryAction = viewModel.uiState.value.snackbarMessage?.action
         assertNotNull(retryAction)
 
         retryAction!!.invoke()
@@ -270,7 +271,7 @@ class CourseInvitationsViewModelTest {
         val state = viewModel.uiState.value
         assertEquals(0, state.invitations.size)
         assertNotNull(state.snackbarMessage)
-        assertNull(state.snackbarAction)
+        assertNull(state.snackbarMessage?.action)
         coVerify(exactly = 2) {
             handleCourseInvitationUseCase(
                 HandleCourseInvitationParams(
@@ -303,7 +304,6 @@ class CourseInvitationsViewModelTest {
 
         val state = viewModel.uiState.value
         assertNull(state.snackbarMessage)
-        assertNull(state.snackbarAction)
     }
 
     private fun createViewModel(): CourseInvitationsViewModel {

@@ -14,18 +14,10 @@
  *     limitations under the License.
  *
  */
-package com.instructure.pandautils.features.dashboard.widget.courseinvitation
+package com.instructure.pandautils.compose
 
-import com.instructure.pandautils.compose.SnackbarMessage
-import com.instructure.pandautils.domain.models.enrollment.CourseInvitation
-
-data class CourseInvitationsUiState(
-    val loading: Boolean = true,
-    val error: Boolean = false,
-    val invitations: List<CourseInvitation> = emptyList(),
-    val snackbarMessage: SnackbarMessage? = null,
-    val onRefresh: () -> Unit = {},
-    val onAcceptInvitation: (CourseInvitation) -> Unit = {},
-    val onDeclineInvitation: (CourseInvitation) -> Unit = {},
-    val onClearSnackbar: () -> Unit = {}
+data class SnackbarMessage(
+    val message: String,
+    val actionLabel: String? = null,
+    val action: (() -> Unit)? = null
 )
