@@ -40,9 +40,9 @@
             style="@style/TextFont.Medium"/>
 
         <com.instructure.pandautils.views.CanvasLoadingView
+            android:id="@+id/canvasLoadingView"
             android:layout_width="42dp"
             android:layout_height="42dp"
-            app:clv_override_color="@color/login_studentAppTheme"
             android:layout_gravity="center"/>
 
     </androidx.cardview.widget.CardView>

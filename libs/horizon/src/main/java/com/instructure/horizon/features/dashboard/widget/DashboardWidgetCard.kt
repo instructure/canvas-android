@@ -41,6 +41,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.horizon.R
@@ -121,13 +122,14 @@ fun DashboardWidgetCard(
                 HorizonSpace(SpaceSize.SPACE_8)
                 Text(
                     text = title,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                     style = HorizonTypography.labelMediumBold,
                     color = HorizonColors.Text.dataPoint(),
                     modifier = Modifier
+                        .weight(1f)
                         .shimmerEffect(isLoading)
                 )
-
-                Spacer(Modifier.weight(1f))
 
                 if (pageState != null && pageState.pageCount > 1) {
                     HorizonSpace(SpaceSize.SPACE_8)
