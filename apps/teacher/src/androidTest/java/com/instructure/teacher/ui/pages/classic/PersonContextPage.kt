@@ -24,12 +24,16 @@ import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertContainsText
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertHasText
+import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.withAncestor
+import com.instructure.espresso.page.withChild
+import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withParent
 import com.instructure.espresso.page.withText
+import com.instructure.espresso.scrollTo
 import com.instructure.teacher.R
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.not
@@ -66,6 +70,25 @@ open class PersonContextPage : BasePage(R.id.studentContextPage) {
      */
     fun assertDisplaysCourseInfo(courseNameText: String) {
         courseName.assertHasText(courseNameText)
+    }
+
+    /**
+     * Asserts the assignment status for a given assignment name.
+     *
+     * @param assignmentName The name of the assignment.
+     * @param expectedStatus The expected status of the assignment.
+     */
+    fun assertAssignmentStatus(assignmentName: String, expectedStatus: String) {
+        onView(withText(expectedStatus) + withParent(withChild(withText(assignmentName)))).scrollTo().assertDisplayed()
+    }
+
+    /**
+     * Clicks on an assignment with the given name.
+     *
+     * @param assignmentName The name of the assignment to click.
+     */
+    fun clickAssignment(assignmentName: String) {
+        onView(withText(assignmentName) + withId(R.id.assignmentTitle)).click()
     }
 
     /**

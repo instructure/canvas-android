@@ -9,6 +9,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardItemState
+import com.instructure.horizon.features.dashboard.widget.DashboardWidgetPageState
 import com.instructure.horizon.features.dashboard.widget.skilloverview.DashboardSkillOverviewSection
 import com.instructure.horizon.features.dashboard.widget.skilloverview.DashboardSkillOverviewUiState
 import com.instructure.horizon.features.dashboard.widget.skilloverview.card.DashboardSkillOverviewCardState
@@ -30,7 +31,7 @@ class DashboardSkillOverviewWidgetUiTest {
         )
 
         composeTestRule.setContent {
-            DashboardSkillOverviewSection(uiState, rememberNavController())
+            DashboardSkillOverviewSection(uiState, DashboardWidgetPageState.Empty, rememberNavController())
         }
 
         val title = context.getString(R.string.dashboardSkillOverviewTitle)
@@ -45,7 +46,7 @@ class DashboardSkillOverviewWidgetUiTest {
         )
 
         composeTestRule.setContent {
-            DashboardSkillOverviewSection(uiState, rememberNavController())
+            DashboardSkillOverviewSection(uiState, DashboardWidgetPageState.Empty, rememberNavController())
         }
 
         val title = context.getString(R.string.dashboardSkillOverviewTitle)
@@ -66,7 +67,7 @@ class DashboardSkillOverviewWidgetUiTest {
         )
 
         composeTestRule.setContent {
-            DashboardSkillOverviewSection(uiState, rememberNavController())
+            DashboardSkillOverviewSection(uiState, DashboardWidgetPageState.Empty, rememberNavController())
         }
 
         val retryLabel = context.getString(R.string.dashboardWidgetCardErrorRetry)
@@ -83,7 +84,7 @@ class DashboardSkillOverviewWidgetUiTest {
         )
 
         composeTestRule.setContent {
-            DashboardSkillOverviewSection(uiState, rememberNavController())
+            DashboardSkillOverviewSection(uiState, DashboardWidgetPageState.Empty, rememberNavController())
         }
 
         val title = context.getString(R.string.dashboardSkillOverviewTitle)
@@ -101,7 +102,7 @@ class DashboardSkillOverviewWidgetUiTest {
         )
 
         composeTestRule.setContent {
-            DashboardSkillOverviewSection(uiState, rememberNavController())
+            DashboardSkillOverviewSection(uiState, DashboardWidgetPageState.Empty, rememberNavController())
         }
 
         val title = context.getString(R.string.dashboardSkillOverviewTitle)
@@ -120,7 +121,7 @@ class DashboardSkillOverviewWidgetUiTest {
         )
 
         composeTestRule.setContent {
-            DashboardSkillOverviewSection(uiState, rememberNavController())
+            DashboardSkillOverviewSection(uiState, DashboardWidgetPageState.Empty, rememberNavController())
         }
 
         val title = context.getString(R.string.dashboardSkillOverviewTitle)
@@ -139,7 +140,7 @@ class DashboardSkillOverviewWidgetUiTest {
         )
 
         composeTestRule.setContent {
-            DashboardSkillOverviewSection(uiState, rememberNavController())
+            DashboardSkillOverviewSection(uiState, DashboardWidgetPageState.Empty, rememberNavController())
         }
 
         val title = context.getString(R.string.dashboardSkillOverviewTitle)
@@ -158,7 +159,7 @@ class DashboardSkillOverviewWidgetUiTest {
         )
 
         composeTestRule.setContent {
-            DashboardSkillOverviewSection(uiState, rememberNavController())
+            DashboardSkillOverviewSection(uiState, DashboardWidgetPageState.Empty, rememberNavController())
         }
 
         val title = context.getString(R.string.dashboardSkillOverviewTitle)

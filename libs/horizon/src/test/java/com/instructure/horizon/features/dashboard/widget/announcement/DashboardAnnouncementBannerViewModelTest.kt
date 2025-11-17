@@ -17,12 +17,16 @@
 package com.instructure.horizon.features.dashboard.widget.announcement
 
 import android.content.Context
+import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardButtonRoute
+import com.instructure.pandautils.utils.ThemePrefs
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkObject
 import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
@@ -47,6 +51,9 @@ class DashboardAnnouncementBannerViewModelTest {
 
     @Before
     fun setup() {
+        mockkObject(ThemePrefs)
+        every { ThemePrefs.brandColor } returns 1
+        every { context.getString(R.string.notificationsAnnouncementCategoryLabel) } returns "Announcement"
         Dispatchers.setMain(testDispatcher)
     }
 

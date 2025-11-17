@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 - present  Instructure, Inc.
+ * Copyright (C) 2025 - present Instructure, Inc.
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -12,17 +12,26 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-package com.instructure.teacher.viewinterface
+package com.instructure.teacher.di
 
-import com.instructure.canvasapi2.models.Course
-import com.instructure.pandautils.blueprint.FragmentViewInterface
+import com.instructure.pandautils.features.todolist.ToDoListViewModelBehavior
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
 
-interface CourseSettingsFragmentView : FragmentViewInterface {
-    fun showEditCourseNameDialog()
-    fun showEditCourseHomePageDialog(hasFrontPage: Boolean)
-    fun updateCourseName(course: Course)
-    fun updateCourseHomePage(newHomePage: Course.HomePage?)
+
+@Module
+@InstallIn(ViewModelComponent::class)
+class ToDoListModule {
+
+    @Provides
+    fun provideToDoListViewModelBehavior(): ToDoListViewModelBehavior {
+        return object : ToDoListViewModelBehavior {
+            override fun updateWidget(forceRefresh: Boolean) = Unit
+        }
+    }
 }
-

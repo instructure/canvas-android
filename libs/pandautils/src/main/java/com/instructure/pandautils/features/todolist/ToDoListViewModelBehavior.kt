@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 - present  Instructure, Inc.
+ * Copyright (C) 2025 - present Instructure, Inc.
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -12,17 +12,12 @@
  *
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-package com.instructure.teacher.viewinterface
+package com.instructure.pandautils.features.todolist
 
-import com.instructure.canvasapi2.models.Course
-import com.instructure.pandautils.blueprint.FragmentViewInterface
 
-interface CourseSettingsFragmentView : FragmentViewInterface {
-    fun showEditCourseNameDialog()
-    fun showEditCourseHomePageDialog(hasFrontPage: Boolean)
-    fun updateCourseName(course: Course)
-    fun updateCourseHomePage(newHomePage: Course.HomePage?)
+interface ToDoListViewModelBehavior {
+    fun updateWidget(forceRefresh: Boolean = true)
 }
-
