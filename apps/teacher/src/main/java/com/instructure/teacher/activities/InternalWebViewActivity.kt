@@ -19,11 +19,15 @@ package com.instructure.teacher.activities
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.activities.BasePresenterActivity
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.EdgeToEdgeHelper
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
 import com.instructure.teacher.R
 import com.instructure.teacher.factory.InternalWebViewPresenterFactory
 import com.instructure.teacher.fragments.InternalWebViewFragment
@@ -42,7 +46,22 @@ class InternalWebViewActivity : BasePresenterActivity<InternalWebViewPresenter, 
         super.onCreate(savedInstanceState)
         EdgeToEdgeHelper.enableEdgeToEdge(this)
         setContentView(R.layout.activity_internal_webview)
+        setupWindowInsets()
         handleIntentExtras(intent.getBundleExtra(Const.EXTRAS))
+    }
+
+    private fun setupWindowInsets() {
+        val root = findViewById<android.view.View>(R.id.internalWebViewContainer)
+        ViewCompat.setOnApplyWindowInsetsListener(root) { view, windowInsets ->
+            val insets = windowInsets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+            view.updatePadding(
+                left = insets.left,
+                right = insets.right
+            )
+            windowInsets
+        }
     }
 
     override fun onReadySetGo(presenter: InternalWebViewPresenter) = setupViews()

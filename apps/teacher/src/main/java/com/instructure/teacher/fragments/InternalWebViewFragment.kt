@@ -108,7 +108,7 @@ open class InternalWebViewFragment : BaseFragment() {
 
         toolbar?.applyTopSystemBarInsets()
 
-        binding.canvasWebView.applyBottomSystemBarInsets()
+        binding.canvasWebViewContainer.applyBottomSystemBarInsets()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) = with(binding) {

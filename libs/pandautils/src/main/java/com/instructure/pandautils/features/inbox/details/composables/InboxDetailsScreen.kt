@@ -139,9 +139,8 @@ private fun AppBar(
         contentColor = Color(color = ThemePrefs.primaryTextColor),
         elevation = 0.dp,
         modifier = Modifier
-            .windowInsetsPadding(WindowInsets.statusBars)
-            .height(64.dp)
             .testTag("toolbar"),
+        windowInsets = WindowInsets.statusBars
     )
 }
 @OptIn(ExperimentalMaterialApi::class)
