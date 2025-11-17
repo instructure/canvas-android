@@ -168,6 +168,7 @@ class CalendarEventDetailsPage(private val composeTestRule: ComposeTestRule) : B
         composeTestRule.onNode(
             hasContentDescription("Remove")
         ).performClick()
+        Thread.sleep(1000)
         waitForView(withText(R.string.yes)).scrollTo().click()
     }
 

@@ -139,6 +139,7 @@ class CalendarToDoDetailsPage(private val composeTestRule: ComposeTestRule) {
         composeTestRule.onNode(
             hasContentDescription("Remove")
         ).performClick()
+        Thread.sleep(1000)
         waitForView(withText(com.instructure.pandautils.R.string.yes)).scrollTo().click()
     }
 
