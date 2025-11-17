@@ -23,12 +23,15 @@ import com.instructure.canvas.espresso.common.pages.compose.ToDoFilterPage
 import com.instructure.canvas.espresso.common.pages.compose.ToDoListPage
 import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvas.espresso.mockcanvas.addAssignment
+import com.instructure.canvas.espresso.mockcanvas.addCourse
 import com.instructure.canvas.espresso.mockcanvas.addCourseCalendarEvent
 import com.instructure.canvas.espresso.mockcanvas.addDiscussionTopicToAssignment
 import com.instructure.canvas.espresso.mockcanvas.addDiscussionTopicToCourse
+import com.instructure.canvas.espresso.mockcanvas.addEnrollment
 import com.instructure.canvas.espresso.mockcanvas.addPlannable
 import com.instructure.canvas.espresso.mockcanvas.addQuizToCourse
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.models.User
@@ -554,11 +557,13 @@ abstract class ToDoListInteractionTest : CanvasComposeTest() {
     @Test
     fun favoriteCoursesFilterShowsOnlyFavoriteCoursesItems() {
         val data = initData()
+        val user = getLoggedInUser()
 
         val favoriteCourse = data.courses.values.first()
         favoriteCourse.isFavorite = true
 
         val nonFavoriteCourse = data.addCourse(isFavorite = false)
+        data.addEnrollment(user, nonFavoriteCourse, Enrollment.EnrollmentType.Student)
 
         val favoriteAssignment = data.addAssignment(
             favoriteCourse.id,
