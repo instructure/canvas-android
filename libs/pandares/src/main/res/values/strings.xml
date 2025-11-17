@@ -1046,6 +1046,7 @@
     <string name="downloadSuccessful">Download successful</string>
     <string name="downloading">Downloading</string>
     <string name="downloadComplete">Download complete</string>
+    <string name="fileDownloadNotificationPermissionDenied">Download started. Enable notifications to see progress.</string>
     <string name="notificationChannelNameFileDownloadsName">Download Notifications</string>
     <string name="notificationChannelNameFileDownloadsDescription">Canvas notifications for ongoing downloads.</string>
 
@@ -2197,4 +2198,28 @@
     <string name="todoMarkedAsNotDone">%s marked as not done</string>
     <string name="todoMarkedAsDoneSnackbarUndo">Undo</string>
     <string name="todoActionOffline">This action cannot be performed offline</string>
+
+    <!-- To Do List Filter Screen -->
+    <string name="todoFilterPreferences">To Do list Preferences</string>
+    <string name="todoFilterVisibleItems">Visible Items</string>
+    <string name="todoFilterShowPersonalToDos">Show Personal To Dos</string>
+    <string name="todoFilterShowCalendarEvents">Show Calendar Events</string>
+    <string name="todoFilterShowCompleted">Show Completed</string>
+    <string name="todoFilterFavoriteCoursesOnly">Favourite Courses Only</string>
+    <string name="todoFilterShowTasksFrom">Show tasks from</string>
+    <string name="todoFilterShowTasksUntil">Show tasks until</string>
+    <string name="todoFilterToday">Today</string>
+    <string name="todoFilterThisWeek">This Week</string>
+    <string name="todoFilterLastWeek">Last Week</string>
+    <string name="todoFilterTwoWeeks">2 Weeks Ago</string>
+    <string name="todoFilterThreeWeeks">3 Weeks Ago</string>
+    <string name="todoFilterFourWeeks">4 Weeks Ago</string>
+    <string name="todoFilterNextWeek">Next Week</string>
+    <string name="todoFilterInTwoWeeks">In 2 Weeks</string>
+    <string name="todoFilterInThreeWeeks">In 3 Weeks</string>
+    <string name="todoFilterInFourWeeks">In 4 Weeks</string>
+    <string name="todoFilterFromDate">From %s</string>
+    <string name="todoFilterUntilDate">Until %s</string>
+    <string name="a11y_buttonSelectionSelected">selected</string>
+    <string name="a11y_buttonSelectionNotSelected">not selected</string>
 </resources>

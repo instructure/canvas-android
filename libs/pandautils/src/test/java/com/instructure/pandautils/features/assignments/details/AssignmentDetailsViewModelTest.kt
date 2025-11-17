@@ -752,12 +752,12 @@ class AssignmentDetailsViewModelTest {
     }
 
     @Test
-    fun `Submit button is not visible when not between valid date range`() {
+    fun `Submit button is not visible when not between valid date range and assignment is locked`() {
         val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)), accessRestrictedByDate = true)
         every { savedStateHandle.get<Course>(Const.CANVAS_CONTEXT) } returns course
         coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
-        val assignment = Assignment(name = "Test", submissionTypesRaw = listOf("online_text_entry"))
+        val assignment = Assignment(name = "Test", submissionTypesRaw = listOf("online_text_entry"), lockedForUser = true, hasOverrides = false)
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
 
         val viewModel = getViewModel()

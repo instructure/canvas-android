@@ -66,6 +66,7 @@ import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
 import com.instructure.pandautils.utils.AssignmentUtils2
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.isAllowedToSubmitWithOverrides
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.getSubAssignmentSubmissionGrade
 import com.instructure.pandautils.utils.getSubAssignmentSubmissionStateLabel
@@ -464,11 +465,10 @@ class AssignmentDetailsViewModel @Inject constructor(
         // Observers shouldn't see the submit button OR if the course is soft concluded
         val submitVisible = when {
             isObserver -> false
-            !course.value?.isBetweenValidDateRange().orDefault() -> false
             assignment.submission?.excused.orDefault() -> false
             else -> when (assignment.turnInType) {
-                Assignment.TurnInType.QUIZ, Assignment.TurnInType.DISCUSSION -> true
-                Assignment.TurnInType.ONLINE, Assignment.TurnInType.EXTERNAL_TOOL -> assignment.isAllowedToSubmit
+                Assignment.TurnInType.QUIZ, Assignment.TurnInType.DISCUSSION -> course.value?.isBetweenValidDateRange().orDefault()
+                Assignment.TurnInType.ONLINE, Assignment.TurnInType.EXTERNAL_TOOL -> assignment.isAllowedToSubmitWithOverrides(course.value)
                 else -> false
             }
         }

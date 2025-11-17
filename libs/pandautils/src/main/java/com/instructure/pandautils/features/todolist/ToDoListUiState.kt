@@ -30,7 +30,11 @@ data class ToDoListUiState(
     val onUndoMarkAsDoneUndoneAction: () -> Unit = {},
     val onMarkedAsDoneSnackbarDismissed: () -> Unit = {},
     val onRefresh: () -> Unit = {},
-    val toDoCount: Int? = null
+    val toDoCount: Int? = null,
+    val onToDoCountChanged: () -> Unit = {},
+    val onFiltersChanged: (Boolean) -> Unit = {},
+    val isFilterApplied: Boolean = false,
+    val removingItemIds: Set<String> = emptySet()
 )
 
 data class ConfirmationSnackbarData(
