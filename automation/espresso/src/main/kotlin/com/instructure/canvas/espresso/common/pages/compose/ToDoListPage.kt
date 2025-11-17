@@ -17,6 +17,7 @@ package com.instructure.canvas.espresso.common.pages.compose
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -95,5 +96,39 @@ class ToDoListPage(private val composeTestRule: ComposeTestRule) : BasePage() {
     fun clickDateBadge(dayOfMonth: Int) {
         composeTestRule.onNodeWithText(dayOfMonth.toString()).performClick()
         composeTestRule.waitForIdle()
+    }
+
+    fun assertFilterIconOutline() {
+        composeTestRule.onNodeWithContentDescription(getStringFromResource(R.string.a11y_contentDescriptionToDoFilter))
+            .assertExists()
+    }
+
+    fun assertFilterIconFilled() {
+        composeTestRule.onNodeWithContentDescription(getStringFromResource(R.string.a11y_contentDescriptionToDoFilter))
+            .assertExists()
+    }
+
+    fun assertEmptyState() {
+        composeTestRule.onNodeWithText(getStringFromResource(R.string.noToDosForNow))
+            .assertIsDisplayed()
+    }
+
+    fun waitForSnackbar(itemTitle: String, timeoutMillis: Long = 5000) {
+        val message = getStringFromResource(R.string.todoMarkedAsDone, itemTitle)
+        composeTestRule.waitUntil(timeoutMillis) {
+            composeTestRule.onAllNodesWithText(message).fetchSemanticsNodes().isNotEmpty()
+        }
+    }
+
+    fun waitForItemToDisappear(itemTitle: String, timeoutMillis: Long = 5000) {
+        composeTestRule.waitUntil(timeoutMillis) {
+            composeTestRule.onAllNodesWithText(itemTitle).fetchSemanticsNodes().isEmpty()
+        }
+    }
+
+    fun waitForItemToAppear(itemTitle: String, timeoutMillis: Long = 5000) {
+        composeTestRule.waitUntil(timeoutMillis) {
+            composeTestRule.onAllNodesWithText(itemTitle).fetchSemanticsNodes().isNotEmpty()
+        }
     }
 }

@@ -16,9 +16,13 @@
 package com.instructure.canvas.espresso.common.pages.compose
 
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onNodeWithContentDescription
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollToNode
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.getStringFromResource
 import com.instructure.pandautils.R
@@ -50,6 +54,30 @@ class ToDoFilterPage(private val composeTestRule: ComposeTestRule) : BasePage() 
 
     fun toggleShowCompleted() {
         composeTestRule.onNodeWithText(getStringFromResource(R.string.todoFilterShowCompleted))
+            .performClick()
+        composeTestRule.waitForIdle()
+    }
+
+    fun clickClose() {
+        composeTestRule.onNodeWithContentDescription(getStringFromResource(R.string.close))
+            .performClick()
+        composeTestRule.waitForIdle()
+    }
+
+    fun selectPastDateRange(labelResId: Int) {
+        val labelText = getStringFromResource(labelResId)
+        composeTestRule.onNodeWithTag("ToDoFilterContent")
+            .performScrollToNode(hasText(labelText))
+        composeTestRule.onNodeWithText(labelText)
+            .performClick()
+        composeTestRule.waitForIdle()
+    }
+
+    fun selectFutureDateRange(labelResId: Int) {
+        val labelText = getStringFromResource(labelResId)
+        composeTestRule.onNodeWithTag("ToDoFilterContent")
+            .performScrollToNode(hasText(labelText))
+        composeTestRule.onNodeWithText(labelText)
             .performClick()
         composeTestRule.waitForIdle()
     }

@@ -47,6 +47,7 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.models.postmodels.CreateObserverThresholdWrapper
 import com.instructure.canvasapi2.models.toPlannerItems
 import com.instructure.canvasapi2.utils.pageview.PandataInfo
+import com.instructure.canvasapi2.utils.toDate
 import com.instructure.pandautils.utils.fromJson
 import com.instructure.pandautils.utils.orDefault
 import okio.Buffer
@@ -124,6 +125,10 @@ object UserEndpoint : Endpoint(
                     val userId = pathVars.userId
                     val userCourseIds = data.enrollments.values.filter { it.userId == userId }.map { it.courseId }
 
+                    // Get date filter parameters
+                    val startDate = request.url.queryParameter("start_date").toDate()
+                    val endDate = request.url.queryParameter("end_date").toDate()
+
                     val todos = data.todos.filter { it.userId == userId }
 
                     val events = data.courseCalendarEvents
@@ -136,7 +141,6 @@ object UserEndpoint : Endpoint(
                         .toPlannerItems(PlannableType.CALENDAR_EVENT)
 
                     // Gather our assignments
-                    // Currently we assume all the assignments are due today
                     val plannerItemsList = data.assignments.values
                         .filter { userCourseIds.contains(it.courseId) }
                         .map { assignment ->
@@ -160,6 +164,10 @@ object UserEndpoint : Endpoint(
                         .plus(todos)
                         .plus(events)
                         .plus(userEvents)
+                        .filter {
+                            if (startDate == null || endDate == null) return@filter true
+                            it.plannableDate.time in startDate.time..endDate.time
+                        }
 
                     request.successResponse(plannerItemsList)
                 }

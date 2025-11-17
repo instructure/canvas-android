@@ -33,6 +33,7 @@ import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.toApiString
+import com.instructure.pandautils.R
 import org.junit.Test
 import java.util.Calendar
 import java.util.Date
@@ -183,19 +184,15 @@ abstract class ToDoListInteractionTest : CanvasComposeTest() {
         toDoListPage.assertItemDisplayed(assignment.name!!)
         toDoListPage.clickCheckbox(assignment.id)
 
-        Thread.sleep(1000)
-        composeTestRule.waitForIdle()
-
-        // Verify snackbar appears with assignment name
+        // Wait for snackbar to appear
+        toDoListPage.waitForSnackbar(assignment.name!!)
         toDoListPage.assertSnackbarDisplayed(assignment.name!!)
 
         // Click undo button in snackbar
         toDoListPage.clickSnackbarUndo()
 
-        Thread.sleep(1000)
-        composeTestRule.waitForIdle()
-
-        // Verify item is still displayed (unmarked as done)
+        // Wait for item to reappear after undo
+        toDoListPage.waitForItemToAppear(assignment.name!!)
         toDoListPage.assertItemDisplayed(assignment.name!!)
     }
 
@@ -216,10 +213,8 @@ abstract class ToDoListInteractionTest : CanvasComposeTest() {
         toDoListPage.assertItemDisplayed(assignment.name!!)
         toDoListPage.swipeItemRight(assignment.id)
 
-        // Wait for API call + snackbar
-        Thread.sleep(2000)
-
-        // Verify snackbar appears with assignment name
+        // Wait for snackbar to appear
+        toDoListPage.waitForSnackbar(assignment.name!!)
         toDoListPage.assertSnackbarDisplayed(assignment.name!!)
     }
 
@@ -240,10 +235,8 @@ abstract class ToDoListInteractionTest : CanvasComposeTest() {
         toDoListPage.assertItemDisplayed(assignment.name!!)
         toDoListPage.swipeItemLeft(assignment.id)
 
-        // Wait for API call + snackbar
-        Thread.sleep(2000)
-
-        // Verify snackbar appears with assignment name
+        // Wait for snackbar to appear
+        toDoListPage.waitForSnackbar(assignment.name!!)
         toDoListPage.assertSnackbarDisplayed(assignment.name!!)
     }
 
@@ -302,10 +295,9 @@ abstract class ToDoListInteractionTest : CanvasComposeTest() {
 
         // Mark the assignment as done
         toDoListPage.clickCheckbox(assignment.id)
-        Thread.sleep(1000)
-        composeTestRule.waitForIdle()
 
-        // Verify it's no longer displayed (completed items are hidden by default)
+        // Wait for item to disappear
+        toDoListPage.waitForItemToDisappear(assignment.name!!)
         toDoListPage.assertItemNotDisplayed(assignment.name!!)
 
         // Open filter and enable "Show Completed"
@@ -317,6 +309,246 @@ abstract class ToDoListInteractionTest : CanvasComposeTest() {
 
         // Verify the completed assignment is now displayed
         toDoListPage.assertItemDisplayed(assignment.name!!)
+    }
+
+    @Test
+    fun emptyStateDisplayedWhenNoToDos() {
+        val data = initData()
+
+        goToToDoList(data)
+
+        composeTestRule.waitForIdle()
+        toDoListPage.assertEmptyState()
+    }
+
+    @Test
+    fun personalToDosFilterShowsPersonalToDos() {
+        val data = initData()
+
+        val course = data.courses.values.first()
+        val user = getLoggedInUser()
+        val assignment = data.addAssignment(
+            course.id,
+            name = "Regular Assignment",
+            dueAt = Calendar.getInstance().time.toApiString()
+        )
+
+        val personalTodo = data.addPlannable(
+            name = "Personal Todo Item",
+            course = course,
+            userId = user.id,
+            type = PlannableType.PLANNER_NOTE,
+            date = Date()
+        )
+
+        goToToDoList(data)
+
+        composeTestRule.waitForIdle()
+
+        // By default, personal todos are hidden
+        toDoListPage.assertItemDisplayed(assignment.name!!)
+        toDoListPage.assertItemNotDisplayed(personalTodo.plannable.title)
+
+        // Enable personal todos filter
+        toDoListPage.clickFilterButton()
+        toDoFilterPage.toggleShowPersonalToDos()
+        toDoFilterPage.clickDone()
+
+        composeTestRule.waitForIdle()
+
+        // Verify personal todo is now displayed
+        toDoListPage.assertItemDisplayed(assignment.name!!)
+        toDoListPage.assertItemDisplayed(personalTodo.plannable.title)
+    }
+
+    @Test
+    fun calendarEventsFilterShowsCalendarEvents() {
+        val data = initData()
+
+        val course = data.courses.values.first()
+        val assignment = data.addAssignment(
+            course.id,
+            name = "Regular Assignment",
+            dueAt = Calendar.getInstance().time.toApiString()
+        )
+
+        val event = data.addCourseCalendarEvent(
+            course = course,
+            startDate = Date().toApiString(),
+            title = "Calendar Event",
+            description = "Event Description"
+        )
+
+        goToToDoList(data)
+
+        composeTestRule.waitForIdle()
+
+        // By default, calendar events are hidden
+        toDoListPage.assertItemDisplayed(assignment.name!!)
+        toDoListPage.assertItemNotDisplayed(event.title!!)
+
+        // Enable calendar events filter
+        toDoListPage.clickFilterButton()
+        toDoFilterPage.toggleShowCalendarEvents()
+        toDoFilterPage.clickDone()
+
+        composeTestRule.waitForIdle()
+
+        // Verify calendar event is now displayed
+        toDoListPage.assertItemDisplayed(assignment.name!!)
+        toDoListPage.assertItemDisplayed(event.title!!)
+    }
+
+    @Test
+    fun filterCloseWithoutSavingDoesNotApplyChanges() {
+        val data = initData()
+
+        val course = data.courses.values.first()
+        val assignment = data.addAssignment(
+            course.id,
+            name = "Assignment to Complete",
+            dueAt = Calendar.getInstance().time.toApiString()
+        )
+
+        goToToDoList(data)
+
+        composeTestRule.waitForIdle()
+        toDoListPage.assertItemDisplayed(assignment.name!!)
+
+        // Mark assignment as done so it's hidden
+        toDoListPage.clickCheckbox(assignment.id)
+        toDoListPage.waitForItemToDisappear(assignment.name!!)
+        toDoListPage.assertItemNotDisplayed(assignment.name!!)
+
+        // Open filter and toggle "Show Completed" but close without saving
+        toDoListPage.clickFilterButton()
+        toDoFilterPage.toggleShowCompleted()
+        toDoFilterPage.clickClose()
+
+        composeTestRule.waitForIdle()
+
+        // Verify completed item is still hidden (filter was not applied)
+        toDoListPage.assertItemNotDisplayed(assignment.name!!)
+        toDoListPage.assertFilterIconOutline()
+    }
+
+    @Test
+    fun filterCloseWithSavingAppliesChanges() {
+        val data = initData()
+
+        val course = data.courses.values.first()
+        val assignment = data.addAssignment(
+            course.id,
+            name = "Assignment to Complete",
+            dueAt = Calendar.getInstance().time.toApiString()
+        )
+
+        goToToDoList(data)
+
+        composeTestRule.waitForIdle()
+        toDoListPage.assertItemDisplayed(assignment.name!!)
+
+        // Mark assignment as done so it's hidden
+        toDoListPage.clickCheckbox(assignment.id)
+        toDoListPage.waitForItemToDisappear(assignment.name!!)
+        toDoListPage.assertItemNotDisplayed(assignment.name!!)
+
+        // Open filter, toggle "Show Completed" and save
+        toDoListPage.clickFilterButton()
+        toDoFilterPage.toggleShowCompleted()
+        toDoFilterPage.clickDone()
+
+        composeTestRule.waitForIdle()
+
+        // Verify completed item is now displayed (filter was applied)
+        toDoListPage.assertItemDisplayed(assignment.name!!)
+        toDoListPage.assertFilterIconFilled()
+    }
+
+    @Test
+    fun pastDateRangeFilterShowsOlderItems() {
+        val data = initData()
+
+        val course = data.courses.values.first()
+        val calendar = Calendar.getInstance()
+
+        // Create assignment 2 weeks ago
+        calendar.add(Calendar.WEEK_OF_YEAR, -2)
+        val twoWeeksAgo = calendar.time
+        val oldAssignment = data.addAssignment(
+            course.id,
+            name = "Old Assignment",
+            dueAt = twoWeeksAgo.toApiString()
+        )
+
+        // Create assignment today
+        calendar.time = Date()
+        val todayAssignment = data.addAssignment(
+            course.id,
+            name = "Today Assignment",
+            dueAt = calendar.time.toApiString()
+        )
+
+        goToToDoList(data)
+
+        composeTestRule.waitForIdle()
+
+        // By default, past date range is "Last Week" so assignment from 2 weeks ago should be hidden
+        toDoListPage.assertItemDisplayed(todayAssignment.name!!)
+        toDoListPage.assertItemNotDisplayed(oldAssignment.name!!)
+
+        // Change past date range to "2 Weeks Ago"
+        toDoListPage.clickFilterButton()
+        toDoFilterPage.selectPastDateRange(R.string.todoFilterTwoWeeks)
+        toDoFilterPage.clickDone()
+
+        composeTestRule.waitForIdle()
+
+        // Now both assignments should be visible
+        toDoListPage.assertItemDisplayed(todayAssignment.name!!)
+        toDoListPage.assertItemDisplayed(oldAssignment.name!!)
+    }
+
+    @Test
+    fun futureDateRangeFilterShowsFutureItems() {
+        val data = initData()
+
+        val course = data.courses.values.first()
+        val calendar = Calendar.getInstance()
+
+        // Create assignment today
+        val todayAssignment = data.addAssignment(
+            course.id,
+            name = "Today Assignment",
+            dueAt = calendar.time.toApiString()
+        )
+
+        // Create assignment 2 weeks from now
+        calendar.add(Calendar.WEEK_OF_YEAR, 2)
+        val futureAssignment = data.addAssignment(
+            course.id,
+            name = "Future Assignment",
+            dueAt = calendar.time.toApiString()
+        )
+
+        goToToDoList(data)
+
+        composeTestRule.waitForIdle()
+
+        // By default, future date range is "Next Week" so assignment from 2 weeks ahead should be hidden
+        toDoListPage.assertItemDisplayed(todayAssignment.name!!)
+        toDoListPage.assertItemNotDisplayed(futureAssignment.name!!)
+
+        // Change future date range to "In 2 Weeks"
+        toDoListPage.clickFilterButton()
+        toDoFilterPage.selectFutureDateRange(R.string.todoFilterInTwoWeeks)
+        toDoFilterPage.clickDone()
+
+        composeTestRule.waitForIdle()
+
+        // Now both assignments should be visible
+        toDoListPage.assertItemDisplayed(todayAssignment.name!!)
+        toDoListPage.assertItemDisplayed(futureAssignment.name!!)
     }
 
     override fun displaysPageObjects() = Unit
