@@ -36,6 +36,7 @@ import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.Calendar
 import java.util.Date
 
 @RunWith(AndroidJUnit4::class)
@@ -222,7 +223,8 @@ class DashboardAnnouncementBannerWidgetUiTest {
 
     @Test
     fun testSuccessStateDisplaysDateCorrectly() {
-        val testDate = Date(1704067200000L)
+        val testDate = Calendar.getInstance().apply { set(2024, 0, 1) }.time
+
         val testAnnouncement = DashboardPaginatedWidgetCardItemState(
             chipState = DashboardPaginatedWidgetCardChipState(
                 label = "Announcement",
