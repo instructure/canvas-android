@@ -26,6 +26,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCardError
+import com.instructure.horizon.features.dashboard.widget.DashboardWidgetPageState
 import com.instructure.horizon.features.dashboard.widget.myprogress.card.DashboardMyProgressCardContent
 import com.instructure.horizon.features.dashboard.widget.myprogress.card.DashboardMyProgressCardState
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -36,6 +37,7 @@ import kotlinx.coroutines.flow.update
 fun DashboardMyProgressWidget(
     shouldRefresh: Boolean,
     refreshState: MutableStateFlow<List<Boolean>>,
+    pageState: DashboardWidgetPageState,
     modifier: Modifier = Modifier
 ) {
     val viewModel = hiltViewModel<DashboardMyProgressViewModel>()
@@ -50,12 +52,13 @@ fun DashboardMyProgressWidget(
         }
     }
 
-    DashboardMyProgressSection(state, modifier)
+    DashboardMyProgressSection(state, pageState, modifier)
 }
 
 @Composable
 fun DashboardMyProgressSection(
     state: DashboardMyProgressUiState,
+    pageState: DashboardWidgetPageState,
     modifier: Modifier = Modifier
 ) {
     when (state.state) {
@@ -63,6 +66,7 @@ fun DashboardMyProgressSection(
             DashboardMyProgressCardContent(
                 DashboardMyProgressCardState.Loading,
                 true,
+                pageState,
                 modifier
             )
         }
@@ -72,6 +76,7 @@ fun DashboardMyProgressSection(
                 R.drawable.trending_up,
                 HorizonColors.PrimitivesSky.sky12,
                 false,
+                pageState,
                 { state.onRefresh {} },
                 modifier = modifier
             )
@@ -80,6 +85,7 @@ fun DashboardMyProgressSection(
             DashboardMyProgressCardContent(
                 state.cardState,
                 false,
+                pageState,
                 modifier
             )
         }

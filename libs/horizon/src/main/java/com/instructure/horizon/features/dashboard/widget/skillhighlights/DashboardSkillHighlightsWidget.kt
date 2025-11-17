@@ -29,6 +29,7 @@ import androidx.navigation.NavHostController
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCardError
+import com.instructure.horizon.features.dashboard.widget.DashboardWidgetPageState
 import com.instructure.horizon.features.dashboard.widget.skillhighlights.card.DashboardSkillHighlightsCardContent
 import com.instructure.horizon.features.dashboard.widget.skillhighlights.card.DashboardSkillHighlightsCardState
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -78,6 +79,7 @@ fun DashboardSkillHighlightsSection(
                 R.drawable.hub,
                 HorizonColors.PrimitivesGreen.green12(),
                 false,
+                DashboardWidgetPageState.Empty,
                 { state.onRefresh {} },
                 modifier = modifier.padding(horizontal = 24.dp)
             )

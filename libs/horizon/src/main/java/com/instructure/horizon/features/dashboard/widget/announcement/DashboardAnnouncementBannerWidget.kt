@@ -16,19 +16,20 @@
  */
 package com.instructure.horizon.features.dashboard.widget.announcement
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCard
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardState
-import com.instructure.horizon.features.dashboard.widget.announcement.card.DashboardAnnouncementBannerCardError
+import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCardError
+import com.instructure.horizon.features.dashboard.widget.DashboardWidgetPageState
+import com.instructure.horizon.horizonui.foundation.HorizonColors
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
@@ -71,9 +72,13 @@ fun DashboardAnnouncementBannerSection(
             )
         }
         DashboardItemState.ERROR -> {
-            DashboardAnnouncementBannerCardError(
+            DashboardWidgetCardError(
+                stringResource(R.string.notificationsAnnouncementCategoryLabel),
+                R.drawable.campaign,
+                HorizonColors.Surface.institution().copy(alpha = 0.1f),
+                false,
+                DashboardWidgetPageState.Empty,
                 { state.onRefresh {} },
-                Modifier.padding(horizontal = 16.dp)
             )
         }
         DashboardItemState.SUCCESS -> {
