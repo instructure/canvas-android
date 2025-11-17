@@ -2,6 +2,16 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Skills
+
+Operational commands are available as skills in `.claude/skills/`:
+- `/build` - Build commands for all apps
+- `/test` - Unit and instrumentation test commands
+- `/deploy` - Device deployment and ADB commands
+- `/pr` - Pull request creation guidelines
+
+Use these skills when you need specific command references.
+
 ## Project Overview
 
 Canvas Android is a multi-app learning management system project with three main applications (Student, Teacher, Parent) sharing common libraries. The apps are built with Kotlin, Jetpack Compose (modern UI) and XML layouts (legacy), following MVVM architecture with Dagger Hilt for dependency injection.
@@ -24,66 +34,6 @@ Canvas Android is a multi-app learning management system project with three main
 **Testing Libraries (in `../automation/`):**
 - `espresso/` - UI testing framework built on Espresso
 - `dataseedingapi/` - gRPC wrapper for Canvas data seeding in tests
-
-## Build Commands
-
-Run from repository root (`canvas-android/`), not the `apps/` directory:
-
-```bash
-# Build Student app (dev debug variant)
-./gradle/gradlew -p apps :student:assembleDevDebug
-
-# Build Teacher app (dev debug variant)
-./gradle/gradlew -p apps :teacher:assembleDevDebug
-
-# Build Parent app (dev debug variant)
-./gradle/gradlew -p apps :parent:assembleDevDebug
-
-# Build all apps
-./gradle/gradlew -p apps assembleAllApps
-
-# Clean build
-./gradle/gradlew -p apps clean
-```
-
-## Running Tests
-
-**Unit Tests:**
-1. Set Build Variant to `qaDebug` in Android Studio
-2. Run tests by clicking the play button next to test cases/classes
-3. Or via command line:
-```bash
-./gradle/gradlew -p apps :student:testQaDebugUnitTest
-./gradle/gradlew -p apps :teacher:testQaDebugUnitTest
-./gradle/gradlew -p apps :parent:testQaDebugUnitTest
-```
-
-**Shared Library Tests:**
-```bash
-# Test a specific module
-./gradle/gradlew -p apps :pandautils:testDebugUnitTest
-
-# Test specific class
-./gradle/gradlew -p apps :pandautils:testDebugUnitTest --tests "com.instructure.pandautils.features.discussion.router.DiscussionRouterViewModelTest.*"
-
-# Force re-run tests (ignore cache)
-./gradle/gradlew -p apps :pandautils:testDebugUnitTest --rerun-tasks
-```
-
-**Instrumentation/Espresso Tests:**
-```bash
-./gradle/gradlew -p apps :student:connectedQaDebugAndroidTest
-./gradle/gradlew -p apps :teacher:connectedQaDebugAndroidTest
-```
-
-**Single Test:**
-```bash
-# Unit test
-./gradle/gradlew -p apps :student:testQaDebugUnitTest --tests "com.instructure.student.SpecificTest"
-
-# Instrumentation test
-./gradle/gradlew -p apps :student:connectedQaDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.instructure.student.ui.SpecificTest
-```
 
 ## Architecture
 
@@ -143,6 +93,7 @@ Dependencies are centralized in `buildSrc/src/main/java/GlobalDependencies.kt` w
 - Self-documenting code without inline comments unless specifically requested
 - Use descriptive variable and function names
 - **Companion objects**: Place companion objects at the bottom of the class, following Kotlin style guides. For simple private constants used only within a file, consider using top-level constants instead
+- Always use imports instead of fully qualified names in code
 
 ### Component Patterns
 - Use existing utility functions and shared components from `pandautils`
@@ -175,43 +126,6 @@ The project uses a Router pattern for navigation between features:
 - **Routing Methods**: Routers use `RouteMatcher.route()` to navigate to other fragments using `Route` objects
 - **Example Flow**: ViewModel → Action → Fragment.handleAction() → Router.routeTo*() → RouteMatcher.route()
 
-## Device Deployment
-
-**Install to Connected Device:**
-```bash
-# Install Student app
-./gradle/gradlew -p apps :student:installDevDebug
-
-# Install Teacher app
-./gradle/gradlew -p apps :teacher:installDevDebug
-
-# Install Parent app
-./gradle/gradlew -p apps :parent:installDevDebug
-```
-
-**Launch App:**
-```bash
-# Check connected devices
-adb devices
-
-# Launch using monkey (works with any launcher activity)
-adb shell monkey -p com.instructure.candroid -c android.intent.category.LAUNCHER 1
-adb shell monkey -p com.instructure.teacher -c android.intent.category.LAUNCHER 1
-adb shell monkey -p com.instructure.parentapp -c android.intent.category.LAUNCHER 1
-```
-
-**Common ADB Commands:**
-```bash
-# View logs
-adb logcat | grep "candroid"
-
-# Clear app data
-adb shell pm clear com.instructure.candroid
-
-# Uninstall app
-adb uninstall com.instructure.candroid
-```
-
 ## Additional Context
 
 ### Initial Setup
@@ -230,15 +144,3 @@ The project uses `PrivateData.merge()` to inject private configuration (API keys
 
 ### Localization
 Apps support multiple languages. Translation tags are scanned at build time via `LocaleScanner.getAvailableLanguageTags()`.
-
-### Pull Requests
-When creating a pull request, use the template located at `/PULL_REQUEST_TEMPLATE` in the repository root. The template includes:
-- Test plan description
-- Issue references (refs:)
-- Impact scope (affects: - only Student, Teacher, or Parent; can be multiple if affecting multiple apps)
-- Release note
-- Checklist (dark/light mode, landscape/tablet, accessibility, product approval)
-
-Note: Do not include E2E tests or screenshots sections in the PR description unless specifically needed.
-
-Use `gh pr create` with the template to create PRs from the command line.

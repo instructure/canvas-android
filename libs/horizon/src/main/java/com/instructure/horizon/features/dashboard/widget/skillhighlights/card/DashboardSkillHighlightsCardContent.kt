@@ -71,7 +71,6 @@ fun DashboardSkillHighlightsCardContent(
     ) {
         if (state.skills.isEmpty()) {
             Column {
-                HorizonSpace(SpaceSize.SPACE_8)
                 Text(
                     text = stringResource(R.string.dashboardSkillHighlightsNoDataTitle),
                     style = HorizonTypography.h4,

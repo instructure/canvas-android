@@ -82,9 +82,7 @@ class ToDoListFragment : BaseCanvasFragment(), FragmentInteractions, NavigationC
 
     override fun getFragment(): Fragment = this
 
-    override fun onHandleBackPressed(): Boolean {
-        return false
-    }
+    override fun onHandleBackPressed() = false
 
     companion object {
         fun makeRoute(canvasContext: CanvasContext): Route = Route(ToDoListFragment::class.java, canvasContext, Bundle())

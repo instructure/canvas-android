@@ -14,17 +14,26 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 package com.instructure.student.di.feature
 
+import android.appwidget.AppWidgetManager
+import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.instructure.pandautils.features.calendar.CalendarSharedEvents
 import com.instructure.pandautils.features.todolist.ToDoListRouter
+import com.instructure.pandautils.features.todolist.ToDoListViewModelBehavior
 import com.instructure.student.features.todolist.StudentToDoListRouter
+import com.instructure.student.features.todolist.StudentToDoListViewModelBehavior
+import com.instructure.student.widget.WidgetUpdater
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.FragmentComponent
+import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
+
 
 @Module
 @InstallIn(FragmentComponent::class)
@@ -37,5 +46,19 @@ class ToDoListModule {
         calendarSharedEvents: CalendarSharedEvents
     ): ToDoListRouter {
         return StudentToDoListRouter(activity, fragment, calendarSharedEvents)
+    }
+}
+
+@Module
+@InstallIn(ViewModelComponent::class)
+class ToDoListViewModelModule {
+
+    @Provides
+    fun provideToDoListViewModelBehavior(
+        @ApplicationContext context: Context,
+        widgetUpdater: WidgetUpdater,
+        appWidgetManager: AppWidgetManager
+    ): ToDoListViewModelBehavior {
+        return StudentToDoListViewModelBehavior(context, widgetUpdater, appWidgetManager)
     }
 }

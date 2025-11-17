@@ -16,10 +16,13 @@
 
 package com.instructure.student.features.dashboard.compose
 
+import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
+
 data class DashboardUiState(
     val loading: Boolean = true,
     val error: String? = null,
     val refreshing: Boolean = false,
+    val widgets: List<WidgetMetadata> = emptyList(),
     val onRefresh: () -> Unit = {},
     val onRetry: () -> Unit = {}
 )

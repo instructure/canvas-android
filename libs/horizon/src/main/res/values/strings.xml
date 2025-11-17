@@ -442,7 +442,7 @@
     <string name="dashboardAnnouncementRefreshMessage">Refresh</string>
     <string name="a11y_dashboardNextItemContentDescription">Next item</string>
     <string name="a11y_dashboardPreviousItemContentDescription">Previous item</string>
-    <string name="dsahboardPaginatedWidgetPagerMessage">%1$d of %2$d</string>
+    <string name="dashboardPaginatedWidgetPagerMessage">%1$d of %2$d</string>
     <string name="showMore">Show more</string>
     <string name="notesEmptyContentTitle">Start capturing your notes</string>
     <string name="notesEmptyContentBody">Your notes from learning materials will appear here. Highlight key ideas, reflections, or questions as you learn—they\'ll all be saved in your Notebook for easy review later.</string>

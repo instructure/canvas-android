@@ -71,6 +71,7 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
+import com.instructure.horizon.features.dashboard.widget.DashboardWidgetPageState
 import com.instructure.horizon.features.dashboard.widget.announcement.DashboardAnnouncementBannerWidget
 import com.instructure.horizon.features.dashboard.widget.course.DashboardCourseSection
 import com.instructure.horizon.features.dashboard.widget.myprogress.DashboardMyProgressWidget
@@ -282,7 +283,8 @@ private fun NumericWidgetRow(
     homeNavController: NavHostController
 ) {
     BoxWithConstraints {
-        val pagerState = rememberPagerState { 3 }
+        val pageCount = 3
+        val pagerState = rememberPagerState{ pageCount }
         if (this.isWideLayout) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -296,17 +298,20 @@ private fun NumericWidgetRow(
                 DashboardMyProgressWidget(
                     shouldRefresh,
                     refreshStateFlow,
+                    DashboardWidgetPageState.Empty,
                     Modifier.width(IntrinsicSize.Max)
                 )
                 DashboardTimeSpentWidget(
                     shouldRefresh,
                     refreshStateFlow,
+                    DashboardWidgetPageState.Empty,
                     Modifier.width(IntrinsicSize.Max)
                 )
                 DashboardSkillOverviewWidget(
                     homeNavController,
                     shouldRefresh,
                     refreshStateFlow,
+                    DashboardWidgetPageState.Empty,
                     Modifier.width(IntrinsicSize.Max)
                 )
             }
@@ -324,6 +329,7 @@ private fun NumericWidgetRow(
                         DashboardMyProgressWidget(
                             shouldRefresh,
                             refreshStateFlow,
+                            DashboardWidgetPageState(index + 1, pageCount),
                             modifier
                                 .fillMaxWidth()
                                 .padding(bottom = 16.dp)
@@ -334,6 +340,7 @@ private fun NumericWidgetRow(
                         DashboardTimeSpentWidget(
                             shouldRefresh,
                             refreshStateFlow,
+                            DashboardWidgetPageState(index + 1, pageCount),
                             modifier
                                 .fillMaxWidth()
                                 .padding(bottom = 16.dp)
@@ -345,6 +352,7 @@ private fun NumericWidgetRow(
                             homeNavController,
                             shouldRefresh,
                             refreshStateFlow,
+                            DashboardWidgetPageState(index + 1, pageCount),
                             modifier
                                 .fillMaxWidth()
                                 .padding(bottom = 16.dp)

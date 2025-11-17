@@ -42,6 +42,7 @@ import com.instructure.pandautils.utils.getGrade
 import com.instructure.pandautils.utils.getSubAssignmentSubmissionGrade
 import com.instructure.pandautils.utils.getSubAssignmentSubmissionStateLabel
 import com.instructure.pandautils.utils.getSubmissionStateLabel
+import com.instructure.pandautils.utils.isAllowedToSubmitWithOverrides
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.orderedCheckpoints
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -193,7 +194,7 @@ class GradesViewModel @Inject constructor(
                 val dueAt = assignment.dueAt ?: assignment.orderedCheckpoints.firstOrNull { it.dueAt != null }?.dueAt
                 val submission = assignment.submission
                 val isWithoutGradedSubmission = submission == null || submission.isWithoutGradedSubmission
-                val isOverdue = assignment.isAllowedToSubmit && isWithoutGradedSubmission
+                val isOverdue = assignment.isAllowedToSubmitWithOverrides(course) && isWithoutGradedSubmission
                 if (dueAt == null) {
                     undated.add(assignment)
                 } else {
