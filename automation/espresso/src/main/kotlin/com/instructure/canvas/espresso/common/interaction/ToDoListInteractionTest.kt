@@ -40,7 +40,7 @@ import java.util.Date
 
 abstract class ToDoListInteractionTest : CanvasComposeTest() {
 
-    val toDoListPage = ToDoListPage(composeTestRule)
+    private val toDoListPage = ToDoListPage(composeTestRule)
     private val toDoFilterPage = ToDoFilterPage(composeTestRule)
     private val todoDetailsPage = CalendarToDoDetailsPage(composeTestRule)
     private val eventDetailsPage = CalendarEventDetailsPage(composeTestRule)
