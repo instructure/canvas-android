@@ -58,6 +58,12 @@ class ToDoFilterPage(private val composeTestRule: ComposeTestRule) : BasePage() 
         composeTestRule.waitForIdle()
     }
 
+    fun toggleFavoriteCourses() {
+        composeTestRule.onNodeWithText(getStringFromResource(R.string.todoFilterFavoriteCoursesOnly))
+            .performClick()
+        composeTestRule.waitForIdle()
+    }
+
     fun clickClose() {
         composeTestRule.onNodeWithContentDescription(getStringFromResource(R.string.close))
             .performClick()

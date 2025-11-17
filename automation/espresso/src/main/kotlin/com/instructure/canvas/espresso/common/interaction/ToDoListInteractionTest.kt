@@ -551,6 +551,47 @@ abstract class ToDoListInteractionTest : CanvasComposeTest() {
         toDoListPage.assertItemDisplayed(futureAssignment.name!!)
     }
 
+    @Test
+    fun favoriteCoursesFilterShowsOnlyFavoriteCoursesItems() {
+        val data = initData()
+
+        val favoriteCourse = data.courses.values.first()
+        favoriteCourse.isFavorite = true
+
+        val nonFavoriteCourse = data.addCourse(isFavorite = false)
+
+        val favoriteAssignment = data.addAssignment(
+            favoriteCourse.id,
+            name = "Favorite Course Assignment",
+            dueAt = Calendar.getInstance().time.toApiString()
+        )
+
+        val nonFavoriteAssignment = data.addAssignment(
+            nonFavoriteCourse.id,
+            name = "Non-Favorite Course Assignment",
+            dueAt = Calendar.getInstance().time.toApiString()
+        )
+
+        goToToDoList(data)
+
+        composeTestRule.waitForIdle()
+
+        // By default, both assignments should be visible
+        toDoListPage.assertItemDisplayed(favoriteAssignment.name!!)
+        toDoListPage.assertItemDisplayed(nonFavoriteAssignment.name!!)
+
+        // Enable favorite courses filter
+        toDoListPage.clickFilterButton()
+        toDoFilterPage.toggleFavoriteCourses()
+        toDoFilterPage.clickDone()
+
+        composeTestRule.waitForIdle()
+
+        // Only the favorite course assignment should be visible
+        toDoListPage.assertItemDisplayed(favoriteAssignment.name!!)
+        toDoListPage.assertItemNotDisplayed(nonFavoriteAssignment.name!!)
+    }
+
     override fun displaysPageObjects() = Unit
 
     abstract fun goToToDoList(data: MockCanvas)
