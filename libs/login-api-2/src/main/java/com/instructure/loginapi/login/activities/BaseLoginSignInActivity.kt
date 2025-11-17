@@ -167,15 +167,17 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
     }
 
     private fun setupWindowInsets() {
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
+            val insets = windowInsets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
             view.setPadding(
-                systemBars.left,
+                insets.left,
                 0,
-                systemBars.right,
+                insets.right,
                 0
             )
-            insets
+            windowInsets
         }
     }
 

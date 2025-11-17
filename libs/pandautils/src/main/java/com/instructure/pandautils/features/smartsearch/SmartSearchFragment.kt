@@ -61,6 +61,11 @@ class SmartSearchFragment : BaseCanvasFragment() {
         super.onActivityCreated(savedInstanceState)
         ThemePrefs.reapplyCanvasTheme(requireActivity())
         ViewStyler.setStatusBarDark(requireActivity(), canvasContext.color)
+        // Clear any window dim that might be left from previous screen's search bar
+        requireActivity().window.clearFlags(android.view.WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+        requireActivity().window.attributes = requireActivity().window.attributes.apply {
+            dimAmount = 0f
+        }
     }
 
     override fun onCreateView(

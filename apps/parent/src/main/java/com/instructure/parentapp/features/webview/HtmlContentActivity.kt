@@ -20,6 +20,9 @@ package com.instructure.parentapp.features.webview
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.fragments.HtmlContentFragment
 import com.instructure.pandautils.fragments.HtmlContentFragment.Companion.DARK_TOOLBAR
@@ -34,8 +37,10 @@ class HtmlContentActivity : BaseCanvasActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_html_content)
         EdgeToEdgeHelper.enableEdgeToEdge(this)
+        setContentView(R.layout.activity_html_content)
+
+        setupWindowInsets()
 
         if (savedInstanceState == null) {
             val title = intent.getStringExtra(Const.TITLE).orEmpty()
@@ -49,6 +54,20 @@ class HtmlContentActivity : BaseCanvasActivity() {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragmentContainer, fragment)
                 .commit()
+        }
+    }
+
+    private fun setupWindowInsets() {
+        val root = findViewById<android.view.View>(R.id.fragmentContainer)
+        ViewCompat.setOnApplyWindowInsetsListener(root) { view, windowInsets ->
+            val insets = windowInsets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+            view.updatePadding(
+                left = insets.left,
+                right = insets.right
+            )
+            windowInsets
         }
     }
 

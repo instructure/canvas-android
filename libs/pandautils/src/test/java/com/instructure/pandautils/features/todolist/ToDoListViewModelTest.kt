@@ -16,6 +16,7 @@
 package com.instructure.pandautils.features.todolist
 
 import android.content.Context
+import android.os.Bundle
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Plannable
@@ -23,19 +24,32 @@ import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.models.PlannerOverride
 import com.instructure.canvasapi2.models.SubmissionState
+import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
+import com.instructure.canvasapi2.utils.AnalyticsParamConstants
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.todolist.filter.DateRangeSelection
+import com.instructure.pandautils.room.appdatabase.daos.ToDoFilterDao
+import com.instructure.pandautils.room.appdatabase.entities.ToDoFilterEntity
 import com.instructure.pandautils.utils.NetworkStateProvider
+import io.mockk.clearMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkConstructor
+import io.mockk.slot
 import io.mockk.unmockkAll
+import io.mockk.unmockkConstructor
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -55,16 +69,59 @@ class ToDoListViewModelTest {
     private val repository: ToDoListRepository = mockk(relaxed = true)
     private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
     private val firebaseCrashlytics: FirebaseCrashlytics = mockk(relaxed = true)
+    private val toDoFilterDao: ToDoFilterDao = mockk(relaxed = true)
+    private val apiPrefs: ApiPrefs = mockk(relaxed = true)
+    private val analytics: Analytics = mockk(relaxed = true)
+
+    private val testUser = User(id = 123L, name = "Test User")
+    private val testDomain = "test.instructure.com"
+
+    // Track Bundle values for analytics tests
+    private val bundleStorage = mutableMapOf<String, String?>()
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
         ContextKeeper.appContext = context
+
+        // Clear bundle storage for each test
+        bundleStorage.clear()
+
+        // Mock Bundle constructor for analytics tests
+        mockkConstructor(Bundle::class)
+        every { anyConstructed<Bundle>().putString(any(), any()) } answers {
+            val key = firstArg<String>()
+            val value = secondArg<String>()
+            bundleStorage[key] = value
+        }
+        every { anyConstructed<Bundle>().getString(any()) } answers {
+            val key = firstArg<String>()
+            bundleStorage[key]
+        }
+
+        // Setup default filter DAO and ApiPrefs behavior
+        every { apiPrefs.user } returns testUser
+        every { apiPrefs.fullDomain } returns testDomain
+
+        // Return a default filter that shows everything (including completed items)
+        // This prevents tests from accidentally filtering out items
+        val defaultTestFilter = ToDoFilterEntity(
+            userDomain = testDomain,
+            userId = testUser.id,
+            personalTodos = true,
+            calendarEvents = true,
+            showCompleted = true,  // Important: show completed items in tests by default
+            favoriteCourses = false,
+            pastDateRange = DateRangeSelection.ONE_WEEK,
+            futureDateRange = DateRangeSelection.ONE_WEEK
+        )
+        coEvery { toDoFilterDao.findByUser(any(), any()) } returns defaultTestFilter
     }
 
     @After
     fun tearDown() {
         Dispatchers.resetMain()
+        unmockkConstructor(Bundle::class)
         unmockkAll()
     }
 
@@ -704,9 +761,632 @@ class ToDoListViewModelTest {
         assertEquals(1, viewModel.uiState.value.toDoCount)
     }
 
+    // Filter integration tests
+    @Test
+    fun `onFiltersChanged with dateFiltersChanged true triggers data reload`() = runTest {
+        val courses = listOf(Course(id = 1L, name = "Course 1", courseCode = "CS101"))
+        val initialPlannerItems = listOf(createPlannerItem(id = 1L, title = "Assignment 1"))
+        val updatedPlannerItems = listOf(
+            createPlannerItem(id = 1L, title = "Assignment 1"),
+            createPlannerItem(id = 2L, title = "Assignment 2")
+        )
+
+        coEvery { repository.getCourses(false) } returns DataResult.Success(courses)
+        coEvery { repository.getPlannerItems(any(), any(), false) } returns DataResult.Success(initialPlannerItems)
+        coEvery { repository.getCourses(true) } returns DataResult.Success(courses) andThen DataResult.Success(courses)
+        coEvery { repository.getPlannerItems(any(), any(), true) } returns DataResult.Success(updatedPlannerItems)
+
+        val viewModel = getViewModel()
+
+        // Verify initial data
+        assertEquals(1, viewModel.uiState.value.itemsByDate.values.flatten().size)
+
+        // Trigger filter change with dateFiltersChanged=true
+        viewModel.uiState.value.onFiltersChanged(true)
+
+        // Verify data was reloaded
+        coVerify(atLeast = 2) { repository.getCourses(any()) }
+        coVerify(atLeast = 2) { repository.getPlannerItems(any(), any(), any()) }
+    }
+
+    @Test
+    fun `onFiltersChanged with dateFiltersChanged false applies filters locally`() = runTest {
+        val courses = listOf(Course(id = 1L, name = "Course 1", courseCode = "CS101"))
+        val plannerItems = listOf(
+            createPlannerItem(id = 1L, title = "Assignment 1"),
+            createPlannerItem(id = 2L, title = "Assignment 2")
+        )
+
+        coEvery { repository.getCourses(any()) } returns DataResult.Success(courses)
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(plannerItems)
+
+        val viewModel = getViewModel()
+
+        // Clear invocation counters after init
+        clearMocks(repository, answers = false)
+        coEvery { repository.getCourses(any()) } returns DataResult.Success(courses)
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(plannerItems)
+
+        // Trigger filter change with dateFiltersChanged=false
+        viewModel.uiState.value.onFiltersChanged(false)
+
+        // Verify data was NOT reloaded from repository (no additional calls)
+        coVerify(exactly = 0) { repository.getCourses(any()) }
+        coVerify(exactly = 0) { repository.getPlannerItems(any(), any(), any()) }
+    }
+
+    @Test
+    fun `Swipe to done adds item to removingItemIds when showCompleted is false`() = runTest {
+        val plannerItem = createPlannerItem(id = 1L, title = "Assignment", submitted = false)
+        val plannerOverride = PlannerOverride(id = 100L, plannableId = 1L, plannableType = PlannableType.ASSIGNMENT, markedComplete = true)
+        val filters = ToDoFilterEntity(
+            userDomain = testDomain,
+            userId = testUser.id,
+            showCompleted = false
+        )
+
+        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(listOf(plannerItem))
+        coEvery { repository.createPlannerOverride(any(), any(), any()) } returns DataResult.Success(plannerOverride)
+        coEvery { toDoFilterDao.findByUser(testDomain, testUser.id) } returns filters
+        every { networkStateProvider.isOnline() } returns true
+
+        val viewModel = getViewModel()
+
+        val item = viewModel.uiState.value.itemsByDate.values.flatten().first()
+        item.onSwipeToDone()
+
+        // Item should be added to removingItemIds since showCompleted=false
+        assertTrue(viewModel.uiState.value.removingItemIds.contains("1"))
+    }
+
+    @Test
+    fun `Swipe to done does NOT add item to removingItemIds when showCompleted is true`() = runTest {
+        val plannerItem = createPlannerItem(id = 1L, title = "Assignment", submitted = false)
+        val plannerOverride = PlannerOverride(id = 100L, plannableId = 1L, plannableType = PlannableType.ASSIGNMENT, markedComplete = true)
+        val filters = ToDoFilterEntity(
+            userDomain = testDomain,
+            userId = testUser.id,
+            showCompleted = true
+        )
+
+        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(listOf(plannerItem))
+        coEvery { repository.createPlannerOverride(any(), any(), any()) } returns DataResult.Success(plannerOverride)
+        coEvery { toDoFilterDao.findByUser(testDomain, testUser.id) } returns filters
+        every { networkStateProvider.isOnline() } returns true
+
+        val viewModel = getViewModel()
+
+        val item = viewModel.uiState.value.itemsByDate.values.flatten().first()
+        item.onSwipeToDone()
+
+        // Item should NOT be added to removingItemIds since showCompleted=true
+        assertFalse(viewModel.uiState.value.removingItemIds.contains("1"))
+    }
+
+    @Test
+    fun `Swipe to done removes item from removingItemIds on failure`() = runTest {
+        val plannerItem = createPlannerItem(id = 1L, title = "Assignment", submitted = false)
+        val filters = ToDoFilterEntity(
+            userDomain = testDomain,
+            userId = testUser.id,
+            showCompleted = false
+        )
+
+        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(listOf(plannerItem))
+        coEvery { repository.createPlannerOverride(any(), any(), any()) } returns DataResult.Fail()
+        coEvery { toDoFilterDao.findByUser(testDomain, testUser.id) } returns filters
+        every { networkStateProvider.isOnline() } returns true
+        every { context.getString(R.string.errorUpdatingToDo) } returns "Error updating to-do"
+
+        val viewModel = getViewModel()
+
+        val item = viewModel.uiState.value.itemsByDate.values.flatten().first()
+        item.onSwipeToDone()
+
+        // Item should be removed from removingItemIds since update failed
+        assertFalse(viewModel.uiState.value.removingItemIds.contains("1"))
+    }
+
+    @Test
+    fun `Checkbox toggle does NOT immediately add item to removingItemIds`() = runTest {
+        val plannerItem = createPlannerItem(id = 1L, title = "Assignment", submitted = false)
+        val plannerOverride = PlannerOverride(id = 100L, plannableId = 1L, plannableType = PlannableType.ASSIGNMENT, markedComplete = true)
+        val filters = ToDoFilterEntity(
+            userDomain = testDomain,
+            userId = testUser.id,
+            showCompleted = false
+        )
+
+        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(listOf(plannerItem))
+        coEvery { repository.createPlannerOverride(any(), any(), any()) } returns DataResult.Success(plannerOverride)
+        coEvery { toDoFilterDao.findByUser(testDomain, testUser.id) } returns filters
+        every { networkStateProvider.isOnline() } returns true
+
+        val viewModel = getViewModel()
+
+        val item = viewModel.uiState.value.itemsByDate.values.flatten().first()
+        item.onCheckboxToggle(true)
+
+        // Item should NOT be immediately added to removingItemIds (debounced)
+        assertFalse(viewModel.uiState.value.removingItemIds.contains("1"))
+    }
+
+    @Test
+    fun `Checkbox debounce timer adds items to removingItemIds after delay`() = runTest {
+        val plannerItem = createPlannerItem(id = 1L, title = "Assignment", submitted = false)
+        val plannerOverride = PlannerOverride(id = 100L, plannableId = 1L, plannableType = PlannableType.ASSIGNMENT, markedComplete = true)
+        val filters = ToDoFilterEntity(
+            userDomain = testDomain,
+            userId = testUser.id,
+            showCompleted = false
+        )
+
+        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(listOf(plannerItem))
+        coEvery { repository.createPlannerOverride(any(), any(), any()) } returns DataResult.Success(plannerOverride)
+        coEvery { toDoFilterDao.findByUser(testDomain, testUser.id) } returns filters
+        every { networkStateProvider.isOnline() } returns true
+
+        val viewModel = getViewModel()
+
+        val item = viewModel.uiState.value.itemsByDate.values.flatten().first()
+        item.onCheckboxToggle(true)
+
+        // Item should NOT be immediately added
+        assertFalse(viewModel.uiState.value.removingItemIds.contains("1"))
+
+        // Advance time past debounce delay (1 second)
+        advanceTimeBy(1100)
+
+        // Now item should be added to removingItemIds
+        assertTrue(viewModel.uiState.value.removingItemIds.contains("1"))
+    }
+
+    @Test
+    fun `Checkbox debounce timer resets when another checkbox action occurs`() = runTest {
+        val plannerItems = listOf(
+            createPlannerItem(id = 1L, title = "Assignment 1", submitted = false),
+            createPlannerItem(id = 2L, title = "Assignment 2", submitted = false)
+        )
+        val plannerOverride = PlannerOverride(id = 100L, plannableId = 1L, plannableType = PlannableType.ASSIGNMENT, markedComplete = true)
+        val filters = ToDoFilterEntity(
+            userDomain = testDomain,
+            userId = testUser.id,
+            showCompleted = false
+        )
+
+        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(plannerItems)
+        coEvery { repository.createPlannerOverride(any(), any(), any()) } returns DataResult.Success(plannerOverride)
+        coEvery { toDoFilterDao.findByUser(testDomain, testUser.id) } returns filters
+        every { networkStateProvider.isOnline() } returns true
+
+        val viewModel = getViewModel()
+
+        val items = viewModel.uiState.value.itemsByDate.values.flatten()
+        items[0].onCheckboxToggle(true)
+
+        // Advance time partway through debounce
+        advanceTimeBy(500)
+
+        // Toggle another item - this should reset the timer
+        items[1].onCheckboxToggle(true)
+
+        // Advance time to where first item would have been added
+        advanceTimeBy(700)
+
+        // First item should NOT be added yet (timer was reset)
+        assertFalse(viewModel.uiState.value.removingItemIds.contains("1"))
+
+        // Advance remaining time
+        advanceTimeBy(400)
+
+        // Now both items should be added
+        assertTrue(viewModel.uiState.value.removingItemIds.contains("1"))
+        assertTrue(viewModel.uiState.value.removingItemIds.contains("2"))
+    }
+
+    @Test
+    fun `Undo removes item from removingItemIds`() = runTest {
+        val plannerItem = createPlannerItem(id = 1L, title = "Assignment", submitted = false)
+        val plannerOverride = PlannerOverride(id = 100L, plannableId = 1L, plannableType = PlannableType.ASSIGNMENT, markedComplete = true)
+        val revertedOverride = plannerOverride.copy(markedComplete = false)
+        val filters = ToDoFilterEntity(
+            userDomain = testDomain,
+            userId = testUser.id,
+            showCompleted = false
+        )
+
+        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(listOf(plannerItem))
+        coEvery { repository.createPlannerOverride(1L, PlannableType.ASSIGNMENT, true) } returns DataResult.Success(plannerOverride)
+        coEvery { repository.updatePlannerOverride(100L, false) } returns DataResult.Success(revertedOverride)
+        coEvery { toDoFilterDao.findByUser(testDomain, testUser.id) } returns filters
+        every { networkStateProvider.isOnline() } returns true
+
+        val viewModel = getViewModel()
+
+        // Mark item as done
+        val item = viewModel.uiState.value.itemsByDate.values.flatten().first()
+        item.onSwipeToDone()
+
+        // Item should be in removingItemIds
+        assertTrue(viewModel.uiState.value.removingItemIds.contains("1"))
+
+        // Undo
+        viewModel.uiState.value.onUndoMarkAsDoneUndoneAction()
+
+        // Item should be removed from removingItemIds
+        assertFalse(viewModel.uiState.value.removingItemIds.contains("1"))
+    }
+
+    @Test
+    fun `Data reload clears removingItemIds`() = runTest {
+        val plannerItem = createPlannerItem(id = 1L, title = "Assignment", submitted = false)
+        val plannerOverride = PlannerOverride(id = 100L, plannableId = 1L, plannableType = PlannableType.ASSIGNMENT, markedComplete = true)
+        val filters = ToDoFilterEntity(
+            userDomain = testDomain,
+            userId = testUser.id,
+            showCompleted = false
+        )
+
+        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(listOf(plannerItem))
+        coEvery { repository.createPlannerOverride(any(), any(), any()) } returns DataResult.Success(plannerOverride)
+        coEvery { toDoFilterDao.findByUser(testDomain, testUser.id) } returns filters
+        every { networkStateProvider.isOnline() } returns true
+
+        val viewModel = getViewModel()
+
+        // Mark item as done
+        val item = viewModel.uiState.value.itemsByDate.values.flatten().first()
+        item.onSwipeToDone()
+
+        // Item should be in removingItemIds
+        assertTrue(viewModel.uiState.value.removingItemIds.contains("1"))
+
+        // Trigger data reload
+        viewModel.uiState.value.onRefresh()
+
+        // removingItemIds should be cleared
+        assertTrue(viewModel.uiState.value.removingItemIds.isEmpty())
+    }
+
+    @Test
+    fun `isFilterApplied is true when personal todos filter is enabled`() = runTest {
+        val filters = ToDoFilterEntity(
+            userDomain = testDomain,
+            userId = testUser.id,
+            personalTodos = true
+        )
+
+        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(emptyList())
+        coEvery { toDoFilterDao.findByUser(testDomain, testUser.id) } returns filters
+
+        val viewModel = getViewModel()
+
+        assertTrue(viewModel.uiState.value.isFilterApplied)
+    }
+
+    @Test
+    fun `isFilterApplied is true when calendar events filter is enabled`() = runTest {
+        val filters = ToDoFilterEntity(
+            userDomain = testDomain,
+            userId = testUser.id,
+            calendarEvents = true
+        )
+
+        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(emptyList())
+        coEvery { toDoFilterDao.findByUser(testDomain, testUser.id) } returns filters
+
+        val viewModel = getViewModel()
+
+        assertTrue(viewModel.uiState.value.isFilterApplied)
+    }
+
+    @Test
+    fun `isFilterApplied is true when show completed filter is enabled`() = runTest {
+        val filters = ToDoFilterEntity(
+            userDomain = testDomain,
+            userId = testUser.id,
+            showCompleted = true
+        )
+
+        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(emptyList())
+        coEvery { toDoFilterDao.findByUser(testDomain, testUser.id) } returns filters
+
+        val viewModel = getViewModel()
+
+        assertTrue(viewModel.uiState.value.isFilterApplied)
+    }
+
+    @Test
+    fun `isFilterApplied is true when favorite courses filter is enabled`() = runTest {
+        val filters = ToDoFilterEntity(
+            userDomain = testDomain,
+            userId = testUser.id,
+            favoriteCourses = true
+        )
+
+        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(emptyList())
+        coEvery { toDoFilterDao.findByUser(testDomain, testUser.id) } returns filters
+
+        val viewModel = getViewModel()
+
+        assertTrue(viewModel.uiState.value.isFilterApplied)
+    }
+
+    @Test
+    fun `isFilterApplied is true when past date range is not default`() = runTest {
+        val filters = ToDoFilterEntity(
+            userDomain = testDomain,
+            userId = testUser.id,
+            pastDateRange = DateRangeSelection.TWO_WEEKS
+        )
+
+        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(emptyList())
+        coEvery { toDoFilterDao.findByUser(testDomain, testUser.id) } returns filters
+
+        val viewModel = getViewModel()
+
+        assertTrue(viewModel.uiState.value.isFilterApplied)
+    }
+
+    @Test
+    fun `isFilterApplied is true when future date range is not default`() = runTest {
+        val filters = ToDoFilterEntity(
+            userDomain = testDomain,
+            userId = testUser.id,
+            futureDateRange = DateRangeSelection.THREE_WEEKS
+        )
+
+        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(emptyList())
+        coEvery { toDoFilterDao.findByUser(testDomain, testUser.id) } returns filters
+
+        val viewModel = getViewModel()
+
+        assertTrue(viewModel.uiState.value.isFilterApplied)
+    }
+
+    @Test
+    fun `isFilterApplied is false when all filters are default`() = runTest {
+        val filters = ToDoFilterEntity(
+            userDomain = testDomain,
+            userId = testUser.id,
+            personalTodos = false,
+            calendarEvents = false,
+            showCompleted = false,
+            favoriteCourses = false,
+            pastDateRange = DateRangeSelection.ONE_WEEK,
+            futureDateRange = DateRangeSelection.ONE_WEEK
+        )
+
+        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(emptyList())
+        coEvery { toDoFilterDao.findByUser(testDomain, testUser.id) } returns filters
+
+        val viewModel = getViewModel()
+
+        assertFalse(viewModel.uiState.value.isFilterApplied)
+    }
+
+    // Analytics tracking tests
+    @Test
+    fun `Analytics event is logged when item is marked as done`() = runTest {
+        val plannerItem = createPlannerItem(id = 1L, title = "Assignment", submitted = false)
+        val plannerOverride = PlannerOverride(id = 100L, plannableId = 1L, plannableType = PlannableType.ASSIGNMENT, markedComplete = true)
+
+        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(listOf(plannerItem))
+        coEvery { repository.createPlannerOverride(any(), any(), any()) } returns DataResult.Success(plannerOverride)
+        every { networkStateProvider.isOnline() } returns true
+
+        val viewModel = getViewModel()
+
+        val item = viewModel.uiState.value.itemsByDate.values.flatten().first()
+        item.onCheckboxToggle(true)
+
+        verify { analytics.logEvent(AnalyticsEventConstants.TODO_ITEM_MARKED_DONE) }
+    }
+
+    @Test
+    fun `Analytics event is logged when item is marked as undone`() = runTest {
+        val plannerOverride = PlannerOverride(id = 100L, plannableId = 1L, plannableType = PlannableType.ASSIGNMENT, markedComplete = true)
+        val plannerItem = createPlannerItem(id = 1L, title = "Assignment", submitted = false).copy(
+            plannerOverride = plannerOverride
+        )
+        val updatedOverride = plannerOverride.copy(markedComplete = false)
+
+        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(listOf(plannerItem))
+        coEvery { repository.updatePlannerOverride(any(), any()) } returns DataResult.Success(updatedOverride)
+        every { networkStateProvider.isOnline() } returns true
+
+        val viewModel = getViewModel()
+
+        val item = viewModel.uiState.value.itemsByDate.values.flatten().first()
+        item.onCheckboxToggle(false)
+
+        verify { analytics.logEvent(AnalyticsEventConstants.TODO_ITEM_MARKED_UNDONE) }
+    }
+
+    @Test
+    fun `Analytics event is logged when item is marked as done via swipe`() = runTest {
+        val plannerItem = createPlannerItem(id = 1L, title = "Assignment", submitted = false)
+        val plannerOverride = PlannerOverride(id = 100L, plannableId = 1L, plannableType = PlannableType.ASSIGNMENT, markedComplete = true)
+
+        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(listOf(plannerItem))
+        coEvery { repository.createPlannerOverride(any(), any(), any()) } returns DataResult.Success(plannerOverride)
+        every { networkStateProvider.isOnline() } returns true
+
+        val viewModel = getViewModel()
+
+        val item = viewModel.uiState.value.itemsByDate.values.flatten().first()
+        item.onSwipeToDone()
+
+        verify { analytics.logEvent(AnalyticsEventConstants.TODO_ITEM_MARKED_DONE) }
+    }
+
+    @Test
+    fun `Analytics event is not logged when item update fails`() = runTest {
+        val plannerItem = createPlannerItem(id = 1L, title = "Assignment", submitted = false)
+
+        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(listOf(plannerItem))
+        coEvery { repository.createPlannerOverride(any(), any(), any()) } returns DataResult.Fail()
+        every { networkStateProvider.isOnline() } returns true
+        every { context.getString(R.string.errorUpdatingToDo) } returns "Error updating to-do"
+
+        val viewModel = getViewModel()
+
+        val item = viewModel.uiState.value.itemsByDate.values.flatten().first()
+        item.onCheckboxToggle(true)
+
+        verify(exactly = 0) { analytics.logEvent(AnalyticsEventConstants.TODO_ITEM_MARKED_DONE) }
+        verify(exactly = 0) { analytics.logEvent(AnalyticsEventConstants.TODO_ITEM_MARKED_UNDONE) }
+    }
+
+    @Test
+    fun `Analytics event is logged for default filter on init`() = runTest {
+        val filters = ToDoFilterEntity(
+            userDomain = testDomain,
+            userId = testUser.id,
+            personalTodos = false,
+            calendarEvents = false,
+            showCompleted = false,
+            favoriteCourses = false,
+            pastDateRange = DateRangeSelection.ONE_WEEK,
+            futureDateRange = DateRangeSelection.ONE_WEEK
+        )
+
+        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(emptyList())
+        coEvery { toDoFilterDao.findByUser(testDomain, testUser.id) } returns filters
+
+        getViewModel()
+
+        verify { analytics.logEvent(AnalyticsEventConstants.TODO_LIST_LOADED_DEFAULT_FILTER) }
+    }
+
+    @Test
+    fun `Analytics event is logged for custom filter with personal todos enabled`() = runTest {
+        val filters = ToDoFilterEntity(
+            userDomain = testDomain,
+            userId = testUser.id,
+            personalTodos = true,
+            calendarEvents = false,
+            showCompleted = false,
+            favoriteCourses = false,
+            pastDateRange = DateRangeSelection.ONE_WEEK,
+            futureDateRange = DateRangeSelection.ONE_WEEK
+        )
+
+        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(emptyList())
+        coEvery { toDoFilterDao.findByUser(testDomain, testUser.id) } returns filters
+
+        getViewModel()
+
+        val bundleSlot = slot<Bundle>()
+        verify {
+            analytics.logEvent(
+                AnalyticsEventConstants.TODO_LIST_LOADED_CUSTOM_FILTER,
+                capture(bundleSlot)
+            )
+        }
+
+        assertEquals("true", bundleSlot.captured.getString(AnalyticsParamConstants.FILTER_PERSONAL_TODOS))
+        assertEquals("false", bundleSlot.captured.getString(AnalyticsParamConstants.FILTER_CALENDAR_EVENTS))
+        assertEquals("false", bundleSlot.captured.getString(AnalyticsParamConstants.FILTER_SHOW_COMPLETED))
+        assertEquals("false", bundleSlot.captured.getString(AnalyticsParamConstants.FILTER_FAVOURITE_COURSES))
+        assertEquals("one_week", bundleSlot.captured.getString(AnalyticsParamConstants.FILTER_SELECTED_DATE_RANGE_PAST))
+        assertEquals("one_week", bundleSlot.captured.getString(AnalyticsParamConstants.FILTER_SELECTED_DATE_RANGE_FUTURE))
+    }
+
+    @Test
+    fun `Analytics event is logged for custom filter with all options enabled`() = runTest {
+        val filters = ToDoFilterEntity(
+            userDomain = testDomain,
+            userId = testUser.id,
+            personalTodos = true,
+            calendarEvents = true,
+            showCompleted = true,
+            favoriteCourses = true,
+            pastDateRange = DateRangeSelection.TWO_WEEKS,
+            futureDateRange = DateRangeSelection.THREE_WEEKS
+        )
+
+        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(emptyList())
+        coEvery { toDoFilterDao.findByUser(testDomain, testUser.id) } returns filters
+
+        getViewModel()
+
+        val bundleSlot = slot<Bundle>()
+        verify {
+            analytics.logEvent(
+                AnalyticsEventConstants.TODO_LIST_LOADED_CUSTOM_FILTER,
+                capture(bundleSlot)
+            )
+        }
+
+        assertEquals("true", bundleSlot.captured.getString(AnalyticsParamConstants.FILTER_PERSONAL_TODOS))
+        assertEquals("true", bundleSlot.captured.getString(AnalyticsParamConstants.FILTER_CALENDAR_EVENTS))
+        assertEquals("true", bundleSlot.captured.getString(AnalyticsParamConstants.FILTER_SHOW_COMPLETED))
+        assertEquals("true", bundleSlot.captured.getString(AnalyticsParamConstants.FILTER_FAVOURITE_COURSES))
+        assertEquals("two_weeks", bundleSlot.captured.getString(AnalyticsParamConstants.FILTER_SELECTED_DATE_RANGE_PAST))
+        assertEquals("three_weeks", bundleSlot.captured.getString(AnalyticsParamConstants.FILTER_SELECTED_DATE_RANGE_FUTURE))
+    }
+
+    @Test
+    fun `Analytics event is logged for custom filter with custom date ranges`() = runTest {
+        val filters = ToDoFilterEntity(
+            userDomain = testDomain,
+            userId = testUser.id,
+            personalTodos = false,
+            calendarEvents = false,
+            showCompleted = false,
+            favoriteCourses = false,
+            pastDateRange = DateRangeSelection.FOUR_WEEKS,
+            futureDateRange = DateRangeSelection.FOUR_WEEKS
+        )
+
+        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(emptyList())
+        coEvery { toDoFilterDao.findByUser(testDomain, testUser.id) } returns filters
+
+        getViewModel()
+
+        val bundleSlot = slot<Bundle>()
+        verify {
+            analytics.logEvent(
+                AnalyticsEventConstants.TODO_LIST_LOADED_CUSTOM_FILTER,
+                capture(bundleSlot)
+            )
+        }
+
+        assertEquals("false", bundleSlot.captured.getString(AnalyticsParamConstants.FILTER_PERSONAL_TODOS))
+        assertEquals("false", bundleSlot.captured.getString(AnalyticsParamConstants.FILTER_CALENDAR_EVENTS))
+        assertEquals("false", bundleSlot.captured.getString(AnalyticsParamConstants.FILTER_SHOW_COMPLETED))
+        assertEquals("false", bundleSlot.captured.getString(AnalyticsParamConstants.FILTER_FAVOURITE_COURSES))
+        assertEquals("four_weeks", bundleSlot.captured.getString(AnalyticsParamConstants.FILTER_SELECTED_DATE_RANGE_PAST))
+        assertEquals("four_weeks", bundleSlot.captured.getString(AnalyticsParamConstants.FILTER_SELECTED_DATE_RANGE_FUTURE))
+    }
+
     // Helper functions
     private fun getViewModel(): ToDoListViewModel {
-        return ToDoListViewModel(context, repository, networkStateProvider, firebaseCrashlytics)
+        return ToDoListViewModel(context, repository, networkStateProvider, firebaseCrashlytics, toDoFilterDao, apiPrefs, analytics)
     }
 
     private fun createPlannerItem(

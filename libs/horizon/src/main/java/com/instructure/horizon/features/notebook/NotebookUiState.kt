@@ -31,4 +31,5 @@ data class NotebookUiState(
     val updateContent: (Long?, Pair<String, String>?) -> Unit,
     val showTopBar: Boolean = false,
     val showFilters: Boolean = false,
+    val navigateToEdit: Boolean = false
 )

@@ -30,6 +30,7 @@ import com.instructure.pandautils.utils.getContextNameForPlannerItem
 import com.instructure.pandautils.utils.getDateTextForPlannerItem
 import com.instructure.pandautils.utils.getIconForPlannerItem
 import com.instructure.pandautils.utils.getTagForPlannerItem
+import com.instructure.pandautils.utils.getUrl
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toLocalDate
 import com.instructure.student.widget.glance.WidgetState
@@ -114,29 +115,7 @@ class ToDoWidgetUpdater(
         canvasContextText = getContextNameForPlannerItem(context, courses),
         title = plannable.title,
         dateText = getDateTextForPlannerItem(context).orEmpty(),
-        url = getUrl(),
+        url = getUrl(apiPrefs),
         tag = getTagForPlannerItem(context)
     )
-
-    private fun PlannerItem.getUrl(): String {
-        val url = when (plannableType) {
-            PlannableType.CALENDAR_EVENT -> {
-                "/${canvasContext.type.apiString}/${canvasContext.id}/calendar_events/${plannable.id}"
-            }
-
-            PlannableType.PLANNER_NOTE -> {
-                "/todos/${plannable.id}"
-            }
-
-            else -> {
-                htmlUrl.orEmpty()
-            }
-        }
-
-        return if (url.startsWith("/")) {
-            apiPrefs.fullDomain + url
-        } else {
-            url
-        }
-    }
 }

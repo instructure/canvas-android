@@ -153,7 +153,6 @@ class NotificationListFragment : ParentFragment(), Bookmarkable, FragmentManager
         }
 
         recyclerBinding.listView.isSelectionEnabled = false
-        recyclerBinding.swipeRefreshLayout.applyBottomSystemBarInsets()
 
         binding.confirmButton.text = getString(R.string.delete)
         binding.confirmButton.setOnClickListener { recyclerAdapter?.confirmButtonClicked() }
