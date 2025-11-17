@@ -16,18 +16,12 @@
 
 package com.instructure.pandautils.features.dashboard.widget.db
 
-import androidx.room.Database
-import androidx.room.RoomDatabase
+import com.instructure.pandautils.room.common.createMigration
 
-@Database(
-    entities = [
-        WidgetConfigEntity::class,
-        WidgetMetadataEntity::class
-    ],
-    version = 2
+val widgetDatabaseMigrations = arrayOf(
+
+    createMigration(1, 2) { database ->
+        database.execSQL("ALTER TABLE widget_metadata ADD COLUMN isEditable INTEGER NOT NULL DEFAULT 1")
+        database.execSQL("ALTER TABLE widget_metadata ADD COLUMN isFullWidth INTEGER NOT NULL DEFAULT 0")
+    }
 )
-abstract class WidgetDatabase : RoomDatabase() {
-
-    abstract fun widgetConfigDao(): WidgetConfigDao
-    abstract fun widgetMetadataDao(): WidgetMetadataDao
-}

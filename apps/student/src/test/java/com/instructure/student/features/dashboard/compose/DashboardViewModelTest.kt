@@ -20,10 +20,11 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
-import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.pandautils.compose.SnackbarMessage
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.usecase.EnsureDefaultWidgetsUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetMetadataUseCase
+import com.instructure.pandautils.utils.NetworkStateProvider
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -35,7 +36,9 @@ import junit.framework.Assert.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -181,5 +184,54 @@ class DashboardViewModelTest {
         val state = viewModel.uiState.value
         assertFalse(state.loading)
         assertEquals("Test error", state.error)
+    }
+
+    @Test
+    fun testShowSnackbarEmitsMessage() = runTest {
+        val message = "Test message"
+        val messages = mutableListOf<SnackbarMessage>()
+
+        val job = launch(testDispatcher) {
+            viewModel.snackbarMessage.collect { snackbarMessage ->
+                messages.add(snackbarMessage)
+            }
+        }
+
+        viewModel.showSnackbar(message)
+        advanceUntilIdle()
+
+        assertEquals(1, messages.size)
+        assertEquals(message, messages[0].message)
+        assertEquals(null, messages[0].actionLabel)
+        assertEquals(null, messages[0].action)
+
+        job.cancel()
+    }
+
+    @Test
+    fun testShowSnackbarWithActionEmitsMessageAndAction() = runTest {
+        val message = "Test message"
+        val actionLabel = "Retry"
+        var actionInvoked = false
+        val action: () -> Unit = { actionInvoked = true }
+
+        val messages = mutableListOf<SnackbarMessage>()
+
+        val job = launch(testDispatcher) {
+            viewModel.snackbarMessage.collect { snackbarMessage ->
+                messages.add(snackbarMessage)
+            }
+        }
+
+        viewModel.showSnackbar(message, actionLabel, action)
+        advanceUntilIdle()
+
+        assertEquals(1, messages.size)
+        assertEquals(message, messages[0].message)
+        assertEquals(actionLabel, messages[0].actionLabel)
+        messages[0].action?.invoke()
+        assertTrue(actionInvoked)
+
+        job.cancel()
     }
 }
