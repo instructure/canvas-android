@@ -45,6 +45,10 @@ class ToDoListPage(private val composeTestRule: ComposeTestRule) : BasePage() {
         composeTestRule.onNodeWithText(itemTitle).assertIsDisplayed()
     }
 
+    fun assertItemNotDisplayed(itemTitle: String) {
+        composeTestRule.onNodeWithText(itemTitle).assertDoesNotExist()
+    }
+
     fun clickCheckbox(itemId: Long) {
         composeTestRule.onNodeWithTag("todoCheckbox_$itemId")
             .performClick()

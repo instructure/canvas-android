@@ -289,20 +289,24 @@ abstract class ToDoListInteractionTest : CanvasComposeTest() {
         val data = initData()
 
         val course = data.courses.values.first()
-
-        // Create a regular assignment
         val assignment = data.addAssignment(
             course.id,
-            name = "Incomplete Assignment",
+            name = "Assignment to Complete",
             dueAt = Calendar.getInstance().time.toApiString()
         )
 
         goToToDoList(data)
 
         composeTestRule.waitForIdle()
-
-        // Initially, should show the assignment
         toDoListPage.assertItemDisplayed(assignment.name!!)
+
+        // Mark the assignment as done
+        toDoListPage.clickCheckbox(assignment.id)
+        Thread.sleep(1000)
+        composeTestRule.waitForIdle()
+
+        // Verify it's no longer displayed (completed items are hidden by default)
+        toDoListPage.assertItemNotDisplayed(assignment.name!!)
 
         // Open filter and enable "Show Completed"
         toDoListPage.clickFilterButton()
@@ -311,7 +315,7 @@ abstract class ToDoListInteractionTest : CanvasComposeTest() {
 
         composeTestRule.waitForIdle()
 
-        // Still should show the assignment (it's not completed)
+        // Verify the completed assignment is now displayed
         toDoListPage.assertItemDisplayed(assignment.name!!)
     }
 
