@@ -67,6 +67,14 @@ class PeopleListFilterDialog : BaseCanvasAppCompatDialogFragment() {
         canvasContext = nonNullArgs.getParcelable(Const.CANVAS_CONTEXT)
         shouldIncludeGroups = nonNullArgs.getBoolean(Const.GROUPS)
 
+        // Restore selected contexts from saved state
+        savedInstanceState?.let {
+            val selectedContexts = it.getParcelableArrayList<CanvasContext>(SAVED_SELECTED_CONTEXTS_KEY)
+            selectedContexts?.forEach { context ->
+                canvasContextMap[context] = true
+            }
+        }
+
         recyclerView = view.findViewById(R.id.recyclerView)
         recyclerView?.layoutManager = LinearLayoutManager(requireContext())
 
@@ -154,6 +162,12 @@ class PeopleListFilterDialog : BaseCanvasAppCompatDialogFragment() {
         return canvasContexts
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        val selectedContexts = canvasContextMap.filter { it.value }.keys.toCollection(ArrayList())
+        outState.putParcelableArrayList(SAVED_SELECTED_CONTEXTS_KEY, selectedContexts)
+    }
+
     override fun onDestroyView() {
         mApiCalls?.cancel()
         super.onDestroyView()
@@ -162,6 +176,7 @@ class PeopleListFilterDialog : BaseCanvasAppCompatDialogFragment() {
     companion object {
         const val REQUEST_KEY = "PeopleListFilterDialog"
         const val RESULT_SELECTED_CONTEXTS = "selected_contexts"
+        private const val SAVED_SELECTED_CONTEXTS_KEY = "saved_selected_contexts"
 
         fun getInstance(manager: FragmentManager, canvasContextIdList: ArrayList<Long>, canvasContext: CanvasContext, shouldIncludeGroups: Boolean) : PeopleListFilterDialog {
             manager.dismissExisting<PeopleListFilterDialog>()
