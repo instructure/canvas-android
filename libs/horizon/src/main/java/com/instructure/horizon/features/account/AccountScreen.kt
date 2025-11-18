@@ -42,6 +42,7 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
@@ -81,7 +82,12 @@ fun AccountScreen(
 }
 
 @Composable
-private fun AccountContentScreen(state: AccountUiState, navController: NavController, onLogout: () -> Unit, switchExperience: () -> Unit) {
+private fun AccountContentScreen(
+    state: AccountUiState,
+    navController: NavController,
+    onLogout: () -> Unit,
+    switchExperience: () -> Unit
+) {
     LazyColumn(
         contentPadding = PaddingValues(24.dp)
     ) {
@@ -136,6 +142,7 @@ private fun AccountContentScreen(state: AccountUiState, navController: NavContro
                             navController,
                             onLogout,
                             switchExperience,
+                            state.onShowSnackbar,
                             clipModifier
                         )
 
@@ -156,8 +163,16 @@ private fun AccountContentScreen(state: AccountUiState, navController: NavContro
 }
 
 @Composable
-private fun AccountItem(item: AccountItemState, navController: NavController, onLogout: () -> Unit, switchExperience: () -> Unit, modifier: Modifier = Modifier) {
+private fun AccountItem(
+    item: AccountItemState,
+    navController: NavController,
+    onLogout: () -> Unit,
+    switchExperience: () -> Unit,
+    onShowSnackbar: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
     val uriHandler = LocalUriHandler.current
+    val context = LocalContext.current
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
@@ -168,7 +183,11 @@ private fun AccountItem(item: AccountItemState, navController: NavController, on
                     is AccountItemType.Open -> navController.navigate(item.type.route.route)
 
                     is AccountItemType.OpenExternal -> {
-                        uriHandler.openUri(item.type.url)
+                        try {
+                            uriHandler.openUri(item.type.url)
+                        } catch (_: Exception) {
+                            onShowSnackbar(context.getString(R.string.accountFailedtoOpenLinkMessage))
+                        }
                     }
 
                     is AccountItemType.LogOut -> {

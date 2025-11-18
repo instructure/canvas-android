@@ -28,6 +28,7 @@ data class AccountUiState(
     val updateUserName: (String) -> Unit = {},
     val performLogout: () -> Unit = {},
     val switchExperience: () -> Unit = {},
+    val onShowSnackbar: (String) -> Unit = {},
     val restartApp: Boolean = false,
 )
 

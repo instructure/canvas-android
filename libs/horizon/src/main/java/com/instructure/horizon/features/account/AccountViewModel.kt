@@ -53,7 +53,8 @@ class AccountViewModel @Inject constructor(
             ),
             updateUserName = ::updateUserName,
             performLogout = ::performLogout,
-            switchExperience = ::switchExperience
+            switchExperience = ::switchExperience,
+            onShowSnackbar = ::onShowSnackbar
         )
     )
     val uiState = _uiState.asStateFlow()
@@ -169,6 +170,12 @@ class AccountViewModel @Inject constructor(
     private fun dismissSnackbar() {
         _uiState.update {
             it.copy(screenState = it.screenState.copy(snackbarMessage = null))
+        }
+    }
+
+    private fun onShowSnackbar(message: String) {
+        _uiState.update {
+            it.copy(screenState = it.screenState.copy(snackbarMessage = message))
         }
     }
 
