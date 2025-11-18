@@ -40,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -57,6 +58,7 @@ import com.instructure.pandautils.compose.composables.CanvasDivider
 fun SpeedGraderCommentsScreen(
     expanded: Boolean,
     fixed: Boolean = false,
+    showRubric: Boolean = false,
     onExpandToggle: () -> Unit
 ) {
     val viewModel: SpeedGraderCommentsViewModel = hiltViewModel()
@@ -76,12 +78,14 @@ fun SpeedGraderCommentsScreen(
                 .semantics {
                     stateDescription = if (expanded) stateExpanded else stateCollapsed
                 }
-                .clickable(
-                    enabled = !uiState.isLoading
-                ) {
-                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                    onExpandToggle()
-                }
+                .then(
+                    if (showRubric) Modifier.clickable(
+                        enabled = !uiState.isLoading
+                    ) {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        onExpandToggle()
+                    } else Modifier
+                )
                 .padding(horizontal = 16.dp)
                 .height(50.dp)
 
@@ -98,7 +102,7 @@ fun SpeedGraderCommentsScreen(
                 color = colorResource(R.color.textDarkest),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f).testTag("commentsLabel")
             )
             if (uiState.isLoading) {
                 CircularProgressIndicator(

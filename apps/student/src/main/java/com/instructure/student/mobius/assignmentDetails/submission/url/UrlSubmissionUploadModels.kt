@@ -26,7 +26,7 @@ sealed class UrlSubmissionUploadEvent {
 
 sealed class UrlSubmissionUploadEffect {
     data class ShowUrlPreview(val url: String) : UrlSubmissionUploadEffect()
-    data class SubmitUrl(val url: String, val course: CanvasContext, val assignmentId: Long, val assignmentName: String?) : UrlSubmissionUploadEffect()
+    data class SubmitUrl(val url: String, val course: CanvasContext, val assignmentId: Long, val assignmentName: String?, val attempt: Long) : UrlSubmissionUploadEffect()
     data class InitializeUrl(val url: String?) : UrlSubmissionUploadEffect()
 }
 
@@ -41,5 +41,6 @@ data class UrlSubmissionUploadModel(
         val initialUrl: String? = null,
         val isFailure: Boolean = false,
         val urlError: MalformedUrlError = MalformedUrlError.NONE,
-        val isSubmittable: Boolean = false
+        val isSubmittable: Boolean = false,
+        val attempt: Long = 1L
 )

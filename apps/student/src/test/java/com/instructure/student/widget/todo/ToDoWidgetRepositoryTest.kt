@@ -25,10 +25,11 @@ import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.models.PlannerOverride
 import com.instructure.canvasapi2.models.SubmissionState
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.LinkHeaders
-import com.instructure.pandautils.room.calendar.daos.CalendarFilterDao
-import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
+import com.instructure.pandautils.room.appdatabase.daos.ToDoFilterDao
+import com.instructure.pandautils.room.appdatabase.entities.ToDoFilterEntity
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -43,15 +44,16 @@ class ToDoWidgetRepositoryTest {
 
     private val plannerApi: PlannerAPI.PlannerInterface = mockk(relaxed = true)
     private val coursesApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
-    private val calendarFilterDao: CalendarFilterDao = mockk(relaxed = true)
+    private val toDoFilterDao: ToDoFilterDao = mockk(relaxed = true)
+    private val apiPrefs: ApiPrefs = mockk(relaxed = true)
 
-    private val repository: ToDoWidgetRepository = ToDoWidgetRepository(plannerApi, coursesApi, calendarFilterDao)
+    private val repository: ToDoWidgetRepository = ToDoWidgetRepository(plannerApi, coursesApi, toDoFilterDao, apiPrefs)
 
     @Test
     fun `Returns failed result when planner api request fails`() = runTest {
-        coEvery { plannerApi.getPlannerItems(any(), any(), any(), any()) } returns DataResult.Fail()
+        coEvery { plannerApi.getPlannerItems(any(), any(), any(), any(), any()) } returns DataResult.Fail()
 
-        val result = repository.getPlannerItems("2023-1-1", "2023-1-2", emptyList(), true)
+        val result = repository.getPlannerItems("2023-1-1", "2023-1-2", true)
 
         assertEquals(DataResult.Fail(), result)
     }
@@ -69,9 +71,9 @@ class ToDoWidgetRepositoryTest {
             createPlannerItem(2, 6, PlannableType.CALENDAR_EVENT)
         )
 
-        coEvery { plannerApi.getPlannerItems(any(), any(), any(), any()) } returns DataResult.Success(plannerItems)
+        coEvery { plannerApi.getPlannerItems(any(), any(), any(), any(), any()) } returns DataResult.Success(plannerItems)
 
-        val result = repository.getPlannerItems("2023-1-1", "2023-1-2", emptyList(), true)
+        val result = repository.getPlannerItems("2023-1-1", "2023-1-2", true)
 
         assertEquals(DataResult.Success(plannerItems.minus(listOf(filteredItem, filteredItem2).toSet())), result)
     }
@@ -88,13 +90,13 @@ class ToDoWidgetRepositoryTest {
             createPlannerItem(2, 6, PlannableType.CALENDAR_EVENT)
         )
 
-        coEvery { plannerApi.getPlannerItems(any(), any(), any(), any()) } returns DataResult.Success(
+        coEvery { plannerApi.getPlannerItems(any(), any(), any(), any(), any()) } returns DataResult.Success(
             plannerItems1,
             linkHeaders = LinkHeaders(nextUrl = "next")
         )
         coEvery { plannerApi.nextPagePlannerItems(eq("next"), any()) } returns DataResult.Success(plannerItems2)
 
-        val result = repository.getPlannerItems("2023-1-1", "2023-1-2", emptyList(), true)
+        val result = repository.getPlannerItems("2023-1-1", "2023-1-2", true)
 
         assertEquals(DataResult.Success(plannerItems1.plus(plannerItems2)), result)
     }
@@ -141,14 +143,16 @@ class ToDoWidgetRepositoryTest {
     }
 
     @Test
-    fun `Gets calendar filters frm db`() = runTest {
-        val filters = CalendarFilterEntity(1, "domain", "1", -1, setOf("filter1"))
-        coEvery { calendarFilterDao.findByUserIdAndDomain(any(), any()) } returns filters
+    fun `Gets todo filters from db`() = runTest {
+        val filters = ToDoFilterEntity(1, "domain", 1)
+        coEvery { apiPrefs.fullDomain } returns "domain"
+        coEvery { apiPrefs.user?.id } returns 1
+        coEvery { toDoFilterDao.findByUser(any(), any()) } returns filters
 
-        val result = repository.getCalendarFilters(1, "domain")
+        val result = repository.getToDoFilters()
 
         assertEquals(filters, result)
-        coVerify { calendarFilterDao.findByUserIdAndDomain(1, "domain") }
+        coVerify { toDoFilterDao.findByUser("domain", 1) }
     }
 
     private fun createPlannerItem(

@@ -22,6 +22,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.composables.DiscussionCheckpointUiState
 import com.instructure.pandautils.features.grades.gradepreferences.GradePreferencesUiState
 import com.instructure.pandautils.features.grades.gradepreferences.SortBy
 import com.instructure.pandautils.utils.DisplayGrade
@@ -44,7 +45,9 @@ data class GradesUiState(
     val onlyGradedAssignmentsSwitchEnabled: Boolean = true,
     val gradeText: String = "",
     val isGradeLocked: Boolean = false,
-    val snackbarMessage: String? = null
+    val snackbarMessage: String? = null,
+    val searchQuery: String = "",
+    val isSearchExpanded: Boolean = false
 )
 
 data class AssignmentGroupUiState(
@@ -60,7 +63,9 @@ data class AssignmentUiState(
     val name: String,
     val dueDate: String,
     val submissionStateLabel: SubmissionStateLabel,
-    val displayGrade: DisplayGrade
+    val displayGrade: DisplayGrade,
+    val checkpoints: List<DiscussionCheckpointUiState> = emptyList(),
+    val checkpointsExpanded: Boolean = false
 )
 
 sealed class SubmissionStateLabel {
@@ -99,6 +104,9 @@ sealed class GradesAction {
     data class OnlyGradedAssignmentsSwitchCheckedChange(val checked: Boolean) : GradesAction()
     data class AssignmentClick(val id: Long) : GradesAction()
     data object SnackbarDismissed : GradesAction()
+    data class ToggleCheckpointsExpanded(val assignmentId: Long) : GradesAction()
+    data object ToggleSearch : GradesAction()
+    data class SearchQueryChanged(val query: String) : GradesAction()
 }
 
 sealed class GradesViewModelAction {

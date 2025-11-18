@@ -15,19 +15,31 @@
  */
 package com.instructure.teacher.presenters
 
+import com.instructure.canvasapi2.CanvasRestAdapter
+import com.instructure.canvasapi2.apis.UserAPI
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DashboardCard
+import com.instructure.canvasapi2.models.DashboardPositions
+import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.weave.apiAsync
+import com.instructure.pandarecycler.util.toList
 import com.instructure.pandautils.blueprint.SyncPresenter
 import com.instructure.pandautils.utils.ColorApiHelper
+import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.teacher.viewinterface.CoursesView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class DashboardPresenter : SyncPresenter<Course, CoursesView>(Course::class.java) {
+class DashboardPresenter(
+    private val userApi: UserAPI.UsersInterface,
+    private val networkStateProvider: NetworkStateProvider
+) : SyncPresenter<Course, CoursesView>(Course::class.java) {
 
     private var dashboardJob: Job? = null
 
@@ -54,6 +66,7 @@ class DashboardPresenter : SyncPresenter<Course, CoursesView>(Course::class.java
             .onSuccess { courses ->
                 // Make a call to get which courses are visible on the dashboard as well as their position
                 loadCards(forceNetwork, courses)
+                storeDomainOverrides(courses)
             }
     }
 
@@ -67,6 +80,14 @@ class DashboardPresenter : SyncPresenter<Course, CoursesView>(Course::class.java
                 data.addOrUpdate(validCourses)
                 notifyRefreshFinished()
             }
+    }
+
+    private fun storeDomainOverrides(courses: List<Course>) {
+        courses.forEach { course ->
+            course.tabs?.find { it.tabId == Tab.ASSIGNMENTS_ID }?.domain?.let {
+                ApiPrefs.overrideDomains[course.id] = it
+            }
+        }
     }
 
     private fun createCourseFromDashboardCard(dashboardCard: DashboardCard, courseMap: Map<Long, Course>): Course {
@@ -101,5 +122,37 @@ class DashboardPresenter : SyncPresenter<Course, CoursesView>(Course::class.java
 
     override fun areContentsTheSame(item1: Course, item2: Course): Boolean {
         return item1.contextId.hashCode() == item2.contextId.hashCode()
+    }
+
+    fun moveCourse(fromPosition: Int, toPosition: Int) {
+        if (fromPosition < 0
+            || toPosition < 0
+            || fromPosition >= data.size()
+            || toPosition >= data.size()
+            || fromPosition == toPosition
+        ) return
+        val courses = data.toList().toMutableList()
+        val movedCourse = courses.removeAt(fromPosition)
+        courses.add(toPosition, movedCourse)
+        data.clear()
+        data.addOrUpdate(courses)
+    }
+
+    suspend fun saveDashboardPositions(): DataResult<DashboardPositions> {
+        val courses = data.toList()
+        val positions = courses
+            .mapIndexed { index, course -> Pair(course.contextId, index) }
+            .toMap()
+        val dashboardPositions = DashboardPositions(positions)
+
+        val result = userApi.updateDashboardPositions(dashboardPositions, RestParams(isForceReadFromNetwork = true))
+        if (result is DataResult.Success) {
+            CanvasRestAdapter.clearCacheUrls("dashboard/dashboard_cards")
+        }
+        return result
+    }
+
+    fun isOnline(): Boolean {
+        return networkStateProvider.isOnline()
     }
 }

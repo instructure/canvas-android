@@ -20,19 +20,21 @@ import androidx.test.espresso.matcher.ViewMatchers
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
 import com.google.android.apps.common.testing.accessibility.framework.checks.SpeakableTextPresentCheck
 import com.instructure.canvas.espresso.common.interaction.InboxSignatureInteractionTest
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.fakes.FakeAssignmentDetailsManager
-import com.instructure.canvas.espresso.mockCanvas.fakes.FakeCommentLibraryManager
-import com.instructure.canvas.espresso.mockCanvas.fakes.FakeInboxSettingsManager
-import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionCommentsManager
-import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionContentManager
-import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionDetailsManager
-import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionGradeManager
-import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionRubricManager
-import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.mockcanvas.MockCanvas
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeAssignmentDetailsManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeCommentLibraryManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeInboxSettingsManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakePostPolicyManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionCommentsManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionContentManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionDetailsManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionGradeManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionRubricManager
+import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvasapi2.di.GraphQlApiModule
 import com.instructure.canvasapi2.managers.CommentLibraryManager
 import com.instructure.canvasapi2.managers.InboxSettingsManager
+import com.instructure.canvasapi2.managers.PostPolicyManager
 import com.instructure.canvasapi2.managers.SubmissionRubricManager
 import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionCommentsManager
@@ -41,10 +43,10 @@ import com.instructure.canvasapi2.managers.graphql.SubmissionDetailsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionGradeManager
 import com.instructure.parentapp.BuildConfig
 import com.instructure.parentapp.features.login.LoginActivity
-import com.instructure.parentapp.ui.pages.DashboardPage
-import com.instructure.parentapp.ui.pages.LeftSideNavigationDrawerPage
+import com.instructure.parentapp.ui.pages.classic.DashboardPage
+import com.instructure.parentapp.ui.pages.classic.LeftSideNavigationDrawerPage
 import com.instructure.parentapp.utils.ParentActivityTestRule
-import com.instructure.parentapp.utils.tokenLogin
+import com.instructure.parentapp.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
@@ -85,6 +87,10 @@ class ParentInboxSignatureInteractionTest : InboxSignatureInteractionTest() {
     @BindValue
     @JvmField
     val commentLibraryManager: CommentLibraryManager = FakeCommentLibraryManager()
+
+    @BindValue
+    @JvmField
+    val postPolicyManager: PostPolicyManager = FakePostPolicyManager()
 
     private val dashboardPage = DashboardPage()
     private val leftSideNavigationDrawerPage = LeftSideNavigationDrawerPage()

@@ -63,6 +63,7 @@ fun AttachmentCard(
 ) {
     val attachment = attachmentCardItem.attachment
     val status = attachmentCardItem.status
+    val isClickEnabled = status != AttachmentStatus.UPLOADING
 
     Card(
         backgroundColor = colorResource(id = com.instructure.pandares.R.color.backgroundLightest),
@@ -70,7 +71,7 @@ fun AttachmentCard(
         shape = RoundedCornerShape(10.dp),
         modifier = modifier
             .testTag("attachment")
-            .clickable { onSelect() }
+            .clickable(enabled = isClickEnabled) { onSelect() }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -130,7 +131,18 @@ fun AttachmentCard(
             if (!attachmentCardItem.readOnly){
                 when (status) {
                     AttachmentStatus.UPLOADING -> {
-                        Loading()
+                        val progress = attachmentCardItem.uploadProgress
+                        if (progress != null && progress > 0f) {
+                            // Show progress percentage
+                            Text(
+                                text = "${(progress * 100).toInt()}%",
+                                color = colorResource(id = R.color.textDark),
+                                fontSize = 14.sp
+                            )
+                        } else {
+                            // Show indeterminate loading spinner
+                            Loading()
+                        }
                     }
 
                     AttachmentStatus.UPLOADED -> {

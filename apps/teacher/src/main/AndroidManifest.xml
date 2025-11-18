@@ -275,6 +275,7 @@
 
     <queries>
         <package android:name="com.instructure.candroid" />
+        <package android:name="com.instructure.parentapp" />
         <package android:name="us.zoom.videomeetings" />
         <intent>
             <action android:name="android.media.action.IMAGE_CAPTURE" />

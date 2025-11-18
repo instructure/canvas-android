@@ -14,6 +14,7 @@ import com.instructure.pandautils.room.appdatabase.daos.ModuleBulkProgressDao
 import com.instructure.pandautils.room.appdatabase.daos.PendingSubmissionCommentDao
 import com.instructure.pandautils.room.appdatabase.daos.ReminderDao
 import com.instructure.pandautils.room.appdatabase.daos.SubmissionCommentDao
+import com.instructure.pandautils.room.appdatabase.daos.ToDoFilterDao
 import com.instructure.pandautils.room.appdatabase.entities.AttachmentEntity
 import com.instructure.pandautils.room.appdatabase.entities.AuthorEntity
 import com.instructure.pandautils.room.appdatabase.entities.DashboardFileUploadEntity
@@ -25,6 +26,7 @@ import com.instructure.pandautils.room.appdatabase.entities.ModuleBulkProgressEn
 import com.instructure.pandautils.room.appdatabase.entities.PendingSubmissionCommentEntity
 import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
 import com.instructure.pandautils.room.appdatabase.entities.SubmissionCommentEntity
+import com.instructure.pandautils.room.appdatabase.entities.ToDoFilterEntity
 import com.instructure.pandautils.room.assignment.list.converter.AssignmentFilterConverter
 import com.instructure.pandautils.room.assignment.list.daos.AssignmentListSelectedFiltersEntityDao
 import com.instructure.pandautils.room.assignment.list.entities.AssignmentListSelectedFiltersEntity
@@ -43,8 +45,9 @@ import com.instructure.pandautils.room.common.Converters
         ReminderEntity::class,
         ModuleBulkProgressEntity::class,
         AssignmentListSelectedFiltersEntity::class,
-        FileDownloadProgressEntity::class
-    ], version = 12
+        FileDownloadProgressEntity::class,
+        ToDoFilterEntity::class
+    ], version = 14
 )
 @TypeConverters(Converters::class, AssignmentFilterConverter::class)
 abstract class AppDatabase : RoomDatabase() {
@@ -72,4 +75,6 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun assignmentListSelectedFiltersEntityDao(): AssignmentListSelectedFiltersEntityDao
 
     abstract fun fileDownloadProgressDao(): FileDownloadProgressDao
+
+    abstract fun toDoFilterDao(): ToDoFilterDao
 }

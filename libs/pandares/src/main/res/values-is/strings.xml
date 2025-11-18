@@ -468,7 +468,7 @@
     <!-- Groups -->
     <string name="groupDialogTitle">Hópskilaboð?</string>
     <string name="groupDialogMessage">Bæta öllum við eitt hópsamtal eða senda skilaboð á alla hvern fyrir sig?</string>
-    <string name="group">Hópur</string>
+    <string name="group">Verkefnaflokkur</string>
     <string name="groups">Hópar</string>
     <string name="groupMembers">Hópmeðlimir</string>
 
@@ -908,6 +908,15 @@
         <item quantity="other">%s punktar</item>
     </plurals>
 
+    <plurals name="pointsPts">
+        <item quantity="one">punktur</item>
+        <item quantity="other">punktar</item>
+    </plurals>
+
+    <plurals name="pointsPossible">
+        <item quantity="one">\/ %.0f punktur</item>
+        <item quantity="other">\/ %.0f punktar</item>
+    </plurals>
     <string name="timeLimit">Tímamörk</string>
     <string name="newPushNotifications">%1$s nýjar tilkynningar</string>
     <string name="like">líka við</string>
@@ -978,7 +987,7 @@
     <string name="updating_module_info">Uppfæri einingaupplýsingar&#8230;</string>
     <string name="pending_review">Bíður mats</string>
     <string name="totalPoints">%s punktar</string>
-    <string name="totalPointsText">Heildarpunktar</string>
+    <string name="totalPointsText">Heildarstig</string>
     <string name="contentDescriptionPoints">%s punktar</string>
     <string name="score">Einkunn</string>
     <string name="rangedRubricTotal" formatted="false">%s / %s punktar</string>
@@ -1033,6 +1042,10 @@
     <string name="downloadFailed">Niðurhal mistókst</string>
     <string name="downloadSuccessful">Niðurhal tókst</string>
 
+    <string name="downloading">Hleðst niður</string>
+    <string name="downloadComplete">Niðurhleðslu lokið</string>
+    <string name="notificationChannelNameFileDownloadsName">Niðurhalstilkynningar</string>
+    <string name="notificationChannelNameFileDownloadsDescription">Canvas-tilkynningar fyrir niðurhal sem er í gangi.</string>
     <string name="full_due_date_details">Upplýsingar um skiladag</string>
     <string name="submissions">Skil</string>
     <string name="attachment">Viðhengi</string>
@@ -1887,7 +1900,7 @@
     <string name="gradesBasedOnGraded">Byggt á verkefnum með einkunnum</string>
     <string name="lateSubmissionLabel">Seint</string>
     <string name="sortByDueDate">Skiladagur</string>
-    <string name="sortByGroup">Hópur</string>
+    <string name="sortByGroup">Verkefnaflokkur</string>
     <string name="gradePreferencesScreenTitle">Kjörstillingar fyrir einkunnir</string>
     <string name="gradePreferencesHeaderGradingPeriod">Einkunnatímabil</string>
     <string name="gradePreferencesHeaderSortBy">Raða eftir</string>
@@ -2006,6 +2019,7 @@
     <string name="inboxSignatureSwitchLabel">Undirskrift</string>
     <string name="inboxSignatureTextfieldHeader">Texti undirskriftar</string>
     <string name="due_dateTime">Skil: %1$s, %2$s</string>
+    <string name="submitted_dateTime">Skilað: %1$s, %2$s</string>
     <string name="noDueDate">Enginn skiladagur</string>
     <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
     <string name="needsGradingCount">%1$s Þarfnast einkunnargjafar</string>
@@ -2013,6 +2027,10 @@
     <plurals name="assignmentListMaxpoints">
         <item quantity="one">%d punktur</item>
         <item quantity="other">%d punktar</item>
+    </plurals>
+    <plurals name="percentGradeScore">
+        <item quantity="one">(%.0f punktur)</item>
+        <item quantity="other">(%.0f punktar)</item>
     </plurals>
     <string name="noAssignments">Engin verkefni</string>
     <string name="assignmentGroup">Verkefnahópur</string>
@@ -2069,4 +2087,57 @@
     <string name="widgetSingleGradeSelectCourse">Við skulum velja námskeið</string>
     <string name="widgetGradesErrorLoadingCourses">Villa við sókn á námskeiðum.</string>
     <string name="settingsSwitchExperience">Skiptu yfir í Canvas Career</string>
+    <string name="speedGraderGradeTabTitle">Einkunn og matskvarði</string>
+    <string name="speedGraderDetailsTabTitle">Upplýsingar</string>
+    <string name="a11y_contentDescription_expandPanel">Stækka svæði</string>
+    <string name="a11y_contentDescription_collapsePanel">Minnka svæði</string>
+    <string name="pointGradeHint">Skrifaðu einkunn hér</string>
+    <string name="percentageGradeHint">Skrifaðu prósentu hér</string>
+    <string name="completeIncompleteGradeScore">%.0f / %.0f</string>
+    <string name="letterGrade">Bókstafseinkunn</string>
+    <string name="daysLate">Dögum of seint</string>
+    <plurals name="pointTotal">
+        <item quantity="one">%s / %s punktur</item>
+        <item quantity="other">%s / %s punktar</item>
+    </plurals>
+    <string name="speedGraderLatePenaltyTitle">Viðurlög vegna of seinna skila:</string>
+    <string name="gradingStatus_none">Ekkert</string>
+    <string name="gradingStatus_late">Seint</string>
+    <string name="gradingStatus_missing">Vantar</string>
+    <string name="gradingStatus_extended">Framlengd</string>
+    <string name="gradingStatus_excused">Undanþegið</string>
+    <string name="status">Staða</string>
+    <string name="speedGraderStudentNotes">Athugasemdir nemanda</string>
+    <string name="speedGraderStudentNotesLoading">Hleður inn athugasemdum nemenda</string>
+    <string name="speedGraderStudentNotesErrorTitle">Úps! Eitthvað fór úrskeiðis</string>
+    <string name="speedGraderStudentNotesErrorDescription">Við eigum erfitt með að sýna nemendaathugasemdir þínar.</string>
+    <string name="speedGraderStudentNotesErrorButtonText">Glæða</string>
+    <string name="not_graded">Ekki metið</string>
+    <string name="speedGraderSubmissionDetails">Upplýsingar um skil</string>
+    <string name="speedGraderSubmissionDetailsLoading">Hleður skilaupplýsingum</string>
+    <string name="speedGraderWordCount">Orðafjöldi</string>
+    <string name="rubricsTitle">Matskvarðar</string>
+    <string name="rubricScore">Einkunn</string>
+    <string name="rubricScoreHint">Skrifaðu einkunn hér</string>
+    <string name="speedGraderCommentsTitle">Athugasemdir (%s)</string>
+    <string name="anonymousGradingStudentLabel">Nemandi</string>
+    <string name="anonymousGradingUserLabel">Nafnlaus notandi</string>
+    <string name="rubricNote">Athugasemd matskvarða</string>
+    <string name="content_description_edit_rubric_comment">Breyta athugasemd matskvarða</string>
+    <string name="rubricNoteHint">Athugasemd</string>
+    <string name="a11y_sendRubricNoteContentDescription">Senda athugasemd matskvarða</string>
+    <string name="select_attachment_type">Velja tegund viðhengis</string>
+    <string name="choose_files">Velja skrár</string>
+    <string name="a11y_expanded">Stækkað</string>
+    <string name="a11y_collapsed">Fellt saman</string>
+    <string name="excuseStudent">Veita nemanda leyfi</string>
+    <string name="detailsEmptyMessage">Við höfum ekki frekari upplýsingar um þennan nemanda og verkefni</string>
+    <string name="daysLateHint">Skrifa dögum of seint</string>
+    <string name="reply_to_topic">Svar við efni</string>
+    <string name="additional_replies">Viðbótarsvör (%d)</string>
+    <string name="reply_to_topic_due">Komið að svari við efni</string>
+    <string name="additional_replies_due">Komið að viðbótarsvörum (%d)</string>
+    <string name="a11y_discussion_checkpoints">Umræðuvörður</string>
+    <string name="multipleDueDates">Margir skiladagar</string>
+    <string name="courseConcludedError">Námskeiði lokið. Ekki var hægt að senda skilaboð!</string>
 </resources>

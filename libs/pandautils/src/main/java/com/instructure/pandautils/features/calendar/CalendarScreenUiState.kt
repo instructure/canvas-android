@@ -25,7 +25,8 @@ import java.util.Locale
 data class CalendarScreenUiState(
     val calendarUiState: CalendarUiState,
     val calendarEventsUiState: CalendarEventsUiState = CalendarEventsUiState(),
-    val snackbarMessage: String? = null
+    val snackbarMessage: String? = null,
+    val showAddEventButton: Boolean = true
 )
 
 data class CalendarUiState(
@@ -139,4 +140,7 @@ sealed class SharedCalendarAction(val delay: Long = 0L) {
     data object CloseEventScreen : SharedCalendarAction()
     data class TodayButtonVisible(val visible: Boolean) : SharedCalendarAction()
     data object TodayButtonTapped : SharedCalendarAction()
+    // Delay is needed to ensure fragment navigation completes and the fragment subscribes to the event before it's emitted
+    data class SelectDay(val date: LocalDate) : SharedCalendarAction(delay = 100)
+    data object RefreshToDoList : SharedCalendarAction(delay = 50)
 }

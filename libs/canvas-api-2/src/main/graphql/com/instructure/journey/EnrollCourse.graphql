@@ -1,0 +1,5 @@
+mutation EnrollCourse($progressId: String!) {
+    enroll(progressId: $progressId) {
+        id
+    }
+}

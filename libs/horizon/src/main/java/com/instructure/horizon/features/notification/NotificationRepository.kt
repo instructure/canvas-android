@@ -19,24 +19,44 @@ package com.instructure.horizon.features.notification
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.StreamAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.StreamItem
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.depaginate
 import javax.inject.Inject
 
 class NotificationRepository @Inject constructor(
+    private val apiPrefs: ApiPrefs,
     private val streamApi: StreamAPI.StreamInterface,
-    private val courseApi: CourseAPI.CoursesInterface
+    private val courseApi: CourseAPI.CoursesInterface,
+    private val getCoursesManager: HorizonGetCoursesManager
 ) {
     suspend fun getNotifications(forceRefresh: Boolean): List<StreamItem> {
+        val courseIds = getCoursesInProgress(forceRefresh)
         val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceRefresh)
         return streamApi.getUserStream(restParams)
             .depaginate { streamApi.getNextPageStream(it, restParams) }
             .dataOrThrow
+            .filter {
+                it.courseId == -1L || courseIds.contains(it.courseId)
+            }
+            .filter {
+                    it.isDueDateNotification()
+                    || it.isNotificationItemScored()
+                    || it.isGradingPeriodNotification()
+            }
     }
 
     suspend fun getCourse(courseId: Long): Course {
         val restParams = RestParams()
         return courseApi.getCourse(courseId, restParams).dataOrThrow
+    }
+
+    private suspend fun getCoursesInProgress(forceRefresh: Boolean): List<Long> {
+        return getCoursesManager
+            .getCoursesWithProgress(apiPrefs.user?.id ?: -1L, forceRefresh)
+            .dataOrThrow
+            .map { it.courseId }
     }
 }

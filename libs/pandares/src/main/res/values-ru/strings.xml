@@ -934,6 +934,19 @@
         <item quantity="other">%s баллов</item>
     </plurals>
 
+    <plurals name="pointsPts">
+        <item quantity="one">балл</item>
+        <item quantity="few">баллы</item>
+        <item quantity="many">баллы</item>
+        <item quantity="other">баллы</item>
+    </plurals>
+
+    <plurals name="pointsPossible">
+        <item quantity="one">\/ %.0f балл</item>
+        <item quantity="few">\/ %.0f баллов</item>
+        <item quantity="many">\/ %.0f баллов</item>
+        <item quantity="other">\/ %.0f баллов</item>
+    </plurals>
     <string name="timeLimit">Ограничение по времени</string>
     <string name="newPushNotifications">Новые уведомления %1$s</string>
     <string name="like">нравятся</string>
@@ -1061,6 +1074,10 @@
     <string name="downloadFailed">Сбой скачивания</string>
     <string name="downloadSuccessful">Скачивание завершено</string>
 
+    <string name="downloading">Скачивание</string>
+    <string name="downloadComplete">Скачивание завершено</string>
+    <string name="notificationChannelNameFileDownloadsName">Уведомления о скачивании</string>
+    <string name="notificationChannelNameFileDownloadsDescription">Уведомления Canvas для текущих скачиваний.</string>
     <string name="full_due_date_details">Полная информация о сроке выполнения</string>
     <string name="submissions">Отправки</string>
     <string name="attachment">Вложение</string>
@@ -2068,6 +2085,7 @@
     <string name="inboxSignatureSwitchLabel">Подпись</string>
     <string name="inboxSignatureTextfieldHeader">Текст подписи</string>
     <string name="due_dateTime">Срок: %1$s, %2$s</string>
+    <string name="submitted_dateTime">Отправлено: %1$s, %2$s</string>
     <string name="noDueDate">Срок выполнения не задан</string>
     <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
     <string name="needsGradingCount">%1$s требует оценки</string>
@@ -2077,6 +2095,12 @@
         <item quantity="few">%d баллов</item>
         <item quantity="many">%d баллов</item>
         <item quantity="other">%d баллов</item>
+    </plurals>
+    <plurals name="percentGradeScore">
+        <item quantity="one">(%.0f балл)</item>
+        <item quantity="few">(%.0f баллов)</item>
+        <item quantity="many">(%.0f баллов)</item>
+        <item quantity="other">(%.0f баллов)</item>
     </plurals>
     <string name="noAssignments">Нет заданий</string>
     <string name="assignmentGroup">Группа заданий</string>
@@ -2133,4 +2157,59 @@
     <string name="widgetSingleGradeSelectCourse">Давайте выберем курс</string>
     <string name="widgetGradesErrorLoadingCourses">Произошла ошибка при загрузке курсов.</string>
     <string name="settingsSwitchExperience">Переключение на Canvas Career</string>
+    <string name="speedGraderGradeTabTitle">Класс и рубрика</string>
+    <string name="speedGraderDetailsTabTitle">Подробные сведения</string>
+    <string name="a11y_contentDescription_expandPanel">Развернуть панель</string>
+    <string name="a11y_contentDescription_collapsePanel">Свернуть панель</string>
+    <string name="pointGradeHint">Укажите оценку здесь</string>
+    <string name="percentageGradeHint">Укажите процент здесь</string>
+    <string name="completeIncompleteGradeScore">%.0f / %.0f</string>
+    <string name="letterGrade">Буква класса</string>
+    <string name="daysLate">Дни, опоздание</string>
+    <plurals name="pointTotal">
+        <item quantity="one">%s / %s балл</item>
+        <item quantity="few">%s / %s баллов</item>
+        <item quantity="many">%s / %s баллов</item>
+        <item quantity="other">%s / %s баллов</item>
+    </plurals>
+    <string name="speedGraderLatePenaltyTitle">Снижение оценки за опоздание</string>
+    <string name="gradingStatus_none">Нет</string>
+    <string name="gradingStatus_late">Поздно</string>
+    <string name="gradingStatus_missing">Отсутствует</string>
+    <string name="gradingStatus_extended">Расширенный</string>
+    <string name="gradingStatus_excused">По уважительной причине</string>
+    <string name="status">Статус</string>
+    <string name="speedGraderStudentNotes">Примечания учащегося</string>
+    <string name="speedGraderStudentNotesLoading">Загрузка примечаний учащегося</string>
+    <string name="speedGraderStudentNotesErrorTitle">Ой! Что-то пошло не так</string>
+    <string name="speedGraderStudentNotesErrorDescription">У нас возникли проблемы с отображением заметок учащегося</string>
+    <string name="speedGraderStudentNotesErrorButtonText">Обновить</string>
+    <string name="not_graded">Оценка не выставлена</string>
+    <string name="speedGraderSubmissionDetails">Сведения об отправке</string>
+    <string name="speedGraderSubmissionDetailsLoading">Загрузка информации об отправке</string>
+    <string name="speedGraderWordCount">Количество слов</string>
+    <string name="rubricsTitle">Рубрики</string>
+    <string name="rubricScore">Оценка</string>
+    <string name="rubricScoreHint">Укажите оценку здесь</string>
+    <string name="speedGraderCommentsTitle">Комментарии (%s)</string>
+    <string name="anonymousGradingStudentLabel">Учащийся</string>
+    <string name="anonymousGradingUserLabel">Анонимный пользователь</string>
+    <string name="rubricNote">Примечание к рубрике</string>
+    <string name="content_description_edit_rubric_comment">Редактировать примечание к рубрике</string>
+    <string name="rubricNoteHint">Примечание</string>
+    <string name="a11y_sendRubricNoteContentDescription">Отправить примечание к рубрике</string>
+    <string name="select_attachment_type">Выбрать тип вложения</string>
+    <string name="choose_files">Выберите файлы</string>
+    <string name="a11y_expanded">В развернутом виде</string>
+    <string name="a11y_collapsed">В свернутом виде</string>
+    <string name="excuseStudent">Освободить студента</string>
+    <string name="detailsEmptyMessage">У нас нет дополнительных сведений об этом учащемся и задании</string>
+    <string name="daysLateHint">Написать дни опоздания</string>
+    <string name="reply_to_topic">Ответ по теме</string>
+    <string name="additional_replies">Дополнительные ответы (%d)</string>
+    <string name="reply_to_topic_due">Требуется ответ по теме</string>
+    <string name="additional_replies_due">Требуются дополнительные ответы (%d)</string>
+    <string name="a11y_discussion_checkpoints">Контрольные точки обсуждения</string>
+    <string name="multipleDueDates">Множественные даты выполнения</string>
+    <string name="courseConcludedError">Курс завершен. Невозможно отправить сообщение!</string>
 </resources>

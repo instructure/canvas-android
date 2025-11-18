@@ -47,6 +47,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
@@ -56,9 +58,6 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentPicker
 import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentPickerUiState
-import com.instructure.horizon.features.inbox.list.HORIZON_INBOX_LIST_NEW_CONVERSATION_CREATED
-import com.instructure.horizon.features.inbox.list.HORIZON_REFRESH_INBOX_LIST
-import com.instructure.horizon.features.inbox.navigation.HorizonInboxRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
@@ -275,7 +274,13 @@ private fun CourseRecipientPickerSection(state: HorizonInboxComposeUiState) {
             onMenuOpenChanged = { isRecipientPickerOpened = it },
             minSearchQueryLengthForMenu = state.minQueryLength
         )
-        MultiSelectSearch(recipientPickerState)
+        val context = LocalContext.current
+        MultiSelectSearch(
+            recipientPickerState,
+            Modifier.semantics {
+                contentDescription = context.getString(R.string.a11y_inboxComposeSelectCourse)
+            }
+        )
 
         HorizonSpace(SpaceSize.SPACE_12)
     }
@@ -403,23 +408,11 @@ private fun HorizonInboxComposeControlsSection(state: HorizonInboxComposeUiState
                         )
                     }
                 } else {
-                    val listEntry = remember(navController.currentBackStackEntry) {
-                        try {
-                            navController.getBackStackEntry(HorizonInboxRoute.InboxList.route)
-                        } catch (e: IllegalArgumentException) {
-                            // If the back stack entry doesn't exist, we can safely ignore it
-                            null
-                        }
-                    }
                     Button(
                         label = stringResource(R.string.inboxComposeSendLabel),
                         color = ButtonColor.Institution,
                         onClick = {
                             state.onSendConversation {
-                                listEntry?.savedStateHandle?.set(
-                                    HORIZON_REFRESH_INBOX_LIST,
-                                    HORIZON_INBOX_LIST_NEW_CONVERSATION_CREATED
-                                )
                                 navController.popBackStack()
                             }
                         }

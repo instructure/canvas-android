@@ -895,6 +895,13 @@
         <item quantity="other">%s 点</item>
     </plurals>
 
+    <plurals name="pointsPts">
+        <item quantity="other">ポイント</item>
+    </plurals>
+
+    <plurals name="pointsPossible">
+        <item quantity="other">V%.0f点</item>
+    </plurals>
     <string name="timeLimit">時間制限</string>
     <string name="newPushNotifications">%1$s 新規通知</string>
     <string name="like">いいね</string>
@@ -1019,6 +1026,10 @@
     <string name="downloadFailed">ダウンロードに失敗</string>
     <string name="downloadSuccessful">ダウンロードに成功</string>
 
+    <string name="downloading">読み込み中</string>
+    <string name="downloadComplete">ダウンロード完了</string>
+    <string name="notificationChannelNameFileDownloadsName">通知をダウンロードする</string>
+    <string name="notificationChannelNameFileDownloadsDescription">現在ダウンロード中の Canvas 通知。</string>
     <string name="full_due_date_details">締め切り日の全詳細</string>
     <string name="submissions">提出物</string>
     <string name="attachment">添付ファイル</string>
@@ -1975,12 +1986,16 @@
     <string name="inboxSignatureSwitchLabel">署名</string>
     <string name="inboxSignatureTextfieldHeader">署名テキスト</string>
     <string name="due_dateTime">期限：%1$s、%2$s</string>
+    <string name="submitted_dateTime">提出済み：%1$s、%2$s</string>
     <string name="noDueDate">締切日なし</string>
     <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
     <string name="needsGradingCount">%1$sが採点が必要です</string>
     <string name="assignmentListTitle">課題リスト</string>
     <plurals name="assignmentListMaxpoints">
         <item quantity="other">%d 点</item>
+    </plurals>
+    <plurals name="percentGradeScore">
+        <item quantity="other">(%.0f点)</item>
     </plurals>
     <string name="noAssignments">課題なし</string>
     <string name="assignmentGroup">課題グループ</string>
@@ -2037,4 +2052,56 @@
     <string name="widgetSingleGradeSelectCourse">コースを選択しましょう</string>
     <string name="widgetGradesErrorLoadingCourses">コースの読み込み中にエラーが発生しました。</string>
     <string name="settingsSwitchExperience">Canvas Career に切り替える</string>
+    <string name="speedGraderGradeTabTitle">学年 &amp; ルブリック</string>
+    <string name="speedGraderDetailsTabTitle">詳細</string>
+    <string name="a11y_contentDescription_expandPanel">パネルを展開する</string>
+    <string name="a11y_contentDescription_collapsePanel">パネルを折りたたむ</string>
+    <string name="pointGradeHint">ここにスコアを入力してください</string>
+    <string name="percentageGradeHint">ここにパーセンテージを入力してください</string>
+    <string name="completeIncompleteGradeScore">%.0f / %.0f</string>
+    <string name="letterGrade">ABC...評価</string>
+    <string name="daysLate">遅延日数</string>
+    <plurals name="pointTotal">
+        <item quantity="other">%s / %s 点</item>
+    </plurals>
+    <string name="speedGraderLatePenaltyTitle">遅延ペナルティ：</string>
+    <string name="gradingStatus_none">なし</string>
+    <string name="gradingStatus_late">遅延</string>
+    <string name="gradingStatus_missing">欠如</string>
+    <string name="gradingStatus_extended">拡大された</string>
+    <string name="gradingStatus_excused">評価対象外(免除)</string>
+    <string name="status">ステータス</string>
+    <string name="speedGraderStudentNotes">受講者のメモ</string>
+    <string name="speedGraderStudentNotesLoading">受講者のメモを読み込み中</string>
+    <string name="speedGraderStudentNotesErrorTitle">おっと！なにかが失敗しました</string>
+    <string name="speedGraderStudentNotesErrorDescription">受講者ノートを表示する際に問題が発生しています。</string>
+    <string name="speedGraderStudentNotesErrorButtonText">更新</string>
+    <string name="not_graded">採点なし</string>
+    <string name="speedGraderSubmissionDetails">提出物の詳細</string>
+    <string name="speedGraderSubmissionDetailsLoading">提出詳細を読み込み中</string>
+    <string name="speedGraderWordCount">語数</string>
+    <string name="rubricsTitle">ルーブリック</string>
+    <string name="rubricScore">スコア</string>
+    <string name="rubricScoreHint">ここにスコアを入力してください</string>
+    <string name="speedGraderCommentsTitle">コメント(%s)</string>
+    <string name="anonymousGradingStudentLabel">受講者</string>
+    <string name="anonymousGradingUserLabel">匿名のユーザー</string>
+    <string name="rubricNote">ルーブリックのメモ</string>
+    <string name="content_description_edit_rubric_comment">ルーブリックのメモを編集する</string>
+    <string name="rubricNoteHint">注</string>
+    <string name="a11y_sendRubricNoteContentDescription">ルーブリックのメモを送信する</string>
+    <string name="select_attachment_type">別添ファイルタイプを選択する</string>
+    <string name="choose_files">ファイルの選択</string>
+    <string name="a11y_expanded">拡大</string>
+    <string name="a11y_collapsed">折りたたみ</string>
+    <string name="excuseStudent">学生を免除する</string>
+    <string name="detailsEmptyMessage">この受講者と課題に関する詳細情報はありません。</string>
+    <string name="daysLateHint">遅延日数を書いてください</string>
+    <string name="reply_to_topic">トピックに返信する</string>
+    <string name="additional_replies">追加の返信 (%d)</string>
+    <string name="reply_to_topic_due">トピックに返信する期日：</string>
+    <string name="additional_replies_due">追加の返信 (%d)の期日：</string>
+    <string name="a11y_discussion_checkpoints">ディスカッションチェックポイント</string>
+    <string name="multipleDueDates">複数の締切日</string>
+    <string name="courseConcludedError">コース完了しました。メッセージを送信できません！</string>
 </resources>

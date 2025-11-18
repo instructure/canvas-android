@@ -28,15 +28,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -44,12 +39,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
-import com.instructure.canvasapi2.managers.NoteHighlightedData
-import com.instructure.canvasapi2.managers.NoteHighlightedDataRange
-import com.instructure.canvasapi2.managers.NoteHighlightedDataTextPosition
-import com.instructure.canvasapi2.managers.NoteObjectType
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedData
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedDataRange
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedDataTextPosition
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteObjectType
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.notebook.common.composable.NotebookAppBar
@@ -58,6 +53,7 @@ import com.instructure.horizon.features.notebook.common.composable.NotebookPill
 import com.instructure.horizon.features.notebook.common.composable.NotebookTypeSelect
 import com.instructure.horizon.features.notebook.common.model.Note
 import com.instructure.horizon.features.notebook.common.model.NotebookType
+import com.instructure.horizon.features.notebook.navigation.NotebookRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
@@ -71,6 +67,8 @@ import com.instructure.horizon.horizonui.molecules.IconButtonSize
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.pandautils.compose.modifiers.conditional
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.localisedFormat
 import java.util.Date
 
@@ -78,8 +76,12 @@ import java.util.Date
 fun NotebookScreen(
     mainNavController: NavHostController,
     state: NotebookUiState,
-    onDismiss: (() -> Unit)? = null
 ) {
+    val activity = LocalContext.current.getActivityOrNull()
+    LaunchedEffect(Unit) {
+        if (activity != null) ViewStyler.setStatusBarColor(activity, ContextCompat.getColor(activity, R.color.surface_pagePrimary))
+    }
+
     val scrollState = rememberLazyListState()
     Scaffold(
         containerColor = HorizonColors.Surface.pagePrimary(),
@@ -87,15 +89,6 @@ fun NotebookScreen(
             if (state.showTopBar) {
                 NotebookAppBar(
                     navigateBack = { mainNavController.popBackStack() },
-                    modifier = Modifier.conditional(scrollState.canScrollBackward) {
-                        horizonShadow(
-                            elevation = HorizonElevation.level2,
-                        )
-                    }
-                )
-            } else if (onDismiss != null) {
-                NotebookAppBar(
-                    onClose = { onDismiss() },
                     modifier = Modifier.conditional(scrollState.canScrollBackward) {
                         horizonShadow(
                             elevation = HorizonElevation.level2,
@@ -146,13 +139,30 @@ fun NotebookScreen(
                 items(state.notes) { note ->
                     Column {
                         NoteContent(note) {
-                            mainNavController.navigate(
-                                MainNavigationRoute.ModuleItemSequence(
-                                    courseId = note.courseId,
-                                    moduleItemAssetType = note.objectType.value,
-                                    moduleItemAssetId = note.objectId,
+                            if (state.navigateToEdit) {
+                                mainNavController.navigate(
+                                    NotebookRoute.EditNotebook(
+                                        noteId = note.id,
+                                        highlightedTextStartOffset = note.highlightedText.range.startOffset,
+                                        highlightedTextEndOffset = note.highlightedText.range.endOffset,
+                                        highlightedTextStartContainer = note.highlightedText.range.startContainer,
+                                        highlightedTextEndContainer = note.highlightedText.range.endContainer,
+                                        textSelectionStart = note.highlightedText.textPosition.start,
+                                        textSelectionEnd = note.highlightedText.textPosition.end,
+                                        highlightedText = note.highlightedText.selectedText,
+                                        noteType = note.type.name,
+                                        userComment = note.userText
+                                    )
                                 )
-                            )
+                            } else {
+                                mainNavController.navigate(
+                                    MainNavigationRoute.ModuleItemSequence(
+                                        courseId = note.courseId,
+                                        moduleItemAssetType = note.objectType.value,
+                                        moduleItemAssetId = note.objectId,
+                                    )
+                                )
+                            }
                         }
 
                         if (state.notes.lastOrNull() != note) {
@@ -176,37 +186,6 @@ fun NotebookScreen(
                 }
             }
         }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun NotebookBottomDialog(
-    courseId: Long,
-    objectFilter: Pair<String, String>,
-    mainNavController: NavHostController,
-    onDismiss: () -> Unit
-) {
-    val viewModel = hiltViewModel<NotebookViewModel>()
-    val state by viewModel.uiState.collectAsState()
-    val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-
-    ModalBottomSheet(
-        containerColor = HorizonColors.Surface.pagePrimary(),
-        onDismissRequest = { onDismiss() },
-        dragHandle = null,
-        sheetState = bottomSheetState,
-    ) {
-        LaunchedEffect(courseId, objectFilter) {
-            state.updateContent(courseId, objectFilter)
-        }
-
-        NotebookScreen(
-            mainNavController = mainNavController,
-            state = state,
-            onDismiss = { onDismiss() }
-        )
-
     }
 }
 

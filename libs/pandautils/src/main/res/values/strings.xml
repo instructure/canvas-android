@@ -487,6 +487,7 @@
     <string name="a11y_markAsDoneWithName">%s Mark as done</string>
     <string name="a11y_markAsNotDoneWithName">%s Mark as not done</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="a11y_expand_collapse">Expand or collapse section</string>
     <string name="inboxSignatureError">Failed to load inbox signature</string>
     <string name="inboxSignatureSettingsUpdated">Inbox settings saved!</string>
     <string name="inboxSignatureSettingsError">Failed to save inbox settings</string>
@@ -499,4 +500,5 @@
         <item quantity="one">%d Min</item>
         <item quantity="other">%d Mins</item>
     </plurals>
+    <string name="notATeacherDescription">One of our other apps may be a better fit. Tap an icon to log in there.</string>
 </resources>

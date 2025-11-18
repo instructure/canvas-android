@@ -255,3 +255,18 @@
 
 -keep class androidx.navigation.** { *; }
     -keep interface androidx.navigation.** { *; }
+
+# Netty and BlockHound integration
+-dontwarn reactor.blockhound.integration.BlockHoundIntegration
+-dontwarn io.netty.util.internal.Hidden$NettyBlockHoundIntegration
+-keep class reactor.blockhound.integration.** { *; }
+-keep class io.netty.util.internal.Hidden$NettyBlockHoundIntegration { *; }
+
+# Additional Netty keep rules for R8
+-dontwarn io.netty.**
+-keep class io.netty.** { *; }
+-keepclassmembers class io.netty.** { *; }
+
+# BlockHound related classes
+-dontwarn reactor.blockhound.**
+-keep class reactor.blockhound.** { *; }

@@ -77,7 +77,6 @@ import com.instructure.pandautils.features.inbox.list.OnUnreadCountInvalidated
 import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.features.settings.SettingsFragment
-import com.instructure.pandautils.features.themeselector.ThemeSelectorBottomSheet
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
@@ -159,6 +158,9 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
     private var drawerItemSelectedJob: Job? = null
 
     private val mTabSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+        // Cancel any active drag on dashboard before switching tabs
+        (supportFragmentManager.findFragmentByTag(DashboardFragment::class.java.simpleName) as? DashboardFragment)?.cancelCardDrag()
+
         selectedTab = when (item.itemId) {
             R.id.tab_courses -> {
                 addCoursesFragment()
@@ -245,12 +247,6 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         RatingDialog.showRatingDialog(this, AppType.TEACHER)
 
         updateManager.checkForInAppUpdate(this)
-
-        if (!ThemePrefs.themeSelectionShown) {
-            val themeSelector = ThemeSelectorBottomSheet()
-            themeSelector.show(supportFragmentManager, ThemeSelectorBottomSheet::javaClass.name)
-            ThemePrefs.themeSelectionShown = true
-        }
 
         lifecycleScope.launch {
             if (ApiPrefs.pandataInfo?.isValid != true) {

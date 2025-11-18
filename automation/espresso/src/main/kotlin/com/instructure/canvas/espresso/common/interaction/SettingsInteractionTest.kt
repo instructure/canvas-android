@@ -16,7 +16,7 @@
 
 import com.instructure.canvas.espresso.CanvasComposeTest
 import com.instructure.canvas.espresso.common.pages.compose.SettingsPage
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import org.junit.Test
 
 abstract class SettingsInteractionTest : CanvasComposeTest() {

@@ -16,7 +16,11 @@
  */
 package com.instructure.student.di.feature
 
+import com.instructure.pandautils.features.inbox.compose.InboxComposeBehavior
 import com.instructure.pandautils.features.inbox.details.InboxDetailsBehavior
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.student.features.inbox.compose.StudentInboxComposeBehavior
+
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,5 +32,10 @@ class InboxModule {
     @Provides
     fun provideInboxDetailsBehavior(): InboxDetailsBehavior {
         return InboxDetailsBehavior()
+    }
+
+    @Provides
+    fun provideInboxComposeBehavior(): InboxComposeBehavior {
+        return StudentInboxComposeBehavior()
     }
 }

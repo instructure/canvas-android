@@ -50,19 +50,22 @@ import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.molecules.SpinnerSize
+import com.instructure.pandautils.compose.modifiers.conditional
 import com.instructure.pandautils.utils.toPx
 
 @Composable
-fun <T>InputDropDownPopup(
+fun <T> InputDropDownPopup(
     isMenuOpen: Boolean,
     options: List<T>,
     verticalOffsetPx: Int,
-    width: Dp,
+    width: Dp?,
     onMenuOpenChanged: (Boolean) -> Unit,
     onOptionSelected: (T) -> Unit,
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
     isFocusable: Boolean = true,
+    closeMenuAfterSelection: (T) -> Boolean = { true },
+    optionEnabled: (T) -> Boolean = { true },
     item: @Composable (T) -> Unit = { selectionOption ->
         SingleSelectItem(selectionOption.toString())
     },
@@ -86,7 +89,12 @@ fun <T>InputDropDownPopup(
                 modifier = modifier
                     .padding(bottom = 8.dp)
                     .padding(horizontal = 8.dp)
-                    .width(width),
+                    .conditional(width == null) {
+                        fillMaxWidth()
+                    }
+                    .conditional(width != null) {
+                        width(width!!)
+                    },
                 shape = HorizonCornerRadius.level2,
                 colors = CardDefaults.cardColors()
                     .copy(containerColor = HorizonColors.Surface.pageSecondary()),
@@ -95,7 +103,9 @@ fun <T>InputDropDownPopup(
                         width = 1.dp,
                         color = HorizonColors.LineAndBorder.containerStroke()
                     )
-                } else { null },
+                } else {
+                    null
+                },
             ) {
                 AnimatedContent(
                     isLoading,
@@ -129,9 +139,13 @@ fun <T>InputDropDownPopup(
                                     verticalAlignment = Alignment.CenterVertically,
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .clickable {
-                                            onOptionSelected(selectionOption)
-                                            onMenuOpenChanged(false)
+                                        .conditional(optionEnabled(selectionOption)) {
+                                            clickable {
+                                                onOptionSelected(selectionOption)
+                                                if (closeMenuAfterSelection(selectionOption)) {
+                                                    onMenuOpenChanged(false)
+                                                }
+                                            }
                                         }
                                 ) {
                                     item(selectionOption)

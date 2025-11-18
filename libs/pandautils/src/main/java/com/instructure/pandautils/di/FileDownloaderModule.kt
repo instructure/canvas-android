@@ -17,18 +17,31 @@ package com.instructure.pandautils.di
 
 import android.content.Context
 import android.webkit.CookieManager
+import com.instructure.pandautils.utils.DownloadNotificationHelper
 import com.instructure.pandautils.utils.FileDownloader
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 class FileDownloaderModule {
+
     @Provides
-    fun provideFileDownloader(@ApplicationContext context: Context, cookieManager: CookieManager): FileDownloader {
-        return FileDownloader(context, cookieManager)
+    @Singleton
+    fun provideDownloadNotificationHelper(@ApplicationContext context: Context): DownloadNotificationHelper {
+        return DownloadNotificationHelper(context)
+    }
+
+    @Provides
+    fun provideFileDownloader(
+        @ApplicationContext context: Context,
+        cookieManager: CookieManager,
+        downloadNotificationHelper: DownloadNotificationHelper
+    ): FileDownloader {
+        return FileDownloader(context, cookieManager, downloadNotificationHelper)
     }
 }

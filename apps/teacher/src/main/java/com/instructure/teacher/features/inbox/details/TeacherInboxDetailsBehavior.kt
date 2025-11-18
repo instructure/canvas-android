@@ -19,7 +19,9 @@ package com.instructure.teacher.features.inbox.details
 import android.content.Context
 import com.instructure.pandautils.features.inbox.details.InboxDetailsBehavior
 import com.instructure.teacher.utils.isTablet
+import javax.inject.Inject
 
-class TeacherInboxDetailsBehavior: InboxDetailsBehavior() {
+class TeacherInboxDetailsBehavior @Inject constructor() : InboxDetailsBehavior() {
+    
     override fun getShowBackButton(context: Context): Boolean = !context.isTablet
 }

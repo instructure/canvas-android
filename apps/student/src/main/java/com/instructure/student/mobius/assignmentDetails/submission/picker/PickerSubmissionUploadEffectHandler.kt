@@ -18,7 +18,6 @@ package com.instructure.student.mobius.assignmentDetails.submission.picker
 
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import androidx.core.content.FileProvider
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
@@ -32,7 +31,6 @@ import com.instructure.pandautils.utils.getFragmentActivity
 import com.instructure.pandautils.utils.remove
 import com.instructure.pandautils.utils.requestPermissions
 import com.instructure.student.R
-import com.instructure.student.features.documentscanning.DocumentScanningActivity
 import com.instructure.student.mobius.assignmentDetails.isIntentAvailable
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode.CommentAttachment
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode.FileSubmission
@@ -117,9 +115,6 @@ class PickerSubmissionUploadEffectHandler(
             PickerSubmissionUploadEffect.LaunchSelectFile -> {
                 launchSelectFile()
             }
-            PickerSubmissionUploadEffect.LaunchDocumentScanning -> {
-                launchDocumentScanning()
-            }
             is PickerSubmissionUploadEffect.LoadFileContents -> {
                 loadFile(effect.allowedExtensions, effect.uri, context)
             }
@@ -135,12 +130,21 @@ class PickerSubmissionUploadEffectHandler(
     private fun handleSubmit(model: PickerSubmissionUploadModel) {
         when (model.mode) {
             MediaSubmission -> {
+                val file = model.files.first()
+                val mediaType = when {
+                    file.contentType?.startsWith("video/") == true -> "video"
+                    file.contentType?.startsWith("audio/") == true -> "audio"
+                    else -> null
+                }
                 submissionHelper.startMediaSubmission(
                     canvasContext = model.canvasContext,
                     assignmentId = model.assignmentId,
                     assignmentName = model.assignmentName,
                     assignmentGroupCategoryId = model.assignmentGroupCategoryId,
-                    mediaFilePath = model.files.first().fullPath
+                    mediaFilePath = file.fullPath,
+                    attempt = model.attemptId ?: 1L,
+                    mediaType = mediaType,
+                    mediaSource = model.mediaSource
                 )
             }
             FileSubmission -> {
@@ -149,7 +153,8 @@ class PickerSubmissionUploadEffectHandler(
                     assignmentId = model.assignmentId,
                     assignmentName = model.assignmentName,
                     assignmentGroupCategoryId = model.assignmentGroupCategoryId,
-                    files = ArrayList(model.files)
+                    files = ArrayList(model.files),
+                    attempt = model.attemptId ?: 1L
                 )
             }
             CommentAttachment -> {
@@ -208,17 +213,6 @@ class PickerSubmissionUploadEffectHandler(
         view?.getSelectFileIntent()?.let {
             (context.getFragmentActivity()).startActivityForResult(it, REQUEST_PICK_FILE_FROM_DEVICE)
         }
-    }
-
-    private fun launchDocumentScanning() {
-        // Get camera permission if we need it
-        if (needsPermissions(
-                        PickerSubmissionUploadEvent.DocumentScanningClicked,
-                        PermissionUtils.CAMERA
-                )
-        ) return
-        val intent = Intent(context, DocumentScanningActivity::class.java)
-        (context.getFragmentActivity()).startActivityForResult(intent, REQUEST_DOCUMENT_SCANNING)
     }
 
     private fun launchCamera() {

@@ -908,6 +908,15 @@
         <item quantity="other">%s pointe</item>
     </plurals>
 
+    <plurals name="pointsPts">
+        <item quantity="one">pointe</item>
+        <item quantity="other">pte</item>
+    </plurals>
+
+    <plurals name="pointsPossible">
+        <item quantity="one">\/ %.0f pte</item>
+        <item quantity="other">\/ %.0f pte</item>
+    </plurals>
     <string name="timeLimit">Teorainn ama</string>
     <string name="newPushNotifications">%1$s Fógra Nua</string>
     <string name="like">is maith liom</string>
@@ -1034,6 +1043,10 @@
     <string name="downloadFailed">Theip ar an íoslódáil</string>
     <string name="downloadSuccessful">Íoslódáil an rath</string>
 
+    <string name="downloading">Ag íoslódáil</string>
+    <string name="downloadComplete">Íoslódáil críochnaithe</string>
+    <string name="notificationChannelNameFileDownloadsName">Fógraí Íoslódála</string>
+    <string name="notificationChannelNameFileDownloadsDescription">Fógraí Canbhás le haghaidh íoslódálacha atá ar siúl.</string>
     <string name="full_due_date_details">Sonraí iomlána faoin dáta dlite</string>
     <string name="submissions">Uaslódálacha</string>
     <string name="attachment">Ceangaltán</string>
@@ -2021,6 +2034,7 @@
     <string name="inboxSignatureSwitchLabel">Síniú</string>
     <string name="inboxSignatureTextfieldHeader">Téacs sínithe</string>
     <string name="due_dateTime">Dlite: %1$s, %2$s</string>
+    <string name="submitted_dateTime">Arna chur isteach: %1$s, %2$s</string>
     <string name="noDueDate">Níl aon Dáta Dlite</string>
     <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
     <string name="needsGradingCount">Tá Marcáil de Dhíth uaidh seo: %1$s</string>
@@ -2028,6 +2042,10 @@
     <plurals name="assignmentListMaxpoints">
         <item quantity="one">%d pointe</item>
         <item quantity="other">%d pointe</item>
+    </plurals>
+    <plurals name="percentGradeScore">
+        <item quantity="one">(%.0f pte)</item>
+        <item quantity="other">(%.0f pte)</item>
     </plurals>
     <string name="noAssignments">Gan tascanna</string>
     <string name="assignmentGroup">grúpa taisc</string>
@@ -2084,4 +2102,57 @@
     <string name="widgetSingleGradeSelectCourse">Roghnaímis cúrsa</string>
     <string name="widgetGradesErrorLoadingCourses">Tharla earráid agus cúrsaí á lódáil.</string>
     <string name="settingsSwitchExperience">Téigh go Canvas Career</string>
+    <string name="speedGraderGradeTabTitle">Marc &amp; Rúibric</string>
+    <string name="speedGraderDetailsTabTitle">Sonraí</string>
+    <string name="a11y_contentDescription_expandPanel">Leathnaigh an painéal</string>
+    <string name="a11y_contentDescription_collapsePanel">Leacaigh an painéal</string>
+    <string name="pointGradeHint">Scríobh scór anseo</string>
+    <string name="percentageGradeHint">Scríobh céatadán anseo</string>
+    <string name="completeIncompleteGradeScore">%.0f / %.0f</string>
+    <string name="letterGrade">Marc Litreach</string>
+    <string name="daysLate">Laethanta déanacha</string>
+    <plurals name="pointTotal">
+        <item quantity="one">%s / %s pte</item>
+        <item quantity="other">%s / %s pte</item>
+    </plurals>
+    <string name="speedGraderLatePenaltyTitle">Pionós Déanach</string>
+    <string name="gradingStatus_none">Dada</string>
+    <string name="gradingStatus_late">Déanach</string>
+    <string name="gradingStatus_missing">Ar iarraidh</string>
+    <string name="gradingStatus_extended">Sínte</string>
+    <string name="gradingStatus_excused">Leithscéal ina leith</string>
+    <string name="status">Stádas</string>
+    <string name="speedGraderStudentNotes">Nótaí Mac Léinn</string>
+    <string name="speedGraderStudentNotesLoading">Nótaí Mac Léinn á lódáil</string>
+    <string name="speedGraderStudentNotesErrorTitle">Úps! Chuaigh rud eigin mícheart</string>
+    <string name="speedGraderStudentNotesErrorDescription">Tá deacracht againn nótaí na mac léinn a thaispeáint.</string>
+    <string name="speedGraderStudentNotesErrorButtonText">Athnuaigh</string>
+    <string name="not_graded">Nach Bhfuil Marcáilte</string>
+    <string name="speedGraderSubmissionDetails">Sonraí Uaslódála</string>
+    <string name="speedGraderSubmissionDetailsLoading">Sonraí na hUaslódála á Lódáil</string>
+    <string name="speedGraderWordCount">Líon Focal</string>
+    <string name="rubricsTitle">Rúibricí</string>
+    <string name="rubricScore">Scór</string>
+    <string name="rubricScoreHint">Scríobh scór anseo</string>
+    <string name="speedGraderCommentsTitle">Ráitis (%s)</string>
+    <string name="anonymousGradingStudentLabel">Mac Léinn</string>
+    <string name="anonymousGradingUserLabel">Úsáideoir anaithnid</string>
+    <string name="rubricNote">Nóta Rúibrice</string>
+    <string name="content_description_edit_rubric_comment">Cuir nóta rúibrice in eagar</string>
+    <string name="rubricNoteHint">Tabhair faoi deara</string>
+    <string name="a11y_sendRubricNoteContentDescription">Seol nóta rúibrice</string>
+    <string name="select_attachment_type">Roghnaigh Cineál Ceangaltáin</string>
+    <string name="choose_files">Roghnaigh Comhaid</string>
+    <string name="a11y_expanded">Leathnaithe</string>
+    <string name="a11y_collapsed">Leacaigh</string>
+    <string name="excuseStudent">Ná bac leis an Mac Léinn</string>
+    <string name="detailsEmptyMessage">Níl tuilleadh sonraí againn don Mhac Léinn agus don Tasc seo</string>
+    <string name="daysLateHint">Scríobh lá déanach</string>
+    <string name="reply_to_topic">Freagra ar an ábhar</string>
+    <string name="additional_replies">Freagraí breise (%d)</string>
+    <string name="reply_to_topic_due">Freagra ar an topaic dlite</string>
+    <string name="additional_replies_due">Freagraí breise (%d) dlite</string>
+    <string name="a11y_discussion_checkpoints">Seicphointí Fóraim</string>
+    <string name="multipleDueDates">Dáta Dlite Iolracha</string>
+    <string name="courseConcludedError">Críochnaíodh an cúrsa. Ní féidir teachtaireachtaí a sheoladh!</string>
 </resources>

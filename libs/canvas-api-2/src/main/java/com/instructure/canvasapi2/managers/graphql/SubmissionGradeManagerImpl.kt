@@ -15,18 +15,21 @@
  */
 package com.instructure.canvasapi2.managers.graphql
 
-import com.instructure.canvasapi2.QLClientConfig
+import com.apollographql.apollo.ApolloClient
+import com.apollographql.apollo.api.Optional
 import com.instructure.canvasapi2.SubmissionGradeQuery
 import com.instructure.canvasapi2.UpdateSubmissionGradeMutation
-import com.apollographql.apollo.api.Optional
 import com.instructure.canvasapi2.UpdateSubmissionStatusMutation
+import com.instructure.canvasapi2.enqueueMutation
+import com.instructure.canvasapi2.enqueueQuery
 
-class SubmissionGradeManagerImpl : SubmissionGradeManager {
+class SubmissionGradeManagerImpl(private val apolloClient: ApolloClient) : SubmissionGradeManager {
 
     override suspend fun getSubmissionGrade(
         assignmentId: Long,
         studentId: Long,
-        forceNetwork: Boolean
+        forceNetwork: Boolean,
+        domain: String?
     ): SubmissionGradeQuery.Data {
         var hasNextPage = true
         var nextCursor: String? = null
@@ -34,20 +37,18 @@ class SubmissionGradeManagerImpl : SubmissionGradeManager {
         var submission: SubmissionGradeQuery.Data? = null
 
         while (hasNextPage) {
-            val nextCursorParam =
-                if (nextCursor != null) Optional.present(nextCursor) else Optional.absent()
-            val query =
-                SubmissionGradeQuery(studentId.toString(), assignmentId.toString(), nextCursorParam)
-            val data = QLClientConfig.enqueueQuery(query, forceNetwork = true).dataAssertNoErrors
+            val nextCursorParam = if (nextCursor != null) Optional.present(nextCursor) else Optional.absent()
+            val query = SubmissionGradeQuery(studentId.toString(), assignmentId.toString(), nextCursorParam)
+            val data = apolloClient.enqueueQuery(query, forceNetwork = true, domain = domain).dataAssertNoErrors
             if (submission == null) {
                 submission = data
             } else {
                 submission = submission.copy(
                     submission = submission.submission?.copy(
-                        assignment = submission.submission?.assignment?.copy(
-                            course = submission.submission?.assignment?.course?.copy(
-                                customGradeStatusesConnection = submission.submission?.assignment?.course?.customGradeStatusesConnection?.copy(
-                                    edges = submission.submission?.assignment?.course?.customGradeStatusesConnection?.edges.orEmpty() +
+                        assignment = submission.submission.assignment?.copy(
+                            course = submission.submission.assignment.course?.copy(
+                                customGradeStatusesConnection = submission.submission.assignment.course.customGradeStatusesConnection?.copy(
+                                    edges = submission.submission.assignment.course.customGradeStatusesConnection.edges.orEmpty() +
                                             data.submission?.assignment?.course?.customGradeStatusesConnection?.edges.orEmpty()
                                 )
                             )
@@ -56,7 +57,7 @@ class SubmissionGradeManagerImpl : SubmissionGradeManager {
                 )
             }
 
-            hasNextPage = data.submission?.assignment?.course?.customGradeStatusesConnection?.pageInfo?.hasNextPage ?: false
+            hasNextPage = data.submission?.assignment?.course?.customGradeStatusesConnection?.pageInfo?.hasNextPage == true
             nextCursor = data.submission?.assignment?.course?.customGradeStatusesConnection?.pageInfo?.endCursor
         }
 
@@ -68,7 +69,7 @@ class SubmissionGradeManagerImpl : SubmissionGradeManager {
         submissionId: Long
     ): UpdateSubmissionGradeMutation.Data {
         val mutation = UpdateSubmissionGradeMutation(score.toInt(), submissionId.toString())
-        val result = QLClientConfig.enqueueMutation(mutation)
+        val result = apolloClient.enqueueMutation(mutation)
         return result.dataAssertNoErrors
     }
 
@@ -85,7 +86,7 @@ class SubmissionGradeManagerImpl : SubmissionGradeManager {
             statusId,
             status
         )
-        val result = QLClientConfig.enqueueMutation(mutation)
+        val result = apolloClient.enqueueMutation(mutation)
         return result.dataAssertNoErrors
     }
 }

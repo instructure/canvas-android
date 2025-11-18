@@ -908,6 +908,15 @@
         <item quantity="other">%s ngā koinga</item>
     </plurals>
 
+    <plurals name="pointsPts">
+        <item quantity="one">koinga</item>
+        <item quantity="other">ngā koinga</item>
+    </plurals>
+
+    <plurals name="pointsPossible">
+        <item quantity="one">\/ %.0f koinga</item>
+        <item quantity="other">\/ %.0f ngā koinga</item>
+    </plurals>
     <string name="timeLimit">Wā Whāiti</string>
     <string name="newPushNotifications">%1$s Whakamōhiotanga Whakahou</string>
     <string name="like">rite</string>
@@ -1033,6 +1042,10 @@
     <string name="downloadFailed">I rahua te tikiake</string>
     <string name="downloadSuccessful">I pai te tikiake</string>
 
+    <string name="downloading">Tikiake ana</string>
+    <string name="downloadComplete">Kua oti te tango</string>
+    <string name="notificationChannelNameFileDownloadsName">Ngā Pānui Tikiake</string>
+    <string name="notificationChannelNameFileDownloadsDescription">Ngā pānui Canvas mō ngā tikiake tonu.</string>
     <string name="full_due_date_details">Ngā taipitopito katoa o ngā rā e tika ana</string>
     <string name="submissions">Tukunga</string>
     <string name="attachment">Āpitihanga</string>
@@ -2006,6 +2019,7 @@
     <string name="inboxSignatureSwitchLabel">Waitohu</string>
     <string name="inboxSignatureTextfieldHeader">Kuputuhi waitohu</string>
     <string name="due_dateTime">E tika ana: %1$s, %2$s</string>
+    <string name="submitted_dateTime">Kua tukuna: %1$s, %2$s</string>
     <string name="noDueDate">Kaore He Rā Tika</string>
     <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
     <string name="needsGradingCount">%1$s E hiahiatia ana mo te kōeke</string>
@@ -2013,6 +2027,10 @@
     <plurals name="assignmentListMaxpoints">
         <item quantity="one">%d koinga</item>
         <item quantity="other">%d ngā koinga</item>
+    </plurals>
+    <plurals name="percentGradeScore">
+        <item quantity="one">(%.0f tohu)</item>
+        <item quantity="other">(%.0f ngā tohu)</item>
     </plurals>
     <string name="noAssignments">Kaore ngā whakataunga</string>
     <string name="assignmentGroup">Rōpū Whakataunga</string>
@@ -2069,4 +2087,57 @@
     <string name="widgetSingleGradeSelectCourse">Me whiriwhiri he akoranga</string>
     <string name="widgetGradesErrorLoadingCourses">I puta he hapa i te wa e uta ana i nga akoranga.</string>
     <string name="settingsSwitchExperience">Hurihia ki te Canvas Mahi</string>
+    <string name="speedGraderGradeTabTitle">Kōeke &amp; Rubric</string>
+    <string name="speedGraderDetailsTabTitle">Nga korero taipitopito</string>
+    <string name="a11y_contentDescription_expandPanel">Roha te röpü</string>
+    <string name="a11y_contentDescription_collapsePanel">Kotikotia te paewhiri</string>
+    <string name="pointGradeHint">Tuhia te kaute ki konei</string>
+    <string name="percentageGradeHint">Tuhia te ōrau ki konei</string>
+    <string name="completeIncompleteGradeScore">%.0f / %.0f</string>
+    <string name="letterGrade">Kōeke Reta</string>
+    <string name="daysLate">Ngā rā tureiti</string>
+    <plurals name="pointTotal">
+        <item quantity="one">%s / %s koinga</item>
+        <item quantity="other">%s / %s ngā koinga</item>
+    </plurals>
+    <string name="speedGraderLatePenaltyTitle">Whiu tōmuri</string>
+    <string name="gradingStatus_none">Kaore</string>
+    <string name="gradingStatus_late">Tōmuri</string>
+    <string name="gradingStatus_missing">Ngaro</string>
+    <string name="gradingStatus_extended">Whakaroa</string>
+    <string name="gradingStatus_excused">Whakawātea</string>
+    <string name="status">Tūnga</string>
+    <string name="speedGraderStudentNotes">Nga Panui a nga akonga</string>
+    <string name="speedGraderStudentNotesLoading">Uta ana i nga korero a nga akonga</string>
+    <string name="speedGraderStudentNotesErrorTitle">Aue! I raruraru tētahi mea</string>
+    <string name="speedGraderStudentNotesErrorDescription">Kei te raru matou ki te whakaatu i nga korero a nga akonga.</string>
+    <string name="speedGraderStudentNotesErrorButtonText">Whakahouhia</string>
+    <string name="not_graded">Kāore i kōekehia</string>
+    <string name="speedGraderSubmissionDetails">Taipitopito tāpaetanga</string>
+    <string name="speedGraderSubmissionDetailsLoading">Uta ana i nga korero tukunga</string>
+    <string name="speedGraderWordCount">Kupu Kaute</string>
+    <string name="rubricsTitle">Rubrics</string>
+    <string name="rubricScore">Tohu</string>
+    <string name="rubricScoreHint">Tuhia te kaute ki konei</string>
+    <string name="speedGraderCommentsTitle">Nga korero (%s)</string>
+    <string name="anonymousGradingStudentLabel">Ākonga</string>
+    <string name="anonymousGradingUserLabel">Kaiwhakamahi muna</string>
+    <string name="rubricNote">Rubric Note</string>
+    <string name="content_description_edit_rubric_comment">Whakatika rubric note</string>
+    <string name="rubricNoteHint">Note a</string>
+    <string name="a11y_sendRubricNoteContentDescription">Tukuna rubric note</string>
+    <string name="select_attachment_type">Tīpakohia Momo Āpitihanga</string>
+    <string name="choose_files">Kōwhiri ngā kōnae</string>
+    <string name="a11y_expanded">Kua rahi ake</string>
+    <string name="a11y_collapsed">Hinga</string>
+    <string name="excuseStudent">Whakawātea ākoranga</string>
+    <string name="detailsEmptyMessage">Karekau he taipitopito atu mo tenei Taumahi me tenei Taumahi</string>
+    <string name="daysLateHint">Tuhia nga ra tomuri</string>
+    <string name="reply_to_topic">Whakautu ki te kaupapa</string>
+    <string name="additional_replies">Nga whakautu taapiri (%d)</string>
+    <string name="reply_to_topic_due">Kua tae ki te wā whakautu ki te kaupapa</string>
+    <string name="additional_replies_due">Kua tae ki te wā whakautu tāpiri (%d)</string>
+    <string name="a11y_discussion_checkpoints">Matapakinga Takitaki</string>
+    <string name="multipleDueDates">Maha Rā e tika ana</string>
+    <string name="courseConcludedError">Kua mutu te akoranga. Kaore e taea te tuku karere!</string>
 </resources>

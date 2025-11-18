@@ -87,14 +87,9 @@ import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.localisedFormat
 import java.util.Date
 
-const val HORIZON_REFRESH_INBOX_LIST = "horizon_refresh_inbox_list"
-const val HORIZON_INBOX_LIST_NEW_CONVERSATION_CREATED = "horizon_inbox_list_new_conversation_created"
-const val HORIZON_INBOX_LIST_ANNOUNCEMENT_READ = "horizon_inbox_list_announcement_read"
-
 @Composable
 fun HorizonInboxListScreen(
     state: HorizonInboxListUiState,
-    mainNavController: NavHostController,
     navController: NavHostController
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -113,28 +108,12 @@ fun HorizonInboxListScreen(
         }
     }
 
-    val listEntry = remember(navController.currentBackStackEntry) { navController.getBackStackEntry(HorizonInboxRoute.InboxList.route) }
-    val savedStateHandle = listEntry.savedStateHandle
-    val refreshFlow = remember { savedStateHandle.getStateFlow<String?>(HORIZON_REFRESH_INBOX_LIST, null) }
-    val refreshTrigger by refreshFlow.collectAsState()
-    val snackbarMessage = stringResource(R.string.inboxListConversationCreatedMessage)
-    LaunchedEffect(refreshTrigger) {
-        if (refreshTrigger != null) {
-            state.loadingState.onRefresh()
-            if (refreshTrigger == HORIZON_INBOX_LIST_NEW_CONVERSATION_CREATED) {
-                state.showSnackbar(snackbarMessage)
-            }
-            savedStateHandle[HORIZON_REFRESH_INBOX_LIST] = null
-        }
-    }
-
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         containerColor = HorizonColors.Surface.pagePrimary(),
     ) { padding ->
         InboxStateWrapper(
             state,
-            mainNavController,
             navController,
             Modifier.padding(padding)
         )
@@ -145,7 +124,6 @@ fun HorizonInboxListScreen(
 @Composable
 private fun InboxStateWrapper(
     state: HorizonInboxListUiState,
-    mainNavController: NavHostController,
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
@@ -168,7 +146,7 @@ private fun InboxStateWrapper(
         },
         content = {
             LazyColumn {
-                inboxHeader(state, mainNavController, navController)
+                inboxHeader(state, navController)
 
                 if (state.loadingState.isLoading) {
                     loadingContent()
@@ -199,7 +177,6 @@ private fun LazyListScope.loadingContent(modifier: Modifier = Modifier) {
 
 private fun LazyListScope.inboxHeader(
     state: HorizonInboxListUiState,
-    mainNavController: NavHostController,
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
@@ -218,7 +195,7 @@ private fun LazyListScope.inboxHeader(
                     size = IconButtonSize.NORMAL,
                     color = IconButtonColor.Inverse,
                     elevation = HorizonElevation.level4,
-                    onClick = { mainNavController.popBackStack() },
+                    onClick = { navController.popBackStack() },
                 )
 
                 Spacer(modifier = Modifier.weight(1f))
@@ -445,6 +422,6 @@ private fun HorizonInboxListPreview() {
         onRecipientRemoved = {},
         updateRecipientSearchQuery = {}
     )
-    HorizonInboxListScreen(state, rememberNavController(), rememberNavController())
+    HorizonInboxListScreen(state, rememberNavController())
 
 }

@@ -15,218 +15,98 @@
  */
 package com.instructure.horizon.features.dashboard
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.instructure.canvasapi2.managers.CourseWithProgress
-import com.instructure.canvasapi2.managers.DashboardCourse
-import com.instructure.canvasapi2.models.ModuleItem
-import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
-import com.instructure.horizon.R
-import com.instructure.horizon.horizonui.platform.LoadingState
-import com.instructure.horizon.model.LearningObjectType
 import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.formatIsoDuration
 import com.instructure.pandautils.utils.poll
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
     private val dashboardRepository: DashboardRepository,
-    @ApplicationContext private val context: Context,
-    private val themePrefs: ThemePrefs
+    private val themePrefs: ThemePrefs,
+    private val dashboardEventHandler: DashboardEventHandler
 ) : ViewModel() {
 
-    private val _uiState =
-        MutableStateFlow(DashboardUiState(loadingState = LoadingState(onRefresh = ::refresh, onSnackbarDismiss = ::dismissSnackbar)))
+    private val _uiState = MutableStateFlow(DashboardUiState(onSnackbarDismiss = ::dismissSnackbar, updateExternalShouldRefresh = ::updateExternalShouldRefresh))
     val uiState = _uiState.asStateFlow()
 
     init {
         viewModelScope.tryLaunch {
-            _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = true)) }
-            loadData(forceNetwork = false)
-            _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = false)) }
+            loadUnreadCount()
+            loadLogo()
         } catch {
-            _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = false)) }
+
+        }
+
+        viewModelScope.launch {
+            dashboardEventHandler.events.collect { event ->
+                when (event) {
+                    is DashboardEvent.DashboardRefresh -> {
+                        _uiState.update { it.copy(externalShouldRefresh = true) }
+                        refresh()
+                    }
+                    is DashboardEvent.ShowSnackbar -> showSnackbar(event.message)
+                    else -> { /* No-op */ }
+                }
+            }
         }
     }
 
-    fun refresh() {
-        viewModelScope.tryLaunch {
-            _uiState.update { it.copy(loadingState = it.loadingState.copy(isRefreshing = true)) }
-            loadData(forceNetwork = true)
-            _uiState.update { it.copy(loadingState = it.loadingState.copy(isRefreshing = false)) }
-        } catch {
-            _uiState.update { it.copy(loadingState = it.loadingState.copy(isRefreshing = false)) }
-        }
-    }
-
-    private suspend fun loadData(forceNetwork: Boolean) {
+    private suspend fun loadLogo() {
         // We need to poll for the logo URL because the Dashboard already starts to load when the canvas theme is not yet applied at the first launch.
         poll(
             pollInterval = 50,
             maxAttempts = 10,
             block = { _uiState.update { it.copy(logoUrl = themePrefs.mobileLogoUrl) } },
-            validate = { themePrefs.mobileLogoUrl.isNotEmpty() })
-        val dashboardContent = dashboardRepository.getDashboardContent(forceNetwork = forceNetwork)
-        if (dashboardContent.isSuccess) {
-            val coursesResult = dashboardContent.dataOrThrow.courses
-            val courseUiStates = coursesResult.map { course ->
-                viewModelScope.async {
-                    mapCourse(course, forceNetwork)
-                }
-            }.awaitAll().filterNotNull()
-            val inviteResults = dashboardContent.dataOrThrow.courseInvites
-            val invites = inviteResults.map { courseInvite ->
-                CourseInviteUiState(courseId = courseInvite.courseId, courseName = courseInvite.courseName, onAccept = {
-                    updateAcceptLoadingForInvite(courseInvite.courseId, true)
-                    viewModelScope.tryLaunch {
-                        dashboardRepository.acceptInvite(courseInvite.courseId, courseInvite.enrollmentId)
-                        refresh()
-                    } catch {
-                        _uiState.update { it.copy(loadingState = it.loadingState.copy(snackbarMessage = context.getString(R.string.dashboard_courseInviteFailed))) }
-                        updateAcceptLoadingForInvite(courseInvite.courseId, false)
-                    }
-                }, onDismiss = {
-                    dismissInvite(courseInvite.courseId)
-                })
-            }
-            _uiState.update { it.copy(coursesUiState = courseUiStates, invitesUiState = invites, loadingState = it.loadingState.copy(isError = false)) }
-        } else {
-            handleError()
-        }
+            validate = { themePrefs.mobileLogoUrl.isNotEmpty() }
+        )
     }
 
-    private suspend fun mapCourse(dashboardCourse: DashboardCourse, forceNetwork: Boolean): DashboardCourseUiState? {
-        val nextModuleId = dashboardCourse.nextUpModuleId
-        val nextModuleItemId = dashboardCourse.nextUpModuleItemId
-        return if (nextModuleId != null && nextModuleItemId != null) {
-            createCourseUiState(dashboardCourse)
-        } else if (dashboardCourse.course.progress < 100.0) {
-
-            val modules = dashboardRepository.getFirstPageModulesWithItems(
-                dashboardCourse.course.courseId,
-                forceNetwork = forceNetwork
-            )
-
-            if (modules.isSuccess) {
-                val nextModuleItemResult = modules.dataOrThrow.flatMap { module -> module.items }.firstOrNull()
-                val nextModuleResult = modules.dataOrThrow.find { module -> module.id == nextModuleItemResult?.moduleId }
-
-                if (nextModuleItemResult == null || nextModuleResult == null) {
-                    return null
-                }
-                createCourseUiState(dashboardCourse.course, nextModuleResult, nextModuleItemResult)
-            } else {
-                handleError()
-                null
-            }
-        } else if (dashboardCourse.course.progress == 100.0) {
-            DashboardCourseUiState(
-                courseId = dashboardCourse.course.courseId,
-                courseName = dashboardCourse.course.courseName,
-                courseProgress = dashboardCourse.course.progress,
-                completed = true,
-                progressLabel = getProgressLabel(dashboardCourse.course.progress),
-            )
-        } else {
-            handleError()
-            null
-        }
-    }
-
-    private fun createCourseUiState(
-        dashboardCourse: DashboardCourse
-    ) = DashboardCourseUiState(
-        courseId = dashboardCourse.course.courseId,
-        courseName = dashboardCourse.course.courseName,
-        courseProgress = dashboardCourse.course.progress,
-        nextModuleName = dashboardCourse.nextUpModuleTitle ?: "",
-        nextModuleItemId = dashboardCourse.nextUpModuleItemId,
-        nextModuleItemName = dashboardCourse.nextUpModuleItemTitle ?: "",
-        progressLabel = getProgressLabel(dashboardCourse.course.progress),
-        remainingTime = dashboardCourse.nextModuleItemEstimatedDuration?.formatIsoDuration(context),
-        learningObjectType = if (dashboardCourse.isNewQuiz) LearningObjectType.ASSESSMENT else LearningObjectType.fromApiString(
-            dashboardCourse.nextModuleItemType.orEmpty()
-        ),
-        dueDate = dashboardCourse.nextModuleItemDueDate
-    )
-
-    private fun createCourseUiState(
-        course: CourseWithProgress,
-        nextModule: ModuleObject?,
-        nextModuleItem: ModuleItem
-    ) = DashboardCourseUiState(
-        courseId = course.courseId,
-        courseName = course.courseName,
-        courseProgress = course.progress,
-        nextModuleName = nextModule?.name ?: "",
-        nextModuleItemId = nextModuleItem.id,
-        nextModuleItemName = nextModuleItem.title ?: "",
-        progressLabel = getProgressLabel(course.progress),
-        remainingTime = nextModuleItem.estimatedDuration?.formatIsoDuration(context),
-        learningObjectType = if (nextModuleItem.quizLti) LearningObjectType.ASSESSMENT else LearningObjectType.fromApiString(nextModuleItem.type.orEmpty()),
-        dueDate = nextModuleItem.moduleDetails?.dueDate
-    )
-
-    private fun getProgressLabel(progress: Double): String {
-        return when (progress) {
-            0.0 -> {
-                context.getString(R.string.learningObject_pillStatusNotStarted).uppercase()
-            }
-
-            100.0 -> {
-                context.getString(R.string.learningObject_pillStatusCompleted).uppercase()
-            }
-
-            else -> {
-                context.getString(R.string.learningObject_pillStatusInProgress).uppercase()
-            }
-        }
-    }
-
-    private fun handleError() {
+    private suspend fun loadUnreadCount() {
+        val unreadCounts = dashboardRepository.getUnreadCounts(true)
+        val unreadConversations = unreadCounts.firstOrNull { it.type == "Conversation" }?.unreadCount ?: 0
+        val unreadNotifications = unreadCounts.filter { it.type == "Message" }.sumOf { it.unreadCount }
         _uiState.update {
-            if (it.coursesUiState.isEmpty()) {
-                it.copy(loadingState = it.loadingState.copy(isError = true))
-            } else {
-                it.copy(loadingState = it.loadingState.copy(snackbarMessage = context.getString(R.string.errorOccurred)))
-            }
+            it.copy(
+                unreadCountState = DashboardUnreadState(
+                    unreadConversations = unreadConversations,
+                    unreadNotifications = unreadNotifications
+                )
+            )
+        }
+    }
+
+    fun refresh() {
+        viewModelScope.tryLaunch {
+            loadUnreadCount()
+        } catch {
+
+        }
+    }
+
+    private fun showSnackbar(message: String) {
+        _uiState.update {
+            it.copy(snackbarMessage = message)
         }
     }
 
     private fun dismissSnackbar() {
         _uiState.update {
-            it.copy(loadingState = it.loadingState.copy(snackbarMessage = null))
+            it.copy(snackbarMessage = null)
         }
     }
 
-    private fun updateAcceptLoadingForInvite(courseId: Long, isLoading: Boolean) {
-        _uiState.update { currentState ->
-            val updatedInvites = currentState.invitesUiState.map { invite ->
-                if (invite.courseId == courseId) {
-                    invite.copy(acceptLoading = isLoading)
-                } else {
-                    invite
-                }
-            }
-            currentState.copy(invitesUiState = updatedInvites)
-        }
-    }
-
-    private fun dismissInvite(courseId: Long) {
-        _uiState.update { currentState ->
-            val updatedInvites = currentState.invitesUiState.filterNot { it.courseId == courseId }
-            currentState.copy(invitesUiState = updatedInvites)
+    private fun updateExternalShouldRefresh(value: Boolean) {
+        _uiState.update {
+            it.copy(externalShouldRefresh = value)
         }
     }
 }

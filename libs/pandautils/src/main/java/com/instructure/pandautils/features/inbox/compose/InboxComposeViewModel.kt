@@ -22,6 +22,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkInfo
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.DataResult
@@ -32,6 +33,7 @@ import com.instructure.pandautils.features.inbox.utils.AttachmentStatus
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsMode
 import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.FileDownloader
 import com.instructure.pandautils.utils.ScreenState
 import com.instructure.pandautils.utils.debounce
@@ -46,6 +48,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.Date
 import java.util.EnumMap
 import java.util.UUID
 import javax.inject.Inject
@@ -57,7 +60,9 @@ class InboxComposeViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val fileDownloader: FileDownloader,
     private val inboxComposeRepository: InboxComposeRepository,
-    private val attachmentDao: AttachmentDao
+    private val attachmentDao: AttachmentDao,
+    private val featureFlagProvider: FeatureFlagProvider,
+    private val inboxComposeBehavior: InboxComposeBehavior
 ): ViewModel() {
     private var canSendToAll = false
 
@@ -101,6 +106,7 @@ class InboxComposeViewModel @Inject constructor(
         if (options != null) {
             initFromOptions(options)
         }
+        checkAndApplyFeatureFlagRestrictions()
         loadSignature()
     }
 
@@ -185,19 +191,129 @@ class InboxComposeViewModel @Inject constructor(
         }
     }
 
-    fun updateAttachments(uuid: UUID?, workInfo: WorkInfo) {
-        if (workInfo.state == WorkInfo.State.SUCCEEDED) {
-            viewModelScope.launch {
-                uuid?.let { uuid ->
-                    val attachmentEntities = attachmentDao.findByParentId(uuid.toString())
-                    val status = workInfo.state.toAttachmentCardStatus()
-                    attachmentEntities?.let { attachmentList ->
-                        _uiState.update { it.copy(attachments = it.attachments + attachmentList.map { AttachmentCardItem(it.toApiModel(), status, false) }) }
-                        attachmentDao.deleteAll(attachmentList)
-                    } ?: sendScreenResult(context.getString(R.string.errorUploadingFile))
-                } ?: sendScreenResult(context.getString(R.string.errorUploadingFile))
-
+    private fun checkAndApplyFeatureFlagRestrictions() {
+        viewModelScope.launch {
+            val shouldHideSendIndividual = inboxComposeBehavior.shouldHideSendIndividual()
+            
+            if (shouldHideSendIndividual) {
+                _uiState.update {
+                    it.copy(
+                        hiddenFields = it.hiddenFields.copy(isSendIndividualHidden = true),
+                        sendIndividual = true
+                    )
+                }
+                initialState = initialState.copy(
+                    hiddenFields = initialState.hiddenFields.copy(isSendIndividualHidden = true),
+                    sendIndividual = true
+                )
             }
+        }
+    }
+
+    fun addUploadingAttachments(filePaths: List<String>) {
+        // Create placeholder attachments with UPLOADING status from file URIs
+        val placeholderAttachments = filePaths.mapIndexed { index, path ->
+            val fileName = path.substringAfterLast("/")
+            val attachment = com.instructure.canvasapi2.models.Attachment(
+                id = System.currentTimeMillis() + index, // Temporary ID until real one is assigned
+                filename = fileName,
+                displayName = fileName,
+                contentType = ""
+            )
+            AttachmentCardItem(attachment, AttachmentStatus.UPLOADING, false)
+        }
+
+        _uiState.update { it.copy(attachments = it.attachments + placeholderAttachments) }
+    }
+
+    fun updateAttachments(uuid: UUID?, workInfo: WorkInfo) {
+        viewModelScope.launch {
+            uuid?.let { workerId ->
+                val status = workInfo.state.toAttachmentCardStatus()
+
+                when (workInfo.state) {
+                    WorkInfo.State.ENQUEUED, WorkInfo.State.RUNNING -> {
+                        // Update progress for uploading attachments
+                        val progress = workInfo.progress
+                        val uploadedSize = progress.getLong("PROGRESS_DATA_UPLOADED_SIZE", 0L)
+                        val totalSize = progress.getLong("PROGRESS_DATA_TOTAL_SIZE", 0L)
+                        val progressPercent = if (totalSize > 0) uploadedSize.toFloat() / totalSize.toFloat() else 0f
+
+                        // Find attachment with this workerId, or assign workerId to first placeholder without one
+                        _uiState.update { currentState ->
+                            var workerIdAssigned = false
+                            currentState.copy(
+                                attachments = currentState.attachments.map { attachment ->
+                                    when {
+                                        // Update attachment that already has this workerId
+                                        attachment.workerId == workerId.toString() -> {
+                                            attachment.copy(uploadProgress = progressPercent)
+                                        }
+                                        // Assign workerId to first placeholder without one
+                                        !workerIdAssigned && attachment.status == AttachmentStatus.UPLOADING && attachment.workerId == null -> {
+                                            workerIdAssigned = true
+                                            attachment.copy(workerId = workerId.toString(), uploadProgress = progressPercent)
+                                        }
+                                        else -> attachment
+                                    }
+                                }
+                            )
+                        }
+                    }
+                    WorkInfo.State.SUCCEEDED -> {
+                        // Replace placeholder attachment with matching workerId with real uploaded attachments
+                        val attachmentEntities = attachmentDao.findByParentId(workerId.toString())
+                        attachmentEntities?.let { attachmentList ->
+                            // Create real uploaded attachments
+                            val uploadedAttachments = attachmentList.map {
+                                AttachmentCardItem(it.toApiModel(), status, false)
+                            }
+
+                            // Remove placeholder with matching workerId, or first UPLOADING placeholder without workerId
+                            _uiState.update { currentState ->
+                                var placeholderRemoved = false
+                                val filteredAttachments = currentState.attachments.filter { attachment ->
+                                    when {
+                                        attachment.workerId == workerId.toString() -> {
+                                            placeholderRemoved = true
+                                            false // Remove this placeholder
+                                        }
+                                        !placeholderRemoved && attachment.status == AttachmentStatus.UPLOADING && attachment.workerId == null -> {
+                                            placeholderRemoved = true
+                                            false // Remove first unassigned placeholder
+                                        }
+                                        else -> true
+                                    }
+                                }
+                                currentState.copy(attachments = filteredAttachments + uploadedAttachments)
+                            }
+                            attachmentDao.deleteAll(attachmentList)
+                        } ?: sendScreenResult(context.getString(R.string.errorUploadingFile))
+                    }
+                    WorkInfo.State.FAILED, WorkInfo.State.CANCELLED, WorkInfo.State.BLOCKED -> {
+                        // Update placeholder with matching workerId to FAILED, or first UPLOADING placeholder without workerId
+                        _uiState.update { currentState ->
+                            var placeholderUpdated = false
+                            currentState.copy(
+                                attachments = currentState.attachments.map { attachment ->
+                                    when {
+                                        attachment.workerId == workerId.toString() -> {
+                                            placeholderUpdated = true
+                                            attachment.copy(status = AttachmentStatus.FAILED)
+                                        }
+                                        !placeholderUpdated && attachment.status == AttachmentStatus.UPLOADING && attachment.workerId == null -> {
+                                            placeholderUpdated = true
+                                            attachment.copy(status = AttachmentStatus.FAILED, workerId = workerId.toString())
+                                        }
+                                        else -> attachment
+                                    }
+                                }
+                            )
+                        }
+                        sendScreenResult(context.getString(R.string.errorUploadingFile))
+                    }
+                }
+            } ?: sendScreenResult(context.getString(R.string.errorUploadingFile))
         }
     }
 
@@ -236,7 +352,9 @@ class InboxComposeViewModel @Inject constructor(
                 _uiState.update { it.copy(subject = action.subject) }
             }
             is InboxComposeActionHandler.SendIndividualChanged -> {
-                _uiState.update { it.copy(sendIndividual = action.sendIndividual) }
+                if (!uiState.value.hiddenFields.isSendIndividualHidden) {
+                    _uiState.update { it.copy(sendIndividual = action.sendIndividual) }
+                }
             }
             is InboxComposeActionHandler.AddAttachmentSelected -> {
                 viewModelScope.launch {
@@ -507,12 +625,31 @@ class InboxComposeViewModel @Inject constructor(
         return inboxComposeRepository.getRecipients(searchQuery, contextId, forceRefresh)
     }
 
+    private fun canSendMessageInContext(canvasContext: CanvasContext): Boolean {
+        if (canvasContext !is Course) return true
+
+        val fullCourse = uiState.value.selectContextUiState.canvasContexts
+            .filterIsInstance<Course>()
+            .find { it.id == canvasContext.id }
+            ?: canvasContext
+
+        val now = Date()
+        return fullCourse.workflowState != Course.WorkflowState.COMPLETED &&
+                fullCourse.endDate?.before(now) != true &&
+                fullCourse.term?.endDate?.before(now) != true
+    }
+
     private fun createConversation() {
         uiState.value.selectContextUiState.selectedCanvasContext?.let { canvasContext ->
             viewModelScope.launch {
                 _uiState.update { uiState.value.copy(screenState = ScreenState.Loading) }
 
                 try {
+                    if (!canSendMessageInContext(canvasContext)) {
+                        sendScreenResult(context.getString(R.string.courseConcludedError))
+                        return@launch
+                    }
+
                     inboxComposeRepository.createConversation(
                         recipients = uiState.value.recipientPickerUiState.selectedRecipients,
                         subject = uiState.value.subject.text,
@@ -544,6 +681,11 @@ class InboxComposeViewModel @Inject constructor(
                 _uiState.update { uiState.value.copy(screenState = ScreenState.Loading) }
 
                 try {
+                    if (!canSendMessageInContext(canvasContext)) {
+                        sendScreenResult(context.getString(R.string.courseConcludedError))
+                        return@launch
+                    }
+
                     inboxComposeRepository.addMessage(
                         conversationId = uiState.value.previousMessages?.conversation?.id ?: 0,
                         recipients = uiState.value.recipientPickerUiState.selectedRecipients,

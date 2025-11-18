@@ -908,6 +908,15 @@
         <item quantity="other">%s điểm thành phần</item>
     </plurals>
 
+    <plurals name="pointsPts">
+        <item quantity="one">điểm</item>
+        <item quantity="other">điểm</item>
+    </plurals>
+
+    <plurals name="pointsPossible">
+        <item quantity="one">\/ %.0f điểm</item>
+        <item quantity="other">\/ %.0f điểm</item>
+    </plurals>
     <string name="timeLimit">Giới Hạn Thời Gian</string>
     <string name="newPushNotifications">%1$s Thông Báo Mới</string>
     <string name="like">thích</string>
@@ -1033,6 +1042,10 @@
     <string name="downloadFailed">Tải xuống thất bại</string>
     <string name="downloadSuccessful">Tải xuống thành công</string>
 
+    <string name="downloading">Đang tải xuống</string>
+    <string name="downloadComplete">Tải xuống thành công</string>
+    <string name="notificationChannelNameFileDownloadsName">Thông Báo Tải Xuống</string>
+    <string name="notificationChannelNameFileDownloadsDescription">Thông báo Canvas cho các mục tải xuống đang diễn ra.</string>
     <string name="full_due_date_details">Thông Tin Chi Tiết Ngày Đến Hạn Đầy Đủ</string>
     <string name="submissions">Nộp</string>
     <string name="attachment">Tập Tin Đính Kèm</string>
@@ -2007,6 +2020,7 @@
     <string name="inboxSignatureSwitchLabel">Chữ Ký</string>
     <string name="inboxSignatureTextfieldHeader">Văn bản chữ ký</string>
     <string name="due_dateTime">Hạn: %1$s, %2$s</string>
+    <string name="submitted_dateTime">Đã Nộp: %1$s, %2$s</string>
     <string name="noDueDate">Không Có Ngày Đến Hạn</string>
     <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
     <string name="needsGradingCount">%1$s Cần Chấm Điểm</string>
@@ -2014,6 +2028,10 @@
     <plurals name="assignmentListMaxpoints">
         <item quantity="one">%d điểm thành phần</item>
         <item quantity="other">%d điểm</item>
+    </plurals>
+    <plurals name="percentGradeScore">
+        <item quantity="one">(%.0f điểm)</item>
+        <item quantity="other">(%.0f điểm)</item>
     </plurals>
     <string name="noAssignments">Không có bài tập</string>
     <string name="assignmentGroup">Nhóm Bài Tập</string>
@@ -2070,4 +2088,57 @@
     <string name="widgetSingleGradeSelectCourse">Hãy chọn một khóa học</string>
     <string name="widgetGradesErrorLoadingCourses">Đã xảy ra lỗi khi tải các khóa học.</string>
     <string name="settingsSwitchExperience">Chuyển đổi sang Canvas Career</string>
+    <string name="speedGraderGradeTabTitle">Điểm &amp; Bảng Đánh Giá Theo Tiêu Chí</string>
+    <string name="speedGraderDetailsTabTitle">Các Thông Tin Chi Tiết</string>
+    <string name="a11y_contentDescription_expandPanel">Mở rộng bảng</string>
+    <string name="a11y_contentDescription_collapsePanel">Thu gọn bảng</string>
+    <string name="pointGradeHint">Viết điểm ở đây</string>
+    <string name="percentageGradeHint">Viết số phần trăm ở đây</string>
+    <string name="completeIncompleteGradeScore">%.0f / %.0f</string>
+    <string name="letterGrade">Điểm Bằng Chữ</string>
+    <string name="daysLate">Ngày trễ</string>
+    <plurals name="pointTotal">
+        <item quantity="one">%s / %s điểm</item>
+        <item quantity="other">%s / %s điểm</item>
+    </plurals>
+    <string name="speedGraderLatePenaltyTitle">Phạt Do Muộn</string>
+    <string name="gradingStatus_none">Không Có</string>
+    <string name="gradingStatus_late">Muộn</string>
+    <string name="gradingStatus_missing">Bị Thiếu</string>
+    <string name="gradingStatus_extended">Đã Kéo Dài</string>
+    <string name="gradingStatus_excused">Đã Xin Phép</string>
+    <string name="status">Trạng Thái</string>
+    <string name="speedGraderStudentNotes">Ghi Chú của Sinh Viên</string>
+    <string name="speedGraderStudentNotesLoading">Đang tải các Ghi chú của sinh viên</string>
+    <string name="speedGraderStudentNotesErrorTitle">Rất tiếc! Đã Xảy Ra Vấn Đề</string>
+    <string name="speedGraderStudentNotesErrorDescription">Chúng tôi đang gặp khó khăn khi hiển thị ghi chú của sinh viên.</string>
+    <string name="speedGraderStudentNotesErrorButtonText">Làm Mới</string>
+    <string name="not_graded">Chưa Được Chấm Điểm</string>
+    <string name="speedGraderSubmissionDetails">Chi Tiết Bài Nộp</string>
+    <string name="speedGraderSubmissionDetailsLoading">Đang tải chi tiết Bài Nộp</string>
+    <string name="speedGraderWordCount">Số Từ</string>
+    <string name="rubricsTitle">Bảng Đánh Giá Theo Tiêu Chí</string>
+    <string name="rubricScore">Điểm</string>
+    <string name="rubricScoreHint">Viết điểm ở đây</string>
+    <string name="speedGraderCommentsTitle">Bình luận (%s)</string>
+    <string name="anonymousGradingStudentLabel">Sinh Viên</string>
+    <string name="anonymousGradingUserLabel">Người Sử Dụng Ẩn Danh</string>
+    <string name="rubricNote">Ghi Chú Bảng Đánh Giá Theo Tiêu Chí</string>
+    <string name="content_description_edit_rubric_comment">Chỉnh sửa ghi chú bảng đánh giá theo tiêu chí</string>
+    <string name="rubricNoteHint">Ghi chú</string>
+    <string name="a11y_sendRubricNoteContentDescription">Gửi ghi chú bảng đánh giá theo tiêu chí</string>
+    <string name="select_attachment_type">Chọn Loại Tập Tin Đính Kèm</string>
+    <string name="choose_files">Chọn Tập Tin</string>
+    <string name="a11y_expanded">Đã Mở Rộng</string>
+    <string name="a11y_collapsed">Đã Thu Gọn</string>
+    <string name="excuseStudent">Cho Phép Sinh Viên</string>
+    <string name="detailsEmptyMessage">Chúng tôi không có thêm thông tin chi tiết về Sinh Viên và Bài Tập này</string>
+    <string name="daysLateHint">Ghi số ngày trễ</string>
+    <string name="reply_to_topic">Trả lời chủ đề</string>
+    <string name="additional_replies">Các phản hồi bổ sung (%d)</string>
+    <string name="reply_to_topic_due">Phản hồi chủ đề đến hạn</string>
+    <string name="additional_replies_due">Các phản hồi bổ sung (%d) đến hạn</string>
+    <string name="a11y_discussion_checkpoints">Điểm Kiểm Tra Thảo Luận</string>
+    <string name="multipleDueDates">Nhiều Ngày Đến Hạn</string>
+    <string name="courseConcludedError">Các khóa học đã kết thúc. Không thể gửi tin nhắn!</string>
 </resources>

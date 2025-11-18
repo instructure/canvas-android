@@ -67,7 +67,7 @@ object AssignmentAPI {
         @GET("courses/{courseId}/assignments/{assignmentId}?include[]=submission&include[]=rubric_assessment&needs_grading_count_by_section=true&override_assignment_dates=true&all_dates=true&include[]=overrides&include[]=score_statistics&include[]=submission_history")
         fun getAssignmentWithHistory(@Path("courseId") courseId: Long, @Path("assignmentId") assignmentId: Long): Call<Assignment>
 
-        @GET("courses/{courseId}/assignments/{assignmentId}?include[]=submission&include[]=rubric_assessment&needs_grading_count_by_section=true&override_assignment_dates=true&all_dates=true&include[]=overrides&include[]=score_statistics&include[]=submission_history")
+        @GET("courses/{courseId}/assignments/{assignmentId}?include[]=submission&include[]=rubric_assessment&needs_grading_count_by_section=true&override_assignment_dates=true&all_dates=true&include[]=overrides&include[]=score_statistics&include[]=submission_history&include[]=checkpoints&include[]=discussion_topic&include[]=sub_assignment_submissions")
         suspend fun getAssignmentWithHistory(
             @Path("courseId") courseId: Long,
             @Path("assignmentId") assignmentId: Long,
@@ -77,7 +77,7 @@ object AssignmentAPI {
         @GET("courses/{courseId}/assignments/{assignmentId}?include[]=submission&include[]=rubric_assessment&needs_grading_count_by_section=true&override_assignment_dates=true&all_dates=true&include[]=overrides&include[]=observed_users&include[]=score_statistics&include[]=submission_history")
         fun getAssignmentIncludeObservees(@Path("courseId") courseId: Long, @Path("assignmentId") assignmentId: Long): Call<ObserveeAssignment>
 
-        @GET("courses/{courseId}/assignments/{assignmentId}?include[]=submission&include[]=rubric_assessment&needs_grading_count_by_section=true&override_assignment_dates=true&all_dates=true&include[]=overrides&include[]=observed_users&include[]=score_statistics&include[]=submission_history")
+        @GET("courses/{courseId}/assignments/{assignmentId}?include[]=submission&include[]=rubric_assessment&needs_grading_count_by_section=true&override_assignment_dates=true&all_dates=true&include[]=overrides&include[]=observed_users&include[]=score_statistics&include[]=submission_history&include[]=checkpoints&include[]=discussion_topic&include[]=sub_assignment_submissions")
         suspend fun getAssignmentIncludeObservees(
             @Path("courseId") courseId: Long,
             @Path("assignmentId") assignmentId: Long,
@@ -92,7 +92,7 @@ object AssignmentAPI {
         @GET("courses/{courseId}/assignment_groups?include[]=assignments&include[]=discussion_topic&include[]=submission&override_assignment_dates=true&include[]=all_dates&include[]=overrides")
         fun getFirstPageAssignmentGroupListWithAssignments(@Path("courseId") courseId: Long): Call<List<AssignmentGroup>>
 
-        @GET("courses/{courseId}/assignment_groups?include[]=assignments&include[]=discussion_topic&include[]=submission&include[]=rubric_assessment&override_assignment_dates=true&include[]=all_dates&include[]=overrides&include[]=submission_history&include[]=submission_comments&include[]=score_statistics")
+        @GET("courses/{courseId}/assignment_groups?include[]=assignments&include[]=discussion_topic&include[]=submission&include[]=rubric_assessment&override_assignment_dates=true&include[]=all_dates&include[]=overrides&include[]=submission_history&include[]=submission_comments&include[]=score_statistics&include[]=checkpoints&include[]=discussion_topic&include[]=sub_assignment_submissions")
         suspend fun getFirstPageAssignmentGroupListWithAssignments(@Path("courseId") courseId: Long, @Tag restParams: RestParams): DataResult<List<AssignmentGroup>>
 
         @GET
@@ -117,7 +117,7 @@ object AssignmentAPI {
             @Tag restParams: RestParams
         ): DataResult<List<AssignmentGroup>>
 
-        @GET("courses/{courseId}/assignment_groups?include[]=assignments&include[]=discussion_topic&include[]=submission&include[]=all_dates&include[]=overrides&include[]=observed_users&override_assignment_dates=true")
+        @GET("courses/{courseId}/assignment_groups?include[]=assignments&include[]=discussion_topic&include[]=submission&include[]=all_dates&include[]=overrides&include[]=observed_users&override_assignment_dates=true&include[]=checkpoints&include[]=discussion_topic&include[]=sub_assignment_submissions")
         suspend fun getFirstPageAssignmentGroupListWithAssignmentsForObserver(
             @Path("courseId") courseId: Long,
             @Query("grading_period_id") gradingPeriodId: Long?,

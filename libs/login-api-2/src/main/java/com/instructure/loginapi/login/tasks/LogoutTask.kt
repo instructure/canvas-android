@@ -55,6 +55,12 @@ abstract class LogoutTask(
         QR_CODE_SWITCH
     }
 
+    companion object {
+        @Volatile
+        var isLoggingOut = false
+            private set
+    }
+
     protected abstract fun onCleanup()
     protected abstract fun createLoginIntent(context: Context): Intent
     protected abstract fun createQRLoginIntent(context: Context, uri: Uri): Intent?
@@ -67,6 +73,7 @@ abstract class LogoutTask(
 
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     fun execute() {
+        isLoggingOut = true
         try {
             // Get the fcm token to delete the comm channel, then resume logout
             getFcmToken { registrationId ->

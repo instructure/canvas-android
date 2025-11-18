@@ -27,9 +27,13 @@ import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentGroup
+import com.instructure.canvasapi2.models.Checkpoint
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.pandautils.compose.composables.DiscussionCheckpointUiState
 import com.instructure.pandautils.features.assignments.list.AssignmentGroupItemState
 import com.instructure.pandautils.features.assignments.list.AssignmentListMenuOverFlowItem
 import com.instructure.pandautils.features.assignments.list.AssignmentListScreenOption
@@ -41,10 +45,13 @@ import com.instructure.pandautils.features.assignments.list.filter.AssignmentLis
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterOptions
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterType
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListSelectedFilters
+import com.instructure.pandautils.features.grades.SubmissionStateLabel
+import com.instructure.pandautils.utils.DisplayGrade
 import com.instructure.pandautils.utils.ScreenState
 import com.jakewharton.threetenabp.AndroidThreeTen
 import org.junit.Rule
 import org.junit.Test
+import java.util.Date
 
 class AssignmentListScreenTest {
     @get:Rule
@@ -281,5 +288,102 @@ class AssignmentListScreenTest {
         composeTestRule.onNode(hasText("Retry"))
             .assertIsDisplayed()
             .assertHasClickAction()
+    }
+
+    @Test
+    fun assertDiscussionCheckpointsContent() {
+        composeTestRule.setContent {
+            AndroidThreeTen.init(LocalContext.current)
+            val assignmentGroups = listOf(
+                AssignmentGroup(
+                    id = 1,
+                    name = "Group 1",
+                    assignments = listOf(
+                        Assignment(
+                            name = "Assignment 1",
+                            checkpoints = listOf(
+                                Checkpoint(),
+                                Checkpoint()
+                            ),
+                            submission = Submission(
+                                grade = "7/15",
+                                postedAt = Date()
+                            )
+                        )
+                    )
+                )
+            )
+            val state = AssignmentListUiState(
+                state = ScreenState.Content,
+                subtitle = "Course",
+                allAssignments = assignmentGroups.flatMap { it.assignments },
+                assignmentGroups = assignmentGroups,
+                listState = mapOf(
+                    assignmentGroups[0].name.orEmpty() to assignmentGroups[0].assignments.map {
+                        AssignmentGroupItemState(
+                            course = Course(), assignment = it, customStatuses = emptyList(), checkpoints = listOf(
+                                DiscussionCheckpointUiState(
+                                    name = "Checkpoint 1",
+                                    dueDate = "Due date 1",
+                                    submissionStateLabel = SubmissionStateLabel.Graded,
+                                    displayGrade = DisplayGrade("7/10", ""),
+                                    pointsPossible = 10
+                                ),
+                                DiscussionCheckpointUiState(
+                                    name = "Checkpoint 2",
+                                    dueDate = "Due date 2",
+                                    submissionStateLabel = SubmissionStateLabel.Missing,
+                                    displayGrade = DisplayGrade("-/5", ""),
+                                    pointsPossible = 5
+                                )
+                            ),
+                            checkpointsExpanded = true,
+                            showDueDate = true,
+                            showGrade = true,
+                            showSubmissionState = true
+                        )
+                    }
+                ),
+                screenOption = AssignmentListScreenOption.List
+            )
+            AssignmentListScreen(
+                title = "Grade Preferences",
+                state = state,
+                contextColor = Color.Red,
+                screenActionHandler = {},
+                listActionHandler = {}
+            )
+        }
+
+        composeTestRule.onNodeWithText("Group 1")
+            .assertIsDisplayed()
+        composeTestRule.onNodeWithText("Assignment 1")
+            .assertIsDisplayed()
+        composeTestRule.onNode(hasTestTag("assignmentDueDate") and hasText("Due date 1"), true)
+            .assertIsDisplayed()
+        composeTestRule.onNode(hasTestTag("assignmentDueDate") and hasText("Due date 2"), true)
+            .assertIsDisplayed()
+        composeTestRule.onNode(hasTestTag("submissionStateLabel") and hasText("Graded"), true)
+            .assertIsDisplayed()
+        composeTestRule.onNodeWithText("7/15")
+            .assertIsDisplayed()
+
+        composeTestRule.onNodeWithText("Checkpoint 1")
+            .assertIsDisplayed()
+        composeTestRule.onNode(hasTestTag("checkpointDueDate_Checkpoint 1") and hasText("Due date 1"), true)
+            .assertIsDisplayed()
+        composeTestRule.onNode(hasTestTag("checkpointSubmissionStateLabel") and hasText("Graded"), true)
+            .assertIsDisplayed()
+        composeTestRule.onNodeWithText("7/10")
+            .assertIsDisplayed()
+
+        composeTestRule.onNodeWithText("Checkpoint 2")
+            .assertIsDisplayed()
+        composeTestRule.onNode(hasTestTag("checkpointDueDate_Checkpoint 2") and hasText("Due date 2"), true)
+            .assertIsDisplayed()
+        composeTestRule.onNode(hasTestTag("checkpointSubmissionStateLabel") and hasText("Missing"), true)
+            .assertIsDisplayed()
+        composeTestRule.onNodeWithText("-/5")
+            .assertIsDisplayed()
     }
 }

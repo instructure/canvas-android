@@ -79,7 +79,7 @@ object DiscussionAPI {
         @GET("{contextType}/{contextId}/discussion_topics?override_assignment_dates=true&include[]=all_dates&include[]=overrides&include[]=sections")
         fun getFirstPageDiscussionTopicHeaders(@Path("contextType") contextType: String, @Path("contextId") contextId: Long): Call<List<DiscussionTopicHeader>>
 
-        @GET("{contextType}/{contextId}/discussion_topics?override_assignment_dates=true&include[]=all_dates&include[]=overrides&include[]=sections")
+        @GET("{contextType}/{contextId}/discussion_topics?override_assignment_dates=true&include[]=all_dates&include[]=overrides&include[]=sections&include[]=checkpoints")
         suspend fun getFirstPageDiscussionTopicHeaders(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Tag params: RestParams): DataResult<List<DiscussionTopicHeader>>
 
         @GET("{contextType}/{contextId}/discussion_topics/{topicId}?include[]=sections")

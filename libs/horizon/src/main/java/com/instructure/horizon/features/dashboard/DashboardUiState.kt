@@ -15,35 +15,16 @@
  */
 package com.instructure.horizon.features.dashboard
 
-import com.instructure.horizon.horizonui.platform.LoadingState
-import com.instructure.horizon.model.LearningObjectType
-import java.util.Date
-
 data class DashboardUiState(
     val logoUrl: String = "",
-    val coursesUiState: List<DashboardCourseUiState> = emptyList(),
-    val invitesUiState: List<CourseInviteUiState> = emptyList(),
-    val loadingState: LoadingState = LoadingState(),
+    val externalShouldRefresh: Boolean = false,
+    val updateExternalShouldRefresh: (Boolean) -> Unit = {},
+    val unreadCountState: DashboardUnreadState = DashboardUnreadState(),
+    val snackbarMessage: String? = null,
+    val onSnackbarDismiss: () -> Unit = {},
 )
 
-data class DashboardCourseUiState(
-    val courseId: Long,
-    val courseName: String,
-    val courseProgress: Double,
-    val completed: Boolean = false,
-    val nextModuleName: String? = null,
-    val nextModuleItemName: String? = null,
-    val nextModuleItemId: Long? = null,
-    val progressLabel: String? = null,
-    val remainingTime: String? = null,
-    val learningObjectType: LearningObjectType? = null,
-    val dueDate: Date? = null
-)
-
-data class CourseInviteUiState(
-    val courseId: Long,
-    val courseName: String,
-    val onAccept: () -> Unit,
-    val onDismiss: () -> Unit,
-    val acceptLoading: Boolean = false,
+data class DashboardUnreadState(
+    val unreadConversations: Int = 0,
+    val unreadNotifications: Int = 0,
 )

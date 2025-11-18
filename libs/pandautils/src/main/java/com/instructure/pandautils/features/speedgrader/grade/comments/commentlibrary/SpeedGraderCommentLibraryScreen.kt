@@ -33,6 +33,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -150,6 +151,7 @@ private fun SpeedGraderCommentLibraryContent(
                 modifier = modifier
                     .weight(1f)
                     .fillMaxWidth()
+                    .testTag("commentLibraryListColumn"),
             ) {
                 itemsIndexed(uiState.items) { index, item ->
                     Text(
@@ -162,6 +164,7 @@ private fun SpeedGraderCommentLibraryContent(
                                 uiState.onCommentValueChanged(item)
                             }
                             .padding(vertical = 14.dp)
+                            .testTag("commentLibraryItem")
                     )
                     if (index != uiState.items.lastIndex) {
                         CanvasDivider()
@@ -178,7 +181,8 @@ private fun SpeedGraderCommentLibraryContent(
             sendCommentClicked = {
                 onSendCommentClicked(uiState.commentValue)
             },
-            isOnCommentLibrary = true
+            isOnCommentLibrary = true,
+            testTag = "commentLibraryFilterInputField"
         )
     }
 }

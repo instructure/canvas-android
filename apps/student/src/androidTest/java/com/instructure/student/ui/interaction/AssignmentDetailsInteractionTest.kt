@@ -15,8 +15,21 @@
  */
 package com.instructure.student.ui.interaction
 
+import android.Manifest
+import android.app.Activity
+import android.app.Instrumentation
+import android.content.Intent
+import android.net.Uri
+import android.provider.MediaStore
 import androidx.compose.ui.platform.ComposeView
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.UiSelector
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
 import com.google.android.apps.common.testing.accessibility.framework.checks.SpeakableTextPresentCheck
 import com.instructure.canvas.espresso.FeatureCategory
@@ -25,29 +38,32 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.checkToastText
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.addAssignment
-import com.instructure.canvas.espresso.mockCanvas.addAssignmentsToGroups
-import com.instructure.canvas.espresso.mockCanvas.addSubmissionForAssignment
-import com.instructure.canvas.espresso.mockCanvas.fakes.FakeCustomGradeStatusesManager
-import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.mockcanvas.MockCanvas
+import com.instructure.canvas.espresso.mockcanvas.addAssignment
+import com.instructure.canvas.espresso.mockcanvas.addAssignmentsToGroups
+import com.instructure.canvas.espresso.mockcanvas.addSubmissionForAssignment
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeCustomGradeStatusesManager
+import com.instructure.canvas.espresso.mockcanvas.init
+import com.instructure.canvas.espresso.refresh
 import com.instructure.canvasapi2.di.graphql.CustomGradeStatusModule
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Checkpoint
 import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.pandautils.utils.toFormattedString
 import com.instructure.student.R
 import com.instructure.student.ui.utils.StudentComposeTest
-import com.instructure.student.ui.utils.routeTo
-import com.instructure.student.ui.utils.tokenLogin
+import com.instructure.student.ui.utils.extensions.routeTo
+import com.instructure.student.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import org.hamcrest.Matchers
 import org.junit.Assert.assertNotNull
 import org.junit.Test
+import java.io.File
 import java.util.Calendar
 
 @HiltAndroidTest
@@ -62,9 +78,7 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
 
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, SecondaryFeatureCategory.SUBMISSIONS_ONLINE_URL)
-    fun testSubmission_submitAssignment() {
-        // TODO - Test submitting for each submission type
-        // For now, I'm going to just test one submission type
+    fun testSubmission_submitOnlineURL() {
         val data = MockCanvas.init(
             studentCount = 1,
             courseCount = 1
@@ -85,6 +99,246 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.clickSubmit()
         urlSubmissionUploadPage.submitText("https://google.com")
+        assignmentDetailsPage.assertStatusSubmitted()
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, SecondaryFeatureCategory.SUBMISSIONS_TEXT_ENTRY)
+    fun testSubmission_submitTextEntry() {
+        val data = MockCanvas.init(
+            studentCount = 1,
+            courseCount = 1
+        )
+
+        val course = data.courses.values.first()
+        val student = data.students[0]
+        val token = data.tokenFor(student)!!
+        val assignment = data.addAssignment(courseId = course.id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY))
+        data.addSubmissionForAssignment(
+            assignmentId = assignment.id,
+            userId = data.users.values.first().id,
+            type = Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString
+        )
+        tokenLogin(data.domain, token, student)
+        routeTo("courses/${course.id}/assignments", data.domain)
+
+        assignmentListPage.clickAssignment(assignment)
+        assignmentDetailsPage.clickSubmit()
+        textSubmissionUploadPage.typeText("This is my test submission text.")
+        textSubmissionUploadPage.clickOnSubmitButton()
+        assignmentDetailsPage.assertStatusSubmitted()
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, SecondaryFeatureCategory.SUBMISSIONS_FILE_UPLOAD)
+    fun testSubmission_submitFileUpload() {
+        val data = MockCanvas.init(
+            studentCount = 1,
+            courseCount = 1
+        )
+
+        val course = data.courses.values.first()
+        val student = data.students[0]
+        val token = data.tokenFor(student)!!
+        val assignment = data.addAssignment(courseId = course.id, submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_UPLOAD))
+        data.addSubmissionForAssignment(
+            assignmentId = assignment.id,
+            userId = data.users.values.first().id,
+            type = Assignment.SubmissionType.ONLINE_UPLOAD.apiString
+        )
+        tokenLogin(data.domain, token, student)
+        routeTo("courses/${course.id}/assignments", data.domain)
+
+        val fileName = "test.txt"
+        Intents.init()
+        try {
+            stubFilePickerIntent(fileName)
+            setupFileOnDevice(fileName)
+
+            assignmentListPage.clickAssignment(assignment)
+            assignmentDetailsPage.clickSubmit()
+            pickerSubmissionUploadPage.chooseDevice()
+            pickerSubmissionUploadPage.waitForSubmitButtonToAppear()
+            pickerSubmissionUploadPage.assertFileDisplayed(fileName)
+            pickerSubmissionUploadPage.submit()
+            assignmentDetailsPage.assertStatusSubmitted()
+        } finally {
+            Intents.release()
+        }
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, SecondaryFeatureCategory.SUBMISSIONS_MEDIA_RECORDING)
+    fun testSubmission_submitMediaRecordingChooseMediaFile() {
+        val data = MockCanvas.init(
+            studentCount = 1,
+            courseCount = 1
+        )
+
+        val course = data.courses.values.first()
+        val student = data.students[0]
+        val token = data.tokenFor(student)!!
+        val assignment = data.addAssignment(courseId = course.id, submissionTypeList = listOf(Assignment.SubmissionType.MEDIA_RECORDING))
+        data.addSubmissionForAssignment(
+            assignmentId = assignment.id,
+            userId = data.users.values.first().id,
+            type = Assignment.SubmissionType.MEDIA_RECORDING.apiString
+        )
+        tokenLogin(data.domain, token, student)
+        routeTo("courses/${course.id}/assignments", data.domain)
+
+        val activity = activityRule.activity
+        grantPermissions(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO)
+
+        val fileName = "test_video.mp4"
+        copyAssetFileToExternalCache(activity, fileName)
+
+        val resultData = Intent()
+        val dir = activity.externalCacheDir
+        val file = File(dir?.path, fileName)
+        val uri = Uri.fromFile(file)
+        resultData.data = uri
+        val activityResult = Instrumentation.ActivityResult(Activity.RESULT_OK, resultData)
+
+        Intents.init()
+        try {
+            Intents.intending(
+                Matchers.anyOf(
+                    IntentMatchers.hasAction(Intent.ACTION_GET_CONTENT),
+                    IntentMatchers.hasAction(Intent.ACTION_PICK),
+                    IntentMatchers.hasAction(Intent.ACTION_OPEN_DOCUMENT)
+                )
+            ).respondWith(activityResult)
+
+            assignmentListPage.clickAssignment(assignment)
+            assignmentDetailsPage.clickSubmit()
+
+            onView(withId(R.id.submissionEntryMediaFile)).perform(click())
+
+            pickerSubmissionUploadPage.waitForSubmitButtonToAppear()
+            pickerSubmissionUploadPage.assertFileDisplayed(fileName)
+            pickerSubmissionUploadPage.submit()
+            assignmentDetailsPage.assertStatusSubmitted()
+        } finally {
+            Intents.release()
+        }
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, SecondaryFeatureCategory.SUBMISSIONS_MEDIA_RECORDING)
+    fun testSubmission_submitMediaRecordingRecordVideo() {
+        val data = MockCanvas.init(
+            studentCount = 1,
+            courseCount = 1
+        )
+
+        val course = data.courses.values.first()
+        val student = data.students[0]
+        val token = data.tokenFor(student)!!
+        val assignment = data.addAssignment(courseId = course.id, submissionTypeList = listOf(Assignment.SubmissionType.MEDIA_RECORDING))
+        data.addSubmissionForAssignment(
+            assignmentId = assignment.id,
+            userId = data.users.values.first().id,
+            type = Assignment.SubmissionType.MEDIA_RECORDING.apiString
+        )
+        tokenLogin(data.domain, token, student)
+        routeTo("courses/${course.id}/assignments", data.domain)
+
+        val activity = activityRule.activity
+        grantPermissions(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO)
+
+        val testVideoFile = "test_video.mp4"
+        copyAssetFileToExternalCache(activity, testVideoFile)
+
+        var capturedVideoUri: Uri? = null
+
+        Intents.init()
+        Intents.intending(
+            Matchers.allOf(
+                IntentMatchers.hasAction(MediaStore.ACTION_VIDEO_CAPTURE),
+                IntentMatchers.hasExtraWithKey(MediaStore.EXTRA_OUTPUT)
+            )
+        ).respondWithFunction { intent ->
+            val outputUri = intent.extras?.get(MediaStore.EXTRA_OUTPUT) as? Uri
+            capturedVideoUri = outputUri
+            if (outputUri != null) {
+                val context = InstrumentationRegistry.getInstrumentation().targetContext
+                val dir = context.externalCacheDir
+                val sampleFile = File(dir, testVideoFile)
+                if (outputUri.scheme == "file") {
+                    val destFile = File(outputUri.path!!)
+                    destFile.parentFile?.mkdirs()
+                    sampleFile.copyTo(destFile, overwrite = true)
+                } else if (outputUri.scheme == "content") {
+                    context.contentResolver.openOutputStream(outputUri)?.use { outputStream ->
+                        sampleFile.inputStream().use { inputStream ->
+                            inputStream.copyTo(outputStream)
+                        }
+                    }
+                }
+            }
+            Instrumentation.ActivityResult(Activity.RESULT_OK, Intent())
+        }
+
+        assignmentListPage.clickAssignment(assignment)
+        assignmentDetailsPage.clickSubmit()
+        onView(withId(R.id.submissionEntryVideo)).perform(click())
+
+        Intents.release()
+
+        pickerSubmissionUploadPage.waitForSubmitButtonToAppear()
+
+        val fileName = File(capturedVideoUri!!.path!!).name
+        pickerSubmissionUploadPage.assertFileDisplayed(fileName)
+        pickerSubmissionUploadPage.submit()
+
+        assignmentDetailsPage.assertStatusSubmitted()
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION, SecondaryFeatureCategory.SUBMISSIONS_MEDIA_RECORDING)
+    fun testSubmission_submitMediaRecordingRecordAudio() {
+        val data = MockCanvas.init(
+            studentCount = 1,
+            courseCount = 1
+        )
+
+        val course = data.courses.values.first()
+        val student = data.students[0]
+        val token = data.tokenFor(student)!!
+        val assignment = data.addAssignment(courseId = course.id, submissionTypeList = listOf(Assignment.SubmissionType.MEDIA_RECORDING))
+        data.addSubmissionForAssignment(
+            assignmentId = assignment.id,
+            userId = data.users.values.first().id,
+            type = Assignment.SubmissionType.MEDIA_RECORDING.apiString
+        )
+        tokenLogin(data.domain, token, student)
+        routeTo("courses/${course.id}/assignments", data.domain)
+
+        val activity = activityRule.activity
+        grantPermissions(Manifest.permission.RECORD_AUDIO)
+
+        val testAudioFileName = "test_audio.mp3"
+        copyAssetFileToExternalCache(activity, testAudioFileName)
+
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        val recordingFile = File(context.externalCacheDir, "audio.amr")
+        val testAudioFile = File(context.externalCacheDir, testAudioFileName)
+        testAudioFile.copyTo(recordingFile, overwrite = true)
+
+        assignmentListPage.clickAssignment(assignment)
+        assignmentDetailsPage.clickSubmit()
+        onView(withId(R.id.submissionEntryAudio)).perform(click())
+
+        device.findObject(UiSelector().resourceIdMatches(".*recordAudioButton")).click()
+
+        testAudioFile.copyTo(recordingFile, overwrite = true)
+
+        device.findObject(UiSelector().resourceIdMatches(".*stopButton")).click()
+
+        device.findObject(UiSelector().resourceIdMatches(".*sendAudioButton")).click()
+
+        refresh()
         assignmentDetailsPage.assertStatusSubmitted()
     }
 
@@ -141,13 +395,50 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
         val data = setUpData()
         goToAssignmentList()
         val calendar = Calendar.getInstance().apply { set(2023, 0, 31, 23, 59, 0) }
-        val expectedDueDate = "January 31, 2023 11:59 PM"
+        val expectedDueDate = "Jan 31, 2023 11:59 PM"
         val course = data.courses.values.first()
         val assignmentWithNoDueDate = data.addAssignment(course.id, name = "Test Assignment", dueAt = calendar.time.toApiString())
         assignmentListPage.refreshAssignmentList()
         assignmentListPage.clickAssignment(assignmentWithNoDueDate)
 
         assignmentDetailsPage.assertDisplaysDate(expectedDueDate)
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    fun testDisplayDueDates() {
+        val data = setUpData()
+        goToAssignmentList()
+
+        var calendar = Calendar.getInstance().apply { set(2023, 0, 29, 23, 59, 0) }
+        val expectedReplyToTopicDueDate = "Jan 29, 2023 11:59 PM"
+        val replyToTopicDueDate = calendar.time.toApiString()
+
+        calendar = Calendar.getInstance().apply { set(2023, 0, 31, 23, 59, 0) }
+        val expectedReplyToEntryDueDate = "Jan 31, 2023 11:59 PM"
+        val replyToEntryDueDate = calendar.time.toApiString()
+        val course = data.courses.values.first()
+
+        val checkpoints = listOf(
+            Checkpoint(
+                name = "Reply to Topic",
+                tag = "reply_to_topic",
+                dueAt = replyToTopicDueDate,
+                pointsPossible = 10.0
+            ),
+            Checkpoint(
+                name = "Reply to Entry",
+                tag = "reply_to_entry",
+                dueAt = replyToEntryDueDate,
+                pointsPossible = 10.0
+            )
+        )
+        val assignmentWithNoDueDate = data.addAssignment(course.id, name = "Test Assignment", dueAt = calendar.time.toApiString(), checkpoints = checkpoints)
+        assignmentListPage.refreshAssignmentList()
+        assignmentListPage.clickAssignment(assignmentWithNoDueDate)
+
+        assignmentDetailsPage.assertDisplaysDate(expectedReplyToTopicDueDate, 0)
+        assignmentDetailsPage.assertDisplaysDate(expectedReplyToEntryDueDate, 1)
     }
 
     @Test
@@ -400,7 +691,39 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
 
         assignmentListPage.clickAssignment(assignment)
 
-        reminderPage.assertReminderSectionDisplayed()
+        assignmentReminderPage.assertReminderSectionDisplayed()
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    fun testReminderSectionsAreVisibleWhenThereAreNoFutureDueDates() {
+        val data = setUpData()
+        val course = data.courses.values.first()
+
+        val pastDate = Calendar.getInstance().apply {
+            add(Calendar.DAY_OF_MONTH, -1)
+        }.time.toApiString()
+
+        val checkpoints = listOf(
+            Checkpoint(
+                name = "Reply to Topic",
+                tag = "reply_to_topic",
+                dueAt = pastDate,
+                pointsPossible = 10.0
+            ),
+            Checkpoint(
+                name = "Reply to Entry",
+                tag = "reply_to_entry",
+                dueAt = pastDate,
+                pointsPossible = 10.0
+            )
+        )
+        val assignment = data.addAssignment(course.id, name = "Test Assignment", dueAt = pastDate, checkpoints = checkpoints)
+        goToAssignmentList()
+
+        assignmentListPage.clickAssignment(assignment)
+        assignmentDetailsPage.assertReminderViewDisplayed(0)
+        assignmentDetailsPage.assertReminderViewDisplayed(1)
     }
 
     @Test
@@ -413,7 +736,7 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
 
         assignmentListPage.clickAssignment(assignment)
 
-        reminderPage.assertReminderSectionDisplayed()
+        assignmentReminderPage.assertReminderSectionDisplayed()
     }
 
     @Test
@@ -428,7 +751,7 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
 
         assignmentListPage.clickAssignment(assignment)
 
-        reminderPage.assertReminderSectionDisplayed()
+        assignmentReminderPage.assertReminderSectionDisplayed()
     }
 
     @Test
@@ -445,12 +768,12 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
         goToAssignmentList()
 
         assignmentListPage.clickAssignment(assignment)
-        reminderPage.clickAddReminder()
-        reminderPage.clickCustomReminderOption()
-        reminderPage.selectDate(reminderCalendar)
-        reminderPage.selectTime(reminderCalendar)
+        assignmentReminderPage.clickAddReminder()
+        assignmentReminderPage.clickCustomReminderOption()
+        assignmentReminderPage.selectDate(reminderCalendar)
+        assignmentReminderPage.selectTime(reminderCalendar)
 
-        reminderPage.assertReminderDisplayedWithText(reminderCalendar.time.toFormattedString())
+        assignmentReminderPage.assertReminderDisplayedWithText(reminderCalendar.time.toFormattedString())
     }
 
     @Test
@@ -467,17 +790,17 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
         goToAssignmentList()
 
         assignmentListPage.clickAssignment(assignment)
-        reminderPage.clickAddReminder()
-        reminderPage.clickCustomReminderOption()
-        reminderPage.selectDate(reminderCalendar)
-        reminderPage.selectTime(reminderCalendar)
+        assignmentReminderPage.clickAddReminder()
+        assignmentReminderPage.clickCustomReminderOption()
+        assignmentReminderPage.selectDate(reminderCalendar)
+        assignmentReminderPage.selectTime(reminderCalendar)
 
 
-        reminderPage.assertReminderDisplayedWithText(reminderCalendar.time.toFormattedString())
+        assignmentReminderPage.assertReminderDisplayedWithText(reminderCalendar.time.toFormattedString())
 
-        reminderPage.removeReminderWithText(reminderCalendar.time.toFormattedString())
+        assignmentReminderPage.removeReminderWithText(reminderCalendar.time.toFormattedString())
 
-        reminderPage.assertReminderNotDisplayedWithText(reminderCalendar.time.toFormattedString())
+        assignmentReminderPage.assertReminderNotDisplayedWithText(reminderCalendar.time.toFormattedString())
     }
 
     @Test
@@ -494,10 +817,10 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
         goToAssignmentList()
 
         assignmentListPage.clickAssignment(assignment)
-        reminderPage.clickAddReminder()
-        reminderPage.clickCustomReminderOption()
-        reminderPage.selectDate(reminderCalendar)
-        reminderPage.selectTime(reminderCalendar)
+        assignmentReminderPage.clickAddReminder()
+        assignmentReminderPage.clickCustomReminderOption()
+        assignmentReminderPage.selectDate(reminderCalendar)
+        assignmentReminderPage.selectTime(reminderCalendar)
 
         checkToastText(R.string.reminderInPast, activityRule.activity)
     }
@@ -517,17 +840,48 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
 
         assignmentListPage.clickAssignment(assignment)
 
-        reminderPage.clickAddReminder()
-        reminderPage.clickCustomReminderOption()
-        reminderPage.selectDate(reminderCalendar)
-        reminderPage.selectTime(reminderCalendar)
+        assignmentReminderPage.clickAddReminder()
+        assignmentReminderPage.clickCustomReminderOption()
+        assignmentReminderPage.selectDate(reminderCalendar)
+        assignmentReminderPage.selectTime(reminderCalendar)
 
-        reminderPage.clickAddReminder()
-        reminderPage.clickCustomReminderOption()
-        reminderPage.selectDate(reminderCalendar)
-        reminderPage.selectTime(reminderCalendar)
+        assignmentReminderPage.clickAddReminder()
+        assignmentReminderPage.clickCustomReminderOption()
+        assignmentReminderPage.selectDate(reminderCalendar)
+        assignmentReminderPage.selectTime(reminderCalendar)
 
         checkToastText(R.string.reminderAlreadySet, activityRule.activity)
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    fun testDiscussionCheckpointsDisplayed() {
+        val data = setUpData()
+        val course = data.courses.values.first()
+
+        val checkpoint1 = Checkpoint(
+            tag = "reply_to_topic",
+            pointsPossible = 5.0,
+            dueAt = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 1) }.time.toApiString()
+        )
+        val checkpoint2 = Checkpoint(
+            tag = "reply_to_entry",
+            pointsPossible = 5.0,
+            dueAt = Calendar.getInstance().apply { add(Calendar.DAY_OF_MONTH, 2) }.time.toApiString()
+        )
+
+        val assignment = data.addAssignment(
+            courseId = course.id,
+            name = "Discussion Checkpoint Assignment",
+            checkpoints = listOf(checkpoint1, checkpoint2),
+            submissionTypeList = listOf(Assignment.SubmissionType.DISCUSSION_TOPIC)
+        )
+
+        goToAssignmentList()
+        assignmentListPage.clickAssignment(assignment)
+
+        assignmentDetailsPage.assertCheckpointDisplayed(0, "Reply to topic", "-/5")
+        assignmentDetailsPage.assertCheckpointDisplayed(1, "Additional replies (0)", "-/5")
     }
 
     private fun setUpData(restrictQuantitativeData: Boolean = false): MockCanvas {
@@ -591,6 +945,16 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
         data.addSubmissionForAssignment(assignment.id, student.id, Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString, grade = grade, score = score, excused = excused)
 
         return assignment
+    }
+
+    private fun grantPermissions(vararg permissions: String) {
+        val activity = activityRule.activity
+        permissions.forEach { permission ->
+            InstrumentationRegistry.getInstrumentation().uiAutomation.grantRuntimePermission(
+                activity.packageName,
+                permission
+            )
+        }
     }
 
     override fun enableAndConfigureAccessibilityChecks() {

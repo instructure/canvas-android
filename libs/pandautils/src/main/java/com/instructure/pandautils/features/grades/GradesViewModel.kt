@@ -32,12 +32,19 @@ import com.instructure.canvasapi2.utils.toDate
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.composables.DiscussionCheckpointUiState
 import com.instructure.pandautils.features.grades.gradepreferences.SortBy
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.debounce
 import com.instructure.pandautils.utils.filterHiddenAssignments
 import com.instructure.pandautils.utils.getAssignmentIcon
 import com.instructure.pandautils.utils.getGrade
+import com.instructure.pandautils.utils.getSubAssignmentSubmissionGrade
+import com.instructure.pandautils.utils.getSubAssignmentSubmissionStateLabel
 import com.instructure.pandautils.utils.getSubmissionStateLabel
+import com.instructure.pandautils.utils.isAllowedToSubmitWithOverrides
 import com.instructure.pandautils.utils.orDefault
+import com.instructure.pandautils.utils.orderedCheckpoints
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
@@ -72,6 +79,16 @@ class GradesViewModel @Inject constructor(
     private var courseGrade: CourseGrade? = null
 
     private var customStatuses = listOf<CustomGradeStatusesQuery.Node>()
+    private var allItems = emptyList<AssignmentGroupUiState>()
+
+    private val debouncedSearch = debounce<String>(
+        coroutineScope = viewModelScope
+    ) { query ->
+        val filteredItems = filterItems(allItems, query)
+        _uiState.update {
+            it.copy(items = filteredItems)
+        }
+    }
 
     init {
         loadGrades(
@@ -111,16 +128,18 @@ class GradesViewModel @Inject constructor(
 
             courseGrade = repository.getCourseGrade(course, repository.studentId, enrollments, selectedGradingPeriod?.id)
 
-            val items = when (sortBy) {
+            allItems = when (sortBy) {
                 SortBy.GROUP -> groupByAssignmentGroup(assignmentGroups)
                 SortBy.DUE_DATE -> groupByDueDate(assignmentGroups)
             }.filter {
                 it.assignments.isNotEmpty()
             }
 
+            val filteredItems = filterItems(allItems, _uiState.value.searchQuery)
+
             _uiState.update {
                 it.copy(
-                    items = items,
+                    items = filteredItems,
                     isLoading = false,
                     isRefreshing = false,
                     gradePreferencesUiState = it.gradePreferencesUiState.copy(
@@ -167,10 +186,10 @@ class GradesViewModel @Inject constructor(
         assignmentGroups
             .flatMap { it.assignments }
             .forEach { assignment ->
-                val dueAt = assignment.dueAt
+                val dueAt = assignment.dueAt ?: assignment.orderedCheckpoints.firstOrNull { it.dueAt != null }?.dueAt
                 val submission = assignment.submission
                 val isWithoutGradedSubmission = submission == null || submission.isWithoutGradedSubmission
-                val isOverdue = assignment.isAllowedToSubmit && isWithoutGradedSubmission
+                val isOverdue = assignment.isAllowedToSubmitWithOverrides(course) && isWithoutGradedSubmission
                 if (dueAt == null) {
                     undated.add(assignment)
                 } else {
@@ -213,29 +232,76 @@ class GradesViewModel @Inject constructor(
     private fun mapAssignments(assignments: List<Assignment>) = assignments.sortedBy { it.position }.map { assignment ->
         val iconRes = assignment.getAssignmentIcon()
 
-        val dateText = assignment.dueDate?.let {
-            val dateText = DateHelper.monthDayYearDateFormatUniversalShort.format(it)
-            val timeText = DateHelper.getFormattedTime(context, it)
-            context.getString(R.string.due, "$dateText $timeText")
-        } ?: context.getString(R.string.gradesNoDueDate)
-
         val submissionStateLabel = assignment.getSubmissionStateLabel(customStatuses)
 
         AssignmentUiState(
             id = assignment.id,
             iconRes = iconRes,
             name = assignment.name.orEmpty(),
-            dueDate = dateText,
+            dueDate = getDateText(assignment.dueDate),
             submissionStateLabel = submissionStateLabel,
             displayGrade = assignment.getGrade(
                 submission = assignment.submission,
-                context = context,
+                resources = context.resources,
                 restrictQuantitativeData = course?.settings?.restrictQuantitativeData.orDefault(),
                 gradingScheme = course?.gradingScheme.orEmpty(),
                 showZeroPossiblePoints = true,
                 showNotGraded = true
-            )
+            ),
+            checkpoints = assignment.orderedCheckpoints.map { checkpoint ->
+                val subAssignmentSubmission = assignment.submission?.subAssignmentSubmissions?.find {
+                    it.subAssignmentTag == checkpoint.tag
+                }
+
+                DiscussionCheckpointUiState(
+                    name = when (checkpoint.tag) {
+                        Const.REPLY_TO_TOPIC -> context.getString(R.string.reply_to_topic)
+                        Const.REPLY_TO_ENTRY -> context.getString(
+                            R.string.additional_replies,
+                            assignment.discussionTopicHeader?.replyRequiredCount
+                        )
+                        else -> checkpoint.name.orEmpty()
+                    },
+                    dueDate = getDateText(checkpoint.dueDate),
+                    submissionStateLabel = assignment.getSubAssignmentSubmissionStateLabel(
+                        subAssignmentSubmission,
+                        customStatuses
+                    ),
+                    displayGrade = assignment.getSubAssignmentSubmissionGrade(
+                        possiblePoints = checkpoint.pointsPossible.orDefault(),
+                        submission = subAssignmentSubmission,
+                        resources = context.resources,
+                        restrictQuantitativeData = course?.settings?.restrictQuantitativeData.orDefault(),
+                        gradingScheme = course?.gradingScheme.orEmpty(),
+                        showZeroPossiblePoints = true,
+                        showNotGraded = true
+                    ),
+                    pointsPossible = checkpoint.pointsPossible?.toInt().orDefault()
+                )
+            },
+            checkpointsExpanded = false
         )
+    }
+
+    private fun getDateText(dueAt: Date?) = dueAt?.let {
+        val dateText = DateHelper.monthDayYearDateFormatUniversalShort.format(it)
+        val timeText = DateHelper.getFormattedTime(context, it)
+        context.getString(R.string.due, "$dateText $timeText")
+    } ?: context.getString(R.string.gradesNoDueDate)
+
+    private fun filterItems(items: List<AssignmentGroupUiState>, query: String): List<AssignmentGroupUiState> {
+        if (query.length < 3) return items
+
+        return items.mapNotNull { group ->
+            val filteredAssignments = group.assignments.filter { assignment ->
+                assignment.name.contains(query, ignoreCase = true)
+            }
+            if (filteredAssignments.isEmpty()) {
+                null
+            } else {
+                group.copy(assignments = filteredAssignments)
+            }
+        }
     }
 
     fun handleAction(action: GradesAction) {
@@ -293,6 +359,39 @@ class GradesViewModel @Inject constructor(
 
             is GradesAction.SnackbarDismissed -> {
                 _uiState.update { it.copy(snackbarMessage = null) }
+            }
+
+            is GradesAction.ToggleCheckpointsExpanded -> {
+                val items = uiState.value.items.map { group ->
+                    group.copy(
+                        assignments = group.assignments.map {
+                            if (it.id == action.assignmentId) {
+                                it.copy(checkpointsExpanded = !it.checkpointsExpanded)
+                            } else {
+                                it
+                            }
+                        }
+                    )
+                }
+                _uiState.update { it.copy(items = items) }
+            }
+
+            is GradesAction.ToggleSearch -> {
+                val isExpanding = !uiState.value.isSearchExpanded
+                _uiState.update {
+                    it.copy(
+                        isSearchExpanded = isExpanding,
+                        searchQuery = if (!isExpanding) "" else it.searchQuery,
+                        items = if (!isExpanding) allItems else it.items
+                    )
+                }
+            }
+
+            is GradesAction.SearchQueryChanged -> {
+                _uiState.update {
+                    it.copy(searchQuery = action.query)
+                }
+                debouncedSearch(action.query)
             }
         }
     }

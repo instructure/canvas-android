@@ -19,7 +19,7 @@
 package com.instructure.student.ui.utils
 
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import com.instructure.canvas.espresso.common.pages.ReminderPage
+import com.instructure.canvas.espresso.common.pages.AssignmentReminderPage
 import com.instructure.canvas.espresso.common.pages.compose.AssignmentListPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarEventCreateEditPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarEventDetailsPage
@@ -36,7 +36,10 @@ import com.instructure.canvas.espresso.common.pages.compose.SelectContextPage
 import com.instructure.canvas.espresso.common.pages.compose.SettingsPage
 import com.instructure.canvas.espresso.common.pages.compose.SmartSearchPage
 import com.instructure.canvas.espresso.common.pages.compose.SmartSearchPreferencesPage
+import com.instructure.espresso.ModuleItemInteractions
+import com.instructure.student.R
 import com.instructure.student.activity.LoginActivity
+import com.instructure.student.ui.pages.classic.StudentAssignmentDetailsPage
 import org.junit.Rule
 
 abstract class StudentComposeTest : StudentTest() {
@@ -52,7 +55,7 @@ abstract class StudentComposeTest : StudentTest() {
     val calendarToDoDetailsPage = CalendarToDoDetailsPage(composeTestRule)
     val calendarFilterPage = CalendarFilterPage(composeTestRule)
     val settingsPage = SettingsPage(composeTestRule)
-    val reminderPage = ReminderPage(composeTestRule)
+    val assignmentReminderPage = AssignmentReminderPage(composeTestRule)
     val inboxDetailsPage = InboxDetailsPage(composeTestRule)
     val inboxComposePage = InboxComposePage(composeTestRule)
     val recipientPickerPage = RecipientPickerPage(composeTestRule)
@@ -61,5 +64,12 @@ abstract class StudentComposeTest : StudentTest() {
     val smartSearchPreferencesPage = SmartSearchPreferencesPage(composeTestRule)
     val assignmentListPage = AssignmentListPage(composeTestRule)
     val inboxSignatureSettingsPage = InboxSignatureSettingsPage(composeTestRule)
+    val assignmentDetailsPage = StudentAssignmentDetailsPage(
+        ModuleItemInteractions(
+            R.id.moduleName,
+            R.id.next_item,
+            R.id.prev_item
+        ), composeTestRule
+    )
     val gradeListPage = GradesPage(composeTestRule)
 }

@@ -33,7 +33,7 @@ import androidx.compose.ui.test.performScrollToNode
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeDown
 import androidx.compose.ui.test.swipeUp
-import com.instructure.composeTest.hasDrawable
+import com.instructure.composetest.hasDrawable
 import com.instructure.pandautils.R
 
 

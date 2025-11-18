@@ -23,20 +23,22 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
-import com.instructure.pandautils.room.calendar.daos.CalendarFilterDao
-import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
+import com.instructure.pandautils.room.appdatabase.daos.ToDoFilterDao
+import com.instructure.pandautils.room.appdatabase.entities.ToDoFilterEntity
+import com.instructure.pandautils.utils.orDefault
 
 class ToDoWidgetRepository(
     private val plannerApi: PlannerAPI.PlannerInterface,
     private val coursesApi: CourseAPI.CoursesInterface,
-    private val calendarFilterDao: CalendarFilterDao
+    private val toDoFilterDao: ToDoFilterDao,
+    private val apiPrefs: ApiPrefs
 ) {
     suspend fun getPlannerItems(
         startDate: String,
         endDate: String,
-        contextCodes: List<String>,
         forceNetwork: Boolean
     ): DataResult<List<PlannerItem>> {
         val restParams = RestParams(
@@ -48,7 +50,8 @@ class ToDoWidgetRepository(
         return plannerApi.getPlannerItems(
             startDate,
             endDate,
-            contextCodes,
+            emptyList(),
+            null,
             restParams
         ).depaginate {
             plannerApi.nextPagePlannerItems(it, restParams)
@@ -71,7 +74,10 @@ class ToDoWidgetRepository(
         }.dataOrNull.orEmpty()
     }
 
-    suspend fun getCalendarFilters(userId: Long, domain: String): CalendarFilterEntity? {
-        return calendarFilterDao.findByUserIdAndDomain(userId, domain)
+    suspend fun getToDoFilters(): ToDoFilterEntity {
+        return toDoFilterDao.findByUser(
+            apiPrefs.fullDomain,
+            apiPrefs.user?.id.orDefault()
+        ) ?: ToDoFilterEntity(userDomain = apiPrefs.fullDomain, userId = apiPrefs.user?.id.orDefault())
     }
 }

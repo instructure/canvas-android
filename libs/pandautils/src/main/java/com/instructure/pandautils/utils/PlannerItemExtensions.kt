@@ -18,13 +18,39 @@ package com.instructure.pandautils.utils
 
 import android.content.Context
 import androidx.annotation.DrawableRes
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.canvasapi2.utils.toDate
 import com.instructure.pandautils.R
+import com.instructure.pandautils.room.appdatabase.entities.ToDoFilterEntity
 
 fun PlannerItem.todoHtmlUrl(apiPrefs: ApiPrefs): String {
     return "${apiPrefs.fullDomain}/todos/${this.plannable.id}"
+}
+
+fun PlannerItem.getUrl(apiPrefs: ApiPrefs): String {
+    val url = when (plannableType) {
+        PlannableType.CALENDAR_EVENT -> {
+            "/${canvasContext.type.apiString}/${canvasContext.id}/calendar_events/${plannable.id}"
+        }
+
+        PlannableType.PLANNER_NOTE -> {
+            "/todos/${plannable.id}"
+        }
+
+        else -> {
+            htmlUrl.orEmpty()
+        }
+    }
+
+    return if (url.startsWith("/")) {
+        apiPrefs.fullDomain + url
+    } else {
+        url
+    }
 }
 
 @DrawableRes
@@ -39,6 +65,60 @@ fun PlannerItem.getIconForPlannerItem(): Int {
     }
 }
 
+fun PlannerItem.getDateTextForPlannerItem(context: Context): String? {
+    return when (plannableType) {
+        PlannableType.PLANNER_NOTE -> {
+            plannable.todoDate.toDate()?.let {
+                DateHelper.getFormattedTime(context, it)
+            }
+        }
+
+        PlannableType.CALENDAR_EVENT -> {
+            val startDate = plannable.startAt
+            val endDate = plannable.endAt
+            if (startDate != null && endDate != null) {
+                val startText = DateHelper.getFormattedTime(context, startDate).orEmpty()
+                val endText = DateHelper.getFormattedTime(context, endDate).orEmpty()
+
+                when {
+                    plannable.allDay == true -> context.getString(R.string.widgetAllDay)
+                    startDate == endDate -> startText
+                    else -> context.getString(R.string.widgetFromTo, startText, endText)
+                }
+            } else null
+        }
+
+        else -> {
+            plannable.dueAt?.let {
+                return DateHelper.getFormattedTime(context, it).orEmpty()
+            }
+        }
+    }
+}
+
+fun PlannerItem.getContextNameForPlannerItem(context: Context, courses: Collection<Course>): String {
+    val course = courses.find { it.id == canvasContext.id }
+    val hasNickname = course?.originalName != null
+    val courseTitle = if (hasNickname) course.name else course?.courseCode
+    return when (plannableType) {
+        PlannableType.PLANNER_NOTE -> {
+            if (contextName.isNullOrEmpty()) {
+                context.getString(R.string.userCalendarToDo)
+            } else {
+                context.getString(R.string.courseToDo, courseTitle ?: contextName)
+            }
+        }
+
+        else -> {
+            if (canvasContext is Course) {
+                courseTitle.orEmpty()
+            } else {
+                contextName.orEmpty()
+            }
+        }
+    }
+}
+
 fun PlannerItem.getTagForPlannerItem(context: Context): String? {
     return if (plannable.subAssignmentTag == Const.REPLY_TO_TOPIC) {
         context.getString(R.string.reply_to_topic)
@@ -49,5 +129,44 @@ fun PlannerItem.getTagForPlannerItem(context: Context): String? {
         )
     } else {
         null
+    }
+}
+
+fun PlannerItem.isComplete(): Boolean {
+    return plannerOverride?.markedComplete ?: if (plannableType == PlannableType.ASSIGNMENT
+        || plannableType == PlannableType.DISCUSSION_TOPIC
+        || plannableType == PlannableType.SUB_ASSIGNMENT
+    ) {
+        submissionState?.submitted == true
+    } else {
+        false
+    }
+}
+
+fun List<PlannerItem>.filterByToDoFilters(
+    filters: ToDoFilterEntity,
+    courses: Collection<Course>
+): List<PlannerItem> {
+    return this.filter { item ->
+        if (!filters.personalTodos && item.plannableType == PlannableType.PLANNER_NOTE) {
+            return@filter false
+        }
+
+        if (!filters.calendarEvents && item.plannableType == PlannableType.CALENDAR_EVENT) {
+            return@filter false
+        }
+
+        if (!filters.showCompleted && item.isComplete()) {
+            return@filter false
+        }
+
+        if (filters.favoriteCourses) {
+            val course = courses.find { it.id == item.courseId }
+            if (course != null && !course.isFavorite) {
+                return@filter false
+            }
+        }
+
+        true
     }
 }

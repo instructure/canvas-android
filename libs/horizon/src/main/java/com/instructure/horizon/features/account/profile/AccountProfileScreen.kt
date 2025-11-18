@@ -25,7 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.instructure.horizon.R
 import com.instructure.horizon.features.account.AccountViewModel
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
@@ -40,15 +40,14 @@ import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 @Composable
 fun AccountProfileScreen(
     state: AccountProfileUiState,
-    navController: NavController,
-    mainNavController: NavController,
+    navController: NavHostController,
 ) {
     HorizonScaffold(
         title = stringResource(R.string.accountProfileLabel),
         onBackPressed = { navController.popBackStack() }
     ) { modifier ->
         LoadingStateWrapper(state.screenState) {
-            AccountProfileContent(state, mainNavController, modifier)
+            AccountProfileContent(state, navController, modifier)
         }
     }
 }
@@ -56,7 +55,7 @@ fun AccountProfileScreen(
 @Composable
 private fun AccountProfileContent(
     state: AccountProfileUiState,
-    mainNavController: NavController,
+    navController: NavHostController,
     modifier: Modifier,
 ) {
     LazyColumn(
@@ -86,7 +85,7 @@ private fun AccountProfileContent(
                     width = ButtonWidth.FILL,
                     onClick = {
                         state.saveChanges {
-                            mainNavController.currentBackStackEntry?.savedStateHandle?.set(AccountViewModel.CHANGE_USER_NAME,
+                            navController.currentBackStackEntry?.savedStateHandle?.set(AccountViewModel.CHANGE_USER_NAME,
                                 it
                             )
                         }

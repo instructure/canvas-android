@@ -908,6 +908,15 @@
         <item quantity="other">%s poin</item>
     </plurals>
 
+    <plurals name="pointsPts">
+        <item quantity="one">pt</item>
+        <item quantity="other">pt</item>
+    </plurals>
+
+    <plurals name="pointsPossible">
+        <item quantity="one">\/ %.0f pt</item>
+        <item quantity="other">\/ %.0f pt</item>
+    </plurals>
     <string name="timeLimit">Batas Waktu</string>
     <string name="newPushNotifications">%1$s Notifikasi Baru</string>
     <string name="like">suka</string>
@@ -1033,6 +1042,10 @@
     <string name="downloadFailed">Pengunduhan gagal</string>
     <string name="downloadSuccessful">Unduhan berhasil</string>
 
+    <string name="downloading">Mengunduh</string>
+    <string name="downloadComplete">Pengunduhan selesai</string>
+    <string name="notificationChannelNameFileDownloadsName">Notifikasi Pengunduhan</string>
+    <string name="notificationChannelNameFileDownloadsDescription">Notifikasi Canvas untuk pengunduhan yang sedang berlangsung.</string>
     <string name="full_due_date_details">Detail tanggal batas lengkap</string>
     <string name="submissions">Penyerahan</string>
     <string name="attachment">Lampiran</string>
@@ -2009,6 +2022,7 @@
     <string name="inboxSignatureSwitchLabel">Tanda Tangan</string>
     <string name="inboxSignatureTextfieldHeader">Teks tanda tangan</string>
     <string name="due_dateTime">Batas waktu: %1$s, %2$s</string>
+    <string name="submitted_dateTime">Menyerahkan: %1$s, %2$s</string>
     <string name="noDueDate">Tidak Ada Batas Waktu</string>
     <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
     <string name="needsGradingCount">%1$s Membutuhkan Penilaian</string>
@@ -2016,6 +2030,10 @@
     <plurals name="assignmentListMaxpoints">
         <item quantity="one">%d poin</item>
         <item quantity="other">%d poin</item>
+    </plurals>
+    <plurals name="percentGradeScore">
+        <item quantity="one">(%.0f pt)</item>
+        <item quantity="other">(%.0f pt)</item>
     </plurals>
     <string name="noAssignments">Tidak ada tugas</string>
     <string name="assignmentGroup">Grup Tugas</string>
@@ -2072,4 +2090,57 @@
     <string name="widgetSingleGradeSelectCourse">Ayo pilih kursus</string>
     <string name="widgetGradesErrorLoadingCourses">Kesalahan terjadi saat memuat kursus.</string>
     <string name="settingsSwitchExperience">Alihkan ke Canvas Career</string>
+    <string name="speedGraderGradeTabTitle">Nilai &amp; Rubrik</string>
+    <string name="speedGraderDetailsTabTitle">Detail</string>
+    <string name="a11y_contentDescription_expandPanel">Perluas panel</string>
+    <string name="a11y_contentDescription_collapsePanel">Tutup panel</string>
+    <string name="pointGradeHint">Tuliskan skor di sini</string>
+    <string name="percentageGradeHint">Tuliskan persentase di sini</string>
+    <string name="completeIncompleteGradeScore">%.0f / %.0f</string>
+    <string name="letterGrade">Nilai Dalam Huruf</string>
+    <string name="daysLate">Hari terlambat</string>
+    <plurals name="pointTotal">
+        <item quantity="one">%s / %s pt</item>
+        <item quantity="other">%s / %s pt</item>
+    </plurals>
+    <string name="speedGraderLatePenaltyTitle">Penalti Terlambat:</string>
+    <string name="gradingStatus_none">Tidak ada</string>
+    <string name="gradingStatus_late">Terlambat</string>
+    <string name="gradingStatus_missing">Tidak Ada</string>
+    <string name="gradingStatus_extended">Diperpanjang</string>
+    <string name="gradingStatus_excused">Dibolehkan</string>
+    <string name="status">Status</string>
+    <string name="speedGraderStudentNotes">Catatan Siswa</string>
+    <string name="speedGraderStudentNotesLoading">Memuat catatan Siswa</string>
+    <string name="speedGraderStudentNotesErrorTitle">Waduh! Ada Sesuatu yang Salah</string>
+    <string name="speedGraderStudentNotesErrorDescription">Kami kesulitan menampilkan catatan siswa.</string>
+    <string name="speedGraderStudentNotesErrorButtonText">Muat Ulang</string>
+    <string name="not_graded">Tidak Dinilai</string>
+    <string name="speedGraderSubmissionDetails">Detail Penyerahan</string>
+    <string name="speedGraderSubmissionDetailsLoading">Memuat detail penyerahan</string>
+    <string name="speedGraderWordCount">Jumlah Kata</string>
+    <string name="rubricsTitle">Rubrik</string>
+    <string name="rubricScore">Skor</string>
+    <string name="rubricScoreHint">Tuliskan skor di sini</string>
+    <string name="speedGraderCommentsTitle">Komentar (%s)</string>
+    <string name="anonymousGradingStudentLabel">Siswa</string>
+    <string name="anonymousGradingUserLabel">Pengguna Anonim</string>
+    <string name="rubricNote">Catatan Rubrik</string>
+    <string name="content_description_edit_rubric_comment">Edit catatan rubrik</string>
+    <string name="rubricNoteHint">Catatan</string>
+    <string name="a11y_sendRubricNoteContentDescription">Kirim catatan rubrik</string>
+    <string name="select_attachment_type">Pilih Jenis Lampiran</string>
+    <string name="choose_files">Pilih File</string>
+    <string name="a11y_expanded">Diperbesar</string>
+    <string name="a11y_collapsed">Diperkecil</string>
+    <string name="excuseStudent">Bolehkan Siswa</string>
+    <string name="detailsEmptyMessage">Kami tidak memiliki detail lebih lanjut untuk Siswa dan Tugas ini</string>
+    <string name="daysLateHint">Tuliskan hari terlambat</string>
+    <string name="reply_to_topic">Balas ke topik</string>
+    <string name="additional_replies">Balasan tambahan (%d)</string>
+    <string name="reply_to_topic_due">Tanggal batas balas ke topik</string>
+    <string name="additional_replies_due">Tanggal batas balasan tambahan (%d)</string>
+    <string name="a11y_discussion_checkpoints">Checkpoint Diskusi</string>
+    <string name="multipleDueDates">Tanggal Batas Berganda</string>
+    <string name="courseConcludedError">Kursus selesai. Tidak dapat mengirim pesan!</string>
 </resources>

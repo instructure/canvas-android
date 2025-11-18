@@ -38,21 +38,35 @@ import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.canvasapi2.utils.toDate
 import okhttp3.OkHttpClient
 import java.io.File
-import java.util.*
+import java.util.Date
 import java.util.concurrent.TimeUnit
+
+private const val DOMAIN_HEADER_KEY = "Override-Domain"
 
 open class QLClientConfig {
 
     /** The GraphQL endpoint. Defaults to "<fullDomain>/api/graphql/" */
     var url: String = ApiPrefs.fullDomain + GRAPHQL_ENDPOINT
 
-    /** The [OkHttpClient] to use for this request. Defaults to the client obtained from [CanvasRestAdapter.getOkHttpClient]
+    /** The [OkHttpClient] to use for this request. Defaults to the client obtained from [CanvasRestAdapter.okHttpClient]
      * with a supplementary interceptor to add an additional header. It is recommended to use this default client as it
      * has several useful behaviors such as request logging, read timeouts, and auth/user-agent/referrer header injection. */
     var httpClient: OkHttpClient = CanvasRestAdapter.okHttpClient
         .newBuilder()
         .addInterceptor { chain ->
             chain.proceed(chain.request().newBuilder().addHeader("GraphQL-Metrics", "true").build())
+        }
+        .addInterceptor { chain ->
+            var request = chain.request()
+            val domain = request.header(DOMAIN_HEADER_KEY)
+            if (domain != null) {
+                val newUrl = (domain + GRAPHQL_ENDPOINT)
+                request = request.newBuilder()
+                    .url(newUrl)
+                    .removeHeader(DOMAIN_HEADER_KEY)
+                    .build()
+            }
+            chain.proceed(request)
         }
         .build()
 
@@ -113,30 +127,6 @@ open class QLClientConfig {
             }
         }
 
-        suspend fun <DATA : Query.Data, T : Query<DATA>> enqueueQuery(
-            query: T,
-            forceNetwork: Boolean = false,
-            block: QLClientConfig.() -> Unit = {}
-        ): ApolloResponse<DATA> {
-            val config = QLClientConfig()
-            if (forceNetwork) config.fetchPolicy = HttpFetchPolicy.NetworkOnly
-            config.block()
-            // Since we handle errors with exceptions, we keep the compat call of execute because the new doesn't throw exceptions
-            val result = config.buildClient().query(query).executeV3()
-            return result
-        }
-
-        suspend fun <DATA : Mutation.Data, T : Mutation<DATA>> enqueueMutation(
-            mutation: T,
-            block: QLClientConfig.() -> Unit = {}
-        ): ApolloResponse<DATA> {
-            val config = QLClientConfig()
-            config.block()
-            // Since we handle errors with exceptions, we keep the compat call of execute because the new doesn't throw exceptions
-            val result = config.buildClient().mutation(mutation).executeV3()
-            return result
-        }
-
         fun clearCacheDirectory(): Boolean {
             return try {
                 cacheFile.deleteRecursively()
@@ -146,4 +136,35 @@ open class QLClientConfig {
             }
         }
     }
+}
+
+suspend fun <T : Query.Data> ApolloClient.enqueueQuery(
+    query: Query<T>,
+    forceNetwork: Boolean = false,
+    domain: String? = null
+): ApolloResponse<T> {
+    val call = if (forceNetwork) {
+        this.query(query).httpFetchPolicy(HttpFetchPolicy.NetworkOnly)
+    } else {
+        this.query(query)
+    }
+
+    if (domain != null) {
+        call.addHttpHeader(DOMAIN_HEADER_KEY, domain)
+    }
+
+    return call.executeV3()
+}
+
+suspend fun <T : Mutation.Data> ApolloClient.enqueueMutation(
+    mutation: Mutation<T>,
+    domain: String? = null
+): ApolloResponse<T> {
+    val call = this.mutation(mutation)
+
+    if (domain != null) {
+        call.addHttpHeader(DOMAIN_HEADER_KEY, domain)
+    }
+
+    return call.executeV3()
 }

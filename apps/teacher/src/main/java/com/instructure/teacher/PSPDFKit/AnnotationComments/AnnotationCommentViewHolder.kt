@@ -51,7 +51,7 @@ class AnnotationCommentViewHolder(private val binding: AdapterAnnotationCommentB
         }
 
         commentEditIcon.onClick {
-            val popup = PopupMenu(context, it, Gravity.TOP, 0, com.google.android.material.R.style.Widget_AppCompat_PopupMenu_Overflow)
+            val popup = PopupMenu(context, it, Gravity.TOP, 0, com.google.android.material.R.style.Widget_Material3_PopupMenu_Overflow)
             popup.inflate(R.menu.menu_edit_annotation_comment)
             if(!canEdit) popup.menu.removeItem(R.id.edit)
             if(!canDelete) popup.menu.removeItem(R.id.delete)

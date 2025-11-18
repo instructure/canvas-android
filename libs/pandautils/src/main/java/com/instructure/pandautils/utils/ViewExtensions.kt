@@ -35,10 +35,12 @@ import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.os.Build
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
 import android.util.TypedValue
+import android.view.HapticFeedbackConstants
 import android.view.Menu
 import android.view.MenuItem
 import android.view.TouchDelegate
@@ -749,7 +751,7 @@ val Attachment.iconRes: Int
         contentType!!.startsWith("image") -> R.drawable.ic_image
         contentType!!.startsWith("video") -> R.drawable.ic_media
         contentType!!.startsWith("audio") -> R.drawable.ic_audio
-        else -> when (filename!!.substringAfterLast('.', "").lowercase(Locale.getDefault())) {
+        else -> when (filename.orEmpty().substringAfterLast('.', "").lowercase(Locale.getDefault())) {
             "doc", "docx" -> R.drawable.ic_document
             "txt" -> R.drawable.ic_document
             "rtf" -> R.drawable.ic_document
@@ -989,4 +991,30 @@ fun View.showSnackbar(
 
     snackbar.show()
     snackbar.view.requestAccessibilityFocus(1000)
+}
+
+/**
+ * Performs haptic feedback with appropriate constants based on API level.
+ * Uses TOGGLE_ON/TOGGLE_OFF on API 34+ for marking done/undone, falls back to CONTEXT_CLICK on older versions.
+ */
+fun View.performToggleHapticFeedback(toggleOn: Boolean) {
+    val hapticConstant = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+        if (toggleOn) HapticFeedbackConstants.TOGGLE_ON else HapticFeedbackConstants.TOGGLE_OFF
+    } else {
+        HapticFeedbackConstants.CONTEXT_CLICK
+    }
+    performHapticFeedback(hapticConstant)
+}
+
+/**
+ * Performs haptic feedback for gesture start/end with appropriate constants based on API level.
+ * Uses GESTURE_START/GESTURE_END on API 34+, falls back to CONTEXT_CLICK on older versions.
+ */
+fun View.performGestureHapticFeedback(isStart: Boolean) {
+    val hapticConstant = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+        if (isStart) HapticFeedbackConstants.GESTURE_START else HapticFeedbackConstants.GESTURE_END
+    } else {
+        HapticFeedbackConstants.CONTEXT_CLICK
+    }
+    performHapticFeedback(hapticConstant)
 }

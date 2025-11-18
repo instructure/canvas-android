@@ -21,7 +21,6 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.instructure.pandautils.utils.filecache.FileCache
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Logger
@@ -36,14 +35,14 @@ import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.filecache.FileCache
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.InitActivity
 import com.instructure.teacher.tasks.TeacherLogoutTask
-import com.pspdfkit.PSPDFKit
-import com.pspdfkit.exceptions.InvalidPSPDFKitLicenseException
-import com.pspdfkit.exceptions.PSPDFKitInitializationFailedException
-import com.pspdfkit.initialization.InitializationOptions
+import com.pspdfkit.Nutrient
+import com.pspdfkit.exceptions.InvalidNutrientLicenseException
+import com.pspdfkit.exceptions.NutrientInitializationFailedException
 
 abstract class BaseAppManager : com.instructure.canvasapi2.AppManager() {
 
@@ -76,11 +75,11 @@ abstract class BaseAppManager : com.instructure.canvasapi2.AppManager() {
         ColorKeeper.defaultColor = getColorCompat(R.color.textDarkest)
 
         try {
-            PSPDFKit.initialize(this, InitializationOptions(licenseKey = BuildConfig.PSPDFKIT_LICENSE_KEY))
-        } catch (e: PSPDFKitInitializationFailedException) {
-            Logger.e("Current device is not compatible with PSPDFKIT!")
-        } catch (e: InvalidPSPDFKitLicenseException) {
-            Logger.e("Invalid or Trial PSPDFKIT License!")
+            Nutrient.initialize(this, BuildConfig.PSPDFKIT_LICENSE_KEY)
+        } catch (e: NutrientInitializationFailedException) {
+            Logger.e("Current device is not compatible with Nutrient!")
+        } catch (e: InvalidNutrientLicenseException) {
+            Logger.e("Invalid or Trial Nutrient License!")
         }
 
         MasqueradeHelper.masqueradeLogoutTask = Runnable {
@@ -99,6 +98,9 @@ abstract class BaseAppManager : com.instructure.canvasapi2.AppManager() {
     }
 
     override fun performLogoutOnAuthError() {
+        // Don't trigger another logout if we're already in a logout flow
+        if (LogoutTask.isLoggingOut) return
+
         TeacherLogoutTask(
             LogoutTask.Type.LOGOUT,
             alarmScheduler = getScheduler()

@@ -19,5 +19,5 @@ import com.instructure.canvasapi2.SubmissionContentQuery
 
 interface SubmissionContentManager {
 
-    suspend fun getSubmissionContent(userId: Long, assignmentId: Long): SubmissionContentQuery.Data
+    suspend fun getSubmissionContent(userId: Long, assignmentId: Long, domain: String? = null): SubmissionContentQuery.Data
 }

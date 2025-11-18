@@ -86,7 +86,24 @@ object CanvasNetworkAdapter {
         return ApolloClient.Builder()
             .serverUrl("https://mobileqa.beta.instructure.com/api/graphql/")
             .okHttpClient(okHttpClientForApollo(token))
+            .addCustomScalarAdapter(com.instructure.dataseedingapi.type.DateTime.type, DateTimeAdapter())
             .build()
+    }
+
+    private class DateTimeAdapter : com.apollographql.apollo.api.Adapter<java.util.Date> {
+        override fun fromJson(reader: com.apollographql.apollo.api.json.JsonReader, customScalarAdapters: com.apollographql.apollo.api.CustomScalarAdapters): java.util.Date {
+            val dateString = reader.nextString()
+            return java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").apply {
+                timeZone = java.util.TimeZone.getTimeZone("UTC")
+            }.parse(dateString) ?: throw IllegalArgumentException("Invalid date: $dateString")
+        }
+
+        override fun toJson(writer: com.apollographql.apollo.api.json.JsonWriter, customScalarAdapters: com.apollographql.apollo.api.CustomScalarAdapters, value: java.util.Date) {
+            val dateString = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").apply {
+                timeZone = java.util.TimeZone.getTimeZone("UTC")
+            }.format(value)
+            writer.value(dateString)
+        }
     }
 
     private val noAuthOkHttpClient: OkHttpClient by lazy {

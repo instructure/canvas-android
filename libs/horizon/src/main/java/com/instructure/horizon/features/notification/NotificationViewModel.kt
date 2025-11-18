@@ -19,14 +19,12 @@ package com.instructure.horizon.features.notification
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.StreamItem
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.platform.LoadingState
-import com.instructure.pandautils.utils.localisedFormat
-import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,8 +43,6 @@ class NotificationViewModel @Inject constructor(
                 onRefresh = ::refresh,
                 onSnackbarDismiss = ::dismissSnackbar
             ),
-            decreasePageIndex = ::decreasePageIndex,
-            increasePageIndex = ::increasePageIndex,
         )
     )
     val uiState = _uiState.asStateFlow()
@@ -74,18 +70,24 @@ class NotificationViewModel @Inject constructor(
     }
 
     private suspend fun loadData(forceRefresh: Boolean = false) {
-        val notifications = repository.getNotifications(forceRefresh)
-        val items = notifications.map {
+        val userNotifications = repository.getNotifications(forceRefresh).map {
             NotificationItem(
-                categoryLabel = getNotificationItemCategoryLabel(it),
+                category = getNotificationItemCategoryLabel(it),
                 title = getNotificationItemTitle(it),
-                date = it.updatedDate?.localisedFormat("MMM dd").orEmpty()
+                courseLabel = if (it.isCourseNotification()) getCourseName(it.courseId) else null,
+                date = it.updatedDate,
+                isRead = it.isReadState,
+                deepLink = if (it.assignment?.htmlUrl != null) {
+                    it.assignment?.htmlUrl!!
+                } else {
+                    it.htmlUrl
+                }
             )
         }
+
         _uiState.update {
             it.copy(
-                allNotificationItems = items,
-                pagedNotificationItems = items.chunked(10),
+                notificationItems = (userNotifications).sortedByDescending { item -> item.date }
             )
         }
     }
@@ -108,97 +110,52 @@ class NotificationViewModel @Inject constructor(
         }
     }
 
-    private suspend  fun getNotificationItemCategoryLabel(streamItem: StreamItem): String {
-        val courseName = repository.getCourse(streamItem.courseId).name
-        if (isNotificationItemScored(streamItem)) {
-            return context.getString(R.string.notificationsAssignmentScoredCategoryLabel)
+    private fun getNotificationItemCategoryLabel(streamItem: StreamItem): NotificationItemCategory {
+        if (streamItem.isNotificationItemScored()) {
+            return NotificationItemCategory(
+                context.getString(R.string.notificationsScoreChangedCategoryLabel),
+                StatusChipColor.Violet
+            )
         }
-        if (isDueDateChanged(streamItem)) {
-            return context.getString(R.string.notificationsDueDateChangedCategoryLabel)
+        if (streamItem.isGradingPeriodNotification()) {
+            return NotificationItemCategory(
+                context.getString(R.string.notificationsScoreCategoryLabel),
+                StatusChipColor.Violet
+            )
         }
-        if (isGradingWeightChanged(streamItem)) {
-            return context.getString(R.string.notificationsScoringWeightChangedCategoryLabel)
+        if (streamItem.isDueDateNotification()) {
+            return NotificationItemCategory(
+                context.getString(R.string.notificationsDueDateCategoryLabel),
+                StatusChipColor.Honey
+            )
         }
-        if (streamItem.contextType == CanvasContext.Type.COURSE) {
-            return context.getString(
-                R.string.notificationsAnnouncementFromCetegoryLabel,
-                courseName
+        if (streamItem.isCourseNotification()) {
+            return NotificationItemCategory(
+                context.getString(R.string.notificationsAnnouncementCategoryLabel),
+                StatusChipColor.Sky
             )
         }
 
-        return streamItem.notificationCategory
+        return NotificationItemCategory(
+            streamItem.notificationCategory,
+            StatusChipColor.Honey
+        )
     }
 
-    private suspend fun getNotificationItemTitle(streamItem: StreamItem): String {
-        val courseName = repository.getCourse(streamItem.courseId).name
-        if (isNotificationItemScored(streamItem)) {
+    private fun getNotificationItemTitle(streamItem: StreamItem): String {
+        if (streamItem.isNotificationItemScored()) {
             return context.getString(R.string.notificationsScoredItemTitle, streamItem.title)
-        }
-        if (isDueDateChanged(streamItem)) {
-            return formatDueDateTitle(streamItem, courseName)
-        }
-        if (isAssignmentCreated(streamItem)) {
-            return streamItem.title?.replace(", $courseName", "").orEmpty()
-        }
-        if (isGradingWeightChanged(streamItem)) {
-            return formatGradingWeightChangeTitle(streamItem)
         }
         return streamItem.title.orEmpty()
     }
 
-    private fun increasePageIndex() {
-        _uiState.update {
-            it.copy(currentPageIndex = it.currentPageIndex + 1)
-        }
-    }
-
-    private fun decreasePageIndex() {
-        _uiState.update {
-            it.copy(currentPageIndex = it.currentPageIndex - 1)
-        }
+    private suspend fun getCourseName(courseId: Long): String {
+        return repository.getCourse(courseId).name
     }
 
     private fun dismissSnackbar() {
         _uiState.update {
             it.copy(screenState = it.screenState.copy(snackbarMessage = null))
         }
-    }
-
-    // TODO: There is no API support for handling categories and titles.
-    // TODO: For now the Web and iOS logic is copied, but it won't work if language support is introduced.
-    // TODO: This should be handled in the API.
-    private fun isNotificationItemScored(streamItem: StreamItem): Boolean {
-        return streamItem.grade != null || streamItem.score != -1.0
-    }
-
-    private fun isDueDateChanged(streamItem: StreamItem): Boolean {
-        return streamItem.notificationCategory == "Due Date"
-                && streamItem.title?.contains("Assignment Due Date Changed").orDefault()
-    }
-
-    private fun isAssignmentCreated(streamItem: StreamItem): Boolean {
-        return streamItem.notificationCategory == "Due Date"
-                && streamItem.title?.contains("Assignment Created").orDefault()
-    }
-
-    private fun isGradingWeightChanged(streamItem: StreamItem): Boolean {
-        return streamItem.notificationCategory == "Grading Policies"
-                || streamItem.title?.contains("Grading Weight Changed").orDefault()
-    }
-
-    private fun formatDueDateTitle(streamItem: StreamItem, courseName: String): String {
-        val assignmentName = streamItem.title
-            ?.replace("Assignment Due Date Changed: ", "")
-            ?.replace(", $courseName", "")
-
-        val dateComponent = streamItem.getMessage(context)?.split("\n\n")?.firstOrNull()
-        val date = dateComponent.orEmpty()
-
-        return context.getString(R.string.notificationsDueOnTitle, assignmentName, date)
-    }
-
-    private fun formatGradingWeightChangeTitle(streamItem: StreamItem): String {
-        val courseNameFromTitle = streamItem.title?.replace("Grade Weight Changed: ", "")
-        return context.getString(R.string.notificationsScoreWeightChangedTitle, courseNameFromTitle)
     }
 }

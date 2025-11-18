@@ -306,4 +306,72 @@ class CalendarScreenTest {
         val snackbarText = composeTestRule.onNode(hasText("Snackbar message").and(hasAnyAncestor(hasTestTag("snackbarHost"))))
         snackbarText.assertIsDisplayed()
     }
+
+    @Test
+    fun addEventButtonIsHiddenWhenShowAddEventButtonIsFalse() {
+        composeTestRule.setContent {
+            AndroidThreeTen.init(LocalContext.current)
+            stateMapper = CalendarStateMapper(Clock.systemDefaultZone())
+            val selectedDate = LocalDate.now().plusDays(1)
+            CalendarScreen(
+                title = "Calendar",
+                calendarScreenUiState = CalendarScreenUiState(
+                    calendarUiState = CalendarUiState(
+                        selectedDate, true, stateMapper.createHeaderUiState(
+                            selectedDate, null
+                        ), stateMapper.createBodyUiState(true, selectedDate)
+                    ),
+                    showAddEventButton = false
+                ),
+                false,
+                showToolbar = true,
+                actionHandler = {},
+                navigationActionClick = {},
+            )
+        }
+
+        val fab = composeTestRule.onNode(hasContentDescription("Add new calendar item"))
+        fab.performClick()
+        composeTestRule.waitForIdle()
+        
+        val addToDoItem = composeTestRule.onNode((hasText("Add To Do")))
+        addToDoItem.assertIsDisplayed()
+        
+        val addEventItem = composeTestRule.onNode((hasText("Add Event")))
+        addEventItem.assertIsNotDisplayed()
+    }
+
+    @Test
+    fun addEventButtonIsShownWhenShowAddEventButtonIsTrue() {
+        composeTestRule.setContent {
+            AndroidThreeTen.init(LocalContext.current)
+            stateMapper = CalendarStateMapper(Clock.systemDefaultZone())
+            val selectedDate = LocalDate.now().plusDays(1)
+            CalendarScreen(
+                title = "Calendar",
+                calendarScreenUiState = CalendarScreenUiState(
+                    calendarUiState = CalendarUiState(
+                        selectedDate, true, stateMapper.createHeaderUiState(
+                            selectedDate, null
+                        ), stateMapper.createBodyUiState(true, selectedDate)
+                    ),
+                    showAddEventButton = true
+                ),
+                false,
+                showToolbar = true,
+                actionHandler = {},
+                navigationActionClick = {},
+            )
+        }
+
+        val fab = composeTestRule.onNode(hasContentDescription("Add new calendar item"))
+        fab.performClick()
+        composeTestRule.waitForIdle()
+        
+        val addToDoItem = composeTestRule.onNode((hasText("Add To Do")))
+        addToDoItem.assertIsDisplayed()
+        
+        val addEventItem = composeTestRule.onNode((hasText("Add Event")))
+        addEventItem.assertIsDisplayed()
+    }
 }

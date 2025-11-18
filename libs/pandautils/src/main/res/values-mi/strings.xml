@@ -499,4 +499,5 @@
         <item quantity="one">%d Min</item>
         <item quantity="other">%d Min</item>
     </plurals>
+    <string name="notATeacherDescription">He pai ake pea tetahi o a maatau taupānga. Patohia tetahi ata hei takiuru ki reira.</string>
 </resources>

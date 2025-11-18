@@ -908,6 +908,15 @@
         <item quantity="other">%s punts</item>
     </plurals>
 
+    <plurals name="pointsPts">
+        <item quantity="one">punt</item>
+        <item quantity="other">punts</item>
+    </plurals>
+
+    <plurals name="pointsPossible">
+        <item quantity="one">\/ %.0f punt</item>
+        <item quantity="other">\/ %.0f punts</item>
+    </plurals>
     <string name="timeLimit">Límit de temps</string>
     <string name="newPushNotifications">%1$s Notificacions noves</string>
     <string name="like">m\'agrada</string>
@@ -1033,6 +1042,10 @@
     <string name="downloadFailed">S\'ha produït un error en la baixada</string>
     <string name="downloadSuccessful">S\'ha realitzat correctament la baixada</string>
 
+    <string name="downloading">S\'està baixant</string>
+    <string name="downloadComplete">S’ha completat la baixada</string>
+    <string name="notificationChannelNameFileDownloadsName">Notificacions sobre les baixades</string>
+    <string name="notificationChannelNameFileDownloadsDescription">Notificacions del Canvas sobre les baixades en curs.</string>
     <string name="full_due_date_details">Detalls complets sobre la data de lliurament</string>
     <string name="submissions">Entregues</string>
     <string name="attachment">Fitxer adjunt</string>
@@ -2007,6 +2020,7 @@
     <string name="inboxSignatureSwitchLabel">Signatura</string>
     <string name="inboxSignatureTextfieldHeader">Text de la signatura</string>
     <string name="due_dateTime">Data de lliurament: %1$s, %2$s</string>
+    <string name="submitted_dateTime">S’ha entregat el: %1$s, %2$s</string>
     <string name="noDueDate">Sense data de lliurament</string>
     <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
     <string name="needsGradingCount">S\'ha de qualificar %1$s</string>
@@ -2014,6 +2028,10 @@
     <plurals name="assignmentListMaxpoints">
         <item quantity="one">%d punt</item>
         <item quantity="other">%d punts</item>
+    </plurals>
+    <plurals name="percentGradeScore">
+        <item quantity="one">(%.0f punt)</item>
+        <item quantity="other">(%.0f punts)</item>
     </plurals>
     <string name="noAssignments">No hi ha cap activitat</string>
     <string name="assignmentGroup">Grup d\'activitats</string>
@@ -2070,4 +2088,57 @@
     <string name="widgetSingleGradeSelectCourse">Triem una assignatura</string>
     <string name="widgetGradesErrorLoadingCourses">S\'ha produït un error en carregar les assignatures.</string>
     <string name="settingsSwitchExperience">Canvia al Canvas Career</string>
+    <string name="speedGraderGradeTabTitle">Nota i rúbrica</string>
+    <string name="speedGraderDetailsTabTitle">Informació</string>
+    <string name="a11y_contentDescription_expandPanel">Desplegueu la subfinestra</string>
+    <string name="a11y_contentDescription_collapsePanel">Contraieu la subfinestra</string>
+    <string name="pointGradeHint">Escriviu la puntuació aquí</string>
+    <string name="percentageGradeHint">Escriviu el percentatge aquí</string>
+    <string name="completeIncompleteGradeScore">%.0f / %.0f</string>
+    <string name="letterGrade">Nota amb lletra</string>
+    <string name="daysLate">Dies tard</string>
+    <plurals name="pointTotal">
+        <item quantity="one">%s / %s punt</item>
+        <item quantity="other">%s / %s punts</item>
+    </plurals>
+    <string name="speedGraderLatePenaltyTitle">Penalització per entrega endarrerida</string>
+    <string name="gradingStatus_none">Cap</string>
+    <string name="gradingStatus_late">Endarrerit</string>
+    <string name="gradingStatus_missing">No presentat</string>
+    <string name="gradingStatus_extended">Ampliada</string>
+    <string name="gradingStatus_excused">Justificat</string>
+    <string name="status">Estat</string>
+    <string name="speedGraderStudentNotes">Notes de l’estudiant</string>
+    <string name="speedGraderStudentNotesLoading">S’estan carregant les notes de l\'estudiant</string>
+    <string name="speedGraderStudentNotesErrorTitle">Vaja! S’ha produït un error</string>
+    <string name="speedGraderStudentNotesErrorDescription">Tenim problemes per mostrar les notes de l’estudiant.</string>
+    <string name="speedGraderStudentNotesErrorButtonText">Actualitza-ho</string>
+    <string name="not_graded">Sense nota</string>
+    <string name="speedGraderSubmissionDetails">Informació de l\'entrega</string>
+    <string name="speedGraderSubmissionDetailsLoading">S\'està carregant la informació de l\'entrega</string>
+    <string name="speedGraderWordCount">Recompte de paraules</string>
+    <string name="rubricsTitle">Rúbriques</string>
+    <string name="rubricScore">Puntuació</string>
+    <string name="rubricScoreHint">Escriviu la puntuació aquí</string>
+    <string name="speedGraderCommentsTitle">Comentaris (%s)</string>
+    <string name="anonymousGradingStudentLabel">Estudiant</string>
+    <string name="anonymousGradingUserLabel">Usuari anònim</string>
+    <string name="rubricNote">Nota de la rúbrica</string>
+    <string name="content_description_edit_rubric_comment">Editeu la nota de la rúbrica</string>
+    <string name="rubricNoteHint">Nota</string>
+    <string name="a11y_sendRubricNoteContentDescription">Envieu la nota de la rúbrica</string>
+    <string name="select_attachment_type">Seleccioneu el tipus de fitxer adjunt</string>
+    <string name="choose_files">Trieu els fitxers</string>
+    <string name="a11y_expanded">Desplegat</string>
+    <string name="a11y_collapsed">Contret</string>
+    <string name="excuseStudent">Excuseu l\'estudiant</string>
+    <string name="detailsEmptyMessage">No tenim més informació sobre aquest estudiant i aquesta activitat</string>
+    <string name="daysLateHint">Anoteu els dies tard</string>
+    <string name="reply_to_topic">Responeu al tema</string>
+    <string name="additional_replies">Respostes addicionals (%d):</string>
+    <string name="reply_to_topic_due">Data de lliurament de la resposta al tema</string>
+    <string name="additional_replies_due">Data de lliurament de les respostes addicionals (%d)</string>
+    <string name="a11y_discussion_checkpoints">Ítems dels fòrums</string>
+    <string name="multipleDueDates">Dates de lliurament múltiples</string>
+    <string name="courseConcludedError">L’assignatura ha conclòs. No es poden enviar missatges.</string>
 </resources>

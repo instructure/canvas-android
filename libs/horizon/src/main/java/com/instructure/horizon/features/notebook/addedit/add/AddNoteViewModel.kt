@@ -22,15 +22,15 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.instructure.canvasapi2.managers.NoteHighlightedData
-import com.instructure.canvasapi2.managers.NoteHighlightedDataRange
-import com.instructure.canvasapi2.managers.NoteHighlightedDataTextPosition
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedData
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedDataRange
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedDataTextPosition
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
 import com.instructure.horizon.features.notebook.addedit.AddEditNoteUiState
 import com.instructure.horizon.features.notebook.common.model.NotebookType
-import com.instructure.horizon.navigation.MainNavigationRoute
+import com.instructure.horizon.features.notebook.navigation.NotebookRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,17 +44,17 @@ class AddNoteViewModel @Inject constructor(
     private val repository: AddNoteRepository,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
-    private val courseId: String = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().courseId
-    private val objectType: String = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().objectType
-    private val objectId: String = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().objectId
-    private val highlightedTextStartOffset: Int = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().highlightedTextStartOffset
-    private val highlightedTextEndOffset: Int = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().highlightedTextEndOffset
-    private val highlightedTextStartContainer: String = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().highlightedTextStartContainer
-    private val highlightedTextEndContainer: String = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().highlightedTextEndContainer
-    private val highlightedTextSelectionStart: Int = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().textSelectionStart
-    private val highlightedTextSelectionEnd: Int = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().textSelectionEnd
-    private val highlightedText: String = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().highlightedText
-    private val noteType: String? = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().noteType
+    private val courseId: String = savedStateHandle.toRoute<NotebookRoute.AddNotebook>().courseId
+    private val objectType: String = savedStateHandle.toRoute<NotebookRoute.AddNotebook>().objectType
+    private val objectId: String = savedStateHandle.toRoute<NotebookRoute.AddNotebook>().objectId
+    private val highlightedTextStartOffset: Int = savedStateHandle.toRoute<NotebookRoute.AddNotebook>().highlightedTextStartOffset
+    private val highlightedTextEndOffset: Int = savedStateHandle.toRoute<NotebookRoute.AddNotebook>().highlightedTextEndOffset
+    private val highlightedTextStartContainer: String = savedStateHandle.toRoute<NotebookRoute.AddNotebook>().highlightedTextStartContainer
+    private val highlightedTextEndContainer: String = savedStateHandle.toRoute<NotebookRoute.AddNotebook>().highlightedTextEndContainer
+    private val highlightedTextSelectionStart: Int = savedStateHandle.toRoute<NotebookRoute.AddNotebook>().textSelectionStart
+    private val highlightedTextSelectionEnd: Int = savedStateHandle.toRoute<NotebookRoute.AddNotebook>().textSelectionEnd
+    private val highlightedText: String = savedStateHandle.toRoute<NotebookRoute.AddNotebook>().highlightedText
+    private val noteType: String? = savedStateHandle.toRoute<NotebookRoute.AddNotebook>().noteType
 
     private val _uiState = MutableStateFlow(
         AddEditNoteUiState(

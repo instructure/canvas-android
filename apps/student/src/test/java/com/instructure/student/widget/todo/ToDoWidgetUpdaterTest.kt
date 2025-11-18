@@ -31,7 +31,7 @@ import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.toApiString
-import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
+import com.instructure.pandautils.room.appdatabase.entities.ToDoFilterEntity
 import com.instructure.pandautils.utils.color
 import com.instructure.student.R
 import com.instructure.student.widget.glance.WidgetState
@@ -68,9 +68,13 @@ class ToDoWidgetUpdaterTest {
         ContextKeeper.appContext = mockk(relaxed = true)
         mockkObject(DateHelper)
         every { DateHelper.getPreferredTimeFormat(any()) } returns SimpleDateFormat("HH:mm", Locale.getDefault())
-        every { context.getString(R.string.widgetDueDate, any()) } answers { "Due at ${secondArg<Array<Any>>()[0]}" }
         every { context.getString(R.string.userCalendarToDo) } returns "To Do"
         every { context.getString(R.string.widgetAllDay) } returns "All day"
+
+        // Set up default mocks
+        every { apiPrefs.user } returns User(1L)
+        coEvery { repository.getToDoFilters() } returns ToDoFilterEntity(userDomain = "domain", userId = 1L, personalTodos = true, calendarEvents = true)
+        coEvery { repository.getCourses(any()) } returns emptyList()
     }
 
     @After
@@ -80,7 +84,7 @@ class ToDoWidgetUpdaterTest {
 
     @Test
     fun `Emits Loading state when called`() = runTest {
-        val flow = updater.updateData(context)
+        val flow = updater.updateData(context, forceNetwork = true)
         assertEquals(WidgetState.Loading, flow.first().state)
     }
 
@@ -88,31 +92,31 @@ class ToDoWidgetUpdaterTest {
     fun `Emits NotLoggedIn state when user is null`() = runTest {
         every { apiPrefs.user } returns null
 
-        val flow = updater.updateData(context)
+        val flow = updater.updateData(context, forceNetwork = true)
         assertEquals(WidgetState.NotLoggedIn, flow.last().state)
     }
 
     @Test
     fun `Emits NotLoggedIn state when api call gets authorization error`() = runTest {
-        coEvery { repository.getPlannerItems(any(), any(), any(), any()) } returns DataResult.Fail(Failure.Authorization())
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Fail(Failure.Authorization())
 
-        val flow = updater.updateData(context)
+        val flow = updater.updateData(context, forceNetwork = true)
         assertEquals(WidgetState.NotLoggedIn, flow.last().state)
     }
 
     @Test
     fun `Emits Error state when api calls fail`() = runTest {
-        coEvery { repository.getPlannerItems(any(), any(), any(), any()) } returns DataResult.Fail()
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Fail()
 
-        val flow = updater.updateData(context)
+        val flow = updater.updateData(context, forceNetwork = true)
         assertEquals(WidgetState.Error, flow.last().state)
     }
 
     @Test
     fun `Emits Empty state when api returns empty list`() = runTest {
-        coEvery { repository.getPlannerItems(any(), any(), any(), any()) } returns DataResult.Success(emptyList())
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(emptyList())
 
-        val flow = updater.updateData(context)
+        val flow = updater.updateData(context, forceNetwork = true)
         assertEquals(WidgetState.Empty, flow.last().state)
     }
 
@@ -144,20 +148,11 @@ class ToDoWidgetUpdaterTest {
         )
 
         coEvery { repository.getCourses(any()) } returns listOf(Course(1, courseCode = "CODE"))
-        coEvery { repository.getPlannerItems(any(), any(), any(), any()) } returns DataResult.Success(listOf(assignmentItem, toDoItem, calendarEvent))
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(listOf(assignmentItem, toDoItem, calendarEvent))
 
         val expected = ToDoWidgetUiState(
             WidgetState.Content,
             listOf(
-                WidgetPlannerItem(
-                    LocalDate.of(2024, 1, 5),
-                    R.drawable.ic_assignment,
-                    assignmentItem.canvasContext.color,
-                    "CODE",
-                    "Plannable 1",
-                    "Due at 02:00",
-                    "https://htmlurl.com"
-                ),
                 WidgetPlannerItem(
                     LocalDate.of(2023, 10, 1),
                     R.drawable.ic_todo,
@@ -166,6 +161,15 @@ class ToDoWidgetUpdaterTest {
                     "Plannable 2",
                     "12:00",
                     "/todos/2"
+                ),
+                WidgetPlannerItem(
+                    LocalDate.of(2024, 1, 5),
+                    R.drawable.ic_assignment,
+                    assignmentItem.canvasContext.color,
+                    "CODE",
+                    "Plannable 1",
+                    "02:00",
+                    "https://htmlurl.com"
                 ),
                 WidgetPlannerItem(
                     LocalDate.of(2025, 5, 21),
@@ -178,29 +182,133 @@ class ToDoWidgetUpdaterTest {
                 )
             )
         )
-        val flow = updater.updateData(context)
+        val flow = updater.updateData(context, forceNetwork = true)
         assertEquals(expected, flow.last())
     }
 
     @Test
-    fun `Gets calendar filters and calls api with the correct params`() = runTest {
-        val now = LocalDate.now().atStartOfDay()
-        coEvery { apiPrefs.user } returns User(1L)
-        coEvery { apiPrefs.fullDomain } returns "domain"
-        coEvery { repository.getCalendarFilters(1L, "domain") } returns CalendarFilterEntity(
-            1,
-            "domain",
-            "1",
-            -1,
-            setOf("course_1", "group_1", "user_1")
+    fun `Shows only incomplete items`() = runTest {
+        val submittedAssignmentItem = createPlannerItem(
+            plannableType = PlannableType.ASSIGNMENT,
+            date = createDate(2024, 1, 5, 2),
+            courseId = 1,
+            submitted = true
         )
 
-        updater.updateData(context).last()
+        val submittedDiscussionItem = createPlannerItem(
+            plannableType = PlannableType.DISCUSSION_TOPIC,
+            date = createDate(2024, 1, 5, 2),
+            courseId = 1,
+            submitted = true
+        )
+
+        val submittedSubAssignmentItem = createPlannerItem(
+            plannableType = PlannableType.SUB_ASSIGNMENT,
+            date = createDate(2024, 1, 5, 2),
+            courseId = 1,
+            submitted = true
+        )
+
+        val completedToDoItem = createPlannerItem(
+            plannableType = PlannableType.PLANNER_NOTE,
+            date = createDate(2023, 10, 1, 12),
+            plannableId = 2,
+            userId = 1,
+            startAt = createDate(2023, 10, 1, 12),
+            endAt = createDate(2023, 10, 1, 13),
+            markedComplete = true
+        )
+
+        val subAssignmentItem = createPlannerItem(
+            plannableType = PlannableType.SUB_ASSIGNMENT,
+            date = createDate(2024, 1, 5, 2),
+            courseId = 1,
+            submitted = false
+        )
+
+        val toDoItem = createPlannerItem(
+            plannableType = PlannableType.PLANNER_NOTE,
+            date = createDate(2023, 10, 1, 12),
+            plannableId = 2,
+            userId = 1,
+            startAt = createDate(2023, 10, 1, 12),
+            endAt = createDate(2023, 10, 1, 13)
+        )
+
+        val calendarEvent = createPlannerItem(
+            plannableType = PlannableType.CALENDAR_EVENT,
+            date = createDate(2025, 5, 21, 12),
+            userId = 1,
+            startAt = createDate(2025, 5, 21, 12),
+            endAt = createDate(2025, 5, 21, 12),
+            contextName = "Context Name",
+            allDay = true
+        )
+
+        coEvery { repository.getCourses(any()) } returns listOf(Course(1, courseCode = "CODE"))
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(listOf(
+            submittedAssignmentItem,
+            submittedDiscussionItem,
+            submittedSubAssignmentItem,
+            completedToDoItem,
+            subAssignmentItem,
+            toDoItem,
+            calendarEvent
+        ))
+
+        val expected = ToDoWidgetUiState(
+            WidgetState.Content,
+            listOf(
+                WidgetPlannerItem(
+                    LocalDate.of(2023, 10, 1),
+                    R.drawable.ic_todo,
+                    apiPrefs.user.color,
+                    "To Do",
+                    "Plannable 2",
+                    "12:00",
+                    "/todos/2"
+                ),
+                WidgetPlannerItem(
+                    LocalDate.of(2024, 1, 5),
+                    R.drawable.ic_discussion,
+                    subAssignmentItem.canvasContext.color,
+                    "CODE",
+                    "Plannable 1",
+                    "02:00",
+                    "https://htmlurl.com"
+                ),
+                WidgetPlannerItem(
+                    LocalDate.of(2025, 5, 21),
+                    R.drawable.ic_calendar,
+                    apiPrefs.user.color,
+                    "Context Name",
+                    "Plannable 1",
+                    "All day",
+                    "/users/1/calendar_events/1"
+                )
+            )
+        )
+        val flow = updater.updateData(context, forceNetwork = true)
+        assertEquals(expected, flow.last())
+    }
+
+    @Test
+    fun `Gets todo filters and calls api with the correct params`() = runTest {
+        every { apiPrefs.user } returns User(1L)
+        every { apiPrefs.fullDomain } returns "domain"
+        val filters = ToDoFilterEntity(userDomain = "domain", userId = 1L)
+        coEvery { repository.getToDoFilters() } returns filters
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(emptyList())
+
+        updater.updateData(context, forceNetwork = true).last()
+
+        val startDate = filters.pastDateRange.calculatePastDateRange().toApiString()
+        val endDate = filters.futureDateRange.calculateFutureDateRange().toApiString()
+
         coVerify {
             repository.getPlannerItems(
-                startDate = now.toApiString().orEmpty(),
-                endDate = now.plusDays(28).toApiString().orEmpty(),
-                contextCodes = listOf("course_1", "group_1", "user_1"),
+                startDate = startDate,
+                endDate = endDate,
                 forceNetwork = true
             )
         }
@@ -215,7 +323,9 @@ class ToDoWidgetUpdaterTest {
         startAt: Date? = null,
         endAt: Date? = null,
         contextName: String? = null,
-        allDay: Boolean = false
+        allDay: Boolean = false,
+        submitted: Boolean = false,
+        markedComplete: Boolean? = null
     ): PlannerItem {
         val plannable = Plannable(
             id = plannableId,
@@ -242,8 +352,12 @@ class ToDoWidgetUpdaterTest {
             plannable = plannable,
             plannableDate = date,
             htmlUrl = "https://htmlurl.com",
-            submissionState = SubmissionState(submitted = false),
-            plannerOverride = PlannerOverride(plannableType = plannableType, plannableId = plannableId),
+            submissionState = SubmissionState(submitted = submitted),
+            plannerOverride = if (markedComplete != null) PlannerOverride(
+                plannableType = plannableType,
+                plannableId = plannableId,
+                markedComplete = markedComplete
+            ) else null,
             newActivity = false
         )
     }

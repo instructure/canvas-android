@@ -157,7 +157,11 @@ private fun SpeedGraderContentScreen(
                         arguments = route.bundle,
                         modifier = Modifier
                             .fillMaxSize()
-                            .conditional(content is PdfContent || content is DiscussionContent) {
+                            .conditional(
+                                content is PdfContent ||
+                                        content is DiscussionContent ||
+                                        content is ExternalToolContent
+                            ) {
                                 pointerInput(Unit) {
                                     awaitPointerEventScope {
                                         while (true) {
@@ -304,7 +308,8 @@ private fun SubmissionStatus(
                 is SubmissionStateLabel.Custom -> submissionStatus.label
             },
             color = colorResource(id = submissionStatus.colorRes),
-            fontSize = 14.sp
+            fontSize = 14.sp,
+            modifier  = Modifier.testTag("submissionStatusLabel")
         )
     }
 }

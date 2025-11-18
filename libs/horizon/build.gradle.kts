@@ -3,9 +3,10 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
     id("kotlin-android")
-    id("kotlin-kapt")
+    id("com.google.devtools.ksp")
     id("dagger.hilt.android.plugin")
     kotlin("plugin.serialization") version "2.1.20"
+    id("jacoco")
 }
 
 android {
@@ -15,9 +16,8 @@ android {
 
     defaultConfig {
         minSdk = Versions.MIN_SDK
-        targetSdk = Versions.TARGET_SDK
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.instructure.horizon.espresso.HorizonCustomTestRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
 
@@ -57,6 +57,10 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_17.toString()
     }
+
+    hilt {
+        enableAggregatingTask = false
+    }
 }
 
 dependencies {
@@ -64,11 +68,11 @@ dependencies {
 
     implementation(Libs.NAVIGATION_COMPOSE)
     implementation(Libs.HILT)
-    kapt(Libs.HILT_COMPILER)
+    ksp(Libs.HILT_COMPILER)
     implementation(Libs.HILT_ANDROIDX_WORK)
-    kapt(Libs.HILT_ANDROIDX_COMPILER)
+    ksp(Libs.HILT_ANDROIDX_COMPILER)
 
-    implementation(Libs.PSPDFKIT)
+    implementation(Libs.NUTRIENT)
 
     implementation(Libs.ANDROIDX_ANNOTATION)
     implementation(Libs.ANDROIDX_APPCOMPAT)
@@ -85,4 +89,85 @@ dependencies {
     implementation(Libs.FIREBASE_CRASHLYTICS) {
         isTransitive = true
     }
+
+    /* Android Test Dependencies */
+    androidTestImplementation(project(":espresso"))
+    androidTestImplementation(project(":dataseedingapi"))
+    androidTestImplementation(Libs.COMPOSE_UI_TEST)
+
+    /* Unit Test Dependencies */
+    testImplementation(Libs.JUNIT)
+    testImplementation(Libs.ROBOLECTRIC)
+    testImplementation(Libs.ANDROIDX_TEST_JUNIT)
+    testImplementation(Libs.MOCKK)
+    androidTestImplementation(Libs.ANDROIDX_TEST_JUNIT)
+    testImplementation(Libs.KOTLIN_COROUTINES_TEST)
+    testImplementation(Libs.THREETEN_BP)
+    testImplementation(Libs.ANDROIDX_CORE_TESTING)
+    androidTestImplementation(Libs.HILT_TESTING)
+
+    /* Pandautils dependencies to provide fake implementations for testing */
+    androidTestImplementation(Libs.PLAY_IN_APP_UPDATES)
+    androidTestImplementation(Libs.ROOM)
+}
+
+tasks.register<JacocoReport>("jacocoTestReport") {
+    dependsOn("testDebugUnitTest")
+
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+        csv.required.set(false)
+    }
+
+    val fileFilter = listOf(
+        "**/R.class",
+        "**/R$*.class",
+        "**/BuildConfig.*",
+        "**/Manifest*.*",
+        "**/*Test*.*",
+        "android/**/*.*",
+        "**/*\$ViewInjector*.*",
+        "**/*\$ViewBinder*.*",
+        "**/Lambda$*.class",
+        "**/Lambda.class",
+        "**/*Lambda.class",
+        "**/*Lambda*.class",
+        "**/*_MembersInjector.class",
+        "**/Dagger*Component*.*",
+        "**/*Module_*Factory.class",
+        "**/di/module/*",
+        "**/*_Factory*.*",
+        "**/*Module*.*",
+        "**/*Dagger*.*",
+        "**/*Hilt*.*",
+        "**/hilt_aggregated_deps/**",
+        "**/*_HiltModules*.*",
+        "**/*_ComponentTreeDeps*.*",
+        "**/*_Impl*.*",
+        "**/*Screen*.*",
+        "**/*Ui*.*",
+        "**/*Navigation*.*",
+        "**/*Activity*.*",
+        "**/*Fragment*.*",
+        "**/*Composable*.*",
+        "**/*Preview*.*",
+        "**/horizonui/**",
+        "**/model/**",
+        "**/navigation/**"
+    )
+
+    val debugTree = fileTree("${layout.buildDirectory.get().asFile}/tmp/kotlin-classes/debug") {
+        exclude(fileFilter)
+        include("**/features/**/*ViewModel*.class")
+        include("**/features/**/*Repository*.class")
+    }
+
+    val mainSrc = "${project.projectDir}/src/main/java"
+
+    sourceDirectories.setFrom(files(mainSrc))
+    classDirectories.setFrom(files(debugTree))
+    executionData.setFrom(fileTree(layout.buildDirectory.get().asFile) {
+        include("jacoco/testDebugUnitTest.exec")
+    })
 }

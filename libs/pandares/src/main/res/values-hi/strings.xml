@@ -908,6 +908,15 @@
         <item quantity="other">%s पॉइंट्स</item>
     </plurals>
 
+    <plurals name="pointsPts">
+        <item quantity="one">पॉइंट</item>
+        <item quantity="other">पॉइंट्स</item>
+    </plurals>
+
+    <plurals name="pointsPossible">
+        <item quantity="one">\/ %.0f पॉइंट</item>
+        <item quantity="other">\/ %.0f पॉइंट्स</item>
+    </plurals>
     <string name="timeLimit">समय सीमा</string>
     <string name="newPushNotifications">%1$s नई सूचनाएं</string>
     <string name="like">पसंद</string>
@@ -1033,6 +1042,10 @@
     <string name="downloadFailed">डाउनलोड करना विफल रहा</string>
     <string name="downloadSuccessful">डाउनलोड करना सफल रहा</string>
 
+    <string name="downloading">डाउनलोड किया जा रहा है</string>
+    <string name="downloadComplete">डाउनलोड पूरा हुआ</string>
+    <string name="notificationChannelNameFileDownloadsName">सूचनाएं डाउनलोड करें</string>
+    <string name="notificationChannelNameFileDownloadsDescription">जारी डाउनलोड्स के लिए Canvas सूचनाएं।</string>
     <string name="full_due_date_details">नियत तिथि का पूरा ब्यौरा</string>
     <string name="submissions">सबमिशन</string>
     <string name="attachment">संलग्नक</string>
@@ -2014,6 +2027,7 @@
     <string name="inboxSignatureSwitchLabel">हस्ताक्षर</string>
     <string name="inboxSignatureTextfieldHeader">हस्ताक्षर पाठ</string>
     <string name="due_dateTime">नियत: %1$s, %2$s</string>
+    <string name="submitted_dateTime">सबमिट किया गया: %1$s, %2$s</string>
     <string name="noDueDate">कोई नियत तिथि नहीं</string>
     <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
     <string name="needsGradingCount">%1$s ग्रेडिंग की आवश्यकता है</string>
@@ -2021,6 +2035,10 @@
     <plurals name="assignmentListMaxpoints">
         <item quantity="one">%d पॉइंट</item>
         <item quantity="other">%d पॉइंट्स</item>
+    </plurals>
+    <plurals name="percentGradeScore">
+        <item quantity="one">(%.0f पॉइंट)</item>
+        <item quantity="other">(%.0f पॉइंट्स)</item>
     </plurals>
     <string name="noAssignments">कोई असाइनमेंट नहीं</string>
     <string name="assignmentGroup">असाइनमेंट ग्रुप</string>
@@ -2077,4 +2095,57 @@
     <string name="widgetSingleGradeSelectCourse">आइए, एक पाठ्यक्रम चुनें</string>
     <string name="widgetGradesErrorLoadingCourses">पाठ्यक्रम लोड करते समय त्रुटि उत्पन्न हुई।</string>
     <string name="settingsSwitchExperience">Canvas कैरियर पर स्विच करें</string>
+    <string name="speedGraderGradeTabTitle">ग्रेड और रुब्रिक</string>
+    <string name="speedGraderDetailsTabTitle">विवरण</string>
+    <string name="a11y_contentDescription_expandPanel">पैनल बढ़ाएं</string>
+    <string name="a11y_contentDescription_collapsePanel">पैनल संक्षिप्त करें</string>
+    <string name="pointGradeHint">यहाँ अंक लिखें</string>
+    <string name="percentageGradeHint">यहाँ प्रतिशत लिखें</string>
+    <string name="completeIncompleteGradeScore">%.0f / %.0f</string>
+    <string name="letterGrade">अक्षर ग्रेड</string>
+    <string name="daysLate">दिन देर से</string>
+    <plurals name="pointTotal">
+        <item quantity="one">%s / %s पॉइंट</item>
+        <item quantity="other">%s / %s पॉइंट्स</item>
+    </plurals>
+    <string name="speedGraderLatePenaltyTitle">विलंब दंड:</string>
+    <string name="gradingStatus_none">कोई नहीं</string>
+    <string name="gradingStatus_late">विलंब</string>
+    <string name="gradingStatus_missing">लापता</string>
+    <string name="gradingStatus_extended">विस्तार किया गया</string>
+    <string name="gradingStatus_excused">माफ़ किया</string>
+    <string name="status">स्थिति</string>
+    <string name="speedGraderStudentNotes">छात्र नोट्स</string>
+    <string name="speedGraderStudentNotesLoading">छात्र नोट्स लोड करना</string>
+    <string name="speedGraderStudentNotesErrorTitle">ओह! कुछ गड़बड़ हुई</string>
+    <string name="speedGraderStudentNotesErrorDescription">हमें छात्र नोट्स दिखाने में कठिनाई हो रही है।</string>
+    <string name="speedGraderStudentNotesErrorButtonText">रीफ़्रेश करें</string>
+    <string name="not_graded">ग्रेड नहीं किया गया</string>
+    <string name="speedGraderSubmissionDetails">सबमिशन का विवरण</string>
+    <string name="speedGraderSubmissionDetailsLoading">सबमिशन विवरण लोड करना</string>
+    <string name="speedGraderWordCount">शब्दों की गिनती</string>
+    <string name="rubricsTitle">रुब्रिक</string>
+    <string name="rubricScore">अंक</string>
+    <string name="rubricScoreHint">यहाँ अंक लिखें</string>
+    <string name="speedGraderCommentsTitle">टिप्पणियां (%s)</string>
+    <string name="anonymousGradingStudentLabel">छात्र</string>
+    <string name="anonymousGradingUserLabel">अज्ञात उपयोगकर्ता</string>
+    <string name="rubricNote">रुब्रिक नोट</string>
+    <string name="content_description_edit_rubric_comment">रुब्रिक नोट संपादित करें</string>
+    <string name="rubricNoteHint">ध्यान दें</string>
+    <string name="a11y_sendRubricNoteContentDescription">रुब्रिक नोट भेजें</string>
+    <string name="select_attachment_type">अनुलग्नक प्रकार चुनें</string>
+    <string name="choose_files">फ़ाइलें चुनें</string>
+    <string name="a11y_expanded">बढ़ाया गया</string>
+    <string name="a11y_collapsed">संक्षिप्त किया गया</string>
+    <string name="excuseStudent">छात्र को माफ़ करें</string>
+    <string name="detailsEmptyMessage">हमारे पास इस छात्र और असाइनमेंट के बारे में और जानकारी नहीं है</string>
+    <string name="daysLateHint">\'दिन देर से\' लिखें</string>
+    <string name="reply_to_topic">विषय पर उत्तर दें</string>
+    <string name="additional_replies">अतिरिक्त उत्तर (%d)</string>
+    <string name="reply_to_topic_due">विषय का उत्तर नियत है</string>
+    <string name="additional_replies_due">अतिरिक्त उत्तर (%d) नियत है</string>
+    <string name="a11y_discussion_checkpoints">चर्चा जांच बिंदु</string>
+    <string name="multipleDueDates">एकाधिक नियत तिथियां</string>
+    <string name="courseConcludedError">पाठ्यक्रम समाप्त हुआ। संदेश भेजने में असमर्थ!</string>
 </resources>

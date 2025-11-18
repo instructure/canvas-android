@@ -908,6 +908,15 @@
         <item quantity="other">%s poeng</item>
     </plurals>
 
+    <plurals name="pointsPts">
+        <item quantity="one">p</item>
+        <item quantity="other">poeng</item>
+    </plurals>
+
+    <plurals name="pointsPossible">
+        <item quantity="one">\/ %.0f poeng</item>
+        <item quantity="other">\/ %.0f poeng</item>
+    </plurals>
     <string name="timeLimit">Tidsbegrensning</string>
     <string name="newPushNotifications">%1$s Nye varsler</string>
     <string name="like">liker</string>
@@ -1033,6 +1042,10 @@
     <string name="downloadFailed">Kunne ikke laste ned</string>
     <string name="downloadSuccessful">Lastet ned</string>
 
+    <string name="downloading">Laster ned</string>
+    <string name="downloadComplete">Nedlasting fullført</string>
+    <string name="notificationChannelNameFileDownloadsName">Last ned varslinger</string>
+    <string name="notificationChannelNameFileDownloadsDescription">Canvas-varslinger for pågående nedlastinger.</string>
     <string name="full_due_date_details">Fulle forfallsdato detaljer</string>
     <string name="submissions">Innleveringer</string>
     <string name="attachment">Vedlegg</string>
@@ -2007,6 +2020,7 @@
     <string name="inboxSignatureSwitchLabel">Signatur</string>
     <string name="inboxSignatureTextfieldHeader">Signaturtekst</string>
     <string name="due_dateTime">Frist: %1$s, %2$s</string>
+    <string name="submitted_dateTime">Sendt inn: %1$s, %2$s</string>
     <string name="noDueDate">Ingen forfallsdato</string>
     <string name="assignmentPointsPerMaximum">%1$s/%2$s</string>
     <string name="needsGradingCount">%1$s trenger vurdering</string>
@@ -2014,6 +2028,10 @@
     <plurals name="assignmentListMaxpoints">
         <item quantity="one">%d poeng</item>
         <item quantity="other">%d poeng</item>
+    </plurals>
+    <plurals name="percentGradeScore">
+        <item quantity="one">(%.0f poeng)</item>
+        <item quantity="other">(%.0f poeng)</item>
     </plurals>
     <string name="noAssignments">Ingen oppgaver</string>
     <string name="assignmentGroup">Oppgavegruppe</string>
@@ -2070,4 +2088,57 @@
     <string name="widgetSingleGradeSelectCourse">La oss velge et emne</string>
     <string name="widgetGradesErrorLoadingCourses">Det oppsto en feil ved lasting av emner.</string>
     <string name="settingsSwitchExperience">Bytt til Canvas Career</string>
+    <string name="speedGraderGradeTabTitle">Vurdering og vurderingsveiledning</string>
+    <string name="speedGraderDetailsTabTitle">Detaljer</string>
+    <string name="a11y_contentDescription_expandPanel">Vis panel</string>
+    <string name="a11y_contentDescription_collapsePanel">Skjul panel</string>
+    <string name="pointGradeHint">Skriv poengsum her</string>
+    <string name="percentageGradeHint">Skriv prosent her</string>
+    <string name="completeIncompleteGradeScore">%.0f / %.0f</string>
+    <string name="letterGrade">Bokstavvurdering</string>
+    <string name="daysLate">Dager for sent</string>
+    <plurals name="pointTotal">
+        <item quantity="one">%s / %s poeng</item>
+        <item quantity="other">%s / %s poeng</item>
+    </plurals>
+    <string name="speedGraderLatePenaltyTitle">Forsinkelsesstraff</string>
+    <string name="gradingStatus_none">Ingen</string>
+    <string name="gradingStatus_late">Sent</string>
+    <string name="gradingStatus_missing">Mangler</string>
+    <string name="gradingStatus_extended">Utvidet</string>
+    <string name="gradingStatus_excused">Fritatt</string>
+    <string name="status">Status</string>
+    <string name="speedGraderStudentNotes">Studentmerknader</string>
+    <string name="speedGraderStudentNotesLoading">Laster inn studentmerknader</string>
+    <string name="speedGraderStudentNotesErrorTitle">Obs! Noe gikk galt</string>
+    <string name="speedGraderStudentNotesErrorDescription">Vi har problemer med å vise studentmerknader.</string>
+    <string name="speedGraderStudentNotesErrorButtonText">Oppdater</string>
+    <string name="not_graded">Ikke vurdert</string>
+    <string name="speedGraderSubmissionDetails">Detaljer om innlevering</string>
+    <string name="speedGraderSubmissionDetailsLoading">Laster inn innleveringsdetaljer</string>
+    <string name="speedGraderWordCount">Ordtelling</string>
+    <string name="rubricsTitle">Vurderingsveiledninger</string>
+    <string name="rubricScore">Resultat</string>
+    <string name="rubricScoreHint">Skriv poengsum her</string>
+    <string name="speedGraderCommentsTitle">Kommentarer (%s)</string>
+    <string name="anonymousGradingStudentLabel">Student</string>
+    <string name="anonymousGradingUserLabel">Anonym bruker</string>
+    <string name="rubricNote">Vurderingsveiledningsnotat</string>
+    <string name="content_description_edit_rubric_comment">Rediger vurderingsveiledningsnotat</string>
+    <string name="rubricNoteHint">Merknad</string>
+    <string name="a11y_sendRubricNoteContentDescription">Send vurderingsveiledningsnotat</string>
+    <string name="select_attachment_type">Velg vedleggstype</string>
+    <string name="choose_files">Velg filer</string>
+    <string name="a11y_expanded">Utvidet</string>
+    <string name="a11y_collapsed">Skjult</string>
+    <string name="excuseStudent">Unnskylde student</string>
+    <string name="detailsEmptyMessage">Vi har ikke ytterligere detaljer for denne studenten og oppgaven</string>
+    <string name="daysLateHint">Angi dager for sent</string>
+    <string name="reply_to_topic">Svar på tema</string>
+    <string name="additional_replies">Ekstra svar (%d):</string>
+    <string name="reply_to_topic_due">Svar på emnet forfaller</string>
+    <string name="additional_replies_due">Ekstra svar (%d) forfaller</string>
+    <string name="a11y_discussion_checkpoints">Sjekkpunkter for diskusjon</string>
+    <string name="multipleDueDates">Flere forfallsdatoer</string>
+    <string name="courseConcludedError">Emne avsluttet. Kunne ikke sende meldinger!</string>
 </resources>

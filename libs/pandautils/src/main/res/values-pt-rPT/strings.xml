@@ -499,4 +499,5 @@
         <item quantity="one">%d Min</item>
         <item quantity="other">%d Mins</item>
     </plurals>
+    <string name="notATeacherDescription">Uma das nossas outras apps pode ser um ajuste melhor. Toque num ícone para iniciar sessão.</string>
 </resources>

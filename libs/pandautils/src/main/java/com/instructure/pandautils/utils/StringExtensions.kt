@@ -47,7 +47,13 @@ fun String.linkify(
     val spannable = SpannableString(this@linkify)
     Linkify.addLinks(spannable, Patterns.WEB_URL, null)
     Linkify.addLinks(spannable, Patterns.EMAIL_ADDRESS, null)
-    Linkify.addLinks(spannable, Patterns.PHONE, null)
+    Linkify.addLinks(
+        spannable,
+        Patterns.PHONE,
+        "tel:",
+        Linkify.sPhoneNumberMatchFilter,
+        Linkify.sPhoneNumberTransformFilter
+    )
 
     val spans = spannable.getSpans(0, spannable.length, URLSpan::class.java)
     for (span in spans) {

@@ -70,10 +70,6 @@ fun SpeedGraderScreen(
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    val pagerState = rememberPagerState(
-        pageCount = { uiState.submissionIds.size },
-        initialPage = uiState.selectedItem
-    )
     val viewPagerEnabled by sharedViewModel.viewPagerEnabled.collectAsState(initial = true)
 
     val errorEvent by sharedViewModel.errorState.collectAsState(initial = null)
@@ -151,6 +147,11 @@ fun SpeedGraderScreen(
             }
 
             else -> {
+                val pagerState = rememberPagerState(
+                    pageCount = { uiState.submissionIds.size },
+                    initialPage = uiState.selectedItem
+                )
+
                 HorizontalPager(
                     modifier = Modifier.padding(padding),
                     state = pagerState,

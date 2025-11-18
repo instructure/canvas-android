@@ -908,6 +908,15 @@
         <item quantity="other">%s puntos</item>
     </plurals>
 
+    <plurals name="pointsPts">
+        <item quantity="one">pto</item>
+        <item quantity="other">ptos</item>
+    </plurals>
+
+    <plurals name="pointsPossible">
+        <item quantity="one">\/ %.0f pto</item>
+        <item quantity="other">\/ %.0f ptos</item>
+    </plurals>
     <string name="timeLimit">Límite de tiempo</string>
     <string name="newPushNotifications">%1$s Nuevas notificaciones</string>
     <string name="like">me gusta</string>
@@ -1033,6 +1042,10 @@
     <string name="downloadFailed">No se ha podido realizar la descarga</string>
     <string name="downloadSuccessful">La descarga se ha realizado correctamente</string>
 
+    <string name="downloading">Descargando</string>
+    <string name="downloadComplete">Descarga completa</string>
+    <string name="notificationChannelNameFileDownloadsName">Descargar notificaciones</string>
+    <string name="notificationChannelNameFileDownloadsDescription">Notificaciones de Canvas para descargas en curso.</string>
     <string name="full_due_date_details">Detalles completos de la fecha de entrega</string>
     <string name="submissions">Entregas</string>
     <string name="attachment">Archivo adjunto</string>
@@ -2008,6 +2021,7 @@
     <string name="inboxSignatureSwitchLabel">Firma</string>
     <string name="inboxSignatureTextfieldHeader">Texto de la firma</string>
     <string name="due_dateTime">Fecha de entrega: %1$s, %2$s</string>
+    <string name="submitted_dateTime">Entregado: %1$s, %2$s</string>
     <string name="noDueDate">No hay fecha de entrega</string>
     <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
     <string name="needsGradingCount">%1$s necesita evaluación</string>
@@ -2015,6 +2029,10 @@
     <plurals name="assignmentListMaxpoints">
         <item quantity="one">%d punto</item>
         <item quantity="other">%d puntos</item>
+    </plurals>
+    <plurals name="percentGradeScore">
+        <item quantity="one">(%.0f pto)</item>
+        <item quantity="other">(%.0f ptos)</item>
     </plurals>
     <string name="noAssignments">Sin actividades</string>
     <string name="assignmentGroup">Grupo de actividades</string>
@@ -2071,4 +2089,57 @@
     <string name="widgetSingleGradeSelectCourse">Elijamos una asignatura</string>
     <string name="widgetGradesErrorLoadingCourses">Se ha producido un error al cargar las asignaturas.</string>
     <string name="settingsSwitchExperience">Cambiar a Canvas Career</string>
+    <string name="speedGraderGradeTabTitle">Nota y rúbrica</string>
+    <string name="speedGraderDetailsTabTitle">Detalles</string>
+    <string name="a11y_contentDescription_expandPanel">Expandir panel</string>
+    <string name="a11y_contentDescription_collapsePanel">Colapsar panel</string>
+    <string name="pointGradeHint">Escribe la puntuación aquí</string>
+    <string name="percentageGradeHint">Escribe el porcentaje aquí</string>
+    <string name="completeIncompleteGradeScore">%.0f / %.0f</string>
+    <string name="letterGrade">Nota por letra</string>
+    <string name="daysLate">Días de retraso</string>
+    <plurals name="pointTotal">
+        <item quantity="one">%s / %s pto</item>
+        <item quantity="other">%s / %s ptos</item>
+    </plurals>
+    <string name="speedGraderLatePenaltyTitle">Sanción por entrega con retraso</string>
+    <string name="gradingStatus_none">Ninguno</string>
+    <string name="gradingStatus_late">Atrasado</string>
+    <string name="gradingStatus_missing">No presentado</string>
+    <string name="gradingStatus_extended">Ampliado</string>
+    <string name="gradingStatus_excused">Justificado</string>
+    <string name="status">Estado</string>
+    <string name="speedGraderStudentNotes">Notas del estudiante</string>
+    <string name="speedGraderStudentNotesLoading">Cargando notas del estudiante</string>
+    <string name="speedGraderStudentNotesErrorTitle">¡Vaya! Se ha producido un error</string>
+    <string name="speedGraderStudentNotesErrorDescription">Tenemos problemas para mostrar las notas del estudiante.</string>
+    <string name="speedGraderStudentNotesErrorButtonText">Actualizar</string>
+    <string name="not_graded">Sin evaluar</string>
+    <string name="speedGraderSubmissionDetails">Detalles de la entrega</string>
+    <string name="speedGraderSubmissionDetailsLoading">Cargando detalles de la entrega</string>
+    <string name="speedGraderWordCount">Recuento de palabras</string>
+    <string name="rubricsTitle">Rúbricas</string>
+    <string name="rubricScore">Puntuación</string>
+    <string name="rubricScoreHint">Escribe la puntuación aquí</string>
+    <string name="speedGraderCommentsTitle">Comentarios (%s)</string>
+    <string name="anonymousGradingStudentLabel">Estudiante</string>
+    <string name="anonymousGradingUserLabel">Usuario anónimo</string>
+    <string name="rubricNote">Nota de rúbrica</string>
+    <string name="content_description_edit_rubric_comment">Editar nota de rúbrica</string>
+    <string name="rubricNoteHint">Nota</string>
+    <string name="a11y_sendRubricNoteContentDescription">Enviar nota de rúbrica</string>
+    <string name="select_attachment_type">Seleccionar tipo de adjunto</string>
+    <string name="choose_files">Seleccionar los archivos</string>
+    <string name="a11y_expanded">Expandido</string>
+    <string name="a11y_collapsed">Colapsado</string>
+    <string name="excuseStudent">Justificar al estudiante</string>
+    <string name="detailsEmptyMessage">No tenemos más información sobre este estudiante y actividad</string>
+    <string name="daysLateHint">Escribir los días de retraso</string>
+    <string name="reply_to_topic">Responder al tema</string>
+    <string name="additional_replies">Respuestas adicionales (%d)</string>
+    <string name="reply_to_topic_due">Responder al tema pendiente</string>
+    <string name="additional_replies_due">Respuestas adicionales (%d) pendientes</string>
+    <string name="a11y_discussion_checkpoints">Puntos de comprobación del foro de discusión</string>
+    <string name="multipleDueDates">Varias fechas de entrega</string>
+    <string name="courseConcludedError">Asignatura concluida. ¡No se pueden enviar mensajes!</string>
 </resources>

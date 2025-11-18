@@ -1,0 +1,93 @@
+/*
+ * Copyright (C) 2025 - present Instructure, Inc.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, version 3 of the License.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+package com.instructure.horizon.features.dashboard.widget.myprogress
+
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.instructure.horizon.R
+import com.instructure.horizon.features.dashboard.DashboardItemState
+import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCardError
+import com.instructure.horizon.features.dashboard.widget.DashboardWidgetPageState
+import com.instructure.horizon.features.dashboard.widget.myprogress.card.DashboardMyProgressCardContent
+import com.instructure.horizon.features.dashboard.widget.myprogress.card.DashboardMyProgressCardState
+import com.instructure.horizon.horizonui.foundation.HorizonColors
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
+
+@Composable
+fun DashboardMyProgressWidget(
+    shouldRefresh: Boolean,
+    refreshState: MutableStateFlow<List<Boolean>>,
+    pageState: DashboardWidgetPageState,
+    modifier: Modifier = Modifier
+) {
+    val viewModel = hiltViewModel<DashboardMyProgressViewModel>()
+    val state by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(shouldRefresh) {
+        if (shouldRefresh) {
+            refreshState.update { it + true }
+            state.onRefresh {
+                refreshState.update { it - true }
+            }
+        }
+    }
+
+    DashboardMyProgressSection(state, pageState, modifier)
+}
+
+@Composable
+fun DashboardMyProgressSection(
+    state: DashboardMyProgressUiState,
+    pageState: DashboardWidgetPageState,
+    modifier: Modifier = Modifier
+) {
+    when (state.state) {
+        DashboardItemState.LOADING -> {
+            DashboardMyProgressCardContent(
+                DashboardMyProgressCardState.Loading,
+                true,
+                pageState,
+                modifier
+            )
+        }
+        DashboardItemState.ERROR -> {
+            DashboardWidgetCardError(
+                stringResource(R.string.dashboardMyProgressTitle),
+                R.drawable.trending_up,
+                HorizonColors.PrimitivesSky.sky12,
+                false,
+                pageState,
+                { state.onRefresh {} },
+                modifier = modifier
+            )
+        }
+        DashboardItemState.SUCCESS -> {
+            DashboardMyProgressCardContent(
+                state.cardState,
+                false,
+                pageState,
+                modifier
+            )
+        }
+    }
+}

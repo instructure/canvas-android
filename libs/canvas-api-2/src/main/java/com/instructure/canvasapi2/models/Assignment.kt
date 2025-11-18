@@ -117,7 +117,10 @@ data class Assignment(
         @SerializedName("hide_in_gradebook")
         val isHiddenInGradeBook: Boolean = false,
         @SerializedName("sub_assignment_tag")
-        val subAssignmentTag: String? = null
+        val subAssignmentTag: String? = null,
+        val checkpoints: List<Checkpoint> = emptyList(),
+        @SerializedName("has_overrides")
+        val hasOverrides: Boolean = false
 ) : CanvasModel<Assignment>() {
     override val comparisonDate get() = dueDate
     override val comparisonString get() = dueAt
@@ -248,6 +251,10 @@ data class Assignment(
         return LtiType.entries.firstOrNull {
             it.id != null && externalToolAttributes?.url?.contains(it.id) == true
         } ?: LtiType.EXTERNAL_TOOL
+    }
+
+    fun isQuiz(): Boolean {
+        return getSubmissionTypes().contains(SubmissionType.ONLINE_QUIZ) || ltiToolType() == LtiType.NEW_QUIZZES_LTI
     }
 
     companion object {

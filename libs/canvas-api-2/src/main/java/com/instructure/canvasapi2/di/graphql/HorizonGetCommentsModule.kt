@@ -15,7 +15,9 @@
  */
 package com.instructure.canvasapi2.di.graphql
 
-import com.instructure.canvasapi2.managers.HorizonGetCommentsManager
+import com.apollographql.apollo.ApolloClient
+import com.instructure.canvasapi2.di.DefaultApolloClient
+import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCommentsManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,7 +28,7 @@ import dagger.hilt.components.SingletonComponent
 class HorizonGetCommentsModule {
 
     @Provides
-    fun provideHorizonGetCommentsManager(): HorizonGetCommentsManager {
-        return HorizonGetCommentsManager()
+    fun provideHorizonGetCommentsManager(@DefaultApolloClient apolloClient: ApolloClient): HorizonGetCommentsManager {
+        return HorizonGetCommentsManager(apolloClient)
     }
 }

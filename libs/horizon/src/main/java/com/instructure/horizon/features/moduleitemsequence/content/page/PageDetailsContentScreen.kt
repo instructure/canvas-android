@@ -30,17 +30,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.instructure.canvasapi2.managers.NoteHighlightedData
-import com.instructure.canvasapi2.managers.NoteHighlightedDataRange
-import com.instructure.canvasapi2.managers.NoteHighlightedDataTextPosition
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContextSource
 import com.instructure.horizon.features.notebook.common.webview.ComposeNotesHighlightingCanvasWebView
 import com.instructure.horizon.features.notebook.common.webview.NotesCallback
+import com.instructure.horizon.features.notebook.navigation.NotebookRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.SpaceSize
-import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.pandautils.compose.composables.ComposeEmbeddedWebViewCallbacks
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
@@ -99,7 +96,7 @@ fun PageDetailsContentScreen(
                     notesCallback = NotesCallback(
                         onNoteSelected = { noteId, noteType, selectedText, userComment, startContainer, startOffset, endContainer, endOffset, textSelectionStart, textSelectionEnd ->
                             mainNavController.navigate(
-                                MainNavigationRoute.EditNotebook(
+                                NotebookRoute.EditNotebook(
                                     noteId = noteId,
                                     noteType = noteType,
                                     highlightedTextStartOffset = startOffset,
@@ -114,40 +111,21 @@ fun PageDetailsContentScreen(
                             )
                         },
                         onNoteAdded = { selectedText, noteType, startContainer, startOffset, endContainer, endOffset, textSelectionStart, textSelectionEnd ->
-                            if (noteType == null) {
-                                mainNavController.navigate(
-                                    MainNavigationRoute.AddNotebook(
-                                        courseId = uiState.courseId.toString(),
-                                        objectType = "Page",
-                                        objectId = uiState.pageId.toString(),
-                                        highlightedTextStartOffset = startOffset,
-                                        highlightedTextEndOffset = endOffset,
-                                        highlightedTextStartContainer = startContainer,
-                                        highlightedTextEndContainer = endContainer,
-                                        highlightedText = selectedText,
-                                        textSelectionStart = textSelectionStart,
-                                        textSelectionEnd = textSelectionEnd,
-                                        noteType = noteType
-                                    )
+                            mainNavController.navigate(
+                                NotebookRoute.AddNotebook(
+                                    courseId = uiState.courseId.toString(),
+                                    objectType = "Page",
+                                    objectId = uiState.pageId.toString(),
+                                    highlightedTextStartOffset = startOffset,
+                                    highlightedTextEndOffset = endOffset,
+                                    highlightedTextStartContainer = startContainer,
+                                    highlightedTextEndContainer = endContainer,
+                                    highlightedText = selectedText,
+                                    textSelectionStart = textSelectionStart,
+                                    textSelectionEnd = textSelectionEnd,
+                                    noteType = noteType
                                 )
-                            } else {
-                                uiState.addNote(
-                                    NoteHighlightedData(
-                                        selectedText = selectedText,
-                                        range = NoteHighlightedDataRange(
-                                            startOffset = startOffset,
-                                            endOffset = endOffset,
-                                            startContainer = startContainer,
-                                            endContainer = endContainer
-                                        ),
-                                        textPosition = NoteHighlightedDataTextPosition(
-                                            start = textSelectionStart,
-                                            end = textSelectionEnd
-                                        )
-                                    ),
-                                    noteType
-                                )
-                            }
+                            )
                         }
                     )
                 )

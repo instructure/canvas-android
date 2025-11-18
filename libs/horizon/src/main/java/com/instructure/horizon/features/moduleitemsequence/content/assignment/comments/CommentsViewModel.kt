@@ -20,8 +20,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkManager
-import com.instructure.canvasapi2.managers.CommentAttachment
-import com.instructure.canvasapi2.managers.CommentsData
+import com.instructure.canvasapi2.managers.graphql.horizon.CommentAttachment
+import com.instructure.canvasapi2.managers.graphql.horizon.CommentsData
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
@@ -200,10 +200,10 @@ class CommentsViewModel @Inject constructor(
 
         viewModelScope.tryLaunch {
             commentsRepository.postComment(courseId, assignmentId, apiPrefs.user?.id.orDefault(), attempt, commentText).dataOrThrow
-            reloadData()
             _uiState.update {
                 it.copy(comment = TextFieldValue(""), postingComment = false)
             }
+            reloadData()
         } catch { _ ->
             _uiState.update { it.copy(postingComment = false, errorMessage = context.getString(R.string.commentsBottomSheet_failedToPostComment)) }
         }

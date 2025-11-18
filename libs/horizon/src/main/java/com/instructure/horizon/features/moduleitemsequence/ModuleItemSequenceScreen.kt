@@ -41,6 +41,8 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -51,6 +53,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -97,7 +100,7 @@ import com.instructure.horizon.features.moduleitemsequence.content.lti.ExternalT
 import com.instructure.horizon.features.moduleitemsequence.content.page.PageDetailsContentScreen
 import com.instructure.horizon.features.moduleitemsequence.content.page.PageDetailsViewModel
 import com.instructure.horizon.features.moduleitemsequence.progress.ProgressScreen
-import com.instructure.horizon.features.notebook.NotebookBottomDialog
+import com.instructure.horizon.features.notebook.navigation.NotebookRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
@@ -118,7 +121,6 @@ import com.instructure.horizon.horizonui.molecules.PillType
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.molecules.SpinnerSize
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
-import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.pandautils.compose.modifiers.conditional
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
@@ -127,42 +129,49 @@ import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.orDefault
 import kotlin.math.abs
 
-const val SHOULD_REFRESH_DASHBOARD = "shouldRefreshDashboard"
-const val SHOULD_REFRESH_LEARN_SCREEN = "shouldRefreshLearnScreen"
-
 @Composable
 fun ModuleItemSequenceScreen(mainNavController: NavHostController, uiState: ModuleItemSequenceUiState) {
     val activity = LocalContext.current.getActivityOrNull()
     if (activity != null) ViewStyler.setStatusBarColor(activity, ThemePrefs.brandColor, true)
     if (uiState.progressScreenState.visible) ProgressScreen(uiState.progressScreenState, uiState.loadingState)
-    Scaffold(containerColor = HorizonColors.Surface.institution(), bottomBar = {
-        ModuleItemSequenceBottomBar(
-            showNextButton = uiState.currentPosition < uiState.items.size - 1,
-            showPreviousButton = uiState.currentPosition > 0,
-            showNotebookButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Page,
-            showAssignmentToolsButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Assignment,
-            onNextClick = uiState.onNextClick,
-            onPreviousClick = uiState.onPreviousClick,
-            onAssignmentToolsClick = uiState.onAssignmentToolsClick,
-            onAiAssistClick = { uiState.updateShowAiAssist(true) },
-            onNotebookClick = { uiState.updateShowNotebook(true) },
-            notebookEnabled = uiState.notebookButtonEnabled,
-            aiAssistEnabled = uiState.aiAssistButtonEnabled,
-            hasUnreadComments = uiState.hasUnreadComments
-        )
-    }) { contentPadding ->
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    Scaffold(
+        containerColor = HorizonColors.Surface.institution(),
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        bottomBar = {
+            ModuleItemSequenceBottomBar(
+                showNextButton = uiState.currentPosition < uiState.items.size - 1,
+                showPreviousButton = uiState.currentPosition > 0,
+                showNotebookButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Page,
+                showAssignmentToolsButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Assignment,
+                onNextClick = uiState.onNextClick,
+                onPreviousClick = uiState.onPreviousClick,
+                onAssignmentToolsClick = uiState.onAssignmentToolsClick,
+                onAiAssistClick = { uiState.updateShowAiAssist(true) },
+                onNotebookClick = {
+                    mainNavController.navigate(
+                        NotebookRoute.Notebook.route(
+                            uiState.courseId.toString(),
+                            uiState.objectTypeAndId.first,
+                            uiState.objectTypeAndId.second,
+                            true,
+                            false,
+                            true
+                        )
+                    )
+                },
+                notebookEnabled = uiState.notebookButtonEnabled,
+                aiAssistEnabled = uiState.aiAssistButtonEnabled,
+                hasUnreadComments = uiState.hasUnreadComments
+            )
+        }
+    ) { contentPadding ->
         Box(modifier = Modifier.padding(contentPadding)) {
             if (uiState.showAiAssist) {
                 AiAssistantScreen(
                     onDismiss = { uiState.updateShowAiAssist(false) },
-                )
-            }
-            if (uiState.showNotebook) {
-                NotebookBottomDialog(
-                    uiState.courseId,
-                    uiState.objectTypeAndId,
-                    mainNavController,
-                    { uiState.updateShowNotebook(false) }
                 )
             }
             ModuleItemSequenceContent(uiState = uiState, mainNavController = mainNavController, onBackPressed = {
@@ -270,15 +279,6 @@ private fun ModuleItemSequenceContent(
                 .padding(top = moduleHeaderHeight)
         ) {
             if (uiState.currentPosition != -1) {
-                val homeEntry =
-                    remember(mainNavController.currentBackStackEntry) { mainNavController.getBackStackEntry(MainNavigationRoute.Home.route) }
-                LaunchedEffect(uiState.shouldRefreshPreviousScreen) {
-                    if (uiState.shouldRefreshPreviousScreen) {
-                        homeEntry.savedStateHandle[SHOULD_REFRESH_DASHBOARD] = true
-                        homeEntry.savedStateHandle[SHOULD_REFRESH_LEARN_SCREEN] = true
-                    }
-                }
-
                 val pagerState = rememberPagerState(initialPage = uiState.currentPosition, pageCount = { uiState.items.size })
                 var previousPosition by rememberSaveable { mutableStateOf(uiState.currentPosition) }
                 LaunchedEffect(key1 = uiState.currentPosition) {
@@ -638,7 +638,6 @@ private fun ModuleItemSequenceScreenPreview() {
                 moduleItemContent = ModuleItemContent.Assignment(courseId = 1, assignmentId = 1L)
             ),
             updateShowAiAssist = {},
-            updateShowNotebook = {},
         )
     )
 }

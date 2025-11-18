@@ -908,6 +908,15 @@
         <item quantity="other">%s poäng</item>
     </plurals>
 
+    <plurals name="pointsPts">
+        <item quantity="one">poäng</item>
+        <item quantity="other">poäng</item>
+    </plurals>
+
+    <plurals name="pointsPossible">
+        <item quantity="one">\/ %.0f poäng</item>
+        <item quantity="other">\/ %.0f poäng</item>
+    </plurals>
     <string name="timeLimit">Tidsgräns</string>
     <string name="newPushNotifications">%1$s Nya aviseringar</string>
     <string name="like">gilla-markering</string>
@@ -1033,6 +1042,10 @@
     <string name="downloadFailed">Nedladdningen misslyckades</string>
     <string name="downloadSuccessful">Nedladdningen lyckades</string>
 
+    <string name="downloading">Laddar ned</string>
+    <string name="downloadComplete">Nedladdning slutförd</string>
+    <string name="notificationChannelNameFileDownloadsName">Nedladdningsaviseringar</string>
+    <string name="notificationChannelNameFileDownloadsDescription">Canvas-aviseringar för pågående nedladdningar.</string>
     <string name="full_due_date_details">Fullständiga detaljer för inlämningsdatum</string>
     <string name="submissions">Inskickningar</string>
     <string name="attachment">Bilaga</string>
@@ -2006,6 +2019,7 @@
     <string name="inboxSignatureSwitchLabel">Signatur</string>
     <string name="inboxSignatureTextfieldHeader">Signaturtext</string>
     <string name="due_dateTime">Inlämningsdatum: %1$s, %2$s</string>
+    <string name="submitted_dateTime">Inlämnat: %1$s, %2$s</string>
     <string name="noDueDate">Inget inlämningsdatum</string>
     <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
     <string name="needsGradingCount">%1$s behöver bedömning</string>
@@ -2013,6 +2027,10 @@
     <plurals name="assignmentListMaxpoints">
         <item quantity="one">%d poäng</item>
         <item quantity="other">%d poäng</item>
+    </plurals>
+    <plurals name="percentGradeScore">
+        <item quantity="one">(%.0f poäng)</item>
+        <item quantity="other">(%.0f poäng)</item>
     </plurals>
     <string name="noAssignments">Inga uppgifter</string>
     <string name="assignmentGroup">Uppgiftsgrupp</string>
@@ -2069,4 +2087,57 @@
     <string name="widgetSingleGradeSelectCourse">Nu väljer vi en kurs.</string>
     <string name="widgetGradesErrorLoadingCourses">Ett fel inträffade under inläsning av kurser.</string>
     <string name="settingsSwitchExperience">Byt till Canvas Career</string>
+    <string name="speedGraderGradeTabTitle">Bedömning och matris</string>
+    <string name="speedGraderDetailsTabTitle">Detaljer</string>
+    <string name="a11y_contentDescription_expandPanel">Visa panelen</string>
+    <string name="a11y_contentDescription_collapsePanel">Dölj panelen</string>
+    <string name="pointGradeHint">Ange resultatet här</string>
+    <string name="percentageGradeHint">Ange procentandelen här</string>
+    <string name="completeIncompleteGradeScore">%.0f / %.0f</string>
+    <string name="letterGrade">Bokstavsbedömning</string>
+    <string name="daysLate">Dagar sent</string>
+    <plurals name="pointTotal">
+        <item quantity="one">%s / %s poäng</item>
+        <item quantity="other">%s / %s poäng</item>
+    </plurals>
+    <string name="speedGraderLatePenaltyTitle">Förseningsavdrag</string>
+    <string name="gradingStatus_none">Inga</string>
+    <string name="gradingStatus_late">Sen</string>
+    <string name="gradingStatus_missing">Saknad</string>
+    <string name="gradingStatus_extended">Utökad</string>
+    <string name="gradingStatus_excused">Ursäktad</string>
+    <string name="status">Status</string>
+    <string name="speedGraderStudentNotes">Elevanteckningar</string>
+    <string name="speedGraderStudentNotesLoading">Läser in elevanteckningar</string>
+    <string name="speedGraderStudentNotesErrorTitle">Hoppsan! Något gick fel</string>
+    <string name="speedGraderStudentNotesErrorDescription">Vi har problem med att visa elevanteckningarna.</string>
+    <string name="speedGraderStudentNotesErrorButtonText">Uppdatera</string>
+    <string name="not_graded">Inte bedömd</string>
+    <string name="speedGraderSubmissionDetails">Inlämningsdetaljer</string>
+    <string name="speedGraderSubmissionDetailsLoading">Läser in inlämningsinformation</string>
+    <string name="speedGraderWordCount">Antal ord</string>
+    <string name="rubricsTitle">Matriser</string>
+    <string name="rubricScore">Resultat</string>
+    <string name="rubricScoreHint">Ange resultatet här</string>
+    <string name="speedGraderCommentsTitle">Kommentar (%s)</string>
+    <string name="anonymousGradingStudentLabel">Elev</string>
+    <string name="anonymousGradingUserLabel">Anonym användare</string>
+    <string name="rubricNote">Matrisanteckning</string>
+    <string name="content_description_edit_rubric_comment">Redigera versionsinformationen</string>
+    <string name="rubricNoteHint">Anteckning</string>
+    <string name="a11y_sendRubricNoteContentDescription">Skicka versionsinformationen</string>
+    <string name="select_attachment_type">Välj bilagetyp</string>
+    <string name="choose_files">Välj filer</string>
+    <string name="a11y_expanded">Förstorad</string>
+    <string name="a11y_collapsed">Förminskad</string>
+    <string name="excuseStudent">Låt eleven slippa göra</string>
+    <string name="detailsEmptyMessage">Vi har inte ytterligare information för den här eleven och uppgiften</string>
+    <string name="daysLateHint">Ange dagars försening</string>
+    <string name="reply_to_topic">Svar på ämne</string>
+    <string name="additional_replies">Ytterligare svar (%d)</string>
+    <string name="reply_to_topic_due">Svara på ämnet som är försenat</string>
+    <string name="additional_replies_due">Ytterligare svar (%d) försenade</string>
+    <string name="a11y_discussion_checkpoints">Kontrollpunkter för diskussion</string>
+    <string name="multipleDueDates">Flera inlämningsdatum</string>
+    <string name="courseConcludedError">Kursen slutförd Det gick inte att skicka meddelanden!</string>
 </resources>

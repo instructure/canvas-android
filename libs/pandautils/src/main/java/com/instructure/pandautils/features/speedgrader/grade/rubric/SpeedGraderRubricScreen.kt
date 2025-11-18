@@ -111,7 +111,9 @@ fun SpeedGraderRubricContent(uiState: SpeedGraderRubricUiState) {
                     .padding(vertical = 12.dp, horizontal = 16.dp)
             ) {
                 Text(
-                    modifier = Modifier.padding(bottom = 14.dp).testTag("speedGraderRubricsLabel"),
+                    modifier = Modifier
+                        .padding(bottom = 14.dp)
+                        .testTag("speedGraderRubricsLabel"),
                     text = stringResource(R.string.rubricsTitle),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
@@ -316,8 +318,19 @@ private fun RubricCriterion(
             if (expanded) {
                 CanvasDivider()
             }
-
-            var enteredPoint by remember(assessment) { mutableStateOf(assessment?.points) }
+            var textFieldScore by remember(assessment) {
+                mutableStateOf(assessment?.points?.stringValueWithoutTrailingZeros.orEmpty())
+            }
+            var enteredPoint by remember(assessment) {
+                mutableStateOf(assessment?.points)
+            }
+            LaunchedEffect(textFieldScore) {
+                val scoreAsDouble = textFieldScore.toDoubleOrNull()
+                if (scoreAsDouble != enteredPoint) {
+                    enteredPoint = scoreAsDouble
+                    onPointChanged(enteredPoint.orDefault(), rubricCriterion.id)
+                }
+            }
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -332,11 +345,8 @@ private fun RubricCriterion(
                 Spacer(modifier = Modifier.weight(1f))
                 BasicTextFieldWithHintDecoration(
                     modifier = Modifier.padding(end = 8.dp),
-                    value = enteredPoint?.stringValueWithoutTrailingZeros,
-                    onValueChange = { point ->
-                        enteredPoint = point.toDoubleOrNull()
-                        onPointChanged(enteredPoint.orDefault(), rubricCriterion.id)
-                    },
+                    value = textFieldScore,
+                    onValueChange = { textFieldScore = it },
                     hint = stringResource(R.string.rubricScoreHint),
                     textColor = LocalCourseColor.current,
                     hintColor = colorResource(R.color.textPlaceholder),

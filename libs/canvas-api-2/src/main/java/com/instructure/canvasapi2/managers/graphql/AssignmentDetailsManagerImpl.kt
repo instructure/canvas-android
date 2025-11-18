@@ -15,13 +15,14 @@
  */
 package com.instructure.canvasapi2.managers.graphql
 
+import com.apollographql.apollo.ApolloClient
 import com.instructure.canvasapi2.AssignmentDetailsQuery
-import com.instructure.canvasapi2.QLClientConfig
+import com.instructure.canvasapi2.enqueueQuery
 
-class AssignmentDetailsManagerImpl : AssignmentDetailsManager {
+class AssignmentDetailsManagerImpl(private val apolloClient: ApolloClient) : AssignmentDetailsManager {
     override suspend fun getAssignmentDetails(assignmentId: Long): AssignmentDetailsQuery.Data {
         val query = AssignmentDetailsQuery(assignmentId.toString())
-        val result = QLClientConfig.enqueueQuery(query)
+        val result = apolloClient.enqueueQuery(query)
         return result.dataAssertNoErrors
     }
 }

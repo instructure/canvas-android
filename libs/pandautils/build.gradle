@@ -19,6 +19,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'com.google.devtools.ksp'
 apply plugin: 'dagger.hilt.android.plugin'
 apply plugin: 'org.jetbrains.kotlin.plugin.compose'
 
@@ -41,12 +42,8 @@ android {
         buildConfigField "boolean", "IS_TESTING", isTesting()
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testApplicationId System.getProperty("testApplicationId", "com.instructure.pandautils.test")
-        javaCompileOptions {
-            annotationProcessorOptions {
-                compilerArgumentProviders(
-                        new RoomSchemaArgProvider(new File(projectDir, "schemas"))
-                )
-            }
+        ksp {
+            arg("room.schemaLocation", "$projectDir/schemas".toString())
         }
     }
 
@@ -116,6 +113,7 @@ configurations {
     androidTestImplementation.exclude module:'protobuf-lite'
 
     all*.resolutionStrategy {
+        force 'io.grpc:grpc-netty:1.75.0'
         force Libs.KOTLIN_STD_LIB
     }
 }
@@ -131,6 +129,9 @@ dependencies {
     implementation Libs.CAMERA_VIEW
 
     implementation Libs.LOTTIE
+
+    // Explicitly add secure grpc-netty version to override any transitive dependencies
+    implementation 'io.grpc:grpc-netty:1.75.0'
 
     /* Kotlin */
     implementation Libs.KOTLIN_STD_LIB
@@ -197,9 +198,9 @@ dependencies {
 
     /* DI */
     implementation Libs.HILT
-    kapt Libs.HILT_COMPILER
+    ksp Libs.HILT_COMPILER
     implementation Libs.HILT_ANDROIDX_WORK
-    kapt Libs.HILT_ANDROIDX_COMPILER
+    ksp Libs.HILT_ANDROIDX_COMPILER
 
     /* AAC */
     implementation Libs.VIEW_MODEL
@@ -210,7 +211,7 @@ dependencies {
 
     /* ROOM */
     implementation Libs.ROOM
-    kapt Libs.ROOM_COMPILER
+    ksp Libs.ROOM_COMPILER
     implementation Libs.ROOM_COROUTINES
 
     /* Compose */
@@ -244,8 +245,6 @@ dependencies {
     // We need to add this dependency if we update ExoPlayer to 2.12.0
     // More details here: classpath https://github.com/google/ExoPlayer/issues/7905
     implementation 'com.google.guava:guava:29.0-android'
-
-    kaptTest Libs.ANDROIDX_DATABINDING_COMPILER
 
     androidTestImplementation Libs.KOTLIN_COROUTINES_TEST
     androidTestImplementation (project(':espresso')) {

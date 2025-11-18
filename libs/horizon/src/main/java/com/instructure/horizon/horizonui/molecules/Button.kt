@@ -167,14 +167,13 @@ fun LoadingButton(
     iconPosition: ButtonIconPosition = ButtonIconPosition.NoIcon,
     enabled: Boolean = true,
     loading: Boolean = true,
+    height: ButtonHeight = ButtonHeight.NORMAL,
     onClick: () -> Unit = {},
     badge: @Composable (() -> Unit)? = null
 ) {
-    val alpha = if (enabled) 1f else 0.5f
     Box(
         contentAlignment = contentAlignment,
         modifier = modifier
-            .background(color = color.backgroundColor.copy(alpha = alpha), shape = HorizonCornerRadius.level6)
             .animateContentSize()
     ) {
         if (loading) {
@@ -188,18 +187,15 @@ fun LoadingButton(
                     color = color.contentColor,
                     modifier = Modifier
                         .align(Alignment.Center)
-                        .padding(horizontal = 22.dp, vertical = 10.dp),
+                        .padding(horizontal = height.horizontalPadding, vertical = height.verticalPadding),
                 )
             }
         } else {
             Button(
                 label = label,
-                height = ButtonHeight.NORMAL,
+                height = height,
                 width = width,
-                color = ButtonColor.Custom(
-                    backgroundColor = Color.Transparent,
-                    contentColor = color.contentColor
-                ),
+                color = color,
                 iconPosition = iconPosition,
                 onClick = onClick,
                 enabled = enabled,

@@ -277,6 +277,7 @@
     <string name="checkBoxFinalGradeOption">Based on graded assignments</string>
     <string name="checkBoxWhatIfGradeOption">Show What-If Score</string>
     <string name="whatIfDialogText">What-If Score</string>
+    <string name="whatIfScoreExceedsMaximum">Score cannot exceed maximum points</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s out of %2$s points, %3$s</string>
     <string name="inbox">Inbox</string>
@@ -1043,6 +1044,11 @@
     <string name="downloadingFile">Downloading</string>
     <string name="downloadFailed">Download failed</string>
     <string name="downloadSuccessful">Download successful</string>
+    <string name="downloading">Downloading</string>
+    <string name="downloadComplete">Download complete</string>
+    <string name="fileDownloadNotificationPermissionDenied">Download started. Enable notifications to see progress.</string>
+    <string name="notificationChannelNameFileDownloadsName">Download Notifications</string>
+    <string name="notificationChannelNameFileDownloadsDescription">Canvas notifications for ongoing downloads.</string>
 
     <string name="full_due_date_details">Full due date details</string>
     <string name="submissions">Submissions</string>
@@ -1368,6 +1374,11 @@
     <plurals name="a11y_notificationsUnreadCount">
         <item quantity="one">%s unread notification</item>
         <item quantity="other">%s unread notifications</item>
+    </plurals>
+
+    <plurals name="a11y_todoBadgeCount">
+        <item quantity="one">%s to do item</item>
+        <item quantity="other">%s to do items</item>
     </plurals>
 
     <string name="noAnnotationSelected">No annotation selected</string>
@@ -1919,6 +1930,8 @@
     <string name="gradePreferencesHeaderSortBy">Sort By</string>
     <string name="gradesEmptyTitle">No Assignments</string>
     <string name="gradesEmptyMessage">It looks like assignments haven\'t been created in this space yet.</string>
+    <string name="noMatchingAssignments">No Matching Assignments</string>
+    <string name="noMatchingAssignmentsDescription">No assignments match your search. Try a different search term.</string>
     <string name="errorLoadingGrades">We\'re having trouble loading your student\'s grades. Please try reloading the page or check back later.</string>
     <string name="errorLoadingCourse">We\'re having trouble loading your student\'s course details. Please try reloading the page or check back later.</string>
     <string name="gradesFilterContentDescription">Filter</string>
@@ -2065,6 +2078,8 @@
     <string name="allAssignments">All Assignments</string>
     <string name="statusFilter">Status Filter</string>
     <string name="a11y_contentDescription_filter">Filter</string>
+    <string name="a11y_filter_active">Filter active</string>
+    <string name="a11y_filter_inactive">Filter inactive</string>
     <string name="a11y_contentDescription_postPolicy">Post policy</string>
     <string name="late">Late</string>
     <string name="a11y_contentDescription_expand">Expand</string>
@@ -2151,4 +2166,67 @@
     <string name="daysLateHint">Write days late</string>
     <string name="reply_to_topic">Reply to topic</string>
     <string name="additional_replies">Additional replies (%d)</string>
+    <string name="reply_to_topic_due">Reply to topic due</string>
+    <string name="additional_replies_due">Additional replies (%d) due</string>
+    <string name="a11y_discussion_checkpoints">Discussion Checkpoints</string>
+    <string name="multipleDueDates">Multiple Due Dates</string>
+    <string name="courseConcludedError">Course concluded. Unable to send messages!</string>
+    <string name="openInDetailView">Open in Detail View</string>
+    <string name="immersiveView">Immersive view</string>
+    <string name="statuses">Statuses</string>
+    <string name="precise_filtering">Precise filtering</string>
+    <string name="differentiation_tags">Differentiation tags</string>
+    <string name="students_without_differentiation_tags">Students without Differentiation tags</string>
+    <string name="sort_by">Sort by</string>
+    <string name="student_sortable_name">Student sortable name</string>
+    <string name="student_name">Student name</string>
+    <string name="submission_date">Submission date</string>
+    <string name="submission_status">Submission status</string>
+    <string name="write_score_here">Write score here</string>
+    <string name="scored_more_than_with_max">Scored More than / %s pts</string>
+    <string name="scored_less_than_with_max">Scored Less than / %s pts</string>
+    <string name="scored_between_values">Scored %1$s - %2$s</string>
+    <string name="multiple_filters">Multiple filters</string>
+    <string name="a11y_contentDescriptionToDoFilter">Filter</string>
+    <string name="errorLoadingToDos">There was an error loading your to-do items. Please check your connection and try again.</string>
+    <string name="errorUpdatingToDo">There was an error updating the to-do item. Please check your connection and try again.</string>
+    <string name="noToDosForNow">No To Dos for now!</string>
+    <string name="noToDosForNowSubtext">It looks like a great time to rest, relax, and recharge.</string>
+    <string name="todoSwipeDone">Done</string>
+    <string name="todoSwipeUndo">Undo</string>
+    <string name="todoMarkedAsDone">%s marked as done</string>
+    <string name="todoMarkedAsNotDone">%s marked as not done</string>
+    <string name="todoMarkedAsDoneSnackbarUndo">Undo</string>
+    <string name="todoActionOffline">This action cannot be performed offline</string>
+
+    <!-- To Do List Filter Screen -->
+    <string name="todoFilterPreferences">To Do list Preferences</string>
+    <string name="todoFilterVisibleItems">Visible Items</string>
+    <string name="todoFilterShowPersonalToDos">Show Personal To Dos</string>
+    <string name="todoFilterShowCalendarEvents">Show Calendar Events</string>
+    <string name="todoFilterShowCompleted">Show Completed</string>
+    <string name="todoFilterFavoriteCoursesOnly">Favourite Courses Only</string>
+    <string name="todoFilterShowTasksFrom">Show tasks from</string>
+    <string name="todoFilterShowTasksUntil">Show tasks until</string>
+    <string name="todoFilterToday">Today</string>
+    <string name="todoFilterThisWeek">This Week</string>
+    <string name="todoFilterLastWeek">Last Week</string>
+    <string name="todoFilterTwoWeeks">2 Weeks Ago</string>
+    <string name="todoFilterThreeWeeks">3 Weeks Ago</string>
+    <string name="todoFilterFourWeeks">4 Weeks Ago</string>
+    <string name="todoFilterNextWeek">Next Week</string>
+    <string name="todoFilterInTwoWeeks">In 2 Weeks</string>
+    <string name="todoFilterInThreeWeeks">In 3 Weeks</string>
+    <string name="todoFilterInFourWeeks">In 4 Weeks</string>
+    <string name="todoFilterFromDate">From %s</string>
+    <string name="todoFilterUntilDate">Until %s</string>
+    <string name="a11y_buttonSelectionSelected">selected</string>
+    <string name="a11y_buttonSelectionNotSelected">not selected</string>
+
+    <!-- Course Invitations -->
+    <string name="courseInvitationsTitle">Course Invitations (%d)</string>
+    <string name="courseInvitationAccepted">Invitation to %s accepted</string>
+    <string name="courseInvitationDeclined">Invitation to %s declined</string>
+    <string name="courseInvitationDeclineConfirmTitle">Decline Invitation</string>
+    <string name="courseInvitationDeclineConfirmMessage">Are you sure you want to decline the invitation to %s?</string>
 </resources>

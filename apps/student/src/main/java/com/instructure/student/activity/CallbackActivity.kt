@@ -20,6 +20,8 @@ package com.instructure.student.activity
 import android.os.Bundle
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.StatusCallback
+import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.FeaturesManager
@@ -31,6 +33,7 @@ import com.instructure.canvasapi2.models.Account
 import com.instructure.canvasapi2.models.CanvasColor
 import com.instructure.canvasapi2.models.CanvasTheme
 import com.instructure.canvasapi2.models.LaunchDefinition
+import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.SelfRegistration
 import com.instructure.canvasapi2.models.TermsOfService
 import com.instructure.canvasapi2.models.UnreadConversationCount
@@ -41,20 +44,29 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.RemoteConfigParam
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
+import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.canvasapi2.utils.pageview.PandataInfo
 import com.instructure.canvasapi2.utils.pageview.PandataManager
+import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandautils.dialogs.RatingDialog
 import com.instructure.pandautils.features.inbox.list.OnUnreadCountInvalidated
+import com.instructure.pandautils.features.todolist.filter.DateRangeSelection
+import com.instructure.pandautils.room.appdatabase.daos.ToDoFilterDao
+import com.instructure.pandautils.room.appdatabase.entities.ToDoFilterEntity
 import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.SHA256
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.filterByToDoFilters
+import com.instructure.pandautils.utils.isComplete
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toast
 import com.instructure.student.BuildConfig
@@ -69,6 +81,7 @@ import retrofit2.Call
 import retrofit2.Response
 import sdk.pendo.io.Pendo
 import javax.inject.Inject
+import kotlin.collections.filter
 
 @AndroidEntryPoint
 abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, NotificationListFragment.OnNotificationCountInvalidated {
@@ -86,7 +99,19 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
     lateinit var userApi: UserAPI.UsersInterface
 
     @Inject
+    lateinit var plannerApi: PlannerAPI.PlannerInterface
+
+    @Inject
     lateinit var widgetLogger: WidgetLogger
+
+    @Inject
+    lateinit var toDoFilterDao: ToDoFilterDao
+
+    @Inject
+    lateinit var apiPrefs: ApiPrefs
+
+    @Inject
+    lateinit var courseApi: CourseAPI.CoursesInterface
 
     private var loadInitialDataJob: Job? = null
 
@@ -94,6 +119,7 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
     abstract fun updateUnreadCount(unreadCount: Int)
     abstract fun increaseUnreadCount(increaseBy: Int)
     abstract fun updateNotificationCount(notificationCount: Int)
+    abstract fun updateToDoCount(toDoCount: Int)
     abstract fun initialCoreDataLoadingComplete()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -178,6 +204,10 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
 
             getUnreadNotificationCount()
 
+            if (RemoteConfigUtils.getBoolean(RemoteConfigParam.TODO_REDESIGN)) {
+                getToDoCount()
+            }
+
             initialCoreDataLoadingComplete()
         } catch {
             initialCoreDataLoadingComplete()
@@ -204,6 +234,43 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
             val unreadCountInt = (it.unreadCount ?: "0").toInt()
             updateUnreadCount(unreadCountInt)
         }
+    }
+
+    protected suspend fun getToDoCount() {
+        val todoFilters = toDoFilterDao.findByUser(
+            apiPrefs.fullDomain,
+            apiPrefs.user?.id.orDefault()
+        ) ?: ToDoFilterEntity(userDomain = apiPrefs.fullDomain, userId = apiPrefs.user?.id.orDefault())
+
+        val startDate = todoFilters.pastDateRange.calculatePastDateRange().toApiString()
+        val endDate = todoFilters.futureDateRange.calculateFutureDateRange().toApiString()
+
+        val restParams = RestParams(isForceReadFromNetwork = true, usePerPageQueryParam = true)
+        val plannerItems = plannerApi.getPlannerItems(
+            startDate = startDate,
+            endDate = endDate,
+            contextCodes = emptyList(),
+            restParams = restParams
+        ).depaginate { nextUrl ->
+            plannerApi.nextPagePlannerItems(nextUrl, restParams)
+        }
+
+        val filteredCourses = if (todoFilters.favoriteCourses) {
+            val restParams = RestParams(isForceReadFromNetwork = false)
+            val courses = courseApi.getFavoriteCourses(restParams).depaginate { nextUrl ->
+                courseApi.next(nextUrl, restParams)
+            }
+            courses.dataOrNull ?: emptyList()
+        } else {
+            emptyList()
+        }
+
+        // Filter planner items - exclude announcements, assessment requests, completed items
+        val todoCount = plannerItems.dataOrNull
+            ?.filter { it.plannableType != PlannableType.ANNOUNCEMENT && it.plannableType != PlannableType.ASSESSMENT_REQUEST && !it.isComplete() }
+            ?.filterByToDoFilters(todoFilters, filteredCourses)
+            ?.count() ?: 0
+        updateToDoCount(todoCount)
     }
 
     private fun getUnreadNotificationCount() {

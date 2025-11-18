@@ -500,4 +500,5 @@
         <item quantity="one">%d min</item>
         <item quantity="other">%d min</item>
     </plurals>
+    <string name="notATeacherDescription">Otra de nuestras aplicaciones podría ser más adecuada. Toca un icono para iniciar sesión allí.</string>
 </resources>
