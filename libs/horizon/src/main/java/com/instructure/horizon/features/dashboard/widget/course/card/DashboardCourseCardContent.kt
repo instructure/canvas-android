@@ -118,23 +118,23 @@ private fun DashboardCourseCardCompactContent(
                 .padding(horizontal = 24.dp)
         ) {
             if (!state.title.isNullOrEmpty()) {
-                Spacer(Modifier.height(16.dp))
+                HorizonSpace(SpaceSize.SPACE_16)
                 TitleText(state.title, isLoading)
             }
             if (state.progress != null) {
-                Spacer(Modifier.height(12.dp))
+                HorizonSpace(SpaceSize.SPACE_12)
                 CourseProgress(state.progress, isLoading)
             }
             if (state.descriptionState != null) {
-                Spacer(Modifier.height(16.dp))
+                HorizonSpace(SpaceSize.SPACE_16)
                 DescriptionText(state.descriptionState, isLoading)
             }
             if (state.moduleItem != null) {
-                Spacer(Modifier.height(16.dp))
+                HorizonSpace(SpaceSize.SPACE_16)
                 ModuleItemCard(state.moduleItem, isLoading, handleOnClickAction)
             }
             if (state.pageState != DashboardWidgetPageState.Empty) {
-                Spacer(Modifier.height(16.dp))
+                HorizonSpace(SpaceSize.SPACE_16)
                 PageIndicator(state.pageState, isLoading)
             }
         }
@@ -148,44 +148,46 @@ private fun DashboardCourseCardWideContent(
     isLoading: Boolean,
     handleOnClickAction: (CardClickAction?) -> Unit,
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ){
-        ImageWithProgramChips(
-            state,
-            isLoading,
-            Modifier
-                .width(320.dp)
-                .padding(start = 24.dp, top = 24.dp, bottom = 24.dp, end = 16.dp)
-                .clip(HorizonCornerRadius.level2)
-        )
-        Column(
+    Column {
+        Row(
             modifier = Modifier
-                .padding(end = 24.dp, bottom = 24.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            if (!state.title.isNullOrEmpty()) {
-                Spacer(Modifier.height(24.dp))
-                TitleText(state.title, isLoading)
-            }
-            if (state.progress != null) {
-                Spacer(Modifier.height(12.dp))
-                CourseProgress(state.progress, isLoading)
-            }
-            if (state.descriptionState != null) {
-                Spacer(Modifier.height(16.dp))
-                DescriptionText(state.descriptionState, isLoading)
-            }
-            if (state.moduleItem != null) {
-                Spacer(Modifier.height(16.dp))
-                ModuleItemCard(state.moduleItem, isLoading, handleOnClickAction)
-            }
-            if (state.pageState != DashboardWidgetPageState.Empty) {
-                Spacer(Modifier.height(16.dp))
-                PageIndicator(state.pageState, isLoading)
+            ImageWithProgramChips(
+                state,
+                isLoading,
+                Modifier
+                    .width(320.dp)
+                    .padding(start = 24.dp, top = 24.dp, end = 16.dp)
+                    .clip(HorizonCornerRadius.level2)
+            )
+            Column(
+                modifier = Modifier
+                    .padding(end = 24.dp, top = 24.dp)
+            ) {
+                if (!state.title.isNullOrEmpty()) {
+                    TitleText(state.title, isLoading)
+                }
+                if (state.progress != null) {
+                    HorizonSpace(SpaceSize.SPACE_12)
+                    CourseProgress(state.progress, isLoading)
+                }
+                if (state.descriptionState != null) {
+                    HorizonSpace(SpaceSize.SPACE_16)
+                    DescriptionText(state.descriptionState, isLoading)
+                }
+                if (state.moduleItem != null) {
+                    HorizonSpace(SpaceSize.SPACE_16)
+                    ModuleItemCard(state.moduleItem, isLoading, handleOnClickAction)
+                }
             }
         }
+        if (state.pageState != DashboardWidgetPageState.Empty) {
+            HorizonSpace(SpaceSize.SPACE_16)
+            PageIndicator(state.pageState, isLoading)
+        }
+        HorizonSpace(SpaceSize.SPACE_24)
     }
 }
 
