@@ -21,10 +21,9 @@ import android.content.res.Configuration
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -112,9 +111,9 @@ import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.FullScreenDialog
 import com.instructure.pandautils.compose.composables.GroupHeader
 import com.instructure.pandautils.compose.composables.Loading
+import com.instructure.pandautils.compose.composables.OverflowMenu
 import com.instructure.pandautils.compose.composables.SearchBar
 import com.instructure.pandautils.compose.composables.SubmissionState
-import com.instructure.pandautils.compose.composables.OverflowMenu
 import com.instructure.pandautils.features.grades.gradepreferences.GradePreferencesScreen
 import com.instructure.pandautils.utils.DisplayGrade
 import com.instructure.pandautils.utils.announceAccessibilityText
@@ -416,11 +415,11 @@ private fun GradesScreenContent(
                 }
 
                 items(
-                    items = it.assignments,
+                    items = item.assignments,
                     key = { assignment -> assignment.id }
                 ) { assignment ->
                     AnimatedVisibility(
-                        visible = it.expanded,
+                        visible = item.expanded,
                         enter = expandVertically(),
                         exit = shrinkVertically()
                     ) {
@@ -516,28 +515,27 @@ private fun GradesCard(
 
         if (showFilterIcon) {
             FilterIcon(uiState, actionHandler, Color(color = contextColor))
-        }
-
-        Box(
-            modifier = Modifier
-                .size(48.dp)
-                .clip(CircleShape)
-                .clickable {
-                    actionHandler(GradesAction.ToggleSearch)
-                }
-                .semantics {
-                    role = Role.Button
-                },
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_search_white_24dp),
-                contentDescription = stringResource(id = R.string.search),
-                tint = Color(userColor),
+            Box(
                 modifier = Modifier
-                    .size(24.dp)
-                    .testTag("searchIcon")
-            )
+                    .size(48.dp)
+                    .clip(CircleShape)
+                    .clickable {
+                        actionHandler(GradesAction.ToggleSearch)
+                    }
+                    .semantics {
+                        role = Role.Button
+                    },
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_search_white_24dp),
+                    contentDescription = stringResource(id = R.string.search),
+                    tint = Color(color = contextColor),
+                    modifier = Modifier
+                        .size(24.dp)
+                        .testTag("searchIcon")
+                )
+            }
         }
     }
 }
@@ -604,7 +602,7 @@ private fun EmptySearchContent() {
 fun AssignmentItem(
     uiState: AssignmentUiState,
     actionHandler: (GradesAction) -> Unit,
-    userColor: Int,
+    contextColor: Int,
     modifier: Modifier = Modifier
 ) {
     val iconRotation by animateFloatAsState(
@@ -631,7 +629,7 @@ fun AssignmentItem(
             Icon(
                 painter = painterResource(id = uiState.iconRes),
                 contentDescription = null,
-                tint = Color(userColor),
+                tint = Color(contextColor),
                 modifier = Modifier
                     .size(24.dp)
                     .semantics {
@@ -682,7 +680,7 @@ fun AssignmentItem(
                 if (gradeText.isNotEmpty()) {
                     Text(
                         text = gradeText,
-                        color = Color(userColor),
+                        color = Color(contextColor),
                         fontSize = 16.sp,
                         modifier = Modifier
                             .semantics {
@@ -694,7 +692,7 @@ fun AssignmentItem(
                 AnimatedVisibility(visible = uiState.checkpointsExpanded) {
                     Column(modifier = Modifier.padding(top = 8.dp)) {
                         uiState.checkpoints.forEach {
-                            CheckpointItem(it, Color(userColor))
+                            CheckpointItem(it, Color(contextColor))
                         }
                     }
                 }
@@ -786,7 +784,7 @@ private fun AssignmentItemPreview() {
             submissionStateLabel = SubmissionStateLabel.Late
         ),
         actionHandler = {},
-        userColor = android.graphics.Color.RED
+        contextColor = android.graphics.Color.RED
     )
 }
 

@@ -235,7 +235,8 @@ class GradesScreenTest {
                     ),
                     gradeText = "87% A"
                 ),
-                actionHandler = {}
+                actionHandler = {},
+                canvasContextColor = Color.RED
             )
         }
 

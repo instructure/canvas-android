@@ -51,7 +51,7 @@ class GradesAssignmentItemTest {
             AssignmentItem(
                 uiState = getUiState(),
                 actionHandler = {},
-                userColor = android.graphics.Color.RED
+                contextColor = android.graphics.Color.RED
             )
         }
 
@@ -83,7 +83,7 @@ class GradesAssignmentItemTest {
                     submissionStateLabel = SubmissionStateLabel.Submitted
                 ),
                 actionHandler = {},
-                userColor = android.graphics.Color.RED
+                contextColor = android.graphics.Color.RED
             )
         }
 
@@ -105,7 +105,7 @@ class GradesAssignmentItemTest {
                     submissionStateLabel = SubmissionStateLabel.Missing
                 ),
                 actionHandler = {},
-                userColor = android.graphics.Color.RED
+                contextColor = android.graphics.Color.RED
             )
         }
 
@@ -127,7 +127,7 @@ class GradesAssignmentItemTest {
                     submissionStateLabel = SubmissionStateLabel.Late
                 ),
                 actionHandler = {},
-                userColor = android.graphics.Color.RED
+                contextColor = android.graphics.Color.RED
             )
         }
 
@@ -149,7 +149,7 @@ class GradesAssignmentItemTest {
                     submissionStateLabel = SubmissionStateLabel.Graded
                 ),
                 actionHandler = {},
-                userColor = android.graphics.Color.RED
+                contextColor = android.graphics.Color.RED
             )
         }
 
@@ -171,7 +171,7 @@ class GradesAssignmentItemTest {
                     submissionStateLabel = SubmissionStateLabel.Custom(R.drawable.ic_flag, R.color.textInfo, "Custom Status")
                 ),
                 actionHandler = {},
-                userColor = android.graphics.Color.RED
+                contextColor = android.graphics.Color.RED
             )
         }
 
