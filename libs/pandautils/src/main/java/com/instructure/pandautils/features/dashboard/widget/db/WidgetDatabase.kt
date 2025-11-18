@@ -24,7 +24,7 @@ import androidx.room.RoomDatabase
         WidgetConfigEntity::class,
         WidgetMetadataEntity::class
     ],
-    version = 1
+    version = 2
 )
 abstract class WidgetDatabase : RoomDatabase() {
 
