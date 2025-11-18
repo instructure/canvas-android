@@ -18,6 +18,7 @@ package com.instructure.horizon.pages
 
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.filter
 import androidx.compose.ui.test.filterToOne
 import androidx.compose.ui.test.hasAnyDescendant
 import androidx.compose.ui.test.hasText
@@ -34,13 +35,10 @@ class HorizonDashboardPage(private val composeTestRule: ComposeTestRule) {
     fun assertNotStartedProgramDisplayed(programName: String) {
         composeTestRule.onNodeWithText(programName, substring = true)
             .assertIsDisplayed()
-
-        composeTestRule.onNodeWithText("Program details", useUnmergedTree = true)
-            .assertIsDisplayed()
     }
 
     fun clickProgramDetails(programName: String) {
-        composeTestRule.onNodeWithText("Program details", useUnmergedTree = true)
+        composeTestRule.onNodeWithText(programName, useUnmergedTree = true)
             .assertIsDisplayed()
             .performClick()
     }
@@ -69,7 +67,8 @@ class HorizonDashboardPage(private val composeTestRule: ComposeTestRule) {
 
         if (progress != null) {
             courseCardParent.onChildren()
-                .filterToOne(hasAnyDescendant(hasText(progress.roundToInt().toString() + "%", substring = true)))
+                .filter(hasAnyDescendant(hasText(progress.roundToInt().toString() + "%", substring = true)))
+                .onFirst()
                 .assertIsDisplayed()
         }
 

@@ -248,6 +248,252 @@ jobs:
             -Dorg.gradle.jvmargs="-Xmx6g -XX:+HeapDumpOnOutOfMemoryError" \
             -Dkotlin.compiler.execution.strategy=in-process
 
+  horizon-unit-tests:
+    name: horizon-unit-tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    if: >-
+      (
+        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
+        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
+      ) && contains(github.event.pull_request.body, 'Student')
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+          fetch-depth: 1
+          token: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Cache Gradle Build Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches/build-cache-*
+            .gradle
+          key: ${{ runner.os }}-gradle-build-cache-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-build-cache-
+
+      - name: Run unit tests
+        run: |
+          ./gradle/gradlew -p apps :horizon:testDebugUnitTest \
+            --build-cache \
+            --parallel \
+            --max-workers=4 \
+            --no-daemon \
+            -Dorg.gradle.jvmargs="-Xmx6g -XX:+HeapDumpOnOutOfMemoryError" \
+            -Dkotlin.compiler.execution.strategy=in-process
+
+  horizon-test-build:
+    name: horizon-test-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    if: >-
+      (
+        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
+        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
+      ) && contains(github.event.pull_request.body, 'Student')
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+          fetch-depth: 1
+          token: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Cache Gradle Build Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches/build-cache-*
+            .gradle
+          key: ${{ runner.os }}-gradle-build-cache-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-build-cache-
+
+      - name: Build Horizon test APK
+        run: |
+          ./gradle/gradlew -p apps :horizon:assembleDebugAndroidTest \
+            --build-cache \
+            --parallel \
+            --max-workers=4 \
+            --no-daemon \
+            -Dorg.gradle.jvmargs="-Xmx6g -XX:+HeapDumpOnOutOfMemoryError" \
+            -Dkotlin.compiler.execution.strategy=in-process
+
+      - name: Upload Horizon test APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: horizon-debug-androidTest.apk
+          path: libs/horizon/build/outputs/apk/androidTest/debug/horizon-debug-androidTest.apk
+
+  horizon-ui-tests:
+    name: horizon-ui-tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    if: >-
+      (
+        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
+        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
+      ) && contains(github.event.pull_request.body, 'Student')
+    needs: [student-build, horizon-test-build]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Setup Service account
+        env:
+          FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.GCLOUD_KEY }}
+        run: |
+          if [ -z "${FIREBASE_SERVICE_ACCOUNT_KEY}" ]; then
+            echo "Error: GCLOUD_KEY secret is not set"
+            exit 1
+          fi
+          echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
+          chmod 600 service-account-key.json
+
+      - name: Setup Flank config
+        run: cp ./libs/horizon/flank.yml ./flank.yml
+
+      - name: Copy APKs to expected locations
+        run: |
+          if [ -d "student-qa-debug.apk" ]; then
+             mkdir -p apps/student/build/outputs/apk/qa/debug
+             mv student-qa-debug.apk/student-qa-debug.apk apps/student/build/outputs/apk/qa/debug/
+             rm -rf student-qa-debug.apk
+          fi
+          if [ -d "horizon-debug-androidTest.apk" ]; then
+             mkdir -p libs/horizon/build/outputs/apk/androidTest/debug
+             mv horizon-debug-androidTest.apk/horizon-debug-androidTest.apk libs/horizon/build/outputs/apk/androidTest/debug/
+             rm -rf horizon-debug-androidTest.apk
+          fi
+
+      - name: Run Flank UI tests
+        uses: Flank/flank@v23.10.1
+        with:
+          version: 'v23.07.0'
+          platform: 'android'
+          service_account: './service-account-key.json'
+          flank_configuration_file: './flank.yml'
+
+      - name: Report test results to Splunk
+        run: ./apps/postProcessTestRun.bash horizon-ui results/`ls results`
+        env:
+          SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
+          OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
+          BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
+          BITRISE_GIT_BRANCH: ${{ github.ref_name }}
+          BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Cleanup sensitive files
+        if: always()
+        run: rm -f service-account-key.json
+
+  horizon-interaction-tests:
+    name: horizon-interaction-tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    if: >-
+      (
+        (github.event.action == 'opened' || github.event.action == 'synchronize') ||
+        (github.event.action == 'labeled' && (contains(github.event.pull_request.labels.*.name, 'run-ui-tests') || contains(github.event.pull_request.labels.*.name, 'run-e2e-tests')))
+      ) && contains(github.event.pull_request.body, 'Student')
+    needs: [student-build, horizon-test-build]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Setup Service account
+        env:
+          FIREBASE_SERVICE_ACCOUNT_KEY: ${{ secrets.GCLOUD_KEY }}
+        run: |
+          if [ -z "${FIREBASE_SERVICE_ACCOUNT_KEY}" ]; then
+            echo "Error: GCLOUD_KEY secret is not set"
+            exit 1
+          fi
+          echo "${FIREBASE_SERVICE_ACCOUNT_KEY}" > service-account-key.json
+          chmod 600 service-account-key.json
+
+      - name: Setup Flank config
+        run: cp ./libs/horizon/flank_interaction.yml ./flank.yml
+
+      - name: Copy APKs to expected locations
+        run: |
+          if [ -d "student-qa-debug.apk" ]; then
+             mkdir -p apps/student/build/outputs/apk/qa/debug
+             mv student-qa-debug.apk/student-qa-debug.apk apps/student/build/outputs/apk/qa/debug/
+             rm -rf student-qa-debug.apk
+          fi
+          if [ -d "horizon-debug-androidTest.apk" ]; then
+             mkdir -p libs/horizon/build/outputs/apk/androidTest/debug
+             mv horizon-debug-androidTest.apk/horizon-debug-androidTest.apk libs/horizon/build/outputs/apk/androidTest/debug/
+             rm -rf horizon-debug-androidTest.apk
+          fi
+
+      - name: Run Flank interaction tests
+        uses: Flank/flank@v23.10.1
+        with:
+          version: 'v23.07.0'
+          platform: 'android'
+          service_account: './service-account-key.json'
+          flank_configuration_file: './flank.yml'
+
+      - name: Report test results to Splunk
+        run: ./apps/postProcessTestRun.bash horizon-interaction results/`ls results`
+        env:
+          SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
+          OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
+          BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
+          BITRISE_GIT_BRANCH: ${{ github.ref_name }}
+          BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Cleanup sensitive files
+        if: always()
+        run: rm -f service-account-key.json
+
   parent-portrait-ui-tests:
     name: parent-portrait-ui-tests
     runs-on: ubuntu-latest
