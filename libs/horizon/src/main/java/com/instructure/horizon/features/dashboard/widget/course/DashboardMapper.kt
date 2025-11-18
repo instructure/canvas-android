@@ -24,7 +24,9 @@ import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardButtonRoute
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardHeaderState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardItemState
+import com.instructure.horizon.features.dashboard.widget.DashboardWidgetPageState
 import com.instructure.horizon.features.dashboard.widget.course.card.CardClickAction
+import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCourseCardDescriptionState
 import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCourseCardImageState
 import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCourseCardModuleItemState
 import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCourseCardParentProgramState
@@ -37,12 +39,9 @@ internal suspend fun List<GetCoursesQuery.Enrollment>.mapToDashboardCourseCardSt
     programs: List<Program>,
     nextModuleForCourse: suspend (Long?) -> DashboardCourseCardModuleItemState?
 ): List<DashboardCourseCardState> {
-    val completed = this.filter { it.isCompleted() }.map { it.mapCompleted(context, programs) }
-    val active = this.filter { it.isActive() }.map { it.mapActive(programs, nextModuleForCourse) }
-    return (active + completed).sortedByDescending { course ->
-        course.progress.run { if (this == 100.0) -1.0 else this } // Active courses first, then completed courses
-            ?: 0.0
-    }
+    val completed = this.filter { it.isCompleted() }.mapCompleted(context, programs)
+    val active = this.filter { it.isActive() }.mapActive(programs, nextModuleForCourse)
+    return (active + completed).adjustAndSortCourseCardValues()
 }
 
 internal fun List<Program>.mapToDashboardCourseCardState(context: Context): List<DashboardPaginatedWidgetCardItemState> {
@@ -74,51 +73,76 @@ private fun GetCoursesQuery.Enrollment.isMaxProgress(): Boolean {
     return this.course?.usersConnection?.nodes?.firstOrNull()?.courseProgression?.requirements?.completionPercentage == 100.0
 }
 
-private fun GetCoursesQuery.Enrollment.mapCompleted(context: Context, programs: List<Program>): DashboardCourseCardState {
-    return DashboardCourseCardState(
-        parentPrograms = programs
-            .filter { it.sortedRequirements.any { it.courseId == this.course?.id?.toLongOrNull() } }
-            .map { program ->
-                DashboardCourseCardParentProgramState(
-                    programName = program.name,
-                    programId = program.id,
-                    onClickAction = CardClickAction.NavigateToProgram(program.id)
-                )
-            },
-        imageState = DashboardCourseCardImageState(
-            imageUrl = this.course?.image_download_url,
-            showPlaceholder = true
-        ),
-        title = this.course?.name.orEmpty(),
-        description = context.getString(R.string.dashboardCompletedCourseDetails),
-        progress = this.course?.usersConnection?.nodes?.firstOrNull()?.courseProgression?.requirements?.completionPercentage ?: 0.0,
-        moduleItem = null,
-        onClickAction = CardClickAction.NavigateToCourse(this.course?.id?.toLongOrNull() ?: -1L)
-    )
+private fun List<GetCoursesQuery.Enrollment>.mapCompleted(context: Context, programs: List<Program>): List<DashboardCourseCardState> {
+    return map { item ->
+        DashboardCourseCardState(
+            parentPrograms = programs
+                .filter { it.sortedRequirements.any { it.courseId == item.course?.id?.toLongOrNull() } }
+                .map { program ->
+                    DashboardCourseCardParentProgramState(
+                        programName = program.name,
+                        programId = program.id,
+                        onClickAction = CardClickAction.NavigateToProgram(program.id)
+                    )
+                },
+            imageState = DashboardCourseCardImageState(
+                imageUrl = item.course?.image_download_url,
+                showPlaceholder = true
+            ),
+            title = item.course?.name.orEmpty(),
+            descriptionState = DashboardCourseCardDescriptionState(
+                descriptionTitle = context.getString(R.string.dashboardCompletedCourseTitle),
+                description = context.getString(R.string.dashboardCompletedCourseMessage),
+            ),
+            progress = item.course?.usersConnection?.nodes?.firstOrNull()?.courseProgression?.requirements?.completionPercentage
+                ?: 0.0,
+            moduleItem = null,
+            onClickAction = CardClickAction.NavigateToCourse(item.course?.id?.toLongOrNull() ?: -1L)
+        )
+    }
 }
 
-private suspend fun GetCoursesQuery.Enrollment.mapActive(
+private suspend fun List<GetCoursesQuery.Enrollment>.mapActive(
     programs: List<Program>,
     nextModuleForCourse: suspend (Long?) -> DashboardCourseCardModuleItemState?
-): DashboardCourseCardState {
-    return DashboardCourseCardState(
-        parentPrograms = programs
-            .filter { it.sortedRequirements.any { it.courseId == this.course?.id?.toLongOrNull() } }
-            .map { program ->
-                DashboardCourseCardParentProgramState(
-                    programName = program.name,
-                    programId = program.id,
-                    onClickAction = CardClickAction.NavigateToProgram(program.id)
-                )
-            },
-        imageState = DashboardCourseCardImageState(
-            imageUrl = this.course?.image_download_url,
-            showPlaceholder = true
-        ),
-        title = this.course?.name.orEmpty(),
-        description = null,
-        progress = this.course?.usersConnection?.nodes?.firstOrNull()?.courseProgression?.requirements?.completionPercentage ?: 0.0,
-        moduleItem = nextModuleForCourse(this.course?.id?.toLongOrNull()),
-        onClickAction = CardClickAction.NavigateToCourse(this.course?.id?.toLongOrNull() ?: -1L),
-    )
+): List<DashboardCourseCardState> {
+    return map { item ->
+        DashboardCourseCardState(
+            parentPrograms = programs
+                .filter { it.sortedRequirements.any { it.courseId == item.course?.id?.toLongOrNull() } }
+                .map { program ->
+                    DashboardCourseCardParentProgramState(
+                        programName = program.name,
+                        programId = program.id,
+                        onClickAction = CardClickAction.NavigateToProgram(program.id)
+                    )
+                },
+            imageState = DashboardCourseCardImageState(
+                imageUrl = item.course?.image_download_url,
+                showPlaceholder = true
+            ),
+            title = item.course?.name.orEmpty(),
+            descriptionState = null,
+            progress = item.course?.usersConnection?.nodes?.firstOrNull()?.courseProgression?.requirements?.completionPercentage
+                ?: 0.0,
+            moduleItem = nextModuleForCourse(item.course?.id?.toLongOrNull()),
+            onClickAction = CardClickAction.NavigateToCourse(
+                item.course?.id?.toLongOrNull() ?: -1L
+            ),
+        )
+    }
+}
+
+private fun List<DashboardCourseCardState>.adjustAndSortCourseCardValues(): List<DashboardCourseCardState> {
+    return sortedByDescending { course ->
+        course.progress.run { if (this == 100.0) -1.0 else this } // Active courses first, then completed courses
+            ?: 0.0
+    }.mapIndexed { index, item ->
+        item.copy(
+            pageState = DashboardWidgetPageState(
+                currentPageNumber = index + 1,
+                pageCount = size
+            )
+        )
+    }
 }
