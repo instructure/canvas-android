@@ -45,6 +45,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
@@ -196,7 +197,7 @@ fun CollapsableScaffold(
                         top = collapsedTopBarPadding,
                         bottom = collapsedBottomBarPadding
                     )
-                )
+                ).testTag("collapsableContent")
             ) {
                 content()
             }

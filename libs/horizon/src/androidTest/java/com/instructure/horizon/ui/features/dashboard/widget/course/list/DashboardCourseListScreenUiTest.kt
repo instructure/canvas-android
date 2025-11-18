@@ -17,10 +17,13 @@
 package com.instructure.horizon.ui.features.dashboard.widget.course.list
 
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onChild
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performScrollToNode
 import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.horizon.features.dashboard.widget.course.list.DashboardCourseListCourseState
@@ -213,6 +216,9 @@ class DashboardCourseListScreenUiTest {
             DashboardCourseListScreen(state, navController)
         }
 
+        composeTestRule.onNodeWithTag("collapsableContent")
+            .onChild()
+            .performScrollToNode(hasText("Show more"))
         composeTestRule.onNodeWithText("Show more")
             .assertIsDisplayed()
     }
@@ -272,7 +278,11 @@ class DashboardCourseListScreenUiTest {
             DashboardCourseListScreen(state, navController)
         }
 
+        composeTestRule.onNodeWithTag("collapsableContent")
+            .onChild()
+            .performScrollToNode(hasText("Show more"))
         composeTestRule.onNodeWithText("Show more")
+            .assertIsDisplayed()
             .performClick()
 
         assert(showMoreCalled) { "Show more callback should be called when button is clicked" }
@@ -293,12 +303,21 @@ class DashboardCourseListScreenUiTest {
             DashboardCourseListScreen(state, navController)
         }
 
+        composeTestRule.onNodeWithTag("collapsableContent")
+            .onChild()
+            .performScrollToNode(hasText("Course 1"))
         composeTestRule.onNodeWithText("Course 1")
             .assertIsDisplayed()
 
+        composeTestRule.onNodeWithTag("collapsableContent")
+            .onChild()
+            .performScrollToNode(hasText("Course 2"))
         composeTestRule.onNodeWithText("Course 2")
             .assertIsDisplayed()
 
+        composeTestRule.onNodeWithTag("collapsableContent")
+            .onChild()
+            .performScrollToNode(hasText("Course 3"))
         composeTestRule.onNodeWithText("Course 3")
             .assertIsDisplayed()
 
@@ -324,11 +343,16 @@ class DashboardCourseListScreenUiTest {
             DashboardCourseListScreen(state, navController)
         }
 
+        composeTestRule.onNodeWithTag("collapsableContent")
+            .onChild()
+            .performScrollToNode(hasText("Course 1"))
         composeTestRule.onNodeWithText("Course 1")
             .assertIsDisplayed()
 
+        composeTestRule.onNodeWithTag("collapsableContent")
+            .onChild()
+            .performScrollToNode(hasText("Course 6"))
         composeTestRule.onNodeWithText("Course 6")
-            .performScrollTo()
             .assertIsDisplayed()
 
         composeTestRule.onNodeWithText("Course 7")
@@ -353,8 +377,10 @@ class DashboardCourseListScreenUiTest {
         composeTestRule.onNodeWithText("Course 1")
             .assertIsDisplayed()
 
+        composeTestRule.onNodeWithTag("collapsableContent")
+            .onChild()
+            .performScrollToNode(hasText("Course 5"))
         composeTestRule.onNodeWithText("Course 5")
-            .performScrollTo()
             .assertIsDisplayed()
 
         composeTestRule.onNodeWithText("Show more")
