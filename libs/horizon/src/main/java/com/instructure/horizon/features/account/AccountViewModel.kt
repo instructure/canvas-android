@@ -119,7 +119,7 @@ class AccountViewModel @Inject constructor(
         items = listOf(
             AccountItemState(
                 title = context.getString(R.string.accountReportABug),
-                type = AccountItemType.OpenExternal(AccountRoute.BugReportWebView)
+                type = AccountItemType.OpenExternal("https://community.canvaslms.com/t5/Canvas-Career/Report-an-issue/td-p/662564")
             )
         )
     )

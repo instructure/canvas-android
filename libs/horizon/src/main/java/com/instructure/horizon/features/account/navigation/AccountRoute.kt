@@ -23,5 +23,4 @@ sealed class AccountRoute(val route: String) {
     data object Notifications : AccountRoute("notifications")
     data object CalendarFeed : AccountRoute("calendar_feed")
     data object Advanced : AccountRoute("advanced")
-    data object BugReportWebView : AccountRoute("report_a_bug")
 }
