@@ -24,11 +24,15 @@ import androidx.compose.ui.platform.ComposeView
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.compose.CanvasTheme
+import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
 import com.instructure.student.fragment.ParentFragment
+import com.instructure.student.features.dashboard.notifications.StudentDashboardRouter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class DashboardFragment : ParentFragment() {
+
+    private val router: DashboardRouter by lazy { StudentDashboardRouter(requireActivity()) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,7 +43,7 @@ class DashboardFragment : ParentFragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 CanvasTheme {
-                    DashboardScreen()
+                    DashboardScreen(router = router)
                 }
             }
         }

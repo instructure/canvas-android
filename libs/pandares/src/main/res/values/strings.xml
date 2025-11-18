@@ -2229,4 +2229,7 @@
     <string name="courseInvitationDeclined">Invitation to %s declined</string>
     <string name="courseInvitationDeclineConfirmTitle">Decline Invitation</string>
     <string name="courseInvitationDeclineConfirmMessage">Are you sure you want to decline the invitation to %s?</string>
+
+    <!-- Institutional Announcements -->
+    <string name="institutionalAnnouncementsTitle">Institutional Announcements</string>
 </resources>
