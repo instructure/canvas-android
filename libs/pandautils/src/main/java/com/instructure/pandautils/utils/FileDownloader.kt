@@ -42,6 +42,14 @@ class FileDownloader(
         filename: String?,
         contentType: String?
     ) {
+        if (downloadURL == null) {
+            Toast.makeText(
+                context,
+                context.getString(R.string.errorOccurred),
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
         downloadFileToDevice(Uri.parse(downloadURL), filename, contentType)
     }
 
