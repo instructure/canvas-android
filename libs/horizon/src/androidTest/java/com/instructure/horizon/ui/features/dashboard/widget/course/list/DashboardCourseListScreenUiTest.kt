@@ -20,6 +20,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollTo
 import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.horizon.features.dashboard.widget.course.list.DashboardCourseListCourseState
@@ -327,6 +328,7 @@ class DashboardCourseListScreenUiTest {
             .assertIsDisplayed()
 
         composeTestRule.onNodeWithText("Course 6")
+            .performScrollTo()
             .assertIsDisplayed()
 
         composeTestRule.onNodeWithText("Course 7")
@@ -352,6 +354,7 @@ class DashboardCourseListScreenUiTest {
             .assertIsDisplayed()
 
         composeTestRule.onNodeWithText("Course 5")
+            .performScrollTo()
             .assertIsDisplayed()
 
         composeTestRule.onNodeWithText("Show more")
