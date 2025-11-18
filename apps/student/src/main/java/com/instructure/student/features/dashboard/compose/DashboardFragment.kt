@@ -26,13 +26,14 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
 import com.instructure.student.fragment.ParentFragment
-import com.instructure.student.features.dashboard.notifications.StudentDashboardRouter
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class DashboardFragment : ParentFragment() {
 
-    private val router: DashboardRouter by lazy { StudentDashboardRouter(requireActivity()) }
+    @Inject
+    lateinit var router: DashboardRouter
 
     override fun onCreateView(
         inflater: LayoutInflater,
