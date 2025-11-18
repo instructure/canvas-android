@@ -2231,5 +2231,5 @@
     <string name="courseInvitationDeclineConfirmMessage">Are you sure you want to decline the invitation to %s?</string>
 
     <!-- Institutional Announcements -->
-    <string name="institutionalAnnouncementsTitle">Institutional Announcements</string>
+    <string name="institutionalAnnouncementsTitle">Announcements (%d)</string>
 </resources>

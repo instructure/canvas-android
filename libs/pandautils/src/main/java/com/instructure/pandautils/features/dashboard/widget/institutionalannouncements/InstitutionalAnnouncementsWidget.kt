@@ -115,7 +115,7 @@ fun InstitutionalAnnouncementsContent(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
                 .padding(bottom = 12.dp),
-            text = stringResource(R.string.institutionalAnnouncementsTitle),
+            text = stringResource(R.string.institutionalAnnouncementsTitle, uiState.announcements.size),
             fontSize = 14.sp,
             lineHeight = 19.sp,
             fontWeight = FontWeight.Normal,
