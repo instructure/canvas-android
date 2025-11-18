@@ -268,7 +268,7 @@ private fun CourseImage(
                     painterResource(R.drawable.book_2_filled),
                     contentDescription = null,
                     tint = HorizonColors.Surface.institution(),
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier.size(32.dp)
                 )
             }
         }
