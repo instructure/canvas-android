@@ -47,6 +47,7 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -124,7 +125,11 @@ fun <T> DropdownChip(
                 text = selectedItem?.label ?: placeholder,
                 style = HorizonTypography.p2,
                 color = contentColor,
-                modifier = Modifier.padding(
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier
+                    .weight(1f, false)
+                    .padding(
                     end = 2.dp,
                     top = verticalPadding,
                     bottom = verticalPadding

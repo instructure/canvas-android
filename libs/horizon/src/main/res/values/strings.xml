@@ -448,4 +448,6 @@
     <string name="notesEmptyContentBody">Your notes from learning materials will appear here. Highlight key ideas, reflections, or questions as you learn—they\'ll all be saved in your Notebook for easy review later.</string>
     <string name="notesEmptyFilteredContentTitle">Nothing here yet</string>
     <string name="notesEmptyFilteredContentBody">Adjust your filters or create a new note to get started.</string>
+    <string name="notesErrorContentTitle">Failed to load Notebook</string>
+    <string name="notesErrorContentBody">Please try again.</string>
 </resources>

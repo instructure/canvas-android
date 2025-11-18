@@ -96,9 +96,9 @@ class NotebookViewModel @Inject constructor(
         updateJob = viewModelScope.tryLaunch {
             _uiState.update {
                 if (isLoadingMore) {
-                    it.copy(isLoadingMore = true)
+                    it.copy(isLoadingMore = true, isError = false)
                 } else {
-                    it.copy(isLoading = true)
+                    it.copy(isLoading = true, isError = false)
                 }
             }
 
@@ -129,6 +129,7 @@ class NotebookViewModel @Inject constructor(
 
             _uiState.update {
                 it.copy(
+                    isError = false,
                     isLoading = false,
                     isLoadingMore = false,
                     notes = if (isLoadingMore) oldNotes + newNotes else newNotes,
@@ -138,6 +139,7 @@ class NotebookViewModel @Inject constructor(
         } catch {
             _uiState.update {
                 it.copy(
+                    isError = true,
                     isLoading = false,
                     isLoadingMore = false,
                     hasNextPage = false,

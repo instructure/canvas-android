@@ -74,6 +74,7 @@ import com.instructure.horizon.horizonui.molecules.DropdownChip
 import com.instructure.horizon.horizonui.molecules.DropdownItem
 import com.instructure.horizon.horizonui.molecules.HorizonDivider
 import com.instructure.horizon.horizonui.molecules.Spinner
+import com.instructure.horizon.horizonui.organisms.CollapsableHeaderScreen
 import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.getActivityOrNull
@@ -94,9 +95,9 @@ fun NotebookScreen(
     }
 
     val scrollState = rememberLazyListState()
-    Scaffold(
-        containerColor = HorizonColors.Surface.pagePrimary(),
-        topBar = {
+    CollapsableHeaderScreen(
+        modifier = Modifier.background(HorizonColors.Surface.pagePrimary()),
+        headerContent = {
             if (state.showTopBar) {
                 NotebookAppBar(
                     navigateBack = { mainNavController.popBackStack() },
@@ -104,12 +105,12 @@ fun NotebookScreen(
                 )
             }
         },
-    ) { padding ->
+    bodyContent = {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues = padding)
+                //.padding(paddingValues = padding)
         ) {
             if ((state.showNoteTypeFilter || state.showCourseFilter) && (state.courses.isNotEmpty() || state.selectedCourse != null || state.selectedFilter != null)) {
                 FilterContent(
@@ -143,6 +144,10 @@ fun NotebookScreen(
                     if (state.isLoading) {
                         item {
                             LoadingContent()
+                        }
+                    } else if (state.isError) {
+                        item {
+                            ErrorContent()
                         }
                     } else if (state.notes.isEmpty()) {
                         item {
@@ -212,7 +217,7 @@ fun NotebookScreen(
                 }
             }
         }
-    }
+    })
 }
 
 @Composable
@@ -301,7 +306,8 @@ private fun FilterContent(
                 onItemSelected = { item -> onCourseSelected(item?.value) },
                 placeholder = stringResource(R.string.notebookFilterCoursePlaceholder),
                 dropdownWidth = 178.dp,
-                verticalPadding = 6.dp
+                verticalPadding = 6.dp,
+                modifier = Modifier.weight(1f, false)
             )
         }
 
@@ -392,7 +398,7 @@ private fun NoteContent(
 private fun EmptyContent(modifier: Modifier = Modifier) {
     Column(
         horizontalAlignment = Alignment.Start,
-        modifier = modifier
+        modifier = modifier.fillMaxWidth()
     ) {
         Text(
             text = stringResource(R.string.notesEmptyContentTitle),
@@ -412,7 +418,7 @@ private fun EmptyContent(modifier: Modifier = Modifier) {
 private fun EmptyFilteredContent(modifier: Modifier = Modifier) {
     Column(
         horizontalAlignment = Alignment.Start,
-        modifier = modifier
+        modifier = modifier.fillMaxWidth()
     ) {
         Text(
             text = stringResource(R.string.notesEmptyFilteredContentTitle),
@@ -422,6 +428,26 @@ private fun EmptyFilteredContent(modifier: Modifier = Modifier) {
         HorizonSpace(size = SpaceSize.SPACE_8)
         Text(
             text = stringResource(R.string.notesEmptyFilteredContentBody),
+            style = HorizonTypography.p1,
+            color = HorizonColors.Text.dataPoint()
+        )
+    }
+}
+
+@Composable
+private fun ErrorContent(modifier: Modifier = Modifier) {
+    Column(
+        horizontalAlignment = Alignment.Start,
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Text(
+            text = stringResource(R.string.notesErrorContentTitle),
+            style = HorizonTypography.sh2,
+            color = HorizonColors.Text.body()
+        )
+        HorizonSpace(size = SpaceSize.SPACE_8)
+        Text(
+            text = stringResource(R.string.notesErrorContentBody),
             style = HorizonTypography.p1,
             color = HorizonColors.Text.dataPoint()
         )
@@ -468,6 +494,66 @@ private fun NotebookScreenPreview() {
                 type = NotebookType.Confusing
             )
         ),
+        updateContent = { _, _ -> }
+    )
+
+    NotebookScreen(
+        mainNavController = NavHostController(LocalContext.current),
+        state = state
+    )
+}
+
+@Composable
+@Preview
+private fun NotebookScreenEmptyPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    val state = NotebookUiState(
+        isLoading = false,
+        showNoteTypeFilter = true,
+        showCourseFilter = true,
+        showTopBar = true,
+        notes = emptyList(),
+        updateContent = { _, _ -> }
+    )
+
+    NotebookScreen(
+        mainNavController = NavHostController(LocalContext.current),
+        state = state
+    )
+}
+
+@Composable
+@Preview
+private fun NotebookScreenEmptyFilteredPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    val state = NotebookUiState(
+        isLoading = false,
+        showNoteTypeFilter = true,
+        showCourseFilter = true,
+        showTopBar = true,
+        selectedFilter = NotebookType.Important,
+        notes = emptyList(),
+        updateContent = { _, _ -> }
+    )
+
+    NotebookScreen(
+        mainNavController = NavHostController(LocalContext.current),
+        state = state
+    )
+}
+
+@Composable
+@Preview
+private fun NotebookScreenErrorPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    val state = NotebookUiState(
+        isError = true,
+        isLoading = false,
+        showNoteTypeFilter = true,
+        showCourseFilter = true,
+        showTopBar = true,
+        selectedFilter = NotebookType.Important,
+        notes = emptyList(),
         updateContent = { _, _ -> }
     )
 
