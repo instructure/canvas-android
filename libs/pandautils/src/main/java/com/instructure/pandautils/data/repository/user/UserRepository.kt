@@ -14,16 +14,11 @@
  *     limitations under the License.
  *
  */
-package com.instructure.pandautils.domain.models.accountnotification
+package com.instructure.pandautils.data.repository.user
 
-import java.util.Date
+import com.instructure.canvasapi2.models.Account
+import com.instructure.canvasapi2.utils.DataResult
 
-data class InstitutionalAnnouncement(
-    val id: Long,
-    val subject: String,
-    val message: String,
-    val institutionName: String,
-    val startDate: Date?,
-    val icon: String,
-    val logoUrl: String
-)
+interface UserRepository {
+    suspend fun getAccount(forceRefresh: Boolean): DataResult<Account>
+}

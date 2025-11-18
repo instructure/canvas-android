@@ -58,7 +58,8 @@ class InstitutionalAnnouncementsViewModelTest {
                 message = "Test Message",
                 institutionName = "",
                 startDate = Date(),
-                icon = "info"
+                icon = "info",
+                logoUrl = ""
             )
         )
 
@@ -96,7 +97,8 @@ class InstitutionalAnnouncementsViewModelTest {
                 message = "Message",
                 institutionName = "",
                 startDate = Date(),
-                icon = "info"
+                icon = "info",
+                logoUrl = ""
             )
         )
 
@@ -107,7 +109,8 @@ class InstitutionalAnnouncementsViewModelTest {
                 message = "Message",
                 institutionName = "",
                 startDate = Date(),
-                icon = "warning"
+                icon = "warning",
+                logoUrl = ""
             )
         )
 
@@ -146,7 +149,8 @@ class InstitutionalAnnouncementsViewModelTest {
                 message = "Message 1",
                 institutionName = "",
                 startDate = Date(1000L),
-                icon = "info"
+                icon = "info",
+                logoUrl = ""
             ),
             InstitutionalAnnouncement(
                 id = 2L,
@@ -154,7 +158,8 @@ class InstitutionalAnnouncementsViewModelTest {
                 message = "Message 2",
                 institutionName = "",
                 startDate = Date(2000L),
-                icon = "warning"
+                icon = "warning",
+                logoUrl = ""
             ),
             InstitutionalAnnouncement(
                 id = 3L,
@@ -162,7 +167,8 @@ class InstitutionalAnnouncementsViewModelTest {
                 message = "Message 3",
                 institutionName = "",
                 startDate = Date(3000L),
-                icon = "calendar"
+                icon = "calendar",
+                logoUrl = ""
             )
         )
 
@@ -198,7 +204,8 @@ class InstitutionalAnnouncementsViewModelTest {
                 message = "Message",
                 institutionName = "",
                 startDate = Date(),
-                icon = "info"
+                icon = "info",
+                logoUrl = ""
             )
         )
 

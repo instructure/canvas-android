@@ -16,16 +16,21 @@
 package com.instructure.pandautils.features.dashboard.widget.institutionalannouncements
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -39,6 +44,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -49,11 +56,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
+import androidx.compose.ui.graphics.Color
 import com.instructure.canvasapi2.models.AccountNotification
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.PagerIndicator
 import com.instructure.pandautils.domain.models.accountnotification.InstitutionalAnnouncement
+import com.instructure.pandautils.utils.ThemePrefs
 import kotlinx.coroutines.flow.SharedFlow
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -153,6 +164,7 @@ fun InstitutionalAnnouncementsContent(
     }
 }
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 private fun AnnouncementCard(
     announcement: InstitutionalAnnouncement,
@@ -169,46 +181,108 @@ private fun AnnouncementCard(
             containerColor = colorResource(R.color.backgroundLightestElevated)
         )
     ) {
-        Column(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalAlignment = Alignment.Top
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalAlignment = Alignment.Top
-            ) {
-                Icon(
-                    painter = painterResource(id = getIconResource(announcement.icon)),
-                    contentDescription = null,
-                    modifier = Modifier.size(24.dp),
-                    tint = colorResource(R.color.textDark)
-                )
-
-                Column(
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text(
-                        text = announcement.subject,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        overflow = TextOverflow.Ellipsis,
-                        color = colorResource(R.color.textDarkest),
-                        maxLines = 2
+            Box {
+                if (announcement.logoUrl.isNotEmpty()) {
+                    GlideImage(
+                        model = announcement.logoUrl,
+                        contentDescription = announcement.institutionName,
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clip(RoundedCornerShape(8.dp)),
+                        contentScale = ContentScale.Inside
                     )
-
-                    announcement.startDate?.let { startDate ->
+                } else {
+                    Box(
+                        modifier = Modifier
+                            .size(40.dp)
+                            .background(
+                                color = Color(ThemePrefs.brandColor),
+                                shape = RoundedCornerShape(8.dp)
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
                         Text(
-                            modifier = Modifier.padding(top = 4.dp),
-                            text = formatDate(startDate),
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Normal,
-                            color = colorResource(R.color.textDark)
+                            text = announcement.institutionName.take(3).uppercase(),
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = colorResource(R.color.white)
                         )
                     }
                 }
+
+                Box(
+                    modifier = Modifier
+                        .size(16.dp)
+                        .align(Alignment.TopStart)
+                        .offset(x = (-8).dp, y = (-8).dp)
+                        .background(colorResource(R.color.backgroundLightestElevated), CircleShape)
+                ) {
+                    Icon(
+                        painter = painterResource(id = getIconResource(announcement.icon)),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(16.dp)
+                            .align(Alignment.Center),
+                        tint = colorResource(
+                            when (announcement.icon) {
+                                AccountNotification.ACCOUNT_NOTIFICATION_WARNING -> R.color.textWarning
+                                AccountNotification.ACCOUNT_NOTIFICATION_ERROR -> R.color.textDanger
+                                else -> R.color.textInfo
+                            }
+                        )
+                    )
+                }
             }
+
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                Text(
+                    text = announcement.institutionName,
+                    fontSize = 12.sp,
+                    lineHeight = 16.sp,
+                    fontWeight = FontWeight.Normal,
+                    color = Color(ThemePrefs.brandColor),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+
+                announcement.startDate?.let { startDate ->
+                    Text(
+                        text = formatDateTime(startDate),
+                        fontSize = 12.sp,
+                        lineHeight = 16.sp,
+                        fontWeight = FontWeight.Normal,
+                        color = colorResource(R.color.textDark),
+                        maxLines = 1
+                    )
+                }
+
+                Text(
+                    modifier = Modifier.padding(top = 4.dp),
+                    text = announcement.subject,
+                    fontSize = 16.sp,
+                    lineHeight = 22.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    overflow = TextOverflow.Ellipsis,
+                    color = colorResource(R.color.textDarkest),
+                    maxLines = 2
+                )
+            }
+
+            Icon(
+                painter = painterResource(id = R.drawable.ic_arrow_down),
+                contentDescription = null,
+                modifier = Modifier.size(24.dp),
+                tint = colorResource(R.color.textDark)
+            )
         }
     }
 }
@@ -216,15 +290,16 @@ private fun AnnouncementCard(
 @Composable
 private fun getIconResource(icon: String): Int {
     return when (icon) {
-        AccountNotification.ACCOUNT_NOTIFICATION_WARNING -> R.drawable.ic_warning
-        AccountNotification.ACCOUNT_NOTIFICATION_ERROR -> R.drawable.ic_warning
-        AccountNotification.ACCOUNT_NOTIFICATION_CALENDAR -> R.drawable.ic_calendar_month
-        else -> R.drawable.ic_info
+        AccountNotification.ACCOUNT_NOTIFICATION_WARNING -> R.drawable.ic_warning_solid
+        AccountNotification.ACCOUNT_NOTIFICATION_ERROR -> R.drawable.ic_warning_solid
+        AccountNotification.ACCOUNT_NOTIFICATION_CALENDAR -> R.drawable.ic_calendar_solid
+        AccountNotification.ACCOUNT_NOTIFICATION_QUESTION -> R.drawable.ic_question_solid
+        else -> R.drawable.ic_info_solid
     }
 }
 
-private fun formatDate(date: Date): String {
-    val formatter = SimpleDateFormat("MMM d, yyyy", Locale.getDefault())
+private fun formatDateTime(date: Date): String {
+    val formatter = SimpleDateFormat("d MMM yyyy, h:mm a", Locale.getDefault())
     return formatter.format(date)
 }
 
@@ -244,19 +319,21 @@ fun InstitutionalAnnouncementsContentPreview() {
             announcements = listOf(
                 InstitutionalAnnouncement(
                     id = 1,
-                    subject = "System Maintenance This Weekend",
+                    subject = "Back to School Ceremony Dress Code",
                     message = "Canvas will be offline for maintenance...",
-                    institutionName = "University",
+                    institutionName = "Canvas College Sydney",
                     startDate = Date(),
-                    icon = AccountNotification.ACCOUNT_NOTIFICATION_WARNING
+                    icon = AccountNotification.ACCOUNT_NOTIFICATION_WARNING,
+                    logoUrl = ""
                 ),
                 InstitutionalAnnouncement(
                     id = 2,
                     subject = "New Feature Release",
                     message = "We're excited to announce...",
-                    institutionName = "University",
+                    institutionName = "Canvas College Sydney",
                     startDate = Date(),
-                    icon = AccountNotification.ACCOUNT_NOTIFICATION_CALENDAR
+                    icon = AccountNotification.ACCOUNT_NOTIFICATION_CALENDAR,
+                    logoUrl = ""
                 )
             )
         ),

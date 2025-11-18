@@ -16,11 +16,16 @@
  */
 package com.instructure.pandautils.domain.usecase.accountnotification
 
+import com.instructure.canvasapi2.models.Account
 import com.instructure.canvasapi2.models.AccountNotification
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.data.repository.accountnotification.AccountNotificationRepository
+import com.instructure.pandautils.data.repository.user.UserRepository
+import com.instructure.pandautils.utils.ThemePrefs
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkObject
 import io.mockk.unmockkAll
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -32,11 +37,20 @@ import java.util.Date
 class LoadInstitutionalAnnouncementsUseCaseTest {
 
     private val accountNotificationRepository: AccountNotificationRepository = mockk(relaxed = true)
+    private val userRepository: UserRepository = mockk(relaxed = true)
     private lateinit var useCase: LoadInstitutionalAnnouncementsUseCase
 
     @Before
     fun setup() {
-        useCase = LoadInstitutionalAnnouncementsUseCase(accountNotificationRepository)
+        mockkObject(ThemePrefs)
+        every { ThemePrefs.brandColor } returns 0xFF0000FF.toInt()
+        every { ThemePrefs.mobileLogoUrl } returns "https://example.com/logo.png"
+
+        useCase = LoadInstitutionalAnnouncementsUseCase(
+            accountNotificationRepository,
+            userRepository,
+            ThemePrefs
+        )
     }
 
     @After
@@ -66,6 +80,10 @@ class LoadInstitutionalAnnouncementsUseCaseTest {
             accountNotificationRepository.getAccountNotifications(false)
         } returns DataResult.Success(notifications)
 
+        coEvery {
+            userRepository.getAccount(false)
+        } returns DataResult.Success(Account(id = 1L, name = "Test Institution"))
+
         val result = useCase(LoadInstitutionalAnnouncementsParams(forceRefresh = false))
 
         assertEquals(5, result.size)
@@ -87,6 +105,10 @@ class LoadInstitutionalAnnouncementsUseCaseTest {
             accountNotificationRepository.getAccountNotifications(true)
         } returns DataResult.Success(notifications)
 
+        coEvery {
+            userRepository.getAccount(true)
+        } returns DataResult.Success(Account(id = 1L, name = "Test Institution"))
+
         val result = useCase(LoadInstitutionalAnnouncementsParams(forceRefresh = true))
 
         assertEquals(1, result.size)
@@ -97,6 +119,10 @@ class LoadInstitutionalAnnouncementsUseCaseTest {
         coEvery {
             accountNotificationRepository.getAccountNotifications(false)
         } returns DataResult.Success(emptyList())
+
+        coEvery {
+            userRepository.getAccount(false)
+        } returns DataResult.Success(Account(id = 1L, name = "Test Institution"))
 
         val result = useCase(LoadInstitutionalAnnouncementsParams(forceRefresh = false))
 
@@ -119,14 +145,19 @@ class LoadInstitutionalAnnouncementsUseCaseTest {
             accountNotificationRepository.getAccountNotifications(false)
         } returns DataResult.Success(notifications)
 
+        coEvery {
+            userRepository.getAccount(false)
+        } returns DataResult.Success(Account(id = 1L, name = "Canvas University"))
+
         val result = useCase(LoadInstitutionalAnnouncementsParams(forceRefresh = false))
 
         assertEquals(1, result.size)
         assertEquals(123L, result[0].id)
         assertEquals("Test Subject", result[0].subject)
         assertEquals("Test Message", result[0].message)
-        assertEquals("", result[0].institutionName)
+        assertEquals("Canvas University", result[0].institutionName)
         assertEquals("warning", result[0].icon)
+        assertEquals("https://example.com/logo.png", result[0].logoUrl)
     }
 
     @Test(expected = IllegalStateException::class)
@@ -148,6 +179,10 @@ class LoadInstitutionalAnnouncementsUseCaseTest {
         coEvery {
             accountNotificationRepository.getAccountNotifications(false)
         } returns DataResult.Success(notifications)
+
+        coEvery {
+            userRepository.getAccount(false)
+        } returns DataResult.Success(Account(id = 1L, name = "Test Institution"))
 
         val result = useCase(LoadInstitutionalAnnouncementsParams(forceRefresh = false))
 
@@ -173,6 +208,10 @@ class LoadInstitutionalAnnouncementsUseCaseTest {
             accountNotificationRepository.getAccountNotifications(false)
         } returns DataResult.Success(notifications)
 
+        coEvery {
+            userRepository.getAccount(false)
+        } returns DataResult.Success(Account(id = 1L, name = "Test Institution"))
+
         val result = useCase(LoadInstitutionalAnnouncementsParams(forceRefresh = false))
 
         assertEquals(5, result.size)
@@ -181,5 +220,67 @@ class LoadInstitutionalAnnouncementsUseCaseTest {
         assertEquals(8L, result[2].id)
         assertEquals(7L, result[3].id)
         assertEquals(6L, result[4].id)
+    }
+
+    @Test
+    fun `execute handles failed user repository call gracefully`() = runTest {
+        val notifications = listOf(
+            AccountNotification(id = 1L, subject = "Announcement 1", message = "Message 1", icon = "info", startAt = "1970-01-01T00:00:01Z")
+        )
+
+        coEvery {
+            accountNotificationRepository.getAccountNotifications(false)
+        } returns DataResult.Success(notifications)
+
+        coEvery {
+            userRepository.getAccount(false)
+        } returns DataResult.Fail()
+
+        val result = useCase(LoadInstitutionalAnnouncementsParams(forceRefresh = false))
+
+        assertEquals(1, result.size)
+        assertEquals("", result[0].institutionName)
+    }
+
+    @Test
+    fun `execute uses empty logo URL when ThemePrefs mobileLogoUrl is empty`() = runTest {
+        val notifications = listOf(
+            AccountNotification(id = 1L, subject = "Announcement 1", message = "Message 1", icon = "info", startAt = "1970-01-01T00:00:01Z")
+        )
+
+        every { ThemePrefs.mobileLogoUrl } returns ""
+
+        coEvery {
+            accountNotificationRepository.getAccountNotifications(false)
+        } returns DataResult.Success(notifications)
+
+        coEvery {
+            userRepository.getAccount(false)
+        } returns DataResult.Success(Account(id = 1L, name = "Test Institution"))
+
+        val result = useCase(LoadInstitutionalAnnouncementsParams(forceRefresh = false))
+
+        assertEquals(1, result.size)
+        assertEquals("", result[0].logoUrl)
+    }
+
+    @Test
+    fun `execute correctly maps institution name from account`() = runTest {
+        val notifications = listOf(
+            AccountNotification(id = 1L, subject = "Announcement 1", message = "Message 1", icon = "info", startAt = "1970-01-01T00:00:01Z")
+        )
+
+        coEvery {
+            accountNotificationRepository.getAccountNotifications(false)
+        } returns DataResult.Success(notifications)
+
+        coEvery {
+            userRepository.getAccount(false)
+        } returns DataResult.Success(Account(id = 1L, name = "Instructure University"))
+
+        val result = useCase(LoadInstitutionalAnnouncementsParams(forceRefresh = false))
+
+        assertEquals(1, result.size)
+        assertEquals("Instructure University", result[0].institutionName)
     }
 }
