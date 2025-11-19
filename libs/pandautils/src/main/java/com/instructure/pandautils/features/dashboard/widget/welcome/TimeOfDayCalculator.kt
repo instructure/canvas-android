@@ -21,6 +21,7 @@ class TimeOfDayCalculator(private val timeProvider: TimeProvider) {
     fun getTimeOfDay(): TimeOfDay {
         val hour = timeProvider.getCurrentHourOfDay()
         return when {
+            hour < 4 -> TimeOfDay.NIGHT
             hour < 12 -> TimeOfDay.MORNING
             hour < 17 -> TimeOfDay.AFTERNOON
             hour < 21 -> TimeOfDay.EVENING

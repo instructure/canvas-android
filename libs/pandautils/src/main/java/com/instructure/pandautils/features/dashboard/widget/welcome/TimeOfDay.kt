@@ -17,8 +17,8 @@
 package com.instructure.pandautils.features.dashboard.widget.welcome
 
 enum class TimeOfDay {
-    MORNING,    // Before 12pm
+    MORNING,    // 4am - 12pm
     AFTERNOON,  // 12pm - 5pm
     EVENING,    // 5pm - 9pm
-    NIGHT       // After 9pm
+    NIGHT       // 9pm - 4am
 }
