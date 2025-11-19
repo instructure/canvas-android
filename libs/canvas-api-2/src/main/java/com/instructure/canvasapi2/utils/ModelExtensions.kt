@@ -207,7 +207,8 @@ fun convertScoreToLetterGrade(score: Double, maxScore: Double, gradingScheme: Li
 
 fun convertPercentScoreToLetterGrade(percentScore: Double, gradingScheme: List<GradingSchemeRow>): String {
     if (gradingScheme.isEmpty()) return ""
-    val grade = gradingScheme.firstOrNull { percentScore >= it.value } ?: gradingScheme.last()
+    val epsilon = 0.0000001
+    val grade = gradingScheme.firstOrNull { percentScore >= (it.value - epsilon) } ?: gradingScheme.last()
     return grade.name
 }
 
