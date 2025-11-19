@@ -58,9 +58,9 @@ import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.courseinvitation.CourseInvitationsWidget
+import com.instructure.pandautils.features.dashboard.widget.welcome.WelcomeWidget
 import com.instructure.student.R
 import com.instructure.student.activity.NavigationActivity
-import com.instructure.student.features.dashboard.widget.welcome.WelcomeWidget
 import kotlinx.coroutines.flow.SharedFlow
 
 @Composable
