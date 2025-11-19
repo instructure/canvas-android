@@ -74,9 +74,9 @@ class NotebookViewModel @Inject constructor(
         loadData()
     }
 
-    private fun loadCourses() {
+    private fun loadCourses(forceNetwork: Boolean = false) {
         viewModelScope.launch {
-            when (val result = repository.getCourses()) {
+            when (val result = repository.getCourses(forceNetwork)) {
                 is DataResult.Success -> {
                     _uiState.update { it.copy(courses = result.data) }
                 }
@@ -88,17 +88,24 @@ class NotebookViewModel @Inject constructor(
         }
     }
 
+    fun refresh() {
+        updateJob?.cancel()
+        loadCourses(forceNetwork = true)
+        loadData(isRefreshing = true)
+    }
+
     private fun loadData(
         after: String? = null,
         courseId: Long? = this.courseId,
-        isLoadingMore: Boolean = false
+        isLoadingMore: Boolean = false,
+        isRefreshing: Boolean = false
     ) {
         updateJob = viewModelScope.tryLaunch {
             _uiState.update {
-                if (isLoadingMore) {
-                    it.copy(isLoadingMore = true, isError = false)
-                } else {
-                    it.copy(isLoading = true, isError = false)
+                when {
+                    isRefreshing -> it.copy(isRefreshing = true, isError = false)
+                    isLoadingMore -> it.copy(isLoadingMore = true, isError = false)
+                    else -> it.copy(isLoading = true, isError = false)
                 }
             }
 
@@ -132,6 +139,7 @@ class NotebookViewModel @Inject constructor(
                     isError = false,
                     isLoading = false,
                     isLoadingMore = false,
+                    isRefreshing = false,
                     notes = if (isLoadingMore) oldNotes + newNotes else newNotes,
                     hasNextPage = notesResponse.pageInfo.hasNextPage,
                 )
@@ -142,6 +150,7 @@ class NotebookViewModel @Inject constructor(
                     isError = true,
                     isLoading = false,
                     isLoadingMore = false,
+                    isRefreshing = false,
                     hasNextPage = false,
                 )
             }

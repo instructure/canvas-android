@@ -23,6 +23,7 @@ import com.instructure.horizon.features.notebook.common.model.NotebookType
 data class NotebookUiState(
     val isLoading: Boolean = true,
     val isLoadingMore: Boolean = false,
+    val isRefreshing: Boolean = false,
     val isError: Boolean = false,
     val selectedFilter: NotebookType? = null,
     val onFilterSelected: (NotebookType?) -> Unit = {},

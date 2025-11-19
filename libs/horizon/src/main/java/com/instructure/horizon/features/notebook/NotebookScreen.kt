@@ -14,6 +14,8 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+@file:OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
+
 package com.instructure.horizon.features.notebook
 
 import androidx.compose.foundation.background
@@ -32,8 +34,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -84,8 +91,9 @@ import java.util.Date
 @Composable
 fun NotebookScreen(
     mainNavController: NavHostController,
-    state: NotebookUiState,
+    viewModel: NotebookViewModel,
 ) {
+    val state by viewModel.uiState.collectAsState()
     val activity = LocalContext.current.getActivityOrNull()
     LaunchedEffect(Unit) {
         if (activity != null) ViewStyler.setStatusBarColor(
@@ -95,6 +103,8 @@ fun NotebookScreen(
     }
 
     val scrollState = rememberLazyListState()
+    val pullToRefreshState = rememberPullToRefreshState()
+
     CollapsableHeaderScreen(
         modifier = Modifier.background(HorizonColors.Surface.pagePrimary()),
         headerContent = {
@@ -106,6 +116,22 @@ fun NotebookScreen(
             }
         },
     bodyContent = {
+        PullToRefreshBox(
+            isRefreshing = state.isRefreshing,
+            onRefresh = { viewModel.refresh() },
+            state = pullToRefreshState,
+            indicator = {
+                Indicator(
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(top = if (state.showTopBar) 56.dp else 0.dp),
+                    isRefreshing = state.isRefreshing,
+                    containerColor = HorizonColors.Surface.pageSecondary(),
+                    color = HorizonColors.Surface.institution(),
+                    state = pullToRefreshState
+                )
+            }
+        ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
@@ -216,6 +242,7 @@ fun NotebookScreen(
                     HorizonDivider()
                 }
             }
+        }
         }
     })
 }
@@ -458,107 +485,41 @@ private fun ErrorContent(modifier: Modifier = Modifier) {
 @Preview
 private fun NotebookScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
-    val state = NotebookUiState(
-        isLoading = false,
-        showNoteTypeFilter = true,
-        showCourseFilter = true,
-        showTopBar = true,
-        selectedFilter = NotebookType.Important,
-        notes = listOf(
-            Note(
-                id = "1",
-                courseId = 123L,
-                objectId = "456",
-                objectType = NoteObjectType.PAGE,
-                userText = "This is a note about an assignment.",
-                highlightedText = NoteHighlightedData(
-                    "Important part of the assignment.",
-                    NoteHighlightedDataRange(0, 0, "", ""),
-                    NoteHighlightedDataTextPosition(0, 0)
-                ),
-                updatedAt = Date(),
-                type = NotebookType.Important
-            ),
-            Note(
-                id = "2",
-                courseId = 123L,
-                objectId = "789",
-                objectType = NoteObjectType.PAGE,
-                userText = "This is a note about another assignment.",
-                highlightedText = NoteHighlightedData(
-                    "Confusing part of the assignment.",
-                    NoteHighlightedDataRange(0, 0, "", ""),
-                    NoteHighlightedDataTextPosition(0, 0)
-                ),
-                updatedAt = Date(),
-                type = NotebookType.Confusing
-            )
-        ),
-        updateContent = { _, _ -> }
-    )
-
-    NotebookScreen(
-        mainNavController = NavHostController(LocalContext.current),
-        state = state
-    )
+    FilterContentPreview()
 }
 
 @Composable
 @Preview
 private fun NotebookScreenEmptyPreview() {
     ContextKeeper.appContext = LocalContext.current
-    val state = NotebookUiState(
-        isLoading = false,
-        showNoteTypeFilter = true,
-        showCourseFilter = true,
-        showTopBar = true,
-        notes = emptyList(),
-        updateContent = { _, _ -> }
-    )
-
-    NotebookScreen(
-        mainNavController = NavHostController(LocalContext.current),
-        state = state
-    )
+    EmptyContent()
 }
 
 @Composable
 @Preview
 private fun NotebookScreenEmptyFilteredPreview() {
     ContextKeeper.appContext = LocalContext.current
-    val state = NotebookUiState(
-        isLoading = false,
-        showNoteTypeFilter = true,
-        showCourseFilter = true,
-        showTopBar = true,
-        selectedFilter = NotebookType.Important,
-        notes = emptyList(),
-        updateContent = { _, _ -> }
-    )
-
-    NotebookScreen(
-        mainNavController = NavHostController(LocalContext.current),
-        state = state
-    )
+    EmptyFilteredContent()
 }
 
 @Composable
 @Preview
 private fun NotebookScreenErrorPreview() {
     ContextKeeper.appContext = LocalContext.current
-    val state = NotebookUiState(
-        isError = true,
-        isLoading = false,
-        showNoteTypeFilter = true,
-        showCourseFilter = true,
-        showTopBar = true,
-        selectedFilter = NotebookType.Important,
-        notes = emptyList(),
-        updateContent = { _, _ -> }
-    )
+    ErrorContent()
+}
 
-    NotebookScreen(
-        mainNavController = NavHostController(LocalContext.current),
-        state = state
+@Composable
+@Preview
+private fun FilterContentPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    FilterContent(
+        selectedFilter = NotebookType.Important,
+        onFilterSelected = {},
+        selectedCourse = null,
+        onCourseSelected = {},
+        courses = emptyList(),
+        showNoteTypeFilter = true,
+        showCourseFilter = true
     )
 }

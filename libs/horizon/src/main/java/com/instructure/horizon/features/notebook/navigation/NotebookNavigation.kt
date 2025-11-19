@@ -78,8 +78,7 @@ fun NavGraphBuilder.notebookNavigation(
             )
         ) {
             val viewModel = hiltViewModel<NotebookViewModel>()
-            val uiState by viewModel.uiState.collectAsState()
-            NotebookScreen(navController, uiState)
+            NotebookScreen(navController, viewModel)
         }
         composable<NotebookRoute.AddNotebook> {
             val viewModel = hiltViewModel<AddNoteViewModel>()
