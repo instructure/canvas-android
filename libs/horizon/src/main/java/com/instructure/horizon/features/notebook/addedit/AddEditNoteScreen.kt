@@ -18,10 +18,12 @@ package com.instructure.horizon.features.notebook.addedit
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -31,6 +33,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -59,6 +65,9 @@ import com.instructure.horizon.horizonui.molecules.ButtonIconPosition
 import com.instructure.horizon.horizonui.molecules.ButtonWidth
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.organisms.inputs.common.InputLabelRequired
+import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelect
+import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectInputSize
+import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectState
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextArea
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextAreaState
 import com.instructure.pandautils.utils.ViewStyler
@@ -144,14 +153,19 @@ private fun AddEditNoteContent(state: AddEditNoteUiState, navController: NavHost
             .padding(padding)
             .padding(24.dp)
     ) {
-        Text(
-            text = stringResource(R.string.addNoteHighlightlabel),
-            style = HorizonTypography.labelLargeBold,
-            color = HorizonColors.Text.body()
+        var isMenuOpen by remember { mutableStateOf(false) }
+        SingleSelect(
+            SingleSelectState(
+                options = NotebookType.entries.map { it.name },
+                selectedOption = state.type?.name,
+                size = SingleSelectInputSize.Small,
+                onOptionSelected = { state.onTypeChanged(NotebookType.valueOf(it)) },
+                isMenuOpen = isMenuOpen,
+                onMenuOpenChanged = { isMenuOpen = it },
+                isFullWidth = false,
+            ),
+            modifier = Modifier.width(IntrinsicSize.Min)
         )
-
-        HorizonSpace(SpaceSize.SPACE_8)
-
         NotebookHighlightedText(
             text = state.highlightedData.selectedText,
             type = state.type
@@ -189,7 +203,7 @@ private fun AddEditNoteContent(state: AddEditNoteUiState, navController: NavHost
 
         TextArea(
             state = TextAreaState(
-                label = stringResource(R.string.addNoteAddANoteLabel),
+                placeHolderText = stringResource(R.string.addNoteAddANoteLabel),
                 required = InputLabelRequired.Optional,
                 value = state.userComment,
                 onValueChange = state.onUserCommentChanged,
