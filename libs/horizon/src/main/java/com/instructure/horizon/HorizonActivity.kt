@@ -19,15 +19,17 @@ import android.content.Intent
 import android.content.pm.ShortcutManager
 import android.content.res.Configuration
 import android.os.Bundle
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.ContextCompat
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDeepLinkRequest
@@ -46,9 +48,7 @@ import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.Utils
-import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.WebViewAuthenticator
-import com.instructure.pandautils.utils.getActivityOrNull
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -67,12 +67,14 @@ class HorizonActivity : BaseCanvasActivity() {
         if (ThemePrefs.appTheme != AppTheme.LIGHT.ordinal) {
             setLightTheme() // Force the light theme for Horizon experience to avoid any glitches.
         }
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.light(Color.Transparent.toArgb(), Color.Transparent.toArgb()),
+            navigationBarStyle = SystemBarStyle.light(Color.Transparent.toArgb(), Color.Transparent.toArgb())
+        )
 
         setContent {
             navController = rememberNavController()
 
-            val activity = LocalContext.current.getActivityOrNull()
-            if (activity != null) ViewStyler.setStatusBarColor(activity, ContextCompat.getColor(activity, R.color.surface_pagePrimary))
             HorizonTheme {
                 HorizonNavigation(navController)
             }

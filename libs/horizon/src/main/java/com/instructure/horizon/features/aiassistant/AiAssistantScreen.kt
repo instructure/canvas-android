@@ -17,6 +17,7 @@ package com.instructure.horizon.features.aiassistant
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
@@ -28,6 +29,7 @@ import androidx.navigation.compose.rememberNavController
 import com.instructure.horizon.R
 import com.instructure.horizon.features.aiassistant.navigation.AiAssistNavigation
 import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.util.bottomSafeDrawing
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,10 +39,11 @@ fun AiAssistantScreen(
     val navController = rememberNavController()
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     ModalBottomSheet(
-        containerColor = colorResource(R.color.ai_gradient_start),
+        containerColor = colorResource(R.color.ai_gradient_end),
         onDismissRequest = { onDismiss() },
         dragHandle = null,
         sheetState = bottomSheetState,
+        contentWindowInsets = { WindowInsets.bottomSafeDrawing }
     ) {
         Box(
             modifier = Modifier

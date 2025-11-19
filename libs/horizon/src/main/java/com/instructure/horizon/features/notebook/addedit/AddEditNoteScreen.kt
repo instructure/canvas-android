@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -35,8 +36,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedData
 import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedDataRange
 import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedDataTextPosition
@@ -59,8 +60,6 @@ import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.organisms.inputs.common.InputLabelRequired
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextArea
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextAreaState
-import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.getActivityOrNull
 
 @Composable
 fun AddEditNoteScreen(
@@ -68,16 +67,12 @@ fun AddEditNoteScreen(
     state: AddEditNoteUiState,
     onShowSnackbar: (String?, () -> Unit) -> Unit
 ) {
-    val activity = LocalContext.current.getActivityOrNull()
-    LaunchedEffect(Unit) {
-        if (activity != null) ViewStyler.setStatusBarColor(activity, ContextCompat.getColor(activity, R.color.surface_pagePrimary))
-    }
-
     LaunchedEffect(state.snackbarMessage) {
         onShowSnackbar(state.snackbarMessage, state.onSnackbarDismiss)
     }
 
     Scaffold(
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         containerColor = HorizonColors.Surface.pagePrimary(),
         topBar = { NotebookAppBar(navigateBack = { navController.popBackStack() }) },
     ) { padding ->
@@ -212,7 +207,7 @@ private fun AddEditNoteScreenPreview() {
     )
 
     AddEditNoteScreen(
-        navController = NavHostController(LocalContext.current),
+        navController = rememberNavController(),
         state = state,
         onShowSnackbar = { _, _ -> }
     )
