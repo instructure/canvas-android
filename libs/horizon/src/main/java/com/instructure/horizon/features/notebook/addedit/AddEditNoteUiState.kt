@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlight
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 
 data class AddEditNoteUiState(
+    val title: String = "",
     val highlightedData: NoteHighlightedData,
     val userComment: TextFieldValue = TextFieldValue(""),
     val onUserCommentChanged: (TextFieldValue) -> Unit,

@@ -16,9 +16,11 @@
  */
 package com.instructure.horizon.features.notebook.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -32,9 +34,12 @@ import com.instructure.horizon.features.notebook.addedit.add.AddNoteViewModel
 import com.instructure.horizon.features.notebook.addedit.edit.EditNoteViewModel
 import com.instructure.horizon.horizonui.animation.enterTransition
 import com.instructure.horizon.horizonui.animation.exitTransition
+import com.instructure.horizon.horizonui.animation.mainEnterTransition
+import com.instructure.horizon.horizonui.animation.mainExitTransition
 import com.instructure.horizon.horizonui.animation.popEnterTransition
 import com.instructure.horizon.horizonui.animation.popExitTransition
 import com.instructure.horizon.navigation.MainNavigationRoute
+import com.instructure.pandautils.utils.orDefault
 
 fun NavGraphBuilder.notebookNavigation(
     navController: NavHostController,
@@ -75,21 +80,48 @@ fun NavGraphBuilder.notebookNavigation(
                     type = NavType.BoolType
                     defaultValue = false
                 }
-            )
+            ),
+            enterTransition = { if (isAddEditTransition()) mainEnterTransition else enterTransition },
+            exitTransition = { if (isAddEditTransition()) mainExitTransition else exitTransition },
+            popEnterTransition = { if (isAddEditTransition()) mainEnterTransition else popEnterTransition },
+            popExitTransition = { if (isAddEditTransition()) mainExitTransition else popExitTransition },
         ) {
             val viewModel = hiltViewModel<NotebookViewModel>()
             val uiState by viewModel.uiState.collectAsState()
             NotebookScreen(navController, uiState)
         }
-        composable<NotebookRoute.AddNotebook> {
+        composable<NotebookRoute.AddNotebook>(
+            enterTransition = { mainEnterTransition },
+            exitTransition = { mainExitTransition },
+            popEnterTransition = { mainEnterTransition },
+            popExitTransition = { mainExitTransition },
+        ) {
             val viewModel = hiltViewModel<AddNoteViewModel>()
             val uiState by viewModel.uiState.collectAsState()
             AddEditNoteScreen(navController, uiState, onShowSnackbar)
         }
-        composable<NotebookRoute.EditNotebook> {
+        composable<NotebookRoute.EditNotebook>(
+            enterTransition = { mainEnterTransition },
+            exitTransition = { mainExitTransition },
+            popEnterTransition = { mainEnterTransition },
+            popExitTransition = { mainExitTransition },
+        ) {
             val viewModel = hiltViewModel<EditNoteViewModel>()
             val uiState by viewModel.uiState.collectAsState()
             AddEditNoteScreen(navController, uiState, onShowSnackbar)
         }
     }
+}
+
+private fun AnimatedContentTransitionScope<NavBackStackEntry>.isAddEditTransition(): Boolean {
+    val addNoteRoute = NotebookRoute.AddNotebook::class.java.name.replace("$", ".")
+    val editNoteRoute = NotebookRoute.EditNotebook::class.java.name.replace("$", ".")
+    return this.targetState.destination.route
+                ?.startsWith(addNoteRoute).orDefault()
+            || this.initialState.destination.route
+                ?.startsWith(addNoteRoute).orDefault()
+            || this.targetState.destination.route
+                ?.startsWith(editNoteRoute).orDefault()
+            || this.initialState.destination.route
+                ?.startsWith(editNoteRoute).orDefault()
 }

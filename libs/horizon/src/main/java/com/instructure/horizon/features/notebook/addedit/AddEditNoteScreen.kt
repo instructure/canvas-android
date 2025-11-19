@@ -24,8 +24,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -42,7 +45,6 @@ import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlight
 import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedDataTextPosition
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
-import com.instructure.horizon.features.notebook.common.composable.NotebookAppBar
 import com.instructure.horizon.features.notebook.common.composable.NotebookHighlightedText
 import com.instructure.horizon.features.notebook.common.composable.NotebookTypeSelect
 import com.instructure.horizon.features.notebook.common.model.NotebookType
@@ -70,7 +72,7 @@ fun AddEditNoteScreen(
 ) {
     val activity = LocalContext.current.getActivityOrNull()
     LaunchedEffect(Unit) {
-        if (activity != null) ViewStyler.setStatusBarColor(activity, ContextCompat.getColor(activity, R.color.surface_pagePrimary))
+        if (activity != null) ViewStyler.setStatusBarColor(activity, ContextCompat.getColor(activity, R.color.surface_pageSecondary))
     }
 
     LaunchedEffect(state.snackbarMessage) {
@@ -78,8 +80,8 @@ fun AddEditNoteScreen(
     }
 
     Scaffold(
-        containerColor = HorizonColors.Surface.pagePrimary(),
-        topBar = { NotebookAppBar(navigateBack = { navController.popBackStack() }) },
+        containerColor = HorizonColors.Surface.pageSecondary(),
+        topBar = { AddEditNoteAppBar(state, navigateBack = { navController.popBackStack() }) },
     ) { padding ->
         if (state.isLoading) {
             AddEditNoteLoading(padding)
@@ -92,6 +94,46 @@ fun AddEditNoteScreen(
         }
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun AddEditNoteAppBar(
+    state: AddEditNoteUiState,
+    navigateBack: () -> Unit
+) {
+    CenterAlignedTopAppBar(
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = HorizonColors.Surface.pageSecondary(),
+            titleContentColor = HorizonColors.Text.title(),
+            navigationIconContentColor = HorizonColors.Icon.default()
+        ),
+        title = {
+            Text(
+                state.title,
+                style = HorizonTypography.h4,
+                color = HorizonColors.Text.title()
+            )
+        },
+        navigationIcon = {
+            Button(
+                label = "Cancel",
+                onClick = navigateBack,
+                color = ButtonColor.WhiteWithOutline,
+                height = ButtonHeight.SMALL
+            )
+        },
+        actions = {
+            Button(
+                label = "Save",
+                onClick = { state.onSaveNote(navigateBack) },
+                color = ButtonColor.Black,
+                height = ButtonHeight.SMALL
+            )
+        },
+        modifier = Modifier.padding(horizontal = 16.dp)
+    )
+}
+
 
 @Composable
 private fun AddEditNoteContent(state: AddEditNoteUiState, navController: NavHostController, padding: PaddingValues) {
@@ -198,6 +240,7 @@ private fun AddEditNoteLoading(padding: PaddingValues) {
 private fun AddEditNoteScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
     val state = AddEditNoteUiState(
+        title = "Add note",
         type = NotebookType.Important,
         highlightedData = NoteHighlightedData(
             selectedText = "This is a highlighted text",
@@ -223,6 +266,7 @@ private fun AddEditNoteScreenPreview() {
 private fun AddEditNoteScreenLoadingPreview() {
     ContextKeeper.appContext = LocalContext.current
     val state = AddEditNoteUiState(
+        title = "Add note",
         type = NotebookType.Important,
         highlightedData = NoteHighlightedData(
             selectedText = "This is a highlighted text",

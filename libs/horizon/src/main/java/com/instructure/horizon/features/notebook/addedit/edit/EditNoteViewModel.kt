@@ -66,6 +66,7 @@ class EditNoteViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(
         AddEditNoteUiState(
+            title = "Edit note",
             highlightedData = NoteHighlightedData(
                 selectedText = highlightedText,
                 range = NoteHighlightedDataRange(
