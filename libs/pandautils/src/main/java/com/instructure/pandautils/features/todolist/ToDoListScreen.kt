@@ -80,6 +80,7 @@ import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -363,6 +364,7 @@ private fun ToDoItemsList(
             state = listState,
             modifier = Modifier
                 .fillMaxSize()
+                .testTag("todoList")
                 .onGloballyPositioned { coordinates ->
                     listHeight = coordinates.size.height
                 }
@@ -524,6 +526,7 @@ private fun ToDoItem(
     Box(
         modifier = modifier
             .fillMaxWidth()
+            .testTag("todoItem_${item.id}")
             .onGloballyPositioned { coordinates ->
                 itemWidth = coordinates.size.width.toFloat()
             }
@@ -752,7 +755,8 @@ private fun ToDoItemContent(
                 colors = CheckboxDefaults.colors(
                     checkedColor = Color(ThemePrefs.brandColor),
                     uncheckedColor = colorResource(id = R.color.textDark)
-                )
+                ),
+                modifier = Modifier.testTag("todoCheckbox_${item.id}")
             )
         }
     }
