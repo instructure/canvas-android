@@ -38,6 +38,14 @@ import java.util.regex.Pattern
 
 private const val WORKFLOW_STATE_DELETED = "deleted"
 
+/**
+ * Epsilon tolerance for floating-point comparisons in grade calculations.
+ * This accounts for precision loss during percentage/score conversions,
+ * particularly for low-point assignments (e.g., 1-point assignments where
+ * 90% = 0.9 may become 0.8999999... after float/double conversions).
+ */
+private const val GRADING_COMPARISON_EPSILON = 0.0000001
+
 fun Assignment.SubmissionType.prettyPrint(context: Context): String
         = Assignment.submissionTypeToPrettyPrintString(this, context) ?: ""
 
@@ -207,8 +215,7 @@ fun convertScoreToLetterGrade(score: Double, maxScore: Double, gradingScheme: Li
 
 fun convertPercentScoreToLetterGrade(percentScore: Double, gradingScheme: List<GradingSchemeRow>): String {
     if (gradingScheme.isEmpty()) return ""
-    val epsilon = 0.0000001
-    val grade = gradingScheme.firstOrNull { percentScore >= (it.value - epsilon) } ?: gradingScheme.last()
+    val grade = gradingScheme.firstOrNull { percentScore >= (it.value - GRADING_COMPARISON_EPSILON) } ?: gradingScheme.last()
     return grade.name
 }
 
