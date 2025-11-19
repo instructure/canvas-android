@@ -39,6 +39,8 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.utils.setVisible
@@ -101,6 +103,7 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         recyclerBinding = PandaRecyclerRefreshLayoutBinding.bind(binding.root)
+        binding.toolbar.applyTopSystemBarInsets()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -212,6 +215,7 @@ class ModuleListFragment : ParentFragment(), Bookmarkable {
         recyclerAdapter?.let {
             configureRecyclerView(requireView(), requireContext(), it, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView)
         }
+        recyclerBinding.swipeRefreshLayout.applyBottomSystemBarInsets()
     }
 
     fun notifyOfItemChanged(`object`: ModuleObject?, item: ModuleItem?) {

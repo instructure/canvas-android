@@ -59,6 +59,9 @@ import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.PermissionUtils
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyBottomSystemBarMargin
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.utils.needsPermissions
 import com.instructure.pandautils.utils.orDefault
@@ -127,6 +130,7 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
 
     override fun applyTheme() {
         binding?.toolbar?.apply {
+            applyTopSystemBarInsets()
             setupAsBackButton {
                 activity?.onBackPressed()
             }
@@ -163,6 +167,8 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
                 }
             )
         }
+
+        binding?.submitButton?.applyBottomSystemBarMargin()
 
         binding?.checkpointGradesComposeView?.setContent {
             val checkpoints = viewModel.discussionCheckpoints.collectAsState()
@@ -343,6 +349,7 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
     }
 
     private fun setupDescriptionView() {
+        binding?.descriptionWebViewWrapper?.applyBottomSystemBarInsets()
         binding?.descriptionWebViewWrapper?.webView?.addVideoClient(requireActivity())
         binding?.descriptionWebViewWrapper?.webView?.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {

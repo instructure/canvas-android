@@ -55,6 +55,8 @@ import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.PermissionRequester
 import com.instructure.pandautils.utils.PermissionUtils
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.argsWithContext
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.enableAlgorithmicDarkening
@@ -104,6 +106,8 @@ class LtiLaunchFragment : BaseCanvasFragment(), NavigationCallbacks {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.toolbar.applyTopSystemBarInsets()
+        binding.webView.applyBottomSystemBarInsets()
         binding.loadingView.setOverrideColor(ltiLaunchFragmentBehavior.toolbarColor)
         binding.toolName.setTextForVisibility(title.validOrNull())
         binding.toolbar.setupAsBackButton {

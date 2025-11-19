@@ -38,7 +38,6 @@
         <item name="pspdf__annotationCreationToolbarIconsStyle">@style/PSPDFAnnotationCreationToolbarIconsStyle</item>
         <item name="pspdf__actionBarIconsStyle">@style/PSPDFKitActionBarIconsStyle</item>
         <item name="pspdf__contextualToolbarStyle">@style/ContextualToolbarStyle</item>
-        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
     </style>
 
 </resources>

@@ -21,6 +21,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Recipient
@@ -31,6 +34,7 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.nonNullArgs
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.ChooseMessageRecipientRecyclerAdapter
@@ -106,12 +110,23 @@ class ChooseRecipientsFragment : BaseSyncFragment<Recipient, ChooseRecipientsPre
 
         setupToolbar(view)
         view.findViewById<TextView>(R.id.menuDone).setTextColor(ThemePrefs.textButtonColor)
+
+        view.findViewById<Toolbar>(R.id.toolbar).applyTopSystemBarInsets()
+
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         swipeRefreshLayoutContainerBinding = RecyclerSwipeRefreshLayoutBinding.bind(view)
         super.onViewCreated(view, savedInstanceState)
+
+        mRecyclerView?.let { recyclerView ->
+            ViewCompat.setOnApplyWindowInsetsListener(recyclerView) { v, insets ->
+                val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                v.updatePadding(bottom = systemBars.bottom)
+                insets
+            }
+        }
     }
 
     override fun layoutResId(): Int = R.layout.fragment_choose_recipients

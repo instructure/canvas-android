@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -77,7 +78,12 @@ fun LoadingStateWrapper(
         }
     }
 
-    Scaffold(containerColor = containerColor, snackbarHost = { SnackbarHost(snackbarHostState) }, modifier = modifier) { paddingValues ->
+    Scaffold(
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
+        containerColor = containerColor,
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        modifier = modifier
+    ) { paddingValues ->
         if (loadingState.isPullToRefreshEnabled) {
             PullToRefreshBox(
                 isRefreshing = loadingState.isRefreshing,

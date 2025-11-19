@@ -29,10 +29,15 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
@@ -121,65 +126,72 @@ import com.instructure.horizon.horizonui.molecules.PillType
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.molecules.SpinnerSize
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
+import com.instructure.horizon.util.HorizonEdgeToEdgeSystemBars
+import com.instructure.horizon.util.horizontalSafeDrawing
 import com.instructure.pandautils.compose.modifiers.conditional
 import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.orDefault
 import kotlin.math.abs
 
 @Composable
 fun ModuleItemSequenceScreen(mainNavController: NavHostController, uiState: ModuleItemSequenceUiState) {
-    val activity = LocalContext.current.getActivityOrNull()
-    if (activity != null) ViewStyler.setStatusBarColor(activity, ThemePrefs.brandColor, true)
     if (uiState.progressScreenState.visible) ProgressScreen(uiState.progressScreenState, uiState.loadingState)
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    Scaffold(
-        containerColor = HorizonColors.Surface.institution(),
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-        bottomBar = {
-            ModuleItemSequenceBottomBar(
-                showNextButton = uiState.currentPosition < uiState.items.size - 1,
-                showPreviousButton = uiState.currentPosition > 0,
-                showNotebookButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Page,
-                showAssignmentToolsButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Assignment,
-                onNextClick = uiState.onNextClick,
-                onPreviousClick = uiState.onPreviousClick,
-                onAssignmentToolsClick = uiState.onAssignmentToolsClick,
-                onAiAssistClick = { uiState.updateShowAiAssist(true) },
-                onNotebookClick = {
-                    mainNavController.navigate(
-                        NotebookRoute.Notebook.route(
-                            uiState.courseId.toString(),
-                            uiState.objectTypeAndId.first,
-                            uiState.objectTypeAndId.second,
-                            true,
-                            false,
-                            true
+    HorizonEdgeToEdgeSystemBars(
+        statusBarColor = HorizonColors.Surface.institution(),
+        navigationBarColor = HorizonColors.Surface.pagePrimary(),
+        modifier = Modifier.padding(WindowInsets.horizontalSafeDrawing.asPaddingValues())
+    ){
+        Scaffold(
+            contentWindowInsets = WindowInsets.horizontalSafeDrawing,
+            containerColor = HorizonColors.Surface.pagePrimary(),
+            snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+            bottomBar = {
+                ModuleItemSequenceBottomBar(
+                    showNextButton = uiState.currentPosition < uiState.items.size - 1,
+                    showPreviousButton = uiState.currentPosition > 0,
+                    showNotebookButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Page,
+                    showAssignmentToolsButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Assignment,
+                    onNextClick = uiState.onNextClick,
+                    onPreviousClick = uiState.onPreviousClick,
+                    onAssignmentToolsClick = uiState.onAssignmentToolsClick,
+                    onAiAssistClick = { uiState.updateShowAiAssist(true) },
+                    onNotebookClick = {
+                        mainNavController.navigate(
+                            NotebookRoute.Notebook.route(
+                                uiState.courseId.toString(),
+                                uiState.objectTypeAndId.first,
+                                uiState.objectTypeAndId.second,
+                                true,
+                                false,
+                                true
+                            )
                         )
-                    )
-                },
-                notebookEnabled = uiState.notebookButtonEnabled,
-                aiAssistEnabled = uiState.aiAssistButtonEnabled,
-                hasUnreadComments = uiState.hasUnreadComments
-            )
-        }
-    ) { contentPadding ->
-        Box(modifier = Modifier.padding(contentPadding)) {
-            if (uiState.showAiAssist) {
-                AiAssistantScreen(
-                    onDismiss = { uiState.updateShowAiAssist(false) },
+                    },
+                    notebookEnabled = uiState.notebookButtonEnabled,
+                    aiAssistEnabled = uiState.aiAssistButtonEnabled,
+                    hasUnreadComments = uiState.hasUnreadComments
                 )
             }
-            ModuleItemSequenceContent(uiState = uiState, mainNavController = mainNavController, onBackPressed = {
-                mainNavController.popBackStack()
-            })
-            val markAsDoneState = uiState.currentItem?.markAsDoneUiState
-            if (markAsDoneState != null && !uiState.currentItem.isLoading) {
-                MarkAsDoneButton(markAsDoneState)
+        ) { contentPadding ->
+            Box(modifier = Modifier.padding(contentPadding)) {
+                if (uiState.showAiAssist) {
+                    AiAssistantScreen(
+                        onDismiss = { uiState.updateShowAiAssist(false) },
+                    )
+                }
+                ModuleItemSequenceContent(
+                    uiState = uiState,
+                    mainNavController = mainNavController,
+                    onBackPressed = {
+                        mainNavController.popBackStack()
+                    })
+                val markAsDoneState = uiState.currentItem?.markAsDoneUiState
+                if (markAsDoneState != null && !uiState.currentItem.isLoading) {
+                    MarkAsDoneButton(markAsDoneState)
+                }
             }
         }
     }
@@ -256,13 +268,17 @@ private fun ModuleItemSequenceContent(
                         moduleHeaderHeight = coordinates.size.height
                         val temp = nestedScrollConnection.appBarOffset
                         nestedScrollConnection =
-                            CollapsingAppBarNestedScrollConnection(moduleHeaderHeight).apply { appBarOffset = temp }
+                            CollapsingAppBarNestedScrollConnection(moduleHeaderHeight).apply {
+                                appBarOffset = temp
+                            }
                     }
                 }
         ) {
             ModuleHeaderContainer(
                 uiState = uiState,
                 modifier = Modifier
+                    .background(HorizonColors.Surface.institution())
+                    .windowInsetsPadding(WindowInsets.statusBars)
                     .padding(start = 24.dp, end = 24.dp, top = 16.dp, bottom = 24.dp)
                     .wrapContentHeight(),
                 onBackPressed = onBackPressed
@@ -274,7 +290,10 @@ private fun ModuleItemSequenceContent(
             containerColor = Color.Transparent,
             modifier = Modifier
                 .conditional(uiState.loadingState.isLoading || uiState.loadingState.isError) {
-                    background(color = HorizonColors.Surface.pageSecondary(), shape = HorizonCornerRadius.level5)
+                    background(
+                        color = HorizonColors.Surface.pageSecondary(),
+                        shape = HorizonCornerRadius.level5
+                    )
                 }
                 .padding(top = moduleHeaderHeight)
         ) {
@@ -377,7 +396,7 @@ private fun ModuleItemPager(pagerState: PagerState, modifier: Modifier = Modifie
         state = pagerState,
         beyondViewportPageCount = 0,
         pageSize = PageSize.Fill,
-        modifier = modifier,
+        modifier = modifier.background(HorizonColors.Surface.institution()),
         userScrollEnabled = false
     ) { page ->
         Column(
@@ -538,10 +557,14 @@ private fun ModuleItemSequenceBottomBar(
     onNotebookClick: () -> Unit = {},
     hasUnreadComments: Boolean = false
 ) {
-    Surface(shadowElevation = HorizonElevation.level4, color = HorizonColors.Surface.pagePrimary()) {
+    Surface(
+        shadowElevation = HorizonElevation.level4,
+        color = HorizonColors.Surface.pagePrimary(),
+    ) {
         Box(
             modifier = modifier
                 .fillMaxWidth()
+                .windowInsetsPadding(WindowInsets.navigationBars)
                 .padding(horizontal = 24.dp, vertical = 16.dp)
         ) {
             if (showPreviousButton) IconButton(

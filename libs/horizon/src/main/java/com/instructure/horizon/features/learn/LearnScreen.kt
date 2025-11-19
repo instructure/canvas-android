@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -61,7 +62,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -82,19 +82,13 @@ import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.organisms.inputs.common.InputDropDownPopup
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
+import com.instructure.horizon.util.HorizonEdgeToEdgeSystemBars
+import com.instructure.horizon.util.bottomNavigationScreenInsets
 import com.instructure.pandautils.compose.modifiers.conditional
-import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.getActivityOrNull
 import kotlinx.coroutines.delay
 
 @Composable
 fun LearnScreen(state: LearnUiState, mainNavController: NavHostController) {
-
-    val activity = LocalContext.current.getActivityOrNull()
-    LaunchedEffect(Unit) {
-        if (activity != null) ViewStyler.setStatusBarColor(activity, ContextCompat.getColor(activity, R.color.surface_pagePrimary))
-    }
-
     val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(state.screenState.snackbarMessage) {
@@ -106,24 +100,31 @@ fun LearnScreen(state: LearnUiState, mainNavController: NavHostController) {
         }
     }
 
-    Scaffold(
-        containerColor = HorizonColors.Surface.pagePrimary(),
-        snackbarHost = { SnackbarHost(snackbarHostState) }
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            when {
-                state.screenState.isError -> ErrorContent(state.screenState, state.screenState.errorMessage.orEmpty())
-                state.screenState.isLoading -> LoadingContent()
-                else -> if (state.learningItems.isEmpty()) {
-                    LearnScreenEmptyContent(state)
-                } else {
-                    LearnScreenWrapper(state, mainNavController, Modifier.fillMaxSize())
+    HorizonEdgeToEdgeSystemBars(null, null) {
+        Scaffold(
+            contentWindowInsets = WindowInsets.bottomNavigationScreenInsets,
+            containerColor = HorizonColors.Surface.pagePrimary(),
+            snackbarHost = { SnackbarHost(snackbarHostState) }
+        ) { padding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                when {
+                    state.screenState.isError -> ErrorContent(
+                        state.screenState,
+                        state.screenState.errorMessage.orEmpty()
+                    )
+
+                    state.screenState.isLoading -> LoadingContent()
+                    else -> if (state.learningItems.isEmpty()) {
+                        LearnScreenEmptyContent(state)
+                    } else {
+                        LearnScreenWrapper(state, mainNavController, Modifier.fillMaxSize())
+                    }
                 }
             }
         }
@@ -186,7 +187,10 @@ private fun LearnScreenWrapper(
         modifier = modifier
             .fillMaxSize()
     ) {
-        Column(modifier = Modifier.padding(top = 16.dp)) {
+        Column(
+            modifier = Modifier
+                .padding(top = 16.dp)
+        ) {
             val selectedLearningItem = state.selectedLearningItem
             AnimatedContent(selectedLearningItem) { selectedItem ->
                 selectedItem?.parentItem?.let { parentItem ->

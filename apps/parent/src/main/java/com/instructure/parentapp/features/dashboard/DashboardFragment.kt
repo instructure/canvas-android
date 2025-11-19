@@ -60,7 +60,9 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.animateCircularBackgroundColorChange
 import com.instructure.pandautils.utils.announceAccessibilityText
+import com.instructure.pandautils.utils.applySystemBarInsets
 import com.instructure.pandautils.utils.applyTheme
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.collectDistinctUntilChanged
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.getDrawableCompat
@@ -275,6 +277,7 @@ class DashboardFragment : BaseCanvasFragment(), NavigationCallbacks {
     }
 
     private fun setupToolbar() {
+        binding.toolbar.applyTopSystemBarInsets()
         binding.navigationButtonHolder.contentDescription = getString(R.string.navigation_drawer_open)
         binding.navigationButtonHolder.onClick {
             openNavigationDrawer()
@@ -287,6 +290,7 @@ class DashboardFragment : BaseCanvasFragment(), NavigationCallbacks {
 
     private fun setupNavigationDrawer() {
         val navView = binding.navView
+        navView.applySystemBarInsets()
 
         headerLayoutBinding = NavigationDrawerHeaderLayoutBinding.bind(navView.getHeaderView(0))
 
