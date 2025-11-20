@@ -50,6 +50,7 @@ import com.instructure.espresso.randomString
 import com.instructure.espresso.replaceText
 import com.instructure.espresso.scrollTo
 import com.instructure.teacher.R
+import com.instructure.teacher.ui.utils.TypeInRCETextEditor
 import com.instructure.teacher.view.AssignmentOverrideView
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.Matchers
@@ -69,6 +70,7 @@ class EditQuizDetailsPage : BasePage() {
     private val accessCodeEditText by WaitForViewWithId(R.id.editAccessCode)
     private val saveButton by OnViewWithId(R.id.menuSave)
     private val descriptionWebView by OnViewWithId(R.id.descriptionWebView, autoAssert = false)
+    private val contentRceView by WaitForViewWithId(R.id.rce_webView, autoAssert = false)
     private val noDescriptionTextView by OnViewWithId(
         R.id.noDescriptionTextView,
         autoAssert = false
@@ -89,6 +91,15 @@ class EditQuizDetailsPage : BasePage() {
     fun editQuizTitle(newName: String) {
         quizTitleEditText.replaceText(newName)
         saveQuiz()
+    }
+
+    /**
+     * Edits the quiz description with the specified new description.
+     *
+     * @param newDescription The new description to be set as the quiz description.
+     */
+    fun editQuizDescription(newDescription: String) {
+        contentRceView.perform(TypeInRCETextEditor(newDescription))
     }
 
     /**
@@ -258,8 +269,18 @@ class EditQuizDetailsPage : BasePage() {
     )
 
     fun editAssignees() = waitScrollClick(R.id.assignTo)
-    fun clickEditDueDate() = waitScrollClick(R.id.dueDate)
-    fun clickEditDueTime() = waitScrollClick(R.id.dueTime)
+    fun clickEditDueDate(overrideIndex: Int = 0) {
+        addOverrideButton().scrollTo()
+        Thread.sleep(1000) //wait for the UI to be settled
+        onViewWithContentDescription("due_date_$overrideIndex").scrollTo()
+        onViewWithContentDescription("due_date_$overrideIndex").click()
+    }
+    fun clickEditDueTime(overrideIndex: Int = 0) {
+        addOverrideButton().scrollTo()
+        Thread.sleep(1000) //wait for the UI to be settled
+        onViewWithContentDescription("due_time_$overrideIndex").scrollTo()
+        onViewWithContentDescription("due_time_$overrideIndex").click()
+    }
     fun clickEditUnlockDate() = waitScrollClick(R.id.fromDate)
     fun clickEditUnlockTime() = waitScrollClick(R.id.fromTime)
     fun clickEditLockDate() = waitScrollClick(R.id.toDate)
