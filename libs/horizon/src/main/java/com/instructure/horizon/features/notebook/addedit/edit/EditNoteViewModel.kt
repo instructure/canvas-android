@@ -67,7 +67,7 @@ class EditNoteViewModel @Inject constructor(
     init {
         _uiState.update {
             it.copy(
-                title = "Edit note",
+                title = context.getString(R.string.editNoteTitle),
                 highlightedData = NoteHighlightedData(
                     selectedText = highlightedText,
                     range = NoteHighlightedDataRange(

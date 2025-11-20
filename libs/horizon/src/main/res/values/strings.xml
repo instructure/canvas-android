@@ -455,4 +455,16 @@
     <string name="dashboardCourseListEmptyMessage">Adjust your filters to see more.</string>
     <string name="dashboardCourseListShowMore">Show more</string>
     <string name="deleteNoteLabel">Delete note</string>
+    <string name="createNoteTitle">Create note</string>
+    <string name="editNoteTitle">Edit note</string>
+    <string name="editNoteCancelButtonLabel">Cancel</string>
+    <string name="editNoteSaveButtonLabel">Save</string>
+    <string name="deleteNoteConfirmationTitle">Delete note</string>
+    <string name="deleteNoteConfirmationMessage">Are you sure you want to delete this note?</string>
+    <string name="deleteNoteConfirmationDeleteLabel">Delete</string>
+    <string name="deleteNoteConfirmationCancelLabel">Cancel</string>
+    <string name="editNoteExitConfirmationTitle">Discard changes</string>
+    <string name="editNoteExitConfirmationMessage">Are you sure you want to discard your changes?</string>
+    <string name="editNoteExitConfirmationExitButtonLabel">Exit</string>
+    <string name="editNoteExitConfirmationCancelButtonLabel">Cancel</string>
 </resources>

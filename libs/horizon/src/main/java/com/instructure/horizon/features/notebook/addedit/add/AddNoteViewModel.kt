@@ -55,7 +55,7 @@ class AddNoteViewModel @Inject constructor(
     init {
         _uiState.update {
             it.copy(
-                title = "Create note",
+                title = context.getString(R.string.createNoteTitle),
                 hasContentChange = true,
                 highlightedData = NoteHighlightedData(
                     selectedText = highlightedText,

@@ -126,7 +126,7 @@ private fun AddEditNoteAppBar(
         },
         navigationIcon = {
             Button(
-                label = "Cancel",
+                label = stringResource(R.string.editNoteCancelButtonLabel),
                 onClick = {
                     if (state.hasContentChange) {
                         state.updateExitConfirmationDialog(true)
@@ -140,7 +140,7 @@ private fun AddEditNoteAppBar(
         },
         actions = {
             Button(
-                label = "Save",
+                label = stringResource(R.string.editNoteSaveButtonLabel),
                 onClick = { state.onSaveNote(navigateBack) },
                 color = ButtonColor.Black,
                 height = ButtonHeight.SMALL,
@@ -193,7 +193,8 @@ private fun AddEditNoteContent(state: AddEditNoteUiState, padding: PaddingValues
                 value = state.userComment,
                 onValueChange = state.onUserCommentChanged,
             ),
-            minLines = 5
+            minLines = 5,
+            maxLines = 5
         )
 
         HorizonSpace(SpaceSize.SPACE_16)
@@ -243,6 +244,53 @@ private fun AddEditNoteLoading(padding: PaddingValues) {
 }
 
 @Composable
+private fun AddEditNoteScreenDeleteConfirmationDialog(
+    state: AddEditNoteUiState,
+    navController: NavHostController
+) {
+    if (state.showDeleteConfirmationDialog) {
+        Modal(
+            ModalDialogState(
+                title = stringResource(R.string.deleteNoteConfirmationTitle),
+                message = stringResource(R.string.deleteNoteConfirmationMessage),
+                primaryButtonTitle = stringResource(R.string.deleteNoteConfirmationDeleteLabel),
+                primaryButtonClick = {
+                    state.updateDeleteConfirmationDialog(false)
+                    state.onDeleteNote?.invoke { navController.popBackStack() }
+                },
+                secondaryButtonTitle = stringResource(R.string.deleteNoteConfirmationCancelLabel),
+                secondaryButtonClick = { state.updateDeleteConfirmationDialog(false) }
+
+            ),
+            onDismiss = { state.updateDeleteConfirmationDialog(false) }
+        )
+    }
+}
+
+@Composable
+private fun AddEditNoteScreenExitConfirmationDialog(
+    state: AddEditNoteUiState,
+    navController: NavHostController
+) {
+    if (state.showExitConfirmationDialog) {
+        Modal(
+            ModalDialogState(
+                title = stringResource(R.string.editNoteExitConfirmationTitle),
+                message = stringResource(R.string.editNoteExitConfirmationMessage),
+                primaryButtonTitle = stringResource(R.string.editNoteExitConfirmationExitButtonLabel),
+                primaryButtonClick = {
+                    state.updateExitConfirmationDialog(false)
+                    navController.popBackStack()
+                },
+                secondaryButtonTitle = stringResource(R.string.editNoteExitConfirmationCancelButtonLabel),
+                secondaryButtonClick = { state.updateExitConfirmationDialog(false) }
+            ),
+            onDismiss = { state.updateExitConfirmationDialog(false) }
+        )
+    }
+}
+
+@Composable
 @Preview
 private fun AddEditNoteScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
@@ -267,54 +315,6 @@ private fun AddEditNoteScreenPreview() {
         onShowSnackbar = { _, _ -> }
     )
 }
-
-@Composable
-private fun AddEditNoteScreenDeleteConfirmationDialog(
-    state: AddEditNoteUiState,
-    navController: NavHostController
-) {
-    if (state.showDeleteConfirmationDialog) {
-        Modal(
-            ModalDialogState(
-                title = "Delete note",
-                message = "Are you sure you want to delete this note?",
-                primaryButtonTitle = "Delete",
-                primaryButtonClick = {
-                    state.updateDeleteConfirmationDialog(false)
-                    state.onDeleteNote?.invoke { navController.popBackStack() }
-                },
-                secondaryButtonTitle = "Cancel",
-                secondaryButtonClick = { state.updateDeleteConfirmationDialog(false) }
-
-            ),
-            onDismiss = { state.updateDeleteConfirmationDialog(false) }
-        )
-    }
-}
-
-@Composable
-private fun AddEditNoteScreenExitConfirmationDialog(
-    state: AddEditNoteUiState,
-    navController: NavHostController
-) {
-    if (state.showExitConfirmationDialog) {
-        Modal(
-            ModalDialogState(
-                title = "Discard changes",
-                message = "Are you sure you want to discard your changes?",
-                primaryButtonTitle = "Exit",
-                primaryButtonClick = {
-                    state.updateExitConfirmationDialog(false)
-                    navController.popBackStack()
-                },
-                secondaryButtonTitle = "Cancel",
-                secondaryButtonClick = { state.updateExitConfirmationDialog(false) }
-            ),
-            onDismiss = { state.updateExitConfirmationDialog(false) }
-        )
-    }
-}
-
 
 @Composable
 @Preview
