@@ -71,8 +71,8 @@ data class NoteHighlightedDataRange(
 )
 
 data class NoteHighlightedDataTextPosition(
-    val start: Int,
-    val end: Int
+    val start: Int = 0,
+    val end: Int = 0
 )
 
 data class NoteItem(

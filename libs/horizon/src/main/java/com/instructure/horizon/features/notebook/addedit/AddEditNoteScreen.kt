@@ -65,6 +65,8 @@ import com.instructure.horizon.horizonui.molecules.ButtonHeight
 import com.instructure.horizon.horizonui.molecules.ButtonIconPosition
 import com.instructure.horizon.horizonui.molecules.ButtonWidth
 import com.instructure.horizon.horizonui.molecules.Spinner
+import com.instructure.horizon.horizonui.organisms.Modal
+import com.instructure.horizon.horizonui.organisms.ModalDialogState
 import com.instructure.horizon.horizonui.organisms.inputs.common.InputLabelRequired
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelect
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectInputSize
@@ -96,11 +98,9 @@ fun AddEditNoteScreen(
         if (state.isLoading) {
             AddEditNoteLoading(padding)
         } else {
-            AddEditNoteContent(
-                state = state,
-                navController = navController,
-                padding = padding
-            )
+            AddEditNoteScreenDeleteConfirmationDialog(state, navController)
+            AddEditNoteScreenExitConfirmationDialog(state, navController)
+            AddEditNoteContent(state, padding)
         }
     }
 }
@@ -127,7 +127,13 @@ private fun AddEditNoteAppBar(
         navigationIcon = {
             Button(
                 label = "Cancel",
-                onClick = navigateBack,
+                onClick = {
+                    if (state.hasContentChange) {
+                        state.updateExitConfirmationDialog(true)
+                    } else {
+                        navigateBack()
+                    }
+                },
                 color = ButtonColor.WhiteWithOutline,
                 height = ButtonHeight.SMALL
             )
@@ -137,7 +143,8 @@ private fun AddEditNoteAppBar(
                 label = "Save",
                 onClick = { state.onSaveNote(navigateBack) },
                 color = ButtonColor.Black,
-                height = ButtonHeight.SMALL
+                height = ButtonHeight.SMALL,
+                enabled = state.hasContentChange
             )
         },
         modifier = Modifier.padding(horizontal = 16.dp)
@@ -146,7 +153,7 @@ private fun AddEditNoteAppBar(
 
 
 @Composable
-private fun AddEditNoteContent(state: AddEditNoteUiState, navController: NavHostController, padding: PaddingValues) {
+private fun AddEditNoteContent(state: AddEditNoteUiState, padding: PaddingValues) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -214,7 +221,7 @@ private fun AddEditNoteContent(state: AddEditNoteUiState, navController: NavHost
                 height = ButtonHeight.SMALL,
                 color = ButtonColor.DangerInverse,
                 iconPosition = ButtonIconPosition.Start(R.drawable.delete),
-                onClick = { state.onDeleteNote?.invoke { navController.popBackStack() } }
+                onClick = { state.updateDeleteConfirmationDialog(true) }
             )
         }
     }
@@ -258,6 +265,54 @@ private fun AddEditNoteScreenPreview() {
         onShowSnackbar = { _, _ -> }
     )
 }
+
+@Composable
+private fun AddEditNoteScreenDeleteConfirmationDialog(
+    state: AddEditNoteUiState,
+    navController: NavHostController
+) {
+    if (state.showDeleteConfirmationDialog) {
+        Modal(
+            ModalDialogState(
+                title = "Delete note",
+                message = "Are you sure you want to delete this note?",
+                primaryButtonTitle = "Delete",
+                primaryButtonClick = {
+                    state.updateDeleteConfirmationDialog(false)
+                    state.onDeleteNote?.invoke { navController.popBackStack() }
+                },
+                secondaryButtonTitle = "Cancel",
+                secondaryButtonClick = { state.updateDeleteConfirmationDialog(false) }
+
+            ),
+            onDismiss = { state.updateDeleteConfirmationDialog(false) }
+        )
+    }
+}
+
+@Composable
+private fun AddEditNoteScreenExitConfirmationDialog(
+    state: AddEditNoteUiState,
+    navController: NavHostController
+) {
+    if (state.showExitConfirmationDialog) {
+        Modal(
+            ModalDialogState(
+                title = "Discard changes",
+                message = "Are you sure you want to discard your changes?",
+                primaryButtonTitle = "Exit",
+                primaryButtonClick = {
+                    state.updateExitConfirmationDialog(false)
+                    navController.popBackStack()
+                },
+                secondaryButtonTitle = "Cancel",
+                secondaryButtonClick = { state.updateExitConfirmationDialog(false) }
+            ),
+            onDismiss = { state.updateExitConfirmationDialog(false) }
+        )
+    }
+}
+
 
 @Composable
 @Preview
