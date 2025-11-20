@@ -135,7 +135,8 @@ private fun AddEditNoteAppBar(
                     }
                 },
                 color = ButtonColor.WhiteWithOutline,
-                height = ButtonHeight.SMALL
+                height = ButtonHeight.SMALL,
+                enabled = !state.isLoading
             )
         },
         actions = {
@@ -144,7 +145,7 @@ private fun AddEditNoteAppBar(
                 onClick = { state.onSaveNote(navigateBack) },
                 color = ButtonColor.Black,
                 height = ButtonHeight.SMALL,
-                enabled = state.hasContentChange
+                enabled = state.hasContentChange && !state.isLoading
             )
         },
         modifier = Modifier.padding(horizontal = 16.dp)
