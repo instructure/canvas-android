@@ -18,6 +18,7 @@ package com.instructure.horizon.features.notebook.common.webview
 
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
+import com.instructure.horizon.features.notebook.common.composable.toNotebookLocalisedDateFormat
 import com.instructure.horizon.features.notebook.common.model.Note
 
 class JSTextSelectionInterface(
@@ -40,7 +41,8 @@ class JSTextSelectionInterface(
         endContainer: String,
         endOffset: Int,
         textSelectionStart: Int,
-        textSelectionEnd: Int
+        textSelectionEnd: Int,
+        updatedAt: String,
     ) -> Unit,
     private val onSelectionPositionChange: (
         left: Float,
@@ -83,9 +85,10 @@ class JSTextSelectionInterface(
         endOffset: Int,
         endContainer: String,
         textSelectionStart: Int,
-        textSelectionEnd: Int
+        textSelectionEnd: Int,
+        updatedAt: String,
     ) {
-        onHighlightedTextClick(noteId, noteType, selectedText, userComment, startContainer, startOffset, endContainer, endOffset, textSelectionStart, textSelectionEnd)
+        onHighlightedTextClick(noteId, noteType, selectedText, userComment, startContainer, startOffset, endContainer, endOffset, textSelectionStart, textSelectionEnd, updatedAt)
     }
 
     companion object {
@@ -630,7 +633,7 @@ const isNodeInRange = (range, node) => {
 		"""
         private val JS_CODE = """
 ${JS_CODE_FROM_WEB}
-function highlightSelection(noteId, selectedText, userComment, startOffset, startContainer, endOffset, endContainer, noteReactionString, textSelectionStart, textSelectionEnd) {
+function highlightSelection(noteId, selectedText, userComment, startOffset, startContainer, endOffset, endContainer, noteReactionString, textSelectionStart, textSelectionEnd, updatedAt) {
 	let parent = document.getElementById("parent-container");//document.documentElement;
 	if (!parent) return;
 
@@ -655,7 +658,7 @@ function highlightSelection(noteId, selectedText, userComment, startOffset, star
 		const highlightElement = document.createElement("span");
 		highlightElement.classList.add(highlightClassName);
 		highlightElement.classList.add(cssClass);
-		highlightElement.onclick = function () { ${ JS_INTERFACE_NAME }.onHighlightedTextClicked(noteId, noteReactionString, selectedText, userComment, startOffset, startContainer, endOffset, endContainer, textSelectionStart, textSelectionEnd); };
+		highlightElement.onclick = function () { ${ JS_INTERFACE_NAME }.onHighlightedTextClicked(noteId, noteReactionString, selectedText, userComment, startOffset, startContainer, endOffset, endContainer, textSelectionStart, textSelectionEnd, updatedAt); };
 		highlightElement.textContent = textNode.textContent;
 
 		if (!highlightElement) return;
@@ -709,7 +712,8 @@ javascript: (function () {
                 endContainer: String,
                 endOffset: Int,
                 textSelectionStart: Int,
-                textSelectionEnd: Int
+                textSelectionEnd: Int,
+                updatedAt: String,
             ) -> Unit,
             onSelectionPositionChange: (
                 left: Float,
@@ -728,7 +732,7 @@ javascript: (function () {
 
         fun WebView.highlightNotes(notes: List<Note>) {
             notes.forEach { note ->
-                val script = "javascript:highlightSelection('${note.id}', '${note.highlightedText.selectedText.replace("\n", "\\n")}', '${note.userText.replace("\n", "\\n")}', ${note.highlightedText.range.startOffset}, '${note.highlightedText.range.startContainer}', ${note.highlightedText.range.endOffset}, '${note.highlightedText.range.endContainer}', '${note.type.name}', ${note.highlightedText.textPosition.start}, ${note.highlightedText.textPosition.end})"
+                val script = "javascript:highlightSelection('${note.id}', '${note.highlightedText.selectedText.replace("\n", "\\n")}', '${note.userText.replace("\n", "\\n")}', ${note.highlightedText.range.startOffset}, '${note.highlightedText.range.startContainer}', ${note.highlightedText.range.endOffset}, '${note.highlightedText.range.endContainer}', '${note.type.name}', ${note.highlightedText.textPosition.start}, ${note.highlightedText.textPosition.end}, '${note.updatedAt.toNotebookLocalisedDateFormat()}')"
                 this.evaluateJavascript(script, null)
             }
         }

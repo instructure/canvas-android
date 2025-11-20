@@ -1,5 +1,7 @@
 package com.instructure.horizon.features.notebook.common.webview
 
+import java.util.Date
+
 data class NotesCallback(
     val onNoteSelected: (
         noteId: String,
@@ -11,7 +13,8 @@ data class NotesCallback(
         endContainer: String,
         endOffset: Int,
         textSelectionStart: Int,
-        textSelectionEnd: Int
+        textSelectionEnd: Int,
+        updatedAt: String,
     ) -> Unit,
     val onNoteAdded: (
         selectedText: String,

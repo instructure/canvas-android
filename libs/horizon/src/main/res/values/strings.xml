@@ -454,4 +454,5 @@
     <string name="dashboardCourseListEmptyTitle">Nothing here yet</string>
     <string name="dashboardCourseListEmptyMessage">Adjust your filters to see more.</string>
     <string name="dashboardCourseListShowMore">Show more</string>
+    <string name="deleteNoteLabel">Delete note</string>
 </resources>

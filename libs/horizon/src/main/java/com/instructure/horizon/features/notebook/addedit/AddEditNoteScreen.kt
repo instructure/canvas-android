@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -42,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
@@ -52,7 +54,6 @@ import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlight
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.notebook.common.composable.NotebookHighlightedText
-import com.instructure.horizon.features.notebook.common.composable.NotebookTypeSelect
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
@@ -151,8 +152,10 @@ private fun AddEditNoteContent(state: AddEditNoteUiState, navController: NavHost
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
             .padding(padding)
-            .padding(24.dp)
+            .padding(horizontal = 16.dp)
     ) {
+        HorizonSpace(SpaceSize.SPACE_24)
+
         var isMenuOpen by remember { mutableStateOf(false) }
         SingleSelect(
             SingleSelectState(
@@ -166,38 +169,13 @@ private fun AddEditNoteContent(state: AddEditNoteUiState, navController: NavHost
             ),
             modifier = Modifier.width(IntrinsicSize.Min)
         )
+
+        HorizonSpace(SpaceSize.SPACE_24)
+
         NotebookHighlightedText(
             text = state.highlightedData.selectedText,
             type = state.type
         )
-
-        HorizonSpace(SpaceSize.SPACE_24)
-
-        Text(
-            text = stringResource(R.string.addNoteLabelLabel),
-            style = HorizonTypography.labelLargeBold,
-            color = HorizonColors.Text.body()
-        )
-
-        HorizonSpace(SpaceSize.SPACE_8)
-
-        Row {
-            NotebookTypeSelect(
-                type = NotebookType.Important,
-                isSelected = state.type == NotebookType.Important,
-                onSelect = { state.onTypeChanged(if (state.type == NotebookType.Important) null else NotebookType.Important) },
-                modifier = Modifier.weight(1f)
-            )
-
-            HorizonSpace(SpaceSize.SPACE_12)
-
-            NotebookTypeSelect(
-                type = NotebookType.Confusing,
-                isSelected = state.type == NotebookType.Confusing,
-                onSelect = { state.onTypeChanged(if (state.type == NotebookType.Confusing) null else NotebookType.Confusing) },
-                modifier = Modifier.weight(1f)
-            )
-        }
 
         HorizonSpace(SpaceSize.SPACE_24)
 
@@ -213,24 +191,30 @@ private fun AddEditNoteContent(state: AddEditNoteUiState, navController: NavHost
 
         HorizonSpace(SpaceSize.SPACE_16)
 
-        Button(
-            label = stringResource(R.string.addNoteSaveLabel),
-            onClick = { state.onSaveNote { navController.popBackStack() } },
-            enabled = !state.isLoading && state.type != null,
-            color = ButtonColor.Institution,
-            width = ButtonWidth.FILL,
-            height = ButtonHeight.NORMAL
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            if (state.lastModifiedDate != null) {
+                Text(
+                    state.lastModifiedDate,
+                    style = HorizonTypography.labelSmall,
+                    color = HorizonColors.Text.timestamp(),
+                    modifier = Modifier.weight(1f),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            } else {
+                Spacer(Modifier.weight(1f))
+            }
 
-        if (state.onDeleteNote != null) {
-            HorizonSpace(SpaceSize.SPACE_16)
             Button(
-                label = stringResource(R.string.addNoteDeleteLabel),
-                onClick = { state.onDeleteNote?.invoke { navController.popBackStack() } },
+                label = stringResource(R.string.deleteNoteLabel),
+                width = ButtonWidth.RELATIVE,
+                height = ButtonHeight.SMALL,
                 color = ButtonColor.DangerInverse,
-                width = ButtonWidth.FILL,
-                height = ButtonHeight.NORMAL,
                 iconPosition = ButtonIconPosition.Start(R.drawable.delete),
+                onClick = { state.onDeleteNote?.invoke { navController.popBackStack() } }
             )
         }
     }

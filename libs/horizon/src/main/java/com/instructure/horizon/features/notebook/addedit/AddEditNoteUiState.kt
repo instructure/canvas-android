@@ -29,6 +29,7 @@ data class AddEditNoteUiState(
     val onTypeChanged: (NotebookType?) -> Unit,
     val onSaveNote: (() -> Unit) -> Unit,
     val isLoading: Boolean = false,
+    val lastModifiedDate: String? = null,
     val onDeleteNote: ((() -> Unit) -> Unit)? = null,
     val snackbarMessage: String? = null,
     val onSnackbarDismiss: () -> Unit,

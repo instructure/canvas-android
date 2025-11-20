@@ -63,6 +63,8 @@ class EditNoteViewModel @Inject constructor(
         savedStateHandle.toRoute<NotebookRoute.EditNotebook>().textSelectionStart
     private val highlightedTextSelectionEnd: Int =
         savedStateHandle.toRoute<NotebookRoute.EditNotebook>().textSelectionEnd
+    private val lastModifiedDate: String? =
+        savedStateHandle.toRoute<NotebookRoute.EditNotebook>().updatedAt
 
     private val _uiState = MutableStateFlow(
         AddEditNoteUiState(
@@ -82,6 +84,7 @@ class EditNoteViewModel @Inject constructor(
             ),
             userComment = TextFieldValue(userComment),
             type = NotebookType.valueOf(noteType),
+            lastModifiedDate = lastModifiedDate,
             onTypeChanged = ::onTypeChanged,
             onUserCommentChanged = ::onUserCommentChanged,
             onSaveNote = ::editNote,
