@@ -28,7 +28,12 @@ class DashboardScreenTest {
         )
 
         composeTestRule.setContent {
-            DashboardScreenContent(uiState = mockUiState, MutableSharedFlow())
+            DashboardScreenContent(
+                uiState = mockUiState,
+                refreshSignal = MutableSharedFlow(),
+                snackbarMessageFlow = MutableSharedFlow(),
+                onShowSnackbar = { _, _, _ -> }
+            )
         }
 
         composeTestRule.waitForIdle()
@@ -46,7 +51,12 @@ class DashboardScreenTest {
         )
 
         composeTestRule.setContent {
-            DashboardScreenContent(uiState = mockUiState, MutableSharedFlow())
+            DashboardScreenContent(
+                uiState = mockUiState,
+                refreshSignal = MutableSharedFlow(),
+                snackbarMessageFlow = MutableSharedFlow(),
+                onShowSnackbar = { _, _, _ -> }
+            )
         }
 
         composeTestRule.waitForIdle()
@@ -64,7 +74,12 @@ class DashboardScreenTest {
         )
 
         composeTestRule.setContent {
-            DashboardScreenContent(uiState = mockUiState, MutableSharedFlow())
+            DashboardScreenContent(
+                uiState = mockUiState,
+                refreshSignal = MutableSharedFlow(),
+                snackbarMessageFlow = MutableSharedFlow(),
+                onShowSnackbar = { _, _, _ -> }
+            )
         }
 
         composeTestRule.waitForIdle()
@@ -82,7 +97,12 @@ class DashboardScreenTest {
         )
 
         composeTestRule.setContent {
-            DashboardScreenContent(uiState = mockUiState, MutableSharedFlow())
+            DashboardScreenContent(
+                uiState = mockUiState,
+                refreshSignal = MutableSharedFlow(),
+                snackbarMessageFlow = MutableSharedFlow(),
+                onShowSnackbar = { _, _, _ -> }
+            )
         }
 
         composeTestRule.waitForIdle()

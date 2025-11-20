@@ -19,5 +19,12 @@ package com.instructure.pandautils.features.dashboard.widget
 data class WidgetMetadata(
     val id: String,
     val position: Int,
-    val isVisible: Boolean
-)
+    val isVisible: Boolean,
+    val isEditable: Boolean = true,
+    val isFullWidth: Boolean = false
+) {
+    companion object {
+        const val WIDGET_ID_COURSE_INVITATIONS = "course_invitations"
+        const val WIDGET_ID_WELCOME = "welcome"
+    }
+}

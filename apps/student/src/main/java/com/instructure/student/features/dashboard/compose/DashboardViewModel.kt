@@ -18,9 +18,10 @@ package com.instructure.student.features.dashboard.compose
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.pandautils.compose.SnackbarMessage
 import com.instructure.pandautils.features.dashboard.widget.usecase.EnsureDefaultWidgetsUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetMetadataUseCase
+import com.instructure.pandautils.utils.NetworkStateProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -49,8 +50,17 @@ class DashboardViewModel @Inject constructor(
     private val _refreshSignal = MutableSharedFlow<Unit>()
     val refreshSignal = _refreshSignal.asSharedFlow()
 
+    private val _snackbarMessage = MutableSharedFlow<SnackbarMessage>()
+    val snackbarMessage = _snackbarMessage.asSharedFlow()
+
     init {
         loadDashboard()
+    }
+
+    fun showSnackbar(message: String, actionLabel: String? = null, action: (() -> Unit)? = null) {
+        viewModelScope.launch {
+            _snackbarMessage.emit(SnackbarMessage(message, actionLabel, action))
+        }
     }
 
     private fun loadDashboard() {

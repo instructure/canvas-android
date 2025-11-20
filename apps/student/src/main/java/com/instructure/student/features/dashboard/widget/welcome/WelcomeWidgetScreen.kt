@@ -18,6 +18,7 @@ package com.instructure.student.features.dashboard.widget.welcome
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -26,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.instructure.student.R
@@ -50,7 +52,7 @@ private fun WelcomeContent(
     modifier: Modifier = Modifier,
     uiState: WelcomeWidgetUiState
 ) {
-    Column(modifier = modifier) {
+    Column(modifier = modifier.padding(horizontal = 16.dp)) {
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = uiState.greeting,
