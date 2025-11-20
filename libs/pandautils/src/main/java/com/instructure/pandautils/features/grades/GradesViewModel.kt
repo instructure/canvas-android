@@ -123,7 +123,8 @@ class GradesViewModel @Inject constructor(
                 repository.setSortBy(_uiState.value.gradePreferencesUiState.sortBy)
             }
 
-            val assignmentGroups = repository.loadAssignmentGroups(courseId, selectedGradingPeriod?.id, forceRefresh).filterHiddenAssignments()
+            val assignmentGroups =
+                repository.loadAssignmentGroups(courseId, selectedGradingPeriod?.id, forceRefresh).filterHiddenAssignments()
             val enrollments = repository.loadEnrollments(courseId, selectedGradingPeriod?.id, forceRefresh)
 
             courseGrade = repository.getCourseGrade(course, repository.studentId, enrollments, selectedGradingPeriod?.id)
@@ -260,6 +261,7 @@ class GradesViewModel @Inject constructor(
                             R.string.additional_replies,
                             assignment.discussionTopicHeader?.replyRequiredCount
                         )
+
                         else -> checkpoint.name.orEmpty()
                     },
                     dueDate = getDateText(checkpoint.dueDate),
@@ -279,6 +281,9 @@ class GradesViewModel @Inject constructor(
                     pointsPossible = checkpoint.pointsPossible?.toInt().orDefault()
                 )
             },
+            score = assignment.submission?.score,
+            maxScore = assignment.pointsPossible,
+            whatIfScore = null,
             checkpointsExpanded = false
         )
     }
@@ -392,6 +397,65 @@ class GradesViewModel @Inject constructor(
                     it.copy(searchQuery = action.query)
                 }
                 debouncedSearch(action.query)
+            }
+
+            is GradesAction.ShowWhatIfScoreSwitchCheckedChange -> {
+                _uiState.update {
+                    it.copy(showWhatIfScore = action.checked)
+                }
+            }
+
+            is GradesAction.ShowWhatIfScoreDialog -> {
+                val assignment = uiState.value.items
+                    .flatMap { it.assignments }
+                    .find { it.id == action.assignmentId }
+
+                assignment?.let {
+                    val currentScore = it.score
+                    val maxScore = it.maxScore
+
+                    val currentScoreText = if (currentScore != null) {
+                        context.getString(R.string.whatIfScoreCurrentGraded, currentScore, maxScore)
+                    } else {
+                        context.getString(R.string.whatIfScoreCurrentUngraded, maxScore)
+                    }
+
+                    _uiState.update { state ->
+                        state.copy(
+                            whatIfScoreDialogData = WhatIfScoreDialogData(
+                                assignmentId = assignment.id,
+                                assignmentName = assignment.name,
+                                currentScoreText = currentScoreText,
+                                whatIfScore = null,
+                                maxScore = maxScore
+                            )
+                        )
+                    }
+                }
+            }
+
+            is GradesAction.HideWhatIfScoreDialog -> {
+                _uiState.update { it.copy(whatIfScoreDialogData = null) }
+            }
+
+            is GradesAction.UpdateWhatIfScore -> {
+                _uiState.update { state ->
+                    val updatedItems = state.items.map { group ->
+                        group.copy(
+                            assignments = group.assignments.map { assignment ->
+                                if (assignment.id == action.assignmentId) {
+                                    assignment.copy(whatIfScore = action.score)
+                                } else {
+                                    assignment
+                                }
+                            }
+                        )
+                    }
+                    state.copy(
+                        items = updatedItems,
+                        whatIfScoreDialogData = null
+                    )
+                }
             }
         }
     }

@@ -43,11 +43,21 @@ data class GradesUiState(
     val items: List<AssignmentGroupUiState> = emptyList(),
     val gradePreferencesUiState: GradePreferencesUiState = GradePreferencesUiState(),
     val onlyGradedAssignmentsSwitchEnabled: Boolean = true,
+    val showWhatIfScore: Boolean = false,
+    val whatIfScoreDialogData: WhatIfScoreDialogData? = null,
     val gradeText: String = "",
     val isGradeLocked: Boolean = false,
     val snackbarMessage: String? = null,
     val searchQuery: String = "",
     val isSearchExpanded: Boolean = false
+)
+
+data class WhatIfScoreDialogData(
+    val assignmentId: Long,
+    val assignmentName: String,
+    val currentScoreText: String,
+    val whatIfScore: Double?,
+    val maxScore: Double?
 )
 
 data class AssignmentGroupUiState(
@@ -64,6 +74,9 @@ data class AssignmentUiState(
     val dueDate: String,
     val submissionStateLabel: SubmissionStateLabel,
     val displayGrade: DisplayGrade,
+    val score: Double?,
+    val maxScore: Double?,
+    val whatIfScore: Double?,
     val checkpoints: List<DiscussionCheckpointUiState> = emptyList(),
     val checkpointsExpanded: Boolean = false
 )
@@ -102,6 +115,10 @@ sealed class GradesAction {
     data object HideGradePreferences : GradesAction()
     data class GradePreferencesUpdated(val gradingPeriod: GradingPeriod?, val sortBy: SortBy) : GradesAction()
     data class OnlyGradedAssignmentsSwitchCheckedChange(val checked: Boolean) : GradesAction()
+    data class ShowWhatIfScoreSwitchCheckedChange(val checked: Boolean) : GradesAction()
+    data class ShowWhatIfScoreDialog(val assignmentId: Long) : GradesAction()
+    data object HideWhatIfScoreDialog : GradesAction()
+    data class UpdateWhatIfScore(val assignmentId: Long, val score: Double?) : GradesAction()
     data class AssignmentClick(val id: Long) : GradesAction()
     data object SnackbarDismissed : GradesAction()
     data class ToggleCheckpointsExpanded(val assignmentId: Long) : GradesAction()

@@ -55,15 +55,20 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.Card
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.SnackbarResult
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -95,6 +100,7 @@ import androidx.compose.ui.semantics.hideFromAccessibility
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -190,6 +196,19 @@ fun GradesScreen(
                 GradePreferencesDialog(
                     uiState = uiState,
                     actionHandler = actionHandler,
+                    canvasContextColor = canvasContextColor
+                )
+            }
+
+            uiState.whatIfScoreDialogData?.let { dialogData ->
+                WhatIfScoreDialog(
+                    dialogData = dialogData,
+                    onDismiss = {
+                        actionHandler(GradesAction.HideWhatIfScoreDialog)
+                    },
+                    onConfirm = { score ->
+                        actionHandler(GradesAction.UpdateWhatIfScore(dialogData.assignmentId, score))
+                    },
                     canvasContextColor = canvasContextColor
                 )
             }
@@ -360,6 +379,45 @@ private fun GradesScreenContent(
                     )
                 }
 
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .defaultMinSize(minHeight = 48.dp)
+                        .padding(start = 32.dp, end = 32.dp, bottom = 16.dp)
+                        .toggleable(
+                            value = uiState.showWhatIfScore,
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) {
+                            actionHandler(GradesAction.ShowWhatIfScoreSwitchCheckedChange(!uiState.showWhatIfScore))
+                        }
+                        .semantics {
+                            role = Role.Switch
+                        },
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.showWhatIfScore),
+                        fontSize = 16.sp,
+                        color = colorResource(id = R.color.textDarkest),
+                        modifier = Modifier.testTag("showWhatIfScoreLabel")
+                    )
+                    CanvasSwitch(
+                        interactionSource = NoRippleInteractionSource(),
+                        checked = uiState.showWhatIfScore,
+                        onCheckedChange = {
+                            actionHandler(GradesAction.ShowWhatIfScoreSwitchCheckedChange(it))
+                        },
+                        color = Color(color = canvasContextColor),
+                        modifier = Modifier
+                            .height(24.dp)
+                            .semantics {
+                                hideFromAccessibility()
+                            }
+                    )
+                }
+
                 AnimatedVisibility(
                     visible = uiState.isSearchExpanded,
                     enter = slideInVertically() + fadeIn(),
@@ -423,7 +481,7 @@ private fun GradesScreenContent(
                         enter = expandVertically(),
                         exit = shrinkVertically()
                     ) {
-                        AssignmentItem(assignment, actionHandler, contextColor)
+                        AssignmentItem(assignment, actionHandler, contextColor, uiState.showWhatIfScore)
                     }
                 }
             }
@@ -455,7 +513,11 @@ private fun GradesCard(
                 .semantics(true) {}
                 .weight(1f),
             shape = RoundedCornerShape(6.dp),
-            backgroundColor = colorResource(id = R.color.backgroundLightestElevated),
+            backgroundColor = if (uiState.showWhatIfScore) {
+                Color(color = contextColor)
+            } else {
+                colorResource(id = R.color.backgroundLightestElevated)
+            },
             elevation = 8.dp
         ) {
             Row(
@@ -465,8 +527,10 @@ private fun GradesCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                val whatIf = uiState.showWhatIfScore
+                val onlyGraded = uiState.onlyGradedAssignmentsSwitchEnabled
                 AnimatedContent(
-                    targetState = shouldShowNewText && uiState.onlyGradedAssignmentsSwitchEnabled,
+                    targetState = shouldShowNewText && (onlyGraded || whatIf),
                     label = "GradeCardTextAnimation",
                     transitionSpec = {
                         if (targetState) {
@@ -477,13 +541,19 @@ private fun GradesCard(
                     }
                 ) {
                     Text(
-                        text = if (it) {
-                            stringResource(id = R.string.gradesBasedOnGraded)
-                        } else {
-                            stringResource(id = R.string.gradesTotal)
+                        text = when {
+                            !it -> stringResource(id = R.string.gradesTotal)
+                            whatIf && onlyGraded -> stringResource(id = R.string.gradesBasedOnGradedAndWhatIf)
+                            whatIf -> stringResource(id = R.string.whatIfScoreLabel)
+                            onlyGraded -> stringResource(id = R.string.gradesBasedOnGraded)
+                            else -> stringResource(id = R.string.gradesTotal)
                         },
                         fontSize = 14.sp,
-                        color = colorResource(id = R.color.textDark),
+                        color = if (uiState.showWhatIfScore) {
+                            colorResource(id = R.color.textLightest)
+                        } else {
+                            colorResource(id = R.color.textDark)
+                        },
                         modifier = Modifier
                             .fillMaxWidth(0.5f)
                             .testTag("gradesCardText")
@@ -494,7 +564,11 @@ private fun GradesCard(
                     Icon(
                         painter = painterResource(id = R.drawable.ic_lock_lined),
                         contentDescription = stringResource(id = R.string.gradeLockedContentDescription),
-                        tint = colorResource(id = R.color.textDarkest),
+                        tint = if (uiState.showWhatIfScore) {
+                            colorResource(id = R.color.textLightest)
+                        } else {
+                            colorResource(id = R.color.textDarkest)
+                        },
                         modifier = Modifier
                             .size(24.dp)
                             .semantics {
@@ -506,7 +580,11 @@ private fun GradesCard(
                         text = uiState.gradeText,
                         fontSize = 22.sp,
                         textAlign = TextAlign.Right,
-                        color = colorResource(id = R.color.textDarkest),
+                        color = if (uiState.showWhatIfScore) {
+                            colorResource(id = R.color.textLightest)
+                        } else {
+                            colorResource(id = R.color.textDarkest)
+                        },
                         modifier = Modifier.padding(start = 8.dp)
                     )
                 }
@@ -603,8 +681,11 @@ fun AssignmentItem(
     uiState: AssignmentUiState,
     actionHandler: (GradesAction) -> Unit,
     contextColor: Int,
+    showWhatIfScore: Boolean,
     modifier: Modifier = Modifier
 ) {
+    val hasWhatIfScore = showWhatIfScore && uiState.whatIfScore != null
+
     val iconRotation by animateFloatAsState(
         targetValue = if (uiState.checkpointsExpanded) 180f else 0f,
         label = "expandedIconRotation"
@@ -613,6 +694,13 @@ fun AssignmentItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .background(
+                color = if (hasWhatIfScore) {
+                    Color(color = contextColor)
+                } else {
+                    Color.Transparent
+                }
+            )
             .clickable {
                 actionHandler(GradesAction.AssignmentClick(uiState.id))
             }
@@ -629,7 +717,11 @@ fun AssignmentItem(
             Icon(
                 painter = painterResource(id = uiState.iconRes),
                 contentDescription = null,
-                tint = Color(contextColor),
+                tint = if (hasWhatIfScore) {
+                    colorResource(id = R.color.textDarkest)
+                } else {
+                    Color(contextColor)
+                },
                 modifier = Modifier
                     .size(24.dp)
                     .semantics {
@@ -640,24 +732,40 @@ fun AssignmentItem(
             Column {
                 Text(
                     text = uiState.name,
-                    color = colorResource(id = R.color.textDarkest),
+                    color = if (hasWhatIfScore) {
+                        colorResource(id = R.color.textDarkest)
+                    } else {
+                        colorResource(id = R.color.textDarkest)
+                    },
                     fontSize = 16.sp
                 )
                 if (uiState.checkpoints.isNotEmpty()) {
                     uiState.checkpoints.forEach {
                         Text(
                             text = it.dueDate,
-                            color = colorResource(id = R.color.textDark),
+                            color = if (hasWhatIfScore) {
+                                colorResource(id = R.color.textDarkest)
+                            } else {
+                                colorResource(id = R.color.textDark)
+                            },
                             fontSize = 14.sp,
                             modifier = Modifier.testTag("assignmentDueDate")
                         )
                     }
-                    SubmissionState(uiState.submissionStateLabel, "submissionStateLabel")
+                    SubmissionState(
+                        submissionStateLabel = uiState.submissionStateLabel,
+                        testTag = "submissionStateLabel",
+                        colorOverride = if (hasWhatIfScore) R.color.textDarkest else null
+                    )
                 } else {
                     FlowRow {
                         Text(
                             text = uiState.dueDate,
-                            color = colorResource(id = R.color.textDark),
+                            color = if (hasWhatIfScore) {
+                                colorResource(id = R.color.textDarkest)
+                            } else {
+                                colorResource(id = R.color.textDark)
+                            },
                             fontSize = 14.sp,
                             modifier = Modifier.testTag("assignmentDueDate")
                         )
@@ -672,7 +780,11 @@ fun AssignmentItem(
                                     .align(Alignment.CenterVertically)
                             )
                             Spacer(modifier = Modifier.width(4.dp))
-                            SubmissionState(uiState.submissionStateLabel, "submissionStateLabel")
+                            SubmissionState(
+                                submissionStateLabel = uiState.submissionStateLabel,
+                                testTag = "submissionStateLabel",
+                                colorOverride = if (hasWhatIfScore) R.color.textDarkest else null
+                            )
                         }
                     }
                 }
@@ -680,7 +792,11 @@ fun AssignmentItem(
                 if (gradeText.isNotEmpty()) {
                     Text(
                         text = gradeText,
-                        color = Color(contextColor),
+                        color = if (hasWhatIfScore) {
+                            colorResource(id = R.color.textDarkest)
+                        } else {
+                            Color(contextColor)
+                        },
                         fontSize = 16.sp,
                         modifier = Modifier
                             .semantics {
@@ -692,16 +808,48 @@ fun AssignmentItem(
                 AnimatedVisibility(visible = uiState.checkpointsExpanded) {
                     Column(modifier = Modifier.padding(top = 8.dp)) {
                         uiState.checkpoints.forEach {
-                            CheckpointItem(it, Color(contextColor))
+                            CheckpointItem(
+                                discussionCheckpointUiState = it,
+                                contextColor = Color(contextColor),
+                                colorOverride = if (hasWhatIfScore) R.color.textDarkest else null
+                            )
                         }
                     }
                 }
+            }
+        }
+        if (showWhatIfScore) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .requiredSize(48.dp)
+                    .clip(CircleShape)
+                    .clickable {
+                        actionHandler(GradesAction.ShowWhatIfScoreDialog(uiState.id))
+                    }
+                    .semantics {
+                        testTag = "editWhatIfScore"
+                        role = Role.Button
+                    }
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_edit),
+                    tint = if (hasWhatIfScore) {
+                        colorResource(id = R.color.textDarkest)
+                    } else {
+                        colorResource(id = R.color.textDarkest)
+                    },
+                    contentDescription = stringResource(id = R.string.editWhatIfScore),
+                    modifier = Modifier.size(20.dp)
+                )
             }
         }
         if (uiState.checkpoints.isNotEmpty()) {
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
+                    .align(Alignment.Top)
                     .requiredSize(48.dp)
                     .clip(CircleShape)
                     .clickable {
@@ -722,7 +870,11 @@ fun AssignmentItem(
                 )
                 Icon(
                     painter = painterResource(id = R.drawable.ic_arrow_down),
-                    tint = colorResource(id = R.color.textDarkest),
+                    tint = if (hasWhatIfScore) {
+                        colorResource(id = R.color.textDarkest)
+                    } else {
+                        colorResource(id = R.color.textDarkest)
+                    },
                     contentDescription = expandButtonContentDescription,
                     modifier = Modifier
                         .size(20.dp)
@@ -731,6 +883,85 @@ fun AssignmentItem(
             }
         }
     }
+}
+
+@Composable
+private fun WhatIfScoreDialog(
+    dialogData: WhatIfScoreDialogData,
+    onDismiss: () -> Unit,
+    onConfirm: (Double?) -> Unit,
+    canvasContextColor: Int
+) {
+    var whatIfScoreText by remember { mutableStateOf(dialogData.whatIfScore?.toString().orEmpty()) }
+
+    AlertDialog(
+        title = {
+            Text(
+                text = stringResource(id = R.string.editWhatIfScoreTitle),
+                color = colorResource(id = R.color.textDarkest)
+            )
+        },
+        text = {
+            Column {
+                if (dialogData.currentScoreText.isNotEmpty()) {
+                    Text(
+                        text = dialogData.currentScoreText,
+                        color = colorResource(id = R.color.textDark),
+                        fontSize = 14.sp,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+                }
+                OutlinedTextField(
+                    value = whatIfScoreText,
+                    onValueChange = { whatIfScoreText = it },
+                    label = {
+                        Text(
+                            text = stringResource(id = R.string.whatIfScoreLabel),
+                            color = colorResource(id = R.color.textDark)
+                        )
+                    },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                    singleLine = true,
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        textColor = colorResource(id = R.color.textDarkest),
+                        focusedBorderColor = Color(canvasContextColor),
+                        unfocusedBorderColor = colorResource(id = R.color.borderMedium),
+                        cursorColor = Color(canvasContextColor),
+                        focusedLabelColor = Color(canvasContextColor)
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag("whatIfScoreInput")
+                )
+            }
+        },
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onConfirm(whatIfScoreText.toDoubleOrNull())
+                },
+                modifier = Modifier.testTag("doneButton")
+            ) {
+                Text(
+                    text = stringResource(id = R.string.done),
+                    color = Color(canvasContextColor)
+                )
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = onDismiss,
+                modifier = Modifier.testTag("cancelButton")
+            ) {
+                Text(
+                    text = stringResource(id = R.string.cancel),
+                    color = Color(canvasContextColor)
+                )
+            }
+        },
+        backgroundColor = colorResource(R.color.backgroundLightestElevated)
+    )
 }
 
 @Preview(showBackground = true)
@@ -750,7 +981,10 @@ private fun GradesScreenPreview() {
                             name = "Assignment 1",
                             dueDate = "Due Date",
                             displayGrade = DisplayGrade("100%", ""),
-                            submissionStateLabel = SubmissionStateLabel.NotSubmitted
+                            submissionStateLabel = SubmissionStateLabel.NotSubmitted,
+                            score = 0.0,
+                            maxScore = 0.0,
+                            whatIfScore = 0.0
                         ),
                         AssignmentUiState(
                             id = 2,
@@ -758,7 +992,10 @@ private fun GradesScreenPreview() {
                             name = "Assignment 2",
                             dueDate = "Due Date",
                             displayGrade = DisplayGrade("Complete", ""),
-                            submissionStateLabel = SubmissionStateLabel.Graded
+                            submissionStateLabel = SubmissionStateLabel.Graded,
+                            score = 0.0,
+                            maxScore = 0.0,
+                            whatIfScore = 0.0
                         )
                     ),
                     expanded = true
@@ -781,10 +1018,14 @@ private fun AssignmentItemPreview() {
             name = "Assignment 1",
             dueDate = "Due Date",
             displayGrade = DisplayGrade("100%", ""),
-            submissionStateLabel = SubmissionStateLabel.Late
+            submissionStateLabel = SubmissionStateLabel.Late,
+            score = 0.0,
+            maxScore = 0.0,
+            whatIfScore = 0.0
         ),
         actionHandler = {},
-        contextColor = android.graphics.Color.RED
+        contextColor = android.graphics.Color.RED,
+        showWhatIfScore = false
     )
 }
 
