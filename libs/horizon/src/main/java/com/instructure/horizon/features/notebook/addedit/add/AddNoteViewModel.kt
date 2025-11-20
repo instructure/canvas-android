@@ -71,6 +71,7 @@ class AddNoteViewModel @Inject constructor(
                     )
                 ),
                 onSaveNote = ::addNote,
+                onDeleteNote = null,
                 type = if (noteType == null) null else NotebookType.valueOf(noteType),
             )
         }
@@ -94,5 +95,9 @@ class AddNoteViewModel @Inject constructor(
         } catch {
             _uiState.update { it.copy(isLoading = false, snackbarMessage = context.getString(R.string.failedToSaveNoteMessage)) }
         }
+    }
+
+    override fun hasContentChange(): Boolean {
+        return true
     }
 }

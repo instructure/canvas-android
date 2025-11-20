@@ -121,4 +121,9 @@ class EditNoteViewModel @Inject constructor(
             _uiState.update { it.copy(isLoading = false, snackbarMessage = context.getString(R.string.failedToDeleteNoteMessage)) }
         }
     }
+
+    override fun hasContentChange(): Boolean {
+        return uiState.value.userComment.text != userComment ||
+                uiState.value.type != NotebookType.valueOf(noteType)
+    }
 }

@@ -215,14 +215,16 @@ private fun AddEditNoteContent(state: AddEditNoteUiState, padding: PaddingValues
                 Spacer(Modifier.weight(1f))
             }
 
-            Button(
-                label = stringResource(R.string.deleteNoteLabel),
-                width = ButtonWidth.RELATIVE,
-                height = ButtonHeight.SMALL,
-                color = ButtonColor.DangerInverse,
-                iconPosition = ButtonIconPosition.Start(R.drawable.delete),
-                onClick = { state.updateDeleteConfirmationDialog(true) }
-            )
+            if (state.onDeleteNote != null) {
+                Button(
+                    label = stringResource(R.string.deleteNoteLabel),
+                    width = ButtonWidth.RELATIVE,
+                    height = ButtonHeight.SMALL,
+                    color = ButtonColor.DangerInverse,
+                    iconPosition = ButtonIconPosition.Start(R.drawable.delete),
+                    onClick = { state.updateDeleteConfirmationDialog(true) }
+                )
+            }
         }
     }
 }

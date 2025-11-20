@@ -36,15 +36,13 @@ abstract class AddEditViewModel: ViewModel() {
     val uiState = _uiState.asStateFlow()
 
     private fun onTypeChanged(newType: NotebookType?) {
-        _uiState.update {
-            it.copy(
-                type = newType
-            )
-        }
+        _uiState.update { it.copy(type = newType,) }
+        _uiState.update { it.copy(hasContentChange = hasContentChange()) }
     }
 
     private fun onUserCommentChanged(userComment: TextFieldValue) {
         _uiState.update { it.copy(userComment = userComment) }
+        _uiState.update { it.copy(hasContentChange = hasContentChange()) }
     }
 
     private fun onSnackbarDismissed() {
@@ -58,4 +56,6 @@ abstract class AddEditViewModel: ViewModel() {
     private fun updateShowDeleteConfirmationDialog(value: Boolean) {
         _uiState.update { it.copy(showDeleteConfirmationDialog = value) }
     }
+
+    protected abstract fun hasContentChange(): Boolean
 }
