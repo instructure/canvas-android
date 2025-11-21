@@ -25,7 +25,8 @@ import kotlin.random.Random
 
 class GetWelcomeMessageUseCase @Inject constructor(
     private val resources: Resources,
-    private val timeOfDayCalculator: TimeOfDayCalculator
+    private val timeOfDayCalculator: TimeOfDayCalculator,
+    private val random: Random
 ) {
 
     operator fun invoke(): String {
@@ -40,6 +41,6 @@ class GetWelcomeMessageUseCase @Inject constructor(
         }
 
         val allMessages = genericMessages + timeSpecificMessages
-        return allMessages[Random.nextInt(allMessages.size)]
+        return allMessages[random.nextInt(allMessages.size)]
     }
 }
