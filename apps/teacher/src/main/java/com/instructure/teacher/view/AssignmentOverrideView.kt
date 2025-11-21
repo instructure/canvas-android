@@ -197,8 +197,8 @@ class AssignmentOverrideView @JvmOverloads constructor(
 
         if (BuildConfig.IS_TESTING) {
             removeOverride.contentDescription = "remove_override_button_$index"
-            binding.dueDate.contentDescription = "due_date_$index"
-            binding.dueTime.contentDescription = "due_time_$index"
+            binding.dueDateTextInput.contentDescription = "due_date_$index"
+            binding.dueTimeTextInput.contentDescription = "due_time_$index"
         }
 
         removeOverride.setOnClickListener {
