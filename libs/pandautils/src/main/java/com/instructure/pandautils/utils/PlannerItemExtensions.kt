@@ -136,6 +136,7 @@ fun PlannerItem.isComplete(): Boolean {
     return plannerOverride?.markedComplete ?: if (plannableType == PlannableType.ASSIGNMENT
         || plannableType == PlannableType.DISCUSSION_TOPIC
         || plannableType == PlannableType.SUB_ASSIGNMENT
+        || plannableType == PlannableType.QUIZ
     ) {
         submissionState?.submitted == true
     } else {

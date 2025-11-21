@@ -31,6 +31,8 @@ import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.isInvited
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.calendar.CalendarSharedEvents
+import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.features.todolist.filter.DateRangeSelection
 import com.instructure.pandautils.room.appdatabase.daos.ToDoFilterDao
 import com.instructure.pandautils.room.appdatabase.entities.ToDoFilterEntity
@@ -64,6 +66,7 @@ class ToDoListViewModel @Inject constructor(
     private val apiPrefs: ApiPrefs,
     private val analytics: Analytics,
     private val toDoListViewModelBehavior: ToDoListViewModelBehavior,
+    private val calendarSharedEvents: CalendarSharedEvents,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -115,6 +118,20 @@ class ToDoListViewModel @Inject constructor(
 
     init {
         loadData()
+        observeCalendarSharedEvents()
+    }
+
+    private fun observeCalendarSharedEvents() {
+        viewModelScope.launch {
+            calendarSharedEvents.events.collect { action ->
+                when (action) {
+                    is SharedCalendarAction.RefreshToDoList -> {
+                        loadData(forceRefresh = true)
+                    }
+                    else -> {} // Ignore other calendar actions
+                }
+            }
+        }
     }
 
     private fun loadData(forceRefresh: Boolean = false) {
