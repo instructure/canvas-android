@@ -2346,4 +2346,7 @@
 
     <!-- Accessibility -->
     <string name="welcomeWidgetContentDescription">Welcome message: %1$s. %2$s</string>
+
+    <!-- Institutional Announcements -->
+    <string name="institutionalAnnouncementsTitle">Announcements (%d)</string>
 </resources>

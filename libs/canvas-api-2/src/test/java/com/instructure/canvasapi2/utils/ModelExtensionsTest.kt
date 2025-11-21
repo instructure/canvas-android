@@ -116,6 +116,66 @@ class ModelExtensionsTest {
     }
 
     @Test
+    fun `Score to letter grade handles floating point precision for 1 point assignment with A grade`() {
+        val standardGradingScheme = listOf(
+            GradingSchemeRow("A", 0.9),
+            GradingSchemeRow("B", 0.8),
+            GradingSchemeRow("C", 0.7),
+            GradingSchemeRow("D", 0.6),
+            GradingSchemeRow("F", 0.0)
+        )
+        val result = convertScoreToLetterGrade(0.9, 1.0, standardGradingScheme)
+
+        assertEquals("A", result)
+    }
+
+    @Test
+    fun `Score to letter grade handles floating point precision for 1 point assignment with B grade`() {
+        val standardGradingScheme = listOf(
+            GradingSchemeRow("A", 0.9),
+            GradingSchemeRow("B", 0.8),
+            GradingSchemeRow("C", 0.7),
+            GradingSchemeRow("D", 0.6),
+            GradingSchemeRow("F", 0.0)
+        )
+        val result = convertScoreToLetterGrade(0.8, 1.0, standardGradingScheme)
+
+        assertEquals("B", result)
+    }
+
+    @Test
+    fun `Score to letter grade handles conversion from percentage to score for 1 point assignment`() {
+        val standardGradingScheme = listOf(
+            GradingSchemeRow("A", 0.9),
+            GradingSchemeRow("B", 0.8),
+            GradingSchemeRow("C", 0.7),
+            GradingSchemeRow("D", 0.6),
+            GradingSchemeRow("F", 0.0)
+        )
+        val percentage = 90.0f
+        val pointsPossible = 1.0
+        val score = (percentage / 100) * pointsPossible
+        val result = convertScoreToLetterGrade(score, pointsPossible, standardGradingScheme)
+
+        assertEquals("A", result)
+    }
+
+    @Test
+    fun `Score to letter grade handles exact threshold values`() {
+        val standardGradingScheme = listOf(
+            GradingSchemeRow("A", 0.9),
+            GradingSchemeRow("B", 0.8),
+            GradingSchemeRow("C", 0.7),
+            GradingSchemeRow("D", 0.6),
+            GradingSchemeRow("F", 0.0)
+        )
+        assertEquals("A", convertScoreToLetterGrade(90.0, 100.0, standardGradingScheme))
+        assertEquals("B", convertScoreToLetterGrade(80.0, 100.0, standardGradingScheme))
+        assertEquals("C", convertScoreToLetterGrade(70.0, 100.0, standardGradingScheme))
+        assertEquals("D", convertScoreToLetterGrade(60.0, 100.0, standardGradingScheme))
+    }
+
+    @Test
     fun `Counts matching custom status submissions`() {
         val list = listOf(
             Submission(
