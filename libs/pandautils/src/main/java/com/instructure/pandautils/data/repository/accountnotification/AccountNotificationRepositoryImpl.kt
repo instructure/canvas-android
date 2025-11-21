@@ -20,9 +20,8 @@ import com.instructure.canvasapi2.apis.AccountNotificationAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.AccountNotification
 import com.instructure.canvasapi2.utils.DataResult
-import javax.inject.Inject
 
-class AccountNotificationRepositoryImpl @Inject constructor(
+class AccountNotificationRepositoryImpl(
     private val accountNotificationApi: AccountNotificationAPI.AccountNotificationInterface
 ) : AccountNotificationRepository {
 
