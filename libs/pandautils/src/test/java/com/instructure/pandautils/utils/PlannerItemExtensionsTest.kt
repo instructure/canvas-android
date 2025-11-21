@@ -463,6 +463,59 @@ class PlannerItemExtensionsTest {
         assertEquals(false, result)
     }
 
+    @Test
+    fun `isComplete returns true for QUIZ when submitted`() {
+        val plannerItem = createPlannerItem(
+            plannableType = PlannableType.QUIZ,
+            submissionState = com.instructure.canvasapi2.models.SubmissionState(submitted = true)
+        )
+
+        val result = plannerItem.isComplete()
+
+        assertEquals(true, result)
+    }
+
+    @Test
+    fun `isComplete returns false for QUIZ when not submitted`() {
+        val plannerItem = createPlannerItem(
+            plannableType = PlannableType.QUIZ,
+            submissionState = com.instructure.canvasapi2.models.SubmissionState(submitted = false)
+        )
+
+        val result = plannerItem.isComplete()
+
+        assertEquals(false, result)
+    }
+
+    @Test
+    fun `isComplete returns false for QUIZ with null submission state`() {
+        val plannerItem = createPlannerItem(
+            plannableType = PlannableType.QUIZ,
+            submissionState = null
+        )
+
+        val result = plannerItem.isComplete()
+
+        assertEquals(false, result)
+    }
+
+    @Test
+    fun `isComplete returns true for QUIZ with plannerOverride marked complete`() {
+        val plannerItem = createPlannerItem(
+            plannableType = PlannableType.QUIZ,
+            plannerOverride = com.instructure.canvasapi2.models.PlannerOverride(
+                plannableType = PlannableType.QUIZ,
+                plannableId = 1L,
+                markedComplete = true
+            ),
+            submissionState = com.instructure.canvasapi2.models.SubmissionState(submitted = false)
+        )
+
+        val result = plannerItem.isComplete()
+
+        assertEquals(true, result)
+    }
+
     // filterByToDoFilters tests
     @Test
     fun `filterByToDoFilters filters out PLANNER_NOTE when personalTodos is false`() {
