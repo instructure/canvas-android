@@ -77,6 +77,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInParent
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
@@ -328,8 +329,9 @@ private fun ToDoItemsList(
 
     val dateGroups = filteredItemsByDate.entries.toList()
     val listState = rememberLazyListState()
-    val itemPositions = remember { mutableStateMapOf<String, Float>() }
-    val itemSizes = remember { mutableStateMapOf<String, Int>() }
+    val configuration = LocalConfiguration.current
+    val itemPositions = remember(configuration) { mutableStateMapOf<String, Float>() }
+    val itemSizes = remember(configuration) { mutableStateMapOf<String, Int>() }
     val density = LocalDensity.current
     var listHeight by remember { mutableIntStateOf(0) }
 
