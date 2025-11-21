@@ -167,23 +167,6 @@ class HorizonNotebookPage(private val composeTestRule: ComposeTestRule) {
             .performClick()
     }
 
-    fun selectNoteType(type: String) {
-        selectType(type)
-    }
-
-    fun clearAndEnterUserComment(comment: String) {
-        clearUserComment()
-        enterUserComment(comment)
-    }
-
-    fun clickDeleteConfirmButton() {
-        clickDeleteConfirmationButton()
-    }
-
-    fun waitForIdle() {
-        composeTestRule.waitForIdle()
-    }
-
     fun clickAddNoteButton() {
         composeTestRule.onNodeWithText(context.getString(R.string.editNoteSaveButtonLabel))
             .performClick()
