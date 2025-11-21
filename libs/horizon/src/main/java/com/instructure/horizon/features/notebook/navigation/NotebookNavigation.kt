@@ -75,7 +75,7 @@ fun NavGraphBuilder.notebookNavigation(
                     type = NavType.BoolType
                     defaultValue = false
                 }
-            )
+            ),
         ) {
             val viewModel = hiltViewModel<NotebookViewModel>()
             val uiState by viewModel.uiState.collectAsState()

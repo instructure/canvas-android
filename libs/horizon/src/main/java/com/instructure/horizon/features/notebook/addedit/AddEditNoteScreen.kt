@@ -16,23 +16,35 @@
  */
 package com.instructure.horizon.features.notebook.addedit
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
@@ -42,9 +54,7 @@ import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlight
 import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedDataTextPosition
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
-import com.instructure.horizon.features.notebook.common.composable.NotebookAppBar
 import com.instructure.horizon.features.notebook.common.composable.NotebookHighlightedText
-import com.instructure.horizon.features.notebook.common.composable.NotebookTypeSelect
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
@@ -56,7 +66,12 @@ import com.instructure.horizon.horizonui.molecules.ButtonHeight
 import com.instructure.horizon.horizonui.molecules.ButtonIconPosition
 import com.instructure.horizon.horizonui.molecules.ButtonWidth
 import com.instructure.horizon.horizonui.molecules.Spinner
+import com.instructure.horizon.horizonui.organisms.Modal
+import com.instructure.horizon.horizonui.organisms.ModalDialogState
 import com.instructure.horizon.horizonui.organisms.inputs.common.InputLabelRequired
+import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelect
+import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectInputSize
+import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectState
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextArea
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextAreaState
 import com.instructure.pandautils.utils.ViewStyler
@@ -70,45 +85,109 @@ fun AddEditNoteScreen(
 ) {
     val activity = LocalContext.current.getActivityOrNull()
     LaunchedEffect(Unit) {
-        if (activity != null) ViewStyler.setStatusBarColor(activity, ContextCompat.getColor(activity, R.color.surface_pagePrimary))
+        if (activity != null) ViewStyler.setStatusBarColor(activity, ContextCompat.getColor(activity, R.color.surface_pageSecondary))
     }
 
     LaunchedEffect(state.snackbarMessage) {
         onShowSnackbar(state.snackbarMessage, state.onSnackbarDismiss)
     }
 
+    BackHandler {
+        if (state.hasContentChange) {
+            state.updateExitConfirmationDialog(true)
+        } else {
+            navController.popBackStack()
+        }
+    }
+
     Scaffold(
-        containerColor = HorizonColors.Surface.pagePrimary(),
-        topBar = { NotebookAppBar(navigateBack = { navController.popBackStack() }) },
+        containerColor = HorizonColors.Surface.pageSecondary(),
+        topBar = { AddEditNoteAppBar(state, navigateBack = { navController.popBackStack() }) },
     ) { padding ->
         if (state.isLoading) {
             AddEditNoteLoading(padding)
         } else {
-            AddEditNoteContent(
-                state = state,
-                navController = navController,
-                padding = padding
-            )
+            AddEditNoteScreenDeleteConfirmationDialog(state, navController)
+            AddEditNoteScreenExitConfirmationDialog(state, navController)
+            AddEditNoteContent(state, padding)
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun AddEditNoteContent(state: AddEditNoteUiState, navController: NavHostController, padding: PaddingValues) {
+private fun AddEditNoteAppBar(
+    state: AddEditNoteUiState,
+    navigateBack: () -> Unit
+) {
+    CenterAlignedTopAppBar(
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = HorizonColors.Surface.pageSecondary(),
+            titleContentColor = HorizonColors.Text.title(),
+            navigationIconContentColor = HorizonColors.Icon.default()
+        ),
+        title = {
+            Text(
+                state.title,
+                style = HorizonTypography.h4,
+                color = HorizonColors.Text.title()
+            )
+        },
+        navigationIcon = {
+            Button(
+                label = stringResource(R.string.editNoteCancelButtonLabel),
+                onClick = {
+                    if (state.hasContentChange) {
+                        state.updateExitConfirmationDialog(true)
+                    } else {
+                        navigateBack()
+                    }
+                },
+                color = ButtonColor.WhiteWithOutline,
+                height = ButtonHeight.SMALL,
+                enabled = !state.isLoading
+            )
+        },
+        actions = {
+            Button(
+                label = stringResource(R.string.editNoteSaveButtonLabel),
+                onClick = { state.onSaveNote(navigateBack) },
+                color = ButtonColor.Black,
+                height = ButtonHeight.SMALL,
+                enabled = state.hasContentChange && !state.isLoading
+            )
+        },
+        modifier = Modifier.padding(horizontal = 16.dp)
+    )
+}
+
+
+@Composable
+private fun AddEditNoteContent(state: AddEditNoteUiState, padding: PaddingValues) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
             .padding(padding)
-            .padding(24.dp)
+            .padding(horizontal = 16.dp)
     ) {
-        Text(
-            text = stringResource(R.string.addNoteHighlightlabel),
-            style = HorizonTypography.labelLargeBold,
-            color = HorizonColors.Text.body()
+        HorizonSpace(SpaceSize.SPACE_24)
+
+        var isMenuOpen by remember { mutableStateOf(false) }
+        SingleSelect(
+            SingleSelectState(
+                options = NotebookType.entries.map { it.name },
+                selectedOption = state.type?.name,
+                size = SingleSelectInputSize.Small,
+                onOptionSelected = { state.onTypeChanged(NotebookType.valueOf(it)) },
+                isMenuOpen = isMenuOpen,
+                onMenuOpenChanged = { isMenuOpen = it },
+                isFullWidth = false,
+            ),
+            modifier = Modifier.width(IntrinsicSize.Min)
         )
 
-        HorizonSpace(SpaceSize.SPACE_8)
+        HorizonSpace(SpaceSize.SPACE_24)
 
         NotebookHighlightedText(
             text = state.highlightedData.selectedText,
@@ -117,65 +196,46 @@ private fun AddEditNoteContent(state: AddEditNoteUiState, navController: NavHost
 
         HorizonSpace(SpaceSize.SPACE_24)
 
-        Text(
-            text = stringResource(R.string.addNoteLabelLabel),
-            style = HorizonTypography.labelLargeBold,
-            color = HorizonColors.Text.body()
-        )
-
-        HorizonSpace(SpaceSize.SPACE_8)
-
-        Row {
-            NotebookTypeSelect(
-                type = NotebookType.Important,
-                isSelected = state.type == NotebookType.Important,
-                onSelect = { state.onTypeChanged(if (state.type == NotebookType.Important) null else NotebookType.Important) },
-                modifier = Modifier.weight(1f)
-            )
-
-            HorizonSpace(SpaceSize.SPACE_12)
-
-            NotebookTypeSelect(
-                type = NotebookType.Confusing,
-                isSelected = state.type == NotebookType.Confusing,
-                onSelect = { state.onTypeChanged(if (state.type == NotebookType.Confusing) null else NotebookType.Confusing) },
-                modifier = Modifier.weight(1f)
-            )
-        }
-
-        HorizonSpace(SpaceSize.SPACE_24)
-
         TextArea(
             state = TextAreaState(
-                label = stringResource(R.string.addNoteAddANoteLabel),
+                placeHolderText = stringResource(R.string.addNoteAddANoteLabel),
                 required = InputLabelRequired.Optional,
                 value = state.userComment,
                 onValueChange = state.onUserCommentChanged,
             ),
-            minLines = 5
+            minLines = 5,
+            maxLines = 5
         )
 
         HorizonSpace(SpaceSize.SPACE_16)
 
-        Button(
-            label = stringResource(R.string.addNoteSaveLabel),
-            onClick = { state.onSaveNote { navController.popBackStack() } },
-            enabled = !state.isLoading && state.type != null,
-            color = ButtonColor.Institution,
-            width = ButtonWidth.FILL,
-            height = ButtonHeight.NORMAL
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            if (state.lastModifiedDate != null) {
+                Text(
+                    state.lastModifiedDate,
+                    style = HorizonTypography.labelSmall,
+                    color = HorizonColors.Text.timestamp(),
+                    modifier = Modifier.weight(1f),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            } else {
+                Spacer(Modifier.weight(1f))
+            }
 
-        if (state.onDeleteNote != null) {
-            HorizonSpace(SpaceSize.SPACE_16)
-            Button(
-                label = stringResource(R.string.addNoteDeleteLabel),
-                onClick = { state.onDeleteNote?.invoke { navController.popBackStack() } },
-                color = ButtonColor.DangerInverse,
-                width = ButtonWidth.FILL,
-                height = ButtonHeight.NORMAL,
-                iconPosition = ButtonIconPosition.Start(R.drawable.delete),
-            )
+            if (state.onDeleteNote != null) {
+                Button(
+                    label = stringResource(R.string.deleteNoteLabel),
+                    width = ButtonWidth.RELATIVE,
+                    height = ButtonHeight.SMALL,
+                    color = ButtonColor.DangerInverse,
+                    iconPosition = ButtonIconPosition.Start(R.drawable.delete),
+                    onClick = { state.updateDeleteConfirmationDialog(true) }
+                )
+            }
         }
     }
 }
@@ -194,10 +254,58 @@ private fun AddEditNoteLoading(padding: PaddingValues) {
 }
 
 @Composable
+private fun AddEditNoteScreenDeleteConfirmationDialog(
+    state: AddEditNoteUiState,
+    navController: NavHostController
+) {
+    if (state.showDeleteConfirmationDialog) {
+        Modal(
+            ModalDialogState(
+                title = stringResource(R.string.deleteNoteConfirmationTitle),
+                message = stringResource(R.string.deleteNoteConfirmationMessage),
+                primaryButtonTitle = stringResource(R.string.deleteNoteConfirmationDeleteLabel),
+                primaryButtonClick = {
+                    state.updateDeleteConfirmationDialog(false)
+                    state.onDeleteNote?.invoke { navController.popBackStack() }
+                },
+                secondaryButtonTitle = stringResource(R.string.deleteNoteConfirmationCancelLabel),
+                secondaryButtonClick = { state.updateDeleteConfirmationDialog(false) }
+
+            ),
+            onDismiss = { state.updateDeleteConfirmationDialog(false) }
+        )
+    }
+}
+
+@Composable
+private fun AddEditNoteScreenExitConfirmationDialog(
+    state: AddEditNoteUiState,
+    navController: NavHostController
+) {
+    if (state.showExitConfirmationDialog) {
+        Modal(
+            ModalDialogState(
+                title = stringResource(R.string.editNoteExitConfirmationTitle),
+                message = stringResource(R.string.editNoteExitConfirmationMessage),
+                primaryButtonTitle = stringResource(R.string.editNoteExitConfirmationExitButtonLabel),
+                primaryButtonClick = {
+                    state.updateExitConfirmationDialog(false)
+                    navController.popBackStack()
+                },
+                secondaryButtonTitle = stringResource(R.string.editNoteExitConfirmationCancelButtonLabel),
+                secondaryButtonClick = { state.updateExitConfirmationDialog(false) }
+            ),
+            onDismiss = { state.updateExitConfirmationDialog(false) }
+        )
+    }
+}
+
+@Composable
 @Preview
 private fun AddEditNoteScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
     val state = AddEditNoteUiState(
+        title = "Add note",
         type = NotebookType.Important,
         highlightedData = NoteHighlightedData(
             selectedText = "This is a highlighted text",
@@ -223,6 +331,7 @@ private fun AddEditNoteScreenPreview() {
 private fun AddEditNoteScreenLoadingPreview() {
     ContextKeeper.appContext = LocalContext.current
     val state = AddEditNoteUiState(
+        title = "Add note",
         type = NotebookType.Important,
         highlightedData = NoteHighlightedData(
             selectedText = "This is a highlighted text",

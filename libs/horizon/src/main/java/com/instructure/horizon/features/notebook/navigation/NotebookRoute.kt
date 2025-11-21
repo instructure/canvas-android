@@ -85,5 +85,6 @@ sealed class NotebookRoute(open val route: String) {
         val highlightedText: String,
         val noteType: String,
         val userComment: String,
+        val updatedAt: String?,
     ): NotebookRoute("edit_notebook")
 }

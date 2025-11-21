@@ -47,6 +47,7 @@ import com.instructure.horizon.horizonui.animation.enterTransition
 import com.instructure.horizon.horizonui.animation.exitTransition
 import com.instructure.horizon.horizonui.animation.popEnterTransition
 import com.instructure.horizon.horizonui.animation.popExitTransition
+import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.navigation.MainNavigationRoute.Companion.ASSIGNMENT_ID
 import com.instructure.horizon.navigation.MainNavigationRoute.Companion.COURSE_ID
 import com.instructure.horizon.navigation.MainNavigationRoute.Companion.PAGE_ID
@@ -87,6 +88,7 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     Scaffold(
+        containerColor = HorizonColors.Surface.pagePrimary(),
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
     ) { innerPadding ->
         NavHost(

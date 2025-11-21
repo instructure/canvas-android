@@ -214,7 +214,7 @@ fun ComposeNotesHighlightingCanvasWebView(
                         selectedTextStart = selectedTextStartParam
                         selectedTextEnd = selectedTextEndParam
                     },
-                    onHighlightedTextClick = { noteId, noteType, selectedText, userComment, startContainer, startOffset, endContainer, endOffset, selectedTextStartParam, selectedTextEndParam ->
+                    onHighlightedTextClick = { noteId, noteType, selectedText, userComment, startContainer, startOffset, endContainer, endOffset, selectedTextStartParam, selectedTextEndParam, updatedAt ->
                         lifecycleOwner.lifecycleScope.launch {
                             notesCallback.onNoteSelected(
                                 noteId,
@@ -226,7 +226,8 @@ fun ComposeNotesHighlightingCanvasWebView(
                                 endContainer,
                                 endOffset,
                                 selectedTextStartParam,
-                                selectedTextEndParam
+                                selectedTextEndParam,
+                                updatedAt
                             )
                         }
                     },

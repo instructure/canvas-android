@@ -18,7 +18,10 @@ package com.instructure.horizon.features.notebook.common.webview
 
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
+import com.google.gson.Gson
+import com.instructure.horizon.features.notebook.common.composable.toNotebookLocalisedDateFormat
 import com.instructure.horizon.features.notebook.common.model.Note
+import org.json.JSONObject
 
 class JSTextSelectionInterface(
     private val onTextSelect: (
@@ -40,7 +43,8 @@ class JSTextSelectionInterface(
         endContainer: String,
         endOffset: Int,
         textSelectionStart: Int,
-        textSelectionEnd: Int
+        textSelectionEnd: Int,
+        updatedAt: String,
     ) -> Unit,
     private val onSelectionPositionChange: (
         left: Float,
@@ -83,12 +87,28 @@ class JSTextSelectionInterface(
         endOffset: Int,
         endContainer: String,
         textSelectionStart: Int,
-        textSelectionEnd: Int
+        textSelectionEnd: Int,
+        updatedAt: String,
     ) {
-        onHighlightedTextClick(noteId, noteType, selectedText, userComment, startContainer, startOffset, endContainer, endOffset, textSelectionStart, textSelectionEnd)
+        onHighlightedTextClick(noteId, noteType, selectedText, userComment, startContainer, startOffset, endContainer, endOffset, textSelectionStart, textSelectionEnd, updatedAt)
     }
 
+    data class HighlightParams(
+        val noteId: String,
+        val selectedText: String,
+        val userComment: String,
+        val startOffset: Int,
+        val startContainer: String,
+        val endOffset: Int,
+        val endContainer: String,
+        val noteReactionString: String,
+        val textSelectionStart: Int,
+        val textSelectionEnd: Int,
+        val updatedAt: String
+    )
+
     companion object {
+        private val gson = Gson()
         private const val JS_INTERFACE_NAME = "TextSelectionInterface"
 		private const val JS_CODE_FROM_WEB = """
 let highlightCss = `
@@ -630,7 +650,10 @@ const isNodeInRange = (range, node) => {
 		"""
         private val JS_CODE = """
 ${JS_CODE_FROM_WEB}
-function highlightSelection(noteId, selectedText, userComment, startOffset, startContainer, endOffset, endContainer, noteReactionString, textSelectionStart, textSelectionEnd) {
+function highlightSelection(paramsJson) {
+	const params = JSON.parse(paramsJson);
+	const { noteId, selectedText, userComment, startOffset, startContainer, endOffset, endContainer, noteReactionString, textSelectionStart, textSelectionEnd, updatedAt } = params;
+
 	let parent = document.getElementById("parent-container");//document.documentElement;
 	if (!parent) return;
 
@@ -655,7 +678,7 @@ function highlightSelection(noteId, selectedText, userComment, startOffset, star
 		const highlightElement = document.createElement("span");
 		highlightElement.classList.add(highlightClassName);
 		highlightElement.classList.add(cssClass);
-		highlightElement.onclick = function () { ${ JS_INTERFACE_NAME }.onHighlightedTextClicked(noteId, noteReactionString, selectedText, userComment, startOffset, startContainer, endOffset, endContainer, textSelectionStart, textSelectionEnd); };
+		highlightElement.onclick = function () { ${ JS_INTERFACE_NAME }.onHighlightedTextClicked(noteId, noteReactionString, selectedText, userComment, startOffset, startContainer, endOffset, endContainer, textSelectionStart, textSelectionEnd, updatedAt); };
 		highlightElement.textContent = textNode.textContent;
 
 		if (!highlightElement) return;
@@ -709,7 +732,8 @@ javascript: (function () {
                 endContainer: String,
                 endOffset: Int,
                 textSelectionStart: Int,
-                textSelectionEnd: Int
+                textSelectionEnd: Int,
+                updatedAt: String,
             ) -> Unit,
             onSelectionPositionChange: (
                 left: Float,
@@ -728,7 +752,22 @@ javascript: (function () {
 
         fun WebView.highlightNotes(notes: List<Note>) {
             notes.forEach { note ->
-                val script = "javascript:highlightSelection('${note.id}', '${note.highlightedText.selectedText.replace("\n", "\\n")}', '${note.userText.replace("\n", "\\n")}', ${note.highlightedText.range.startOffset}, '${note.highlightedText.range.startContainer}', ${note.highlightedText.range.endOffset}, '${note.highlightedText.range.endContainer}', '${note.type.name}', ${note.highlightedText.textPosition.start}, ${note.highlightedText.textPosition.end})"
+                val params = HighlightParams(
+                    noteId = note.id,
+                    selectedText = note.highlightedText.selectedText,
+                    userComment = note.userText,
+                    startOffset = note.highlightedText.range.startOffset,
+                    startContainer = note.highlightedText.range.startContainer,
+                    endOffset = note.highlightedText.range.endOffset,
+                    endContainer = note.highlightedText.range.endContainer,
+                    noteReactionString = note.type.name,
+                    textSelectionStart = note.highlightedText.textPosition.start,
+                    textSelectionEnd = note.highlightedText.textPosition.end,
+                    updatedAt = note.updatedAt.toNotebookLocalisedDateFormat()
+                )
+                val paramsJson = gson.toJson(params)
+                val quotedJson = JSONObject.quote(paramsJson)
+                val script = "javascript:highlightSelection($quotedJson)"
                 this.evaluateJavascript(script, null)
             }
         }
