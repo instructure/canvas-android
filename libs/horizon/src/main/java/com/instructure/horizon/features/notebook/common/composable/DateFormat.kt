@@ -20,5 +20,5 @@ import com.instructure.pandautils.utils.localisedFormat
 import java.util.Date
 
 fun Date.toNotebookLocalisedDateFormat(): String {
-    return this.localisedFormat("MMM dd, YYYY")
+    return this.localisedFormat("MMM dd, yyyy")
 }

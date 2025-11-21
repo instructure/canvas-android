@@ -79,7 +79,7 @@ class NotebookInteractionTest : HorizonTest() {
         fakeRedwoodApiManager.reset()
     }
     @Test
-    fun testNoteIsSiplayed() = runTest {
+    fun testNoteIsDisplayed() = runTest {
         val data = setupMockCanvasData()
         val course = data.courses.values.first()
 
