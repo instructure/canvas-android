@@ -175,6 +175,10 @@ class ToDoListViewModel @Inject constructor(
 
         val itemId = plannerItem.plannable.id.toString()
 
+        // Account-level calendar events should not be clickable
+        val isAccountLevelEvent = plannerItem.contextType?.equals("Account", ignoreCase = true) == true
+        val isClickable = !(isAccountLevelEvent && itemType == ToDoItemType.CALENDAR_EVENT)
+
         return ToDoItemUiState(
             id = itemId,
             title = plannerItem.plannable.title,
@@ -187,6 +191,7 @@ class ToDoListViewModel @Inject constructor(
             iconRes = plannerItem.getIconForPlannerItem(),
             tag = plannerItem.getTagForPlannerItem(context),
             htmlUrl = plannerItem.getUrl(apiPrefs),
+            isClickable = isClickable,
             onSwipeToDone = { handleSwipeToDone(itemId) },
             onCheckboxToggle = { isChecked -> handleCheckboxToggle(itemId, isChecked) }
         )

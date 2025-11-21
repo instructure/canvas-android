@@ -667,7 +667,7 @@ private fun ToDoItemContent(
         modifier = modifier
             .fillMaxWidth()
             .background(colorResource(id = R.color.backgroundLightest))
-            .clickable(onClick = onClick)
+            .clickable(enabled = item.isClickable, onClick = onClick)
             .padding(start = 12.dp, end = 16.dp, top = 8.dp, bottom = 8.dp),
         verticalAlignment = Alignment.Top
     ) {
