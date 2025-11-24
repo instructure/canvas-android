@@ -366,8 +366,6 @@ class ToDoListViewModel @Inject constructor(
                 )
             }
             checkboxRemovedItems.clear()
-
-            applyFiltersLocally()
         }
     }
 

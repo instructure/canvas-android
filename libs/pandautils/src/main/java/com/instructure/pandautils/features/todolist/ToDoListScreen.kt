@@ -272,26 +272,31 @@ fun ToDoListScreen(
 }
 
 @Composable
-private fun ToDoListContent(
+internal fun ToDoListContent(
     uiState: ToDoListUiState,
     onOpenToDoItem: (String) -> Unit,
     onDateClick: (Date) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // Filter out items that are being removed
+    val filteredItemsByDate = uiState.itemsByDate.mapValues { (_, items) ->
+        items.filter { it.id !in uiState.removingItemIds }
+    }.filterValues { it.isNotEmpty() }
+
     when {
         uiState.isLoading -> {
-            Loading(modifier = modifier.fillMaxSize())
+            Loading(modifier = modifier.fillMaxSize().testTag("todoListLoading"))
         }
 
         uiState.isError -> {
             ErrorContent(
                 errorMessage = stringResource(id = R.string.errorLoadingToDos),
                 retryClick = uiState.onRefresh,
-                modifier = modifier.fillMaxSize()
+                modifier = modifier.fillMaxSize().testTag("todoListError")
             )
         }
 
-        uiState.itemsByDate.isEmpty() -> {
+        filteredItemsByDate.isEmpty() -> {
             EmptyContent(
                 emptyTitle = stringResource(id = R.string.noToDosForNow),
                 emptyMessage = stringResource(id = R.string.noToDosForNowSubtext),
@@ -299,15 +304,15 @@ private fun ToDoListContent(
                 modifier = modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
+                    .testTag("todoListEmpty")
             )
         }
 
         else -> {
             ToDoItemsList(
-                itemsByDate = uiState.itemsByDate,
+                itemsByDate = filteredItemsByDate,
                 onItemClicked = onOpenToDoItem,
                 onDateClick = onDateClick,
-                removingItemIds = uiState.removingItemIds,
                 modifier = modifier
             )
         }
@@ -319,15 +324,9 @@ private fun ToDoItemsList(
     itemsByDate: Map<Date, List<ToDoItemUiState>>,
     onItemClicked: (String) -> Unit,
     onDateClick: (Date) -> Unit,
-    modifier: Modifier = Modifier,
-    removingItemIds: Set<String> = emptySet()
+    modifier: Modifier = Modifier
 ) {
-    // Filter out items that are being removed
-    val filteredItemsByDate = itemsByDate.mapValues { (_, items) ->
-        items.filter { it.id !in removingItemIds }
-    }.filterValues { it.isNotEmpty() }
-
-    val dateGroups = filteredItemsByDate.entries.toList()
+    val dateGroups = itemsByDate.entries.toList()
     val listState = rememberLazyListState()
     val configuration = LocalConfiguration.current
     val itemPositions = remember(configuration) { mutableStateMapOf<String, Float>() }

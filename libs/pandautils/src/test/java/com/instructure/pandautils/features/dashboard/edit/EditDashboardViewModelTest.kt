@@ -1046,6 +1046,64 @@ class EditDashboardViewModelTest {
         coVerify(exactly = 1) { repository.getCourses() }
     }
 
+    @Test
+    fun `RefreshToDoList event is sent when course is added to favorites`() {
+        //Given
+        val courses = listOf(createCourse(1L, "Current course", false))
+
+        coEvery { repository.getCourses() } returns listOf(courses, emptyList(), emptyList())
+
+        every { repository.isFavoriteable(any()) } returns true
+
+        coEvery { repository.getGroups() } returns emptyList()
+
+        every { courseManager.addCourseToFavoritesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Favorite(1L))
+        }
+
+        //When
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider, calendarSharedEvents)
+        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleOwner) {}
+
+        val data = viewModel.data.value?.items ?: emptyList()
+
+        val itemViewModel = (data[3] as EditDashboardCourseItemViewModel)
+        itemViewModel.onFavoriteClick()
+
+        //Then
+        coVerify { calendarSharedEvents.sendEvent(any(), any<com.instructure.pandautils.features.calendar.SharedCalendarAction.RefreshToDoList>()) }
+    }
+
+    @Test
+    fun `RefreshToDoList event is sent when course is removed from favorites`() {
+        //Given
+        val courses = listOf(createCourse(1L, "Current course", true))
+
+        coEvery { repository.getCourses() } returns listOf(courses, emptyList(), emptyList())
+
+        every { repository.isFavoriteable(any()) } returns true
+
+        coEvery { repository.getGroups() } returns emptyList()
+
+        every { courseManager.removeCourseFromFavoritesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Favorite(1L))
+        }
+
+        //When
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider, calendarSharedEvents)
+        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleOwner) {}
+
+        val data = viewModel.data.value?.items ?: emptyList()
+
+        val itemViewModel = (data[3] as EditDashboardCourseItemViewModel)
+        itemViewModel.onFavoriteClick()
+
+        //Then
+        coVerify { calendarSharedEvents.sendEvent(any(), any<com.instructure.pandautils.features.calendar.SharedCalendarAction.RefreshToDoList>()) }
+    }
+
     private fun createCourse(
             id: Long,
             name: String,
