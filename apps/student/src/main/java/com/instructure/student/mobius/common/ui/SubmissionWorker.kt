@@ -75,9 +75,8 @@ import com.instructure.student.mobius.common.FlowSource
 import com.instructure.student.mobius.common.trySend
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
@@ -661,10 +660,12 @@ class SubmissionWorker @AssistedInject constructor(
                 }
             }
 
-            calendarSharedEvents.sendEvent(
-                CoroutineScope(currentCoroutineContext()),
-                SharedCalendarAction.RefreshToDoList
-            )
+            coroutineScope {
+                calendarSharedEvents.sendEvent(
+                    this,
+                    SharedCalendarAction.RefreshToDoList
+                )
+            }
 
             Result.success()
         } ?: run {
