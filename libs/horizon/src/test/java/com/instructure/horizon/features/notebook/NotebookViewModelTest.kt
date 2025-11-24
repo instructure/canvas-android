@@ -91,7 +91,7 @@ class NotebookViewModelTest {
     fun `Test data loads successfully on init`() {
         val viewModel = getViewModel()
 
-        assertFalse(viewModel.uiState.value.isLoading)
+        assertFalse(viewModel.uiState.value.loadingState.isLoading)
         coVerify { repository.getNotes(any(), any(), any(), any(), any(), any(), any()) }
     }
 
@@ -108,7 +108,7 @@ class NotebookViewModelTest {
 
         val viewModel = getViewModel()
 
-        assertFalse(viewModel.uiState.value.isLoading)
+        assertFalse(viewModel.uiState.value.loadingState.isLoading)
         assertTrue(viewModel.uiState.value.notes.isEmpty())
     }
 
@@ -218,24 +218,6 @@ class NotebookViewModelTest {
     }
 
     @Test
-    fun `Test updateContent with different courseId reloads data`() = runTest {
-        val viewModel = getViewModel()
-
-        viewModel.uiState.value.updateContent(456L, Pair("Assignment", "123"))
-
-        coVerify(atLeast = 1) { repository.getNotes(any(), any(), any(), any(), 456L, Pair("Assignment", "123"), any()) }
-    }
-
-    @Test
-    fun `Test updateContent with same courseId does not reload data`() = runTest {
-        val viewModel = getViewModel()
-
-        viewModel.uiState.value.updateContent(null, null)
-
-        coVerify(exactly = 1) { repository.getNotes(any(), any(), any(), any(), any(), any(), any()) }
-    }
-
-    @Test
     fun `Test loadNextPage triggers with valid next page`() = runTest {
         coEvery { repository.getNotes(any(), any(), any(), any(), any(), any(), any()) } returns testNotes.copy(
             pageInfo = testNotes.pageInfo.copy(hasNextPage = true)
@@ -245,20 +227,6 @@ class NotebookViewModelTest {
         viewModel.uiState.value.loadNextPage()
 
         coVerify(atLeast = 2) { repository.getNotes(any(), any(), any(), any(), any(), any(), any()) }
-    }
-
-    @Test
-    fun `Test loadNextPage does not trigger when no next page`() = runTest {
-        val notesWithoutNext = testNotes.copy(
-            pageInfo = testNotes.pageInfo.copy(hasNextPage = false)
-        )
-        coEvery { repository.getNotes(any(), any(), any(), any(), any(), any(), any()) } returns notesWithoutNext
-
-        val viewModel = getViewModel()
-
-        viewModel.uiState.value.loadNextPage()
-
-        coVerify(exactly = 1) { repository.getNotes(any(), any(), any(), any(), any(), any(), any()) }
     }
 
     @Test

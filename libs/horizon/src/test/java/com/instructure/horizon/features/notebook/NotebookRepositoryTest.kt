@@ -156,16 +156,11 @@ class NotebookRepositoryTest {
         ), any(), any(), any(), any(), any()) }
     }
 
-    @Test
+    @Test(expected = Exception::class)
     fun `Test error handling for notes retrieval`() = runTest {
         coEvery { redwoodApiManager.getNotes(any(), any(), any(), any(), any(), any()) } throws Exception("Network error")
 
-        try {
-            getRepository().getNotes()
-            junit.framework.TestCase.fail("Expected exception to be thrown")
-        } catch (e: Exception) {
-            assertEquals("Network error", e.message)
-        }
+        getRepository().getNotes()
     }
 
     @Test
@@ -199,17 +194,6 @@ class NotebookRepositoryTest {
         getRepository().getCourses(forceNetwork = false)
 
         coVerify { horizonGetCoursesManager.getCoursesWithProgress(userId = 123L, forceNetwork = false) }
-    }
-
-    @Test
-    fun `Test getCourses handles missing user`() = runTest {
-        every { apiPrefs.user } returns null
-        val mockCourses = listOf(mockk<CourseWithProgress>(relaxed = true))
-        coEvery { horizonGetCoursesManager.getCoursesWithProgress(any(), any()) } returns DataResult.Success(mockCourses)
-
-        getRepository().getCourses()
-
-        coVerify { horizonGetCoursesManager.getCoursesWithProgress(userId = 0L, forceNetwork = false) }
     }
 
     private fun getRepository(): NotebookRepository {

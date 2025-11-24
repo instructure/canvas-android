@@ -21,7 +21,6 @@ package com.instructure.horizon.features.notebook
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -30,13 +29,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.pulltorefresh.PullToRefreshBox
-import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -54,10 +50,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
-import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedData
-import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedDataRange
-import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedDataTextPosition
-import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteObjectType
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.notebook.common.composable.NotebookAppBar
@@ -82,11 +74,11 @@ import com.instructure.horizon.horizonui.molecules.DropdownItem
 import com.instructure.horizon.horizonui.molecules.HorizonDivider
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.organisms.CollapsableHeaderScreen
+import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.localisedFormat
-import java.util.Date
 
 @Composable
 fun NotebookScreen(
@@ -103,7 +95,6 @@ fun NotebookScreen(
     }
 
     val scrollState = rememberLazyListState()
-    val pullToRefreshState = rememberPullToRefreshState()
 
     CollapsableHeaderScreen(
         modifier = Modifier.background(HorizonColors.Surface.pagePrimary()),
@@ -115,148 +106,108 @@ fun NotebookScreen(
                 )
             }
         },
-    bodyContent = {
-        PullToRefreshBox(
-            isRefreshing = state.isRefreshing,
-            onRefresh = { viewModel.refresh() },
-            state = pullToRefreshState,
-            indicator = {
-                Indicator(
+        bodyContent = {
+            LoadingStateWrapper(state.loadingState) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .padding(top = if (state.showTopBar) 56.dp else 0.dp),
-                    isRefreshing = state.isRefreshing,
-                    containerColor = HorizonColors.Surface.pageSecondary(),
-                    color = HorizonColors.Surface.institution(),
-                    state = pullToRefreshState
-                )
-            }
-        ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxSize()
-                //.padding(paddingValues = padding)
-        ) {
-            if ((state.showNoteTypeFilter || state.showCourseFilter) && (state.courses.isNotEmpty() || state.selectedCourse != null || state.selectedFilter != null)) {
-                FilterContent(
-                    modifier = Modifier
-                        .clip(HorizonCornerRadius.level5)
-                        .background(HorizonColors.Surface.pageSecondary()),
-                    selectedFilter = state.selectedFilter,
-                    onFilterSelected = state.onFilterSelected,
-                    selectedCourse = state.selectedCourse,
-                    onCourseSelected = state.onCourseSelected,
-                    courses = state.courses,
-                    showNoteTypeFilter = state.showNoteTypeFilter,
-                    showCourseFilter = state.showCourseFilter
-                )
-            }
-
-            Box {
-                LazyColumn(
-                    state = scrollState,
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .background(HorizonColors.Surface.pageSecondary()),
-                    contentPadding = PaddingValues(
-                        start = 16.dp,
-                        end = 16.dp,
-                        top = 2.dp,
-                        bottom = 16.dp
-                    )
+                        .fillMaxSize()
                 ) {
+                    if ((state.showNoteTypeFilter || state.showCourseFilter) && (state.courses.isNotEmpty() || state.selectedCourse != null || state.selectedFilter != null)) {
+                        FilterContent(
+                            state,
+                            scrollState,
+                            Modifier
+                                .clip(HorizonCornerRadius.level5)
+                                .background(HorizonColors.Surface.pageSecondary()),
+                        )
+                    }
 
-                    if (state.isLoading) {
-                        item {
-                            LoadingContent()
-                        }
-                    } else if (state.isError) {
-                        item {
-                            ErrorContent()
-                        }
-                    } else if (state.notes.isEmpty()) {
-                        item {
-                            if (state.selectedCourse != null || state.selectedFilter != null) {
-                                EmptyFilteredContent()
-                            } else {
-                                EmptyContent()
+                    LazyColumn(
+                        state = scrollState,
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .background(HorizonColors.Surface.pageSecondary()),
+                        contentPadding = PaddingValues(
+                            start = 16.dp,
+                            end = 16.dp,
+                            top = 2.dp,
+                            bottom = 16.dp
+                        )
+                    ) {
+                        if (state.notes.isEmpty()) {
+                            item {
+                                if (state.selectedCourse != null || state.selectedFilter != null) {
+                                    EmptyFilteredContent()
+                                } else {
+                                    EmptyContent()
+                                }
                             }
-                        }
-                    } else {
-                        items(state.notes) { note ->
-                            Column {
-                                NoteContent(note) {
-                                    if (state.navigateToEdit) {
-                                        mainNavController.navigate(
-                                            NotebookRoute.EditNotebook(
-                                                noteId = note.id,
-                                                highlightedTextStartOffset = note.highlightedText.range.startOffset,
-                                                highlightedTextEndOffset = note.highlightedText.range.endOffset,
-                                                highlightedTextStartContainer = note.highlightedText.range.startContainer,
-                                                highlightedTextEndContainer = note.highlightedText.range.endContainer,
-                                                textSelectionStart = note.highlightedText.textPosition.start,
-                                                textSelectionEnd = note.highlightedText.textPosition.end,
-                                                highlightedText = note.highlightedText.selectedText,
-                                                noteType = note.type.name,
-                                                userComment = note.userText
+                        } else {
+                            items(state.notes) { note ->
+                                Column {
+                                    NoteContent(note) {
+                                        if (state.navigateToEdit) {
+                                            mainNavController.navigate(
+                                                NotebookRoute.EditNotebook(
+                                                    noteId = note.id,
+                                                    highlightedTextStartOffset = note.highlightedText.range.startOffset,
+                                                    highlightedTextEndOffset = note.highlightedText.range.endOffset,
+                                                    highlightedTextStartContainer = note.highlightedText.range.startContainer,
+                                                    highlightedTextEndContainer = note.highlightedText.range.endContainer,
+                                                    textSelectionStart = note.highlightedText.textPosition.start,
+                                                    textSelectionEnd = note.highlightedText.textPosition.end,
+                                                    highlightedText = note.highlightedText.selectedText,
+                                                    noteType = note.type.name,
+                                                    userComment = note.userText
+                                                )
                                             )
-                                        )
-                                    } else {
-                                        mainNavController.navigate(
-                                            MainNavigationRoute.ModuleItemSequence(
-                                                courseId = note.courseId,
-                                                moduleItemAssetType = note.objectType.value,
-                                                moduleItemAssetId = note.objectId,
+                                        } else {
+                                            mainNavController.navigate(
+                                                MainNavigationRoute.ModuleItemSequence(
+                                                    courseId = note.courseId,
+                                                    moduleItemAssetType = note.objectType.value,
+                                                    moduleItemAssetId = note.objectId,
+                                                )
                                             )
-                                        )
+                                        }
+                                    }
+
+                                    if (state.notes.lastOrNull() != note) {
+                                        HorizonSpace(SpaceSize.SPACE_4)
                                     }
                                 }
-
-                                if (state.notes.lastOrNull() != note) {
-                                    HorizonSpace(SpaceSize.SPACE_4)
-                                }
                             }
-                        }
 
-                        if (state.hasNextPage) {
-                            item {
-                                if (state.isLoadingMore) {
-                                    LoadingContent()
-                                } else {
-                                    Button(
-                                        label = stringResource(R.string.showMore),
-                                        height = ButtonHeight.SMALL,
-                                        width = ButtonWidth.FILL,
-                                        color = ButtonColor.WhiteWithOutline,
-                                        onClick = { state.loadNextPage() },
-                                        modifier = Modifier.padding(vertical = 24.dp)
-                                    )
+                            if (state.hasNextPage) {
+                                item {
+                                    if (state.isLoadingMore) {
+                                        LoadingContent()
+                                    } else {
+                                        Button(
+                                            label = stringResource(R.string.showMore),
+                                            height = ButtonHeight.SMALL,
+                                            width = ButtonWidth.FILL,
+                                            color = ButtonColor.WhiteWithOutline,
+                                            onClick = { state.loadNextPage() },
+                                            modifier = Modifier.padding(vertical = 24.dp)
+                                        )
+                                    }
                                 }
                             }
                         }
                     }
                 }
-
-                if (scrollState.canScrollBackward) {
-                    HorizonDivider()
-                }
             }
         }
-        }
-    })
+    )
 }
 
 @Composable
 private fun FilterContent(
+    state: NotebookUiState,
+    scrollState: LazyListState,
     modifier: Modifier = Modifier,
-    selectedFilter: NotebookType?,
-    onFilterSelected: (NotebookType?) -> Unit,
-    selectedCourse: CourseWithProgress?,
-    onCourseSelected: (CourseWithProgress?) -> Unit,
-    courses: List<CourseWithProgress>,
-    showNoteTypeFilter: Boolean = true,
-    showCourseFilter: Boolean = true,
 ) {
     val context = LocalContext.current
     val defaultBackgroundColor = HorizonColors.PrimitivesGrey.grey12()
@@ -293,16 +244,16 @@ private fun FilterContent(
     }
 
     // Course filter items
-    val allCoursesItem = DropdownItem(
-        value = null as CourseWithProgress?,
+    val allCoursesItem = DropdownItem<CourseWithProgress?>(
+        value = null,
         label = context.getString(R.string.notebookFilterCoursePlaceholder),
         iconRes = null,
         iconTint = null,
         backgroundColor = defaultBackgroundColor
     )
 
-    val courseItems = remember(courses) {
-        listOf(allCoursesItem) + courses.map { course ->
+    val courseItems = remember(state.courses) {
+        listOf(allCoursesItem) + state.courses.map { course ->
             DropdownItem(
                 value = course,
                 label = course.courseName,
@@ -314,41 +265,47 @@ private fun FilterContent(
     }
 
     val selectedTypeItem =
-        if (selectedFilter == null) allNotesItem else typeItems.find { it.value == selectedFilter }
+        if (state.selectedFilter == null) allNotesItem else typeItems.find { it.value == state.selectedFilter }
 
     val selectedCourseItem =
-        if (selectedCourse == null) allCoursesItem else courseItems.find { it.value == selectedCourse }
+        if (state.selectedCourse == null) allCoursesItem else courseItems.find { it.value == state.selectedCourse }
 
 
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        if (showCourseFilter) {
-            DropdownChip(
-                items = courseItems,
-                selectedItem = selectedCourseItem,
-                onItemSelected = { item -> onCourseSelected(item?.value) },
-                placeholder = stringResource(R.string.notebookFilterCoursePlaceholder),
-                dropdownWidth = 178.dp,
-                verticalPadding = 6.dp,
-                modifier = Modifier.weight(1f, false)
-            )
+        Column {
+            Row(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                if (state.showCourseFilter) {
+                    DropdownChip(
+                        items = courseItems,
+                        selectedItem = selectedCourseItem,
+                        onItemSelected = { item -> state.onCourseSelected(item?.value) },
+                        placeholder = stringResource(R.string.notebookFilterCoursePlaceholder),
+                        dropdownWidth = 178.dp,
+                        verticalPadding = 6.dp,
+                        modifier = Modifier.weight(1f, false)
+                    )
+                }
+
+                if (state.showNoteTypeFilter) {
+                    DropdownChip(
+                        items = typeItems,
+                        selectedItem = selectedTypeItem,
+                        onItemSelected = { item -> state.onFilterSelected(item?.value) },
+                        placeholder = stringResource(R.string.notebookFilterTypePlaceholder),
+                        dropdownWidth = 178.dp,
+                        verticalPadding = 6.dp
+                    )
+                }
+            }
+
+            if (scrollState.canScrollBackward) {
+                HorizonDivider()
+            }
         }
-
-        if (showNoteTypeFilter) {
-            DropdownChip(
-                items = typeItems,
-                selectedItem = selectedTypeItem,
-                onItemSelected = { item -> onFilterSelected(item?.value) },
-                placeholder = stringResource(R.string.notebookFilterTypePlaceholder),
-                dropdownWidth = 178.dp,
-                verticalPadding = 6.dp
-            )
-        }
-    }
 }
 
 @Composable
@@ -483,13 +440,6 @@ private fun ErrorContent(modifier: Modifier = Modifier) {
 
 @Composable
 @Preview
-private fun NotebookScreenPreview() {
-    ContextKeeper.appContext = LocalContext.current
-    FilterContentPreview()
-}
-
-@Composable
-@Preview
 private fun NotebookScreenEmptyPreview() {
     ContextKeeper.appContext = LocalContext.current
     EmptyContent()
@@ -507,19 +457,4 @@ private fun NotebookScreenEmptyFilteredPreview() {
 private fun NotebookScreenErrorPreview() {
     ContextKeeper.appContext = LocalContext.current
     ErrorContent()
-}
-
-@Composable
-@Preview
-private fun FilterContentPreview() {
-    ContextKeeper.appContext = LocalContext.current
-    FilterContent(
-        selectedFilter = NotebookType.Important,
-        onFilterSelected = {},
-        selectedCourse = null,
-        onCourseSelected = {},
-        courses = emptyList(),
-        showNoteTypeFilter = true,
-        showCourseFilter = true
-    )
 }

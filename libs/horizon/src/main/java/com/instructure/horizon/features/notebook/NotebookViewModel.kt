@@ -20,12 +20,13 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
-import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.features.notebook.common.model.Note
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.horizon.features.notebook.common.model.mapToNotes
 import com.instructure.horizon.features.notebook.navigation.NotebookRoute
+import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.redwood.QueryNotesQuery
 import com.instructure.redwood.type.OrderDirection
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -33,7 +34,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -41,8 +41,8 @@ class NotebookViewModel @Inject constructor(
     private val repository: NotebookRepository,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-    private var cursorId: String? = null
     private var pageInfo: QueryNotesQuery.PageInfo? = null
+    private var loadJob: Job? = null
 
     private var courseId: Long? =
         savedStateHandle.get<String>(NotebookRoute.Notebook.COURSE_ID)?.toLongOrNull()
@@ -56,152 +56,112 @@ class NotebookViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(
         NotebookUiState(
+            loadingState = LoadingState(
+                onSnackbarDismiss = ::onSnackbarDismiss,
+                onRefresh = ::refresh
+            ),
             loadNextPage = ::getNextPage,
             onFilterSelected = ::onFilterSelected,
             onCourseSelected = ::onCourseSelected,
-            updateContent = ::updateContent,
             showTopBar = showTopBar,
             showFilters = showFilters,
+            showCourseFilter = courseId == null,
             navigateToEdit = navigateToEdit,
         )
     )
     val uiState = _uiState.asStateFlow()
-    var updateJob: Job? = null
 
     init {
-        removeCourseFilterIfNeeded()
-        loadCourses()
         loadData()
     }
 
-    private fun loadCourses(forceNetwork: Boolean = false) {
-        viewModelScope.launch {
-            when (val result = repository.getCourses(forceNetwork)) {
-                is DataResult.Success -> {
-                    _uiState.update { it.copy(courses = result.data) }
-                }
-
-                is DataResult.Fail -> {
-                    _uiState.update { it.copy(courses = emptyList()) }
-                }
-            }
+    fun loadData() {
+        loadJob?.cancel()
+        loadJob = viewModelScope.tryLaunch {
+            _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = true, isError = false, errorMessage = null)) }
+            fetchData()
+            _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = false)) }
+        } catch {
+            _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = false, isError = true, errorMessage = "Failed to load notes")) }
         }
     }
 
     fun refresh() {
-        updateJob?.cancel()
-        loadCourses(forceNetwork = true)
-        loadData(isRefreshing = true)
-    }
-
-    private fun loadData(
-        after: String? = null,
-        courseId: Long? = this.courseId,
-        isLoadingMore: Boolean = false,
-        isRefreshing: Boolean = false
-    ) {
-        updateJob = viewModelScope.tryLaunch {
-            _uiState.update {
-                when {
-                    isRefreshing -> it.copy(isRefreshing = true, isError = false)
-                    isLoadingMore -> it.copy(isLoadingMore = true, isError = false)
-                    else -> it.copy(isLoading = true, isError = false)
-                }
-            }
-
-            val notesResponse = repository.getNotes(
-                after = after,
-                before = null,
-                filterType = uiState.value.selectedFilter,
-                courseId = courseId,
-                objectTypeAndId = objectTypeAndId,
-                orderDirection = OrderDirection.descending
-            )
-            cursorId = notesResponse.edges?.firstOrNull()?.cursor
-            pageInfo = notesResponse.pageInfo
-
-            val oldNotes = if (courseId != null) {
-                uiState.value.notes.filter { it.courseId == this@NotebookViewModel.courseId }
-            } else {
-                uiState.value.notes
-            }
-            val newNotes = notesResponse.mapToNotes().also { notes ->
-                // Filter notes by courseId if applicable
-                if (courseId != null) {
-                    notes.filter { it.courseId == courseId }
-                } else {
-                    notes
-                }
-            }
-
-            _uiState.update {
-                it.copy(
-                    isError = false,
-                    isLoading = false,
-                    isLoadingMore = false,
-                    isRefreshing = false,
-                    notes = if (isLoadingMore) oldNotes + newNotes else newNotes,
-                    hasNextPage = notesResponse.pageInfo.hasNextPage,
-                )
-            }
+        pageInfo = null
+        loadJob?.cancel()
+        loadJob = viewModelScope.tryLaunch {
+            _uiState.update { it.copy(loadingState = it.loadingState.copy(isRefreshing = true)) }
+            fetchData(forceNetwork = true)
+            _uiState.update { it.copy(loadingState = it.loadingState.copy(isRefreshing = false, isError = false, errorMessage = null)) }
         } catch {
-            _uiState.update {
-                it.copy(
-                    isError = true,
-                    isLoading = false,
-                    isLoadingMore = false,
-                    isRefreshing = false,
-                    hasNextPage = false,
-                )
-            }
+            _uiState.update { it.copy(loadingState = it.loadingState.copy(isRefreshing = false, snackbarMessage = "Failed to load notes")) }
         }
     }
 
+    private suspend fun fetchData(forceNetwork: Boolean = false) {
+        fetchCourses(forceNetwork)
+        val notes = fetchNotes(forceNetwork)
+        _uiState.update { it.copy(notes = notes) }
+    }
+
+    private suspend fun fetchCourses(forceNetwork: Boolean = false) {
+        val courses = repository.getCourses(forceNetwork).dataOrThrow
+        _uiState.update { it.copy(courses = courses) }
+    }
+
+    private suspend fun fetchNotes(forceNetwork: Boolean = false): List<Note> {
+        val notesResponse = repository.getNotes(
+            after = pageInfo?.endCursor,
+            before = null,
+            filterType = uiState.value.selectedFilter,
+            courseId = courseId,
+            objectTypeAndId = objectTypeAndId,
+            orderDirection = OrderDirection.descending,
+            forceNetwork = forceNetwork
+        )
+        pageInfo = notesResponse.pageInfo
+
+        _uiState.update {
+            it.copy(hasNextPage = notesResponse.pageInfo.hasNextPage,)
+        }
+
+        return notesResponse.mapToNotes()
+    }
+
     private fun getNextPage() {
-        if (!uiState.value.isLoadingMore && uiState.value.hasNextPage) {
-            loadData(after = pageInfo?.endCursor, isLoadingMore = true)
+        loadJob = viewModelScope.tryLaunch {
+            _uiState.update { it.copy(isLoadingMore = true) }
+            val notes = fetchNotes()
+            _uiState.update { it.copy(notes = it.notes + notes, isLoadingMore = false) }
+        } catch {
+            _uiState.update { it.copy(loadingState = it.loadingState.copy(snackbarMessage = "Failed to load notes")) }
         }
     }
 
     private fun onFilterSelected(newFilter: NotebookType?) {
-        _uiState.update { currentState ->
-            currentState.copy(selectedFilter = newFilter)
-        }
-        updateJob?.cancel()
+        pageInfo = null
+        _uiState.update { it.copy(selectedFilter = newFilter) }
         loadData()
     }
 
     private fun onCourseSelected(course: CourseWithProgress?) {
-        _uiState.update { currentState ->
-            currentState.copy(selectedCourse = course)
-        }
-        updateJob?.cancel()
+        pageInfo = null
+        _uiState.update { it.copy(selectedCourse = course) }
         courseId = course?.courseId
-        loadData(courseId = courseId)
-    }
-
-    private fun updateContent(courseId: Long?, objectTypeAndId: Pair<String, String>?) {
-        if (courseId != this.courseId || objectTypeAndId != this.objectTypeAndId) {
-            this.courseId = courseId
-            this.objectTypeAndId = objectTypeAndId
-            updateJob?.cancel()
-            loadData()
-        }
+        loadData()
     }
 
     fun updateFilters(courseId: Long? = null, objectTypeAndId: Pair<String, String>? = null) {
         if (courseId != this.courseId) {
+            pageInfo = null
             this.courseId = courseId
             this.objectTypeAndId = objectTypeAndId
-            updateJob?.cancel()
-            loadData()
         }
+        loadData()
     }
 
-    private fun removeCourseFilterIfNeeded() {
-        if (courseId != null) {
-            _uiState.update { it.copy(showCourseFilter = false) }
-        }
+    private fun onSnackbarDismiss() {
+        _uiState.update { it.copy(loadingState = it.loadingState.copy(snackbarMessage = null)) }
     }
 
     fun updateScreenState(

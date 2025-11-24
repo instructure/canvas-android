@@ -42,7 +42,8 @@ class NotebookRepository @Inject constructor(
         filterType: NotebookType? = null,
         courseId: Long? = null,
         objectTypeAndId: Pair<String, String>? = null,
-        orderDirection: OrderDirection? = null
+        orderDirection: OrderDirection? = null,
+        forceNetwork: Boolean = false
     ): QueryNotesQuery.Notes {
         val filterInput = NoteFilterInput(
             reactions = if (filterType != null) {
@@ -73,14 +74,16 @@ class NotebookRepository @Inject constructor(
                 lastN = itemCount,
                 before = before,
                 filter = filterInput,
-                orderBy = orderByInput
+                orderBy = orderByInput,
+                forceNetwork = forceNetwork
             )
         } else {
             redwoodApiManager.getNotes(
                 firstN = itemCount,
                 after = after,
                 filter = filterInput,
-                orderBy = orderByInput
+                orderBy = orderByInput,
+                forceNetwork = forceNetwork
             )
         }
 

@@ -99,6 +99,7 @@ class RedwoodApiManager @Inject constructor(
         after: String? = null,
         before: String? = null,
         orderBy: OrderByInput? = null,
+        forceNetwork: Boolean = false
     ): QueryNotesQuery.Notes {
         val query = QueryNotesQuery(
             filter = Optional.presentIfNotNull(filter),
@@ -109,7 +110,7 @@ class RedwoodApiManager @Inject constructor(
             orderBy = Optional.presentIfNotNull(orderBy),
         )
         val result = redwoodClient
-            .enqueueQuery(query)
+            .enqueueQuery(query, forceNetwork)
             .dataAssertNoErrors.notes
 
         return result
