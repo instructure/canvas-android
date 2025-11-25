@@ -1,14 +1,16 @@
 package com.instructure.horizon.horizonui.foundation
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -51,24 +53,33 @@ fun Modifier.horizonBorderShadow(
     bottom: Dp,
     cornerRadius: Dp,
 ): Modifier {
-    return drawBehind {
-        drawRoundRect(
-            brush = Brush.radialGradient(
-                    0f to color,
-                    0.9f to color,
-                    1.0f to color.copy(0.5f),
-            ),
-            topLeft = Offset(
-                x = -start.toPx(),
-                y = -top.toPx()
-            ),
-            size = Size(
-                width = size.width + start.toPx() + end.toPx(),
-                height = size.height + top.toPx() + bottom.toPx()
-            ),
-            cornerRadius = CornerRadius(cornerRadius.toPx(), cornerRadius.toPx()),
+    val maxShadow = maxOf(start, top, end, bottom)
+
+    return this
+        .layout { measurable, constraints ->
+            val placeable = measurable.measure(constraints)
+            val width = placeable.width + start.roundToPx() + end.roundToPx()
+            val height = placeable.height + top.roundToPx() + bottom.roundToPx()
+
+            layout(width, height) {
+                placeable.place(start.roundToPx(), top.roundToPx())
+            }
+        }
+        .shadow(
+            elevation = maxShadow,
+            shape = RoundedCornerShape(cornerRadius),
+            ambientColor = color,
+            spotColor = color
         )
-    }
+        .layout { measurable, constraints ->
+            val placeable = measurable.measure(constraints)
+            val width = placeable.width - start.roundToPx() - end.roundToPx()
+            val height = placeable.height - top.roundToPx() - bottom.roundToPx()
+
+            layout(width, height) {
+                placeable.place(-start.roundToPx(), -top.roundToPx())
+            }
+        }
 }
 
 @Composable
