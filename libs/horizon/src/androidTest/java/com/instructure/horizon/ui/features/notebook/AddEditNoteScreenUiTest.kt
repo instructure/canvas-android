@@ -246,7 +246,7 @@ class AddEditNoteScreenUiTest {
             AddEditNoteScreen(navController, state) { _, _ -> }
         }
 
-        composeTestRule.onNodeWithText("Confusing", useUnmergedTree = true)
+        composeTestRule.onNodeWithText("Unclear", useUnmergedTree = true)
             .assertIsDisplayed()
     }
 
