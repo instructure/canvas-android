@@ -66,6 +66,7 @@ import com.instructure.student.mobius.common.trySend
 import com.instructure.pandautils.room.studentdb.entities.CreateFileSubmissionEntity
 import com.instructure.pandautils.room.studentdb.entities.CreatePendingSubmissionCommentEntity
 import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
+import com.instructure.pandautils.room.studentdb.entities.SubmissionState
 import com.instructure.pandautils.room.studentdb.entities.daos.CreateFileSubmissionDao
 import com.instructure.pandautils.room.studentdb.entities.daos.CreatePendingSubmissionCommentDao
 import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionCommentFileDao
@@ -141,6 +142,9 @@ class SubmissionWorker @AssistedInject constructor(
 
     private suspend fun uploadText(submission: CreateSubmissionEntity): Result {
         showProgressNotification(submission.assignmentName, submission.id)
+
+        createSubmissionDao.updateSubmissionState(submission.id, SubmissionState.SUBMITTING)
+
         val textToSubmit = try {
             withContext(Dispatchers.IO) {
                 URLEncoder.encode(submission.submissionEntry, "UTF-8")
@@ -166,6 +170,9 @@ class SubmissionWorker @AssistedInject constructor(
 
     private suspend fun uploadUrl(submission: CreateSubmissionEntity, isLti: Boolean): Result {
         showProgressNotification(submission.assignmentName, submission.id)
+
+        createSubmissionDao.updateSubmissionState(submission.id, SubmissionState.SUBMITTING)
+
         val params = RestParams(
             canvasContext = submission.canvasContext,
             domain = apiPrefs.overrideDomains[submission.canvasContext.id],
@@ -270,12 +277,14 @@ class SubmissionWorker @AssistedInject constructor(
     private suspend fun uploadFileSubmission(submission: CreateSubmissionEntity): Result {
         showProgressNotification(submission.assignmentName, submission.id)
 
+        createSubmissionDao.updateSubmissionState(submission.id, SubmissionState.UPLOADING_FILES)
+
         val (completed, pending) = createFileSubmissionDao
             .findFilesForSubmissionId(submission.id).partition { it.attachmentId != null }
         val uploadedAttachmentIds = uploadFiles(submission, completed.size, pending)
             ?: return Result.failure() // Cancel submitting if any of the files failed to upload
 
-        // Update the notification to show that we're doing the actual submission now
+        createSubmissionDao.updateSubmissionState(submission.id, SubmissionState.SUBMITTING)
         showProgressNotification(submission.assignmentName, submission.id, alertOnlyOnce = true)
 
         val attachmentIds = completed.mapNotNull { it.attachmentId } + uploadedAttachmentIds
