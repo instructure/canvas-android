@@ -124,6 +124,7 @@ fun NotebookScreen(
                     }
 
                     LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
                         state = scrollState,
                         modifier = Modifier
                             .fillMaxHeight()

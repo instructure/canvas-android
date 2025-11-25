@@ -1,11 +1,12 @@
 package com.instructure.horizon.horizonui.foundation
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -56,21 +57,7 @@ fun Modifier.horizonBorderShadow(
     val maxShadow = maxOf(start, top, end, bottom)
 
     return this
-        .layout { measurable, constraints ->
-            val placeable = measurable.measure(constraints)
-            val width = placeable.width + start.roundToPx() + end.roundToPx()
-            val height = placeable.height + top.roundToPx() + bottom.roundToPx()
-
-            layout(width, height) {
-                placeable.place(start.roundToPx(), top.roundToPx())
-            }
-        }
-        .shadow(
-            elevation = maxShadow,
-            shape = RoundedCornerShape(cornerRadius),
-            ambientColor = color,
-            spotColor = color
-        )
+        .padding(start, top, end, bottom)
         .layout { measurable, constraints ->
             val placeable = measurable.measure(constraints)
             val width = placeable.width - start.roundToPx() - end.roundToPx()
@@ -78,6 +65,19 @@ fun Modifier.horizonBorderShadow(
 
             layout(width, height) {
                 placeable.place(-start.roundToPx(), -top.roundToPx())
+            }
+        }
+        .dropShadow(RoundedCornerShape(cornerRadius)) {
+            this.color = color.copy(0.1f)
+            this.radius = maxShadow.toPx() / 2
+        }
+        .layout { measurable, constraints ->
+            val placeable = measurable.measure(constraints)
+            val width = placeable.width + start.roundToPx() + end.roundToPx()
+            val height = placeable.height + top.roundToPx() + bottom.roundToPx()
+
+            layout(width, height) {
+                placeable.place(start.roundToPx(), top.roundToPx())
             }
         }
 }
