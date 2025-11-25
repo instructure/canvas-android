@@ -248,6 +248,14 @@ class SubmissionWorker @AssistedInject constructor(
                     submission,
                     mediaSubmissionResult.dataOrThrow.late
                 )
+
+                coroutineScope {
+                    calendarSharedEvents.sendEvent(
+                        this,
+                        SharedCalendarAction.RefreshToDoList
+                    )
+                }
+
                 Result.success()
             } ?: run {
                 createSubmissionDao.setSubmissionError(true, submission.id)
@@ -299,6 +307,14 @@ class SubmissionWorker @AssistedInject constructor(
         return result.dataOrNull?.let {
             deleteSubmissionsForAssignment(submission.assignmentId)
             showCompleteNotification(context, submission, result.dataOrThrow.late)
+
+            coroutineScope {
+                calendarSharedEvents.sendEvent(
+                    this,
+                    SharedCalendarAction.RefreshToDoList
+                )
+            }
+
             Result.success()
         } ?: run {
             createSubmissionDao.setSubmissionError(true, submission.id)
