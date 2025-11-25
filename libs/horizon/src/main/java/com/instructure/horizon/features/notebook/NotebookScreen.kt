@@ -64,7 +64,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
-import com.instructure.horizon.horizonui.foundation.horizonBorderShadow
+import com.instructure.horizon.horizonui.foundation.horizonBorder
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.ButtonHeight
@@ -290,7 +290,7 @@ private fun NoteContent(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .horizonBorderShadow(colorResource(note.type.color), 12.dp, 0.dp, 0.dp, 12.dp, 16.dp)
+            .horizonBorder(colorResource(note.type.color), 12.dp, 1.dp, 1.dp, 12.dp, 16.dp)
             .background(
                 color = HorizonColors.PrimitivesWhite.white10(),
                 shape = HorizonCornerRadius.level2,
