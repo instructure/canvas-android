@@ -42,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -60,11 +61,10 @@ import com.instructure.horizon.features.notebook.common.model.Note
 import com.instructure.horizon.features.notebook.navigation.NotebookRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
-import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
-import com.instructure.horizon.horizonui.foundation.horizonShadow
+import com.instructure.horizon.horizonui.foundation.horizonBorder
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.ButtonHeight
@@ -289,11 +289,7 @@ private fun NoteContent(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .horizonShadow(
-                elevation = HorizonElevation.level4,
-                shape = HorizonCornerRadius.level2,
-                clip = true
-            )
+            .horizonBorder(colorResource(note.type.color), 6.dp, 1.dp, 1.dp, 6.dp, 16.dp)
             .background(
                 color = HorizonColors.PrimitivesWhite.white10(),
                 shape = HorizonCornerRadius.level2,

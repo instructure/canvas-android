@@ -1,10 +1,111 @@
 package com.instructure.horizon.horizonui.foundation
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 object HorizonBorder {
     fun level1(color: Color = HorizonColors.LineAndBorder.lineStroke()) = BorderStroke(1.dp, color)
     fun level2(color: Color = HorizonColors.LineAndBorder.lineStroke()) = BorderStroke(2.dp, color)
 }
+
+@Composable
+fun Modifier.horizonBorder(
+    color: Color,
+    start: Dp,
+    top: Dp,
+    end: Dp,
+    bottom: Dp,
+    cornerRadius: Dp,
+): Modifier {
+    return drawBehind {
+        drawRoundRect(
+            color = color,
+            topLeft = Offset(
+                x = -start.toPx(),
+                y = -top.toPx()
+            ),
+            size = Size(
+                width = size.width + start.toPx() + end.toPx(),
+                height = size.height + top.toPx() + bottom.toPx()
+            ),
+            cornerRadius = CornerRadius(cornerRadius.toPx(), cornerRadius.toPx()),
+        )
+    }
+}
+
+@Composable
+fun Modifier.horizonBorderShadow(
+    color: Color,
+    start: Dp,
+    top: Dp,
+    end: Dp,
+    bottom: Dp,
+    cornerRadius: Dp,
+): Modifier {
+    return drawBehind {
+        drawRoundRect(
+            brush = Brush.radialGradient(
+                    0f to color,
+                    0.9f to color,
+                    1.0f to color.copy(0.5f),
+            ),
+            topLeft = Offset(
+                x = -start.toPx(),
+                y = -top.toPx()
+            ),
+            size = Size(
+                width = size.width + start.toPx() + end.toPx(),
+                height = size.height + top.toPx() + bottom.toPx()
+            ),
+            cornerRadius = CornerRadius(cornerRadius.toPx(), cornerRadius.toPx()),
+        )
+    }
+}
+
+@Composable
+fun Modifier.horizonBorder(
+    color: Color,
+    horizontal: Dp,
+    vertical: Dp,
+    cornerRadius: Dp,
+): Modifier {
+    return horizonBorder(color, horizontal, vertical, horizontal, vertical, cornerRadius)
+}
+
+@Composable
+fun Modifier.horizonBorder(
+    color: Color,
+    all: Dp,
+    cornerRadius: Dp,
+): Modifier {
+    return horizonBorder(color, all, all, cornerRadius)
+}
+
+@Composable
+fun Modifier.horizonBorderShadow(
+    color: Color,
+    horizontal: Dp,
+    vertical: Dp,
+    cornerRadius: Dp,
+): Modifier {
+    return horizonBorderShadow(color, horizontal, vertical, horizontal, vertical, cornerRadius)
+}
+
+@Composable
+fun Modifier.horizonBorderShadow(
+    color: Color,
+    all: Dp,
+    cornerRadius: Dp,
+): Modifier {
+    return horizonBorderShadow(color, all, all, cornerRadius)
+}
+
