@@ -50,6 +50,7 @@ import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.AnalyticsParamConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.FileUtils
 import com.instructure.canvasapi2.utils.ProgressRequestUpdateListener
 import com.instructure.pandautils.features.submission.SubmissionWorkerAction
@@ -639,6 +640,8 @@ class SubmissionWorker @AssistedInject constructor(
         submission: CreateSubmissionEntity
     ): Result {
         return result.dataOrNull?.let {
+            createSubmissionDao.updateSubmissionState(submission.id, SubmissionState.COMPLETED)
+            createSubmissionDao.setCanvasSubmissionId(submission.id, result.dataOrThrow.id)
             createSubmissionDao.deleteSubmissionById(submission.id)
             if (!result.dataOrThrow.late) showConfetti()
 
@@ -667,33 +670,54 @@ class SubmissionWorker @AssistedInject constructor(
 
             Result.success()
         } ?: run {
-            createSubmissionDao.setSubmissionError(true, submission.id)
-            showErrorNotification(context, submission)
+            val failure = (result as DataResult.Fail).failure
+            val errorMessage = failure?.message ?: "Unknown error"
 
-            when (submission.submissionType) {
-                Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString -> {
-                    analytics.logEvent(AnalyticsEventConstants.SUBMIT_TEXTENTRY_FAILED, Bundle().apply {
-                        putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
-                    })
+            val shouldRetry = when (failure) {
+                is Failure.Network -> {
+                    val errorCode = failure.errorCode
+                    errorCode == null || errorCode >= 500
                 }
-                Assignment.SubmissionType.ONLINE_URL.apiString -> {
-                    analytics.logEvent(AnalyticsEventConstants.SUBMIT_URL_FAILED, Bundle().apply {
-                        putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
-                    })
-                }
-                Assignment.SubmissionType.BASIC_LTI_LAUNCH.apiString -> {
-                    analytics.logEvent(AnalyticsEventConstants.SUBMIT_STUDIO_FAILED, Bundle().apply {
-                        putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
-                    })
-                }
-                Assignment.SubmissionType.STUDENT_ANNOTATION.apiString -> {
-                    analytics.logEvent(AnalyticsEventConstants.SUBMIT_ANNOTATION_FAILED, Bundle().apply {
-                        putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
-                    })
-                }
+                is Failure.Exception -> true
+                is Failure.Authorization -> false
+                else -> false
             }
 
-            Result.failure()
+            if (shouldRetry && submission.retryCount < 3) {
+                createSubmissionDao.updateSubmissionState(submission.id, SubmissionState.RETRYING)
+                createSubmissionDao.incrementRetryCount(submission.id, errorMessage)
+                return Result.retry()
+            } else {
+                createSubmissionDao.updateSubmissionState(submission.id, SubmissionState.FAILED)
+                createSubmissionDao.setSubmissionError(true, submission.id)
+                createSubmissionDao.incrementRetryCount(submission.id, errorMessage)
+                showErrorNotification(context, submission)
+
+                when (submission.submissionType) {
+                    Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString -> {
+                        analytics.logEvent(AnalyticsEventConstants.SUBMIT_TEXTENTRY_FAILED, Bundle().apply {
+                            putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                        })
+                    }
+                    Assignment.SubmissionType.ONLINE_URL.apiString -> {
+                        analytics.logEvent(AnalyticsEventConstants.SUBMIT_URL_FAILED, Bundle().apply {
+                            putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                        })
+                    }
+                    Assignment.SubmissionType.BASIC_LTI_LAUNCH.apiString -> {
+                        analytics.logEvent(AnalyticsEventConstants.SUBMIT_STUDIO_FAILED, Bundle().apply {
+                            putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                        })
+                    }
+                    Assignment.SubmissionType.STUDENT_ANNOTATION.apiString -> {
+                        analytics.logEvent(AnalyticsEventConstants.SUBMIT_ANNOTATION_FAILED, Bundle().apply {
+                            putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                        })
+                    }
+                }
+
+                Result.failure()
+            }
         }
     }
 
