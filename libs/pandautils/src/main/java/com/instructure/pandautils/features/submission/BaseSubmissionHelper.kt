@@ -46,7 +46,7 @@ abstract class BaseSubmissionHelper(
         text: String,
         attempt: Long = 1L,
         deleteBySubmissionTypeFilter: Assignment.SubmissionType? = null
-    ) {
+    ): Long {
         val dbSubmissionId = runBlocking {
             insertNewSubmission(assignmentId, deleteBySubmissionTypeFilter = deleteBySubmissionTypeFilter) {
                 val entity = CreateSubmissionEntity(
@@ -65,6 +65,7 @@ abstract class BaseSubmissionHelper(
         }
 
         startSubmissionWorker(SubmissionWorkerAction.TEXT_ENTRY, submissionId = dbSubmissionId)
+        return dbSubmissionId
     }
 
     suspend fun saveDraft(
@@ -127,7 +128,7 @@ abstract class BaseSubmissionHelper(
         assignmentName: String?,
         url: String,
         attempt: Long = 1L
-    ) {
+    ): Long {
         val dbSubmissionId = runBlocking {
             insertNewSubmission(assignmentId) {
                 val entity = CreateSubmissionEntity(
@@ -145,6 +146,7 @@ abstract class BaseSubmissionHelper(
         }
 
         startSubmissionWorker(SubmissionWorkerAction.URL_ENTRY, submissionId = dbSubmissionId)
+        return dbSubmissionId
     }
 
     fun startFileSubmission(
@@ -156,8 +158,8 @@ abstract class BaseSubmissionHelper(
         deleteBySubmissionTypeFilter: Assignment.SubmissionType? = null,
         attempt: Long = 1L
 
-    ) {
-        files.ifEmpty { return } // No need to upload files if we aren't given any
+    ): Long {
+        if (files.isEmpty()) return -1
 
         val dbSubmissionId = runBlocking {
             insertNewSubmission(assignmentId, files, deleteBySubmissionTypeFilter) {
@@ -177,6 +179,7 @@ abstract class BaseSubmissionHelper(
         }
 
         startSubmissionWorker(SubmissionWorkerAction.FILE_ENTRY, submissionId = dbSubmissionId)
+        return dbSubmissionId
     }
 
     fun retryFileSubmission(dbSubmissionId: Long) {
@@ -199,7 +202,7 @@ abstract class BaseSubmissionHelper(
         attempt: Long = 1L,
         mediaType: String? = null,
         mediaSource: String? = null
-    ) {
+    ): Long {
         val file = File(mediaFilePath).let {
             FileSubmitObject(
                 it.name,
@@ -227,6 +230,7 @@ abstract class BaseSubmissionHelper(
         }
 
         startSubmissionWorker(SubmissionWorkerAction.MEDIA_ENTRY, submissionId = dbSubmissionId)
+        return dbSubmissionId
     }
 
     fun startStudioSubmission(
@@ -235,7 +239,7 @@ abstract class BaseSubmissionHelper(
         assignmentName: String?,
         url: String,
         attempt: Long = 1L
-    ) {
+    ): Long {
         val dbSubmissionId = runBlocking {
             insertNewSubmission(assignmentId) {
                 val entity = CreateSubmissionEntity(
@@ -253,6 +257,7 @@ abstract class BaseSubmissionHelper(
         }
 
         startSubmissionWorker(SubmissionWorkerAction.STUDIO_ENTRY, submissionId = dbSubmissionId)
+        return dbSubmissionId
     }
 
     fun startCommentUpload(
@@ -323,7 +328,7 @@ abstract class BaseSubmissionHelper(
         assignmentName: String?,
         annotatableAttachmentId: Long,
         attempt: Long = 1L
-    ) {
+    ): Long {
         val dbSubmissionId = runBlocking {
             insertNewSubmission(assignmentId) {
                 val entity = CreateSubmissionEntity(
@@ -341,6 +346,7 @@ abstract class BaseSubmissionHelper(
         }
 
         startSubmissionWorker(SubmissionWorkerAction.STUDENT_ANNOTATION, submissionId = dbSubmissionId)
+        return dbSubmissionId
     }
 
     private suspend fun insertNewSubmission(
