@@ -290,7 +290,7 @@ private fun NoteContent(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .horizonBorder(colorResource(note.type.color), 12.dp, 1.dp, 1.dp, 12.dp, 16.dp)
+            .horizonBorder(colorResource(note.type.color).copy(alpha = 0.1f), 12.dp, 1.dp, 1.dp, 12.dp, 16.dp)
             .background(
                 color = HorizonColors.PrimitivesWhite.white10(),
                 shape = HorizonCornerRadius.level2,
