@@ -38,7 +38,7 @@ fun Modifier.horizonBorder(
             }
         }
         .dropShadow(RoundedCornerShape(cornerRadius)) {
-            this.color = color.copy(0.1f)
+            this.color = color
             this.radius = 0f
         }
         .layout { measurable, constraints ->
@@ -76,22 +76,22 @@ fun Modifier.horizonBorderShadow(
         }
         .dropShadow(RoundedCornerShape(cornerRadius)) {
             this.color = color.copy(0.1f)
-            this.radius = maxShadow.toPx() / 2
+            this.radius = maxShadow.toPx()
 
             val offsetX = if (start == 0.dp) {
-                this.radius = maxShadow.toPx() / 4
+                this.radius = maxShadow.toPx() / 2
                 radius
             } else if (end == 0.dp) {
-                this.radius = maxShadow.toPx() / 4
+                this.radius = maxShadow.toPx() / 2
                 -radius
             } else {
                 0f
             }
             val offsetY = if (top == 0.dp) {
-                this.radius = maxShadow.toPx() / 4
+                this.radius = maxShadow.toPx() / 2
                 radius
             } else if (bottom == 0.dp) {
-                this.radius = maxShadow.toPx() / 4
+                this.radius = maxShadow.toPx() / 2
                 -radius
             } else {
                 0f
