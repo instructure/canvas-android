@@ -34,7 +34,6 @@ import io.mockk.every
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
-import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
@@ -172,8 +171,7 @@ class NotebookRepositoryTest {
 
         val result = getRepository().getCourses()
 
-        assertTrue(result is DataResult.Success)
-        assertEquals(mockCourses, (result as DataResult.Success).data)
+        assertEquals(mockCourses, result)
     }
 
     @Test

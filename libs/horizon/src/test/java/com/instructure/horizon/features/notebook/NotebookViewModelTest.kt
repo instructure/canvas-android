@@ -16,9 +16,9 @@
  */
 package com.instructure.horizon.features.notebook
 
+import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
-import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.redwood.QueryNotesQuery
 import io.mockk.coEvery
@@ -43,6 +43,7 @@ import java.util.Date
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class NotebookViewModelTest {
+    private val context: Context = mockk(relaxed = true)
     private val repository: NotebookRepository = mockk(relaxed = true)
     private val savedStateHandle = SavedStateHandle()
     private val testDispatcher = UnconfinedTestDispatcher()
@@ -78,7 +79,7 @@ class NotebookViewModelTest {
     fun setup() {
         Dispatchers.setMain(testDispatcher)
         coEvery { repository.getNotes(any(), any(), any(), any(), any(), any(), any()) } returns testNotes
-        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
+        coEvery { repository.getCourses(any()) } returns emptyList()
     }
 
     @After
@@ -164,7 +165,7 @@ class NotebookViewModelTest {
             mockk<CourseWithProgress>(relaxed = true),
             mockk<CourseWithProgress>(relaxed = true)
         )
-        coEvery { repository.getCourses(any()) } returns DataResult.Success(mockCourses)
+        coEvery { repository.getCourses(any()) } returns mockCourses
 
         val viewModel = getViewModel()
 
@@ -173,7 +174,7 @@ class NotebookViewModelTest {
 
     @Test
     fun `Test loadCourses failure sets empty courses`() = runTest {
-        coEvery { repository.getCourses(any()) } returns DataResult.Fail()
+        coEvery { repository.getCourses(any()) } returns emptyList()
 
         val viewModel = getViewModel()
 
@@ -239,6 +240,6 @@ class NotebookViewModelTest {
     }
 
     private fun getViewModel(): NotebookViewModel {
-        return NotebookViewModel(repository, savedStateHandle)
+        return NotebookViewModel(context, repository, savedStateHandle)
     }
 }
