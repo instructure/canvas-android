@@ -342,7 +342,7 @@ private fun ToDoItemsList(
     )
 
     // Calculate content height from last item's position + size
-    val listContentHeight by remember(dateGroups) {
+    val listContentHeight by remember(dateGroups, itemPositions) {
         derivedStateOf {
             if (dateGroups.isEmpty()) return@derivedStateOf 0
             val lastGroup = dateGroups.last()
