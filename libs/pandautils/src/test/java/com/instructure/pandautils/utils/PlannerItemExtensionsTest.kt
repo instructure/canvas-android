@@ -783,6 +783,54 @@ class PlannerItemExtensionsTest {
     }
 
     @Test
+    fun `filterByToDoFilters uses plannable courseId for PLANNER_NOTE when item courseId is null`() {
+        val filters = createToDoFilterEntity(favoriteCourses = true)
+        val courses = listOf(
+            Course(id = 1L, isFavorite = true),
+            Course(id = 2L, isFavorite = false)
+        )
+        val items = listOf(
+            createPlannerItem(
+                plannableType = PlannableType.PLANNER_NOTE,
+                courseId = null,
+                plannable = createPlannable(courseId = 1L)
+            ),
+            createPlannerItem(
+                plannableType = PlannableType.PLANNER_NOTE,
+                courseId = null,
+                plannable = createPlannable(courseId = 2L)
+            )
+        )
+
+        val result = items.filterByToDoFilters(filters, courses)
+
+        // Only PLANNER_NOTE with favorite course (via plannable.courseId) should be included
+        assertEquals(1, result.size)
+        assertEquals(1L, result[0].plannable.courseId)
+    }
+
+    @Test
+    fun `filterByToDoFilters prefers item courseId over plannable courseId for PLANNER_NOTE`() {
+        val filters = createToDoFilterEntity(favoriteCourses = true)
+        val courses = listOf(
+            Course(id = 1L, isFavorite = true),
+            Course(id = 2L, isFavorite = false)
+        )
+        val items = listOf(
+            createPlannerItem(
+                plannableType = PlannableType.PLANNER_NOTE,
+                courseId = 2L, // item.courseId is set (non-favorite)
+                plannable = createPlannable(courseId = 1L) // plannable.courseId is favorite
+            )
+        )
+
+        val result = items.filterByToDoFilters(filters, courses)
+
+        // Should use item.courseId (2L) which is not favorite, so item is filtered out
+        assertEquals(0, result.size)
+    }
+
+    @Test
     fun `filterByToDoFilters handles DISCUSSION_TOPIC completion`() {
         val filters = createToDoFilterEntity(showCompleted = false)
         val items = listOf(

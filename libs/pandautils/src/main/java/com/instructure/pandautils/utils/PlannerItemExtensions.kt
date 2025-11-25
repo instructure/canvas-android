@@ -162,7 +162,13 @@ fun List<PlannerItem>.filterByToDoFilters(
         }
 
         if (filters.favoriteCourses) {
-            val course = courses.find { it.id == item.courseId }
+            val courseIdToCheck = item.courseId ?: if (item.plannableType == PlannableType.PLANNER_NOTE) {
+                item.plannable.courseId
+            } else {
+                null
+            }
+
+            val course = courses.find { it.id == courseIdToCheck }
             if (course != null && !course.isFavorite) {
                 return@filter false
             }
