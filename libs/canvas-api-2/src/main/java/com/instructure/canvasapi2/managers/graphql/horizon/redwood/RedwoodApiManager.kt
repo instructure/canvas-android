@@ -97,6 +97,7 @@ interface RedwoodApiManager {
         after: String? = null,
         before: String? = null,
         orderBy: OrderByInput? = null,
+        forceNetwork: Boolean = false
     ): QueryNotesQuery.Notes
 
     suspend fun createNote(
@@ -128,6 +129,7 @@ class RedwoodApiManagerImpl @Inject constructor(
         after: String?,
         before: String?,
         orderBy: OrderByInput?,
+        forceNetwork: Boolean
     ): QueryNotesQuery.Notes {
         val query = QueryNotesQuery(
             filter = Optional.presentIfNotNull(filter),
@@ -138,7 +140,7 @@ class RedwoodApiManagerImpl @Inject constructor(
             orderBy = Optional.presentIfNotNull(orderBy),
         )
         val result = redwoodClient
-            .enqueueQuery(query)
+            .enqueueQuery(query, forceNetwork)
             .dataAssertNoErrors.notes
 
         return result

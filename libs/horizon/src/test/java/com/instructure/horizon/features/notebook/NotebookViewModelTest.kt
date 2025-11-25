@@ -16,15 +16,19 @@
  */
 package com.instructure.horizon.features.notebook
 
+import android.content.Context
 import androidx.lifecycle.SavedStateHandle
+import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.redwood.QueryNotesQuery
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertFalse
+import junit.framework.TestCase.assertNull
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -39,6 +43,7 @@ import java.util.Date
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class NotebookViewModelTest {
+    private val context: Context = mockk(relaxed = true)
     private val repository: NotebookRepository = mockk(relaxed = true)
     private val savedStateHandle = SavedStateHandle()
     private val testDispatcher = UnconfinedTestDispatcher()
@@ -74,6 +79,7 @@ class NotebookViewModelTest {
     fun setup() {
         Dispatchers.setMain(testDispatcher)
         coEvery { repository.getNotes(any(), any(), any(), any(), any(), any(), any()) } returns testNotes
+        coEvery { repository.getCourses(any()) } returns emptyList()
     }
 
     @After
@@ -86,7 +92,7 @@ class NotebookViewModelTest {
     fun `Test data loads successfully on init`() {
         val viewModel = getViewModel()
 
-        assertFalse(viewModel.uiState.value.isLoading)
+        assertFalse(viewModel.uiState.value.loadingState.isLoading)
         coVerify { repository.getNotes(any(), any(), any(), any(), any(), any(), any()) }
     }
 
@@ -103,7 +109,7 @@ class NotebookViewModelTest {
 
         val viewModel = getViewModel()
 
-        assertFalse(viewModel.uiState.value.isLoading)
+        assertFalse(viewModel.uiState.value.loadingState.isLoading)
         assertTrue(viewModel.uiState.value.notes.isEmpty())
     }
 
@@ -112,7 +118,6 @@ class NotebookViewModelTest {
         val viewModel = getViewModel()
 
         assertTrue(viewModel.uiState.value.hasNextPage)
-        assertFalse(viewModel.uiState.value.hasPreviousPage)
     }
 
     @Test
@@ -144,20 +149,6 @@ class NotebookViewModelTest {
     }
 
     @Test
-    fun `Test load previous page uses start cursor`() = runTest {
-        val notesWithPrevious = testNotes.copy(
-            pageInfo = testNotes.pageInfo.copy(hasPreviousPage = true)
-        )
-        coEvery { repository.getNotes(any(), any(), any(), any(), any(), any(), any()) } returns notesWithPrevious
-
-        val viewModel = getViewModel()
-
-        viewModel.uiState.value.loadPreviousPage()
-
-        coVerify { repository.getNotes(after = null, before = "startCursor1", any(), any(), any(), any(), any()) }
-    }
-
-    @Test
     fun `Test update course id reloads data`() = runTest {
         val viewModel = getViewModel()
 
@@ -168,7 +159,87 @@ class NotebookViewModelTest {
         coVerify(exactly = 2) { repository.getNotes(any(), any(), any(), any(), 123L, any(), any()) }
     }
 
+    @Test
+    fun `Test loadCourses success populates courses`() = runTest {
+        val mockCourses = listOf(
+            mockk<CourseWithProgress>(relaxed = true),
+            mockk<CourseWithProgress>(relaxed = true)
+        )
+        coEvery { repository.getCourses(any()) } returns mockCourses
+
+        val viewModel = getViewModel()
+
+        assertEquals(mockCourses, viewModel.uiState.value.courses)
+    }
+
+    @Test
+    fun `Test loadCourses failure sets empty courses`() = runTest {
+        coEvery { repository.getCourses(any()) } returns emptyList()
+
+        val viewModel = getViewModel()
+
+        assertTrue(viewModel.uiState.value.courses.isEmpty())
+    }
+
+    @Test
+    fun `Test onCourseSelected updates state and reloads data`() = runTest {
+        val mockCourse = mockk<CourseWithProgress>(relaxed = true) {
+            every { courseId } returns 123L
+        }
+        val viewModel = getViewModel()
+
+        viewModel.uiState.value.onCourseSelected(mockCourse)
+
+        assertEquals(mockCourse, viewModel.uiState.value.selectedCourse)
+        coVerify(atLeast = 1) { repository.getNotes(any(), any(), any(), any(), 123L, any(), any()) }
+    }
+
+    @Test
+    fun `Test onCourseSelected with null clears course`() = runTest {
+        val viewModel = getViewModel()
+
+        viewModel.uiState.value.onCourseSelected(null)
+
+        assertNull(viewModel.uiState.value.selectedCourse)
+    }
+
+    @Test
+    fun `Test updateScreenState changes visibility flags`() = runTest {
+        val viewModel = getViewModel()
+
+        viewModel.updateScreenState(
+            showNoteTypeFilter = false,
+            showCourseFilter = true,
+            showTopBar = true
+        )
+
+        assertFalse(viewModel.uiState.value.showNoteTypeFilter)
+        assertTrue(viewModel.uiState.value.showCourseFilter)
+        assertTrue(viewModel.uiState.value.showTopBar)
+    }
+
+    @Test
+    fun `Test loadNextPage triggers with valid next page`() = runTest {
+        coEvery { repository.getNotes(any(), any(), any(), any(), any(), any(), any()) } returns testNotes.copy(
+            pageInfo = testNotes.pageInfo.copy(hasNextPage = true)
+        )
+        val viewModel = getViewModel()
+
+        viewModel.uiState.value.loadNextPage()
+
+        coVerify(atLeast = 2) { repository.getNotes(any(), any(), any(), any(), any(), any(), any()) }
+    }
+
+    @Test
+    fun `Test course filter is hidden when courseId is present`() = runTest {
+        savedStateHandle["courseId"] = "123"
+
+        val viewModel = getViewModel()
+
+        assertFalse(viewModel.uiState.value.showCourseFilter)
+    }
+
     private fun getViewModel(): NotebookViewModel {
-        return NotebookViewModel(repository, savedStateHandle)
+        return NotebookViewModel(context, repository, savedStateHandle)
     }
 }

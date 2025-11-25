@@ -33,7 +33,8 @@ class FakeRedwoodApiManager : RedwoodApiManager {
         lastN: Int?,
         after: String?,
         before: String?,
-        orderBy: OrderByInput?
+        orderBy: OrderByInput?,
+        forceNetwork: Boolean
     ): QueryNotesQuery.Notes {
         val edges = notes.map { note ->
             QueryNotesQuery.Edge(
