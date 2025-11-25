@@ -75,6 +75,7 @@ fun <T> DropdownChip(
     modifier: Modifier = Modifier,
     dropdownWidth: Dp? = null,
     placeholder: String,
+    showIconCollapsed: Boolean = false,
     borderColor: Color = HorizonColors.LineAndBorder.lineStroke(),
     contentColor: Color = HorizonColors.Text.body(),
     verticalPadding: Dp = 0.dp
@@ -121,6 +122,16 @@ fun <T> DropdownChip(
                     contentDescription = selectedItem?.label ?: placeholder
                 }
         ) {
+            if (showIconCollapsed && selectedItem?.iconRes != null) {
+                Icon(
+                    painter = painterResource(selectedItem.iconRes),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .padding(2.dp),
+                    tint = selectedItem.iconTint ?: HorizonColors.Icon.default()
+                )
+            }
             Text(
                 text = selectedItem?.label ?: placeholder,
                 style = HorizonTypography.p2,

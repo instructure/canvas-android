@@ -41,7 +41,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -55,9 +54,9 @@ import com.instructure.horizon.R
 import com.instructure.horizon.features.notebook.common.composable.NotebookAppBar
 import com.instructure.horizon.features.notebook.common.composable.NotebookHighlightedText
 import com.instructure.horizon.features.notebook.common.composable.NotebookPill
+import com.instructure.horizon.features.notebook.common.composable.NotebookTypeSelect
 import com.instructure.horizon.features.notebook.common.composable.toNotebookLocalisedDateFormat
 import com.instructure.horizon.features.notebook.common.model.Note
-import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.horizon.features.notebook.navigation.NotebookRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
@@ -213,37 +212,6 @@ private fun FilterContent(
 ) {
     val context = LocalContext.current
     val defaultBackgroundColor = HorizonColors.PrimitivesGrey.grey12()
-    val importantBgColor = HorizonColors.PrimitivesSea.sea12()
-    val confusingBgColor = HorizonColors.PrimitivesRed.red12()
-
-    // Type filter items
-    val allNotesItem = DropdownItem(
-        value = null as NotebookType?,
-        label = context.getString(R.string.notebookTypeAllNotes),
-        iconRes = R.drawable.menu,
-        iconTint = HorizonColors.Icon.default(),
-        backgroundColor = defaultBackgroundColor
-    )
-
-    val typeItems = remember {
-        listOf(
-            allNotesItem,
-            DropdownItem(
-                value = NotebookType.Important,
-                label = context.getString(NotebookType.Important.labelRes),
-                iconRes = NotebookType.Important.iconRes,
-                iconTint = Color(context.getColor(NotebookType.Important.color)),
-                backgroundColor = importantBgColor
-            ),
-            DropdownItem(
-                value = NotebookType.Confusing,
-                label = context.getString(NotebookType.Confusing.labelRes),
-                iconRes = NotebookType.Confusing.iconRes,
-                iconTint = Color(context.getColor(NotebookType.Confusing.color)),
-                backgroundColor = confusingBgColor
-            )
-        )
-    }
 
     // Course filter items
     val allCoursesItem = DropdownItem<CourseWithProgress?>(
@@ -265,9 +233,6 @@ private fun FilterContent(
             )
         }
     }
-
-    val selectedTypeItem =
-        if (state.selectedFilter == null) allNotesItem else typeItems.find { it.value == state.selectedFilter }
 
     val selectedCourseItem =
         if (state.selectedCourse == null) allCoursesItem else courseItems.find { it.value == state.selectedCourse }
@@ -293,14 +258,7 @@ private fun FilterContent(
                 }
 
                 if (state.showNoteTypeFilter) {
-                    DropdownChip(
-                        items = typeItems,
-                        selectedItem = selectedTypeItem,
-                        onItemSelected = { item -> state.onFilterSelected(item?.value) },
-                        placeholder = stringResource(R.string.notebookFilterTypePlaceholder),
-                        dropdownWidth = 178.dp,
-                        verticalPadding = 6.dp
-                    )
+                    NotebookTypeSelect(state.selectedFilter, state.onFilterSelected, false, true)
                 }
             }
 

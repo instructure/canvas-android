@@ -247,7 +247,7 @@
     <string name="assignmentDetails_submissionConfirmationMessage">Once you submit this attempt, you won’t be able to make any changes.</string>
     <string name="assignmentDetails_submissionConfirmationCancel">Cancel</string>
     <string name="assignmentDetails_submissionConfirmationConfirm">Submit attempt</string>
-    <string name="notebookTypeConfusing">Unclear</string>
+    <string name="notebookTypeUnclear">Unclear</string>
     <string name="notebookTypeImportant">Important</string>
     <string name="notebookTypeAllNotes">All notes</string>
     <string name="notebookTitle">Notebook</string>
