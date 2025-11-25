@@ -75,7 +75,7 @@ fun DashboardAnnouncementBannerSection(
             DashboardWidgetCardError(
                 stringResource(R.string.notificationsAnnouncementCategoryLabel),
                 R.drawable.campaign,
-                HorizonColors.Surface.institution().copy(alpha = 0.1f),
+                HorizonColors.PrimitivesSky.sky12,
                 false,
                 DashboardWidgetPageState.Empty,
                 { state.onRefresh {} },

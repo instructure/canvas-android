@@ -16,12 +16,14 @@
  */
 package com.instructure.horizon.features.notebook
 
+import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.R
 import com.instructure.horizon.features.notebook.common.model.Note
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.horizon.features.notebook.common.model.mapToNotes
@@ -30,6 +32,7 @@ import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.redwood.QueryNotesQuery
 import com.instructure.redwood.type.OrderDirection
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -38,6 +41,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NotebookViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val repository: NotebookRepository,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
@@ -78,11 +82,19 @@ class NotebookViewModel @Inject constructor(
     fun loadData() {
         loadJob?.cancel()
         loadJob = viewModelScope.tryLaunch {
-            _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = true, isError = false, errorMessage = null)) }
+            _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = true, isRefreshing = false, isError = false, errorMessage = null)) }
             fetchData()
-            _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = false)) }
+            _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = false, isError = false, errorMessage = null)) }
         } catch {
-            _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = false, isError = true, errorMessage = "Failed to load notes")) }
+            _uiState.update { it.copy(
+                loadingState = it.loadingState.copy(
+                    isLoading = false,
+                    isError = true,
+                    errorMessage = context.getString(
+                        R.string.notebookFailedToLoadErrorMessage
+                    )
+                )
+            ) }
         }
     }
 
@@ -94,7 +106,14 @@ class NotebookViewModel @Inject constructor(
             fetchData(forceNetwork = true)
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isRefreshing = false, isError = false, errorMessage = null)) }
         } catch {
-            _uiState.update { it.copy(loadingState = it.loadingState.copy(isRefreshing = false, snackbarMessage = "Failed to load notes")) }
+            _uiState.update { it.copy(
+                loadingState = it.loadingState.copy(
+                    isRefreshing = false,
+                    snackbarMessage = context.getString(
+                        R.string.notebookFailedToLoadErrorMessage
+                    )
+                )
+            ) }
         }
     }
 
@@ -105,7 +124,7 @@ class NotebookViewModel @Inject constructor(
     }
 
     private suspend fun fetchCourses(forceNetwork: Boolean = false) {
-        val courses = repository.getCourses(forceNetwork).dataOrThrow
+        val courses = repository.getCourses(forceNetwork)
         _uiState.update { it.copy(courses = courses) }
     }
 
@@ -122,13 +141,14 @@ class NotebookViewModel @Inject constructor(
         pageInfo = notesResponse.pageInfo
 
         _uiState.update {
-            it.copy(hasNextPage = notesResponse.pageInfo.hasNextPage,)
+            it.copy(hasNextPage = notesResponse.pageInfo.hasNextPage)
         }
 
         return notesResponse.mapToNotes()
     }
 
     private fun getNextPage() {
+        loadJob?.cancel()
         loadJob = viewModelScope.tryLaunch {
             _uiState.update { it.copy(isLoadingMore = true) }
             val notes = fetchNotes()
@@ -152,11 +172,9 @@ class NotebookViewModel @Inject constructor(
     }
 
     fun updateFilters(courseId: Long? = null, objectTypeAndId: Pair<String, String>? = null) {
-        if (courseId != this.courseId) {
-            pageInfo = null
-            this.courseId = courseId
-            this.objectTypeAndId = objectTypeAndId
-        }
+        pageInfo = null
+        this.courseId = courseId
+        this.objectTypeAndId = objectTypeAndId
         loadData()
     }
 

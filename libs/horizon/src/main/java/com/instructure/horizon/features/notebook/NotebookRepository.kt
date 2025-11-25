@@ -21,7 +21,6 @@ import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
 import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
 import com.instructure.canvasapi2.managers.graphql.horizon.redwood.RedwoodApiManager
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.redwood.QueryNotesQuery
 import com.instructure.redwood.type.LearningObjectFilter
@@ -89,10 +88,10 @@ class NotebookRepository @Inject constructor(
 
     }
 
-    suspend fun getCourses(forceNetwork: Boolean = false): DataResult<List<CourseWithProgress>> {
+    suspend fun getCourses(forceNetwork: Boolean = false): List<CourseWithProgress> {
         return horizonGetCoursesManager.getCoursesWithProgress(
             userId = apiPrefs.user?.id ?: 0L,
             forceNetwork = forceNetwork
-        )
+        ).dataOrNull.orEmpty()
     }
 }

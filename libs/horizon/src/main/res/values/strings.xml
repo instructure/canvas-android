@@ -450,4 +450,5 @@
     <string name="notesEmptyFilteredContentBody">Adjust your filters or create a new note to get started.</string>
     <string name="notesErrorContentTitle">Failed to load Notebook</string>
     <string name="notesErrorContentBody">Please try again.</string>
+    <string name="notebookFailedToLoadErrorMessage">Failed to load notes</string>
 </resources>
