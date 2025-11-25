@@ -19,7 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -28,6 +28,8 @@ import androidx.navigation.navArgument
 import com.instructure.horizon.features.account.navigation.accountNavigation
 import com.instructure.horizon.features.dashboard.DashboardScreen
 import com.instructure.horizon.features.dashboard.DashboardViewModel
+import com.instructure.horizon.features.dashboard.widget.course.list.DashboardCourseListScreen
+import com.instructure.horizon.features.dashboard.widget.course.list.DashboardCourseListViewModel
 import com.instructure.horizon.features.learn.LearnScreen
 import com.instructure.horizon.features.learn.LearnViewModel
 import com.instructure.horizon.features.skillspace.SkillspaceScreen
@@ -45,6 +47,7 @@ const val PROGRAM_PREFIX = "program_"
 @Serializable
 sealed class HomeNavigationRoute(val route: String) {
     data object Dashboard : HomeNavigationRoute("dashboard")
+    data object CourseList: HomeNavigationRoute("courses")
     data object Learn : HomeNavigationRoute("learn?learningItemId={learningItemId}") {
         fun withCourse(courseId: Long? = null) =
             if (courseId != null) "learn?learningItemId=$COURSE_PREFIX$courseId" else "learn"
@@ -87,6 +90,11 @@ fun HomeNavigation(navController: NavHostController, mainNavController: NavHostC
             val viewModel = hiltViewModel<SkillspaceViewModel>()
             val uiState by viewModel.uiState.collectAsState()
             SkillspaceScreen(uiState)
+        }
+        composable(HomeNavigationRoute.CourseList.route) {
+            val viewModel = hiltViewModel<DashboardCourseListViewModel>()
+            val uiState by viewModel.uiState.collectAsState()
+            DashboardCourseListScreen(uiState, navController)
         }
         accountNavigation(navController)
 

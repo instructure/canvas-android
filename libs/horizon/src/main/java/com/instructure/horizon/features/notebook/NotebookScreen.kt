@@ -55,6 +55,7 @@ import com.instructure.horizon.R
 import com.instructure.horizon.features.notebook.common.composable.NotebookAppBar
 import com.instructure.horizon.features.notebook.common.composable.NotebookHighlightedText
 import com.instructure.horizon.features.notebook.common.composable.NotebookPill
+import com.instructure.horizon.features.notebook.common.composable.toNotebookLocalisedDateFormat
 import com.instructure.horizon.features.notebook.common.model.Note
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.horizon.features.notebook.navigation.NotebookRoute
@@ -159,7 +160,8 @@ fun NotebookScreen(
                                                     textSelectionEnd = note.highlightedText.textPosition.end,
                                                     highlightedText = note.highlightedText.selectedText,
                                                     noteType = note.type.name,
-                                                    userComment = note.userText
+                                                    userComment = note.userText,
+                                                    updatedAt = note.updatedAt.toNotebookLocalisedDateFormat()
                                                 )
                                             )
                                         } else {

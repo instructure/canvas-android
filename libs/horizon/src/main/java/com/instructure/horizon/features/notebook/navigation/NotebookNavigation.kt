@@ -18,7 +18,7 @@ package com.instructure.horizon.features.notebook.navigation
 
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -75,7 +75,7 @@ fun NavGraphBuilder.notebookNavigation(
                     type = NavType.BoolType
                     defaultValue = false
                 }
-            )
+            ),
         ) {
             val viewModel = hiltViewModel<NotebookViewModel>()
             NotebookScreen(navController, viewModel)
