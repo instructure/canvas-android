@@ -65,17 +65,18 @@ import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.foundation.horizonBorder
+import com.instructure.horizon.horizonui.foundation.horizonBorderShadow
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.ButtonHeight
 import com.instructure.horizon.horizonui.molecules.ButtonWidth
 import com.instructure.horizon.horizonui.molecules.DropdownChip
 import com.instructure.horizon.horizonui.molecules.DropdownItem
-import com.instructure.horizon.horizonui.molecules.HorizonDivider
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.organisms.CollapsableHeaderScreen
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.horizon.navigation.MainNavigationRoute
+import com.instructure.pandautils.compose.modifiers.conditional
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.localisedFormat
@@ -118,8 +119,15 @@ fun NotebookScreen(
                             state,
                             scrollState,
                             Modifier
+                                .background(HorizonColors.Surface.pagePrimary())
                                 .clip(HorizonCornerRadius.level5)
-                                .background(HorizonColors.Surface.pageSecondary()),
+                                .conditional(scrollState.canScrollBackward) {
+                                    horizonBorderShadow(
+                                        HorizonColors.Surface.inversePrimary(),
+                                        bottom = 1.dp,
+                                    )
+                                }
+                                .background(HorizonColors.Surface.pageSecondary())
                         )
                     }
 
@@ -239,32 +247,26 @@ private fun FilterContent(
         if (state.selectedCourse == null) allCoursesItem else courseItems.find { it.value == state.selectedCourse }
 
 
-        Column {
-            Row(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                if (state.showCourseFilter) {
-                    DropdownChip(
-                        items = courseItems,
-                        selectedItem = selectedCourseItem,
-                        onItemSelected = { item -> state.onCourseSelected(item?.value) },
-                        placeholder = stringResource(R.string.notebookFilterCoursePlaceholder),
-                        dropdownWidth = 178.dp,
-                        verticalPadding = 6.dp,
-                        modifier = Modifier.weight(1f, false)
-                    )
-                }
-
-                if (state.showNoteTypeFilter) {
-                    NotebookTypeSelect(state.selectedFilter, state.onFilterSelected, false, true)
-                }
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            if (state.showCourseFilter) {
+                DropdownChip(
+                    items = courseItems,
+                    selectedItem = selectedCourseItem,
+                    onItemSelected = { item -> state.onCourseSelected(item?.value) },
+                    placeholder = stringResource(R.string.notebookFilterCoursePlaceholder),
+                    dropdownWidth = 178.dp,
+                    verticalPadding = 6.dp,
+                    modifier = Modifier.weight(1f, false)
+                )
             }
 
-            if (scrollState.canScrollBackward) {
-                HorizonDivider()
+            if (state.showNoteTypeFilter) {
+                NotebookTypeSelect(state.selectedFilter, state.onFilterSelected, false, true)
             }
         }
 }
@@ -290,7 +292,14 @@ private fun NoteContent(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .horizonBorder(colorResource(note.type.color).copy(alpha = 0.1f), 12.dp, 1.dp, 1.dp, 12.dp, 16.dp)
+            .horizonBorder(
+                colorResource(note.type.color).copy(alpha = 0.1f),
+                12.dp,
+                1.dp,
+                1.dp,
+                12.dp,
+                16.dp
+            )
             .background(
                 color = HorizonColors.PrimitivesWhite.white10(),
                 shape = HorizonCornerRadius.level2,

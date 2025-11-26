@@ -3,7 +3,6 @@ package com.instructure.horizon.horizonui.foundation
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.dropShadow
 import androidx.compose.ui.geometry.Offset
@@ -17,7 +16,6 @@ object HorizonBorder {
     fun level2(color: Color = HorizonColors.LineAndBorder.lineStroke()) = BorderStroke(2.dp, color)
 }
 
-@Composable
 fun Modifier.horizonBorder(
     color: Color,
     start: Dp = 0.dp,
@@ -52,7 +50,6 @@ fun Modifier.horizonBorder(
         }
 }
 
-@Composable
 fun Modifier.horizonBorderShadow(
     color: Color,
     start: Dp = 0.dp,
@@ -109,7 +106,6 @@ fun Modifier.horizonBorderShadow(
         }
 }
 
-@Composable
 fun Modifier.horizonBorder(
     color: Color,
     horizontal: Dp = 0.dp,
@@ -119,7 +115,6 @@ fun Modifier.horizonBorder(
     return horizonBorder(color, horizontal, vertical, horizontal, vertical, cornerRadius)
 }
 
-@Composable
 fun Modifier.horizonBorder(
     color: Color,
     all: Dp = 0.dp,
@@ -128,7 +123,6 @@ fun Modifier.horizonBorder(
     return horizonBorder(color, all, all, cornerRadius)
 }
 
-@Composable
 fun Modifier.horizonBorderShadow(
     color: Color,
     horizontal: Dp = 0.dp,
@@ -138,7 +132,6 @@ fun Modifier.horizonBorderShadow(
     return horizonBorderShadow(color, horizontal, vertical, horizontal, vertical, cornerRadius)
 }
 
-@Composable
 fun Modifier.horizonBorderShadow(
     color: Color,
     all: Dp = 0.dp,
