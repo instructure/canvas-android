@@ -239,6 +239,78 @@ class NotebookViewModelTest {
         assertFalse(viewModel.uiState.value.showCourseFilter)
     }
 
+    @Test
+    fun `Test updateShowDeleteConfirmation updates state correctly`() = runTest {
+        val viewModel = getViewModel()
+        val testNote = viewModel.uiState.value.notes.first()
+
+        viewModel.uiState.value.updateShowDeleteConfirmation(testNote)
+
+        assertEquals(testNote, viewModel.uiState.value.showDeleteConfirmationForNote)
+    }
+
+    @Test
+    fun `Test updateShowDeleteConfirmation with null clears confirmation`() = runTest {
+        val viewModel = getViewModel()
+        val testNote = viewModel.uiState.value.notes.first()
+
+        viewModel.uiState.value.updateShowDeleteConfirmation(testNote)
+        viewModel.uiState.value.updateShowDeleteConfirmation(null)
+
+        assertNull(viewModel.uiState.value.showDeleteConfirmationForNote)
+    }
+
+    @Test
+    fun `Test deleteNote removes note from list after successful deletion`() = runTest {
+        coEvery { repository.deleteNote(any()) } returns Unit
+        val viewModel = getViewModel()
+        val initialNotesCount = viewModel.uiState.value.notes.size
+        val noteToDelete = viewModel.uiState.value.notes.first()
+
+        viewModel.uiState.value.deleteNote(noteToDelete)
+
+        assertEquals(initialNotesCount - 1, viewModel.uiState.value.notes.size)
+        assertFalse(viewModel.uiState.value.notes.contains(noteToDelete))
+        assertNull(viewModel.uiState.value.deleteLoadingNote)
+        coVerify(exactly = 1) { repository.deleteNote(noteToDelete.id) }
+    }
+
+    @Test
+    fun `Test deleteNote clears loading state on error`() = runTest {
+        coEvery { repository.deleteNote(any()) } throws Exception("Delete failed")
+        val viewModel = getViewModel()
+        val initialNotesCount = viewModel.uiState.value.notes.size
+        val noteToDelete = viewModel.uiState.value.notes.first()
+
+        viewModel.uiState.value.deleteNote(noteToDelete)
+
+        assertEquals(initialNotesCount, viewModel.uiState.value.notes.size)
+        assertTrue(viewModel.uiState.value.notes.contains(noteToDelete))
+        assertNull(viewModel.uiState.value.deleteLoadingNote)
+    }
+
+    @Test
+    fun `Test deleteNote with null note does nothing`() = runTest {
+        val viewModel = getViewModel()
+        val initialNotesCount = viewModel.uiState.value.notes.size
+
+        viewModel.uiState.value.deleteNote(null)
+
+        assertEquals(initialNotesCount, viewModel.uiState.value.notes.size)
+        coVerify(exactly = 0) { repository.deleteNote(any()) }
+    }
+
+    @Test
+    fun `Test deleteNote calls repository with correct noteId`() = runTest {
+        coEvery { repository.deleteNote(any()) } returns Unit
+        val viewModel = getViewModel()
+        val noteToDelete = viewModel.uiState.value.notes.first()
+
+        viewModel.uiState.value.deleteNote(noteToDelete)
+
+        coVerify(exactly = 1) { repository.deleteNote(noteToDelete.id) }
+    }
+
     private fun getViewModel(): NotebookViewModel {
         return NotebookViewModel(context, repository, savedStateHandle)
     }

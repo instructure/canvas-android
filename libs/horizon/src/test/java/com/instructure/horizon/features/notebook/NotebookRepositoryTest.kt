@@ -194,6 +194,31 @@ class NotebookRepositoryTest {
         coVerify { horizonGetCoursesManager.getCoursesWithProgress(userId = 123L, forceNetwork = false) }
     }
 
+    @Test
+    fun `Test deleteNote calls redwood API with noteId`() = runTest {
+        coEvery { redwoodApiManager.deleteNote(any()) } returns Unit
+
+        getRepository().deleteNote("note123")
+
+        coVerify(exactly = 1) { redwoodApiManager.deleteNote("note123") }
+    }
+
+    @Test(expected = Exception::class)
+    fun `Test deleteNote propagates API errors`() = runTest {
+        coEvery { redwoodApiManager.deleteNote(any()) } throws Exception("Delete failed")
+
+        getRepository().deleteNote("note123")
+    }
+
+    @Test
+    fun `Test deleteNote with empty noteId calls API`() = runTest {
+        coEvery { redwoodApiManager.deleteNote(any()) } returns Unit
+
+        getRepository().deleteNote("")
+
+        coVerify(exactly = 1) { redwoodApiManager.deleteNote("") }
+    }
+
     private fun getRepository(): NotebookRepository {
         return NotebookRepository(redwoodApiManager, horizonGetCoursesManager, apiPrefs)
     }

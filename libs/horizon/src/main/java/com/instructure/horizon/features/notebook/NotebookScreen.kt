@@ -90,6 +90,18 @@ fun NotebookScreen(
     viewModel: NotebookViewModel,
 ) {
     val state by viewModel.uiState.collectAsState()
+
+    NotebookScreen(
+        navController = mainNavController,
+        state = state
+    )
+}
+
+@Composable
+fun NotebookScreen(
+    navController: NavHostController,
+    state: NotebookUiState
+) {
     val activity = LocalContext.current.getActivityOrNull()
     LaunchedEffect(Unit) {
         if (activity != null) ViewStyler.setStatusBarColor(
@@ -113,7 +125,7 @@ fun NotebookScreen(
         headerContent = {
             if (state.showTopBar) {
                 NotebookAppBar(
-                    navigateBack = { mainNavController.popBackStack() },
+                    navigateBack = { navController.popBackStack() },
                     centeredTitle = true
                 )
             }
@@ -125,7 +137,7 @@ fun NotebookScreen(
                     modifier = Modifier
                         .fillMaxSize()
                 ) {
-                    if ((state.showNoteTypeFilter || state.showCourseFilter) && (state.courses.isNotEmpty() || state.selectedCourse != null || state.selectedFilter != null)) {
+                    if ((state.showNoteTypeFilter || state.showCourseFilter)) {
                         FilterContent(
                             state,
                             scrollState,
@@ -173,7 +185,7 @@ fun NotebookScreen(
                                         state.updateShowDeleteConfirmation(note)
                                     }) {
                                         if (state.navigateToEdit) {
-                                            mainNavController.navigate(
+                                            navController.navigate(
                                                 NotebookRoute.EditNotebook(
                                                     noteId = note.id,
                                                     highlightedTextStartOffset = note.highlightedText.range.startOffset,
@@ -189,7 +201,7 @@ fun NotebookScreen(
                                                 )
                                             )
                                         } else {
-                                            mainNavController.navigate(
+                                            navController.navigate(
                                                 MainNavigationRoute.ModuleItemSequence(
                                                     courseId = note.courseId,
                                                     moduleItemAssetType = note.objectType.value,
@@ -368,14 +380,18 @@ private fun NoteContent(
                     Text(
                         text = note.updatedAt.localisedFormat("MMM d, yyyy"),
                         style = HorizonTypography.labelMediumBold,
-                        color = HorizonColors.Text.timestamp()
+                        color = HorizonColors.Text.timestamp(),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
 
                     if (courseName != null) {
                         Text(
                             text = courseName,
                             style = HorizonTypography.labelMediumBold,
-                            color = HorizonColors.Text.timestamp()
+                            color = HorizonColors.Text.timestamp(),
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
                 }
