@@ -124,10 +124,18 @@ fun NotebookScreen(
         modifier = Modifier.background(HorizonColors.Surface.pagePrimary()),
         headerContent = {
             if (state.showTopBar) {
-                NotebookAppBar(
-                    navigateBack = { navController.popBackStack() },
-                    centeredTitle = true
-                )
+                if (state.showCourseFilter) {
+                    NotebookAppBar(
+                        navigateBack = { navController.popBackStack() },
+                        centeredTitle = true
+                    )
+                } else {
+                    NotebookAppBar(
+                        onClose = { navController.popBackStack() },
+                        centeredTitle = false
+                    )
+                }
+
             }
         },
         bodyContent = {
