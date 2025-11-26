@@ -55,7 +55,7 @@ class DiscussionSubmissionViewFragment : BaseCanvasFragment() {
     private fun isValidCanvasDomain(url: String): Boolean {
         if (url.contains(ApiPrefs.domain)) return true
         return ApiPrefs.overrideDomains.values.any { overrideDomain ->
-            overrideDomain != null && url.contains(overrideDomain)
+            !overrideDomain.isNullOrEmpty() && url.contains(overrideDomain)
         }
     }
 
@@ -65,7 +65,7 @@ class DiscussionSubmissionViewFragment : BaseCanvasFragment() {
     private fun getDomainForUrl(url: String): String {
         if (url.contains(ApiPrefs.domain)) return ApiPrefs.domain
         ApiPrefs.overrideDomains.values.forEach { overrideDomain ->
-            if (overrideDomain != null && url.contains(overrideDomain)) {
+            if (!overrideDomain.isNullOrEmpty() && url.contains(overrideDomain)) {
                 return overrideDomain
             }
         }

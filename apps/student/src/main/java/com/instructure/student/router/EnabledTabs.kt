@@ -77,12 +77,10 @@ class EnabledTabsImpl: EnabledTabs {
                 tab.externalUrl?.let { externalUrl ->
                     val uri = externalUrl.toUri()
                     val courseIdIndex = uri.pathSegments.indexOf("courses") + 1
-                    if (courseIdIndex > 0 && courseIdIndex < uri.pathSegments.size) {
-                        val courseIdSegment = uri.pathSegments[courseIdIndex]
-                        if (courseIdSegment.contains("~")) {
-                            val shardId = courseIdSegment.substringBefore("~")
-                            ApiPrefs.shardIds[entry.key] = shardId
-                        }
+                    val courseIdSegment = uri.pathSegments.getOrNull(courseIdIndex) ?: return@let
+                    if (courseIdSegment.contains("~")) {
+                        val shardId = courseIdSegment.substringBefore("~")
+                        ApiPrefs.shardIds[entry.key] = shardId
                     }
                 }
             }

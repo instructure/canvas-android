@@ -254,7 +254,8 @@ object APIHelper {
      */
     fun createGlobalUserId(shardId: String, userId: Long): Long {
         val tildeId = "$shardId~$userId"
-        return expandTildeId(tildeId).toLong()
+        return expandTildeId(tildeId).toLongOrNull()
+            ?: throw IllegalArgumentException("Invalid tilde ID: $tildeId")
     }
 
     /**
