@@ -76,6 +76,7 @@ fun <T> DropdownChip(
     dropdownWidth: Dp? = null,
     placeholder: String,
     showIconCollapsed: Boolean = false,
+    enabled: Boolean = true,
     borderColor: Color = HorizonColors.LineAndBorder.lineStroke(),
     contentColor: Color = HorizonColors.Text.body(),
     verticalPadding: Dp = 0.dp
@@ -108,7 +109,7 @@ fun <T> DropdownChip(
                     HorizonCornerRadius.level1
                 )
                 .clip(HorizonCornerRadius.level1)
-                .clickable { isMenuOpen = !isMenuOpen }
+                .conditional(enabled) { clickable { isMenuOpen = !isMenuOpen } }
                 .padding(horizontal = 8.dp, vertical = 2.dp)
                 .onGloballyPositioned {
                     heightInPx = it.size.height
@@ -141,20 +142,22 @@ fun <T> DropdownChip(
                 modifier = Modifier
                     .weight(1f, false)
                     .padding(
-                    end = 2.dp,
-                    top = verticalPadding,
-                    bottom = verticalPadding
-                )
+                        end = 2.dp,
+                        top = verticalPadding,
+                        bottom = verticalPadding
+                    )
             )
 
-            Icon(
-                painter = painterResource(R.drawable.keyboard_arrow_down),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(16.dp)
-                    .rotate(iconRotation.value.toFloat()),
-                tint = contentColor
-            )
+            if (enabled) {
+                Icon(
+                    painter = painterResource(R.drawable.keyboard_arrow_down),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(16.dp)
+                        .rotate(iconRotation.value.toFloat()),
+                    tint = contentColor
+                )
+            }
         }
 
         InputDropDownPopup(

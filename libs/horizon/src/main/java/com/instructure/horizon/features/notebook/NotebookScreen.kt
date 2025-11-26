@@ -54,7 +54,6 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.notebook.common.composable.NotebookAppBar
 import com.instructure.horizon.features.notebook.common.composable.NotebookHighlightedText
-import com.instructure.horizon.features.notebook.common.composable.NotebookPill
 import com.instructure.horizon.features.notebook.common.composable.NotebookTypeSelect
 import com.instructure.horizon.features.notebook.common.composable.toNotebookLocalisedDateFormat
 import com.instructure.horizon.features.notebook.common.model.Note
@@ -155,7 +154,10 @@ fun NotebookScreen(
                         } else {
                             items(state.notes) { note ->
                                 Column {
-                                    NoteContent(note) {
+                                    val courseName = if (state.showCourseFilter) {
+                                        state.courses.firstOrNull { it.courseId == note.courseId }?.courseName
+                                    } else null
+                                    NoteContent(note, courseName) {
                                         if (state.navigateToEdit) {
                                             mainNavController.navigate(
                                                 NotebookRoute.EditNotebook(
@@ -287,6 +289,7 @@ private fun LoadingContent() {
 @Composable
 private fun NoteContent(
     note: Note,
+    courseName: String?,
     onClick: () -> Unit,
 ) {
     Column(
@@ -311,10 +314,13 @@ private fun NoteContent(
                 .fillMaxWidth()
                 .padding(24.dp)
         ) {
-            Text(
-                text = note.updatedAt.localisedFormat("MMM d, yyyy"),
-                style = HorizonTypography.labelSmall,
-                color = HorizonColors.Text.timestamp()
+            NotebookTypeSelect(
+                note.type,
+                verticalPadding = 2.dp,
+                onSelect = {},
+                showIcons = true,
+                enabled = false,
+                showAllOption = false
             )
 
             HorizonSpace(SpaceSize.SPACE_16)
@@ -336,10 +342,22 @@ private fun NoteContent(
                     overflow = TextOverflow.Ellipsis,
                 )
 
-                HorizonSpace(SpaceSize.SPACE_16)
+                HorizonSpace(SpaceSize.SPACE_8)
             }
 
-            NotebookPill(note.type)
+            Text(
+                text = note.updatedAt.localisedFormat("MMM d, yyyy"),
+                style = HorizonTypography.labelMediumBold,
+                color = HorizonColors.Text.timestamp()
+            )
+
+            if (courseName != null) {
+                Text(
+                    text = courseName,
+                    style = HorizonTypography.labelMediumBold,
+                    color = HorizonColors.Text.timestamp()
+                )
+            }
         }
     }
 }
