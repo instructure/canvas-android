@@ -216,7 +216,6 @@ fun NotebookScreen(
                                             width = ButtonWidth.FILL,
                                             color = ButtonColor.WhiteWithOutline,
                                             onClick = { state.loadNextPage() },
-                                            modifier = Modifier.padding(vertical = 24.dp)
                                         )
                                     }
                                 }
@@ -362,11 +361,9 @@ private fun NoteContent(
                 HorizonSpace(SpaceSize.SPACE_8)
             }
 
-            Row(
-                verticalAlignment = Alignment.Bottom
-            ) {
+            Row {
                 Column(
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f).align(Alignment.CenterVertically)
                 ){
                     Text(
                         text = note.updatedAt.localisedFormat("MMM d, yyyy"),
@@ -388,7 +385,8 @@ private fun NoteContent(
                     color = IconButtonColor.InverseDanger,
                     size = IconButtonSize.SMALL,
                     onClick = { onDeleteClick() },
-                    loading = note == deleteLoading
+                    loading = note == deleteLoading,
+                    modifier = Modifier.align(Alignment.Bottom)
                 )
             }
         }
