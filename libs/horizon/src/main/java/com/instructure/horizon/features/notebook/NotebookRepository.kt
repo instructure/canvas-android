@@ -94,4 +94,8 @@ class NotebookRepository @Inject constructor(
             forceNetwork = forceNetwork
         ).dataOrNull.orEmpty()
     }
+
+    suspend fun deleteNote(noteId: String) {
+        redwoodApiManager.deleteNote(noteId)
+    }
 }

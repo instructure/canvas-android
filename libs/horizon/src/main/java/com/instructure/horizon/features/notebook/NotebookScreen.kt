@@ -52,6 +52,7 @@ import androidx.navigation.NavHostController
 import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
+import com.instructure.horizon.features.notebook.common.composable.NoteDeleteConfirmationDialog
 import com.instructure.horizon.features.notebook.common.composable.NotebookAppBar
 import com.instructure.horizon.features.notebook.common.composable.NotebookHighlightedText
 import com.instructure.horizon.features.notebook.common.composable.NotebookTypeSelect
@@ -71,6 +72,9 @@ import com.instructure.horizon.horizonui.molecules.ButtonHeight
 import com.instructure.horizon.horizonui.molecules.ButtonWidth
 import com.instructure.horizon.horizonui.molecules.DropdownChip
 import com.instructure.horizon.horizonui.molecules.DropdownItem
+import com.instructure.horizon.horizonui.molecules.IconButtonColor
+import com.instructure.horizon.horizonui.molecules.IconButtonSize
+import com.instructure.horizon.horizonui.molecules.LoadingIconButton
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.organisms.CollapsableHeaderScreen
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
@@ -95,6 +99,14 @@ fun NotebookScreen(
     }
 
     val scrollState = rememberLazyListState()
+
+    NoteDeleteConfirmationDialog(
+        showDialog = state.showDeleteConfirmationForNote != null,
+        dismissDialog = { state.updateShowDeleteConfirmation(null) },
+        onDeleteSelected = {
+            state.deleteNote(state.showDeleteConfirmationForNote)
+        }
+    )
 
     CollapsableHeaderScreen(
         modifier = Modifier.background(HorizonColors.Surface.pagePrimary()),
@@ -157,7 +169,9 @@ fun NotebookScreen(
                                     val courseName = if (state.showCourseFilter) {
                                         state.courses.firstOrNull { it.courseId == note.courseId }?.courseName
                                     } else null
-                                    NoteContent(note, courseName) {
+                                    NoteContent(note, courseName, state.deleteLoadingNote, onDeleteClick = {
+                                        state.updateShowDeleteConfirmation(note)
+                                    }) {
                                         if (state.navigateToEdit) {
                                             mainNavController.navigate(
                                                 NotebookRoute.EditNotebook(
@@ -290,6 +304,8 @@ private fun LoadingContent() {
 private fun NoteContent(
     note: Note,
     courseName: String?,
+    deleteLoading: Note?,
+    onDeleteClick: () -> Unit,
     onClick: () -> Unit,
 ) {
     Column(
@@ -307,6 +323,7 @@ private fun NoteContent(
                 color = HorizonColors.PrimitivesWhite.white10(),
                 shape = HorizonCornerRadius.level2,
             )
+            .clip(HorizonCornerRadius.level2)
             .clickable { onClick() }
     ) {
         Column(
@@ -345,17 +362,33 @@ private fun NoteContent(
                 HorizonSpace(SpaceSize.SPACE_8)
             }
 
-            Text(
-                text = note.updatedAt.localisedFormat("MMM d, yyyy"),
-                style = HorizonTypography.labelMediumBold,
-                color = HorizonColors.Text.timestamp()
-            )
+            Row(
+                verticalAlignment = Alignment.Bottom
+            ) {
+                Column(
+                    modifier = Modifier.weight(1f)
+                ){
+                    Text(
+                        text = note.updatedAt.localisedFormat("MMM d, yyyy"),
+                        style = HorizonTypography.labelMediumBold,
+                        color = HorizonColors.Text.timestamp()
+                    )
 
-            if (courseName != null) {
-                Text(
-                    text = courseName,
-                    style = HorizonTypography.labelMediumBold,
-                    color = HorizonColors.Text.timestamp()
+                    if (courseName != null) {
+                        Text(
+                            text = courseName,
+                            style = HorizonTypography.labelMediumBold,
+                            color = HorizonColors.Text.timestamp()
+                        )
+                    }
+                }
+
+                LoadingIconButton(
+                    iconRes = R.drawable.delete,
+                    color = IconButtonColor.InverseDanger,
+                    size = IconButtonSize.SMALL,
+                    onClick = { onDeleteClick() },
+                    loading = note == deleteLoading
                 )
             }
         }

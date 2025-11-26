@@ -37,4 +37,8 @@ data class NotebookUiState(
     val navigateToEdit: Boolean = false,
     val showNoteTypeFilter: Boolean = true,
     val showCourseFilter: Boolean = true,
+    val showDeleteConfirmationForNote: Note? = null,
+    val updateShowDeleteConfirmation: (Note?) -> Unit = {},
+    val deleteNote: (Note?) -> Unit = {},
+    val deleteLoadingNote: Note? = null
 )
