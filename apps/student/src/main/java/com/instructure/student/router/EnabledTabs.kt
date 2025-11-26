@@ -8,6 +8,7 @@ import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.interactions.router.Route
+import androidx.core.net.toUri
 
 interface EnabledTabs {
     fun isPathTabNotEnabled(route: Route?): Boolean
@@ -66,8 +67,24 @@ class EnabledTabsImpl: EnabledTabs {
                 api.next(it, RestParams(usePerPageQueryParam = true))
             }.dataOrNull?.associate { it.id to (it.tabs ?: emptyList()) } ?: emptyMap()
         enabledTabs?.forEach { entry ->
-            entry.value.find { tab -> tab.tabId == Tab.ASSIGNMENTS_ID }?.domain?.let { domain ->
-                ApiPrefs.overrideDomains[entry.key] = domain
+            entry.value.find { tab -> tab.tabId == Tab.ASSIGNMENTS_ID }?.let { tab ->
+                tab.domain?.let { domain ->
+                    ApiPrefs.overrideDomains[entry.key] = domain
+                }
+
+                // Parse shard ID from full_url if it contains a tilde
+                // Example: "https://example.com/courses/7053~2848/assignments" -> "7053"
+                tab.externalUrl?.let { externalUrl ->
+                    val uri = externalUrl.toUri()
+                    val courseIdIndex = uri.pathSegments.indexOf("courses") + 1
+                    if (courseIdIndex > 0 && courseIdIndex < uri.pathSegments.size) {
+                        val courseIdSegment = uri.pathSegments[courseIdIndex]
+                        if (courseIdSegment.contains("~")) {
+                            val shardId = courseIdSegment.substringBefore("~")
+                            ApiPrefs.shardIds[entry.key] = shardId
+                        }
+                    }
+                }
             }
         }
     }
