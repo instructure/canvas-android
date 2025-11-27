@@ -256,8 +256,10 @@ private fun AnimatedContentTransitionScope<NavBackStackEntry>.isOverlayEnterTran
 
     val targetIsModuleItemSequence = targetRoute?.startsWith(MainNavigationRoute.ModuleItemSequence::class.java.name.replace("$", ".")).orDefault()
     val isFromNotebook = initialRoute?.startsWith(NotebookRoute.Notebook.route).orDefault()
+    val isFromAddNote = initialRoute?.startsWith(NotebookRoute.AddNotebook::class.java.name.replace("$", ".")).orDefault()
+    val isFromEditNote = initialRoute?.startsWith(NotebookRoute.EditNotebook::class.java.name.replace("$", ".")).orDefault()
 
-    return targetIsModuleItemSequence && !isFromNotebook
+    return targetIsModuleItemSequence && !(isFromNotebook || isFromAddNote || isFromEditNote)
 }
 
 private fun AnimatedContentTransitionScope<NavBackStackEntry>.isOverlayExitTransition(): Boolean {
@@ -266,8 +268,10 @@ private fun AnimatedContentTransitionScope<NavBackStackEntry>.isOverlayExitTrans
 
     val isFromModuleItemSequence = initialRoute?.startsWith(MainNavigationRoute.ModuleItemSequence::class.java.name.replace("$", ".")).orDefault()
     val targetIsNotebook = targetRoute?.startsWith(NotebookRoute.Notebook.route).orDefault()
+    val targetIsAddNote = targetRoute?.startsWith(NotebookRoute.AddNotebook::class.java.name.replace("$", ".")).orDefault()
+    val targetIsEditNote = targetRoute?.startsWith(NotebookRoute.EditNotebook::class.java.name.replace("$", ".")).orDefault()
 
-    return isFromModuleItemSequence && targetIsNotebook
+    return isFromModuleItemSequence && (targetIsNotebook || targetIsAddNote || targetIsEditNote)
 }
 
 private fun AnimatedContentTransitionScope<NavBackStackEntry>.isOverlayPopEnterTransition(): Boolean {
@@ -276,8 +280,10 @@ private fun AnimatedContentTransitionScope<NavBackStackEntry>.isOverlayPopEnterT
 
     val targetIsModuleItemSequence = targetRoute?.startsWith(MainNavigationRoute.ModuleItemSequence::class.java.name.replace("$", ".")).orDefault()
     val isFromNotebook = initialRoute?.startsWith(NotebookRoute.Notebook.route).orDefault()
+    val isFromAddNote = initialRoute?.startsWith(NotebookRoute.AddNotebook::class.java.name.replace("$", ".")).orDefault()
+    val isFromEditNote = initialRoute?.startsWith(NotebookRoute.EditNotebook::class.java.name.replace("$", ".")).orDefault()
 
-    return targetIsModuleItemSequence && isFromNotebook
+    return targetIsModuleItemSequence && (isFromNotebook || isFromAddNote || isFromEditNote)
 }
 
 private fun AnimatedContentTransitionScope<NavBackStackEntry>.isOverlayPopExitTransition(): Boolean {
@@ -286,6 +292,8 @@ private fun AnimatedContentTransitionScope<NavBackStackEntry>.isOverlayPopExitTr
 
     val isFromModuleItemSequence = initialRoute?.startsWith(MainNavigationRoute.ModuleItemSequence::class.java.name.replace("$", ".")).orDefault()
     val targetIsNotebook = targetRoute?.startsWith(NotebookRoute.Notebook.route).orDefault()
+    val targetIsAddNote = targetRoute?.startsWith(NotebookRoute.AddNotebook::class.java.name.replace("$", ".")).orDefault()
+    val targetIsEditNote = targetRoute?.startsWith(NotebookRoute.EditNotebook::class.java.name.replace("$", ".")).orDefault()
 
-    return isFromModuleItemSequence && !targetIsNotebook
+    return isFromModuleItemSequence && !(targetIsNotebook || targetIsAddNote || targetIsEditNote)
 }
