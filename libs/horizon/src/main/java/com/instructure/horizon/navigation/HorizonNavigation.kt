@@ -15,6 +15,7 @@
  */
 package com.instructure.horizon.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -28,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -40,11 +42,16 @@ import com.instructure.horizon.features.home.HomeViewModel
 import com.instructure.horizon.features.inbox.navigation.horizonInboxNavigation
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemSequenceScreen
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemSequenceViewModel
+import com.instructure.horizon.features.notebook.navigation.NotebookRoute
 import com.instructure.horizon.features.notebook.navigation.notebookNavigation
 import com.instructure.horizon.features.notification.NotificationScreen
 import com.instructure.horizon.features.notification.NotificationViewModel
 import com.instructure.horizon.horizonui.animation.enterTransition
 import com.instructure.horizon.horizonui.animation.exitTransition
+import com.instructure.horizon.horizonui.animation.overlayEnterTransition
+import com.instructure.horizon.horizonui.animation.overlayExitTransition
+import com.instructure.horizon.horizonui.animation.overlayPopEnterTransition
+import com.instructure.horizon.horizonui.animation.overlayPopExitTransition
 import com.instructure.horizon.horizonui.animation.popEnterTransition
 import com.instructure.horizon.horizonui.animation.popExitTransition
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -52,6 +59,7 @@ import com.instructure.horizon.navigation.MainNavigationRoute.Companion.ASSIGNME
 import com.instructure.horizon.navigation.MainNavigationRoute.Companion.COURSE_ID
 import com.instructure.horizon.navigation.MainNavigationRoute.Companion.PAGE_ID
 import com.instructure.horizon.navigation.MainNavigationRoute.Companion.QUIZ_ID
+import com.instructure.pandautils.utils.orDefault
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
@@ -114,7 +122,12 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
             composable(MainNavigationRoute.Home.route) {
                 HomeScreen(navController, hiltViewModel<HomeViewModel>())
             }
-            composable<MainNavigationRoute.ModuleItemSequence> {
+            composable<MainNavigationRoute.ModuleItemSequence>(
+                enterTransition = { overlayEnterTransition(::isOverlayEnterTransition) },
+                exitTransition = { overlayExitTransition(::isOverlayExitTransition) },
+                popEnterTransition = { overlayPopEnterTransition(::isOverlayPopEnterTransition) },
+                popExitTransition = { overlayPopExitTransition(::isOverlayPopExitTransition) }
+            ) {
                 val viewModel = hiltViewModel<ModuleItemSequenceViewModel>()
                 val uiState by viewModel.uiState.collectAsState()
                 ModuleItemSequenceScreen(navController, uiState)
@@ -235,4 +248,44 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
             }
         }
     }
+}
+
+private fun AnimatedContentTransitionScope<NavBackStackEntry>.isOverlayEnterTransition(): Boolean {
+    val initialRoute = initialState.destination.route
+    val targetRoute = targetState.destination.route
+
+    val targetIsModuleItemSequence = targetRoute?.startsWith(MainNavigationRoute.ModuleItemSequence::class.java.name.replace("$", ".")).orDefault()
+    val isFromNotebook = initialRoute?.startsWith(NotebookRoute.Notebook.route).orDefault()
+
+    return targetIsModuleItemSequence && !isFromNotebook
+}
+
+private fun AnimatedContentTransitionScope<NavBackStackEntry>.isOverlayExitTransition(): Boolean {
+    val initialRoute = initialState.destination.route
+    val targetRoute = targetState.destination.route
+
+    val isFromModuleItemSequence = initialRoute?.startsWith(MainNavigationRoute.ModuleItemSequence::class.java.name.replace("$", ".")).orDefault()
+    val targetIsNotebook = targetRoute?.startsWith(NotebookRoute.Notebook.route).orDefault()
+
+    return isFromModuleItemSequence && targetIsNotebook
+}
+
+private fun AnimatedContentTransitionScope<NavBackStackEntry>.isOverlayPopEnterTransition(): Boolean {
+    val initialRoute = initialState.destination.route
+    val targetRoute = targetState.destination.route
+
+    val targetIsModuleItemSequence = targetRoute?.startsWith(MainNavigationRoute.ModuleItemSequence::class.java.name.replace("$", ".")).orDefault()
+    val isFromNotebook = initialRoute?.startsWith(NotebookRoute.Notebook.route).orDefault()
+
+    return targetIsModuleItemSequence && isFromNotebook
+}
+
+private fun AnimatedContentTransitionScope<NavBackStackEntry>.isOverlayPopExitTransition(): Boolean {
+    val initialRoute = initialState.destination.route
+    val targetRoute = targetState.destination.route
+
+    val isFromModuleItemSequence = initialRoute?.startsWith(MainNavigationRoute.ModuleItemSequence::class.java.name.replace("$", ".")).orDefault()
+    val targetIsNotebook = targetRoute?.startsWith(NotebookRoute.Notebook.route).orDefault()
+
+    return isFromModuleItemSequence && !targetIsNotebook
 }

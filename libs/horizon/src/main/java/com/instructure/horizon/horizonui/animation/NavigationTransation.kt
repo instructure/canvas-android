@@ -16,6 +16,8 @@
  */
 package com.instructure.horizon.horizonui.animation
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
@@ -43,3 +45,35 @@ val mainEnterTransition = fadeIn(initialAlpha = animatedAlpha) +
 
 val mainExitTransition = fadeOut(targetAlpha = animatedAlpha) +
         scaleOut(targetScale = animatedScale)
+
+fun overlayEnterTransition(isOverlayTransition: () -> Boolean = { true }): EnterTransition {
+    return if (isOverlayTransition()) {
+        mainEnterTransition
+    } else {
+        enterTransition
+    }
+}
+
+fun overlayExitTransition(isOverlayTransition: () -> Boolean = { true }): ExitTransition {
+    return if (isOverlayTransition()) {
+        ExitTransition.None
+    } else {
+        exitTransition
+    }
+}
+
+fun overlayPopEnterTransition(isOverlayTransition: () -> Boolean = { true }): EnterTransition {
+    return if (isOverlayTransition()) {
+        EnterTransition.None
+    } else {
+        popEnterTransition
+    }
+}
+
+fun overlayPopExitTransition(isOverlayTransition: () -> Boolean = { true }): ExitTransition {
+    return if (isOverlayTransition()) {
+        ExitTransition.None
+    } else {
+        popExitTransition
+    }
+}

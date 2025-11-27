@@ -16,9 +16,11 @@
  */
 package com.instructure.horizon.features.notebook.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -32,9 +34,16 @@ import com.instructure.horizon.features.notebook.addedit.add.AddNoteViewModel
 import com.instructure.horizon.features.notebook.addedit.edit.EditNoteViewModel
 import com.instructure.horizon.horizonui.animation.enterTransition
 import com.instructure.horizon.horizonui.animation.exitTransition
+import com.instructure.horizon.horizonui.animation.mainEnterTransition
+import com.instructure.horizon.horizonui.animation.mainExitTransition
+import com.instructure.horizon.horizonui.animation.overlayEnterTransition
+import com.instructure.horizon.horizonui.animation.overlayExitTransition
+import com.instructure.horizon.horizonui.animation.overlayPopEnterTransition
+import com.instructure.horizon.horizonui.animation.overlayPopExitTransition
 import com.instructure.horizon.horizonui.animation.popEnterTransition
 import com.instructure.horizon.horizonui.animation.popExitTransition
 import com.instructure.horizon.navigation.MainNavigationRoute
+import com.instructure.pandautils.utils.orDefault
 
 fun NavGraphBuilder.notebookNavigation(
     navController: NavHostController,
@@ -50,6 +59,10 @@ fun NavGraphBuilder.notebookNavigation(
     ) {
         composable(
             route = NotebookRoute.Notebook.route,
+            enterTransition = { overlayEnterTransition(::isOverlayEnterTransition) },
+            exitTransition = { overlayExitTransition(::isOverlayExitTransition) },
+            popEnterTransition = { overlayPopEnterTransition(::isOverlayPopEnterTransition) },
+            popExitTransition = { overlayPopExitTransition(::isOverlayPopExitTransition) },
             arguments = listOf(
                 navArgument(NotebookRoute.Notebook.COURSE_ID) {
                     type = NavType.StringType
@@ -80,15 +93,68 @@ fun NavGraphBuilder.notebookNavigation(
             val viewModel = hiltViewModel<NotebookViewModel>()
             NotebookScreen(navController, viewModel)
         }
-        composable<NotebookRoute.AddNotebook> {
+        composable<NotebookRoute.AddNotebook>(
+            enterTransition = { mainEnterTransition },
+            exitTransition = { mainExitTransition },
+            popEnterTransition = { mainEnterTransition },
+            popExitTransition = { mainExitTransition },
+        ) {
             val viewModel = hiltViewModel<AddNoteViewModel>()
             val uiState by viewModel.uiState.collectAsState()
             AddEditNoteScreen(navController, uiState, onShowSnackbar)
         }
-        composable<NotebookRoute.EditNotebook> {
+        composable<NotebookRoute.EditNotebook>(
+            enterTransition = { mainEnterTransition },
+            exitTransition = { mainExitTransition },
+            popEnterTransition = { mainEnterTransition },
+            popExitTransition = { mainExitTransition },
+        ) {
             val viewModel = hiltViewModel<EditNoteViewModel>()
             val uiState by viewModel.uiState.collectAsState()
             AddEditNoteScreen(navController, uiState, onShowSnackbar)
         }
     }
+}
+
+private fun AnimatedContentTransitionScope<NavBackStackEntry>.isOverlayEnterTransition(): Boolean {
+    val initialRoute = initialState.destination.route
+    val targetRoute = targetState.destination.route
+
+    val targetIsNotebook = targetRoute?.startsWith(NotebookRoute.Notebook.route).orDefault()
+    val isFromEditNotebook = initialRoute?.startsWith(NotebookRoute.EditNotebook::class.java.name.replace("$", ".")).orDefault()
+    val isFromModuleItemSequence = initialRoute?.startsWith(MainNavigationRoute.ModuleItemSequence::class.java.name.replace("$", ".")).orDefault()
+
+    return targetIsNotebook && (isFromEditNotebook || isFromModuleItemSequence)
+}
+
+private fun AnimatedContentTransitionScope<NavBackStackEntry>.isOverlayExitTransition(): Boolean {
+    val initialRoute = initialState.destination.route
+    val targetRoute = targetState.destination.route
+
+    val isFromNotebook = initialRoute?.startsWith(NotebookRoute.Notebook.route).orDefault()
+    val targetIsEditNotebook = targetRoute?.startsWith(NotebookRoute.EditNotebook::class.java.name.replace("$", ".")).orDefault()
+
+    return isFromNotebook && targetIsEditNotebook
+}
+
+private fun AnimatedContentTransitionScope<NavBackStackEntry>.isOverlayPopEnterTransition(): Boolean {
+    val initialRoute = initialState.destination.route
+    val targetRoute = targetState.destination.route
+
+    val targetIsNotebook = targetRoute?.startsWith(NotebookRoute.Notebook.route).orDefault()
+    val isFromEditNotebook = initialRoute?.startsWith(NotebookRoute.EditNotebook::class.java.name.replace("$", ".")).orDefault()
+    val isFromModuleItemSequence = initialRoute?.startsWith(MainNavigationRoute.ModuleItemSequence::class.java.name.replace("$", ".")).orDefault()
+
+    return targetIsNotebook && isFromEditNotebook && !isFromModuleItemSequence
+}
+
+private fun AnimatedContentTransitionScope<NavBackStackEntry>.isOverlayPopExitTransition(): Boolean {
+    val initialRoute = initialState.destination.route
+    val targetRoute = targetState.destination.route
+
+    val isFromNotebook = initialRoute?.startsWith(NotebookRoute.Notebook.route).orDefault()
+    val targetIsModuleItemSequence = targetRoute?.startsWith(MainNavigationRoute.ModuleItemSequence::class.java.name.replace("$", ".")).orDefault()
+    val targetIsEditNotebook = targetRoute?.startsWith(NotebookRoute.EditNotebook::class.java.name.replace("$", ".")).orDefault()
+
+    return isFromNotebook && (targetIsModuleItemSequence || targetIsEditNotebook)
 }
