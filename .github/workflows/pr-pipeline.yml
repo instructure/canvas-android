@@ -1315,39 +1315,67 @@ jobs:
           all_success = True
 
           for module_dir, module_name in modules.items():
-              report_file = None
+              report_files = []
 
-              # Search for index.html in the downloaded artifacts
+              # Search for all index.html files in the downloaded artifacts
               for root, dirs, files in os.walk(f'test-results/{module_dir}'):
                   if 'index.html' in files:
-                      report_file = os.path.join(root, 'index.html')
-                      break
+                      report_files.append(os.path.join(root, 'index.html'))
 
-              if not report_file:
+              if not report_files:
                   # Job was skipped, don't show in output
                   continue
 
-              result = parse_test_report(report_file)
-              if not result:
-                  # Test ran but results are missing/corrupted
+              # Aggregate results from all report files (important for submodules)
+              module_tests = 0
+              module_failures = 0
+              module_ignored = 0
+              module_duration = 0.0
+              failed_to_parse = 0
+
+              for report_file in report_files:
+                  result = parse_test_report(report_file)
+                  if not result:
+                      failed_to_parse += 1
+                      continue
+
+                  module_tests += result['tests']
+                  module_failures += result['failures']
+                  module_ignored += result['ignored']
+
+                  # Parse duration (remove 's' and convert to float)
+                  try:
+                      duration_str = result['duration'].replace('s', '')
+                      module_duration += float(duration_str)
+                  except:
+                      pass
+
+              if module_tests == 0 and failed_to_parse > 0:
+                  # All reports failed to parse
                   print(f"### ⚠️ {module_name}")
-                  print("- Failed to parse test results\n")
+                  print(f"- Failed to parse test results ({failed_to_parse} report(s))\n")
                   continue
 
-              total_tests += result['tests']
-              total_failures += result['failures']
-              total_ignored += result['ignored']
+              # Calculate success rate
+              if module_tests > 0:
+                  success_rate = f"{((module_tests - module_failures) / module_tests * 100):.0f}%"
+              else:
+                  success_rate = "N/A"
 
-              if result['failures'] > 0:
+              total_tests += module_tests
+              total_failures += module_failures
+              total_ignored += module_ignored
+
+              if module_failures > 0:
                   all_success = False
                   emoji = '❌'
               else:
                   emoji = '✅'
 
               print(f"### {emoji} {module_name}")
-              print(f"- **Tests:** {result['tests']} total, {result['failures']} failed, {result['ignored']} skipped")
-              print(f"- **Duration:** {result['duration']}")
-              print(f"- **Success Rate:** {result['success_rate']}\n")
+              print(f"- **Tests:** {module_tests} total, {module_failures} failed, {module_ignored} skipped")
+              print(f"- **Duration:** {module_duration:.3f}s")
+              print(f"- **Success Rate:** {success_rate}\n")
 
           print("---")
           print(f"### 📊 Summary")
