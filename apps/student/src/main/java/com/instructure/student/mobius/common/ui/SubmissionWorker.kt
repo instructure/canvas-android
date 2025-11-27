@@ -52,17 +52,10 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.FileUtils
 import com.instructure.canvasapi2.utils.ProgressRequestUpdateListener
+import com.instructure.pandautils.features.calendar.CalendarSharedEvents
+import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.features.submission.SubmissionWorkerAction
 import com.instructure.pandautils.models.PushNotification
-import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.FileUploadUtils
-import com.instructure.pandautils.utils.NotoriousUploader
-import com.instructure.student.R
-import com.instructure.student.activity.NavigationActivity
-import com.instructure.student.events.ShowConfettiEvent
-import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsSharedEvent
-import com.instructure.student.mobius.common.FlowSource
-import com.instructure.student.mobius.common.trySend
 import com.instructure.pandautils.room.studentdb.entities.CreateFileSubmissionEntity
 import com.instructure.pandautils.room.studentdb.entities.CreatePendingSubmissionCommentEntity
 import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
@@ -70,10 +63,20 @@ import com.instructure.pandautils.room.studentdb.entities.daos.CreateFileSubmiss
 import com.instructure.pandautils.room.studentdb.entities.daos.CreatePendingSubmissionCommentDao
 import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionCommentFileDao
 import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionDao
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.FileUploadUtils
+import com.instructure.pandautils.utils.NotoriousUploader
 import com.instructure.pandautils.utils.orDefault
+import com.instructure.student.R
+import com.instructure.student.activity.NavigationActivity
+import com.instructure.student.events.ShowConfettiEvent
+import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsSharedEvent
+import com.instructure.student.mobius.common.FlowSource
+import com.instructure.student.mobius.common.trySend
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
@@ -96,7 +99,8 @@ class SubmissionWorker @AssistedInject constructor(
     private val notoriousUploader: NotoriousUploader,
     private val fileUploadManager: FileUploadManager,
     private val groupManager: GroupManager,
-    private val analytics: Analytics
+    private val analytics: Analytics,
+    private val calendarSharedEvents: CalendarSharedEvents
 ) : CoroutineWorker(context, workerParameters) {
 
     private lateinit var notificationBuilder: NotificationCompat.Builder
@@ -244,6 +248,14 @@ class SubmissionWorker @AssistedInject constructor(
                     submission,
                     mediaSubmissionResult.dataOrThrow.late
                 )
+
+                coroutineScope {
+                    calendarSharedEvents.sendEvent(
+                        this,
+                        SharedCalendarAction.RefreshToDoList
+                    )
+                }
+
                 Result.success()
             } ?: run {
                 createSubmissionDao.setSubmissionError(true, submission.id)
@@ -295,6 +307,14 @@ class SubmissionWorker @AssistedInject constructor(
         return result.dataOrNull?.let {
             deleteSubmissionsForAssignment(submission.assignmentId)
             showCompleteNotification(context, submission, result.dataOrThrow.late)
+
+            coroutineScope {
+                calendarSharedEvents.sendEvent(
+                    this,
+                    SharedCalendarAction.RefreshToDoList
+                )
+            }
+
             Result.success()
         } ?: run {
             createSubmissionDao.setSubmissionError(true, submission.id)
@@ -654,6 +674,13 @@ class SubmissionWorker @AssistedInject constructor(
                         putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
                     })
                 }
+            }
+
+            coroutineScope {
+                calendarSharedEvents.sendEvent(
+                    this,
+                    SharedCalendarAction.RefreshToDoList
+                )
             }
 
             Result.success()

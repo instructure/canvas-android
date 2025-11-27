@@ -33,6 +33,8 @@ import com.instructure.pandautils.features.dashboard.edit.itemviewmodels.EditDas
 import com.instructure.pandautils.features.dashboard.edit.itemviewmodels.EditDashboardGroupItemViewModel
 import com.instructure.pandautils.features.dashboard.edit.itemviewmodels.EditDashboardHeaderViewModel
 import com.instructure.pandautils.features.dashboard.edit.itemviewmodels.EditDashboardNoteItemViewModel
+import com.instructure.pandautils.features.calendar.CalendarSharedEvents
+import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
@@ -46,7 +48,8 @@ class EditDashboardViewModel @Inject constructor(
     private val courseManager: CourseManager,
     private val groupManager: GroupManager,
     private val repository: EditDashboardRepository,
-    private val networkStateProvider: NetworkStateProvider
+    private val networkStateProvider: NetworkStateProvider,
+    private val calendarSharedEvents: CalendarSharedEvents
 ) : ViewModel() {
 
     val state: LiveData<ViewState>
@@ -155,6 +158,7 @@ class EditDashboardViewModel @Inject constructor(
                         addCourseToFavorites(action.itemViewModel)
                         courseManager.addCourseToFavoritesAsync(action.itemViewModel.id).await().dataOrThrow
                         _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.added_to_dashboard)))
+                        calendarSharedEvents.sendEvent(viewModelScope, SharedCalendarAction.RefreshToDoList)
                     } catch (e: Exception) {
                         Logger.d("Failed to select course: ${e.printStackTrace()}")
                         removeCourseFromFavorites(action.itemViewModel)
@@ -184,6 +188,7 @@ class EditDashboardViewModel @Inject constructor(
                         removeCourseFromFavorites(action.itemViewModel)
                         courseManager.removeCourseFromFavoritesAsync(action.itemViewModel.id).await().dataOrThrow
                         _events.postValue(Event(EditDashboardItemAction.ShowSnackBar(R.string.removed_from_dashboard)))
+                        calendarSharedEvents.sendEvent(viewModelScope, SharedCalendarAction.RefreshToDoList)
                     } catch (e: Exception) {
                         Logger.d("Failed to deselect course: ${e.printStackTrace()}")
                         addCourseToFavorites(action.itemViewModel)
