@@ -45,7 +45,7 @@ class CustomStatusesE2ETest: ParentComposeTest() {
         val teacher = data.teachersList[0]
 
         Log.d(PREPARATION_TAG, "Seeding a custom status ('AMAZING') with the admin user.")
-        val customStatusId = CustomStatusApi.upsertCustomGradeStatus(adminToken, name = "AMAZING", color = "#FF0000")
+        customStatusId = CustomStatusApi.upsertCustomGradeStatus(adminToken, name = "AMAZING", color = "#FF0000")
 
         Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course.")
         val testAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
@@ -93,8 +93,14 @@ class CustomStatusesE2ETest: ParentComposeTest() {
     @After
     fun tearDown() {
         customStatusId?.let {
-            Log.d(PREPARATION_TAG, "Cleaning up the custom status we created with '$it' ID previously because 3 is the maximum limit of custom statuses.")
-            CustomStatusApi.deleteCustomGradeStatus(adminToken, it)
-        }
+            try {
+                Log.d(PREPARATION_TAG, "Cleaning up the custom status we created with '$it' ID previously because 3 is the maximum limit of custom statuses.")
+                CustomStatusApi.deleteCustomGradeStatus(adminToken, it)
+                Log.d(PREPARATION_TAG, "Successfully deleted custom status with ID: $it")
+            } catch (e: Exception) {
+                Log.e(PREPARATION_TAG, "Failed to delete custom status with ID: $it", e)
+                throw e
+            }
+        } ?: Log.w(PREPARATION_TAG, "No custom status ID to clean up - this might indicate the test failed during setup")
     }
 }

@@ -50,7 +50,18 @@ object CustomStatusApi {
         val mutationCall = DeleteCustomGradeStatusMutation(id = id)
 
         runBlocking {
-            apolloClient.mutation(mutationCall).executeV3()
+            val response = apolloClient.mutation(mutationCall).executeV3()
+
+            if (response.hasErrors()) {
+                val errorMessages = response.errors?.joinToString(", ") { it.message }
+                throw IllegalStateException("Failed to delete custom grade status '$id': $errorMessages")
+            }
+
+            val errors = response.data?.deleteCustomGradeStatus?.errors
+            if (!errors.isNullOrEmpty()) {
+                val errorMessages = errors.joinToString(", ") { "${it.attribute}: ${it.message}" }
+                throw IllegalStateException("Failed to delete custom grade status '$id': $errorMessages")
+            }
         }
     }
 }
