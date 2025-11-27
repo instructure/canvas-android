@@ -478,4 +478,5 @@
     <string name="editNoteExitConfirmationMessage">Are you sure you want to discard your changes?</string>
     <string name="editNoteExitConfirmationExitButtonLabel">Exit</string>
     <string name="editNoteExitConfirmationCancelButtonLabel">Cancel</string>
+    <string name="a11y_notebookDeleteNoteButtonContentDescription">Delete note</string>
 </resources>

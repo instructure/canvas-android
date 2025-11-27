@@ -43,6 +43,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -350,13 +352,17 @@ private fun NoteContent(
                 .fillMaxWidth()
                 .padding(24.dp)
         ) {
+            val typeName = stringResource(note.type.labelRes)
             NotebookTypeSelect(
                 note.type,
                 verticalPadding = 2.dp,
                 onSelect = {},
                 showIcons = true,
                 enabled = false,
-                showAllOption = false
+                showAllOption = false,
+                modifier = Modifier.clearAndSetSemantics {
+                    contentDescription = typeName
+                }
             )
 
             HorizonSpace(SpaceSize.SPACE_16)
@@ -383,7 +389,9 @@ private fun NoteContent(
 
             Row {
                 Column(
-                    modifier = Modifier.weight(1f).align(Alignment.CenterVertically)
+                    modifier = Modifier
+                        .weight(1f)
+                        .align(Alignment.CenterVertically)
                 ){
                     Text(
                         text = note.updatedAt.localisedFormat("MMM d, yyyy"),
@@ -406,6 +414,7 @@ private fun NoteContent(
 
                 LoadingIconButton(
                     iconRes = R.drawable.delete,
+                    contentDescription = stringResource(R.string.a11y_notebookDeleteNoteButtonContentDescription),
                     color = IconButtonColor.InverseDanger,
                     size = IconButtonSize.SMALL,
                     onClick = { onDeleteClick() },
