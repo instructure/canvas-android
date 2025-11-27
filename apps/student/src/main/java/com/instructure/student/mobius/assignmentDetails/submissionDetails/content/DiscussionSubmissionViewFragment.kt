@@ -22,12 +22,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebChromeClient
 import android.webkit.WebView
-import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.canvasapi2.managers.OAuthManager
-import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApi
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.enableAlgorithmicDarkening
@@ -49,6 +48,29 @@ class DiscussionSubmissionViewFragment : BaseCanvasFragment() {
 
     private var discussionUrl: String by StringArg()
     private var authJob: Job? = null
+
+    /**
+     * Check if a URL belongs to any of the valid Canvas domains (main domain or override domains)
+     */
+    private fun isValidCanvasDomain(url: String): Boolean {
+        if (url.contains(ApiPrefs.domain)) return true
+        return ApiPrefs.overrideDomains.values.any { overrideDomain ->
+            !overrideDomain.isNullOrEmpty() && url.contains(overrideDomain)
+        }
+    }
+
+    /**
+     * Get the appropriate domain for a given URL (main domain or matching override domain)
+     */
+    private fun getDomainForUrl(url: String): String {
+        if (url.contains(ApiPrefs.domain)) return ApiPrefs.domain
+        ApiPrefs.overrideDomains.values.forEach { overrideDomain ->
+            if (!overrideDomain.isNullOrEmpty() && url.contains(overrideDomain)) {
+                return overrideDomain
+            }
+        }
+        return ApiPrefs.domain
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -86,12 +108,12 @@ class DiscussionSubmissionViewFragment : BaseCanvasFragment() {
                     (url != discussionUrl && !url.contains("root_discussion_topic_id")) && RouteMatcher.canRouteInternally(
                         requireActivity(),
                         url,
-                        ApiPrefs.domain,
+                        getDomainForUrl(url),
                         false
                     )
 
                 override fun routeInternallyCallback(url: String) {
-                    RouteMatcher.canRouteInternally(requireActivity(), url, ApiPrefs.domain, true)
+                    RouteMatcher.canRouteInternally(requireActivity(), url, getDomainForUrl(url), true)
                 }
             }
 
@@ -103,18 +125,19 @@ class DiscussionSubmissionViewFragment : BaseCanvasFragment() {
                     )
 
                 override fun shouldLaunchInternalWebViewFragment(url: String): Boolean =
-                    !url.contains(ApiPrefs.domain)
+                    !isValidCanvasDomain(url)
             }
 
         binding.discussionSubmissionWebView.setInitialScale(100)
 
         authJob = GlobalScope.launch(Dispatchers.Main) {
-            val authenticatedUrl = if (ApiPrefs.domain in discussionUrl)
+            val authenticatedUrl = if (isValidCanvasDomain(discussionUrl))
                 try {
-                    awaitApi<AuthenticatedSession> {
+                    awaitApi {
                         OAuthManager.getAuthenticatedSession(
                             discussionUrl,
-                            it
+                            it,
+                            getDomainForUrl(discussionUrl).takeIf { it != ApiPrefs.domain }
                         )
                     }.sessionUrl
                 } catch (e: StatusCallbackError) {
