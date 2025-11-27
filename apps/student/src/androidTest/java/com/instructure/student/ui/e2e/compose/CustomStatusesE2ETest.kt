@@ -89,8 +89,14 @@ class CustomStatusesE2ETest: StudentComposeTest() {
     @After
     fun tearDown() {
         customStatusId?.let {
-            Log.d(PREPARATION_TAG, "Cleaning up the custom status we created with '$it' ID previously because 3 is the maximum limit of custom statuses.")
-            CustomStatusApi.deleteCustomGradeStatus(adminToken, it)
-        }
+            try {
+                Log.d(PREPARATION_TAG, "Cleaning up the custom status we created with '$it' ID previously because 3 is the maximum limit of custom statuses.")
+                CustomStatusApi.deleteCustomGradeStatus(adminToken, it)
+                Log.d(PREPARATION_TAG, "Successfully deleted custom status with ID: $it")
+            } catch (e: Exception) {
+                Log.e(PREPARATION_TAG, "Failed to delete custom status with ID: $it", e)
+                throw e
+            }
+        } ?: Log.w(PREPARATION_TAG, "No custom status ID to clean up - this might indicate the test failed during setup")
     }
 }
