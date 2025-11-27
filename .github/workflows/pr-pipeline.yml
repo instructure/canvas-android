@@ -1255,6 +1255,7 @@ jobs:
           import re
           from pathlib import Path
           from html.parser import HTMLParser
+          import xml.etree.ElementTree as ET
 
           class TestReportParser(HTMLParser):
               def __init__(self):
@@ -1307,6 +1308,33 @@ jobs:
                   'duration': parser.data.get('duration', 'N/A'),
                   'success_rate': parser.data.get('successRate', 'N/A')
               }
+
+          def extract_failed_tests(index_html_path):
+              """Extract failed test names from HTML class reports in the same directory"""
+              failed_tests = []
+              # The classes directory is a sibling of the index.html file
+              report_dir = Path(index_html_path).parent
+              classes_dir = report_dir / 'classes'
+
+              if not classes_dir.exists():
+                  return failed_tests
+
+              for class_file in classes_dir.glob('*.html'):
+                  try:
+                      with open(class_file, 'r') as f:
+                          content = f.read()
+
+                      # Find failed test names
+                      matches = re.findall(r'<h3 class="failures">([^<]+)</h3>', content)
+                      if matches:
+                          class_name = class_file.stem
+                          for test_name in matches:
+                              failed_tests.append(f"{class_name}.{test_name}")
+                  except:
+                      # Skip files that can't be read
+                      pass
+
+              return failed_tests
 
           modules = {
               'parent-test-results': '📱 Parent App',
@@ -1384,7 +1412,23 @@ jobs:
               print(f"### {emoji} {module_name}")
               print(f"- **Tests:** {module_tests} total, {module_failures} failed, {module_ignored} skipped")
               print(f"- **Duration:** {module_duration:.3f}s")
-              print(f"- **Success Rate:** {success_rate}\n")
+              print(f"- **Success Rate:** {success_rate}")
+
+              # Show failed tests if there are any
+              if module_failures > 0:
+                  # Extract failed test names from all report files
+                  failed_tests = []
+                  for report_file in report_files:
+                      failed_tests.extend(extract_failed_tests(report_file))
+
+                  if failed_tests:
+                      print(f"\n<details>")
+                      print(f"<summary>❌ Failed Tests ({len(failed_tests)})</summary>\n")
+                      for test in failed_tests:
+                          print(f"- `{test}`")
+                      print(f"</details>")
+
+              print()
 
           print("---")
           print(f"### 📊 Summary")
