@@ -1259,31 +1259,26 @@ jobs:
           class TestReportParser(HTMLParser):
               def __init__(self):
                   super().__init__()
-                  self.in_counter = False
-                  self.in_label = False
-                  self.current_label = None
+                  self.in_value = False
+                  self.current_id = None
                   self.data = {}
 
               def handle_starttag(self, tag, attrs):
                   attrs_dict = dict(attrs)
-                  if tag == 'div' and attrs_dict.get('class') == 'counter':
-                      self.in_counter = True
-                  elif tag == 'p':
-                      self.in_label = True
+                  if tag == 'div' and 'infoBox' in attrs_dict.get('class', ''):
+                      self.current_id = attrs_dict.get('id')
+                  elif tag == 'div' and (attrs_dict.get('class') == 'counter' or attrs_dict.get('class') == 'percent'):
+                      self.in_value = True
 
               def handle_endtag(self, tag):
                   if tag == 'div':
-                      self.in_counter = False
-                  elif tag == 'p':
-                      self.in_label = False
-                      self.current_label = None
+                      self.in_value = False
 
               def handle_data(self, data):
                   data = data.strip()
-                  if self.in_label and data:
-                      self.current_label = data.lower()
-                  elif self.in_counter and self.current_label and data:
-                      self.data[self.current_label] = data
+                  if self.in_value and self.current_id and data:
+                      self.data[self.current_id] = data
+                      self.in_value = False
 
           def parse_test_report(html_file):
               """Parse Gradle HTML test report"""
@@ -1301,7 +1296,7 @@ jobs:
                   'failures': int(parser.data.get('failures', 0)),
                   'ignored': int(parser.data.get('ignored', 0)),
                   'duration': parser.data.get('duration', 'N/A'),
-                  'success_rate': parser.data.get('successful', 'N/A')
+                  'success_rate': parser.data.get('successRate', 'N/A')
               }
 
           modules = {
@@ -1329,12 +1324,12 @@ jobs:
                       break
 
               if not report_file:
-                  print(f"### ⚠️ {module_name}")
-                  print("- Test results not available\n")
+                  # Job was skipped, don't show in output
                   continue
 
               result = parse_test_report(report_file)
               if not result:
+                  # Test ran but results are missing/corrupted
                   print(f"### ⚠️ {module_name}")
                   print("- Failed to parse test results\n")
                   continue
