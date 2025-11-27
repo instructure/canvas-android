@@ -1291,10 +1291,19 @@ jobs:
               parser = TestReportParser()
               parser.feed(content)
 
+              # Safely parse integer values with error handling
+              try:
+                  tests = int(parser.data.get('tests', '0'))
+                  failures = int(parser.data.get('failures', '0'))
+                  ignored = int(parser.data.get('ignored', '0'))
+              except (ValueError, TypeError):
+                  # If parsing fails, return None to indicate corrupted report
+                  return None
+
               return {
-                  'tests': int(parser.data.get('tests', 0)),
-                  'failures': int(parser.data.get('failures', 0)),
-                  'ignored': int(parser.data.get('ignored', 0)),
+                  'tests': tests,
+                  'failures': failures,
+                  'ignored': ignored,
                   'duration': parser.data.get('duration', 'N/A'),
                   'success_rate': parser.data.get('successRate', 'N/A')
               }
@@ -1391,7 +1400,8 @@ jobs:
 
           PYTHON_SCRIPT
 
-          python3 parse_tests.py | tee test-report.md
+          set -eo pipefail
+          python3 parse_tests.py > test-report.md
 
       - name: Post or update PR comment
         uses: actions/github-script@v7
