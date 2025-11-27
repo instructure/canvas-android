@@ -109,6 +109,16 @@ jobs:
         run: |
           ./gradle/gradlew -p apps testDebugUnitTest -x :dataseedingapi:test -x :teacher:test -x :student:test
 
+      - name: Upload submodule test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: submodule-test-results
+          path: |
+            libs/*/build/reports/tests/testDebugUnitTest/
+            libs/*/build/test-results/testDebugUnitTest/
+          retention-days: 1
+
       # Uploading Artifacts to GitHub
       - name: Upload test APK
         uses: actions/upload-artifact@v4
@@ -164,6 +174,16 @@ jobs:
             -Dorg.gradle.jvmargs="-Xmx6g -XX:+HeapDumpOnOutOfMemoryError" \
             -Dkotlin.compiler.execution.strategy=in-process
 
+      - name: Upload parent test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: parent-test-results
+          path: |
+            apps/parent/build/reports/tests/testDevDebugUnitTest/
+            apps/parent/build/test-results/testDevDebugUnitTest/
+          retention-days: 1
+
   student-unit-tests:
     name: student-unit-tests
     runs-on: ubuntu-latest
@@ -206,6 +226,16 @@ jobs:
             -Dorg.gradle.jvmargs="-Xmx6g -XX:+HeapDumpOnOutOfMemoryError" \
             -Dkotlin.compiler.execution.strategy=in-process
 
+      - name: Upload student test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: student-test-results
+          path: |
+            apps/student/build/reports/tests/testDevDebugUnitTest/
+            apps/student/build/test-results/testDevDebugUnitTest/
+          retention-days: 1
+
   teacher-unit-tests:
     name: teacher-unit-tests
     runs-on: ubuntu-latest
@@ -247,6 +277,16 @@ jobs:
             --no-daemon \
             -Dorg.gradle.jvmargs="-Xmx6g -XX:+HeapDumpOnOutOfMemoryError" \
             -Dkotlin.compiler.execution.strategy=in-process
+
+      - name: Upload teacher test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: teacher-test-results
+          path: |
+            apps/teacher/build/reports/tests/testDevDebugUnitTest/
+            apps/teacher/build/test-results/testDevDebugUnitTest/
+          retention-days: 1
 
   horizon-unit-tests:
     name: horizon-unit-tests
@@ -300,6 +340,16 @@ jobs:
             --no-daemon \
             -Dorg.gradle.jvmargs="-Xmx6g -XX:+HeapDumpOnOutOfMemoryError" \
             -Dkotlin.compiler.execution.strategy=in-process
+
+      - name: Upload horizon test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: horizon-test-results
+          path: |
+            libs/horizon/build/reports/tests/testDebugUnitTest/
+            libs/horizon/build/test-results/testDebugUnitTest/
+          retention-days: 1
 
   horizon-test-build:
     name: horizon-test-build
@@ -1183,3 +1233,179 @@ jobs:
           platform: 'android'
           service_account: './service-account-key.json'
           flank_configuration_file: './flank.yml'
+  unit-test-report:
+    name: unit-test-report
+    runs-on: ubuntu-latest
+    if: always()
+    needs: [parent-unit-tests, student-unit-tests, teacher-unit-tests, horizon-unit-tests, submodule-build-and-test]
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Download all test results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: '*-test-results'
+          path: test-results/
+
+      - name: Parse test results and generate report
+        id: parse
+        run: |
+          cat > parse_tests.py <<'PYTHON_SCRIPT'
+          import os
+          import re
+          from pathlib import Path
+          from html.parser import HTMLParser
+
+          class TestReportParser(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.in_counter = False
+                  self.in_label = False
+                  self.current_label = None
+                  self.data = {}
+
+              def handle_starttag(self, tag, attrs):
+                  attrs_dict = dict(attrs)
+                  if tag == 'div' and attrs_dict.get('class') == 'counter':
+                      self.in_counter = True
+                  elif tag == 'p':
+                      self.in_label = True
+
+              def handle_endtag(self, tag):
+                  if tag == 'div':
+                      self.in_counter = False
+                  elif tag == 'p':
+                      self.in_label = False
+                      self.current_label = None
+
+              def handle_data(self, data):
+                  data = data.strip()
+                  if self.in_label and data:
+                      self.current_label = data.lower()
+                  elif self.in_counter and self.current_label and data:
+                      self.data[self.current_label] = data
+
+          def parse_test_report(html_file):
+              """Parse Gradle HTML test report"""
+              if not Path(html_file).exists():
+                  return None
+
+              with open(html_file, 'r') as f:
+                  content = f.read()
+
+              parser = TestReportParser()
+              parser.feed(content)
+
+              return {
+                  'tests': int(parser.data.get('tests', 0)),
+                  'failures': int(parser.data.get('failures', 0)),
+                  'ignored': int(parser.data.get('ignored', 0)),
+                  'duration': parser.data.get('duration', 'N/A'),
+                  'success_rate': parser.data.get('successful', 'N/A')
+              }
+
+          modules = {
+              'parent-test-results': '📱 Parent App',
+              'student-test-results': '📱 Student App',
+              'teacher-test-results': '📱 Teacher App',
+              'horizon-test-results': '🌅 Horizon',
+              'submodule-test-results': '📦 Submodules'
+          }
+
+          print("## 🧪 Unit Test Results\n")
+
+          total_tests = 0
+          total_failures = 0
+          total_ignored = 0
+          all_success = True
+
+          for module_dir, module_name in modules.items():
+              report_file = None
+
+              # Search for index.html in the downloaded artifacts
+              for root, dirs, files in os.walk(f'test-results/{module_dir}'):
+                  if 'index.html' in files:
+                      report_file = os.path.join(root, 'index.html')
+                      break
+
+              if not report_file:
+                  print(f"### ⚠️ {module_name}")
+                  print("- Test results not available\n")
+                  continue
+
+              result = parse_test_report(report_file)
+              if not result:
+                  print(f"### ⚠️ {module_name}")
+                  print("- Failed to parse test results\n")
+                  continue
+
+              total_tests += result['tests']
+              total_failures += result['failures']
+              total_ignored += result['ignored']
+
+              if result['failures'] > 0:
+                  all_success = False
+                  emoji = '❌'
+              else:
+                  emoji = '✅'
+
+              print(f"### {emoji} {module_name}")
+              print(f"- **Tests:** {result['tests']} total, {result['failures']} failed, {result['ignored']} skipped")
+              print(f"- **Duration:** {result['duration']}")
+              print(f"- **Success Rate:** {result['success_rate']}\n")
+
+          print("---")
+          print(f"### 📊 Summary")
+          print(f"- **Total Tests:** {total_tests}")
+          print(f"- **Failed:** {total_failures}")
+          print(f"- **Skipped:** {total_ignored}")
+          if all_success and total_tests > 0:
+              print(f"- **Status:** ✅ All tests passed!")
+          elif total_tests > 0:
+              print(f"- **Status:** ❌ {total_failures} test(s) failed")
+          else:
+              print(f"- **Status:** ⚠️ No test results found")
+
+          PYTHON_SCRIPT
+
+          python3 parse_tests.py | tee test-report.md
+
+      - name: Post or update PR comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const report = fs.readFileSync('test-report.md', 'utf8');
+            const marker = '<!-- unit-test-results-comment -->';
+            const body = marker + '\n' + report + '\n\n_Last updated: ' + new Date().toUTCString() + '_';
+
+            // Find existing comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const existingComment = comments.find(comment =>
+              comment.body.includes(marker)
+            );
+
+            if (existingComment) {
+              // Update existing comment
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existingComment.id,
+                body: body
+              });
+              console.log('Updated existing comment');
+            } else {
+              // Create new comment
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: body
+              });
+              console.log('Created new comment');
+            }
