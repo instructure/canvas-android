@@ -684,9 +684,11 @@ class AssignmentDetailsViewModel @Inject constructor(
                 SubmissionType.STUDENT_ANNOTATION -> postAction(AssignmentDetailAction.NavigateToAnnotationSubmissionScreen(assignment))
                 SubmissionType.MEDIA_RECORDING -> postAction(AssignmentDetailAction.ShowMediaDialog(assignment))
                 SubmissionType.EXTERNAL_TOOL, SubmissionType.BASIC_LTI_LAUNCH -> {
-                    externalLTITool.let {
+                    if (externalLTITool != null) {
                         Analytics.logEvent(AnalyticsEventConstants.ASSIGNMENT_LAUNCHLTI_SELECTED)
-                        postAction(AssignmentDetailAction.NavigateToLtiLaunchScreen(assignment.name.orEmpty(), it, assignment.ltiToolType().openInternally))
+                        postAction(AssignmentDetailAction.NavigateToLtiLaunchScreen(assignment.name.orEmpty(), externalLTITool, assignment.ltiToolType().openInternally))
+                    } else {
+                        postAction(AssignmentDetailAction.ShowToast(resources.getString(R.string.generalUnexpectedError)))
                     }
                 }
                 else -> Unit
