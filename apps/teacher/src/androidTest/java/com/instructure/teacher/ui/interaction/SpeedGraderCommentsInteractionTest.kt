@@ -19,10 +19,34 @@ import com.instructure.canvas.espresso.annotations.Stub
 import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvas.espresso.mockcanvas.addAssignment
 import com.instructure.canvas.espresso.mockcanvas.addCoursePermissions
-import com.instructure.canvas.espresso.mockcanvas.addSubmissionsForAssignment
+import com.instructure.canvas.espresso.mockcanvas.addSubmissionForAssignment
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeAssignmentDetailsManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeCommentLibraryManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeCustomGradeStatusesManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeDifferentiationTagsManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeInboxSettingsManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakePostPolicyManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeStudentContextManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionCommentsManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionContentManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionDetailsManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionGradeManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionRubricManager
 import com.instructure.canvas.espresso.mockcanvas.init
+import com.instructure.canvasapi2.di.GraphQlApiModule
+import com.instructure.canvasapi2.di.graphql.CustomGradeStatusModule
+import com.instructure.canvasapi2.managers.CommentLibraryManager
+import com.instructure.canvasapi2.managers.InboxSettingsManager
+import com.instructure.canvasapi2.managers.PostPolicyManager
+import com.instructure.canvasapi2.managers.StudentContextManager
+import com.instructure.canvasapi2.managers.SubmissionRubricManager
+import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
+import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.managers.graphql.DifferentiationTagsManager
+import com.instructure.canvasapi2.managers.graphql.SubmissionCommentsManager
+import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
+import com.instructure.canvasapi2.managers.graphql.SubmissionDetailsManager
+import com.instructure.canvasapi2.managers.graphql.SubmissionGradeManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.CanvasContextPermission
@@ -38,8 +62,58 @@ import dagger.hilt.android.testing.UninstallModules
 import org.junit.Test
 
 @HiltAndroidTest
-@UninstallModules(DifferentiationTagsModule::class)
+@UninstallModules(
+    GraphQlApiModule::class,
+    DifferentiationTagsModule::class,
+    CustomGradeStatusModule::class
+)
 class SpeedGraderCommentsInteractionTest : TeacherComposeTest() {
+
+    override fun displaysPageObjects() = Unit
+
+    @BindValue
+    @JvmField
+    val commentLibraryManager: CommentLibraryManager = FakeCommentLibraryManager()
+
+    @BindValue
+    @JvmField
+    val postPolicyManager: PostPolicyManager = FakePostPolicyManager()
+
+    @BindValue
+    @JvmField
+    val inboxSettingsManager: InboxSettingsManager = FakeInboxSettingsManager()
+
+    @BindValue
+    @JvmField
+    val personContextManager: StudentContextManager = FakeStudentContextManager()
+
+    @BindValue
+    @JvmField
+    val assignmentDetailsManager: AssignmentDetailsManager = FakeAssignmentDetailsManager()
+
+    @BindValue
+    @JvmField
+    val submissionContentManager: SubmissionContentManager = FakeSubmissionContentManager()
+
+    @BindValue
+    @JvmField
+    val submissionGradeManager: SubmissionGradeManager = FakeSubmissionGradeManager()
+
+    @BindValue
+    @JvmField
+    val submissionDetailsManager: SubmissionDetailsManager = FakeSubmissionDetailsManager()
+
+    @BindValue
+    @JvmField
+    val submissionRubricManager: SubmissionRubricManager = FakeSubmissionRubricManager()
+
+    @BindValue
+    @JvmField
+    val submissionCommentsManager: SubmissionCommentsManager = FakeSubmissionCommentsManager()
+
+    @BindValue
+    @JvmField
+    val customGradeStatusesManager: CustomGradeStatusesManager = FakeCustomGradeStatusesManager()
 
     @BindValue
     @JvmField
@@ -54,153 +128,201 @@ class SpeedGraderCommentsInteractionTest : TeacherComposeTest() {
             url = "http://fake.blah/somePath" // Code/Test will crash w/o a non-null url
     )
 
-    @Stub
     @Test
-    override fun displaysPageObjects() {
-        goToSpeedGraderCommentsPage(
-                submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
-        )
+    fun assertCommentWithAuthorAndTextDisplayed() {
+        val submission = goToSpeedGraderCommentsPage(commentText = "Important comment")
 
-        speedGraderCommentsPage.assertPageObjects()
+        val authorName = submission.submissionComments[0].authorName!!
+        val commentText = submission.submissionComments[0].comment!!
+        speedGraderPage.assertCommentsLabelDisplayed(1)
+        speedGraderPage.assertCommentDisplayed(commentText,authorName)
     }
 
-    @Stub
     @Test
-    fun displaysAuthorName() {
-        val submissionList = goToSpeedGraderCommentsPage(
-                submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY),
-                withComment = true
-        )
+    fun assertCommentsLabelDisplayed() {
+        val submission = goToSpeedGraderCommentsPage(commentText = "Important comment")
 
-        val authorName = submissionList?.get(0)!!.submissionComments[0].authorName!!
-        speedGraderCommentsPage.assertDisplaysAuthorName(authorName)
+        val commentCount = submission.submissionComments.size
+        speedGraderPage.assertCommentsLabelDisplayed(commentCount)
     }
 
-    @Stub
-    @Test
-    fun displaysCommentText() {
-        val submissionList = goToSpeedGraderCommentsPage(
-                submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY),
-                withComment = true
-        )
-
-        val commentText = submissionList?.get(0)!!.submissionComments[0].comment!!
-        speedGraderCommentsPage.assertDisplaysCommentText(commentText)
-    }
-
-    @Stub
-    @Test
-    fun displaysCommentAttachment() {
-        val submissionList = goToSpeedGraderCommentsPage(
-                submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY),
-                withComment = true,
-                attachment = attachment
-        )
-
-        val attachment = submissionList?.get(0)!!.submissionComments[0].attachments.get(0)
-        speedGraderCommentsPage.assertDisplaysCommentAttachment(attachment)
-    }
-
-    @Stub
-    @Test
-    fun displaysSubmissionHistory() {
-        goToSpeedGraderCommentsPage(
-                submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
-        )
-
-        speedGraderCommentsPage.assertDisplaysSubmission()
-    }
-
-    @Stub
-    @Test
-    fun displaysSubmissionFile() {
-        val submissionList = goToSpeedGraderCommentsPage(
-                submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_UPLOAD),
-                attachment = attachment
-        )
-
-        val fileAttachments = submissionList?.get(0)!!.attachments[0]
-        speedGraderCommentsPage.assertDisplaysSubmissionFile(fileAttachments)
-    }
-
-    @Stub
     @Test
     fun addsNewTextComment() {
-        goToSpeedGraderCommentsPage(
-                submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
-        )
+        goToSpeedGraderCommentsPage()
 
         val newComment = randomString(32)
-        speedGraderCommentsPage.addComment(newComment)
-        speedGraderCommentsPage.assertDisplaysCommentText(newComment)
+
+        speedGraderPage.typeCommentInInputField(newComment)
+        speedGraderPage.clickSendCommentButton()
+        speedGraderPage.assertCommentDisplayed(newComment, author = null)
+    }
+
+    @Test
+    fun showsNoComments() {
+        goToSpeedGraderCommentsPage()
+
+        speedGraderPage.assertCommentsLabelDisplayed(0)
+    }
+
+    @Test
+    fun displaysOwnCommentText() {
+        val submission = goToSpeedGraderCommentsPage(commentText = "teacher's comment", isTeacherComment = true)
+
+        val commentText = submission.submissionComments[0].comment!!
+        speedGraderPage.assertCommentsLabelDisplayed(1)
+        speedGraderPage.assertCommentDisplayed(commentText, author = null)
+        speedGraderPage.assertCommentAuthorNameNotDisplayed()
+    }
+
+    @Test
+    fun sendsCommentFromCommentLibrary() {
+        goToSpeedGraderCommentsPage(seedCommentLibrary = true)
+
+        speedGraderPage.clickCommentLibraryButton()
+        speedGraderPage.assertCommentLibraryTitle()
+        speedGraderPage.assertCommentLibraryItemCount(3)
+
+        speedGraderPage.selectCommentLibraryResultItem(0)
+        speedGraderPage.clickSendCommentButton(commentLibraryOpened = true)
+        speedGraderPage.assertCommentDisplayed("Great work!", author = null)
+    }
+
+    @Test
+    fun displaysMultipleCommentsInOrder() {
+        val submission = goToSpeedGraderCommentsPage(commentCount = 4)
+
+        val commentText1 = submission.submissionComments[0].comment!!
+        val commentText2 = submission.submissionComments[1].comment!!
+        val commentText3 = submission.submissionComments[2].comment!!
+        val commentText4 = submission.submissionComments[3].comment!!
+
+        speedGraderPage.assertCommentsLabelDisplayed(4)
+
+        speedGraderPage.assertCommentTextDisplayed(commentText1, isOwnComment = false)
+        speedGraderPage.assertCommentTextDisplayed(commentText2, isOwnComment = true)
+        speedGraderPage.assertCommentTextDisplayed(commentText3, isOwnComment = false)
+        speedGraderPage.assertCommentTextDisplayed(commentText4, isOwnComment = true)
+
     }
 
     @Stub
     @Test
-    fun showsNoCommentsMessage() {
-        goToSpeedGraderCommentsPage(
-                submissionCount = 0,
-                submissionTypeList = listOf(Assignment.SubmissionType.ON_PAPER)
+    fun displaysCommentWithAttachment() {
+        val submission = goToSpeedGraderCommentsPage(
+            commentText = "Please check this file",
+            isTeacherComment = false,
+            attachment = attachment
         )
 
-        speedGraderCommentsPage.assertDisplaysEmptyState()
+        val commentText = submission.submissionComments[0].comment!!
+        val authorName = submission.submissionComments[0].authorName!!
+        val attachmentName = submission.submissionComments[0].attachments[0].displayName
+
+        speedGraderPage.assertCommentsLabelDisplayed(1)
+        speedGraderPage.assertCommentDisplayed(commentText, authorName)
+        speedGraderPage.assertCommentAttachmentDisplayed(attachmentName.toString())
     }
 
     /**
-     * Common setup routine
+     * Common setup routine for SpeedGrader comments tests.
+     * Always creates an assignment with ONLINE_TEXT_ENTRY submission type.
      *
-     * [submissionCount] is the number of submissions for the created assignment.  Typically 0 or 1.
-     * [submissionTypeList] is the submission type for the assignment.
-     * [withComment] if true, include a (student) comment with the submission.
-     * [attachment] if non-null, is either a comment attachment (if withComment is true) or a submission
-     * attachment (if withComment is false).
-     *
+     * @param commentText if not null, include a single comment with the submission containing this text (ignored if commentCount > 0)
+     * @param isTeacherComment if true, the comment will be authored by the teacher (own comment), otherwise by the student
+     * @param attachment if non-null, is either a comment attachment (if commentText is not null) or a submission attachment (if commentText is null)
+     * @param seedCommentLibrary if true, seeds the comment library with predefined comments
+     * @param commentCount if > 0, creates multiple alternating student/teacher comments (overrides commentText parameter)
+     * @return the created submission
      */
     private fun goToSpeedGraderCommentsPage(
-        submissionCount: Int = 1,
-        submissionTypeList: List<Assignment.SubmissionType> = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY),
-        withComment: Boolean = false,
-        attachment: Attachment? = null): MutableList<Submission>? {
+        commentText: String? = null,
+        isTeacherComment: Boolean = false,
+        attachment: Attachment? = null,
+        seedCommentLibrary: Boolean = false,
+        commentCount: Int = 0
+    ): Submission {
 
         val data = MockCanvas.init(teacherCount = 1, studentCount = 1, courseCount = 1, favoriteCourseCount = 1)
         val teacher = data.teachers[0]
         val course = data.courses.values.first()
         val student = data.students[0]
 
+        if (seedCommentLibrary) {
+            data.commentLibraryItems[teacher.id] = listOf(
+                "Great work!",
+                "Please review the instructions",
+                "Well done on this assignment"
+            )
+        }
+
         data.addCoursePermissions(
                 course.id,
-                CanvasContextPermission() // Just need to have some sort of permissions object registered
+                CanvasContextPermission()
         )
 
         val assignment = data.addAssignment(
                 courseId = course.id,
-                submissionTypeList = submissionTypeList
+                submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
         )
 
-        var submissionComment : SubmissionComment? = null
-        if(withComment) {
-            submissionComment = SubmissionComment(
-                    id = data.newItemId(),
-                    authorId = student.id,
-                    // Allows Espresso to distinguish between this and the full name, which is elsewhere on the page
-                    authorName = student.shortName,
-                    authorPronouns = student.pronouns,
-                    attempt = 1L,
-                    comment = "a comment",
-                    attachments = if(attachment == null) arrayListOf<Attachment>() else arrayListOf(attachment)
-            )
+        val allComments = when {
+            commentCount > 0 -> {
+                List(commentCount) { i ->
+                    val isStudentComment = i % 2 == 0
+                    val author = if (isStudentComment) student else teacher
+                    val commentNumber = if (isStudentComment) (i / 2) + 1 else (i / 2) + 1
+
+                    SubmissionComment(
+                        id = data.newItemId(),
+                        authorId = author.id,
+                        authorName = author.shortName,
+                        authorPronouns = author.pronouns,
+                        attempt = 1L,
+                        comment = if (isStudentComment) {
+                            when (commentNumber) {
+                                1 -> "First student comment"
+                                2 -> "Second student comment"
+                                else -> "Student comment #$commentNumber"
+                            }
+                        } else {
+                            when (commentNumber) {
+                                1 -> "Teacher reply"
+                                2 -> "Another teacher reply"
+                                else -> "Teacher reply #$commentNumber"
+                            }
+                        },
+                        attachments = arrayListOf()
+                    )
+                }
+            }
+            commentText != null -> {
+                val author = if (isTeacherComment) teacher else student
+                listOf(
+                    SubmissionComment(
+                        id = data.newItemId(),
+                        authorId = author.id,
+                        authorName = author.shortName,
+                        authorPronouns = author.pronouns,
+                        attempt = 1L,
+                        comment = commentText,
+                        attachments = if (attachment == null) arrayListOf() else arrayListOf(attachment)
+                    )
+                )
+            }
+            else -> emptyList()
         }
 
-        var submissionList = mutableListOf<Submission>()
-        repeat(submissionCount) {
-            val submissionTypesRaw = submissionTypeList.map { it.apiString }
-            submissionList = data.addSubmissionsForAssignment(
-                    assignmentId = assignment.id,
-                    userId = student.id,
-                    types = submissionTypesRaw,
-                    comment = submissionComment,
-                    attachment = if (withComment) null else attachment
-            )
+        val submission = data.addSubmissionForAssignment(
+                assignmentId = assignment.id,
+                userId = student.id,
+                type = Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString,
+                body = "This is a test submission",
+                attachment = if (commentText == null && commentCount == 0) attachment else null,
+                comment = allComments.firstOrNull()
+        )
+
+        if (allComments.isNotEmpty()) {
+            submission.submissionComments = allComments
         }
 
         val token = data.tokenFor(teacher)!!
@@ -211,9 +333,11 @@ class SpeedGraderCommentsInteractionTest : TeacherComposeTest() {
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.clickAllSubmissions()
         assignmentSubmissionListPage.clickSubmission(student)
-        speedGraderPage.selectCommentsTab()
-        speedGraderPage.swipeUpCommentsTab()
+        composeTestRule.waitForIdle()
+        if (isCompactDevice()) speedGraderPage.clickExpandPanelButton()
+        speedGraderPage.selectTab("Grade & Rubric")
+        composeTestRule.waitForIdle()
 
-        return submissionList
+        return submission
     }
 }

@@ -94,7 +94,6 @@ import com.instructure.pandautils.views.FloatingRecordingView
 import com.instructure.pandautils.views.RecordingMediaType
 import dagger.hilt.android.EarlyEntryPoints
 import java.util.Date
-import java.util.UUID
 import kotlin.math.roundToInt
 
 
@@ -715,6 +714,7 @@ fun SpeedGraderUserCommentItem(
             if (comment.content.isNotEmpty()) {
                 Text(
                     text = comment.content,
+                    modifier = Modifier.testTag("commentText"),
                     fontSize = 14.sp,
                     lineHeight = 19.sp,
                     color = colorResource(id = R.color.textDarkest)
