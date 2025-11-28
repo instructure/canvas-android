@@ -22,6 +22,7 @@ import android.webkit.MimeTypeMap
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.LtiType
 import com.instructure.canvasapi2.models.Quiz
@@ -29,6 +30,7 @@ import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.pandautils.utils.AssignmentUtils2
+import com.instructure.pandautils.utils.isAllowedToSubmitWithOverrides
 import com.instructure.student.mobius.common.ui.UpdateInit
 import com.instructure.student.util.Const
 import com.spotify.mobius.First
@@ -171,7 +173,8 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
             Assignment.SubmissionType.NONE.apiString in assignment?.submissionTypesRaw.orEmpty() -> SubmissionDetailsContentType.NoneContent
             Assignment.SubmissionType.ON_PAPER.apiString in assignment?.submissionTypesRaw.orEmpty() -> SubmissionDetailsContentType.OnPaperContent
             Assignment.SubmissionType.EXTERNAL_TOOL.apiString in assignment?.submissionTypesRaw.orEmpty() -> {
-                if (assignment != null && (assignment.isAllowedToSubmit || submission?.workflowState != "unsubmitted"))
+                val course = canvasContext as? Course
+                if (assignment != null && (assignment.isAllowedToSubmitWithOverrides(course) || submission?.workflowState != "unsubmitted"))
                     SubmissionDetailsContentType.ExternalToolContent(canvasContext, ltiTool, assignment.name.orEmpty(), assignment.ltiToolType())
                 else SubmissionDetailsContentType.LockedContent
             }

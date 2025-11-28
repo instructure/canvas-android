@@ -423,8 +423,8 @@
     <string name="submitted_late">Envoyé tardivement</string>
     <string name="havent_submitted_yet">Pas encore envoyé</string>
     <string name="havent_been_graded">N’ont pas été notés</string>
-    <string name="scored_less_than">Noté moins que&#8230;</string>
-    <string name="scored_more_than">Noté plus que&#8230;</string>
+    <string name="scored_less_than">Moins de</string>
+    <string name="scored_more_than">Plus de</string>
     <string name="scored_less_than_value">Noté moins que %s</string>
     <string name="scored_more_than_value">Noté plus que %s</string>
     <string name="add_comment">Ajouter un commentaire</string>

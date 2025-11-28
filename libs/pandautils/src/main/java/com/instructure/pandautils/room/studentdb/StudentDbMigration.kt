@@ -17,6 +17,13 @@
 import com.instructure.pandautils.room.common.createMigration
 
 val studentDbMigrations = arrayOf(
+    createMigration(6, 7) { database ->
+        database.execSQL("ALTER TABLE `CreateSubmissionEntity` ADD COLUMN `submission_state` TEXT NOT NULL DEFAULT 'QUEUED'")
+        database.execSQL("ALTER TABLE `CreateSubmissionEntity` ADD COLUMN `state_updated_at` INTEGER")
+        database.execSQL("ALTER TABLE `CreateSubmissionEntity` ADD COLUMN `retry_count` INTEGER NOT NULL DEFAULT 0")
+        database.execSQL("ALTER TABLE `CreateSubmissionEntity` ADD COLUMN `last_error_message` TEXT")
+        database.execSQL("ALTER TABLE `CreateSubmissionEntity` ADD COLUMN `canvas_submission_id` INTEGER")
+    },
     createMigration(5, 6) { database ->
         // Add attempt column to CreateSubmissionEntity table
         database.execSQL("ALTER TABLE `CreateSubmissionEntity` ADD COLUMN `attempt` INTEGER NOT NULL DEFAULT 1")

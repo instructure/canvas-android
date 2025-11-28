@@ -30,14 +30,18 @@ import java.io.File
 class ParentAssignmentDetailsSubmissionHandler(
 ) : AssignmentDetailsSubmissionHandler {
     override var isUploading: Boolean = false
-    override var lastSubmissionIsDraft: Boolean = false
-    override var lastSubmissionEntry: String? = null
+    override var isFailed: Boolean = false
+    override var lastSubmissionId: Long? = null
     override var lastSubmissionAssignmentId: Long? = null
     override var lastSubmissionSubmissionType: String? = null
+    override var lastSubmissionIsDraft: Boolean = false
+    override var lastSubmissionEntry: String? = null
 
-    override fun addAssignmentSubmissionObserver(context: Context, assignmentId: Long, userId: Long, resources: Resources, data: MutableLiveData<AssignmentDetailsViewData>, refreshAssignment: () -> Unit) = Unit
+    override fun addAssignmentSubmissionObserver(context: Context, assignmentId: Long, userId: Long, resources: Resources, data: MutableLiveData<AssignmentDetailsViewData>, refreshAssignment: () -> Unit, updateGradeCell: () -> Unit) = Unit
 
     override fun removeAssignmentSubmissionObserver() = Unit
+
+    override suspend fun ensureSubmissionStateIsCurrent(assignmentId: Long, userId: Long) = Unit
 
     override fun uploadAudioSubmission(context: Context?, course: Course?, assignment: Assignment?, file: File?) = Unit
 

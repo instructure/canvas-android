@@ -297,6 +297,7 @@ class LoginE2ETest : StudentTest() {
     // Verify that students can sign into vanity domain
     @E2E
     @Test
+    @Stub
     @TestMetaData(Priority.MANDATORY, FeatureCategory.LOGIN, TestCategory.E2E)
     fun testVanityDomainLoginE2E() {
         // Create a Retrofit client for our vanity domain

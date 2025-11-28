@@ -426,8 +426,8 @@
     <string name="submitted_late">Submitted Late</string>
     <string name="havent_submitted_yet">Haven\'t Submitted Yet</string>
     <string name="havent_been_graded">Haven\'t Been Graded</string>
-    <string name="scored_less_than">Scored Less Than&#8230;</string>
-    <string name="scored_more_than">Scored More Than&#8230;</string>
+    <string name="scored_less_than">Scored Less than</string>
+    <string name="scored_more_than">Scored More than</string>
     <string name="scored_less_than_value">Scored Less Than %s</string>
     <string name="scored_more_than_value">Scored More Than %s</string>
     <string name="add_comment">Add Comment</string>

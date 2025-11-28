@@ -277,6 +277,7 @@
     <string name="checkBoxFinalGradeOption">Byggt á verkefnum með einkunnum</string>
     <string name="checkBoxWhatIfGradeOption">Sýna spáða einkunn</string>
     <string name="whatIfDialogText">Spáð einkunn</string>
+    <string name="whatIfScoreExceedsMaximum">Einkunn getur ekki farið yfir hámarksstig</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s af %2$s punktum, %3$s</string>
     <string name="inbox">Innhólf</string>
@@ -2052,6 +2053,8 @@
     <string name="allAssignments">Öll verkefni</string>
     <string name="statusFilter">Stöðusía</string>
     <string name="a11y_contentDescription_filter">Sía</string>
+    <string name="a11y_filter_active">Sía virk</string>
+    <string name="a11y_filter_inactive">Sía óvirk</string>
     <string name="a11y_contentDescription_postPolicy">Birtingarstefna</string>
     <string name="late">Seint</string>
     <string name="a11y_contentDescription_expand">Víkka</string>
@@ -2140,4 +2143,20 @@
     <string name="a11y_discussion_checkpoints">Umræðuvörður</string>
     <string name="multipleDueDates">Margir skiladagar</string>
     <string name="courseConcludedError">Námskeiði lokið. Ekki var hægt að senda skilaboð!</string>
+    <string name="openInDetailView">Opna í ítarlegu yfirliti</string>
+    <string name="immersiveView">Aðgengilegt yfirlit</string>
+    <string name="statuses">Stöður</string>
+    <string name="precise_filtering">Nákvæm síun</string>
+    <string name="differentiation_tags">Aðgreind merki</string>
+    <string name="students_without_differentiation_tags">Nemendur án aðgreindra merkja</string>
+    <string name="sort_by">Raða eftir</string>
+    <string name="student_sortable_name">Flokkanlegt nafn nemanda</string>
+    <string name="student_name">Nafn nemanda</string>
+    <string name="submission_date">Skiladagur</string>
+    <string name="submission_status">Staða á skilum</string>
+    <string name="write_score_here">Skrifaðu einkunn hér</string>
+    <string name="scored_more_than_with_max">Með meira í einkunn en / %s punkta</string>
+    <string name="scored_less_than_with_max">Með minna í einkunn en / %s punkta</string>
+    <string name="scored_between_values">Með einkunn %1$s - %2$s</string>
+    <string name="multiple_filters">Margar síur</string>
 </resources>

@@ -88,6 +88,7 @@ class SimpleWebViewFragment : BaseCanvasFragment(), NavigationCallbacks {
 
         savedInstanceState?.let {
             binding.webView.restoreState(it)
+            binding.webView.enableAlgorithmicDarkening()
         }
     }
 

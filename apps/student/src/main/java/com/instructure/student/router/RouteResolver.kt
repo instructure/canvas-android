@@ -30,6 +30,7 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.student.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.student.activity.NothingToSeeHereFragment
 import com.instructure.student.features.coursebrowser.CourseBrowserFragment
+import com.instructure.student.features.dashboard.compose.DashboardFragment
 import com.instructure.student.features.discussion.details.DiscussionDetailsFragment
 import com.instructure.student.features.discussion.list.DiscussionListFragment
 import com.instructure.student.features.elementary.course.ElementaryCourseFragment
@@ -45,19 +46,20 @@ import com.instructure.student.features.pages.list.PageListFragment
 import com.instructure.student.features.people.details.PeopleDetailsFragment
 import com.instructure.student.features.people.list.PeopleListFragment
 import com.instructure.student.features.quiz.list.QuizListFragment
+import com.instructure.pandautils.features.todolist.ToDoListFragment
 import com.instructure.student.fragment.AccountPreferencesFragment
 import com.instructure.student.fragment.AnnouncementListFragment
 import com.instructure.student.fragment.AssignmentBasicFragment
 import com.instructure.student.fragment.BasicQuizViewFragment
 import com.instructure.student.fragment.CourseSettingsFragment
-import com.instructure.student.fragment.DashboardFragment
+import com.instructure.student.fragment.OldDashboardFragment
 import com.instructure.student.fragment.EditPageDetailsFragment
 import com.instructure.student.fragment.FeatureFlagsFragment
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.fragment.NotificationListFragment
+import com.instructure.student.fragment.OldToDoListFragment
 import com.instructure.student.fragment.ProfileSettingsFragment
 import com.instructure.student.fragment.StudioWebViewFragment
-import com.instructure.student.fragment.ToDoListFragment
 import com.instructure.student.fragment.UnknownItemFragment
 import com.instructure.student.fragment.UnsupportedFeatureFragment
 import com.instructure.student.fragment.UnsupportedTabFragment
@@ -112,8 +114,10 @@ object RouteResolver {
         // Divided up into two camps, those who need a valid CanvasContext and those who do not
 
         return when {
+            cls.isA<OldDashboardFragment>() -> OldDashboardFragment.newInstance(route)
             cls.isA<DashboardFragment>() -> DashboardFragment.newInstance(route)
             cls.isA<ElementaryDashboardFragment>() -> ElementaryDashboardFragment.newInstance(route)
+            cls.isA<OldToDoListFragment>() -> OldToDoListFragment.newInstance(route)
             cls.isA<ToDoListFragment>() -> ToDoListFragment.newInstance(route)
             cls.isA<NotificationListFragment>() -> NotificationListFragment.newInstance(route)
             cls.isA<InboxFragment>() -> InboxFragment.newInstance(route)

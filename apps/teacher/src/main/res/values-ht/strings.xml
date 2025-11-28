@@ -423,8 +423,8 @@
     <string name="submitted_late">Soumèt an Reta</string>
     <string name="havent_submitted_yet">Poko Soumèt</string>
     <string name="havent_been_graded">Poko Klase</string>
-    <string name="scored_less_than">Fè Mwens Ke&#8230;</string>
-    <string name="scored_more_than">Fè Plis ke&#8230;</string>
+    <string name="scored_less_than">Fè Mwens Pase</string>
+    <string name="scored_more_than">Fè Plis Pase</string>
     <string name="scored_less_than_value">Fè Mwens Ke %s</string>
     <string name="scored_more_than_value">Fè Plis ke %s</string>
     <string name="add_comment">Ajoute Kòmantè</string>

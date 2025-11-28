@@ -277,6 +277,7 @@
     <string name="checkBoxFinalGradeOption">Yn seiliedig ar aseiniadau wedi’u graddio</string>
     <string name="checkBoxWhatIfGradeOption">Dangos Sgôr "Beth-os"</string>
     <string name="whatIfDialogText">Sgôr "Beth-os"</string>
+    <string name="whatIfScoreExceedsMaximum">Does dim modd i’r sgôr fod yn fwy na’r nifer uchaf o bwyntiau</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s allan o %2$s pwynt, %3$s</string>
     <string name="inbox">Blwch Derbyn</string>
@@ -2052,6 +2053,8 @@
     <string name="allAssignments">Pob Aseiniad</string>
     <string name="statusFilter">Hidlydd Statws</string>
     <string name="a11y_contentDescription_filter">Hidlo</string>
+    <string name="a11y_filter_active">Mae’r hidlydd ar waith</string>
+    <string name="a11y_filter_inactive">Nid yw’r hidlydd ar waith</string>
     <string name="a11y_contentDescription_postPolicy">Polisi postio</string>
     <string name="late">Yn Hwyr</string>
     <string name="a11y_contentDescription_expand">Ehangu</string>
@@ -2140,4 +2143,20 @@
     <string name="a11y_discussion_checkpoints">Pwyntiau Gwirio Trafodaeth</string>
     <string name="multipleDueDates">Mwy nag un dyddiad cau</string>
     <string name="courseConcludedError">Cwrs wedi dod i ben. Methu anfon negeseuon!</string>
+    <string name="openInDetailView">Agor yn y Wedd Manylion</string>
+    <string name="immersiveView">Gwedd Ymdrwythol</string>
+    <string name="statuses">Statws</string>
+    <string name="precise_filtering">Hidlo manwl gywir</string>
+    <string name="differentiation_tags">Tagiau gwahaniaethol</string>
+    <string name="students_without_differentiation_tags">Myfyrwyr heb dagiau Gwahaniaethol</string>
+    <string name="sort_by">Trefnu yn ôl</string>
+    <string name="student_sortable_name">Enw dosbarthadwy myfyriwr</string>
+    <string name="student_name">Enw’r myfyriwr</string>
+    <string name="submission_date">Dyddiad cyflwyno</string>
+    <string name="submission_status">Statws cyflwyno</string>
+    <string name="write_score_here">Ysgrifennwch y sgôr yma</string>
+    <string name="scored_more_than_with_max">Wedi cael sgôr o fwy na / %s pwynt</string>
+    <string name="scored_less_than_with_max">Wedi cael sgôr o lai na / %s pwynt</string>
+    <string name="scored_between_values">Wedi sgorio %1$s - %2$s</string>
+    <string name="multiple_filters">Mwy nag un hidlydd</string>
 </resources>

@@ -18,7 +18,6 @@ package com.instructure.canvas.espresso.mockcanvas.endpoints
 
 import android.util.Log
 import com.google.gson.Gson
-import com.instructure.canvas.espresso.mockCanvas.endpoints.CareerEndpoint
 import com.instructure.canvas.espresso.mockcanvas.Endpoint
 import com.instructure.canvas.espresso.mockcanvas.addDiscussionTopicToCourse
 import com.instructure.canvas.espresso.mockcanvas.addPlannable
@@ -370,6 +369,14 @@ object ApiEndpoint : Endpoint(
     ),
     Segment("planner_notes") to Endpoint(
         LongId(PathVars::plannerNoteId) to Endpoint {
+            GET {
+                val plannable = data.todos.find { it.plannable.id == pathVars.plannerNoteId }?.plannable
+                if (plannable != null) {
+                    request.successResponse(plannable)
+                } else {
+                    request.unauthorizedResponse()
+                }
+            }
             DELETE {
                 val plannerNote = data.todos.find { it.plannable.id == pathVars.plannerNoteId }
                 if (plannerNote != null) {

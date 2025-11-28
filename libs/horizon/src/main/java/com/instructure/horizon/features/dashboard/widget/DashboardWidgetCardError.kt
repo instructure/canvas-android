@@ -47,6 +47,7 @@ fun DashboardWidgetCardError(
     @DrawableRes iconRes: Int,
     widgetColor: Color,
     useMinWidth: Boolean,
+    pageState: DashboardWidgetPageState,
     onRetryClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -56,6 +57,7 @@ fun DashboardWidgetCardError(
         iconRes = iconRes,
         widgetColor = widgetColor,
         useMinWidth = useMinWidth,
+        pageState = pageState,
         modifier = modifier
             .semantics(mergeDescendants = true) {
                 role = Role.Button

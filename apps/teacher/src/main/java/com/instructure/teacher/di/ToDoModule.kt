@@ -20,6 +20,8 @@ package com.instructure.teacher.di
 import androidx.fragment.app.FragmentActivity
 import com.instructure.pandautils.features.calendartodo.details.ToDoViewModelBehavior
 import com.instructure.pandautils.features.calendartodo.details.ToDoRouter
+import com.instructure.pandautils.features.todolist.DefaultToDoListRouter
+import com.instructure.pandautils.features.todolist.ToDoListRouter
 import com.instructure.teacher.features.calendartodo.TeacherToDoRouter
 import dagger.Module
 import dagger.Provides
@@ -34,6 +36,11 @@ class ToDoModule {
     @Provides
     fun provideToDoRouter(activity: FragmentActivity): ToDoRouter {
         return TeacherToDoRouter(activity)
+    }
+
+    @Provides
+    fun provideToDoListRouter(): ToDoListRouter {
+        return DefaultToDoListRouter()
     }
 }
 

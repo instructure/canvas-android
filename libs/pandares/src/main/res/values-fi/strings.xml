@@ -277,6 +277,7 @@
     <string name="checkBoxFinalGradeOption">Perustuu arvosteltuihin tehtäviin</string>
     <string name="checkBoxWhatIfGradeOption">Näytä Mitä jos -pistemäärä</string>
     <string name="whatIfDialogText">Mitä jos -pistemäärä</string>
+    <string name="whatIfScoreExceedsMaximum">Pisteet eivät saa ylittää enimmäispistemäärää</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s / %2$s pistettä, %3$s</string>
     <string name="inbox">Saapuneet</string>
@@ -2052,6 +2053,8 @@
     <string name="allAssignments">Kaikki tehtävät</string>
     <string name="statusFilter">Tilan suodatin</string>
     <string name="a11y_contentDescription_filter">Suodatin</string>
+    <string name="a11y_filter_active">Suodatin aktiivinen</string>
+    <string name="a11y_filter_inactive">Suodatin ei-aktiivinen</string>
     <string name="a11y_contentDescription_postPolicy">Lähetä käytäntö</string>
     <string name="late">Myöhään</string>
     <string name="a11y_contentDescription_expand">Laajenna</string>
@@ -2140,4 +2143,20 @@
     <string name="a11y_discussion_checkpoints">Keskustelun tarkistuskohdat</string>
     <string name="multipleDueDates">Useita määräpäiviä</string>
     <string name="courseConcludedError">Kurssi on päättynyt. Viestien lähetys ei onnistu!</string>
+    <string name="openInDetailView">Avaa yksityiskohtaisessa näkymässä</string>
+    <string name="immersiveView">Immersiivinen näkymä</string>
+    <string name="statuses">Tilat</string>
+    <string name="precise_filtering">Täsmällinen suodatus</string>
+    <string name="differentiation_tags">Eriytysmerkit</string>
+    <string name="students_without_differentiation_tags">Opiskelijat ilman eriyttämistunnisteita</string>
+    <string name="sort_by">Lajitteluperuste</string>
+    <string name="student_sortable_name">Opiskelijan lajittelunimi</string>
+    <string name="student_name">Opiskelijan nimi</string>
+    <string name="submission_date">Tehtävälähetyksen päivämäärä</string>
+    <string name="submission_status">Lähetyksen tila</string>
+    <string name="write_score_here">Kirjoita pistemäärä tähän</string>
+    <string name="scored_more_than_with_max">Sai enemmän kuin / %s pistettä</string>
+    <string name="scored_less_than_with_max">Sai vähemmän kuin / %s pistettä</string>
+    <string name="scored_between_values">Pistemäärä %1$s - %2$s</string>
+    <string name="multiple_filters">Useita suodattimia</string>
 </resources>

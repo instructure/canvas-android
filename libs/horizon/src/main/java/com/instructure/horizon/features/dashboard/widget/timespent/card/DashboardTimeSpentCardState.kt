@@ -22,7 +22,11 @@ data class DashboardTimeSpentCardState(
     val courses: List<CourseOption> = emptyList(),
     val selectedCourseId: Long? = null,
     val onCourseSelected: (String?) -> Unit = {}
-)
+) {
+    companion object {
+        val Loading = DashboardTimeSpentCardState(hours = 5, minutes = 30,)
+    }
+}
 
 data class CourseOption(
     val id: Long,

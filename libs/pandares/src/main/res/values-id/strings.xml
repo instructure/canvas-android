@@ -277,6 +277,7 @@
     <string name="checkBoxFinalGradeOption">Berdasarkan tugas yang dinilai</string>
     <string name="checkBoxWhatIfGradeOption">Tampilkan Skor Bagaimana-Kalau</string>
     <string name="whatIfDialogText">Skor Bagaimana-Kalau</string>
+    <string name="whatIfScoreExceedsMaximum">Skor tidak boleh melebihi poin maksimum</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s dari %2$s poin, %3$s</string>
     <string name="inbox">Kotak Masuk</string>
@@ -2055,6 +2056,8 @@
     <string name="allAssignments">Semua Tugas</string>
     <string name="statusFilter">Filter Status</string>
     <string name="a11y_contentDescription_filter">Filter</string>
+    <string name="a11y_filter_active">Filter aktif</string>
+    <string name="a11y_filter_inactive">Filter tidak aktif</string>
     <string name="a11y_contentDescription_postPolicy">Kebijakan posting</string>
     <string name="late">Terlambat</string>
     <string name="a11y_contentDescription_expand">Perbesar</string>
@@ -2143,4 +2146,20 @@
     <string name="a11y_discussion_checkpoints">Checkpoint Diskusi</string>
     <string name="multipleDueDates">Tanggal Batas Berganda</string>
     <string name="courseConcludedError">Kursus selesai. Tidak dapat mengirim pesan!</string>
+    <string name="openInDetailView">Buka dalam Tampilan Detail</string>
+    <string name="immersiveView">Tampilan imersif</string>
+    <string name="statuses">Status</string>
+    <string name="precise_filtering">Pemfilteran presisi</string>
+    <string name="differentiation_tags">Tag diferensiasi</string>
+    <string name="students_without_differentiation_tags">Siswa tanpa tag Diferensiasi</string>
+    <string name="sort_by">Sortir menurut</string>
+    <string name="student_sortable_name">Nama siswa yang dapat diurutkan</string>
+    <string name="student_name">Nama siswa</string>
+    <string name="submission_date">Tanggal penyerahan</string>
+    <string name="submission_status">Status penyerahan</string>
+    <string name="write_score_here">Tuliskan skor di sini</string>
+    <string name="scored_more_than_with_max">Mendapat skor Lebih dari / %s pts</string>
+    <string name="scored_less_than_with_max">Mendapat skor Kurang dari / %s pts</string>
+    <string name="scored_between_values">Mendapat skor %1$s - %2$s</string>
+    <string name="multiple_filters">Gandakan filter</string>
 </resources>

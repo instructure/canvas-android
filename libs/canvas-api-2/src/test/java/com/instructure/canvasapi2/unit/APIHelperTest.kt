@@ -204,4 +204,109 @@ class APIHelperTest {
 
         assertEquals(expected, APIHelper.expandTildeId(actual))
     }
+
+    @Test
+    fun getShardIdFromToken_withShard() {
+        val token = "7053~abcdef1234567890"
+        val expected = "7053"
+
+        assertEquals(expected, APIHelper.getShardIdFromToken(token))
+    }
+
+    @Test
+    fun getShardIdFromToken_withoutShard() {
+        val token = "abcdef1234567890"
+
+        assertEquals(null, APIHelper.getShardIdFromToken(token))
+    }
+
+    @Test
+    fun getShardIdFromToken_emptyToken() {
+        val token = ""
+
+        assertEquals(null, APIHelper.getShardIdFromToken(token))
+    }
+
+    @Test
+    fun createGlobalUserId() {
+        val shardId = "7053"
+        val userId = 2848L
+        val expected = 70530000000002848L
+
+        assertEquals(expected, APIHelper.createGlobalUserId(shardId, userId))
+    }
+
+    @Test
+    fun createGlobalUserId_largerIds() {
+        val shardId = "12345"
+        val userId = 6789L
+        val expected = 123450000000006789L
+
+        assertEquals(expected, APIHelper.createGlobalUserId(shardId, userId))
+    }
+
+    @Test
+    fun createGlobalUserId_shortShard() {
+        val shardId = "3"
+        val userId = 12771174L
+        val expected = 30000012771174L
+
+        assertEquals(expected, APIHelper.createGlobalUserId(shardId, userId))
+    }
+
+    @Test
+    fun getUserIdForCourse_sameShard() {
+        val courseId = 1234L
+        val userId = 5678L
+        val shardIds = mapOf(courseId to "7053")
+        val accessToken = "7053~abcdef1234567890"
+
+        // Should return original userId since both are on same shard
+        assertEquals(userId, APIHelper.getUserIdForCourse(courseId, userId, shardIds, accessToken))
+    }
+
+    @Test
+    fun getUserIdForCourse_differentShard() {
+        val courseId = 1234L
+        val userId = 5678L
+        val shardIds = mapOf(courseId to "7053")
+        val accessToken = "8000~abcdef1234567890"
+
+        // Should return global user ID since course is on different shard
+        val expected = 80000000000005678L
+        assertEquals(expected, APIHelper.getUserIdForCourse(courseId, userId, shardIds, accessToken))
+    }
+
+    @Test
+    fun getUserIdForCourse_noShardId() {
+        val courseId = 1234L
+        val userId = 5678L
+        val shardIds = emptyMap<Long, String?>()
+        val accessToken = "7053~abcdef1234567890"
+
+        // Should return original userId since course has no shard ID
+        assertEquals(userId, APIHelper.getUserIdForCourse(courseId, userId, shardIds, accessToken))
+    }
+
+    @Test
+    fun getUserIdForCourse_noTokenShard() {
+        val courseId = 1234L
+        val userId = 5678L
+        val shardIds = mapOf(courseId to "7053")
+        val accessToken = "abcdef1234567890"
+
+        // Should return original userId since token has no shard ID
+        assertEquals(userId, APIHelper.getUserIdForCourse(courseId, userId, shardIds, accessToken))
+    }
+
+    @Test
+    fun getUserIdForCourse_nullShardId() {
+        val courseId = 1234L
+        val userId = 5678L
+        val shardIds = mapOf(courseId to null)
+        val accessToken = "7053~abcdef1234567890"
+
+        // Should return original userId since course shard ID is null
+        assertEquals(userId, APIHelper.getUserIdForCourse(courseId, userId, shardIds, accessToken))
+    }
 }
