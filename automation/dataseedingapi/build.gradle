@@ -12,6 +12,7 @@ buildscript {
 
     dependencies {
         classpath Plugins.KOTLIN
+        classpath Plugins.APOLLO
         classpath Libs.APOLLO_RUNTIME
     }
 }

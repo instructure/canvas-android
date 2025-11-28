@@ -18,7 +18,6 @@ package com.instructure.student.features.assignments.details
 import android.content.Context
 import android.content.res.Resources
 import android.net.Uri
-import android.os.Build
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -39,7 +38,9 @@ import com.instructure.student.mobius.assignmentDetails.uploadAudioRecording
 import com.instructure.student.mobius.common.ui.SubmissionHelper
 import com.instructure.pandautils.room.studentdb.StudentDb
 import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
+import com.instructure.pandautils.room.studentdb.entities.SubmissionState
 import com.instructure.student.util.getStudioLTITool
+import kotlinx.coroutines.runBlocking
 import java.io.File
 import java.util.Date
 
@@ -48,6 +49,8 @@ class StudentAssignmentDetailsSubmissionHandler(
     private val studentDb: StudentDb
 ) : AssignmentDetailsSubmissionHandler {
     override var isUploading: Boolean = false
+    override var isFailed: Boolean = false
+    override var lastSubmissionId: Long? = null
     override var lastSubmissionAssignmentId: Long? = null
     override var lastSubmissionSubmissionType: String? = null
     override var lastSubmissionIsDraft: Boolean = false
@@ -64,10 +67,35 @@ class StudentAssignmentDetailsSubmissionHandler(
         resources: Resources,
         data: MutableLiveData<AssignmentDetailsViewData>,
         refreshAssignment: () -> Unit,
+        updateGradeCell: () -> Unit
     ) {
+        runBlocking {
+            val submissions = studentDb.submissionDao().findSubmissionsByAssignmentId(assignmentId, userId)
+            val initialSubmission = submissions.lastOrNull()
+
+            if (initialSubmission != null) {
+                val hasFailedSubmission = initialSubmission.submissionState == SubmissionState.FAILED || initialSubmission.errorFlag
+                val isActivelyUploading = !initialSubmission.isDraft && initialSubmission.submissionState.isActive
+
+                if (hasFailedSubmission) {
+                    isFailed = true
+                    isUploading = false
+                } else if (isActivelyUploading) {
+                    isUploading = true
+                    isFailed = false
+                }
+
+                lastSubmissionId = initialSubmission.id
+                lastSubmissionAssignmentId = initialSubmission.assignmentId
+                lastSubmissionSubmissionType = initialSubmission.submissionType
+                lastSubmissionIsDraft = initialSubmission.isDraft
+                lastSubmissionEntry = initialSubmission.submissionEntry
+            }
+        }
+
         submissionLiveData = studentDb.submissionDao().findSubmissionsByAssignmentIdLiveData(assignmentId, userId)
 
-        setupObserver(context, resources, data, refreshAssignment)
+        setupObserver(context, resources, data, refreshAssignment, updateGradeCell)
 
         submissionObserver?.let { observer ->
             submissionLiveData?.observeForever(observer)
@@ -77,6 +105,45 @@ class StudentAssignmentDetailsSubmissionHandler(
     override fun removeAssignmentSubmissionObserver() {
         submissionObserver?.let { observer ->
             submissionLiveData?.removeObserver(observer)
+        }
+    }
+
+    override suspend fun ensureSubmissionStateIsCurrent(assignmentId: Long, userId: Long) {
+        val submissions = studentDb.submissionDao().findSubmissionsByAssignmentId(assignmentId, userId)
+        val submission = submissions.lastOrNull()
+
+        if (submission != null) {
+            val hasFailedSubmission = submission.submissionState == SubmissionState.FAILED || submission.errorFlag
+            val isActivelyUploading = !submission.isDraft && submission.submissionState.isActive
+
+            when {
+                hasFailedSubmission -> {
+                    isFailed = true
+                    isUploading = false
+                }
+                isActivelyUploading -> {
+                    isUploading = true
+                    isFailed = false
+                }
+                else -> {
+                    isFailed = false
+                    isUploading = false
+                }
+            }
+
+            lastSubmissionId = submission.id
+            lastSubmissionAssignmentId = submission.assignmentId
+            lastSubmissionSubmissionType = submission.submissionType
+            lastSubmissionIsDraft = submission.isDraft
+            lastSubmissionEntry = submission.submissionEntry
+        } else {
+            isFailed = false
+            isUploading = false
+            lastSubmissionId = null
+            lastSubmissionAssignmentId = null
+            lastSubmissionSubmissionType = null
+            lastSubmissionIsDraft = false
+            lastSubmissionEntry = null
         }
     }
 
@@ -103,9 +170,11 @@ class StudentAssignmentDetailsSubmissionHandler(
         resources: Resources,
         data: MutableLiveData<AssignmentDetailsViewData>,
         refreshAssignment: () -> Unit,
+        updateGradeCell: () -> Unit
     ) {
         submissionObserver = Observer<List<CreateSubmissionEntity>> { submissions ->
                 val submission = submissions.lastOrNull()
+                lastSubmissionId = submission?.id
                 lastSubmissionAssignmentId = submission?.assignmentId
                 lastSubmissionSubmissionType = submission?.submissionType
                 lastSubmissionIsDraft = submission?.isDraft ?: false
@@ -117,9 +186,13 @@ class StudentAssignmentDetailsSubmissionHandler(
                     data.value?.hasDraft = isDraft
                     data.value?.notifyPropertyChanged(BR.hasDraft)
 
+                    val isActivelyUploading = !isDraft && dbSubmission.submissionState.isActive
+                    val hasFailedSubmission = dbSubmission.submissionState == SubmissionState.FAILED || dbSubmission.errorFlag
                     val dateString = (dbSubmission.lastActivityDate?.toInstant()?.toEpochMilli()?.let { Date(it) } ?: Date()).toFormattedString()
-                    if (!isDraft && !isUploading) {
+
+                    if (isActivelyUploading && !isUploading) {
                         isUploading = true
+                        isFailed = false
                         data.value?.attempts = attempts?.toMutableList()?.apply {
                             add(
                                 0, AssignmentDetailsAttemptItemViewModel(
@@ -133,9 +206,14 @@ class StudentAssignmentDetailsSubmissionHandler(
                         }.orEmpty()
                         data.value?.notifyPropertyChanged(BR.attempts)
                     }
-                    if (isUploading && submission.errorFlag) {
+
+                    if (hasFailedSubmission && !isFailed) {
+                        isUploading = false
+                        isFailed = true
                         data.value?.attempts = attempts?.toMutableList()?.apply {
-                            if (isNotEmpty()) removeAt(0)
+                            if (isNotEmpty() && firstOrNull()?.data?.isUploading == true) {
+                                removeAt(0)
+                            }
                             add(0, AssignmentDetailsAttemptItemViewModel(
                                 AssignmentDetailsAttemptViewData(
                                     resources.getString(R.string.attempt, attempts.size),
@@ -146,10 +224,19 @@ class StudentAssignmentDetailsSubmissionHandler(
                             )
                         }.orEmpty()
                         data.value?.notifyPropertyChanged(BR.attempts)
+                        updateGradeCell()
+                    }
+
+                    if (dbSubmission.submissionState == SubmissionState.COMPLETED && isUploading) {
+                        isUploading = false
+                        isFailed = false
+                        refreshAssignment()
+                        context.toast(R.string.submissionSuccessTitle)
                     }
                 } ?: run {
                     if (isUploading) {
                         isUploading = false
+                        isFailed = false
                         refreshAssignment()
                         context.toast(R.string.submissionSuccessTitle)
                     }

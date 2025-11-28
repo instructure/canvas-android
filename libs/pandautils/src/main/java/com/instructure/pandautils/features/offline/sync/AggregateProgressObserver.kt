@@ -75,10 +75,20 @@ class AggregateProgressObserver(
 
     init {
         GlobalScope.launch(Dispatchers.Main) {
-            courseProgressLiveData = courseSyncProgressDao.findAllLiveData()
+            courseProgressLiveData = try {
+                courseSyncProgressDao.findAllLiveData()
+            } catch (e: Exception) {
+                firebaseCrashlytics.recordException(e)
+                null
+            }
             courseProgressLiveData?.observeForever(courseProgressObserver)
 
-            fileProgressLiveData = fileSyncProgressDao.findAllLiveData()
+            fileProgressLiveData = try {
+                fileSyncProgressDao.findAllLiveData()
+            } catch (e: Exception) {
+                firebaseCrashlytics.recordException(e)
+                null
+            }
             fileProgressLiveData?.observeForever(fileProgressObserver)
 
             studioMediaProgressLiveData = try {

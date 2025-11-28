@@ -13,6 +13,7 @@ import com.instructure.pandautils.room.appdatabase.daos.MediaCommentDao
 import com.instructure.pandautils.room.appdatabase.daos.PendingSubmissionCommentDao
 import com.instructure.pandautils.room.appdatabase.daos.ReminderDao
 import com.instructure.pandautils.room.appdatabase.daos.SubmissionCommentDao
+import com.instructure.pandautils.room.appdatabase.daos.ToDoFilterDao
 import com.instructure.pandautils.room.assignment.list.daos.AssignmentListSelectedFiltersEntityDao
 import com.instructure.pandautils.room.calendar.CalendarFilterDatabase
 import com.instructure.pandautils.room.calendar.daos.CalendarFilterDao
@@ -91,6 +92,12 @@ class DatabaseModule {
     @Singleton
     fun provideFileDownloadProgressDao(appDatabase: AppDatabase): FileDownloadProgressDao {
         return appDatabase.fileDownloadProgressDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideToDoFilterDao(appDatabase: AppDatabase): ToDoFilterDao {
+        return appDatabase.toDoFilterDao()
     }
 
     @Provides

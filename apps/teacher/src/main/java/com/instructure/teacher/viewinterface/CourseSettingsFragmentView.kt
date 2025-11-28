@@ -21,7 +21,7 @@ import com.instructure.pandautils.blueprint.FragmentViewInterface
 
 interface CourseSettingsFragmentView : FragmentViewInterface {
     fun showEditCourseNameDialog()
-    fun showEditCourseHomePageDialog()
+    fun showEditCourseHomePageDialog(hasFrontPage: Boolean)
     fun updateCourseName(course: Course)
     fun updateCourseHomePage(newHomePage: Course.HomePage?)
 }

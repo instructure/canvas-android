@@ -70,7 +70,29 @@ class PeopleListFragment : BaseSyncFragment<User, PeopleListPresenter, PeopleLis
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         swipeRefreshLayoutContainerBinding = RecyclerSwipeRefreshLayoutBinding.bind(view)
+        savedInstanceState?.let {
+            canvasContextsSelected = it.getParcelableArrayList(SELECTED_CONTEXTS_KEY)
+        }
+        setupFilterResultListener()
         super.onViewCreated(view, savedInstanceState)
+    }
+
+    private fun setupFilterResultListener() {
+        childFragmentManager.setFragmentResultListener(PeopleListFilterDialog.REQUEST_KEY, viewLifecycleOwner) { _, result ->
+            val canvasContexts = result.getParcelableArrayList<CanvasContext>(PeopleListFilterDialog.RESULT_SELECTED_CONTEXTS)
+            canvasContexts?.let {
+                canvasContextsSelected = ArrayList(it)
+                presenter.canvasContextList = canvasContextsSelected as ArrayList<CanvasContext>
+                setupTitle(it)
+            }
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        canvasContextsSelected?.let {
+            outState.putParcelableArrayList(SELECTED_CONTEXTS_KEY, it)
+        }
     }
 
     override fun layoutResId(): Int = R.layout.fragment_people_list_layout
@@ -79,6 +101,10 @@ class PeopleListFragment : BaseSyncFragment<User, PeopleListPresenter, PeopleLis
 
     override fun onReadySetGo(presenter: PeopleListPresenter) {
         recyclerView?.adapter = adapter
+
+        canvasContextsSelected?.let {
+            presenter.restoreCanvasContextList(it)
+        }
 
         setupViews()
         presenter.loadData(false)
@@ -121,19 +147,14 @@ class PeopleListFragment : BaseSyncFragment<User, PeopleListPresenter, PeopleLis
         searchView.setOnQueryTextListener(this@PeopleListFragment)
 
         peopleListToolbar.menu.findItem(R.id.peopleFilterMenuItem)?.setOnMenuItemClickListener {
-            //let the user select the course/group they want to see
-            PeopleListFilterDialog.getInstance(requireActivity().supportFragmentManager, presenter.canvasContextListIds, canvasContext, true) { canvasContexts ->
-                canvasContextsSelected = ArrayList()
-                canvasContextsSelected!!.addAll(canvasContexts)
-
-                presenter.canvasContextList = canvasContextsSelected as ArrayList<CanvasContext>
-                setupTitle(canvasContexts)
-            }.show(requireActivity().supportFragmentManager, PeopleListFilterDialog::class.java.simpleName)
+            PeopleListFilterDialog.getInstance(childFragmentManager, presenter.canvasContextListIds, canvasContext, true)
+                .show(childFragmentManager, PeopleListFilterDialog::class.java.simpleName)
             false
         }
 
         clearFilterTextView.setOnClickListener {
             peopleFilter.setText(R.string.allPeople)
+            canvasContextsSelected = null
             presenter.clearCanvasContextList()
             clearFilterTextView.visibility = View.GONE
         }
@@ -231,6 +252,8 @@ class PeopleListFragment : BaseSyncFragment<User, PeopleListPresenter, PeopleLis
     }
 
     companion object {
+        private const val SELECTED_CONTEXTS_KEY = "selected_contexts"
+
         fun newInstance(canvasContext: CanvasContext): PeopleListFragment {
             val args = Bundle()
             args.putParcelable(Const.CANVAS_CONTEXT, canvasContext)

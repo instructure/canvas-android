@@ -15,6 +15,7 @@
  */
 package com.instructure.student.mobius.common.ui
 
+import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.Data
 import androidx.work.NetworkType
@@ -25,6 +26,7 @@ import com.instructure.pandautils.features.submission.BaseSubmissionHelper
 import com.instructure.pandautils.features.submission.SubmissionWorkerAction
 import com.instructure.pandautils.room.studentdb.StudentDb
 import com.instructure.pandautils.utils.Const
+import java.util.concurrent.TimeUnit
 
 class SubmissionHelper(
     studentDb: StudentDb,
@@ -45,6 +47,7 @@ class SubmissionHelper(
         val submissionWork = OneTimeWorkRequest.Builder(SubmissionWorker::class.java)
             .setInputData(data.build())
             .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
+            .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 30, TimeUnit.SECONDS)
             .addTag("SubmissionWorker")
             .build()
         workManager.enqueue(submissionWork)

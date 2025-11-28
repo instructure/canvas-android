@@ -18,4 +18,8 @@ package com.instructure.horizon.features.dashboard.widget.skilloverview.card
 
 data class DashboardSkillOverviewCardState(
     val completedSkillCount: Int = 0
-)
+) {
+    companion object {
+        val Loading = DashboardSkillOverviewCardState(5)
+    }
+}

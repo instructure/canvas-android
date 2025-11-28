@@ -71,8 +71,8 @@ data class NoteHighlightedDataRange(
 )
 
 data class NoteHighlightedDataTextPosition(
-    val start: Int,
-    val end: Int
+    val start: Int = 0,
+    val end: Int = 0
 )
 
 data class NoteItem(
@@ -89,9 +89,7 @@ data class NoteItem(
     val updatedAt: Date?,
 )
 
-class RedwoodApiManager @Inject constructor(
-    @RedwoodApolloClient private val redwoodClient: ApolloClient
-) {
+interface RedwoodApiManager {
     suspend fun getNotes(
         filter: NoteFilterInput? = null,
         firstN: Int? = null,
@@ -99,6 +97,39 @@ class RedwoodApiManager @Inject constructor(
         after: String? = null,
         before: String? = null,
         orderBy: OrderByInput? = null,
+        forceNetwork: Boolean = false
+    ): QueryNotesQuery.Notes
+
+    suspend fun createNote(
+        courseId: String,
+        objectId: String,
+        objectType: String,
+        userText: String?,
+        notebookType: String?,
+        highlightData: NoteHighlightedData? = null
+    )
+
+    suspend fun updateNote(
+        id: String,
+        userText: String?,
+        notebookType: String?,
+        highlightData: NoteHighlightedData? = null
+    )
+
+    suspend fun deleteNote(noteId: String)
+}
+
+class RedwoodApiManagerImpl @Inject constructor(
+    @RedwoodApolloClient private val redwoodClient: ApolloClient
+) : RedwoodApiManager {
+    override suspend fun getNotes(
+        filter: NoteFilterInput?,
+        firstN: Int?,
+        lastN: Int?,
+        after: String?,
+        before: String?,
+        orderBy: OrderByInput?,
+        forceNetwork: Boolean
     ): QueryNotesQuery.Notes {
         val query = QueryNotesQuery(
             filter = Optional.presentIfNotNull(filter),
@@ -109,19 +140,19 @@ class RedwoodApiManager @Inject constructor(
             orderBy = Optional.presentIfNotNull(orderBy),
         )
         val result = redwoodClient
-            .enqueueQuery(query)
+            .enqueueQuery(query, forceNetwork)
             .dataAssertNoErrors.notes
 
         return result
     }
 
-    suspend fun createNote(
+    override suspend fun createNote(
         courseId: String,
         objectId: String,
         objectType: String,
         userText: String?,
         notebookType: String?,
-        highlightData: NoteHighlightedData? = null
+        highlightData: NoteHighlightedData?
     ) {
         val reaction = if (notebookType == null) {
             Optional.absent()
@@ -144,11 +175,11 @@ class RedwoodApiManager @Inject constructor(
             .dataAssertNoErrors
     }
 
-    suspend fun updateNote(
+    override suspend fun updateNote(
         id: String,
         userText: String?,
         notebookType: String?,
-        highlightData: NoteHighlightedData? = null
+        highlightData: NoteHighlightedData?
     ) {
         val reaction = if (notebookType == null) {
             Optional.absent()
@@ -170,7 +201,7 @@ class RedwoodApiManager @Inject constructor(
             .dataAssertNoErrors
     }
 
-    suspend fun deleteNote(noteId: String) {
+    override suspend fun deleteNote(noteId: String) {
         val mutation = DeleteNoteMutation(noteId)
 
         redwoodClient

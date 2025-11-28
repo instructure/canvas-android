@@ -38,7 +38,7 @@ class LoginInteractionTest : StudentTest() {
         if(isTabletDevice()) loginFindSchoolPage.assertHintText(R.string.schoolInstructureCom)
         else loginFindSchoolPage.assertHintText(R.string.loginHint)
 
-        loginFindSchoolPage.enterDomain("harv")
+        loginFindSchoolPage.enterDomain("harvest")
         loginFindSchoolPage.assertSchoolSearchResults("City Harvest Church (Singapore)")
     }
 

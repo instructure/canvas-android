@@ -15,6 +15,7 @@
  */
 package com.instructure.pandautils.room.studentdb.entities
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.instructure.canvasapi2.models.CanvasContext
@@ -40,5 +41,15 @@ data class CreateSubmissionEntity(
     val isDraft: Boolean = false,
     val attempt: Long = 1L,
     val mediaType: String? = null,
-    val mediaSource: String? = null
+    val mediaSource: String? = null,
+    @ColumnInfo(name = "submission_state", defaultValue = "QUEUED")
+    val submissionState: SubmissionState = SubmissionState.QUEUED,
+    @ColumnInfo(name = "state_updated_at")
+    val stateUpdatedAt: Date? = null,
+    @ColumnInfo(name = "retry_count", defaultValue = "0")
+    val retryCount: Int = 0,
+    @ColumnInfo(name = "last_error_message")
+    val lastErrorMessage: String? = null,
+    @ColumnInfo(name = "canvas_submission_id")
+    val canvasSubmissionId: Long? = null
 )

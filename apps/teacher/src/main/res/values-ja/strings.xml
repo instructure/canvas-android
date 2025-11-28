@@ -192,7 +192,7 @@
     <string name="points_with_value">ポイント</string>
     <string name="point_with_value">ポイント</string>
     <string name="no_due_date">期日なし</string>
-    <string name="due_date">期日</string>
+    <string name="due_date">提出期限</string>
 
     <string name="view_replies">返信を表示</string>
     <string name="view_discussion">ディスカッションを表示</string>
@@ -419,8 +419,8 @@
     <string name="submitted_late">遅れた提出</string>
     <string name="havent_submitted_yet">まだ提出されていません</string>
     <string name="havent_been_graded">まだ採点されていません</string>
-    <string name="scored_less_than">&#8230; 未満のスコア</string>
-    <string name="scored_more_than">&#8230;を上回るスコア</string>
+    <string name="scored_less_than">...未満のスコア</string>
+    <string name="scored_more_than">...を上回るスコア</string>
     <string name="scored_less_than_value">%s 未満のスコア</string>
     <string name="scored_more_than_value">%s を上回るスコア</string>
     <string name="add_comment">コメントを追加</string>

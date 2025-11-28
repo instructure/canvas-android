@@ -50,30 +50,35 @@ import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.AnalyticsParamConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.FileUtils
 import com.instructure.canvasapi2.utils.ProgressRequestUpdateListener
+import com.instructure.pandautils.features.calendar.CalendarSharedEvents
+import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.features.submission.SubmissionWorkerAction
 import com.instructure.pandautils.models.PushNotification
+import com.instructure.pandautils.room.studentdb.entities.CreateFileSubmissionEntity
+import com.instructure.pandautils.room.studentdb.entities.CreatePendingSubmissionCommentEntity
+import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
+import com.instructure.pandautils.room.studentdb.entities.SubmissionState
+import com.instructure.pandautils.room.studentdb.entities.daos.CreateFileSubmissionDao
+import com.instructure.pandautils.room.studentdb.entities.daos.CreatePendingSubmissionCommentDao
+import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionCommentFileDao
+import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionDao
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FileUploadUtils
 import com.instructure.pandautils.utils.NotoriousUploader
+import com.instructure.pandautils.utils.orDefault
 import com.instructure.student.R
 import com.instructure.student.activity.NavigationActivity
 import com.instructure.student.events.ShowConfettiEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsSharedEvent
 import com.instructure.student.mobius.common.FlowSource
 import com.instructure.student.mobius.common.trySend
-import com.instructure.pandautils.room.studentdb.entities.CreateFileSubmissionEntity
-import com.instructure.pandautils.room.studentdb.entities.CreatePendingSubmissionCommentEntity
-import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
-import com.instructure.pandautils.room.studentdb.entities.daos.CreateFileSubmissionDao
-import com.instructure.pandautils.room.studentdb.entities.daos.CreatePendingSubmissionCommentDao
-import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionCommentFileDao
-import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionDao
-import com.instructure.pandautils.utils.orDefault
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
@@ -96,7 +101,8 @@ class SubmissionWorker @AssistedInject constructor(
     private val notoriousUploader: NotoriousUploader,
     private val fileUploadManager: FileUploadManager,
     private val groupManager: GroupManager,
-    private val analytics: Analytics
+    private val analytics: Analytics,
+    private val calendarSharedEvents: CalendarSharedEvents
 ) : CoroutineWorker(context, workerParameters) {
 
     private lateinit var notificationBuilder: NotificationCompat.Builder
@@ -141,6 +147,9 @@ class SubmissionWorker @AssistedInject constructor(
 
     private suspend fun uploadText(submission: CreateSubmissionEntity): Result {
         showProgressNotification(submission.assignmentName, submission.id)
+
+        createSubmissionDao.updateSubmissionState(submission.id, SubmissionState.SUBMITTING)
+
         val textToSubmit = try {
             withContext(Dispatchers.IO) {
                 URLEncoder.encode(submission.submissionEntry, "UTF-8")
@@ -166,6 +175,9 @@ class SubmissionWorker @AssistedInject constructor(
 
     private suspend fun uploadUrl(submission: CreateSubmissionEntity, isLti: Boolean): Result {
         showProgressNotification(submission.assignmentName, submission.id)
+
+        createSubmissionDao.updateSubmissionState(submission.id, SubmissionState.SUBMITTING)
+
         val params = RestParams(
             canvasContext = submission.canvasContext,
             domain = apiPrefs.overrideDomains[submission.canvasContext.id],
@@ -237,6 +249,7 @@ class SubmissionWorker @AssistedInject constructor(
                     putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
                     submission.mediaType?.let { putString(AnalyticsParamConstants.MEDIA_TYPE, it) }
                     submission.mediaSource?.let { putString(AnalyticsParamConstants.MEDIA_SOURCE, it) }
+                    putInt(AnalyticsParamConstants.RETRY, if (submission.retryCount > 0) 1 else 0)
                 })
 
                 showCompleteNotification(
@@ -244,6 +257,14 @@ class SubmissionWorker @AssistedInject constructor(
                     submission,
                     mediaSubmissionResult.dataOrThrow.late
                 )
+
+                coroutineScope {
+                    calendarSharedEvents.sendEvent(
+                        this,
+                        SharedCalendarAction.RefreshToDoList
+                    )
+                }
+
                 Result.success()
             } ?: run {
                 createSubmissionDao.setSubmissionError(true, submission.id)
@@ -252,6 +273,7 @@ class SubmissionWorker @AssistedInject constructor(
                     putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
                     submission.mediaType?.let { putString(AnalyticsParamConstants.MEDIA_TYPE, it) }
                     submission.mediaSource?.let { putString(AnalyticsParamConstants.MEDIA_SOURCE, it) }
+                    putInt(AnalyticsParamConstants.RETRY, if (submission.retryCount > 0) 1 else 0)
                 })
                 Result.failure()
             }
@@ -261,6 +283,7 @@ class SubmissionWorker @AssistedInject constructor(
                 putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
                 submission.mediaType?.let { putString(AnalyticsParamConstants.MEDIA_TYPE, it) }
                 submission.mediaSource?.let { putString(AnalyticsParamConstants.MEDIA_SOURCE, it) }
+                putInt(AnalyticsParamConstants.RETRY, if (submission.retryCount > 0) 1 else 0)
             })
             return Result.failure()
         }
@@ -270,12 +293,14 @@ class SubmissionWorker @AssistedInject constructor(
     private suspend fun uploadFileSubmission(submission: CreateSubmissionEntity): Result {
         showProgressNotification(submission.assignmentName, submission.id)
 
+        createSubmissionDao.updateSubmissionState(submission.id, SubmissionState.UPLOADING_FILES)
+
         val (completed, pending) = createFileSubmissionDao
             .findFilesForSubmissionId(submission.id).partition { it.attachmentId != null }
         val uploadedAttachmentIds = uploadFiles(submission, completed.size, pending)
             ?: return Result.failure() // Cancel submitting if any of the files failed to upload
 
-        // Update the notification to show that we're doing the actual submission now
+        createSubmissionDao.updateSubmissionState(submission.id, SubmissionState.SUBMITTING)
         showProgressNotification(submission.assignmentName, submission.id, alertOnlyOnce = true)
 
         val attachmentIds = completed.mapNotNull { it.attachmentId } + uploadedAttachmentIds
@@ -295,6 +320,14 @@ class SubmissionWorker @AssistedInject constructor(
         return result.dataOrNull?.let {
             deleteSubmissionsForAssignment(submission.assignmentId)
             showCompleteNotification(context, submission, result.dataOrThrow.late)
+
+            coroutineScope {
+                calendarSharedEvents.sendEvent(
+                    this,
+                    SharedCalendarAction.RefreshToDoList
+                )
+            }
+
             Result.success()
         } ?: run {
             createSubmissionDao.setSubmissionError(true, submission.id)
@@ -357,6 +390,7 @@ class SubmissionWorker @AssistedInject constructor(
             }).onSuccess { attachment ->
                 analytics.logEvent(AnalyticsEventConstants.SUBMIT_FILEUPLOAD_SUCCEEDED, Bundle().apply {
                     putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                    putInt(AnalyticsParamConstants.RETRY, if (submission.retryCount > 0) 1 else 0)
                 })
                 updateFileProgress(
                     submission.id,
@@ -379,6 +413,7 @@ class SubmissionWorker @AssistedInject constructor(
             }.onFailure {
                 analytics.logEvent(AnalyticsEventConstants.SUBMIT_FILEUPLOAD_FAILED, Bundle().apply {
                     putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                    putInt(AnalyticsParamConstants.RETRY, if (submission.retryCount > 0) 1 else 0)
                 })
                 runBlocking {
                     handleFileError(submission, index, attachments, it?.message)
@@ -630,6 +665,8 @@ class SubmissionWorker @AssistedInject constructor(
         submission: CreateSubmissionEntity
     ): Result {
         return result.dataOrNull?.let {
+            createSubmissionDao.updateSubmissionState(submission.id, SubmissionState.COMPLETED)
+            createSubmissionDao.setCanvasSubmissionId(submission.id, result.dataOrThrow.id)
             createSubmissionDao.deleteSubmissionById(submission.id)
             if (!result.dataOrThrow.late) showConfetti()
 
@@ -637,54 +674,90 @@ class SubmissionWorker @AssistedInject constructor(
                 Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString -> {
                     analytics.logEvent(AnalyticsEventConstants.SUBMIT_TEXTENTRY_SUCCEEDED, Bundle().apply {
                         putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                        putInt(AnalyticsParamConstants.RETRY, if (submission.retryCount > 0) 1 else 0)
                     })
                 }
                 Assignment.SubmissionType.ONLINE_URL.apiString -> {
                     analytics.logEvent(AnalyticsEventConstants.SUBMIT_URL_SUCCEEDED, Bundle().apply {
                         putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                        putInt(AnalyticsParamConstants.RETRY, if (submission.retryCount > 0) 1 else 0)
                     })
                 }
                 Assignment.SubmissionType.BASIC_LTI_LAUNCH.apiString -> {
                     analytics.logEvent(AnalyticsEventConstants.SUBMIT_STUDIO_SUCCEEDED, Bundle().apply {
                         putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                        putInt(AnalyticsParamConstants.RETRY, if (submission.retryCount > 0) 1 else 0)
                     })
                 }
                 Assignment.SubmissionType.STUDENT_ANNOTATION.apiString -> {
                     analytics.logEvent(AnalyticsEventConstants.SUBMIT_ANNOTATION_SUCCEEDED, Bundle().apply {
                         putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                        putInt(AnalyticsParamConstants.RETRY, if (submission.retryCount > 0) 1 else 0)
                     })
                 }
+            }
+
+            coroutineScope {
+                calendarSharedEvents.sendEvent(
+                    this,
+                    SharedCalendarAction.RefreshToDoList
+                )
             }
 
             Result.success()
         } ?: run {
-            createSubmissionDao.setSubmissionError(true, submission.id)
-            showErrorNotification(context, submission)
+            val failure = (result as DataResult.Fail).failure
+            val errorMessage = failure?.message ?: "Unknown error"
 
-            when (submission.submissionType) {
-                Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString -> {
-                    analytics.logEvent(AnalyticsEventConstants.SUBMIT_TEXTENTRY_FAILED, Bundle().apply {
-                        putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
-                    })
+            val shouldRetry = when (failure) {
+                is Failure.Network -> {
+                    val errorCode = failure.errorCode
+                    errorCode == null || errorCode >= 500
                 }
-                Assignment.SubmissionType.ONLINE_URL.apiString -> {
-                    analytics.logEvent(AnalyticsEventConstants.SUBMIT_URL_FAILED, Bundle().apply {
-                        putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
-                    })
-                }
-                Assignment.SubmissionType.BASIC_LTI_LAUNCH.apiString -> {
-                    analytics.logEvent(AnalyticsEventConstants.SUBMIT_STUDIO_FAILED, Bundle().apply {
-                        putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
-                    })
-                }
-                Assignment.SubmissionType.STUDENT_ANNOTATION.apiString -> {
-                    analytics.logEvent(AnalyticsEventConstants.SUBMIT_ANNOTATION_FAILED, Bundle().apply {
-                        putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
-                    })
-                }
+                is Failure.Exception -> true
+                is Failure.Authorization -> false
+                else -> false
             }
 
-            Result.failure()
+            if (shouldRetry && submission.retryCount < 3) {
+                createSubmissionDao.updateSubmissionState(submission.id, SubmissionState.RETRYING)
+                createSubmissionDao.incrementRetryCount(submission.id, errorMessage)
+                return Result.retry()
+            } else {
+                createSubmissionDao.updateSubmissionState(submission.id, SubmissionState.FAILED)
+                createSubmissionDao.setSubmissionError(true, submission.id)
+                createSubmissionDao.incrementRetryCount(submission.id, errorMessage)
+                showErrorNotification(context, submission)
+
+                when (submission.submissionType) {
+                    Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString -> {
+                        analytics.logEvent(AnalyticsEventConstants.SUBMIT_TEXTENTRY_FAILED, Bundle().apply {
+                            putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                            putInt(AnalyticsParamConstants.RETRY, if (submission.retryCount > 0) 1 else 0)
+                        })
+                    }
+                    Assignment.SubmissionType.ONLINE_URL.apiString -> {
+                        analytics.logEvent(AnalyticsEventConstants.SUBMIT_URL_FAILED, Bundle().apply {
+                            putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                            putInt(AnalyticsParamConstants.RETRY, if (submission.retryCount > 0) 1 else 0)
+                        })
+                    }
+                    Assignment.SubmissionType.BASIC_LTI_LAUNCH.apiString -> {
+                        analytics.logEvent(AnalyticsEventConstants.SUBMIT_STUDIO_FAILED, Bundle().apply {
+                            putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                            putInt(AnalyticsParamConstants.RETRY, if (submission.retryCount > 0) 1 else 0)
+                        })
+                    }
+                    Assignment.SubmissionType.STUDENT_ANNOTATION.apiString -> {
+                        analytics.logEvent(AnalyticsEventConstants.SUBMIT_ANNOTATION_FAILED, Bundle().apply {
+                            putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                            putInt(AnalyticsParamConstants.RETRY, if (submission.retryCount > 0) 1 else 0)
+                        })
+                    }
+                }
+
+                Result.failure()
+            }
         }
     }
 

@@ -257,8 +257,8 @@ fun Assignment.getSubAssignmentSubmissionStateLabel(
     submission?.late.orDefault(),
     submission?.missing.orDefault(),
     !submission?.grade.isNullOrEmpty(),
-    submitted = false, // TODO: Sub-assignments do not have a submittedAt field
-    notSubmitted = false // TODO: Sub-assignments do not have a submittedAt field
+    submission?.submittedAt != null,
+    submission?.submittedAt == null
 )
 
 val Assignment.orderedCheckpoints: List<Checkpoint>

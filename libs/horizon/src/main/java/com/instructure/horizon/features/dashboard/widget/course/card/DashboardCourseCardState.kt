@@ -1,21 +1,34 @@
 package com.instructure.horizon.features.dashboard.widget.course.card
 
-import com.instructure.horizon.horizonui.molecules.StatusChipColor
+import com.instructure.horizon.features.dashboard.widget.DashboardWidgetPageState
 import com.instructure.horizon.model.LearningObjectType
 import java.util.Date
 
 data class DashboardCourseCardState(
-    val chipState: DashboardCourseCardChipState? = null,
     val parentPrograms: List<DashboardCourseCardParentProgramState>? = null,
-    val imageState: DashboardCourseCardImageState? = null,
+    val imageState: DashboardCourseCardImageState = DashboardCourseCardImageState(),
     val title: String? = null,
-    val description: String? = null,
+    val descriptionTitle: String? = null,
+    val descriptionState: DashboardCourseCardDescriptionState? = null,
     val progress: Double? = null,
     val moduleItem: DashboardCourseCardModuleItemState? = null,
-    val buttonState: DashboardCourseCardButtonState? = null,
     val onClickAction: CardClickAction? = null,
-    val lastAccessed: Date? = null,
-)
+    val pageState: DashboardWidgetPageState = DashboardWidgetPageState.Empty,
+) {
+    companion object {
+        val Loading = DashboardCourseCardState(
+            parentPrograms = listOf(DashboardCourseCardParentProgramState("Loading Program", "1", CardClickAction.Action {})),
+            imageState = DashboardCourseCardImageState(imageUrl = "url"),
+            title = "Loading Course Title",
+            progress = 20.0,
+            moduleItem = DashboardCourseCardModuleItemState(
+                moduleItemTitle = "Loading Module Item",
+                moduleItemType = LearningObjectType.PAGE,
+                onClickAction = CardClickAction.Action({})
+            )
+        )
+    }
+}
 
 data class DashboardCourseCardParentProgramState(
     val programName: String,
@@ -31,21 +44,14 @@ data class DashboardCourseCardModuleItemState(
     val onClickAction: CardClickAction,
 )
 
-data class DashboardCourseCardButtonState(
-    val label: String,
-    val onClickAction: CardClickAction,
-    val isLoading: Boolean = false,
-    val action: suspend () -> Unit = { },
-)
-
-data class DashboardCourseCardChipState(
-    val label: String,
-    val color: StatusChipColor,
-)
-
 data class DashboardCourseCardImageState(
     val imageUrl: String? = null,
-    val showPlaceholder: Boolean = false,
+    val showPlaceholder: Boolean = true,
+)
+
+data class DashboardCourseCardDescriptionState(
+    val descriptionTitle: String,
+    val description: String,
 )
 
 sealed class CardClickAction {

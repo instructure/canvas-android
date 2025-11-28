@@ -16,119 +16,108 @@
  */
 package com.instructure.horizon.features.notebook.common.composable
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.horizon.R
 import com.instructure.horizon.features.notebook.common.model.NotebookType
-import com.instructure.horizon.horizonui.foundation.HorizonBorder
 import com.instructure.horizon.horizonui.foundation.HorizonColors
-import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
-import com.instructure.horizon.horizonui.foundation.HorizonSpace
-import com.instructure.horizon.horizonui.foundation.HorizonTypography
-import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.molecules.DropdownChip
+import com.instructure.horizon.horizonui.molecules.DropdownItem
 
 @Composable
 fun NotebookTypeSelect(
-    type: NotebookType,
-    isSelected: Boolean,
-    onSelect: () -> Unit,
-    modifier: Modifier = Modifier
+    selected: NotebookType?,
+    onSelect: (NotebookType?) -> Unit,
+    showIcons: Boolean,
+    showAllOption: Boolean,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    verticalPadding: Dp = 6.dp
 ) {
-    val borderColor = if (isSelected) colorResource(type.color) else HorizonColors.LineAndBorder.containerStroke()
-    val iconColor = if (isSelected) colorResource(type.color) else HorizonColors.Icon.default()
-    val textColor = if (isSelected) colorResource(type.color) else HorizonColors.Text.body()
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-            .clip(HorizonCornerRadius.level2)
-            .border(
-                HorizonBorder.level1(color = borderColor),
-                HorizonCornerRadius.level2
+    val context = LocalContext.current
+    val defaultBackgroundColor = HorizonColors.PrimitivesGrey.grey12()
+    val importantBgColor = HorizonColors.PrimitivesSea.sea12()
+    val confusingBgColor = HorizonColors.PrimitivesRed.red12()
+    val allNotesItem = DropdownItem(
+        value = null as NotebookType?,
+        label = context.getString(R.string.notebookTypeAllNotes),
+        iconRes = R.drawable.menu,
+        iconTint = HorizonColors.Icon.default(),
+        backgroundColor = defaultBackgroundColor
+    )
+    val typeItems = remember {
+        buildList {
+            if (showAllOption) {
+                add(allNotesItem)
+            }
+            add(
+                DropdownItem(
+                    value = NotebookType.Important,
+                    label = context.getString(NotebookType.Important.labelRes),
+                    iconRes = NotebookType.Important.iconRes,
+                    iconTint = Color(context.getColor(NotebookType.Important.color)),
+                    backgroundColor = importantBgColor
+                )
             )
-            .background(Color.White)
-            .clickable {
-                onSelect()
-            },
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.padding(24.dp)
-        ) {
-            Icon(
-                painter = painterResource(type.iconRes),
-                contentDescription = null,
-                tint = iconColor,
-                modifier = Modifier.size(24.dp)
-            )
-
-            HorizonSpace(SpaceSize.SPACE_8)
-
-            Text(
-                text = stringResource(type.labelRes),
-                style = HorizonTypography.buttonTextLarge,
-                color = textColor,
+            add(
+                DropdownItem(
+                    value = NotebookType.Confusing,
+                    label = context.getString(NotebookType.Confusing.labelRes),
+                    iconRes = NotebookType.Confusing.iconRes,
+                    iconTint = Color(context.getColor(NotebookType.Confusing.color)),
+                    backgroundColor = confusingBgColor
+                )
             )
         }
     }
-}
+    val selectedTypeItem =
+        if (selected == null) allNotesItem else typeItems.find { it.value == selected }
 
-@Composable
-@Preview
-private fun NotebookTypeSelectConfusingSelectedPreview() {
-    ContextKeeper.appContext = LocalContext.current
-    NotebookTypeSelect(
-        type = NotebookType.Confusing,
-        isSelected = true,
-        onSelect = {}
+
+    DropdownChip(
+        items = typeItems,
+        selectedItem = selectedTypeItem,
+        onItemSelected = { item -> onSelect(item?.value) },
+        placeholder = stringResource(R.string.notebookFilterTypePlaceholder),
+        dropdownWidth = 178.dp,
+        verticalPadding = verticalPadding,
+        showIconCollapsed = showIcons,
+        enabled = enabled,
+        borderColor = if (showIcons) {
+            selectedTypeItem?.iconTint ?: HorizonColors.LineAndBorder.lineStroke()
+        } else {
+            HorizonColors.LineAndBorder.lineStroke()
+        },
+        contentColor = if (showIcons) {
+            selectedTypeItem?.iconTint ?: HorizonColors.Text.body()
+        } else {
+            HorizonColors.Text.body()
+        },
+        modifier = modifier
     )
 }
 
 @Composable
 @Preview
-private fun NotebookTypeSelectConfusingNotSelectedPreview() {
-    ContextKeeper.appContext = LocalContext.current
-    NotebookTypeSelect(
-        type = NotebookType.Confusing,
-        isSelected = false,
-        onSelect = {}
-    )
+private fun NotebookTypeSelectAllPreview() {
+    NotebookTypeSelect(null, {}, true, true)
 }
 
 @Composable
 @Preview
-private fun NotebookTypeSelectImportantSelectedPreview() {
-    ContextKeeper.appContext = LocalContext.current
-    NotebookTypeSelect(
-        type = NotebookType.Important,
-        isSelected = true,
-        onSelect = {}
-    )
+private fun NotebookTypeSelectImportantPreview() {
+    NotebookTypeSelect(NotebookType.Important, {}, true, true)
 }
 
 @Composable
 @Preview
-private fun NotebookTypeSelectImportantNotSelectedPreview() {
-    ContextKeeper.appContext = LocalContext.current
-    NotebookTypeSelect(
-        type = NotebookType.Important,
-        isSelected = false,
-        onSelect = {}
-    )
+private fun NotebookTypeSelectConfusingPreview() {
+    NotebookTypeSelect(NotebookType.Confusing, {}, true, true)
 }

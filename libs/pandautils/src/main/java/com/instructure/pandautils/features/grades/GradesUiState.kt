@@ -39,7 +39,9 @@ data class GradesUiState(
     val onlyGradedAssignmentsSwitchEnabled: Boolean = true,
     val gradeText: String = "",
     val isGradeLocked: Boolean = false,
-    val snackbarMessage: String? = null
+    val snackbarMessage: String? = null,
+    val searchQuery: String = "",
+    val isSearchExpanded: Boolean = false
 )
 
 data class AssignmentGroupUiState(
@@ -97,6 +99,8 @@ sealed class GradesAction {
     data class AssignmentClick(val id: Long) : GradesAction()
     data object SnackbarDismissed : GradesAction()
     data class ToggleCheckpointsExpanded(val assignmentId: Long) : GradesAction()
+    data object ToggleSearch : GradesAction()
+    data class SearchQueryChanged(val query: String) : GradesAction()
 }
 
 sealed class GradesViewModelAction {

@@ -425,8 +425,8 @@
     <string name="submitted_late">Entregado con retraso</string>
     <string name="havent_submitted_yet">Aún no has entregado</string>
     <string name="havent_been_graded">No has sido evaluado</string>
-    <string name="scored_less_than">Has obtenido una puntuación inferior a&#8230;</string>
-    <string name="scored_more_than">Has obtenido una puntuación superior a&#8230;</string>
+    <string name="scored_less_than">Puntuación inferior a</string>
+    <string name="scored_more_than">Puntuación superior a</string>
     <string name="scored_less_than_value">Han obtenido una puntuación inferior a %s</string>
     <string name="scored_more_than_value">Han obtenido una puntuación superior a %s</string>
     <string name="add_comment">Añadir comentario</string>

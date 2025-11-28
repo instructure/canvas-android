@@ -277,6 +277,7 @@
     <string name="checkBoxFinalGradeOption">Căn cứ theo bài tập đã được chấm điểm</string>
     <string name="checkBoxWhatIfGradeOption">Hiển Thị Điểm Giả Định</string>
     <string name="whatIfDialogText">Điểm Giả Định</string>
+    <string name="whatIfScoreExceedsMaximum">Điểm không được vượt quá điểm thành phần tối đa</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s trên tổng số %2$s điểm thành phần, %3$s</string>
     <string name="inbox">Hộp Thư Đến</string>
@@ -2053,6 +2054,8 @@
     <string name="allAssignments">Tất Cả Bài Tập</string>
     <string name="statusFilter">Bộ Lọc Trạng Thái</string>
     <string name="a11y_contentDescription_filter">Lọc</string>
+    <string name="a11y_filter_active">Bộ lọc đang hoạt động</string>
+    <string name="a11y_filter_inactive">Bộ lọc không hoạt động</string>
     <string name="a11y_contentDescription_postPolicy">Chính sách đăng bài</string>
     <string name="late">Trễ</string>
     <string name="a11y_contentDescription_expand">Mở Rộng</string>
@@ -2141,4 +2144,20 @@
     <string name="a11y_discussion_checkpoints">Điểm Kiểm Tra Thảo Luận</string>
     <string name="multipleDueDates">Nhiều Ngày Đến Hạn</string>
     <string name="courseConcludedError">Các khóa học đã kết thúc. Không thể gửi tin nhắn!</string>
+    <string name="openInDetailView">Mở trong Chế Độ Xem Chi Tiết</string>
+    <string name="immersiveView">Chế độ xem nhập vai</string>
+    <string name="statuses">Các Trạng Thái</string>
+    <string name="precise_filtering">Lọc chính xác</string>
+    <string name="differentiation_tags">Thẻ phân biệt</string>
+    <string name="students_without_differentiation_tags">Sinh viên không có Thẻ phân biệt</string>
+    <string name="sort_by">Sắp xếp theo</string>
+    <string name="student_sortable_name">Tên sinh viên có thể sắp xếp được</string>
+    <string name="student_name">Tên sinh viên</string>
+    <string name="submission_date">Ngày nộp</string>
+    <string name="submission_status">Trạng thái nộp</string>
+    <string name="write_score_here">Viết điểm ở đây</string>
+    <string name="scored_more_than_with_max">Đạt Trên / %s điểm thành phần</string>
+    <string name="scored_less_than_with_max">Đạt Dưới / %s điểm thành phần</string>
+    <string name="scored_between_values">Đã chấm điểm %1$s - %2$s</string>
+    <string name="multiple_filters">Nhiều bộ lọc</string>
 </resources>
