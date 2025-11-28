@@ -424,8 +424,8 @@
     <string name="submitted_late">Skilað seint</string>
     <string name="havent_submitted_yet">Hafa ekki skilað enn</string>
     <string name="havent_been_graded">Hafa ekki verið metin</string>
-    <string name="scored_less_than">Fékk lægri einkunn en&#8230;</string>
-    <string name="scored_more_than">Fékk hærri einkunn en&#8230;</string>
+    <string name="scored_less_than">Lægri einkunn en</string>
+    <string name="scored_more_than">Hærri einkunn en</string>
     <string name="scored_less_than_value">Fékk lægri einkunn en %s</string>
     <string name="scored_more_than_value">Fékk hærri einkunn en %s</string>
     <string name="add_comment">Bæta við athugasemd</string>

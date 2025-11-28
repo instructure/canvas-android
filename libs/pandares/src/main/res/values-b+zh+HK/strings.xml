@@ -272,6 +272,7 @@
     <string name="checkBoxFinalGradeOption">基於已評分的作業列表</string>
     <string name="checkBoxWhatIfGradeOption">顯示可能得分</string>
     <string name="whatIfDialogText">可能得分</string>
+    <string name="whatIfScoreExceedsMaximum">得分不可超過最高分</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">得分為 %1$s，滿分為 %2$s，%3$s</string>
     <string name="inbox">收件匣</string>
@@ -2017,6 +2018,8 @@
     <string name="allAssignments">所有作業列表</string>
     <string name="statusFilter">狀態篩選器</string>
     <string name="a11y_contentDescription_filter">篩選器</string>
+    <string name="a11y_filter_active">篩選器已啟用</string>
+    <string name="a11y_filter_inactive">篩選器已停用</string>
     <string name="a11y_contentDescription_postPolicy">貼文政策</string>
     <string name="late">逾期</string>
     <string name="a11y_contentDescription_expand">展開</string>
@@ -2104,4 +2107,20 @@
     <string name="a11y_discussion_checkpoints">討論區檢查點</string>
     <string name="multipleDueDates">多個截止日期</string>
     <string name="courseConcludedError">課程結束。無法傳送訊息！</string>
+    <string name="openInDetailView">在詳細資料視圖中開啟</string>
+    <string name="immersiveView">沉浸式視圖</string>
+    <string name="statuses">狀態</string>
+    <string name="precise_filtering">精確篩選</string>
+    <string name="differentiation_tags">差異化標籤</string>
+    <string name="students_without_differentiation_tags">沒有差異化標籤的學生</string>
+    <string name="sort_by">排序依據</string>
+    <string name="student_sortable_name">可排序的學生姓名</string>
+    <string name="student_name">學生姓名</string>
+    <string name="submission_date">提交項目日期</string>
+    <string name="submission_status">提交項目狀態</string>
+    <string name="write_score_here">在此寫下分數</string>
+    <string name="scored_more_than_with_max">得分高於/%s 分</string>
+    <string name="scored_less_than_with_max">得分低於/%s 分</string>
+    <string name="scored_between_values">%1$s - %2$s 分</string>
+    <string name="multiple_filters">多個篩選器</string>
 </resources>

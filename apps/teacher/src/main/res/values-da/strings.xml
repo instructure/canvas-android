@@ -423,8 +423,8 @@
     <string name="submitted_late">Afleveret sent</string>
     <string name="havent_submitted_yet">Jeg har ikke afleveret endnu</string>
     <string name="havent_been_graded">Jeg har ikke fået karakter</string>
-    <string name="scored_less_than">Fik mindre end &#8230;</string>
-    <string name="scored_more_than">Fik mere end &#8230;</string>
+    <string name="scored_less_than">Scorede mindre end</string>
+    <string name="scored_more_than">Scorede mere end</string>
     <string name="scored_less_than_value">Fik mindre end %s</string>
     <string name="scored_more_than_value">Fik mere end %s</string>
     <string name="add_comment">Tilføj kommentar</string>

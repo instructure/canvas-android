@@ -277,6 +277,7 @@
     <string name="checkBoxFinalGradeOption">Com base em tarefas classificadas</string>
     <string name="checkBoxWhatIfGradeOption">Apresentar Pontuação Potencial</string>
     <string name="whatIfDialogText">Pontuação Potencial</string>
+    <string name="whatIfScoreExceedsMaximum">A pontuação não pode exceder o máximo de pontos</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s de %2$s pontos, %3$s</string>
     <string name="inbox">Caixa de entrada</string>
@@ -2052,6 +2053,8 @@
     <string name="allAssignments">Todas as Tarefas</string>
     <string name="statusFilter">Filtro de estado</string>
     <string name="a11y_contentDescription_filter">Filtrar</string>
+    <string name="a11y_filter_active">Filtrar ativo</string>
+    <string name="a11y_filter_inactive">Filtrar inativo</string>
     <string name="a11y_contentDescription_postPolicy">Postar políticas</string>
     <string name="late">Atrasado</string>
     <string name="a11y_contentDescription_expand">Expandir</string>
@@ -2140,4 +2143,20 @@
     <string name="a11y_discussion_checkpoints">Pontos de controlo do debate</string>
     <string name="multipleDueDates">Datas de limite múltiplas</string>
     <string name="courseConcludedError">Disciplina concluída. Não é possível enviar mensagens!</string>
+    <string name="openInDetailView">Abrir em Detalhes</string>
+    <string name="immersiveView">Visualização imersiva</string>
+    <string name="statuses">Estado</string>
+    <string name="precise_filtering">Filtragem precisa</string>
+    <string name="differentiation_tags">Etiquetas de diferenciação</string>
+    <string name="students_without_differentiation_tags">Alunos sem etiquetas de diferenciação</string>
+    <string name="sort_by">Classificar por</string>
+    <string name="student_sortable_name">Nome classificável do aluno</string>
+    <string name="student_name">Nome do aluno</string>
+    <string name="submission_date">Data de submissão</string>
+    <string name="submission_status">Estado da submissão</string>
+    <string name="write_score_here">Escreva a pontuação aqui</string>
+    <string name="scored_more_than_with_max">Pontuou mais que / %s pts</string>
+    <string name="scored_less_than_with_max">Pontuou menos que / %s pts</string>
+    <string name="scored_between_values">Pontuado %1$s - %2$s</string>
+    <string name="multiple_filters">Vários filtros</string>
 </resources>

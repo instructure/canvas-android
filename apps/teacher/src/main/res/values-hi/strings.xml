@@ -425,8 +425,8 @@
     <string name="submitted_late">विलंब से सबमिट किया गया</string>
     <string name="havent_submitted_yet">अभी तक सबमिट नहीं किया गया है</string>
     <string name="havent_been_graded">अभी तक ग्रेड नहीं किया गया है</string>
-    <string name="scored_less_than">&#8230; से कम अंक प्राप्त हुए</string>
-    <string name="scored_more_than">&#8230; से अधिक अंक प्राप्त हुए</string>
+    <string name="scored_less_than">इस से कम अंक मिले:</string>
+    <string name="scored_more_than">इस से ज़्यादा अंक मिले:</string>
     <string name="scored_less_than_value">%s से कम अंक प्राप्त हुए</string>
     <string name="scored_more_than_value">%s से अधिक अंक प्राप्त हुए</string>
     <string name="add_comment">टिप्पणी जोड़ें</string>

@@ -425,8 +425,8 @@
     <string name="submitted_late">Diserahkan Terlambat</string>
     <string name="havent_submitted_yet">Belum Diserahkan</string>
     <string name="havent_been_graded">Belum Dinilai</string>
-    <string name="scored_less_than">Mendapat Skor Kurang Dari &#8230;</string>
-    <string name="scored_more_than">Mendapat Skor Lebih Dari &#8230;</string>
+    <string name="scored_less_than">Nilai Kurang dari</string>
+    <string name="scored_more_than">Nilai Lebih dari</string>
     <string name="scored_less_than_value">Mendapat Skor Kurang Dari %s</string>
     <string name="scored_more_than_value">Mendapat Skor Lebih Dari %s</string>
     <string name="add_comment">Tambah Komentar</string>
