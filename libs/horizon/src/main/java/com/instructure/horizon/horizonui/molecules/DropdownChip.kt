@@ -160,21 +160,23 @@ fun <T> DropdownChip(
             }
         }
 
-        InputDropDownPopup(
-            isMenuOpen = isMenuOpen,
-            options = items,
-            width = width,
-            verticalOffsetPx = heightInPx,
-            onMenuOpenChanged = { isMenuOpen = it },
-            onOptionSelected = { item ->
-                if (selectedItem != item) {
-                    onItemSelected(item)
+        if (enabled) {
+            InputDropDownPopup(
+                isMenuOpen = isMenuOpen,
+                options = items,
+                width = width,
+                verticalOffsetPx = heightInPx,
+                onMenuOpenChanged = { isMenuOpen = it },
+                onOptionSelected = { item ->
+                    if (selectedItem != item) {
+                        onItemSelected(item)
+                    }
+                },
+                item = { item ->
+                    DropdownChipItem(item, selectedItem)
                 }
-            },
-            item = { item ->
-                DropdownChipItem(item, selectedItem)
-            }
-        )
+            )
+        }
     }
 }
 

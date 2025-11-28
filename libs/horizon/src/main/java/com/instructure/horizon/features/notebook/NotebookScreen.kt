@@ -334,10 +334,10 @@ private fun NoteContent(
             .fillMaxWidth()
             .horizonBorder(
                 colorResource(note.type.color).copy(alpha = 0.1f),
-                12.dp,
+                6.dp,
                 1.dp,
                 1.dp,
-                12.dp,
+                6.dp,
                 16.dp
             )
             .background(
