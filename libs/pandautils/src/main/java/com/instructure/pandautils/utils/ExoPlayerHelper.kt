@@ -251,5 +251,18 @@ class ExoAgent private constructor(val uri: Uri) {
         fun releaseAllAgents() {
             agentInstances.values.forEach { it.release() }
         }
+
+        /** Pauses all agents except the one associated with the specified Uri */
+        fun pauseAllOtherAgents(currentUri: Uri) {
+            agentInstances.forEach { (uriString, agent) ->
+                if (uriString != currentUri.toString()) {
+                    agent.mPlayer?.let {
+                        if (it.isPlaying) {
+                            it.playWhenReady = false
+                        }
+                    }
+                }
+            }
+        }
     }
 }
