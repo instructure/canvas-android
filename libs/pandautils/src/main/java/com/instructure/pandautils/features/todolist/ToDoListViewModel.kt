@@ -497,8 +497,8 @@ class ToDoListViewModel @Inject constructor(
                 !filters.calendarEvents &&
                 !filters.showCompleted &&
                 !filters.favoriteCourses &&
-                filters.pastDateRange == DateRangeSelection.ONE_WEEK &&
-                filters.futureDateRange == DateRangeSelection.ONE_WEEK
+                filters.pastDateRange == DateRangeSelection.FOUR_WEEKS &&
+                filters.futureDateRange == DateRangeSelection.THIS_WEEK
 
         if (isDefaultFilter) {
             analytics.logEvent(AnalyticsEventConstants.TODO_LIST_LOADED_DEFAULT_FILTER)
@@ -517,6 +517,6 @@ class ToDoListViewModel @Inject constructor(
 
     private fun isFilterApplied(filters: ToDoFilterEntity): Boolean {
         return filters.personalTodos || filters.calendarEvents || filters.showCompleted || filters.favoriteCourses
-                || filters.pastDateRange != DateRangeSelection.ONE_WEEK || filters.futureDateRange != DateRangeSelection.ONE_WEEK
+                || filters.pastDateRange != DateRangeSelection.FOUR_WEEKS || filters.futureDateRange != DateRangeSelection.THIS_WEEK
     }
 }

@@ -120,8 +120,8 @@ class ToDoListViewModelTest {
             calendarEvents = true,
             showCompleted = true,  // Important: show completed items in tests by default
             favoriteCourses = false,
-            pastDateRange = DateRangeSelection.ONE_WEEK,
-            futureDateRange = DateRangeSelection.ONE_WEEK
+            pastDateRange = DateRangeSelection.FOUR_WEEKS,
+            futureDateRange = DateRangeSelection.THIS_WEEK
         )
         coEvery { toDoFilterDao.findByUser(any(), any()) } returns defaultTestFilter
     }
@@ -1177,8 +1177,8 @@ class ToDoListViewModelTest {
             calendarEvents = false,
             showCompleted = false,
             favoriteCourses = false,
-            pastDateRange = DateRangeSelection.ONE_WEEK,
-            futureDateRange = DateRangeSelection.ONE_WEEK
+            pastDateRange = DateRangeSelection.FOUR_WEEKS,
+            futureDateRange = DateRangeSelection.THIS_WEEK
         )
 
         coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
@@ -1276,8 +1276,8 @@ class ToDoListViewModelTest {
             calendarEvents = false,
             showCompleted = false,
             favoriteCourses = false,
-            pastDateRange = DateRangeSelection.ONE_WEEK,
-            futureDateRange = DateRangeSelection.ONE_WEEK
+            pastDateRange = DateRangeSelection.FOUR_WEEKS,
+            futureDateRange = DateRangeSelection.THIS_WEEK
         )
 
         coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())

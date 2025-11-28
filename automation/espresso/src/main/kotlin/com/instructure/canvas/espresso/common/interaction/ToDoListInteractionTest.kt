@@ -262,6 +262,13 @@ abstract class ToDoListInteractionTest : CanvasComposeTest() {
         goToToDoList(data)
 
         composeTestRule.waitForIdle()
+
+        // Ensure the assignment is visible by setting future range to cover 3 days ahead
+        toDoListPage.clickFilterButton()
+        toDoFilterPage.selectFutureDateRange(R.string.todoFilterNextWeek)
+        toDoFilterPage.clickDone()
+
+        composeTestRule.waitForIdle()
         toDoListPage.assertItemDisplayed(assignment.name!!)
         toDoListPage.clickDateBadge(dayOfMonth)
 
@@ -475,13 +482,13 @@ abstract class ToDoListInteractionTest : CanvasComposeTest() {
         val course = data.courses.values.first()
         val calendar = Calendar.getInstance()
 
-        // Create assignment 2 weeks ago
-        calendar.add(Calendar.WEEK_OF_YEAR, -2)
-        val twoWeeksAgo = calendar.time
+        // Create assignment 3 weeks ago
+        calendar.add(Calendar.WEEK_OF_YEAR, -3)
+        val threeWeeksAgo = calendar.time
         val oldAssignment = data.addAssignment(
             course.id,
             name = "Old Assignment",
-            dueAt = twoWeeksAgo.toApiString()
+            dueAt = threeWeeksAgo.toApiString()
         )
 
         // Create assignment today
@@ -496,18 +503,29 @@ abstract class ToDoListInteractionTest : CanvasComposeTest() {
 
         composeTestRule.waitForIdle()
 
-        // By default, past date range is "Last Week" so assignment from 2 weeks ago should be hidden
+        // By default, past date range is "4 Weeks Ago" so assignment from 3 weeks ago should be visible
         toDoListPage.assertItemDisplayed(todayAssignment.name!!)
-        toDoListPage.assertItemNotDisplayed(oldAssignment.name!!)
+        toDoListPage.assertItemDisplayed(oldAssignment.name!!)
 
-        // Change past date range to "2 Weeks Ago"
+        // Change past date range to "Last Week" to hide the older assignment
         toDoListPage.clickFilterButton()
-        toDoFilterPage.selectPastDateRange(R.string.todoFilterTwoWeeks)
+        toDoFilterPage.selectPastDateRange(R.string.todoFilterLastWeek)
         toDoFilterPage.clickDone()
 
         composeTestRule.waitForIdle()
 
-        // Now both assignments should be visible
+        // Assignment from 3 weeks ago should now be hidden (outside 1-week range)
+        toDoListPage.assertItemDisplayed(todayAssignment.name!!)
+        toDoListPage.assertItemNotDisplayed(oldAssignment.name!!)
+
+        // Change past date range to "4 Weeks Ago" to show the older assignment again
+        toDoListPage.clickFilterButton()
+        toDoFilterPage.selectPastDateRange(R.string.todoFilterFourWeeks)
+        toDoFilterPage.clickDone()
+
+        composeTestRule.waitForIdle()
+
+        // Assignment from 3 weeks ago should now be visible again (within 4-week range)
         toDoListPage.assertItemDisplayed(todayAssignment.name!!)
         toDoListPage.assertItemDisplayed(oldAssignment.name!!)
     }
