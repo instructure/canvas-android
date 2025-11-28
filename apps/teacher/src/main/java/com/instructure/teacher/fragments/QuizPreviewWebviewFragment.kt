@@ -107,6 +107,7 @@ class QuizPreviewWebviewFragment : InternalWebViewFragment() {
         @JvmStatic val TITLE = "title"
 
         fun newInstance(args: Bundle) = QuizPreviewWebviewFragment().apply {
+            arguments = args
             url = args.getString(URL)!!
             title = args.getString(TITLE)!!
         }
@@ -116,6 +117,7 @@ class QuizPreviewWebviewFragment : InternalWebViewFragment() {
             args.putString(URL, url)
             args.putString(TITLE, title)
             args.putBoolean(DARK_TOOLBAR, false)
+            args.putBoolean(AUTHENTICATE, true)
             return args
         }
     }
