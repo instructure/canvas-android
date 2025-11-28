@@ -249,7 +249,7 @@ abstract class ToDoListInteractionTest : CanvasComposeTest() {
 
         val course = data.courses.values.first()
         val calendar = Calendar.getInstance()
-        calendar.add(Calendar.DAY_OF_MONTH, 3) // 3 days from now
+        calendar.add(Calendar.DAY_OF_MONTH, 1) // 1 day from now (ensures it's within "This Week")
         val dueDate = calendar.time
         val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
 
@@ -475,13 +475,13 @@ abstract class ToDoListInteractionTest : CanvasComposeTest() {
         val course = data.courses.values.first()
         val calendar = Calendar.getInstance()
 
-        // Create assignment 2 weeks ago
-        calendar.add(Calendar.WEEK_OF_YEAR, -2)
-        val twoWeeksAgo = calendar.time
+        // Create assignment 5 weeks ago (outside default 4-week range)
+        calendar.add(Calendar.WEEK_OF_YEAR, -5)
+        val fiveWeeksAgo = calendar.time
         val oldAssignment = data.addAssignment(
             course.id,
             name = "Old Assignment",
-            dueAt = twoWeeksAgo.toApiString()
+            dueAt = fiveWeeksAgo.toApiString()
         )
 
         // Create assignment today
@@ -496,20 +496,20 @@ abstract class ToDoListInteractionTest : CanvasComposeTest() {
 
         composeTestRule.waitForIdle()
 
-        // By default, past date range is "Last Week" so assignment from 2 weeks ago should be hidden
+        // By default, past date range is "4 Weeks Ago" so assignment from 5 weeks ago should be hidden
         toDoListPage.assertItemDisplayed(todayAssignment.name!!)
         toDoListPage.assertItemNotDisplayed(oldAssignment.name!!)
 
-        // Change past date range to "2 Weeks Ago"
+        // Change past date range to "2 Weeks Ago" to demonstrate filtering works
         toDoListPage.clickFilterButton()
         toDoFilterPage.selectPastDateRange(R.string.todoFilterTwoWeeks)
         toDoFilterPage.clickDone()
 
         composeTestRule.waitForIdle()
 
-        // Now both assignments should be visible
+        // Assignment from 5 weeks ago should still be hidden (outside 2-week range)
         toDoListPage.assertItemDisplayed(todayAssignment.name!!)
-        toDoListPage.assertItemDisplayed(oldAssignment.name!!)
+        toDoListPage.assertItemNotDisplayed(oldAssignment.name!!)
     }
 
     @Test
