@@ -71,6 +71,8 @@ class NotebookViewModel @Inject constructor(
             showFilters = showFilters,
             showCourseFilter = courseId == null,
             navigateToEdit = navigateToEdit,
+            updateShowDeleteConfirmation = ::updateShowDeleteConfirmation,
+            deleteNote = ::deleteNote
         )
     )
     val uiState = _uiState.asStateFlow()
@@ -195,5 +197,21 @@ class NotebookViewModel @Inject constructor(
             savedStateHandle.get<String>(NotebookRoute.Notebook.OBJECT_TYPE) ?: return null
         val objectId = savedStateHandle.get<String>(NotebookRoute.Notebook.OBJECT_ID) ?: return null
         return Pair(objectType, objectId)
+    }
+
+    private fun updateShowDeleteConfirmation(note: Note?) {
+        _uiState.update { it.copy(showDeleteConfirmationForNote = note) }
+    }
+
+    private fun deleteNote(note: Note?) {
+        if (note != null) {
+            viewModelScope.tryLaunch {
+                _uiState.update { it.copy(deleteLoadingNote = note) }
+                repository.deleteNote(note.id)
+                _uiState.update { it.copy(deleteLoadingNote = null, notes = it.notes.filterNot { it == note }) }
+            } catch {
+                _uiState.update { it.copy(deleteLoadingNote = null) }
+            }
+        }
     }
 }

@@ -92,10 +92,10 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
     ) { innerPadding ->
         NavHost(
-            enterTransition = { enterTransition },
-            exitTransition = { exitTransition },
-            popEnterTransition = { popEnterTransition },
-            popExitTransition = { popExitTransition },
+            enterTransition = { enterTransition() },
+            exitTransition = { exitTransition() },
+            popEnterTransition = { popEnterTransition() },
+            popExitTransition = { popExitTransition() },
             modifier = modifier.padding(innerPadding),
             navController = navController,
             startDestination = MainNavigationRoute.Home.route
@@ -114,7 +114,12 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
             composable(MainNavigationRoute.Home.route) {
                 HomeScreen(navController, hiltViewModel<HomeViewModel>())
             }
-            composable<MainNavigationRoute.ModuleItemSequence> {
+            composable<MainNavigationRoute.ModuleItemSequence>(
+                enterTransition = { enterTransition() },
+                exitTransition = { exitTransition() },
+                popEnterTransition = { popEnterTransition() },
+                popExitTransition = { popExitTransition() }
+            ) {
                 val viewModel = hiltViewModel<ModuleItemSequenceViewModel>()
                 val uiState by viewModel.uiState.collectAsState()
                 ModuleItemSequenceScreen(navController, uiState)
@@ -236,3 +241,4 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
         }
     }
 }
+

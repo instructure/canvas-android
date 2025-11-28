@@ -48,6 +48,7 @@ import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlight
 import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedDataTextPosition
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
+import com.instructure.horizon.features.notebook.common.composable.NoteDeleteConfirmationDialog
 import com.instructure.horizon.features.notebook.common.composable.NotebookHighlightedText
 import com.instructure.horizon.features.notebook.common.composable.NotebookTypeSelect
 import com.instructure.horizon.features.notebook.common.model.NotebookType
@@ -99,7 +100,15 @@ fun AddEditNoteScreen(
         if (state.isLoading) {
             AddEditNoteLoading(padding)
         } else {
-            AddEditNoteScreenDeleteConfirmationDialog(state, navController)
+            NoteDeleteConfirmationDialog(
+                showDialog = state.showDeleteConfirmationDialog,
+                onDeleteSelected = {
+                    state.onDeleteNote?.invoke {
+                        navController.popBackStack()
+                    }
+                },
+                dismissDialog = { state.updateDeleteConfirmationDialog(false) }
+            )
             AddEditNoteScreenExitConfirmationDialog(state, navController)
             AddEditNoteContent(state, padding)
         }
@@ -230,30 +239,6 @@ private fun AddEditNoteLoading(padding: PaddingValues) {
             .padding(24.dp)
     ) {
         Spinner(color = HorizonColors.Surface.institution())
-    }
-}
-
-@Composable
-private fun AddEditNoteScreenDeleteConfirmationDialog(
-    state: AddEditNoteUiState,
-    navController: NavHostController
-) {
-    if (state.showDeleteConfirmationDialog) {
-        Modal(
-            ModalDialogState(
-                title = stringResource(R.string.deleteNoteConfirmationTitle),
-                message = stringResource(R.string.deleteNoteConfirmationMessage),
-                primaryButtonTitle = stringResource(R.string.deleteNoteConfirmationDeleteLabel),
-                primaryButtonClick = {
-                    state.updateDeleteConfirmationDialog(false)
-                    state.onDeleteNote?.invoke { navController.popBackStack() }
-                },
-                secondaryButtonTitle = stringResource(R.string.deleteNoteConfirmationCancelLabel),
-                secondaryButtonClick = { state.updateDeleteConfirmationDialog(false) }
-
-            ),
-            onDismiss = { state.updateDeleteConfirmationDialog(false) }
-        )
     }
 }
 

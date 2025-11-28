@@ -34,8 +34,11 @@ import com.instructure.horizon.features.learn.LearnScreen
 import com.instructure.horizon.features.learn.LearnViewModel
 import com.instructure.horizon.features.skillspace.SkillspaceScreen
 import com.instructure.horizon.features.skillspace.SkillspaceViewModel
-import com.instructure.horizon.horizonui.animation.mainEnterTransition
-import com.instructure.horizon.horizonui.animation.mainExitTransition
+import com.instructure.horizon.horizonui.animation.NavigationTransitionAnimation
+import com.instructure.horizon.horizonui.animation.enterTransition
+import com.instructure.horizon.horizonui.animation.exitTransition
+import com.instructure.horizon.horizonui.animation.popEnterTransition
+import com.instructure.horizon.horizonui.animation.popExitTransition
 import com.instructure.horizon.horizonui.showroom.ShowroomContent
 import com.instructure.horizon.horizonui.showroom.ShowroomItem
 import com.instructure.horizon.horizonui.showroom.showroomItems
@@ -64,10 +67,10 @@ sealed class HomeNavigationRoute(val route: String) {
 fun HomeNavigation(navController: NavHostController, mainNavController: NavHostController, modifier: Modifier = Modifier) {
     NavHost(
         navController,
-        enterTransition = { mainEnterTransition },
-        exitTransition = { mainExitTransition },
-        popEnterTransition = { mainEnterTransition },
-        popExitTransition = { mainExitTransition },
+        enterTransition = { enterTransition(NavigationTransitionAnimation.SCALE) },
+        exitTransition = { exitTransition(NavigationTransitionAnimation.SCALE) },
+        popEnterTransition = { popEnterTransition(NavigationTransitionAnimation.SCALE) },
+        popExitTransition = { popExitTransition(NavigationTransitionAnimation.SCALE) },
         startDestination = HomeNavigationRoute.Dashboard.route, modifier = modifier
     ) {
         composable(HomeNavigationRoute.Dashboard.route) {

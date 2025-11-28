@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.instructure.horizon.R
 import com.instructure.horizon.features.notebook.common.model.NotebookType
@@ -37,6 +38,8 @@ fun NotebookTypeSelect(
     showIcons: Boolean,
     showAllOption: Boolean,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    verticalPadding: Dp = 6.dp
 ) {
     val context = LocalContext.current
     val defaultBackgroundColor = HorizonColors.PrimitivesGrey.grey12()
@@ -84,8 +87,9 @@ fun NotebookTypeSelect(
         onItemSelected = { item -> onSelect(item?.value) },
         placeholder = stringResource(R.string.notebookFilterTypePlaceholder),
         dropdownWidth = 178.dp,
-        verticalPadding = 6.dp,
+        verticalPadding = verticalPadding,
         showIconCollapsed = showIcons,
+        enabled = enabled,
         borderColor = if (showIcons) {
             selectedTypeItem?.iconTint ?: HorizonColors.LineAndBorder.lineStroke()
         } else {
