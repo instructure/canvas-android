@@ -215,6 +215,9 @@ abstract class BaseViewMediaActivity : BaseCanvasActivity() {
     override fun onResume() {
         super.onResume()
 
+        // Pause all other playing videos to prevent multiple videos playing simultaneously
+        ExoAgent.pauseAllOtherAgents(mUri)
+
         val fileFolderDeletedEvent = EventBus.getDefault().getStickyEvent(FileFolderDeletedEvent::class.java)
         if (fileFolderDeletedEvent != null)
             finish()
