@@ -49,6 +49,10 @@ fun BasePage.withAncestor(id: Int): Matcher<View> = ViewMatchers.isDescendantOfA
 
 fun BasePage.withAncestor(matcher: Matcher<View>): Matcher<View> = ViewMatchers.isDescendantOfA(matcher)
 
+fun BasePage.withChild(id: Int): Matcher<View> = ViewMatchers.withChild(withId(id))
+
+fun BasePage.withChild(matcher: Matcher<View>): Matcher<View> = ViewMatchers.withChild(matcher)
+
 fun BasePage.withDescendant(descendantMatcher: Matcher<View>): Matcher<View> = ViewMatchers.hasDescendant(descendantMatcher)
 
 fun BasePage.withText(arg0: String): Matcher<View> = ViewMatchers.withText(arg0)

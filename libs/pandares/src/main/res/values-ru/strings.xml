@@ -287,6 +287,7 @@
     <string name="checkBoxFinalGradeOption">На основе оцененных заданий</string>
     <string name="checkBoxWhatIfGradeOption">Показать возможную оценку</string>
     <string name="whatIfDialogText">Возможная оценка</string>
+    <string name="whatIfScoreExceedsMaximum">Оценка не может превышать максимальное количество баллов</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s из %2$s баллов, %3$s</string>
     <string name="inbox">Входящие</string>
@@ -2122,6 +2123,8 @@
     <string name="allAssignments">Все задания</string>
     <string name="statusFilter">Фильтр статуса</string>
     <string name="a11y_contentDescription_filter">Фильтровать</string>
+    <string name="a11y_filter_active">Фильтр активен</string>
+    <string name="a11y_filter_inactive">Фильтр неактивен</string>
     <string name="a11y_contentDescription_postPolicy">Политика публикации</string>
     <string name="late">Поздно</string>
     <string name="a11y_contentDescription_expand">Развернуть</string>
@@ -2212,4 +2215,20 @@
     <string name="a11y_discussion_checkpoints">Контрольные точки обсуждения</string>
     <string name="multipleDueDates">Множественные даты выполнения</string>
     <string name="courseConcludedError">Курс завершен. Невозможно отправить сообщение!</string>
+    <string name="openInDetailView">Открыть в подробном представлении</string>
+    <string name="immersiveView">Иммерсивное представление</string>
+    <string name="statuses">Статусы</string>
+    <string name="precise_filtering">Точная фильтрация</string>
+    <string name="differentiation_tags">Теги дифференциации</string>
+    <string name="students_without_differentiation_tags">Учащиеся без тегов дифференциации</string>
+    <string name="sort_by">Сортировать по</string>
+    <string name="student_sortable_name">Сортируемое имя учащегося</string>
+    <string name="student_name">Имя учащегося</string>
+    <string name="submission_date">Данные отправки</string>
+    <string name="submission_status">Статус отправки</string>
+    <string name="write_score_here">Укажите оценку здесь</string>
+    <string name="scored_more_than_with_max">Оценено больше чем / %s пунктов</string>
+    <string name="scored_less_than_with_max">Оценено меньше чем / %s пунктов</string>
+    <string name="scored_between_values">Оценено %1$s - %2$s</string>
+    <string name="multiple_filters">Несколько фильтров</string>
 </resources>

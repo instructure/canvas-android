@@ -65,7 +65,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.ErrorContent
@@ -75,7 +74,7 @@ import com.instructure.pandautils.features.calendar.CalendarEventsPageUiState
 import com.instructure.pandautils.features.calendar.CalendarEventsUiState
 import com.instructure.pandautils.features.calendar.EventUiState
 import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.courseOrUserColor
 import com.jakewharton.threetenabp.AndroidThreeTen
 
 private const val PAGE_COUNT = 1000
@@ -184,11 +183,7 @@ fun CalendarEventsPage(
 
 @Composable
 fun CalendarEventItem(eventUiState: EventUiState, onEventClick: (Long) -> Unit, modifier: Modifier = Modifier) {
-    val contextColor = if (eventUiState.canvasContext is User) {
-        Color(ThemePrefs.brandColor)
-    } else {
-        Color(eventUiState.canvasContext.color)
-    }
+    val contextColor = Color(eventUiState.canvasContext.courseOrUserColor)
     Row(
         modifier
             .clickable { onEventClick(eventUiState.plannableId) }

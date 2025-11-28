@@ -45,7 +45,7 @@ class StudentSettingsBehaviour(
             if (apiPrefs.canvasForElementary) {
                 preferencesList.add(1, SettingsItem.HOMEROOM_VIEW)
             }
-            if (BuildConfig.DEBUG) {
+            if (BuildConfig.IS_DEBUG) {
                 preferencesList.add(SettingsItem.ACCOUNT_PREFERENCES)
                 preferencesList.add(SettingsItem.FEATURE_FLAGS)
                 preferencesList.add(SettingsItem.REMOTE_CONFIG)

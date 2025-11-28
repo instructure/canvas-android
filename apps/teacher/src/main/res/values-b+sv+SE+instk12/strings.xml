@@ -425,8 +425,8 @@
     <string name="submitted_late">Sent inskickad</string>
     <string name="havent_submitted_yet">Inte har skickat in ännu</string>
     <string name="havent_been_graded">Har inte blivit bedömd</string>
-    <string name="scored_less_than">Fick sämre resultat än&#8230;</string>
-    <string name="scored_more_than">Fick bättre resultat än&#8230;</string>
+    <string name="scored_less_than">Fick mindre än</string>
+    <string name="scored_more_than">Fick mer än</string>
     <string name="scored_less_than_value">Fick sämre resultat än %s</string>
     <string name="scored_more_than_value">Fick bättre resultat än %s</string>
     <string name="add_comment">Lägg till kommentar</string>

@@ -92,6 +92,7 @@ class ToDoFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInteract
         when (action) {
             is ToDoViewModelAction.RefreshCalendarDay -> {
                 sharedEvents.sendEvent(lifecycleScope, SharedCalendarAction.RefreshDays(listOf(action.date)))
+                sharedEvents.sendEvent(lifecycleScope, SharedCalendarAction.RefreshToDoList)
                 navigateBack()
             }
 

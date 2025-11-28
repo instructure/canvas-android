@@ -18,11 +18,13 @@ package com.instructure.horizon.features.notebook.navigation
 
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import androidx.navigation.navArgument
 import com.instructure.horizon.features.notebook.NotebookScreen
 import com.instructure.horizon.features.notebook.NotebookViewModel
 import com.instructure.horizon.features.notebook.addedit.AddEditNoteScreen
@@ -41,15 +43,42 @@ fun NavGraphBuilder.notebookNavigation(
     navigation(
         route = MainNavigationRoute.Notebook.route,
         startDestination = NotebookRoute.Notebook.route,
-        enterTransition = { enterTransition },
-        exitTransition = { exitTransition },
-        popEnterTransition = { popEnterTransition },
-        popExitTransition = { popExitTransition },
+        enterTransition = { enterTransition() },
+        exitTransition = { exitTransition() },
+        popEnterTransition = { popEnterTransition() },
+        popExitTransition = { popExitTransition() },
     ) {
-        composable(NotebookRoute.Notebook.route) {
+        composable(
+            route = NotebookRoute.Notebook.route,
+            arguments = listOf(
+                navArgument(NotebookRoute.Notebook.COURSE_ID) {
+                    type = NavType.StringType
+                    nullable = true
+                },
+                navArgument(NotebookRoute.Notebook.OBJECT_TYPE) {
+                    type = NavType.StringType
+                    nullable = true
+                },
+                navArgument(NotebookRoute.Notebook.OBJECT_ID) {
+                    type = NavType.StringType
+                    nullable = true
+                },
+                navArgument(NotebookRoute.Notebook.SHOW_TOP_BAR) {
+                    type = NavType.BoolType
+                    defaultValue = true
+                },
+                navArgument(NotebookRoute.Notebook.SHOW_FILTERS) {
+                    type = NavType.BoolType
+                    defaultValue = true
+                },
+                navArgument(NotebookRoute.Notebook.NAVIGATE_TO_EDIT) {
+                    type = NavType.BoolType
+                    defaultValue = false
+                }
+            ),
+        ) {
             val viewModel = hiltViewModel<NotebookViewModel>()
-            val uiState by viewModel.uiState.collectAsState()
-            NotebookScreen(navController, uiState)
+            NotebookScreen(navController, viewModel)
         }
         composable<NotebookRoute.AddNotebook> {
             val viewModel = hiltViewModel<AddNoteViewModel>()

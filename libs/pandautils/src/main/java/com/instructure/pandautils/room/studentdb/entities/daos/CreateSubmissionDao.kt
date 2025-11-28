@@ -20,7 +20,9 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
+import com.instructure.pandautils.room.studentdb.entities.SubmissionState
 import kotlinx.coroutines.flow.Flow
+import java.util.Date
 
 @Dao
 interface CreateSubmissionDao {
@@ -105,4 +107,16 @@ interface CreateSubmissionDao {
 
     @Query("DELETE FROM CreateSubmissionEntity WHERE assignmentId = :assignmentId AND userId = :userId AND submissionType = :submissionType AND isDraft = 1")
     suspend fun deleteDraftByAssignmentIdAndType(assignmentId: Long, userId: Long, submissionType: String)
+
+    @Query("UPDATE CreateSubmissionEntity SET submission_state = :state, state_updated_at = :timestamp WHERE id = :id")
+    suspend fun updateSubmissionState(id: Long, state: SubmissionState, timestamp: Date = Date())
+
+    @Query("UPDATE CreateSubmissionEntity SET retry_count = retry_count + 1, last_error_message = :error WHERE id = :id")
+    suspend fun incrementRetryCount(id: Long, error: String?)
+
+    @Query("UPDATE CreateSubmissionEntity SET canvas_submission_id = :submissionId WHERE id = :id")
+    suspend fun setCanvasSubmissionId(id: Long, submissionId: Long)
+
+    @Query("SELECT * FROM CreateSubmissionEntity WHERE submission_state IN (:states)")
+    suspend fun findSubmissionsByState(states: List<SubmissionState>): List<CreateSubmissionEntity>
 }

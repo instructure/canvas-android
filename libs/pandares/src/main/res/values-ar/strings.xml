@@ -296,6 +296,7 @@
     <string name="checkBoxFinalGradeOption">على أساس المهام التي تم تقييمها</string>
     <string name="checkBoxWhatIfGradeOption">عرض النتيجة المفترضة</string>
     <string name="whatIfDialogText">النتيجة المفترضة</string>
+    <string name="whatIfScoreExceedsMaximum">لا يمكن أن تتجاوز الدرجات الحد الأقصى من النقاط</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s من إجمالي %2$s نقاط، %3$s</string>
     <string name="inbox">علبة الوارد</string>
@@ -2191,6 +2192,8 @@
     <string name="allAssignments">كل المهام</string>
     <string name="statusFilter">عامل تصفية الحالة</string>
     <string name="a11y_contentDescription_filter">عامل تصفية</string>
+    <string name="a11y_filter_active">عامل التصفية نشط</string>
+    <string name="a11y_filter_inactive">عامل التصفية غير نشط</string>
     <string name="a11y_contentDescription_postPolicy">سياسة النشر</string>
     <string name="late">متأخر</string>
     <string name="a11y_contentDescription_expand">توسيع</string>
@@ -2283,4 +2286,20 @@
     <string name="a11y_discussion_checkpoints">نقاط تحقق النقاش</string>
     <string name="multipleDueDates">تواريخ استحقاق متعددة</string>
     <string name="courseConcludedError">انتهى المساق. يتعذر إرسال الرسائل!</string>
+    <string name="openInDetailView">فتح في طريقة عرض التفاصيل</string>
+    <string name="immersiveView">طريقة عرض غامرة</string>
+    <string name="statuses">الحالات</string>
+    <string name="precise_filtering">التصفية الدقيقة</string>
+    <string name="differentiation_tags">علامات التمايز</string>
+    <string name="students_without_differentiation_tags">طلاب دون علامات تمايز</string>
+    <string name="sort_by">الفزر حسب</string>
+    <string name="student_sortable_name">اسم الطالب القابل للفرز</string>
+    <string name="student_name">اسم الطالب</string>
+    <string name="submission_date">تاريخ الإرسال</string>
+    <string name="submission_status">حالة الإرسال</string>
+    <string name="write_score_here">اكتب الدرجة هنا</string>
+    <string name="scored_more_than_with_max">تم إحراز نقاط أكثر من / %s من النقاط</string>
+    <string name="scored_less_than_with_max">تم إحراز نقاط أقل من / %s من النقاط</string>
+    <string name="scored_between_values">تم إحراز %1$s - %2$s</string>
+    <string name="multiple_filters">عدة عوامل تصفية</string>
 </resources>

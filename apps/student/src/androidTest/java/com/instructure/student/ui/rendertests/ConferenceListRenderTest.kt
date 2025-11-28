@@ -20,6 +20,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
+import com.instructure.student.mobius.conferences.conference_list.ConferenceHeaderType
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListItemViewState
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListRepositoryFragment
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListViewState
@@ -81,7 +82,11 @@ class ConferenceListRenderTest : StudentRenderTest() {
     fun displaysListItems() {
         val tint = Color.BLUE
         val itemStates = listOf(
-            ConferenceListItemViewState.ConferenceHeader("Header 1"),
+            ConferenceListItemViewState.ConferenceHeader(
+                title = "Header 1",
+                headerType = ConferenceHeaderType.NEW_CONFERENCES,
+                isExpanded = true
+            ),
             ConferenceListItemViewState.ConferenceItem(
                 tint = tint,
                 title = "Conference 1",
@@ -100,7 +105,11 @@ class ConferenceListRenderTest : StudentRenderTest() {
                 conferenceId = 0,
                 isJoinable = false
             ),
-            ConferenceListItemViewState.ConferenceHeader("Header 2"),
+            ConferenceListItemViewState.ConferenceHeader(
+                title = "Header 2",
+                headerType = ConferenceHeaderType.CONCLUDED_CONFERENCES,
+                isExpanded = true
+            ),
             ConferenceListItemViewState.ConferenceItem(
                 tint = tint,
                 title = "Conference 3",

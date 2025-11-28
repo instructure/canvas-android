@@ -54,6 +54,7 @@ class PeopleListPresenter(private val mCanvasContext: CanvasContext?) : SyncPres
             filterCanvasContexts()
         }
     private val mUserList = ArrayList<User>()
+    private var shouldApplyFilterAfterLoad = false
     private var mRun: RecipientRunnable? = null
     // If we try to automate this class the handler might create some issues. Cross that bridge when we come to it
     private val mHandler = Handler()
@@ -78,6 +79,12 @@ class PeopleListPresenter(private val mCanvasContext: CanvasContext?) : SyncPres
         override fun onResponse(response: Response<List<User>>, linkHeaders: LinkHeaders, type: ApiType) {
             data.addOrUpdate(response.body()!!)
             mUserList.addAll(response.body()!!)
+
+            if (shouldApplyFilterAfterLoad && canvasContextList.isNotEmpty()) {
+                shouldApplyFilterAfterLoad = false
+                filterCanvasContexts()
+            }
+
             viewCallback?.checkIfEmpty()
             viewCallback?.onRefreshFinished()
         }
@@ -205,6 +212,19 @@ class PeopleListPresenter(private val mCanvasContext: CanvasContext?) : SyncPres
     fun clearCanvasContextList() {
         canvasContextList.clear()
         refresh(false)
+    }
+
+    fun restoreCanvasContextList(contexts: ArrayList<CanvasContext>) {
+        canvasContextList.clear()
+        canvasContextList.addAll(contexts)
+        shouldApplyFilterAfterLoad = true
+
+        // Load group users for any group contexts
+        for (canvasContext in contexts) {
+            if (CanvasContext.Type.isGroup(canvasContext)) {
+                getGroupUsers(canvasContext)
+            }
+        }
     }
 
     private fun filterCanvasContexts() {

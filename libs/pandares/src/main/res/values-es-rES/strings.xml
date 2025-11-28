@@ -277,6 +277,7 @@
     <string name="checkBoxFinalGradeOption">Basado en actividades evaluadas</string>
     <string name="checkBoxWhatIfGradeOption">Mostrar la puntuación hipotética</string>
     <string name="whatIfDialogText">Puntuación hipotética</string>
+    <string name="whatIfScoreExceedsMaximum">La puntuación no puede superar el máximo de puntos</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s de %2$s puntos, %3$s</string>
     <string name="inbox">Bandeja de entrada</string>
@@ -2054,6 +2055,8 @@
     <string name="allAssignments">Todas las actividades</string>
     <string name="statusFilter">Filtro de estado</string>
     <string name="a11y_contentDescription_filter">Filtrar</string>
+    <string name="a11y_filter_active">Filtro activo</string>
+    <string name="a11y_filter_inactive">Filtro inactivo</string>
     <string name="a11y_contentDescription_postPolicy">Política de publicación</string>
     <string name="late">Atrasado</string>
     <string name="a11y_contentDescription_expand">Expandir</string>
@@ -2142,4 +2145,20 @@
     <string name="a11y_discussion_checkpoints">Puntos de comprobación del foro de discusión</string>
     <string name="multipleDueDates">Varias fechas de entrega</string>
     <string name="courseConcludedError">Asignatura concluida. ¡No se pueden enviar mensajes!</string>
+    <string name="openInDetailView">Abrir en vista detallada</string>
+    <string name="immersiveView">Vista inmersiva</string>
+    <string name="statuses">Estados</string>
+    <string name="precise_filtering">Filtrado preciso</string>
+    <string name="differentiation_tags">Etiquetas de diferenciación</string>
+    <string name="students_without_differentiation_tags">Estudiantes sin etiquetas de diferenciación</string>
+    <string name="sort_by">Ordenar por</string>
+    <string name="student_sortable_name">Nombre ordenable del estudiante</string>
+    <string name="student_name">Nombre del estudiante</string>
+    <string name="submission_date">Fecha de entrega</string>
+    <string name="submission_status">Estado de entrega</string>
+    <string name="write_score_here">Escribe la puntuación aquí</string>
+    <string name="scored_more_than_with_max">Ha obtenido una puntuación superior a / %s puntos</string>
+    <string name="scored_less_than_with_max">Ha obtenido una puntuación inferior a / %s puntos</string>
+    <string name="scored_between_values">Ha obtenido una puntuación de %1$s - %2$s</string>
+    <string name="multiple_filters">Múltiples filtros</string>
 </resources>

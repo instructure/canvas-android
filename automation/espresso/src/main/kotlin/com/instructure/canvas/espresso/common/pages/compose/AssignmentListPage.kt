@@ -19,6 +19,8 @@ package com.instructure.canvas.espresso.common.pages.compose
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
+import androidx.compose.ui.test.hasAnyAncestor
+import androidx.compose.ui.test.hasAnyChild
 import androidx.compose.ui.test.hasAnyDescendant
 import androidx.compose.ui.test.hasAnySibling
 import androidx.compose.ui.test.hasContentDescription
@@ -99,8 +101,8 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
         assertHasAssignmentCommon(assignment.name, assignment.dueAt, null)
     }
 
-    fun assertHasAssignment(assignment: AssignmentApiModel, expectedGrade: String? = null) {
-        assertHasAssignmentCommon(assignment.name, assignment.dueAt, expectedGrade)
+    fun assertHasAssignment(assignment: AssignmentApiModel, expectedGrade: String? = null, assignmentStatus: String? = null) {
+        assertHasAssignmentCommon(assignment.name, assignment.dueAt, expectedGrade, assignmentStatus)
     }
 
     fun assertHasAssignment(assignment: Assignment, expectedGrade: String? = null) {
@@ -113,7 +115,7 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
     }
 
     fun assertHasAssignmentWithCheckpoints(assignmentName: String, dueAtString: String = "No due date", expectedGrade: String? = null) {
-        assertHasAssignmentCommon(assignmentName, dueAtString, expectedGrade, true)
+        assertHasAssignmentCommon(assignmentName, dueAtString, expectedGrade, hasCheckPoints = true)
     }
 
     fun assertAssignmentNotDisplayed(assignmentName: String) {
@@ -160,7 +162,7 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
         composeTestRule.onNode( hasTestTag("checkpointGradeText") and hasText(gradeAdditionalReplies), useUnmergedTree = true).assertIsDisplayed()
     }
 
-    private fun assertHasAssignmentCommon(assignmentName: String, assignmentDueAt: String?, expectedLabel: String? = null, hasCheckPoints : Boolean = false) {
+    private fun assertHasAssignmentCommon(assignmentName: String, assignmentDueAt: String?, expectedGradeLabel: String? = null, assignmentStatus: String? = null, hasCheckPoints : Boolean = false) {
 
        // Check if the assignment is a discussion with checkpoints, if yes, we are expecting 2 due dates for the 2 checkpoints.
        if(hasCheckPoints) {
@@ -199,14 +201,24 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
 
         retryWithIncreasingDelay(times = 10, maxDelay = 4000, catchBlock = { refresh() }) {
             // Check that grade is present, if that is specified
-            if (expectedLabel != null) {
+            if (expectedGradeLabel != null) {
                 composeTestRule.onNode(
                     hasText(assignmentName).and(
-                        hasParent(hasAnyDescendant(hasText(expectedLabel, substring = true)))
+                        hasParent(hasAnyDescendant(hasText(expectedGradeLabel, substring = true)))
                     )
                 )
                     .assertIsDisplayed()
             }
+        }
+
+        if(assignmentStatus != null) {
+            composeTestRule.onNode(
+                hasText(assignmentStatus).and(
+                    hasAnyAncestor(hasAnyChild(hasText(assignmentName)))
+                ),
+                useUnmergedTree = true
+            )
+            .assertIsDisplayed()
         }
     }
 

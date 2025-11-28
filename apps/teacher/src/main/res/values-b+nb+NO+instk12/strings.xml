@@ -425,8 +425,8 @@
     <string name="submitted_late">Levert etter fristen</string>
     <string name="havent_submitted_yet">Ikke sendt inn ennå</string>
     <string name="havent_been_graded">Ikke vurdert</string>
-    <string name="scored_less_than">Scoret mindre enn&#8230;</string>
-    <string name="scored_more_than">Scoret mer enn&#8230;</string>
+    <string name="scored_less_than">Fikk resultat lavere enn</string>
+    <string name="scored_more_than">Fikk resultat høyere enn</string>
     <string name="scored_less_than_value">Dårligere vurdering enn %s</string>
     <string name="scored_more_than_value">Bedre vurdering enn %s</string>
     <string name="add_comment">Legg til kommentar</string>

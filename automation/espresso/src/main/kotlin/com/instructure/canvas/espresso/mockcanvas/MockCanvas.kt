@@ -1113,6 +1113,11 @@ fun MockCanvas.addAssignment(
 ) : Assignment {
     val assignmentId = newItemId()
     val submissionTypeListRawStrings = submissionTypeList.map { it.apiString }
+    val generatedHtmlUrl = if (htmlUrl.isNullOrEmpty()) {
+        "https://$domain/courses/$courseId/assignments/$assignmentId"
+    } else {
+        htmlUrl
+    }
     var assignment = Assignment(
         id = assignmentId,
         assignmentGroupId = assignmentGroupId,
@@ -1138,7 +1143,7 @@ fun MockCanvas.addAssignment(
         ),
         gradingType = gradingType,
         discussionTopicHeader = discussionTopicHeader,
-        htmlUrl = htmlUrl,
+        htmlUrl = generatedHtmlUrl,
         submission = submission,
         checkpoints = checkpoints
     )
@@ -1890,19 +1895,22 @@ fun MockCanvas.addQuizToCourse(
     var assignment : Assignment? = null
 
     // For quizzes that are actual assignments, create an associated Assignment object
-    if(quizType == Quiz.TYPE_ASSIGNMENT) {
+    if (quizType == Quiz.TYPE_ASSIGNMENT) {
+        val assignmentId = newItemId()
+        val assignmentUrl = "https://$domain/api/v1/courses/${course.id}/assignments/$assignmentId"
         assignment = Assignment(
-                id = newItemId(),
-                name = title,
-                description = description,
-                dueAt = dueAt,
-                submissionTypesRaw = listOf("online_quiz"),
-                quizId = quizId,
-                courseId = course.id,
-                lockAt = lockAt,
-                unlockAt = unlockAt,
-                allDates = listOf(AssignmentDueDate(id = newItemId(), dueAt = dueAt, lockAt = lockAt, unlockAt = unlockAt))
-                )
+            id = assignmentId,
+            name = title,
+            description = description,
+            dueAt = dueAt,
+            submissionTypesRaw = listOf("online_quiz"),
+            quizId = quizId,
+            courseId = course.id,
+            lockAt = lockAt,
+            unlockAt = unlockAt,
+            allDates = listOf(AssignmentDueDate(id = newItemId(), dueAt = dueAt, lockAt = lockAt, unlockAt = unlockAt)),
+            htmlUrl = assignmentUrl
+        )
 
         assignments.put(assignment.id, assignment)
     }
