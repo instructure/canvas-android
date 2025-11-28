@@ -52,6 +52,7 @@ import org.threeten.bp.Clock
 import java.util.Locale
 import java.util.TimeZone
 import javax.inject.Singleton
+import kotlin.random.Random
 
 /**
  * Module that provides all the application scope dependencies, that are not related to other module.
@@ -188,5 +189,10 @@ class ApplicationModule {
     @Provides
     fun provideFileCache(): FileCache {
         return FileCache
+    }
+
+    @Provides
+    fun provideRandom(): Random {
+        return Random.Default
     }
 }

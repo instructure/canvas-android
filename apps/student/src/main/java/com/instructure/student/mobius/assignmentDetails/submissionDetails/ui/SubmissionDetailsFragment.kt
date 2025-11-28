@@ -19,6 +19,7 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails.ui
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.pandautils.utils.BooleanArg
 import com.instructure.pandautils.utils.Const
@@ -45,7 +46,7 @@ abstract class SubmissionDetailsFragment : MobiusFragment<SubmissionDetailsModel
     val isObserver by BooleanArg(key = Const.IS_OBSERVER, default = false)
     private val initialSelectedSubmissionAttempt by LongArg(key = Const.SUBMISSION_ATTEMPT)
 
-    override fun makeEffectHandler() = SubmissionDetailsEffectHandler(getRepository())
+    override fun makeEffectHandler() = SubmissionDetailsEffectHandler(getRepository(), getApiPreferences())
 
     override fun makeUpdate() = SubmissionDetailsUpdate()
 
@@ -62,4 +63,6 @@ abstract class SubmissionDetailsFragment : MobiusFragment<SubmissionDetailsModel
     )
 
     abstract fun getRepository(): SubmissionDetailsRepository
+
+    abstract fun getApiPreferences(): ApiPrefs
 }

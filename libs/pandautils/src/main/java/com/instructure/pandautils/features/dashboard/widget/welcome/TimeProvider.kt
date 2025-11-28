@@ -14,9 +14,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.student.features.dashboard.widget.welcome
+package com.instructure.pandautils.features.dashboard.widget.welcome
 
-data class WelcomeWidgetUiState(
-    val greeting: String = "",
-    val message: String = ""
-)
+import java.util.Calendar
+
+interface TimeProvider {
+    fun getCurrentHourOfDay(): Int
+}
+
+class SystemTimeProvider : TimeProvider {
+    override fun getCurrentHourOfDay(): Int {
+        return Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+    }
+}

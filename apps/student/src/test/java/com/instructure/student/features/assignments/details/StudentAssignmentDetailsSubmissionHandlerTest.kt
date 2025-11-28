@@ -69,8 +69,10 @@ class StudentAssignmentDetailsSubmissionHandlerTest {
     fun `Test initial values`() {
         submissionHandler = StudentAssignmentDetailsSubmissionHandler(submissionHelper, studentDb)
         assertEquals(false, submissionHandler.isUploading)
+        assertEquals(false, submissionHandler.isFailed)
         assertEquals(false, submissionHandler.lastSubmissionIsDraft)
         assertEquals(null, submissionHandler.lastSubmissionEntry)
+        assertEquals(null, submissionHandler.lastSubmissionId)
         assertEquals(null, submissionHandler.lastSubmissionAssignmentId)
         assertEquals(null, submissionHandler.lastSubmissionSubmissionType)
     }
@@ -97,7 +99,7 @@ class StudentAssignmentDetailsSubmissionHandlerTest {
             studentDb.submissionDao().findSubmissionsByAssignmentIdLiveData(any(), any())
         } returns liveData
 
-        submissionHandler.addAssignmentSubmissionObserver(mockk(relaxed = true), 0, 0, mockk(relaxed = true), data, {})
+        submissionHandler.addAssignmentSubmissionObserver(mockk(relaxed = true), 0, 0, mockk(relaxed = true), data, {}, {})
 
         liveData.postValue(listOf(getDbSubmission()))
 
@@ -130,7 +132,7 @@ class StudentAssignmentDetailsSubmissionHandlerTest {
         } returns liveData
 
         submissionHandler.addAssignmentSubmissionObserver(
-            mockk(relaxed = true), 0, 0, mockk(relaxed = true), data, {})
+            mockk(relaxed = true), 0, 0, mockk(relaxed = true), data, {}, {})
 
         liveData.postValue(listOf(getDbSubmission()))
         assertTrue(submissionHandler.isUploading)

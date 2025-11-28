@@ -32,6 +32,8 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.calendar.CalendarSharedEvents
+import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.features.todolist.filter.DateRangeSelection
 import com.instructure.pandautils.room.appdatabase.daos.ToDoFilterDao
 import com.instructure.pandautils.room.appdatabase.entities.ToDoFilterEntity
@@ -48,6 +50,7 @@ import io.mockk.unmockkConstructor
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.resetMain
@@ -73,6 +76,7 @@ class ToDoListViewModelTest {
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val analytics: Analytics = mockk(relaxed = true)
     private val toDoListViewModelBehavior: ToDoListViewModelBehavior = mockk(relaxed = true)
+    private val calendarSharedEvents: CalendarSharedEvents = mockk(relaxed = true)
 
     private val testUser = User(id = 123L, name = "Test User")
     private val testDomain = "test.instructure.com"
@@ -104,6 +108,9 @@ class ToDoListViewModelTest {
         every { apiPrefs.user } returns testUser
         every { apiPrefs.fullDomain } returns testDomain
 
+        // Mock CalendarSharedEvents.events flow to return empty flow
+        every { calendarSharedEvents.events } returns MutableSharedFlow()
+
         // Return a default filter that shows everything (including completed items)
         // This prevents tests from accidentally filtering out items
         val defaultTestFilter = ToDoFilterEntity(
@@ -113,8 +120,8 @@ class ToDoListViewModelTest {
             calendarEvents = true,
             showCompleted = true,  // Important: show completed items in tests by default
             favoriteCourses = false,
-            pastDateRange = DateRangeSelection.ONE_WEEK,
-            futureDateRange = DateRangeSelection.ONE_WEEK
+            pastDateRange = DateRangeSelection.FOUR_WEEKS,
+            futureDateRange = DateRangeSelection.THIS_WEEK
         )
         coEvery { toDoFilterDao.findByUser(any(), any()) } returns defaultTestFilter
     }
@@ -1170,8 +1177,8 @@ class ToDoListViewModelTest {
             calendarEvents = false,
             showCompleted = false,
             favoriteCourses = false,
-            pastDateRange = DateRangeSelection.ONE_WEEK,
-            futureDateRange = DateRangeSelection.ONE_WEEK
+            pastDateRange = DateRangeSelection.FOUR_WEEKS,
+            futureDateRange = DateRangeSelection.THIS_WEEK
         )
 
         coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
@@ -1269,8 +1276,8 @@ class ToDoListViewModelTest {
             calendarEvents = false,
             showCompleted = false,
             favoriteCourses = false,
-            pastDateRange = DateRangeSelection.ONE_WEEK,
-            futureDateRange = DateRangeSelection.ONE_WEEK
+            pastDateRange = DateRangeSelection.FOUR_WEEKS,
+            futureDateRange = DateRangeSelection.THIS_WEEK
         )
 
         coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
@@ -1387,9 +1394,177 @@ class ToDoListViewModelTest {
         assertEquals("four_weeks", bundleSlot.captured.getString(AnalyticsParamConstants.FILTER_SELECTED_DATE_RANGE_FUTURE))
     }
 
+    @Test
+    fun `Account-level calendar events are not clickable`() = runTest {
+        val accountCalendarEvent = createPlannerItem(
+            id = 1L,
+            title = "Account Event",
+            plannableType = PlannableType.CALENDAR_EVENT
+        ).copy(contextType = "Account")
+
+        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(listOf(accountCalendarEvent))
+
+        val viewModel = getViewModel()
+
+        val uiState = viewModel.uiState.value
+        val item = uiState.itemsByDate.values.flatten().first()
+
+        assertFalse(item.isClickable)
+        assertEquals(ToDoItemType.CALENDAR_EVENT, item.itemType)
+    }
+
+    @Test
+    fun `Course-level calendar events are clickable`() = runTest {
+        val courseCalendarEvent = createPlannerItem(
+            id = 1L,
+            title = "Course Event",
+            courseId = 1L,
+            plannableType = PlannableType.CALENDAR_EVENT
+        ).copy(contextType = "Course")
+
+        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(listOf(courseCalendarEvent))
+
+        val viewModel = getViewModel()
+
+        val uiState = viewModel.uiState.value
+        val item = uiState.itemsByDate.values.flatten().first()
+
+        assertTrue(item.isClickable)
+        assertEquals(ToDoItemType.CALENDAR_EVENT, item.itemType)
+    }
+
+    @Test
+    fun `User-level calendar events are clickable`() = runTest {
+        val userCalendarEvent = createPlannerItem(
+            id = 1L,
+            title = "User Event",
+            plannableType = PlannableType.CALENDAR_EVENT
+        ).copy(contextType = "User")
+
+        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(listOf(userCalendarEvent))
+
+        val viewModel = getViewModel()
+
+        val uiState = viewModel.uiState.value
+        val item = uiState.itemsByDate.values.flatten().first()
+
+        assertTrue(item.isClickable)
+        assertEquals(ToDoItemType.CALENDAR_EVENT, item.itemType)
+    }
+
+    @Test
+    fun `RefreshToDoList event triggers loadData with forceRefresh`() = runTest {
+        val courses = listOf(Course(id = 1L, name = "Course 1", courseCode = "CS101"))
+        val initialPlannerItems = listOf(createPlannerItem(id = 1L, title = "Assignment 1"))
+        val refreshedPlannerItems = listOf(
+            createPlannerItem(id = 1L, title = "Assignment 1"),
+            createPlannerItem(id = 2L, title = "Assignment 2")
+        )
+
+        coEvery { repository.getCourses(false) } returns DataResult.Success(courses)
+        coEvery { repository.getPlannerItems(any(), any(), false) } returns DataResult.Success(initialPlannerItems)
+        coEvery { repository.getCourses(true) } returns DataResult.Success(courses)
+        coEvery { repository.getPlannerItems(any(), any(), true) } returns DataResult.Success(refreshedPlannerItems)
+
+        // Create a real MutableSharedFlow for testing
+        val sharedEventsFlow = MutableSharedFlow<SharedCalendarAction>()
+        every { calendarSharedEvents.events } returns sharedEventsFlow
+
+        val viewModel = getViewModel()
+
+        // Verify initial data
+        assertEquals(1, viewModel.uiState.value.itemsByDate.values.flatten().size)
+
+        // Emit RefreshToDoList event
+        sharedEventsFlow.emit(SharedCalendarAction.RefreshToDoList)
+
+        // Verify data was reloaded with forceRefresh=true
+        coVerify { repository.getCourses(true) }
+        coVerify { repository.getPlannerItems(any(), any(), true) }
+        assertEquals(2, viewModel.uiState.value.itemsByDate.values.flatten().size)
+    }
+
+    @Test
+    fun `Empty state is shown when completing the last item via swipe`() = runTest {
+        val plannerItem = createPlannerItem(id = 1L, title = "Last Assignment", submitted = false)
+        val plannerOverride = PlannerOverride(id = 100L, plannableId = 1L, plannableType = PlannableType.ASSIGNMENT, markedComplete = true)
+        val filters = ToDoFilterEntity(
+            userDomain = testDomain,
+            userId = testUser.id,
+            showCompleted = false
+        )
+
+        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(listOf(plannerItem))
+        coEvery { repository.createPlannerOverride(any(), any(), any()) } returns DataResult.Success(plannerOverride)
+        coEvery { toDoFilterDao.findByUser(testDomain, testUser.id) } returns filters
+        every { networkStateProvider.isOnline() } returns true
+
+        val viewModel = getViewModel()
+
+        // Verify we start with one item
+        assertEquals(1, viewModel.uiState.value.itemsByDate.values.flatten().size)
+        assertEquals(1, viewModel.uiState.value.toDoCount)
+
+        // Complete the last item via swipe
+        val item = viewModel.uiState.value.itemsByDate.values.flatten().first()
+        item.onSwipeToDone()
+
+        val uiState = viewModel.uiState.value
+
+        // Item should be marked as checked
+        assertTrue(uiState.itemsByDate.values.flatten().first().isChecked)
+        // Item should be added to removingItemIds (will be hidden from UI, triggering empty state)
+        assertTrue(uiState.removingItemIds.contains("1"))
+        // Todo count should be zero
+        assertEquals(0, uiState.toDoCount)
+    }
+
+    @Test
+    fun `Empty state is shown when completing the last item via checkbox after debounce`() = runTest {
+        val plannerItem = createPlannerItem(id = 1L, title = "Last Assignment", submitted = false)
+        val plannerOverride = PlannerOverride(id = 100L, plannableId = 1L, plannableType = PlannableType.ASSIGNMENT, markedComplete = true)
+        val filters = ToDoFilterEntity(
+            userDomain = testDomain,
+            userId = testUser.id,
+            showCompleted = false
+        )
+
+        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(listOf(plannerItem))
+        coEvery { repository.createPlannerOverride(any(), any(), any()) } returns DataResult.Success(plannerOverride)
+        coEvery { toDoFilterDao.findByUser(testDomain, testUser.id) } returns filters
+        every { networkStateProvider.isOnline() } returns true
+
+        val viewModel = getViewModel()
+
+        // Verify we start with one item and todo count is 1
+        assertEquals(1, viewModel.uiState.value.itemsByDate.values.flatten().size)
+        assertEquals(1, viewModel.uiState.value.toDoCount)
+
+        // Complete the last item via checkbox
+        val item = viewModel.uiState.value.itemsByDate.values.flatten().first()
+        item.onCheckboxToggle(true)
+
+        // Todo count should be zero after marking as done
+        assertEquals(0, viewModel.uiState.value.toDoCount)
+        // Item should NOT be in removingItemIds yet (debounced)
+        assertFalse(viewModel.uiState.value.removingItemIds.contains("1"))
+
+        // Advance time past debounce delay
+        advanceTimeBy(1100)
+
+        // Now item should be added to removingItemIds, which hides it from UI (empty state)
+        assertTrue(viewModel.uiState.value.removingItemIds.contains("1"))
+        assertEquals(0, viewModel.uiState.value.toDoCount)
+    }
+
     // Helper functions
     private fun getViewModel(): ToDoListViewModel {
-        return ToDoListViewModel(context, repository, networkStateProvider, firebaseCrashlytics, toDoFilterDao, apiPrefs, analytics, toDoListViewModelBehavior)
+        return ToDoListViewModel(context, repository, networkStateProvider, firebaseCrashlytics, toDoFilterDao, apiPrefs, analytics, toDoListViewModelBehavior, calendarSharedEvents)
     }
 
     private fun createPlannerItem(

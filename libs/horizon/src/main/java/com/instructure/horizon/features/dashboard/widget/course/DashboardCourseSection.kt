@@ -156,7 +156,7 @@ private fun DashboardCourseSectionContent(
                     else -> {
                         DashboardMoreCourseCard(
                             state.courses.size,
-                            Modifier
+                            modifier
                                 .padding(bottom = 12.dp)
                                 .height(maxCardHeight.toDp.dp)
                         ) {

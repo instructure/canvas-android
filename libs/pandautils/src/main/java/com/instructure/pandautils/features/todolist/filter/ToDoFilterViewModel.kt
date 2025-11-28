@@ -54,8 +54,8 @@ class ToDoFilterViewModel @Inject constructor(
         FILTER_FAVORITE_COURSES to false
     )
 
-    private var selectedPastOption = DateRangeSelection.ONE_WEEK
-    private var selectedFutureOption = DateRangeSelection.ONE_WEEK
+    private var selectedPastOption = DateRangeSelection.FOUR_WEEKS
+    private var selectedFutureOption = DateRangeSelection.THIS_WEEK
 
     private val _uiState = MutableStateFlow(createInitialUiState())
     val uiState = _uiState.asStateFlow()

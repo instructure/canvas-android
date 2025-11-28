@@ -463,6 +463,59 @@ class PlannerItemExtensionsTest {
         assertEquals(false, result)
     }
 
+    @Test
+    fun `isComplete returns true for QUIZ when submitted`() {
+        val plannerItem = createPlannerItem(
+            plannableType = PlannableType.QUIZ,
+            submissionState = com.instructure.canvasapi2.models.SubmissionState(submitted = true)
+        )
+
+        val result = plannerItem.isComplete()
+
+        assertEquals(true, result)
+    }
+
+    @Test
+    fun `isComplete returns false for QUIZ when not submitted`() {
+        val plannerItem = createPlannerItem(
+            plannableType = PlannableType.QUIZ,
+            submissionState = com.instructure.canvasapi2.models.SubmissionState(submitted = false)
+        )
+
+        val result = plannerItem.isComplete()
+
+        assertEquals(false, result)
+    }
+
+    @Test
+    fun `isComplete returns false for QUIZ with null submission state`() {
+        val plannerItem = createPlannerItem(
+            plannableType = PlannableType.QUIZ,
+            submissionState = null
+        )
+
+        val result = plannerItem.isComplete()
+
+        assertEquals(false, result)
+    }
+
+    @Test
+    fun `isComplete returns true for QUIZ with plannerOverride marked complete`() {
+        val plannerItem = createPlannerItem(
+            plannableType = PlannableType.QUIZ,
+            plannerOverride = com.instructure.canvasapi2.models.PlannerOverride(
+                plannableType = PlannableType.QUIZ,
+                plannableId = 1L,
+                markedComplete = true
+            ),
+            submissionState = com.instructure.canvasapi2.models.SubmissionState(submitted = false)
+        )
+
+        val result = plannerItem.isComplete()
+
+        assertEquals(true, result)
+    }
+
     // filterByToDoFilters tests
     @Test
     fun `filterByToDoFilters filters out PLANNER_NOTE when personalTodos is false`() {
@@ -727,6 +780,54 @@ class PlannerItemExtensionsTest {
         assertEquals(2, result.size)
         assertEquals(null, result[0].courseId)
         assertEquals(1L, result[1].courseId)
+    }
+
+    @Test
+    fun `filterByToDoFilters uses plannable courseId for PLANNER_NOTE when item courseId is null`() {
+        val filters = createToDoFilterEntity(favoriteCourses = true)
+        val courses = listOf(
+            Course(id = 1L, isFavorite = true),
+            Course(id = 2L, isFavorite = false)
+        )
+        val items = listOf(
+            createPlannerItem(
+                plannableType = PlannableType.PLANNER_NOTE,
+                courseId = null,
+                plannable = createPlannable(courseId = 1L)
+            ),
+            createPlannerItem(
+                plannableType = PlannableType.PLANNER_NOTE,
+                courseId = null,
+                plannable = createPlannable(courseId = 2L)
+            )
+        )
+
+        val result = items.filterByToDoFilters(filters, courses)
+
+        // Only PLANNER_NOTE with favorite course (via plannable.courseId) should be included
+        assertEquals(1, result.size)
+        assertEquals(1L, result[0].plannable.courseId)
+    }
+
+    @Test
+    fun `filterByToDoFilters prefers item courseId over plannable courseId for PLANNER_NOTE`() {
+        val filters = createToDoFilterEntity(favoriteCourses = true)
+        val courses = listOf(
+            Course(id = 1L, isFavorite = true),
+            Course(id = 2L, isFavorite = false)
+        )
+        val items = listOf(
+            createPlannerItem(
+                plannableType = PlannableType.PLANNER_NOTE,
+                courseId = 2L, // item.courseId is set (non-favorite)
+                plannable = createPlannable(courseId = 1L) // plannable.courseId is favorite
+            )
+        )
+
+        val result = items.filterByToDoFilters(filters, courses)
+
+        // Should use item.courseId (2L) which is not favorite, so item is filtered out
+        assertEquals(0, result.size)
     }
 
     @Test
