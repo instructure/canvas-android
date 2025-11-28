@@ -16,30 +16,104 @@
  */
 package com.instructure.horizon.horizonui.animation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.navigation.NavBackStackEntry
+import com.instructure.horizon.navigation.animationRules
 
 private const val animatedAlpha: Float = 0.0f
 private const val animatedScale: Float = 0.8f
 
-val enterTransition = slideInHorizontally(initialOffsetX = { it }) +
+private val slideEnterTransition = slideInHorizontally(initialOffsetX = { it }) +
         fadeIn(initialAlpha = animatedAlpha)
 
-val exitTransition = slideOutHorizontally(targetOffsetX = { -it }) +
+private val slideExitTransition = slideOutHorizontally(targetOffsetX = { -it }) +
         fadeOut(targetAlpha = animatedAlpha)
 
-val popEnterTransition = slideInHorizontally(initialOffsetX = { -it }) +
+private val slidePopEnterTransition = slideInHorizontally(initialOffsetX = { -it }) +
         fadeIn(initialAlpha = animatedAlpha)
 
-val popExitTransition = slideOutHorizontally(targetOffsetX = { it/2 }) +
+private val slidePopExitTransition = slideOutHorizontally(targetOffsetX = { it / 2 }) +
         fadeOut(targetAlpha = animatedAlpha)
 
-val mainEnterTransition = fadeIn(initialAlpha = animatedAlpha) +
+private val scaleEnterTransition = fadeIn(initialAlpha = animatedAlpha) +
         scaleIn(initialScale = animatedScale)
 
-val mainExitTransition = fadeOut(targetAlpha = animatedAlpha) +
+private val scaleExitTransition = ExitTransition.None
+
+private val scalePopEnterTransition = EnterTransition.None
+
+private val scalePopExitTransition = fadeOut(targetAlpha = animatedAlpha) +
         scaleOut(targetScale = animatedScale)
+
+enum class NavigationTransitionAnimation(
+    val enterTransition: EnterTransition,
+    val exitTransition: ExitTransition,
+    val popEnterTransition: EnterTransition,
+    val popExitTransition: ExitTransition
+) {
+    SLIDE(
+        enterTransition = slideEnterTransition,
+        exitTransition = slideExitTransition,
+        popEnterTransition = slidePopEnterTransition,
+        popExitTransition = slidePopExitTransition
+    ),
+    SCALE(
+        enterTransition = scaleEnterTransition,
+        exitTransition = scaleExitTransition,
+        popEnterTransition = scalePopEnterTransition,
+        popExitTransition = scalePopExitTransition
+    )
+}
+
+
+fun AnimatedContentTransitionScope<NavBackStackEntry>.enterTransition(
+    defaultTransitionStyle: NavigationTransitionAnimation = NavigationTransitionAnimation.SLIDE
+): EnterTransition {
+    val fromRoute = initialState.destination.route
+    val toRoute = targetState.destination.route
+
+    return (findAnimationStyle(fromRoute, toRoute) ?: defaultTransitionStyle).enterTransition
+}
+
+fun AnimatedContentTransitionScope<NavBackStackEntry>.exitTransition(
+    defaultTransitionStyle: NavigationTransitionAnimation = NavigationTransitionAnimation.SLIDE
+): ExitTransition {
+    val fromRoute = initialState.destination.route
+    val toRoute = targetState.destination.route
+
+    return (findAnimationStyle(fromRoute, toRoute) ?: defaultTransitionStyle).exitTransition
+}
+
+fun AnimatedContentTransitionScope<NavBackStackEntry>.popEnterTransition(
+    defaultTransitionStyle: NavigationTransitionAnimation = NavigationTransitionAnimation.SLIDE
+): EnterTransition {
+    val fromRoute = initialState.destination.route
+    val toRoute = targetState.destination.route
+
+    return (findAnimationStyle(toRoute, fromRoute) ?: defaultTransitionStyle).popEnterTransition
+}
+
+fun AnimatedContentTransitionScope<NavBackStackEntry>.popExitTransition(
+    defaultTransitionStyle: NavigationTransitionAnimation = NavigationTransitionAnimation.SLIDE
+): ExitTransition {
+    val fromRoute = initialState.destination.route
+    val toRoute = targetState.destination.route
+
+    return (findAnimationStyle(toRoute, fromRoute) ?: defaultTransitionStyle).popExitTransition
+}
+
+private fun findAnimationStyle(fromRoute: String?, toRoute: String?): NavigationTransitionAnimation? {
+    return animationRules.firstOrNull { rule ->
+        val fromMatches = rule.from == null || fromRoute?.startsWith(rule.from) == true
+        val toMatches = rule.to == null || toRoute?.startsWith(rule.to) == true
+        fromMatches && toMatches
+    }?.style
+}

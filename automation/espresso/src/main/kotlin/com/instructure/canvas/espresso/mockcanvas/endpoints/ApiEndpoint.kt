@@ -369,6 +369,14 @@ object ApiEndpoint : Endpoint(
     ),
     Segment("planner_notes") to Endpoint(
         LongId(PathVars::plannerNoteId) to Endpoint {
+            GET {
+                val plannable = data.todos.find { it.plannable.id == pathVars.plannerNoteId }?.plannable
+                if (plannable != null) {
+                    request.successResponse(plannable)
+                } else {
+                    request.unauthorizedResponse()
+                }
+            }
             DELETE {
                 val plannerNote = data.todos.find { it.plannable.id == pathVars.plannerNoteId }
                 if (plannerNote != null) {

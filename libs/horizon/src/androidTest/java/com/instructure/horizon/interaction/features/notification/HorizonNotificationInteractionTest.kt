@@ -17,7 +17,9 @@
 package com.instructure.horizon.interaction.features.notification
 
 import com.instructure.canvas.espresso.mockcanvas.MockCanvas
-import com.instructure.canvas.espresso.mockcanvas.addAccountNotification
+import com.instructure.canvas.espresso.mockcanvas.addAssignment
+import com.instructure.canvas.espresso.mockcanvas.addSubmissionForAssignment
+import com.instructure.canvas.espresso.mockcanvas.addSubmissionStreamItem
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeGetHorizonCourseManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeGetProgramsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeGetSkillsManager
@@ -70,9 +72,24 @@ class HorizonNotificationInteractionTest: HorizonTest() {
         val token = data.tokenFor(student)!!
         tokenLogin(data.domain, token, student)
 
-        val accountNotification = data.addAccountNotification()
+        val course = data.courses.values.first()
+        val assignment = data.addAssignment(course.id)
+        val submission = data.addSubmissionForAssignment(
+            assignment.id,
+            student.id,
+            type = "text",
+            body = "submission"
+        )
+        val streamItem = data.addSubmissionStreamItem(
+            student,
+            course,
+            assignment,
+            submission,
+            grade = "A"
+        )
+
         dashboardPage.clickNotificationButton()
-        notificationsPage.assertNotificationItem(accountNotification.subject, "Announcement")
+        notificationsPage.assertNotificationItem(streamItem.title.orEmpty(), "Score changed")
 
     }
 }

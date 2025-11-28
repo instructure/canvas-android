@@ -163,6 +163,10 @@ class BookmarkCreationDialog : BaseCanvasAppCompatDialogFragment() {
                                 bookmark.getQueryParamForBookmark)
                     }
 
+                    // Strip any remaining placeholder segments (e.g., /:sliding_tab_type/:submission_id)
+                    // that weren't replaced during URL generation
+                    bookmarkUrl = bookmarkUrl?.replace(Regex("/:[^/?#]+"), "")
+
                     Analytics.trackBookmarkSelected(context, peakingFragment::class.java.simpleName + " " + topFragment::class.java.simpleName)
 
                     if(bookmarkUrl != null) {
@@ -177,6 +181,10 @@ class BookmarkCreationDialog : BaseCanvasAppCompatDialogFragment() {
                     if(bookmarkUrl.isNullOrBlank()) {
                         bookmarkUrl = RouteMatcher.generateUrl(bookmark.canvasContext!!.type, topFragment::class.java, topFragment.bookmark.getParamForBookmark)
                     }
+
+                    // Strip any remaining placeholder segments (e.g., /:sliding_tab_type/:submission_id)
+                    // that weren't replaced during URL generation
+                    bookmarkUrl = bookmarkUrl?.replace(Regex("/:[^/?#]+"), "")
 
                     Analytics.trackBookmarkSelected(context, topFragment::class.java.simpleName)
 

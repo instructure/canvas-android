@@ -21,7 +21,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardItemState
@@ -75,7 +75,7 @@ fun DashboardAnnouncementBannerSection(
             DashboardWidgetCardError(
                 stringResource(R.string.notificationsAnnouncementCategoryLabel),
                 R.drawable.campaign,
-                HorizonColors.Surface.institution().copy(alpha = 0.1f),
+                HorizonColors.PrimitivesSky.sky12,
                 false,
                 DashboardWidgetPageState.Empty,
                 { state.onRefresh {} },

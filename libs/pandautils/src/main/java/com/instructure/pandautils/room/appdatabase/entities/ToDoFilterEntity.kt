@@ -28,6 +28,6 @@ data class ToDoFilterEntity(
     val calendarEvents: Boolean = false,
     val showCompleted: Boolean = false,
     val favoriteCourses: Boolean = false,
-    val pastDateRange: DateRangeSelection = DateRangeSelection.ONE_WEEK,
-    val futureDateRange: DateRangeSelection = DateRangeSelection.ONE_WEEK
+    val pastDateRange: DateRangeSelection = DateRangeSelection.FOUR_WEEKS,
+    val futureDateRange: DateRangeSelection = DateRangeSelection.THIS_WEEK
 )

@@ -20,9 +20,8 @@ import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.utils.DataResult
-import javax.inject.Inject
 
-class EnrollmentRepositoryImpl @Inject constructor(
+class EnrollmentRepositoryImpl(
     private val enrollmentApi: EnrollmentAPI.EnrollmentInterface
 ) : EnrollmentRepository {
 
