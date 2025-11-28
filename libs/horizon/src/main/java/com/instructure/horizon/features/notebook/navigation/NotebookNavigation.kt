@@ -43,10 +43,10 @@ fun NavGraphBuilder.notebookNavigation(
     navigation(
         route = MainNavigationRoute.Notebook.route,
         startDestination = NotebookRoute.Notebook.route,
-        enterTransition = { enterTransition },
-        exitTransition = { exitTransition },
-        popEnterTransition = { popEnterTransition },
-        popExitTransition = { popExitTransition },
+        enterTransition = { enterTransition() },
+        exitTransition = { exitTransition() },
+        popEnterTransition = { popEnterTransition() },
+        popExitTransition = { popExitTransition() },
     ) {
         composable(
             route = NotebookRoute.Notebook.route,
@@ -75,11 +75,10 @@ fun NavGraphBuilder.notebookNavigation(
                     type = NavType.BoolType
                     defaultValue = false
                 }
-            )
+            ),
         ) {
             val viewModel = hiltViewModel<NotebookViewModel>()
-            val uiState by viewModel.uiState.collectAsState()
-            NotebookScreen(navController, uiState)
+            NotebookScreen(navController, viewModel)
         }
         composable<NotebookRoute.AddNotebook> {
             val viewModel = hiltViewModel<AddNoteViewModel>()

@@ -136,6 +136,7 @@ fun PlannerItem.isComplete(): Boolean {
     return plannerOverride?.markedComplete ?: if (plannableType == PlannableType.ASSIGNMENT
         || plannableType == PlannableType.DISCUSSION_TOPIC
         || plannableType == PlannableType.SUB_ASSIGNMENT
+        || plannableType == PlannableType.QUIZ
     ) {
         submissionState?.submitted == true
     } else {
@@ -161,7 +162,13 @@ fun List<PlannerItem>.filterByToDoFilters(
         }
 
         if (filters.favoriteCourses) {
-            val course = courses.find { it.id == item.courseId }
+            val courseIdToCheck = item.courseId ?: if (item.plannableType == PlannableType.PLANNER_NOTE) {
+                item.plannable.courseId
+            } else {
+                null
+            }
+
+            val course = courses.find { it.id == courseIdToCheck }
             if (course != null && !course.isFavorite) {
                 return@filter false
             }

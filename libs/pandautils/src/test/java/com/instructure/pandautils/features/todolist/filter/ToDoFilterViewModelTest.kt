@@ -112,9 +112,9 @@ class ToDoFilterViewModelTest {
         assertFalse(state.checkboxItems[2].checked) // Show completed
         assertFalse(state.checkboxItems[3].checked) // Favorite courses
 
-        // Default date range should be ONE_WEEK
-        assertEquals(DateRangeSelection.ONE_WEEK, state.selectedPastOption)
-        assertEquals(DateRangeSelection.ONE_WEEK, state.selectedFutureOption)
+        // Default date range should be FOUR_WEEKS (past) and THIS_WEEK (future)
+        assertEquals(DateRangeSelection.FOUR_WEEKS, state.selectedPastOption)
+        assertEquals(DateRangeSelection.THIS_WEEK, state.selectedFutureOption)
 
         // Flags should be false
         assertFalse(state.shouldCloseAndApplyFilters)

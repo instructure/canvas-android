@@ -47,6 +47,7 @@ import com.instructure.horizon.horizonui.animation.enterTransition
 import com.instructure.horizon.horizonui.animation.exitTransition
 import com.instructure.horizon.horizonui.animation.popEnterTransition
 import com.instructure.horizon.horizonui.animation.popExitTransition
+import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.navigation.MainNavigationRoute.Companion.ASSIGNMENT_ID
 import com.instructure.horizon.navigation.MainNavigationRoute.Companion.COURSE_ID
 import com.instructure.horizon.navigation.MainNavigationRoute.Companion.PAGE_ID
@@ -87,13 +88,14 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     Scaffold(
+        containerColor = HorizonColors.Surface.pagePrimary(),
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
     ) { innerPadding ->
         NavHost(
-            enterTransition = { enterTransition },
-            exitTransition = { exitTransition },
-            popEnterTransition = { popEnterTransition },
-            popExitTransition = { popExitTransition },
+            enterTransition = { enterTransition() },
+            exitTransition = { exitTransition() },
+            popEnterTransition = { popEnterTransition() },
+            popExitTransition = { popExitTransition() },
             modifier = modifier.padding(innerPadding),
             navController = navController,
             startDestination = MainNavigationRoute.Home.route
@@ -112,7 +114,12 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
             composable(MainNavigationRoute.Home.route) {
                 HomeScreen(navController, hiltViewModel<HomeViewModel>())
             }
-            composable<MainNavigationRoute.ModuleItemSequence> {
+            composable<MainNavigationRoute.ModuleItemSequence>(
+                enterTransition = { enterTransition() },
+                exitTransition = { exitTransition() },
+                popEnterTransition = { popEnterTransition() },
+                popExitTransition = { popExitTransition() }
+            ) {
                 val viewModel = hiltViewModel<ModuleItemSequenceViewModel>()
                 val uiState by viewModel.uiState.collectAsState()
                 ModuleItemSequenceScreen(navController, uiState)
@@ -234,3 +241,4 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
         }
     }
 }
+
