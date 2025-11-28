@@ -423,8 +423,8 @@
     <string name="submitted_late">Tukunga tūreiti</string>
     <string name="havent_submitted_yet">Kaore anō i tukunga noa</string>
     <string name="havent_been_graded">Kaore anō i kōekehia noa</string>
-    <string name="scored_less_than">Kaute iti ake i &#8230;</string>
-    <string name="scored_more_than">Kaute nui atu i&#8230;</string>
+    <string name="scored_less_than">He iti iho te kaute</string>
+    <string name="scored_more_than">I piro Neke atu i te</string>
     <string name="scored_less_than_value">Kaute iti ake i %s</string>
     <string name="scored_more_than_value">Kaute nui atu i %s</string>
     <string name="add_comment">Tāpiri Tākupu</string>
