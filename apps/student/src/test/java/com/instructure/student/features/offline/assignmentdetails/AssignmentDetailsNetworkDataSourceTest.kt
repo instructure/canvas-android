@@ -134,11 +134,13 @@ class AssignmentDetailsNetworkDataSourceTest {
         Assert.assertEquals(expected, assignmentResult)
     }
 
-    @Test(expected = IllegalStateException::class)
-    fun `Get LTI by launch url failure throws exception`() = runTest {
+    @Test
+    fun `Get LTI by launch url failure returns null`() = runTest {
         coEvery { assignmentInterface.getExternalToolLaunchUrl(any(), any(), any(), any(), any()) } returns DataResult.Fail()
 
-        dataSource.getExternalToolLaunchUrl(1, 1, 1, true)
+        val result = dataSource.getExternalToolLaunchUrl(1, 1, 1, true)
+
+        Assert.assertNull(result)
     }
 
     @Test
