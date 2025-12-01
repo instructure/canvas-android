@@ -565,7 +565,7 @@ private fun ModuleItemSequenceBottomBar(
                     onClick = onAiAssistClick,
                 )
                 if (showNotebookButton) IconButton(
-                    iconRes = R.drawable.menu_book_notebook,
+                    iconRes = R.drawable.edit_note,
                     enabled = notebookEnabled,
                     color = IconButtonColor.Inverse,
                     elevation = HorizonElevation.level4,
