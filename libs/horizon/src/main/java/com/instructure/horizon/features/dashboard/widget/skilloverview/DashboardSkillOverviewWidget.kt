@@ -16,14 +16,13 @@
  */
 package com.instructure.horizon.features.dashboard.widget.skilloverview
 
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardItemState

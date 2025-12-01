@@ -425,8 +425,8 @@
     <string name="submitted_late">Curtha isteach Déanach</string>
     <string name="havent_submitted_yet">Nach bhfuil curtha isteach fós</string>
     <string name="havent_been_graded">Nach bhfuil Marcáilte</string>
-    <string name="scored_less_than">Scóráil Níos lú ná&#8230;</string>
-    <string name="scored_more_than">Scóráil Níos Mó ná&#8230;</string>
+    <string name="scored_less_than">Scóráladh Níos Lú ná</string>
+    <string name="scored_more_than">Scóráladh Níos Mó ná</string>
     <string name="scored_less_than_value">Scóráil Níos lú ná %s</string>
     <string name="scored_more_than_value">Scóráil Níos Mó ná %s</string>
     <string name="add_comment">Cuir Trácht leis</string>

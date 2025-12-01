@@ -18,13 +18,13 @@ package com.instructure.horizon.features.dashboard.widget.course.card
 
 import android.graphics.drawable.Drawable
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -47,14 +47,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.LinkAnnotation
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextLinkStyles
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.text.withLink
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
@@ -66,6 +59,7 @@ import com.bumptech.glide.request.target.Target
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardCard
+import com.instructure.horizon.features.dashboard.widget.DashboardWidgetPageState
 import com.instructure.horizon.horizonui.animation.shimmerEffect
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
@@ -73,13 +67,11 @@ import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.isWideLayout
-import com.instructure.horizon.horizonui.molecules.Pill
-import com.instructure.horizon.horizonui.molecules.PillCase
-import com.instructure.horizon.horizonui.molecules.PillSize
-import com.instructure.horizon.horizonui.molecules.PillStyle
-import com.instructure.horizon.horizonui.molecules.PillType
 import com.instructure.horizon.horizonui.molecules.ProgressBarSmall
 import com.instructure.horizon.horizonui.molecules.ProgressBarStyle
+import com.instructure.horizon.horizonui.molecules.StatusChip
+import com.instructure.horizon.horizonui.molecules.StatusChipColor
+import com.instructure.horizon.horizonui.molecules.StatusChipState
 import com.instructure.horizon.model.LearningObjectType
 import com.instructure.pandautils.utils.localisedFormatMonthDay
 import java.util.Date
@@ -120,32 +112,30 @@ private fun DashboardCourseCardCompactContent(
     Column(
         modifier = Modifier.fillMaxWidth()
     ){
-        if (state.imageState != null) {
-            CourseImage(state.imageState, isLoading, Modifier.fillMaxWidth())
-        }
+        ImageWithProgramChips(state, isLoading, Modifier.fillMaxWidth())
         Column(
             modifier = Modifier
                 .padding(horizontal = 24.dp)
         ) {
-            if (!state.parentPrograms.isNullOrEmpty()) {
-                Spacer(Modifier.height(16.dp))
-                ProgramsText(state.parentPrograms, isLoading, handleOnClickAction)
-            }
             if (!state.title.isNullOrEmpty()) {
-                Spacer(Modifier.height(16.dp))
+                HorizonSpace(SpaceSize.SPACE_16)
                 TitleText(state.title, isLoading)
             }
             if (state.progress != null) {
-                Spacer(Modifier.height(12.dp))
+                HorizonSpace(SpaceSize.SPACE_12)
                 CourseProgress(state.progress, isLoading)
             }
-            if (!state.description.isNullOrEmpty()) {
-                Spacer(Modifier.height(16.dp))
-                DescriptionText(state.description, isLoading)
+            if (state.descriptionState != null) {
+                HorizonSpace(SpaceSize.SPACE_16)
+                DescriptionText(state.descriptionState, isLoading)
             }
             if (state.moduleItem != null) {
-                Spacer(Modifier.height(16.dp))
+                HorizonSpace(SpaceSize.SPACE_16)
                 ModuleItemCard(state.moduleItem, isLoading, handleOnClickAction)
+            }
+            if (state.pageState != DashboardWidgetPageState.Empty) {
+                HorizonSpace(SpaceSize.SPACE_16)
+                PageIndicator(state.pageState, isLoading)
             }
         }
         HorizonSpace(SpaceSize.SPACE_24)
@@ -158,44 +148,66 @@ private fun DashboardCourseCardWideContent(
     isLoading: Boolean,
     handleOnClickAction: (CardClickAction?) -> Unit,
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ){
-        if (state.imageState != null) {
-            CourseImage(
-                state.imageState,
+    Column {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            ImageWithProgramChips(
+                state,
                 isLoading,
                 Modifier
                     .width(320.dp)
-                    .padding(start = 24.dp, top = 24.dp, bottom = 24.dp, end = 16.dp)
+                    .padding(start = 24.dp, top = 24.dp, end = 16.dp)
                     .clip(HorizonCornerRadius.level2)
             )
+            Column(
+                modifier = Modifier
+                    .padding(end = 24.dp, top = 24.dp)
+            ) {
+                if (!state.title.isNullOrEmpty()) {
+                    TitleText(state.title, isLoading)
+                }
+                if (state.progress != null) {
+                    HorizonSpace(SpaceSize.SPACE_12)
+                    CourseProgress(state.progress, isLoading)
+                }
+                if (state.descriptionState != null) {
+                    HorizonSpace(SpaceSize.SPACE_16)
+                    DescriptionText(state.descriptionState, isLoading)
+                }
+                if (state.moduleItem != null) {
+                    HorizonSpace(SpaceSize.SPACE_16)
+                    ModuleItemCard(state.moduleItem, isLoading, handleOnClickAction)
+                }
+            }
         }
+        if (state.pageState != DashboardWidgetPageState.Empty) {
+            HorizonSpace(SpaceSize.SPACE_16)
+            PageIndicator(state.pageState, isLoading)
+        }
+        HorizonSpace(SpaceSize.SPACE_24)
+    }
+}
+
+@Composable
+private fun ImageWithProgramChips(
+    state: DashboardCourseCardState,
+    isLoading: Boolean,
+    modifier: Modifier = Modifier
+) {
+    Box(modifier) {
+        CourseImage(state.imageState, isLoading)
+
         Column(
+            verticalArrangement = Arrangement.spacedBy(4.dp),
             modifier = Modifier
-                .padding(end = 24.dp, bottom = 24.dp)
+                .padding(24.dp)
         ) {
-            if (!state.parentPrograms.isNullOrEmpty()) {
-                Spacer(Modifier.height(16.dp))
-                ProgramsText(state.parentPrograms, isLoading, handleOnClickAction)
-            }
-            if (!state.title.isNullOrEmpty()) {
-                Spacer(Modifier.height(16.dp))
-                TitleText(state.title, isLoading)
-            }
-            if (state.progress != null) {
-                Spacer(Modifier.height(12.dp))
-                CourseProgress(state.progress, isLoading)
-            }
-            if (!state.description.isNullOrEmpty()) {
-                Spacer(Modifier.height(16.dp))
-                DescriptionText(state.description, isLoading)
-            }
-            if (state.moduleItem != null) {
-                Spacer(Modifier.height(16.dp))
-                ModuleItemCard(state.moduleItem, isLoading, handleOnClickAction)
+            // Display only 3 programs at most
+            state.parentPrograms?.take(3)?.forEach { program ->
+                ProgramChip(program, isLoading)
             }
         }
     }
@@ -250,59 +262,17 @@ private fun CourseImage(
                 modifier = modifier
                     .aspectRatio(1.69f)
                     .background(HorizonColors.Surface.institution().copy(alpha = 0.1f))
-                    .shimmerEffect(isLoading || isImageLoading)
+                    .shimmerEffect(isLoading)
             ) {
                 Icon(
                     painterResource(R.drawable.book_2_filled),
                     contentDescription = null,
                     tint = HorizonColors.Surface.institution(),
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier.size(32.dp)
                 )
             }
         }
     }
-}
-
-@Composable
-private fun ProgramsText(
-    programs: List<DashboardCourseCardParentProgramState>,
-    isLoading: Boolean,
-    handleOnClickAction: (CardClickAction?) -> Unit,
-) {
-    val programsAnnotated = buildAnnotatedString {
-        programs.forEachIndexed { i, program ->
-            if (i > 0) append(", ")
-            withLink(
-                LinkAnnotation.Clickable(
-                    tag = program.programId,
-                    styles = TextLinkStyles(
-                        style = SpanStyle(textDecoration = TextDecoration.Underline)
-                    ),
-                    linkInteractionListener = { _ -> handleOnClickAction(program.onClickAction) }
-                )
-            ) {
-                append(program.programName)
-            }
-        }
-    }
-
-    // String resource can't work with annotated string so we need a temporary placeholder
-    val template = stringResource(R.string.learnScreen_partOfProgram, "__PROGRAMS__")
-
-    val fullText = buildAnnotatedString {
-        val parts = template.split("__PROGRAMS__")
-        append(parts[0])
-        append(programsAnnotated)
-        if (parts.size > 1) append(parts[1])
-    }
-
-    Text(
-        text = fullText,
-        style = HorizonTypography.p1,
-        modifier = Modifier
-            .semantics(mergeDescendants = true) {}
-            .shimmerEffect(isLoading)
-    )
 }
 
 @Composable
@@ -312,9 +282,9 @@ private fun TitleText(
 ) {
     Text(
         text = title,
-        style = HorizonTypography.h4,
+        style = HorizonTypography.labelLargeBold,
         color = HorizonColors.Text.title(),
-        maxLines = 2,
+        maxLines = 1,
         overflow = TextOverflow.Ellipsis,
         modifier = Modifier.shimmerEffect(isLoading)
     )
@@ -322,15 +292,24 @@ private fun TitleText(
 
 @Composable
 private fun DescriptionText(
-    description: String,
+    descriptionState: DashboardCourseCardDescriptionState,
     isLoading: Boolean,
 ) {
-    Text(
-        text = description,
-        style = HorizonTypography.p1,
-        color = HorizonColors.Text.body(),
-        modifier = Modifier.shimmerEffect(isLoading)
-    )
+    Column {
+        Text(
+            text = descriptionState.descriptionTitle,
+            style = HorizonTypography.labelLargeBold,
+            color = HorizonColors.Text.title(),
+            modifier = Modifier.shimmerEffect(isLoading)
+        )
+        HorizonSpace(SpaceSize.SPACE_8)
+        Text(
+            text = descriptionState.description,
+            style = HorizonTypography.p1,
+            color = HorizonColors.Text.body(),
+            modifier = Modifier.shimmerEffect(isLoading)
+        )
+    }
 }
 
 @Composable
@@ -363,6 +342,29 @@ private fun CourseProgress(
     }
 }
 
+@Composable
+private fun PageIndicator(
+    pageState: DashboardWidgetPageState,
+    isLoading: Boolean,
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ){
+        Text(
+            stringResource(
+                R.string.dashboardPaginatedWidgetPagerMessage,
+                pageState.currentPageNumber,
+                pageState.pageCount
+            ),
+            style = HorizonTypography.p2,
+            color = HorizonColors.Text.dataPoint(),
+            modifier = Modifier.shimmerEffect(isLoading),
+        )
+    }
+}
+
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun ModuleItemCard(
@@ -391,52 +393,96 @@ private fun ModuleItemCard(
         Column {
             Text(
                 text = state.moduleItemTitle,
-                style = HorizonTypography.p1,
+                style = HorizonTypography.p2,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
                 color = HorizonColors.Text.body()
             )
             Spacer(Modifier.height(12.dp))
-            FlowRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Pill(
-                    label = stringResource(state.moduleItemType.stringRes),
-                    size = PillSize.SMALL,
-                    style = PillStyle.SOLID,
-                    type = PillType.INVERSE,
-                    case = PillCase.TITLE,
-                    iconRes = state.moduleItemType.iconRes,
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    if (state.estimatedDuration != null) {
+                        StatusChip(
+                            StatusChipState(
+                                label = state.estimatedDuration,
+                                color = StatusChipColor.White,
+                                fill = true,
+                                iconRes = R.drawable.schedule,
+                            )
+                        )
+                    }
+                    if (state.dueDate != null) {
+                        StatusChip(
+                            StatusChipState(
+                                label = stringResource(R.string.learningobject_dueDate, state.dueDate.localisedFormatMonthDay()),
+                                color = StatusChipColor.White,
+                                fill = true,
+                                iconRes = R.drawable.calendar_today,
+                            )
+                        )
+                    } else {
+                        StatusChip(
+                            StatusChipState(
+                                label = stringResource(R.string.dashboardCourseCardModuleItemNoDueDateLabel),
+                                color = StatusChipColor.White,
+                                fill = true,
+                                iconRes = R.drawable.calendar_today,
+                            )
+                        )
+                    }
+                }
+                StatusChip(
+                    StatusChipState(
+                        label = stringResource(state.moduleItemType.stringRes),
+                        color = StatusChipColor.White,
+                        fill = true,
+                        iconRes = state.moduleItemType.iconRes,
+                    )
                 )
-
-                if (state.dueDate != null) {
-                    Pill(
-                        label = stringResource(R.string.learningobject_dueDate, state.dueDate.localisedFormatMonthDay()),
-                        size = PillSize.SMALL,
-                        style = PillStyle.SOLID,
-                        type = PillType.INVERSE,
-                        case = PillCase.TITLE,
-                        iconRes = R.drawable.calendar_today,
-                    )
-                }
-
-                if (state.estimatedDuration != null) {
-                    Pill(
-                        label = state.estimatedDuration,
-                        size = PillSize.SMALL,
-                        style = PillStyle.SOLID,
-                        type = PillType.INVERSE,
-                        case = PillCase.TITLE,
-                        iconRes = R.drawable.calendar_today,
-                    )
-                }
             }
         }
     }
 }
 
 @Composable
+private fun ProgramChip(
+    program: DashboardCourseCardParentProgramState,
+    isLoading: Boolean
+) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(2.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .background(
+                color = HorizonColors.Surface.pageSecondary(),
+                shape = HorizonCornerRadius.level1
+            )
+            .border(1.dp, HorizonColors.LineAndBorder.lineStroke(), HorizonCornerRadius.level1)
+            .shimmerEffect(isLoading)
+            .padding(horizontal = 12.dp, vertical = 2.dp)
+    ) {
+        Text(
+            stringResource(R.string.dashboardCourseCardProgramPrefix),
+            style = HorizonTypography.labelMediumBold,
+            color = HorizonColors.Text.title()
+        )
+        Text(program.programName,
+            style = HorizonTypography.p2,
+            color = HorizonColors.Text.title(),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+    }
+}
+
+@Composable
 @Preview
-private fun DashboardCourseCardWithModulePreview() {
+private fun DashboardCourseCardWithModuleCompactPreview() {
     ContextKeeper.appContext = LocalContext.current
 
     val state = DashboardCourseCardState(
@@ -445,17 +491,60 @@ private fun DashboardCourseCardWithModulePreview() {
                 programName = "Program Name",
                 programId = "1",
                 onClickAction = CardClickAction.Action({})
+            ),
+            DashboardCourseCardParentProgramState(
+                programName = "Program Name to test the overflow behaviour in the chip",
+                programId = "2",
+                onClickAction = CardClickAction.Action({})
             )
         ),
-        imageState = null,
+        imageState = DashboardCourseCardImageState(
+            imageUrl = null,
+            showPlaceholder = true
+        ),
         title = "Course Title That Might Be Really Long and Go On Two Lines",
-        description = "This is a description of the course. It might be really long and go on multiple lines.",
         progress = 45.0,
         moduleItem = DashboardCourseCardModuleItemState(
             moduleItemTitle = "Module Item Title That Might Be Really Long and Go On Two Lines",
             moduleItemType = LearningObjectType.ASSIGNMENT,
             dueDate = Date(),
-            estimatedDuration = "5 mins",
+            estimatedDuration = "32 Hours 25 Mins",
+            onClickAction = CardClickAction.Action({})
+        ),
+        onClickAction = CardClickAction.Action({})
+    )
+    DashboardCourseCardContent(state, {}, false)
+}
+
+@Composable
+@Preview(widthDp = 720)
+private fun DashboardCourseCardWithModuleWidePreview() {
+    ContextKeeper.appContext = LocalContext.current
+
+    val state = DashboardCourseCardState(
+        parentPrograms = listOf(
+            DashboardCourseCardParentProgramState(
+                programName = "Program Name",
+                programId = "1",
+                onClickAction = CardClickAction.Action({})
+            ),
+            DashboardCourseCardParentProgramState(
+                programName = "Program Name to test the overflow behaviour in the chip",
+                programId = "2",
+                onClickAction = CardClickAction.Action({})
+            )
+        ),
+        imageState = DashboardCourseCardImageState(
+            imageUrl = null,
+            showPlaceholder = true
+        ),
+        title = "Course Title That Might Be Really Long and Go On Two Lines",
+        progress = 45.0,
+        moduleItem = DashboardCourseCardModuleItemState(
+            moduleItemTitle = "Module Item Title That Might Be Really Long and Go On Two Lines",
+            moduleItemType = LearningObjectType.ASSIGNMENT,
+            dueDate = Date(),
+            estimatedDuration = "32 Hours 25 Mins",
             onClickAction = CardClickAction.Action({})
         ),
         onClickAction = CardClickAction.Action({})

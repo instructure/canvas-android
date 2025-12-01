@@ -36,6 +36,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.ExternalToolAttributes
 import com.instructure.canvasapi2.models.LockInfo
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.models.SubAssignmentSubmission
@@ -670,17 +671,40 @@ class AssignmentDetailsViewModelTest {
     }
 
     @Test
-    fun `Submit button click - external tool`() {
+    fun `Submit button click - external tool with valid LTI tool`() {
         val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
         coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
 
         val assignment = Assignment(submissionTypesRaw = listOf("external_tool"))
-        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment.copy(
+            externalToolAttributes = ExternalToolAttributes(contentId = 1L)
+        )
+        coEvery { assignmentDetailsRepository.getExternalToolLaunchUrl(any(), any(), any(), any()) } returns mockk(relaxed = true)
 
         val viewModel = getViewModel()
         viewModel.onSubmitButtonClicked()
 
         assertTrue(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToLtiLaunchScreen)
+    }
+
+    @Test
+    fun `Submit button click - external tool with null LTI tool shows error`() {
+        val errorMessage = "An unexpected error occurred."
+        every { resources.getString(R.string.generalUnexpectedError) } returns errorMessage
+
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        val assignment = Assignment(submissionTypesRaw = listOf("external_tool"))
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+        coEvery { assignmentDetailsRepository.getExternalToolLaunchUrl(any(), any(), any(), any()) } returns null
+
+        val viewModel = getViewModel()
+        viewModel.onSubmitButtonClicked()
+
+        val action = viewModel.events.value?.peekContent()
+        assertTrue(action is AssignmentDetailAction.ShowToast)
+        assertEquals(errorMessage, (action as AssignmentDetailAction.ShowToast).message)
     }
 
     @Test

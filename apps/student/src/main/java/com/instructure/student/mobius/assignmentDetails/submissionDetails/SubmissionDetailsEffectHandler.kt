@@ -18,6 +18,7 @@
 package com.instructure.student.mobius.assignmentDetails.submissionDetails
 
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.exhaustive
@@ -32,7 +33,8 @@ import kotlinx.coroutines.launch
 import java.io.File
 
 class SubmissionDetailsEffectHandler(
-    private val repository: SubmissionDetailsRepository
+    private val repository: SubmissionDetailsRepository,
+    private val apiPrefs: ApiPrefs
 ) : EffectHandler<SubmissionDetailsView, SubmissionDetailsEvent, SubmissionDetailsEffect>() {
 
     override fun accept(effect: SubmissionDetailsEffect) {
@@ -70,9 +72,16 @@ class SubmissionDetailsEffectHandler(
             // If the user is an observer, get the id of the first observee that comes back, otherwise use the user's id
             val enrollments = repository.getObserveeEnrollments(true).dataOrNull.orEmpty()
             val observeeId = enrollments.firstOrNull { it.isObserver && it.courseId == effect.courseId }?.associatedUserId
-            val userId = observeeId ?: ApiPrefs.user!!.id
+            val userId = observeeId ?: apiPrefs.user!!.id
 
-            val submissionResult = repository.getSingleSubmission(effect.courseId, effect.assignmentId, userId, true)
+            val finalUserId = APIHelper.getUserIdForCourse(
+                effect.courseId,
+                userId,
+                apiPrefs.shardIds,
+                apiPrefs.accessToken
+            )
+
+            val submissionResult = repository.getSingleSubmission(effect.courseId, effect.assignmentId, finalUserId, true)
             val assignmentResult = repository.getAssignment(effect.assignmentId, effect.courseId, true)
 
             val studioLTIToolResult = if (repository.isOnline() && assignmentResult.containsSubmissionType(Assignment.SubmissionType.ONLINE_UPLOAD)) {

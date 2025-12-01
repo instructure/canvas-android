@@ -59,7 +59,14 @@ class EnsureDefaultWidgetsUseCaseTest {
         coVerify {
             repository.saveMetadata(
                 match {
-                    it.id == "welcome" && it.position == 1 && it.isVisible
+                    it.id == "institutional_announcements" && it.position == 1 && it.isVisible && !it.isEditable
+                }
+            )
+        }
+        coVerify {
+            repository.saveMetadata(
+                match {
+                    it.id == "welcome" && it.position == 2 && it.isVisible
                 }
             )
         }
@@ -69,7 +76,8 @@ class EnsureDefaultWidgetsUseCaseTest {
     fun `execute does not create widget if it already exists`() = runTest {
         val existingMetadata = listOf(
             WidgetMetadata("course_invitations", 0, true, false),
-            WidgetMetadata("welcome", 1, true)
+            WidgetMetadata("institutional_announcements", 1, true, false),
+            WidgetMetadata("welcome", 2, true)
         )
         coEvery { repository.observeAllMetadata() } returns flowOf(existingMetadata)
 
@@ -90,6 +98,11 @@ class EnsureDefaultWidgetsUseCaseTest {
         coVerify(exactly = 1) {
             repository.saveMetadata(
                 match { it.id == "course_invitations" }
+            )
+        }
+        coVerify(exactly = 1) {
+            repository.saveMetadata(
+                match { it.id == "institutional_announcements" }
             )
         }
         coVerify(exactly = 1) {

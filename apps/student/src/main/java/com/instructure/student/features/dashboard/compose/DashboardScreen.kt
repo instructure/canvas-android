@@ -56,15 +56,17 @@ import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
+import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.courseinvitation.CourseInvitationsWidget
+import com.instructure.pandautils.features.dashboard.widget.welcome.WelcomeWidget
+import com.instructure.pandautils.features.dashboard.widget.institutionalannouncements.InstitutionalAnnouncementsWidget
 import com.instructure.student.R
 import com.instructure.student.activity.NavigationActivity
-import com.instructure.student.features.dashboard.widget.welcome.WelcomeWidget
 import kotlinx.coroutines.flow.SharedFlow
 
 @Composable
-fun DashboardScreen() {
+fun DashboardScreen(router: DashboardRouter) {
     val viewModel: DashboardViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
 
@@ -72,7 +74,8 @@ fun DashboardScreen() {
         uiState = uiState,
         refreshSignal = viewModel.refreshSignal,
         snackbarMessageFlow = viewModel.snackbarMessage,
-        onShowSnackbar = viewModel::showSnackbar
+        onShowSnackbar = viewModel::showSnackbar,
+        router = router
     )
 }
 
@@ -82,7 +85,8 @@ fun DashboardScreenContent(
     uiState: DashboardUiState,
     refreshSignal: SharedFlow<Unit>,
     snackbarMessageFlow: SharedFlow<SnackbarMessage>,
-    onShowSnackbar: (String, String?, (() -> Unit)?) -> Unit
+    onShowSnackbar: (String, String?, (() -> Unit)?) -> Unit,
+    router: DashboardRouter
 ) {
     val activity = LocalActivity.current
     val pullRefreshState = rememberPullRefreshState(
@@ -158,6 +162,7 @@ fun DashboardScreenContent(
                         widgets = uiState.widgets,
                         refreshSignal = refreshSignal,
                         onShowSnackbar = onShowSnackbar,
+                        router = router,
                         modifier = Modifier.fillMaxSize()
                     )
                 }
@@ -180,6 +185,7 @@ private fun WidgetGrid(
     widgets: List<WidgetMetadata>,
     refreshSignal: SharedFlow<Unit>,
     onShowSnackbar: (String, String?, (() -> Unit)?) -> Unit,
+    router: DashboardRouter,
     modifier: Modifier = Modifier
 ) {
     val activity = LocalActivity.current ?: return
@@ -209,7 +215,7 @@ private fun WidgetGrid(
                 }
             }
         ) { metadata ->
-            GetWidgetComposable(metadata.id, refreshSignal, columns, onShowSnackbar)
+            GetWidgetComposable(metadata.id, refreshSignal, columns, onShowSnackbar, router)
         }
     }
 }
@@ -219,7 +225,8 @@ private fun GetWidgetComposable(
     widgetId: String,
     refreshSignal: SharedFlow<Unit>,
     columns: Int,
-    onShowSnackbar: (String, String?, (() -> Unit)?) -> Unit
+    onShowSnackbar: (String, String?, (() -> Unit)?) -> Unit,
+    router: DashboardRouter
 ) {
     return when (widgetId) {
         WidgetMetadata.WIDGET_ID_WELCOME -> WelcomeWidget(refreshSignal = refreshSignal)
@@ -227,6 +234,11 @@ private fun GetWidgetComposable(
             refreshSignal = refreshSignal,
             columns = columns,
             onShowSnackbar = onShowSnackbar
+        )
+        WidgetMetadata.WIDGET_ID_INSTITUTIONAL_ANNOUNCEMENTS -> InstitutionalAnnouncementsWidget(
+            refreshSignal = refreshSignal,
+            columns = columns,
+            onAnnouncementClick = router::routeToGlobalAnnouncement
         )
         else -> {}
     }

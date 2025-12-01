@@ -13,10 +13,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package com.instructure.pandautils.features.dashboard.widget.institutionalannouncements
 
-package com.instructure.student.features.dashboard.widget.welcome
+import com.instructure.pandautils.domain.models.accountnotification.InstitutionalAnnouncement
 
-data class WelcomeWidgetUiState(
-    val greeting: String = "",
-    val message: String = ""
+data class InstitutionalAnnouncementsUiState(
+    val loading: Boolean = true,
+    val error: Boolean = false,
+    val announcements: List<InstitutionalAnnouncement> = emptyList(),
+    val onRefresh: () -> Unit = {}
 )

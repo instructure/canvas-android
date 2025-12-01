@@ -14,9 +14,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.student.features.dashboard.widget.welcome
+package com.instructure.pandautils.features.dashboard.widget.welcome
 
 import androidx.lifecycle.ViewModel
+import com.instructure.pandautils.features.dashboard.widget.welcome.usecase.GetWelcomeGreetingUseCase
+import com.instructure.pandautils.features.dashboard.widget.welcome.usecase.GetWelcomeMessageUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -25,16 +27,27 @@ import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
-class WelcomeWidgetViewModel @Inject constructor() : ViewModel() {
+class WelcomeWidgetViewModel @Inject constructor(
+    private val getWelcomeGreetingUseCase: GetWelcomeGreetingUseCase,
+    private val getWelcomeMessageUseCase: GetWelcomeMessageUseCase
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(WelcomeWidgetUiState())
     val uiState: StateFlow<WelcomeWidgetUiState> = _uiState.asStateFlow()
 
     init {
+        loadWelcomeContent()
+    }
+
+    fun refresh() {
+        loadWelcomeContent()
+    }
+
+    private fun loadWelcomeContent() {
         _uiState.update {
             it.copy(
-                greeting = "Welcome back, Learner!",
-                message = "Here you can find an overview of your courses and activities."
+                greeting = getWelcomeGreetingUseCase(),
+                message = getWelcomeMessageUseCase()
             )
         }
     }
