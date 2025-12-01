@@ -44,7 +44,7 @@
     <string name="submissionStatusUploadingSubtitle">タップして進捗を表示する</string>
     <string name="submissionStatusFailedTitle">提出に失敗しました</string>
     <string name="submissionStatusFailedSubtitle">タップして詳細を表示する</string>
-    <string name="submissionAndRubric">提出 &amp; ルブリック</string>
+    <string name="submissionAndRubric">課題提出とルーブリック</string>
     <string name="commentsAndRubric">コメント &amp; ルブリック</string>
     <string name="errorLoadingAssignment">この課題の読み込み中、問題がありました。接続を確認して、もう一度お試しください。</string>
     <string name="submitted">タスクの評定を送信</string>
@@ -120,7 +120,7 @@
     <string name="submission">提出</string>
     <string name="submissionVersions">提出バージョン</string>
     <string name="submissionDetailsFileTabName">ファイル (%d)</string>
-    <string name="rubric">ルービック</string>
+    <string name="rubric">ルーブリック</string>
     <string name="submissionDetailsErrorTitle">提出エラー</string>
     <string name="urlSubmissionDisclaimer">この提出物は、外部ページへの URL でした。提出時のページの様子を示すスナップショットを追加しました。</string>
     <string name="submissionDetailsNoSubmissionYet">提出はまだされていません</string>
@@ -272,6 +272,7 @@
     <string name="checkBoxFinalGradeOption">評定済み課題に基づく</string>
     <string name="checkBoxWhatIfGradeOption">仮定のスコアを表示</string>
     <string name="whatIfDialogText">仮定のスコア</string>
+    <string name="whatIfScoreExceedsMaximum">スコアは最大点数を超えることはできません</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s / %2$s 点、%3$s</string>
     <string name="inbox">受信トレイ</string>
@@ -822,7 +823,7 @@
     <string name="notification_cat_alerts">アラート</string>
     <string name="notification_cat_conferences">会議</string>
 
-    <string name="notification_pref_due_date">期日</string>
+    <string name="notification_pref_due_date">提出期限</string>
     <string name="notification_pref_grading_policies">採点方針</string>
     <string name="notification_pref_course_content">コース内容</string>
     <string name="notification_pref_files">ファイル</string>
@@ -1579,8 +1580,8 @@
     <string name="update">更新</string>
     <string name="availability_title">利用可能性</string>
     <string name="visibility_title">可視性</string>
-    <string name="available_from">開始日時</string>
-    <string name="available_until">終了日時</string>
+    <string name="available_from">公開日時</string>
+    <string name="available_until">公開終了日時</string>
     <string name="from">From（～から）</string>
     <string name="until">利用終了日時</string>
     <string name="date">日付</string>
@@ -1866,7 +1867,7 @@
     <string name="gradesTotal">合計</string>
     <string name="gradesBasedOnGraded">評定済み課題に基づく</string>
     <string name="lateSubmissionLabel">遅延</string>
-    <string name="sortByDueDate">期日</string>
+    <string name="sortByDueDate">提出期限</string>
     <string name="sortByGroup">グループ</string>
     <string name="gradePreferencesScreenTitle">評定優先</string>
     <string name="gradePreferencesHeaderGradingPeriod">採点期間</string>
@@ -2000,7 +2001,7 @@
     <string name="noAssignments">課題なし</string>
     <string name="assignmentGroup">課題グループ</string>
     <string name="assignmentType">課題タイプ</string>
-    <string name="dueDate">期日</string>
+    <string name="dueDate">提出期限</string>
     <string name="needsGrading">採点が必要です</string>
     <string name="published">公開済み</string>
     <string name="unpublished">非公開</string>
@@ -2017,6 +2018,8 @@
     <string name="allAssignments">全課題</string>
     <string name="statusFilter">ステータスフィルター</string>
     <string name="a11y_contentDescription_filter">フィルタ</string>
+    <string name="a11y_filter_active">フィルター有効</string>
+    <string name="a11y_filter_inactive">フィルター無効</string>
     <string name="a11y_contentDescription_postPolicy">投稿ポリシー</string>
     <string name="late">遅延</string>
     <string name="a11y_contentDescription_expand">展開</string>
@@ -2104,4 +2107,20 @@
     <string name="a11y_discussion_checkpoints">ディスカッションチェックポイント</string>
     <string name="multipleDueDates">複数の締切日</string>
     <string name="courseConcludedError">コース完了しました。メッセージを送信できません！</string>
+    <string name="openInDetailView">詳細ビューで開く</string>
+    <string name="immersiveView">没入型ビュー</string>
+    <string name="statuses">ステータス</string>
+    <string name="precise_filtering">正確なフィルタリング</string>
+    <string name="differentiation_tags">差別化タグ</string>
+    <string name="students_without_differentiation_tags">差別化タグなしの受講者</string>
+    <string name="sort_by">並べ替え基準</string>
+    <string name="student_sortable_name">受講者の並べ替え可能な名</string>
+    <string name="student_name">受講者名</string>
+    <string name="submission_date">提出日</string>
+    <string name="submission_status">提出状態</string>
+    <string name="write_score_here">ここにスコアを入力してください</string>
+    <string name="scored_more_than_with_max">/ %s ポイント超を得点</string>
+    <string name="scored_less_than_with_max">/ %s ポイント未満を得点</string>
+    <string name="scored_between_values">%1$s - %2$sを得点</string>
+    <string name="multiple_filters">複数のフィルター</string>
 </resources>

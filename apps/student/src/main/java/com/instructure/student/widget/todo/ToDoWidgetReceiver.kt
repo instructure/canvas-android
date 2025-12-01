@@ -19,6 +19,7 @@ package com.instructure.student.widget.todo
 
 import android.appwidget.AppWidgetManager
 import android.content.Context
+import android.content.Intent
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
@@ -64,14 +65,18 @@ class ToDoWidgetReceiver : GlanceAppWidgetReceiver() {
         super.onDeleted(context, appWidgetIds)
     }
 
-    override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
-        super.onUpdate(context, appWidgetManager, appWidgetIds)
-        updateData(context)
+    override fun onReceive(context: Context, intent: Intent) {
+        super.onReceive(context, intent)
+        // Instead of handling the update in onUpdate, we handle it here so that we can also get intent extras
+        if (intent.action == AppWidgetManager.ACTION_APPWIDGET_UPDATE || intent.action == AppWidgetManager.ACTION_APPWIDGET_RESTORED) {
+            val forceRefresh = intent.getBooleanExtra(EXTRA_FORCE_REFRESH, true)
+            updateData(context, forceRefresh)
+        }
     }
 
-    private fun updateData(context: Context) {
+    private fun updateData(context: Context, forceNetwork: Boolean = true) {
         coroutineScope.launch {
-            toDoWidgetUpdater.updateData(context).collectLatest {
+            toDoWidgetUpdater.updateData(context, forceNetwork).collectLatest {
                 val glanceId = GlanceAppWidgetManager(context)
                     .getGlanceIds(ToDoWidget::class.java)
                     .firstOrNull() ?: return@collectLatest
@@ -89,5 +94,6 @@ class ToDoWidgetReceiver : GlanceAppWidgetReceiver() {
 
     companion object {
         val toDoWidgetUiStateKey = stringPreferencesKey("toDoWidgetUiState")
+        const val EXTRA_FORCE_REFRESH = "extra_force_refresh"
     }
 }

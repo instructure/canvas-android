@@ -71,6 +71,7 @@ class HorizonHomeInteractionTest : HorizonTest() {
         val student = data.students.first()
         val token = data.tokenFor(student)!!
         tokenLogin(data.domain, token, student)
+        composeTestRule.waitForIdle()
 
         homePage.assertBottomNavigationVisible()
     }
@@ -85,6 +86,7 @@ class HorizonHomeInteractionTest : HorizonTest() {
         val student = data.students.first()
         val token = data.tokenFor(student)!!
         tokenLogin(data.domain, token, student)
+        composeTestRule.waitForIdle()
 
         homePage.assertBottomNavigationVisible()
         homePage.clickLearnTab()

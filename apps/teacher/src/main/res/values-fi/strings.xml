@@ -423,8 +423,8 @@
     <string name="submitted_late">Lähetetty myöhässä</string>
     <string name="havent_submitted_yet">Ei ole lähettänyt vielä</string>
     <string name="havent_been_graded">Ei ole vielä arvosteltu</string>
-    <string name="scored_less_than">Sai vähemmän pisteitä kuin&#8230;</string>
-    <string name="scored_more_than">Sai enemmän pisteitä kuin&#8230;</string>
+    <string name="scored_less_than">Sai vähemmän pisteitä kuin</string>
+    <string name="scored_more_than">Sai enemmän pisteitä kuin</string>
     <string name="scored_less_than_value">Sai vähemmän pisteitä kuin%s</string>
     <string name="scored_more_than_value">Sai enemmän pisteitä kuin%s</string>
     <string name="add_comment">Lisää kommentti</string>

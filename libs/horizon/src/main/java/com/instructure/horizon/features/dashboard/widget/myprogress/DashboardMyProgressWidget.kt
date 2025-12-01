@@ -16,20 +16,19 @@
  */
 package com.instructure.horizon.features.dashboard.widget.myprogress
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCardError
+import com.instructure.horizon.features.dashboard.widget.DashboardWidgetPageState
 import com.instructure.horizon.features.dashboard.widget.myprogress.card.DashboardMyProgressCardContent
+import com.instructure.horizon.features.dashboard.widget.myprogress.card.DashboardMyProgressCardState
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -38,6 +37,7 @@ import kotlinx.coroutines.flow.update
 fun DashboardMyProgressWidget(
     shouldRefresh: Boolean,
     refreshState: MutableStateFlow<List<Boolean>>,
+    pageState: DashboardWidgetPageState,
     modifier: Modifier = Modifier
 ) {
     val viewModel = hiltViewModel<DashboardMyProgressViewModel>()
@@ -52,26 +52,23 @@ fun DashboardMyProgressWidget(
         }
     }
 
-    DashboardMyProgressSection(state, modifier)
+    DashboardMyProgressSection(state, pageState, modifier)
 }
 
 @Composable
 fun DashboardMyProgressSection(
     state: DashboardMyProgressUiState,
+    pageState: DashboardWidgetPageState,
     modifier: Modifier = Modifier
 ) {
     when (state.state) {
         DashboardItemState.LOADING -> {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                DashboardMyProgressCardContent(
-                    state.cardState,
-                    true,
-                    modifier
-                )
-            }
+            DashboardMyProgressCardContent(
+                DashboardMyProgressCardState.Loading,
+                true,
+                pageState,
+                modifier
+            )
         }
         DashboardItemState.ERROR -> {
             DashboardWidgetCardError(
@@ -79,21 +76,18 @@ fun DashboardMyProgressSection(
                 R.drawable.trending_up,
                 HorizonColors.PrimitivesSky.sky12,
                 false,
+                pageState,
                 { state.onRefresh {} },
                 modifier = modifier
             )
         }
         DashboardItemState.SUCCESS -> {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                DashboardMyProgressCardContent(
-                    state.cardState,
-                    false,
-                    modifier
-                )
-            }
+            DashboardMyProgressCardContent(
+                state.cardState,
+                false,
+                pageState,
+                modifier
+            )
         }
     }
 }

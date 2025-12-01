@@ -16,11 +16,13 @@
 package com.instructure.horizon.horizonui
 
 import android.content.Context
+import androidx.compose.foundation.layout.BoxWithConstraintsScope
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.SemanticsPropertyReceiver
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.unit.dp
 import com.instructure.horizon.R
 
 fun SemanticsPropertyReceiver.expandable(context: Context, expanded: Boolean) {
@@ -41,3 +43,6 @@ fun SemanticsPropertyReceiver.selectable(context: Context, selected: Boolean) {
     stateDescription = if (selected) selectedStateDesc else unselectedStateDesc
     liveRegion = LiveRegionMode.Assertive
 }
+
+val BoxWithConstraintsScope.isWideLayout
+    get() = this.maxWidth >= 500.dp

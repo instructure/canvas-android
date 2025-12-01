@@ -423,8 +423,8 @@
     <string name="submitted_late">Submetido tardiamente</string>
     <string name="havent_submitted_yet">Ainda não enviou</string>
     <string name="havent_been_graded">Não foram avaliados</string>
-    <string name="scored_less_than">Pontuação Menor que&#8230;</string>
-    <string name="scored_more_than">Pontuação Maior que&#8230;</string>
+    <string name="scored_less_than">Pontuação inferior a</string>
+    <string name="scored_more_than">Pontuação superior a</string>
     <string name="scored_less_than_value">Pontuação Menor que %s</string>
     <string name="scored_more_than_value">Pontuação Maior que %s</string>
     <string name="add_comment">Adicionar comentário</string>

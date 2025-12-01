@@ -1,0 +1,38 @@
+/*
+ * Copyright (C) 2025 - present Instructure, Inc.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, version 3 of the License.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+package com.instructure.horizon.features.dashboard.widget.course.list
+
+import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
+import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetProgramsManager
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
+import com.instructure.canvasapi2.utils.ApiPrefs
+import javax.inject.Inject
+
+class DashboardCourseListRepository @Inject constructor(
+    private val apiPrefs: ApiPrefs,
+    private val getCoursesManager: HorizonGetCoursesManager,
+    private val getProgramsManager: GetProgramsManager
+) {
+    suspend fun getCourses(foreRefresh: Boolean): List<CourseWithProgress> {
+        return getCoursesManager.getCoursesWithProgress(apiPrefs.user?.id ?: -1, foreRefresh).dataOrThrow
+    }
+
+    suspend fun getPrograms(foreRefresh: Boolean): List<Program> {
+        return getProgramsManager.getPrograms(foreRefresh)
+    }
+}

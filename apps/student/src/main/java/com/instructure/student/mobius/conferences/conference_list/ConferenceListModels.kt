@@ -26,6 +26,12 @@ sealed class ConferenceListEvent {
     object LaunchInBrowserFinished : ConferenceListEvent()
     data class DataLoaded(val listResult: DataResult<List<Conference>>) : ConferenceListEvent()
     data class ConferenceClicked(val conferenceId: Long) : ConferenceListEvent()
+    data class HeaderClicked(val headerType: ConferenceHeaderType) : ConferenceListEvent()
+}
+
+enum class ConferenceHeaderType {
+    NEW_CONFERENCES,
+    CONCLUDED_CONFERENCES
 }
 
 sealed class ConferenceListEffect {
@@ -38,5 +44,7 @@ data class ConferenceListModel(
     val canvasContext: CanvasContext,
     val isLoading: Boolean = false,
     val isLaunchingInBrowser: Boolean = false,
-    val listResult: DataResult<List<Conference>>? = null
+    val listResult: DataResult<List<Conference>>? = null,
+    val isNewConferencesExpanded: Boolean = true,
+    val isConcludedConferencesExpanded: Boolean = true
 )

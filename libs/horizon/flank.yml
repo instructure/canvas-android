@@ -1,0 +1,25 @@
+gcloud:
+  project: delta-essence-114723
+# Use the next two lines to run locally
+#  app: ../apps/student/build/outputs/apk/qa/debug/student-qa-debug.apk
+#  test: ./build/outputs/apk/androidTest/debug/horizon-debug-androidTest.apk
+  app: ./apps/student/build/outputs/apk/qa/debug/student-qa-debug.apk
+  test: ./libs/horizon/build/outputs/apk/androidTest/debug/horizon-debug-androidTest.apk
+  results-bucket: android-student
+  auto-google-login: true
+  use-orchestrator: true
+  performance-metrics: false
+  record-video: true
+  timeout: 30m
+  test-targets:
+  - package com.instructure.horizon.ui
+  - notAnnotation com.instructure.canvas.espresso.annotations.E2E, com.instructure.canvas.espresso.annotations.Stub, com.instructure.canvas.espresso.annotations.FlakyE2E, com.instructure.canvas.espresso.annotations.KnownBug, com.instructure.canvas.espresso.annotations.OfflineE2E
+  device:
+  - model: Pixel2.arm
+    version: 29
+    locale: en_US
+    orientation: portrait
+
+flank:
+  testShards: 10
+  testRuns: 1

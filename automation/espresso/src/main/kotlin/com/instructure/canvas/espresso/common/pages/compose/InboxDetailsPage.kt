@@ -141,6 +141,8 @@ class InboxDetailsPage(private val composeTestRule: ComposeTestRule) {
 
         composeTestRule.onNode(hasTestTag("messageMenuItem").and(hasText(buttonLabel)), true)
             .performClick()
+
+        composeTestRule.waitForIdle()
     }
 
     fun pressOverflowMenuItemForConversation(buttonLabel: String) {
