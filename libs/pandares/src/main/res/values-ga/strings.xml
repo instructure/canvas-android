@@ -277,6 +277,7 @@
     <string name="checkBoxFinalGradeOption">Bunaithe ar thascanna marcáilte</string>
     <string name="checkBoxWhatIfGradeOption">Taispeáin an Scór dá mba rud é</string>
     <string name="whatIfDialogText">Scór dá mba rud é</string>
+    <string name="whatIfScoreExceedsMaximum">Ní féidir leis an scór uasta n bpointí a shárú</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s as %2$s pointí, %3$s</string>
     <string name="inbox">Bosca Isteach</string>
@@ -2067,6 +2068,8 @@
     <string name="allAssignments">Gach Tasc</string>
     <string name="statusFilter">Scagaire Stádais</string>
     <string name="a11y_contentDescription_filter">Scag</string>
+    <string name="a11y_filter_active">Scagaire gníomhach</string>
+    <string name="a11y_filter_inactive">Scagaire neamhghníomhach</string>
     <string name="a11y_contentDescription_postPolicy">Polasaí postála</string>
     <string name="late">Déanach</string>
     <string name="a11y_contentDescription_expand">Leathnaigh</string>
@@ -2155,4 +2158,20 @@
     <string name="a11y_discussion_checkpoints">Seicphointí Fóraim</string>
     <string name="multipleDueDates">Dáta Dlite Iolracha</string>
     <string name="courseConcludedError">Críochnaíodh an cúrsa. Ní féidir teachtaireachtaí a sheoladh!</string>
+    <string name="openInDetailView">Oscail i Radharc Mionsonraithe</string>
+    <string name="immersiveView">Radharc tumtha</string>
+    <string name="statuses">Stádais</string>
+    <string name="precise_filtering">Scagadh beacht</string>
+    <string name="differentiation_tags">Clibeanna difreála</string>
+    <string name="students_without_differentiation_tags">Mic léinn nach bhfuil clibeanna Difreála orthu</string>
+    <string name="sort_by">Sórtáil de réir</string>
+    <string name="student_sortable_name">Ainm insórtáilte mac léinn</string>
+    <string name="student_name">Ainm an mhic léinn</string>
+    <string name="submission_date">Dáta na huaslódála</string>
+    <string name="submission_status">Stádas na huaslódála</string>
+    <string name="write_score_here">Scríobh scór anseo</string>
+    <string name="scored_more_than_with_max">Scóráladh Níos mó ná / %s (b)p(h)ointe</string>
+    <string name="scored_less_than_with_max">Scóráladh Níos lú ná / %s (b)p(h)ointe</string>
+    <string name="scored_between_values">Scóráilte %1$s - %2$s</string>
+    <string name="multiple_filters">Scagairí iolracha</string>
 </resources>

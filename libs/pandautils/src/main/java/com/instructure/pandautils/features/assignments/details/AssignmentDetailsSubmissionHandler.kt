@@ -27,14 +27,18 @@ import java.io.File
 
 interface AssignmentDetailsSubmissionHandler {
     var isUploading: Boolean
+    var isFailed: Boolean
+    var lastSubmissionId: Long?
     var lastSubmissionAssignmentId: Long?
     var lastSubmissionSubmissionType: String?
     var lastSubmissionIsDraft: Boolean
     var lastSubmissionEntry: String?
 
-    fun addAssignmentSubmissionObserver(context: Context, assignmentId: Long, userId: Long, resources: Resources, data: MutableLiveData<AssignmentDetailsViewData>, refreshAssignment: () -> Unit)
+    fun addAssignmentSubmissionObserver(context: Context, assignmentId: Long, userId: Long, resources: Resources, data: MutableLiveData<AssignmentDetailsViewData>, refreshAssignment: () -> Unit, updateGradeCell: () -> Unit = {})
 
     fun removeAssignmentSubmissionObserver()
+
+    suspend fun ensureSubmissionStateIsCurrent(assignmentId: Long, userId: Long)
 
     fun uploadAudioSubmission(context: Context?, course: Course?, assignment: Assignment?, file: File?)
 

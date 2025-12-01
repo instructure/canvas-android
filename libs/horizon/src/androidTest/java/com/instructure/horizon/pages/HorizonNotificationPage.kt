@@ -28,7 +28,7 @@ class HorizonNotificationPage(private val composeTestRule: ComposeTestRule) {
     fun assertNotificationItem(title: String, label: String) {
         composeTestRule.onNode(
             hasAnyChild(hasText(label)).and(
-                hasAnyChild(hasText(title))
+                hasAnyChild(hasText(title, true))
             )
         ).assertIsDisplayed().onChild().assertHasClickAction()
     }

@@ -24,6 +24,8 @@ import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertIsNotSelected
 import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.assertTextContains
+import androidx.compose.ui.test.hasAnyAncestor
+import androidx.compose.ui.test.hasAnyDescendant
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
@@ -276,6 +278,28 @@ class SpeedGraderGradePage(private val composeTestRule: ComposeTestRule) : BaseP
             composeTestRule.onAllNodesWithTag("speedGraderStatusDropdown")
                 .fetchSemanticsNodes().any { it.config.getOrNull(androidx.compose.ui.semantics.SemanticsProperties.Text)?.any { text -> text.text.contains(statusText) } == true }
         }
+    }
+
+    /**
+     * Asserts that the current status is displayed for the specified student.
+     *
+     * @param expectedStatus The expected status to be displayed.
+     * @param studentName The name of the student associated with the status.
+     */
+    fun assertCurrentStatus(expectedStatus: String, studentName: String) {
+        composeTestRule.onNode(hasText(expectedStatus) and hasTestTag("submissionStatusLabel") and hasAnyAncestor(hasAnyDescendant(hasText(studentName))), useUnmergedTree = true).assertIsDisplayed()
+    }
+
+    /**
+     * Selects a status from the status dropdown in the Compose UI.
+     *
+     * @param statusText The status text to be selected from the dropdown.
+     */
+    fun selectStatus(statusText: String) {
+        composeTestRule.onNodeWithTag("speedGraderStatusDropdown", useUnmergedTree = true).performClick()
+        composeTestRule.waitForIdle()
+        composeTestRule.onNode(hasText(statusText), useUnmergedTree = true).performClick()
+        composeTestRule.waitForIdle()
     }
 
     /**

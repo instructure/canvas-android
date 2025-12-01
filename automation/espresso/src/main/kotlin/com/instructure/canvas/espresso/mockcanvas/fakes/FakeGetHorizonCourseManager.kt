@@ -90,25 +90,31 @@ class FakeGetHorizonCourseManager(): HorizonGetCoursesManager {
 
     fun getCourses(): List<CourseWithProgress> {
         val courses = MockCanvas.data.courses.values.toList()
-        val activeCourse = CourseWithProgress(
-            courseId = courses[0].id,
-            courseName = courses[0].name,
-            courseSyllabus = "Syllabus for Course 1",
-            progress = 0.25
-        )
-        val completedCourse = CourseWithProgress(
-            courseId = courses[1].id,
-            courseName = courses[1].name,
-            courseSyllabus = "Syllabus for Course 2",
-            progress = 1.0
-        )
-        val invitedCourse = CourseWithProgress(
-            courseId = courses[2].id,
-            courseName = courses[2].name,
-            courseSyllabus = null,
-            progress = 0.0
-        )
+        val activeCourse = if (courses.size > 0) {
+            CourseWithProgress(
+                courseId = courses[0].id,
+                courseName = courses[0].name,
+                courseSyllabus = "Syllabus for Course 1",
+                progress = 0.25
+            )
+        } else { null }
+        val completedCourse = if (courses.size > 1) {
+            CourseWithProgress(
+                courseId = courses[1].id,
+                courseName = courses[1].name,
+                courseSyllabus = "Syllabus for Course 2",
+                progress = 1.0
+            )
+        } else { null }
+        val invitedCourse = if (courses.size > 2) {
+            CourseWithProgress(
+                courseId = courses[2].id,
+                courseName = courses[2].name,
+                courseSyllabus = null,
+                progress = 0.0
+            )
+        } else { null }
 
-        return listOf(activeCourse, completedCourse, invitedCourse)
+        return listOfNotNull(activeCourse, completedCourse, invitedCourse)
     }
 }

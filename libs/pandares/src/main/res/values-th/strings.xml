@@ -277,6 +277,7 @@
     <string name="checkBoxFinalGradeOption">พิจารณาจากภารกิจที่ให้เกรด</string>
     <string name="checkBoxWhatIfGradeOption">แสดงคะแนน What-If</string>
     <string name="whatIfDialogText">คะแนน What-If</string>
+    <string name="whatIfScoreExceedsMaximum">คะแนนจะต้องไม่เกินคะแนนสูงสุด</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s จาก %2$s คะแนน, %3$s</string>
     <string name="inbox">กล่องจดหมาย</string>
@@ -2052,6 +2053,8 @@
     <string name="allAssignments">ภารกิจทั้งหมด</string>
     <string name="statusFilter">ตัวกรองสถานะ</string>
     <string name="a11y_contentDescription_filter">ตัวกรอง</string>
+    <string name="a11y_filter_active">ตัวกรองใช้งาน</string>
+    <string name="a11y_filter_inactive">ตัวกรองไม่ได้ใช้งาน</string>
     <string name="a11y_contentDescription_postPolicy">นโยบายการโพสต์</string>
     <string name="late">ล่าช้า</string>
     <string name="a11y_contentDescription_expand">ขยาย</string>
@@ -2140,4 +2143,20 @@
     <string name="a11y_discussion_checkpoints">จุดตรวจสอบส่วนการพูดคุย</string>
     <string name="multipleDueDates">วันครบกำหนดหลายรายการ</string>
     <string name="courseConcludedError">บทเรียนสิ้นสุดแล้ว ไม่สามารถส่งข้อความได้!</string>
+    <string name="openInDetailView">เปิดในมุมมองรายละเอียด</string>
+    <string name="immersiveView">มุมมองเชิงลึก</string>
+    <string name="statuses">สถานะ</string>
+    <string name="precise_filtering">คัดกรองอย่างแม่นยำ</string>
+    <string name="differentiation_tags">แท็กเฉพาะ</string>
+    <string name="students_without_differentiation_tags">ผู้เรียนที่ไม่มีแท็กเฉพาะ</string>
+    <string name="sort_by">จัดเรียงจาก</string>
+    <string name="student_sortable_name">ชื่อแบบจัดเรียงได้ของผู้เรียน</string>
+    <string name="student_name">ชื่อผู้เรียน</string>
+    <string name="submission_date">ข้อมูลการจัดส่ง</string>
+    <string name="submission_status">สถานะผลงานจัดส่ง</string>
+    <string name="write_score_here">เขียนคะแนนที่นี่</string>
+    <string name="scored_more_than_with_max">คะแนนมากกว่า / %s คะแนน</string>
+    <string name="scored_less_than_with_max">คะแนนน้อยกว่า / %s คะแนน</string>
+    <string name="scored_between_values">คะแนน %1$s - %2$s</string>
+    <string name="multiple_filters">หลายตัวกรอง</string>
 </resources>

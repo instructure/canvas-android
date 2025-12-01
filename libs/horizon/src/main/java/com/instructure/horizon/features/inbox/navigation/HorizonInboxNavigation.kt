@@ -16,12 +16,10 @@
  */
 package com.instructure.horizon.features.inbox.navigation
 
-import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavBackStackEntry
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -39,12 +37,9 @@ import com.instructure.horizon.features.inbox.list.HorizonInboxListScreen
 import com.instructure.horizon.features.inbox.list.HorizonInboxListViewModel
 import com.instructure.horizon.horizonui.animation.enterTransition
 import com.instructure.horizon.horizonui.animation.exitTransition
-import com.instructure.horizon.horizonui.animation.mainEnterTransition
-import com.instructure.horizon.horizonui.animation.mainExitTransition
 import com.instructure.horizon.horizonui.animation.popEnterTransition
 import com.instructure.horizon.horizonui.animation.popExitTransition
 import com.instructure.horizon.navigation.MainNavigationRoute
-import com.instructure.pandautils.utils.orDefault
 
 fun NavGraphBuilder.horizonInboxNavigation(
     navController: NavHostController,
@@ -55,10 +50,10 @@ fun NavGraphBuilder.horizonInboxNavigation(
     ) {
         composable(
             HorizonInboxRoute.InboxList.route,
-            enterTransition = { if (isComposeTransition()) mainEnterTransition else enterTransition },
-            exitTransition = { if (isComposeTransition()) mainExitTransition else exitTransition },
-            popEnterTransition = { if (isComposeTransition()) mainEnterTransition else popEnterTransition },
-            popExitTransition = { if (isComposeTransition()) mainExitTransition else popExitTransition },
+            enterTransition = { enterTransition() },
+            exitTransition = { exitTransition() },
+            popEnterTransition = { popEnterTransition() },
+            popExitTransition = { popExitTransition() },
         ) {
             val viewModel = hiltViewModel<HorizonInboxListViewModel>()
             val uiState by viewModel.uiState.collectAsState()
@@ -66,10 +61,6 @@ fun NavGraphBuilder.horizonInboxNavigation(
         }
         composable(
             HorizonInboxRoute.InboxDetails.route,
-            enterTransition = { enterTransition },
-            exitTransition = { exitTransition },
-            popEnterTransition = { popEnterTransition },
-            popExitTransition = { popExitTransition },
             arguments = listOf(
                 navArgument(HorizonInboxRoute.InboxDetails.TYPE) {
                     type = androidx.navigation.NavType.StringType
@@ -90,10 +81,6 @@ fun NavGraphBuilder.horizonInboxNavigation(
         }
         composable(
             HorizonInboxRoute.InboxCompose.route,
-            enterTransition = { mainEnterTransition },
-            exitTransition = { mainExitTransition },
-            popEnterTransition = { mainEnterTransition },
-            popExitTransition = { mainExitTransition },
         ) {
             val viewModel: HorizonInboxComposeViewModel = hiltViewModel()
             val uiState by viewModel.uiState.collectAsState()
@@ -107,10 +94,6 @@ fun NavGraphBuilder.horizonInboxNavigation(
         // Conversation Details from deeplink
         composable(
             HorizonInboxRoute.InboxDetailsDeepLink.route,
-            enterTransition = { mainEnterTransition },
-            exitTransition = { mainExitTransition },
-            popEnterTransition = { mainEnterTransition },
-            popExitTransition = { mainExitTransition },
             arguments = listOf(
                 navArgument(HorizonInboxRoute.InboxDetails.ID) {
                     type = androidx.navigation.NavType.LongType
@@ -135,10 +118,6 @@ fun NavGraphBuilder.horizonInboxNavigation(
         // Announcement Details from deeplink
         composable(
             HorizonInboxRoute.CourseAnnouncementDetailsDeepLink.route,
-            enterTransition = { mainEnterTransition },
-            exitTransition = { mainExitTransition },
-            popEnterTransition = { mainEnterTransition },
-            popExitTransition = { mainExitTransition },
             arguments = listOf(
                 navArgument(HorizonInboxRoute.InboxDetails.ID) {
                     type = androidx.navigation.NavType.LongType
@@ -167,13 +146,4 @@ fun NavGraphBuilder.horizonInboxNavigation(
             }
         }
     }
-}
-
-private fun AnimatedContentTransitionScope<NavBackStackEntry>.isComposeTransition(): Boolean {
-    return this.targetState.destination.route
-        ?.startsWith(HorizonInboxRoute.InboxCompose.route)
-        .orDefault() ||
-        this.initialState.destination.route
-            ?.startsWith(HorizonInboxRoute.InboxCompose.route)
-            .orDefault()
 }

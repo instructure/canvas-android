@@ -431,8 +431,8 @@
     <string name="submitted_late">Przesłano z opóźnieniem</string>
     <string name="havent_submitted_yet">Nie przesłano</string>
     <string name="havent_been_graded">Nie oceniono</string>
-    <string name="scored_less_than">Ocenione poniżej&#8230;</string>
-    <string name="scored_more_than">Ocenione powyżej&#8230;</string>
+    <string name="scored_less_than">Wynik punktowy poniżej</string>
+    <string name="scored_more_than">Wynik punktowy powyżej</string>
     <string name="scored_less_than_value">Ocenione poniżej %s</string>
     <string name="scored_more_than_value">Ocenione powyżej %s</string>
     <string name="add_comment">Dodaj komentarz</string>

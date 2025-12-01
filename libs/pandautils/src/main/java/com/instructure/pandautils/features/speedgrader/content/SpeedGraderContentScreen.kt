@@ -72,7 +72,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.compose.AndroidFragment
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.instructure.canvasapi2.utils.DateHelper
@@ -308,7 +308,8 @@ private fun SubmissionStatus(
                 is SubmissionStateLabel.Custom -> submissionStatus.label
             },
             color = colorResource(id = submissionStatus.colorRes),
-            fontSize = 14.sp
+            fontSize = 14.sp,
+            modifier  = Modifier.testTag("submissionStatusLabel")
         )
     }
 }
