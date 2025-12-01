@@ -26,5 +26,11 @@ data class CoursesWidgetUiState(
     val groups: List<GroupCardItem> = emptyList(),
     val isCoursesExpanded: Boolean = true,
     val isGroupsExpanded: Boolean = true,
-    val showGrades: Boolean = false
+    val showGrades: Boolean = false,
+    val onCourseClick: (Long) -> Unit = {},
+    val onGroupClick: (Long) -> Unit = {},
+    val onToggleCoursesExpanded: () -> Unit = {},
+    val onToggleGroupsExpanded: () -> Unit = {},
+    val onManageOfflineContent: (Long) -> Unit = {},
+    val onCustomizeCourse: (Long) -> Unit = {}
 )

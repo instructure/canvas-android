@@ -40,13 +40,38 @@ class CoursesWidgetViewModel @Inject constructor(
     private val coursesWidgetBehavior: CoursesWidgetBehavior
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(CoursesWidgetUiState())
+    private val _uiState = MutableStateFlow(
+        CoursesWidgetUiState(
+            onCourseClick = ::onCourseClick,
+            onGroupClick = ::onGroupClick,
+            onToggleCoursesExpanded = ::toggleCoursesExpanded,
+            onToggleGroupsExpanded = ::toggleGroupsExpanded,
+            onManageOfflineContent = ::onManageOfflineContent,
+            onCustomizeCourse = ::onCustomizeCourse
+        )
+    )
     val uiState: StateFlow<CoursesWidgetUiState> = _uiState.asStateFlow()
 
     init {
         loadData()
         observeExpandedStates()
         observeGradeVisibility()
+    }
+
+    private fun onCourseClick(courseId: Long) {
+        coursesWidgetBehavior.onCourseClick(courseId)
+    }
+
+    private fun onGroupClick(groupId: Long) {
+        coursesWidgetBehavior.onGroupClick(groupId)
+    }
+
+    private fun onManageOfflineContent(courseId: Long) {
+        coursesWidgetBehavior.onManageOfflineContent(courseId)
+    }
+
+    private fun onCustomizeCourse(courseId: Long) {
+        coursesWidgetBehavior.onCustomizeCourse(courseId)
     }
 
     fun refresh() {

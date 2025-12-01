@@ -27,4 +27,20 @@ class StudentCoursesWidgetBehavior @Inject constructor(
     override fun observeGradeVisibility(): Flow<Boolean> {
         return observeGradeVisibilityUseCase(Unit)
     }
+
+    override fun onCourseClick(courseId: Long) {
+        // TODO: Navigate to course details
+    }
+
+    override fun onGroupClick(groupId: Long) {
+        // TODO: Navigate to group details
+    }
+
+    override fun onManageOfflineContent(courseId: Long) {
+        // TODO: Navigate to manage offline content for course
+    }
+
+    override fun onCustomizeCourse(courseId: Long) {
+        // TODO: Navigate to customize course (color/nickname)
+    }
 }
