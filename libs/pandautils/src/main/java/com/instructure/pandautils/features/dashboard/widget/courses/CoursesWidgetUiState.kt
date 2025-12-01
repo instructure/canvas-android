@@ -27,6 +27,7 @@ data class CoursesWidgetUiState(
     val isCoursesExpanded: Boolean = true,
     val isGroupsExpanded: Boolean = true,
     val showGrades: Boolean = false,
+    val showColorOverlay: Boolean = false,
     val onCourseClick: (Long) -> Unit = {},
     val onGroupClick: (Long) -> Unit = {},
     val onToggleCoursesExpanded: () -> Unit = {},

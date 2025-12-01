@@ -56,6 +56,7 @@ class CoursesWidgetViewModel @Inject constructor(
         loadData()
         observeExpandedStates()
         observeGradeVisibility()
+        observeColorOverlay()
     }
 
     private fun onCourseClick(courseId: Long) {
@@ -142,6 +143,16 @@ class CoursesWidgetViewModel @Inject constructor(
                 .catch { }
                 .collect { showGrades ->
                     _uiState.update { it.copy(showGrades = showGrades) }
+                }
+        }
+    }
+
+    private fun observeColorOverlay() {
+        viewModelScope.launch {
+            coursesWidgetBehavior.observeColorOverlay()
+                .catch { }
+                .collect { showColorOverlay ->
+                    _uiState.update { it.copy(showColorOverlay = showColorOverlay) }
                 }
         }
     }

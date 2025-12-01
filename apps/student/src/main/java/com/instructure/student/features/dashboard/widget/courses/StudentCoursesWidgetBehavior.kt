@@ -21,11 +21,16 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class StudentCoursesWidgetBehavior @Inject constructor(
-    private val observeGradeVisibilityUseCase: ObserveGradeVisibilityUseCase
+    private val observeGradeVisibilityUseCase: ObserveGradeVisibilityUseCase,
+    private val observeColorOverlayUseCase: ObserveColorOverlayUseCase
 ) : CoursesWidgetBehavior {
 
     override fun observeGradeVisibility(): Flow<Boolean> {
         return observeGradeVisibilityUseCase(Unit)
+    }
+
+    override fun observeColorOverlay(): Flow<Boolean> {
+        return observeColorOverlayUseCase(Unit)
     }
 
     override fun onCourseClick(courseId: Long) {

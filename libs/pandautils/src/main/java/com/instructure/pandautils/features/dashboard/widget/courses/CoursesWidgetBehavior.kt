@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface CoursesWidgetBehavior {
     fun observeGradeVisibility(): Flow<Boolean>
+    fun observeColorOverlay(): Flow<Boolean>
     fun onCourseClick(courseId: Long)
     fun onGroupClick(groupId: Long)
     fun onManageOfflineContent(courseId: Long)

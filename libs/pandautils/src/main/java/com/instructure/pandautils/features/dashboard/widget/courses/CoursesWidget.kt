@@ -81,6 +81,7 @@ private fun CoursesWidgetContent(
                             CourseCard(
                                 courseCard = course,
                                 showGrade = uiState.showGrades,
+                                showColorOverlay = uiState.showColorOverlay,
                                 onCourseClick = uiState.onCourseClick,
                                 onManageOfflineContent = uiState.onManageOfflineContent,
                                 onCustomizeCourse = uiState.onCustomizeCourse

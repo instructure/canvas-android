@@ -69,6 +69,7 @@ import com.instructure.pandautils.domain.models.courses.GradeDisplay
 fun CourseCard(
     courseCard: CourseCardItem,
     showGrade: Boolean,
+    showColorOverlay: Boolean,
     onCourseClick: (Long) -> Unit,
     onMenuClick: ((Long) -> Unit)? = null,
     onManageOfflineContent: ((Long) -> Unit)? = null,
@@ -117,7 +118,7 @@ fun CourseCard(
                         modifier = Modifier
                             .fillMaxSize()
                             .clip(RoundedCornerShape(22.dp))
-                            .alpha(0.4f),
+                            .alpha(if (showColorOverlay) 0.4f else 1f),
                         contentScale = ContentScale.Crop
                     )
                 }
@@ -380,6 +381,7 @@ private fun CourseCardPreview() {
             isClickable = true
         ),
         showGrade = true,
+        showColorOverlay = true,
         onCourseClick = {},
         onMenuClick = {}
     )
