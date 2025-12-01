@@ -17,12 +17,24 @@
 
 package com.instructure.dataseeding.api
 
-import com.instructure.dataseeding.model.*
+import com.instructure.dataseeding.model.AssignmentApiModel
+import com.instructure.dataseeding.model.AttachmentApiModel
+import com.instructure.dataseeding.model.CreateSubmissionCommentWrapper
+import com.instructure.dataseeding.model.FileType
+import com.instructure.dataseeding.model.GradeSubmission
+import com.instructure.dataseeding.model.GradeSubmissionWrapper
+import com.instructure.dataseeding.model.SubmissionApiModel
+import com.instructure.dataseeding.model.SubmissionType
+import com.instructure.dataseeding.model.SubmitCourseAssignmentSubmissionWrapper
 import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.Randomizer
 import com.instructure.dataseeding.util.RetryBackoff
 import retrofit2.Call
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Path
 
 object SubmissionsApi {
     interface SubmissionsService {
@@ -103,10 +115,11 @@ object SubmissionsApi {
                         assignmentId: Long,
                         studentId: Long,
                         excused: Boolean = false,
-                        postedGrade: String? = null): SubmissionApiModel {
+                        postedGrade: String? = null,
+                        customGradeStatusId: String? = null): SubmissionApiModel {
 
         return submissionsService(teacherToken)
-                .gradeSubmission(courseId, assignmentId, studentId, GradeSubmissionWrapper(GradeSubmission(postedGrade, excused)))
+                .gradeSubmission(courseId, assignmentId, studentId, GradeSubmissionWrapper(GradeSubmission(postedGrade, excused, customGradeStatusId)))
                 .execute()
                 .body()!!
     }

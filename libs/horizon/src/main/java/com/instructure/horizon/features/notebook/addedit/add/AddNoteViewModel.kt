@@ -17,9 +17,7 @@
 package com.instructure.horizon.features.notebook.addedit.add
 
 import android.content.Context
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedData
@@ -28,13 +26,11 @@ import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlight
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
-import com.instructure.horizon.features.notebook.addedit.AddEditNoteUiState
+import com.instructure.horizon.features.notebook.addedit.AddEditViewModel
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.horizon.features.notebook.navigation.NotebookRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
@@ -43,7 +39,7 @@ class AddNoteViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val repository: AddNoteRepository,
     savedStateHandle: SavedStateHandle
-): ViewModel() {
+): AddEditViewModel() {
     private val courseId: String = savedStateHandle.toRoute<NotebookRoute.AddNotebook>().courseId
     private val objectType: String = savedStateHandle.toRoute<NotebookRoute.AddNotebook>().objectType
     private val objectId: String = savedStateHandle.toRoute<NotebookRoute.AddNotebook>().objectId
@@ -56,29 +52,30 @@ class AddNoteViewModel @Inject constructor(
     private val highlightedText: String = savedStateHandle.toRoute<NotebookRoute.AddNotebook>().highlightedText
     private val noteType: String? = savedStateHandle.toRoute<NotebookRoute.AddNotebook>().noteType
 
-    private val _uiState = MutableStateFlow(
-        AddEditNoteUiState(
-            highlightedData = NoteHighlightedData(
-                selectedText = highlightedText,
-                range = NoteHighlightedDataRange(
-                    startOffset = highlightedTextStartOffset,
-                    endOffset = highlightedTextEndOffset,
-                    startContainer = highlightedTextStartContainer,
-                    endContainer = highlightedTextEndContainer
+    init {
+        _uiState.update {
+            it.copy(
+                title = context.getString(R.string.createNoteTitle),
+                hasContentChange = true,
+                highlightedData = NoteHighlightedData(
+                    selectedText = highlightedText,
+                    range = NoteHighlightedDataRange(
+                        startOffset = highlightedTextStartOffset,
+                        endOffset = highlightedTextEndOffset,
+                        startContainer = highlightedTextStartContainer,
+                        endContainer = highlightedTextEndContainer
+                    ),
+                    textPosition = NoteHighlightedDataTextPosition(
+                        start = highlightedTextSelectionStart,
+                        end = highlightedTextSelectionEnd
+                    )
                 ),
-                textPosition = NoteHighlightedDataTextPosition(
-                    start = highlightedTextSelectionStart,
-                    end = highlightedTextSelectionEnd
-                )
-            ),
-            onTypeChanged = ::onTypeChanged,
-            onUserCommentChanged = ::onUserCommentChanged,
-            onSaveNote = ::addNote,
-            onSnackbarDismiss = ::onSnackbarDismissed,
-            type = if (noteType == null) null else NotebookType.valueOf(noteType),
-        )
-    )
-    val uiState = _uiState.asStateFlow()
+                onSaveNote = ::addNote,
+                onDeleteNote = null,
+                type = if (noteType == null) null else NotebookType.valueOf(noteType),
+            )
+        }
+    }
 
     private fun addNote(onFinished: () -> Unit) {
         viewModelScope.tryLaunch {
@@ -100,19 +97,7 @@ class AddNoteViewModel @Inject constructor(
         }
     }
 
-    private fun onTypeChanged(newType: NotebookType?) {
-        _uiState.update {
-            it.copy(
-                type = newType
-            )
-        }
-    }
-
-    private fun onUserCommentChanged(userComment: TextFieldValue) {
-        _uiState.update { it.copy(userComment = userComment) }
-    }
-
-    private fun onSnackbarDismissed() {
-        _uiState.update { it.copy(snackbarMessage = null) }
+    override fun hasContentChange(): Boolean {
+        return true
     }
 }

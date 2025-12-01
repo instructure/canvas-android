@@ -74,4 +74,8 @@ val appDatabaseMigrations = arrayOf(
     createMigration(12, 13) { database ->
         database.execSQL("ALTER TABLE ReminderEntity ADD COLUMN tag TEXT")
     },
+
+    createMigration(13, 14) { database ->
+        database.execSQL("CREATE TABLE IF NOT EXISTS todo_filter (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, userDomain TEXT NOT NULL, userId INTEGER NOT NULL, personalTodos INTEGER NOT NULL DEFAULT 0, calendarEvents INTEGER NOT NULL DEFAULT 0, showCompleted INTEGER NOT NULL DEFAULT 0, favoriteCourses INTEGER NOT NULL DEFAULT 0, pastDateRange TEXT NOT NULL DEFAULT 'ONE_WEEK', futureDateRange TEXT NOT NULL DEFAULT 'ONE_WEEK')")
+    },
 )

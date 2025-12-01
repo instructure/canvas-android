@@ -124,6 +124,8 @@ open class BaseCalendarFragment : BaseCanvasFragment(), NavigationCallbacks, Fra
 
             SharedCalendarAction.TodayButtonTapped -> viewModel.handleAction(CalendarAction.TodayTapped)
 
+            is SharedCalendarAction.SelectDay -> viewModel.handleAction(CalendarAction.DaySelected(action.date))
+
             else -> {}
         }
     }

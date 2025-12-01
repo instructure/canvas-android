@@ -17,10 +17,15 @@
 package com.instructure.teacher.factory
 
 
+import com.instructure.canvasapi2.apis.UserAPI
+import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.teacher.presenters.DashboardPresenter
 import com.instructure.teacher.viewinterface.CoursesView
 import com.instructure.pandautils.blueprint.PresenterFactory
 
-class DashboardPresenterFactory : PresenterFactory<CoursesView, DashboardPresenter> {
-    override fun create() = DashboardPresenter()
+class DashboardPresenterFactory(
+    private val userApi: UserAPI.UsersInterface,
+    private val networkStateProvider: NetworkStateProvider
+) : PresenterFactory<CoursesView, DashboardPresenter> {
+    override fun create() = DashboardPresenter(userApi, networkStateProvider)
 }

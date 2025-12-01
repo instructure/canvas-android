@@ -277,6 +277,7 @@
     <string name="checkBoxFinalGradeOption">Sou baz devwa yo evalye yo</string>
     <string name="checkBoxWhatIfGradeOption">Montre Kisa-Si Nòt</string>
     <string name="whatIfDialogText">Kisa-Si Nòt</string>
+    <string name="whatIfScoreExceedsMaximum">Nòt la pa ka depase kantite pwen maksimòm yo</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s sou %2$s pwen, %3$s</string>
     <string name="inbox">Bwat resepsyon</string>
@@ -2052,6 +2053,8 @@
     <string name="allAssignments">Tout Sesyon yo</string>
     <string name="statusFilter">Filtè Estati</string>
     <string name="a11y_contentDescription_filter">Filtè</string>
+    <string name="a11y_filter_active">Filtè aktive</string>
+    <string name="a11y_filter_inactive">Filtè pa aktive</string>
     <string name="a11y_contentDescription_postPolicy">Politik pòs</string>
     <string name="late">An reta</string>
     <string name="a11y_contentDescription_expand">Elaji</string>
@@ -2140,4 +2143,20 @@
     <string name="a11y_discussion_checkpoints">Pwen Kontwòl Diskisyon yo</string>
     <string name="multipleDueDates">Plizyè Delè</string>
     <string name="courseConcludedError">Kou a fini. Enposib pou voye mesaj!</string>
+    <string name="openInDetailView">Ouvri nan Vizyalizasyon detaye</string>
+    <string name="immersiveView">Gade Anplis</string>
+    <string name="statuses">Estati</string>
+    <string name="precise_filtering">Filtraj ak presizyon</string>
+    <string name="differentiation_tags">Etikèt Diferansyasyon</string>
+    <string name="students_without_differentiation_tags">Elèv san Etikèt Diferansyasyon</string>
+    <string name="sort_by">Klase pa</string>
+    <string name="student_sortable_name">Non triyab pa elèv</string>
+    <string name="student_name">Non elèv</string>
+    <string name="submission_date">Dat soumisyon</string>
+    <string name="submission_status">Estati Soumisyon</string>
+    <string name="write_score_here">Ekri rezilta a isit la</string>
+    <string name="scored_more_than_with_max">Te fè plis pase / %s pwen</string>
+    <string name="scored_less_than_with_max">Te fè mwens pase / %s pwen</string>
+    <string name="scored_between_values">Te fè %1$s - %2$s</string>
+    <string name="multiple_filters">Plizyè filtè</string>
 </resources>

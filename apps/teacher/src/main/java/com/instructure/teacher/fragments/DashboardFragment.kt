@@ -20,10 +20,15 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.view.MenuItem
+import android.view.MotionEvent
+import android.view.MotionEvent.ACTION_CANCEL
 import android.view.View
+import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
@@ -33,7 +38,18 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
 import com.instructure.pandautils.features.dashboard.notifications.DashboardNotificationsFragment
 import com.instructure.pandautils.fragments.BaseSyncFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.Utils
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.fadeAnimationWithAction
+import com.instructure.pandautils.utils.getDrawableCompat
+import com.instructure.pandautils.utils.requestAccessibilityFocus
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.toast
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.InitActivity
 import com.instructure.teacher.adapters.CoursesAdapter
@@ -49,15 +65,25 @@ import com.instructure.teacher.utils.RecyclerViewUtils
 import com.instructure.teacher.utils.TeacherPrefs
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.viewinterface.CoursesView
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import javax.inject.Inject
 
 private const val LIST_SPAN_COUNT = 1
 
 @PageView
 @ScreenView(SCREEN_VIEW_DASHBOARD)
+@AndroidEntryPoint
 class DashboardFragment : BaseSyncFragment<Course, DashboardPresenter, CoursesView, CoursesViewHolder, CoursesAdapter>(), CoursesView {
+
+    @Inject
+    lateinit var userApi: UserAPI.UsersInterface
+
+    @Inject
+    lateinit var networkStateProvider: NetworkStateProvider
 
     private val binding by viewBinding(FragmentDashboardBinding::bind)
 
@@ -82,7 +108,7 @@ class DashboardFragment : BaseSyncFragment<Course, DashboardPresenter, CoursesVi
     override fun perPageCount() = ApiPrefs.perPageCount
     override fun withPagination() = false
 
-    override fun getPresenterFactory() = DashboardPresenterFactory()
+    override fun getPresenterFactory() = DashboardPresenterFactory(userApi, networkStateProvider)
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -141,6 +167,7 @@ class DashboardFragment : BaseSyncFragment<Course, DashboardPresenter, CoursesVi
         if(courseRecyclerView.adapter == null) {
             courseRecyclerView.adapter = adapter
         }
+        addItemTouchHelperForCardReorder()
         presenter.loadData(mNeedToForceNetwork)
         mNeedToForceNetwork = false
     }
@@ -232,6 +259,86 @@ class DashboardFragment : BaseSyncFragment<Course, DashboardPresenter, CoursesVi
     override fun checkIfEmpty() = with(binding) {
         emptyCoursesView.setEmptyViewImage(requireContext().getDrawableCompat(R.drawable.ic_panda_super))
         RecyclerViewUtils.checkIfEmpty(emptyCoursesView, courseRecyclerView, swipeRefreshLayout, adapter, presenter.isEmpty)
+    }
+
+    private fun addItemTouchHelperForCardReorder() {
+        val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
+            ItemTouchHelper.START or ItemTouchHelper.END or ItemTouchHelper.DOWN or ItemTouchHelper.UP,
+            0
+        ) {
+            private var draggedFromPosition: Int? = null
+
+            override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
+                super.onSelectedChanged(viewHolder, actionState)
+
+                if (viewHolder != null && actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
+                    draggedFromPosition = viewHolder.bindingAdapterPosition
+                }
+            }
+
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                val fromPosition = viewHolder.bindingAdapterPosition
+                val toPosition = target.bindingAdapterPosition
+
+                if (fromPosition in 0 until adapter.size() && toPosition in 0 until adapter.size()) {
+                    adapter.notifyItemMoved(fromPosition, toPosition)
+                }
+
+                return true
+            }
+
+            override fun getDragDirs(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder
+            ): Int {
+                return if (viewHolder is CoursesViewHolder && presenter.isOnline()) {
+                    ItemTouchHelper.START or ItemTouchHelper.END or ItemTouchHelper.DOWN or ItemTouchHelper.UP
+                } else 0
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) = Unit
+
+            override fun clearView(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder
+            ) {
+                super.clearView(recyclerView, viewHolder)
+
+                val finishingPosition = viewHolder.bindingAdapterPosition
+                val startPosition = draggedFromPosition
+
+                if (finishingPosition == RecyclerView.NO_POSITION || startPosition == null) {
+                    draggedFromPosition = null
+                    return
+                }
+
+                if (startPosition != finishingPosition) {
+                    presenter.moveCourse(startPosition, finishingPosition)
+                    adapter.notifyDataSetChanged()
+
+                    lifecycleScope.launch {
+                        val result = presenter.saveDashboardPositions()
+                        if (result.isFail) {
+                            toast(R.string.failedToUpdateDashboardOrder)
+                        }
+                    }
+                }
+
+                draggedFromPosition = null
+            }
+        })
+
+        itemTouchHelper.attachToRecyclerView(binding.courseRecyclerView)
+    }
+
+    fun cancelCardDrag() {
+        val cancelEvent = MotionEvent.obtain(0L, 0L, ACTION_CANCEL, 0f, 0f, 0)
+        binding.courseRecyclerView.onTouchEvent(cancelEvent)
+        cancelEvent.recycle()
     }
 
     companion object {

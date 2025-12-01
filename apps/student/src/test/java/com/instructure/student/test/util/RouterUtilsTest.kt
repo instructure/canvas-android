@@ -21,6 +21,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.interactions.router.RouterParams
@@ -46,8 +47,11 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.Sub
 import com.instructure.student.mobius.conferences.conference_list.ui.ConferenceListRepositoryFragment
 import com.instructure.student.mobius.syllabus.ui.SyllabusRepositoryFragment
 import com.instructure.student.router.RouteMatcher
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkObject
 import junit.framework.TestCase
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -55,6 +59,12 @@ import org.junit.runner.RunWith
 class RouterUtilsTest : TestCase() {
 
     private val activity: FragmentActivity = mockk(relaxed = true)
+
+    @Before
+    fun setup() {
+        mockkObject(RemoteConfigUtils)
+        every { RemoteConfigUtils.getString(any()) } returns "false"
+    }
 
     @Test
     fun testCanRouteInternally_misc() {

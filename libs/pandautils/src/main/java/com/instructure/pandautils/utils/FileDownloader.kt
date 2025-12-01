@@ -15,13 +15,18 @@
  */
 package com.instructure.pandautils.utils
 
+import android.Manifest
 import android.app.DownloadManager
 import android.content.Context
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.webkit.CookieManager
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.models.Attachment
+import com.instructure.pandautils.R
 
 class FileDownloader(
     private val context: Context,
@@ -37,6 +42,14 @@ class FileDownloader(
         filename: String?,
         contentType: String?
     ) {
+        if (downloadURL == null) {
+            Toast.makeText(
+                context,
+                context.getString(R.string.errorOccurred),
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
         downloadFileToDevice(Uri.parse(downloadURL), filename, contentType)
     }
 
@@ -67,5 +80,24 @@ class FileDownloader(
         val downloadId = downloadManager.enqueue(request)
 
         downloadNotificationHelper.monitorDownload(downloadId, filename)
+
+        showNotificationPermissionToastIfNeeded()
+    }
+
+    private fun showNotificationPermissionToastIfNeeded() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val hasPermission = ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+
+            if (!hasPermission) {
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.fileDownloadNotificationPermissionDenied),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
     }
 }

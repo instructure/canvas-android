@@ -129,7 +129,11 @@ private fun BottomNavigationBar(
                                 saveState = true
                             }
                             launchSingleTop = true
-                            restoreState = true
+
+                            // Do not restore screen state when navigating to Dashboard screen
+                            // Restore when navigating between other screens
+                            restoreState = item.route != HomeNavigationRoute.Dashboard.route ||
+                                    (item.route == HomeNavigationRoute.Dashboard.route && currentDestination?.route == HomeNavigationRoute.Dashboard.route)
                         }
                     })
                 }

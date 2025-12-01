@@ -154,10 +154,12 @@ class EventFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInterac
             is EventViewModelAction.RefreshCalendarDays -> {
                 navigateBack()
                 sharedEvents.sendEvent(lifecycleScope, SharedCalendarAction.RefreshDays(action.days))
+                sharedEvents.sendEvent(lifecycleScope, SharedCalendarAction.RefreshToDoList)
             }
             is EventViewModelAction.RefreshCalendar -> {
                 navigateBack()
                 sharedEvents.sendEvent(lifecycleScope, SharedCalendarAction.RefreshCalendar)
+                sharedEvents.sendEvent(lifecycleScope, SharedCalendarAction.RefreshToDoList)
             }
             is EventViewModelAction.OnReminderAddClicked -> checkAlarmPermission()
             is EventViewModelAction.NavigateToComposeMessageScreen -> eventRouter.navigateToComposeMessageScreen(action.options)

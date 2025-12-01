@@ -261,7 +261,7 @@ class SubmissionDetailsEmptyContentEffectHandlerTest : Assert() {
                 "Path",
                 mediaSource = "audio_recorder"
             )
-        } returns Unit
+        } returns 1L
 
 
         connection.accept(SubmissionDetailsEmptyContentEffect.UploadAudioSubmission(file, course, assignment))

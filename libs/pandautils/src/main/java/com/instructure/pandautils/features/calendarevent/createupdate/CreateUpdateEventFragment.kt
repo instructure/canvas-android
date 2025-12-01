@@ -78,12 +78,14 @@ class CreateUpdateEventFragment : BaseCanvasFragment(), NavigationCallbacks, Fra
                 navigateBack()
                 sharedEvents.sendEvent(lifecycleScope, SharedCalendarAction.RefreshDays(action.days))
                 sharedEvents.sendEvent(lifecycleScope, SharedCalendarAction.CloseEventScreen)
+                sharedEvents.sendEvent(lifecycleScope, SharedCalendarAction.RefreshToDoList)
             }
 
             is CreateUpdateEventViewModelAction.RefreshCalendar -> {
                 navigateBack()
                 sharedEvents.sendEvent(lifecycleScope, SharedCalendarAction.RefreshCalendar)
                 sharedEvents.sendEvent(lifecycleScope, SharedCalendarAction.CloseEventScreen)
+                sharedEvents.sendEvent(lifecycleScope, SharedCalendarAction.RefreshToDoList)
             }
 
             is CreateUpdateEventViewModelAction.NavigateBack -> navigateBack()

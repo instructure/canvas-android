@@ -42,13 +42,6 @@ android {
         buildConfigField "boolean", "IS_TESTING", isTesting()
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         testApplicationId System.getProperty("testApplicationId", "com.instructure.pandautils.test")
-        javaCompileOptions {
-            annotationProcessorOptions {
-                compilerArgumentProviders(
-                        new RoomSchemaArgProvider(new File(projectDir, "schemas"))
-                )
-            }
-        }
         ksp {
             arg("room.schemaLocation", "$projectDir/schemas".toString())
         }
