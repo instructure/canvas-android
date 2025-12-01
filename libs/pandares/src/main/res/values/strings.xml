@@ -1945,6 +1945,7 @@
     <string name="whatIfScoreLabel">What-if</string>
     <string name="whatIfScoreCurrentGraded">Score %1$.0f out of %2$.0f</string>
     <string name="whatIfScoreCurrentUngraded">Not graded, max score %.0f</string>
+    <string name="whatIfScoreDisplay">What-if: %s</string>
     <string name="gradesBasedOnGradedAndWhatIf">Based on graded assignments, and What-if Score</string>
     <string name="chooseACourseToMessage">Choose a course to message</string>
     <string name="regardingHiddenMessage">Regarding: %1$s, %2$s</string>

@@ -43,6 +43,7 @@ data class GradesUiState(
     val items: List<AssignmentGroupUiState> = emptyList(),
     val gradePreferencesUiState: GradePreferencesUiState = GradePreferencesUiState(),
     val onlyGradedAssignmentsSwitchEnabled: Boolean = true,
+    val isWhatIfGradingEnabled: Boolean = false,
     val showWhatIfScore: Boolean = false,
     val whatIfScoreDialogData: WhatIfScoreDialogData? = null,
     val gradeText: String = "",
