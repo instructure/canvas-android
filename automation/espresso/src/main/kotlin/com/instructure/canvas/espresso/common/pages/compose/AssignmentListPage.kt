@@ -211,14 +211,16 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
             }
         }
 
-        if(assignmentStatus != null) {
-            composeTestRule.onNode(
-                hasText(assignmentStatus).and(
-                    hasAnyAncestor(hasAnyChild(hasText(assignmentName)))
-                ),
-                useUnmergedTree = true
-            )
-            .assertIsDisplayed()
+        retryWithIncreasingDelay(times = 10, maxDelay = 4000, catchBlock = { refresh() }) {
+            if(assignmentStatus != null) {
+                composeTestRule.onNode(
+                    hasText(assignmentStatus).and(
+                        hasAnyAncestor(hasAnyChild(hasText(assignmentName)))
+                    ),
+                    useUnmergedTree = true
+                )
+                .assertIsDisplayed()
+            }
         }
     }
 
