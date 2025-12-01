@@ -189,8 +189,8 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
         assignmentSubmissionListPage.assertSubmissionFilterOption("Needs Grading")
         assignmentSubmissionListPage.assertSubmissionFilterOption("Submitted")
         assignmentSubmissionListPage.assertSubmissionFilterOption("Graded")
-        assignmentSubmissionListPage.assertPreciseFilterOption("Scored Less Than…")
-        assignmentSubmissionListPage.assertPreciseFilterOption("Scored More Than…")
+        assignmentSubmissionListPage.assertPreciseFilterOption("Scored Less than")
+        assignmentSubmissionListPage.assertPreciseFilterOption("Scored More than")
 
         Log.d(STEP_TAG, "Select 'Not Graded' and click on 'OK'.")
         assignmentSubmissionListPage.clickFilterUngraded()
