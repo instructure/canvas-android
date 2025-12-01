@@ -210,17 +210,6 @@ fun CourseCard(
                     overflow = TextOverflow.Ellipsis,
                     lineHeight = 21.sp
                 )
-
-                courseCard.courseCode?.let { code ->
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Text(
-                        text = code,
-                        fontSize = 14.sp,
-                        color = colorResource(R.color.textDark),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
             }
 
             if (courseCard.announcementCount > 0) {
@@ -305,10 +294,11 @@ private fun GradeBadge(
                 }
                 GradeDisplay.NotAvailable -> {
                     Text(
-                        text = stringResource(R.string.not_graded),
-                        fontSize = 10.sp,
+                        text = stringResource(R.string.noGradeText),
+                        fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = courseColor
+                        color = courseColor,
+                        lineHeight = 19.sp
                     )
                 }
                 GradeDisplay.Hidden -> {
