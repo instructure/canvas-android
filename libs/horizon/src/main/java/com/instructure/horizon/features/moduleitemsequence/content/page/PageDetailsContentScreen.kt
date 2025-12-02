@@ -30,6 +30,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedData
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedDataRange
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedDataTextPosition
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContextSource
 import com.instructure.horizon.features.notebook.common.webview.ComposeNotesHighlightingCanvasWebView
 import com.instructure.horizon.features.notebook.common.webview.NotesCallback
@@ -114,20 +117,21 @@ fun PageDetailsContentScreen(
                             )
                         },
                         onNoteAdded = { selectedText, noteType, startContainer, startOffset, endContainer, endOffset, textSelectionStart, textSelectionEnd ->
-                            mainNavController.navigate(
-                                NotebookRoute.AddNotebook(
-                                    courseId = uiState.courseId.toString(),
-                                    objectType = "Page",
-                                    objectId = uiState.pageId.toString(),
-                                    highlightedTextStartOffset = startOffset,
-                                    highlightedTextEndOffset = endOffset,
-                                    highlightedTextStartContainer = startContainer,
-                                    highlightedTextEndContainer = endContainer,
-                                    highlightedText = selectedText,
-                                    textSelectionStart = textSelectionStart,
-                                    textSelectionEnd = textSelectionEnd,
-                                    noteType = noteType
-                                )
+                            uiState.addNote(
+                                NoteHighlightedData(
+                                    selectedText = selectedText,
+                                    range = NoteHighlightedDataRange(
+                                        startOffset = startOffset,
+                                        endOffset = endOffset,
+                                        startContainer = startContainer,
+                                        endContainer = endContainer
+                                    ),
+                                    textPosition = NoteHighlightedDataTextPosition(
+                                        start = textSelectionStart,
+                                        end = textSelectionEnd
+                                    )
+                                ),
+                                noteType
                             )
                         }
                     )
