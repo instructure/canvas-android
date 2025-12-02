@@ -277,6 +277,7 @@
     <string name="checkBoxFinalGradeOption">Baserat på bedömda uppgifter</string>
     <string name="checkBoxWhatIfGradeOption">Visa tänk om-resultat</string>
     <string name="whatIfDialogText">Tänk om-resultat</string>
+    <string name="whatIfScoreExceedsMaximum">Resultatet får inte överstiga maxpoängen</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s av %2$s poäng, %3$s</string>
     <string name="inbox">Inkorg</string>
@@ -2052,6 +2053,8 @@
     <string name="allAssignments">Alla uppgifter</string>
     <string name="statusFilter">Statusfilter</string>
     <string name="a11y_contentDescription_filter">Filtrera</string>
+    <string name="a11y_filter_active">Filter aktivt</string>
+    <string name="a11y_filter_inactive">Filter inaktivt</string>
     <string name="a11y_contentDescription_postPolicy">Publicera policy</string>
     <string name="late">Sen</string>
     <string name="a11y_contentDescription_expand">Expandera</string>
@@ -2140,4 +2143,20 @@
     <string name="a11y_discussion_checkpoints">Kontrollpunkter för diskussion</string>
     <string name="multipleDueDates">Flera inlämningsdatum</string>
     <string name="courseConcludedError">Kursen slutförd Det gick inte att skicka meddelanden!</string>
+    <string name="openInDetailView">Öppna i detaljerad vy</string>
+    <string name="immersiveView">Uppslukande vy</string>
+    <string name="statuses">Statusar</string>
+    <string name="precise_filtering">Precis filtrering</string>
+    <string name="differentiation_tags">Differentieringstaggar</string>
+    <string name="students_without_differentiation_tags">Studenter utan differentieringstaggar</string>
+    <string name="sort_by">Sortera efter</string>
+    <string name="student_sortable_name">Studentens sorterbara efternamn</string>
+    <string name="student_name">Studentens namn</string>
+    <string name="submission_date">Inlämningsdatum</string>
+    <string name="submission_status">Inlämningsstatus</string>
+    <string name="write_score_here">Ange resultatet här</string>
+    <string name="scored_more_than_with_max">Fick mer än/%s poäng</string>
+    <string name="scored_less_than_with_max">Fick mindre än/%s poäng</string>
+    <string name="scored_between_values">Fick %1$s–%2$s</string>
+    <string name="multiple_filters">Flera filter</string>
 </resources>

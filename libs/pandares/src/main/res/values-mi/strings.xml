@@ -277,6 +277,7 @@
     <string name="checkBoxFinalGradeOption">I runga i nga taumahi kua tohua</string>
     <string name="checkBoxWhatIfGradeOption">Whakāturia aha-Ki te Tohu</string>
     <string name="whatIfDialogText">Aha-Ki te Tohu</string>
+    <string name="whatIfScoreExceedsMaximum">Kāore e taea e te kaute te neke atu i ngā tohu mōrahi</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s waho ō %2$s ngā koinga, %3$s</string>
     <string name="inbox">Pouakauru</string>
@@ -2052,6 +2053,8 @@
     <string name="allAssignments">Ngā Whakataunga Katoa</string>
     <string name="statusFilter">Tātari Tūnga</string>
     <string name="a11y_contentDescription_filter">Tātari</string>
+    <string name="a11y_filter_active">Tātari hohe</string>
+    <string name="a11y_filter_inactive">Tātari kore hohe</string>
     <string name="a11y_contentDescription_postPolicy">Kaupapa Here Pānui</string>
     <string name="late">Tūreiti</string>
     <string name="a11y_contentDescription_expand">Whakawhānui</string>
@@ -2140,4 +2143,20 @@
     <string name="a11y_discussion_checkpoints">Matapakinga Takitaki</string>
     <string name="multipleDueDates">Maha Rā e tika ana</string>
     <string name="courseConcludedError">Kua mutu te akoranga. Kaore e taea te tuku karere!</string>
+    <string name="openInDetailView">Whakatuwheratia ki te Tirohanga Taipitopito</string>
+    <string name="immersiveView">Tirohanga rumaki</string>
+    <string name="statuses">Ngā tūnga</string>
+    <string name="precise_filtering">Te tātari tika</string>
+    <string name="differentiation_tags">Ngā tohu wehewehe</string>
+    <string name="students_without_differentiation_tags">Ko nga akonga kaore he tohu rereke</string>
+    <string name="sort_by">Kōmaka i te</string>
+    <string name="student_sortable_name">Ingoa kōmaka ākonga</string>
+    <string name="student_name">ingoa Ākonga</string>
+    <string name="submission_date">Te ra tuku</string>
+    <string name="submission_status">Te mana tuku</string>
+    <string name="write_score_here">Tuhia te kaute ki konei</string>
+    <string name="scored_more_than_with_max">Neke atu i te / %s ngā tohu</string>
+    <string name="scored_less_than_with_max">I whiwhihia i raro iho i te / %s ngā tohu</string>
+    <string name="scored_between_values">I whiwhihia %1$s - %2$s</string>
+    <string name="multiple_filters">Ngā tātari maha</string>
 </resources>

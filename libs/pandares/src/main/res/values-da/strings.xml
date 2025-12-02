@@ -277,6 +277,7 @@
     <string name="checkBoxFinalGradeOption">Baseret på bedømte opgaver</string>
     <string name="checkBoxWhatIfGradeOption">Vis Hvad-du-hvis score</string>
     <string name="whatIfDialogText">Hvad-nu-hvis score</string>
+    <string name="whatIfScoreExceedsMaximum">Resultatet kan ikke overstige det maksimale antal point</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s ud af %2$s point, %3$s</string>
     <string name="inbox">Indbakke</string>
@@ -2052,6 +2053,8 @@
     <string name="allAssignments">Alle opgaver</string>
     <string name="statusFilter">Statusfilter</string>
     <string name="a11y_contentDescription_filter">Filter</string>
+    <string name="a11y_filter_active">Filter aktivt</string>
+    <string name="a11y_filter_inactive">Filter inaktivt</string>
     <string name="a11y_contentDescription_postPolicy">Politik for indlæg</string>
     <string name="late">Sen</string>
     <string name="a11y_contentDescription_expand">Udvid</string>
@@ -2140,4 +2143,20 @@
     <string name="a11y_discussion_checkpoints">Diskussionens kontrolpunkter</string>
     <string name="multipleDueDates">Flere forfaldsdatoer</string>
     <string name="courseConcludedError">Faget er afsluttet. Kunne ikke sende beskeder!</string>
+    <string name="openInDetailView">Åbn i detaljeret visning</string>
+    <string name="immersiveView">Fordybende visning</string>
+    <string name="statuses">Statusser</string>
+    <string name="precise_filtering">Præcis filtrering</string>
+    <string name="differentiation_tags">Differentierede tags</string>
+    <string name="students_without_differentiation_tags">Studerende uden differentierede tags</string>
+    <string name="sort_by">Sorter efter</string>
+    <string name="student_sortable_name">Studerendes sorterbare navn</string>
+    <string name="student_name">Den studerendes navn</string>
+    <string name="submission_date">Afleveringsdato</string>
+    <string name="submission_status">Afleveringsstatus</string>
+    <string name="write_score_here">Skriv resultat her</string>
+    <string name="scored_more_than_with_max">Opnåede mere end / %s point</string>
+    <string name="scored_less_than_with_max">Opnåede mindre end / %s point</string>
+    <string name="scored_between_values">Opnåede %1$s - %2$s</string>
+    <string name="multiple_filters">Flere filtre</string>
 </resources>

@@ -277,6 +277,7 @@
     <string name="checkBoxFinalGradeOption">Na podlagi ocenjenih nalog</string>
     <string name="checkBoxWhatIfGradeOption">Prikaži simulacijo rezultatov</string>
     <string name="whatIfDialogText">Simulacija rezultatov</string>
+    <string name="whatIfScoreExceedsMaximum">Rezultat ne sme preseči največjega števila točk</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s od %2$s točk, %3$s</string>
     <string name="inbox">Pošta</string>
@@ -2052,6 +2053,8 @@
     <string name="allAssignments">Vse naloge</string>
     <string name="statusFilter">Filter stanja</string>
     <string name="a11y_contentDescription_filter">Filter</string>
+    <string name="a11y_filter_active">Filter aktiven</string>
+    <string name="a11y_filter_inactive">Filter neaktiven</string>
     <string name="a11y_contentDescription_postPolicy">Pravila o objavah</string>
     <string name="late">Zamuda</string>
     <string name="a11y_contentDescription_expand">Razširi</string>
@@ -2140,4 +2143,20 @@
     <string name="a11y_discussion_checkpoints">Točke preverjanja razprave</string>
     <string name="multipleDueDates">Več rokov</string>
     <string name="courseConcludedError">Predmet zaključen. Sporočil ni bilo mogoče poslati!</string>
+    <string name="openInDetailView">Odpri v podrobnem pogledu</string>
+    <string name="immersiveView">Poglobljen pogled</string>
+    <string name="statuses">Statusi</string>
+    <string name="precise_filtering">Natančno filtriranje</string>
+    <string name="differentiation_tags">Diferenciacijske oznake</string>
+    <string name="students_without_differentiation_tags">Študenti brez diferenciacijskih oznak</string>
+    <string name="sort_by">Razvrsti glede na</string>
+    <string name="student_sortable_name">Ime za razvrščanje študenta</string>
+    <string name="student_name">Ime študenta</string>
+    <string name="submission_date">Datum oddaje</string>
+    <string name="submission_status">Status oddaje</string>
+    <string name="write_score_here">Tukaj vnesite rezultat</string>
+    <string name="scored_more_than_with_max">Dosegel rezultat, večji od / %s točk</string>
+    <string name="scored_less_than_with_max">Dosegel rezultat, manjši od / %s točk</string>
+    <string name="scored_between_values">Dosegel rezultat %1$s - %2$s</string>
+    <string name="multiple_filters">Več filtrov</string>
 </resources>
