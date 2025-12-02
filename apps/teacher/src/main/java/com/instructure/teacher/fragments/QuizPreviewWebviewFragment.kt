@@ -28,6 +28,7 @@ import com.instructure.pandautils.utils.enableAlgorithmicDarkening
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.views.CanvasWebView
+import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.setupBackButton
 import kotlinx.coroutines.Job
@@ -117,7 +118,12 @@ class QuizPreviewWebviewFragment : InternalWebViewFragment() {
             args.putString(URL, url)
             args.putString(TITLE, title)
             args.putBoolean(DARK_TOOLBAR, false)
-            args.putBoolean(AUTHENTICATE, true)
+
+            // Only authenticate during tests to avoid intermittent login page issues
+            if (BuildConfig.DEBUG) {
+                args.putBoolean(AUTHENTICATE, true)
+            }
+
             return args
         }
     }
