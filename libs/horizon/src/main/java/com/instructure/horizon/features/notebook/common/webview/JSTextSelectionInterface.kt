@@ -678,6 +678,7 @@ function highlightSelection(paramsJson) {
 		const highlightElement = document.createElement("span");
 		highlightElement.classList.add(highlightClassName);
 		highlightElement.classList.add(cssClass);
+		highlightElement.setAttribute('data-note-id', noteId);
 		highlightElement.onclick = function () { ${ JS_INTERFACE_NAME }.onHighlightedTextClicked(noteId, noteReactionString, selectedText, userComment, startOffset, startContainer, endOffset, endContainer, textSelectionStart, textSelectionEnd, updatedAt); };
 		highlightElement.textContent = textNode.textContent;
 
@@ -686,6 +687,17 @@ function highlightSelection(paramsJson) {
 		parent.replaceChild(highlightElement, textNode);
 	}
 
+}
+
+function getNotePosition(noteId) {
+	const highlights = document.getElementsByClassName('notebook-highlight');
+	for (const highlight of highlights) {
+		if (highlight.getAttribute('data-note-id') === noteId) {
+			const rect = highlight.getBoundingClientRect();
+			return rect.top + window.scrollY;
+		}
+	}
+	return -1;
 }
 javascript: (function () {
 	document.addEventListener("selectionchange", () => {
@@ -769,6 +781,14 @@ javascript: (function () {
                 val quotedJson = JSONObject.quote(paramsJson)
                 val script = "javascript:highlightSelection($quotedJson)"
                 this.evaluateJavascript(script, null)
+            }
+        }
+
+        fun WebView.getNoteYPosition(noteId: String, onResult: (Float?) -> Unit) {
+            val quotedNoteId = JSONObject.quote(noteId)
+            this.evaluateJavascript("getNotePosition($quotedNoteId)") { result ->
+                val position = result?.replace("\"", "")?.toFloatOrNull()
+                onResult(if (position != null && position >= 0) position else null)
             }
         }
     }

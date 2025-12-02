@@ -305,6 +305,7 @@ private fun ModuleItemSequenceContent(
                         uiState.assignmentToolsOpened,
                         updateAiContext = uiState.updateAiAssistContext,
                         updateNotebookContext = uiState.updateObjectTypeAndId,
+                        scrollToNoteId = uiState.scrollToNoteId
                     )
                 }
             }
@@ -403,6 +404,7 @@ private fun ModuleItemContentScreen(
     assignmentToolsOpened: () -> Unit,
     updateAiContext: (AiAssistContextSource, String) -> Unit,
     updateNotebookContext: (Pair<String, String>) -> Unit,
+    scrollToNoteId: String?,
     modifier: Modifier = Modifier
 ) {
     if (moduleItemUiState.isLoading) {
@@ -461,7 +463,8 @@ private fun ModuleItemContentScreen(
                     uiState = uiState,
                     scrollState = scrollState,
                     updateAiContext = { source, content -> updateAiContext(source, content) },
-                    mainNavController = mainNavController
+                    mainNavController = mainNavController,
+                    scrollToNoteId = scrollToNoteId
                 )
             }
             composable(

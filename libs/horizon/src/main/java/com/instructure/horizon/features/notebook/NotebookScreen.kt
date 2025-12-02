@@ -216,6 +216,7 @@ fun NotebookScreen(
                                                     courseId = note.courseId,
                                                     moduleItemAssetType = note.objectType.value,
                                                     moduleItemAssetId = note.objectId,
+                                                    scrollToNoteId = note.id
                                                 )
                                             )
                                         }

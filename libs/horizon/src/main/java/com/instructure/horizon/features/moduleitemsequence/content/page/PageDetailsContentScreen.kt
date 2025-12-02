@@ -51,7 +51,8 @@ fun PageDetailsContentScreen(
     scrollState: ScrollState,
     updateAiContext: (AiAssistContextSource, String) -> Unit,
     mainNavController: NavHostController,
-    modifier: Modifier = Modifier
+    scrollToNoteId: String?,
+    modifier: Modifier = Modifier,
 ) {
     val activity = LocalContext.current.getActivityOrNull()
     LaunchedEffect(uiState.urlToOpen) {
@@ -81,6 +82,7 @@ fun PageDetailsContentScreen(
                 ComposeNotesHighlightingCanvasWebView(
                     content = "<div id=\"parent-container\"><div>$it</div></div>",
                     notes = uiState.notes,
+                    scrollToNoteId = scrollToNoteId,
                     applyOnWebView = {
                         activity?.let { addVideoClient(it) }
                         overrideHtmlFormatColors = HorizonColors.htmlFormatColors
