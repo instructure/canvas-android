@@ -16,6 +16,8 @@
 
 package com.instructure.pandautils.features.dashboard.widget.courses
 
+import android.content.res.Configuration
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -32,6 +34,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.DropdownMenu
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
@@ -57,12 +60,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.Shimmer
 import com.instructure.pandautils.domain.models.courses.CourseCardItem
 import com.instructure.pandautils.domain.models.courses.GradeDisplay
+import com.instructure.pandautils.utils.getFragmentActivity
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
@@ -70,24 +75,26 @@ fun CourseCard(
     courseCard: CourseCardItem,
     showGrade: Boolean,
     showColorOverlay: Boolean,
-    onCourseClick: (Long) -> Unit,
+    onCourseClick: (FragmentActivity, Long) -> Unit,
     onMenuClick: ((Long) -> Unit)? = null,
-    onManageOfflineContent: ((Long) -> Unit)? = null,
-    onCustomizeCourse: ((Long) -> Unit)? = null,
+    onManageOfflineContent: ((FragmentActivity, Long) -> Unit)? = null,
+    onCustomizeCourse: ((FragmentActivity, Long) -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
     var showMenu by remember { mutableStateOf(false) }
     val hasMenu = onManageOfflineContent != null && onCustomizeCourse != null
 
+    val activity = LocalActivity.current?.getFragmentActivity()
+
     Box(modifier = modifier) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(enabled = courseCard.isClickable) { onCourseClick(courseCard.id) }
+            .clickable(enabled = courseCard.isClickable) { activity?.let { onCourseClick(it, courseCard.id) } }
             .alpha(if (courseCard.isClickable) 1f else 0.5f),
-        shape = RoundedCornerShape(24.dp),
+        shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = colorResource(R.color.backgroundLightestElevated)
+            containerColor = colorResource(R.color.backgroundLightest)
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
@@ -107,7 +114,7 @@ fun CourseCard(
                         .fillMaxSize()
                         .background(
                             color = Color(courseCard.color),
-                            shape = RoundedCornerShape(22.dp)
+                            shape = RoundedCornerShape(14.dp)
                         )
                 )
 
@@ -117,7 +124,7 @@ fun CourseCard(
                         contentDescription = null,
                         modifier = Modifier
                             .fillMaxSize()
-                            .clip(RoundedCornerShape(22.dp))
+                            .clip(RoundedCornerShape(14.dp))
                             .alpha(if (showColorOverlay) 0.4f else 1f),
                         contentScale = ContentScale.Crop
                     )
@@ -152,7 +159,7 @@ fun CourseCard(
                             onDismissRequest = { showMenu = false },
                             modifier = Modifier.width(200.dp),
                             shape = RoundedCornerShape(8.dp),
-                            containerColor = colorResource(R.color.backgroundLightestElevated)
+                            containerColor = colorResource(R.color.backgroundLightest)
                         ) {
                             DropdownMenuItem(
                                 text = {
@@ -164,7 +171,7 @@ fun CourseCard(
                                 },
                                 onClick = {
                                     showMenu = false
-                                    onManageOfflineContent!!(courseCard.id)
+                                    activity?.let { onManageOfflineContent.invoke(it, courseCard.id) }
                                 }
                             )
                             DropdownMenuItem(
@@ -177,7 +184,7 @@ fun CourseCard(
                                 },
                                 onClick = {
                                     showMenu = false
-                                    onCustomizeCourse!!(courseCard.id)
+                                    activity?.let { onCustomizeCourse.invoke(it, courseCard.id) }
                                 }
                             )
                         }
@@ -315,9 +322,9 @@ fun CourseCardShimmer(
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(24.dp),
+        shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = colorResource(R.color.backgroundLightestElevated)
+            containerColor = colorResource(R.color.backgroundLightest)
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
@@ -330,7 +337,7 @@ fun CourseCardShimmer(
         ) {
             Shimmer(
                 modifier = Modifier.size(72.dp),
-                shape = RoundedCornerShape(22.dp)
+                shape = RoundedCornerShape(14.dp)
             )
 
             Column(
@@ -343,12 +350,6 @@ fun CourseCardShimmer(
                     modifier = Modifier
                         .fillMaxWidth(0.7f)
                         .height(16.dp)
-                )
-
-                Shimmer(
-                    modifier = Modifier
-                        .fillMaxWidth(0.5f)
-                        .height(14.dp)
                 )
             }
         }
@@ -372,12 +373,13 @@ private fun CourseCardPreview() {
         ),
         showGrade = true,
         showColorOverlay = true,
-        onCourseClick = {},
+        onCourseClick = {_, _ ->},
         onMenuClick = {}
     )
 }
 
 @Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun CourseCardShimmerPreview() {
     CourseCardShimmer()

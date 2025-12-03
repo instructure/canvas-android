@@ -16,12 +16,23 @@
 
 package com.instructure.pandautils.features.dashboard.widget.courses
 
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Group
+import com.instructure.pandautils.data.repository.course.CourseRepository
+import com.instructure.pandautils.domain.models.courses.CourseCardItem
+import com.instructure.pandautils.domain.models.courses.GradeDisplay
+import com.instructure.pandautils.domain.models.courses.GroupCardItem
 import com.instructure.pandautils.domain.usecase.courses.LoadFavoriteCoursesParams
 import com.instructure.pandautils.domain.usecase.courses.LoadFavoriteCoursesUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadGroupsParams
 import com.instructure.pandautils.domain.usecase.courses.LoadGroupsUseCase
+import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
+import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -37,8 +48,15 @@ class CoursesWidgetViewModel @Inject constructor(
     private val loadFavoriteCoursesUseCase: LoadFavoriteCoursesUseCase,
     private val loadGroupsUseCase: LoadGroupsUseCase,
     private val sectionExpandedStateDataStore: SectionExpandedStateDataStore,
-    private val coursesWidgetBehavior: CoursesWidgetBehavior
+    private val coursesWidgetBehavior: CoursesWidgetBehavior,
+    private val courseSyncSettingsDao: CourseSyncSettingsDao,
+    private val networkStateProvider: NetworkStateProvider,
+    private val featureFlagProvider: FeatureFlagProvider,
+    private val courseRepository: CourseRepository
 ) : ViewModel() {
+
+    private var courses: List<Course> = emptyList()
+    private var groups: List<Group> = emptyList()
 
     private val _uiState = MutableStateFlow(
         CoursesWidgetUiState(
@@ -59,20 +77,24 @@ class CoursesWidgetViewModel @Inject constructor(
         observeColorOverlay()
     }
 
-    private fun onCourseClick(courseId: Long) {
-        coursesWidgetBehavior.onCourseClick(courseId)
+    private fun onCourseClick(activity: FragmentActivity, courseId: Long) {
+        val course = courses.find { it.id == courseId } ?: return
+        coursesWidgetBehavior.onCourseClick(activity, course)
     }
 
-    private fun onGroupClick(groupId: Long) {
-        coursesWidgetBehavior.onGroupClick(groupId)
+    private fun onGroupClick(activity: FragmentActivity, groupId: Long) {
+        val group = groups.find { it.id == groupId } ?: return
+        coursesWidgetBehavior.onGroupClick(activity, group)
     }
 
-    private fun onManageOfflineContent(courseId: Long) {
-        coursesWidgetBehavior.onManageOfflineContent(courseId)
+    private fun onManageOfflineContent(activity: FragmentActivity, courseId: Long) {
+        val course = courses.find { it.id == courseId } ?: return
+        coursesWidgetBehavior.onManageOfflineContent(activity, course)
     }
 
-    private fun onCustomizeCourse(courseId: Long) {
-        coursesWidgetBehavior.onCustomizeCourse(courseId)
+    private fun onCustomizeCourse(activity: FragmentActivity, courseId: Long) {
+        val course = courses.find { it.id == courseId } ?: return
+        coursesWidgetBehavior.onCustomizeCourse(activity, course)
     }
 
     fun refresh() {
@@ -98,14 +120,17 @@ class CoursesWidgetViewModel @Inject constructor(
             _uiState.update { it.copy(isLoading = true, isError = false) }
 
             try {
-                val courses = loadFavoriteCoursesUseCase(LoadFavoriteCoursesParams(forceRefresh))
-                val groups = loadGroupsUseCase(LoadGroupsParams(forceRefresh))
+                courses = loadFavoriteCoursesUseCase(LoadFavoriteCoursesParams(forceRefresh))
+                groups = loadGroupsUseCase(LoadGroupsParams(forceRefresh))
+
+                val courseCards = mapCoursesToCardItems(courses)
+                val groupCards = mapGroupsToCardItems(groups)
 
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        courses = courses,
-                        groups = groups
+                        courses = courseCards,
+                        groups = groupCards
                     )
                 }
             } catch (e: Exception) {
@@ -116,6 +141,80 @@ class CoursesWidgetViewModel @Inject constructor(
                     )
                 }
             }
+        }
+    }
+
+    private suspend fun mapCoursesToCardItems(courses: List<Course>): List<CourseCardItem> {
+        val syncedIds = getSyncedCourseIds()
+        val isOnline = networkStateProvider.isOnline()
+
+        return courses.map { course ->
+            val isSynced = syncedIds.contains(course.id)
+            val themedColor = ColorKeeper.getOrGenerateColor(course)
+            CourseCardItem(
+                id = course.id,
+                name = course.name,
+                courseCode = course.courseCode,
+                color = themedColor.light,
+                imageUrl = course.imageUrl,
+                grade = mapGrade(course),
+                announcementCount = 0,
+                isSynced = isSynced,
+                isClickable = isOnline || isSynced
+            )
+        }
+    }
+
+    private suspend fun mapGroupsToCardItems(groups: List<Group>): List<GroupCardItem> {
+        return groups.map { group ->
+            val parentCourse = if (group.courseId != 0L) {
+                courseRepository.getCourse(group.courseId, false).dataOrNull
+            } else {
+                null
+            }
+
+            val themedColor = parentCourse?.let { ColorKeeper.getOrGenerateColor(it) }
+                ?: ColorKeeper.getOrGenerateColor(group)
+
+            GroupCardItem(
+                id = group.id,
+                name = group.name.orEmpty(),
+                parentCourseName = parentCourse?.name,
+                parentCourseId = group.courseId,
+                color = themedColor.light,
+                memberCount = group.membersCount
+            )
+        }
+    }
+
+    private suspend fun getSyncedCourseIds(): Set<Long> {
+        if (!featureFlagProvider.offlineEnabled()) return emptySet()
+
+        val courseSyncSettings = courseSyncSettingsDao.findAll()
+        return courseSyncSettings
+            .filter { it.anySyncEnabled }
+            .map { it.courseId }
+            .toSet()
+    }
+
+    private fun mapGrade(course: Course): GradeDisplay {
+        val enrollment = course.enrollments?.firstOrNull()
+
+        return when {
+            enrollment == null -> GradeDisplay.NotAvailable
+            enrollment.computedCurrentGrade == null && enrollment.computedCurrentScore == null -> {
+                if (course.hideFinalGrades == true) {
+                    GradeDisplay.Locked
+                } else {
+                    GradeDisplay.NotAvailable
+                }
+            }
+            enrollment.computedCurrentGrade != null -> GradeDisplay.Letter(enrollment.computedCurrentGrade!!)
+            enrollment.computedCurrentScore != null -> {
+                val score = enrollment.computedCurrentScore!!
+                GradeDisplay.Percentage("${score.toInt()}%")
+            }
+            else -> GradeDisplay.NotAvailable
         }
     }
 

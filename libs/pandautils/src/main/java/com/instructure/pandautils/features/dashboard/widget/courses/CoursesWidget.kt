@@ -16,8 +16,12 @@
 
 package com.instructure.pandautils.features.dashboard.widget.courses
 
+import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -27,6 +31,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -40,6 +45,7 @@ import kotlinx.coroutines.flow.SharedFlow
 @Composable
 fun CoursesWidget(
     refreshSignal: SharedFlow<Unit>,
+    columns: Int,
     modifier: Modifier = Modifier
 ) {
     val viewModel: CoursesWidgetViewModel = hiltViewModel()
@@ -53,18 +59,20 @@ fun CoursesWidget(
 
     CoursesWidgetContent(
         modifier = modifier,
-        uiState = uiState
+        uiState = uiState,
+        columns = columns
     )
 }
 
 @Composable
 private fun CoursesWidgetContent(
     modifier: Modifier = Modifier,
-    uiState: CoursesWidgetUiState
+    uiState: CoursesWidgetUiState,
+    columns: Int = 1
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         if (uiState.isLoading) {
-            CoursesWidgetLoadingState()
+            CoursesWidgetLoadingState(columns = columns)
         } else {
             if (uiState.courses.isNotEmpty()) {
                 CollapsibleSection(
@@ -73,20 +81,22 @@ private fun CoursesWidgetContent(
                     isExpanded = uiState.isCoursesExpanded,
                     onToggleExpanded = uiState.onToggleCoursesExpanded
                 ) {
-                    Column(
+                    NonLazyGrid(
+                        columns = columns,
+                        itemCount = uiState.courses.size,
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        uiState.courses.forEach { course ->
-                            CourseCard(
-                                courseCard = course,
-                                showGrade = uiState.showGrades,
-                                showColorOverlay = uiState.showColorOverlay,
-                                onCourseClick = uiState.onCourseClick,
-                                onManageOfflineContent = uiState.onManageOfflineContent,
-                                onCustomizeCourse = uiState.onCustomizeCourse
-                            )
-                        }
+                        horizontalSpacing = 12.dp,
+                        verticalSpacing = 12.dp
+                    ) { index ->
+                        val course = uiState.courses[index]
+                        CourseCard(
+                            courseCard = course,
+                            showGrade = uiState.showGrades,
+                            showColorOverlay = uiState.showColorOverlay,
+                            onCourseClick = uiState.onCourseClick,
+                            onManageOfflineContent = uiState.onManageOfflineContent,
+                            onCustomizeCourse = uiState.onCustomizeCourse
+                        )
                     }
                 }
             }
@@ -102,15 +112,49 @@ private fun CoursesWidgetContent(
                     isExpanded = uiState.isGroupsExpanded,
                     onToggleExpanded = uiState.onToggleGroupsExpanded
                 ) {
-                    Column(
+                    NonLazyGrid(
+                        columns = columns,
+                        itemCount = uiState.groups.size,
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-                        uiState.groups.forEach { group ->
-                            GroupCard(
-                                groupCard = group,
-                                onGroupClick = uiState.onGroupClick
-                            )
+                        horizontalSpacing = 12.dp,
+                        verticalSpacing = 12.dp
+                    ) { index ->
+                        val group = uiState.groups[index]
+                        GroupCard(
+                            groupCard = group,
+                            onGroupClick = uiState.onGroupClick
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun NonLazyGrid(
+    columns: Int,
+    itemCount: Int,
+    modifier: Modifier = Modifier,
+    horizontalSpacing: androidx.compose.ui.unit.Dp = 0.dp,
+    verticalSpacing: androidx.compose.ui.unit.Dp = 0.dp,
+    content: @Composable (Int) -> Unit
+) {
+    val rows = (itemCount + columns - 1) / columns
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(verticalSpacing)
+    ) {
+        repeat(rows) { rowIndex ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(horizontalSpacing)
+            ) {
+                repeat(columns) { columnIndex ->
+                    val itemIndex = rowIndex * columns + columnIndex
+                    Box(modifier = Modifier.weight(1f)) {
+                        if (itemIndex < itemCount) {
+                            content(itemIndex)
                         }
                     }
                 }
@@ -120,20 +164,24 @@ private fun CoursesWidgetContent(
 }
 
 @Composable
-private fun CoursesWidgetLoadingState() {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+private fun CoursesWidgetLoadingState(columns: Int = 1) {
+    NonLazyGrid(
+        columns = columns,
+        itemCount = 3,
+        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+        horizontalSpacing = 12.dp,
+        verticalSpacing = 12.dp
     ) {
-        repeat(3) {
-            CourseCardShimmer()
-        }
+        CourseCardShimmer()
     }
 }
 
 @Preview(showBackground = true)
+@Preview(
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    backgroundColor = 0x1F2124
+)
 @Composable
 private fun CoursesWidgetContentPreview() {
     CoursesWidgetContent(
@@ -180,7 +228,66 @@ private fun CoursesWidgetContentPreview() {
     )
 }
 
+@Preview(widthDp = 1260)
+@Preview(
+    widthDp = 1260,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    backgroundColor = 0x1F2124,
+    showBackground = true
+)
+@Composable
+private fun CoursesWidgetTabletContentPreview() {
+    CoursesWidgetContent(
+        columns = 3,
+        uiState = CoursesWidgetUiState(
+            isLoading = false,
+            courses = listOf(
+                CourseCardItem(
+                    id = 1,
+                    name = "Introduction to Computer Science",
+                    courseCode = "CS 101",
+                    color = 0xFF2196F3.toInt(),
+                    imageUrl = null,
+                    grade = GradeDisplay.Percentage("85%"),
+                    announcementCount = 2,
+                    isSynced = true,
+                    isClickable = true
+                ),
+                CourseCardItem(
+                    id = 2,
+                    name = "Advanced Mathematics",
+                    courseCode = "MATH 201",
+                    color = 0xFF4CAF50.toInt(),
+                    imageUrl = null,
+                    grade = GradeDisplay.Letter("A-"),
+                    announcementCount = 0,
+                    isSynced = false,
+                    isClickable = true
+                )
+            ),
+            groups = listOf(
+                GroupCardItem(
+                    id = 1,
+                    name = "Project Team Alpha",
+                    parentCourseName = "Introduction to Computer Science",
+                    parentCourseId = 1,
+                    color = 0xFF4CAF50.toInt(),
+                    memberCount = 5
+                )
+            ),
+            isCoursesExpanded = true,
+            isGroupsExpanded = true,
+            showGrades = true
+        )
+    )
+}
+
 @Preview(showBackground = true)
+@Preview(
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    backgroundColor = 0x1F2124
+)
 @Composable
 private fun CoursesWidgetLoadingPreview() {
     CoursesWidgetContent(

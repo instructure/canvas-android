@@ -16,6 +16,7 @@
 
 package com.instructure.pandautils.features.dashboard.widget.courses
 
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -47,21 +48,24 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.fragment.app.FragmentActivity
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.Shimmer
 import com.instructure.pandautils.domain.models.courses.GroupCardItem
+import com.instructure.pandautils.utils.getFragmentActivity
 
 @Composable
 fun GroupCard(
     groupCard: GroupCardItem,
-    onGroupClick: (Long) -> Unit,
+    onGroupClick: (FragmentActivity, Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val activity = LocalActivity.current?.getFragmentActivity()
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .clickable { onGroupClick(groupCard.id) },
-        shape = RoundedCornerShape(24.dp),
+            .clickable { activity?.let { onGroupClick(it, groupCard.id) } },
+        shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
             containerColor = colorResource(R.color.backgroundLightestElevated)
         ),
@@ -83,7 +87,7 @@ fun GroupCard(
                         .size(72.dp)
                         .background(
                             color = Color(groupCard.color),
-                            shape = RoundedCornerShape(22.dp)
+                            shape = RoundedCornerShape(14.dp)
                         ),
                     contentAlignment = Alignment.Center
                 ) {
@@ -95,7 +99,7 @@ fun GroupCard(
                         Spacer(modifier = Modifier.weight(1f))
 
                         Card(
-                            shape = RoundedCornerShape(24.dp),
+                            shape = RoundedCornerShape(16.dp),
                             colors = CardDefaults.cardColors(
                                 containerColor = Color.White
                             ),
@@ -161,7 +165,7 @@ fun GroupCardShimmer(
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(24.dp),
+        shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
             containerColor = colorResource(R.color.backgroundLightestElevated)
         ),
@@ -176,7 +180,7 @@ fun GroupCardShimmer(
         ) {
             Shimmer(
                 modifier = Modifier.size(72.dp),
-                shape = RoundedCornerShape(22.dp)
+                shape = RoundedCornerShape(14.dp)
             )
 
             Column(
@@ -196,12 +200,6 @@ fun GroupCardShimmer(
                         .fillMaxWidth(0.5f)
                         .height(14.dp)
                 )
-
-                Shimmer(
-                    modifier = Modifier
-                        .fillMaxWidth(0.4f)
-                        .height(12.dp)
-                )
             }
         }
     }
@@ -219,7 +217,7 @@ private fun GroupCardPreview() {
             color = 0xFF4CAF50.toInt(),
             memberCount = 5
         ),
-        onGroupClick = {}
+        onGroupClick = {_, _ -> }
     )
 }
 

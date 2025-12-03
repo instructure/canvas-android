@@ -17,7 +17,9 @@
 package com.instructure.student.di.feature
 
 import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidgetBehavior
+import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidgetRouter
 import com.instructure.student.features.dashboard.widget.courses.StudentCoursesWidgetBehavior
+import com.instructure.student.features.dashboard.widget.courses.StudentCoursesWidgetRouter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,6 +28,11 @@ import dagger.hilt.android.components.ViewModelComponent
 @Module
 @InstallIn(ViewModelComponent::class)
 class CoursesWidgetModule {
+
+    @Provides
+    fun provideCoursesWidgetRouter(): CoursesWidgetRouter {
+        return StudentCoursesWidgetRouter()
+    }
 
     @Provides
     fun provideCoursesWidgetBehavior(

@@ -227,7 +227,7 @@ private fun InvitationCard(
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(
-            containerColor = colorResource(R.color.backgroundLightestElevated)
+            containerColor = colorResource(R.color.backgroundLightest)
         )
     ) {
         Column(
@@ -308,7 +308,7 @@ private fun InvitationCard(
 @Preview(showBackground = true)
 @Preview(
     showBackground = true,
-    backgroundColor = 0xFF0F1316,
+    backgroundColor = 0x1F2124,
     uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES
 )
 @Composable

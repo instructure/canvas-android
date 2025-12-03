@@ -16,13 +16,18 @@
 
 package com.instructure.student.features.dashboard.widget.courses
 
+import androidx.fragment.app.FragmentActivity
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Group
 import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidgetBehavior
+import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidgetRouter
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class StudentCoursesWidgetBehavior @Inject constructor(
     private val observeGradeVisibilityUseCase: ObserveGradeVisibilityUseCase,
-    private val observeColorOverlayUseCase: ObserveColorOverlayUseCase
+    private val observeColorOverlayUseCase: ObserveColorOverlayUseCase,
+    private val router: CoursesWidgetRouter
 ) : CoursesWidgetBehavior {
 
     override fun observeGradeVisibility(): Flow<Boolean> {
@@ -33,19 +38,19 @@ class StudentCoursesWidgetBehavior @Inject constructor(
         return observeColorOverlayUseCase(Unit)
     }
 
-    override fun onCourseClick(courseId: Long) {
-        // TODO: Navigate to course details
+    override fun onCourseClick(activity: FragmentActivity, course: Course) {
+        router.routeToCourse(activity, course)
     }
 
-    override fun onGroupClick(groupId: Long) {
-        // TODO: Navigate to group details
+    override fun onGroupClick(activity: FragmentActivity, group: Group) {
+        router.routeToGroup(activity, group)
     }
 
-    override fun onManageOfflineContent(courseId: Long) {
-        // TODO: Navigate to manage offline content for course
+    override fun onManageOfflineContent(activity: FragmentActivity, course: Course) {
+        router.routeToManageOfflineContent(activity, course)
     }
 
-    override fun onCustomizeCourse(courseId: Long) {
-        // TODO: Navigate to customize course (color/nickname)
+    override fun onCustomizeCourse(activity: FragmentActivity, course: Course) {
+        router.routeToCustomizeCourse(activity, course)
     }
 }

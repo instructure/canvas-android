@@ -16,11 +16,9 @@
 
 package com.instructure.pandautils.domain.usecase.courses
 
-import com.instructure.pandautils.data.repository.course.CourseRepository
+import com.instructure.canvasapi2.models.Group
 import com.instructure.pandautils.data.repository.group.GroupRepository
-import com.instructure.pandautils.domain.models.courses.GroupCardItem
 import com.instructure.pandautils.domain.usecase.BaseUseCase
-import com.instructure.pandautils.utils.ColorKeeper
 import javax.inject.Inject
 
 data class LoadGroupsParams(
@@ -28,33 +26,12 @@ data class LoadGroupsParams(
 )
 
 class LoadGroupsUseCase @Inject constructor(
-    private val groupRepository: GroupRepository,
-    private val courseRepository: CourseRepository
-) : BaseUseCase<LoadGroupsParams, List<GroupCardItem>>() {
+    private val groupRepository: GroupRepository
+) : BaseUseCase<LoadGroupsParams, List<Group>>() {
 
-    override suspend fun execute(params: LoadGroupsParams): List<GroupCardItem> {
+    override suspend fun execute(params: LoadGroupsParams): List<Group> {
         val groups = groupRepository.getGroups(params.forceRefresh).dataOrThrow
 
-        return groups
-            .filter { it.isFavorite }
-            .map { group ->
-                val parentCourse = if (group.courseId != 0L) {
-                    courseRepository.getCourse(group.courseId, params.forceRefresh).dataOrNull
-                } else {
-                    null
-                }
-
-                val themedColor = parentCourse?.let { ColorKeeper.getOrGenerateColor(it) }
-                    ?: ColorKeeper.getOrGenerateColor(group)
-
-                GroupCardItem(
-                    id = group.id,
-                    name = group.name.orEmpty(),
-                    parentCourseName = parentCourse?.name,
-                    parentCourseId = group.courseId,
-                    color = themedColor.light,
-                    memberCount = group.membersCount
-                )
-            }
+        return groups.filter { it.isFavorite }
     }
 }

@@ -111,7 +111,7 @@ fun DashboardScreenContent(
     }
 
     Scaffold(
-        modifier = Modifier.background(colorResource(R.color.backgroundLightest)),
+        modifier = Modifier.background(colorResource(R.color.backgroundLight)),
         topBar = {
             CanvasThemedAppBar(
                 title = stringResource(id = R.string.dashboard),
@@ -126,7 +126,7 @@ fun DashboardScreenContent(
     ) { paddingValues ->
         Box(
             modifier = Modifier
-                .background(colorResource(R.color.backgroundLightest))
+                .background(colorResource(R.color.backgroundLight))
                 .padding(paddingValues)
                 .pullRefresh(pullRefreshState)
                 .fillMaxSize()
@@ -231,7 +231,7 @@ private fun GetWidgetComposable(
 ) {
     return when (widgetId) {
         WidgetMetadata.WIDGET_ID_WELCOME -> WelcomeWidget(refreshSignal = refreshSignal)
-        WidgetMetadata.WIDGET_ID_COURSES -> CoursesWidget(refreshSignal = refreshSignal)
+        WidgetMetadata.WIDGET_ID_COURSES -> CoursesWidget(refreshSignal = refreshSignal, columns = columns)
         WidgetMetadata.WIDGET_ID_COURSE_INVITATIONS -> CourseInvitationsWidget(
             refreshSignal = refreshSignal,
             columns = columns,

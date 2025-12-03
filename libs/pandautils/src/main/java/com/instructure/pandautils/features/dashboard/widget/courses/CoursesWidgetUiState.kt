@@ -16,6 +16,7 @@
 
 package com.instructure.pandautils.features.dashboard.widget.courses
 
+import androidx.fragment.app.FragmentActivity
 import com.instructure.pandautils.domain.models.courses.CourseCardItem
 import com.instructure.pandautils.domain.models.courses.GroupCardItem
 
@@ -28,10 +29,10 @@ data class CoursesWidgetUiState(
     val isGroupsExpanded: Boolean = true,
     val showGrades: Boolean = false,
     val showColorOverlay: Boolean = false,
-    val onCourseClick: (Long) -> Unit = {},
-    val onGroupClick: (Long) -> Unit = {},
+    val onCourseClick: (FragmentActivity, Long) -> Unit = { _, _ -> },
+    val onGroupClick: (FragmentActivity, Long) -> Unit = { _, _ -> },
     val onToggleCoursesExpanded: () -> Unit = {},
     val onToggleGroupsExpanded: () -> Unit = {},
-    val onManageOfflineContent: (Long) -> Unit = {},
-    val onCustomizeCourse: (Long) -> Unit = {}
+    val onManageOfflineContent: (FragmentActivity, Long) -> Unit = { _, _ -> },
+    val onCustomizeCourse: (FragmentActivity, Long) -> Unit = { _, _ -> }
 )

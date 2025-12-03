@@ -16,16 +16,24 @@
 
 package com.instructure.teacher.di
 
+import androidx.fragment.app.FragmentActivity
 import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidgetBehavior
+import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidgetRouter
 import com.instructure.teacher.features.dashboard.widget.courses.TeacherCoursesWidgetBehavior
+import com.instructure.teacher.features.dashboard.widget.courses.TeacherCoursesWidgetRouter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.components.FragmentComponent
 
 @Module
-@InstallIn(ViewModelComponent::class)
+@InstallIn(FragmentComponent::class)
 class CoursesWidgetModule {
+
+    @Provides
+    fun provideCoursesWidgetRouter(activity: FragmentActivity): CoursesWidgetRouter {
+        return TeacherCoursesWidgetRouter(activity)
+    }
 
     @Provides
     fun provideCoursesWidgetBehavior(
