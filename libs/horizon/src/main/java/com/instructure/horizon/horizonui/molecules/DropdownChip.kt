@@ -160,7 +160,7 @@ fun <T> DropdownChip(
             }
         }
 
-        if (enabled) {
+        if (isMenuOpen) {
             InputDropDownPopup(
                 isMenuOpen = isMenuOpen,
                 options = items,

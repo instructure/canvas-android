@@ -37,6 +37,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -131,7 +133,10 @@ private fun AddEditNoteAppBar(
             Text(
                 state.title,
                 style = HorizonTypography.h4,
-                color = HorizonColors.Text.title()
+                color = HorizonColors.Text.title(),
+                modifier = Modifier.semantics {
+                    traversalIndex = -1f
+                }
             )
         },
         navigationIcon = {
@@ -158,7 +163,9 @@ private fun AddEditNoteAppBar(
                 enabled = state.hasContentChange && !state.isLoading
             )
         },
-        modifier = Modifier.padding(horizontal = 16.dp)
+        modifier = Modifier.padding(horizontal = 16.dp).semantics {
+            traversalIndex = -1f
+        }
     )
 }
 
@@ -174,7 +181,12 @@ private fun AddEditNoteContent(state: AddEditNoteUiState, padding: PaddingValues
     ) {
         HorizonSpace(SpaceSize.SPACE_24)
 
-        NotebookTypeSelect(state.type, state.onTypeChanged, true, false)
+        NotebookTypeSelect(
+            state.type,
+            state.onTypeChanged,
+            true,
+            false,
+        )
 
         HorizonSpace(SpaceSize.SPACE_24)
 

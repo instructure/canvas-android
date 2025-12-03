@@ -104,7 +104,8 @@ class JSTextSelectionInterface(
         val noteReactionString: String,
         val textSelectionStart: Int,
         val textSelectionEnd: Int,
-        val updatedAt: String
+        val updatedAt: String,
+        val accessibilityLabel: String
     )
 
     companion object {
@@ -652,7 +653,7 @@ const isNodeInRange = (range, node) => {
 ${JS_CODE_FROM_WEB}
 function highlightSelection(paramsJson) {
 	const params = JSON.parse(paramsJson);
-	const { noteId, selectedText, userComment, startOffset, startContainer, endOffset, endContainer, noteReactionString, textSelectionStart, textSelectionEnd, updatedAt } = params;
+	const { noteId, selectedText, userComment, startOffset, startContainer, endOffset, endContainer, noteReactionString, textSelectionStart, textSelectionEnd, updatedAt, accessibilityLabel } = params;
 
 	let parent = document.getElementById("parent-container");//document.documentElement;
 	if (!parent) return;
@@ -679,6 +680,8 @@ function highlightSelection(paramsJson) {
 		highlightElement.classList.add(highlightClassName);
 		highlightElement.classList.add(cssClass);
 		highlightElement.setAttribute('data-note-id', noteId);
+		highlightElement.setAttribute('role', 'button');
+		highlightElement.setAttribute('aria-label', accessibilityLabel);
 		highlightElement.onclick = function () { ${ JS_INTERFACE_NAME }.onHighlightedTextClicked(noteId, noteReactionString, selectedText, userComment, startOffset, startContainer, endOffset, endContainer, textSelectionStart, textSelectionEnd, updatedAt); };
 		highlightElement.textContent = textNode.textContent;
 
@@ -764,6 +767,11 @@ javascript: (function () {
 
         fun WebView.highlightNotes(notes: List<Note>) {
             notes.forEach { note ->
+                val accessibilityLabel = context.getString(
+                    com.instructure.horizon.R.string.a11y_notebookHighlightMarkedAs,
+                    note.highlightedText.selectedText,
+                    note.type.name
+                )
                 val params = HighlightParams(
                     noteId = note.id,
                     selectedText = note.highlightedText.selectedText,
@@ -775,7 +783,8 @@ javascript: (function () {
                     noteReactionString = note.type.name,
                     textSelectionStart = note.highlightedText.textPosition.start,
                     textSelectionEnd = note.highlightedText.textPosition.end,
-                    updatedAt = note.updatedAt.toNotebookLocalisedDateFormat()
+                    updatedAt = note.updatedAt.toNotebookLocalisedDateFormat(),
+                    accessibilityLabel = accessibilityLabel
                 )
                 val paramsJson = gson.toJson(params)
                 val quotedJson = JSONObject.quote(paramsJson)

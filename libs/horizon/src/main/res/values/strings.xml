@@ -479,4 +479,10 @@
     <string name="editNoteExitConfirmationExitButtonLabel">Exit</string>
     <string name="editNoteExitConfirmationCancelButtonLabel">Cancel</string>
     <string name="a11y_notebookDeleteNoteButtonContentDescription">Delete note</string>
+    <string name="a11y_previousModuleItem">Previous module item</string>
+    <string name="a11y_openAIAssistant">Open AI Assistant</string>
+    <string name="a11y_openNotebook">Open notebook</string>
+    <string name="a11y_openMoreOptions">Open more options</string>
+    <string name="a11y_nextModuleItem">Next module item</string>
+    <string name="a11y_notebookHighlightMarkedAs">%1$s, marked as %2$s, double tap to edit note</string>
 </resources>
