@@ -120,7 +120,7 @@ class QuizPreviewWebviewFragment : InternalWebViewFragment() {
             args.putBoolean(DARK_TOOLBAR, false)
 
             // Only authenticate during tests to avoid intermittent login page issues
-            if (BuildConfig.DEBUG) {
+            if (BuildConfig.IS_TESTING) {
                 args.putBoolean(AUTHENTICATE, true)
             }
 
