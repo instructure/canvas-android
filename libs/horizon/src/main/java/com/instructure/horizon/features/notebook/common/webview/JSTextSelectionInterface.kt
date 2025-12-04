@@ -765,7 +765,7 @@ javascript: (function () {
             this.evaluateJavascript(JS_CODE, null)
         }
 
-        fun WebView.highlightNotes(notes: List<Note>) {
+        fun WebView.highlightNotes(notes: List<Note>, onHighlighted: () -> Unit) {
             notes.forEach { note ->
                 val accessibilityLabel = context.getString(
                     com.instructure.horizon.R.string.a11y_notebookHighlightMarkedAs,
@@ -789,7 +789,9 @@ javascript: (function () {
                 val paramsJson = gson.toJson(params)
                 val quotedJson = JSONObject.quote(paramsJson)
                 val script = "javascript:highlightSelection($quotedJson)"
-                this.evaluateJavascript(script, null)
+                this.evaluateJavascript(script) {
+                    onHighlighted()
+                }
             }
         }
 

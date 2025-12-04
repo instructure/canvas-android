@@ -54,6 +54,7 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.JsExternalToolInterface
 import com.instructure.pandautils.utils.JsGoogleDocsInterface
+import com.instructure.pandautils.utils.toPx
 import com.instructure.pandautils.views.CanvasWebView
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -117,7 +118,7 @@ fun ComposeNotesHighlightingCanvasWebView(
             webViewInstance?.webView?.getNoteYPosition(noteId) { yPosition ->
                 if (yPosition != null) {
                     composeScope.launch {
-                        val targetScroll = yPosition.toInt().coerceIn(0, scrollState.maxValue)
+                        val targetScroll = (yPosition.toInt().toPx).coerceIn(0, scrollState.maxValue)
                         scrollState.animateScrollTo(targetScroll)
                     }
                 }
@@ -185,8 +186,9 @@ fun ComposeNotesHighlightingCanvasWebView(
                             webViewCallbacks.onPageFinished(webView, url)
 
                             webView.evaluateTextSelectionInterface()
-                            webView.highlightNotes(notesStateValue.value)
-                            isPageLoaded = true
+                            webView.highlightNotes(notesStateValue.value) {
+                                isPageLoaded = true
+                            }
                         }
 
                         override fun onPageStartedCallback(webView: WebView, url: String) = webViewCallbacks.onPageStarted(webView, url)
