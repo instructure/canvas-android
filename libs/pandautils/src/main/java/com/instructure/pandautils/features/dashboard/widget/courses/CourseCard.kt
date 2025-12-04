@@ -50,6 +50,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
@@ -67,7 +68,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.Shimmer
 import com.instructure.pandautils.domain.models.courses.CourseCardItem
 import com.instructure.pandautils.domain.models.courses.GradeDisplay
-import com.instructure.pandautils.utils.getFragmentActivity
+import com.instructure.pandautils.utils.getFragmentActivityOrNull
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
@@ -84,11 +85,11 @@ fun CourseCard(
     var showMenu by remember { mutableStateOf(false) }
     val hasMenu = onManageOfflineContent != null && onCustomizeCourse != null
 
-    val activity = LocalActivity.current?.getFragmentActivity()
+    val activity = LocalActivity.current?.getFragmentActivityOrNull()
 
     val cardShape = RoundedCornerShape(16.dp)
 
-    Box(modifier = modifier) {
+    Box(modifier = modifier.testTag("CourseCard_${courseCard.id}")) {
     Card(
         modifier = Modifier
             .fillMaxWidth()

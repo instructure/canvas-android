@@ -57,7 +57,7 @@ import com.instructure.pandautils.domain.models.courses.CourseCardItem
 import com.instructure.pandautils.domain.models.courses.GradeDisplay
 import com.instructure.pandautils.domain.models.courses.GroupCardItem
 import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.getFragmentActivity
+import com.instructure.pandautils.utils.getFragmentActivityOrNull
 import kotlinx.coroutines.flow.SharedFlow
 
 @Composable
@@ -83,12 +83,12 @@ fun CoursesWidget(
 }
 
 @Composable
-private fun CoursesWidgetContent(
+fun CoursesWidgetContent(
     modifier: Modifier = Modifier,
     uiState: CoursesWidgetUiState,
     columns: Int = 1
 ) {
-    val activity = LocalActivity.current?.getFragmentActivity()
+    val activity = LocalActivity.current?.getFragmentActivityOrNull()
     Column(modifier = modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier

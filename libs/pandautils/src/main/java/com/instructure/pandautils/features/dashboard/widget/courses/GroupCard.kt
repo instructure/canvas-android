@@ -41,6 +41,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
@@ -54,7 +55,7 @@ import androidx.fragment.app.FragmentActivity
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.Shimmer
 import com.instructure.pandautils.domain.models.courses.GroupCardItem
-import com.instructure.pandautils.utils.getFragmentActivity
+import com.instructure.pandautils.utils.getFragmentActivityOrNull
 
 @Composable
 fun GroupCard(
@@ -62,12 +63,13 @@ fun GroupCard(
     onGroupClick: (FragmentActivity, Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val activity = LocalActivity.current?.getFragmentActivity()
+    val activity = LocalActivity.current?.getFragmentActivityOrNull()
 
     val cardShape = RoundedCornerShape(16.dp)
 
     Card(
         modifier = modifier
+            .testTag("GroupCard_${groupCard.id}")
             .fillMaxWidth()
             .clip(cardShape)
             .clickable { activity?.let { onGroupClick(it, groupCard.id) } },
