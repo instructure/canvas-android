@@ -17,6 +17,7 @@
 package com.instructure.horizon.features.notebook.addedit
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -33,10 +34,17 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.text.input.TextFieldValue
@@ -71,6 +79,7 @@ import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextArea
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextAreaState
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.getActivityOrNull
+import kotlinx.coroutines.delay
 
 @Composable
 fun AddEditNoteScreen(
@@ -123,6 +132,15 @@ private fun AddEditNoteAppBar(
     state: AddEditNoteUiState,
     navigateBack: () -> Unit
 ) {
+    val requester = FocusRequester()
+    var requestFocus by rememberSaveable { mutableStateOf(true) }
+    LaunchedEffect(Unit) {
+        delay(50)
+        if(requestFocus) {
+            requester.requestFocus()
+            requestFocus = false
+        }
+    }
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = HorizonColors.Surface.pageSecondary(),
@@ -134,9 +152,12 @@ private fun AddEditNoteAppBar(
                 state.title,
                 style = HorizonTypography.h4,
                 color = HorizonColors.Text.title(),
-                modifier = Modifier.semantics {
-                    traversalIndex = -1f
-                }
+                modifier = Modifier
+                    .semantics {
+                        traversalIndex = -1f
+                    }
+                    .focusRequester(requester)
+                    .focusable()
             )
         },
         navigationIcon = {
@@ -163,9 +184,12 @@ private fun AddEditNoteAppBar(
                 enabled = state.hasContentChange && !state.isLoading
             )
         },
-        modifier = Modifier.padding(horizontal = 16.dp).semantics {
-            traversalIndex = -1f
-        }
+        modifier = Modifier
+            .padding(horizontal = 16.dp)
+            .semantics {
+                isTraversalGroup = true
+                traversalIndex = -1f
+            }
     )
 }
 
