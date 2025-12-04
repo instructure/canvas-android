@@ -69,6 +69,7 @@ class GradesViewModel @Inject constructor(
     private val repository: GradesRepository,
     private val gradeFormatter: GradeFormatter,
     private val gradeCalculator: GradeCalculator,
+    private val gradesViewModelBehavior: GradesViewModelBehavior,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -145,11 +146,7 @@ class GradesViewModel @Inject constructor(
 
             val filteredItems = filterItems(allItems, _uiState.value.searchQuery)
 
-            // Determine if what-if grading is enabled
-            val hasValidGroupRule = assignmentGroups.any { it.rules?.hasValidRule().orDefault() }
-            val isWhatIfGradingEnabled = !course.isWeightedGradingPeriods &&
-                    !hasValidGroupRule &&
-                    course.settings?.restrictQuantitativeData != true
+            val isWhatIfGradingEnabled = gradesViewModelBehavior.isWhatIfGradingEnabled(course, assignmentGroups)
 
             _uiState.update {
                 it.copy(

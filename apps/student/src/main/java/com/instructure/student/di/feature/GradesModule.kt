@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.grades.GradesRepository
+import com.instructure.pandautils.features.grades.GradesViewModelBehavior
 import com.instructure.pandautils.room.offline.daos.CustomGradeStatusDao
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
@@ -31,6 +32,7 @@ import com.instructure.pandautils.room.offline.facade.SubmissionFacade
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.features.grades.StudentGradesRepository
+import com.instructure.student.features.grades.StudentGradesViewModelBehavior
 import com.instructure.student.features.grades.datasource.GradesLocalDataSource
 import com.instructure.student.features.grades.datasource.GradesNetworkDataSource
 import com.instructure.student.util.StudentPrefs
@@ -81,5 +83,10 @@ class GradesModule {
             apiPrefs,
             studentPrefs
         )
+    }
+
+    @Provides
+    fun provideGradesViewModelBehavior(): GradesViewModelBehavior {
+        return StudentGradesViewModelBehavior()
     }
 }
