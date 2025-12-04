@@ -17,7 +17,6 @@
 
 package com.instructure.pandautils.features.grades
 
-import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.pandautils.utils.orDefault
 import java.math.BigDecimal
@@ -42,11 +41,10 @@ class GradeCalculator @Inject constructor() {
         onlyGraded: Boolean
     ): Double {
         return when {
-            applyGroupWeights && !onlyGraded -> calcGradesTotal(groups, whatIfScores)
             applyGroupWeights && onlyGraded -> calcGradesGraded(groups, whatIfScores)
-            !applyGroupWeights && !onlyGraded -> calcGradesTotalNoWeight(groups, whatIfScores)
+            applyGroupWeights && !onlyGraded -> calcGradesTotal(groups, whatIfScores)
             !applyGroupWeights && onlyGraded -> calcGradesGradedNoWeight(groups, whatIfScores)
-            else -> 0.0
+            else -> calcGradesTotalNoWeight(groups, whatIfScores)
         }
     }
 

@@ -835,7 +835,7 @@ fun AssignmentItem(
                             Box(
                                 modifier = Modifier
                                     .background(
-                                        color = Color.White,
+                                        color = colorResource(R.color.backgroundLightest),
                                         shape = RoundedCornerShape(4.dp)
                                     )
                                     .padding(horizontal = 4.dp)
@@ -942,7 +942,7 @@ private fun WhatIfScoreDialog(
     canvasContextColor: Int
 ) {
     var whatIfScoreText by remember { mutableStateOf(dialogData.whatIfScore?.toString().orEmpty()) }
-    var errorMessage by remember { mutableStateOf<String?>(null) }
+    var warningMessage by remember { mutableStateOf<String?>(null) }
     val context = LocalContext.current
 
     AlertDialog(
@@ -965,8 +965,16 @@ private fun WhatIfScoreDialog(
                 OutlinedTextField(
                     value = whatIfScoreText,
                     onValueChange = {
-                        whatIfScoreText = it
-                        errorMessage = null
+                        val newValue = it
+                        if (newValue.isEmpty() || newValue.matches(Regex("^\\d*\\.?\\d{0,2}$"))) {
+                            whatIfScoreText = newValue
+                            val score = newValue.toDoubleOrNull()
+                            warningMessage = if (score != null && dialogData.maxScore != null && score > dialogData.maxScore) {
+                                context.getString(R.string.whatIfScoreExceedsMaximumWarning)
+                            } else {
+                                null
+                            }
+                        }
                     },
                     label = {
                         Text(
@@ -976,24 +984,21 @@ private fun WhatIfScoreDialog(
                     },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     singleLine = true,
-                    isError = errorMessage != null,
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         textColor = colorResource(id = R.color.textDarkest),
                         focusedBorderColor = Color(canvasContextColor),
                         unfocusedBorderColor = colorResource(id = R.color.borderMedium),
                         cursorColor = Color(canvasContextColor),
-                        focusedLabelColor = Color(canvasContextColor),
-                        errorBorderColor = colorResource(id = R.color.textDanger),
-                        errorLabelColor = colorResource(id = R.color.textDanger)
+                        focusedLabelColor = Color(canvasContextColor)
                     ),
                     modifier = Modifier
                         .fillMaxWidth()
                         .testTag("whatIfScoreInput")
                 )
-                errorMessage?.let { error ->
+                warningMessage?.let { warning ->
                     Text(
-                        text = error,
-                        color = colorResource(id = R.color.textDanger),
+                        text = warning,
+                        color = colorResource(id = R.color.textWarning),
                         fontSize = 12.sp,
                         modifier = Modifier.padding(top = 4.dp)
                     )
@@ -1005,11 +1010,7 @@ private fun WhatIfScoreDialog(
             TextButton(
                 onClick = {
                     val score = whatIfScoreText.toDoubleOrNull()
-                    if (score != null && dialogData.maxScore != null && score > dialogData.maxScore) {
-                        errorMessage = context.getString(R.string.whatIfScoreExceedsMaximum)
-                    } else {
-                        onConfirm(score)
-                    }
+                    onConfirm(score)
                 },
                 modifier = Modifier.testTag("doneButton")
             ) {
