@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.utils.pageview.PandataInfo
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardRepository
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardRouter
 import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
+import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidgetBehavior
 import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidgetRouter
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragmentBehavior
 import com.instructure.pandautils.features.discussion.router.DiscussionRouteHelperRepository
@@ -132,6 +133,11 @@ class DefaultBindingsModule {
 
     @Provides
     fun provideCoursesWidgetRouter(): CoursesWidgetRouter {
+        throw NotImplementedError()
+    }
+
+    @Provides
+    fun provideCoursesWidgetBehavior(): CoursesWidgetBehavior {
         throw NotImplementedError()
     }
 }

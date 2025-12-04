@@ -2356,4 +2356,5 @@
     <string name="offline_content_available">Offline content available</string>
     <string name="a11y_contentDescription_moreOptions">More options</string>
     <string name="customizeCourse">Customize Course</string>
+    <string name="favoriteCoursesAndGroups">Favorite Courses and Groups</string>
 </resources>

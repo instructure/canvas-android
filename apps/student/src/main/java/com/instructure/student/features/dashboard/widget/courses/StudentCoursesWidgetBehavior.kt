@@ -53,4 +53,8 @@ class StudentCoursesWidgetBehavior @Inject constructor(
     override fun onCustomizeCourse(activity: FragmentActivity, course: Course) {
         router.routeToCustomizeCourse(activity, course)
     }
+
+    override fun onAllCoursesClicked(activity: FragmentActivity) {
+        router.routeToAllCourses(activity)
+    }
 }

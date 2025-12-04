@@ -240,7 +240,7 @@ private fun InvitationCard(
                     .padding(top = 16.dp, bottom = 24.dp),
                 text = invitation.courseName,
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Normal,
+                fontWeight = FontWeight.Medium,
                 overflow = TextOverflow.Ellipsis,
                 color = colorResource(R.color.textDarkest),
                 maxLines = 2

@@ -86,13 +86,16 @@ fun CourseCard(
 
     val activity = LocalActivity.current?.getFragmentActivity()
 
+    val cardShape = RoundedCornerShape(16.dp)
+
     Box(modifier = modifier) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
+            .clip(cardShape)
             .clickable(enabled = courseCard.isClickable) { activity?.let { onCourseClick(it, courseCard.id) } }
             .alpha(if (courseCard.isClickable) 1f else 0.5f),
-        shape = RoundedCornerShape(16.dp),
+        shape = cardShape,
         colors = CardDefaults.cardColors(
             containerColor = colorResource(R.color.backgroundLightest)
         ),
@@ -211,7 +214,7 @@ fun CourseCard(
                 Text(
                     text = courseCard.name,
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold,
+                    fontWeight = FontWeight.Medium,
                     color = colorResource(R.color.textDarkest),
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
@@ -357,6 +360,7 @@ fun CourseCardShimmer(
 }
 
 @Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun CourseCardPreview() {
     CourseCard(

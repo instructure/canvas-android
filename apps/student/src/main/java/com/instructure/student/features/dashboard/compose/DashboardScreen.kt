@@ -60,8 +60,8 @@ import com.instructure.pandautils.features.dashboard.notifications.DashboardRout
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.courseinvitation.CourseInvitationsWidget
 import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidget
-import com.instructure.pandautils.features.dashboard.widget.welcome.WelcomeWidget
 import com.instructure.pandautils.features.dashboard.widget.institutionalannouncements.InstitutionalAnnouncementsWidget
+import com.instructure.pandautils.features.dashboard.widget.welcome.WelcomeWidget
 import com.instructure.student.R
 import com.instructure.student.activity.NavigationActivity
 import kotlinx.coroutines.flow.SharedFlow

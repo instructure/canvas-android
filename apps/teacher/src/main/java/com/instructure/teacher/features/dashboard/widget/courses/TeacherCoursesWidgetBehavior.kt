@@ -46,10 +46,14 @@ class TeacherCoursesWidgetBehavior @Inject constructor(
     }
 
     override fun onManageOfflineContent(activity: FragmentActivity, course: Course) {
-        router.routeToManageOfflineContent(activity, course)
+        throw NotImplementedError()
     }
 
     override fun onCustomizeCourse(activity: FragmentActivity, course: Course) {
-        router.routeToCustomizeCourse(activity, course)
+        throw NotImplementedError()
+    }
+
+    override fun onAllCoursesClicked(activity: FragmentActivity) {
+        router.routeToAllCourses(activity)
     }
 }

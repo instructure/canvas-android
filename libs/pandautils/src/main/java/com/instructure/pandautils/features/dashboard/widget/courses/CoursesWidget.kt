@@ -17,29 +17,47 @@
 package com.instructure.pandautils.features.dashboard.widget.courses
 
 import android.content.res.Configuration
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Icon
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.domain.models.courses.CourseCardItem
 import com.instructure.pandautils.domain.models.courses.GradeDisplay
 import com.instructure.pandautils.domain.models.courses.GroupCardItem
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.getFragmentActivity
 import kotlinx.coroutines.flow.SharedFlow
 
 @Composable
@@ -70,7 +88,49 @@ private fun CoursesWidgetContent(
     uiState: CoursesWidgetUiState,
     columns: Int = 1
 ) {
+    val activity = LocalActivity.current?.getFragmentActivity()
     Column(modifier = modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                stringResource(R.string.favoriteCoursesAndGroups),
+                color = colorResource(R.color.textDarkest),
+                fontSize = 14.sp,
+                lineHeight = 19.sp
+            )
+
+            Button(
+                onClick = { activity?.let { uiState.onAllCourses(it) } },
+                modifier = Modifier
+                    .height(24.dp)
+                    .padding(start = 16.dp),
+                contentPadding = PaddingValues(top = 0.dp, bottom = 0.dp, start = 10.dp, end = 6.dp),
+                shape = RoundedCornerShape(100.dp),
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Color(ThemePrefs.buttonColor),
+                    contentColor = Color(ThemePrefs.buttonTextColor)
+                )
+            ) {
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        stringResource(R.string.allCourses),
+                        fontSize = 12.sp,
+                        lineHeight = 14.sp,
+                        modifier = Modifier.padding(top = 4.dp, bottom = 6.dp)
+                    )
+                    Icon(
+                        painter = painterResource(R.drawable.ic_chevron_down_small),
+                        contentDescription = null,
+                        modifier = Modifier.rotate(270f)
+                    )
+                }
+            }
+        }
         if (uiState.isLoading) {
             CoursesWidgetLoadingState(columns = columns)
         } else {
@@ -84,7 +144,7 @@ private fun CoursesWidgetContent(
                     NonLazyGrid(
                         columns = columns,
                         itemCount = uiState.courses.size,
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                        modifier = Modifier.padding(horizontal = 16.dp),
                         horizontalSpacing = 12.dp,
                         verticalSpacing = 12.dp
                     ) { index ->
@@ -102,9 +162,6 @@ private fun CoursesWidgetContent(
             }
 
             if (uiState.groups.isNotEmpty()) {
-                if (uiState.courses.isNotEmpty()) {
-                    Spacer(modifier = Modifier.height(16.dp))
-                }
 
                 CollapsibleSection(
                     title = stringResource(R.string.groups),
@@ -115,7 +172,7 @@ private fun CoursesWidgetContent(
                     NonLazyGrid(
                         columns = columns,
                         itemCount = uiState.groups.size,
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                        modifier = Modifier.padding(horizontal = 16.dp),
                         horizontalSpacing = 12.dp,
                         verticalSpacing = 12.dp
                     ) { index ->
@@ -184,6 +241,7 @@ private fun CoursesWidgetLoadingState(columns: Int = 1) {
 )
 @Composable
 private fun CoursesWidgetContentPreview() {
+    ContextKeeper.appContext = LocalContext.current
     CoursesWidgetContent(
         uiState = CoursesWidgetUiState(
             isLoading = false,
@@ -237,6 +295,7 @@ private fun CoursesWidgetContentPreview() {
 )
 @Composable
 private fun CoursesWidgetTabletContentPreview() {
+    ContextKeeper.appContext = LocalContext.current
     CoursesWidgetContent(
         columns = 3,
         uiState = CoursesWidgetUiState(
@@ -290,6 +349,7 @@ private fun CoursesWidgetTabletContentPreview() {
 )
 @Composable
 private fun CoursesWidgetLoadingPreview() {
+    ContextKeeper.appContext = LocalContext.current
     CoursesWidgetContent(
         uiState = CoursesWidgetUiState(isLoading = true)
     )

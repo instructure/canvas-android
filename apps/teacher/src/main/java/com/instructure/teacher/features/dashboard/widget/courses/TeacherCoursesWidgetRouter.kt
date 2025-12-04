@@ -19,6 +19,7 @@ package com.instructure.teacher.features.dashboard.widget.courses
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
+import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
 import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidgetRouter
 import com.instructure.teacher.fragments.CourseBrowserFragment
 import com.instructure.teacher.router.RouteMatcher
@@ -39,5 +40,9 @@ class TeacherCoursesWidgetRouter : CoursesWidgetRouter {
 
     override fun routeToCustomizeCourse(activity: FragmentActivity, course: Course) {
         // TODO: Navigate to customize course screen (color/nickname)
+    }
+
+    override fun routeToAllCourses(activity: FragmentActivity) {
+        RouteMatcher.route(activity, EditDashboardFragment.makeRoute())
     }
 }

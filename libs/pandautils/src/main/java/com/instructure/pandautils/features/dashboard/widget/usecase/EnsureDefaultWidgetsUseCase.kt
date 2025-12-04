@@ -53,7 +53,8 @@ class EnsureDefaultWidgetsUseCase @Inject constructor(
             WidgetMetadata(
                 id = WidgetMetadata.WIDGET_ID_COURSES,
                 position = 3,
-                isVisible = true
+                isVisible = true,
+                isFullWidth = true
             )
         )
 

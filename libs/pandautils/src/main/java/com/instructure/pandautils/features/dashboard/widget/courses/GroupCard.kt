@@ -16,6 +16,7 @@
 
 package com.instructure.pandautils.features.dashboard.widget.courses
 
+import android.content.res.Configuration
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -38,6 +39,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -61,11 +63,15 @@ fun GroupCard(
     modifier: Modifier = Modifier
 ) {
     val activity = LocalActivity.current?.getFragmentActivity()
+
+    val cardShape = RoundedCornerShape(16.dp)
+
     Card(
         modifier = modifier
             .fillMaxWidth()
+            .clip(cardShape)
             .clickable { activity?.let { onGroupClick(it, groupCard.id) } },
-        shape = RoundedCornerShape(16.dp),
+        shape = cardShape,
         colors = CardDefaults.cardColors(
             containerColor = colorResource(R.color.backgroundLightestElevated)
         ),
@@ -108,7 +114,7 @@ fun GroupCard(
                             Text(
                                 text = groupCard.memberCount.toString(),
                                 fontSize = 16.sp,
-                                fontWeight = FontWeight.SemiBold,
+                                fontWeight = FontWeight.Medium,
                                 color = Color(groupCard.color),
                                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
                                 lineHeight = 21.sp
@@ -206,6 +212,7 @@ fun GroupCardShimmer(
 }
 
 @Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun GroupCardPreview() {
     GroupCard(
@@ -222,6 +229,7 @@ private fun GroupCardPreview() {
 }
 
 @Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun GroupCardShimmerPreview() {
     GroupCardShimmer()

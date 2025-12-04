@@ -65,8 +65,7 @@ fun CollapsibleSection(
         ) {
             Text(
                 text = "$title ($count)",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold,
+                fontSize = 14.sp,
                 color = colorResource(R.color.textDarkest)
             )
 

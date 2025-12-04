@@ -170,11 +170,13 @@ private fun AnnouncementCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val cardShape = RoundedCornerShape(16.dp)
     Card(
         modifier = modifier
             .fillMaxWidth()
+            .clip(cardShape)
             .clickable(onClick = onClick),
-        shape = RoundedCornerShape(16.dp),
+        shape = cardShape,
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(
             containerColor = colorResource(R.color.backgroundLightest)
@@ -269,7 +271,7 @@ private fun AnnouncementCard(
                     text = announcement.subject,
                     fontSize = 16.sp,
                     lineHeight = 22.sp,
-                    fontWeight = FontWeight.SemiBold,
+                    fontWeight = FontWeight.Medium,
                     overflow = TextOverflow.Ellipsis,
                     color = colorResource(R.color.textDarkest),
                     maxLines = 2

@@ -28,4 +28,5 @@ interface CoursesWidgetBehavior {
     fun onGroupClick(activity: FragmentActivity, group: Group)
     fun onManageOfflineContent(activity: FragmentActivity, course: Course)
     fun onCustomizeCourse(activity: FragmentActivity, course: Course)
+    fun onAllCoursesClicked(activity: FragmentActivity)
 }

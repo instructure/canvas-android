@@ -65,7 +65,8 @@ class CoursesWidgetViewModel @Inject constructor(
             onToggleCoursesExpanded = ::toggleCoursesExpanded,
             onToggleGroupsExpanded = ::toggleGroupsExpanded,
             onManageOfflineContent = ::onManageOfflineContent,
-            onCustomizeCourse = ::onCustomizeCourse
+            onCustomizeCourse = ::onCustomizeCourse,
+            onAllCourses = ::onAllCourses
         )
     )
     val uiState: StateFlow<CoursesWidgetUiState> = _uiState.asStateFlow()
@@ -203,18 +204,17 @@ class CoursesWidgetViewModel @Inject constructor(
         return when {
             enrollment == null -> GradeDisplay.NotAvailable
             enrollment.computedCurrentGrade == null && enrollment.computedCurrentScore == null -> {
-                if (course.hideFinalGrades == true) {
+                if (course.hideFinalGrades) {
                     GradeDisplay.Locked
                 } else {
                     GradeDisplay.NotAvailable
                 }
             }
             enrollment.computedCurrentGrade != null -> GradeDisplay.Letter(enrollment.computedCurrentGrade!!)
-            enrollment.computedCurrentScore != null -> {
-                val score = enrollment.computedCurrentScore!!
-                GradeDisplay.Percentage("${score.toInt()}%")
+            else -> {
+                val score = enrollment.computedCurrentScore
+                GradeDisplay.Percentage("${score?.toInt()}%")
             }
-            else -> GradeDisplay.NotAvailable
         }
     }
 
@@ -254,5 +254,9 @@ class CoursesWidgetViewModel @Inject constructor(
                     _uiState.update { it.copy(showColorOverlay = showColorOverlay) }
                 }
         }
+    }
+
+    private fun onAllCourses(activity: FragmentActivity) {
+        coursesWidgetBehavior.onAllCoursesClicked(activity)
     }
 }
