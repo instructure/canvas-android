@@ -66,6 +66,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
     private val moduleItemId = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().moduleItemId
     private val moduleItemAssetType = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().moduleItemAssetType
     private val moduleItemAssetId = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().moduleItemAssetId
+    private val scrollToNoteId = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().scrollToNoteId
 
     private var courseProgressChanged = false
 
@@ -73,6 +74,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
         MutableStateFlow(
             ModuleItemSequenceUiState(
                 courseId = courseId,
+                scrollToNoteId = scrollToNoteId,
                 loadingState = LoadingState(onRefresh = ::refresh),
                 onPreviousClick = ::previousClicked,
                 onNextClick = ::nextClicked,
