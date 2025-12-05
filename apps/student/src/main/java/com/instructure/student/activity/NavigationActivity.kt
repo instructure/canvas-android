@@ -1273,7 +1273,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         val studioLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition.STUDIO_DOMAIN }
         val gaugeLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition.GAUGE_DOMAIN }
         val masteryLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition.MASTERY_DOMAIN }
-        val portfolioLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition.PORTFOLIO_DOMAIN }
+        val portfolioLaunchDefinition = launchDefinitions?.firstOrNull { it.domain?.contains(LaunchDefinition.PORTFOLIO_DOMAIN) == true }
 
         val studio = findViewById<View>(R.id.navigationDrawerItem_studio)
         studio.visibility = if (studioLaunchDefinition != null) View.VISIBLE else View.GONE

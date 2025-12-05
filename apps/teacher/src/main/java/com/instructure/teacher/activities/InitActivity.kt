@@ -495,7 +495,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         val arcLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition.STUDIO_DOMAIN }
         val gaugeLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition.GAUGE_DOMAIN }
         val masteryLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition.MASTERY_DOMAIN }
-        val portfolioLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition.PORTFOLIO_DOMAIN }
+        val portfolioLaunchDefinition = launchDefinitions?.firstOrNull { it.domain?.contains(LaunchDefinition.PORTFOLIO_DOMAIN) == true }
 
         navigationDrawerItemArc.setVisible(arcLaunchDefinition != null)
         navigationDrawerItemArc.tag = arcLaunchDefinition
