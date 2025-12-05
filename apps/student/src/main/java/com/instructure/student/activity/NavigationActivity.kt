@@ -254,7 +254,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 R.id.navigationDrawerItem_files -> {
                     ApiPrefs.user?.let { handleRoute(FileListFragment.makeRoute(it)) }
                 }
-                R.id.navigationDrawerItem_gauge, R.id.navigationDrawerItem_studio, R.id.navigationDrawerItem_mastery -> {
+                R.id.navigationDrawerItem_gauge, R.id.navigationDrawerItem_studio, R.id.navigationDrawerItem_mastery, R.id.navigationDrawerItem_portfolio -> {
                     val launchDefinition = v.tag as? LaunchDefinition ?: return@weave
                     launchLti(launchDefinition)
                 }
@@ -648,6 +648,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             navigationDrawerItemGauge.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
             navigationDrawerItemStudio.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
             navigationDrawerItemMastery.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
+            navigationDrawerItemPortfolio.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
             navigationDrawerItemBookmarks.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
             navigationDrawerItemChangeUser.setOnClickListener(mNavigationDrawerItemClickListener)
             navigationDrawerItemHelp.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
@@ -661,6 +662,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 navigationDrawerItemGauge,
                 navigationDrawerItemStudio,
                 navigationDrawerItemMastery,
+                navigationDrawerItemPortfolio,
                 navigationDrawerItemBookmarks,
                 navigationDrawerItemChangeUser,
                 navigationDrawerItemHelp,
@@ -775,6 +777,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             navigationDrawerOfflineIndicator.setVisible(isOffline)
             navigationDrawerItemStudio.alpha = if (isOffline) 0.5f else 1f
             navigationDrawerItemGauge.alpha = if (isOffline) 0.5f else 1f
+            navigationDrawerItemMastery.alpha = if (isOffline) 0.5f else 1f
+            navigationDrawerItemPortfolio.alpha = if (isOffline) 0.5f else 1f
             navigationDrawerItemHelp.alpha = if (isOffline) 0.5f else 1f
             navigationDrawerItemBookmarks.alpha = if (isOffline) 0.5f else 1f
             navigationDrawerItemFiles.alpha = if (isOffline) 0.5f else 1f
@@ -1269,6 +1273,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         val studioLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition.STUDIO_DOMAIN }
         val gaugeLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition.GAUGE_DOMAIN }
         val masteryLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition.MASTERY_DOMAIN }
+        val portfolioLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition.PORTFOLIO_DOMAIN }
 
         val studio = findViewById<View>(R.id.navigationDrawerItem_studio)
         studio.visibility = if (studioLaunchDefinition != null) View.VISIBLE else View.GONE
@@ -1281,6 +1286,10 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         val mastery = findViewById<View>(R.id.navigationDrawerItem_mastery)
         mastery.visibility = if (masteryLaunchDefinition != null) View.VISIBLE else View.GONE
         mastery.tag = masteryLaunchDefinition
+
+        val portfolio = findViewById<View>(R.id.navigationDrawerItem_portfolio)
+        portfolio.visibility = if (portfolioLaunchDefinition != null) View.VISIBLE else View.GONE
+        portfolio.tag = portfolioLaunchDefinition
     }
 
     override fun addBookmark() {
