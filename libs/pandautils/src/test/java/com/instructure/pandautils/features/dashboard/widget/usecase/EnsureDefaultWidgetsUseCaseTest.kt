@@ -70,6 +70,13 @@ class EnsureDefaultWidgetsUseCaseTest {
                 }
             )
         }
+        coVerify {
+            repository.saveMetadata(
+                match {
+                    it.id == "courses" && it.position == 3 && it.isVisible && it.isFullWidth
+                }
+            )
+        }
     }
 
     @Test
@@ -77,7 +84,8 @@ class EnsureDefaultWidgetsUseCaseTest {
         val existingMetadata = listOf(
             WidgetMetadata("course_invitations", 0, true, false),
             WidgetMetadata("institutional_announcements", 1, true, false),
-            WidgetMetadata("welcome", 2, true)
+            WidgetMetadata("welcome", 2, true),
+            WidgetMetadata("courses", 3, true, isFullWidth = true)
         )
         coEvery { repository.observeAllMetadata() } returns flowOf(existingMetadata)
 
@@ -108,6 +116,11 @@ class EnsureDefaultWidgetsUseCaseTest {
         coVerify(exactly = 1) {
             repository.saveMetadata(
                 match { it.id == "welcome" }
+            )
+        }
+        coVerify(exactly = 1) {
+            repository.saveMetadata(
+                match { it.id == "courses" }
             )
         }
         coVerify(exactly = 0) {
