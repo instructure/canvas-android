@@ -24,6 +24,7 @@ import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
 import com.instructure.canvas.espresso.refresh
+import com.instructure.dataseeding.api.PagesApi
 import com.instructure.teacher.ui.utils.TeacherTest
 import com.instructure.teacher.ui.utils.extensions.seedData
 import com.instructure.teacher.ui.utils.extensions.tokenLogin
@@ -64,7 +65,7 @@ class CourseSettingsE2ETest : TeacherTest() {
         val newCourseHomePage: String = courseSettingsPage.selectNewHomePage()
 
         Log.d(ASSERTION_TAG, "Assert if home page has been changed.")
-        courseSettingsPage.assertHomePageChanged(newCourseHomePage)
+        courseSettingsPage.assertHomePageText(newCourseHomePage)
 
         val newCourseName = "New Course Name"
         Log.d(STEP_TAG, "Click on 'Course Name' menu and edit course's name to be '$newCourseName'.")
@@ -101,7 +102,7 @@ class CourseSettingsE2ETest : TeacherTest() {
         val secondCourseNewHomePage: String = courseSettingsPage.selectNewHomePage()
 
         Log.d(ASSERTION_TAG, "Assert if home page has been changed.")
-        courseSettingsPage.assertHomePageChanged(secondCourseNewHomePage)
+        courseSettingsPage.assertHomePageText(secondCourseNewHomePage)
 
         Log.d(STEP_TAG, "Go back to course browser page.")
         Espresso.pressBack()
@@ -124,5 +125,129 @@ class CourseSettingsE2ETest : TeacherTest() {
         Log.d(ASSERTION_TAG, "Assert if the corresponding course names are displayed (new course name for first course and the original course name of the second course).")
         dashboardPage.assertDisplaysCourse(newCourseName)
         dashboardPage.assertDisplaysCourse(secondCourse.name)
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.BUG_CASE, FeatureCategory.COURSE, TestCategory.E2E) // MBL-19486
+    fun testCannotSelectCourseSettingsFrontPageIfNoFrontPageE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(teachers = 1, courses = 1)
+        val course = data.coursesList[0]
+        val teacher = data.teachersList[0]
+        val firstCourse = data.coursesList[0]
+
+        Log.d(PREPARATION_TAG, "Create a published page for course: '${course.name}'.")
+        val publishedPage = PagesApi.createCoursePage(course.id, teacher.token, published = true, frontPage = false, body = "<h1 id=\"header1\">Regular Page Text</h1>")
+
+        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
+        tokenLogin(teacher)
+
+        Log.d(STEP_TAG, "Open '${firstCourse.name}' course and click on Course Settings button.")
+        dashboardPage.waitForRender()
+        dashboardPage.openCourse(firstCourse)
+        courseBrowserPage.clickSettingsButton()
+
+        Log.d(ASSERTION_TAG, "Assert if Course Settings page is displayed correctly.")
+        courseSettingsPage.assertPageObjects()
+
+        Log.d(STEP_TAG, "Click on 'Set Home Page' menu and select another page as home page.")
+        courseSettingsPage.clickSetHomePage()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Pages Front Page' radio button is not clickable since there is no front page in the course yet.")
+        courseSettingsPage.assertRadioButtonNotClickable("Pages Front Page")
+
+        Log.d(ASSERTION_TAG, "Assert that the other radio buttons are clickable.")
+        courseSettingsPage.assertRadioButtonClickable("Course Activity Stream")
+        courseSettingsPage.assertRadioButtonClickable("Course Modules")
+        courseSettingsPage.assertRadioButtonClickable("Assignments List")
+        courseSettingsPage.assertRadioButtonClickable("Syllabus")
+
+        Log.d(STEP_TAG, "Cancel the new home page selection dialog and navigate back to Course Browser Page.")
+        courseSettingsPage.cancelNewHomePageSelectionDialog()
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG, "Open Pages tab.")
+        courseBrowserPage.openPagesTab()
+
+        Log.d(STEP_TAG, "Open '${publishedPage.title}' page and Edit it. Set it as a front page and click on 'Save'.")
+        pageListPage.openPage(publishedPage.title)
+        editPageDetailsPage.openEdit()
+        editPageDetailsPage.toggleFrontPage()
+        editPageDetailsPage.savePage()
+
+        Log.d(STEP_TAG, "Navigate back to Pages List Page.")
+        Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that '${publishedPage.title}' is displayed as a FRONT page.")
+        pageListPage.assertFrontPageDisplayed(publishedPage.title)
+
+        Log.d(STEP_TAG, " Navigate back to Course Browser Page.")
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG, "Click on Course Settings button.")
+        courseBrowserPage.clickSettingsButton()
+
+        Log.d(ASSERTION_TAG, "Assert if Course Settings page is displayed correctly.")
+        courseSettingsPage.assertPageObjects()
+
+        Log.d(STEP_TAG, "Click on 'Set Home Page' menu.")
+        courseSettingsPage.clickSetHomePage()
+
+        Log.d(ASSERTION_TAG, "Assert that ALL the radio buttons are clickable, so the 'Course Front Page' as well, because there is a front page yet in the course.")
+        courseSettingsPage.assertRadioButtonClickable("Pages Front Page")
+        courseSettingsPage.assertRadioButtonClickable("Course Activity Stream")
+        courseSettingsPage.assertRadioButtonClickable("Course Modules")
+        courseSettingsPage.assertRadioButtonClickable("Assignments List")
+        courseSettingsPage.assertRadioButtonClickable("Syllabus")
+
+        Log.d(STEP_TAG, "Select 'Course Front Page' as new home page.")
+        courseSettingsPage.selectNewHomePageOption("Pages Front Page")
+
+        Log.d(ASSERTION_TAG, "Assert if home page has been changed to 'Course Front Page'.")
+        courseSettingsPage.assertHomePageText("Pages Front Page")
+
+        Log.d(STEP_TAG, "Navigate back to the Course Browser Page.")
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG, "Open Pages tab.")
+        courseBrowserPage.openPagesTab()
+
+        Log.d(STEP_TAG, "Open '${publishedPage.title}' page and Edit it. TURN OFF front page toggle and click on 'Save'.")
+        pageListPage.openPage(publishedPage.title)
+        editPageDetailsPage.openEdit()
+        editPageDetailsPage.toggleFrontPage()
+        editPageDetailsPage.savePage()
+
+        Log.d(STEP_TAG, "Navigate back to Pages List Page.")
+        Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that '${publishedPage.title}' is displayed as a COMMON page.")
+        pageListPage.assertPageDisplayed(publishedPage.title)
+
+        Log.d(STEP_TAG, " Navigate back to Course Browser Page.")
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG, "Click on Course Settings button.")
+        courseBrowserPage.clickSettingsButton()
+
+        Log.d(ASSERTION_TAG, "Assert if Course Settings page is displayed correctly.")
+        courseSettingsPage.assertPageObjects()
+
+        Log.d(ASSERTION_TAG, "Assert that the course home page fell back to 'Course Activity Stream' as we removed the front page so there is no front page yet.")
+        courseSettingsPage.assertHomePageText("Course Activity Stream")
+
+        Log.d(STEP_TAG, "Click on 'Set Home Page' menu.")
+        courseSettingsPage.clickSetHomePage()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Pages Front Page' radio button is not clickable since there is no front page in the course yet.")
+        courseSettingsPage.assertRadioButtonNotClickable("Pages Front Page")
+
+        Log.d(ASSERTION_TAG, "Assert that the other radio buttons are clickable.")
+        courseSettingsPage.assertRadioButtonClickable("Course Activity Stream")
+        courseSettingsPage.assertRadioButtonClickable("Course Modules")
+        courseSettingsPage.assertRadioButtonClickable("Assignments List")
+        courseSettingsPage.assertRadioButtonClickable("Syllabus")
     }
 }
