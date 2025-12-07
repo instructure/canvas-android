@@ -56,7 +56,6 @@ import com.instructure.pandautils.utils.JsExternalToolInterface
 import com.instructure.pandautils.utils.JsGoogleDocsInterface
 import com.instructure.pandautils.utils.toPx
 import com.instructure.pandautils.views.CanvasWebView
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
@@ -110,16 +109,17 @@ fun ComposeNotesHighlightingCanvasWebView(
         }
     }
 
-    LaunchedEffect(scrollToNoteId, isPageLoaded) {
-        delay(500)
-        val noteId = scrollToNoteId
-        if (noteId != null && isPageLoaded && scrollState != null && webViewInstance != null && !isScrolled) {
-            isScrolled = true
-            webViewInstance?.webView?.getNoteYPosition(noteId) { yPosition ->
+    LaunchedEffect(scrollToNoteId, isPageLoaded, pageHeight) {
+        if (scrollToNoteId != null && isPageLoaded && scrollState != null && webViewInstance != null && !isScrolled && pageHeight > 0) {
+            webViewInstance?.webView?.getNoteYPosition(scrollToNoteId) { yPosition ->
                 if (yPosition != null) {
                     composeScope.launch {
-                        val targetScroll = (yPosition.toInt().toPx).coerceIn(0, scrollState.maxValue)
-                        scrollState.animateScrollTo(targetScroll)
+                        val targetScroll =
+                            (yPosition.toInt().toPx).coerceIn(0, scrollState.maxValue)
+                        if (targetScroll > 0) {
+                            isScrolled = true
+                            scrollState.animateScrollTo(targetScroll)
+                        }
                     }
                 }
             }
@@ -272,14 +272,19 @@ fun ComposeNotesHighlightingCanvasWebView(
             modifier = modifier
                 .fillMaxSize()
                 .onGloballyPositioned { coordinates ->
-                    pageHeight = coordinates.size.height
                     if (coordinates.size.height > 0 && coordinates.size.height != previousHeight) {
                         lifecycleOwner.lifecycleScope.launch {
                             val scrollRatio = scrollValue.toFloat() / previousScrollMaxValue.toFloat()
                             scrollState?.scrollTo((scrollRatio * (scrollState.maxValue)).toInt())
                         }
                     }
+                    if (previousHeight != 0) {
+                        pageHeight = coordinates.size.height
+                    }
                     previousHeight = coordinates.size.height
+                    if ((scrollState?.maxValue ?: 0) > 0) {
+                        previousScrollMaxValue = scrollState?.maxValue ?: 0
+                    }
 
                 }
         )
