@@ -56,7 +56,6 @@ import com.instructure.pandautils.utils.JsExternalToolInterface
 import com.instructure.pandautils.utils.JsGoogleDocsInterface
 import com.instructure.pandautils.utils.toPx
 import com.instructure.pandautils.views.CanvasWebView
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
@@ -110,12 +109,10 @@ fun ComposeNotesHighlightingCanvasWebView(
         }
     }
 
-    LaunchedEffect(scrollToNoteId, isPageLoaded) {
-        delay(500)
-        val noteId = scrollToNoteId
-        if (noteId != null && isPageLoaded && scrollState != null && webViewInstance != null && !isScrolled) {
+    LaunchedEffect(scrollToNoteId, isPageLoaded, pageHeight) {
+        if (scrollToNoteId != null && isPageLoaded && scrollState != null && webViewInstance != null && !isScrolled && pageHeight > 0) {
             isScrolled = true
-            webViewInstance?.webView?.getNoteYPosition(noteId) { yPosition ->
+            webViewInstance?.webView?.getNoteYPosition(scrollToNoteId) { yPosition ->
                 if (yPosition != null) {
                     composeScope.launch {
                         val targetScroll = (yPosition.toInt().toPx).coerceIn(0, scrollState.maxValue)

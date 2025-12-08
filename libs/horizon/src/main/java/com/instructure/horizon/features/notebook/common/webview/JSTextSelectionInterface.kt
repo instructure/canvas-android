@@ -700,7 +700,7 @@ function getNotePosition(noteId) {
 			return rect.top + window.scrollY;
 		}
 	}
-	return -1;
+	return 0;
 }
 javascript: (function () {
 	document.addEventListener("selectionchange", () => {
@@ -766,7 +766,7 @@ javascript: (function () {
         }
 
         fun WebView.highlightNotes(notes: List<Note>, onHighlighted: () -> Unit) {
-            notes.forEach { note ->
+            notes.forEachIndexed { index, note ->
                 val accessibilityLabel = context.getString(
                     com.instructure.horizon.R.string.a11y_notebookHighlightMarkedAs,
                     note.highlightedText.selectedText,
@@ -790,7 +790,7 @@ javascript: (function () {
                 val quotedJson = JSONObject.quote(paramsJson)
                 val script = "javascript:highlightSelection($quotedJson)"
                 this.evaluateJavascript(script) {
-                    onHighlighted()
+                    if (index == notes.lastIndex){ onHighlighted() }
                 }
             }
         }
