@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 - present Instructure, Inc.
+ * Copyright (C) 2025 - present Instructure, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,19 +14,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.features.dashboard.notifications
+package com.instructure.pandautils.features.dashboard.widget
 
-import com.instructure.canvasapi2.models.CanvasContext
-
-interface DashboardRouter {
-
-    fun routeToGlobalAnnouncement(subject: String, message: String)
-
-    fun routeToSubmissionDetails(canvasContext: CanvasContext, assignmentId: Long, attemptId: Long)
-
-    fun routeToMyFiles(canvasContext: CanvasContext, folderId: Long)
-
-    fun routeToSyncProgress()
-
-    fun routeToCustomizeDashboard()
+enum class SettingType {
+    COLOR, BOOLEAN
 }
+
+data class SettingDefinition(
+    val key: String,
+    val type: SettingType
+)

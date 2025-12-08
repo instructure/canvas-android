@@ -1,0 +1,111 @@
+/*
+ * Copyright (C) 2025 - present Instructure, Inc.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, version 3 of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package com.instructure.pandautils.features.dashboard.customize
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetMetadataUseCase
+import com.instructure.pandautils.features.dashboard.widget.usecase.SwapWidgetPositionsUseCase
+import com.instructure.pandautils.features.dashboard.widget.usecase.UpdateWidgetVisibilityUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+@HiltViewModel
+class CustomizeDashboardViewModel @Inject constructor(
+    private val observeWidgetMetadataUseCase: ObserveWidgetMetadataUseCase,
+    private val swapWidgetPositionsUseCase: SwapWidgetPositionsUseCase,
+    private val updateWidgetVisibilityUseCase: UpdateWidgetVisibilityUseCase
+) : ViewModel() {
+
+    private val _uiState = MutableStateFlow(CustomizeDashboardUiState())
+    val uiState: StateFlow<CustomizeDashboardUiState> = _uiState.asStateFlow()
+
+    init {
+        loadWidgets()
+    }
+
+    private fun loadWidgets() {
+        viewModelScope.launch {
+            observeWidgetMetadataUseCase(Unit)
+                .catch { e ->
+                    _uiState.update { it.copy(loading = false, error = e.message) }
+                }
+                .collect { metadata ->
+                    val widgetItems = metadata
+                        .filter { it.isEditable }
+                        .sortedBy { it.position }
+                        .map { WidgetItem(metadata = it, config = null) }
+
+                    _uiState.update {
+                        it.copy(
+                            widgets = widgetItems,
+                            loading = false,
+                            error = null
+                        )
+                    }
+                }
+        }
+    }
+
+    fun moveWidgetUp(widgetId: String) {
+        val widgets = _uiState.value.widgets
+        val currentIndex = widgets.indexOfFirst { it.metadata.id == widgetId }
+
+        if (currentIndex > 0) {
+            val currentWidget = widgets[currentIndex].metadata
+            val previousWidget = widgets[currentIndex - 1].metadata
+
+            viewModelScope.launch {
+                swapWidgetPositionsUseCase(
+                    SwapWidgetPositionsUseCase.Params(currentWidget.id, previousWidget.id)
+                )
+            }
+        }
+    }
+
+    fun moveWidgetDown(widgetId: String) {
+        val widgets = _uiState.value.widgets
+        val currentIndex = widgets.indexOfFirst { it.metadata.id == widgetId }
+
+        if (currentIndex < widgets.size - 1) {
+            val currentWidget = widgets[currentIndex].metadata
+            val nextWidget = widgets[currentIndex + 1].metadata
+
+            viewModelScope.launch {
+                swapWidgetPositionsUseCase(
+                    SwapWidgetPositionsUseCase.Params(currentWidget.id, nextWidget.id)
+                )
+            }
+        }
+    }
+
+    fun toggleVisibility(widgetId: String) {
+        val widgetItem = _uiState.value.widgets.firstOrNull { it.metadata.id == widgetId } ?: return
+
+        viewModelScope.launch {
+            updateWidgetVisibilityUseCase(
+                UpdateWidgetVisibilityUseCase.Params(widgetId, !widgetItem.metadata.isVisible)
+            )
+        }
+    }
+}

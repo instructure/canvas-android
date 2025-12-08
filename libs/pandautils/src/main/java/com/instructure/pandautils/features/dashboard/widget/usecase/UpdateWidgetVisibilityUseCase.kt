@@ -14,10 +14,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.features.dashboard.widget
+package com.instructure.pandautils.features.dashboard.widget.usecase
 
-interface WidgetConfig {
-    val widgetId: String
-    fun toJson(): String
-    fun getSettingDefinitions(): List<SettingDefinition> = emptyList()
+import com.instructure.pandautils.domain.usecase.BaseUseCase
+import com.instructure.pandautils.features.dashboard.widget.repository.WidgetMetadataRepository
+import javax.inject.Inject
+
+class UpdateWidgetVisibilityUseCase @Inject constructor(
+    private val repository: WidgetMetadataRepository
+) : BaseUseCase<UpdateWidgetVisibilityUseCase.Params, Unit>() {
+
+    override suspend fun execute(params: Params) {
+        repository.updateVisibility(params.widgetId, params.isVisible)
+    }
+
+    data class Params(
+        val widgetId: String,
+        val isVisible: Boolean
+    )
 }

@@ -1,0 +1,327 @@
+/*
+ * Copyright (C) 2025 - present Instructure, Inc.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, version 3 of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package com.instructure.pandautils.features.dashboard.customize
+
+import android.content.res.Configuration
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.CanvasTheme
+import com.instructure.pandautils.compose.composables.CanvasSwitch
+import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
+import com.instructure.pandautils.compose.composables.EmptyContent
+import com.instructure.pandautils.compose.composables.ErrorContent
+import com.instructure.pandautils.compose.composables.Loading
+import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
+import com.instructure.pandautils.utils.ThemePrefs
+
+@Composable
+fun CustomizeDashboardScreen(onNavigateBack: () -> Unit) {
+    val viewModel: CustomizeDashboardViewModel = hiltViewModel()
+    val uiState by viewModel.uiState.collectAsState()
+
+    CustomizeDashboardScreenContent(
+        uiState = uiState,
+        onNavigateBack = onNavigateBack,
+        onMoveUp = viewModel::moveWidgetUp,
+        onMoveDown = viewModel::moveWidgetDown,
+        onToggleVisibility = viewModel::toggleVisibility
+    )
+}
+
+@Composable
+fun CustomizeDashboardScreenContent(
+    uiState: CustomizeDashboardUiState,
+    onNavigateBack: () -> Unit,
+    onMoveUp: (String) -> Unit,
+    onMoveDown: (String) -> Unit,
+    onToggleVisibility: (String) -> Unit
+) {
+    Scaffold(
+        modifier = Modifier.background(colorResource(R.color.backgroundLight)),
+        topBar = {
+            CanvasThemedAppBar(
+                title = stringResource(id = R.string.customize_dashboard),
+                navIconRes = R.drawable.ic_close_lined,
+                navigationActionClick = {
+                    onNavigateBack()
+                }
+            )
+        }
+    ) { paddingValues ->
+        Box(
+            modifier = Modifier
+                .background(colorResource(R.color.backgroundLight))
+                .padding(paddingValues)
+                .fillMaxSize()
+        ) {
+            when {
+                uiState.error != null -> {
+                    ErrorContent(
+                        errorMessage = uiState.error,
+                        retryClick = {},
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .testTag("errorContent")
+                    )
+                }
+
+                uiState.loading -> {
+                    Loading(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .testTag("loading")
+                    )
+                }
+
+                uiState.widgets.isEmpty() -> {
+                    EmptyContent(
+                        emptyMessage = stringResource(id = R.string.no_widgets),
+                        imageRes = R.drawable.ic_panda_nothing_to_see,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .testTag("emptyContent")
+                    )
+                }
+
+                else -> {
+                    WidgetList(
+                        widgets = uiState.widgets,
+                        onMoveUp = onMoveUp,
+                        onMoveDown = onMoveDown,
+                        onToggleVisibility = onToggleVisibility,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun WidgetList(
+    widgets: List<WidgetItem>,
+    onMoveUp: (String) -> Unit,
+    onMoveDown: (String) -> Unit,
+    onToggleVisibility: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(
+        modifier = modifier.padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items(
+            items = widgets,
+            key = { it.metadata.id }
+        ) { widgetItem ->
+            val index = widgets.indexOf(widgetItem)
+            WidgetListItem(
+                widgetItem = widgetItem,
+                isFirst = index == 0,
+                isLast = index == widgets.size - 1,
+                onMoveUp = { onMoveUp(widgetItem.metadata.id) },
+                onMoveDown = { onMoveDown(widgetItem.metadata.id) },
+                onToggleVisibility = { onToggleVisibility(widgetItem.metadata.id) }
+            )
+        }
+    }
+}
+
+@Composable
+private fun WidgetListItem(
+    widgetItem: WidgetItem,
+    isFirst: Boolean,
+    isLast: Boolean,
+    onMoveUp: () -> Unit,
+    onMoveDown: () -> Unit,
+    onToggleVisibility: () -> Unit
+) {
+    val hasSettings = widgetItem.config?.getSettingDefinitions()?.isNotEmpty() == true
+
+    Column {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag("widgetItem_${widgetItem.metadata.id}"),
+            colors = CardDefaults.cardColors(
+                containerColor = colorResource(R.color.backgroundLightest)
+            ),
+            shape = RoundedCornerShape(16.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 0.dp, top = 12.dp, end = 16.dp, bottom = 14.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 16.dp, end = 16.dp)
+                ) {
+                    Card(
+                        colors = CardDefaults.cardColors(
+                            containerColor = colorResource(R.color.backgroundLightestElevated)
+                        ),
+                        border = BorderStroke(0.5.dp, colorResource(R.color.borderMedium)),
+                        shape = RoundedCornerShape(8.dp),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                            modifier = Modifier.padding(horizontal = 4.dp)
+                        ) {
+                            IconButton(
+                                onClick = onMoveUp,
+                                enabled = !isFirst,
+                                modifier = Modifier
+                                    .size(24.dp)
+                                    .testTag("moveUpButton_${widgetItem.metadata.id}")
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.KeyboardArrowUp,
+                                    contentDescription = stringResource(id = R.string.move_up),
+                                    tint = if (isFirst) colorResource(R.color.textDark) else Color(
+                                        ThemePrefs.brandColor
+                                    )
+                                )
+                            }
+
+                            VerticalDivider(
+                                modifier = Modifier.height(24.dp).padding(vertical = 4.dp),
+                                thickness = 0.5.dp,
+                                color = colorResource(R.color.borderMedium)
+                            )
+
+                            IconButton(
+                                onClick = onMoveDown,
+                                enabled = !isLast,
+                                modifier = Modifier
+                                    .size(24.dp)
+                                    .testTag("moveDownButton_${widgetItem.metadata.id}")
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.KeyboardArrowDown,
+                                    contentDescription = stringResource(id = R.string.move_down),
+                                    tint = if (isLast) colorResource(R.color.textDark) else Color(
+                                        ThemePrefs.brandColor
+                                    )
+                                )
+                            }
+                        }
+                    }
+
+                    Text(
+                        text = stringResource(id = WidgetMetadata.getDisplayNameRes(widgetItem.metadata.id)),
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = FontWeight.SemiBold,
+                        color = colorResource(R.color.textDarkest)
+                    )
+                }
+
+                CanvasSwitch(
+                    checked = widgetItem.metadata.isVisible,
+                    onCheckedChange = { onToggleVisibility() },
+                    modifier = Modifier.testTag("visibilitySwitch_${widgetItem.metadata.id}")
+                )
+            }
+        }
+
+        if (hasSettings) {
+            HorizontalDivider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 0.5.dp),
+                thickness = 0.5.dp,
+                color = colorResource(R.color.borderMedium)
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun CustomizeDashboardScreenPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    CanvasTheme {
+        CustomizeDashboardScreenContent(
+            uiState = CustomizeDashboardUiState(
+                widgets = listOf(
+                    WidgetItem(
+                        metadata = WidgetMetadata(
+                            id = WidgetMetadata.WIDGET_ID_WELCOME,
+                            position = 0,
+                            isVisible = true
+                        ),
+                        config = null
+                    )
+                ),
+                loading = false,
+                error = null
+            ),
+            onNavigateBack = {},
+            onMoveUp = {},
+            onMoveDown = {},
+            onToggleVisibility = {}
+        )
+    }
+}

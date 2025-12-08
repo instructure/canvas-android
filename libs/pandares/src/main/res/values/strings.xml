@@ -2349,4 +2349,14 @@
 
     <!-- Institutional Announcements -->
     <string name="institutionalAnnouncementsTitle">Announcements (%d)</string>
+
+    <!-- Widget Display Names -->
+    <string name="widget_hello">Hello %s</string>
+
+    <!-- Customize Dashboard -->
+    <string name="customize_dashboard">Customize Dashboard</string>
+    <string name="dashboard_widgets">Widgets</string>
+    <string name="move_up">Move up</string>
+    <string name="move_down">Move down</string>
+    <string name="no_widgets">No widgets available</string>
 </resources>

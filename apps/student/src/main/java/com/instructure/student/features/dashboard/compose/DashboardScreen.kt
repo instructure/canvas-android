@@ -28,9 +28,11 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.IconButton
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -48,6 +50,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -97,7 +100,8 @@ fun DashboardScreenContent(
 
     LaunchedEffect(Unit) {
         snackbarMessageFlow.collect { snackbarMessage ->
-            val actionLabel = if (snackbarMessage.action != null) snackbarMessage.actionLabel else null
+            val actionLabel =
+                if (snackbarMessage.action != null) snackbarMessage.actionLabel else null
             val result = snackbarHostState.showSnackbar(
                 message = snackbarMessage.message,
                 actionLabel = actionLabel,
@@ -116,7 +120,12 @@ fun DashboardScreenContent(
                 title = stringResource(id = R.string.dashboard),
                 navIconRes = R.drawable.ic_hamburger,
                 navIconContentDescription = stringResource(id = R.string.navigation_drawer_open),
-                navigationActionClick = { (activity as? NavigationActivity)?.openNavigationDrawer() }
+                navigationActionClick = { (activity as? NavigationActivity)?.openNavigationDrawer() },
+                actions = {
+                    IconButton(onClick = { router.routeToCustomizeDashboard() }) {
+                        Icon(painterResource(R.drawable.ic_edit), contentDescription = null)
+                    }
+                }
             )
         },
         snackbarHost = {
@@ -142,9 +151,11 @@ fun DashboardScreenContent(
                 }
 
                 uiState.loading -> {
-                    Loading(modifier = Modifier
-                        .fillMaxSize()
-                        .testTag("loading"))
+                    Loading(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .testTag("loading")
+                    )
                 }
 
                 uiState.widgets.isEmpty() -> {
@@ -235,11 +246,13 @@ private fun GetWidgetComposable(
             columns = columns,
             onShowSnackbar = onShowSnackbar
         )
+
         WidgetMetadata.WIDGET_ID_INSTITUTIONAL_ANNOUNCEMENTS -> InstitutionalAnnouncementsWidget(
             refreshSignal = refreshSignal,
             columns = columns,
             onAnnouncementClick = router::routeToGlobalAnnouncement
         )
+
         else -> {}
     }
 }
