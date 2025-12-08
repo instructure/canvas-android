@@ -56,6 +56,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
@@ -161,8 +162,16 @@ private fun WidgetList(
 ) {
     LazyColumn(
         modifier = modifier.padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        item {
+            Text(
+                stringResource(R.string.dashboard_widgets),
+                color = colorResource(R.color.textDarkest),
+                fontSize = 14.sp,
+                lineHeight = 19.sp
+            )
+        }
         items(
             items = widgets,
             key = { it.metadata.id }
@@ -174,7 +183,8 @@ private fun WidgetList(
                 isLast = index == widgets.size - 1,
                 onMoveUp = { onMoveUp(widgetItem.metadata.id) },
                 onMoveDown = { onMoveDown(widgetItem.metadata.id) },
-                onToggleVisibility = { onToggleVisibility(widgetItem.metadata.id) }
+                onToggleVisibility = { onToggleVisibility(widgetItem.metadata.id) },
+                modifier = Modifier.animateItem()
             )
         }
     }
@@ -187,11 +197,12 @@ private fun WidgetListItem(
     isLast: Boolean,
     onMoveUp: () -> Unit,
     onMoveDown: () -> Unit,
-    onToggleVisibility: () -> Unit
+    onToggleVisibility: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val hasSettings = widgetItem.config?.getSettingDefinitions()?.isNotEmpty() == true
 
-    Column {
+    Column(modifier = modifier) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -220,7 +231,6 @@ private fun WidgetListItem(
                         colors = CardDefaults.cardColors(
                             containerColor = colorResource(R.color.backgroundLightestElevated)
                         ),
-                        border = BorderStroke(0.5.dp, colorResource(R.color.borderMedium)),
                         shape = RoundedCornerShape(8.dp),
                         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                     ) {
@@ -246,7 +256,9 @@ private fun WidgetListItem(
                             }
 
                             VerticalDivider(
-                                modifier = Modifier.height(24.dp).padding(vertical = 4.dp),
+                                modifier = Modifier
+                                    .height(24.dp)
+                                    .padding(vertical = 4.dp),
                                 thickness = 0.5.dp,
                                 color = colorResource(R.color.borderMedium)
                             )
@@ -270,7 +282,7 @@ private fun WidgetListItem(
                     }
 
                     Text(
-                        text = stringResource(id = WidgetMetadata.getDisplayNameRes(widgetItem.metadata.id)),
+                        text = widgetItem.displayName,
                         style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.SemiBold,
                         color = colorResource(R.color.textDarkest)
@@ -312,7 +324,8 @@ private fun CustomizeDashboardScreenPreview() {
                             position = 0,
                             isVisible = true
                         ),
-                        config = null
+                        config = null,
+                        displayName = "Hello, [Riley]"
                     )
                 ),
                 loading = false,

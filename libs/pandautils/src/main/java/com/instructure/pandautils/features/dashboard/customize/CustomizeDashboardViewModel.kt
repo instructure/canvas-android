@@ -16,8 +16,12 @@
 
 package com.instructure.pandautils.features.dashboard.customize
 
+import android.content.res.Resources
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.R
+import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetMetadataUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.SwapWidgetPositionsUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.UpdateWidgetVisibilityUseCase
@@ -34,7 +38,9 @@ import javax.inject.Inject
 class CustomizeDashboardViewModel @Inject constructor(
     private val observeWidgetMetadataUseCase: ObserveWidgetMetadataUseCase,
     private val swapWidgetPositionsUseCase: SwapWidgetPositionsUseCase,
-    private val updateWidgetVisibilityUseCase: UpdateWidgetVisibilityUseCase
+    private val updateWidgetVisibilityUseCase: UpdateWidgetVisibilityUseCase,
+    private val resources: Resources,
+    private val apiPrefs: ApiPrefs
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CustomizeDashboardUiState())
@@ -54,7 +60,13 @@ class CustomizeDashboardViewModel @Inject constructor(
                     val widgetItems = metadata
                         .filter { it.isEditable }
                         .sortedBy { it.position }
-                        .map { WidgetItem(metadata = it, config = null) }
+                        .map {
+                            WidgetItem(
+                                metadata = it,
+                                config = null,
+                                displayName = getDisplayName(it.id)
+                            )
+                        }
 
                     _uiState.update {
                         it.copy(
@@ -106,6 +118,13 @@ class CustomizeDashboardViewModel @Inject constructor(
             updateWidgetVisibilityUseCase(
                 UpdateWidgetVisibilityUseCase.Params(widgetId, !widgetItem.metadata.isVisible)
             )
+        }
+    }
+
+    private fun getDisplayName(widgetId: String): String {
+        return when (widgetId) {
+            WidgetMetadata.WIDGET_ID_WELCOME -> resources.getString(R.string.widget_hello, ApiPrefs.user?.shortName)
+            else -> widgetId
         }
     }
 }

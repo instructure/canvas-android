@@ -21,7 +21,8 @@ import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 
 data class WidgetItem(
     val metadata: WidgetMetadata,
-    val config: WidgetConfig?
+    val config: WidgetConfig?,
+    val displayName: String
 )
 
 data class CustomizeDashboardUiState(
