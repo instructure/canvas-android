@@ -15,7 +15,6 @@
  */
 package com.instructure.teacher.ui.interaction
 
-import com.instructure.canvas.espresso.annotations.Stub
 import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvas.espresso.mockcanvas.addAssignment
 import com.instructure.canvas.espresso.mockcanvas.addCoursePermissions
@@ -205,7 +204,6 @@ class SpeedGraderCommentsInteractionTest : TeacherComposeTest() {
 
     }
 
-    @Stub
     @Test
     fun displaysCommentWithAttachment() {
         val submission = goToSpeedGraderCommentsPage(

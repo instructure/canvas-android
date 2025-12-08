@@ -31,6 +31,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTextReplacement
 import androidx.test.espresso.Espresso
@@ -113,29 +114,6 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
             .onNodeWithTag("collapsePanelButton", useUnmergedTree = true)
             .performClick()
         composeTestRule.waitForIdle()
-    }
-
-    /**
-     * Enters a new grade in the Compose grade input field.
-     *
-     * @param grade The grade value to input.
-     */
-    fun enterNewGrade(grade: String) {
-        composeTestRule
-            .onNodeWithTag("gradeInputField")
-            .performTextInput(grade)
-    }
-
-    /**
-     * Asserts that the final grade is displayed in the Compose UI.
-     *
-     * @param grade The expected grade value to be displayed.
-     */
-    fun assertFinalGradeIsDisplayed(grade: String) {
-        composeTestRule
-            .onNodeWithTag("finalGradeValue")
-            .assertTextContains(grade, substring = true)
-            .assertIsDisplayed()
     }
 
     /**
@@ -259,10 +237,7 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
      * Clears the comment input field.
      */
     fun clearComment() {
-        composeTestRule
-            .onNodeWithTag("commentLibraryFilterInputField")
-            .performTextReplacement("") // There's no clearText() in compose testing yet
-        closeSoftKeyboard()
+        composeTestRule.onNodeWithTag("commentLibraryFilterInputField").performTextClearance()
         composeTestRule.waitForIdle()
     }
 
@@ -384,6 +359,30 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
      */
     fun assertCommentLibraryTitle() {
         composeTestRule.onNodeWithText("Comment Library").assertIsDisplayed()
+    }
+
+    /**
+     * Types text in the comment library filter input field and closes the keyboard.
+     *
+     * @param text The text to type in the filter field.
+     */
+    fun typeInCommentLibraryFilter(text: String) {
+        composeTestRule.onNodeWithTag("commentLibraryFilterInputField").performClick().performTextReplacement(text)
+        try {
+            closeSoftKeyboard()
+        } catch (_: Exception) {
+            // Ignore if keyboard is already closed
+        }
+        composeTestRule.waitForIdle()
+    }
+
+    /**
+     * Asserts that the comment library filter input field contains the specified text.
+     *
+     * @param text The text that should be contained in the filter field.
+     */
+    fun assertCommentLibraryFilterContains(text: String) {
+        composeTestRule.onNodeWithTag("commentLibraryFilterInputField").assertTextContains(text)
     }
 
     /**
