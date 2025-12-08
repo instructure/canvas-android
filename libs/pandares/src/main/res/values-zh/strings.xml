@@ -272,6 +272,7 @@
     <string name="checkBoxFinalGradeOption">基于评分的作业</string>
     <string name="checkBoxWhatIfGradeOption">显示假设的分数</string>
     <string name="whatIfDialogText">假设的分数</string>
+    <string name="whatIfScoreExceedsMaximum">分数不能超过满分</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">得分 %1$s，总分 %2$s，%3$s</string>
     <string name="inbox">收件箱</string>
@@ -2017,6 +2018,8 @@
     <string name="allAssignments">所有作业</string>
     <string name="statusFilter">状态过滤器</string>
     <string name="a11y_contentDescription_filter">筛选器</string>
+    <string name="a11y_filter_active">过滤器处于活跃状态</string>
+    <string name="a11y_filter_inactive">过滤器处于不活跃状态</string>
     <string name="a11y_contentDescription_postPolicy">发布政策</string>
     <string name="late">迟交</string>
     <string name="a11y_contentDescription_expand">展开</string>
@@ -2104,4 +2107,20 @@
     <string name="a11y_discussion_checkpoints">讨论检查点</string>
     <string name="multipleDueDates">多个到期日</string>
     <string name="courseConcludedError">课程已结束。无法发送消息！</string>
+    <string name="openInDetailView">在详情视图中打开</string>
+    <string name="immersiveView">沉浸式视图</string>
+    <string name="statuses">状态</string>
+    <string name="precise_filtering">精确筛选</string>
+    <string name="differentiation_tags">差异化标记</string>
+    <string name="students_without_differentiation_tags">无差异化标记的学生</string>
+    <string name="sort_by">排序</string>
+    <string name="student_sortable_name">学生可排序名称</string>
+    <string name="student_name">学生姓名</string>
+    <string name="submission_date">提交日期</string>
+    <string name="submission_status">提交状态</string>
+    <string name="write_score_here">在此处写下分数</string>
+    <string name="scored_more_than_with_max">分数高于 / %s 分</string>
+    <string name="scored_less_than_with_max">分数低于 / %s 分</string>
+    <string name="scored_between_values">分数 %1$s - %2$s</string>
+    <string name="multiple_filters">多个过滤器</string>
 </resources>

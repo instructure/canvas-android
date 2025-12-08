@@ -249,6 +249,7 @@ class SubmissionWorker @AssistedInject constructor(
                     putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
                     submission.mediaType?.let { putString(AnalyticsParamConstants.MEDIA_TYPE, it) }
                     submission.mediaSource?.let { putString(AnalyticsParamConstants.MEDIA_SOURCE, it) }
+                    putInt(AnalyticsParamConstants.RETRY, if (submission.retryCount > 0) 1 else 0)
                 })
 
                 showCompleteNotification(
@@ -272,6 +273,7 @@ class SubmissionWorker @AssistedInject constructor(
                     putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
                     submission.mediaType?.let { putString(AnalyticsParamConstants.MEDIA_TYPE, it) }
                     submission.mediaSource?.let { putString(AnalyticsParamConstants.MEDIA_SOURCE, it) }
+                    putInt(AnalyticsParamConstants.RETRY, if (submission.retryCount > 0) 1 else 0)
                 })
                 Result.failure()
             }
@@ -281,6 +283,7 @@ class SubmissionWorker @AssistedInject constructor(
                 putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
                 submission.mediaType?.let { putString(AnalyticsParamConstants.MEDIA_TYPE, it) }
                 submission.mediaSource?.let { putString(AnalyticsParamConstants.MEDIA_SOURCE, it) }
+                putInt(AnalyticsParamConstants.RETRY, if (submission.retryCount > 0) 1 else 0)
             })
             return Result.failure()
         }
@@ -387,6 +390,7 @@ class SubmissionWorker @AssistedInject constructor(
             }).onSuccess { attachment ->
                 analytics.logEvent(AnalyticsEventConstants.SUBMIT_FILEUPLOAD_SUCCEEDED, Bundle().apply {
                     putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                    putInt(AnalyticsParamConstants.RETRY, if (submission.retryCount > 0) 1 else 0)
                 })
                 updateFileProgress(
                     submission.id,
@@ -409,6 +413,7 @@ class SubmissionWorker @AssistedInject constructor(
             }.onFailure {
                 analytics.logEvent(AnalyticsEventConstants.SUBMIT_FILEUPLOAD_FAILED, Bundle().apply {
                     putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                    putInt(AnalyticsParamConstants.RETRY, if (submission.retryCount > 0) 1 else 0)
                 })
                 runBlocking {
                     handleFileError(submission, index, attachments, it?.message)
@@ -669,21 +674,25 @@ class SubmissionWorker @AssistedInject constructor(
                 Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString -> {
                     analytics.logEvent(AnalyticsEventConstants.SUBMIT_TEXTENTRY_SUCCEEDED, Bundle().apply {
                         putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                        putInt(AnalyticsParamConstants.RETRY, if (submission.retryCount > 0) 1 else 0)
                     })
                 }
                 Assignment.SubmissionType.ONLINE_URL.apiString -> {
                     analytics.logEvent(AnalyticsEventConstants.SUBMIT_URL_SUCCEEDED, Bundle().apply {
                         putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                        putInt(AnalyticsParamConstants.RETRY, if (submission.retryCount > 0) 1 else 0)
                     })
                 }
                 Assignment.SubmissionType.BASIC_LTI_LAUNCH.apiString -> {
                     analytics.logEvent(AnalyticsEventConstants.SUBMIT_STUDIO_SUCCEEDED, Bundle().apply {
                         putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                        putInt(AnalyticsParamConstants.RETRY, if (submission.retryCount > 0) 1 else 0)
                     })
                 }
                 Assignment.SubmissionType.STUDENT_ANNOTATION.apiString -> {
                     analytics.logEvent(AnalyticsEventConstants.SUBMIT_ANNOTATION_SUCCEEDED, Bundle().apply {
                         putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                        putInt(AnalyticsParamConstants.RETRY, if (submission.retryCount > 0) 1 else 0)
                     })
                 }
             }
@@ -724,21 +733,25 @@ class SubmissionWorker @AssistedInject constructor(
                     Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString -> {
                         analytics.logEvent(AnalyticsEventConstants.SUBMIT_TEXTENTRY_FAILED, Bundle().apply {
                             putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                            putInt(AnalyticsParamConstants.RETRY, if (submission.retryCount > 0) 1 else 0)
                         })
                     }
                     Assignment.SubmissionType.ONLINE_URL.apiString -> {
                         analytics.logEvent(AnalyticsEventConstants.SUBMIT_URL_FAILED, Bundle().apply {
                             putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                            putInt(AnalyticsParamConstants.RETRY, if (submission.retryCount > 0) 1 else 0)
                         })
                     }
                     Assignment.SubmissionType.BASIC_LTI_LAUNCH.apiString -> {
                         analytics.logEvent(AnalyticsEventConstants.SUBMIT_STUDIO_FAILED, Bundle().apply {
                             putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                            putInt(AnalyticsParamConstants.RETRY, if (submission.retryCount > 0) 1 else 0)
                         })
                     }
                     Assignment.SubmissionType.STUDENT_ANNOTATION.apiString -> {
                         analytics.logEvent(AnalyticsEventConstants.SUBMIT_ANNOTATION_FAILED, Bundle().apply {
                             putString(AnalyticsParamConstants.ATTEMPT, submission.attempt.toString())
+                            putInt(AnalyticsParamConstants.RETRY, if (submission.retryCount > 0) 1 else 0)
                         })
                     }
                 }
