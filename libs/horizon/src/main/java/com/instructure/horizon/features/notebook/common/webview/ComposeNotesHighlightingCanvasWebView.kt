@@ -273,7 +273,9 @@ fun ComposeNotesHighlightingCanvasWebView(
                     if (coordinates.size.height > 0 && coordinates.size.height != previousHeight) {
                         lifecycleOwner.lifecycleScope.launch {
                             val scrollRatio = scrollValue.toFloat() / previousScrollMaxValue.toFloat()
-                            scrollState?.scrollTo((scrollRatio * (scrollState.maxValue)).toInt())
+                            if (scrollRatio > 0) {
+                                scrollState?.scrollTo((scrollRatio * (scrollState.maxValue)).toInt())
+                            }
                         }
                     }
                     previousHeight = coordinates.size.height
