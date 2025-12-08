@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -42,6 +43,9 @@ fun NotebookHighlightedText(
     var lineCount = 1
     val lineList = mutableListOf<Float>()
     val lineColor = type?.color?.let { colorResource(type.color) }
+    val dashedEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
+    val pathEffect = if (type == NotebookType.Confusing) dashedEffect else null
+
     Text(
         text = text,
         style = HorizonTypography.p1,
@@ -68,7 +72,8 @@ fun NotebookHighlightedText(
                             color = lineColor,
                             strokeWidth = strokeWidth,
                             start = Offset(0f, verticalOffset),
-                            end = Offset(lineWidth, verticalOffset)
+                            end = Offset(lineWidth, verticalOffset),
+                            pathEffect = pathEffect
                         )
 
                         drawLine(

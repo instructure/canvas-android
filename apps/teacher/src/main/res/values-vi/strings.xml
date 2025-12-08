@@ -425,8 +425,8 @@
     <string name="submitted_late">Nộp Trễ</string>
     <string name="havent_submitted_yet">Chưa Nộp</string>
     <string name="havent_been_graded">Chưa Chấm Điểm</string>
-    <string name="scored_less_than">Đạt Mức Điểm Dưới&#8230;</string>
-    <string name="scored_more_than">Đạt Mức Điểm Trên&#8230;</string>
+    <string name="scored_less_than">Đạt Điểm Dưới</string>
+    <string name="scored_more_than">Đạt Điểm Trên</string>
     <string name="scored_less_than_value">Đạt Mức Điểm Dưới%s</string>
     <string name="scored_more_than_value">Đạt Mức Điểm Trên%s</string>
     <string name="add_comment">Thêm Bình Luận</string>

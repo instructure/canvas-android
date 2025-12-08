@@ -46,6 +46,7 @@ class OfflineDatabaseProvider(
         return dbMap.getOrPut(userId) {
             Room.databaseBuilder(context, OfflineDatabase::class.java, "$OFFLINE_DB_PREFIX$userId")
                 .addMigrations(*offlineDatabaseMigrations)
+                .fallbackToDestructiveMigration()
                 .build()
         }
     }

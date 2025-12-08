@@ -16,10 +16,12 @@
 package com.instructure.horizon.horizonui.molecules
 
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
@@ -166,6 +168,55 @@ fun IconButton(
             Box(modifier = Modifier.offset(x = size.badgeOffset, y = (-size.badgeOffset))) {
                 it()
             }
+        }
+    }
+}
+
+@Composable
+fun LoadingIconButton(
+    @DrawableRes iconRes: Int,
+    loading: Boolean,
+    modifier: Modifier = Modifier,
+    size: IconButtonSize = IconButtonSize.NORMAL,
+    color: IconButtonColor = IconButtonColor.Black,
+    elevation: Dp? = null,
+    enabled: Boolean = true,
+    contentDescription: String? = null,
+    onClick: () -> Unit = {},
+    contentAlignment: Alignment = Alignment.Center,
+    badge: @Composable (() -> Unit)? = null
+) {
+    Box(
+        contentAlignment = contentAlignment,
+        modifier = modifier
+            .animateContentSize()
+    ) {
+        if (loading) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .background(color = color.backgroundColor, shape = HorizonCornerRadius.level6)
+            ) {
+                Spinner(
+                    size = SpinnerSize.EXTRA_SMALL,
+                    color = color.iconColor,
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .padding(8.dp),
+                )
+            }
+        } else {
+            IconButton(
+                iconRes = iconRes,
+                modifier = modifier,
+                size = size,
+                color = color,
+                elevation = elevation,
+                enabled = enabled,
+                contentDescription = contentDescription,
+                onClick = onClick,
+                badge = badge
+            )
         }
     }
 }

@@ -28,10 +28,13 @@ import com.instructure.horizon.features.dashboard.widget.course.DashboardCourseR
 import com.instructure.horizon.features.dashboard.widget.course.DashboardCourseViewModel
 import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus
 import com.instructure.journey.type.ProgramVariantType
+import com.instructure.pandautils.utils.ThemePrefs
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
+import io.mockk.mockkObject
 import io.mockk.runs
 import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
@@ -166,6 +169,9 @@ class DashboardCourseViewModelTest {
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
+
+        mockkObject(ThemePrefs)
+        every { ThemePrefs.brandColor } returns 1
 
         coEvery { repository.getEnrollments(any()) } returns activeEnrollments + invitedEnrollments + completedEnrollments
         coEvery { repository.getPrograms(any()) } returns programs
