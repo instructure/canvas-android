@@ -22,8 +22,10 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performScrollTo
 import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardButtonRoute
+import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardHeaderState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardState
 import com.instructure.horizon.features.dashboard.widget.course.DashboardCourseSection
@@ -32,6 +34,7 @@ import com.instructure.horizon.features.dashboard.widget.course.card.CardClickAc
 import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCourseCardModuleItemState
 import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCourseCardParentProgramState
 import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCourseCardState
+import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.model.LearningObjectType
 import org.junit.Rule
 import org.junit.Test
@@ -50,6 +53,11 @@ class HorizonDashboardCourseSectionUiTest {
             programs = DashboardPaginatedWidgetCardState(
                 listOf(
                     DashboardPaginatedWidgetCardItemState(
+                        headerState = DashboardPaginatedWidgetCardHeaderState(
+                            label = "Program",
+                            color = HorizonColors.Surface.institution().copy(0.1f),
+                            iconRes = R.drawable.book_2
+                        ),
                         title = "Program 1",
                         route = DashboardPaginatedWidgetCardButtonRoute.HomeRoute("")
                     )

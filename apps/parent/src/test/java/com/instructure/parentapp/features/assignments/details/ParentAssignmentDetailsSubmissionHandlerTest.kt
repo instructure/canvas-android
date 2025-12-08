@@ -28,8 +28,10 @@ class ParentAssignmentDetailsSubmissionHandlerTest {
     @Test
     fun testUploadDefaultValues() {
         assertEquals(false, submissionHandler.isUploading)
+        assertEquals(false, submissionHandler.isFailed)
         assertEquals(false, submissionHandler.lastSubmissionIsDraft)
         assertEquals(null, submissionHandler.lastSubmissionEntry)
+        assertEquals(null, submissionHandler.lastSubmissionId)
         assertEquals(null, submissionHandler.lastSubmissionAssignmentId)
         assertEquals(null, submissionHandler.lastSubmissionSubmissionType)
     }

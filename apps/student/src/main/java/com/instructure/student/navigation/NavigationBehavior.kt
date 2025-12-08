@@ -20,10 +20,14 @@ import androidx.annotation.MenuRes
 import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.RemoteConfigParam
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.utils.CanvasFont
 import com.instructure.student.activity.NothingToSeeHereFragment
+import com.instructure.pandautils.features.todolist.ToDoListFragment
+import com.instructure.student.fragment.OldToDoListFragment
 import com.instructure.student.fragment.ParentFragment
 
 interface NavigationBehavior {
@@ -31,7 +35,7 @@ interface NavigationBehavior {
     /** 'Root' fragments that should include the bottom nav bar */
     val bottomNavBarFragments: List<Class<out Fragment>>
 
-    val homeFragmentClass: Class<out ParentFragment>
+    val homeFragmentClass: Class<out Fragment>
 
     val visibleNavigationMenuItems: Set<NavigationMenuItem>
 
@@ -40,6 +44,15 @@ interface NavigationBehavior {
     val visibleAccountMenuItems: Set<AccountMenuItem>
 
     val canvasFont: CanvasFont
+
+    val todoFragmentClass: Class<out Fragment>
+        get() {
+            return if (RemoteConfigUtils.getBoolean(RemoteConfigParam.TODO_REDESIGN)) {
+                ToDoListFragment::class.java
+            } else {
+                OldToDoListFragment::class.java
+            }
+        }
 
     @get:MenuRes
     val bottomBarMenu: Int

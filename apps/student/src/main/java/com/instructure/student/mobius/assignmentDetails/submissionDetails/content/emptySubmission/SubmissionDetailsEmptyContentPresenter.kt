@@ -19,6 +19,7 @@ import android.content.Context
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.utils.getShortMonthAndDay
+import com.instructure.pandautils.utils.isAllowedToSubmitWithOverrides
 import com.instructure.pandautils.utils.getTime
 import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentViewState
@@ -76,10 +77,9 @@ object SubmissionDetailsEmptyContentPresenter : Presenter<SubmissionDetailsEmpty
 
     private fun allowedToSubmit(assignment: Assignment, course: Course): Boolean {
         return if (!course.isBetweenValidDateRange()) {
-            // Don't show submit if the course is soft concluded
             return false
         } else if (assignment.turnInType == Assignment.TurnInType.ONLINE || assignment.turnInType == Assignment.TurnInType.EXTERNAL_TOOL) {
-            assignment.isAllowedToSubmit
+            assignment.isAllowedToSubmitWithOverrides(course)
         } else {
             true
         }

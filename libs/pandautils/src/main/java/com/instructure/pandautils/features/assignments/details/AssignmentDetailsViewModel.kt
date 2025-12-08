@@ -66,6 +66,7 @@ import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
 import com.instructure.pandautils.utils.AssignmentUtils2
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.isAllowedToSubmitWithOverrides
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.getSubAssignmentSubmissionGrade
 import com.instructure.pandautils.utils.getSubAssignmentSubmissionStateLabel
@@ -154,14 +155,17 @@ class AssignmentDetailsViewModel @Inject constructor(
 
     init {
         markSubmissionAsRead()
+
         submissionHandler.addAssignmentSubmissionObserver(
             context,
             assignmentId,
             apiPrefs.user?.id.orDefault(),
             resources,
             _data,
-            ::refreshAssignment
+            ::refreshAssignment,
+            ::updateGradeCell
         )
+
         _state.postValue(ViewState.Loading)
         loadData()
 
@@ -319,10 +323,12 @@ class AssignmentDetailsViewModel @Inject constructor(
                         )
                     )
                 }
+
+                submissionHandler.ensureSubmissionStateIsCurrent(assignmentId, apiPrefs.user?.id.orDefault())
+
                 _data.postValue(getViewData(assignmentResult, hasDraft))
                 _state.postValue(ViewState.Success)
 
-                // Check if we need to auto-navigate to submission details from push notification
                 submissionId?.let { subId ->
                     val submission = assignmentResult.submission
                     if (submission != null
@@ -356,11 +362,30 @@ class AssignmentDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val assignmentResult = assignmentDetailsRepository.getAssignment(isObserver, assignmentId, courseId.orDefault(), true)
+                submissionHandler.ensureSubmissionStateIsCurrent(assignmentId, apiPrefs.user?.id.orDefault())
                 _data.postValue(getViewData(assignmentResult, submissionHandler.lastSubmissionIsDraft))
             } catch (e: Exception) {
                 _events.value = Event(AssignmentDetailAction.ShowToast(resources.getString(R.string.assignmentRefreshError)))
             }
         }
+    }
+
+    private fun updateGradeCell() {
+        val currentData = _data.value ?: return
+        val assignment = assignment ?: return
+
+        currentData.selectedGradeCellViewData = GradeCellViewData.fromSubmission(
+            resources,
+            assignmentDetailsColorProvider.getContentColor(course.value),
+            assignmentDetailsColorProvider.submissionAndRubricLabelColor,
+            assignment,
+            assignment.submission,
+            restrictQuantitativeData,
+            uploading = submissionHandler.isUploading,
+            failed = submissionHandler.isFailed,
+            gradingScheme = gradingScheme
+        )
+        currentData.notifyPropertyChanged(BR.selectedGradeCellViewData)
     }
 
     private suspend fun getViewData(assignment: Assignment, hasDraft: Boolean): AssignmentDetailsViewData {
@@ -464,11 +489,10 @@ class AssignmentDetailsViewModel @Inject constructor(
         // Observers shouldn't see the submit button OR if the course is soft concluded
         val submitVisible = when {
             isObserver -> false
-            !course.value?.isBetweenValidDateRange().orDefault() -> false
             assignment.submission?.excused.orDefault() -> false
             else -> when (assignment.turnInType) {
-                Assignment.TurnInType.QUIZ, Assignment.TurnInType.DISCUSSION -> true
-                Assignment.TurnInType.ONLINE, Assignment.TurnInType.EXTERNAL_TOOL -> assignment.isAllowedToSubmit
+                Assignment.TurnInType.QUIZ, Assignment.TurnInType.DISCUSSION -> course.value?.isBetweenValidDateRange().orDefault()
+                Assignment.TurnInType.ONLINE, Assignment.TurnInType.EXTERNAL_TOOL -> assignment.isAllowedToSubmitWithOverrides(course.value)
                 else -> false
             }
         }
@@ -559,6 +583,8 @@ class AssignmentDetailsViewModel @Inject constructor(
                 assignment,
                 assignment.submission,
                 restrictQuantitativeData,
+                uploading = submissionHandler.isUploading,
+                failed = submissionHandler.isFailed,
                 gradingScheme = gradingScheme
             ),
             dueDate = due,
@@ -597,6 +623,20 @@ class AssignmentDetailsViewModel @Inject constructor(
         val attempt = _data.value?.attempts?.getOrNull(position)?.data
         val selectedSubmission = attempt?.submission
         this.selectedSubmission = selectedSubmission
+
+        val isFirstAttempt = position == 0
+        val hasActiveSubmissionState = submissionHandler.isUploading || submissionHandler.isFailed
+        val isUploading = if (isFirstAttempt && hasActiveSubmissionState) {
+            submissionHandler.isUploading
+        } else {
+            attempt?.isUploading.orDefault()
+        }
+        val isFailed = if (isFirstAttempt && hasActiveSubmissionState) {
+            submissionHandler.isFailed
+        } else {
+            attempt?.isFailed.orDefault()
+        }
+
         _data.value?.selectedGradeCellViewData = GradeCellViewData.fromSubmission(
             resources,
             assignmentDetailsColorProvider.getContentColor(course.value),
@@ -604,8 +644,8 @@ class AssignmentDetailsViewModel @Inject constructor(
             assignment,
             selectedSubmission,
             restrictQuantitativeData,
-            attempt?.isUploading.orDefault(),
-            attempt?.isFailed.orDefault(),
+            isUploading,
+            isFailed,
             gradingScheme
         )
         _data.value?.notifyPropertyChanged(BR.selectedGradeCellViewData)
@@ -616,17 +656,25 @@ class AssignmentDetailsViewModel @Inject constructor(
     }
 
     fun onGradeCellClicked() {
-        if (submissionHandler.isUploading) {
+        if (submissionHandler.isUploading || submissionHandler.isFailed) {
             when (submissionHandler.lastSubmissionSubmissionType) {
-                SubmissionType.ONLINE_TEXT_ENTRY.apiString -> onDraftClicked()
+                SubmissionType.ONLINE_TEXT_ENTRY.apiString -> {
+                    postAction(
+                        AssignmentDetailAction.NavigateToTextEntryScreen(
+                            assignment?.name,
+                            submissionHandler.lastSubmissionEntry,
+                            isFailure = submissionHandler.isFailed
+                        )
+                    )
+                }
                 SubmissionType.ONLINE_UPLOAD.apiString, SubmissionType.MEDIA_RECORDING.apiString -> postAction(
-                    AssignmentDetailAction.NavigateToUploadStatusScreen(submissionHandler.lastSubmissionAssignmentId.orDefault())
+                    AssignmentDetailAction.NavigateToUploadStatusScreen(submissionHandler.lastSubmissionId.orDefault())
                 )
                 SubmissionType.ONLINE_URL.apiString -> postAction(
                     AssignmentDetailAction.NavigateToUrlSubmissionScreen(
                         assignment?.name,
                         submissionHandler.lastSubmissionEntry,
-                        submissionHandler.lastSubmissionIsDraft
+                        isFailure = submissionHandler.isFailed
                     )
                 )
             }
@@ -649,7 +697,7 @@ class AssignmentDetailsViewModel @Inject constructor(
             AssignmentDetailAction.NavigateToTextEntryScreen(
                 assignment?.name,
                 submissionHandler.lastSubmissionEntry,
-                submissionHandler.lastSubmissionIsDraft
+                isFailure = false
             )
         )
     }
@@ -684,9 +732,11 @@ class AssignmentDetailsViewModel @Inject constructor(
                 SubmissionType.STUDENT_ANNOTATION -> postAction(AssignmentDetailAction.NavigateToAnnotationSubmissionScreen(assignment))
                 SubmissionType.MEDIA_RECORDING -> postAction(AssignmentDetailAction.ShowMediaDialog(assignment))
                 SubmissionType.EXTERNAL_TOOL, SubmissionType.BASIC_LTI_LAUNCH -> {
-                    externalLTITool.let {
+                    if (externalLTITool != null) {
                         Analytics.logEvent(AnalyticsEventConstants.ASSIGNMENT_LAUNCHLTI_SELECTED)
-                        postAction(AssignmentDetailAction.NavigateToLtiLaunchScreen(assignment.name.orEmpty(), it, assignment.ltiToolType().openInternally))
+                        postAction(AssignmentDetailAction.NavigateToLtiLaunchScreen(assignment.name.orEmpty(), externalLTITool, assignment.ltiToolType().openInternally))
+                    } else {
+                        postAction(AssignmentDetailAction.ShowToast(resources.getString(R.string.generalUnexpectedError)))
                     }
                 }
                 else -> Unit

@@ -22,12 +22,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCardError
+import com.instructure.horizon.features.dashboard.widget.DashboardWidgetPageState
 import com.instructure.horizon.features.dashboard.widget.skilloverview.card.DashboardSkillOverviewCardContent
+import com.instructure.horizon.features.dashboard.widget.skilloverview.card.DashboardSkillOverviewCardState
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -37,6 +39,7 @@ fun DashboardSkillOverviewWidget(
     homeNavController: NavHostController,
     shouldRefresh: Boolean,
     refreshState: MutableStateFlow<List<Boolean>>,
+    pageState: DashboardWidgetPageState,
     modifier: Modifier = Modifier
 ) {
     val viewModel = hiltViewModel<DashboardSkillOverviewViewModel>()
@@ -51,21 +54,23 @@ fun DashboardSkillOverviewWidget(
         }
     }
 
-    DashboardSkillOverviewSection(state, homeNavController, modifier)
+    DashboardSkillOverviewSection(state, pageState, homeNavController, modifier)
 }
 
 @Composable
 fun DashboardSkillOverviewSection(
     state: DashboardSkillOverviewUiState,
+    pageState: DashboardWidgetPageState,
     homeNavController: NavHostController,
     modifier: Modifier = Modifier
 ) {
     when (state.state) {
         DashboardItemState.LOADING -> {
             DashboardSkillOverviewCardContent(
-                state.cardState,
+                DashboardSkillOverviewCardState.Loading,
                 homeNavController,
                 true,
+                pageState,
                 modifier
             )
         }
@@ -75,6 +80,7 @@ fun DashboardSkillOverviewSection(
                 R.drawable.hub,
                 HorizonColors.PrimitivesGreen.green12(),
                 false,
+                pageState,
                 { state.onRefresh {} },
                 modifier = modifier
             )
@@ -84,6 +90,7 @@ fun DashboardSkillOverviewSection(
                 state.cardState,
                 homeNavController,
                 false,
+                pageState,
                 modifier
             )
         }

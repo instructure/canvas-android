@@ -16,6 +16,8 @@
  */
 package com.instructure.student.mobius.conferences.conference_list.ui
 
+import com.instructure.student.mobius.conferences.conference_list.ConferenceHeaderType
+
 sealed class ConferenceListViewState(open val isLaunchingInBrowser: Boolean) {
     class Loading(isLaunchingInBrowser: Boolean) : ConferenceListViewState(isLaunchingInBrowser)
     data class Loaded(
@@ -27,7 +29,11 @@ sealed class ConferenceListViewState(open val isLaunchingInBrowser: Boolean) {
 sealed class ConferenceListItemViewState {
     object Empty : ConferenceListItemViewState()
     object Error : ConferenceListItemViewState()
-    data class ConferenceHeader(val title: String): ConferenceListItemViewState()
+    data class ConferenceHeader(
+        val title: String,
+        val headerType: ConferenceHeaderType,
+        val isExpanded: Boolean
+    ): ConferenceListItemViewState()
     data class ConferenceItem(
         val tint: Int,
         val title: String,

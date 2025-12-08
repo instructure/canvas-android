@@ -277,6 +277,7 @@
     <string name="checkBoxFinalGradeOption">Baser sur les travaux notés</string>
     <string name="checkBoxWhatIfGradeOption">Afficher le score hypothétique</string>
     <string name="whatIfDialogText">Score hypothétique</string>
+    <string name="whatIfScoreExceedsMaximum">Le score ne peut pas dépasser le nombre maximum de points</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s de %2$s points, %3$s</string>
     <string name="inbox">Boîte de réception</string>
@@ -2052,6 +2053,8 @@
     <string name="allAssignments">Toutes les travaux</string>
     <string name="statusFilter">Filtre d’état</string>
     <string name="a11y_contentDescription_filter">Filtre</string>
+    <string name="a11y_filter_active">Filtre actif</string>
+    <string name="a11y_filter_inactive">Filtre inactif</string>
     <string name="a11y_contentDescription_postPolicy">Politique de publication</string>
     <string name="late">En retard</string>
     <string name="a11y_contentDescription_expand">Développer</string>
@@ -2140,4 +2143,20 @@
     <string name="a11y_discussion_checkpoints">Points de contrôle de la discussion</string>
     <string name="multipleDueDates">Dates limites multiples</string>
     <string name="courseConcludedError">Cours achevé. Impossible d’envoyer des messages!</string>
+    <string name="openInDetailView">Ouvrir en vue détaillée</string>
+    <string name="immersiveView">Vue immersive</string>
+    <string name="statuses">Statuts</string>
+    <string name="precise_filtering">Filtrage précis</string>
+    <string name="differentiation_tags">Étiquettes de différenciation</string>
+    <string name="students_without_differentiation_tags">Élèves sans étiquettes de différenciation</string>
+    <string name="sort_by">Trier par</string>
+    <string name="student_sortable_name">Nom répertorié d’élève</string>
+    <string name="student_name">Nom de l’élève</string>
+    <string name="submission_date">Date d’envoi</string>
+    <string name="submission_status">Statut de l’envoi</string>
+    <string name="write_score_here">Inscrivez le score ici</string>
+    <string name="scored_more_than_with_max">Score : Plus de/%s pts</string>
+    <string name="scored_less_than_with_max">Score : Moins de/%s pts</string>
+    <string name="scored_between_values">Score : %1$s —- %2$s</string>
+    <string name="multiple_filters">Filtres multiples</string>
 </resources>

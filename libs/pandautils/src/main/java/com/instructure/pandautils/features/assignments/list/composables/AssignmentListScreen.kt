@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.features.assignments.list.composables
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
@@ -112,6 +113,10 @@ fun AssignmentListScreen(
     screenActionHandler: (AssignmentListScreenEvent) -> Unit,
     listActionHandler: (GroupedListViewEvent<AssignmentGroupItemState>) -> Unit
 ) {
+    BackHandler(enabled = state.screenOption == AssignmentListScreenOption.Filter) {
+        screenActionHandler(AssignmentListScreenEvent.CloseFilterScreen)
+    }
+
     CanvasTheme {
         when (state.screenOption) {
             AssignmentListScreenOption.List -> {

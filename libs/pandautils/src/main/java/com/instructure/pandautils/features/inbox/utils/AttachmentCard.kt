@@ -63,6 +63,7 @@ fun AttachmentCard(
 ) {
     val attachment = attachmentCardItem.attachment
     val status = attachmentCardItem.status
+    val isClickEnabled = status != AttachmentStatus.UPLOADING
 
     Card(
         backgroundColor = colorResource(id = com.instructure.pandares.R.color.backgroundLightest),
@@ -70,7 +71,7 @@ fun AttachmentCard(
         shape = RoundedCornerShape(10.dp),
         modifier = modifier
             .testTag("attachment")
-            .clickable { onSelect() }
+            .clickable(enabled = isClickEnabled) { onSelect() }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

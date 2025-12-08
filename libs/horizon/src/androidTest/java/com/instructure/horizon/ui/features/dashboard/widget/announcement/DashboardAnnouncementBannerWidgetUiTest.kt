@@ -16,9 +16,10 @@
  */
 package com.instructure.horizon.ui.features.dashboard.widget.announcement
 
-import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.navigation.compose.rememberNavController
@@ -27,15 +28,16 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardButtonRoute
-import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardChipState
+import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardHeaderState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardState
 import com.instructure.horizon.features.dashboard.widget.announcement.DashboardAnnouncementBannerSection
 import com.instructure.horizon.features.dashboard.widget.announcement.DashboardAnnouncementBannerUiState
-import com.instructure.horizon.horizonui.molecules.StatusChipColor
+import com.instructure.horizon.horizonui.foundation.HorizonColors
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.Calendar
 import java.util.Date
 
 @RunWith(AndroidJUnit4::class)
@@ -77,9 +79,8 @@ class DashboardAnnouncementBannerWidgetUiTest {
         val errorMessage = context.getString(R.string.dashboardAnnouncementBannerErrorMessage)
 
         composeTestRule.onNodeWithText(errorMessage, substring = true).assertIsDisplayed()
-        composeTestRule.onNodeWithText("Refresh")
+        composeTestRule.onNodeWithText("Refresh", useUnmergedTree = true)
             .assertIsDisplayed()
-            .assertHasClickAction()
             .performClick()
 
         assert(refreshCalled) { "Refresh callback should be called when retry button is clicked" }
@@ -88,9 +89,10 @@ class DashboardAnnouncementBannerWidgetUiTest {
     @Test
     fun testSuccessStateWithSingleAnnouncementDisplaysCorrectly() {
         val testAnnouncement = DashboardPaginatedWidgetCardItemState(
-            chipState = DashboardPaginatedWidgetCardChipState(
+            headerState = DashboardPaginatedWidgetCardHeaderState(
                 label = "Announcement",
-                color = StatusChipColor.Sky
+                color = HorizonColors.Surface.institution().copy(alpha = 0.1f),
+                iconRes = R.drawable.campaign
             ),
             title = "Important Announcement",
             source = "Course Name",
@@ -122,10 +124,10 @@ class DashboardAnnouncementBannerWidgetUiTest {
     fun testSuccessStateWithMultipleAnnouncementsDisplaysAllItems() {
         val announcements = listOf(
             DashboardPaginatedWidgetCardItemState(
-                pageState = "1 of 2",
-                chipState = DashboardPaginatedWidgetCardChipState(
+                headerState = DashboardPaginatedWidgetCardHeaderState(
                     label = "Announcement",
-                    color = StatusChipColor.Sky
+                    color = HorizonColors.Surface.institution().copy(alpha = 0.1f),
+                    iconRes = R.drawable.campaign
                 ),
                 title = "First Announcement",
                 source = "Course 1",
@@ -133,10 +135,10 @@ class DashboardAnnouncementBannerWidgetUiTest {
                 route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
             ),
             DashboardPaginatedWidgetCardItemState(
-                pageState = "2 of 2",
-                chipState = DashboardPaginatedWidgetCardChipState(
+                headerState = DashboardPaginatedWidgetCardHeaderState(
                     label = "Announcement",
-                    color = StatusChipColor.Sky
+                    color = HorizonColors.Surface.institution().copy(alpha = 0.1f),
+                    iconRes = R.drawable.campaign
                 ),
                 title = "Second Announcement",
                 source = "Course 2",
@@ -156,19 +158,18 @@ class DashboardAnnouncementBannerWidgetUiTest {
         }
 
         composeTestRule.onNodeWithText("First Announcement").assertIsDisplayed()
-        composeTestRule.onNodeWithText(
-            context.getString(R.string.dashboardAnnouncementBannerFrom, "Course 1")
-        ).assertIsDisplayed()
+        composeTestRule.onNodeWithText(context.getString(R.string.dashboardAnnouncementBannerFrom, "Course 1")).assertIsDisplayed()
 
-        composeTestRule.onNodeWithText("1 of 2", useUnmergedTree = true).assertIsDisplayed()
+        composeTestRule.onAllNodesWithText("1 of 2").onFirst().assertIsDisplayed()
     }
 
     @Test
     fun testSuccessStateWithGlobalAnnouncementWithoutSource() {
         val testAnnouncement = DashboardPaginatedWidgetCardItemState(
-            chipState = DashboardPaginatedWidgetCardChipState(
+            headerState = DashboardPaginatedWidgetCardHeaderState(
                 label = "Announcement",
-                color = StatusChipColor.Sky
+                color = HorizonColors.Surface.institution().copy(alpha = 0.1f),
+                iconRes = R.drawable.campaign
             ),
             title = "Global Announcement",
             source = null,
@@ -195,9 +196,10 @@ class DashboardAnnouncementBannerWidgetUiTest {
     @Test
     fun testSuccessStateAnnouncementIsClickable() {
         val testAnnouncement = DashboardPaginatedWidgetCardItemState(
-            chipState = DashboardPaginatedWidgetCardChipState(
+            headerState = DashboardPaginatedWidgetCardHeaderState(
                 label = "Announcement",
-                color = StatusChipColor.Sky
+                color = HorizonColors.Surface.institution().copy(alpha = 0.1f),
+                iconRes = R.drawable.campaign
             ),
             title = "Test Announcement",
             source = "Test Course",
@@ -222,11 +224,13 @@ class DashboardAnnouncementBannerWidgetUiTest {
 
     @Test
     fun testSuccessStateDisplaysDateCorrectly() {
-        val testDate = Date(1704067200000L)
+        val testDate = Calendar.getInstance().apply { set(2024, 0, 1) }.time
+
         val testAnnouncement = DashboardPaginatedWidgetCardItemState(
-            chipState = DashboardPaginatedWidgetCardChipState(
+            headerState = DashboardPaginatedWidgetCardHeaderState(
                 label = "Announcement",
-                color = StatusChipColor.Sky
+                color = HorizonColors.Surface.institution().copy(alpha = 0.1f),
+                iconRes = R.drawable.campaign
             ),
             title = "Dated Announcement",
             source = "Test Course",
@@ -250,9 +254,10 @@ class DashboardAnnouncementBannerWidgetUiTest {
     @Test
     fun testSuccessStateWithAnnouncementWithoutDate() {
         val testAnnouncement = DashboardPaginatedWidgetCardItemState(
-            chipState = DashboardPaginatedWidgetCardChipState(
+            headerState = DashboardPaginatedWidgetCardHeaderState(
                 label = "Announcement",
-                color = StatusChipColor.Sky
+                color = HorizonColors.Surface.institution().copy(alpha = 0.1f),
+                iconRes = R.drawable.campaign
             ),
             title = "No Date Announcement",
             source = "Test Course",
@@ -277,9 +282,10 @@ class DashboardAnnouncementBannerWidgetUiTest {
     fun testSuccessStateWithLongAnnouncementTitle() {
         val longTitle = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. This is a very long announcement title that should be displayed properly in the widget."
         val testAnnouncement = DashboardPaginatedWidgetCardItemState(
-            chipState = DashboardPaginatedWidgetCardChipState(
+            headerState = DashboardPaginatedWidgetCardHeaderState(
                 label = "Announcement",
-                color = StatusChipColor.Sky
+                color = HorizonColors.Surface.institution().copy(alpha = 0.1f),
+                iconRes = R.drawable.campaign
             ),
             title = longTitle,
             source = "Test Course",

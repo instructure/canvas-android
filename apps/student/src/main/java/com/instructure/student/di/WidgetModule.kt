@@ -26,7 +26,7 @@ import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.pandautils.room.calendar.daos.CalendarFilterDao
+import com.instructure.pandautils.room.appdatabase.daos.ToDoFilterDao
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.student.widget.WidgetLogger
 import com.instructure.student.widget.WidgetUpdater
@@ -69,9 +69,10 @@ class WidgetModule {
     fun provideToDoWidgetRepository(
         plannerApi: PlannerAPI.PlannerInterface,
         coursesApi: CourseAPI.CoursesInterface,
-        calendarFilterDao: CalendarFilterDao
+        toDoFilterDao: ToDoFilterDao,
+        apiPrefs: ApiPrefs
     ): ToDoWidgetRepository {
-        return ToDoWidgetRepository(plannerApi, coursesApi, calendarFilterDao)
+        return ToDoWidgetRepository(plannerApi, coursesApi, toDoFilterDao, apiPrefs)
     }
 
     @Provides
