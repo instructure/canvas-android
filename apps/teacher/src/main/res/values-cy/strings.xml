@@ -423,8 +423,8 @@
     <string name="submitted_late">Wedi’i gyflwyno’n hwyr</string>
     <string name="havent_submitted_yet">Heb gyflwyno eto</string>
     <string name="havent_been_graded">Heb gael gradd</string>
-    <string name="scored_less_than">Wedi cael sgôr o lai na &#8230;</string>
-    <string name="scored_more_than">Wedi cael sgôr o fwy na &#8230;</string>
+    <string name="scored_less_than">Wedi cael sgôr sy\'n Llai na</string>
+    <string name="scored_more_than">Wedi cael sgôr sy\'n Fwy na</string>
     <string name="scored_less_than_value">Wedi cael sgôr o lai na %s</string>
     <string name="scored_more_than_value">Wedi cael sgôr o fwy na %s</string>
     <string name="add_comment">Ychwanegu Sylw</string>

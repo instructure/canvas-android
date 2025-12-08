@@ -38,8 +38,8 @@ android {
         applicationId "com.instructure.candroid"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 282
-        versionName = '8.3.0'
+        versionCode = 283
+        versionName = '8.4.0'
 
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner 'com.instructure.student.espresso.StudentHiltTestRunner'
@@ -222,6 +222,10 @@ android {
         enableExperimentalClasspathAggregation = true
     }
 
+    ksp {
+        arg("room.schemaLocation", "$projectDir/schemas".toString())
+    }
+
     sourceSets {
         debug.assets.srcDirs += files("$projectDir/schemas".toString())
     }
@@ -337,9 +341,6 @@ dependencies {
     implementation Libs.GLANCE_APPWIDGET
     implementation Libs.GLANCE_APPWIDGET_PREVIEW
 }
-
-// Comment out this line if the reporting logic starts going wonky.
-gradle.addListener new TimingsListener(project)
 
 apply plugin: 'com.google.gms.google-services'
 

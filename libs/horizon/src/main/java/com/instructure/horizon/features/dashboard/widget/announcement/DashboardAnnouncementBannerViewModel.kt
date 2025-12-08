@@ -26,10 +26,10 @@ import com.instructure.horizon.features.dashboard.DashboardEvent
 import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardButtonRoute
-import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardChipState
+import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardHeaderState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardState
-import com.instructure.horizon.horizonui.molecules.StatusChipColor
+import com.instructure.horizon.horizonui.foundation.HorizonColors
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -79,8 +79,8 @@ class DashboardAnnouncementBannerViewModel @Inject constructor(
             it.copy(
                 state = DashboardItemState.SUCCESS,
                 cardState = DashboardPaginatedWidgetCardState(
-                    items = announcements.mapIndexed { index, announcement ->
-                        announcement.toPaginatedWidgetCardItemState(context, index, announcements.size)
+                    items = announcements.map { announcement ->
+                        announcement.toPaginatedWidgetCardItemState(context)
                     }
                 )
             )
@@ -100,21 +100,13 @@ class DashboardAnnouncementBannerViewModel @Inject constructor(
     }
 }
 
-private fun AnnouncementBannerItem.toPaginatedWidgetCardItemState(
-    context: Context,
-    itemIndex: Int,
-    size: Int,
-): DashboardPaginatedWidgetCardItemState {
+private fun AnnouncementBannerItem.toPaginatedWidgetCardItemState(context: Context): DashboardPaginatedWidgetCardItemState {
     return DashboardPaginatedWidgetCardItemState(
-        chipState = DashboardPaginatedWidgetCardChipState(
+        headerState = DashboardPaginatedWidgetCardHeaderState(
             label = context.getString(R.string.notificationsAnnouncementCategoryLabel),
-            color = StatusChipColor.Sky
+            color = HorizonColors.PrimitivesSky.sky12,
+            iconRes = R.drawable.campaign
         ),
-        pageState = if (size > 1) {
-            context.getString(R.string.dsahboardPaginatedWidgetPagerMessage, itemIndex + 1, size)
-        } else {
-            null
-        },
         source = source,
         date = date,
         title = title,

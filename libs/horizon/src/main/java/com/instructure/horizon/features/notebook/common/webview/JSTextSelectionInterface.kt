@@ -18,7 +18,10 @@ package com.instructure.horizon.features.notebook.common.webview
 
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
+import com.google.gson.Gson
+import com.instructure.horizon.features.notebook.common.composable.toNotebookLocalisedDateFormat
 import com.instructure.horizon.features.notebook.common.model.Note
+import org.json.JSONObject
 
 class JSTextSelectionInterface(
     private val onTextSelect: (
@@ -40,7 +43,8 @@ class JSTextSelectionInterface(
         endContainer: String,
         endOffset: Int,
         textSelectionStart: Int,
-        textSelectionEnd: Int
+        textSelectionEnd: Int,
+        updatedAt: String,
     ) -> Unit,
     private val onSelectionPositionChange: (
         left: Float,
@@ -83,14 +87,28 @@ class JSTextSelectionInterface(
         endOffset: Int,
         endContainer: String,
         textSelectionStart: Int,
-        textSelectionEnd: Int
+        textSelectionEnd: Int,
+        updatedAt: String,
     ) {
-        onHighlightedTextClick(noteId, noteType, selectedText, userComment, startContainer, startOffset, endContainer, endOffset, textSelectionStart, textSelectionEnd)
+        onHighlightedTextClick(noteId, noteType, selectedText, userComment, startContainer, startOffset, endContainer, endOffset, textSelectionStart, textSelectionEnd, updatedAt)
     }
 
+    data class HighlightParams(
+        val noteId: String,
+        val selectedText: String,
+        val userComment: String,
+        val startOffset: Int,
+        val startContainer: String,
+        val endOffset: Int,
+        val endContainer: String,
+        val noteReactionString: String,
+        val textSelectionStart: Int,
+        val textSelectionEnd: Int,
+        val updatedAt: String
+    )
+
     companion object {
-        private const val flagBase64Source = "url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTkiIHZpZXdCb3g9IjAgMCAxNiAxOSIgZmlsbD0iI0ZGRkZGRiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMiA5Ljc2OTI1VjE3Ljc1QzIgMTcuOTYyNSAxLjkyODA4IDE4LjE0MDYgMS43ODQyNSAxOC4yODQzQzEuNjQwNDIgMTguNDI4MSAxLjQ2MjI1IDE4LjUgMS4yNDk3NSAxOC41QzEuMDM3MDggMTguNSAwLjg1OSAxOC40MjgxIDAuNzE1NSAxOC4yODQzQzAuNTcxODMzIDE4LjE0MDYgMC41IDE3Ljk2MjUgMC41IDE3Ljc1VjEuNDA0QzAuNSAxLjE0NzgzIDAuNTg2NjY3IDAuOTMzMTY3IDAuNzYgMC43NjAwMDFDMC45MzMxNjcgMC41ODY2NjcgMS4xNDc4MyAwLjUgMS40MDQgMC41SDE0LjExMTVDMTQuMjc1NyAwLjUgMTQuNDIzNSAwLjUzOCAxNC41NTUgMC42MTRDMTQuNjg2NyAwLjY4OTgzMyAxNC43OTEyIDAuNzg4NTAxIDE0Ljg2ODUgMC45MTAwMDFDMTQuOTQ1OCAxLjAzMTUgMTQuOTkzOCAxLjE2NjY3IDE1LjAxMjUgMS4zMTU1QzE1LjAzMSAxLjQ2NDE3IDE1LjAwNjEgMS42MTU4MyAxNC45Mzc4IDEuNzcwNUwxMy40NTIgNS4xMzQ3NUwxNC45Mzc4IDguNDk4NzVDMTUuMDA2MSA4LjY1MzQyIDE1LjAzMSA4LjgwNTA4IDE1LjAxMjUgOC45NTM3NUMxNC45OTM4IDkuMTAyNTggMTQuOTQ1OCA5LjIzNzc1IDE0Ljg2ODUgOS4zNTkyNUMxNC43OTEyIDkuNDgwNzUgMTQuNjg2NyA5LjU3OTQyIDE0LjU1NSA5LjY1NTI1QzE0LjQyMzUgOS43MzEyNSAxNC4yNzU3IDkuNzY5MjUgMTQuMTExNSA5Ljc2OTI1SDJaTTIgOC4yNjkyNUgxMy4yMzI3TDEyLjE1IDUuODY1NUMxMi4wNDM3IDUuNjM4IDExLjk5MDUgNS4zOTQyNSAxMS45OTA1IDUuMTM0MjVDMTEuOTkwNSA0Ljg3NDI1IDEyLjA0MzcgNC42MzA3NSAxMi4xNSA0LjQwMzc1TDEzLjIzMjcgMkgyVjguMjY5MjVaIiBmaWxsPSIjRkZGRkZGIi8+PC9zdmc+Cg==)"
-        private const val questionBase64Source = "url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI0ZGRkZGRiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTQuOTU1OCA4LjAxNzE5QzE0Ljk1NTggNy4xOTE1MyAxNC42Nzk5IDYuNTI4MzYgMTQuMTI4IDYuMDI3NjlDMTMuNTc2IDUuNTI3MTkgMTIuODQ3NSA1LjI3Njk0IDExLjk0MjMgNS4yNzY5NEMxMS4zNjkzIDUuMjc2OTQgMTAuODYxMyA1LjM5Mzg2IDEwLjQxODMgNS42Mjc2OUM5Ljk3NTI5IDUuODYxNjkgOS41OTI4OCA2LjIxMzk0IDkuMjcxMDQgNi42ODQ0NEM5LjA4MTM4IDYuOTUyNDQgOC44Mjc4OCA3LjExMDc4IDguNTEwNTQgNy4xNTk0NEM4LjE5MzM4IDcuMjA4MjggNy45MTYxMiA3LjEzMDc4IDcuNjc4NzkgNi45MjY5NEM3LjUwMzI5IDYuNzc0MjggNy40MDMwNCA2LjU4Mjk0IDcuMzc4MDQgNi4zNTI5NEM3LjM1MzA0IDYuMTIyNzggNy40MDY1NCA1LjkwNDQ0IDcuNTM4NTQgNS42OTc5NEM4LjA0NjIxIDQuOTMwMTEgOC42NzQxMyA0LjM0NjE5IDkuNDIyMjkgMy45NDYxOUMxMC4xNzAzIDMuNTQ2MTkgMTEuMDEwMyAzLjM0NjE5IDExLjk0MjMgMy4zNDYxOUMxMy40MzA4IDMuMzQ2MTkgMTQuNjQyNCAzLjc3MjQ0IDE1LjU3NyA0LjYyNDk0QzE2LjUxMTUgNS40Nzc0NCAxNi45Nzg4IDYuNTg3NjkgMTYuOTc4OCA3Ljk1NTY5QzE2Ljk3ODggOC42ODAwMyAxNi44MjM3IDkuMzQzNzggMTYuNTEzNSA5Ljk0Njk0QzE2LjIwMzIgMTAuNTUwMyAxNS42NzQ0IDExLjE5OTQgMTQuOTI3IDExLjg5NDJDMTQuMjI3IDEyLjUyODkgMTMuNzQ5NSAxMy4wNDM5IDEzLjQ5NDMgMTMuNDM5NEMxMy4yMzkxIDEzLjgzNDkgMTMuMDkxIDE0LjI3OTQgMTMuMDUgMTQuNzcyOUMxMy4wMDkgMTUuMDU3NiAxMi44OTExIDE1LjI5NDggMTIuNjk2MyAxNS40ODQ0QzEyLjUwMTMgMTUuNjc0MyAxMi4yNjY2IDE1Ljc2OTIgMTEuOTkyMyAxNS43NjkyQzExLjcxOCAxNS43NjkyIDExLjQ4MzQgMTUuNjc1MyAxMS4yODg1IDE1LjQ4NzRDMTEuMDkzNyAxNS4yOTk2IDEwLjk5NjMgMTUuMDY4NSAxMC45OTYzIDE0Ljc5NDJDMTAuOTk2MyAxNC4xMjUgMTEuMTQ5MSAxMy41MTMyIDExLjQ1NDggMTIuOTU4N0MxMS43NjA2IDEyLjQwNDIgMTIuMjcyNSAxMS44MDc3IDEyLjk5MDUgMTEuMTY5MkMxMy43NTcyIDEwLjQ5NjIgMTQuMjc2NCA5LjkzNDYxIDE0LjU0OCA5LjQ4NDQ0QzE0LjgxOTkgOS4wMzQ0NCAxNC45NTU4IDguNTQ1MzYgMTQuOTU1OCA4LjAxNzE5Wk0xMS45NDIzIDIxLjQ5OTlDMTEuNTMzMyAyMS40OTk5IDExLjE4MSAyMS4zNTIyIDEwLjg4NTUgMjEuMDU2N0MxMC41OSAyMC43NjEyIDEwLjQ0MjMgMjAuNDA4OSAxMC40NDIzIDE5Ljk5OTlDMTAuNDQyMyAxOS41OTA5IDEwLjU5IDE5LjIzODcgMTAuODg1NSAxOC45NDMyQzExLjE4MSAxOC42NDc3IDExLjUzMzMgMTguNDk5OSAxMS45NDIzIDE4LjQ5OTlDMTIuMzUxMyAxOC40OTk5IDEyLjcwMzUgMTguNjQ3NyAxMi45OTkgMTguOTQzMkMxMy4yOTQ1IDE5LjIzODcgMTMuNDQyMyAxOS41OTA5IDEzLjQ0MjMgMTkuOTk5OUMxMy40NDIzIDIwLjQwODkgMTMuMjk0NSAyMC43NjEyIDEyLjk5OSAyMS4wNTY3QzEyLjcwMzUgMjEuMzUyMiAxMi4zNTEzIDIxLjQ5OTkgMTEuOTQyMyAyMS40OTk5WiIgZmlsbD0iI0ZGRkZGRiIvPjwvc3ZnPgo=)"
+        private val gson = Gson()
         private const val JS_INTERFACE_NAME = "TextSelectionInterface"
 		private const val JS_CODE_FROM_WEB = """
 let highlightCss = `
@@ -100,45 +118,13 @@ let highlightCss = `
       text-decoration-color: rgba(14, 104, 179, 1);
       position: relative;
     }
-    .highlighted-important::before {
-        content: "";
-        display: block;
-        position: absolute;
-        top: -6px;
-        left: -6px;
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        z-index: 10;
-        background-color: rgba(14, 104, 179, 1);
-        background-image: ${flagBase64Source};
-        background-size: 60%;
-        background-repeat: no-repeat;
-        background-position: center;
-    }
     
     .highlighted-confusing {
       background-color: rgba(199, 31, 35, 0.2);
       text-decoration: underline;
       text-decoration-color: rgba(199, 31, 35, 1);
-    
+      text-decoration-style: dashed;
       position: relative;
-    }
-    .highlighted-confusing::before {
-        content: "";
-        display: block;
-        position: absolute;
-        top: -6px;
-        left: -6px;
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        z-index: 10;
-        background-color: rgba(199, 31, 35, 1);
-        background-image: ${questionBase64Source};
-        background-size: 80%;
-        background-repeat: no-repeat;
-        background-position: center;
     }
 `
 const styleSheet = document.createElement("style");
@@ -664,7 +650,10 @@ const isNodeInRange = (range, node) => {
 		"""
         private val JS_CODE = """
 ${JS_CODE_FROM_WEB}
-function highlightSelection(noteId, selectedText, userComment, startOffset, startContainer, endOffset, endContainer, noteReactionString, textSelectionStart, textSelectionEnd) {
+function highlightSelection(paramsJson) {
+	const params = JSON.parse(paramsJson);
+	const { noteId, selectedText, userComment, startOffset, startContainer, endOffset, endContainer, noteReactionString, textSelectionStart, textSelectionEnd, updatedAt } = params;
+
 	let parent = document.getElementById("parent-container");//document.documentElement;
 	if (!parent) return;
 
@@ -689,7 +678,7 @@ function highlightSelection(noteId, selectedText, userComment, startOffset, star
 		const highlightElement = document.createElement("span");
 		highlightElement.classList.add(highlightClassName);
 		highlightElement.classList.add(cssClass);
-		highlightElement.onclick = function () { ${ JS_INTERFACE_NAME }.onHighlightedTextClicked(noteId, noteReactionString, selectedText, userComment, startOffset, startContainer, endOffset, endContainer, textSelectionStart, textSelectionEnd); };
+		highlightElement.onclick = function () { ${ JS_INTERFACE_NAME }.onHighlightedTextClicked(noteId, noteReactionString, selectedText, userComment, startOffset, startContainer, endOffset, endContainer, textSelectionStart, textSelectionEnd, updatedAt); };
 		highlightElement.textContent = textNode.textContent;
 
 		if (!highlightElement) return;
@@ -743,7 +732,8 @@ javascript: (function () {
                 endContainer: String,
                 endOffset: Int,
                 textSelectionStart: Int,
-                textSelectionEnd: Int
+                textSelectionEnd: Int,
+                updatedAt: String,
             ) -> Unit,
             onSelectionPositionChange: (
                 left: Float,
@@ -762,7 +752,22 @@ javascript: (function () {
 
         fun WebView.highlightNotes(notes: List<Note>) {
             notes.forEach { note ->
-                val script = "javascript:highlightSelection('${note.id}', '${note.highlightedText.selectedText.replace("\n", "\\n")}', '${note.userText.replace("\n", "\\n")}', ${note.highlightedText.range.startOffset}, '${note.highlightedText.range.startContainer}', ${note.highlightedText.range.endOffset}, '${note.highlightedText.range.endContainer}', '${note.type.name}', ${note.highlightedText.textPosition.start}, ${note.highlightedText.textPosition.end})"
+                val params = HighlightParams(
+                    noteId = note.id,
+                    selectedText = note.highlightedText.selectedText,
+                    userComment = note.userText,
+                    startOffset = note.highlightedText.range.startOffset,
+                    startContainer = note.highlightedText.range.startContainer,
+                    endOffset = note.highlightedText.range.endOffset,
+                    endContainer = note.highlightedText.range.endContainer,
+                    noteReactionString = note.type.name,
+                    textSelectionStart = note.highlightedText.textPosition.start,
+                    textSelectionEnd = note.highlightedText.textPosition.end,
+                    updatedAt = note.updatedAt.toNotebookLocalisedDateFormat()
+                )
+                val paramsJson = gson.toJson(params)
+                val quotedJson = JSONObject.quote(paramsJson)
+                val script = "javascript:highlightSelection($quotedJson)"
                 this.evaluateJavascript(script, null)
             }
         }

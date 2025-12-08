@@ -246,6 +246,8 @@ object HorizonColors {
 
     object PrimitivesSea {
         @Composable
+        fun sea12() = colorResource(R.color.primitives_sea12)
+        @Composable
         fun sea30() = colorResource(R.color.primitives_sea30)
         @Composable
         fun sea35() = colorResource(R.color.primitives_sea35)

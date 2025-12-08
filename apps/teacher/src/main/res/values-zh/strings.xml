@@ -419,8 +419,8 @@
     <string name="submitted_late">迟交</string>
     <string name="havent_submitted_yet">暂未提交</string>
     <string name="havent_been_graded">暂未评分</string>
-    <string name="scored_less_than">分数低于&#8230;</string>
-    <string name="scored_more_than">分数高于&#8230;</string>
+    <string name="scored_less_than">分数低于</string>
+    <string name="scored_more_than">分数高于</string>
     <string name="scored_less_than_value">分数低于%s</string>
     <string name="scored_more_than_value">分数高于%s</string>
     <string name="add_comment">添加评论</string>

@@ -229,4 +229,57 @@ object APIHelper {
         }
     }
 
+    /**
+     * Extract shard ID from Canvas access token if it contains one
+     * Canvas tokens can be in the format: shardId~token
+     *
+     * @param token the access token to parse
+     * @return the shard ID if present, null otherwise
+     */
+    fun getShardIdFromToken(token: String): String? {
+        return if (token.contains("~")) {
+            token.substringBefore("~")
+        } else {
+            null
+        }
+    }
+
+    /**
+     * Create a global user ID from a shard ID and user ID, then expand it
+     * i.e., converts shardId "7053" and userId 2848 to 70530000000002848
+     *
+     * @param shardId the shard ID
+     * @param userId the user ID
+     * @return the expanded global user ID as a Long
+     */
+    fun createGlobalUserId(shardId: String, userId: Long): Long {
+        val tildeId = "$shardId~$userId"
+        return expandTildeId(tildeId).toLongOrNull()
+            ?: throw IllegalArgumentException("Invalid tilde ID: $tildeId")
+    }
+
+    /**
+     * Get the appropriate user ID for a course, converting to global user ID if the course is on a different shard
+     *
+     * @param courseId the course ID
+     * @param userId the user ID
+     * @param shardIds map of course IDs to shard IDs
+     * @param accessToken the access token to extract the user's shard ID from
+     * @return the user ID to use (either original or global)
+     */
+    fun getUserIdForCourse(
+        courseId: Long,
+        userId: Long,
+        shardIds: Map<Long, String?>,
+        accessToken: String
+    ): Long {
+        val courseShardId = shardIds[courseId]
+        val tokenShardId = getShardIdFromToken(accessToken)
+
+        return if (courseShardId != null && tokenShardId != null && courseShardId != tokenShardId) {
+            createGlobalUserId(tokenShardId, userId)
+        } else {
+            userId
+        }
+    }
 }
