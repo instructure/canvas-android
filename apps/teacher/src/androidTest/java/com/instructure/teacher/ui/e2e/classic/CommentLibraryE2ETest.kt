@@ -162,9 +162,9 @@ class CommentLibraryE2ETest : TeacherComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the 'Comments' label is displayed with the corresponding number of comments, which is 2 at the moment.")
         speedGraderPage.assertCommentsLabelDisplayed(2)
 
-        Log.d(ASSERTION_TAG, "Assert assert both the '$testComment' and '$testComment2' (whole) comments are displayed in the comments section.")
-        speedGraderPage.assertCommentDisplayed(testComment)
-        speedGraderPage.assertCommentDisplayed(testComment2)
+        Log.d(ASSERTION_TAG, "Assert that both the '$testComment' and '$testComment2' (whole) comments are displayed in the comments section.")
+        speedGraderPage.assertCommentDisplayed(testComment, author = null)
+        speedGraderPage.assertCommentDisplayed(testComment2, author = null)
     }
 
     private fun prepareSettingsAndMakeAssignmentWithSubmission(
