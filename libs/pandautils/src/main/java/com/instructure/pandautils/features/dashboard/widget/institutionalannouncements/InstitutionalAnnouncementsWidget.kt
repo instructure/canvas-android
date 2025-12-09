@@ -173,9 +173,7 @@ private fun AnnouncementCard(
     val cardShape = RoundedCornerShape(16.dp)
     Card(
         modifier = modifier
-            .fillMaxWidth()
-            .clip(cardShape)
-            .clickable(onClick = onClick),
+            .fillMaxWidth(),
         shape = cardShape,
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(
@@ -185,6 +183,7 @@ private fun AnnouncementCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .clickable(onClick = onClick)
                 .padding(16.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.Top
