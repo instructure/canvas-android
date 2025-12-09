@@ -343,7 +343,7 @@ private fun NoteContent(
         modifier = Modifier
             .fillMaxWidth()
             .horizonBorder(
-                colorResource(note.type.color).copy(alpha = 0.1f),
+                colorResource(note.type.highlightColor),
                 6.dp,
                 1.dp,
                 1.dp,

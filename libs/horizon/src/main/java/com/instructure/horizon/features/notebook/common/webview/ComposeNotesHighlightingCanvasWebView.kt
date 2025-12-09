@@ -16,6 +16,7 @@
  */
 package com.instructure.horizon.features.notebook.common.webview
 
+import android.util.Log
 import android.webkit.WebView
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.fillMaxSize
@@ -54,6 +55,7 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.JsExternalToolInterface
 import com.instructure.pandautils.utils.JsGoogleDocsInterface
+import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toPx
 import com.instructure.pandautils.views.CanvasWebView
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -113,9 +115,10 @@ fun ComposeNotesHighlightingCanvasWebView(
         if (scrollToNoteId != null && isPageLoaded && scrollState != null && webViewInstance != null && !isScrolled && pageHeight > 0) {
             isScrolled = true
             webViewInstance?.webView?.getNoteYPosition(scrollToNoteId) { yPosition ->
-                if (yPosition != null) {
+                if (yPosition != null && !scrollState.isScrollInProgress.orDefault(true)) {
                     composeScope.launch {
                         val targetScroll = (yPosition.toInt().toPx).coerceIn(0, scrollState.maxValue)
+                        Log.d("NotesHighlightingCanvasWebView", "Scrolling to $targetScroll")
                         scrollState.animateScrollTo(targetScroll)
                     }
                 }
@@ -273,7 +276,7 @@ fun ComposeNotesHighlightingCanvasWebView(
                     if (coordinates.size.height > 0 && coordinates.size.height != previousHeight) {
                         lifecycleOwner.lifecycleScope.launch {
                             val scrollRatio = scrollValue.toFloat() / previousScrollMaxValue.toFloat()
-                            if (scrollRatio > 0) {
+                            if (scrollRatio > 0 && !scrollState?.isScrollInProgress.orDefault(true)) {
                                 scrollState?.scrollTo((scrollRatio * (scrollState.maxValue)).toInt())
                             }
                         }

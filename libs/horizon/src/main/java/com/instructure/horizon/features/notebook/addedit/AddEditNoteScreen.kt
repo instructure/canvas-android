@@ -223,13 +223,12 @@ private fun AddEditNoteContent(state: AddEditNoteUiState, padding: PaddingValues
 
         TextArea(
             state = TextAreaState(
-                placeHolderText = stringResource(R.string.addNoteAddANoteLabel),
+                placeHolderText = stringResource(R.string.addNoteAddANoteOptionalLabel),
                 required = InputLabelRequired.Optional,
                 value = state.userComment,
                 onValueChange = state.onUserCommentChanged,
             ),
             minLines = 5,
-            maxLines = 5
         )
 
         HorizonSpace(SpaceSize.SPACE_16)
@@ -241,7 +240,7 @@ private fun AddEditNoteContent(state: AddEditNoteUiState, padding: PaddingValues
             if (state.lastModifiedDate != null) {
                 Text(
                     state.lastModifiedDate,
-                    style = HorizonTypography.labelSmall,
+                    style = HorizonTypography.labelMediumBold,
                     color = HorizonColors.Text.timestamp(),
                     modifier = Modifier.weight(1f),
                     maxLines = 1,
