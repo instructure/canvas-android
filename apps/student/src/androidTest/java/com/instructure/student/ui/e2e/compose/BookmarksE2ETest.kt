@@ -256,7 +256,7 @@ class BookmarksE2ETest : StudentComposeTest() {
         Log.d(STEP_TAG, "Click on the assignment: '${assignment.name}' from the ToDo list.")
         toDoListPage.clickOnItem(assignment.name)
 
-        val todoBookmarkName = "Todo Assignment Bookmark"
+        val todoBookmarkName = "First Bookmark"
         Log.d(STEP_TAG, "Add a new bookmark with name: '$todoBookmarkName' from the assignment details page.")
         Thread.sleep(1000) //Temporary sleep to wait for the assignment details to load properly.
         assignmentDetailsPage.addBookmark(todoBookmarkName)
@@ -289,7 +289,7 @@ class BookmarksE2ETest : StudentComposeTest() {
         Log.d(STEP_TAG, "Click on the notification about assignment: '${assignment.name}'.")
         notificationPage.clickNotification(assignment.name)
 
-        val notificationBookmarkName = "Notification Assignment Bookmark"
+        val notificationBookmarkName = "Second Bookmark"
         Log.d(STEP_TAG, "Add a new bookmark with name: '$notificationBookmarkName' from the assignment details page.")
         assignmentDetailsPage.addBookmark(notificationBookmarkName)
 
