@@ -28,7 +28,6 @@ import androidx.media3.common.Player
 import androidx.media3.common.Tracks
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.common.util.Util
-import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.dash.DashMediaSource
@@ -38,6 +37,7 @@ import androidx.media3.exoplayer.hls.HlsMediaSource
 import androidx.media3.exoplayer.smoothstreaming.DefaultSsChunkSource
 import androidx.media3.exoplayer.smoothstreaming.SsMediaSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
+import androidx.media3.exoplayer.source.UnrecognizedInputFormatException
 import androidx.media3.exoplayer.trackselection.AdaptiveTrackSelection
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import androidx.media3.exoplayer.trackselection.TrackSelector
@@ -46,6 +46,7 @@ import androidx.media3.extractor.DefaultExtractorsFactory
 import androidx.media3.ui.PlayerView
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
+import androidx.core.net.toUri
 
 enum class ExoAgentState {
     IDLE,
@@ -82,16 +83,22 @@ class ExoAgent private constructor(val uri: Uri) {
     /** Whether the media track is audio only, or false if unknown */
     private var mIsAudioOnly = false
 
+    /** Whether we've already tried retrying with .mpd extension */
+    private var triedMpdRetry = false
+
+    /** The current URI being used (may be modified for DASH retry) */
+    private var currentUri: Uri = uri
+
     /** The current state of this agent */
     private var currentState = ExoAgentState.IDLE
         set(value) {
             mInfoListener?.onStateChanged(value)
         }
 
-    /** The media source that will feed data from the [uri] */
-    private val mMediaSource by lazy {
-        val mediaItem = MediaItem.fromUri(uri)
-        when (Util.inferContentType(uri)) {
+    /** Creates a media source for the given URI */
+    private fun createMediaSource(sourceUri: Uri) = run {
+        val mediaItem = MediaItem.fromUri(sourceUri)
+        when (Util.inferContentType(sourceUri)) {
             C.CONTENT_TYPE_SS -> SsMediaSource.Factory(DefaultSsChunkSource.Factory(DATA_SOURCE_FACTORY), DATA_SOURCE_FACTORY).createMediaSource(mediaItem)
             C.CONTENT_TYPE_DASH -> DashMediaSource.Factory(DefaultDashChunkSource.Factory(DATA_SOURCE_FACTORY), DATA_SOURCE_FACTORY).createMediaSource(mediaItem)
             C.CONTENT_TYPE_HLS -> HlsMediaSource.Factory(DefaultHlsDataSourceFactory(DATA_SOURCE_FACTORY)).createMediaSource(mediaItem)
@@ -163,8 +170,26 @@ class ExoAgent private constructor(val uri: Uri) {
             }
 
             override fun onPlayerError(exception: PlaybackException) {
-                reset()
-                mInfoListener?.onError(exception.cause)
+                val cause = exception.cause
+
+                // Check if this might be a DASH video without .mpd extension
+                if (cause is UnrecognizedInputFormatException &&
+                    !triedMpdRetry &&
+                    !currentUri.toString().endsWith(".mpd")) {
+
+                    // Retry with .mpd appended
+                    triedMpdRetry = true
+                    currentUri = "${currentUri}.mpd".toUri()
+
+                    // Reset and retry with the new URI
+                    mPlayer?.release()
+                    mPlayer = null
+                    preparePlayer()
+                } else {
+                    // Not a retryable error, or already tried retry
+                    reset()
+                    mInfoListener?.onError(cause)
+                }
             }
 
             override fun onPlaybackStateChanged(playbackState: Int) {
@@ -184,7 +209,7 @@ class ExoAgent private constructor(val uri: Uri) {
         })
 
         mPlayer?.playWhenReady = true
-        mPlayer?.setMediaSource(mMediaSource)
+        mPlayer?.setMediaSource(createMediaSource(currentUri))
         mPlayer?.prepare()
     }
 
@@ -230,14 +255,12 @@ class ExoAgent private constructor(val uri: Uri) {
         }
 
         private val DATA_SOURCE_FACTORY by lazy {
-            val httpSourceFactory = DefaultHttpDataSource.Factory()
+            DefaultHttpDataSource.Factory()
                 .setUserAgent(ApiPrefs.userAgent)
                 .setTransferListener(BANDWIDTH_METER)
                 .setConnectTimeoutMs(CONNECT_TIMEOUT)
                 .setReadTimeoutMs(READ_TIMEOUT)
                 .setAllowCrossProtocolRedirects(true)
-            DefaultDataSource.Factory(ContextKeeper.appContext, httpSourceFactory)
-                .setTransferListener(BANDWIDTH_METER)
         }
 
         private var agentInstances: HashMap<String, ExoAgent> = hashMapOf()
