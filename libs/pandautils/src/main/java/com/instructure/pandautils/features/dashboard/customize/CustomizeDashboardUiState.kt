@@ -28,5 +28,10 @@ data class WidgetItem(
 data class CustomizeDashboardUiState(
     val widgets: List<WidgetItem> = emptyList(),
     val loading: Boolean = true,
-    val error: String? = null
+    val error: String? = null,
+    val isDashboardRedesignEnabled: Boolean = false,
+    val onMoveUp: (String) -> Unit = {},
+    val onMoveDown: (String) -> Unit = {},
+    val onToggleVisibility: (String) -> Unit = {},
+    val onToggleDashboardRedesign: (Boolean) -> Unit = {}
 )

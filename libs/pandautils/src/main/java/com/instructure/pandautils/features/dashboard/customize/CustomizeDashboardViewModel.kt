@@ -20,6 +20,9 @@ import android.content.res.Resources
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.RemoteConfigParam
+import com.instructure.canvasapi2.utils.RemoteConfigPrefs
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetMetadataUseCase
@@ -40,14 +43,29 @@ class CustomizeDashboardViewModel @Inject constructor(
     private val swapWidgetPositionsUseCase: SwapWidgetPositionsUseCase,
     private val updateWidgetVisibilityUseCase: UpdateWidgetVisibilityUseCase,
     private val resources: Resources,
-    private val apiPrefs: ApiPrefs
+    private val apiPrefs: ApiPrefs,
+    private val remoteConfigUtils: RemoteConfigUtils,
+    private val remoteConfigPrefs: RemoteConfigPrefs
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(CustomizeDashboardUiState())
+    private val _uiState = MutableStateFlow(
+        CustomizeDashboardUiState(
+            onMoveUp = this::moveWidgetUp,
+            onMoveDown = this::moveWidgetDown,
+            onToggleVisibility = this::toggleVisibility,
+            onToggleDashboardRedesign = this::toggleDashboardRedesign
+        )
+    )
     val uiState: StateFlow<CustomizeDashboardUiState> = _uiState.asStateFlow()
 
     init {
         loadWidgets()
+        loadDashboardRedesignFlag()
+    }
+
+    private fun loadDashboardRedesignFlag() {
+        val isDashboardRedesignEnabled = remoteConfigUtils.getBoolean(RemoteConfigParam.DASHBOARD_REDESIGN)
+        _uiState.update { it.copy(isDashboardRedesignEnabled = isDashboardRedesignEnabled) }
     }
 
     private fun loadWidgets() {
@@ -119,6 +137,11 @@ class CustomizeDashboardViewModel @Inject constructor(
                 UpdateWidgetVisibilityUseCase.Params(widgetId, !widgetItem.metadata.isVisible)
             )
         }
+    }
+
+    fun toggleDashboardRedesign(enabled: Boolean) {
+        remoteConfigPrefs.putString(RemoteConfigParam.DASHBOARD_REDESIGN.rc_name, enabled.toString())
+        _uiState.update { it.copy(isDashboardRedesignEnabled = enabled) }
     }
 
     private fun getDisplayName(widgetId: String): String {

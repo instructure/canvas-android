@@ -76,20 +76,14 @@ fun CustomizeDashboardScreen(onNavigateBack: () -> Unit) {
 
     CustomizeDashboardScreenContent(
         uiState = uiState,
-        onNavigateBack = onNavigateBack,
-        onMoveUp = viewModel::moveWidgetUp,
-        onMoveDown = viewModel::moveWidgetDown,
-        onToggleVisibility = viewModel::toggleVisibility
+        onNavigateBack = onNavigateBack
     )
 }
 
 @Composable
 fun CustomizeDashboardScreenContent(
     uiState: CustomizeDashboardUiState,
-    onNavigateBack: () -> Unit,
-    onMoveUp: (String) -> Unit,
-    onMoveDown: (String) -> Unit,
-    onToggleVisibility: (String) -> Unit
+    onNavigateBack: () -> Unit
 ) {
     Scaffold(
         modifier = Modifier.background(colorResource(R.color.backgroundLight)),
@@ -140,10 +134,7 @@ fun CustomizeDashboardScreenContent(
 
                 else -> {
                     WidgetList(
-                        widgets = uiState.widgets,
-                        onMoveUp = onMoveUp,
-                        onMoveDown = onMoveDown,
-                        onToggleVisibility = onToggleVisibility,
+                        uiState = uiState,
                         modifier = Modifier.fillMaxSize()
                     )
                 }
@@ -154,16 +145,19 @@ fun CustomizeDashboardScreenContent(
 
 @Composable
 private fun WidgetList(
-    widgets: List<WidgetItem>,
-    onMoveUp: (String) -> Unit,
-    onMoveDown: (String) -> Unit,
-    onToggleVisibility: (String) -> Unit,
+    uiState: CustomizeDashboardUiState,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
         modifier = modifier.padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        item {
+            FeatureFlagToggle(
+                isEnabled = uiState.isDashboardRedesignEnabled,
+                onToggle = uiState.onToggleDashboardRedesign
+            )
+        }
         item {
             Text(
                 stringResource(R.string.dashboard_widgets),
@@ -173,17 +167,17 @@ private fun WidgetList(
             )
         }
         items(
-            items = widgets,
+            items = uiState.widgets,
             key = { it.metadata.id }
         ) { widgetItem ->
-            val index = widgets.indexOf(widgetItem)
+            val index = uiState.widgets.indexOf(widgetItem)
             WidgetListItem(
                 widgetItem = widgetItem,
                 isFirst = index == 0,
-                isLast = index == widgets.size - 1,
-                onMoveUp = { onMoveUp(widgetItem.metadata.id) },
-                onMoveDown = { onMoveDown(widgetItem.metadata.id) },
-                onToggleVisibility = { onToggleVisibility(widgetItem.metadata.id) },
+                isLast = index == uiState.widgets.size - 1,
+                onMoveUp = { uiState.onMoveUp(widgetItem.metadata.id) },
+                onMoveDown = { uiState.onMoveDown(widgetItem.metadata.id) },
+                onToggleVisibility = { uiState.onToggleVisibility(widgetItem.metadata.id) },
                 modifier = Modifier.animateItem()
             )
         }
@@ -309,6 +303,30 @@ private fun WidgetListItem(
     }
 }
 
+@Composable
+private fun FeatureFlagToggle(isEnabled: Boolean, onToggle: (Boolean) -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(51.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            stringResource(R.string.new_mobile_dashboard),
+            color = colorResource(R.color.textDarkest),
+            fontWeight = FontWeight.Medium,
+            fontSize = 16.sp,
+            lineHeight = 21.sp
+        )
+
+        CanvasSwitch(
+            checked = isEnabled,
+            onCheckedChange = onToggle
+        )
+    }
+}
+
 @Preview(showBackground = true)
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
@@ -329,12 +347,10 @@ private fun CustomizeDashboardScreenPreview() {
                     )
                 ),
                 loading = false,
-                error = null
+                error = null,
+                isDashboardRedesignEnabled = true
             ),
-            onNavigateBack = {},
-            onMoveUp = {},
-            onMoveDown = {},
-            onToggleVisibility = {}
+            onNavigateBack = {}
         )
     }
 }
