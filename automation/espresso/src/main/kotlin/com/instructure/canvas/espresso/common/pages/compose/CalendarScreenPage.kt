@@ -99,18 +99,22 @@ class CalendarScreenPage(private val composeTestRule: ComposeTestRule) : BasePag
         composeTestRule.waitForIdle()
     }
 
-    fun swipeEventsLeft() {
-        composeTestRule.onNodeWithTag("calendarEventsPage0").performTouchInput {
-            swipeLeft()
+    fun swipeEventsLeft(times: Int = 1) {
+        repeat(times) {
+            composeTestRule.onNodeWithTag("calendarEventsPage0").performTouchInput {
+                swipeLeft()
+            }
+            composeTestRule.waitForIdle()
         }
-        composeTestRule.waitForIdle()
     }
 
-    fun swipeEventsRight() {
-        composeTestRule.onNodeWithTag("calendarEventsPage0").performTouchInput {
-            swipeRight()
+    fun swipeEventsRight(times: Int = 1) {
+        repeat(times) {
+            composeTestRule.onNodeWithTag("calendarEventsPage0").performTouchInput {
+                swipeRight()
+            }
+            composeTestRule.waitForIdle()
         }
-        composeTestRule.waitForIdle()
     }
 
     fun clickCalendarHeader() {
