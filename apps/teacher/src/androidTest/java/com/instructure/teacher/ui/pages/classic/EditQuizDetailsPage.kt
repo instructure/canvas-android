@@ -261,6 +261,63 @@ class EditQuizDetailsPage : BasePage() {
             .check(ViewAssertions.matches(hasTextInputLayoutErrorText(R.string.assignee_blank_error)))
     }
 
+    /**
+     * Opens the assignees editor to modify who the quiz is assigned to.
+     */
+    fun editAssignees() = waitScrollClick(R.id.assignTo)
+
+    /**
+     * Clicks on the due date field to edit the date for a specific override.
+     *
+     * @param overrideIndex The index of the override whose due date to edit (default: 0 for the first override).
+     */
+    fun clickEditDueDate(overrideIndex: Int = 0) {
+        addOverrideButton().scrollTo()
+        Thread.sleep(1000) //wait for the UI to be settled
+        onViewWithContentDescription("due_date_$overrideIndex").scrollTo().click()
+    }
+
+    /**
+     * Clicks on the due time field to edit the time for a specific override.
+     *
+     * @param overrideIndex The index of the override whose due time to edit (default: 0 for the first override).
+     */
+    fun clickEditDueTime(overrideIndex: Int = 0) {
+        addOverrideButton().scrollTo()
+        Thread.sleep(1000) //wait for the UI to be settled
+        onViewWithContentDescription("due_time_$overrideIndex").scrollTo().click()
+    }
+
+    /**
+     * Clicks on the unlock date field to edit when the quiz becomes available.
+     */
+    fun clickEditUnlockDate() = waitScrollClick(R.id.fromDate)
+
+    /**
+     * Clicks on the unlock time field to edit when the quiz becomes available.
+     */
+    fun clickEditUnlockTime() = waitScrollClick(R.id.fromTime)
+
+    /**
+     * Clicks on the lock date field to edit when the quiz is no longer accessible.
+     */
+    fun clickEditLockDate() = waitScrollClick(R.id.toDate)
+
+    /**
+     * Clicks on the lock time field to edit when the quiz is no longer accessible.
+     */
+    fun clickEditLockTime() = waitScrollClick(R.id.toTime)
+
+    /**
+     * Clicks the "Add Override" button to create a new due date override for specific assignees.
+     */
+    fun clickAddOverride() = addOverrideButton().scrollTo().click()
+
+    /**
+     * Toggles the publish switch to change the quiz's published state.
+     */
+    fun switchPublish() = waitScrollClick(R.id.publishSwitch)
+
     private fun addOverrideButton() = waitForView(
         allOf(
             withId(R.id.addOverride),
@@ -268,23 +325,4 @@ class EditQuizDetailsPage : BasePage() {
         )
     )
 
-    fun editAssignees() = waitScrollClick(R.id.assignTo)
-    fun clickEditDueDate(overrideIndex: Int = 0) {
-        addOverrideButton().scrollTo()
-        Thread.sleep(1000) //wait for the UI to be settled
-        onViewWithContentDescription("due_date_$overrideIndex").scrollTo()
-        onViewWithContentDescription("due_date_$overrideIndex").click()
-    }
-    fun clickEditDueTime(overrideIndex: Int = 0) {
-        addOverrideButton().scrollTo()
-        Thread.sleep(1000) //wait for the UI to be settled
-        onViewWithContentDescription("due_time_$overrideIndex").scrollTo()
-        onViewWithContentDescription("due_time_$overrideIndex").click()
-    }
-    fun clickEditUnlockDate() = waitScrollClick(R.id.fromDate)
-    fun clickEditUnlockTime() = waitScrollClick(R.id.fromTime)
-    fun clickEditLockDate() = waitScrollClick(R.id.toDate)
-    fun clickEditLockTime() = waitScrollClick(R.id.toTime)
-    fun clickAddOverride() = addOverrideButton().scrollTo().click()
-    fun switchPublish() = waitScrollClick(R.id.publishSwitch)
 }

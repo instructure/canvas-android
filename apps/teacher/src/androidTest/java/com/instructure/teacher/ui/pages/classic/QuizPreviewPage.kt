@@ -25,22 +25,41 @@ import com.instructure.espresso.page.waitForViewWithId
 import com.instructure.teacher.R
 import org.hamcrest.Matchers.containsString
 
+/**
+ * Represents the quiz preview page in the Teacher app.
+ *
+ * This class extends the `BasePage` class and provides methods for verifying
+ * the quiz preview content, including title and description assertions within the WebView.
+ *
+ * @constructor Creates an instance of the `QuizPreviewPage` class.
+ */
 class QuizPreviewPage : BasePage(R.id.canvasWebView) {
 
-    fun assertPreviewLoaded() {
+    /**
+     * Asserts that the quiz preview is displayed with the expected title and description.
+     *
+     * This method waits for the WebView to load, then verifies that both the quiz title
+     * and description are present in the rendered preview content.
+     *
+     * @param quizTitle The expected quiz title to verify in the preview.
+     * @param description The expected quiz description to verify in the preview.
+     * @throws AssertionError if the preview is not loaded or if the title or description is not displayed.
+     */
+    fun assertPreviewDisplayed(quizTitle: String, description: String) {
         waitForViewWithId(R.id.canvasWebView)
+        assertQuizTitleDisplayed(quizTitle)
+        assertQuizDescriptionDisplayed(description)
     }
 
-    fun assertQuizTitleDisplayed(quizTitle: String) {
+    private fun assertQuizTitleDisplayed(quizTitle: String) {
         onWebView()
             .withElement(findElement(Locator.TAG_NAME, "body"))
             .check(webMatches(getText(), containsString(quizTitle)))
     }
 
-    fun assertQuizDescriptionDisplayed(description: String) {
+    private fun assertQuizDescriptionDisplayed(description: String) {
         onWebView()
             .withElement(findElement(Locator.TAG_NAME, "body"))
             .check(webMatches(getText(), containsString(description)))
     }
-
 }

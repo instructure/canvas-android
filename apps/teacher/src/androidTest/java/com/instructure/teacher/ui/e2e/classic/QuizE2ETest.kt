@@ -90,8 +90,9 @@ class QuizE2ETest: TeacherTest() {
         quizDetailsPage.openEditPage()
         editQuizDetailsPage.editQuizTitle(newQuizTitle)
 
-        Log.d(ASSERTION_TAG, "Assert that the quiz name has been changed to: '$newQuizTitle'.")
-        quizDetailsPage.assertQuizNameChanged(newQuizTitle)
+        Log.d(ASSERTION_TAG, "Assert that the quiz title has been changed from: '${firstQuiz.title}' to: '$newQuizTitle'.")
+        quizDetailsPage.assertQuizTitleNotDisplayed(firstQuiz.title)
+        quizDetailsPage.assertQuizTitleDisplayed(newQuizTitle)
 
         Log.d(STEP_TAG, "Open 'Edit' page and switch on the 'Published' checkbox, so publish the '$newQuizTitle' quiz. Click on 'Save'.")
         quizDetailsPage.openEditPage()
@@ -155,6 +156,12 @@ class QuizE2ETest: TeacherTest() {
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
+        Log.d(PREPARATION_TAG, "Seed a quiz for the '${course.name}' course.")
+        val testQuizList = seedQuizzes(courseId = course.id, quizzes = 1, withDescription = true, teacherToken = teacher.token, published = true)
+        val quiz = testQuizList.quizList[0]
+        val quizTitle = quiz.title
+        val quizDescription = quiz.description
+
         Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
         tokenLogin(teacher)
         dashboardPage.waitForRender()
@@ -163,45 +170,34 @@ class QuizE2ETest: TeacherTest() {
         dashboardPage.openCourse(course.name)
         courseBrowserPage.openQuizzesTab()
 
-        Log.d(PREPARATION_TAG, "Seed a quiz for the '${course.name}' course.")
-        val testQuizList = seedQuizzes(courseId = course.id, quizzes = 1, withDescription = true, teacherToken = teacher.token, published = true)
+        Log.d(STEP_TAG, "Click on the quiz: '$quizTitle'.")
+        quizListPage.clickQuiz(quizTitle)
 
-        Log.d(STEP_TAG, "Refresh the page.")
-        quizListPage.refresh()
-
-        val quiz = testQuizList.quizList[0]
-        Log.d(STEP_TAG, "Click on the quiz: '${quiz.title}'.")
-        quizListPage.clickQuiz(quiz.title)
-
-        val quizTitle = "My Custom Quiz Title"
-        val quizDescription = "This is my custom quiz description"
-        Log.d(STEP_TAG, "Open 'Edit' page and edit the quiz description to: '$quizDescription' and title to: '$quizTitle'.")
+        val newQuizTitle = "My Custom Quiz Title"
+        val newQuizDescription = "This is my custom quiz description"
+        Log.d(STEP_TAG, "Open 'Edit' page and edit the quiz description to: '$newQuizDescription' and title to: '$newQuizTitle'.")
         quizDetailsPage.openEditPage()
-        editQuizDetailsPage.editQuizDescription(quizDescription)
-        editQuizDetailsPage.editQuizTitle(quizTitle)
+        editQuizDetailsPage.editQuizDescription(newQuizDescription)
+        editQuizDetailsPage.editQuizTitle(newQuizTitle)
 
-        Log.d(ASSERTION_TAG, "Assert that the quiz name and description have been changed to: '$quizTitle' and '$quizDescription'.")
-        quizDetailsPage.assertQuizNameChanged(quizTitle)
-        quizDetailsPage.assertQuizDescriptionChanged(quizDescription)
+        Log.d(ASSERTION_TAG, "Assert that the quiz title and description have been changed FROM: '$quizTitle' and '$quizDescription' TO: '$newQuizTitle' and '$newQuizDescription'.")
+        quizDetailsPage.assertQuizTitleNotDisplayed(quizTitle)
+        quizDetailsPage.assertQuizDescriptionNotDisplayed(quizDescription)
+        quizDetailsPage.assertQuizTitleDisplayed(newQuizTitle)
+        quizDetailsPage.assertQuizDescriptionDisplayed(newQuizDescription)
 
         Log.d(STEP_TAG, "Open preview page.")
         quizDetailsPage.openPreviewPage()
 
-        Log.d(ASSERTION_TAG, "Assert that the preview loaded and displays the edited quiz title: '$quizTitle' and the edited quiz description: '$quizDescription'.")
-        quizPreviewPage.assertPreviewLoaded()
-        quizPreviewPage.assertQuizTitleDisplayed(quizTitle)
-        quizPreviewPage.assertQuizDescriptionDisplayed(quizDescription)
+        Log.d(ASSERTION_TAG, "Assert that the preview loaded and displays the edited quiz title: '$newQuizTitle' and the edited quiz description: '$newQuizDescription'.")
+        quizPreviewPage.assertPreviewDisplayed(newQuizTitle, newQuizDescription)
 
-        Log.d(STEP_TAG, "Go back to Quiz Details page.")
+        Log.d(STEP_TAG, "Go back to Quiz Details page and open Due Dates section.")
         Espresso.pressBack()
-
-        Log.d(STEP_TAG, "Open Due Dates section.")
         quizDetailsPage.openAllDatesPage()
 
-        Log.d(STEP_TAG, "Click the pencil/edit icon to open the edit page.")
+        Log.d(STEP_TAG, "Click the pencil/edit icon to open the edit page and set due date to 'May 15, 2025 at 10:30 AM' for the first due date.")
         assignmentDueDatesPage.openEditPage()
-
-        Log.d(STEP_TAG, "Set due date and time for the first due date.")
         editQuizDetailsPage.clickEditDueDate()
         editQuizDetailsPage.editDate(2025, 5, 15)
         editQuizDetailsPage.clickEditDueTime()
@@ -215,16 +211,14 @@ class QuizE2ETest: TeacherTest() {
         Log.d(ASSERTION_TAG, "Assert that another new due date override has been created.")
         editQuizDetailsPage.assertNewOverrideCreated()
 
-        Log.d(STEP_TAG, "Set due date and time for the second override.")
+        Log.d(STEP_TAG, "Set due date to 'Jun 20, 2025 at 2:45 PM' for the second override.")
         editQuizDetailsPage.clickEditDueDate(1)
         editQuizDetailsPage.editDate(2025, 6, 20)
         editQuizDetailsPage.clickEditDueTime(1)
         editQuizDetailsPage.editTime(14, 45)
 
-        Log.d(STEP_TAG, "Save the quiz after creating 2 due dates.")
+        Log.d(STEP_TAG, "Save the quiz after creating 2 due dates and refresh the page.")
         editQuizDetailsPage.saveQuiz()
-
-        Log.d(STEP_TAG, "Refresh the Due Dates page.")
         refresh()
 
         Log.d(ASSERTION_TAG, "Assert that 2 due dates are visible on the Due Dates page.")
@@ -247,16 +241,12 @@ class QuizE2ETest: TeacherTest() {
         Log.d(STEP_TAG, "Open Due Dates section again.")
         quizDetailsPage.openAllDatesPage()
 
-        Log.d(STEP_TAG, "Click the pencil/edit icon to open the edit page.")
+        Log.d(STEP_TAG, "Click the pencil/edit icon to open the edit page and remove the second due date ('Jun 20, 2025 at 2:45 PM').")
         assignmentDueDatesPage.openEditPage()
-
-        Log.d(STEP_TAG, "Remove the second due date.")
         editQuizDetailsPage.removeSecondOverride()
 
-        Log.d(STEP_TAG, "Save the quiz after removing the second due date.")
+        Log.d(STEP_TAG, "Save the quiz after removing the second due date and refresh the page.")
         editQuizDetailsPage.saveQuiz()
-
-        Log.d(STEP_TAG, "Refresh the Due Dates page.")
         refresh()
 
         Log.d(ASSERTION_TAG, "Assert that only 1 due date is visible on the Due Dates page.")

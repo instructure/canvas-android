@@ -16,6 +16,8 @@
 package com.instructure.teacher.ui.pages.classic
 
 import androidx.test.InstrumentationRegistry
+import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.sugar.Web.onWebView
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
@@ -45,6 +47,7 @@ import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withText
 import com.instructure.espresso.swipeDown
 import com.instructure.teacher.R
+import org.hamcrest.Matchers
 import org.hamcrest.Matchers.containsString
 
 /**
@@ -195,25 +198,48 @@ class QuizDetailsPage(val moduleItemInteractions: ModuleItemInteractions) : Base
     }
 
     /**
-     * Asserts that the quiz name has changed to the specified new quiz name.
+     * Asserts that the quiz title is displayed with the specified text.
      *
-     * @param newQuizName The new quiz name to assert.
+     * @param quizTitle The quiz title to assert.
      */
-    fun assertQuizNameChanged(newQuizName: String) {
-        quizTitleTextView.assertHasText(newQuizName)
+    fun assertQuizTitleDisplayed(quizTitle: String) {
+        quizTitleTextView.assertHasText(quizTitle)
     }
 
     /**
-     * Asserts that the quiz description has changed to the specified new description.
+     * Asserts that the quiz description is displayed with the specified text.
      *
-     * @param newDescription The new description to assert.
+     * @param description The description to assert.
      */
-    fun assertQuizDescriptionChanged(newDescription: String) {
+    fun assertQuizDescriptionDisplayed(description: String) {
         scrollTo(R.id.contentWebView)
         instructionsWebView.assertVisible()
         onWebView()
             .withElement(findElement(Locator.TAG_NAME, "body"))
-            .check(webMatches(getText(), containsString(newDescription)))
+            .check(webMatches(getText(), containsString(description)))
+    }
+
+    /**
+     * Asserts that the quiz title is NOT displayed with the specified text.
+     *
+     * @param quizTitle The quiz title that should not be displayed.
+     */
+    fun assertQuizTitleNotDisplayed(quizTitle: String) {
+        onView(withId(R.id.quizTitleTextView))
+            .check(ViewAssertions.matches(Matchers.not(ViewMatchers.withText(quizTitle))))
+    }
+
+    /**
+     * Asserts that the quiz description is NOT displayed with the specified text.
+     *
+     * @param description The description that should not be displayed.
+     */
+    fun assertQuizDescriptionNotDisplayed(description: String?) {
+        scrollTo(R.id.contentWebView)
+        instructionsWebView.assertVisible()
+        onWebView()
+            .withElement(findElement(Locator.TAG_NAME, "body"))
+            .check(webMatches(getText(), Matchers.not(containsString(description))))
     }
 
     /**
