@@ -228,4 +228,96 @@ class BookmarksE2ETest : StudentComposeTest() {
         assert(homeScreenShortcut.exists()) { "Expected to be on system home screen with bookmark shortcut visible, but it was not found." }
     }
 
+    @E2E
+    @Test
+    @TestMetaData(Priority.BUG_CASE, FeatureCategory.BOOKMARKS, TestCategory.E2E)
+    fun testBookmarkAssignmentFromTodoAndNotificationsE2E() {
+
+        //Bug Ticket: MBL-19497
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+
+        Log.d(PREPARATION_TAG, "Preparing first assignment which will appear in the ToDo list.")
+        val assignment = AssignmentsApi.createAssignment(course.id, teacher.token, assignmentName = "important title", gradingType = GradingType.POINTS, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
+
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
+        tokenLogin(student)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Navigate to 'To Do' page.")
+        dashboardPage.clickTodoTab()
+
+        Log.d(ASSERTION_TAG, "Assert that '${assignment.name}' assignment is displayed in the ToDo list.")
+        toDoListPage.assertItemDisplayed(assignment.name)
+
+        Log.d(STEP_TAG, "Click on the assignment: '${assignment.name}' from the ToDo list.")
+        toDoListPage.clickOnItem(assignment.name)
+
+        val todoBookmarkName = "Todo Assignment Bookmark"
+        Log.d(STEP_TAG, "Add a new bookmark with name: '$todoBookmarkName' from the assignment details page.")
+        Thread.sleep(1000) //Temporary sleep to wait for the assignment details to load properly.
+        assignmentDetailsPage.addBookmark(todoBookmarkName)
+
+        Log.d(STEP_TAG, "Navigate back to Dashboard page.")
+        pressBackButton(2)
+
+        Log.d(STEP_TAG, "Click on the 'Bookmarks' menu within the left side menu to open the Bookmarks page.")
+        leftSideNavigationDrawerPage.clickBookmarksMenu()
+
+        Log.d(ASSERTION_TAG, "Assert if the newly created bookmark: '$todoBookmarkName' has displayed.")
+        bookmarkPage.assertBookmarkDisplayed(todoBookmarkName)
+
+        Log.d(STEP_TAG, "Click on '$todoBookmarkName' bookmark.")
+        bookmarkPage.clickBookmark(todoBookmarkName)
+
+        Log.d(ASSERTION_TAG, "Assert if the '$todoBookmarkName' bookmark is navigating to the Assignment Details page with correct assignment.")
+        assignmentDetailsPage.assertAssignmentTitle(assignment.name)
+        assignmentDetailsPage.assertAssignmentDetails(assignment)
+
+        Log.d(STEP_TAG, "Navigate back to the Dashboard page.")
+        pressBackButton(2)
+
+        Log.d(STEP_TAG, "Navigate to 'Notifications' page.")
+        dashboardPage.clickNotificationsTab()
+
+        Log.d(ASSERTION_TAG, "Assert that the notification about assignment: '${assignment.name}' is displayed.")
+        notificationPage.assertNotificationDisplayed(assignment.name)
+
+        Log.d(STEP_TAG, "Click on the notification about assignment: '${assignment.name}'.")
+        notificationPage.clickNotification(assignment.name)
+
+        val notificationBookmarkName = "Notification Assignment Bookmark"
+        Log.d(STEP_TAG, "Add a new bookmark with name: '$notificationBookmarkName' from the assignment details page.")
+        assignmentDetailsPage.addBookmark(notificationBookmarkName)
+
+        Log.d(STEP_TAG, "Navigate back to Dashboard page.")
+        pressBackButton(2)
+
+        Log.d(STEP_TAG, "Click on the 'Bookmarks' menu within the left side menu to open the Bookmarks page.")
+        leftSideNavigationDrawerPage.clickBookmarksMenu()
+
+        Log.d(ASSERTION_TAG, "Assert if both bookmarks are displayed.")
+        bookmarkPage.assertBookmarkDisplayed(todoBookmarkName)
+        bookmarkPage.assertBookmarkDisplayed(notificationBookmarkName)
+
+        Log.d(STEP_TAG, "Click on '$notificationBookmarkName' bookmark.")
+        bookmarkPage.clickBookmark(notificationBookmarkName)
+
+        Log.d(ASSERTION_TAG, "Assert if the '$notificationBookmarkName' bookmark is navigating to the Assignment Details page with correct assignment.")
+        assignmentDetailsPage.assertAssignmentTitle(assignment.name)
+
+        Log.d(STEP_TAG, "Navigate back to the Bookmark List page.")
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG, "Delete both bookmarks: '$todoBookmarkName' and '$notificationBookmarkName'.")
+        bookmarkPage.deleteBookmark(todoBookmarkName)
+        bookmarkPage.deleteBookmark(notificationBookmarkName)
+
+        Log.d(ASSERTION_TAG, "Assert that empty view is displayed, so both bookmarks have been deleted.")
+        bookmarkPage.assertEmptyView()
+    }
+
 }
