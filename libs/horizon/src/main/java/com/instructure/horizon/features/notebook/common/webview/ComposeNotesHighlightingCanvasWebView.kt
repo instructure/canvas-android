@@ -16,7 +16,6 @@
  */
 package com.instructure.horizon.features.notebook.common.webview
 
-import android.util.Log
 import android.webkit.WebView
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.fillMaxSize
@@ -118,7 +117,6 @@ fun ComposeNotesHighlightingCanvasWebView(
                 if (yPosition != null && !scrollState.isScrollInProgress.orDefault(true)) {
                     composeScope.launch {
                         val targetScroll = (yPosition.toInt().toPx).coerceIn(0, scrollState.maxValue)
-                        Log.d("NotesHighlightingCanvasWebView", "Scrolling to $targetScroll")
                         scrollState.animateScrollTo(targetScroll)
                     }
                 }
