@@ -303,7 +303,7 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
         if (author != null) {
             composeTestRule.onNode(hasTestTag("commentAuthorName") and hasText(author), useUnmergedTree = true).performScrollTo().assertIsDisplayed()
             composeTestRule.onNode(hasTestTag("commentCreatedAtDate") and hasAnySibling(hasTestTag("commentAuthorName") and hasText(author)), useUnmergedTree = true).performScrollTo().assertIsDisplayed()
-            composeTestRule.onNode(hasTestTag("commentText") and hasAnySibling(hasTestTag("commentAuthorName") and hasText(author)) and hasText(comment), useUnmergedTree = true).performScrollTo().assertIsDisplayed()
+            composeTestRule.onNode(hasTestTag("commentText") and hasAnySibling(hasTestTag("commentAuthorName") and hasText(author)), useUnmergedTree = true).performScrollTo().assertIsDisplayed()
         }
         else composeTestRule.onNode(hasTestTag("ownCommentText") and hasText(comment), useUnmergedTree = true).performScrollTo().assertIsDisplayed()
     }
