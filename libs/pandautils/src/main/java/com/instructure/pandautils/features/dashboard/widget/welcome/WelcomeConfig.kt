@@ -14,31 +14,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.features.dashboard.customize
+package com.instructure.pandautils.features.dashboard.widget.welcome
 
+import com.google.gson.Gson
+import com.instructure.pandautils.features.dashboard.widget.SettingDefinition
 import com.instructure.pandautils.features.dashboard.widget.SettingType
+import com.instructure.pandautils.features.dashboard.widget.WidgetConfig
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 
-data class WidgetSettingItem(
-    val key: String,
-    val type: SettingType,
-    val value: Any
-)
+data class WelcomeConfig(
+    override val widgetId: String = WidgetMetadata.WIDGET_ID_WELCOME,
+    val showGreeting: Boolean = true
+) : WidgetConfig {
+    override fun toJson(): String = Gson().toJson(this)
 
-data class WidgetItem(
-    val metadata: WidgetMetadata,
-    val displayName: String,
-    val settings: List<WidgetSettingItem> = emptyList()
-)
+    override fun getSettingDefinitions() = listOf(
+        SettingDefinition(
+            key = "showGreeting",
+            type = SettingType.BOOLEAN
+        )
+    )
 
-data class CustomizeDashboardUiState(
-    val widgets: List<WidgetItem> = emptyList(),
-    val loading: Boolean = true,
-    val error: String? = null,
-    val isDashboardRedesignEnabled: Boolean = false,
-    val onMoveUp: (String) -> Unit = {},
-    val onMoveDown: (String) -> Unit = {},
-    val onToggleVisibility: (String) -> Unit = {},
-    val onToggleDashboardRedesign: (Boolean) -> Unit = {},
-    val onUpdateSetting: (widgetId: String, key: String, value: Any) -> Unit = { _, _, _ -> }
-)
+    companion object {
+        fun fromJson(jsonString: String): WelcomeConfig {
+            return Gson().fromJson(jsonString, WelcomeConfig::class.java)
+        }
+    }
+}

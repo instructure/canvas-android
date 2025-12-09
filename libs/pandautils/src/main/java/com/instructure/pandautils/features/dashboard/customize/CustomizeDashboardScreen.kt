@@ -50,6 +50,7 @@ import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -69,12 +70,14 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
+import com.instructure.pandautils.compose.composables.CanvasDivider
 import com.instructure.pandautils.compose.composables.CanvasSwitch
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
+import com.instructure.pandautils.features.dashboard.widget.SettingType
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.utils.ThemePrefs
 import kotlinx.coroutines.GlobalScope
@@ -194,6 +197,7 @@ private fun WidgetList(
                 onMoveUp = { uiState.onMoveUp(widgetItem.metadata.id) },
                 onMoveDown = { uiState.onMoveDown(widgetItem.metadata.id) },
                 onToggleVisibility = { uiState.onToggleVisibility(widgetItem.metadata.id) },
+                onUpdateSetting = uiState.onUpdateSetting,
                 modifier = Modifier.animateItem()
             )
         }
@@ -208,9 +212,10 @@ private fun WidgetListItem(
     onMoveUp: () -> Unit,
     onMoveDown: () -> Unit,
     onToggleVisibility: () -> Unit,
+    onUpdateSetting: (widgetId: String, key: String, value: Any) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val hasSettings = widgetItem.config?.getSettingDefinitions()?.isNotEmpty() == true
+    val hasSettings = widgetItem.settings.isNotEmpty()
 
     Column(modifier = modifier) {
         Card(
@@ -305,17 +310,87 @@ private fun WidgetListItem(
                     modifier = Modifier.testTag("visibilitySwitch_${widgetItem.metadata.id}")
                 )
             }
+            if (hasSettings) {
+                CanvasDivider(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                )
+
+                WidgetSettingsContent(
+                    widgetId = widgetItem.metadata.id,
+                    settings = widgetItem.settings,
+                    onUpdateSetting = onUpdateSetting,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                )
+            }
         }
 
-        if (hasSettings) {
-            HorizontalDivider(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 0.5.dp),
-                thickness = 0.5.dp,
-                color = colorResource(R.color.borderMedium)
-            )
+    }
+}
+
+@Composable
+private fun WidgetSettingsContent(
+    widgetId: String,
+    settings: List<WidgetSettingItem>,
+    onUpdateSetting: (widgetId: String, key: String, value: Any) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier) {
+        settings.forEach { setting ->
+            when (setting.type) {
+                SettingType.BOOLEAN -> {
+                    BooleanSettingRow(
+                        label = getSettingLabel(setting.key),
+                        checked = setting.value as? Boolean ?: false,
+                        onCheckedChange = { newValue ->
+                            onUpdateSetting(widgetId, setting.key, newValue)
+                        }
+                    )
+                }
+                SettingType.COLOR -> {
+                    // TODO: Implement color setting row
+                }
+            }
         }
+    }
+}
+
+@Composable
+private fun getSettingLabel(key: String): String {
+    return when (key) {
+        "showGreeting" -> stringResource(R.string.widget_setting_show_greeting)
+        else -> key
+    }
+}
+
+@Composable
+private fun BooleanSettingRow(
+    label: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = label,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Medium,
+            lineHeight = 21.sp,
+            color = colorResource(R.color.textDarkest)
+        )
+
+        CanvasSwitch(
+            checked = checked,
+            onCheckedChange = onCheckedChange
+        )
     }
 }
 
@@ -533,8 +608,14 @@ private fun CustomizeDashboardScreenPreview() {
                             position = 0,
                             isVisible = true
                         ),
-                        config = null,
-                        displayName = "Hello, [Riley]"
+                        displayName = "Hello, [Riley]",
+                        settings = listOf(
+                            WidgetSettingItem(
+                                key = "showGreeting",
+                                value = false,
+                                type = SettingType.BOOLEAN
+                            )
+                        )
                     )
                 ),
                 loading = false,

@@ -2367,4 +2367,5 @@
     <string name="switched_back_message">Thanks for trying the new dashboard! Could you tell us why you switched back?</string>
     <string name="what_could_we_improve">What could we improve?</string>
     <string name="skip">Skip</string>
+    <string name="widget_setting_show_greeting">Show greeting</string>
 </resources>

@@ -25,14 +25,19 @@ import com.instructure.canvasapi2.utils.RemoteConfigPrefs
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
+import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetConfigUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetMetadataUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.SwapWidgetPositionsUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.UpdateWidgetVisibilityUseCase
+import com.instructure.pandautils.features.dashboard.widget.usecase.UpdateWidgetSettingUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -42,6 +47,8 @@ class CustomizeDashboardViewModel @Inject constructor(
     private val observeWidgetMetadataUseCase: ObserveWidgetMetadataUseCase,
     private val swapWidgetPositionsUseCase: SwapWidgetPositionsUseCase,
     private val updateWidgetVisibilityUseCase: UpdateWidgetVisibilityUseCase,
+    private val observeWidgetConfigUseCase: ObserveWidgetConfigUseCase,
+    private val updateWidgetSettingUseCase: UpdateWidgetSettingUseCase,
     private val resources: Resources,
     private val apiPrefs: ApiPrefs,
     private val remoteConfigUtils: RemoteConfigUtils,
@@ -53,7 +60,8 @@ class CustomizeDashboardViewModel @Inject constructor(
             onMoveUp = this::moveWidgetUp,
             onMoveDown = this::moveWidgetDown,
             onToggleVisibility = this::toggleVisibility,
-            onToggleDashboardRedesign = this::toggleDashboardRedesign
+            onToggleDashboardRedesign = this::toggleDashboardRedesign,
+            onUpdateSetting = this::updateSetting
         )
     )
     val uiState: StateFlow<CustomizeDashboardUiState> = _uiState.asStateFlow()
@@ -68,24 +76,22 @@ class CustomizeDashboardViewModel @Inject constructor(
         _uiState.update { it.copy(isDashboardRedesignEnabled = isDashboardRedesignEnabled) }
     }
 
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     private fun loadWidgets() {
         viewModelScope.launch {
             observeWidgetMetadataUseCase(Unit)
+                .map { metadata ->
+                    metadata
+                        .filter { it.isEditable }
+                        .sortedBy { it.position }
+                }
+                .flatMapLatest { editableMetadata ->
+                    combineWidgetsWithConfigs(editableMetadata)
+                }
                 .catch { e ->
                     _uiState.update { it.copy(loading = false, error = e.message) }
                 }
-                .collect { metadata ->
-                    val widgetItems = metadata
-                        .filter { it.isEditable }
-                        .sortedBy { it.position }
-                        .map {
-                            WidgetItem(
-                                metadata = it,
-                                config = null,
-                                displayName = getDisplayName(it.id)
-                            )
-                        }
-
+                .collect { widgetItems ->
                     _uiState.update {
                         it.copy(
                             widgets = widgetItems,
@@ -96,6 +102,30 @@ class CustomizeDashboardViewModel @Inject constructor(
                 }
         }
     }
+
+    private fun combineWidgetsWithConfigs(metadata: List<WidgetMetadata>) =
+        combine(
+            metadata.map { meta ->
+                observeWidgetConfigUseCase(meta.id)
+                    .map { settings ->
+                        WidgetItem(
+                            metadata = meta,
+                            displayName = getDisplayName(meta.id),
+                            settings = settings
+                        )
+                    }
+                    .catch { e ->
+                        e.printStackTrace()
+                        emit(
+                            WidgetItem(
+                                metadata = meta,
+                                displayName = getDisplayName(meta.id),
+                                settings = emptyList()
+                            )
+                        )
+                    }
+            }
+        ) { it.toList() }
 
     private fun moveWidgetUp(widgetId: String) {
         val widgets = _uiState.value.widgets
@@ -148,6 +178,18 @@ class CustomizeDashboardViewModel @Inject constructor(
         return when (widgetId) {
             WidgetMetadata.WIDGET_ID_WELCOME -> resources.getString(R.string.widget_hello, apiPrefs.user?.shortName)
             else -> widgetId
+        }
+    }
+
+    private fun updateSetting(widgetId: String, key: String, value: Any) {
+        viewModelScope.launch {
+            updateWidgetSettingUseCase(
+                UpdateWidgetSettingUseCase.Params(
+                    widgetId = widgetId,
+                    key = key,
+                    value = value
+                )
+            )
         }
     }
 }
