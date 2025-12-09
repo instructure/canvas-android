@@ -2360,4 +2360,11 @@
     <string name="move_up">Move up</string>
     <string name="move_down">Move down</string>
     <string name="no_widgets">No widgets available</string>
+    <string name="changing_dashboard_layout">Changing dashboard layout</string>
+    <string name="changing_dashboard_layout_message">To change the dashboard layout you have to restart the application</string>
+    <string name="restart_now">Restart now</string>
+    <string name="switched_back">Switched back?</string>
+    <string name="switched_back_message">Thanks for trying the new dashboard! Could you tell us why you switched back?</string>
+    <string name="what_could_we_improve">What could we improve?</string>
+    <string name="skip">Skip</string>
 </resources>

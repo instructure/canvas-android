@@ -29,4 +29,6 @@ interface DashboardRouter {
     fun routeToSyncProgress()
 
     fun routeToCustomizeDashboard()
+
+    fun restartApp()
 }

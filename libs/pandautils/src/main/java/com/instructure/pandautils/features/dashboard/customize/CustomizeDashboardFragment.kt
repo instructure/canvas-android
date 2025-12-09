@@ -8,12 +8,17 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.compose.CanvasTheme
+import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class CustomizeDashboardFragment : Fragment() {
+
+    @Inject
+    lateinit var router: DashboardRouter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -25,6 +30,7 @@ class CustomizeDashboardFragment : Fragment() {
             setContent {
                 CanvasTheme {
                     CustomizeDashboardScreen(
+                        router = router,
                         onNavigateBack = { requireActivity().onBackPressed() }
                     )
                 }

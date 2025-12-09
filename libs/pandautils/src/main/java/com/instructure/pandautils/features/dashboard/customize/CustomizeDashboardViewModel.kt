@@ -97,7 +97,7 @@ class CustomizeDashboardViewModel @Inject constructor(
         }
     }
 
-    fun moveWidgetUp(widgetId: String) {
+    private fun moveWidgetUp(widgetId: String) {
         val widgets = _uiState.value.widgets
         val currentIndex = widgets.indexOfFirst { it.metadata.id == widgetId }
 
@@ -113,7 +113,7 @@ class CustomizeDashboardViewModel @Inject constructor(
         }
     }
 
-    fun moveWidgetDown(widgetId: String) {
+    private fun moveWidgetDown(widgetId: String) {
         val widgets = _uiState.value.widgets
         val currentIndex = widgets.indexOfFirst { it.metadata.id == widgetId }
 
@@ -129,7 +129,7 @@ class CustomizeDashboardViewModel @Inject constructor(
         }
     }
 
-    fun toggleVisibility(widgetId: String) {
+    private fun toggleVisibility(widgetId: String) {
         val widgetItem = _uiState.value.widgets.firstOrNull { it.metadata.id == widgetId } ?: return
 
         viewModelScope.launch {
@@ -139,14 +139,14 @@ class CustomizeDashboardViewModel @Inject constructor(
         }
     }
 
-    fun toggleDashboardRedesign(enabled: Boolean) {
+    private fun toggleDashboardRedesign(enabled: Boolean) {
         remoteConfigPrefs.putString(RemoteConfigParam.DASHBOARD_REDESIGN.rc_name, enabled.toString())
         _uiState.update { it.copy(isDashboardRedesignEnabled = enabled) }
     }
 
     private fun getDisplayName(widgetId: String): String {
         return when (widgetId) {
-            WidgetMetadata.WIDGET_ID_WELCOME -> resources.getString(R.string.widget_hello, ApiPrefs.user?.shortName)
+            WidgetMetadata.WIDGET_ID_WELCOME -> resources.getString(R.string.widget_hello, apiPrefs.user?.shortName)
             else -> widgetId
         }
     }

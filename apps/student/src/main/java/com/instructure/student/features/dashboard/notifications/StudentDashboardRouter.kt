@@ -16,15 +16,19 @@
 
 package com.instructure.student.features.dashboard.notifications
 
+import android.content.Intent
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
 import com.instructure.pandautils.features.offline.sync.progress.SyncProgressFragment
 import com.instructure.pandautils.features.dashboard.customize.CustomizeDashboardFragment
+import com.instructure.student.activity.LoginActivity
 import com.instructure.student.features.files.list.FileListFragment
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsRepositoryFragment
 import com.instructure.student.router.RouteMatcher
+import com.jakewharton.processphoenix.ProcessPhoenix
 
 class StudentDashboardRouter(private val activity: FragmentActivity) : DashboardRouter {
 
@@ -67,5 +71,11 @@ class StudentDashboardRouter(private val activity: FragmentActivity) : Dashboard
             activity,
             CustomizeDashboardFragment.makeRoute()
         )
+    }
+
+    override fun restartApp() {
+        val startupIntent = Intent(ContextKeeper.appContext, LoginActivity::class.java)
+        startupIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+        ProcessPhoenix.triggerRebirth(activity, startupIntent)
     }
 }

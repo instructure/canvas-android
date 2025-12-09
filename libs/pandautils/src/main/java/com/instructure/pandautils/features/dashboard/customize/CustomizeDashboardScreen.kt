@@ -17,7 +17,6 @@
 package com.instructure.pandautils.features.dashboard.customize
 
 import android.content.res.Configuration
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,18 +33,26 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -58,6 +65,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
@@ -66,23 +74,28 @@ import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
+import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.utils.ThemePrefs
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 @Composable
-fun CustomizeDashboardScreen(onNavigateBack: () -> Unit) {
+fun CustomizeDashboardScreen(router: DashboardRouter, onNavigateBack: () -> Unit) {
     val viewModel: CustomizeDashboardViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
 
     CustomizeDashboardScreenContent(
         uiState = uiState,
-        onNavigateBack = onNavigateBack
+        onNavigateBack = onNavigateBack,
+        router = router
     )
 }
 
 @Composable
 fun CustomizeDashboardScreenContent(
     uiState: CustomizeDashboardUiState,
+    router: DashboardRouter,
     onNavigateBack: () -> Unit
 ) {
     Scaffold(
@@ -135,6 +148,7 @@ fun CustomizeDashboardScreenContent(
                 else -> {
                     WidgetList(
                         uiState = uiState,
+                        router = router,
                         modifier = Modifier.fillMaxSize()
                     )
                 }
@@ -146,6 +160,7 @@ fun CustomizeDashboardScreenContent(
 @Composable
 private fun WidgetList(
     uiState: CustomizeDashboardUiState,
+    router: DashboardRouter,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -154,6 +169,7 @@ private fun WidgetList(
     ) {
         item {
             FeatureFlagToggle(
+                router = router,
                 isEnabled = uiState.isDashboardRedesignEnabled,
                 onToggle = uiState.onToggleDashboardRedesign
             )
@@ -304,7 +320,10 @@ private fun WidgetListItem(
 }
 
 @Composable
-private fun FeatureFlagToggle(isEnabled: Boolean, onToggle: (Boolean) -> Unit) {
+private fun FeatureFlagToggle(router: DashboardRouter, isEnabled: Boolean, onToggle: (Boolean) -> Unit) {
+    var showConfirmationDialog by remember { mutableStateOf(false) }
+    var showSurveyDialog by remember { mutableStateOf(false) }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -322,9 +341,181 @@ private fun FeatureFlagToggle(isEnabled: Boolean, onToggle: (Boolean) -> Unit) {
 
         CanvasSwitch(
             checked = isEnabled,
-            onCheckedChange = onToggle
+            onCheckedChange = { newValue ->
+                if (isEnabled && !newValue) {
+                    showConfirmationDialog = true
+                } else {
+                    onToggle(newValue)
+                }
+            }
         )
     }
+
+    if (showConfirmationDialog) {
+        ConfirmationDialog(
+            onConfirm = {
+                onToggle(false)
+                showConfirmationDialog = false
+                showSurveyDialog = true
+            },
+            onDismiss = {
+                showConfirmationDialog = false
+            }
+        )
+    }
+
+    if (showSurveyDialog) {
+        SurveyDialog(
+            router = router,
+            onSubmit = { feedback ->
+                // TODO: Send feedback to backend
+                showSurveyDialog = false
+            },
+            onSkip = {
+                showSurveyDialog = false
+            }
+        )
+    }
+}
+
+@Composable
+private fun ConfirmationDialog(
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        containerColor = colorResource(R.color.backgroundLightest),
+        textContentColor = colorResource(R.color.textDarkest),
+        titleContentColor = colorResource(R.color.textDarkest),
+        onDismissRequest = onDismiss,
+        title = {
+            Text(
+                text = stringResource(R.string.changing_dashboard_layout)
+            )
+        },
+        text = {
+            Text(
+                text = stringResource(R.string.changing_dashboard_layout_message)
+            )
+        },
+        confirmButton = {
+            TextButton(
+                onClick = onConfirm,
+                colors = ButtonDefaults.textButtonColors(
+                    contentColor = Color(ThemePrefs.brandColor)
+                )
+            ) {
+                Text(
+                    text = stringResource(R.string.restart_now)
+                )
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = onDismiss,
+                colors = ButtonDefaults.textButtonColors(
+                    contentColor = Color(ThemePrefs.brandColor)
+                )
+            ) {
+                Text(
+                    text = stringResource(R.string.cancel)
+                )
+            }
+        }
+    )
+}
+
+@Composable
+private fun SurveyDialog(
+    router: DashboardRouter,
+    onSubmit: (String) -> Unit,
+    onSkip: () -> Unit
+) {
+    var feedback by remember { mutableStateOf("") }
+
+    fun restartApp() {
+        GlobalScope.launch {
+            try {
+                router.restartApp()
+            } catch (e: Exception) {
+                // No-op
+            }
+        }
+    }
+
+    AlertDialog(
+        containerColor = colorResource(R.color.backgroundLightest),
+        textContentColor = colorResource(R.color.textDarkest),
+        titleContentColor = colorResource(R.color.textDarkest),
+        onDismissRequest = {
+            onSkip()
+            restartApp()
+        },
+        title = {
+            Text(
+                text = stringResource(R.string.switched_back)
+            )
+        },
+        text = {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Text(
+                    text = stringResource(R.string.switched_back_message),
+                )
+                OutlinedTextField(
+                    value = feedback,
+                    onValueChange = { feedback = it },
+                    label = {
+                        Text(
+                            text = stringResource(R.string.what_could_we_improve),
+                        )
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(8.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedTextColor = colorResource(R.color.textDarkest),
+                        focusedLabelColor = colorResource(R.color.textDark),
+                        focusedBorderColor = colorResource(R.color.borderMedium),
+                        focusedPlaceholderColor = colorResource(R.color.textDark),
+                        unfocusedPlaceholderColor = colorResource(R.color.textDark)
+                    )
+                )
+            }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = {
+                    onSubmit(feedback)
+                    restartApp()
+                },
+                enabled = feedback.isNotBlank(),
+                colors = ButtonDefaults.textButtonColors(
+                    contentColor = Color(ThemePrefs.brandColor),
+                    disabledContentColor = Color(ThemePrefs.brandColor).copy(alpha = 0.6f),
+                )
+            ) {
+                Text(
+                    text = stringResource(R.string.submit)
+                )
+            }
+        },
+        dismissButton = {
+            TextButton(
+                onClick = {
+                    onSkip()
+                    restartApp()
+                },
+                colors = ButtonDefaults.textButtonColors(
+                    contentColor = Color(ThemePrefs.brandColor),
+                )
+            ) {
+                Text(
+                    text = stringResource(R.string.skip)
+                )
+            }
+        }
+    )
 }
 
 @Preview(showBackground = true)
@@ -348,9 +539,46 @@ private fun CustomizeDashboardScreenPreview() {
                 ),
                 loading = false,
                 error = null,
-                isDashboardRedesignEnabled = true
+                isDashboardRedesignEnabled = true,
+                onToggleDashboardRedesign = {}
             ),
-            onNavigateBack = {}
+            onNavigateBack = {},
+            router = object : DashboardRouter {
+                override fun routeToGlobalAnnouncement(
+                    subject: String,
+                    message: String
+                ) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun routeToSubmissionDetails(
+                    canvasContext: CanvasContext,
+                    assignmentId: Long,
+                    attemptId: Long
+                ) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun routeToMyFiles(
+                    canvasContext: CanvasContext,
+                    folderId: Long
+                ) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun routeToSyncProgress() {
+                    TODO("Not yet implemented")
+                }
+
+                override fun routeToCustomizeDashboard() {
+                    TODO("Not yet implemented")
+                }
+
+                override fun restartApp() {
+                    TODO("Not yet implemented")
+                }
+
+            }
         )
     }
 }
