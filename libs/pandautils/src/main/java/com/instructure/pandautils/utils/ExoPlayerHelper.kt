@@ -19,6 +19,7 @@ package com.instructure.pandautils.utils
 import android.net.Uri
 import android.view.SurfaceView
 import androidx.annotation.OptIn
+import androidx.core.net.toUri
 import androidx.media3.common.C
 import androidx.media3.common.C.TRACK_TYPE_VIDEO
 import androidx.media3.common.MediaItem
@@ -28,6 +29,7 @@ import androidx.media3.common.Player
 import androidx.media3.common.Tracks
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.common.util.Util
+import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.dash.DashMediaSource
@@ -46,7 +48,6 @@ import androidx.media3.extractor.DefaultExtractorsFactory
 import androidx.media3.ui.PlayerView
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
-import androidx.core.net.toUri
 
 enum class ExoAgentState {
     IDLE,
@@ -255,12 +256,14 @@ class ExoAgent private constructor(val uri: Uri) {
         }
 
         private val DATA_SOURCE_FACTORY by lazy {
-            DefaultHttpDataSource.Factory()
+            val httpSourceFactory = DefaultHttpDataSource.Factory()
                 .setUserAgent(ApiPrefs.userAgent)
                 .setTransferListener(BANDWIDTH_METER)
                 .setConnectTimeoutMs(CONNECT_TIMEOUT)
                 .setReadTimeoutMs(READ_TIMEOUT)
                 .setAllowCrossProtocolRedirects(true)
+            DefaultDataSource.Factory(ContextKeeper.appContext, httpSourceFactory)
+                .setTransferListener(BANDWIDTH_METER)
         }
 
         private var agentInstances: HashMap<String, ExoAgent> = hashMapOf()
