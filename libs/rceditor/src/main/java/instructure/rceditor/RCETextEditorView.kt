@@ -21,6 +21,7 @@ import android.animation.Animator
 import android.animation.ObjectAnimator
 import android.app.Activity
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.DialogInterface
 import android.content.res.Resources
 import android.graphics.Color
@@ -31,7 +32,6 @@ import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
 import android.view.accessibility.AccessibilityEvent
 import android.webkit.URLUtil
@@ -63,7 +63,18 @@ class RCETextEditorView @JvmOverloads constructor(
 
     val html: String get() = binding.rceWebView.html.orEmpty()
 
-    private val fragmentManager get() = (context as? FragmentActivity)?.supportFragmentManager
+    private val fragmentManager get() = context.findFragmentActivity()?.supportFragmentManager
+
+    private fun Context.findFragmentActivity(): FragmentActivity? {
+        var context = this
+        while (context is ContextWrapper) {
+            if (context is FragmentActivity) {
+                return context
+            }
+            context = context.baseContext
+        }
+        return null
+    }
 
     // Let the fragments that use this view handle what to do when it's clicked
     var actionUploadImageCallback: (() -> Unit)? = null
