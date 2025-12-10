@@ -204,6 +204,7 @@ class CoursesWidgetViewModelTest {
     fun `courses are mapped to CourseCardItems correctly`() {
         setupDefaultMocks()
         val enrollment = Enrollment(
+            type = Enrollment.EnrollmentType.Student,
             computedCurrentGrade = "A",
             computedCurrentScore = 95.0
         )
@@ -232,9 +233,13 @@ class CoursesWidgetViewModelTest {
     }
 
     @Test
-    fun `grade is mapped as Letter when computedCurrentGrade is available`() {
+    fun `grade is mapped as Letter when currentGrade is available`() {
         setupDefaultMocks()
-        val enrollment = Enrollment(computedCurrentGrade = "B+", computedCurrentScore = 88.0)
+        val enrollment = Enrollment(
+            type = Enrollment.EnrollmentType.Student,
+            computedCurrentGrade = "B+",
+            computedCurrentScore = 88.0
+        )
         val course = Course(id = 1, name = "Course", isFavorite = true, enrollments = mutableListOf(enrollment))
         coEvery { loadFavoriteCoursesUseCase(any()) } returns listOf(course)
 
@@ -248,7 +253,10 @@ class CoursesWidgetViewModelTest {
     @Test
     fun `grade is mapped as Percentage when only score is available`() {
         setupDefaultMocks()
-        val enrollment = Enrollment(computedCurrentScore = 75.0)
+        val enrollment = Enrollment(
+            type = Enrollment.EnrollmentType.Student,
+            computedCurrentScore = 75.0
+        )
         val course = Course(id = 1, name = "Course", isFavorite = true, enrollments = mutableListOf(enrollment))
         coEvery { loadFavoriteCoursesUseCase(any()) } returns listOf(course)
 
@@ -262,7 +270,7 @@ class CoursesWidgetViewModelTest {
     @Test
     fun `grade is mapped as Locked when hideFinalGrades is true and no grade available`() {
         setupDefaultMocks()
-        val enrollment = Enrollment()
+        val enrollment = Enrollment(type = Enrollment.EnrollmentType.Student)
         val course = Course(
             id = 1,
             name = "Course",
@@ -279,7 +287,7 @@ class CoursesWidgetViewModelTest {
     }
 
     @Test
-    fun `grade is mapped as NotAvailable when no enrollment`() {
+    fun `grade is mapped as Hidden when no enrollment`() {
         setupDefaultMocks()
         val course = Course(id = 1, name = "Course", isFavorite = true)
         coEvery { loadFavoriteCoursesUseCase(any()) } returns listOf(course)
@@ -287,7 +295,7 @@ class CoursesWidgetViewModelTest {
         viewModel = createViewModel()
 
         val grade = viewModel.uiState.value.courses[0].grade
-        assertTrue(grade is GradeDisplay.NotAvailable)
+        assertTrue(grade is GradeDisplay.Hidden)
     }
 
     @Test

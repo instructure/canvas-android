@@ -30,11 +30,12 @@ class LoadFavoriteCoursesUseCase @Inject constructor(
 ) : BaseUseCase<LoadFavoriteCoursesParams, List<Course>>() {
 
     override suspend fun execute(params: LoadFavoriteCoursesParams): List<Course> {
-        val courses = courseRepository.getFavoriteCourses(params.forceRefresh).dataOrThrow
+        val courses = courseRepository.getCourses(params.forceRefresh).dataOrThrow
         val dashboardCards = courseRepository.getDashboardCards(params.forceRefresh).dataOrThrow
+        val dashboardCardIds = dashboardCards.map { it.id }.toSet()
 
         return courses
-            .filter { it.isFavorite }
+            .filter { it.isFavorite && dashboardCardIds.contains(it.id) }
             .sortedBy { course -> dashboardCards.find { it.id == course.id }?.position ?: Int.MAX_VALUE }
     }
 }

@@ -199,22 +199,18 @@ class CoursesWidgetViewModel @Inject constructor(
     }
 
     private fun mapGrade(course: Course): GradeDisplay {
-        val enrollment = course.enrollments?.firstOrNull()
+        val courseGrade = course.getCourseGrade(false)
 
         return when {
-            enrollment == null -> GradeDisplay.NotAvailable
-            enrollment.computedCurrentGrade == null && enrollment.computedCurrentScore == null -> {
-                if (course.hideFinalGrades) {
-                    GradeDisplay.Locked
-                } else {
-                    GradeDisplay.NotAvailable
-                }
-            }
-            enrollment.computedCurrentGrade != null -> GradeDisplay.Letter(enrollment.computedCurrentGrade!!)
-            else -> {
-                val score = enrollment.computedCurrentScore
+            courseGrade == null -> GradeDisplay.Hidden
+            courseGrade.isLocked -> GradeDisplay.Locked
+            courseGrade.noCurrentGrade -> GradeDisplay.NotAvailable
+            courseGrade.currentGrade != null -> GradeDisplay.Letter(courseGrade.currentGrade!!)
+            courseGrade.currentScore != null -> {
+                val score = courseGrade.currentScore
                 GradeDisplay.Percentage("${score?.toInt()}%")
             }
+            else -> GradeDisplay.NotAvailable
         }
     }
 

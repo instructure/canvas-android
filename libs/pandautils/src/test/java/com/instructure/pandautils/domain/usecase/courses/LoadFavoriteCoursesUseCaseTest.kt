@@ -58,7 +58,7 @@ class LoadFavoriteCoursesUseCaseTest {
             DashboardCard(id = 3, position = 1)
         )
 
-        coEvery { courseRepository.getFavoriteCourses(any()) } returns DataResult.Success(courses)
+        coEvery { courseRepository.getCourses(any()) } returns DataResult.Success(courses)
         coEvery { courseRepository.getDashboardCards(any()) } returns DataResult.Success(dashboardCards)
 
         val result = useCase(LoadFavoriteCoursesParams())
@@ -82,7 +82,7 @@ class LoadFavoriteCoursesUseCaseTest {
             DashboardCard(id = 3, position = 1)
         )
 
-        coEvery { courseRepository.getFavoriteCourses(any()) } returns DataResult.Success(courses)
+        coEvery { courseRepository.getCourses(any()) } returns DataResult.Success(courses)
         coEvery { courseRepository.getDashboardCards(any()) } returns DataResult.Success(dashboardCards)
 
         val result = useCase(LoadFavoriteCoursesParams())
@@ -94,7 +94,7 @@ class LoadFavoriteCoursesUseCaseTest {
     }
 
     @Test
-    fun `execute places courses without dashboard card at the end`() = runTest {
+    fun `execute excludes courses without dashboard card`() = runTest {
         val courses = listOf(
             Course(id = 1, name = "Course A", isFavorite = true),
             Course(id = 2, name = "Course B", isFavorite = true),
@@ -104,12 +104,12 @@ class LoadFavoriteCoursesUseCaseTest {
             DashboardCard(id = 2, position = 0)
         )
 
-        coEvery { courseRepository.getFavoriteCourses(any()) } returns DataResult.Success(courses)
+        coEvery { courseRepository.getCourses(any()) } returns DataResult.Success(courses)
         coEvery { courseRepository.getDashboardCards(any()) } returns DataResult.Success(dashboardCards)
 
         val result = useCase(LoadFavoriteCoursesParams())
 
-        assertEquals(3, result.size)
+        assertEquals(1, result.size)
         assertEquals(2L, result[0].id)
     }
 
@@ -120,7 +120,7 @@ class LoadFavoriteCoursesUseCaseTest {
             Course(id = 2, name = "Course B", isFavorite = false)
         )
 
-        coEvery { courseRepository.getFavoriteCourses(any()) } returns DataResult.Success(courses)
+        coEvery { courseRepository.getCourses(any()) } returns DataResult.Success(courses)
         coEvery { courseRepository.getDashboardCards(any()) } returns DataResult.Success(emptyList())
 
         val result = useCase(LoadFavoriteCoursesParams())
@@ -130,18 +130,18 @@ class LoadFavoriteCoursesUseCaseTest {
 
     @Test
     fun `execute passes forceRefresh parameter to repository`() = runTest {
-        coEvery { courseRepository.getFavoriteCourses(any()) } returns DataResult.Success(emptyList())
+        coEvery { courseRepository.getCourses(any()) } returns DataResult.Success(emptyList())
         coEvery { courseRepository.getDashboardCards(any()) } returns DataResult.Success(emptyList())
 
         useCase(LoadFavoriteCoursesParams(forceRefresh = true))
 
-        coVerify { courseRepository.getFavoriteCourses(true) }
+        coVerify { courseRepository.getCourses(true) }
         coVerify { courseRepository.getDashboardCards(true) }
     }
 
     @Test(expected = IllegalStateException::class)
     fun `execute throws when repository returns failure for courses`() = runTest {
-        coEvery { courseRepository.getFavoriteCourses(any()) } returns DataResult.Fail()
+        coEvery { courseRepository.getCourses(any()) } returns DataResult.Fail()
         coEvery { courseRepository.getDashboardCards(any()) } returns DataResult.Success(emptyList())
 
         useCase(LoadFavoriteCoursesParams())
@@ -149,7 +149,7 @@ class LoadFavoriteCoursesUseCaseTest {
 
     @Test(expected = IllegalStateException::class)
     fun `execute throws when repository returns failure for dashboard cards`() = runTest {
-        coEvery { courseRepository.getFavoriteCourses(any()) } returns DataResult.Success(emptyList())
+        coEvery { courseRepository.getCourses(any()) } returns DataResult.Success(emptyList())
         coEvery { courseRepository.getDashboardCards(any()) } returns DataResult.Fail()
 
         useCase(LoadFavoriteCoursesParams())
