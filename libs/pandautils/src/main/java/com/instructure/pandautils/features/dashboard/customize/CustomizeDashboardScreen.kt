@@ -466,7 +466,8 @@ private fun FeatureFlagToggle(
                 } else {
                     onToggle(newValue)
                 }
-            }
+            },
+            modifier = Modifier.testTag("dashboardRedesignToggle")
         )
     }
 
@@ -509,12 +510,14 @@ private fun ConfirmationDialog(
         onDismissRequest = onDismiss,
         title = {
             Text(
-                text = stringResource(R.string.changing_dashboard_layout)
+                text = stringResource(R.string.changing_dashboard_layout),
+                modifier = Modifier.testTag("confirmationDialogTitle")
             )
         },
         text = {
             Text(
-                text = stringResource(R.string.changing_dashboard_layout_message)
+                text = stringResource(R.string.changing_dashboard_layout_message),
+                modifier = Modifier.testTag("confirmationDialogMessage")
             )
         },
         confirmButton = {
@@ -522,7 +525,8 @@ private fun ConfirmationDialog(
                 onClick = onConfirm,
                 colors = ButtonDefaults.textButtonColors(
                     contentColor = Color(ThemePrefs.brandColor)
-                )
+                ),
+                modifier = Modifier.testTag("confirmationDialogConfirmButton")
             ) {
                 Text(
                     text = stringResource(R.string.restart_now)
@@ -534,13 +538,15 @@ private fun ConfirmationDialog(
                 onClick = onDismiss,
                 colors = ButtonDefaults.textButtonColors(
                     contentColor = Color(ThemePrefs.brandColor)
-                )
+                ),
+                modifier = Modifier.testTag("confirmationDialogDismissButton")
             ) {
                 Text(
                     text = stringResource(R.string.cancel)
                 )
             }
-        }
+        },
+        modifier = Modifier.testTag("confirmationDialog")
     )
 }
 
@@ -572,7 +578,8 @@ private fun SurveyDialog(
         },
         title = {
             Text(
-                text = stringResource(R.string.switched_back)
+                text = stringResource(R.string.switched_back),
+                modifier = Modifier.testTag("surveyDialogTitle")
             )
         },
         text = {
@@ -581,6 +588,7 @@ private fun SurveyDialog(
             ) {
                 Text(
                     text = stringResource(R.string.switched_back_message),
+                    modifier = Modifier.testTag("surveyDialogMessage")
                 )
                 OutlinedTextField(
                     value = feedback,
@@ -590,7 +598,9 @@ private fun SurveyDialog(
                             text = stringResource(R.string.what_could_we_improve),
                         )
                     },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag("surveyDialogFeedbackField"),
                     shape = RoundedCornerShape(8.dp),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedTextColor = colorResource(R.color.textDarkest),
@@ -612,7 +622,8 @@ private fun SurveyDialog(
                 colors = ButtonDefaults.textButtonColors(
                     contentColor = Color(ThemePrefs.brandColor),
                     disabledContentColor = Color(ThemePrefs.brandColor).copy(alpha = 0.6f),
-                )
+                ),
+                modifier = Modifier.testTag("surveyDialogSubmitButton")
             ) {
                 Text(
                     text = stringResource(R.string.submit)
@@ -627,13 +638,15 @@ private fun SurveyDialog(
                 },
                 colors = ButtonDefaults.textButtonColors(
                     contentColor = Color(ThemePrefs.brandColor),
-                )
+                ),
+                modifier = Modifier.testTag("surveyDialogSkipButton")
             ) {
                 Text(
                     text = stringResource(R.string.skip)
                 )
             }
-        }
+        },
+        modifier = Modifier.testTag("surveyDialog")
     )
 }
 
