@@ -363,7 +363,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
                 R.id.navigationDrawerItem_files -> {
                     RouteMatcher.route(this@InitActivity, Route(FileListFragment::class.java, ApiPrefs.user))
                 }
-                R.id.navigationDrawerItem_gauge, R.id.navigationDrawerItem_arc, R.id.navigationDrawerItem_mastery -> {
+                R.id.navigationDrawerItem_gauge, R.id.navigationDrawerItem_arc, R.id.navigationDrawerItem_mastery, R.id.navigationDrawerItem_portfolio -> {
                     val launchDefinition = v.tag as? LaunchDefinition ?: return@weave
                     launchLti(launchDefinition)
                 }
@@ -422,6 +422,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         navigationDrawerItemGauge.setOnClickListener(navDrawerOnClick)
         navigationDrawerItemArc.setOnClickListener(navDrawerOnClick)
         navigationDrawerItemMastery.setOnClickListener(navDrawerOnClick)
+        navigationDrawerItemPortfolio.setOnClickListener(navDrawerOnClick)
         navigationDrawerItemChangeUser.setOnClickListener(navDrawerOnClick)
         navigationDrawerItemLogout.setOnClickListener(navDrawerOnClick)
         navigationDrawerSettings.setOnClickListener(navDrawerOnClick)
@@ -434,6 +435,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
             navigationDrawerItemGauge,
             navigationDrawerItemArc,
             navigationDrawerItemMastery,
+            navigationDrawerItemPortfolio,
             navigationDrawerItemChangeUser,
             navigationDrawerItemHelp,
             navigationDrawerItemLogout,
@@ -493,6 +495,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         val arcLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition.STUDIO_DOMAIN }
         val gaugeLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition.GAUGE_DOMAIN }
         val masteryLaunchDefinition = launchDefinitions?.firstOrNull { it.domain == LaunchDefinition.MASTERY_DOMAIN }
+        val portfolioLaunchDefinition = launchDefinitions?.firstOrNull { it.domain?.contains(LaunchDefinition.PORTFOLIO_DOMAIN) == true }
 
         navigationDrawerItemArc.setVisible(arcLaunchDefinition != null)
         navigationDrawerItemArc.tag = arcLaunchDefinition
@@ -502,6 +505,9 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
 
         navigationDrawerItemMastery.setVisible(masteryLaunchDefinition != null)
         navigationDrawerItemMastery.tag = masteryLaunchDefinition
+
+        navigationDrawerItemPortfolio.setVisible(portfolioLaunchDefinition != null)
+        navigationDrawerItemPortfolio.tag = portfolioLaunchDefinition
     }
 
     override fun onStartMasquerading(domain: String, userId: Long) {
