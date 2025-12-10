@@ -65,15 +65,12 @@ class RCETextEditorView @JvmOverloads constructor(
 
     private val fragmentManager get() = context.findFragmentActivity()?.supportFragmentManager
 
-    private fun Context.findFragmentActivity(): FragmentActivity? {
-        var context = this
-        while (context is ContextWrapper) {
-            if (context is FragmentActivity) {
-                return context
-            }
-            context = context.baseContext
+    private tailrec fun Context.findFragmentActivity(): FragmentActivity? {
+        return when (this) {
+            is FragmentActivity -> this
+            is ContextWrapper -> this.baseContext.findFragmentActivity()
+            else -> null
         }
-        return null
     }
 
     // Let the fragments that use this view handle what to do when it's clicked
