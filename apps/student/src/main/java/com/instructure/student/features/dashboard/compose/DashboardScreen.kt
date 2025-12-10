@@ -53,6 +53,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -70,6 +71,7 @@ import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.courseinvitation.CourseInvitationsWidget
 import com.instructure.pandautils.features.dashboard.widget.welcome.WelcomeWidget
 import com.instructure.pandautils.features.dashboard.widget.institutionalannouncements.InstitutionalAnnouncementsWidget
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.student.R
 import com.instructure.student.activity.NavigationActivity
 import kotlinx.coroutines.flow.SharedFlow
@@ -133,7 +135,9 @@ fun DashboardScreenContent(
                     OverflowMenu(
                         showMenu = showMenu,
                         onDismissRequest = { showMenu = !showMenu },
-                        iconColor = colorResource(R.color.textLightest)
+                        iconColor = Color(ThemePrefs.primaryTextColor),
+                        modifier = Modifier
+                            .background(color = colorResource(id = R.color.backgroundLightestElevated))
                     ) {
                         DropdownMenuItem(onClick = {
                             showMenu = !showMenu

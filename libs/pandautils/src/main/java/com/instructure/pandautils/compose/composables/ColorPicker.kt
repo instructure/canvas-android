@@ -22,6 +22,7 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -32,12 +33,15 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material.icons.Icons
@@ -107,22 +111,13 @@ fun ColorPicker(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Outer box for border
+
                 Box(
                     modifier = Modifier
                         .size(24.dp)
                         .clip(CircleShape)
-                        .background(colorResource(R.color.borderLight)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    // Inner box for color
-                    Box(
-                        modifier = Modifier
-                            .size(22.dp)
-                            .clip(CircleShape)
-                            .background(Color(displaySelectedColor))
-                    )
-                }
+                        .background(Color(displaySelectedColor))
+                )
 
                 Icon(
                     imageVector = if (isExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
@@ -188,21 +183,21 @@ private fun ColorCircle(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Outer box for border
-    Box(
-        modifier = modifier
-            .size(36.dp)
-            .clip(RoundedCornerShape(16.dp))
-            .background(colorResource(R.color.borderLight))
-            .clickable(onClick = onClick),
-        contentAlignment = Alignment.Center
+    Card(
+        onClick = onClick,
+        modifier = modifier.size(36.dp),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(displayColor or 0xFF000000.toInt())
+        ),
+        border = BorderStroke(width = 0.5.dp, color = colorResource(R.color.borderLight)),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 2.dp,
+            pressedElevation = 6.dp
+        )
     ) {
-        // Inner box for color
         Box(
-            modifier = Modifier
-                .size(34.dp)
-                .clip(RoundedCornerShape(15.dp))
-                .background(Color(displayColor or 0xFF000000.toInt())),
+            modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
             if (isSelected) {
