@@ -41,7 +41,6 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -192,6 +191,7 @@ private fun LazyListScope.inboxHeader(
             ) {
                 IconButton(
                     iconRes = R.drawable.arrow_back,
+                    contentDescription = stringResource(R.string.a11yNavigateBack),
                     size = IconButtonSize.NORMAL,
                     color = IconButtonColor.Inverse,
                     elevation = HorizonElevation.level4,
