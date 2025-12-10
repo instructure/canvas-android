@@ -47,6 +47,8 @@ class UpdateWidgetSettingUseCase @Inject constructor(
         when (params.value) {
             is Boolean -> jsonObject.addProperty(params.key, params.value)
             is String -> jsonObject.addProperty(params.key, params.value)
+            is Int -> jsonObject.addProperty(params.key, params.value)
+            is Number -> jsonObject.addProperty(params.key, params.value)
         }
 
         val updatedJsonString = gson.toJson(jsonObject)

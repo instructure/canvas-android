@@ -37,7 +37,6 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -50,7 +49,6 @@ import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -66,7 +64,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
@@ -76,9 +73,12 @@ import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
+import com.instructure.pandautils.compose.composables.ColorPicker
 import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
 import com.instructure.pandautils.features.dashboard.widget.SettingType
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
+import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.pandautils.utils.ThemePrefs
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -91,14 +91,14 @@ fun CustomizeDashboardScreen(router: DashboardRouter, onNavigateBack: () -> Unit
     CustomizeDashboardScreenContent(
         uiState = uiState,
         onNavigateBack = onNavigateBack,
-        router = router
+        onRestartApp = { router.restartApp() }
     )
 }
 
 @Composable
 fun CustomizeDashboardScreenContent(
     uiState: CustomizeDashboardUiState,
-    router: DashboardRouter,
+    onRestartApp: () -> Unit,
     onNavigateBack: () -> Unit
 ) {
     Scaffold(
@@ -151,7 +151,7 @@ fun CustomizeDashboardScreenContent(
                 else -> {
                     WidgetList(
                         uiState = uiState,
-                        router = router,
+                        onRestartApp = onRestartApp,
                         modifier = Modifier.fillMaxSize()
                     )
                 }
@@ -163,7 +163,7 @@ fun CustomizeDashboardScreenContent(
 @Composable
 private fun WidgetList(
     uiState: CustomizeDashboardUiState,
-    router: DashboardRouter,
+    onRestartApp: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -172,7 +172,7 @@ private fun WidgetList(
     ) {
         item {
             FeatureFlagToggle(
-                router = router,
+                onRestartApp = onRestartApp,
                 isEnabled = uiState.isDashboardRedesignEnabled,
                 onToggle = uiState.onToggleDashboardRedesign
             )
@@ -322,7 +322,6 @@ private fun WidgetListItem(
                     onUpdateSetting = onUpdateSetting,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp)
                 )
             }
         }
@@ -346,11 +345,27 @@ private fun WidgetSettingsContent(
                         checked = setting.value as? Boolean ?: false,
                         onCheckedChange = { newValue ->
                             onUpdateSetting(widgetId, setting.key, newValue)
-                        }
+                        },
+                        modifier = Modifier.padding(horizontal = 16.dp)
                     )
                 }
+
                 SettingType.COLOR -> {
-                    // TODO: Implement color setting row
+                    val colorValue = when (val value = setting.value) {
+                        is Int -> value
+                        is Double -> value.toInt()
+                        is String -> value.toIntOrNull() ?: 0x2573DF
+                        else -> 0x2573DF
+                    }
+                    ColorPicker(
+                        label = getSettingLabel(setting.key),
+                        selectedColor = colorValue,
+                        colors = getAvailableColors(),
+                        onColorSelected = { newValue ->
+                            onUpdateSetting(widgetId, setting.key, newValue)
+                        },
+                        titleModifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                    )
                 }
             }
         }
@@ -361,8 +376,31 @@ private fun WidgetSettingsContent(
 private fun getSettingLabel(key: String): String {
     return when (key) {
         "showGreeting" -> stringResource(R.string.widget_setting_show_greeting)
+        "backgroundColor" -> stringResource(R.string.background_color)
         else -> key
     }
+}
+
+@Composable
+private fun getAvailableColors(): List<ThemedColor> {
+    val context = LocalContext.current
+    val lightColors = listOf(
+        context.getColor(R.color.courseColor1light),
+        context.getColor(R.color.courseColor2light),
+        context.getColor(R.color.courseColor3light),
+        context.getColor(R.color.courseColor4light),
+        context.getColor(R.color.courseColor5light),
+        context.getColor(R.color.courseColor6light),
+        context.getColor(R.color.courseColor7light),
+        context.getColor(R.color.courseColor8light),
+        context.getColor(R.color.courseColor9light),
+        context.getColor(R.color.courseColor10light),
+        context.getColor(R.color.courseColor11light),
+        context.getColor(R.color.courseColor12light),
+        context.getColor(R.color.white),
+        context.getColor(R.color.licorice)
+    )
+    return lightColors.map { ColorKeeper.createThemedColor(it) }
 }
 
 @Composable
@@ -395,7 +433,11 @@ private fun BooleanSettingRow(
 }
 
 @Composable
-private fun FeatureFlagToggle(router: DashboardRouter, isEnabled: Boolean, onToggle: (Boolean) -> Unit) {
+private fun FeatureFlagToggle(
+    isEnabled: Boolean,
+    onToggle: (Boolean) -> Unit,
+    onRestartApp: () -> Unit
+) {
     var showConfirmationDialog by remember { mutableStateOf(false) }
     var showSurveyDialog by remember { mutableStateOf(false) }
 
@@ -441,7 +483,7 @@ private fun FeatureFlagToggle(router: DashboardRouter, isEnabled: Boolean, onTog
 
     if (showSurveyDialog) {
         SurveyDialog(
-            router = router,
+            onRestartApp = onRestartApp,
             onSubmit = { feedback ->
                 // TODO: Send feedback to backend
                 showSurveyDialog = false
@@ -502,7 +544,7 @@ private fun ConfirmationDialog(
 
 @Composable
 private fun SurveyDialog(
-    router: DashboardRouter,
+    onRestartApp: () -> Unit,
     onSubmit: (String) -> Unit,
     onSkip: () -> Unit
 ) {
@@ -511,7 +553,7 @@ private fun SurveyDialog(
     fun restartApp() {
         GlobalScope.launch {
             try {
-                router.restartApp()
+                onRestartApp()
             } catch (e: Exception) {
                 // No-op
             }
@@ -614,6 +656,11 @@ private fun CustomizeDashboardScreenPreview() {
                                 key = "showGreeting",
                                 value = false,
                                 type = SettingType.BOOLEAN
+                            ),
+                            WidgetSettingItem(
+                                key = "backgroundColor",
+                                value = 0x2573DF,
+                                type = SettingType.COLOR
                             )
                         )
                     )
@@ -624,42 +671,7 @@ private fun CustomizeDashboardScreenPreview() {
                 onToggleDashboardRedesign = {}
             ),
             onNavigateBack = {},
-            router = object : DashboardRouter {
-                override fun routeToGlobalAnnouncement(
-                    subject: String,
-                    message: String
-                ) {
-                    TODO("Not yet implemented")
-                }
-
-                override fun routeToSubmissionDetails(
-                    canvasContext: CanvasContext,
-                    assignmentId: Long,
-                    attemptId: Long
-                ) {
-                    TODO("Not yet implemented")
-                }
-
-                override fun routeToMyFiles(
-                    canvasContext: CanvasContext,
-                    folderId: Long
-                ) {
-                    TODO("Not yet implemented")
-                }
-
-                override fun routeToSyncProgress() {
-                    TODO("Not yet implemented")
-                }
-
-                override fun routeToCustomizeDashboard() {
-                    TODO("Not yet implemented")
-                }
-
-                override fun restartApp() {
-                    TODO("Not yet implemented")
-                }
-
-            }
+            onRestartApp = {}
         )
     }
 }

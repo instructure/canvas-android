@@ -24,7 +24,8 @@ import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 
 data class WelcomeConfig(
     override val widgetId: String = WidgetMetadata.WIDGET_ID_WELCOME,
-    val showGreeting: Boolean = true
+    val showGreeting: Boolean = true,
+    val backgroundColor: Int = 0x2573DF
 ) : WidgetConfig {
     override fun toJson(): String = Gson().toJson(this)
 
@@ -32,6 +33,10 @@ data class WelcomeConfig(
         SettingDefinition(
             key = "showGreeting",
             type = SettingType.BOOLEAN
+        ),
+        SettingDefinition(
+            key = "backgroundColor",
+            type = SettingType.COLOR
         )
     )
 

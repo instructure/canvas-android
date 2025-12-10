@@ -2368,4 +2368,5 @@
     <string name="what_could_we_improve">What could we improve?</string>
     <string name="skip">Skip</string>
     <string name="widget_setting_show_greeting">Show greeting</string>
+    <string name="background_color">Background color</string>
 </resources>
