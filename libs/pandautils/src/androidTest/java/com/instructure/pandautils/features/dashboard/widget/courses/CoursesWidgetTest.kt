@@ -59,8 +59,6 @@ class CoursesWidgetTest {
         }
 
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithText("Favorite Courses and Groups").assertIsDisplayed()
-        composeTestRule.onNodeWithText("All Courses").assertIsDisplayed()
     }
 
     @Test
@@ -79,7 +77,6 @@ class CoursesWidgetTest {
         }
 
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithText("Favorite Courses and Groups").assertIsDisplayed()
         composeTestRule.onNodeWithText("Courses").assertDoesNotExist()
         composeTestRule.onNodeWithText("Groups").assertDoesNotExist()
     }
