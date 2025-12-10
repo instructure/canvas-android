@@ -22,7 +22,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.OptIn
-import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.HttpDataSource
 import androidx.media3.exoplayer.source.UnrecognizedInputFormatException
@@ -38,7 +37,6 @@ import com.instructure.pandautils.utils.ExoAgentState
 import com.instructure.pandautils.utils.ExoInfoListener
 import com.instructure.pandautils.utils.NullableStringArg
 import com.instructure.pandautils.utils.ParcelableArg
-import com.instructure.pandautils.utils.RouteUtils
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.onClick
@@ -49,7 +47,6 @@ import com.instructure.student.R
 import com.instructure.student.databinding.FragmentMediaSubmissionViewBinding
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType
 import com.instructure.student.router.RouteMatcher
-import kotlinx.coroutines.launch
 
 @OptIn(UnstableApi::class)
 class MediaSubmissionViewFragment : BaseCanvasFragment() {
@@ -115,11 +112,9 @@ class MediaSubmissionViewFragment : BaseCanvasFragment() {
     }
 
     private fun fetchMediaUri() {
-        lifecycleScope.launch {
-            mediaUri = RouteUtils.getMediaUri(uri)
-            if (isResumed) {
-                attachMediaPlayer()
-            }
+        mediaUri = uri
+        if (isResumed) {
+            attachMediaPlayer()
         }
     }
 
