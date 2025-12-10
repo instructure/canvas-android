@@ -271,6 +271,7 @@ private fun CoursesWidgetContentPreview() {
                     name = "Project Team Alpha",
                     parentCourseName = "Introduction to Computer Science",
                     parentCourseId = 1,
+                    parentCourseColor = 0xFF2196F3.toInt(),
                     color = 0xFF4CAF50.toInt(),
                     memberCount = 5
                 )
@@ -326,6 +327,7 @@ private fun CoursesWidgetTabletContentPreview() {
                     name = "Project Team Alpha",
                     parentCourseName = "Introduction to Computer Science",
                     parentCourseId = 1,
+                    parentCourseColor = 0xFF2196F3.toInt(),
                     color = 0xFF4CAF50.toInt(),
                     memberCount = 5
                 )

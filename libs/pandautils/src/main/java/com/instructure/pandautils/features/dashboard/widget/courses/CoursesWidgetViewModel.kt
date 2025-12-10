@@ -33,6 +33,7 @@ import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.pandautils.utils.color
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -174,15 +175,13 @@ class CoursesWidgetViewModel @Inject constructor(
                 null
             }
 
-            val themedColor = parentCourse?.let { ColorKeeper.getOrGenerateColor(it) }
-                ?: ColorKeeper.getOrGenerateColor(group)
-
             GroupCardItem(
                 id = group.id,
                 name = group.name.orEmpty(),
                 parentCourseName = parentCourse?.name,
                 parentCourseId = group.courseId,
-                color = themedColor.light,
+                parentCourseColor = parentCourse.color,
+                color = group.color,
                 memberCount = group.membersCount
             )
         }

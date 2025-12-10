@@ -138,7 +138,7 @@ fun GroupCard(
                     Text(
                         text = courseName,
                         fontSize = 14.sp,
-                        color = Color(groupCard.color),
+                        color = Color(groupCard.parentCourseColor),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         lineHeight = 19.sp
@@ -216,6 +216,7 @@ private fun GroupCardPreview() {
             name = "Project Team Alpha",
             parentCourseName = "Introduction to Computer Science",
             parentCourseId = 1,
+            parentCourseColor = 0xFF2196F3.toInt(),
             color = 0xFF4CAF50.toInt(),
             memberCount = 5
         ),
