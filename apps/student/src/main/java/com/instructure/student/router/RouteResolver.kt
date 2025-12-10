@@ -10,6 +10,7 @@ import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpda
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoFragment
 import com.instructure.pandautils.features.calendartodo.details.ToDoFragment
+import com.instructure.pandautils.features.dashboard.customize.CustomizeDashboardFragment
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
 import com.instructure.pandautils.features.discussion.create.CreateDiscussionWebViewFragment
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
@@ -187,6 +188,7 @@ object RouteResolver {
             cls.isA<RemoteConfigParamsFragment>() -> RemoteConfigParamsFragment()
             cls.isA<SmartSearchFragment>() -> SmartSearchFragment.newInstance(route)
             cls.isA<InboxSignatureFragment>() -> InboxSignatureFragment()
+            cls.isA<CustomizeDashboardFragment>() -> CustomizeDashboardFragment.newInstance(route)
             cls.isA<InternalWebviewFragment>() -> InternalWebviewFragment.newInstance(route) // Keep this at the end
             else -> null
         }

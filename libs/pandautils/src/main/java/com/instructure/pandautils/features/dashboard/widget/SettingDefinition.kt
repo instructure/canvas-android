@@ -14,26 +14,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.features.dashboard.widget.db
+package com.instructure.pandautils.features.dashboard.widget
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Query
-import androidx.room.Upsert
-import kotlinx.coroutines.flow.Flow
-
-@Dao
-interface WidgetConfigDao {
-
-    @Upsert
-    suspend fun upsertConfig(config: WidgetConfigEntity)
-
-    @Query("SELECT * FROM widget_config WHERE widgetId = :widgetId")
-    fun observeConfig(widgetId: String): Flow<WidgetConfigEntity?>
-
-    @Query("SELECT * FROM widget_config WHERE widgetId = :widgetId")
-    suspend fun getConfig(widgetId: String): WidgetConfigEntity?
-
-    @Delete
-    suspend fun deleteConfig(config: WidgetConfigEntity)
+enum class SettingType {
+    COLOR, BOOLEAN
 }
+
+data class SettingDefinition(
+    val key: String,
+    val type: SettingType
+)

@@ -18,6 +18,7 @@ package com.instructure.student.features.dashboard.compose
 
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -27,10 +28,14 @@ import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
 import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.IconButton
+import androidx.compose.material.Text
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -43,11 +48,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -56,11 +65,13 @@ import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
+import com.instructure.pandautils.compose.composables.OverflowMenu
 import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.courseinvitation.CourseInvitationsWidget
 import com.instructure.pandautils.features.dashboard.widget.welcome.WelcomeWidget
 import com.instructure.pandautils.features.dashboard.widget.institutionalannouncements.InstitutionalAnnouncementsWidget
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.student.R
 import com.instructure.student.activity.NavigationActivity
 import kotlinx.coroutines.flow.SharedFlow
@@ -97,7 +108,8 @@ fun DashboardScreenContent(
 
     LaunchedEffect(Unit) {
         snackbarMessageFlow.collect { snackbarMessage ->
-            val actionLabel = if (snackbarMessage.action != null) snackbarMessage.actionLabel else null
+            val actionLabel =
+                if (snackbarMessage.action != null) snackbarMessage.actionLabel else null
             val result = snackbarHostState.showSnackbar(
                 message = snackbarMessage.message,
                 actionLabel = actionLabel,
@@ -109,6 +121,8 @@ fun DashboardScreenContent(
         }
     }
 
+    var showMenu by remember { mutableStateOf(false) }
+
     Scaffold(
         modifier = Modifier.background(colorResource(R.color.backgroundLightest)),
         topBar = {
@@ -116,7 +130,34 @@ fun DashboardScreenContent(
                 title = stringResource(id = R.string.dashboard),
                 navIconRes = R.drawable.ic_hamburger,
                 navIconContentDescription = stringResource(id = R.string.navigation_drawer_open),
-                navigationActionClick = { (activity as? NavigationActivity)?.openNavigationDrawer() }
+                navigationActionClick = { (activity as? NavigationActivity)?.openNavigationDrawer() },
+                actions = {
+                    OverflowMenu(
+                        showMenu = showMenu,
+                        onDismissRequest = { showMenu = !showMenu },
+                        iconColor = Color(ThemePrefs.primaryTextColor),
+                        modifier = Modifier
+                            .background(color = colorResource(id = R.color.backgroundLightestElevated))
+                    ) {
+                        DropdownMenuItem(onClick = {
+                            showMenu = !showMenu
+                        }) {
+                            Text(
+                                stringResource(R.string.course_menu_manage_offline_content),
+                                color = colorResource(id = R.color.textDarkest)
+                            )
+                        }
+                        DropdownMenuItem(onClick = {
+                            showMenu = !showMenu
+                            router.routeToCustomizeDashboard()
+                        }) {
+                            Text(
+                                stringResource(R.string.customize_dashboard),
+                                color = colorResource(id = R.color.textDarkest)
+                            )
+                        }
+                    }
+                }
             )
         },
         snackbarHost = {
@@ -142,9 +183,11 @@ fun DashboardScreenContent(
                 }
 
                 uiState.loading -> {
-                    Loading(modifier = Modifier
-                        .fillMaxSize()
-                        .testTag("loading"))
+                    Loading(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .testTag("loading")
+                    )
                 }
 
                 uiState.widgets.isEmpty() -> {
@@ -235,11 +278,13 @@ private fun GetWidgetComposable(
             columns = columns,
             onShowSnackbar = onShowSnackbar
         )
+
         WidgetMetadata.WIDGET_ID_INSTITUTIONAL_ANNOUNCEMENTS -> InstitutionalAnnouncementsWidget(
             refreshSignal = refreshSignal,
             columns = columns,
             onAnnouncementClick = router::routeToGlobalAnnouncement
         )
+
         else -> {}
     }
 }
