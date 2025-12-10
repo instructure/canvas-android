@@ -37,6 +37,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -104,28 +105,32 @@ class CustomizeDashboardViewModel @Inject constructor(
     }
 
     private fun combineWidgetsWithConfigs(metadata: List<WidgetMetadata>) =
-        combine(
-            metadata.map { meta ->
-                observeWidgetConfigUseCase(meta.id)
-                    .map { settings ->
-                        WidgetItem(
-                            metadata = meta,
-                            displayName = getDisplayName(meta.id),
-                            settings = settings
-                        )
-                    }
-                    .catch { e ->
-                        e.printStackTrace()
-                        emit(
+        if (metadata.isEmpty()) {
+            flowOf(emptyList())
+        } else {
+            combine(
+                metadata.map { meta ->
+                    observeWidgetConfigUseCase(meta.id)
+                        .map { settings ->
                             WidgetItem(
                                 metadata = meta,
                                 displayName = getDisplayName(meta.id),
-                                settings = emptyList()
+                                settings = settings
                             )
-                        )
-                    }
-            }
-        ) { it.toList() }
+                        }
+                        .catch { e ->
+                            e.printStackTrace()
+                            emit(
+                                WidgetItem(
+                                    metadata = meta,
+                                    displayName = getDisplayName(meta.id),
+                                    settings = emptyList()
+                                )
+                            )
+                        }
+                }
+            ) { it.toList() }
+        }
 
     private fun moveWidgetUp(widgetId: String) {
         val widgets = _uiState.value.widgets
