@@ -17,11 +17,9 @@
 package com.instructure.pandautils.compose.composables
 
 import android.content.res.Configuration
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -89,7 +87,14 @@ fun ColorPicker(
         selectedColor or 0xFF000000.toInt()
     }
 
-    Column(modifier = modifier) {
+    Column(
+        modifier = modifier.animateContentSize(
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioNoBouncy,
+                stiffness = Spring.StiffnessMedium
+            )
+        )
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -128,21 +133,7 @@ fun ColorPicker(
             }
         }
 
-        AnimatedVisibility(
-            visible = isExpanded,
-            enter = expandVertically(
-                animationSpec = spring(
-                    dampingRatio = Spring.DampingRatioNoBouncy,
-                    stiffness = Spring.StiffnessMediumLow
-                )
-            ),
-            exit = shrinkVertically(
-                animationSpec = spring(
-                    dampingRatio = Spring.DampingRatioNoBouncy,
-                    stiffness = Spring.StiffnessMediumLow
-                )
-            )
-        ) {
+        if (isExpanded) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
