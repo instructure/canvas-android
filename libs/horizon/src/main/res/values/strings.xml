@@ -479,4 +479,8 @@
     <string name="editNoteExitConfirmationExitButtonLabel">Exit</string>
     <string name="editNoteExitConfirmationCancelButtonLabel">Cancel</string>
     <string name="a11y_notebookDeleteNoteButtonContentDescription">Delete note</string>
+    <string name="a11y_delete">Delete</string>
+    <string name="a11y_cancel">Cancel</string>
+    <string name="a11y_download">Download</string>
+    <string name="a11y_retry">Retry</string>
 </resources>
