@@ -19,6 +19,7 @@ package com.instructure.horizon.features.inbox.compose
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,9 +43,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -92,6 +96,7 @@ import com.instructure.horizon.horizonui.organisms.inputs.textfield.TextFieldInp
 import com.instructure.horizon.horizonui.organisms.inputs.textfield.TextFieldState
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.getActivityOrNull
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -162,13 +167,26 @@ private fun HorizonInboxComposeTopBar(
     state: HorizonInboxComposeUiState,
     navController: NavHostController,
 ) {
+    val requester = FocusRequester()
+    var requestFocus by rememberSaveable { mutableStateOf(true) }
+    LaunchedEffect(Unit) {
+        delay(50)
+        if(requestFocus) {
+            requester.requestFocus()
+            requestFocus = false
+        }
+    }
+
     TopAppBar(
         title = {
             Text(
                 stringResource(R.string.inboxComposeTitle),
                 style = HorizonTypography.h2,
                 color = HorizonColors.Text.title(),
-                modifier = Modifier.padding(horizontal = 12.dp)
+                modifier = Modifier
+                    .padding(horizontal = 12.dp)
+                    .focusRequester(requester)
+                    .focusable()
             )
         },
         actions = {
