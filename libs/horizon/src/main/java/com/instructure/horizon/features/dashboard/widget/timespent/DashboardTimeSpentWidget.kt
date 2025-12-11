@@ -72,7 +72,7 @@ fun DashboardTimeSpentSection(
         }
         DashboardItemState.ERROR -> {
             DashboardWidgetCardError(
-                stringResource(R.string.dashboardTimeSpentTitle),
+                stringResource(R.string.dashboardTimeLearningTitle),
                 R.drawable.schedule,
                 HorizonColors.PrimitivesHoney.honey12(),
                 false,

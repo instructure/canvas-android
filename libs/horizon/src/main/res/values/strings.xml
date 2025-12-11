@@ -369,7 +369,7 @@
     <string name="dashboardCourseCardErrorMessage">Please try again.</string>
     <string name="dashboardCourseCardRefreshLabel">Refresh</string>
     <string name="dashboardNotStartedProgramDetailsLabel">Program details</string>
-    <string name="dashboardTimeSpentTitle">Time learning</string>
+    <string name="dashboardTimeLearningTitle">Time learning</string>
     <string name="dashboardTimeSpentEmptyMessage">This widget will update once data becomes available.</string>
     <string name="dashboardTimeSpentErrorMessage">We weren\'t able to load this content.\nPlease try again.</string>
     <string name="dashboardTimeSpentRetry">Refresh</string>
