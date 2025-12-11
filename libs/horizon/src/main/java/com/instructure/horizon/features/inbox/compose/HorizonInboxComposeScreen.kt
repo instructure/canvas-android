@@ -19,7 +19,6 @@ package com.instructure.horizon.features.inbox.compose
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -43,16 +42,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
@@ -96,7 +90,6 @@ import com.instructure.horizon.horizonui.organisms.inputs.textfield.TextFieldInp
 import com.instructure.horizon.horizonui.organisms.inputs.textfield.TextFieldState
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.getActivityOrNull
-import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -167,16 +160,6 @@ private fun HorizonInboxComposeTopBar(
     state: HorizonInboxComposeUiState,
     navController: NavHostController,
 ) {
-    val requester = FocusRequester()
-    var requestFocus by rememberSaveable { mutableStateOf(true) }
-    LaunchedEffect(Unit) {
-        delay(50)
-        if(requestFocus) {
-            requester.requestFocus()
-            requestFocus = false
-        }
-    }
-
     TopAppBar(
         title = {
             Text(
@@ -185,8 +168,6 @@ private fun HorizonInboxComposeTopBar(
                 color = HorizonColors.Text.title(),
                 modifier = Modifier
                     .padding(horizontal = 12.dp)
-                    .focusRequester(requester)
-                    .focusable()
             )
         },
         actions = {
@@ -292,13 +273,7 @@ private fun CourseRecipientPickerSection(state: HorizonInboxComposeUiState) {
             onMenuOpenChanged = { isRecipientPickerOpened = it },
             minSearchQueryLengthForMenu = state.minQueryLength
         )
-        val context = LocalContext.current
-        MultiSelectSearch(
-            recipientPickerState,
-            Modifier.semantics {
-                contentDescription = context.getString(R.string.a11y_inboxComposeSelectCourse)
-            }
-        )
+        MultiSelectSearch(recipientPickerState)
 
         HorizonSpace(SpaceSize.SPACE_12)
     }
