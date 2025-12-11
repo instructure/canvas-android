@@ -183,7 +183,7 @@ class CourseSettingsE2ETest : TeacherTest() {
         Log.d(ASSERTION_TAG, "Assert that '${publishedPage.title}' is displayed as a FRONT page.")
         pageListPage.assertFrontPageDisplayed(publishedPage.title)
 
-        Log.d(STEP_TAG, " Navigate back to Course Browser Page.")
+        Log.d(STEP_TAG, "Navigate back to Course Browser Page.")
         Espresso.pressBack()
 
         Log.d(STEP_TAG, "Click on Course Settings button.")
@@ -226,7 +226,7 @@ class CourseSettingsE2ETest : TeacherTest() {
         Log.d(ASSERTION_TAG, "Assert that '${publishedPage.title}' is displayed as a COMMON page.")
         pageListPage.assertPageDisplayed(publishedPage.title)
 
-        Log.d(STEP_TAG, " Navigate back to Course Browser Page.")
+        Log.d(STEP_TAG, "Navigate back to Course Browser Page.")
         Espresso.pressBack()
 
         Log.d(STEP_TAG, "Click on Course Settings button.")
