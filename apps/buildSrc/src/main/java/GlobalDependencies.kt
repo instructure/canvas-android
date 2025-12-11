@@ -7,7 +7,7 @@ object Versions {
     const val TARGET_SDK = 35
 
     /* Build/tooling */
-    const val ANDROID_GRADLE_TOOLS = "8.6.1"
+    const val ANDROID_GRADLE_TOOLS = "8.13.2"
     const val BUILD_TOOLS = "35.0.0"
 
     /* Testing */
@@ -16,9 +16,9 @@ object Versions {
     const val JACOCO_ANDROID = "0.1.5"
 
     /* Kotlin */
-    const val KOTLIN = "2.0.21"
-    const val KOTLIN_COROUTINES = "1.9.0"
-    const val KSP = "2.0.21-1.0.27"
+    const val KOTLIN = "2.2.21"
+    const val KOTLIN_COROUTINES = "1.10.2"
+    const val KSP = "2.2.21-2.0.4"
 
     /* Google, Play Services */
     const val GOOGLE_SERVICES = "4.4.3"
@@ -36,7 +36,7 @@ object Versions {
     const val GLIDE_VERSION = "5.0.5"
     const val RETROFIT = "2.11.0"
     const val OKHTTP = "4.12.0"
-    const val ROOM = "2.7.0"
+    const val ROOM = "2.8.4"
     const val HAMCREST = "3.0"
     const val NAVIGATION = "2.9.5"
     const val MEDIA3 = "1.8.0"
