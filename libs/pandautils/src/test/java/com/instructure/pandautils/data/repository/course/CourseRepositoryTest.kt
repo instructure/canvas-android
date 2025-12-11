@@ -171,6 +171,9 @@ class CourseRepositoryTest {
         coEvery {
             courseApi.getFavoriteCourses(any())
         } returns expected
+        coEvery {
+            courseApi.next(any(), any())
+        } returns DataResult.Success(emptyList())
 
         val result = repository.getFavoriteCourses(forceRefresh = false)
 
@@ -187,6 +190,9 @@ class CourseRepositoryTest {
         coEvery {
             courseApi.getFavoriteCourses(any())
         } returns expected
+        coEvery {
+            courseApi.next(any(), any())
+        } returns DataResult.Success(emptyList())
 
         val result = repository.getFavoriteCourses(forceRefresh = true)
 

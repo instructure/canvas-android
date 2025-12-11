@@ -25,7 +25,9 @@ class CourseRepositoryImpl(
 
     override suspend fun getFavoriteCourses(forceRefresh: Boolean): DataResult<List<Course>> {
         val params = RestParams(isForceReadFromNetwork = forceRefresh)
-        return courseApi.getFavoriteCourses(params)
+        return courseApi.getFavoriteCourses(params).depaginate { nextUrl ->
+            courseApi.next(nextUrl, params)
+        }
     }
 
     override suspend fun getDashboardCards(forceRefresh: Boolean): DataResult<List<DashboardCard>> {

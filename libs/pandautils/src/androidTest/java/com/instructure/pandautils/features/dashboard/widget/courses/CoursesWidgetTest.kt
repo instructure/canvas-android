@@ -19,20 +19,18 @@ package com.instructure.pandautils.features.dashboard.widget.courses
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.instructure.pandautils.domain.models.courses.CourseCardItem
-import com.instructure.pandautils.domain.models.courses.GradeDisplay
-import com.instructure.pandautils.domain.models.courses.GroupCardItem
+import com.instructure.pandautils.features.dashboard.widget.courses.model.CourseCardItem
+import com.instructure.pandautils.features.dashboard.widget.courses.model.GradeDisplay
+import com.instructure.pandautils.features.dashboard.widget.courses.model.GroupCardItem
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -88,7 +86,6 @@ class CoursesWidgetTest {
                 id = 1,
                 name = "Introduction to Computer Science",
                 courseCode = "CS 101",
-                color = 0xFF2196F3.toInt(),
                 imageUrl = null,
                 grade = GradeDisplay.Hidden,
                 announcementCount = 0,
@@ -123,7 +120,6 @@ class CoursesWidgetTest {
                 id = 1,
                 name = "Introduction to Computer Science",
                 courseCode = "CS 101",
-                color = 0xFF2196F3.toInt(),
                 imageUrl = null,
                 grade = GradeDisplay.Hidden,
                 announcementCount = 0,
@@ -134,7 +130,6 @@ class CoursesWidgetTest {
                 id = 2,
                 name = "Advanced Mathematics",
                 courseCode = "MATH 201",
-                color = 0xFF4CAF50.toInt(),
                 imageUrl = null,
                 grade = GradeDisplay.Hidden,
                 announcementCount = 0,
@@ -171,7 +166,6 @@ class CoursesWidgetTest {
                 name = "Project Team Alpha",
                 parentCourseName = "Introduction to Computer Science",
                 parentCourseId = 1,
-                color = 0xFF4CAF50.toInt(),
                 memberCount = 5
             )
         )
@@ -202,7 +196,6 @@ class CoursesWidgetTest {
                 id = 1,
                 name = "Introduction to Computer Science",
                 courseCode = "CS 101",
-                color = 0xFF2196F3.toInt(),
                 imageUrl = null,
                 grade = GradeDisplay.Hidden,
                 announcementCount = 0,
@@ -217,7 +210,6 @@ class CoursesWidgetTest {
                 name = "Project Team Alpha",
                 parentCourseName = "Introduction to Computer Science",
                 parentCourseId = 1,
-                color = 0xFF4CAF50.toInt(),
                 memberCount = 5
             )
         )
@@ -254,7 +246,6 @@ class CoursesWidgetTest {
                 id = 1,
                 name = "Introduction to Computer Science",
                 courseCode = "CS 101",
-                color = 0xFF2196F3.toInt(),
                 imageUrl = null,
                 grade = GradeDisplay.Percentage("85%"),
                 announcementCount = 0,
@@ -289,7 +280,6 @@ class CoursesWidgetTest {
                 id = 1,
                 name = "Introduction to Computer Science",
                 courseCode = "CS 101",
-                color = 0xFF2196F3.toInt(),
                 imageUrl = null,
                 grade = GradeDisplay.Letter("A-"),
                 announcementCount = 0,
@@ -324,7 +314,6 @@ class CoursesWidgetTest {
                 id = 1,
                 name = "Introduction to Computer Science",
                 courseCode = "CS 101",
-                color = 0xFF2196F3.toInt(),
                 imageUrl = null,
                 grade = GradeDisplay.Percentage("85%"),
                 announcementCount = 0,
@@ -361,7 +350,6 @@ class CoursesWidgetTest {
                 id = 1,
                 name = "Introduction to Computer Science",
                 courseCode = "CS 101",
-                color = 0xFF2196F3.toInt(),
                 imageUrl = null,
                 grade = GradeDisplay.Hidden,
                 announcementCount = 0,
@@ -401,7 +389,6 @@ class CoursesWidgetTest {
                 name = "Project Team Alpha",
                 parentCourseName = "Introduction to Computer Science",
                 parentCourseId = 1,
-                color = 0xFF4CAF50.toInt(),
                 memberCount = 5
             )
         )
@@ -434,7 +421,6 @@ class CoursesWidgetTest {
                 id = 1,
                 name = "Introduction to Computer Science",
                 courseCode = "CS 101",
-                color = 0xFF2196F3.toInt(),
                 imageUrl = null,
                 grade = GradeDisplay.Hidden,
                 announcementCount = 0,
@@ -468,7 +454,6 @@ class CoursesWidgetTest {
                 id = 1,
                 name = "Introduction to Computer Science",
                 courseCode = "CS 101",
-                color = 0xFF2196F3.toInt(),
                 imageUrl = null,
                 grade = GradeDisplay.Hidden,
                 announcementCount = 2,
@@ -504,7 +489,6 @@ class CoursesWidgetTest {
                 id = 1,
                 name = "Introduction to Computer Science",
                 courseCode = "CS 101",
-                color = 0xFF2196F3.toInt(),
                 imageUrl = null,
                 grade = GradeDisplay.Hidden,
                 announcementCount = 0,
@@ -545,7 +529,6 @@ class CoursesWidgetTest {
                 id = 1,
                 name = "Introduction to Computer Science",
                 courseCode = "CS 101",
-                color = 0xFF2196F3.toInt(),
                 imageUrl = null,
                 grade = GradeDisplay.Hidden,
                 announcementCount = 0,
@@ -587,7 +570,6 @@ class CoursesWidgetTest {
                 name = "Project Team Alpha",
                 parentCourseName = "Introduction to Computer Science",
                 parentCourseId = 1,
-                color = 0xFF4CAF50.toInt(),
                 memberCount = 5
             )
         )
@@ -625,7 +607,6 @@ class CoursesWidgetTest {
                 name = "Project Team Alpha",
                 parentCourseName = "Introduction to Computer Science",
                 parentCourseId = 1,
-                color = 0xFF4CAF50.toInt(),
                 memberCount = 5
             )
         )
@@ -660,7 +641,6 @@ class CoursesWidgetTest {
                 id = 1,
                 name = "Course 1",
                 courseCode = "CS 101",
-                color = 0xFF2196F3.toInt(),
                 imageUrl = null,
                 grade = GradeDisplay.Hidden,
                 announcementCount = 0,
@@ -671,7 +651,6 @@ class CoursesWidgetTest {
                 id = 2,
                 name = "Course 2",
                 courseCode = "CS 102",
-                color = 0xFF4CAF50.toInt(),
                 imageUrl = null,
                 grade = GradeDisplay.Hidden,
                 announcementCount = 0,
@@ -682,7 +661,6 @@ class CoursesWidgetTest {
                 id = 3,
                 name = "Course 3",
                 courseCode = "CS 103",
-                color = 0xFFFF9800.toInt(),
                 imageUrl = null,
                 grade = GradeDisplay.Hidden,
                 announcementCount = 0,

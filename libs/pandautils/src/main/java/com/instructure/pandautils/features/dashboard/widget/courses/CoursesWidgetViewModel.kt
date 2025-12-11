@@ -16,24 +16,30 @@
 
 package com.instructure.pandautils.features.dashboard.widget.courses
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
-import com.instructure.pandautils.data.repository.course.CourseRepository
-import com.instructure.pandautils.domain.models.courses.CourseCardItem
-import com.instructure.pandautils.domain.models.courses.GradeDisplay
-import com.instructure.pandautils.domain.models.courses.GroupCardItem
+import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCase
+import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCaseParams
 import com.instructure.pandautils.domain.usecase.courses.LoadFavoriteCoursesParams
 import com.instructure.pandautils.domain.usecase.courses.LoadFavoriteCoursesUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadGroupsParams
 import com.instructure.pandautils.domain.usecase.courses.LoadGroupsUseCase
+import com.instructure.pandautils.features.dashboard.widget.courses.model.CourseCardItem
+import com.instructure.pandautils.features.dashboard.widget.courses.model.GradeDisplay
+import com.instructure.pandautils.features.dashboard.widget.courses.model.GroupCardItem
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
-import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
-import com.instructure.pandautils.utils.color
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -48,12 +54,14 @@ import javax.inject.Inject
 class CoursesWidgetViewModel @Inject constructor(
     private val loadFavoriteCoursesUseCase: LoadFavoriteCoursesUseCase,
     private val loadGroupsUseCase: LoadGroupsUseCase,
+    private val loadCourseUseCase: LoadCourseUseCase,
     private val sectionExpandedStateDataStore: SectionExpandedStateDataStore,
     private val coursesWidgetBehavior: CoursesWidgetBehavior,
     private val courseSyncSettingsDao: CourseSyncSettingsDao,
     private val networkStateProvider: NetworkStateProvider,
     private val featureFlagProvider: FeatureFlagProvider,
-    private val courseRepository: CourseRepository
+    private val crashlytics: FirebaseCrashlytics,
+    private val localBroadcastManager: LocalBroadcastManager
 ) : ViewModel() {
 
     private var courses: List<Course> = emptyList()
@@ -72,11 +80,25 @@ class CoursesWidgetViewModel @Inject constructor(
     )
     val uiState: StateFlow<CoursesWidgetUiState> = _uiState.asStateFlow()
 
+    private val somethingChangedReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent?) {
+            if (intent?.extras?.getBoolean(Const.COURSE_FAVORITES) == true) {
+                refresh()
+            }
+        }
+    }
+
     init {
         loadData()
         observeExpandedStates()
         observeGradeVisibility()
         observeColorOverlay()
+        localBroadcastManager.registerReceiver(somethingChangedReceiver, IntentFilter(Const.COURSE_THING_CHANGED))
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        localBroadcastManager.unregisterReceiver(somethingChangedReceiver)
     }
 
     private fun onCourseClick(activity: FragmentActivity, courseId: Long) {
@@ -103,14 +125,14 @@ class CoursesWidgetViewModel @Inject constructor(
         loadData(forceRefresh = true)
     }
 
-    fun toggleCoursesExpanded() {
+    private fun toggleCoursesExpanded() {
         viewModelScope.launch {
             val newState = !_uiState.value.isCoursesExpanded
             sectionExpandedStateDataStore.setCoursesExpanded(newState)
         }
     }
 
-    fun toggleGroupsExpanded() {
+    private fun toggleGroupsExpanded() {
         viewModelScope.launch {
             val newState = !_uiState.value.isGroupsExpanded
             sectionExpandedStateDataStore.setGroupsExpanded(newState)
@@ -142,6 +164,7 @@ class CoursesWidgetViewModel @Inject constructor(
                         isError = true
                     )
                 }
+                crashlytics.recordException(e)
             }
         }
     }
@@ -152,12 +175,10 @@ class CoursesWidgetViewModel @Inject constructor(
 
         return courses.map { course ->
             val isSynced = syncedIds.contains(course.id)
-            val themedColor = ColorKeeper.getOrGenerateColor(course)
             CourseCardItem(
                 id = course.id,
                 name = course.name,
                 courseCode = course.courseCode,
-                color = themedColor.light,
                 imageUrl = course.imageUrl,
                 grade = mapGrade(course),
                 announcementCount = 0,
@@ -169,8 +190,13 @@ class CoursesWidgetViewModel @Inject constructor(
 
     private suspend fun mapGroupsToCardItems(groups: List<Group>): List<GroupCardItem> {
         return groups.map { group ->
-            val parentCourse = if (group.courseId != 0L) {
-                courseRepository.getCourse(group.courseId, false).dataOrNull
+            val parentCourse = courses.find { it.id == group.courseId } ?: if (group.courseId != 0L) {
+                try {
+                    loadCourseUseCase(LoadCourseUseCaseParams(group.courseId, false))
+                } catch (e: Exception) {
+                    crashlytics.recordException(e)
+                    null
+                }
             } else {
                 null
             }
@@ -180,8 +206,6 @@ class CoursesWidgetViewModel @Inject constructor(
                 name = group.name.orEmpty(),
                 parentCourseName = parentCourse?.name,
                 parentCourseId = group.courseId,
-                parentCourseColor = parentCourse.color,
-                color = group.color,
                 memberCount = group.membersCount
             )
         }

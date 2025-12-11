@@ -43,14 +43,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
-import com.instructure.pandautils.domain.models.courses.CourseCardItem
-import com.instructure.pandautils.domain.models.courses.GradeDisplay
-import com.instructure.pandautils.domain.models.courses.GroupCardItem
+import com.instructure.pandautils.features.dashboard.widget.courses.model.CourseCardItem
+import com.instructure.pandautils.features.dashboard.widget.courses.model.GradeDisplay
+import com.instructure.pandautils.features.dashboard.widget.courses.model.GroupCardItem
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.getFragmentActivityOrNull
 import kotlinx.coroutines.flow.SharedFlow
@@ -189,8 +190,8 @@ private fun NonLazyGrid(
     columns: Int,
     itemCount: Int,
     modifier: Modifier = Modifier,
-    horizontalSpacing: androidx.compose.ui.unit.Dp = 0.dp,
-    verticalSpacing: androidx.compose.ui.unit.Dp = 0.dp,
+    horizontalSpacing: Dp = 0.dp,
+    verticalSpacing: Dp = 0.dp,
     content: @Composable (Int) -> Unit
 ) {
     val rows = (itemCount + columns - 1) / columns
@@ -246,7 +247,6 @@ private fun CoursesWidgetContentPreview() {
                     id = 1,
                     name = "Introduction to Computer Science",
                     courseCode = "CS 101",
-                    color = 0xFF2196F3.toInt(),
                     imageUrl = null,
                     grade = GradeDisplay.Percentage("85%"),
                     announcementCount = 2,
@@ -257,7 +257,6 @@ private fun CoursesWidgetContentPreview() {
                     id = 2,
                     name = "Advanced Mathematics",
                     courseCode = "MATH 201",
-                    color = 0xFF4CAF50.toInt(),
                     imageUrl = null,
                     grade = GradeDisplay.Letter("A-"),
                     announcementCount = 0,
@@ -271,8 +270,6 @@ private fun CoursesWidgetContentPreview() {
                     name = "Project Team Alpha",
                     parentCourseName = "Introduction to Computer Science",
                     parentCourseId = 1,
-                    parentCourseColor = 0xFF2196F3.toInt(),
-                    color = 0xFF4CAF50.toInt(),
                     memberCount = 5
                 )
             ),
@@ -302,7 +299,6 @@ private fun CoursesWidgetTabletContentPreview() {
                     id = 1,
                     name = "Introduction to Computer Science",
                     courseCode = "CS 101",
-                    color = 0xFF2196F3.toInt(),
                     imageUrl = null,
                     grade = GradeDisplay.Percentage("85%"),
                     announcementCount = 2,
@@ -313,7 +309,6 @@ private fun CoursesWidgetTabletContentPreview() {
                     id = 2,
                     name = "Advanced Mathematics",
                     courseCode = "MATH 201",
-                    color = 0xFF4CAF50.toInt(),
                     imageUrl = null,
                     grade = GradeDisplay.Letter("A-"),
                     announcementCount = 0,
@@ -327,8 +322,6 @@ private fun CoursesWidgetTabletContentPreview() {
                     name = "Project Team Alpha",
                     parentCourseName = "Introduction to Computer Science",
                     parentCourseId = 1,
-                    parentCourseColor = 0xFF2196F3.toInt(),
-                    color = 0xFF4CAF50.toInt(),
                     memberCount = 5
                 )
             ),

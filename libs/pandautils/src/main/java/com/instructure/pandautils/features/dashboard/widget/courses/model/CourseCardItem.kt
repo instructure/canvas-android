@@ -14,14 +14,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.domain.models.courses
+package com.instructure.pandautils.features.dashboard.widget.courses.model
 
-data class GroupCardItem(
+data class CourseCardItem(
     val id: Long,
     val name: String,
-    val parentCourseName: String?,
-    val parentCourseId: Long,
-    val parentCourseColor: Int,
-    val color: Int,
-    val memberCount: Int
+    val courseCode: String?,
+    val imageUrl: String?,
+    val grade: GradeDisplay,
+    val announcementCount: Int = 0,
+    val isSynced: Boolean = false,
+    val isClickable: Boolean = true
 )

@@ -14,16 +14,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.domain.models.courses
+package com.instructure.pandautils.features.dashboard.widget.courses.model
 
-data class CourseCardItem(
-    val id: Long,
-    val name: String,
-    val courseCode: String?,
-    val color: Int,
-    val imageUrl: String?,
-    val grade: GradeDisplay,
-    val announcementCount: Int = 0,
-    val isSynced: Boolean = false,
-    val isClickable: Boolean = true
-)
+sealed class GradeDisplay {
+    data class Percentage(val value: String) : GradeDisplay()
+    data class Letter(val grade: String) : GradeDisplay()
+    data object NotAvailable : GradeDisplay()
+    data object Locked : GradeDisplay()
+    data object Hidden : GradeDisplay()
+}

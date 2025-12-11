@@ -17,8 +17,8 @@
 package com.instructure.pandautils.features.dashboard.widget.courses
 
 import androidx.fragment.app.FragmentActivity
-import com.instructure.pandautils.domain.models.courses.CourseCardItem
-import com.instructure.pandautils.domain.models.courses.GroupCardItem
+import com.instructure.pandautils.features.dashboard.widget.courses.model.CourseCardItem
+import com.instructure.pandautils.features.dashboard.widget.courses.model.GroupCardItem
 
 data class CoursesWidgetUiState(
     val isLoading: Boolean = false,

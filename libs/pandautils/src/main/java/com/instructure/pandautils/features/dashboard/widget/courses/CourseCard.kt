@@ -29,6 +29,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -49,6 +50,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -61,10 +63,13 @@ import androidx.compose.ui.unit.sp
 import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.Shimmer
-import com.instructure.pandautils.domain.models.courses.CourseCardItem
-import com.instructure.pandautils.domain.models.courses.GradeDisplay
+import com.instructure.pandautils.features.dashboard.widget.courses.model.CourseCardItem
+import com.instructure.pandautils.features.dashboard.widget.courses.model.GradeDisplay
+import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getFragmentActivityOrNull
 
 @OptIn(ExperimentalGlideComposeApi::class)
@@ -74,10 +79,10 @@ fun CourseCard(
     showGrade: Boolean,
     showColorOverlay: Boolean,
     onCourseClick: (FragmentActivity, Long) -> Unit,
+    modifier: Modifier = Modifier,
     onMenuClick: ((Long) -> Unit)? = null,
     onManageOfflineContent: ((FragmentActivity, Long) -> Unit)? = null,
     onCustomizeCourse: ((FragmentActivity, Long) -> Unit)? = null,
-    modifier: Modifier = Modifier
 ) {
     var showMenu by remember { mutableStateOf(false) }
     val hasMenu = onManageOfflineContent != null && onCustomizeCourse != null
@@ -113,7 +118,7 @@ fun CourseCard(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(
-                            color = Color(courseCard.color),
+                            color = Color(CanvasContext.emptyCourseContext(id = courseCard.id).color),
                             shape = RoundedCornerShape(14.dp)
                         )
                 )
@@ -141,7 +146,7 @@ fun CourseCard(
                                 .size(24.dp)
                                 .clickable { showMenu = true }
                                 .background(
-                                    color = Color.White,
+                                    color = colorResource(R.color.backgroundLightest),
                                     shape = RoundedCornerShape(12.dp)
                                 ),
                             contentAlignment = Alignment.Center
@@ -150,7 +155,7 @@ fun CourseCard(
                                 painter = painterResource(R.drawable.ic_kebab),
                                 contentDescription = stringResource(R.string.a11y_contentDescription_moreOptions),
                                 modifier = Modifier.size(16.dp),
-                                tint = Color(courseCard.color)
+                                tint = Color(CanvasContext.emptyCourseContext(id = courseCard.id).color)
                             )
                         }
 
@@ -194,7 +199,7 @@ fun CourseCard(
                 if (showGrade && courseCard.grade !is GradeDisplay.Hidden) {
                     GradeBadge(
                         grade = courseCard.grade,
-                        courseColor = Color(courseCard.color),
+                        courseColor = Color(CanvasContext.emptyCourseContext(id = courseCard.id).color),
                         modifier = Modifier
                             .align(Alignment.BottomStart)
                             .padding(bottom = 8.dp, start = 8.dp)
@@ -202,22 +207,18 @@ fun CourseCard(
                 }
             }
 
-            Column(
+            Text(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(start = 16.dp, top = 6.dp, bottom = 6.dp),
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = courseCard.name,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = colorResource(R.color.textDarkest),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    lineHeight = 21.sp
-                )
-            }
+                    .padding(start = 16.dp, end = 8.dp),
+                text = courseCard.name,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium,
+                color = colorResource(R.color.textDarkest),
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                lineHeight = 21.sp
+            )
 
             if (courseCard.announcementCount > 0) {
                 Box(
@@ -226,7 +227,7 @@ fun CourseCard(
                     Icon(
                         painter = painterResource(R.drawable.ic_announcement),
                         contentDescription = stringResource(R.string.announcements),
-                        modifier = Modifier.size(24.dp),
+                        modifier = Modifier.requiredSize(24.dp),
                         tint = colorResource(R.color.textDark)
                     )
                     Box(
@@ -234,7 +235,7 @@ fun CourseCard(
                             .align(Alignment.TopEnd)
                             .offset(x = 8.dp, y = (-8).dp)
                             .background(
-                                color = Color(courseCard.color),
+                                color = Color(CanvasContext.emptyCourseContext(id = courseCard.id).color),
                                 shape = RoundedCornerShape(12.dp)
                             )
                             .padding(horizontal = 5.dp, vertical = 2.dp)
@@ -264,7 +265,7 @@ private fun GradeBadge(
         modifier = modifier,
         shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White
+            containerColor = colorResource(R.color.backgroundLightest)
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
@@ -360,22 +361,24 @@ fun CourseCardShimmer(
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun CourseCardPreview() {
+    ContextKeeper.appContext = LocalContext.current
     CourseCard(
         courseCard = CourseCardItem(
-            id = 1,
+            id = 1L,
             name = "Introduction to Computer Science",
             courseCode = "CS 101",
-            color = 0xFF2196F3.toInt(),
             imageUrl = null,
             grade = GradeDisplay.Percentage("85%"),
-            announcementCount = 0,
+            announcementCount = 4,
             isSynced = true,
             isClickable = true
         ),
         showGrade = true,
         showColorOverlay = true,
         onCourseClick = {_, _ ->},
-        onMenuClick = {}
+        onMenuClick = {},
+        onCustomizeCourse = {_, _ ->},
+        onManageOfflineContent = {_, _ ->}
     )
 }
 
@@ -383,5 +386,6 @@ private fun CourseCardPreview() {
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun CourseCardShimmerPreview() {
+    ContextKeeper.appContext = LocalContext.current
     CourseCardShimmer()
 }

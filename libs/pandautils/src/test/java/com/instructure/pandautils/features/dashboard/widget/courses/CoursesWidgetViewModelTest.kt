@@ -16,14 +16,18 @@
 
 package com.instructure.pandautils.features.dashboard.widget.courses
 
+import android.content.BroadcastReceiver
+import android.content.Intent
+import android.os.Bundle
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.fragment.app.FragmentActivity
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.Group
-import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.pandautils.data.repository.course.CourseRepository
-import com.instructure.pandautils.domain.models.courses.GradeDisplay
+import com.instructure.pandautils.features.dashboard.widget.courses.model.GradeDisplay
+import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadFavoriteCoursesParams
 import com.instructure.pandautils.domain.usecase.courses.LoadFavoriteCoursesUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadGroupsParams
@@ -31,6 +35,7 @@ import com.instructure.pandautils.domain.usecase.courses.LoadGroupsUseCase
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.ThemedColor
@@ -39,6 +44,7 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
+import io.mockk.slot
 import io.mockk.unmockkAll
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
@@ -64,12 +70,14 @@ class CoursesWidgetViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
     private val loadFavoriteCoursesUseCase: LoadFavoriteCoursesUseCase = mockk()
     private val loadGroupsUseCase: LoadGroupsUseCase = mockk()
+    private val loadCourseUseCase: LoadCourseUseCase = mockk()
     private val sectionExpandedStateDataStore: SectionExpandedStateDataStore = mockk(relaxed = true)
     private val coursesWidgetBehavior: CoursesWidgetBehavior = mockk(relaxed = true)
     private val courseSyncSettingsDao: CourseSyncSettingsDao = mockk()
     private val networkStateProvider: NetworkStateProvider = mockk()
     private val featureFlagProvider: FeatureFlagProvider = mockk()
-    private val courseRepository: CourseRepository = mockk()
+    private val crashlytics: FirebaseCrashlytics = mockk(relaxed = true)
+    private val localBroadcastManager: LocalBroadcastManager = mockk()
 
     private lateinit var viewModel: CoursesWidgetViewModel
 
@@ -96,6 +104,8 @@ class CoursesWidgetViewModelTest {
         every { coursesWidgetBehavior.observeColorOverlay() } returns flowOf(false)
         coEvery { featureFlagProvider.offlineEnabled() } returns false
         every { networkStateProvider.isOnline() } returns true
+        every { localBroadcastManager.registerReceiver(any(), any()) } returns Unit
+        every { localBroadcastManager.unregisterReceiver(any()) } returns Unit
     }
 
     @Test
@@ -150,7 +160,7 @@ class CoursesWidgetViewModelTest {
         setupDefaultMocks()
 
         viewModel = createViewModel()
-        viewModel.toggleCoursesExpanded()
+        viewModel.uiState.value.onToggleCoursesExpanded()
 
         coVerify { sectionExpandedStateDataStore.setCoursesExpanded(false) }
     }
@@ -160,7 +170,7 @@ class CoursesWidgetViewModelTest {
         setupDefaultMocks()
 
         viewModel = createViewModel()
-        viewModel.toggleGroupsExpanded()
+        viewModel.uiState.value.onToggleGroupsExpanded()
 
         coVerify { sectionExpandedStateDataStore.setGroupsExpanded(false) }
     }
@@ -355,7 +365,7 @@ class CoursesWidgetViewModelTest {
             Group(id = 1, name = "Study Group", courseId = 100, membersCount = 5, isFavorite = true)
         )
         coEvery { loadGroupsUseCase(any()) } returns groups
-        coEvery { courseRepository.getCourse(100, false) } returns DataResult.Success(parentCourse)
+        coEvery { loadCourseUseCase(any()) } returns parentCourse
 
         viewModel = createViewModel()
 
@@ -447,16 +457,82 @@ class CoursesWidgetViewModelTest {
         verify { coursesWidgetBehavior.onAllCoursesClicked(activity) }
     }
 
+    @Test
+    fun `broadcast receiver is registered on init`() {
+        setupDefaultMocks()
+
+        viewModel = createViewModel()
+
+        verify {
+            localBroadcastManager.registerReceiver(any(), any())
+        }
+    }
+
+    @Test
+    fun `broadcast with COURSE_FAVORITES true triggers refresh`() {
+        setupDefaultMocks()
+        val intent: Intent = mockk()
+        val extras: Bundle = mockk()
+        every { intent.extras } returns extras
+        every { extras.getBoolean(Const.COURSE_FAVORITES) } returns true
+
+        viewModel = createViewModel()
+        coEvery { loadFavoriteCoursesUseCase(LoadFavoriteCoursesParams(forceRefresh = true)) } returns emptyList()
+        coEvery { loadGroupsUseCase(LoadGroupsParams(forceRefresh = true)) } returns emptyList()
+
+        val receiverSlot = slot<BroadcastReceiver>()
+        verify { localBroadcastManager.registerReceiver(capture(receiverSlot), any()) }
+
+        receiverSlot.captured.onReceive(mockk(), intent)
+
+        coVerify { loadFavoriteCoursesUseCase(LoadFavoriteCoursesParams(forceRefresh = true)) }
+        coVerify { loadGroupsUseCase(LoadGroupsParams(forceRefresh = true)) }
+    }
+
+    @Test
+    fun `broadcast without COURSE_FAVORITES does not trigger refresh`() {
+        setupDefaultMocks()
+        val intent: Intent = mockk()
+        val extras: Bundle = mockk()
+        every { intent.extras } returns extras
+        every { extras.getBoolean(Const.COURSE_FAVORITES) } returns false
+
+        viewModel = createViewModel()
+
+        val receiverSlot = slot<BroadcastReceiver>()
+        verify { localBroadcastManager.registerReceiver(capture(receiverSlot), any()) }
+
+        receiverSlot.captured.onReceive(mockk(), intent)
+
+        coVerify(exactly = 1) { loadFavoriteCoursesUseCase(LoadFavoriteCoursesParams(forceRefresh = false)) }
+        coVerify(exactly = 1) { loadGroupsUseCase(LoadGroupsParams(forceRefresh = false)) }
+    }
+
+    @Test
+    fun `exception during load is recorded to crashlytics`() {
+        setupDefaultMocks()
+        val exception = Exception("Test exception")
+        coEvery { loadFavoriteCoursesUseCase(any()) } throws exception
+
+        viewModel = createViewModel()
+
+        verify { crashlytics.recordException(exception) }
+        assertTrue(viewModel.uiState.value.isError)
+        assertFalse(viewModel.uiState.value.isLoading)
+    }
+
     private fun createViewModel(): CoursesWidgetViewModel {
         return CoursesWidgetViewModel(
             loadFavoriteCoursesUseCase = loadFavoriteCoursesUseCase,
             loadGroupsUseCase = loadGroupsUseCase,
+            loadCourseUseCase = loadCourseUseCase,
             sectionExpandedStateDataStore = sectionExpandedStateDataStore,
             coursesWidgetBehavior = coursesWidgetBehavior,
             courseSyncSettingsDao = courseSyncSettingsDao,
             networkStateProvider = networkStateProvider,
             featureFlagProvider = featureFlagProvider,
-            courseRepository = courseRepository
+            crashlytics = crashlytics,
+            localBroadcastManager = localBroadcastManager
         )
     }
 }

@@ -37,6 +37,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.pluralStringResource
@@ -46,9 +47,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.FragmentActivity
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.Shimmer
-import com.instructure.pandautils.domain.models.courses.GroupCardItem
+import com.instructure.pandautils.features.dashboard.widget.courses.model.GroupCardItem
+import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getFragmentActivityOrNull
 
 @Composable
@@ -67,7 +71,7 @@ fun GroupCard(
             .fillMaxWidth(),
         shape = cardShape,
         colors = CardDefaults.cardColors(
-            containerColor = colorResource(R.color.backgroundLightestElevated)
+            containerColor = colorResource(R.color.backgroundLightest)
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
@@ -87,7 +91,7 @@ fun GroupCard(
                     modifier = Modifier
                         .size(72.dp)
                         .background(
-                            color = Color(groupCard.color),
+                            color = Color(CanvasContext.emptyGroupContext(id = groupCard.id).color),
                             shape = RoundedCornerShape(14.dp)
                         ),
                     contentAlignment = Alignment.Center
@@ -102,7 +106,7 @@ fun GroupCard(
                         Card(
                             shape = RoundedCornerShape(16.dp),
                             colors = CardDefaults.cardColors(
-                                containerColor = Color.White
+                                containerColor = colorResource(R.color.backgroundLightest)
                             ),
                             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                         ) {
@@ -110,7 +114,7 @@ fun GroupCard(
                                 text = groupCard.memberCount.toString(),
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Medium,
-                                color = Color(groupCard.color),
+                                color = Color(CanvasContext.emptyGroupContext(id = groupCard.id).color),
                                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
                                 lineHeight = 21.sp
                             )
@@ -119,7 +123,7 @@ fun GroupCard(
                         Text(
                             text = pluralStringResource(R.plurals.groupMemberCount, groupCard.memberCount),
                             fontSize = 14.sp,
-                            color = Color.White,
+                            color = colorResource(R.color.textLightest),
                             lineHeight = 19.sp
                         )
 
@@ -138,7 +142,7 @@ fun GroupCard(
                     Text(
                         text = courseName,
                         fontSize = 14.sp,
-                        color = Color(groupCard.parentCourseColor),
+                        color = Color(CanvasContext.emptyCourseContext(id = groupCard.parentCourseId).color),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         lineHeight = 19.sp
@@ -168,7 +172,7 @@ fun GroupCardShimmer(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = colorResource(R.color.backgroundLightestElevated)
+            containerColor = colorResource(R.color.backgroundLightest)
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
@@ -210,14 +214,13 @@ fun GroupCardShimmer(
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun GroupCardPreview() {
+    ContextKeeper.appContext = LocalContext.current
     GroupCard(
         groupCard = GroupCardItem(
             id = 1,
             name = "Project Team Alpha",
             parentCourseName = "Introduction to Computer Science",
-            parentCourseId = 1,
-            parentCourseColor = 0xFF2196F3.toInt(),
-            color = 0xFF4CAF50.toInt(),
+            parentCourseId = 2,
             memberCount = 5
         ),
         onGroupClick = {_, _ -> }
@@ -228,5 +231,6 @@ private fun GroupCardPreview() {
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun GroupCardShimmerPreview() {
+    ContextKeeper.appContext = LocalContext.current
     GroupCardShimmer()
 }

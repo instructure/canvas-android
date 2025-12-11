@@ -39,7 +39,6 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -64,7 +63,7 @@ fun CollapsibleSection(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "$title ($count)",
+                text = stringResource(R.string.collapsibleSectionTitle, title, count),
                 fontSize = 14.sp,
                 color = colorResource(R.color.textDarkest)
             )
