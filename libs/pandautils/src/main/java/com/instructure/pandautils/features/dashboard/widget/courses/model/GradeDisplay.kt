@@ -14,19 +14,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.features.dashboard.widget
+package com.instructure.pandautils.features.dashboard.widget.courses.model
 
-data class WidgetMetadata(
-    val id: String,
-    val position: Int,
-    val isVisible: Boolean,
-    val isEditable: Boolean = true,
-    val isFullWidth: Boolean = false
-) {
-    companion object {
-        const val WIDGET_ID_COURSE_INVITATIONS = "course_invitations"
-        const val WIDGET_ID_INSTITUTIONAL_ANNOUNCEMENTS = "institutional_announcements"
-        const val WIDGET_ID_WELCOME = "welcome"
-        const val WIDGET_ID_COURSES = "courses"
-    }
+sealed class GradeDisplay {
+    data class Percentage(val value: String) : GradeDisplay()
+    data class Letter(val grade: String) : GradeDisplay()
+    data object NotAvailable : GradeDisplay()
+    data object Locked : GradeDisplay()
+    data object Hidden : GradeDisplay()
 }
