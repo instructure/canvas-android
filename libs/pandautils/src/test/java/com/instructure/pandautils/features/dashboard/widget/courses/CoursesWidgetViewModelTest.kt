@@ -375,7 +375,6 @@ class CoursesWidgetViewModelTest {
         assertEquals(1L, groupCard.id)
         assertEquals("Study Group", groupCard.name)
         assertEquals("Parent Course", groupCard.parentCourseName)
-        assertEquals(100L, groupCard.parentCourseId)
         assertEquals(5, groupCard.memberCount)
     }
 

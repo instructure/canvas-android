@@ -142,7 +142,7 @@ fun GroupCard(
                     Text(
                         text = courseName,
                         fontSize = 14.sp,
-                        color = Color(CanvasContext.emptyCourseContext(id = groupCard.parentCourseId).color),
+                        color = Color(CanvasContext.emptyGroupContext(id = groupCard.id).color),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         lineHeight = 19.sp
@@ -220,7 +220,6 @@ private fun GroupCardPreview() {
             id = 1,
             name = "Project Team Alpha",
             parentCourseName = "Introduction to Computer Science",
-            parentCourseId = 2,
             memberCount = 5
         ),
         onGroupClick = {_, _ -> }

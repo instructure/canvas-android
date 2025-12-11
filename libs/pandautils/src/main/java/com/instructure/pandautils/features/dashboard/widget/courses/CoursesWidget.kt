@@ -269,7 +269,6 @@ private fun CoursesWidgetContentPreview() {
                     id = 1,
                     name = "Project Team Alpha",
                     parentCourseName = "Introduction to Computer Science",
-                    parentCourseId = 1,
                     memberCount = 5
                 )
             ),
@@ -321,7 +320,6 @@ private fun CoursesWidgetTabletContentPreview() {
                     id = 1,
                     name = "Project Team Alpha",
                     parentCourseName = "Introduction to Computer Science",
-                    parentCourseId = 1,
                     memberCount = 5
                 )
             ),

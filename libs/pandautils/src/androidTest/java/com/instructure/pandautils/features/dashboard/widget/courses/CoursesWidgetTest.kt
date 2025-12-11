@@ -165,7 +165,6 @@ class CoursesWidgetTest {
                 id = 1,
                 name = "Project Team Alpha",
                 parentCourseName = "Introduction to Computer Science",
-                parentCourseId = 1,
                 memberCount = 5
             )
         )
@@ -209,7 +208,6 @@ class CoursesWidgetTest {
                 id = 1,
                 name = "Project Team Alpha",
                 parentCourseName = "Introduction to Computer Science",
-                parentCourseId = 1,
                 memberCount = 5
             )
         )
@@ -388,7 +386,6 @@ class CoursesWidgetTest {
                 id = 1,
                 name = "Project Team Alpha",
                 parentCourseName = "Introduction to Computer Science",
-                parentCourseId = 1,
                 memberCount = 5
             )
         )
@@ -569,7 +566,6 @@ class CoursesWidgetTest {
                 id = 1,
                 name = "Project Team Alpha",
                 parentCourseName = "Introduction to Computer Science",
-                parentCourseId = 1,
                 memberCount = 5
             )
         )
@@ -606,7 +602,6 @@ class CoursesWidgetTest {
                 id = 1,
                 name = "Project Team Alpha",
                 parentCourseName = "Introduction to Computer Science",
-                parentCourseId = 1,
                 memberCount = 5
             )
         )

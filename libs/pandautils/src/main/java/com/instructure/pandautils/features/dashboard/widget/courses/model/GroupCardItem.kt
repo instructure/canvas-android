@@ -20,6 +20,5 @@ data class GroupCardItem(
     val id: Long,
     val name: String,
     val parentCourseName: String?,
-    val parentCourseId: Long,
     val memberCount: Int
 )

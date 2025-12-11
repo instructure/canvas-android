@@ -205,7 +205,6 @@ class CoursesWidgetViewModel @Inject constructor(
                 id = group.id,
                 name = group.name.orEmpty(),
                 parentCourseName = parentCourse?.name,
-                parentCourseId = group.courseId,
                 memberCount = group.membersCount
             )
         }
