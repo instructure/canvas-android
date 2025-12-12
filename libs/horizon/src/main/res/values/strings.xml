@@ -483,4 +483,6 @@
     <string name="a11y_cancel">Cancel</string>
     <string name="a11y_download">Download</string>
     <string name="a11y_retry">Retry</string>
+    <string name="a11y_readInboxMessage">Read</string>
+    <string name="a11y_unreadInboxMessage">Unread</string>
 </resources>

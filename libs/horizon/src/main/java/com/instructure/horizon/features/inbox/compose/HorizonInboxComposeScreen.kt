@@ -173,7 +173,7 @@ private fun HorizonInboxComposeTopBar(
         actions = {
             IconButton(
                 iconRes = R.drawable.close,
-                contentDescription = null,
+                contentDescription = stringResource(R.string.close),
                 color = IconButtonColor.Inverse,
                 elevation = HorizonElevation.level4,
                 onClick = {
