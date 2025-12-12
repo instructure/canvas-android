@@ -101,7 +101,7 @@ class CommentLibraryE2ETest : TeacherComposeTest() {
 
         val testText = "another"
         Log.d(STEP_TAG, "Type '$testText' word.")
-        speedGraderPage.typeComment(testText)
+        speedGraderPage.typeCommentInCommentLibraryInputField(testText)
 
         Log.d(ASSERTION_TAG, "Assert that there is only 1 comment displayed in the comment library, which matches the filter.")
         speedGraderPage.assertCommentLibraryItemCount(1)
@@ -126,7 +126,7 @@ class CommentLibraryE2ETest : TeacherComposeTest() {
 
         val nonExistingCommentText = "csakafradi"
         Log.d(STEP_TAG, "Type a non-existing comment text, '$nonExistingCommentText' into the comment input field.")
-        speedGraderPage.typeComment(nonExistingCommentText)
+        speedGraderPage.typeCommentInCommentLibraryInputField(nonExistingCommentText)
 
         Log.d(ASSERTION_TAG, "Assert that there is no comment displayed in the comment library as there's no matching comment with the entered (filter) text.")
         speedGraderPage.assertCommentLibraryItemCount(0)
@@ -148,7 +148,7 @@ class CommentLibraryE2ETest : TeacherComposeTest() {
 
         val testText2 = "test"
         Log.d(STEP_TAG, "Type '$testText2' word.")
-        speedGraderPage.typeComment(testText2)
+        speedGraderPage.typeCommentInCommentLibraryInputField(testText2)
 
         Log.d(ASSERTION_TAG, "Assert that there are 2 comments displayed in the comment library, which matches the filter.")
         speedGraderPage.assertCommentLibraryItemCount(2)
@@ -162,9 +162,9 @@ class CommentLibraryE2ETest : TeacherComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the 'Comments' label is displayed with the corresponding number of comments, which is 2 at the moment.")
         speedGraderPage.assertCommentsLabelDisplayed(2)
 
-        Log.d(ASSERTION_TAG, "Assert assert both the '$testComment' and '$testComment2' (whole) comments are displayed in the comments section.")
-        speedGraderPage.assertCommentDisplayed(testComment)
-        speedGraderPage.assertCommentDisplayed(testComment2)
+        Log.d(ASSERTION_TAG, "Assert that both the '$testComment' and '$testComment2' (whole) comments are displayed in the comments section.")
+        speedGraderPage.assertCommentDisplayed(testComment, author = null)
+        speedGraderPage.assertCommentDisplayed(testComment2, author = null)
     }
 
     private fun prepareSettingsAndMakeAssignmentWithSubmission(

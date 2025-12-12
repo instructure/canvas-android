@@ -25,7 +25,6 @@ import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
-import com.instructure.canvas.espresso.annotations.Stub
 import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvas.espresso.mockcanvas.addAssignment
 import com.instructure.canvas.espresso.mockcanvas.addFileToCourse
@@ -246,18 +245,86 @@ class SubmissionDetailsInteractionTest : StudentComposeTest() {
         )
     }
 
-    @Stub
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
     fun testComments_videoCommentPlayback() {
-        // After recording a video comment, user should be able to view a replay
+        val data = getToCourse()
+        val user = data.users.values.first()
+        val assignment = data.addAssignment(
+            courseId = course.id,
+            submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
+        )
+
+        val videoAttachment = createVideoAttachment(data, "video_comment.mp4")
+
+        val commentText = "Here's a video comment"
+
+        val submissionComment = SubmissionComment(
+            id = data.newItemId(),
+            authorId = user.id,
+            authorName = user.name,
+            comment = commentText,
+            createdAt = Date(),
+            attachments = arrayListOf(videoAttachment),
+            author = Author(id = user.id, displayName = user.shortName),
+            attempt = 1
+        )
+
+        data.addSubmissionForAssignment(
+            assignmentId = assignment.id,
+            userId = user.id,
+            type = Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString,
+            body = "Some Text!",
+            comment = submissionComment
+        )
+
+        courseBrowserPage.selectAssignments()
+        assignmentListPage.clickAssignment(assignment)
+        assignmentDetailsPage.goToSubmissionDetails()
+        submissionDetailsPage.openComments()
+        submissionDetailsPage.assertCommentDisplayed(commentText, user)
+        submissionDetailsPage.assertVideoCommentDisplayed()
     }
 
-    @Stub
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
     fun testComments_audioCommentPlayback() {
-        // After recording an audio comment, user should be able to hear an audio playback
+        val data = getToCourse()
+        val user = data.users.values.first()
+        val assignment = data.addAssignment(
+            courseId = course.id,
+            submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
+        )
+
+        val audioAttachment = createAudioAttachment(data, "audio_comment.mp3")
+
+        val commentText = "Here's an audio comment"
+
+        val submissionComment = SubmissionComment(
+            id = data.newItemId(),
+            authorId = user.id,
+            authorName = user.name,
+            comment = commentText,
+            createdAt = Date(),
+            attachments = arrayListOf(audioAttachment),
+            author = Author(id = user.id, displayName = user.shortName),
+            attempt = 1
+        )
+
+        data.addSubmissionForAssignment(
+            assignmentId = assignment.id,
+            userId = user.id,
+            type = Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString,
+            body = "Some Text!",
+            comment = submissionComment
+        )
+
+        courseBrowserPage.selectAssignments()
+        assignmentListPage.clickAssignment(assignment)
+        assignmentDetailsPage.goToSubmissionDetails()
+        submissionDetailsPage.openComments()
+        submissionDetailsPage.assertCommentDisplayed(commentText, user)
+        submissionDetailsPage.assertAudioCommentDisplayed()
     }
 
 
@@ -281,6 +348,54 @@ class SubmissionDetailsInteractionTest : StudentComposeTest() {
                 previewUrl = mockUrl,
                 createdAt = Date(),
                 size = html.length.toLong()
+        )
+
+        return attachment
+    }
+
+    private fun createAudioAttachment(data: MockCanvas, name: String): Attachment {
+        val course1 = data.courses.values.first()
+        val fileId = data.addFileToCourse(
+            courseId = course1.id,
+            displayName = name,
+            contentType = "audio/mp3",
+            fileContent = "fake audio content"
+        )
+
+        val mockUrl = "https://mock-data.instructure.com/files/$fileId/preview"
+        val attachment = Attachment(
+            id = data.newItemId(),
+            contentType = "audio/mp3",
+            displayName = name,
+            filename = name,
+            url = mockUrl,
+            previewUrl = mockUrl,
+            createdAt = Date(),
+            size = 1024L
+        )
+
+        return attachment
+    }
+
+    private fun createVideoAttachment(data: MockCanvas, name: String): Attachment {
+        val course1 = data.courses.values.first()
+        val fileId = data.addFileToCourse(
+            courseId = course1.id,
+            displayName = name,
+            contentType = "video/mp4",
+            fileContent = "fake video content"
+        )
+
+        val mockUrl = "https://mock-data.instructure.com/files/$fileId/preview"
+        val attachment = Attachment(
+            id = data.newItemId(),
+            contentType = "video/mp4",
+            displayName = name,
+            filename = name,
+            url = mockUrl,
+            previewUrl = mockUrl,
+            createdAt = Date(),
+            size = 2048L
         )
 
         return attachment
