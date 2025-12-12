@@ -21,6 +21,7 @@ import android.content.res.Configuration
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -30,6 +31,7 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -55,6 +57,8 @@ import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Card
@@ -90,6 +94,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -100,6 +105,8 @@ import androidx.compose.ui.semantics.hideFromAccessibility
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -118,7 +125,7 @@ import com.instructure.pandautils.compose.composables.FullScreenDialog
 import com.instructure.pandautils.compose.composables.GroupHeader
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.OverflowMenu
-import com.instructure.pandautils.compose.composables.SearchBar
+import com.instructure.pandautils.compose.composables.SearchBarLive
 import com.instructure.pandautils.compose.composables.SubmissionState
 import com.instructure.pandautils.features.grades.gradepreferences.GradePreferencesScreen
 import com.instructure.pandautils.utils.DisplayGrade
@@ -126,6 +133,8 @@ import com.instructure.pandautils.utils.announceAccessibilityText
 import com.instructure.pandautils.utils.drawableId
 import kotlinx.coroutines.launch
 
+private val FadeInAnimation = fadeIn(animationSpec = tween(300))
+private val FadeOutAnimation = fadeOut(animationSpec = tween(300))
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -157,33 +166,52 @@ fun GradesScreen(
                         title = it.title,
                         subtitle = it.subtitle,
                         navigationActionClick = it.navigationActionClick,
+                        navIconRes = if (uiState.isSearchExpanded) null else R.drawable.ic_back_arrow,
                         backgroundColor = Color(color = canvasContextColor),
                         contentColor = colorResource(id = R.color.textLightest),
                         actions = {
-                            FilterIcon(uiState, actionHandler, colorResource(id = R.color.textLightest))
-                            if (it.bookmarkable) {
-                                var overflowMenuExpanded by remember { mutableStateOf(false) }
-                                OverflowMenu(
-                                    modifier = Modifier.background(color = colorResource(id = R.color.backgroundLightestElevated)),
-                                    showMenu = overflowMenuExpanded,
-                                    onDismissRequest = {
-                                        overflowMenuExpanded = !overflowMenuExpanded
+                            if (!uiState.isLoading) {
+                                if (!uiState.isSearchExpanded) {
+                                    FilterIcon(uiState, actionHandler, colorResource(id = R.color.textLightest))
+                                }
+                                SearchBarLive(
+                                    icon = R.drawable.ic_search_white_24dp,
+                                    tintColor = colorResource(R.color.backgroundLightest),
+                                    placeholder = stringResource(R.string.search),
+                                    query = uiState.searchQuery,
+                                    queryChanged = {
+                                        actionHandler(GradesAction.SearchQueryChanged(it))
                                     },
-                                    iconColor = colorResource(R.color.textLightest)
-                                ) {
-                                    DropdownMenuItem(
-                                        modifier = Modifier.background(
-                                            color = colorResource(id = R.color.backgroundLightestElevated)
-                                        ),
-                                        onClick = {
+                                    expanded = uiState.isSearchExpanded,
+                                    onExpand = {
+                                        actionHandler(GradesAction.SearchQueryChanged(""))
+                                        actionHandler(GradesAction.ToggleSearch)
+                                    }
+                                )
+                                if (!uiState.isSearchExpanded && it.bookmarkable) {
+                                    var overflowMenuExpanded by remember { mutableStateOf(false) }
+                                    OverflowMenu(
+                                        modifier = Modifier.background(color = colorResource(id = R.color.backgroundLightestElevated)),
+                                        showMenu = overflowMenuExpanded,
+                                        onDismissRequest = {
                                             overflowMenuExpanded = !overflowMenuExpanded
-                                            it.addBookmarkClick()
                                         },
+                                        iconColor = colorResource(R.color.textLightest)
                                     ) {
-                                        Text(
-                                            text = stringResource(id = R.string.addBookmark),
-                                            color = colorResource(id = R.color.textDarkest)
-                                        )
+                                        DropdownMenuItem(
+                                            modifier = Modifier.background(
+                                                color = colorResource(id = R.color.backgroundLightestElevated)
+                                            ),
+                                            onClick = {
+                                                overflowMenuExpanded = !overflowMenuExpanded
+                                                it.addBookmarkClick()
+                                            },
+                                        ) {
+                                            Text(
+                                                text = stringResource(id = R.string.addBookmark),
+                                                color = colorResource(id = R.color.textDarkest)
+                                            )
+                                        }
                                     }
                                 }
                             }
@@ -249,7 +277,7 @@ fun GradesScreen(
                             contextColor = canvasContextColor,
                             actionHandler = actionHandler,
                             canvasContextColor = canvasContextColor,
-                            showFilterIconOnGradesCard = appBarUiState == null
+                            showActionsOnCard = appBarUiState == null
                         )
                     }
                 }
@@ -300,7 +328,7 @@ private fun GradesScreenContent(
     uiState: GradesUiState,
     contextColor: Int,
     actionHandler: (GradesAction) -> Unit,
-    showFilterIconOnGradesCard: Boolean,
+    showActionsOnCard: Boolean,
     canvasContextColor: Int
 ) {
     val lazyListState = rememberLazyListState()
@@ -313,14 +341,14 @@ private fun GradesScreenContent(
 
     val isPortrait = LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
 
-    Column {
+    Column(modifier = Modifier.fillMaxSize()) {
         if (isPortrait) {
-            GradesCard(
+            SearchCardTransition(
                 uiState = uiState,
                 contextColor = contextColor,
                 shouldShowNewText = shouldShowNewText,
                 actionHandler = actionHandler,
-                showFilterIcon = showFilterIconOnGradesCard
+                showActionsOnCard = showActionsOnCard
             )
         }
 
@@ -331,12 +359,12 @@ private fun GradesScreenContent(
         ) {
             item {
                 if (!isPortrait) {
-                    GradesCard(
+                    SearchCardTransition(
                         uiState = uiState,
                         contextColor = contextColor,
                         shouldShowNewText = false,
                         actionHandler = actionHandler,
-                        showFilterIcon = showFilterIconOnGradesCard
+                        showActionsOnCard = showActionsOnCard
                     )
                 }
 
@@ -420,46 +448,19 @@ private fun GradesScreenContent(
                     }
                 }
 
-                AnimatedVisibility(
-                    visible = uiState.isSearchExpanded,
-                    enter = slideInVertically() + fadeIn(),
-                    exit = slideOutVertically() + fadeOut()
-                ) {
-                    val focusRequester = remember { FocusRequester() }
-
-                    LaunchedEffect(uiState.isSearchExpanded) {
-                        if (uiState.isSearchExpanded) {
-                            focusRequester.requestFocus()
-                        }
-                    }
-
-                    SearchBar(
-                        icon = R.drawable.ic_search_white_24dp,
-                        searchQuery = uiState.searchQuery,
-                        tintColor = colorResource(R.color.textDarkest),
-                        placeholder = stringResource(R.string.search),
-                        collapsable = false,
-                        onSearch = {
-                            actionHandler(GradesAction.SearchQueryChanged(it))
-                        },
-                        onClear = {
-                            actionHandler(GradesAction.SearchQueryChanged(""))
-                        },
-                        onQueryChange = {
-                            actionHandler(GradesAction.SearchQueryChanged(it))
-                        },
-                        modifier = Modifier
-                            .testTag("searchField")
-                            .focusRequester(focusRequester)
-                    )
-                }
-
                 if (uiState.items.isEmpty()) {
-                    if (uiState.searchQuery.length >= 3) {
-                        EmptySearchContent()
-                    } else {
-                        EmptyContent()
-                    }
+                    GradesEmptyContent(
+                        titleRes = if (uiState.searchQuery.length >= 3) {
+                            R.string.noMatchingAssignments
+                        } else {
+                            R.string.gradesEmptyTitle
+                        },
+                        messageRes = if (uiState.searchQuery.length >= 3) {
+                            R.string.noMatchingAssignmentsDescription
+                        } else {
+                            R.string.gradesEmptyMessage
+                        }
+                    )
                 }
             }
 
@@ -492,12 +493,170 @@ private fun GradesScreenContent(
 }
 
 @Composable
+private fun SearchCardTransition(
+    uiState: GradesUiState,
+    contextColor: Int,
+    shouldShowNewText: Boolean,
+    actionHandler: (GradesAction) -> Unit,
+    showActionsOnCard: Boolean
+) {
+    Box(modifier = Modifier.fillMaxWidth()) {
+        AnimatedVisibility(
+            visible = !(showActionsOnCard && uiState.isSearchExpanded),
+            enter = FadeInAnimation,
+            exit = FadeOutAnimation
+        ) {
+            GradesCard(
+                uiState = uiState,
+                contextColor = contextColor,
+                shouldShowNewText = shouldShowNewText,
+                actionHandler = actionHandler,
+                showActionsOnCard = showActionsOnCard
+            )
+        }
+
+        AnimatedVisibility(
+            visible = showActionsOnCard && uiState.isSearchExpanded,
+            enter = FadeInAnimation,
+            exit = FadeOutAnimation
+        ) {
+            SearchField(
+                uiState = uiState,
+                contextColor = contextColor,
+                actionHandler = actionHandler
+            )
+        }
+    }
+}
+
+@Composable
+private fun SearchField(
+    uiState: GradesUiState,
+    contextColor: Int,
+    actionHandler: (GradesAction) -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(colorResource(R.color.backgroundLightest))
+            .padding(horizontal = 16.dp, vertical = 16.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            val focusRequester = remember { FocusRequester() }
+            val keyboardController = LocalSoftwareKeyboardController.current
+
+            LaunchedEffect(uiState.isSearchExpanded) {
+                if (uiState.isSearchExpanded) {
+                    focusRequester.requestFocus()
+                }
+            }
+
+            Card(
+                shape = RoundedCornerShape(28.dp),
+                backgroundColor = colorResource(R.color.backgroundLightestElevated),
+                elevation = 0.dp,
+                modifier = Modifier
+                    .weight(1f)
+                    .testTag("searchField")
+                    .border(1.dp, colorResource(R.color.borderMedium), RoundedCornerShape(28.dp))
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_search_white_24dp),
+                        contentDescription = null,
+                        tint = colorResource(R.color.textDark),
+                        modifier = Modifier.size(20.dp)
+                    )
+
+                    Spacer(modifier = Modifier.width(12.dp))
+
+                    BasicTextField(
+                        value = uiState.searchQuery,
+                        onValueChange = {
+                            actionHandler(GradesAction.SearchQueryChanged(it))
+                        },
+                        textStyle = TextStyle(
+                            color = colorResource(R.color.textDarkest),
+                            fontSize = 16.sp
+                        ),
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Search
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onSearch = {
+                                keyboardController?.hide()
+                            }
+                        ),
+                        modifier = Modifier
+                            .weight(1f)
+                            .focusRequester(focusRequester)
+                    ) { innerTextField ->
+                        if (uiState.searchQuery.isEmpty()) {
+                            Text(
+                                text = stringResource(R.string.search),
+                                color = colorResource(R.color.textDark),
+                                fontSize = 16.sp
+                            )
+                        }
+                        innerTextField()
+                    }
+
+                    Box(
+                        modifier = Modifier.size(24.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        if (uiState.searchQuery.isNotEmpty()) {
+                            Box(
+                                modifier = Modifier
+                                    .size(24.dp)
+                                    .clip(CircleShape)
+                                    .background(color = Color(contextColor))
+                                    .clickable {
+                                        actionHandler(GradesAction.SearchQueryChanged(""))
+                                    },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_close),
+                                    contentDescription = stringResource(R.string.a11y_searchBarClearButton),
+                                    tint = colorResource(R.color.backgroundLightest),
+                                    modifier = Modifier.size(14.dp)
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
+            Icon(
+                painter = painterResource(R.drawable.ic_close),
+                contentDescription = stringResource(R.string.close),
+                tint = Color(contextColor),
+                modifier = Modifier
+                    .size(24.dp)
+                    .clickable {
+                        actionHandler(GradesAction.ToggleSearch)
+                    }
+            )
+        }
+    }
+}
+
+@Composable
 private fun GradesCard(
     uiState: GradesUiState,
     contextColor: Int,
     shouldShowNewText: Boolean,
     actionHandler: (GradesAction) -> Unit,
-    showFilterIcon: Boolean
+    showActionsOnCard: Boolean
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -507,7 +666,7 @@ private fun GradesCard(
                 top = 16.dp,
                 bottom = 16.dp,
                 start = 16.dp,
-                end = if (showFilterIcon) 0.dp else 16.dp
+                end = if (showActionsOnCard) 0.dp else 16.dp
             )
     ) {
         Card(
@@ -593,8 +752,14 @@ private fun GradesCard(
             }
         }
 
-        if (showFilterIcon) {
-            FilterIcon(uiState, actionHandler, Color(color = contextColor))
+        if (showActionsOnCard) {
+            AnimatedVisibility(
+                visible = !uiState.isSearchExpanded,
+                enter = FadeInAnimation,
+                exit = FadeOutAnimation
+            ) {
+                FilterIcon(uiState, actionHandler, Color(color = contextColor))
+            }
             Box(
                 modifier = Modifier
                     .size(48.dp)
@@ -608,8 +773,10 @@ private fun GradesCard(
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_search_white_24dp),
-                    contentDescription = stringResource(id = R.string.search),
+                    painter = painterResource(
+                        id = if (uiState.isSearchExpanded) R.drawable.ic_close else R.drawable.ic_search_white_24dp
+                    ),
+                    contentDescription = stringResource(id = if (uiState.isSearchExpanded) R.string.close else R.string.search),
                     tint = Color(color = contextColor),
                     modifier = Modifier
                         .size(24.dp)
@@ -654,10 +821,13 @@ private fun FilterIcon(
 }
 
 @Composable
-private fun EmptyContent() {
+private fun GradesEmptyContent(
+    titleRes: Int,
+    messageRes: Int
+) {
     EmptyContent(
-        emptyTitle = stringResource(id = R.string.gradesEmptyTitle),
-        emptyMessage = stringResource(id = R.string.gradesEmptyMessage),
+        emptyTitle = stringResource(id = titleRes),
+        emptyMessage = stringResource(id = messageRes),
         imageRes = R.drawable.ic_panda_space,
         modifier = Modifier
             .fillMaxWidth()
@@ -666,16 +836,16 @@ private fun EmptyContent() {
 }
 
 @Composable
-private fun EmptySearchContent() {
-    EmptyContent(
-        emptyTitle = stringResource(id = R.string.noMatchingAssignments),
-        emptyMessage = stringResource(id = R.string.noMatchingAssignmentsDescription),
-        imageRes = R.drawable.ic_panda_space,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 32.dp, horizontal = 16.dp)
-    )
-}
+private fun whatIfTextColor(hasWhatIfScore: Boolean): Color =
+    colorResource(if (hasWhatIfScore) R.color.textLightest else R.color.textDarkest)
+
+@Composable
+private fun whatIfSecondaryTextColor(hasWhatIfScore: Boolean): Color =
+    colorResource(if (hasWhatIfScore) R.color.textLightest else R.color.textDark)
+
+@Composable
+private fun whatIfIconTint(hasWhatIfScore: Boolean, contextColor: Int): Color =
+    if (hasWhatIfScore) colorResource(R.color.textLightest) else Color(contextColor)
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -719,11 +889,7 @@ fun AssignmentItem(
             Icon(
                 painter = painterResource(id = uiState.iconRes),
                 contentDescription = null,
-                tint = if (hasWhatIfScore) {
-                    colorResource(id = R.color.textLightest)
-                } else {
-                    Color(contextColor)
-                },
+                tint = whatIfIconTint(hasWhatIfScore, contextColor),
                 modifier = Modifier
                     .size(24.dp)
                     .semantics {
@@ -734,22 +900,14 @@ fun AssignmentItem(
             Column {
                 Text(
                     text = uiState.name,
-                    color = if (hasWhatIfScore) {
-                        colorResource(id = R.color.textLightest)
-                    } else {
-                        colorResource(id = R.color.textDarkest)
-                    },
+                    color = whatIfTextColor(hasWhatIfScore),
                     fontSize = 16.sp
                 )
                 if (uiState.checkpoints.isNotEmpty()) {
                     uiState.checkpoints.forEach {
                         Text(
                             text = it.dueDate,
-                            color = if (hasWhatIfScore) {
-                                colorResource(id = R.color.textLightest)
-                            } else {
-                                colorResource(id = R.color.textDark)
-                            },
+                            color = whatIfSecondaryTextColor(hasWhatIfScore),
                             fontSize = 14.sp,
                             modifier = Modifier.testTag("assignmentDueDate")
                         )
@@ -763,11 +921,7 @@ fun AssignmentItem(
                     FlowRow {
                         Text(
                             text = uiState.dueDate,
-                            color = if (hasWhatIfScore) {
-                                colorResource(id = R.color.textLightest)
-                            } else {
-                                colorResource(id = R.color.textDark)
-                            },
+                            color = whatIfSecondaryTextColor(hasWhatIfScore),
                             fontSize = 14.sp,
                             modifier = Modifier.testTag("assignmentDueDate")
                         )
@@ -808,11 +962,7 @@ fun AssignmentItem(
                         if (gradeText.isNotEmpty()) {
                             Text(
                                 text = gradeText,
-                                color = if (hasWhatIfScore) {
-                                    colorResource(id = R.color.textLightest)
-                                } else {
-                                    Color(contextColor)
-                                },
+                                color = whatIfIconTint(hasWhatIfScore, contextColor),
                                 fontSize = 16.sp,
                                 modifier = Modifier
                                     .semantics {
@@ -884,11 +1034,7 @@ fun AssignmentItem(
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_edit),
-                    tint = if (hasWhatIfScore) {
-                        colorResource(id = R.color.textLightest)
-                    } else {
-                        colorResource(id = R.color.textDarkest)
-                    },
+                    tint = whatIfTextColor(hasWhatIfScore),
                     contentDescription = stringResource(id = R.string.editWhatIfScore),
                     modifier = Modifier.size(20.dp)
                 )
@@ -919,11 +1065,7 @@ fun AssignmentItem(
                 )
                 Icon(
                     painter = painterResource(id = R.drawable.ic_arrow_down),
-                    tint = if (hasWhatIfScore) {
-                        colorResource(id = R.color.textLightest)
-                    } else {
-                        colorResource(id = R.color.textDarkest)
-                    },
+                    tint = whatIfTextColor(hasWhatIfScore),
                     contentDescription = expandButtonContentDescription,
                     modifier = Modifier
                         .size(20.dp)
