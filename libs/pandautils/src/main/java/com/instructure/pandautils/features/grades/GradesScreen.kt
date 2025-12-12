@@ -116,6 +116,7 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.NoRippleInteractionSource
+import com.instructure.pandautils.compose.composables.CanvasDivider
 import com.instructure.pandautils.compose.composables.CanvasSwitch
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.CheckpointItem
@@ -408,6 +409,9 @@ private fun GradesScreenContent(
                 }
 
                 if (uiState.isWhatIfGradingEnabled) {
+
+                    CanvasDivider(modifier = Modifier.padding(start = 32.dp, end = 32.dp, bottom = 16.dp))
+
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -446,6 +450,31 @@ private fun GradesScreenContent(
                                 }
                         )
                     }
+                }
+
+                CanvasDivider(modifier = Modifier.padding(horizontal = 16.dp))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .defaultMinSize(minHeight = 48.dp)
+                        .padding(all = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.gradePreferencesHeaderGradingPeriod),
+                        fontSize = 14.sp,
+                        color = colorResource(id = R.color.textDark),
+                        modifier = Modifier.testTag("gradingPeriodLabel")
+                    )
+                    Text(
+                        text = uiState.gradePreferencesUiState.selectedGradingPeriod?.title
+                            ?: stringResource(id = R.string.allGradingPeriods),
+                        fontSize = 16.sp,
+                        color = colorResource(id = R.color.textDarkest),
+                        modifier = Modifier.testTag("gradingPeriodName")
+                    )
                 }
 
                 if (uiState.items.isEmpty()) {

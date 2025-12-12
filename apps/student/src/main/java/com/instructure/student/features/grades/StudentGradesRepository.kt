@@ -53,7 +53,11 @@ class StudentGradesRepository(
     override val studentId: Long
         get() = apiPrefs.user?.id.orDefault()
 
-    override suspend fun loadAssignmentGroups(courseId: Long, gradingPeriodId: Long?, forceRefresh: Boolean): List<AssignmentGroup> {
+    override suspend fun loadAssignmentGroups(
+        courseId: Long,
+        gradingPeriodId: Long?,
+        forceRefresh: Boolean
+    ): List<AssignmentGroup> {
         return gradingPeriodId?.let {
             dataSource().getAssignmentGroupsWithAssignmentsForGradingPeriod(courseId, it, true, forceRefresh)
         } ?: run {
@@ -73,11 +77,18 @@ class StudentGradesRepository(
         return dataSource().getCourseWithGrade(courseId, forceRefresh)
     }
 
-    override fun getCourseGrade(course: Course, studentId: Long, enrollments: List<Enrollment>, gradingPeriodId: Long?): CourseGrade? {
-        val enrollment = enrollments.find { it.userId == studentId }
-        return enrollment?.let {
-            course.getCourseGradeForGradingPeriodSpecificEnrollment(it)
-        } ?: run {
+    override fun getCourseGrade(
+        course: Course,
+        studentId: Long,
+        enrollments: List<Enrollment>,
+        gradingPeriodId: Long?
+    ): CourseGrade? {
+        return if (gradingPeriodId != null) {
+            val enrollment = enrollments.find { it.userId == studentId }
+            enrollment?.let {
+                course.getCourseGradeForGradingPeriodSpecificEnrollment(it)
+            }
+        } else {
             course.getCourseGrade(true)
         }
     }

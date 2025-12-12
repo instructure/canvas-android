@@ -29,14 +29,17 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.composetest.hasDrawable
 import com.instructure.pandares.R
 import com.instructure.pandautils.compose.composables.DiscussionCheckpointUiState
+import com.instructure.pandautils.features.grades.AppBarUiState
 import com.instructure.pandautils.features.grades.AssignmentGroupUiState
 import com.instructure.pandautils.features.grades.AssignmentUiState
 import com.instructure.pandautils.features.grades.GradesScreen
 import com.instructure.pandautils.features.grades.GradesUiState
 import com.instructure.pandautils.features.grades.SubmissionStateLabel
+import com.instructure.pandautils.features.grades.gradepreferences.GradePreferencesUiState
 import com.instructure.pandautils.utils.DisplayGrade
 import org.junit.Rule
 import org.junit.Test
@@ -123,7 +126,10 @@ class GradesScreenTest {
                                     name = "Assignment 1",
                                     dueDate = "No due date",
                                     submissionStateLabel = SubmissionStateLabel.Graded,
-                                    displayGrade = DisplayGrade("14/15", "")
+                                    displayGrade = DisplayGrade("14/15", ""),
+                                    score = 14.0,
+                                    maxScore = 15.0,
+                                    whatIfScore = null
                                 ),
                                 AssignmentUiState(
                                     id = 2,
@@ -131,7 +137,10 @@ class GradesScreenTest {
                                     name = "Assignment 2",
                                     dueDate = "Due date",
                                     submissionStateLabel = SubmissionStateLabel.Submitted,
-                                    displayGrade = DisplayGrade("-/10", "")
+                                    displayGrade = DisplayGrade("-/10", ""),
+                                    score = null,
+                                    maxScore = 10.0,
+                                    whatIfScore = null
                                 )
                             ),
                             expanded = true
@@ -146,7 +155,10 @@ class GradesScreenTest {
                                     name = "Assignment 3",
                                     dueDate = "Due date",
                                     submissionStateLabel = SubmissionStateLabel.Late,
-                                    displayGrade = DisplayGrade("", "")
+                                    displayGrade = DisplayGrade("", ""),
+                                    score = null,
+                                    maxScore = null,
+                                    whatIfScore = null
                                 )
                             ),
                             expanded = false
@@ -211,6 +223,9 @@ class GradesScreenTest {
                                     dueDate = "No due date",
                                     submissionStateLabel = SubmissionStateLabel.Graded,
                                     displayGrade = DisplayGrade("7/15", ""),
+                                    score = 7.0,
+                                    maxScore = 15.0,
+                                    whatIfScore = null,
                                     checkpoints = listOf(
                                         DiscussionCheckpointUiState(
                                             name = "Checkpoint 1",
@@ -309,5 +324,306 @@ class GradesScreenTest {
 
         val snackbarText = composeTestRule.onNode(hasText("Snackbar message").and(hasAnyAncestor(hasTestTag("snackbarHost"))))
         snackbarText.assertIsDisplayed()
+    }
+
+    @Test
+    fun assertGradingPeriodLabelDisplayed() {
+        composeTestRule.setContent {
+            GradesScreen(
+                uiState = GradesUiState(
+                    isLoading = false,
+                    items = emptyList(),
+                    gradeText = "87% A"
+                ),
+                actionHandler = {},
+                canvasContextColor = Color.RED
+            )
+        }
+
+        composeTestRule.onNodeWithTag("gradingPeriodLabel")
+            .assertIsDisplayed()
+        composeTestRule.onNodeWithText("Grading Period")
+            .assertIsDisplayed()
+    }
+
+    @Test
+    fun assertAllGradingPeriodsDisplayedWhenNoGradingPeriodSelected() {
+        composeTestRule.setContent {
+            GradesScreen(
+                uiState = GradesUiState(
+                    isLoading = false,
+                    items = emptyList(),
+                    gradeText = "87% A",
+                    gradePreferencesUiState = GradePreferencesUiState(
+                        selectedGradingPeriod = null
+                    )
+                ),
+                actionHandler = {},
+                canvasContextColor = Color.RED
+            )
+        }
+
+        composeTestRule.onNodeWithTag("gradingPeriodName")
+            .assertIsDisplayed()
+        composeTestRule.onNodeWithText("All Grading Periods")
+            .assertIsDisplayed()
+    }
+
+    @Test
+    fun assertSelectedGradingPeriodNameDisplayed() {
+        val gradingPeriod = GradingPeriod(
+            id = 1L,
+            title = "Spring 2024"
+        )
+
+        composeTestRule.setContent {
+            GradesScreen(
+                uiState = GradesUiState(
+                    isLoading = false,
+                    items = emptyList(),
+                    gradeText = "87% A",
+                    gradePreferencesUiState = GradePreferencesUiState(
+                        selectedGradingPeriod = gradingPeriod
+                    )
+                ),
+                actionHandler = {},
+                canvasContextColor = Color.RED
+            )
+        }
+
+        composeTestRule.onNodeWithTag("gradingPeriodName")
+            .assertIsDisplayed()
+        composeTestRule.onNodeWithText("Spring 2024")
+            .assertIsDisplayed()
+        composeTestRule.onNodeWithText("All Grading Periods")
+            .assertIsNotDisplayed()
+    }
+
+    @Test
+    fun assertGradingPeriodDisplayedWithMultipleGradingPeriods() {
+        val selectedPeriod = GradingPeriod(
+            id = 2L,
+            title = "Q2 2024"
+        )
+
+        composeTestRule.setContent {
+            GradesScreen(
+                uiState = GradesUiState(
+                    isLoading = false,
+                    items = listOf(
+                        AssignmentGroupUiState(
+                            id = 1,
+                            name = "Assignments",
+                            assignments = listOf(
+                                AssignmentUiState(
+                                    id = 1,
+                                    iconRes = R.drawable.ic_assignment,
+                                    name = "Test Assignment",
+                                    dueDate = "Due date",
+                                    submissionStateLabel = SubmissionStateLabel.Graded,
+                                    displayGrade = DisplayGrade("10/10", ""),
+                                    score = 10.0,
+                                    maxScore = 10.0,
+                                    whatIfScore = null
+                                )
+                            ),
+                            expanded = true
+                        )
+                    ),
+                    gradeText = "100% A",
+                    gradePreferencesUiState = GradePreferencesUiState(
+                        selectedGradingPeriod = selectedPeriod,
+                        gradingPeriods = listOf(
+                            GradingPeriod(id = 1L, title = "Q1 2024"),
+                            selectedPeriod,
+                            GradingPeriod(id = 3L, title = "Q3 2024")
+                        )
+                    )
+                ),
+                actionHandler = {},
+                canvasContextColor = Color.RED
+            )
+        }
+
+        composeTestRule.onNodeWithTag("gradingPeriodLabel")
+            .assertIsDisplayed()
+        composeTestRule.onNodeWithTag("gradingPeriodName")
+            .assertIsDisplayed()
+        composeTestRule.onNodeWithText("Q2 2024")
+            .assertIsDisplayed()
+        composeTestRule.onNodeWithText("Q1 2024")
+            .assertIsNotDisplayed()
+        composeTestRule.onNodeWithText("Q3 2024")
+            .assertIsNotDisplayed()
+    }
+
+    @Test
+    fun assertSearchFieldDisplayedWhenExpanded() {
+        composeTestRule.setContent {
+            GradesScreen(
+                uiState = GradesUiState(
+                    isLoading = false,
+                    items = emptyList(),
+                    gradeText = "87% A",
+                    isSearchExpanded = true
+                ),
+                actionHandler = {},
+                canvasContextColor = Color.RED,
+                appBarUiState = AppBarUiState(
+                    title = "Grades",
+                    subtitle = "Course Name",
+                    navigationActionClick = {},
+                    bookmarkable = false,
+                    addBookmarkClick = {}
+                )
+            )
+        }
+
+        composeTestRule.onNodeWithTag("searchField")
+            .assertIsDisplayed()
+        composeTestRule.onNodeWithText("Search")
+            .assertIsDisplayed()
+    }
+
+    @Test
+    fun assertSearchFieldNotDisplayedWhenCollapsed() {
+        composeTestRule.setContent {
+            GradesScreen(
+                uiState = GradesUiState(
+                    isLoading = false,
+                    items = emptyList(),
+                    gradeText = "87% A",
+                    isSearchExpanded = false
+                ),
+                actionHandler = {},
+                canvasContextColor = Color.RED,
+                appBarUiState = AppBarUiState(
+                    title = "Grades",
+                    subtitle = "Course Name",
+                    navigationActionClick = {},
+                    bookmarkable = false,
+                    addBookmarkClick = {}
+                )
+            )
+        }
+
+        composeTestRule.onNodeWithTag("searchField")
+            .assertIsNotDisplayed()
+    }
+
+    @Test
+    fun assertSearchClearButtonDisplayedWhenQueryNotEmpty() {
+        composeTestRule.setContent {
+            GradesScreen(
+                uiState = GradesUiState(
+                    isLoading = false,
+                    items = emptyList(),
+                    gradeText = "87% A",
+                    isSearchExpanded = true,
+                    searchQuery = "assignment"
+                ),
+                actionHandler = {},
+                canvasContextColor = Color.RED,
+                appBarUiState = AppBarUiState(
+                    title = "Grades",
+                    subtitle = "Course Name",
+                    navigationActionClick = {},
+                    bookmarkable = false,
+                    addBookmarkClick = {}
+                )
+            )
+        }
+
+        composeTestRule.onNodeWithContentDescription("Clear query")
+            .assertIsDisplayed()
+            .assertHasClickAction()
+    }
+
+    @Test
+    fun assertSearchCloseButtonDisplayed() {
+        composeTestRule.setContent {
+            GradesScreen(
+                uiState = GradesUiState(
+                    isLoading = false,
+                    items = emptyList(),
+                    gradeText = "87% A",
+                    isSearchExpanded = true
+                ),
+                actionHandler = {},
+                canvasContextColor = Color.RED,
+                appBarUiState = AppBarUiState(
+                    title = "Grades",
+                    subtitle = "Course Name",
+                    navigationActionClick = {},
+                    bookmarkable = false,
+                    addBookmarkClick = {}
+                )
+            )
+        }
+
+        composeTestRule.onNodeWithContentDescription("Close search bar")
+            .assertIsDisplayed()
+            .assertHasClickAction()
+    }
+
+    @Test
+    fun assertEmptySearchResultsDisplayed() {
+        composeTestRule.setContent {
+            GradesScreen(
+                uiState = GradesUiState(
+                    isLoading = false,
+                    items = emptyList(),
+                    gradeText = "87% A",
+                    searchQuery = "test assignment"
+                ),
+                actionHandler = {},
+                canvasContextColor = Color.RED
+            )
+        }
+
+        composeTestRule.onNodeWithText("No Matching Assignments")
+            .assertIsDisplayed()
+        composeTestRule.onNodeWithText("No assignments match your search. Try a different search term.")
+            .assertIsDisplayed()
+    }
+
+    @Test
+    fun assertGradesCardHiddenWhenSearchExpanded() {
+        composeTestRule.setContent {
+            GradesScreen(
+                uiState = GradesUiState(
+                    isLoading = false,
+                    items = listOf(
+                        AssignmentGroupUiState(
+                            id = 1,
+                            name = "Assignments",
+                            assignments = listOf(
+                                AssignmentUiState(
+                                    id = 1,
+                                    iconRes = R.drawable.ic_assignment,
+                                    name = "Test Assignment",
+                                    dueDate = "Due date",
+                                    submissionStateLabel = SubmissionStateLabel.Graded,
+                                    displayGrade = DisplayGrade("10/10", ""),
+                                    score = 10.0,
+                                    maxScore = 10.0,
+                                    whatIfScore = null
+                                )
+                            ),
+                            expanded = true
+                        )
+                    ),
+                    gradeText = "87% A",
+                    isSearchExpanded = true
+                ),
+                actionHandler = {},
+                canvasContextColor = Color.RED
+            )
+        }
+
+        composeTestRule.onNodeWithText("Total")
+            .assertIsNotDisplayed()
+        composeTestRule.onNodeWithTag("searchField")
+            .assertIsDisplayed()
     }
 }
