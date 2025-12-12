@@ -175,6 +175,7 @@ private fun MultiSelectContent(state: MultiSelectSearchState) {
                             MultiSelectSearchInputSize.Small -> TagSize.SMALL
                             MultiSelectSearchInputSize.Medium -> TagSize.MEDIUM
                         },
+                        enabled = state.enabled,
                         dismissible = true,
                         onDismiss = {
                             state.onOptionRemoved(selectedOption)

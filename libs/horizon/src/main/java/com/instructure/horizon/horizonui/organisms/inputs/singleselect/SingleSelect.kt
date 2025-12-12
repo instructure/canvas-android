@@ -76,9 +76,9 @@ fun SingleSelect(
                 role = Role.DropdownList
                 stateDescription = if (state.isMenuOpen) expandedState else collapsedState
                 contentDescription = if (state.selectedOption != null) {
-                    "${state.label}, ${state.selectedOption}"
+                    "${state.label ?: state.placeHolderText ?: ""}, ${state.selectedOption}"
                 } else {
-                    state.label ?: ""
+                    state.label ?: state.placeHolderText ?: ""
                 }
             }
     ) {
