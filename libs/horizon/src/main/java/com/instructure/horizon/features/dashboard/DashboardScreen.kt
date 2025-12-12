@@ -231,7 +231,7 @@ private fun HomeScreenTopBar(uiState: DashboardUiState, mainNavController: NavCo
         )
         Spacer(modifier = Modifier.weight(1f))
         IconButton(
-            iconRes = R.drawable.menu_book_notebook,
+            iconRes = R.drawable.edit_note,
             contentDescription = stringResource(R.string.a11y_dashboardNotebookButtonContentDescription),
             onClick = {
                 mainNavController.navigate(MainNavigationRoute.Notebook.route)

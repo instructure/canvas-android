@@ -105,7 +105,7 @@ class HorizonNotebookPage(private val composeTestRule: ComposeTestRule) {
     }
 
     fun assertTextAreaPlaceholderDisplayed() {
-        composeTestRule.onNodeWithText(context.getString(R.string.addNoteAddANoteLabel))
+        composeTestRule.onNodeWithText(context.getString(R.string.addNoteAddANoteOptionalLabel))
             .assertIsDisplayed()
     }
 
@@ -151,13 +151,13 @@ class HorizonNotebookPage(private val composeTestRule: ComposeTestRule) {
     }
 
     fun enterUserComment(comment: String) {
-        composeTestRule.onNodeWithText(context.getString(R.string.addNoteAddANoteLabel))
+        composeTestRule.onNodeWithText(context.getString(R.string.addNoteAddANoteOptionalLabel))
             .performClick()
             .performTextInput(comment)
     }
 
     fun clearUserComment() {
-        composeTestRule.onNode(hasText(context.getString(R.string.addNoteAddANoteLabel)).not())
+        composeTestRule.onNode(hasText(context.getString(R.string.addNoteAddANoteOptionalLabel)).not())
             .performClick()
             .performTextClearance()
     }
@@ -194,7 +194,7 @@ class HorizonNotebookPage(private val composeTestRule: ComposeTestRule) {
 
     fun clearNoteText() {
         composeTestRule.onNode(
-            hasText(context.getString(R.string.addNoteAddANoteLabel)).not()
+            hasText(context.getString(R.string.addNoteAddANoteOptionalLabel)).not()
         )
             .performClick()
             .performTextClearance()
