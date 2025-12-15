@@ -50,7 +50,7 @@ class ToDoListPage(private val composeTestRule: ComposeTestRule) : BasePage() {
         composeTestRule.onNodeWithText(itemTitle).assertDoesNotExist()
     }
 
-    fun clickCheckbox(itemId: Long) {
+    fun clickMarkToDoItemAsDone(itemId: Long) {
         composeTestRule.onNodeWithTag("todoCheckbox_$itemId")
             .performClick()
         composeTestRule.waitForIdle()

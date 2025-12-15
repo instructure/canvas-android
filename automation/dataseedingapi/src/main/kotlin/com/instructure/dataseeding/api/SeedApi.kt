@@ -140,13 +140,12 @@ object SeedApi {
                 CoursesApi.concludeCourse(coursesList[c].id)
             }
 
-            // Seed favorite courses
-            addAllFavorites(
-                (0 until minOf(request.favoriteCourses, coursesList.size))
-                    .map {
-                        CoursesApi.addCourseToFavorites(coursesList[it].id,teachersList[0].token)
-                    }
-            )
+            // Seed favorite courses for all students
+            (0 until minOf(request.favoriteCourses, coursesList.size)).forEach { courseIndex ->
+                studentsList.forEach { student ->
+                    addFavoriteCourses(CoursesApi.addCourseToFavorites(coursesList[courseIndex].id, student.token))
+                }
+            }
 
             // Seed discussions
             addAllDiscussions(
@@ -212,13 +211,12 @@ object SeedApi {
                 CoursesApi.concludeCourse(coursesList[c].id)
             }
 
-            // Seed favorite courses
-            addAllFavorites(
-                    (0 until minOf(request.favoriteCourses, coursesList.size))
-                            .map {
-                                CoursesApi.addCourseToFavorites(coursesList[it].id,teachersList[0].token)
-                            }
-            )
+            // Seed favorite courses for all students
+            (0 until minOf(request.favoriteCourses, coursesList.size)).forEach { courseIndex ->
+                studentsList.forEach { student ->
+                    addFavoriteCourses(CoursesApi.addCourseToFavorites(coursesList[courseIndex].id, student.token))
+                }
+            }
 
             // Seed discussions
             addAllDiscussions(
