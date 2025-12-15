@@ -21,6 +21,8 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import com.instructure.canvas.espresso.checked
 import com.instructure.canvas.espresso.matchToolbarText
 import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.assertDisabled
+import com.instructure.espresso.assertEnabled
 import com.instructure.espresso.assertHasText
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
@@ -94,13 +96,32 @@ class CourseSettingsPage : BasePage() {
     }
 
     /**
-     * Asserts that the home page has been changed to the specified value.
+     * Selects a new home page option based on the provided option text.
      *
-     * @param newHomePage The expected new home page value.
-     * @throws AssertionError if the home page does not match the expected value.
+     * @param optionText The text of the option to select as the new home page.
      */
-    fun assertHomePageChanged(newHomePage: String) {
-        courseHomePageText.assertHasText(newHomePage)
+    fun selectNewHomePageOption(optionText: String) {
+        val radioButton = onViewWithText(optionText)
+        val dialogOkButton = onViewWithText(android.R.string.ok)
+        radioButton.click()
+        dialogOkButton.click()
+    }
+
+    /**
+     * Cancels the new home page selection dialog.
+     */
+    fun cancelNewHomePageSelectionDialog() {
+        val dialogCancelButton = onViewWithText(R.string.cancel)
+        dialogCancelButton.click()
+    }
+
+    /**
+     * Asserts that the home page has the specified value.
+     *
+     * @param expectedHomePageText The expected home page value.
+     */
+    fun assertHomePageText(expectedHomePageText: String) {
+        courseHomePageText.assertHasText(expectedHomePageText)
     }
 
     /**
@@ -122,6 +143,26 @@ class CourseSettingsPage : BasePage() {
      */
     private fun assertToolbarSubtitleHasText(newCourseName: String) {
         toolbar.check(matches(matchToolbarText(`is`(newCourseName), false)))
+    }
+
+    /**
+     * Asserts that the radio button with the specified text is clickable (enabled).
+     *
+     * @param radioButtonText The text of the radio button to check.
+     * @throws AssertionError if the radio button is not enabled.
+     */
+    fun assertRadioButtonClickable(radioButtonText: String) {
+        onViewWithText(radioButtonText).assertEnabled()
+    }
+
+    /**
+     * Asserts that the radio button with the specified text is not clickable (disabled).
+     *
+     * @param radioButtonText The text of the radio button to check.
+     * @throws AssertionError if the radio button is enabled.
+     */
+    fun assertRadioButtonNotClickable(radioButtonText: String) {
+        onViewWithText(radioButtonText).assertDisabled()
     }
 }
 

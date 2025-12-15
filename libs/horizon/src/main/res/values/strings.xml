@@ -258,7 +258,7 @@
     <string name="notebookEmptyContentMessage">This is where all your notes, taken directly within your learning objects, are stored and organized. It\'s your personal hub for keeping track of key insights, important excerpts, and reflections as you learn. Dive in to review or expand on your notes anytime!</string>
     <string name="addNoteHighlightlabel">Highlight</string>
     <string name="addNoteLabelLabel">Label</string>
-    <string name="addNoteAddANoteLabel">Add a note</string>
+    <string name="addNoteAddANoteOptionalLabel">Add a note (optional)</string>
     <string name="addNoteSaveLabel">Save</string>
     <string name="addNoteDeleteLabel">Delete</string>
     <string name="assignmentDetails_fileTypeNotSupported">File type is not allowed</string>
@@ -485,4 +485,10 @@
     <string name="a11y_retry">Retry</string>
     <string name="a11y_readInboxMessage">Read</string>
     <string name="a11y_unreadInboxMessage">Unread</string>
+    <string name="a11y_previousModuleItem">Previous module item</string>
+    <string name="a11y_openAIAssistant">Open AI Assistant</string>
+    <string name="a11y_openNotebook">Open notebook</string>
+    <string name="a11y_openMoreOptions">Open more options</string>
+    <string name="a11y_nextModuleItem">Next module item</string>
+    <string name="a11y_notebookHighlightMarkedAs">%1$s, marked as %2$s, double tap to edit note</string>
 </resources>
