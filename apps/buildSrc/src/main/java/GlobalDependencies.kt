@@ -12,7 +12,7 @@ object Versions {
 
     /* Testing */
     const val JUNIT = "4.13.2"
-    const val ROBOLECTRIC = "4.13"
+    const val ROBOLECTRIC = "4.16"
     const val JACOCO_ANDROID = "0.1.5"
 
     /* Kotlin */
@@ -34,14 +34,14 @@ object Versions {
     const val FRAGMENT = "1.8.9"
     const val WORK_MANAGER = "2.11.0"
     const val GLIDE_VERSION = "5.0.5"
-    const val RETROFIT = "2.11.0"
+    const val RETROFIT = "3.0.0"
     const val OKHTTP = "4.12.0"
     const val ROOM = "2.8.4"
     const val HAMCREST = "3.0"
     const val NAVIGATION = "2.9.6"
     const val MEDIA3 = "1.8.0"
     const val DATASTORE = "1.2.0"
-    const val LOTTIE = "6.6.6"
+    const val LOTTIE = "6.7.0"
     const val ENCRYPTED_SHARED_PREFERENCES = "1.1.0"
     const val JAVA_JWT = "4.5.0"
     const val GLANCE = "1.1.1"
@@ -104,11 +104,12 @@ object Libs {
     /* Testing */
     const val JUNIT = "junit:junit:${Versions.JUNIT}"
     const val ROBOLECTRIC = "org.robolectric:robolectric:${Versions.ROBOLECTRIC}"
-    const val ANDROIDX_TEST_JUNIT = "androidx.test.ext:junit:1.2.1"
-    const val MOCKK = "io.mockk:mockk:1.13.13"
-    const val THREETEN_BP = "org.threeten:threetenbp:1.7.0"
+    const val ANDROIDX_TEST_JUNIT = "androidx.test.ext:junit:1.3.0"
+    const val MOCKK = "io.mockk:mockk:1.14.7"
+    const val THREETEN_BP = "org.threeten:threetenbp:1.7.2"
     const val UI_AUTOMATOR = "androidx.test.uiautomator:uiautomator:2.3.0"
-    const val TEST_ORCHESTRATOR = "androidx.test:orchestrator:1.5.1"
+    const val TEST_ORCHESTRATOR = "androidx.test:orchestrator:1.6.1"
+    const val HAMCREST = "org.hamcrest:hamcrest:${Versions.HAMCREST}"
 
     /* Qr Code (zxing) */
     const val JOURNEY_ZXING = "com.journeyapps:zxing-android-embedded:4.3.0"
@@ -131,7 +132,7 @@ object Libs {
     const val COMPOSE_VIEW_MODEL = "androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.LIFECYCLE}"
 
     /* Media and content handling */
-    const val NUTRIENT = "io.nutrient:nutrient:${Versions.NUTRIENT}"
+    const val NUTRIENT = "io.nutrient:nutrient:${Versions.NUTRIENT}" // TODO
     const val MEDIA3 = "androidx.media3:media3-exoplayer:${Versions.MEDIA3}"
     const val MEDIA3_UI = "androidx.media3:media3-ui:${Versions.MEDIA3}"
     const val MEDIA3_HLS = "androidx.media3:media3-exoplayer-hls:${Versions.MEDIA3}"
@@ -155,7 +156,7 @@ object Libs {
     const val OKHTTP = "com.squareup.okhttp3:okhttp:${Versions.OKHTTP}"
     const val OKHTTP_LOGGING = "com.squareup.okhttp3:logging-interceptor:${Versions.OKHTTP}"
     const val OKHTTP_URL_CONNECTION = "com.squareup.okhttp3:okhttp-urlconnection:${Versions.OKHTTP}"
-    const val OKIO = "com.squareup.okio:okio:3.9.1"
+    const val OKIO = "com.squareup.okio:okio:3.16.2"
 
     /* Other */
     const val LOTTIE = "com.airbnb.android:lottie:${Versions.LOTTIE}"
@@ -163,22 +164,20 @@ object Libs {
     const val SLIDING_UP_PANEL = "com.sothree.slidinguppanel:library:3.3.1"
     const val DISK_LRU_CACHE = "com.jakewharton:disklrucache:2.0.2"
     const val EVENTBUS = "org.greenrobot:eventbus:3.3.1"
-    const val JW_THREETEN_BP = "com.jakewharton.threetenabp:threetenabp:1.4.6"
+    const val JW_THREETEN_BP = "com.jakewharton.threetenabp:threetenabp:1.4.9"
     const val PROCESS_PHOENIX = "com.jakewharton:process-phoenix:2.1.2"
     const val KEYBOARD_VISIBILITY_LISTENER = "net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.2.1"
     const val APACHE_COMMONS_TEXT = "org.apache.commons:commons-text:1.12.0"
     const val CAMERA_VIEW = "com.otaliastudios:cameraview:2.7.2"
     const val JAVA_JWT = "com.auth0:java-jwt:${Versions.JAVA_JWT}"
 
-    const val PENDO = "sdk.pendo.io:pendoIO:3.7.+"
+    const val PENDO = "sdk.pendo.io:pendoIO:3.9.+"
 
     /* Database */
     const val ROOM = "androidx.room:room-runtime:${Versions.ROOM}"
     const val ROOM_COMPILER = "androidx.room:room-compiler:${Versions.ROOM}"
     const val ROOM_COROUTINES = "androidx.room:room-ktx:${Versions.ROOM}"
     const val ROOM_TEST = "androidx.room:room-testing:${Versions.ROOM}"
-
-    const val HAMCREST = "org.hamcrest:hamcrest:${Versions.HAMCREST}"
 
     const val RRULE = "org.scala-saddle:google-rfc-2445:20110304"
 
@@ -208,7 +207,7 @@ object Libs {
     const val NAVIGATION_KTX = "androidx.navigation:navigation-ui-ktx:${Versions.NAVIGATION}"
     const val NAVIGATION_COMPOSE = "androidx.navigation:navigation-compose:${Versions.NAVIGATION}"
 
-    const val KOTLIN_SERIALIZABLE = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0"
+    const val KOTLIN_SERIALIZABLE = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0"
 }
 
 object Plugins {
