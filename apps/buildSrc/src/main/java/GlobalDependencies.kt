@@ -25,7 +25,7 @@ object Versions {
 
     /* Others */
     const val APOLLO = "4.3.3"
-    const val NUTRIENT = "10.7.0"
+    const val NUTRIENT = "10.9.0"
     const val PHOTO_VIEW = "2.3.0"
     const val MOBIUS = "1.2.1"
     const val HILT = "2.57.2"
@@ -132,7 +132,7 @@ object Libs {
     const val COMPOSE_VIEW_MODEL = "androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.LIFECYCLE}"
 
     /* Media and content handling */
-    const val NUTRIENT = "io.nutrient:nutrient:${Versions.NUTRIENT}" // TODO
+    const val NUTRIENT = "io.nutrient:nutrient:${Versions.NUTRIENT}"
     const val MEDIA3 = "androidx.media3:media3-exoplayer:${Versions.MEDIA3}"
     const val MEDIA3_UI = "androidx.media3:media3-ui:${Versions.MEDIA3}"
     const val MEDIA3_HLS = "androidx.media3:media3-exoplayer-hls:${Versions.MEDIA3}"
