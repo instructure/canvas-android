@@ -14,20 +14,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.features.dashboard.widget
+package com.instructure.student.features.dashboard.widget.forecast
 
-data class WidgetMetadata(
-    val id: String,
-    val position: Int,
-    val isVisible: Boolean,
-    val isEditable: Boolean = true,
-    val isFullWidth: Boolean = false
-) {
-    companion object {
-        const val WIDGET_ID_COURSE_INVITATIONS = "course_invitations"
-        const val WIDGET_ID_INSTITUTIONAL_ANNOUNCEMENTS = "institutional_announcements"
-        const val WIDGET_ID_WELCOME = "welcome"
-        const val WIDGET_ID_COURSES = "courses"
-        const val WIDGET_ID_FORECAST = "forecast"
+import androidx.fragment.app.FragmentActivity
+import com.instructure.canvasapi2.models.Course
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
+import com.instructure.student.router.RouteMatcher
+import javax.inject.Inject
+
+class ForecastWidgetRouter @Inject constructor() {
+
+    fun routeToAssignmentDetails(activity: FragmentActivity, assignmentId: Long, courseId: Long) {
+        val canvasContext = Course(id = courseId)
+        val route = AssignmentDetailsFragment.makeRoute(canvasContext, assignmentId)
+        RouteMatcher.route(activity, route)
     }
 }

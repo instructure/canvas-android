@@ -64,6 +64,7 @@ import com.instructure.pandautils.features.dashboard.widget.institutionalannounc
 import com.instructure.pandautils.features.dashboard.widget.welcome.WelcomeWidget
 import com.instructure.student.R
 import com.instructure.student.activity.NavigationActivity
+import com.instructure.student.features.dashboard.widget.forecast.ForecastWidget
 import kotlinx.coroutines.flow.SharedFlow
 
 @Composable
@@ -242,6 +243,7 @@ private fun GetWidgetComposable(
             columns = columns,
             onAnnouncementClick = router::routeToGlobalAnnouncement
         )
+        WidgetMetadata.WIDGET_ID_FORECAST -> ForecastWidget(refreshSignal = refreshSignal)
         else -> {}
     }
 }

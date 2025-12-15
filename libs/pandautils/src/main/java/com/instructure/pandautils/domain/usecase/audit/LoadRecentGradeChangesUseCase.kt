@@ -16,8 +16,9 @@
 
 package com.instructure.pandautils.domain.usecase.audit
 
-import com.instructure.canvasapi2.models.GradeChange
-import com.instructure.pandautils.data.repository.audit.AuditRepository
+import com.instructure.canvasapi2.utils.toDate
+import com.instructure.pandautils.data.model.GradedSubmission
+import com.instructure.pandautils.data.repository.submission.SubmissionRepository
 import com.instructure.pandautils.domain.usecase.BaseUseCase
 import javax.inject.Inject
 
@@ -29,20 +30,28 @@ data class LoadRecentGradeChangesParams(
 )
 
 class LoadRecentGradeChangesUseCase @Inject constructor(
-    private val auditRepository: AuditRepository
-) : BaseUseCase<LoadRecentGradeChangesParams, List<GradeChange>>() {
+    private val submissionRepository: SubmissionRepository
+) : BaseUseCase<LoadRecentGradeChangesParams, List<GradedSubmission>>() {
 
-    override suspend fun execute(params: LoadRecentGradeChangesParams): List<GradeChange> {
-        val gradeChanges = auditRepository.getGradeChanges(
-            params.studentId,
-            params.startTime,
-            params.endTime,
-            params.forceRefresh
+    override suspend fun execute(params: LoadRecentGradeChangesParams): List<GradedSubmission> {
+        val gradedSince = params.startTime ?: return emptyList()
+
+        val submissions = submissionRepository.getRecentGradedSubmissions(
+            studentId = params.studentId,
+            gradedSince = gradedSince,
+            forceRefresh = params.forceRefresh
         ).dataOrThrow
 
-        return gradeChanges
-            .groupBy { it.links?.assignment }
-            .mapNotNull { (_, changes) -> changes.maxByOrNull { it.versionNumber } }
-            .sortedByDescending { it.createdAt }
+        val filtered = if (params.endTime != null) {
+            val endDate = params.endTime.toDate()
+            submissions.filter { submission ->
+                val postedAt = submission.postedAt
+                postedAt == null || endDate == null || !postedAt.after(endDate)
+            }
+        } else {
+            submissions
+        }
+
+        return filtered.sortedByDescending { it.postedAt }
     }
 }

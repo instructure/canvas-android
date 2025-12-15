@@ -55,6 +55,11 @@ class EnsureDefaultWidgetsUseCase @Inject constructor(
                 position = 3,
                 isVisible = true,
                 isFullWidth = true
+            ),
+            WidgetMetadata(
+                id = WidgetMetadata.WIDGET_ID_FORECAST,
+                position = 4,
+                isVisible = true
             )
         )
 

@@ -14,23 +14,16 @@
  *     limitations under the License.
  */
 
-package com.instructure.canvasapi2.apis
+package com.instructure.canvasapi2.managers.graphql
 
-import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.models.GradeChange
-import com.instructure.canvasapi2.utils.DataResult
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
-import retrofit2.http.Tag
+import com.instructure.canvasapi2.RecentGradedSubmissionsQuery
 
-interface AuditAPI {
+interface RecentGradedSubmissionsManager {
 
-    @GET("audit/grade_change/students/{student_id}")
-    suspend fun getGradeChangesForStudent(
-        @Path("student_id") studentId: Long,
-        @Query("start_time") startTime: String? = null,
-        @Query("end_time") endTime: String? = null,
-        @Tag restParams: RestParams
-    ): DataResult<List<GradeChange>>
+    suspend fun getRecentGradedSubmissions(
+        studentId: Long,
+        gradedSince: String,
+        pageSize: Int = 20,
+        forceNetwork: Boolean = true
+    ): RecentGradedSubmissionsQuery.Data
 }

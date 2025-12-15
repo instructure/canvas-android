@@ -14,20 +14,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.features.dashboard.widget
+package com.instructure.pandautils.data.repository.submission
 
-data class WidgetMetadata(
-    val id: String,
-    val position: Int,
-    val isVisible: Boolean,
-    val isEditable: Boolean = true,
-    val isFullWidth: Boolean = false
-) {
-    companion object {
-        const val WIDGET_ID_COURSE_INVITATIONS = "course_invitations"
-        const val WIDGET_ID_INSTITUTIONAL_ANNOUNCEMENTS = "institutional_announcements"
-        const val WIDGET_ID_WELCOME = "welcome"
-        const val WIDGET_ID_COURSES = "courses"
-        const val WIDGET_ID_FORECAST = "forecast"
-    }
+import com.instructure.pandautils.data.model.GradedSubmission
+import com.instructure.canvasapi2.utils.DataResult
+
+interface SubmissionRepository {
+
+    suspend fun getRecentGradedSubmissions(
+        studentId: Long,
+        gradedSince: String,
+        forceRefresh: Boolean
+    ): DataResult<List<GradedSubmission>>
 }

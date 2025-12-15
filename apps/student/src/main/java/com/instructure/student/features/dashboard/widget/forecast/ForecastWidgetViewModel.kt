@@ -21,7 +21,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.GradeChange
+import com.instructure.pandautils.data.model.GradedSubmission
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.toDate
@@ -54,13 +54,14 @@ class ForecastWidgetViewModel @Inject constructor(
     private val loadUpcomingAssignmentsUseCase: LoadUpcomingAssignmentsUseCase,
     private val loadRecentGradeChangesUseCase: LoadRecentGradeChangesUseCase,
     private val forecastWidgetDataStore: ForecastWidgetDataStore,
+    private val forecastWidgetRouter: ForecastWidgetRouter,
     private val apiPrefs: ApiPrefs,
     private val crashlytics: FirebaseCrashlytics
 ) : ViewModel() {
 
     private var missingAssignments: List<Assignment> = emptyList()
     private var upcomingPlannerItems: List<PlannerItem> = emptyList()
-    private var recentGradeChanges: List<GradeChange> = emptyList()
+    private var recentGradedSubmissions: List<GradedSubmission> = emptyList()
     private var currentWeekOffset: Int = 0
 
     private val _uiState = MutableStateFlow(
@@ -103,7 +104,7 @@ class ForecastWidgetViewModel @Inject constructor(
     }
 
     private fun onAssignmentClick(activity: FragmentActivity, assignmentId: Long, courseId: Long) {
-        // TODO: Implement navigation in Phase 4
+        forecastWidgetRouter.routeToAssignmentDetails(activity, assignmentId, courseId)
     }
 
     private fun retry() {
@@ -193,7 +194,7 @@ class ForecastWidgetViewModel @Inject constructor(
         val sevenDaysAgo = LocalDate.now().minusDays(7)
             .atStartOfDay(ZoneId.systemDefault()).toInstant()
 
-        recentGradeChanges = loadRecentGradeChangesUseCase(
+        recentGradedSubmissions = loadRecentGradeChangesUseCase(
             LoadRecentGradeChangesParams(
                 studentId = userId,
                 startTime = sevenDaysAgo.toString(),
@@ -202,7 +203,7 @@ class ForecastWidgetViewModel @Inject constructor(
             )
         )
         _uiState.update {
-            it.copy(recentGrades = mapRecentGrades(recentGradeChanges))
+            it.copy(recentGrades = mapRecentGrades(recentGradedSubmissions))
         }
     }
 
@@ -253,22 +254,22 @@ class ForecastWidgetViewModel @Inject constructor(
             }
     }
 
-    private fun mapRecentGrades(gradeChanges: List<GradeChange>): List<AssignmentItem> {
-        return gradeChanges
-            .sortedByDescending { it.createdAt }
-            .map { change ->
+    private fun mapRecentGrades(submissions: List<GradedSubmission>): List<AssignmentItem> {
+        return submissions
+            .sortedByDescending { it.postedAt }
+            .map { submission ->
                 AssignmentItem(
-                    id = change.links?.assignment ?: 0,
-                    courseId = change.links?.course ?: 0,
-                    courseName = "", // TODO: Load course info
+                    id = submission.assignmentId,
+                    courseId = submission.courseId,
+                    courseName = submission.courseName,
                     courseColor = 0, // TODO: Load course color
-                    assignmentName = "", // TODO: Load assignment info
+                    assignmentName = submission.assignmentName,
                     dueDate = null,
-                    gradedDate = change.createdAt,
-                    pointsPossible = 0.0, // TODO: Load assignment info
+                    gradedDate = submission.postedAt,
+                    pointsPossible = submission.pointsPossible ?: 0.0,
                     weight = null,
                     iconRes = 0, // TODO: Map to icon
-                    url = "" // TODO: Build URL
+                    url = submission.assignmentUrl ?: ""
                 )
             }
     }
