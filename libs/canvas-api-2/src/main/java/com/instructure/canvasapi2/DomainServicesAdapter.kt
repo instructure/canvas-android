@@ -63,7 +63,7 @@ abstract class DomainServicesAdapter(
 
     companion object {
         const val CACHE_SIZE = (20 * 1024 * 1024).toLong()
-        const val TIMEOUT_SECONDS = 60
+        const val TIMEOUT_SECONDS = 10
     }
 }
 

@@ -16,9 +16,15 @@
  */
 package com.instructure.horizon.features.aiassistant.chat
 
+import android.util.Log
+import com.instructure.canvasapi2.apis.JourneyAssistAPI
 import com.instructure.canvasapi2.managers.graphql.horizon.cedar.CedarApiManager
 import com.instructure.canvasapi2.managers.graphql.horizon.pine.DocumentSource
 import com.instructure.canvasapi2.managers.graphql.horizon.pine.PineApiManager
+import com.instructure.canvasapi2.models.journey.JourneyAssistChatMessage
+import com.instructure.canvasapi2.models.journey.JourneyAssistRequestBody
+import com.instructure.canvasapi2.models.journey.JourneyAssistRole
+import com.instructure.canvasapi2.models.journey.JourneyAssistState
 import com.instructure.cedar.type.DocumentBlock
 import com.instructure.pine.type.MessageInput
 import javax.inject.Inject
@@ -28,9 +34,23 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 @OptIn(ExperimentalEncodingApi::class)
 class AiAssistChatRepository @Inject constructor(
     private val cedarApi: CedarApiManager,
-    private val pineApi: PineApiManager
+    private val pineApi: PineApiManager,
+    private val journeyAssistAPI: JourneyAssistAPI
 ) {
     suspend fun answerPrompt(prompt: String, contextString: String? = null): String {
+        Log.d("AIASSIST", "REST - answerPrompt")
+        val result = journeyAssistAPI.answerPrompt(
+            JourneyAssistRequestBody(prompt,
+            listOf(
+                JourneyAssistChatMessage(
+                    id = "",
+                    prompt = prompt,
+                    role = JourneyAssistRole.USER
+                )
+            ),
+            JourneyAssistState()),
+        )
+        Log.d("AIASSIST", "REST - answerPrompt: $result")
         val document = contextString?.let {
             DocumentBlock(
                 format = "txt",
