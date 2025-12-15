@@ -17,12 +17,10 @@
 package com.instructure.horizon.features.notebook.addedit.add
 
 import android.content.Context
+import android.text.format.DateFormat
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute
-import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedData
-import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedDataRange
-import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedDataTextPosition
 import com.instructure.horizon.R
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.horizon.features.notebook.navigation.NotebookRoute
@@ -64,9 +62,11 @@ class AddNoteViewModelTest {
     fun setup() {
         Dispatchers.setMain(testDispatcher)
         mockkStatic("androidx.navigation.SavedStateHandleKt")
+        mockkStatic("android.text.format.DateFormat")
         every { context.getString(R.string.createNoteTitle) } returns "Add note"
         every { context.getString(R.string.noteHasBeenSavedMessage) } returns "Note has been saved"
         every { context.getString(R.string.failedToSaveNoteMessage) } returns "Failed to save note"
+        every { DateFormat.getBestDateTimePattern(any(), any()) } returns "yyyy-MM-dd HH:mm"
 
         setupSavedStateHandle(
             courseId = testCourseId,

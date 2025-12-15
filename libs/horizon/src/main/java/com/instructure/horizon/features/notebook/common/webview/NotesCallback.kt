@@ -32,7 +32,7 @@ data class NotesCallback(
     ) -> Unit,
     val onNoteAdded: (
         selectedText: String,
-        noteType: String?,
+        noteType: String,
         startContainer: String,
         startOffset: Int,
         endContainer: String,
