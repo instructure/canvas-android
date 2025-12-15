@@ -17,12 +17,15 @@ package com.instructure.horizon.horizonui.organisms.controls
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.selection.toggleable
+import androidx.compose.foundation.selection.triStateToggleable
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxColors
 import androidx.compose.material3.TriStateCheckbox
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -47,14 +50,24 @@ data class CheckboxItemState(
 @Composable
 fun TriStateCheckboxItem(state: TriStateCheckboxItemState, modifier: Modifier = Modifier) {
     val alphaModifier = if (state.enabled) modifier else modifier.alpha(0.5f)
-    Row(modifier = alphaModifier) {
+
+    Row(
+        modifier = alphaModifier
+            .triStateToggleable(
+                state = state.toggleableState,
+                onClick = state.onClick ?: {},
+                enabled = state.enabled
+            )
+    ) {
         val error = state.controlsContentState.error != null
         TriStateCheckbox(
             state = state.toggleableState,
-            onClick = state.onClick,
+            onClick = {},
             enabled = state.enabled,
             colors = horizonCheckboxColors(error),
-            modifier = Modifier.size(20.dp)
+            modifier = Modifier
+                .size(20.dp)
+                .clearAndSetSemantics {}
         )
         HorizonSpace(SpaceSize.SPACE_8)
         ControlsContent(state = state.controlsContentState)
@@ -64,14 +77,24 @@ fun TriStateCheckboxItem(state: TriStateCheckboxItemState, modifier: Modifier = 
 @Composable
 fun CheckboxItem(state: CheckboxItemState, modifier: Modifier = Modifier) {
     val alphaModifier = if (state.enabled) modifier else modifier.alpha(0.5f)
-    Row(modifier = alphaModifier) {
+
+    Row(
+        modifier = alphaModifier
+            .toggleable(
+                value = state.checked,
+                onValueChange = state.onCheckedChanged ?: {},
+                enabled = state.enabled
+            )
+    ) {
         val error = state.controlsContentState.error != null
         Checkbox(
             checked = state.checked,
-            onCheckedChange = state.onCheckedChanged,
+            onCheckedChange = null,
             enabled = state.enabled,
             colors = horizonCheckboxColors(error),
-            modifier = Modifier.size(20.dp)
+            modifier = Modifier
+                .size(20.dp)
+                .clearAndSetSemantics {}
         )
         HorizonSpace(SpaceSize.SPACE_8)
         ControlsContent(state = state.controlsContentState)
