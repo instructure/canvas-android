@@ -17,18 +17,26 @@
 package com.instructure.pandautils.di
 
 import com.instructure.canvasapi2.apis.AccountNotificationAPI
+import com.instructure.canvasapi2.apis.AuditAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.apis.GroupAPI
+import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.pandautils.data.repository.accountnotification.AccountNotificationRepository
 import com.instructure.pandautils.data.repository.accountnotification.AccountNotificationRepositoryImpl
+import com.instructure.pandautils.data.repository.assignment.AssignmentRepository
+import com.instructure.pandautils.data.repository.assignment.AssignmentRepositoryImpl
+import com.instructure.pandautils.data.repository.audit.AuditRepository
+import com.instructure.pandautils.data.repository.audit.AuditRepositoryImpl
 import com.instructure.pandautils.data.repository.course.CourseRepository
 import com.instructure.pandautils.data.repository.course.CourseRepositoryImpl
 import com.instructure.pandautils.data.repository.enrollment.EnrollmentRepository
 import com.instructure.pandautils.data.repository.enrollment.EnrollmentRepositoryImpl
 import com.instructure.pandautils.data.repository.group.GroupRepository
 import com.instructure.pandautils.data.repository.group.GroupRepositoryImpl
+import com.instructure.pandautils.data.repository.planner.PlannerRepository
+import com.instructure.pandautils.data.repository.planner.PlannerRepositoryImpl
 import com.instructure.pandautils.data.repository.user.UserRepository
 import com.instructure.pandautils.data.repository.user.UserRepositoryImpl
 import dagger.Module
@@ -79,5 +87,29 @@ class RepositoryModule {
         groupApi: GroupAPI.GroupInterface
     ): GroupRepository {
         return GroupRepositoryImpl(groupApi)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAssignmentRepository(
+        userApi: UserAPI.UsersInterface
+    ): AssignmentRepository {
+        return AssignmentRepositoryImpl(userApi)
+    }
+
+    @Provides
+    @Singleton
+    fun providePlannerRepository(
+        plannerApi: PlannerAPI.PlannerInterface
+    ): PlannerRepository {
+        return PlannerRepositoryImpl(plannerApi)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuditRepository(
+        auditApi: AuditAPI
+    ): AuditRepository {
+        return AuditRepositoryImpl(auditApi)
     }
 }

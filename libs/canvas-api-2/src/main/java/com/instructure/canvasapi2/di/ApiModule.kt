@@ -6,6 +6,7 @@ import com.instructure.canvasapi2.TokenRefresher
 import com.instructure.canvasapi2.apis.AccountNotificationAPI
 import com.instructure.canvasapi2.apis.AnnouncementAPI
 import com.instructure.canvasapi2.apis.AssignmentAPI
+import com.instructure.canvasapi2.apis.AuditAPI
 import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.apis.CommunicationChannelsAPI
 import com.instructure.canvasapi2.apis.CanvaDocsAPI
@@ -265,6 +266,11 @@ class ApiModule {
     @Provides
     fun provideAssignmentApi(): AssignmentAPI.AssignmentInterface {
         return RestBuilder().build(AssignmentAPI.AssignmentInterface::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideAuditApi(): AuditAPI {
+        return RestBuilder().build(AuditAPI::class.java, RestParams())
     }
 
     @Provides

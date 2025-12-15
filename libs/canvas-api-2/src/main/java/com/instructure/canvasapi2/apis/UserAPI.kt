@@ -171,8 +171,14 @@ object UserAPI {
         @GET("users/self/missing_submissions?include[]=planner_overrides&filter[]=submittable&filter[]=current_grading_period")
         fun getMissingSubmissions(): Call<List<Assignment>>
 
+        @GET("users/self/missing_submissions?include[]=planner_overrides&filter[]=submittable&filter[]=current_grading_period")
+        suspend fun getMissingSubmissions(@Tag restParams: RestParams): DataResult<List<Assignment>>
+
         @GET
         fun getNextPageMissingSubmissions(@Url nextUrl: String): Call<List<Assignment>>
+
+        @GET
+        suspend fun getNextPageMissingSubmissions(@Url nextUrl: String, @Tag restParams: RestParams): DataResult<List<Assignment>>
 
         @GET("courses/{courseId}/users?enrollment_type[]=teacher&enrollment_type[]=ta&include[]=avatar_url&include[]=bio&include[]=enrollments")
         fun getFirstPageTeacherListForCourse(@Path("courseId") courseId: Long): Call<List<User>>
