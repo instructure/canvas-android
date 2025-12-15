@@ -65,6 +65,7 @@ import androidx.compose.material.Card
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarHost
@@ -1153,6 +1154,23 @@ private fun WhatIfScoreDialog(
                             color = colorResource(id = R.color.textDark)
                         )
                     },
+                    trailingIcon = {
+                        if (whatIfScoreText.isNotEmpty()) {
+                            IconButton(
+                                onClick = {
+                                    whatIfScoreText = ""
+                                    warningMessage = null
+                                },
+                                modifier = Modifier.testTag("clearWhatIfScoreButton")
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_reply),
+                                    contentDescription = stringResource(id = R.string.clearWhatIfScore),
+                                    tint = colorResource(id = R.color.textDark)
+                                )
+                            }
+                        }
+                    },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     singleLine = true,
                     colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -1377,5 +1395,22 @@ private fun GradesScreenErrorPreview() {
         ),
         actionHandler = {},
         canvasContextColor = android.graphics.Color.RED
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun WhatIfScoreDialogPreview() {
+    WhatIfScoreDialog(
+        dialogData = WhatIfScoreDialogData(
+            assignmentId = 1,
+            assignmentName = "Essay Assignment",
+            currentScoreText = "Score 55 out of 100",
+            whatIfScore = 75.0,
+            maxScore = 100.0
+        ),
+        onDismiss = {},
+        onConfirm = {},
+        canvasContextColor = 0xFF2B7ABC.toInt()
     )
 }

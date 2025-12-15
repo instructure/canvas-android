@@ -38,7 +38,6 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.DiscussionCheckpointUiState
 import com.instructure.pandautils.features.grades.gradepreferences.SortBy
 import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.DisplayGrade
 import com.instructure.pandautils.utils.debounce
 import com.instructure.pandautils.utils.filterHiddenAssignments
 import com.instructure.pandautils.utils.getAssignmentIcon
@@ -146,7 +145,11 @@ class GradesViewModel @Inject constructor(
 
             val filteredItems = filterItems(allItems, _uiState.value.searchQuery)
 
-            val isWhatIfGradingEnabled = gradesViewModelBehavior.isWhatIfGradingEnabled(course, assignmentGroups)
+            val isWhatIfGradingEnabled = gradesViewModelBehavior.isWhatIfGradingEnabled(
+                course,
+                assignmentGroups,
+                selectedGradingPeriod
+            )
 
             _uiState.update {
                 it.copy(
@@ -367,10 +370,33 @@ class GradesViewModel @Inject constructor(
         }
     }
 
+    private fun updateAssignmentWhatIfScore(
+        items: List<AssignmentGroupUiState>,
+        assignmentId: Long,
+        score: Double?
+    ): List<AssignmentGroupUiState> {
+        return items.map { group ->
+            group.copy(
+                assignments = group.assignments.map { assignment ->
+                    if (assignment.id == assignmentId) {
+                        assignment.copy(whatIfScore = score)
+                    } else {
+                        assignment
+                    }
+                }
+            )
+        }
+    }
+
     fun handleAction(action: GradesAction) {
         when (action) {
             is GradesAction.Refresh -> {
-                if (action.clearItems) _uiState.update { it.copy(items = emptyList()) }
+                _uiState.update {
+                    it.copy(
+                        items = if (action.clearItems) emptyList() else it.items,
+                        showWhatIfScore = false
+                    )
+                }
                 loadGrades(true)
             }
 
@@ -513,17 +539,8 @@ class GradesViewModel @Inject constructor(
 
             is GradesAction.UpdateWhatIfScore -> {
                 _uiState.update { state ->
-                    val updatedItems = state.items.map { group ->
-                        group.copy(
-                            assignments = group.assignments.map { assignment ->
-                                if (assignment.id == action.assignmentId) {
-                                    assignment.copy(whatIfScore = action.score)
-                                } else {
-                                    assignment
-                                }
-                            }
-                        )
-                    }
+                    val updatedItems = updateAssignmentWhatIfScore(state.items, action.assignmentId, action.score)
+                    allItems = updateAssignmentWhatIfScore(allItems, action.assignmentId, action.score)
 
                     val newGradeText = if (state.showWhatIfScore) {
                         calculateWhatIfGrade(updatedItems, state.onlyGradedAssignmentsSwitchEnabled)

@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.pandautils.features.grades.GradesRepository
 import com.instructure.pandautils.features.grades.GradesViewModelBehavior
 import com.instructure.parentapp.features.grades.ParentGradesRepository
@@ -48,7 +49,11 @@ class GradesModule {
     @Provides
     fun provideGradesViewModelBehavior(): GradesViewModelBehavior {
         return object : GradesViewModelBehavior {
-            override fun isWhatIfGradingEnabled(course: Course, assignmentGroups: List<AssignmentGroup>) = false
+            override fun isWhatIfGradingEnabled(
+                course: Course,
+                assignmentGroups: List<AssignmentGroup>,
+                selectedGradingPeriod: GradingPeriod?
+            ) = false
         }
     }
 }

@@ -17,13 +17,30 @@
 
 package com.instructure.pandautils.features.grades
 
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentGroup
+import com.instructure.canvasapi2.models.GradingRule
+import com.instructure.canvasapi2.models.Submission
 import com.instructure.pandautils.utils.orDefault
 import java.math.BigDecimal
 import java.math.RoundingMode
 import javax.inject.Inject
+import kotlin.math.min
 
 class GradeCalculator @Inject constructor() {
+
+    /**
+     * Data class to hold submission information for grade calculations and drop rules.
+     */
+    private data class SubmissionData(
+        val assignment: Assignment,
+        val submission: Submission?,
+        val score: Double,
+        val total: Double,
+        val submitted: Boolean,
+        val pendingReview: Boolean,
+        var drop: Boolean = false
+    )
 
     /**
      * Calculates the grade using what-if scores if provided.
@@ -31,7 +48,7 @@ class GradeCalculator @Inject constructor() {
      * @param groups List of assignment groups with domain models
      * @param whatIfScores Map of assignment ID to what-if score
      * @param applyGroupWeights Whether to apply assignment group weights
-     * @param onlyGraded Whether to calculate based only on graded assignments
+     * @param onlyGraded Whether to calculate based only on graded assignments (true = current grade, false = final grade)
      * @return The calculated grade as a percentage
      */
     fun calculateGrade(
@@ -49,7 +66,7 @@ class GradeCalculator @Inject constructor() {
     }
 
     /**
-     * Calculates a course's total grade based on all assignments.
+     * Calculates a course's total grade based on all assignments (final grade).
      * Maps to the "Calculate based only on graded assignments" checkbox in UNCHECKED state.
      * Uses assignment group weights.
      *
@@ -64,21 +81,18 @@ class GradeCalculator @Inject constructor() {
         var earnedScore = 0.0
 
         for (group in groups) {
-            var earnedPoints = 0.0
-            var totalPoints = 0.0
+            val gradeableAssignments = getGradeableAssignments(group.assignments)
+            val submissionData = buildSubmissionData(
+                gradeableAssignments,
+                whatIfScores,
+                includeUngraded = true
+            )
+
+            val submissionsToKeep = dropAssignments(submissionData, group.rules)
+
+            val earnedPoints = submissionsToKeep.sumOf { it.score }
+            val totalPoints = submissionsToKeep.sumOf { it.total }
             val weight = group.groupWeight
-
-            for (assignment in group.assignments) {
-                if (assignment.omitFromFinalGrade.orDefault()) continue
-
-                val scoreToUse = whatIfScores[assignment.id] ?: assignment.submission?.score
-
-                if (scoreToUse != null && assignment.submissionTypesRaw.isNotEmpty()) {
-                    earnedPoints += scoreToUse
-                }
-
-                totalPoints += assignment.pointsPossible
-            }
 
             if (totalPoints != 0.0 && earnedPoints != 0.0) {
                 earnedScore += earnedPoints / totalPoints * weight
@@ -89,7 +103,7 @@ class GradeCalculator @Inject constructor() {
     }
 
     /**
-     * Calculates a course's grade based only on graded assignments.
+     * Calculates a course's grade based only on graded assignments (current grade).
      * Maps to the "Calculate based only on graded assignments" checkbox in CHECKED state.
      * Uses assignment group weights.
      *
@@ -105,25 +119,19 @@ class GradeCalculator @Inject constructor() {
         var earnedScore = 0.0
 
         for (group in groups) {
-            var totalPoints = 0.0
-            var earnedPoints = 0.0
+            val gradeableAssignments = getGradeableAssignments(group.assignments)
+            val submissionData = buildSubmissionData(
+                gradeableAssignments,
+                whatIfScores,
+                includeUngraded = false
+            )
+
+            val submissionsToKeep = dropAssignments(submissionData, group.rules)
+
+            val earnedPoints = submissionsToKeep.sumOf { it.score }
+            val totalPoints = submissionsToKeep.sumOf { it.total }
             val weight = group.groupWeight
-            var assignCount = 0
-
-            for (assignment in group.assignments) {
-                if (assignment.omitFromFinalGrade.orDefault()) continue
-
-                val scoreToUse = whatIfScores[assignment.id] ?: assignment.submission?.score
-                val isPendingReview = assignment.submission?.workflowState == "pending_review"
-
-                if (scoreToUse != null &&
-                    assignment.submissionTypesRaw.isNotEmpty() &&
-                    !isPendingReview) {
-                    assignCount++
-                    totalPoints += assignment.pointsPossible
-                    earnedPoints += scoreToUse
-                }
-            }
+            val assignCount = submissionsToKeep.size
 
             if (totalPoints != 0.0) {
                 earnedScore += earnedPoints / totalPoints * weight
@@ -144,7 +152,7 @@ class GradeCalculator @Inject constructor() {
     }
 
     /**
-     * Calculates a course's total grade based on all assignments.
+     * Calculates a course's total grade based on all assignments (final grade).
      * Maps to checkbox UNCHECKED state when course has no assignment group weights.
      *
      * @param groups List of assignment groups for the course
@@ -160,20 +168,17 @@ class GradeCalculator @Inject constructor() {
         var totalPoints = 0.0
 
         for (group in groups) {
-            for (assignment in group.assignments) {
-                if (assignment.omitFromFinalGrade.orDefault()) continue
+            val gradeableAssignments = getGradeableAssignments(group.assignments)
+            val submissionData = buildSubmissionData(
+                gradeableAssignments,
+                whatIfScores,
+                includeUngraded = true
+            )
 
-                val scoreToUse = whatIfScores[assignment.id] ?: assignment.submission?.score
-                val isPendingReview = assignment.submission?.workflowState == "pending_review"
+            val submissionsToKeep = dropAssignments(submissionData, group.rules)
 
-                if (scoreToUse != null &&
-                    assignment.submissionTypesRaw.isNotEmpty() &&
-                    !isPendingReview) {
-                    earnedPoints += scoreToUse
-                }
-
-                totalPoints += assignment.pointsPossible
-            }
+            earnedPoints += submissionsToKeep.sumOf { it.score }
+            totalPoints += submissionsToKeep.sumOf { it.total }
         }
 
         if (totalPoints != 0.0 && earnedPoints != 0.0) {
@@ -184,7 +189,7 @@ class GradeCalculator @Inject constructor() {
     }
 
     /**
-     * Calculates a course's grade based only on graded assignments.
+     * Calculates a course's grade based only on graded assignments (current grade).
      * Maps to checkbox CHECKED state when course has no assignment group weights.
      *
      * @param groups List of assignment groups for the course
@@ -196,20 +201,21 @@ class GradeCalculator @Inject constructor() {
         whatIfScores: Map<Long, Double>
     ): Double {
         var earnedScore = 0.0
-        var totalPoints = 0.0
         var earnedPoints = 0.0
+        var totalPoints = 0.0
 
         for (group in groups) {
-            for (assignment in group.assignments) {
-                if (assignment.omitFromFinalGrade.orDefault()) continue
+            val gradeableAssignments = getGradeableAssignments(group.assignments)
+            val submissionData = buildSubmissionData(
+                gradeableAssignments,
+                whatIfScores,
+                includeUngraded = false
+            )
 
-                val scoreToUse = whatIfScores[assignment.id] ?: assignment.submission?.score
+            val submissionsToKeep = dropAssignments(submissionData, group.rules)
 
-                if (scoreToUse != null && assignment.submissionTypesRaw.isNotEmpty()) {
-                    totalPoints += assignment.pointsPossible
-                    earnedPoints += scoreToUse
-                }
-            }
+            earnedPoints += submissionsToKeep.sumOf { it.score }
+            totalPoints += submissionsToKeep.sumOf { it.total }
         }
 
         if (totalPoints != 0.0) {
@@ -217,6 +223,193 @@ class GradeCalculator @Inject constructor() {
         }
 
         return round(earnedScore)
+    }
+
+    /**
+     * Filters assignments to only include gradeable ones.
+     * Excludes:
+     * - Assignments with omitFromFinalGrade = true
+     * - Unpublished assignments
+     * - Assignments with only "not_graded" submission type
+     * - Anonymous assignments (for safety, though should be handled by posted status)
+     */
+    private fun getGradeableAssignments(assignments: List<Assignment>): List<Assignment> {
+        return assignments.filter { assignment ->
+            !assignment.omitFromFinalGrade &&
+                    assignment.published &&
+                    !assignment.submissionTypesRaw.contains("not_graded") &&
+                    assignment.submissionTypesRaw.isNotEmpty()
+        }
+    }
+
+    /**
+     * Builds submission data for calculations.
+     * Handles:
+     * - Excused submissions (filtered out)
+     * - Unposted submissions (filtered out unless what-if score)
+     * - What-if scores (always included)
+     * - Pending review (excluded for current grade, included for final grade)
+     */
+    private fun buildSubmissionData(
+        assignments: List<Assignment>,
+        whatIfScores: Map<Long, Double>,
+        includeUngraded: Boolean
+    ): List<SubmissionData> {
+        return assignments.mapNotNull { assignment ->
+            val submission = assignment.submission
+            val whatIfScore = whatIfScores[assignment.id]
+
+            // Filter excused submissions (always, even with what-if scores)
+            if (submission?.excused == true) {
+                return@mapNotNull null
+            }
+
+            // Filter unposted submissions for current grade (unless there's a what-if score)
+            // For final grade (includeUngraded=true), include all assignments even if unposted
+            if (!includeUngraded && submission?.postedAt == null && whatIfScore == null) {
+                return@mapNotNull null
+            }
+
+            val hasGrade = submission?.grade != null
+            val isPendingReview = submission?.workflowState == "pending_review"
+            val score = whatIfScore ?: submission?.score.orDefault()
+
+            // Determine if this submission should be included
+            val submitted = if (whatIfScore != null) {
+                // What-if scores always count as submitted
+                true
+            } else {
+                // For actual submissions, check if graded
+                hasGrade && if (includeUngraded) {
+                    // For final grade: include all graded (even pending review)
+                    true
+                } else {
+                    // For current grade: exclude pending review
+                    !isPendingReview
+                }
+            }
+
+            // For includeUngraded mode, include all assignments
+            // For graded-only mode, include only submitted ones
+            if (!includeUngraded && !submitted) {
+                return@mapNotNull null
+            }
+
+            SubmissionData(
+                assignment = assignment,
+                submission = submission,
+                score = score,
+                total = assignment.pointsPossible,
+                submitted = submitted,
+                pendingReview = isPendingReview
+            )
+        }
+    }
+
+    /**
+     * Applies drop rules to submissions using a simplified algorithm.
+     * This is a simpler version than the Kane & Kane binary search algorithm used in Canvas web,
+     * but should produce very similar results for most cases.
+     *
+     * Algorithm:
+     * 1. Separate never-drop submissions
+     * 2. Sort droppable submissions by percentage (score/total)
+     * 3. Drop lowest: remove the lowest-scoring submissions
+     * 4. Drop highest: remove the highest-scoring submissions from what remains
+     */
+    private fun dropAssignments(
+        allSubmissionData: List<SubmissionData>,
+        rules: GradingRule?
+    ): List<SubmissionData> {
+        val dropLowest = rules?.dropLowest ?: 0
+        val dropHighest = rules?.dropHighest ?: 0
+        val neverDropIds = rules?.neverDrop ?: emptyList()
+
+        // No dropping needed
+        if (dropLowest == 0 && dropHighest == 0) {
+            return allSubmissionData
+        }
+
+        // Partition into droppable and never-drop
+        val (cannotDrop, droppable) = allSubmissionData.partition { submission ->
+            neverDropIds.contains(submission.assignment.id)
+        }
+
+        if (droppable.isEmpty()) {
+            return cannotDrop
+        }
+
+        // Adjust drop rules if not enough assignments
+        val adjustedDropLowest = min(dropLowest, droppable.size - 1)
+        val adjustedDropHighest = if (adjustedDropLowest + dropHighest >= droppable.size) {
+            0
+        } else {
+            dropHighest
+        }
+
+        val keepHighest = droppable.size - adjustedDropLowest
+        val keepLowest = keepHighest - adjustedDropHighest
+
+        // Separate pointed and unpointed assignments
+        val hasPointed = droppable.any { it.total > 0 }
+
+        val keptSubmissions = if (hasPointed) {
+            dropPointed(droppable, keepHighest, keepLowest)
+        } else {
+            dropUnpointed(droppable, keepHighest, keepLowest)
+        }
+
+        // Mark dropped submissions
+        for (submission in droppable) {
+            if (!keptSubmissions.contains(submission)) {
+                submission.drop = true
+            }
+        }
+
+        return keptSubmissions + cannotDrop
+    }
+
+    /**
+     * Drop algorithm for assignments with 0 points possible.
+     * Just sort by raw score and keep the middle ones.
+     */
+    private fun dropUnpointed(
+        submissions: List<SubmissionData>,
+        keepHighest: Int,
+        keepLowest: Int
+    ): List<SubmissionData> {
+        return submissions
+            .sortedBy { it.score }
+            .takeLast(keepHighest)
+            .take(keepLowest)
+    }
+
+    /**
+     * Simplified drop algorithm for assignments with points possible.
+     * Sorts by percentage and keeps the best/worst based on requirements.
+     *
+     * This is simpler than the Kane & Kane algorithm but works well for most cases:
+     * 1. Sort by percentage (score/total)
+     * 2. Drop lowest: remove from bottom of sorted list
+     * 3. Drop highest: remove from top of what remains
+     */
+    private fun dropPointed(
+        submissions: List<SubmissionData>,
+        keepHighest: Int,
+        keepLowest: Int
+    ): List<SubmissionData> {
+        // Sort by percentage, with stable sorting using assignment ID as tiebreaker
+        val sorted = submissions.sortedWith(
+            compareBy(
+            { it.score / it.total.coerceAtLeast(0.001) },  // Avoid division by zero
+            { it.assignment.id }
+        ))
+
+        // Drop lowest: keep the highest scoring ones
+        val afterDroppingLowest = sorted.takeLast(keepHighest)
+
+        // Drop highest: from what remains, keep the lowest scoring ones
+        return afterDroppingLowest.take(keepLowest)
     }
 
     private fun round(value: Double, places: Int = 2): Double {
