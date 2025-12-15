@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.GradeChange
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.toDate
 import com.instructure.pandautils.domain.usecase.assignment.LoadMissingAssignmentsParams
 import com.instructure.pandautils.domain.usecase.assignment.LoadMissingAssignmentsUseCase
 import com.instructure.pandautils.domain.usecase.assignment.LoadUpcomingAssignmentsParams
@@ -35,7 +36,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
@@ -216,7 +216,7 @@ class ForecastWidgetViewModel @Inject constructor(
                     courseName = "", // TODO: Load course info
                     courseColor = 0, // TODO: Load course color
                     assignmentName = assignment.name.orEmpty(),
-                    dueDate = assignment.dueAt,
+                    dueDate = assignment.dueAt?.toDate(),
                     gradedDate = null,
                     pointsPossible = assignment.pointsPossible,
                     weight = null, // TODO: Add weight if available
@@ -232,21 +232,20 @@ class ForecastWidgetViewModel @Inject constructor(
 
         return plannerItems
             .filter { item ->
-                item.plannableDate?.toInstant()?.let { date ->
-                    !date.isBefore(weekStart) && !date.isAfter(weekEnd)
-                } ?: false
+                val date = item.plannableDate.toInstant()
+                !date.isBefore(weekStart) && !date.isAfter(weekEnd)
             }
             .sortedBy { it.plannableDate }
             .map { item ->
                 AssignmentItem(
-                    id = item.plannableId,
+                    id = item.plannable.id,
                     courseId = item.courseId ?: 0,
                     courseName = "", // TODO: Load course info
                     courseColor = 0, // TODO: Load course color
-                    assignmentName = item.plannableTitle.orEmpty(),
+                    assignmentName = item.plannable.title,
                     dueDate = item.plannableDate,
                     gradedDate = null,
-                    pointsPossible = item.pointsPossible ?: 0.0,
+                    pointsPossible = item.plannable.pointsPossible ?: 0.0,
                     weight = null,
                     iconRes = 0, // TODO: Map planner type to icon
                     url = item.htmlUrl.orEmpty()

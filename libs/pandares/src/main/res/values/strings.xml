@@ -2118,6 +2118,19 @@
     <string name="widgetGradesErrorLoadingCourses">An error occurred while loading courses.</string>
     <string name="settingsSwitchExperience">Switch to Canvas Career</string>
 
+    <string name="forecastWidgetTitle">Weekly Summary</string>
+    <string name="forecastWidgetWeekPeriod">Week #%1$d | %2$s</string>
+    <string name="forecastWidgetMissing">Missing</string>
+    <string name="forecastWidgetDue">Due</string>
+    <string name="forecastWidgetRecentGrades">New Grades</string>
+    <string name="forecastWidgetGradeWeight">%d%% of final grade</string>
+    <string name="forecastWidgetErrorMessage">We\'re having trouble loading your assignments. Please check your connection and try again.</string>
+    <string name="forecastWidgetEmptyMissing">No missing assignments. You\'re all caught up!</string>
+    <string name="forecastWidgetEmptyDue">No assignments due this week.</string>
+    <string name="forecastWidgetEmptyRecentGrades">No new grades in the past 7 days.</string>
+    <string name="a11y_contentDescription_previousWeek">Previous week</string>
+    <string name="a11y_contentDescription_nextWeek">Next week</string>
+
     <string name="speedGraderGradeTabTitle">Grade &amp; Rubric</string>
     <string name="speedGraderDetailsTabTitle">Details</string>
     <string name="a11y_contentDescription_expandPanel">Expand panel</string>
