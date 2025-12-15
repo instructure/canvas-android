@@ -2132,6 +2132,10 @@
         <item quantity="one">%s / %s pt</item>
         <item quantity="other">%s / %s pts</item>
     </plurals>
+    <plurals name="groupMemberCount">
+        <item quantity="one">Student</item>
+        <item quantity="other">Students</item>
+    </plurals>
     <string name="speedGraderLatePenaltyTitle">Late Penalty</string>
     <string name="gradingStatus_none">None</string>
     <string name="gradingStatus_late">Late</string>
@@ -2369,4 +2373,9 @@
     <string name="skip">Skip</string>
     <string name="widget_setting_show_greeting">Show greeting</string>
     <string name="background_color">Background color</string>
+    <string name="offline_content_available">Offline content available</string>
+    <string name="a11y_contentDescription_moreOptions">More options</string>
+    <string name="customizeCourse">Customize Course</string>
+    <string name="favoriteCoursesAndGroups">Favorite Courses and Groups</string>
+    <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
 </resources>

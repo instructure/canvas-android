@@ -42,7 +42,8 @@ fun NotebookHighlightedText(
 ) {
     var lineCount = 1
     val lineList = mutableListOf<Float>()
-    val lineColor = type?.color?.let { colorResource(type.color) }
+    val highlightColor = type?.highlightColor?.let { colorResource(type.highlightColor) }
+    val lineColor = type?.lineColor?.let { colorResource(type.lineColor) }
     val dashedEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
     val pathEffect = if (type == NotebookType.Confusing) dashedEffect else null
 
@@ -60,30 +61,38 @@ fun NotebookHighlightedText(
         },
         modifier = modifier
             .drawWithContent {
-                drawContent()
-                if (lineColor != null) {
+                if (highlightColor != null && lineColor != null) {
                     val strokeWidth = 1.dp.toPx()
                     val lineHeight = size.height / lineCount
                     for (i in 1..lineCount) {
-                        val verticalOffset = i * lineHeight - strokeWidth
+                        val verticalOffset = i * lineHeight
                         val lineWidth = lineList[i - 1]
+
+                        drawLine(
+                            color = highlightColor,
+                            strokeWidth = lineHeight,
+                            start = Offset(0f, verticalOffset - lineHeight / 2 + i * strokeWidth),
+                            end = Offset(lineWidth, verticalOffset - lineHeight / 2 + i * strokeWidth)
+                        )
+
+                        drawLine(
+                            color = highlightColor,
+                            strokeWidth = strokeWidth,
+                            start = Offset(0f, verticalOffset + i * strokeWidth + strokeWidth / 2),
+                            end = Offset(lineWidth, verticalOffset + i * strokeWidth + strokeWidth / 2),
+                            pathEffect = null
+                        )
 
                         drawLine(
                             color = lineColor,
                             strokeWidth = strokeWidth,
-                            start = Offset(0f, verticalOffset),
-                            end = Offset(lineWidth, verticalOffset),
+                            start = Offset(0f, verticalOffset + i * strokeWidth + strokeWidth / 2),
+                            end = Offset(lineWidth, verticalOffset + i * strokeWidth + strokeWidth / 2),
                             pathEffect = pathEffect
-                        )
-
-                        drawLine(
-                            color = lineColor.copy(alpha = 0.2f),
-                            strokeWidth = lineHeight,
-                            start = Offset(0f, verticalOffset - lineHeight / 2),
-                            end = Offset(lineWidth, verticalOffset - lineHeight / 2)
                         )
                     }
                 }
+                drawContent()
             }
     )
 }

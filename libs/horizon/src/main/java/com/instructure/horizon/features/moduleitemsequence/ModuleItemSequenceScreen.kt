@@ -256,7 +256,9 @@ private fun ModuleItemSequenceContent(
                         moduleHeaderHeight = coordinates.size.height
                         val temp = nestedScrollConnection.appBarOffset
                         nestedScrollConnection =
-                            CollapsingAppBarNestedScrollConnection(moduleHeaderHeight).apply { appBarOffset = temp }
+                            CollapsingAppBarNestedScrollConnection(moduleHeaderHeight).apply {
+                                appBarOffset = temp
+                            }
                     }
                 }
         ) {
@@ -274,7 +276,10 @@ private fun ModuleItemSequenceContent(
             containerColor = Color.Transparent,
             modifier = Modifier
                 .conditional(uiState.loadingState.isLoading || uiState.loadingState.isError) {
-                    background(color = HorizonColors.Surface.pageSecondary(), shape = HorizonCornerRadius.level5)
+                    background(
+                        color = HorizonColors.Surface.pageSecondary(),
+                        shape = HorizonCornerRadius.level5
+                    )
                 }
                 .padding(top = moduleHeaderHeight)
         ) {
@@ -305,6 +310,7 @@ private fun ModuleItemSequenceContent(
                         uiState.assignmentToolsOpened,
                         updateAiContext = uiState.updateAiAssistContext,
                         updateNotebookContext = uiState.updateObjectTypeAndId,
+                        scrollToNoteId = uiState.scrollToNoteId
                     )
                 }
             }
@@ -403,6 +409,7 @@ private fun ModuleItemContentScreen(
     assignmentToolsOpened: () -> Unit,
     updateAiContext: (AiAssistContextSource, String) -> Unit,
     updateNotebookContext: (Pair<String, String>) -> Unit,
+    scrollToNoteId: String?,
     modifier: Modifier = Modifier
 ) {
     if (moduleItemUiState.isLoading) {
@@ -461,7 +468,8 @@ private fun ModuleItemContentScreen(
                     uiState = uiState,
                     scrollState = scrollState,
                     updateAiContext = { source, content -> updateAiContext(source, content) },
-                    mainNavController = mainNavController
+                    mainNavController = mainNavController,
+                    scrollToNoteId = scrollToNoteId
                 )
             }
             composable(
@@ -546,6 +554,7 @@ private fun ModuleItemSequenceBottomBar(
         ) {
             if (showPreviousButton) IconButton(
                 iconRes = R.drawable.chevron_left,
+                contentDescription = stringResource(R.string.a11y_previousModuleItem),
                 color = IconButtonColor.Inverse,
                 elevation = HorizonElevation.level4,
                 onClick = onPreviousClick,
@@ -559,13 +568,15 @@ private fun ModuleItemSequenceBottomBar(
             ) {
                 IconButton(
                     iconRes = R.drawable.ai,
+                    contentDescription = stringResource(R.string.a11y_openAIAssistant),
                     enabled = aiAssistEnabled,
                     color = IconButtonColor.Ai,
                     elevation = HorizonElevation.level4,
                     onClick = onAiAssistClick,
                 )
                 if (showNotebookButton) IconButton(
-                    iconRes = R.drawable.menu_book_notebook,
+                    iconRes = R.drawable.edit_note,
+                    contentDescription = stringResource(R.string.a11y_openNotebook),
                     enabled = notebookEnabled,
                     color = IconButtonColor.Inverse,
                     elevation = HorizonElevation.level4,
@@ -573,6 +584,7 @@ private fun ModuleItemSequenceBottomBar(
                 )
                 if (showAssignmentToolsButton) IconButton(
                     iconRes = R.drawable.more_vert,
+                    contentDescription = stringResource(R.string.a11y_openMoreOptions),
                     color = IconButtonColor.Inverse,
                     elevation = HorizonElevation.level4,
                     onClick = onAssignmentToolsClick,
@@ -587,6 +599,7 @@ private fun ModuleItemSequenceBottomBar(
             }
             if (showNextButton) IconButton(
                 iconRes = R.drawable.chevron_right,
+                contentDescription = stringResource(R.string.a11y_nextModuleItem),
                 color = IconButtonColor.Inverse,
                 elevation = HorizonElevation.level4,
                 onClick = onNextClick,

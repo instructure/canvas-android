@@ -29,6 +29,7 @@ data class WidgetMetadata(
         const val WIDGET_ID_COURSE_INVITATIONS = "course_invitations"
         const val WIDGET_ID_INSTITUTIONAL_ANNOUNCEMENTS = "institutional_announcements"
         const val WIDGET_ID_WELCOME = "welcome"
+        const val WIDGET_ID_COURSES = "courses"
 
         fun getDisplayNameRes(widgetId: String): Int = when (widgetId) {
             WIDGET_ID_WELCOME -> R.string.widget_hello

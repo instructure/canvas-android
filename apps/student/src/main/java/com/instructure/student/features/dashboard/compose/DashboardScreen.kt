@@ -69,8 +69,9 @@ import com.instructure.pandautils.compose.composables.OverflowMenu
 import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.courseinvitation.CourseInvitationsWidget
-import com.instructure.pandautils.features.dashboard.widget.welcome.WelcomeWidget
+import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidget
 import com.instructure.pandautils.features.dashboard.widget.institutionalannouncements.InstitutionalAnnouncementsWidget
+import com.instructure.pandautils.features.dashboard.widget.welcome.WelcomeWidget
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.student.R
 import com.instructure.student.activity.NavigationActivity
@@ -124,7 +125,7 @@ fun DashboardScreenContent(
     var showMenu by remember { mutableStateOf(false) }
 
     Scaffold(
-        modifier = Modifier.background(colorResource(R.color.backgroundLightest)),
+        modifier = Modifier.background(colorResource(R.color.backgroundLight)),
         topBar = {
             CanvasThemedAppBar(
                 title = stringResource(id = R.string.dashboard),
@@ -166,7 +167,7 @@ fun DashboardScreenContent(
     ) { paddingValues ->
         Box(
             modifier = Modifier
-                .background(colorResource(R.color.backgroundLightest))
+                .background(colorResource(R.color.backgroundLight))
                 .padding(paddingValues)
                 .pullRefresh(pullRefreshState)
                 .fillMaxSize()
@@ -273,6 +274,7 @@ private fun GetWidgetComposable(
 ) {
     return when (widgetId) {
         WidgetMetadata.WIDGET_ID_WELCOME -> WelcomeWidget(refreshSignal = refreshSignal)
+        WidgetMetadata.WIDGET_ID_COURSES -> CoursesWidget(refreshSignal = refreshSignal, columns = columns)
         WidgetMetadata.WIDGET_ID_COURSE_INVITATIONS -> CourseInvitationsWidget(
             refreshSignal = refreshSignal,
             columns = columns,
