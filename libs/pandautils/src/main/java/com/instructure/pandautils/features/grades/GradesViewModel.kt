@@ -347,26 +347,16 @@ class GradesViewModel @Inject constructor(
             onlyGraded = onlyGraded
         )
 
-        val restrictQuantitativeData = currentCourse.settings?.restrictQuantitativeData.orDefault()
-        return if (restrictQuantitativeData) {
-            val gradingScheme = currentCourse.gradingScheme
-            if (gradingScheme.isNotEmpty()) {
-                convertPercentScoreToLetterGrade(calculatedGrade / 100, gradingScheme)
-            } else {
-                context.getString(R.string.noGradeText)
-            }
+        val result = if (currentCourse.pointsBasedGradingScheme) {
+            convertPercentToPointBased(calculatedGrade, currentCourse.scalingFactor)
         } else {
-            val result = if (currentCourse.pointsBasedGradingScheme) {
-                convertPercentToPointBased(calculatedGrade, currentCourse.scalingFactor)
-            } else {
-                NumberHelper.doubleToPercentage(calculatedGrade)
-            }
-            if (courseGrade?.hasFinalGradeString() == true || courseGrade?.hasCurrentGradeString() == true) {
-                val letterGrade = convertPercentScoreToLetterGrade(calculatedGrade / 100, currentCourse.gradingScheme)
-                "$result $letterGrade"
-            } else {
-                result
-            }
+            NumberHelper.doubleToPercentage(calculatedGrade)
+        }
+        return if (courseGrade?.hasFinalGradeString() == true || courseGrade?.hasCurrentGradeString() == true) {
+            val letterGrade = convertPercentScoreToLetterGrade(calculatedGrade / 100, currentCourse.gradingScheme)
+            "$result $letterGrade"
+        } else {
+            result
         }
     }
 
