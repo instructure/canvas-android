@@ -15,6 +15,8 @@
  */
 package com.instructure.canvas.espresso.common.pages.compose
 
+import android.widget.DatePicker
+import android.widget.TimePicker
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertTextContains
@@ -23,21 +25,35 @@ import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.test.espresso.Espresso.onData
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
+import androidx.test.espresso.contrib.PickerActions
+import androidx.test.espresso.matcher.RootMatchers.isDialog
+import androidx.test.espresso.matcher.ViewMatchers.withClassName
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.sugar.Web.onWebView
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
 import androidx.test.espresso.web.webdriver.DriverAtoms.getText
 import androidx.test.espresso.web.webdriver.Locator
+import com.instructure.espresso.click
+import com.instructure.espresso.matchers.WaitForViewMatcher.waitForView
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
+import com.instructure.espresso.scrollTo
 import com.instructure.pandautils.R
 import org.hamcrest.Matchers
+import org.hamcrest.Matchers.anything
+import java.util.Calendar
 
 class CalendarEventDetailsPage(private val composeTestRule: ComposeTestRule) : BasePage() {
 
@@ -123,5 +139,54 @@ class CalendarEventDetailsPage(private val composeTestRule: ComposeTestRule) : B
 
     fun clickComposeMessageFAB() {
         composeTestRule.onNodeWithContentDescription("Send a message about this event").performClick()
+    }
+
+    fun assertReminderSectionDisplayed() {
+        composeTestRule.onNodeWithText(R.string.reminderTitle.toString()).isDisplayed()
+        composeTestRule.onNodeWithText(R.string.reminderDescription.toString()).isDisplayed()
+        composeTestRule.onNodeWithContentDescription(R.string.a11y_addReminder.toString()).isDisplayed()
+    }
+
+    fun clickBeforeReminderOption(reminderText: String) {
+        waitForView(withText(reminderText)).scrollTo().click()
+        composeTestRule.waitForIdle()
+    }
+
+    fun clickCustomReminderOption() {
+        onData(anything()).inRoot(isDialog()).atPosition(6).perform(click())
+    }
+
+    fun clickAddReminder() {
+        composeTestRule.onNodeWithContentDescription("Add reminder").performClick()
+    }
+
+    fun assertReminderDisplayedWithText(reminderText: String) {
+        composeTestRule.onNodeWithText(reminderText).isDisplayed()
+    }
+
+    fun removeReminder() {
+        composeTestRule.onNode(
+            hasContentDescription("Remove")
+        ).performClick()
+        Thread.sleep(1000)
+        waitForView(withText(R.string.yes)).scrollTo().click()
+    }
+
+    fun assertReminderNotDisplayedWithText(reminderText: String) {
+        onView(withText(reminderText)).check(doesNotExist())
+    }
+
+    fun selectDate(calendar: Calendar) {
+        onView(withClassName(Matchers.equalTo(DatePicker::class.java.name)))
+            .perform(PickerActions.setDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH)))
+
+        onView(withId(android.R.id.button1)).perform(click())
+    }
+
+    fun selectTime(calendar: Calendar) {
+        onView(withClassName(Matchers.equalTo(TimePicker::class.java.name)))
+            .perform(PickerActions.setTime(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE)))
+
+        onView(withId(android.R.id.button1)).perform(click())
     }
 }

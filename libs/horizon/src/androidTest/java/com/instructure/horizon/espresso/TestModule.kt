@@ -23,6 +23,7 @@ import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdat
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoViewModelBehavior
 import com.instructure.pandautils.features.calendartodo.details.ToDoRouter
 import com.instructure.pandautils.features.calendartodo.details.ToDoViewModelBehavior
+import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidgetBehavior
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardRepository
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardRouter
 import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
@@ -358,6 +359,11 @@ object HorizonTestModule {
 
     @Provides
     fun provideToDoListViewModelBehavior(): ToDoListViewModelBehavior {
+        throw NotImplementedError("This is a test module. Implementation not required.")
+    }
+
+    @Provides
+    fun provideCoursesWidgetBehavior(): CoursesWidgetBehavior {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 }

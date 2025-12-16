@@ -58,17 +58,17 @@ class CourseDetailsGradesE2ETest : ParentComposeTest() {
         val teacher = data.teachersList[0]
 
         Log.d(PREPARATION_TAG, "Seeding assignment for '${course.name}' course.")
-        val testAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
+        val gradedAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
 
-        Log.d(PREPARATION_TAG, "Submit assignment: '${testAssignment.name}' for student: '${student.name}'.")
-        SubmissionsApi.seedAssignmentSubmission(course.id, student.token, testAssignment.id, submissionSeedsList = listOf(
+        Log.d(PREPARATION_TAG, "Submit assignment: '${gradedAssignment.name}' for student: '${student.name}'.")
+        SubmissionsApi.seedAssignmentSubmission(course.id, student.token, gradedAssignment.id, submissionSeedsList = listOf(
             SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = SubmissionType.ONLINE_TEXT_ENTRY)))
 
         Log.d(PREPARATION_TAG, "Seeding assignment for '${course.name}' course submitted by the observed student but not graded by the teacher.")
         val submittedAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 30.0, dueAt = 2.days.ago.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
 
-        Log.d(PREPARATION_TAG, "Grade submission: '${testAssignment.name}' with 13 points.")
-        SubmissionsApi.gradeSubmission(teacher.token, course.id, testAssignment.id, student.id, postedGrade = "13")
+        Log.d(PREPARATION_TAG, "Grade submission: '${gradedAssignment.name}' with 13 points.")
+        SubmissionsApi.gradeSubmission(teacher.token, course.id, gradedAssignment.id, student.id, postedGrade = "13")
 
         Log.d(PREPARATION_TAG, "Submit assignment: '${submittedAssignment.name}' for student: '${student.name}'.")
         SubmissionsApi.seedAssignmentSubmission(course.id, student.token, submittedAssignment.id, submissionSeedsList = listOf(
@@ -99,7 +99,7 @@ class CourseDetailsGradesE2ETest : ParentComposeTest() {
             gradesPage.assertBasedOnGradedAssignmentsLabel()
         }
 
-        Log.d(ASSERTION_TAG, "Assert that the group header 'Upcoming Assignments' is displayed since the '${testAssignment.name}' assignment's due date is in the future and it's already graded.")
+        Log.d(ASSERTION_TAG, "Assert that the group header 'Upcoming Assignments' is displayed since the '${gradedAssignment.name}' assignment's due date is in the future and it's already graded.")
         gradesPage.assertGroupHeaderIsDisplayed("Upcoming Assignments")
 
         Log.d(ASSERTION_TAG, "Assert that the group header 'Past Assignments' is displayed since the '${submittedAssignment.name}' assignment's due date is in the past and it's already submitted but hasn't graded yet.")
@@ -109,16 +109,16 @@ class CourseDetailsGradesE2ETest : ParentComposeTest() {
         gradesPage.assertGroupHeaderIsDisplayed("Overdue Assignments")
 
         Log.d(ASSERTION_TAG, "Assert that all the three seeded assignments are displayed.")
-        gradesPage.assertAssignmentIsDisplayed(testAssignment.name)
+        gradesPage.assertAssignmentIsDisplayed(gradedAssignment.name)
         gradesPage.assertAssignmentIsDisplayed(submittedAssignment.name)
         gradesPage.assertAssignmentIsDisplayed(notSubmittedAssignment.name)
 
-        Log.d(ASSERTION_TAG, "Assert that the '${testAssignment.name}' graded assignment's score (aka. grade text) is 13/15 and the Total grade is 86.67%.")
+        Log.d(ASSERTION_TAG, "Assert that the '${gradedAssignment.name}' graded assignment's score (aka. grade text) is 13/15 and the Total grade is 86.67%.")
         retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = {
             composeTestRule.waitForIdle()
             gradesPage.refresh() })
         {
-            gradesPage.assertAssignmentGradeText(testAssignment.name, "13/15")
+            gradesPage.assertAssignmentGradeText(gradedAssignment.name, "13/15")
             gradesPage.assertTotalGradeText("86.67%") //Sometimes the Total grade cannot be displayed because of API issues and even the retry logic does not solve it.
         }
 
@@ -126,12 +126,12 @@ class CourseDetailsGradesE2ETest : ParentComposeTest() {
         gradesPage.assertAssignmentGradeText(submittedAssignment.name, "-/30")
         gradesPage.assertAssignmentGradeText(notSubmittedAssignment.name, "-/15")
 
-        Log.d(STEP_TAG, "Click on the '${testAssignment.name}' assignment to open it's details.")
-        courseDetailsPage.clickAssignment(testAssignment.name)
+        Log.d(STEP_TAG, "Click on the '${gradedAssignment.name}' assignment to open it's details.")
+        courseDetailsPage.clickAssignment(gradedAssignment.name)
 
-        Log.d(ASSERTION_TAG, "Assert that the '${testAssignment.name}' assignment's title and details are displayed and the proper score (13) is displayed as well. Assert that the selected attempt is 'Attempt 1'.")
-        assignmentDetailsPage.assertAssignmentTitle(testAssignment.name)
-        assignmentDetailsPage.assertAssignmentDetails(testAssignment)
+        Log.d(ASSERTION_TAG, "Assert that the '${gradedAssignment.name}' assignment's title and details are displayed and the proper score (13) is displayed as well. Assert that the selected attempt is 'Attempt 1'.")
+        assignmentDetailsPage.assertAssignmentTitle(gradedAssignment.name)
+        assignmentDetailsPage.assertAssignmentDetails(gradedAssignment)
         assignmentDetailsPage.assertAssignmentGraded("13")
 
         Log.d(STEP_TAG, "Navigate back to the Assignment (Grades) List page.")
@@ -167,5 +167,29 @@ class CourseDetailsGradesE2ETest : ParentComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the Total grade is 21.67%, since we are counting missing and not graded assignments as well when calculating the Total Grade.")
         composeTestRule.waitForIdle()
         gradesPage.assertTotalGradeText("21.67%")
+
+        Log.d(PREPARATION_TAG, "Seeding assignment for '${course.name}' course which is not submitted by the observed student.")
+        AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 15.0, dueAt = 1.days.ago.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
+
+        Log.d(PREPARATION_TAG, "Seeding assignment for '${course.name}' course which is not submitted by the observed student.")
+        AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 15.0, dueAt = 1.days.ago.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
+
+        Log.d(PREPARATION_TAG, "Seeding assignment for '${course.name}' course which is not submitted by the observed student.")
+        AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 15.0, dueAt = 1.days.ago.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
+
+        Thread.sleep(5000) // Allow assignments' creation to propagate
+
+        Log.d(ASSERTION_TAG, "Assert the 'Card' label is 'Total'.")
+        gradesPage.assertCardText("Total")
+
+        Log.d(STEP_TAG, "Turn on 'Based on graded assignments' toggle.")
+        gradesPage.clickBasedOnGradedAssignments()
+
+        Log.d(STEP_TAG, "Refresh the Grades page and scroll to the down the assignment list.")
+        gradesPage.refresh()
+        gradesPage.scrollScreen()
+
+        Log.d(ASSERTION_TAG, "Assert the 'Card' label is 'Based on graded assignments'.")
+        gradesPage.assertCardText("Based on graded assignments")
     }
 }

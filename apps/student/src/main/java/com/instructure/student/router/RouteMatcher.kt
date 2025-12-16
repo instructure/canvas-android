@@ -403,6 +403,13 @@ object RouteMatcher : BaseRouteMatcher() {
                 AssignmentDetailsFragment::class.java
             )
         )
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"),
+                QuizListFragment::class.java,
+                AssignmentDetailsFragment::class.java
+            )
+        ) // Route for new quizzes opened from the quiz list. New quizzes are shown on the Assignment details. This is needed for the bookmarker to find the correct route.
 
         // Studio
         routes.add(
