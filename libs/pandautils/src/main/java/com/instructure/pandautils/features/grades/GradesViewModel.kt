@@ -129,8 +129,11 @@ class GradesViewModel @Inject constructor(
                 repository.setSortBy(_uiState.value.gradePreferencesUiState.sortBy)
             }
 
-            val assignmentGroups =
-                repository.loadAssignmentGroups(courseId, selectedGradingPeriod?.id, forceRefresh).filterHiddenAssignments()
+            val assignmentGroups = repository.loadAssignmentGroups(
+                courseId,
+                selectedGradingPeriod?.id,
+                forceRefresh
+            ).filterHiddenAssignments()
             val enrollments = repository.loadEnrollments(courseId, selectedGradingPeriod?.id, forceRefresh)
 
             courseGrade = repository.getCourseGrade(course, repository.studentId, enrollments, selectedGradingPeriod?.id)
@@ -145,11 +148,7 @@ class GradesViewModel @Inject constructor(
 
             val filteredItems = filterItems(allItems, _uiState.value.searchQuery)
 
-            val isWhatIfGradingEnabled = gradesViewModelBehavior.isWhatIfGradingEnabled(
-                course,
-                assignmentGroups,
-                selectedGradingPeriod
-            )
+            val isWhatIfGradingEnabled = gradesViewModelBehavior.isWhatIfGradingEnabled(course)
 
             _uiState.update {
                 it.copy(
@@ -340,12 +339,31 @@ class GradesViewModel @Inject constructor(
         }
 
         val applyGroupWeights = currentCourse.isApplyAssignmentGroupWeights
-        val calculatedGrade = gradeCalculator.calculateGrade(
-            groups = domainAssignmentGroups,
-            whatIfScores = whatIfScores,
-            applyGroupWeights = applyGroupWeights,
-            onlyGraded = onlyGraded
-        )
+
+        // Check if we need to use weighted grading periods calculation
+        val gradingPeriods = _uiState.value.gradePreferencesUiState.gradingPeriods
+        val selectedGradingPeriod = _uiState.value.gradePreferencesUiState.selectedGradingPeriod
+        val useWeightedPeriods = currentCourse.isWeightedGradingPeriods &&
+                selectedGradingPeriod == null &&
+                gradingPeriods.isNotEmpty()
+
+        val calculatedGrade = if (useWeightedPeriods) {
+            gradeCalculator.calculateGradeWithPeriods(
+                groups = domainAssignmentGroups,
+                whatIfScores = whatIfScores,
+                applyGroupWeights = applyGroupWeights,
+                onlyGraded = onlyGraded,
+                gradingPeriods = gradingPeriods,
+                weightGradingPeriods = true
+            )
+        } else {
+            gradeCalculator.calculateGrade(
+                groups = domainAssignmentGroups,
+                whatIfScores = whatIfScores,
+                applyGroupWeights = applyGroupWeights,
+                onlyGraded = onlyGraded
+            )
+        }
 
         val result = if (currentCourse.pointsBasedGradingScheme) {
             convertPercentToPointBased(calculatedGrade, currentCourse.scalingFactor)

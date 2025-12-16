@@ -33,6 +33,7 @@ import com.instructure.student.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
+import org.junit.Test
 
 @HiltAndroidTest
 @UninstallModules(CustomGradeStatusModule::class)
@@ -72,5 +73,83 @@ class StudentGradesInteractionTest : GradesInteractionTest() {
         dashboardPage.waitForRender()
         dashboardPage.selectCourse(course)
         courseBrowserPage.selectGrades()
+    }
+
+    @Test
+    fun enableWhatIfScoring() {
+        val data = initData()
+        val course = data.courses.values.first()
+
+        goToGrades(data, course.name)
+
+        composeTestRule.waitForIdle()
+
+        gradesPage.assertShowWhatIfScoreIsDisplayed()
+        gradesPage.clickShowWhatIfScore()
+    }
+
+    @Test
+    fun enterWhatIfScoreUpdatesGrade() {
+        val data = initData()
+        val course = data.courses.values.first()
+        val assignment = data.assignments.values.first()
+
+        goToGrades(data, course.name)
+
+        composeTestRule.waitForIdle()
+
+        gradesPage.clickShowWhatIfScore()
+        gradesPage.clickEditWhatIfScore(assignment.name.orEmpty())
+        gradesPage.enterWhatIfScore("8")
+        gradesPage.clickDoneInWhatIfDialog()
+
+        composeTestRule.waitForIdle()
+
+        gradesPage.assertWhatIfGradeText(assignment.name.orEmpty(), "What-if: 8/10")
+    }
+
+    @Test
+    fun clearWhatIfScore() {
+        val data = initData()
+        val course = data.courses.values.first()
+        val assignment = data.assignments.values.first()
+
+        goToGrades(data, course.name)
+
+        composeTestRule.waitForIdle()
+
+        gradesPage.clickShowWhatIfScore()
+        gradesPage.clickEditWhatIfScore(assignment.name.orEmpty())
+        gradesPage.enterWhatIfScore("8")
+        gradesPage.clickDoneInWhatIfDialog()
+
+        composeTestRule.waitForIdle()
+
+        gradesPage.clickEditWhatIfScore(assignment.name.orEmpty())
+        gradesPage.clickClearWhatIfScore()
+
+        composeTestRule.waitForIdle()
+
+        gradesPage.assertAssignmentGradeText(assignment.name.orEmpty(), "-/10")
+    }
+
+    @Test
+    fun cancelWhatIfDialog() {
+        val data = initData()
+        val course = data.courses.values.first()
+        val assignment = data.assignments.values.first()
+
+        goToGrades(data, course.name)
+
+        composeTestRule.waitForIdle()
+
+        gradesPage.clickShowWhatIfScore()
+        gradesPage.clickEditWhatIfScore(assignment.name.orEmpty())
+        gradesPage.enterWhatIfScore("8")
+        gradesPage.clickCancelInWhatIfDialog()
+
+        composeTestRule.waitForIdle()
+
+        gradesPage.assertAssignmentGradeText(assignment.name.orEmpty(), "-/10")
     }
 }

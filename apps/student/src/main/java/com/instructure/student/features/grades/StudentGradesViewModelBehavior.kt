@@ -17,20 +17,12 @@
 
 package com.instructure.student.features.grades
 
-import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.pandautils.features.grades.GradesViewModelBehavior
 
 class StudentGradesViewModelBehavior : GradesViewModelBehavior {
 
-    override fun isWhatIfGradingEnabled(
-        course: Course,
-        assignmentGroups: List<AssignmentGroup>,
-        selectedGradingPeriod: GradingPeriod?
-    ): Boolean {
-        val isAllWeightedPeriods = course.isWeightedGradingPeriods && selectedGradingPeriod == null
-
-        return !isAllWeightedPeriods && course.settings?.restrictQuantitativeData != true
+    override fun isWhatIfGradingEnabled(course: Course): Boolean {
+        return course.settings?.restrictQuantitativeData != true
     }
 }

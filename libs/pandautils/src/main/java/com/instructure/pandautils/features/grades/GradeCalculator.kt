@@ -25,6 +25,7 @@ import com.instructure.pandautils.utils.orDefault
 import java.math.BigDecimal
 import java.math.RoundingMode
 import javax.inject.Inject
+import kotlin.math.max
 import kotlin.math.min
 
 class GradeCalculator @Inject constructor() {
@@ -66,6 +67,104 @@ class GradeCalculator @Inject constructor() {
     }
 
     /**
+     * Calculates the grade with weighted grading periods support.
+     * When grading periods are weighted, assignments are grouped by period,
+     * grades are calculated per period (with drop rules applied), and then
+     * combined using period weights.
+     *
+     * @param groups List of assignment groups with domain models
+     * @param whatIfScores Map of assignment ID to what-if score
+     * @param applyGroupWeights Whether to apply assignment group weights
+     * @param onlyGraded Whether to calculate based only on graded assignments
+     * @param gradingPeriods List of grading periods with weights
+     * @param weightGradingPeriods Whether grading periods are weighted
+     * @return The calculated grade as a percentage
+     */
+    fun calculateGradeWithPeriods(
+        groups: List<AssignmentGroup>,
+        whatIfScores: Map<Long, Double>,
+        applyGroupWeights: Boolean,
+        onlyGraded: Boolean,
+        gradingPeriods: List<com.instructure.canvasapi2.models.GradingPeriod>,
+        weightGradingPeriods: Boolean
+    ): Double {
+        if (!weightGradingPeriods || gradingPeriods.isEmpty()) {
+            // No period weighting, use standard calculation
+            return calculateGrade(groups, whatIfScores, applyGroupWeights, onlyGraded)
+        }
+
+        // Split assignment groups by grading period
+        val periodBasedGroups = divideGroupsByGradingPeriods(groups)
+
+        // Calculate grade for each period
+        val periodGrades = gradingPeriods.mapNotNull { period ->
+            val groupsInPeriod = periodBasedGroups[period.id] ?: return@mapNotNull null
+
+            val periodGrade = calculateGrade(groupsInPeriod, whatIfScores, applyGroupWeights, onlyGraded)
+
+            PeriodGrade(
+                periodId = period.id,
+                grade = periodGrade,
+                weight = period.weight
+            )
+        }
+
+        // Combine period grades using weights
+        return combinePeriodGrades(periodGrades)
+    }
+
+    /**
+     * Divides assignment groups by grading period.
+     * Each assignment group may be duplicated multiple times, once for each period it contains assignments from.
+     * This ensures drop rules are applied per period, not across periods.
+     */
+    private fun divideGroupsByGradingPeriods(
+        groups: List<AssignmentGroup>
+    ): Map<Long, List<AssignmentGroup>> {
+        val groupsByPeriod = mutableMapOf<Long, MutableList<AssignmentGroup>>()
+
+        for (group in groups) {
+            // Group assignments by their grading period ID
+            val assignmentsByPeriod = group.assignments.groupBy { assignment ->
+                assignment.submission?.gradingPeriodId
+            }
+
+            // Create a separate group instance for each period
+            for ((periodId, assignmentsInPeriod) in assignmentsByPeriod) {
+                if (periodId != null) {
+                    val periodGroup = group.copy(assignments = assignmentsInPeriod)
+                    groupsByPeriod.getOrPut(periodId) { mutableListOf() }.add(periodGroup)
+                }
+            }
+        }
+
+        return groupsByPeriod
+    }
+
+    /**
+     * Combines grading period grades using their weights.
+     * Formula: sum(periodGrade * periodWeight) * 100 / totalWeight
+     */
+    private fun combinePeriodGrades(periodGrades: List<PeriodGrade>): Double {
+        if (periodGrades.isEmpty()) return 0.0
+
+        val weightedSum = periodGrades.sumOf { it.grade * it.weight }
+        val totalWeight = periodGrades.sumOf { it.weight }
+
+        return if (totalWeight > 0) {
+            (weightedSum * 100.0 / min(totalWeight, 100.0))
+        } else {
+            0.0
+        }
+    }
+
+    private data class PeriodGrade(
+        val periodId: Long,
+        val grade: Double,
+        val weight: Double
+    )
+
+    /**
      * Calculates a course's total grade based on all assignments (final grade).
      * Maps to the "Calculate based only on graded assignments" checkbox in UNCHECKED state.
      * Uses assignment group weights.
@@ -78,6 +177,7 @@ class GradeCalculator @Inject constructor() {
         groups: List<AssignmentGroup>,
         whatIfScores: Map<Long, Double>
     ): Double {
+        var totalWeight = 0.0
         var earnedScore = 0.0
 
         for (group in groups) {
@@ -94,9 +194,19 @@ class GradeCalculator @Inject constructor() {
             val totalPoints = submissionsToKeep.sumOf { it.total }
             val weight = group.groupWeight
 
-            if (totalPoints != 0.0 && earnedPoints != 0.0) {
+            if (totalPoints != 0.0) {
                 earnedScore += earnedPoints / totalPoints * weight
             }
+
+            // Track total weight from groups that have possible points
+            if (totalPoints != 0.0) {
+                totalWeight += weight
+            }
+        }
+
+        // Normalize if total weight is less than 100
+        if (totalWeight < 100 && totalWeight > 0 && earnedScore != 0.0) {
+            earnedScore = earnedScore / totalWeight * 100
         }
 
         return round(earnedScore)
@@ -354,7 +464,7 @@ class GradeCalculator @Inject constructor() {
         val hasPointed = droppable.any { it.total > 0 }
 
         val keptSubmissions = if (hasPointed) {
-            dropPointed(droppable, keepHighest, keepLowest)
+            dropPointed(droppable, cannotDrop, keepHighest, keepLowest)
         } else {
             dropUnpointed(droppable, keepHighest, keepLowest)
         }
@@ -385,31 +495,153 @@ class GradeCalculator @Inject constructor() {
     }
 
     /**
-     * Simplified drop algorithm for assignments with points possible.
-     * Sorts by percentage and keeps the best/worst based on requirements.
+     * Kane & Kane algorithm for dropping assignments with point values.
+     * Uses binary search to find the optimal set of assignments to drop.
+     * Based on the paper "Dropping Lowest Grades" by Daniel Kane and Jonathan Kane.
+     * (http://cseweb.ucsd.edu/~dakane/droplowest.pdf)
      *
-     * This is simpler than the Kane & Kane algorithm but works well for most cases:
-     * 1. Sort by percentage (score/total)
-     * 2. Drop lowest: remove from bottom of sorted list
-     * 3. Drop highest: remove from top of what remains
+     * This is the same algorithm used by Canvas web to ensure identical grade calculations.
      */
     private fun dropPointed(
         submissions: List<SubmissionData>,
+        cannotDrop: List<SubmissionData>,
         keepHighest: Int,
         keepLowest: Int
     ): List<SubmissionData> {
-        // Sort by percentage, with stable sorting using assignment ID as tiebreaker
-        val sorted = submissions.sortedWith(
-            compareBy(
-            { it.score / it.total.coerceAtLeast(0.001) },  // Avoid division by zero
-            { it.assignment.id }
-        ))
+        val maxTotal = submissions.maxOfOrNull { it.total } ?: 0.0
 
-        // Drop lowest: keep the highest scoring ones
-        val afterDroppingLowest = sorted.takeLast(keepHighest)
+        // First phase: drop lowest scores
+        val submissionsWithLowestDropped = keepHelper(
+            submissions = submissions,
+            keepCount = keepHighest,
+            sortAscending = false,  // sort descending to keep highest
+            cannotDrop = cannotDrop,
+            maxTotal = maxTotal
+        )
 
-        // Drop highest: from what remains, keep the lowest scoring ones
-        return afterDroppingLowest.take(keepLowest)
+        // Second phase: drop highest scores from what remains
+        return keepHelper(
+            submissions = submissionsWithLowestDropped,
+            keepCount = keepLowest,
+            sortAscending = true,  // sort ascending to keep lowest
+            cannotDrop = cannotDrop,
+            maxTotal = maxTotal
+        )
+    }
+
+    /**
+     * Binary search helper to find optimal submissions to keep.
+     * This implements the core Kane & Kane algorithm.
+     */
+    private fun keepHelper(
+        submissions: List<SubmissionData>,
+        keepCount: Int,
+        sortAscending: Boolean,
+        cannotDrop: List<SubmissionData>,
+        maxTotal: Double
+    ): List<SubmissionData> {
+        val actualKeepCount = max(1, keepCount)
+
+        if (submissions.size <= actualKeepCount) {
+            return submissions
+        }
+
+        val allSubmissionData = submissions + cannotDrop
+        val (unpointed, pointed) = allSubmissionData.partition { it.total == 0.0 }
+
+        var (qHigh, qLow, qMid) = setUpGrades(pointed, unpointed)
+
+        val bigF = buildBigF(actualKeepCount, cannotDrop, sortAscending)
+
+        var (x, submissionsToKeep) = bigF(qMid, submissions)
+        val threshold = 1.0 / (2.0 * actualKeepCount * maxTotal * maxTotal)
+
+        while (qHigh - qLow >= threshold) {
+            if (x < 0) {
+                qHigh = qMid
+            } else {
+                qLow = qMid
+            }
+            qMid = (qLow + qHigh) / 2.0
+            if (qMid == qHigh || qMid == qLow) {
+                break
+            }
+            val result = bigF(qMid, submissions)
+            x = result.first
+            submissionsToKeep = result.second
+        }
+
+        return submissionsToKeep
+    }
+
+    /**
+     * Builds the scoring function for the binary search.
+     * Returns a function that rates submissions based on threshold q.
+     */
+    private fun buildBigF(
+        keepCount: Int,
+        cannotDrop: List<SubmissionData>,
+        sortAscending: Boolean
+    ): (Double, List<SubmissionData>) -> Pair<Double, List<SubmissionData>> {
+        return { q: Double, submissions: List<SubmissionData> ->
+            // Rate each submission as: score - q * total
+            val ratedScores = submissions.map { submission ->
+                submission.score - q * submission.total to submission
+            }
+
+            // Sort by rating (ascending or descending)
+            val rankedScores = if (sortAscending) {
+                ratedScores.sortedWith(compareBy({ it.first }, { it.second.assignment.id }))
+            } else {
+                ratedScores.sortedWith(compareByDescending<Pair<Double, SubmissionData>> { it.first }
+                    .thenBy { it.second.assignment.id })
+            }
+
+            // Keep the top keepCount submissions
+            val keptScores = rankedScores.take(keepCount)
+            val qKept = keptScores.sumOf { it.first }
+            val keptSubmissions = keptScores.map { it.second }
+
+            // Add the score contribution from cannot-drop submissions
+            val qCannotDrop = cannotDrop.sumOf { submission ->
+                submission.score - q * submission.total
+            }
+
+            qKept + qCannotDrop to keptSubmissions
+        }
+    }
+
+    /**
+     * Sets up initial boundaries for binary search.
+     */
+    private fun setUpGrades(
+        pointed: List<SubmissionData>,
+        unpointed: List<SubmissionData>
+    ): Triple<Double, Double, Double> {
+        val grades = pointed.map { it.score / it.total }.sorted()
+        val qHigh = estimateQHigh(pointed, unpointed, grades)
+        val qLow = grades.firstOrNull() ?: 0.0
+        val qMid = (qLow + qHigh) / 2.0
+
+        return Triple(qHigh, qLow, qMid)
+    }
+
+    /**
+     * Estimates the upper bound for binary search.
+     */
+    private fun estimateQHigh(
+        pointed: List<SubmissionData>,
+        unpointed: List<SubmissionData>,
+        grades: List<Double>
+    ): Double {
+        if (unpointed.isNotEmpty()) {
+            val pointsPossible = pointed.sumOf { it.total }
+            val bestPointedScore = max(pointsPossible, pointed.sumOf { it.score })
+            val unpointedScore = unpointed.sumOf { it.score }
+            return (bestPointedScore + unpointedScore) / pointsPossible
+        }
+
+        return grades.lastOrNull() ?: 0.0
     }
 
     private fun round(value: Double, places: Int = 2): Double {

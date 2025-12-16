@@ -575,6 +575,182 @@ class GradeCalculatorTest {
         assertEquals(85.0, result, 0.01)
     }
 
+    // Kane & Kane Algorithm Specific Tests
+    // These test scenarios where the binary search algorithm differs from simple percentage sorting
+
+    @Test
+    fun `calculates grade with unequal point values and both drop rules - Kane Kane advantage`() {
+        // This tests the Kane & Kane algorithm's ability to handle complex drop scenarios
+        // where assignments have very different point values
+        val groups = listOf(
+            createAssignmentGroup(
+                id = 1,
+                name = "Assignments",
+                gradingRules = GradingRule(dropLowest = 1, dropHighest = 1),
+                assignments = listOf(
+                    createAssignment(1, "Quiz 1", 10.0, submission = createSubmission(8.0, posted = true)),  // 80%
+                    createAssignment(2, "Essay", 100.0, submission = createSubmission(75.0, posted = true)),  // 75%
+                    createAssignment(3, "Quiz 2", 10.0, submission = createSubmission(9.0, posted = true)),  // 90%
+                    createAssignment(4, "Project", 100.0, submission = createSubmission(92.0, posted = true))  // 92%
+                )
+            )
+        )
+
+        val result = calculator.calculateGrade(groups, emptyMap(), applyGroupWeights = false, onlyGraded = true)
+
+        // Kane & Kane finds the optimal combination:
+        // Drop Essay (75%) as lowest percentage, then drop Project (92%) as highest
+        // Keep: Quiz 1 (8/10) + Quiz 2 (9/10) = 17/20 = 85%
+        // This is optimal because keeping the low-weight quizzes together maximizes the percentage
+        assertEquals(85.0, result, 0.01)
+    }
+
+    @Test
+    fun `calculates grade with extreme point differences and drop rules`() {
+        // Tests scenario where one assignment is worth significantly more than others
+        // This demonstrates Kane & Kane finding counterintuitive optimal solutions
+        val groups = listOf(
+            createAssignmentGroup(
+                id = 1,
+                name = "Work",
+                gradingRules = GradingRule(dropLowest = 1),
+                assignments = listOf(
+                    createAssignment(1, "Participation", 5.0, submission = createSubmission(3.0, posted = true)),  // 60%
+                    createAssignment(2, "Final Exam", 200.0, submission = createSubmission(170.0, posted = true)),  // 85%
+                    createAssignment(3, "Quiz", 10.0, submission = createSubmission(7.0, posted = true))  // 70%
+                )
+            )
+        )
+
+        val result = calculator.calculateGrade(groups, emptyMap(), applyGroupWeights = false, onlyGraded = true)
+
+        // Kane & Kane finds optimal: Drop Quiz (70%) instead of Participation (60%)!
+        // Why? Keeping Participation (3/5) + Final (170/200) = 173/205 = 84.39%
+        // vs dropping it: Quiz (7/10) + Final (170/200) = 177/210 = 84.29%
+        // The lower-weight Participation helps the percentage more than the Quiz
+        assertEquals(84.39, result, 0.01)
+    }
+
+    @Test
+    fun `calculates grade with drop highest and lowest combined - order independence`() {
+        // This tests that dropping happens correctly when both rules are present
+        // The Kane & Kane algorithm handles this properly with two phases
+        val groups = listOf(
+            createAssignmentGroup(
+                id = 1,
+                name = "Tests",
+                gradingRules = GradingRule(dropLowest = 2, dropHighest = 1),
+                assignments = listOf(
+                    createAssignment(1, "Test 1", 50.0, submission = createSubmission(35.0, posted = true)),  // 70%
+                    createAssignment(2, "Test 2", 50.0, submission = createSubmission(40.0, posted = true)),  // 80%
+                    createAssignment(3, "Test 3", 50.0, submission = createSubmission(45.0, posted = true)),  // 90%
+                    createAssignment(4, "Test 4", 50.0, submission = createSubmission(42.0, posted = true)),  // 84%
+                    createAssignment(5, "Test 5", 50.0, submission = createSubmission(48.0, posted = true))   // 96%
+                )
+            )
+        )
+
+        val result = calculator.calculateGrade(groups, emptyMap(), applyGroupWeights = false, onlyGraded = true)
+
+        // Drop 2 lowest: Test 1 (70%) and Test 2 (80%)
+        // Then drop 1 highest from remaining: Test 5 (96%)
+        // Keep: Test 4 (84%) and Test 3 (90%)
+        // Result: (42 + 45) / (50 + 50) = 87 / 100 = 87%
+        assertEquals(87.0, result, 0.01)
+    }
+
+    @Test
+    fun `calculates grade with weighted groups and complex drop rules - Kane Kane optimization`() {
+        // Tests the algorithm with weighted groups where drop rules affect the overall grade significantly
+        val groups = listOf(
+            createAssignmentGroup(
+                id = 1,
+                name = "Homework",
+                weight = 30.0,
+                gradingRules = GradingRule(dropLowest = 1),
+                assignments = listOf(
+                    createAssignment(1, "HW1", 20.0, submission = createSubmission(16.0, posted = true)),  // 80%
+                    createAssignment(2, "HW2", 50.0, submission = createSubmission(35.0, posted = true)),  // 70%
+                    createAssignment(3, "HW3", 30.0, submission = createSubmission(27.0, posted = true))   // 90%
+                )
+            ),
+            createAssignmentGroup(
+                id = 2,
+                name = "Exams",
+                weight = 70.0,
+                assignments = listOf(
+                    createAssignment(4, "Midterm", 100.0, submission = createSubmission(85.0, posted = true)),
+                    createAssignment(5, "Final", 100.0, submission = createSubmission(88.0, posted = true))
+                )
+            )
+        )
+
+        val result = calculator.calculateGrade(groups, emptyMap(), applyGroupWeights = true, onlyGraded = true)
+
+        // Homework: Drop HW2 (35/50 = 70%), keep HW1 (16/20) + HW3 (27/30) = 43/50 = 86%
+        // Homework contribution: 86% * 30% = 25.8
+        // Exams: (85 + 88) / 200 = 86.5%
+        // Exams contribution: 86.5% * 70% = 60.55
+        // Total: 25.8 + 60.55 = 86.35%
+        assertEquals(86.35, result, 0.01)
+    }
+
+    @Test
+    fun `calculates grade with never drop and drop rules combined - Kane Kane respects constraints`() {
+        // Tests that never-drop assignments are properly excluded from dropping
+        // even when Kane & Kane algorithm would otherwise consider them
+        val groups = listOf(
+            createAssignmentGroup(
+                id = 1,
+                name = "Work",
+                gradingRules = GradingRule(dropLowest = 1, neverDrop = listOf(2)),
+                assignments = listOf(
+                    createAssignment(1, "Assignment 1", 50.0, submission = createSubmission(30.0, posted = true)),  // 60%
+                    createAssignment(
+                        2,
+                        "Critical Assignment",
+                        50.0,
+                        submission = createSubmission(35.0, posted = true)
+                    ),  // 70% - never drop
+                    createAssignment(3, "Assignment 3", 50.0, submission = createSubmission(45.0, posted = true))   // 90%
+                )
+            )
+        )
+
+        val result = calculator.calculateGrade(groups, emptyMap(), applyGroupWeights = false, onlyGraded = true)
+
+        // Must keep Assignment 2 (never drop)
+        // Drop Assignment 1 (lowest eligible at 60%)
+        // Keep: Assignment 2 (35/50) + Assignment 3 (45/50) = 80/100 = 80%
+        assertEquals(80.0, result, 0.01)
+    }
+
+    @Test
+    fun `calculates grade with what-if scores and drop rules - Kane Kane with hypotheticals`() {
+        // Tests that what-if scores work correctly with the Kane & Kane algorithm
+        val groups = listOf(
+            createAssignmentGroup(
+                id = 1,
+                name = "Assignments",
+                gradingRules = GradingRule(dropLowest = 1),
+                assignments = listOf(
+                    createAssignment(1, "A1", 100.0, submission = createSubmission(70.0, posted = true)),  // 70%
+                    createAssignment(2, "A2", 100.0, submission = createSubmission(85.0, posted = true)),  // 85%
+                    createAssignment(3, "A3", 100.0, submission = null)  // Not graded yet
+                )
+            )
+        )
+
+        // Student wants to see: "If I get 95 on A3, what will my grade be?"
+        val whatIfScores = mapOf(3L to 95.0)
+
+        val result = calculator.calculateGrade(groups, whatIfScores, applyGroupWeights = false, onlyGraded = true)
+
+        // Drop A1 (70%), keep A2 (85%) and A3 with what-if (95%)
+        // Result: (85 + 95) / 200 = 90%
+        assertEquals(90.0, result, 0.01)
+    }
+
     // Helper methods
 
     private fun createAssignmentGroup(

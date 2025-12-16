@@ -133,6 +133,7 @@ import com.instructure.pandautils.features.grades.gradepreferences.GradePreferen
 import com.instructure.pandautils.utils.DisplayGrade
 import com.instructure.pandautils.utils.announceAccessibilityText
 import com.instructure.pandautils.utils.drawableId
+import kotlinx.coroutines.android.awaitFrame
 import kotlinx.coroutines.launch
 
 private val FadeInAnimation = fadeIn(animationSpec = tween(300))
@@ -1116,6 +1117,12 @@ private fun WhatIfScoreDialog(
     var whatIfScoreText by remember { mutableStateOf(dialogData.whatIfScore?.toString().orEmpty()) }
     var warningMessage by remember { mutableStateOf<String?>(null) }
     val context = LocalContext.current
+    val focusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(Unit) {
+        awaitFrame()
+        focusRequester.requestFocus()
+    }
 
     AlertDialog(
         title = {
@@ -1182,6 +1189,7 @@ private fun WhatIfScoreDialog(
                     ),
                     modifier = Modifier
                         .fillMaxWidth()
+                        .focusRequester(focusRequester)
                         .testTag("whatIfScoreInput")
                 )
                 warningMessage?.let { warning ->

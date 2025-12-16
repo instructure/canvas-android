@@ -17,14 +17,8 @@
 
 package com.instructure.pandautils.features.grades
 
-import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.GradingPeriod
 
 interface GradesViewModelBehavior {
-    fun isWhatIfGradingEnabled(
-        course: Course,
-        assignmentGroups: List<AssignmentGroup>,
-        selectedGradingPeriod: GradingPeriod?
-    ): Boolean
+    fun isWhatIfGradingEnabled(course: Course): Boolean
 }
