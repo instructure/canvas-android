@@ -16,11 +16,13 @@
  */
 package com.instructure.student.features.assignments.list
 
+import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
+import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.pandautils.compose.composables.DiscussionCheckpointUiState
 import com.instructure.pandautils.features.assignments.list.AssignmentGroupItemState
 import com.instructure.pandautils.features.assignments.list.AssignmentListBehavior
@@ -89,8 +91,12 @@ class StudentAssignmentListBehavior : AssignmentListBehavior {
     override fun getOverFlowMenuItems(activity: FragmentActivity, fragment: AssignmentListFragment): List<AssignmentListMenuOverFlowItem> {
         return listOf(
             AssignmentListMenuOverFlowItem(activity.getString(R.string.addBookmark)) {
-                val dialog = BookmarkCreationDialog.newInstance(activity, fragment, null)
-                dialog?.show(activity.supportFragmentManager, BookmarkCreationDialog::class.java.simpleName)
+                if (APIHelper.hasNetworkConnection()) {
+                    val dialog = BookmarkCreationDialog.newInstance(activity, fragment, null)
+                    dialog?.show(activity.supportFragmentManager, BookmarkCreationDialog::class.java.simpleName)
+                } else {
+                    Toast.makeText(activity, activity.getString(com.instructure.pandautils.R.string.notAvailableOffline), Toast.LENGTH_SHORT).show()
+                }
             }
         )
     }
