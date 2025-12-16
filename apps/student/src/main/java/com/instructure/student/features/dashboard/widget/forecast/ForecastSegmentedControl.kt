@@ -23,13 +23,16 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -79,6 +82,17 @@ fun ForecastSegmentedControl(
             modifier = Modifier.weight(1f)
         )
 
+        // First divider - hidden if first or second segment is selected
+        if (selectedSection != ForecastSection.MISSING && selectedSection != ForecastSection.DUE) {
+            VerticalDivider(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(vertical = 8.dp)
+                    .width(0.5.dp),
+                color = colorResource(R.color.borderMedium)
+            )
+        }
+
         SegmentButton(
             count = dueCount,
             label = stringResource(R.string.forecastWidgetDue),
@@ -87,6 +101,17 @@ fun ForecastSegmentedControl(
             onSelected = onSectionSelected,
             modifier = Modifier.weight(1f)
         )
+
+        // Second divider - hidden if second or third segment is selected
+        if (selectedSection != ForecastSection.DUE && selectedSection != ForecastSection.RECENT_GRADES) {
+            VerticalDivider(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(vertical = 8.dp)
+                    .width(0.5.dp),
+                color = colorResource(R.color.borderMedium)
+            )
+        }
 
         SegmentButton(
             count = recentGradesCount,
@@ -130,9 +155,8 @@ private fun SegmentButton(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
+            Box(
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
                     text = count.toString(),
@@ -140,15 +164,15 @@ private fun SegmentButton(
                     fontWeight = FontWeight.Bold,
                     lineHeight = 26.sp,
                     color = if (isSelected) Color.White else colorResource(R.color.textDarkest),
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
                 )
-
                 Icon(
                     painter = painterResource(R.drawable.ic_chevron_down_small),
                     contentDescription = null,
                     tint = if (isSelected) Color.White else colorResource(R.color.textDark),
                     modifier = Modifier
-                        .padding(start = 2.dp)
+                        .align(Alignment.CenterEnd)
                         .size(16.dp)
                         .then(
                             if (isSelected) Modifier.rotate(180f) else Modifier

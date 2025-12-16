@@ -52,10 +52,6 @@ fun WeekNavigationHeader(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .shadow(
-                elevation = 2.dp,
-                shape = RoundedCornerShape(8.dp)
-            )
             .background(
                 color = colorResource(R.color.backgroundInfo),
                 shape = RoundedCornerShape(8.dp)

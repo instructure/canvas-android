@@ -21,13 +21,17 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,6 +46,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
@@ -90,61 +95,67 @@ fun ForecastWidgetContent(
                 .padding(horizontal = 16.dp)
         )
 
-        Column(
+        Card(
+            colors = CardDefaults.cardColors(containerColor = colorResource(R.color.backgroundInfo)),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
             modifier = Modifier
                 .fillMaxWidth()
-                .shadow(
-                    elevation = 2.dp,
-                    shape = RoundedCornerShape(16.dp)
-                )
-                .background(
-                    color = colorResource(R.color.backgroundInfo),
-                    shape = RoundedCornerShape(16.dp)
-                )
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+                .padding(horizontal = 16.dp)
         ) {
-            if (uiState.isLoading) {
-                ForecastWidgetLoadingState()
-            } else if (uiState.isError) {
-                ForecastWidgetErrorState(
-                    onRetry = uiState.onRetry
-                )
-            } else {
-                uiState.weekPeriod?.let { weekPeriod ->
-                    WeekNavigationHeader(
-                        weekPeriod = weekPeriod,
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 8.dp, bottom = 16.dp)
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                if (uiState.isLoading) {
+                    ForecastWidgetLoadingState(
+                        weekPeriod = uiState.weekPeriod,
+                        selectedSection = uiState.selectedSection,
                         onNavigatePrevious = uiState.onNavigatePrevious,
                         onNavigateNext = uiState.onNavigateNext
                     )
-
-                    ForecastSegmentedControl(
-                        missingCount = uiState.missingAssignments.size,
-                        dueCount = uiState.dueAssignments.size,
-                        recentGradesCount = uiState.recentGrades.size,
-                        selectedSection = uiState.selectedSection,
-                        onSectionSelected = uiState.onSectionSelected
+                } else if (uiState.isError) {
+                    ForecastWidgetErrorState(
+                        onRetry = uiState.onRetry
                     )
+                } else {
+                    uiState.weekPeriod?.let { weekPeriod ->
+                        WeekNavigationHeader(
+                            weekPeriod = weekPeriod,
+                            onNavigatePrevious = uiState.onNavigatePrevious,
+                            onNavigateNext = uiState.onNavigateNext
+                        )
 
-                    AnimatedVisibility(
-                        visible = uiState.selectedSection != null,
-                        enter = expandVertically(),
-                        exit = shrinkVertically()
-                    ) {
-                        val assignments = when (uiState.selectedSection) {
-                            ForecastSection.MISSING -> uiState.missingAssignments
-                            ForecastSection.DUE -> uiState.dueAssignments
-                            ForecastSection.RECENT_GRADES -> uiState.recentGrades
-                            null -> emptyList()
-                        }
+                        ForecastSegmentedControl(
+                            missingCount = uiState.missingAssignments.size,
+                            dueCount = uiState.dueAssignments.size,
+                            recentGradesCount = uiState.recentGrades.size,
+                            selectedSection = uiState.selectedSection,
+                            onSectionSelected = uiState.onSectionSelected
+                        )
 
-                        if (assignments.isEmpty()) {
-                            ForecastWidgetEmptyState(section = uiState.selectedSection)
-                        } else {
-                            AssignmentList(
-                                assignments = assignments,
-                                onAssignmentClick = uiState.onAssignmentClick
-                            )
+                        AnimatedVisibility(
+                            visible = uiState.selectedSection != null,
+                            enter = expandVertically(),
+                            exit = shrinkVertically()
+                        ) {
+                            val assignments = when (uiState.selectedSection) {
+                                ForecastSection.MISSING -> uiState.missingAssignments
+                                ForecastSection.DUE -> uiState.dueAssignments
+                                ForecastSection.RECENT_GRADES -> uiState.recentGrades
+                                null -> emptyList()
+                            }
+
+                            if (assignments.isEmpty()) {
+                                ForecastWidgetEmptyState(section = uiState.selectedSection)
+                            } else {
+                                AssignmentList(
+                                    assignments = assignments,
+                                    onAssignmentClick = uiState.onAssignmentClick
+                                )
+                            }
                         }
                     }
                 }
@@ -190,29 +201,34 @@ private fun AssignmentList(
 
 @Composable
 private fun ForecastWidgetLoadingState(
+    weekPeriod: WeekPeriod?,
+    selectedSection: ForecastSection?,
+    onNavigatePrevious: () -> Unit,
+    onNavigateNext: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .shadow(
-                elevation = 2.dp,
-                shape = RoundedCornerShape(8.dp)
-            )
-            .background(
-                color = colorResource(R.color.backgroundLightest),
-                shape = RoundedCornerShape(8.dp)
-            )
-            .padding(16.dp),
+        modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        ShimmerBox(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(40.dp),
-            shape = RoundedCornerShape(8.dp)
-        )
+        // Show real week navigation header if weekPeriod is available
+        if (weekPeriod != null) {
+            WeekNavigationHeader(
+                weekPeriod = weekPeriod,
+                onNavigatePrevious = onNavigatePrevious,
+                onNavigateNext = onNavigateNext
+            )
+        } else {
+            // Week navigation header shimmer
+            ShimmerBox(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(40.dp),
+                shape = RoundedCornerShape(8.dp)
+            )
+        }
 
+        // Segmented control shimmer
         ShimmerBox(
             modifier = Modifier
                 .fillMaxWidth()
@@ -220,12 +236,32 @@ private fun ForecastWidgetLoadingState(
             shape = RoundedCornerShape(8.dp)
         )
 
-        ShimmerBox(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(120.dp),
-            shape = RoundedCornerShape(8.dp)
-        )
+        // If a section is selected, show content shimmer
+        if (selectedSection != null) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .shadow(
+                        elevation = 2.dp,
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    .background(
+                        color = colorResource(R.color.backgroundLightest),
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                repeat(3) {
+                    ShimmerBox(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(60.dp),
+                        shape = RoundedCornerShape(4.dp)
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -239,7 +275,13 @@ private fun ForecastWidgetErrorState(
         imageRes = R.drawable.ic_panda_space,
         buttonText = stringResource(R.string.retry),
         buttonClick = onRetry,
-        modifier = modifier.padding(16.dp)
+        modifier = modifier
+            .padding(top = 8.dp)
+            .shadow(elevation = 2.dp, shape = RoundedCornerShape(14.dp))
+            .background(
+                colorResource(R.color.backgroundLightest),
+                shape = RoundedCornerShape(14.dp)
+            )
     )
 }
 
@@ -352,7 +394,16 @@ private fun ForecastWidgetContentPreview() {
 private fun ForecastWidgetLoadingPreview() {
     ContextKeeper.appContext = LocalContext.current
     ForecastWidgetContent(
-        uiState = ForecastWidgetUiState(isLoading = true)
+        uiState = ForecastWidgetUiState(
+            isLoading = true,
+            weekPeriod = WeekPeriod(
+                startDate = LocalDate.of(2025, 9, 1),
+                endDate = LocalDate.of(2025, 9, 7),
+                displayText = "1 Sep - 7 Sep",
+                weekNumber = 36
+            ),
+            selectedSection = ForecastSection.RECENT_GRADES
+        )
     )
 }
 

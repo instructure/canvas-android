@@ -76,9 +76,21 @@ class ForecastWidgetViewModel @Inject constructor(
     val uiState: StateFlow<ForecastWidgetUiState> = _uiState.asStateFlow()
 
     init {
+        // Calculate and set initial week period before loading data
+        val initialWeekPeriod = calculateWeekPeriod(currentWeekOffset)
+        _uiState.update { it.copy(weekPeriod = initialWeekPeriod) }
+
         observeWeekOffset()
         observeSelectedSection()
-        loadData()
+
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true, isError = false) }
+            try {
+                loadMissingAssignments(forceRefresh = false)
+            } catch (e: Exception) {
+                crashlytics.recordException(e)
+            }
+        }
     }
 
     private fun navigatePrevious() {
@@ -125,10 +137,18 @@ class ForecastWidgetViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(
                             weekPeriod = weekPeriod,
-                            dueAssignments = mapUpcomingAssignments(upcomingPlannerItems, weekPeriod)
+                            dueAssignments = mapUpcomingAssignments(upcomingPlannerItems)
                         )
                     }
-                    loadUpcomingAssignments(forceRefresh = false)
+
+                    try {
+                        loadUpcomingAssignments(forceRefresh = true)
+                        loadRecentGrades(forceRefresh = true)
+                        _uiState.update { it.copy(isLoading = false) }
+                    } catch (e: Exception) {
+                        _uiState.update { it.copy(isLoading = false, isError = true) }
+                        crashlytics.recordException(e)
+                    }
                 }
         }
     }
@@ -185,20 +205,21 @@ class ForecastWidgetViewModel @Inject constructor(
             )
         )
         _uiState.update {
-            it.copy(dueAssignments = mapUpcomingAssignments(upcomingPlannerItems, weekPeriod))
+            it.copy(dueAssignments = mapUpcomingAssignments(upcomingPlannerItems))
         }
     }
 
     private suspend fun loadRecentGrades(forceRefresh: Boolean) {
         val userId = apiPrefs.user?.id ?: return
-        val sevenDaysAgo = LocalDate.now().minusDays(7)
-            .atStartOfDay(ZoneId.systemDefault()).toInstant()
+        val weekPeriod = _uiState.value.weekPeriod ?: calculateWeekPeriod(currentWeekOffset)
+        val startDate = weekPeriod.startDate.atStartOfDay(ZoneId.systemDefault()).toInstant()
+        val endDate = weekPeriod.endDate.atTime(23, 59, 59).atZone(ZoneId.systemDefault()).toInstant()
 
         recentGradedSubmissions = loadRecentGradeChangesUseCase(
             LoadRecentGradeChangesParams(
                 studentId = userId,
-                startTime = sevenDaysAgo.toString(),
-                endTime = null,
+                startTime = startDate.toString(),
+                endTime = endDate.toString(),
                 forceRefresh = forceRefresh
             )
         )
@@ -227,15 +248,8 @@ class ForecastWidgetViewModel @Inject constructor(
             }
     }
 
-    private fun mapUpcomingAssignments(plannerItems: List<PlannerItem>, weekPeriod: WeekPeriod): List<AssignmentItem> {
-        val weekStart = weekPeriod.startDate.atStartOfDay(ZoneId.systemDefault()).toInstant()
-        val weekEnd = weekPeriod.endDate.atTime(23, 59, 59).atZone(ZoneId.systemDefault()).toInstant()
-
+    private fun mapUpcomingAssignments(plannerItems: List<PlannerItem>): List<AssignmentItem> {
         return plannerItems
-            .filter { item ->
-                val date = item.plannableDate.toInstant()
-                !date.isBefore(weekStart) && !date.isAfter(weekEnd)
-            }
             .sortedBy { it.plannableDate }
             .map { item ->
                 AssignmentItem(
@@ -256,7 +270,7 @@ class ForecastWidgetViewModel @Inject constructor(
 
     private fun mapRecentGrades(submissions: List<GradedSubmission>): List<AssignmentItem> {
         return submissions
-            .sortedByDescending { it.postedAt }
+            .sortedByDescending { it.gradedAt }
             .map { submission ->
                 AssignmentItem(
                     id = submission.assignmentId,
@@ -265,7 +279,7 @@ class ForecastWidgetViewModel @Inject constructor(
                     courseColor = 0, // TODO: Load course color
                     assignmentName = submission.assignmentName,
                     dueDate = null,
-                    gradedDate = submission.postedAt,
+                    gradedDate = submission.gradedAt,
                     pointsPossible = submission.pointsPossible ?: 0.0,
                     weight = null,
                     iconRes = 0, // TODO: Map to icon

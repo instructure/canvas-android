@@ -39,6 +39,8 @@ query RecentGradedSubmissionsQuery($studentId: ID!, $pageSize: Int!, $gradedSinc
                     gradingStatus
                     postedAt
                     submittedAt
+                    gradeHidden
+                    gradedAt
                     assignment {
                         _id
                         name

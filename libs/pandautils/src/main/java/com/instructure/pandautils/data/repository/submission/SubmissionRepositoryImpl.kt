@@ -45,6 +45,10 @@ class SubmissionRepositoryImpl(
                             val submission = edge?.node ?: return@mapNotNull null
                             val assignment = submission.assignment ?: return@mapNotNull null
 
+                            if (submission.gradeHidden == true) {
+                                return@mapNotNull null
+                            }
+
                             GradedSubmission(
                                 submissionId = submission._id.toLongOrNull() ?: 0,
                                 assignmentId = assignment._id.toLongOrNull() ?: 0,
@@ -53,7 +57,7 @@ class SubmissionRepositoryImpl(
                                 courseName = course.name,
                                 score = submission.score,
                                 grade = submission.grade,
-                                postedAt = submission.postedAt,
+                                gradedAt = submission.gradedAt,
                                 excused = submission.excused == true,
                                 assignmentUrl = assignment.htmlUrl,
                                 pointsPossible = assignment.pointsPossible

@@ -16,6 +16,7 @@
 
 package com.instructure.pandautils.domain.usecase.assignment
 
+import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.pandautils.data.repository.planner.PlannerRepository
 import com.instructure.pandautils.domain.usecase.BaseUseCase
@@ -33,11 +34,16 @@ class LoadUpcomingAssignmentsUseCase @Inject constructor(
 ) : BaseUseCase<LoadUpcomingAssignmentsParams, List<PlannerItem>>() {
 
     override suspend fun execute(params: LoadUpcomingAssignmentsParams): List<PlannerItem> {
-        return plannerRepository.getPlannerItems(
+        val allItems = plannerRepository.getPlannerItems(
             params.startDate,
             params.endDate,
             params.contextCodes,
             params.forceRefresh
         ).dataOrThrow
+
+        return allItems.filter { item ->
+            item.plannableType == PlannableType.ASSIGNMENT ||
+            item.plannableType == PlannableType.SUB_ASSIGNMENT
+        }
     }
 }

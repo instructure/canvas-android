@@ -45,13 +45,13 @@ class LoadRecentGradeChangesUseCase @Inject constructor(
         val filtered = if (params.endTime != null) {
             val endDate = params.endTime.toDate()
             submissions.filter { submission ->
-                val postedAt = submission.postedAt
-                postedAt == null || endDate == null || !postedAt.after(endDate)
+                val gradedAt = submission.gradedAt
+                gradedAt == null || endDate == null || !gradedAt.after(endDate)
             }
         } else {
             submissions
         }
 
-        return filtered.sortedByDescending { it.postedAt }
+        return filtered.sortedByDescending { it.gradedAt }
     }
 }

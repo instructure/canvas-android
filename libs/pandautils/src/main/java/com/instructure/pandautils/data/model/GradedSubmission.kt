@@ -26,7 +26,7 @@ data class GradedSubmission(
     val courseName: String,
     val score: Double?,
     val grade: String?,
-    val postedAt: Date?,
+    val gradedAt: Date?,
     val excused: Boolean,
     val assignmentUrl: String?,
     val pointsPossible: Double?
