@@ -13,9 +13,10 @@ data class AiAssistContext(
 sealed class AiAssistContextSource(val rawValue: String, open val id: String) {
     class Assignment(id: String): AiAssistContextSource("Assignment", id)
     class Page(id: String): AiAssistContextSource("Page", id)
-    class CourseId(id: String): AiAssistContextSource("course-id", id)
-    class ModuleId(id: String): AiAssistContextSource("module-id", id)
-    class ModuleItemId(id: String): AiAssistContextSource("module-item-id", id)
+    class File(id: String): AiAssistContextSource("File", id)
+    class Course(id: String): AiAssistContextSource("course-id", id)
+    class Module(id: String): AiAssistContextSource("module-id", id)
+    class ModuleItem(id: String): AiAssistContextSource("module-item-id", id)
 
     fun toPair(): Pair<String, String> {
         return Pair(rawValue, id)

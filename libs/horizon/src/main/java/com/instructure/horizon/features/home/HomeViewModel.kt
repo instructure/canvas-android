@@ -65,7 +65,7 @@ class HomeViewModel @Inject constructor(
 
     private fun updateShowAiAssist(showAiAssist: Boolean) {
         aiAssistContextProvider.aiAssistContext = AiAssistContext(
-            contextSources = courseIds.map { AiAssistContextSource.CourseId(it.toString()) },
+            contextSources = courseIds.map { AiAssistContextSource.Course(it.toString()) },
         )
         _uiState.update { it.copy(showAiAssist = showAiAssist) }
     }

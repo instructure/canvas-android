@@ -485,6 +485,7 @@ private fun ModuleItemContentScreen(
                 val uiState by viewModel.uiState.collectAsState()
                 FileDetailsContentScreen(
                     uiState = uiState,
+                    updateAiContext = { source, content -> updateAiContext(source, content) },
                     modifier = modifier
                 )
             }

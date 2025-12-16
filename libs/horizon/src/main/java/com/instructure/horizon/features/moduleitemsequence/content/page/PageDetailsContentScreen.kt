@@ -60,10 +60,12 @@ fun PageDetailsContentScreen(
             uiState.onUrlOpened()
         }
     }
-    updateAiContext(
-        AiAssistContextSource.Page(uiState.pageHtmlContent.orEmpty()),
-        uiState.pageHtmlContent.orEmpty()
-    )
+    LaunchedEffect(uiState.pageHtmlContent, uiState.pageId){
+        updateAiContext(
+            AiAssistContextSource.Page(uiState.pageId.toString()),
+            uiState.pageHtmlContent.orEmpty()
+        )
+    }
     uiState.pageHtmlContent?.let {
         Box(
             contentAlignment = Alignment.Center,

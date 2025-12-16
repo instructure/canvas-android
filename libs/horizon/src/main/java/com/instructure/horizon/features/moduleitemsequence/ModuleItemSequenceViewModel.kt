@@ -561,9 +561,9 @@ class ModuleItemSequenceViewModel @Inject constructor(
     private fun updateAiAssistContext(source: AiAssistContextSource, content: String) {
         aiAssistContextProvider.aiAssistContext = AiAssistContext(
             contextSources = listOf(
-                AiAssistContextSource.CourseId(courseId.toString()),
-                AiAssistContextSource.ModuleId(currentModuleItem?.moduleId.toString()),
-                AiAssistContextSource.ModuleItemId(currentModuleItem?.id.toString()),
+                AiAssistContextSource.Course(courseId.toString()),
+                AiAssistContextSource.Module(currentModuleItem?.moduleId.toString()),
+                AiAssistContextSource.ModuleItem(currentModuleItem?.id.toString()),
                 source
             ),
             contextString = content
