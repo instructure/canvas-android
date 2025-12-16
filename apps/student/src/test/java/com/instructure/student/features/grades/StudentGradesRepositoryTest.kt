@@ -363,7 +363,6 @@ class StudentGradesRepositoryTest {
             noFinalGrade = false
         )
 
-        // Pass a grading period ID so it uses the enrollment's current period grades
         val result = repository.getCourseGrade(course, 1, enrollments, 1L)
         assertEquals(expected, result)
     }
