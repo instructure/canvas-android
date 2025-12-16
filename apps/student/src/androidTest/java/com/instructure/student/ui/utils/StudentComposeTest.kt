@@ -67,7 +67,5 @@ abstract class StudentComposeTest : StudentTest() {
     val inboxSignatureSettingsPage = InboxSignatureSettingsPage(composeTestRule)
     val toDoListPage = ToDoListPage(composeTestRule)
     val toDoFilterPage = ToDoFilterPage(composeTestRule)
-    val todoDetailsPage = CalendarToDoDetailsPage(composeTestRule)
-    val eventDetailsPage = CalendarEventDetailsPage(composeTestRule)
     val assignmentDetailsPage = StudentAssignmentDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next_item, R.id.prev_item), composeTestRule)
 }

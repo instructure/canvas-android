@@ -272,7 +272,6 @@ abstract class ToDoListInteractionTest : CanvasComposeTest() {
         toDoListPage.assertItemDisplayed(assignment.name!!)
         toDoListPage.clickDateBadge(dayOfMonth)
 
-        composeTestRule.waitForIdle()
         calendarScreenPage.assertCalendarPageTitle()
     }
 

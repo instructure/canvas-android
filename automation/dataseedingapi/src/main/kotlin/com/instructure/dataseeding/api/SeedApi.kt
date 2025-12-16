@@ -143,7 +143,15 @@ object SeedApi {
             // Seed favorite courses for all students
             (0 until minOf(request.favoriteCourses, coursesList.size)).forEach { courseIndex ->
                 studentsList.forEach { student ->
-                    addFavoriteCourses(CoursesApi.addCourseToFavorites(coursesList[courseIndex].id, student.token))
+                    {
+                        coursesList[courseIndex].isFavorite = true
+                        addFavoriteCourses(
+                            CoursesApi.addCourseToFavorites(
+                                coursesList[courseIndex].id,
+                                student.token
+                            )
+                        )
+                    }
                 }
             }
 
