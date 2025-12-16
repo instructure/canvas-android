@@ -33,7 +33,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -133,6 +135,11 @@ private fun SegmentButton(
     onSelected: (ForecastSection) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val rotation by animateFloatAsState(
+        targetValue = if (isSelected) 180f else 0f,
+        label = "chevronRotation"
+    )
+
     Box(
         modifier = modifier
             .clickable { onSelected(section) }
@@ -174,9 +181,7 @@ private fun SegmentButton(
                     modifier = Modifier
                         .align(Alignment.CenterEnd)
                         .size(16.dp)
-                        .then(
-                            if (isSelected) Modifier.rotate(180f) else Modifier
-                        )
+                        .rotate(rotation)
                 )
             }
 

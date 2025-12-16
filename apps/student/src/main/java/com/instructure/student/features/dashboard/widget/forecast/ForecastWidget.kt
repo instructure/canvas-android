@@ -17,9 +17,13 @@
 package com.instructure.student.features.dashboard.widget.forecast
 
 import android.content.res.Configuration
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -138,23 +142,32 @@ fun ForecastWidgetContent(
 
                         AnimatedVisibility(
                             visible = uiState.selectedSection != null,
-                            enter = expandVertically(),
-                            exit = shrinkVertically()
+                            enter = expandVertically() + fadeIn(),
+                            exit = shrinkVertically() + fadeOut()
                         ) {
-                            val assignments = when (uiState.selectedSection) {
-                                ForecastSection.MISSING -> uiState.missingAssignments
-                                ForecastSection.DUE -> uiState.dueAssignments
-                                ForecastSection.RECENT_GRADES -> uiState.recentGrades
-                                null -> emptyList()
-                            }
+                            AnimatedContent(
+                                targetState = uiState.selectedSection,
+                                transitionSpec = {
+                                    fadeIn() togetherWith fadeOut()
+                                },
+                                label = "sectionContent"
+                            ) { section ->
+                                if (section != null) {
+                                    val assignments = when (section) {
+                                        ForecastSection.MISSING -> uiState.missingAssignments
+                                        ForecastSection.DUE -> uiState.dueAssignments
+                                        ForecastSection.RECENT_GRADES -> uiState.recentGrades
+                                    }
 
-                            if (assignments.isEmpty()) {
-                                ForecastWidgetEmptyState(section = uiState.selectedSection)
-                            } else {
-                                AssignmentList(
-                                    assignments = assignments,
-                                    onAssignmentClick = uiState.onAssignmentClick
-                                )
+                                    if (assignments.isEmpty()) {
+                                        ForecastWidgetEmptyState(section = section)
+                                    } else {
+                                        AssignmentList(
+                                            assignments = assignments,
+                                            onAssignmentClick = uiState.onAssignmentClick
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
