@@ -20,8 +20,7 @@ data class WidgetMetadata(
     val id: String,
     val position: Int,
     val isVisible: Boolean,
-    val isEditable: Boolean = true,
-    val isFullWidth: Boolean = false
+    val isEditable: Boolean = true
 ) {
     companion object {
         const val WIDGET_ID_COURSE_INVITATIONS = "course_invitations"

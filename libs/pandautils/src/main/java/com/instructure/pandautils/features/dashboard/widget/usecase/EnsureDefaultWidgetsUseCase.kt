@@ -35,15 +35,13 @@ class EnsureDefaultWidgetsUseCase @Inject constructor(
                 id = WidgetMetadata.WIDGET_ID_COURSE_INVITATIONS,
                 position = 0,
                 isVisible = true,
-                isEditable = false,
-                isFullWidth = true
+                isEditable = false
             ),
             WidgetMetadata(
                 id = WidgetMetadata.WIDGET_ID_INSTITUTIONAL_ANNOUNCEMENTS,
                 position = 1,
                 isVisible = true,
-                isEditable = false,
-                isFullWidth = true
+                isEditable = false
             ),
             WidgetMetadata(
                 id = WidgetMetadata.WIDGET_ID_WELCOME,
@@ -53,8 +51,7 @@ class EnsureDefaultWidgetsUseCase @Inject constructor(
             WidgetMetadata(
                 id = WidgetMetadata.WIDGET_ID_COURSES,
                 position = 3,
-                isVisible = true,
-                isFullWidth = true
+                isVisible = true
             ),
             WidgetMetadata(
                 id = WidgetMetadata.WIDGET_ID_FORECAST,
