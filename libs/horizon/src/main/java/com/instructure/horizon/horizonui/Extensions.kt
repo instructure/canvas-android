@@ -41,7 +41,19 @@ fun SemanticsPropertyReceiver.selectable(context: Context, selected: Boolean) {
     val unselectedStateDesc = context.getString(R.string.a11y_unselected)
 
     stateDescription = if (selected) selectedStateDesc else unselectedStateDesc
+    if (selected) {
+        liveRegion = LiveRegionMode.Assertive
+    }
+}
+
+fun SemanticsPropertyReceiver.toggleable(context: Context, toggledOn: Boolean) {
+    val onStateDesc = context.getString(R.string.a11y_on)
+    val offStateDesc = context.getString(R.string.a11y_off)
+    val toggleActionLabel = context.getString(R.string.a11y_toggle)
+
+    stateDescription = if (toggledOn) onStateDesc else offStateDesc
     liveRegion = LiveRegionMode.Assertive
+    onClick(toggleActionLabel) { false }
 }
 
 val BoxWithConstraintsScope.isWideLayout

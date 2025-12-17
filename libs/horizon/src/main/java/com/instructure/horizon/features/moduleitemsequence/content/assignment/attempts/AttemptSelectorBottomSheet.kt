@@ -74,6 +74,7 @@ fun AttemptSelectorBottomSheet(
             Box(modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 24.dp)) {
                 IconButton(
                     iconRes = R.drawable.close,
+                    contentDescription = stringResource(R.string.a11y_close),
                     color = IconButtonColor.Inverse,
                     modifier = Modifier
                         .align(Alignment.CenterEnd)

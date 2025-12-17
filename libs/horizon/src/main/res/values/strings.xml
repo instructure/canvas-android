@@ -408,6 +408,9 @@
     <string name="a11y_not_completed">Not completed</string>
     <string name="a11y_locked">Locked</string>
     <string name="a11y_unselected">Unselected</string>
+    <string name="a11y_on">On</string>
+    <string name="a11y_off">Off</string>
+    <string name="a11y_toggle">Toggle</string>
     <string name="dashboardAnnouncementBannerFrom">From %1$s</string>
     <string name="dashboardAnnouncementBannerGoToAnnouncement">Go to announcement</string>
     <string name="dashboardAnnouncementBannerErrorMessage">We weren\'t able to load this content.\nPlease try again.</string>
@@ -486,9 +489,11 @@
     <string name="a11y_readInboxMessage">Read</string>
     <string name="a11y_unreadInboxMessage">Unread</string>
     <string name="a11y_previousModuleItem">Previous module item</string>
+    <string name="a11y_previousModule">Previous module</string>
     <string name="a11y_openAIAssistant">Open AI Assistant</string>
     <string name="a11y_openNotebook">Open notebook</string>
     <string name="a11y_openMoreOptions">Open more options</string>
     <string name="a11y_nextModuleItem">Next module item</string>
+    <string name="a11y_nextModule">Next module</string>
     <string name="a11y_notebookHighlightMarkedAs">%1$s, marked as %2$s, double tap to edit note</string>
 </resources>
