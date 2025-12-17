@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -32,14 +31,11 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.instructure.canvasapi2.models.journey.JourneyAssistChatMessage
+import com.instructure.canvasapi2.models.journey.JourneyAssistRole
 import com.instructure.canvasapi2.utils.ContextKeeper
-import com.instructure.horizon.features.aiassistant.common.composable.AiAssistResponseTextBlock
+import com.instructure.horizon.features.aiassistant.common.composable.AiAssistMessage
 import com.instructure.horizon.features.aiassistant.common.composable.AiAssistScaffold
-import com.instructure.horizon.features.aiassistant.common.composable.AiAssistUserTextBlock
-import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
-import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessagePrompt
-import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessageRole
-import com.instructure.horizon.features.aiassistant.common.model.toDisplayText
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.molecules.Spinner
 
@@ -51,6 +47,7 @@ fun AiAssistChatScreen(
 ) {
     AiAssistScaffold(
         navController = navController,
+        onClearChatHistory = state.onClearChatHistory,
         onDismiss = { onDismiss() },
         inputTextValue = state.inputTextValue,
         onInputTextChanged = { state.onInputTextChanged(it) },
@@ -67,24 +64,7 @@ fun AiAssistChatScreen(
             modifier = modifier
         ) {
             items(state.messages) { message ->
-                Row(
-                    modifier = Modifier.fillMaxWidth()
-                ){
-                    when (message.role) {
-                        is AiAssistMessageRole.User -> {
-                            Spacer(modifier = Modifier.weight(1f))
-                            AiAssistUserTextBlock(
-                                text = message.prompt.toDisplayText(context),
-                                modifier = Modifier.padding(start = 24.dp)
-                            )
-                        }
-
-                        is AiAssistMessageRole.Assistant -> AiAssistResponseTextBlock(
-                            text = message.prompt.toDisplayText(context),
-                            modifier = Modifier.padding(end = 24.dp)
-                        )
-                    }
-                }
+                AiAssistMessage(message) { }
             }
 
             if (state.isLoading) {
@@ -108,13 +88,17 @@ private fun AssistChatScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
     val state = AiAssistChatUiState(
         messages = listOf(
-            AiAssistMessage(
-                prompt = AiAssistMessagePrompt.Custom("Hello"),
-                role = AiAssistMessageRole.User,
+            JourneyAssistChatMessage(
+                id = "1",
+                prompt = "Hello",
+                displayText = "Hello",
+                role = JourneyAssistRole.USER,
             ),
-            AiAssistMessage(
-                prompt = AiAssistMessagePrompt.Custom("Hi there! How can I assist you today?"),
-                role = AiAssistMessageRole.Assistant,
+            JourneyAssistChatMessage(
+                id = "2",
+                prompt = "Hi there! How can I assist you today?",
+                displayText = "Hi there! How can I assist you today?",
+                role = JourneyAssistRole.ASSISTANT
             )
         ),
         inputTextValue = TextFieldValue("Hi,"),

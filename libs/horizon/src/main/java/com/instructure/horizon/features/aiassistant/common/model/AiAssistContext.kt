@@ -1,12 +1,20 @@
 package com.instructure.horizon.features.aiassistant.common.model
 
+import com.instructure.canvasapi2.models.journey.JourneyAssistChatMessage
+import com.instructure.canvasapi2.models.journey.JourneyAssistState
+
 data class AiAssistContext(
     val contextString: String? = null,
     val contextSources: List<AiAssistContextSource> = emptyList(),
-    val chatHistory: List<AiAssistMessage> = emptyList(),
+    val chatHistory: List<JourneyAssistChatMessage> = emptyList(),
 ) {
-    fun isEmpty(): Boolean {
-        return contextString.isNullOrEmpty() && chatHistory.isEmpty()
+    val state: JourneyAssistState
+        get() {
+            return JourneyAssistState(
+                courseID = contextSources.firstOrNull { it is AiAssistContextSource.Course }?.id,
+                pageID = contextSources.firstOrNull { it is AiAssistContextSource.Page }?.id,
+                fileID = contextSources.firstOrNull { it is AiAssistContextSource.File }?.id,
+            )
     }
 }
 

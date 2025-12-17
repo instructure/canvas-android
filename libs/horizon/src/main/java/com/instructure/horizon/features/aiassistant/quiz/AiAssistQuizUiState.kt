@@ -16,17 +16,16 @@
  */
 package com.instructure.horizon.features.aiassistant.quiz
 
-import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
 import com.instructure.horizon.features.aiassistant.quiz.composable.AiAssistQuizAnswerStatus
 
 data class AiAssistQuizUiState(
     val isLoading: Boolean = false,
-    val aiContext: AiAssistContext = AiAssistContext(),
     val quizState: QuizState? = null,
     val isChecked: Boolean = false,
     val checkQuiz: () -> Unit = {},
     val regenerateQuiz: () -> Unit = {},
     val setSelectedIndex: (Int) -> Unit = {},
+    val onClearChatHistory: () -> Unit = {}
 )
 
 data class QuizState(

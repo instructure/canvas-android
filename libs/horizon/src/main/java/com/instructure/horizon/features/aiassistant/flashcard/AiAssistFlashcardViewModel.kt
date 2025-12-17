@@ -30,13 +30,12 @@ import javax.inject.Inject
 @HiltViewModel
 class AiAssistFlashcardViewModel @Inject constructor(
     private val repository: AiAssistFlashcardRepository,
-    aiAssistContextProvider: AiAssistContextProvider
+    private val aiAssistContextProvider: AiAssistContextProvider
 ): ViewModel() {
-    private val aiContext = aiAssistContextProvider.aiAssistContext
-
     private val _uiState = MutableStateFlow(AiAssistFlashcardUiState(
         onFlashcardClicked = ::onFlashcardClicked,
         updateCurrentCardIndex = ::updateCurrentCardIndex,
+        onClearChatHistory = ::onClearChatHistory
     ))
     val uiState = _uiState.asStateFlow()
 
@@ -50,7 +49,7 @@ class AiAssistFlashcardViewModel @Inject constructor(
                 it.copy(isLoading = true)
             }
 
-            val flashcards = repository.generateFlashcards(aiContext.contextString.orEmpty())
+            val flashcards = repository.generateFlashcards("")
 
             _uiState.update {
                 it.copy(
@@ -86,6 +85,12 @@ class AiAssistFlashcardViewModel @Inject constructor(
         _uiState.update {
             it.copy(currentCardIndex = index)
         }
+    }
+
+    private fun onClearChatHistory() {
+        aiAssistContextProvider.aiAssistContext = aiAssistContextProvider.aiAssistContext.copy(
+            chatHistory = emptyList()
+        )
     }
 
 }

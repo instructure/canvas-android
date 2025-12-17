@@ -8,6 +8,7 @@ data class AiAssistFlashcardUiState(
     val flashcardList: List<FlashcardState> = emptyList(),
     val onFlashcardClicked: (FlashcardState) -> Unit = {},
     val updateCurrentCardIndex: (Int) -> Unit = {},
+    val onClearChatHistory: () -> Unit = {},
 )
 
 data class FlashcardState(

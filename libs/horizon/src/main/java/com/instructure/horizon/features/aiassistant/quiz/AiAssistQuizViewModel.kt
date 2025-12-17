@@ -31,13 +31,12 @@ import javax.inject.Inject
 @HiltViewModel
 class AiAssistQuizViewModel @Inject constructor(
     private val repository: AiAssistQuizRepository,
-    aiAssistContextProvider: AiAssistContextProvider
+    private val aiAssistContextProvider: AiAssistContextProvider
 ): ViewModel() {
-    private val aiContext = aiAssistContextProvider.aiAssistContext
 
     private val _uiState = MutableStateFlow(
         AiAssistQuizUiState(
-            aiContext = aiContext,
+            onClearChatHistory = ::onClearChatHistory,
             checkQuiz = ::checkQuiz,
             setSelectedIndex = ::setSelectedIndex,
             regenerateQuiz = ::generateNewQuiz,
@@ -56,7 +55,7 @@ class AiAssistQuizViewModel @Inject constructor(
             }
 
             val quiz = repository.generateCachedQuiz(
-                contextString = aiContext.contextString.orEmpty()
+                contextString = ""
             )
 
             _uiState.update {
@@ -118,5 +117,11 @@ class AiAssistQuizViewModel @Inject constructor(
                 ),
             )
         }
+    }
+
+    private fun onClearChatHistory() {
+        aiAssistContextProvider.aiAssistContext = aiAssistContextProvider.aiAssistContext.copy(
+            chatHistory = emptyList()
+        )
     }
 }

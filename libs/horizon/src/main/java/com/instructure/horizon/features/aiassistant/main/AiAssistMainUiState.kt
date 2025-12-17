@@ -16,9 +16,10 @@
  */
 package com.instructure.horizon.features.aiassistant.main
 
-import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
+import com.instructure.canvasapi2.models.journey.JourneyAssistChatMessage
 
 data class AiAssistMainUiState(
-    val isAiContextEmpty: Boolean,
-    val onSetAiAssistContextMessage: (AiAssistMessage) -> Unit,
+    val isLoading: Boolean = true,
+    val messages: List<JourneyAssistChatMessage> = emptyList(),
+    val addMessageToChatHistory: (String) -> Unit = {}
 )

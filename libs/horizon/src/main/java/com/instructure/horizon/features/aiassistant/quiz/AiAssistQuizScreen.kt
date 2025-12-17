@@ -45,6 +45,7 @@ fun AiAssistQuizScreen(
 ) {
     AiAssistScaffold(
         navController = navController,
+        onClearChatHistory = state.onClearChatHistory,
         onDismiss = { onDismiss() },
     ) { modifier ->
             if (state.isLoading) {
