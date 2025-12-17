@@ -54,7 +54,7 @@ class HorizonInboxComposeUiTest {
             HorizonInboxComposeScreen(uiState, pickerState, rememberNavController())
         }
 
-        composeTestRule.onNodeWithContentDescription("Select Course")
+        composeTestRule.onNodeWithContentDescription("Course")
             .assertIsDisplayed()
     }
 
