@@ -80,30 +80,38 @@ class ForecastWidgetViewModel @Inject constructor(
         val initialWeekPeriod = calculateWeekPeriod(currentWeekOffset)
         _uiState.update { it.copy(weekPeriod = initialWeekPeriod) }
 
-        observeWeekOffset()
         observeSelectedSection()
-
-        viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, isError = false) }
-            try {
-                loadMissingAssignments(forceRefresh = false)
-            } catch (e: Exception) {
-                crashlytics.recordException(e)
-            }
-        }
+        loadData(forceRefresh = false)
     }
 
     private fun navigatePrevious() {
-        viewModelScope.launch {
-            val newOffset = currentWeekOffset - 1
-            forecastWidgetDataStore.setWeekOffset(newOffset)
-        }
+        currentWeekOffset -= 1
+        updateWeekPeriodAndReload()
     }
 
     private fun navigateNext() {
+        currentWeekOffset += 1
+        updateWeekPeriodAndReload()
+    }
+
+    private fun updateWeekPeriodAndReload() {
+        val weekPeriod = calculateWeekPeriod(currentWeekOffset)
+        _uiState.update {
+            it.copy(
+                weekPeriod = weekPeriod,
+                dueAssignments = mapUpcomingAssignments(upcomingPlannerItems)
+            )
+        }
+
         viewModelScope.launch {
-            val newOffset = currentWeekOffset + 1
-            forecastWidgetDataStore.setWeekOffset(newOffset)
+            try {
+                loadUpcomingAssignments(forceRefresh = true)
+                loadRecentGrades(forceRefresh = true)
+                _uiState.update { it.copy(isLoading = false) }
+            } catch (e: Exception) {
+                _uiState.update { it.copy(isLoading = false, isError = true) }
+                crashlytics.recordException(e)
+            }
         }
     }
 
@@ -125,32 +133,6 @@ class ForecastWidgetViewModel @Inject constructor(
 
     fun refresh() {
         loadData(forceRefresh = true)
-    }
-
-    private fun observeWeekOffset() {
-        viewModelScope.launch {
-            forecastWidgetDataStore.observeWeekOffset()
-                .catch { crashlytics.recordException(it) }
-                .collect { offset ->
-                    currentWeekOffset = offset
-                    val weekPeriod = calculateWeekPeriod(offset)
-                    _uiState.update {
-                        it.copy(
-                            weekPeriod = weekPeriod,
-                            dueAssignments = mapUpcomingAssignments(upcomingPlannerItems)
-                        )
-                    }
-
-                    try {
-                        loadUpcomingAssignments(forceRefresh = true)
-                        loadRecentGrades(forceRefresh = true)
-                        _uiState.update { it.copy(isLoading = false) }
-                    } catch (e: Exception) {
-                        _uiState.update { it.copy(isLoading = false, isError = true) }
-                        crashlytics.recordException(e)
-                    }
-                }
-        }
     }
 
     private fun observeSelectedSection() {

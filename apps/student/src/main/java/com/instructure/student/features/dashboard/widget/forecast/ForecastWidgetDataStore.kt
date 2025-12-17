@@ -20,7 +20,6 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -35,12 +34,6 @@ class ForecastWidgetDataStore @Inject constructor(
 ) {
     private val dataStore: DataStore<Preferences> = context.forecastWidgetDataStore
 
-    fun observeWeekOffset(): Flow<Int> {
-        return dataStore.data.map { preferences ->
-            preferences[WEEK_OFFSET_KEY] ?: 0
-        }
-    }
-
     fun observeSelectedSection(): Flow<ForecastSection?> {
         return dataStore.data.map { preferences ->
             val sectionName = preferences[SELECTED_SECTION_KEY]
@@ -51,12 +44,6 @@ class ForecastWidgetDataStore @Inject constructor(
                     null
                 }
             }
-        }
-    }
-
-    suspend fun setWeekOffset(offset: Int) {
-        dataStore.edit { preferences ->
-            preferences[WEEK_OFFSET_KEY] = offset
         }
     }
 
@@ -72,7 +59,6 @@ class ForecastWidgetDataStore @Inject constructor(
 
     companion object {
         const val STORE_NAME = "forecast_widget_store"
-        private val WEEK_OFFSET_KEY = intPreferencesKey("week_offset")
         private val SELECTED_SECTION_KEY = stringPreferencesKey("selected_section")
     }
 }
