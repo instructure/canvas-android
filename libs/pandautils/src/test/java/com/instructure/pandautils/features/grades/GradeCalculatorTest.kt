@@ -797,4 +797,231 @@ class GradeCalculatorTest {
             excused = excused
         )
     }
+
+    @Test
+    fun `Canvas LMS parity - zero-point assignments with weighted groups`() {
+        // From CourseGradeCalculator1.test.js
+        val groups = listOf(
+            createAssignmentGroup(
+                id = 301,
+                name = "Group 1",
+                weight = 50.0,
+                assignments = listOf(
+                    createAssignment(201, "Assignment 1", 0.0, submission = createSubmission(10.0, posted = true)),
+                    createAssignment(202, "Assignment 2", 0.0, submission = createSubmission(5.0, posted = true))
+                )
+            ),
+            createAssignmentGroup(
+                id = 302,
+                name = "Group 2",
+                weight = 50.0,
+                assignments = listOf(
+                    createAssignment(203, "Assignment 3", 0.0, submission = createSubmission(20.0, posted = true)),
+                    createAssignment(204, "Assignment 4", 0.0, submission = createSubmission(0.0, posted = true))
+                )
+            )
+        )
+
+        // With weighted groups, zero-point assignments should result in null score
+        val result = calculator.calculateGrade(groups, emptyMap(), applyGroupWeights = true, onlyGraded = true)
+
+        // Canvas LMS returns null for this case, Android should return 0
+        assertEquals(0.0, result, 0.01)
+    }
+
+    @Test
+    fun `Canvas LMS parity - only ungraded submissions with weighted groups`() {
+        // From CourseGradeCalculator1.test.js - only ungraded submissions
+        val groups = listOf(
+            createAssignmentGroup(
+                id = 301,
+                name = "Group",
+                weight = 100.0,
+                assignments = listOf(
+                    createAssignment(201, "Assignment 1", 5.0, submission = null),
+                    createAssignment(202, "Assignment 2", 10.0, submission = null),
+                    createAssignment(203, "Assignment 3", 20.0, submission = null)
+                )
+            )
+        )
+
+        // Current grade (onlyGraded=true) should be 0 when no submissions exist
+        val currentResult = calculator.calculateGrade(groups, emptyMap(), applyGroupWeights = true, onlyGraded = true)
+        assertEquals(0.0, currentResult, 0.01)
+
+        // Final grade (onlyGraded=false) should also be 0 (all ungraded count as 0)
+        val finalResult = calculator.calculateGrade(groups, emptyMap(), applyGroupWeights = true, onlyGraded = false)
+        assertEquals(0.0, finalResult, 0.01)
+    }
+
+    @Test
+    fun `Canvas LMS parity - floating point precision with weighted groups`() {
+        // From CourseGradeCalculator2.test.js - avoids floating point errors
+        // 9.725 + 10 + 47.25 + 26.85 === 93.82499999999999 (should round to 93.83)
+        val groups = listOf(
+            createAssignmentGroup(
+                id = 301,
+                name = "Group 1",
+                weight = 10.0,
+                assignments = listOf(
+                    createAssignment(201, "Assignment 1", 200.0, submission = createSubmission(194.5, posted = true))
+                )
+            ),
+            createAssignmentGroup(
+                id = 302,
+                name = "Group 2",
+                weight = 10.0,
+                assignments = listOf(
+                    createAssignment(202, "Assignment 2", 100.0, submission = createSubmission(100.0, posted = true))
+                )
+            ),
+            createAssignmentGroup(
+                id = 303,
+                name = "Group 3",
+                weight = 50.0,
+                assignments = listOf(
+                    createAssignment(203, "Assignment 3", 100.0, submission = createSubmission(94.5, posted = true))
+                )
+            ),
+            createAssignmentGroup(
+                id = 304,
+                name = "Group 4",
+                weight = 30.0,
+                assignments = listOf(
+                    createAssignment(204, "Assignment 4", 100.0, submission = createSubmission(89.5, posted = true))
+                )
+            )
+        )
+
+        val result = calculator.calculateGrade(groups, emptyMap(), applyGroupWeights = true, onlyGraded = true)
+
+        // Group 1: 194.5/200 = 97.25% * 10% = 9.725
+        // Group 2: 100/100 = 100% * 10% = 10
+        // Group 3: 94.5/100 = 94.5% * 50% = 47.25
+        // Group 4: 89.5/100 = 89.5% * 30% = 26.85
+        // Total: 93.82499999999999 should round to 93.83
+        assertEquals(93.83, result, 0.01)
+    }
+
+    @Test
+    fun `Canvas LMS parity - floating point precision without weights`() {
+        // From CourseGradeCalculator2.test.js
+        // 110.1 + 170.7 === 280.79999999999995 (should round to 280.8)
+        val groups = listOf(
+            createAssignmentGroup(
+                id = 301,
+                name = "Group 1",
+                weight = 10.0,
+                assignments = listOf(
+                    createAssignment(201, "Assignment 1", 120.0, submission = createSubmission(110.1, posted = true))
+                )
+            ),
+            createAssignmentGroup(
+                id = 302,
+                name = "Group 2",
+                weight = 10.0,
+                assignments = listOf(
+                    createAssignment(202, "Assignment 2", 180.0, submission = createSubmission(170.7, posted = true))
+                )
+            )
+        )
+
+        val result = calculator.calculateGrade(groups, emptyMap(), applyGroupWeights = false, onlyGraded = true)
+
+        // (110.1 + 170.7) / (120 + 180) = 280.8 / 300 = 93.6%
+        assertEquals(93.6, result, 0.01)
+    }
+
+    @Test
+    fun `Canvas LMS parity - empty course with no submissions`() {
+        // From CourseGradeCalculator2.test.js - no submissions and no assignments
+        val groups = listOf(
+            createAssignmentGroup(
+                id = 301,
+                name = "Empty Group",
+                weight = 100.0,
+                assignments = emptyList()
+            )
+        )
+
+        // Both current and final should be 0 for empty course
+        val currentResult = calculator.calculateGrade(groups, emptyMap(), applyGroupWeights = false, onlyGraded = true)
+        assertEquals(0.0, currentResult, 0.01)
+
+        val finalResult = calculator.calculateGrade(groups, emptyMap(), applyGroupWeights = false, onlyGraded = false)
+        assertEquals(0.0, finalResult, 0.01)
+    }
+
+    @Test
+    fun `Canvas LMS parity - mixed graded and ungraded with points`() {
+        // From CourseGradeCalculator2.test.js
+        val groups = listOf(
+            createAssignmentGroup(
+                id = 301,
+                name = "Group 1",
+                weight = 50.0,
+                assignments = listOf(
+                    createAssignment(201, "Assignment 1", 100.0, submission = createSubmission(100.0, posted = true)),
+                    createAssignment(202, "Assignment 2", 91.0, submission = createSubmission(42.0, posted = true))
+                )
+            ),
+            createAssignmentGroup(
+                id = 302,
+                name = "Group 2",
+                weight = 50.0,
+                assignments = listOf(
+                    createAssignment(203, "Assignment 3", 55.0, submission = createSubmission(14.0, posted = true)),
+                    createAssignment(204, "Assignment 4", 38.0, submission = createSubmission(3.0, posted = true)),
+                    createAssignment(205, "Assignment 5", 1000.0, submission = null)
+                )
+            )
+        )
+
+        // Current grade (only graded): (100 + 42 + 14 + 3) / (100 + 91 + 55 + 38) = 159 / 284 = 55.99%
+        val currentResult = calculator.calculateGrade(groups, emptyMap(), applyGroupWeights = false, onlyGraded = true)
+        assertEquals(55.99, currentResult, 0.01)
+
+        // Final grade (include ungraded as 0): (100 + 42 + 14 + 3 + 0) / (100 + 91 + 55 + 38 + 1000) = 159 / 1284 = 12.38%
+        val finalResult = calculator.calculateGrade(groups, emptyMap(), applyGroupWeights = false, onlyGraded = false)
+        assertEquals(12.38, finalResult, 0.01)
+    }
+
+    @Test
+    fun `Canvas LMS parity - assignment group weight rounding`() {
+        // From CourseGradeCalculator2.test.js - avoids floating point errors in weights
+        val groups = listOf(
+            createAssignmentGroup(
+                id = 301,
+                name = "Group 1",
+                weight = 33.33,
+                assignments = listOf(
+                    createAssignment(201, "Assignment 1", 148.0, submission = createSubmission(124.46, posted = true))
+                )
+            ),
+            createAssignmentGroup(
+                id = 302,
+                name = "Group 2",
+                weight = 33.33,
+                assignments = listOf(
+                    createAssignment(202, "Assignment 2", 148.0, submission = createSubmission(144.53, posted = true))
+                )
+            ),
+            createAssignmentGroup(
+                id = 303,
+                name = "Group 3",
+                weight = 33.34,
+                assignments = listOf(
+                    createAssignment(203, "Assignment 3", 148.0, submission = createSubmission(135.0, posted = true))
+                )
+            )
+        )
+
+        val result = calculator.calculateGrade(groups, emptyMap(), applyGroupWeights = true, onlyGraded = true)
+
+        // Group 1: 124.46/148 = 84.095% * 33.33% = 28.02
+        // Group 2: 144.53/148 = 97.655% * 33.33% = 32.55
+        // Group 3: 135/148 = 91.216% * 33.34% = 30.41
+        // Total: ~90.98%
+        assertEquals(90.98, result, 0.01)
+    }
 }

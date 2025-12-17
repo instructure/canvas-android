@@ -28,6 +28,20 @@ import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.min
 
+/**
+ * Extension functions for precise floating point arithmetic to avoid rounding errors.
+ * These match Canvas LMS web's use of Big.js for accurate grade calculations.
+ */
+private fun Double.toBigDecimal(): BigDecimal = BigDecimal.valueOf(this)
+
+private operator fun BigDecimal.plus(other: BigDecimal): BigDecimal = this.add(other)
+
+private operator fun BigDecimal.times(other: Double): BigDecimal =
+    this.multiply(other.toBigDecimal())
+
+private infix fun BigDecimal.divideBy(other: Double): BigDecimal =
+    this.divide(other.toBigDecimal(), 10, RoundingMode.HALF_UP)
+
 class GradeCalculator @Inject constructor() {
 
     /**
@@ -177,8 +191,8 @@ class GradeCalculator @Inject constructor() {
         groups: List<AssignmentGroup>,
         whatIfScores: Map<Long, Double>
     ): Double {
-        var totalWeight = 0.0
-        var earnedScore = 0.0
+        var totalWeight = BigDecimal.ZERO
+        var earnedScore = BigDecimal.ZERO
 
         for (group in groups) {
             val gradeableAssignments = getGradeableAssignments(group.assignments)
@@ -195,21 +209,22 @@ class GradeCalculator @Inject constructor() {
             val weight = group.groupWeight
 
             if (totalPoints != 0.0) {
-                earnedScore += earnedPoints / totalPoints * weight
+                val groupPercentage = earnedPoints.toBigDecimal() divideBy totalPoints
+                earnedScore = earnedScore + (groupPercentage * weight)
             }
 
             // Track total weight from groups that have possible points
             if (totalPoints != 0.0) {
-                totalWeight += weight
+                totalWeight = totalWeight + weight.toBigDecimal()
             }
         }
 
         // Normalize if total weight is less than 100
-        if (totalWeight < 100 && totalWeight > 0 && earnedScore != 0.0) {
-            earnedScore = earnedScore / totalWeight * 100
+        if (totalWeight < 100.0.toBigDecimal() && totalWeight > BigDecimal.ZERO && earnedScore != BigDecimal.ZERO) {
+            earnedScore = (earnedScore divideBy totalWeight.toDouble()) * 100.0
         }
 
-        return round(earnedScore)
+        return round(earnedScore.toDouble())
     }
 
     /**
@@ -225,8 +240,8 @@ class GradeCalculator @Inject constructor() {
         groups: List<AssignmentGroup>,
         whatIfScores: Map<Long, Double>
     ): Double {
-        var totalWeight = 0.0
-        var earnedScore = 0.0
+        var totalWeight = BigDecimal.ZERO
+        var earnedScore = BigDecimal.ZERO
 
         for (group in groups) {
             val gradeableAssignments = getGradeableAssignments(group.assignments)
@@ -244,21 +259,22 @@ class GradeCalculator @Inject constructor() {
             val assignCount = submissionsToKeep.size
 
             if (totalPoints != 0.0) {
-                earnedScore += earnedPoints / totalPoints * weight
+                val groupPercentage = earnedPoints.toBigDecimal() divideBy totalPoints
+                earnedScore = earnedScore + (groupPercentage * weight)
             }
 
             // Track total weight from groups that have graded assignments
             if (assignCount != 0) {
-                totalWeight += weight
+                totalWeight = totalWeight + weight.toBigDecimal()
             }
         }
 
         // Normalize if total weight is less than 100
-        if (totalWeight < 100 && earnedScore != 0.0) {
-            earnedScore = earnedScore / totalWeight * 100
+        if (totalWeight < 100.0.toBigDecimal() && earnedScore != BigDecimal.ZERO) {
+            earnedScore = (earnedScore divideBy totalWeight.toDouble()) * 100.0
         }
 
-        return round(earnedScore)
+        return round(earnedScore.toDouble())
     }
 
     /**
@@ -644,11 +660,17 @@ class GradeCalculator @Inject constructor() {
         return grades.lastOrNull() ?: 0.0
     }
 
+    /**
+     * Rounds a value to the specified number of decimal places.
+     * Uses string conversion to avoid floating point precision issues,
+     * matching Canvas LMS web behavior.
+     *
+     * For example: 93.825 will correctly round to 93.83 (not 93.82)
+     */
     private fun round(value: Double, places: Int = 2): Double {
         if (places < 0) throw IllegalArgumentException()
 
-        var bd = BigDecimal(value)
-        bd = bd.setScale(places, RoundingMode.HALF_UP)
+        val bd = BigDecimal.valueOf(value).setScale(places, RoundingMode.HALF_UP)
         return bd.toDouble()
     }
 }
