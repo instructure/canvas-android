@@ -22,14 +22,14 @@ apply plugin: 'kotlin-parcelize'
 apply plugin: 'com.google.devtools.ksp'
 apply plugin: 'dagger.hilt.android.plugin'
 
-def pineDebugBaseUrl = "https://pine-api-dev.domain-svcs.nonprod.inseng.io"
-def pineReleaseBaseUrl = "https://pine-api-production.us-east-1.temp.prod.inseng.io"
+def pineDebugBaseUrl = "https://pine-api-dev.us-east-1.core.inseng.io"
+def pineReleaseBaseUrl = "https://pine-api.us-east-1.core.inseng.io"
 
-def cedarDebugBaseUrl = "https://cedar-api-dev.domain-svcs.nonprod.inseng.io"
-def cedarReleaseBaseUrl = "https://cedar-api-production.us-east-1.temp.prod.inseng.io"
+def cedarDebugBaseUrl = "https://cedar-api-dev.us-east-1.core.inseng.io"
+def cedarReleaseBaseUrl = "https://cedar-api.us-east-1.core.inseng.io"
 
-def redwoodDebugBaseUrl = "https://redwood-api-dev.domain-svcs.nonprod.inseng.io"
-def redwoodReleaseBaseUrl = "https://redwood-api-production.us-east-1.temp.prod.inseng.io"
+def redwoodDebugBaseUrl = "https://redwood-api-dev.us-east-1.core.inseng.io"
+def redwoodReleaseBaseUrl = "https://redwood-api.us-east-1.core.inseng.io"
 
 def journeyDebugBaseUrl = "https://journey-server-dev.journey.nonprod.inseng.io"
 def journeyReleaseBaseUrl = "https://journey-server-prod.us-east-1.temp.prod.inseng.io"
