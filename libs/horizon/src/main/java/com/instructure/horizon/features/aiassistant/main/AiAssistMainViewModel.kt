@@ -28,7 +28,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import java.util.UUID
 import javax.inject.Inject
 
@@ -43,11 +42,14 @@ class AiAssistMainViewModel @Inject constructor(
 
     init {
         viewModelScope.tryLaunch {
+            _uiState.update { it.copy(isLoading = true) }
+            val message = evaluatePrompt()
+            aiAssistContextProvider.addMessageToChatHistory(message)
             _uiState.update {
-                it.copy(isLoading = true)
-                val message = evaluatePrompt()
-                addMessageToChatHistory(message)
-                it.copy(messages = listOf(message), isLoading = false)
+                it.copy(
+                    messages = listOf(message),
+                    isLoading = false
+                )
             }
         } catch {
             _uiState.update { it.copy(isLoading = false) }
@@ -55,28 +57,41 @@ class AiAssistMainViewModel @Inject constructor(
     }
 
     private suspend fun evaluatePrompt(prompt: String = ""): JourneyAssistChatMessage {
-        return repository.answerPrompt(
+        val response = repository.answerPrompt(
             prompt,
             aiAssistContextProvider.aiAssistContext.chatHistory,
             aiAssistContextProvider.aiAssistContext.state
         )
+        aiAssistContextProvider.updateContextFromState(response.state)
+        return response.message
     }
 
     private fun addMessageToChatHistory(prompt: String) {
-        val message = JourneyAssistChatMessage(
+        val userMessage = JourneyAssistChatMessage(
             id = UUID.randomUUID().toString(),
             prompt = prompt,
             displayText = prompt,
             role = JourneyAssistRole.USER,
         )
-        _uiState.update { it.copy(messages = it.messages + message) }
-        addMessageToChatHistory(message)
-        viewModelScope.launch { evaluatePrompt(message.prompt) }
-    }
+        _uiState.update {
+            it.copy(
+                messages = it.messages + userMessage,
+                isLoading = true
+            )
+        }
+        aiAssistContextProvider.addMessageToChatHistory(userMessage)
 
-    private fun addMessageToChatHistory(message: JourneyAssistChatMessage) {
-        aiAssistContextProvider.aiAssistContext = aiAssistContextProvider.aiAssistContext.copy(
-            chatHistory = aiAssistContextProvider.aiAssistContext.chatHistory + message
-        )
+        viewModelScope.tryLaunch {
+            val response = evaluatePrompt(userMessage.prompt)
+            aiAssistContextProvider.addMessageToChatHistory(response)
+            _uiState.update {
+                it.copy(
+                    messages = it.messages + response,
+                    isLoading = false
+                )
+            }
+        } catch {
+            _uiState.update { it.copy(isLoading = false) }
+        }
     }
 }

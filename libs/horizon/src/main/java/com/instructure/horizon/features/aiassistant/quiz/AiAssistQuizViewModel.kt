@@ -21,6 +21,7 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
+import com.instructure.horizon.features.aiassistant.common.AiAssistRepository
 import com.instructure.horizon.features.aiassistant.quiz.composable.AiAssistQuizAnswerStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,7 +31,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AiAssistQuizViewModel @Inject constructor(
-    private val repository: AiAssistQuizRepository,
+    private val aiAssistRepository: AiAssistRepository,
     private val aiAssistContextProvider: AiAssistContextProvider
 ): ViewModel() {
 
@@ -45,26 +46,21 @@ class AiAssistQuizViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     init {
-        generateNewQuiz()
+        loadQuizFromContext()
     }
 
-    fun generateNewQuiz() {
-        viewModelScope.tryLaunch {
-            _uiState.update {
-                it.copy(isLoading = true)
-            }
+    private fun loadQuizFromContext() {
+        val quizItems = aiAssistContextProvider.aiAssistContext.chatHistory.lastOrNull()?.quizItems
+        val firstQuiz = quizItems?.firstOrNull()
 
-            val quiz = repository.generateCachedQuiz(
-                contextString = ""
-            )
-
+        if (firstQuiz != null) {
             _uiState.update {
                 it.copy(
                     isLoading = false,
                     quizState = QuizState(
-                        question = quiz.question,
-                        answerIndex = quiz.result,
-                        options = quiz.options.map { option ->
+                        question = firstQuiz.question,
+                        answerIndex = firstQuiz.correctAnswerIndex,
+                        options = firstQuiz.answers.map { option ->
                             QuizAnswerState(
                                 text = option,
                                 status = AiAssistQuizAnswerStatus.UNSELECTED
@@ -75,8 +71,29 @@ class AiAssistQuizViewModel @Inject constructor(
                     isChecked = false
                 )
             }
+        }
+    }
+
+    fun generateNewQuiz() {
+        viewModelScope.tryLaunch {
+            _uiState.update {
+                it.copy(isLoading = true)
+            }
+
+            val response = aiAssistRepository.answerPrompt(
+                prompt = "Generate another quiz question",
+                history = aiAssistContextProvider.aiAssistContext.chatHistory,
+                state = aiAssistContextProvider.aiAssistContext.state
+            )
+
+            aiAssistContextProvider.updateContextFromState(response.state)
+            aiAssistContextProvider.addMessageToChatHistory(response.message)
+
+            loadQuizFromContext()
         } catch {
-            // Error handling
+            _uiState.update {
+                it.copy(isLoading = false)
+            }
         }
     }
 

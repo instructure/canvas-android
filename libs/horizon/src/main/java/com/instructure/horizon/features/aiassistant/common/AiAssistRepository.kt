@@ -8,6 +8,11 @@ import com.instructure.canvasapi2.models.journey.JourneyAssistState
 import java.util.UUID
 import javax.inject.Inject
 
+data class AiAssistResponse(
+    val message: JourneyAssistChatMessage,
+    val state: JourneyAssistState?
+)
+
 class AiAssistRepository @Inject constructor(
     private val journeyAssistAPI: JourneyAssistAPI,
 ) {
@@ -15,10 +20,10 @@ class AiAssistRepository @Inject constructor(
         prompt: String,
         history: List<JourneyAssistChatMessage>,
         state: JourneyAssistState
-    ): JourneyAssistChatMessage {
+    ): AiAssistResponse {
         val requestBody = JourneyAssistRequestBody(prompt, history, state)
         val response = journeyAssistAPI.answerPrompt(requestBody)
-        return JourneyAssistChatMessage(
+        val message = JourneyAssistChatMessage(
             id = UUID.randomUUID().toString(),
             displayText = response.response.orEmpty(),
             role = JourneyAssistRole.ASSISTANT,
@@ -27,5 +32,6 @@ class AiAssistRepository @Inject constructor(
             quizItems = response.quizItems,
             citations = response.citations
         )
+        return AiAssistResponse(message, response.state)
     }
 }

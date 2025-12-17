@@ -22,14 +22,6 @@ enum class DomainService(
     val baseUrl: String,
     val workflow: String,
 ) {
-    PINE(
-        baseUrl = BuildConfig.PINE_BASE_URL,
-        workflow = "pine",
-    ),
-    CEDAR(
-        baseUrl = BuildConfig.CEDAR_BASE_URL,
-        workflow = "cedar",
-    ),
     REDWOOD(
         baseUrl = BuildConfig.REDWOOD_BASE_URL,
         workflow = "redwood",

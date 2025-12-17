@@ -21,6 +21,7 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
+import com.instructure.horizon.features.aiassistant.common.AiAssistRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,28 +30,25 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AiAssistFlashcardViewModel @Inject constructor(
-    private val repository: AiAssistFlashcardRepository,
+    private val aiAssistRepository: AiAssistRepository,
     private val aiAssistContextProvider: AiAssistContextProvider
 ): ViewModel() {
     private val _uiState = MutableStateFlow(AiAssistFlashcardUiState(
         onFlashcardClicked = ::onFlashcardClicked,
         updateCurrentCardIndex = ::updateCurrentCardIndex,
-        onClearChatHistory = ::onClearChatHistory
+        onClearChatHistory = ::onClearChatHistory,
+        regenerateFlashcards = ::generateNewFlashcards
     ))
     val uiState = _uiState.asStateFlow()
 
     init {
-        generateNewFlashcards()
+        loadFlashcardsFromContext()
     }
 
-    private fun generateNewFlashcards() {
-        viewModelScope.tryLaunch {
-            _uiState.update {
-                it.copy(isLoading = true)
-            }
+    private fun loadFlashcardsFromContext() {
+        val flashcards = aiAssistContextProvider.aiAssistContext.chatHistory.lastOrNull()?.flashcards
 
-            val flashcards = repository.generateFlashcards("")
-
+        if (flashcards != null) {
             _uiState.update {
                 it.copy(
                     isLoading = false,
@@ -63,8 +61,29 @@ class AiAssistFlashcardViewModel @Inject constructor(
                     },
                 )
             }
+        }
+    }
+
+    private fun generateNewFlashcards() {
+        viewModelScope.tryLaunch {
+            _uiState.update {
+                it.copy(isLoading = true)
+            }
+
+            val response = aiAssistRepository.answerPrompt(
+                prompt = "Generate new flashcards",
+                history = aiAssistContextProvider.aiAssistContext.chatHistory,
+                state = aiAssistContextProvider.aiAssistContext.state
+            )
+
+            aiAssistContextProvider.updateContextFromState(response.state)
+            aiAssistContextProvider.addMessageToChatHistory(response.message)
+
+            loadFlashcardsFromContext()
         } catch {
-            // Handle error
+            _uiState.update {
+                it.copy(isLoading = false)
+            }
         }
     }
 

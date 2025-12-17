@@ -41,6 +41,7 @@ class AiAssistChatViewModel @Inject constructor(
         onInputTextChanged = ::onTextInputChanged,
         onInputTextSubmitted = ::onTextInputSubmitted,
         onClearChatHistory = ::onClearChatHistory,
+        onChipClicked = ::onChipClicked,
         messages = aiAssistContextProvider.aiAssistContext.chatHistory,
     ))
     val uiState = _uiState.asStateFlow()
@@ -77,7 +78,7 @@ class AiAssistChatViewModel @Inject constructor(
             }
 
             val response = answerPrompt(message.prompt)
-            addMessageToChatHistory(response)
+            aiAssistContextProvider.addMessageToChatHistory(response)
 
             _uiState.update {
                 it.copy(
@@ -95,11 +96,13 @@ class AiAssistChatViewModel @Inject constructor(
     }
 
     private suspend fun answerPrompt(prompt: String): JourneyAssistChatMessage {
-        return repository.answerPrompt(
+        val response = repository.answerPrompt(
             prompt,
             aiAssistContextProvider.aiAssistContext.chatHistory,
             aiAssistContextProvider.aiAssistContext.state
         )
+        aiAssistContextProvider.updateContextFromState(response.state)
+        return response.message
     }
 
     private fun addMessageToChatHistory(prompt: String): JourneyAssistChatMessage {
@@ -109,20 +112,22 @@ class AiAssistChatViewModel @Inject constructor(
             displayText = prompt,
             role = JourneyAssistRole.USER,
         )
-        addMessageToChatHistory(message)
+        aiAssistContextProvider.addMessageToChatHistory(message)
         return message
-    }
-
-    private fun addMessageToChatHistory(message: JourneyAssistChatMessage) {
-        aiAssistContextProvider.aiAssistContext = aiAssistContextProvider.aiAssistContext.copy(
-            chatHistory = aiAssistContextProvider.aiAssistContext.chatHistory + message
-        )
     }
 
     private fun onClearChatHistory() {
         aiAssistContextProvider.aiAssistContext = aiAssistContextProvider.aiAssistContext.copy(
             chatHistory = emptyList()
         )
+    }
+
+    private fun onChipClicked(prompt: String) {
+        val message = addMessageToChatHistory(prompt)
+        _uiState.update {
+            it.copy(messages = it.messages + message)
+        }
+        evaluatePrompt(message)
     }
 
 }

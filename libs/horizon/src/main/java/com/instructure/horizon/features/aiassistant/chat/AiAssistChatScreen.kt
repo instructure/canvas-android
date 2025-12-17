@@ -64,7 +64,9 @@ fun AiAssistChatScreen(
             modifier = modifier
         ) {
             items(state.messages) { message ->
-                AiAssistMessage(message) { }
+                AiAssistMessage(message) { prompt ->
+                    state.onChipClicked(prompt)
+                }
             }
 
             if (state.isLoading) {

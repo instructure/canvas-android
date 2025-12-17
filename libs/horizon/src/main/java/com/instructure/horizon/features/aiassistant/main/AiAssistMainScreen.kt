@@ -40,18 +40,23 @@ fun AiAssistMainScreen(
     state: AiAssistMainUiState,
     onDismiss: () -> Unit,
 ) {
-    var messageCount by remember { mutableStateOf(state.messages.size) }
-    LaunchedEffect(Unit) {
-        if (messageCount != state.messages.size) {
-            if (state.messages.lastOrNull()?.flashcards?.isNotEmpty().orDefault()) {
-                navController.navigate(AiAssistRoute.AiAssistFlashcard.route)
-            } else if (state.messages.lastOrNull()?.quizItems?.isNotEmpty().orDefault()) {
-                navController.navigate(AiAssistRoute.AiAssistQuiz.route)
-            } else if (state.messages.isNotEmpty()) {
-                navController.navigate(AiAssistRoute.AiAssistChat.route)
-            }
+    LaunchedEffect(state.messages) {
+        val lastMessage = state.messages.lastOrNull()
+        val hasUserInteracted = state.messages.any { it.role == com.instructure.canvasapi2.models.journey.JourneyAssistRole.USER }
 
-            messageCount = state.messages.size
+        // Only navigate if user has interacted (sent a message or clicked a chip) and last message is from assistant
+        if (hasUserInteracted && lastMessage != null && lastMessage.role == com.instructure.canvasapi2.models.journey.JourneyAssistRole.ASSISTANT) {
+            when {
+                lastMessage.flashcards.isNotEmpty() -> {
+                    navController.navigate(AiAssistRoute.AiAssistFlashcard.route)
+                }
+                lastMessage.quizItems.isNotEmpty() -> {
+                    navController.navigate(AiAssistRoute.AiAssistQuiz.route)
+                }
+                else -> {
+                    navController.navigate(AiAssistRoute.AiAssistChat.route)
+                }
+            }
         }
     }
     var promptInput by remember { mutableStateOf(TextFieldValue("")) }
@@ -63,8 +68,8 @@ fun AiAssistMainScreen(
         onInputTextChanged = { promptInput = it },
         onInputTextSubmitted = {
             state.addMessageToChatHistory(promptInput.text)
-//            navController.navigate(AiAssistRoute.AiAssistChat.route)
-       }
+            promptInput = TextFieldValue("")
+        }
     ) { modifier ->
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(16.dp),
