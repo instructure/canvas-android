@@ -95,7 +95,7 @@ class StudentAssignmentListBehavior : AssignmentListBehavior {
                     val dialog = BookmarkCreationDialog.newInstance(activity, fragment, null)
                     dialog?.show(activity.supportFragmentManager, BookmarkCreationDialog::class.java.simpleName)
                 } else {
-                    Toast.makeText(activity, activity.getString(com.instructure.pandautils.R.string.notAvailableOffline), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, activity.getString(R.string.notAvailableOffline), Toast.LENGTH_SHORT).show()
                 }
             }
         )
