@@ -18,8 +18,11 @@ package com.instructure.pandautils.compose.composables
 
 import android.content.res.Configuration
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -38,14 +41,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -55,8 +56,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -76,6 +79,12 @@ fun ColorPicker(
     titleModifier: Modifier = Modifier
 ) {
     var isExpanded by rememberSaveable { mutableStateOf(false) }
+    val rotationAnimation by animateFloatAsState(
+        targetValue = if (isExpanded) 180F else 0F,
+        animationSpec = tween(durationMillis = 200, easing = FastOutLinearInEasing),
+        label = "chevronIconRotation"
+
+    )
     val isDarkTheme = isSystemInDarkTheme()
 
     // Find the matching ThemedColor and display the appropriate variant
@@ -125,10 +134,12 @@ fun ColorPicker(
                 )
 
                 Icon(
-                    imageVector = if (isExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                    painter = painterResource(R.drawable.ic_chevron_down_small),
                     contentDescription = null,
                     tint = colorResource(R.color.textDark),
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier
+                        .size(24.dp)
+                        .rotate(rotationAnimation)
                 )
             }
         }

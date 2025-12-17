@@ -17,6 +17,7 @@
 package com.instructure.pandautils.features.dashboard.widget.usecase
 
 import com.google.gson.Gson
+import com.instructure.pandautils.features.dashboard.customize.WidgetSettingItem
 import com.instructure.pandautils.features.dashboard.widget.SettingType
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.repository.WidgetConfigDataRepository
@@ -109,7 +110,7 @@ class ObserveWidgetConfigUseCaseTest {
         val configJson2 = """{"widgetId":"welcome","showGreeting":false,"backgroundColor":789012}"""
         coEvery { repository.observeConfigJson(widgetId) } returns flowOf(configJson1, configJson2)
 
-        val results = mutableListOf<List<com.instructure.pandautils.features.dashboard.customize.WidgetSettingItem>>()
+        val results = mutableListOf<List<WidgetSettingItem>>()
         useCase(widgetId).collect { results.add(it) }
 
         assertEquals(2, results.size)

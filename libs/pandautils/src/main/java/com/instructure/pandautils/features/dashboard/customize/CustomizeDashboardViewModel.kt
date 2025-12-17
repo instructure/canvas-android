@@ -84,7 +84,7 @@ class CustomizeDashboardViewModel @Inject constructor(
                 .map { metadata ->
                     metadata
                         .filter { it.isEditable }
-                        .sortedBy { it.position }
+                        .sortedWith(compareBy({ !it.isVisible }, { it.position }))
                 }
                 .flatMapLatest { editableMetadata ->
                     combineWidgetsWithConfigs(editableMetadata)

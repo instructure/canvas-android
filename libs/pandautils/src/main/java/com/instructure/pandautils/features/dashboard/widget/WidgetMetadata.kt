@@ -16,8 +16,6 @@
 
 package com.instructure.pandautils.features.dashboard.widget
 
-import com.instructure.pandautils.R
-
 data class WidgetMetadata(
     val id: String,
     val position: Int,
@@ -30,15 +28,5 @@ data class WidgetMetadata(
         const val WIDGET_ID_INSTITUTIONAL_ANNOUNCEMENTS = "institutional_announcements"
         const val WIDGET_ID_WELCOME = "welcome"
         const val WIDGET_ID_COURSES = "courses"
-
-        fun getDisplayNameRes(widgetId: String): Int = when (widgetId) {
-            WIDGET_ID_WELCOME -> R.string.widget_hello
-            WIDGET_ID_COURSE_INVITATIONS -> R.string.courseInvitationsTitle
-            else -> throw IllegalArgumentException("Unknown widget: $widgetId")
-        }
-
-        fun canHaveSettings(widgetId: String): Boolean = when (widgetId) {
-            else -> false
-        }
     }
 }

@@ -21,6 +21,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,16 +31,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
@@ -54,10 +52,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -70,16 +70,16 @@ import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasDivider
 import com.instructure.pandautils.compose.composables.CanvasSwitch
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
+import com.instructure.pandautils.compose.composables.ColorPicker
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
-import com.instructure.pandautils.compose.composables.ColorPicker
 import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
 import com.instructure.pandautils.features.dashboard.widget.SettingType
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.utils.ColorKeeper
-import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ThemedColor
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -123,7 +123,7 @@ fun CustomizeDashboardScreenContent(
                 uiState.error != null -> {
                     ErrorContent(
                         errorMessage = uiState.error,
-                        retryClick = {},
+                        retryClick = null,
                         modifier = Modifier
                             .fillMaxSize()
                             .testTag("errorContent")
@@ -167,7 +167,8 @@ private fun WidgetList(
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
-        modifier = modifier.padding(16.dp),
+        modifier = modifier,
+        contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         item {
@@ -244,10 +245,16 @@ private fun WidgetListItem(
                 ) {
                     Card(
                         colors = CardDefaults.cardColors(
-                            containerColor = colorResource(R.color.backgroundLightestElevated)
+                            containerColor = if (widgetItem.metadata.isVisible) {
+                                colorResource(R.color.backgroundLightestElevated)
+                            } else {
+                                colorResource(R.color.backgroundLight)
+                            }
                         ),
                         shape = RoundedCornerShape(8.dp),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                        elevation = CardDefaults.cardElevation(
+                            defaultElevation = if (widgetItem.metadata.isVisible) 4.dp else 0.dp
+                        )
                     ) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -256,17 +263,19 @@ private fun WidgetListItem(
                         ) {
                             IconButton(
                                 onClick = onMoveUp,
-                                enabled = !isFirst,
+                                enabled = !isFirst && widgetItem.metadata.isVisible,
+                                colors = IconButtonDefaults.iconButtonColors(
+                                    contentColor = Color(ThemePrefs.brandColor),
+                                    disabledContentColor = colorResource(R.color.disabledColor)
+                                ),
                                 modifier = Modifier
                                     .size(24.dp)
                                     .testTag("moveUpButton_${widgetItem.metadata.id}")
                             ) {
                                 Icon(
-                                    imageVector = Icons.Default.KeyboardArrowUp,
-                                    contentDescription = stringResource(id = R.string.move_up),
-                                    tint = if (isFirst) colorResource(R.color.textDark) else Color(
-                                        ThemePrefs.brandColor
-                                    )
+                                    modifier = Modifier.rotate(180f),
+                                    painter = painterResource(R.drawable.ic_chevron_down_small),
+                                    contentDescription = stringResource(id = R.string.move_up)
                                 )
                             }
 
@@ -280,17 +289,18 @@ private fun WidgetListItem(
 
                             IconButton(
                                 onClick = onMoveDown,
-                                enabled = !isLast,
+                                enabled = !isLast && widgetItem.metadata.isVisible,
+                                colors = IconButtonDefaults.iconButtonColors(
+                                    contentColor = Color(ThemePrefs.brandColor),
+                                    disabledContentColor = colorResource(R.color.disabledColor)
+                                ),
                                 modifier = Modifier
                                     .size(24.dp)
                                     .testTag("moveDownButton_${widgetItem.metadata.id}")
                             ) {
                                 Icon(
-                                    imageVector = Icons.Default.KeyboardArrowDown,
+                                    painter = painterResource(R.drawable.ic_chevron_down_small),
                                     contentDescription = stringResource(id = R.string.move_down),
-                                    tint = if (isLast) colorResource(R.color.textDark) else Color(
-                                        ThemePrefs.brandColor
-                                    )
                                 )
                             }
                         }
@@ -298,8 +308,9 @@ private fun WidgetListItem(
 
                     Text(
                         text = widgetItem.displayName,
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 16.sp,
+                        lineHeight = 21.sp,
+                        fontWeight = FontWeight.Medium,
                         color = colorResource(R.color.textDarkest)
                     )
                 }
@@ -354,8 +365,8 @@ private fun WidgetSettingsContent(
                     val colorValue = when (val value = setting.value) {
                         is Int -> value
                         is Double -> value.toInt()
-                        is String -> value.toIntOrNull() ?: 0x2573DF
-                        else -> 0x2573DF
+                        is String -> value.toIntOrNull() ?: ThemePrefs.brandColor
+                        else -> ThemePrefs.brandColor
                     }
                     ColorPicker(
                         label = getSettingLabel(setting.key),
@@ -399,8 +410,18 @@ private fun getAvailableColors(): List<ThemedColor> {
         context.getColor(R.color.courseColor12light),
     )
     val themedColors = lightColors.map { ColorKeeper.createThemedColor(it) }.toMutableList().apply {
-        add(ThemedColor(context.getColor(R.color.white), context.getColor(R.color.white)))
-        add(ThemedColor(0xFF0f1316.toInt(), 0xFF0f1316.toInt()))
+        add(
+            ThemedColor(
+                context.getColor(R.color.backgroundLightest),
+                context.getColor(R.color.backgroundLightest)
+            )
+        )
+        add(
+            ThemedColor(
+                context.getColor(R.color.backgroundDarkest),
+                context.getColor(R.color.backgroundDarkest)
+            )
+        )
     }
     return themedColors
 }
@@ -664,6 +685,26 @@ private fun CustomizeDashboardScreenPreview() {
                             id = WidgetMetadata.WIDGET_ID_WELCOME,
                             position = 0,
                             isVisible = true
+                        ),
+                        displayName = "Hello, [Riley]",
+                        settings = listOf(
+                            WidgetSettingItem(
+                                key = "showGreeting",
+                                value = false,
+                                type = SettingType.BOOLEAN
+                            ),
+                            WidgetSettingItem(
+                                key = "backgroundColor",
+                                value = 0x2573DF,
+                                type = SettingType.COLOR
+                            )
+                        )
+                    ),
+                    WidgetItem(
+                        metadata = WidgetMetadata(
+                            id = WidgetMetadata.WIDGET_ID_WELCOME,
+                            position = 0,
+                            isVisible = false
                         ),
                         displayName = "Hello, [Riley]",
                         settings = listOf(

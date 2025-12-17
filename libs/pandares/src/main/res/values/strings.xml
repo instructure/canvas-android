@@ -2356,7 +2356,7 @@
     <string name="institutionalAnnouncementsTitle">Announcements (%d)</string>
 
     <!-- Widget Display Names -->
-    <string name="widget_hello">Hello, [%s]</string>
+    <string name="widget_hello">Hello, %s</string>
 
     <!-- Customize Dashboard -->
     <string name="customize_dashboard">Customize Dashboard</string>
