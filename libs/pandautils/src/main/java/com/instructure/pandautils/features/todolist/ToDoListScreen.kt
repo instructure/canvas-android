@@ -372,7 +372,7 @@ private fun ToDoItemsList(
         ) {
             dateGroups.forEachIndexed { groupIndex, (date, items) ->
                 items.forEachIndexed { index, item ->
-                    item(key = "${date.time}_${index}_${item.id}") {
+                    item(key = item.id) {
                         ToDoItem(
                             item = item,
                             showDateBadge = index == 0,
