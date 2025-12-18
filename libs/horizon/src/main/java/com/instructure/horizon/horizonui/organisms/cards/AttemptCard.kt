@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.utils.ContextKeeper
@@ -39,6 +40,7 @@ import com.instructure.horizon.horizonui.molecules.Pill
 import com.instructure.horizon.horizonui.molecules.PillCase
 import com.instructure.horizon.horizonui.molecules.PillSize
 import com.instructure.horizon.horizonui.molecules.PillType
+import com.instructure.horizon.horizonui.selectable
 import com.instructure.pandautils.compose.modifiers.conditional
 
 data class AttemptCardState(
@@ -54,6 +56,7 @@ data class AttemptCardState(
 @Composable
 fun AttemptCard(state: AttemptCardState, modifier: Modifier = Modifier) {
     val onClick = state.onClick
+    val context = LocalContext.current
     Card(
         shape = HorizonCornerRadius.level2,
         colors = CardDefaults.cardColors().copy(containerColor = HorizonColors.Surface.cardPrimary()),
@@ -62,6 +65,11 @@ fun AttemptCard(state: AttemptCardState, modifier: Modifier = Modifier) {
             .clip(HorizonCornerRadius.level2)
             .conditional(onClick != null) {
                 clickable { onClick?.invoke() }
+            }
+            .semantics {
+                if (state.selected) {
+                    selectable(context, true)
+                }
             }
     ) {
         Column(

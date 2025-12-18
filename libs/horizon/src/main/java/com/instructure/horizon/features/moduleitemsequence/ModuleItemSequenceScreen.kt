@@ -68,6 +68,8 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.hideFromAccessibility
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -326,7 +328,12 @@ private fun ModuleHeaderContainer(
 ) {
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Row {
-            IconButton(iconRes = R.drawable.arrow_back, color = IconButtonColor.Institution, onClick = onBackPressed)
+            IconButton(
+                iconRes = R.drawable.arrow_back,
+                contentDescription = stringResource(R.string.a11yNavigateBack),
+                color = IconButtonColor.Institution,
+                onClick = onBackPressed
+            )
             Column(
                 modifier = Modifier
                     .weight(1f)
@@ -350,6 +357,7 @@ private fun ModuleHeaderContainer(
             }
             IconButton(
                 iconRes = R.drawable.list_alt,
+                contentDescription = stringResource(R.string.myProgress),
                 color = IconButtonColor.Institution,
                 onClick = uiState.onProgressClick
             )
@@ -365,7 +373,16 @@ private fun ModuleHeaderContainer(
                     if (index < uiState.currentItem?.detailTags?.lastIndex.orDefault()) listOf(item, "|") else listOf(item)
                 }
                 separatedFlowRowItems.forEach {
-                    Text(text = it, style = HorizonTypography.p2, color = HorizonColors.Text.surfaceColored())
+                    Text(
+                        text = it,
+                        style = HorizonTypography.p2,
+                        color = HorizonColors.Text.surfaceColored(),
+                        modifier = Modifier.semantics {
+                            if (it == "|") {
+                                hideFromAccessibility()
+                            }
+                        }
+                    )
                 }
             }
         }
