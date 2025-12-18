@@ -43,6 +43,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -140,7 +141,7 @@ fun ProgressScreen(uiState: ProgressScreenUiState, loadingState: LoadingState, m
 @Composable
 private fun BoxScope.ProgressScreenContent(uiState: ProgressScreenUiState) {
     val currentPage = uiState.pages[uiState.currentPosition]
-    var hasPageChanged = remember { false }
+    val hasPageChanged = remember { mutableStateOf(false) }
 
     AnimatedContent(
         currentPage,
@@ -158,11 +159,11 @@ private fun BoxScope.ProgressScreenContent(uiState: ProgressScreenUiState) {
         }
         val focusRequester = remember { FocusRequester() }
         LaunchedEffect(uiState.currentPosition) {
-            if (hasPageChanged) {
+            if (hasPageChanged.value) {
                 delay(300)
                 focusRequester.requestFocus()
             } else {
-                hasPageChanged = true
+                hasPageChanged.value = true
             }
         }
         LazyColumn(
