@@ -21,5 +21,6 @@ import com.instructure.canvasapi2.models.journey.JourneyAssistChatMessage
 data class AiAssistMainUiState(
     val isLoading: Boolean = true,
     val messages: List<JourneyAssistChatMessage> = emptyList(),
-    val addMessageToChatHistory: (String) -> Unit = {}
+    val sendMessage: (String) -> Unit = {},
+    val onNavigateToDetails: () -> Unit = {},
 )

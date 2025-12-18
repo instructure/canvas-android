@@ -46,7 +46,7 @@ class AiAssistFlashcardViewModel @Inject constructor(
     }
 
     private fun loadFlashcardsFromContext() {
-        val flashcards = aiAssistContextProvider.aiAssistContext.chatHistory.lastOrNull()?.flashcards
+        val flashcards = aiAssistContextProvider.aiAssistContext.chatHistory.lastOrNull()?.flashCards
 
         if (flashcards != null) {
             _uiState.update {

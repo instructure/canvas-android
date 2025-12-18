@@ -18,6 +18,23 @@ data class AiAssistContext(
     }
 }
 
+fun JourneyAssistState.toContextSourceList(): List<AiAssistContextSource> {
+    return buildList {
+        val courseId = this@toContextSourceList.courseID
+        if (courseId != null) {
+            add(AiAssistContextSource.Course(courseId))
+        }
+        val pageId = this@toContextSourceList.pageID
+        if (pageId != null) {
+            add(AiAssistContextSource.Page(pageId))
+        }
+        val fileId = this@toContextSourceList.fileID
+        if (fileId != null) {
+            add(AiAssistContextSource.File(fileId))
+        }
+    }
+}
+
 sealed class AiAssistContextSource(val rawValue: String, open val id: String) {
     class Assignment(id: String): AiAssistContextSource("Assignment", id)
     class Page(id: String): AiAssistContextSource("Page", id)

@@ -25,10 +25,11 @@ class AiAssistRepository @Inject constructor(
         val response = journeyAssistAPI.answerPrompt(requestBody)
         val message = JourneyAssistChatMessage(
             id = UUID.randomUUID().toString(),
-            displayText = response.response.orEmpty(),
-            role = JourneyAssistRole.ASSISTANT,
+            prompt = response.response.orEmpty(),
+            text = response.response.orEmpty(),
+            role = JourneyAssistRole.Assistant,
             chipOptions = response.chips,
-            flashcards = response.flashCards,
+            flashCards = response.flashCards,
             quizItems = response.quizItems,
             citations = response.citations
         )

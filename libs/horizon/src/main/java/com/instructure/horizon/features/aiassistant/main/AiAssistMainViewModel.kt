@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
 import com.instructure.horizon.features.aiassistant.common.AiAssistRepository
+import com.instructure.horizon.features.aiassistant.common.model.toContextSourceList
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -37,14 +38,26 @@ class AiAssistMainViewModel @Inject constructor(
     private val aiAssistContextProvider: AiAssistContextProvider
 ): ViewModel() {
 
-    private val _uiState = MutableStateFlow(AiAssistMainUiState(addMessageToChatHistory = ::addMessageToChatHistory))
+    private val _uiState = MutableStateFlow(
+        AiAssistMainUiState(
+            sendMessage = ::sendMessage,
+            onNavigateToDetails = ::onNavigateToDetails
+        )
+    )
     val uiState = _uiState.asStateFlow()
 
+    private var aiAssistContextState = aiAssistContextProvider.aiAssistContext.state
+    private var aiAssistMessages = aiAssistContextProvider.aiAssistContext.chatHistory.toMutableList()
+
     init {
+        initMessage()
+    }
+
+    private fun initMessage() {
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(isLoading = true) }
             val message = evaluatePrompt()
-            aiAssistContextProvider.addMessageToChatHistory(message)
+            aiAssistMessages.add(message)
             _uiState.update {
                 it.copy(
                     messages = listOf(message),
@@ -59,19 +72,19 @@ class AiAssistMainViewModel @Inject constructor(
     private suspend fun evaluatePrompt(prompt: String = ""): JourneyAssistChatMessage {
         val response = repository.answerPrompt(
             prompt,
-            aiAssistContextProvider.aiAssistContext.chatHistory,
-            aiAssistContextProvider.aiAssistContext.state
+            aiAssistMessages,
+            aiAssistContextState
         )
-        aiAssistContextProvider.updateContextFromState(response.state)
+        aiAssistContextState = response.state ?: aiAssistContextState
         return response.message
     }
 
-    private fun addMessageToChatHistory(prompt: String) {
+    private fun sendMessage(prompt: String) {
         val userMessage = JourneyAssistChatMessage(
             id = UUID.randomUUID().toString(),
             prompt = prompt,
-            displayText = prompt,
-            role = JourneyAssistRole.USER,
+            text = prompt,
+            role = JourneyAssistRole.User,
         )
         _uiState.update {
             it.copy(
@@ -79,11 +92,11 @@ class AiAssistMainViewModel @Inject constructor(
                 isLoading = true
             )
         }
-        aiAssistContextProvider.addMessageToChatHistory(userMessage)
+        aiAssistMessages.add(userMessage)
 
         viewModelScope.tryLaunch {
             val response = evaluatePrompt(userMessage.prompt)
-            aiAssistContextProvider.addMessageToChatHistory(response)
+            aiAssistMessages.add(response)
             _uiState.update {
                 it.copy(
                     messages = it.messages + response,
@@ -93,5 +106,21 @@ class AiAssistMainViewModel @Inject constructor(
         } catch {
             _uiState.update { it.copy(isLoading = false) }
         }
+    }
+
+    private fun onNavigateToDetails() {
+        _uiState.update {
+            it.copy(
+                messages = it.messages.take(1),
+            )
+        }
+        aiAssistContextProvider.aiAssistContext = aiAssistContextProvider.aiAssistContext.copy(
+            chatHistory = aiAssistMessages,
+            contextSources = aiAssistContextState.toContextSourceList()
+        )
+
+        aiAssistMessages = uiState.value.messages.toMutableList()
+        aiAssistContextState = aiAssistContextProvider.aiAssistContext.state
+
     }
 }

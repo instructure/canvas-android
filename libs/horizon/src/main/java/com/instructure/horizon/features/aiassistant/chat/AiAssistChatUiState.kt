@@ -13,4 +13,5 @@ data class AiAssistChatUiState(
     val onInputTextSubmitted: () -> Unit = {},
     val onClearChatHistory: () -> Unit = {},
     val onChipClicked: (String) -> Unit = {},
+    val onNavigateToCards: () -> Unit = {},
 )

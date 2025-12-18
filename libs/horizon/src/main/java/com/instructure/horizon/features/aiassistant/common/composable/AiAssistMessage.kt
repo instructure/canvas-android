@@ -30,9 +30,9 @@ fun AiAssistMessage(
     message: JourneyAssistChatMessage,
     onSendPrompt: (String) -> Unit
 ) {
-    if (message.role == JourneyAssistRole.ASSISTANT) {
+    if (message.role == JourneyAssistRole.Assistant) {
         AiAssistResponseTextBlock(
-            text = message.displayText,
+            text = message.text,
             footerState = AiAssistResponseTextBlockFooterState(
                 isFooterEnabled = true,
                 sources = message.citations.map {
@@ -52,14 +52,14 @@ fun AiAssistMessage(
             }
 
         )
-    } else if (message.role == JourneyAssistRole.USER) {
+    } else if (message.role == JourneyAssistRole.User) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.End,
             verticalAlignment = Alignment.CenterVertically
         ){
             AiAssistUserTextBlock(
-                text = message.displayText,
+                text = message.text,
             )
         }
     }

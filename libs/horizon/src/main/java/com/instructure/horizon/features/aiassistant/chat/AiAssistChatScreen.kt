@@ -36,6 +36,7 @@ import com.instructure.canvasapi2.models.journey.JourneyAssistRole
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.features.aiassistant.common.composable.AiAssistMessage
 import com.instructure.horizon.features.aiassistant.common.composable.AiAssistScaffold
+import com.instructure.horizon.features.aiassistant.navigation.AiAssistRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.molecules.Spinner
 
@@ -45,6 +46,23 @@ fun AiAssistChatScreen(
     onDismiss: () -> Unit,
     state: AiAssistChatUiState
 ) {
+    LaunchedEffect(state.messages) {
+        val lastMessage = state.messages.lastOrNull()
+
+        if (lastMessage != null) {
+            when {
+                lastMessage.flashCards.isNotEmpty() -> {
+                    state.onNavigateToCards()
+                    navController.navigate(AiAssistRoute.AiAssistFlashcard.route)
+                }
+                lastMessage.quizItems.isNotEmpty() -> {
+                    state.onNavigateToCards()
+                    navController.navigate(AiAssistRoute.AiAssistQuiz.route)
+                }
+            }
+        }
+    }
+
     AiAssistScaffold(
         navController = navController,
         onClearChatHistory = state.onClearChatHistory,
@@ -53,7 +71,6 @@ fun AiAssistChatScreen(
         onInputTextChanged = { state.onInputTextChanged(it) },
         onInputTextSubmitted = { state.onInputTextSubmitted() },
     ) { modifier ->
-        val context = LocalContext.current
         val scrollState = rememberLazyListState()
         LaunchedEffect(state.messages) {
             scrollState.animateScrollToItem(state.messages.size)
@@ -93,14 +110,14 @@ private fun AssistChatScreenPreview() {
             JourneyAssistChatMessage(
                 id = "1",
                 prompt = "Hello",
-                displayText = "Hello",
-                role = JourneyAssistRole.USER,
+                text = "Hello",
+                role = JourneyAssistRole.User,
             ),
             JourneyAssistChatMessage(
                 id = "2",
                 prompt = "Hi there! How can I assist you today?",
-                displayText = "Hi there! How can I assist you today?",
-                role = JourneyAssistRole.ASSISTANT
+                text = "Hi there! How can I assist you today?",
+                role = JourneyAssistRole.Assistant
             )
         ),
         inputTextValue = TextFieldValue("Hi,"),

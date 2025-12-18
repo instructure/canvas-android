@@ -17,6 +17,9 @@
 package com.instructure.horizon.features.aiassistant.main
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
@@ -25,14 +28,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.instructure.horizon.features.aiassistant.common.composable.AiAssistMessage
 import com.instructure.horizon.features.aiassistant.common.composable.AiAssistScaffold
 import com.instructure.horizon.features.aiassistant.navigation.AiAssistRoute
+import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.molecules.Spinner
-import com.instructure.pandautils.utils.orDefault
 
 @Composable
 fun AiAssistMainScreen(
@@ -42,12 +46,11 @@ fun AiAssistMainScreen(
 ) {
     LaunchedEffect(state.messages) {
         val lastMessage = state.messages.lastOrNull()
-        val hasUserInteracted = state.messages.any { it.role == com.instructure.canvasapi2.models.journey.JourneyAssistRole.USER }
 
-        // Only navigate if user has interacted (sent a message or clicked a chip) and last message is from assistant
-        if (hasUserInteracted && lastMessage != null && lastMessage.role == com.instructure.canvasapi2.models.journey.JourneyAssistRole.ASSISTANT) {
+        if (lastMessage != null && state.messages.size > 2) {
+            state.onNavigateToDetails()
             when {
-                lastMessage.flashcards.isNotEmpty() -> {
+                lastMessage.flashCards.isNotEmpty() -> {
                     navController.navigate(AiAssistRoute.AiAssistFlashcard.route)
                 }
                 lastMessage.quizItems.isNotEmpty() -> {
@@ -67,7 +70,7 @@ fun AiAssistMainScreen(
         inputTextValue = promptInput,
         onInputTextChanged = { promptInput = it },
         onInputTextSubmitted = {
-            state.addMessageToChatHistory(promptInput.text)
+            state.sendMessage(promptInput.text)
             promptInput = TextFieldValue("")
         }
     ) { modifier ->
@@ -75,14 +78,21 @@ fun AiAssistMainScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = modifier
         ) {
+            items(state.messages) {
+                AiAssistMessage(
+                    it,
+                    { state.sendMessage(it) }
+                )
+            }
             if (state.isLoading) {
-                item { Spinner() }
-            } else {
-                items(state.messages) {
-                    AiAssistMessage(
-                        it,
-                        { state.addMessageToChatHistory(it) }
-                    )
+                item {
+                    Row(
+                        modifier = Modifier.fillMaxWidth()
+                    ){
+                        Spacer(modifier = Modifier.weight(1f))
+                        Spinner(color = HorizonColors.Surface.cardPrimary())
+                        Spacer(modifier = Modifier.weight(1f))
+                    }
                 }
             }
         }

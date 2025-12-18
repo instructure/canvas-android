@@ -16,7 +16,7 @@
  */
 package com.instructure.canvasapi2.models.journey
 
-enum class JourneyAssistRole(val apiValue: String) {
-    ASSISTANT("Assistant"),
-    USER("User")
+enum class JourneyAssistRole {
+    Assistant,
+    User
 }
