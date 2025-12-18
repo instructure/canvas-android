@@ -124,6 +124,7 @@ class ToDoWidgetUpdaterTest {
     fun `Emits Content when api returns data and maps correctly`() = runTest {
         val assignmentItem = createPlannerItem(
             plannableType = PlannableType.ASSIGNMENT,
+            plannableId = 1,
             date = createDate(2024, 1, 5, 2),
             courseId = 1
         )
@@ -139,6 +140,7 @@ class ToDoWidgetUpdaterTest {
 
         val calendarEvent = createPlannerItem(
             plannableType = PlannableType.CALENDAR_EVENT,
+            plannableId = 3,
             date = createDate(2025, 5, 21, 12),
             userId = 1,
             startAt = createDate(2025, 5, 21, 12),
@@ -176,9 +178,9 @@ class ToDoWidgetUpdaterTest {
                     R.drawable.ic_calendar,
                     apiPrefs.user.color,
                     "Context Name",
-                    "Plannable 1",
+                    "Plannable 3",
                     "All day",
-                    "/users/1/calendar_events/1"
+                    "/users/1/calendar_events/3"
                 )
             )
         )
@@ -190,6 +192,7 @@ class ToDoWidgetUpdaterTest {
     fun `Shows only incomplete items`() = runTest {
         val submittedAssignmentItem = createPlannerItem(
             plannableType = PlannableType.ASSIGNMENT,
+            plannableId = 1,
             date = createDate(2024, 1, 5, 2),
             courseId = 1,
             submitted = true
@@ -197,6 +200,7 @@ class ToDoWidgetUpdaterTest {
 
         val submittedDiscussionItem = createPlannerItem(
             plannableType = PlannableType.DISCUSSION_TOPIC,
+            plannableId = 2,
             date = createDate(2024, 1, 5, 2),
             courseId = 1,
             submitted = true
@@ -204,6 +208,7 @@ class ToDoWidgetUpdaterTest {
 
         val submittedSubAssignmentItem = createPlannerItem(
             plannableType = PlannableType.SUB_ASSIGNMENT,
+            plannableId = 3,
             date = createDate(2024, 1, 5, 2),
             courseId = 1,
             submitted = true
@@ -212,7 +217,7 @@ class ToDoWidgetUpdaterTest {
         val completedToDoItem = createPlannerItem(
             plannableType = PlannableType.PLANNER_NOTE,
             date = createDate(2023, 10, 1, 12),
-            plannableId = 2,
+            plannableId = 4,
             userId = 1,
             startAt = createDate(2023, 10, 1, 12),
             endAt = createDate(2023, 10, 1, 13),
@@ -221,6 +226,7 @@ class ToDoWidgetUpdaterTest {
 
         val subAssignmentItem = createPlannerItem(
             plannableType = PlannableType.SUB_ASSIGNMENT,
+            plannableId = 5,
             date = createDate(2024, 1, 5, 2),
             courseId = 1,
             submitted = false
@@ -228,8 +234,8 @@ class ToDoWidgetUpdaterTest {
 
         val toDoItem = createPlannerItem(
             plannableType = PlannableType.PLANNER_NOTE,
+            plannableId = 6,
             date = createDate(2023, 10, 1, 12),
-            plannableId = 2,
             userId = 1,
             startAt = createDate(2023, 10, 1, 12),
             endAt = createDate(2023, 10, 1, 13)
@@ -237,6 +243,7 @@ class ToDoWidgetUpdaterTest {
 
         val calendarEvent = createPlannerItem(
             plannableType = PlannableType.CALENDAR_EVENT,
+            plannableId = 7,
             date = createDate(2025, 5, 21, 12),
             userId = 1,
             startAt = createDate(2025, 5, 21, 12),
@@ -264,16 +271,16 @@ class ToDoWidgetUpdaterTest {
                     R.drawable.ic_todo,
                     apiPrefs.user.color,
                     "To Do",
-                    "Plannable 2",
+                    "Plannable 6",
                     "12:00",
-                    "/todos/2"
+                    "/todos/6"
                 ),
                 WidgetPlannerItem(
                     LocalDate.of(2024, 1, 5),
                     R.drawable.ic_discussion,
                     subAssignmentItem.canvasContext.color,
                     "CODE",
-                    "Plannable 1",
+                    "Plannable 5",
                     "02:00",
                     "https://htmlurl.com"
                 ),
@@ -282,9 +289,9 @@ class ToDoWidgetUpdaterTest {
                     R.drawable.ic_calendar,
                     apiPrefs.user.color,
                     "Context Name",
-                    "Plannable 1",
+                    "Plannable 7",
                     "All day",
-                    "/users/1/calendar_events/1"
+                    "/users/1/calendar_events/7"
                 )
             )
         )
