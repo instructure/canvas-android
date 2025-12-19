@@ -42,7 +42,6 @@ import com.spotify.mobius.Update
 import com.spotify.mobius.android.MobiusAndroid
 import com.spotify.mobius.android.runners.MainThreadWorkRunner
 import com.spotify.mobius.functions.Consumer
-import kotlinx.android.extensions.LayoutContainer
 
 abstract class MobiusFragment<MODEL, EVENT, EFFECT, VIEW : MobiusView<VIEW_STATE, EVENT, BINDING>, VIEW_STATE, BINDING: ViewBinding> : BaseCanvasFragment() {
     var overrideInitModel: MODEL? = null
@@ -150,14 +149,14 @@ abstract class MobiusView<VIEW_STATE, EVENT, BINDING : ViewBinding>(
     layoutInflater: LayoutInflater,
     bindingInflater: (layoutInflater: LayoutInflater) -> BINDING,
     private val parent: ViewGroup
-) : Connectable<VIEW_STATE, EVENT>, LayoutContainer {
+) : Connectable<VIEW_STATE, EVENT> {
 
     private var _binding: BINDING? = bindingInflater(layoutInflater)
 
     val binding: BINDING
         get() = _binding!!
 
-    override val containerView: View?
+    val containerView: View?
         get() = binding.root
 
     var connection: Connection<VIEW_STATE>? = null

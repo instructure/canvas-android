@@ -140,7 +140,7 @@ dependencies {
     implementation Libs.LIVE_DATA
     implementation Libs.VIEW_MODEL
     implementation project(':rceditor')
-    implementation Libs.COMPOSE_NAVIGATION
+    implementation Libs.NAVIGATION_COMPOSE
 
 
     /* Test Dependencies */
