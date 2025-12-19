@@ -114,6 +114,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.NoRippleInteractionSource
@@ -133,6 +134,7 @@ import com.instructure.pandautils.features.grades.gradepreferences.GradePreferen
 import com.instructure.pandautils.utils.DisplayGrade
 import com.instructure.pandautils.utils.announceAccessibilityText
 import com.instructure.pandautils.utils.drawableId
+import com.instructure.pandautils.utils.orDefault
 import kotlinx.coroutines.android.awaitFrame
 import kotlinx.coroutines.launch
 
@@ -1021,7 +1023,9 @@ fun AssignmentItem(
                                     )
                                     .padding(horizontal = 4.dp)
                             ) {
-                                val whatIfScoreText = "${uiState.whatIfScore.toInt()}/${uiState.maxScore?.toInt()}"
+                                val whatIfScore = NumberHelper.formatDecimal(uiState.whatIfScore, 2, true)
+                                val maxScore = NumberHelper.formatDecimal(uiState.maxScore.orDefault(), 2, true)
+                                val whatIfScoreText = "$whatIfScore/$maxScore"
                                 Text(
                                     text = stringResource(
                                         id = R.string.whatIfScoreDisplay,
