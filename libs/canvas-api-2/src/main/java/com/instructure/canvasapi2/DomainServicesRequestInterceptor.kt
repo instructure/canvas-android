@@ -19,9 +19,7 @@ package com.instructure.canvasapi2
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.CedarApiPref
 import com.instructure.canvasapi2.utils.JourneyApiPref
-import com.instructure.canvasapi2.utils.PineApiPref
 import com.instructure.canvasapi2.utils.RedwoodApiPref
 import com.instructure.canvasapi2.utils.restParams
 import okhttp3.CacheControl
@@ -57,24 +55,6 @@ abstract class DomainServicesRequestInterceptor(
         }
 
         return chain.proceed(builder.build())
-    }
-}
-
-class PineRequestInterceptor @Inject constructor(
-    private val pineApiPref: PineApiPref,
-    apiPrefs: ApiPrefs
-) : DomainServicesRequestInterceptor(apiPrefs) {
-    override fun intercept(chain: Interceptor.Chain): Response {
-        return super.intercept(chain, pineApiPref.token)
-    }
-}
-
-class CedarRequestInterceptor @Inject constructor(
-    private val cedarApiPref: CedarApiPref,
-    apiPrefs: ApiPrefs
-) : DomainServicesRequestInterceptor(apiPrefs) {
-    override fun intercept(chain: Interceptor.Chain): Response {
-        return super.intercept(chain, cedarApiPref.token)
     }
 }
 

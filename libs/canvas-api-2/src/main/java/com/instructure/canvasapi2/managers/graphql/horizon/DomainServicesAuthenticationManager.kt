@@ -5,10 +5,8 @@ import com.instructure.canvasapi2.apis.DomainServicesAuthenticationAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.DomainService
 import com.instructure.canvasapi2.models.DomainServicesWorkflow
-import com.instructure.canvasapi2.utils.CedarApiPref
 import com.instructure.canvasapi2.utils.DomainServicesApiPref
 import com.instructure.canvasapi2.utils.JourneyApiPref
-import com.instructure.canvasapi2.utils.PineApiPref
 import com.instructure.canvasapi2.utils.RedwoodApiPref
 import java.util.Date
 import javax.inject.Inject
@@ -54,24 +52,6 @@ abstract class DomainServicesAuthenticationManager(
         return false
     }
 }
-
-class PineAuthenticationManager @Inject constructor(
-    domainServicesAuthenticationAPI: DomainServicesAuthenticationAPI,
-    pineApiPref: PineApiPref
-) : DomainServicesAuthenticationManager(
-    domainServicesAuthenticationAPI,
-    pineApiPref,
-    DomainService.PINE
-)
-
-class CedarAuthenticationManager @Inject constructor(
-    domainServicesAuthenticationAPI: DomainServicesAuthenticationAPI,
-    cedarApiPref: CedarApiPref
-) : DomainServicesAuthenticationManager(
-    domainServicesAuthenticationAPI,
-    cedarApiPref,
-    DomainService.CEDAR
-)
 
 class RedwoodAuthenticationManager @Inject constructor(
     domainServicesAuthenticationAPI: DomainServicesAuthenticationAPI,

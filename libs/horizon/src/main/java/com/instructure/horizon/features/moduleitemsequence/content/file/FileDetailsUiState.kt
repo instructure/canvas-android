@@ -20,6 +20,7 @@ import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState
 
 data class FileDetailsUiState(
+    val fileId: Long = -1L,
     val url: String = "",
     val fileName: String = "",
     val loadingState: LoadingState = LoadingState(),

@@ -31,6 +31,7 @@ import androidx.navigation.NavHostController
 @Composable
 fun AiAssistScaffold(
     navController: NavHostController,
+    onClearChatHistory: () -> Unit,
     onDismiss: () -> Unit,
     inputTextValue: TextFieldValue? = null,
     onInputTextChanged: ((TextFieldValue) -> Unit)? = null,
@@ -42,11 +43,17 @@ fun AiAssistScaffold(
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-    ){
+    ) {
         AiAssistToolbar(
-            onDismissPressed = { onDismiss() },
+            onDismissPressed = {
+                onClearChatHistory()
+                onDismiss()
+            },
             onBackPressed = if (navController.previousBackStackEntry != null) {
-                { navController.popBackStack() }
+                {
+                    onClearChatHistory()
+                    navController.popBackStack()
+                }
             } else {
                 null
             },

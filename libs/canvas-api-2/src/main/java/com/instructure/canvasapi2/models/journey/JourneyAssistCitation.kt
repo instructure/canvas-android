@@ -14,20 +14,17 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.canvasapi2.models
+package com.instructure.canvasapi2.models.journey
 
-import com.instructure.canvasapi2.BuildConfig
+data class JourneyAssistCitation(
+    val title: String,
+    val courseID: String?,
+    val sourceID: String?,
+    val sourceType: JourneyAssistCitationType?
+)
 
-enum class DomainService(
-    val baseUrl: String,
-    val workflow: String,
-) {
-    REDWOOD(
-        baseUrl = BuildConfig.REDWOOD_BASE_URL,
-        workflow = "redwood",
-    ),
-    JOURNEY(
-        baseUrl = BuildConfig.JOURNEY_BASE_URL,
-        workflow = "journey",
-    )
+enum class JourneyAssistCitationType(val apiValue: String) {
+    WIKI_PAGE("wiki_page"),
+    ATTACHMENT("attachment"),
+    UNKOWN("unknown"),
 }

@@ -154,12 +154,12 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `Test updateShowAiAssist sets AI context with course IDs`() = runTest {
+    fun `Test updateShowAiAssist resets AI context`() = runTest {
         val viewModel = getViewModel()
 
         viewModel.uiState.value.updateShowAiAssist(true)
 
-        verify { aiAssistContextProvider.aiAssistContext = match { it.contextSources.size == 2 } }
+        verify { aiAssistContextProvider.aiAssistContext = match { it.contextSources.isEmpty() } }
     }
 
     @Test

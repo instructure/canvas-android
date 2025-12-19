@@ -14,20 +14,9 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.canvasapi2.models
+package com.instructure.canvasapi2.models.journey
 
-import com.instructure.canvasapi2.BuildConfig
-
-enum class DomainService(
-    val baseUrl: String,
-    val workflow: String,
-) {
-    REDWOOD(
-        baseUrl = BuildConfig.REDWOOD_BASE_URL,
-        workflow = "redwood",
-    ),
-    JOURNEY(
-        baseUrl = BuildConfig.JOURNEY_BASE_URL,
-        workflow = "journey",
-    )
-}
+data class JourneyAssistChipOption(
+    val chip: String,
+    val prompt: String
+)
