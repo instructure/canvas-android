@@ -71,7 +71,7 @@ class AiAssistFlashcardViewModel @Inject constructor(
             }
 
             val response = aiAssistRepository.answerPrompt(
-                prompt = "Generate new flashcards",
+                prompt = aiAssistContextProvider.aiAssistContext.chatHistory.last().prompt,
                 history = aiAssistContextProvider.aiAssistContext.chatHistory,
                 state = aiAssistContextProvider.aiAssistContext.state
             )

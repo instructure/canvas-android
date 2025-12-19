@@ -81,7 +81,7 @@ class AiAssistQuizViewModel @Inject constructor(
             }
 
             val response = aiAssistRepository.answerPrompt(
-                prompt = "Generate another quiz question",
+                prompt = aiAssistContextProvider.aiAssistContext.chatHistory.last().prompt,
                 history = aiAssistContextProvider.aiAssistContext.chatHistory,
                 state = aiAssistContextProvider.aiAssistContext.state
             )
