@@ -19,4 +19,5 @@ package com.instructure.pandautils.features.dashboard.widget
 interface WidgetConfig {
     val widgetId: String
     fun toJson(): String
+    fun getSettingDefinitions(): List<SettingDefinition> = emptyList()
 }

@@ -14,26 +14,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.features.dashboard.widget.db
+package com.instructure.pandautils.features.dashboard.widget.usecase
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Query
-import androidx.room.Upsert
-import kotlinx.coroutines.flow.Flow
+import com.instructure.pandautils.domain.usecase.BaseUseCase
+import com.instructure.pandautils.features.dashboard.widget.repository.WidgetMetadataRepository
+import javax.inject.Inject
 
-@Dao
-interface WidgetConfigDao {
+class UpdateWidgetVisibilityUseCase @Inject constructor(
+    private val repository: WidgetMetadataRepository
+) : BaseUseCase<UpdateWidgetVisibilityUseCase.Params, Unit>() {
 
-    @Upsert
-    suspend fun upsertConfig(config: WidgetConfigEntity)
+    override suspend fun execute(params: Params) {
+        repository.updateVisibility(params.widgetId, params.isVisible)
+    }
 
-    @Query("SELECT * FROM widget_config WHERE widgetId = :widgetId")
-    fun observeConfig(widgetId: String): Flow<WidgetConfigEntity?>
-
-    @Query("SELECT * FROM widget_config WHERE widgetId = :widgetId")
-    suspend fun getConfig(widgetId: String): WidgetConfigEntity?
-
-    @Delete
-    suspend fun deleteConfig(config: WidgetConfigEntity)
+    data class Params(
+        val widgetId: String,
+        val isVisible: Boolean
+    )
 }
