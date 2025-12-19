@@ -45,6 +45,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -216,6 +217,7 @@ fun NotebookScreen(
                                                     courseId = note.courseId,
                                                     moduleItemAssetType = note.objectType.value,
                                                     moduleItemAssetId = note.objectId,
+                                                    scrollToNoteId = note.id
                                                 )
                                             )
                                         }
@@ -303,7 +305,15 @@ private fun FilterContent(
             }
 
             if (state.showNoteTypeFilter) {
-                NotebookTypeSelect(state.selectedFilter, state.onFilterSelected, false, true)
+                NotebookTypeSelect(
+                    state.selectedFilter,
+                    state.onFilterSelected,
+                    false,
+                    true,
+                    Modifier.conditional(!state.showCourseFilter) { // TalkBack hack to fix focus handling
+                        semantics(true) {}
+                    }
+                )
             }
         }
 }
@@ -333,7 +343,7 @@ private fun NoteContent(
         modifier = Modifier
             .fillMaxWidth()
             .horizonBorder(
-                colorResource(note.type.color).copy(alpha = 0.1f),
+                colorResource(note.type.highlightColor),
                 6.dp,
                 1.dp,
                 1.dp,

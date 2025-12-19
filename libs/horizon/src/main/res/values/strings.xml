@@ -258,7 +258,7 @@
     <string name="notebookEmptyContentMessage">This is where all your notes, taken directly within your learning objects, are stored and organized. It\'s your personal hub for keeping track of key insights, important excerpts, and reflections as you learn. Dive in to review or expand on your notes anytime!</string>
     <string name="addNoteHighlightlabel">Highlight</string>
     <string name="addNoteLabelLabel">Label</string>
-    <string name="addNoteAddANoteLabel">Add a note</string>
+    <string name="addNoteAddANoteOptionalLabel">Add a note (optional)</string>
     <string name="addNoteSaveLabel">Save</string>
     <string name="addNoteDeleteLabel">Delete</string>
     <string name="assignmentDetails_fileTypeNotSupported">File type is not allowed</string>
@@ -369,7 +369,7 @@
     <string name="dashboardCourseCardErrorMessage">Please try again.</string>
     <string name="dashboardCourseCardRefreshLabel">Refresh</string>
     <string name="dashboardNotStartedProgramDetailsLabel">Program details</string>
-    <string name="dashboardTimeSpentTitle">Time learning</string>
+    <string name="dashboardTimeLearningTitle">Time learning</string>
     <string name="dashboardTimeSpentEmptyMessage">This widget will update once data becomes available.</string>
     <string name="dashboardTimeSpentErrorMessage">We weren\'t able to load this content.\nPlease try again.</string>
     <string name="dashboardTimeSpentRetry">Refresh</string>
@@ -408,6 +408,9 @@
     <string name="a11y_not_completed">Not completed</string>
     <string name="a11y_locked">Locked</string>
     <string name="a11y_unselected">Unselected</string>
+    <string name="a11y_on">On</string>
+    <string name="a11y_off">Off</string>
+    <string name="a11y_toggle">Toggle</string>
     <string name="dashboardAnnouncementBannerFrom">From %1$s</string>
     <string name="dashboardAnnouncementBannerGoToAnnouncement">Go to announcement</string>
     <string name="dashboardAnnouncementBannerErrorMessage">We weren\'t able to load this content.\nPlease try again.</string>
@@ -479,4 +482,18 @@
     <string name="editNoteExitConfirmationExitButtonLabel">Exit</string>
     <string name="editNoteExitConfirmationCancelButtonLabel">Cancel</string>
     <string name="a11y_notebookDeleteNoteButtonContentDescription">Delete note</string>
+    <string name="a11y_delete">Delete</string>
+    <string name="a11y_cancel">Cancel</string>
+    <string name="a11y_download">Download</string>
+    <string name="a11y_retry">Retry</string>
+    <string name="a11y_readInboxMessage">Read</string>
+    <string name="a11y_unreadInboxMessage">Unread</string>
+    <string name="a11y_previousModuleItem">Previous module item</string>
+    <string name="a11y_previousModule">Previous module</string>
+    <string name="a11y_openAIAssistant">Open AI Assistant</string>
+    <string name="a11y_openNotebook">Open notebook</string>
+    <string name="a11y_openMoreOptions">Open more options</string>
+    <string name="a11y_nextModuleItem">Next module item</string>
+    <string name="a11y_nextModule">Next module</string>
+    <string name="a11y_notebookHighlightMarkedAs">%1$s, marked as %2$s, double tap to edit note</string>
 </resources>

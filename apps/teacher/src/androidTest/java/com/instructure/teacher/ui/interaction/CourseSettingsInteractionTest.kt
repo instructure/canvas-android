@@ -46,7 +46,7 @@ class CourseSettingsInteractionTest : TeacherTest() {
         navigateToCourseSettings()
         courseSettingsPage.clickSetHomePage()
         val newCourseHomePage: String = courseSettingsPage.selectNewHomePage()
-        courseSettingsPage.assertHomePageChanged(newCourseHomePage)
+        courseSettingsPage.assertHomePageText(newCourseHomePage)
     }
 
     private fun navigateToCourseSettings() {

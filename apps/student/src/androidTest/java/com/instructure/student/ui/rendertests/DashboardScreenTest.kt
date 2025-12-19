@@ -24,6 +24,8 @@ class DashboardScreenTest {
         override fun routeToSubmissionDetails(canvasContext: CanvasContext, assignmentId: Long, attemptId: Long) {}
         override fun routeToMyFiles(canvasContext: CanvasContext, folderId: Long) {}
         override fun routeToSyncProgress() {}
+        override fun routeToCustomizeDashboard() {}
+        override fun restartApp() {}
     }
 
     @Test

@@ -18,6 +18,7 @@ package com.instructure.horizon.horizonui.organisms.inputs.common
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.togetherWith
@@ -35,14 +36,19 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
+import android.content.Context
+import android.view.accessibility.AccessibilityManager
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
@@ -70,85 +76,101 @@ fun <T> InputDropDownPopup(
         SingleSelectItem(selectionOption.toString())
     },
 ) {
-    Popup(
-        alignment = Alignment.TopStart,
-        offset = IntOffset(
-            -SpaceSize.SPACE_8.value.toPx,
-            verticalOffsetPx + SpaceSize.SPACE_8.value.toPx
-        ),
-        onDismissRequest = { onMenuOpenChanged(false) },
-        properties = PopupProperties(focusable = isMenuOpen && isFocusable)
-    ) {
-        AnimatedVisibility(
-            isMenuOpen,
-            enter = expandVertically(expandFrom = Alignment.Top),
-            exit = shrinkVertically(shrinkTowards = Alignment.Top),
-            label = "InputDropDownPopupAnimation",
+    val visibleState = remember { MutableTransitionState(isMenuOpen) }
+
+    LaunchedEffect(isMenuOpen) {
+        visibleState.targetState = isMenuOpen
+    }
+
+    val context = LocalContext.current
+    val accessibilityManager = remember {
+        context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+    }
+    val isTalkBackEnabled = accessibilityManager.isEnabled && accessibilityManager.isTouchExplorationEnabled
+
+    if (!visibleState.isIdle || visibleState.currentState) {
+        Popup(
+            alignment = Alignment.TopStart,
+            offset = IntOffset(
+                -SpaceSize.SPACE_8.value.toPx,
+                verticalOffsetPx + SpaceSize.SPACE_8.value.toPx
+            ),
+            onDismissRequest = { onMenuOpenChanged(false) },
+            properties = PopupProperties(
+                focusable = visibleState.targetState && (isFocusable || isTalkBackEnabled)
+            )
         ) {
-            Card(
-                modifier = modifier
-                    .padding(bottom = 8.dp)
-                    .padding(horizontal = 8.dp)
-                    .conditional(width == null) {
-                        fillMaxWidth()
-                    }
-                    .conditional(width != null) {
-                        width(width!!)
-                    },
-                shape = HorizonCornerRadius.level2,
-                colors = CardDefaults.cardColors()
-                    .copy(containerColor = HorizonColors.Surface.pageSecondary()),
-                border = if (isMenuOpen) {
-                    BorderStroke(
-                        width = 1.dp,
-                        color = HorizonColors.LineAndBorder.containerStroke()
-                    )
-                } else {
-                    null
-                },
+            AnimatedVisibility(
+                visibleState = visibleState,
+                enter = expandVertically(expandFrom = Alignment.Top),
+                exit = shrinkVertically(shrinkTowards = Alignment.Top),
+                label = "InputDropDownPopupAnimation",
             ) {
-                AnimatedContent(
-                    isLoading,
-                    transitionSpec = { expandVertically() togetherWith shrinkVertically() }
-                ) { isLoading ->
-                    Column(
-                        modifier = Modifier
-                            .verticalScroll(rememberScrollState())
-                    ) {
-                        if (isLoading) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Center,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp)
-                            ) {
-                                Spinner(size = SpinnerSize.EXTRA_SMALL)
-                            }
-                        } else if (options.isEmpty()) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                            ) {
-                                SingleSelectItem(stringResource(R.string.noOptionsAvailable))
-                            }
-                        } else {
-                            options.forEach { selectionOption ->
+                Card(
+                    modifier = modifier
+                        .padding(bottom = 8.dp)
+                        .padding(horizontal = 8.dp)
+                        .conditional(width == null) {
+                            fillMaxWidth()
+                        }
+                        .conditional(width != null) {
+                            width(width!!)
+                        },
+                    shape = HorizonCornerRadius.level2,
+                    colors = CardDefaults.cardColors()
+                        .copy(containerColor = HorizonColors.Surface.pageSecondary()),
+                    border = if (visibleState.targetState) {
+                        BorderStroke(
+                            width = 1.dp,
+                            color = HorizonColors.LineAndBorder.containerStroke()
+                        )
+                    } else {
+                        null
+                    },
+                ) {
+                    AnimatedContent(
+                        isLoading,
+                        transitionSpec = { expandVertically() togetherWith shrinkVertically() }
+                    ) { isLoading ->
+                        Column(
+                            modifier = Modifier
+                                .verticalScroll(rememberScrollState())
+                        ) {
+                            if (isLoading) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Center,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(16.dp)
+                                ) {
+                                    Spinner(size = SpinnerSize.EXTRA_SMALL)
+                                }
+                            } else if (options.isEmpty()) {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
                                     modifier = Modifier
                                         .fillMaxWidth()
-                                        .conditional(optionEnabled(selectionOption)) {
-                                            clickable {
-                                                onOptionSelected(selectionOption)
-                                                if (closeMenuAfterSelection(selectionOption)) {
-                                                    onMenuOpenChanged(false)
+                                ) {
+                                    SingleSelectItem(stringResource(R.string.noOptionsAvailable))
+                                }
+                            } else {
+                                options.forEach { selectionOption ->
+                                    Row(
+                                        verticalAlignment = Alignment.CenterVertically,
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .conditional(optionEnabled(selectionOption)) {
+                                                clickable {
+                                                    onOptionSelected(selectionOption)
+                                                    if (closeMenuAfterSelection(selectionOption)) {
+                                                        onMenuOpenChanged(false)
+                                                    }
                                                 }
                                             }
-                                        }
-                                ) {
-                                    item(selectionOption)
+                                    ) {
+                                        item(selectionOption)
+                                    }
                                 }
                             }
                         }

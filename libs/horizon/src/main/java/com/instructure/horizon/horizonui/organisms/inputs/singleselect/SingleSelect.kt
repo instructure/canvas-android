@@ -43,6 +43,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -54,6 +55,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.organisms.inputs.common.Input
 import com.instructure.horizon.horizonui.organisms.inputs.common.InputContainer
 import com.instructure.horizon.horizonui.organisms.inputs.common.InputDropDownPopup
+import com.instructure.horizon.horizonui.selectable
 import com.instructure.pandautils.compose.modifiers.conditional
 
 @Composable
@@ -76,9 +78,9 @@ fun SingleSelect(
                 role = Role.DropdownList
                 stateDescription = if (state.isMenuOpen) expandedState else collapsedState
                 contentDescription = if (state.selectedOption != null) {
-                    "${state.label}, ${state.selectedOption}"
+                    "${state.label ?: state.placeHolderText ?: ""}, ${state.selectedOption}"
                 } else {
-                    state.label ?: ""
+                    state.label ?: state.placeHolderText ?: ""
                 }
             }
     ) {
@@ -122,12 +124,16 @@ fun SingleSelect(
 
 @Composable
 private fun <T>SingleSelectItem(option: T, state: SingleSelectState) {
+    val context = LocalContext.current
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
             .conditional(option == state.selectedOption && state.isMenuOpen) {
                 background(HorizonColors.Surface.institution())
+            }
+            .semantics {
+                selectable(context, option == state.selectedOption)
             }
     ) {
         Text(
