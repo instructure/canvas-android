@@ -20,8 +20,8 @@ import com.instructure.horizon.features.aiassistant.quiz.composable.AiAssistQuiz
 
 data class AiAssistQuizUiState(
     val isLoading: Boolean = false,
-    val quizState: QuizState? = null,
-    val isChecked: Boolean = false,
+    val quizList: List<QuizState> = emptyList(),
+    val currentQuizIndex: Int = 0,
     val checkQuiz: () -> Unit = {},
     val regenerateQuiz: () -> Unit = {},
     val setSelectedIndex: (Int) -> Unit = {},
@@ -33,6 +33,7 @@ data class QuizState(
     val answerIndex: Int,
     val options: List<QuizAnswerState>,
     val selectedOptionIndex: Int? = null,
+    val isChecked: Boolean = false,
 )
 
 data class QuizAnswerState(

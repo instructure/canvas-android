@@ -18,6 +18,7 @@ package com.instructure.horizon.features.aiassistant.flashcard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.models.journey.JourneyAssistRole
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
@@ -71,7 +72,8 @@ class AiAssistFlashcardViewModel @Inject constructor(
             }
 
             val response = aiAssistRepository.answerPrompt(
-                prompt = aiAssistContextProvider.aiAssistContext.chatHistory.last().prompt,
+                prompt = aiAssistContextProvider.aiAssistContext.chatHistory
+                    .lastOrNull { it.role == JourneyAssistRole.User }?.prompt.orEmpty(),
                 history = aiAssistContextProvider.aiAssistContext.chatHistory,
                 state = aiAssistContextProvider.aiAssistContext.state
             )

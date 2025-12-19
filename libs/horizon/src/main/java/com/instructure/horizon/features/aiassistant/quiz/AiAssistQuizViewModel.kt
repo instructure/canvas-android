@@ -18,6 +18,7 @@ package com.instructure.horizon.features.aiassistant.quiz
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.models.journey.JourneyAssistRole
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
@@ -51,87 +52,135 @@ class AiAssistQuizViewModel @Inject constructor(
 
     private fun loadQuizFromContext() {
         val quizItems = aiAssistContextProvider.aiAssistContext.chatHistory.lastOrNull()?.quizItems
-        val firstQuiz = quizItems?.firstOrNull()
 
-        if (firstQuiz != null) {
+        if (quizItems != null) {
             _uiState.update {
                 it.copy(
                     isLoading = false,
-                    quizState = QuizState(
-                        question = firstQuiz.question,
-                        answerIndex = firstQuiz.correctAnswerIndex,
-                        options = firstQuiz.answers.map { option ->
-                            QuizAnswerState(
-                                text = option,
-                                status = AiAssistQuizAnswerStatus.UNSELECTED
-                            )
-                        },
-                        selectedOptionIndex = null
-                    ),
-                    isChecked = false
+                    quizList = quizItems.map { quiz ->
+                        QuizState(
+                            question = quiz.question,
+                            answerIndex = quiz.correctAnswerIndex,
+                            options = quiz.answers.map { option ->
+                                QuizAnswerState(
+                                    text = option,
+                                    status = AiAssistQuizAnswerStatus.UNSELECTED
+                                )
+                            },
+                            selectedOptionIndex = null,
+                            isChecked = false
+                        )
+                    },
+                    currentQuizIndex = 0
                 )
             }
         }
     }
 
     fun generateNewQuiz() {
-        viewModelScope.tryLaunch {
+        val currentIndex = _uiState.value.currentQuizIndex
+        val quizList = _uiState.value.quizList
+
+        if (currentIndex < quizList.size - 1) {
             _uiState.update {
-                it.copy(isLoading = true)
+                it.copy(currentQuizIndex = currentIndex + 1)
             }
+        } else {
+            viewModelScope.tryLaunch {
+                _uiState.update {
+                    it.copy(isLoading = true)
+                }
 
-            val response = aiAssistRepository.answerPrompt(
-                prompt = aiAssistContextProvider.aiAssistContext.chatHistory.last().prompt,
-                history = aiAssistContextProvider.aiAssistContext.chatHistory,
-                state = aiAssistContextProvider.aiAssistContext.state
-            )
+                val response = aiAssistRepository.answerPrompt(
+                    prompt = aiAssistContextProvider.aiAssistContext.chatHistory
+                        .lastOrNull { it.role == JourneyAssistRole.User }?.prompt.orEmpty(),
+                    history = aiAssistContextProvider.aiAssistContext.chatHistory,
+                    state = aiAssistContextProvider.aiAssistContext.state
+                )
 
-            aiAssistContextProvider.updateContextFromState(response.state)
-            aiAssistContextProvider.addMessageToChatHistory(response.message)
+                aiAssistContextProvider.updateContextFromState(response.state)
+                aiAssistContextProvider.addMessageToChatHistory(response.message)
 
-            loadQuizFromContext()
-        } catch {
-            _uiState.update {
-                it.copy(isLoading = false)
+                val quizItems = response.message.quizItems
+                val newQuizzes = quizItems.map { quiz ->
+                    QuizState(
+                        question = quiz.question,
+                        answerIndex = quiz.correctAnswerIndex,
+                        options = quiz.answers.map { option ->
+                            QuizAnswerState(
+                                text = option,
+                                status = AiAssistQuizAnswerStatus.UNSELECTED
+                            )
+                        },
+                        selectedOptionIndex = null,
+                        isChecked = false
+                    )
+                }
+
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        quizList = it.quizList + newQuizzes,
+                        currentQuizIndex = it.quizList.size
+                    )
+                }
+            } catch {
+                _uiState.update {
+                    it.copy(isLoading = false)
+                }
             }
         }
     }
 
     private fun checkQuiz() {
-        val selectedOptionIndex = _uiState.value.quizState?.selectedOptionIndex
-        val answerOptionIndex = _uiState.value.quizState?.answerIndex
+        val currentIndex = _uiState.value.currentQuizIndex
+        val currentQuiz = _uiState.value.quizList.getOrNull(currentIndex) ?: return
 
         _uiState.update {
             it.copy(
-                quizState = it.quizState?.copy(
-                    options = it.quizState.options.mapIndexed { index, option ->
-                        if (index == answerOptionIndex) {
-                            option.copy(status = AiAssistQuizAnswerStatus.CORRECT)
-                        } else if (index == selectedOptionIndex) {
-                            option.copy(status = AiAssistQuizAnswerStatus.INCORRECT)
-                        } else {
-                            option
-                        }
+                quizList = it.quizList.mapIndexed { index, quiz ->
+                    if (index == currentIndex) {
+                        quiz.copy(
+                            options = quiz.options.mapIndexed { optionIndex, option ->
+                                if (optionIndex == currentQuiz.answerIndex) {
+                                    option.copy(status = AiAssistQuizAnswerStatus.CORRECT)
+                                } else if (optionIndex == currentQuiz.selectedOptionIndex) {
+                                    option.copy(status = AiAssistQuizAnswerStatus.INCORRECT)
+                                } else {
+                                    option
+                                }
+                            },
+                            isChecked = true
+                        )
+                    } else {
+                        quiz
                     }
-                ),
-                isChecked = true,
+                }
             )
         }
     }
 
     private fun setSelectedIndex(index: Int) {
+        val currentIndex = _uiState.value.currentQuizIndex
+
         _uiState.update {
             it.copy(
-                quizState = it.quizState?.copy(
-                    selectedOptionIndex = index,
-                    options = it.quizState.options.mapIndexed { i, option ->
-                        if (i == index) {
-                            option.copy(status = AiAssistQuizAnswerStatus.SELECTED)
-                        } else {
-                            option.copy(status = AiAssistQuizAnswerStatus.UNSELECTED)
-                        }
+                quizList = it.quizList.mapIndexed { quizIndex, quiz ->
+                    if (quizIndex == currentIndex) {
+                        quiz.copy(
+                            selectedOptionIndex = index,
+                            options = quiz.options.mapIndexed { optionIndex, option ->
+                                if (optionIndex == index) {
+                                    option.copy(status = AiAssistQuizAnswerStatus.SELECTED)
+                                } else {
+                                    option.copy(status = AiAssistQuizAnswerStatus.UNSELECTED)
+                                }
+                            }
+                        )
+                    } else {
+                        quiz
                     }
-                ),
+                }
             )
         }
     }
