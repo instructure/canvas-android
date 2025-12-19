@@ -27,6 +27,9 @@ import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseGrade
 import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.canvasapi2.utils.convertPercentScoreToLetterGrade
+import com.instructure.canvasapi2.utils.convertPercentToPointBased
 import com.instructure.canvasapi2.utils.getCurrentGradingPeriod
 import com.instructure.canvasapi2.utils.toDate
 import com.instructure.canvasapi2.utils.weave.catch
@@ -62,9 +65,10 @@ const val COURSE_ID_KEY = "course-id"
 @HiltViewModel
 class GradesViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val gradesBehaviour: GradesBehaviour,
     private val repository: GradesRepository,
     private val gradeFormatter: GradeFormatter,
+    private val gradeCalculator: GradeCalculator,
+    private val gradesViewModelBehavior: GradesViewModelBehavior,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -78,6 +82,7 @@ class GradesViewModel @Inject constructor(
 
     private var course: Course? = null
     private var courseGrade: CourseGrade? = null
+    private var domainAssignmentGroups = emptyList<AssignmentGroup>()
 
     private var customStatuses = listOf<CustomGradeStatusesQuery.Node>()
     private var allItems = emptyList<AssignmentGroupUiState>()
@@ -102,13 +107,9 @@ class GradesViewModel @Inject constructor(
         viewModelScope.tryLaunch {
             _uiState.update {
                 it.copy(
-                    canvasContextColor = gradesBehaviour.canvasContextColor,
                     isLoading = it.items.isEmpty(),
                     isRefreshing = it.items.isNotEmpty(),
-                    isError = false,
-                    gradePreferencesUiState = it.gradePreferencesUiState.copy(
-                        canvasContextColor = gradesBehaviour.canvasContextColor
-                    )
+                    isError = false
                 )
             }
 
@@ -128,10 +129,15 @@ class GradesViewModel @Inject constructor(
                 repository.setSortBy(_uiState.value.gradePreferencesUiState.sortBy)
             }
 
-            val assignmentGroups = repository.loadAssignmentGroups(courseId, selectedGradingPeriod?.id, forceRefresh).filterHiddenAssignments()
+            val assignmentGroups = repository.loadAssignmentGroups(
+                courseId,
+                selectedGradingPeriod?.id,
+                forceRefresh
+            ).filterHiddenAssignments()
             val enrollments = repository.loadEnrollments(courseId, selectedGradingPeriod?.id, forceRefresh)
 
             courseGrade = repository.getCourseGrade(course, repository.studentId, enrollments, selectedGradingPeriod?.id)
+            domainAssignmentGroups = assignmentGroups
 
             allItems = when (sortBy) {
                 SortBy.GROUP -> groupByAssignmentGroup(assignmentGroups)
@@ -141,6 +147,8 @@ class GradesViewModel @Inject constructor(
             }
 
             val filteredItems = filterItems(allItems, _uiState.value.searchQuery)
+
+            val isWhatIfGradingEnabled = gradesViewModelBehavior.isWhatIfGradingEnabled(course)
 
             _uiState.update {
                 it.copy(
@@ -155,7 +163,9 @@ class GradesViewModel @Inject constructor(
                         sortBy = sortBy
                     ),
                     gradeText = gradeFormatter.getGradeString(course, courseGrade, !it.onlyGradedAssignmentsSwitchEnabled),
-                    isGradeLocked = courseGrade?.isLocked.orDefault()
+                    isGradeLocked = courseGrade?.isLocked.orDefault(),
+                    isWhatIfGradingEnabled = isWhatIfGradingEnabled,
+                    showWhatIfScore = if (isWhatIfGradingEnabled) it.showWhatIfScore else false
                 )
             }
         } catch {
@@ -265,6 +275,7 @@ class GradesViewModel @Inject constructor(
                             R.string.additional_replies,
                             assignment.discussionTopicHeader?.replyRequiredCount
                         )
+
                         else -> checkpoint.name.orEmpty()
                     },
                     dueDate = getDateText(checkpoint.dueDate),
@@ -284,6 +295,9 @@ class GradesViewModel @Inject constructor(
                     pointsPossible = checkpoint.pointsPossible?.toInt().orDefault()
                 )
             },
+            score = assignment.submission?.score,
+            maxScore = assignment.pointsPossible,
+            whatIfScore = null,
             checkpointsExpanded = false
         )
     }
@@ -309,10 +323,88 @@ class GradesViewModel @Inject constructor(
         }
     }
 
+    private fun calculateWhatIfGrade(
+        items: List<AssignmentGroupUiState>,
+        onlyGraded: Boolean
+    ): String {
+        val currentCourse = course ?: return ""
+
+        val whatIfScores = items
+            .flatMap { it.assignments }
+            .filter { it.whatIfScore != null }
+            .associate { it.id to it.whatIfScore!! }
+
+        if (whatIfScores.isEmpty()) {
+            return gradeFormatter.getGradeString(currentCourse, courseGrade, !onlyGraded)
+        }
+
+        val applyGroupWeights = currentCourse.isApplyAssignmentGroupWeights
+
+        // Check if we need to use weighted grading periods calculation
+        val gradingPeriods = _uiState.value.gradePreferencesUiState.gradingPeriods
+        val selectedGradingPeriod = _uiState.value.gradePreferencesUiState.selectedGradingPeriod
+        val useWeightedPeriods = currentCourse.isWeightedGradingPeriods &&
+                selectedGradingPeriod == null &&
+                gradingPeriods.isNotEmpty()
+
+        val calculatedGrade = if (useWeightedPeriods) {
+            gradeCalculator.calculateGradeWithPeriods(
+                groups = domainAssignmentGroups,
+                whatIfScores = whatIfScores,
+                applyGroupWeights = applyGroupWeights,
+                onlyGraded = onlyGraded,
+                gradingPeriods = gradingPeriods,
+                weightGradingPeriods = true
+            )
+        } else {
+            gradeCalculator.calculateGrade(
+                groups = domainAssignmentGroups,
+                whatIfScores = whatIfScores,
+                applyGroupWeights = applyGroupWeights,
+                onlyGraded = onlyGraded
+            )
+        }
+
+        val result = if (currentCourse.pointsBasedGradingScheme) {
+            convertPercentToPointBased(calculatedGrade, currentCourse.scalingFactor)
+        } else {
+            NumberHelper.doubleToPercentage(calculatedGrade)
+        }
+        return if (courseGrade?.hasFinalGradeString() == true || courseGrade?.hasCurrentGradeString() == true) {
+            val letterGrade = convertPercentScoreToLetterGrade(calculatedGrade / 100, currentCourse.gradingScheme)
+            "$result $letterGrade"
+        } else {
+            result
+        }
+    }
+
+    private fun updateAssignmentWhatIfScore(
+        items: List<AssignmentGroupUiState>,
+        assignmentId: Long,
+        score: Double?
+    ): List<AssignmentGroupUiState> {
+        return items.map { group ->
+            group.copy(
+                assignments = group.assignments.map { assignment ->
+                    if (assignment.id == assignmentId) {
+                        assignment.copy(whatIfScore = score)
+                    } else {
+                        assignment
+                    }
+                }
+            )
+        }
+    }
+
     fun handleAction(action: GradesAction) {
         when (action) {
             is GradesAction.Refresh -> {
-                if (action.clearItems) _uiState.update { it.copy(items = emptyList()) }
+                _uiState.update {
+                    it.copy(
+                        items = if (action.clearItems) emptyList() else it.items,
+                        showWhatIfScore = false
+                    )
+                }
                 loadGrades(true)
             }
 
@@ -348,10 +440,16 @@ class GradesViewModel @Inject constructor(
             }
 
             is GradesAction.OnlyGradedAssignmentsSwitchCheckedChange -> {
-                _uiState.update {
-                    it.copy(
+                _uiState.update { state ->
+                    val newGradeText = if (state.showWhatIfScore) {
+                        calculateWhatIfGrade(state.items, action.checked)
+                    } else {
+                        gradeFormatter.getGradeString(course, courseGrade, !action.checked)
+                    }
+
+                    state.copy(
                         onlyGradedAssignmentsSwitchEnabled = action.checked,
-                        gradeText = gradeFormatter.getGradeString(course, courseGrade, !action.checked)
+                        gradeText = newGradeText
                     )
                 }
             }
@@ -397,6 +495,73 @@ class GradesViewModel @Inject constructor(
                     it.copy(searchQuery = action.query)
                 }
                 debouncedSearch(action.query)
+            }
+
+            is GradesAction.ShowWhatIfScoreSwitchCheckedChange -> {
+                _uiState.update { state ->
+                    val newGradeText = if (action.checked) {
+                        calculateWhatIfGrade(state.items, state.onlyGradedAssignmentsSwitchEnabled)
+                    } else {
+                        gradeFormatter.getGradeString(course, courseGrade, !state.onlyGradedAssignmentsSwitchEnabled)
+                    }
+
+                    state.copy(
+                        showWhatIfScore = action.checked,
+                        gradeText = newGradeText
+                    )
+                }
+            }
+
+            is GradesAction.ShowWhatIfScoreDialog -> {
+                val assignment = uiState.value.items
+                    .flatMap { it.assignments }
+                    .find { it.id == action.assignmentId }
+
+                assignment?.let {
+                    val currentScore = it.score
+                    val maxScore = it.maxScore
+
+                    val currentScoreText = if (currentScore != null) {
+                        context.getString(R.string.whatIfScoreCurrentGraded, currentScore, maxScore)
+                    } else {
+                        context.getString(R.string.whatIfScoreCurrentUngraded, maxScore)
+                    }
+
+                    _uiState.update { state ->
+                        state.copy(
+                            whatIfScoreDialogData = WhatIfScoreDialogData(
+                                assignmentId = assignment.id,
+                                assignmentName = assignment.name,
+                                currentScoreText = currentScoreText,
+                                whatIfScore = assignment.whatIfScore,
+                                maxScore = maxScore
+                            )
+                        )
+                    }
+                }
+            }
+
+            is GradesAction.HideWhatIfScoreDialog -> {
+                _uiState.update { it.copy(whatIfScoreDialogData = null) }
+            }
+
+            is GradesAction.UpdateWhatIfScore -> {
+                _uiState.update { state ->
+                    val updatedItems = updateAssignmentWhatIfScore(state.items, action.assignmentId, action.score)
+                    allItems = updateAssignmentWhatIfScore(allItems, action.assignmentId, action.score)
+
+                    val newGradeText = if (state.showWhatIfScore) {
+                        calculateWhatIfGrade(updatedItems, state.onlyGradedAssignmentsSwitchEnabled)
+                    } else {
+                        state.gradeText
+                    }
+
+                    state.copy(
+                        items = updatedItems,
+                        gradeText = newGradeText,
+                        whatIfScoreDialogData = null
+                    )
+                }
             }
         }
     }

@@ -150,8 +150,8 @@ object AssignmentGroupListEndpoint : Endpoint(
     LongId(PathVars::assignmentId) to AssignmentEndpoint,
     response = {
         GET {
+            val gradingPeriodId = request.url.queryParameterValues("grading_period_id").firstOrNull()?.toLongOrNull()
             if (request.url.queryParameterValues("include[]").contains("observed_users")) {
-                val gradingPeriodId = request.url.queryParameterValues("grading_period_id").firstOrNull()?.toLongOrNull()
                 val assignmentGroups = data.assignmentGroups[pathVars.courseId].orEmpty().map {
                     it.toObserveeAssignmentGroup()
                 }
@@ -162,7 +162,11 @@ object AssignmentGroupListEndpoint : Endpoint(
                     request.successResponse(assignmentGroups)
                 }
             } else {
-                request.successResponse(data.assignmentGroups[pathVars.courseId] ?: listOf(AssignmentGroup()))
+                if (gradingPeriodId == -1L) {
+                    request.successResponse(emptyList<AssignmentGroup>())
+                } else {
+                    request.successResponse(data.assignmentGroups[pathVars.courseId] ?: listOf(AssignmentGroup()))
+                }
             }
         }
     }

@@ -38,7 +38,7 @@ import com.instructure.student.features.elementary.course.ElementaryCourseFragme
 import com.instructure.student.features.files.details.FileDetailsFragment
 import com.instructure.student.features.files.list.FileListFragment
 import com.instructure.student.features.files.search.FileSearchFragment
-import com.instructure.student.features.grades.GradesListFragment
+import com.instructure.student.features.grades.GradesFragment
 import com.instructure.student.features.modules.list.ModuleListFragment
 import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
 import com.instructure.student.features.modules.progression.ModuleQuizDecider
@@ -136,7 +136,7 @@ object RouteResolver {
             cls.isA<PageDetailsFragment>() -> PageDetailsFragment.newInstance(route)
             cls.isA<LtiLaunchFragment>() -> LtiLaunchFragment.newInstance(route)
             cls.isA<SyllabusRepositoryFragment>() -> SyllabusRepositoryFragment.newInstance(route)
-            cls.isA<GradesListFragment>() -> GradesListFragment.newInstance(route)
+            cls.isA<GradesFragment>() -> GradesFragment.newInstance(route)
             cls.isA<ModuleListFragment>() -> ModuleListFragment.newInstance(route)
             cls.isA<CourseSettingsFragment>() -> CourseSettingsFragment.newInstance(route)
             cls.isA<AnnouncementListFragment>() -> AnnouncementListFragment.newInstance(route)
