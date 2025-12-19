@@ -43,7 +43,7 @@ fun CheckboxText(
     onCheckedChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
     subtitle: String? = null,
-    testTag: String = "checkboxText"
+    testTag: String = "checkboxItem"
 ) {
     val fullContentDescription = if (subtitle != null) {
         "$text, $subtitle"
@@ -60,13 +60,14 @@ fun CheckboxText(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
+            .testTag("${testTag}Row")
             .clickable { onCheckedChanged(!selected) }
             .semantics(mergeDescendants = true) {
                 contentDescription = fullContentDescription
                 stateDescription = stateDescriptionText
             }
     ) {
-        Checkbox(
+         Checkbox(
             checked = selected,
             onCheckedChange = {
                 onCheckedChanged(it)
