@@ -15,32 +15,19 @@
  */
 package com.instructure.teacher.ui.pages.classic
 
-import androidx.test.espresso.Espresso
-import androidx.test.espresso.matcher.ViewMatchers.Visibility
 import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
-import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
-import com.instructure.canvasapi2.models.Attachment
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.assertHasText
-import com.instructure.espresso.assertVisible
-import com.instructure.espresso.clearText
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
-import com.instructure.espresso.page.callOnClick
 import com.instructure.espresso.page.onView
-import com.instructure.espresso.page.onViewWithId
-import com.instructure.espresso.page.onViewWithText
-import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.waitForView
-import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withParent
 import com.instructure.espresso.page.withText
 import com.instructure.espresso.scrollTo
-import com.instructure.espresso.typeText
 import com.instructure.teacher.R
 import org.hamcrest.Matchers.allOf
 
@@ -53,115 +40,11 @@ import org.hamcrest.Matchers.allOf
  * adding a comment, sending a video comment, sending an audio comment, and asserting the display of video and audio comments.
  * This page extends the BasePage class.
  */
-class SpeedGraderCommentsPage : BasePage() {
+class SpeedGraderCommentsPage : BasePage() { // TODO: We’re still using these tests elsewhere, but that test is stubbed as well, so once we un-stub it, we can regroup these and delete this class.
 
     private val commentEditText by OnViewWithId(R.id.commentEditText)
     private val sendCommentButton by WaitForViewWithId(R.id.sendCommentButton)
     private val addAttachmentButton by OnViewWithId(R.id.addAttachment)
-
-    /**
-     * Asserts the display of the author name.
-     *
-     * @param name The name of the author.
-     */
-    fun assertDisplaysAuthorName(name: String) {
-        onView(withText(name)).assertVisible()
-    }
-
-    /**
-     * Asserts the display of the comment text.
-     *
-     * @param comment The comment text.
-     */
-    fun assertDisplaysCommentText(comment: String) {
-        waitForView(allOf(withId(R.id.commentTextView), withEffectiveVisibility(Visibility.VISIBLE)))
-            .assertHasText(comment)
-    }
-
-    /**
-     * Asserts the display of the comment attachment.
-     *
-     * @param attachment The attachment representing the comment attachment.
-     */
-    fun assertDisplaysCommentAttachment(attachment: Attachment) {
-        onViewWithId(R.id.attachmentNameTextView).assertHasText(attachment.displayName!!)
-    }
-
-    /**
-     * Asserts the display of the submission.
-     */
-    fun assertDisplaysSubmission() {
-        onViewWithId(R.id.commentSubmissionAttachmentView).assertDisplayed()
-    }
-
-    /**
-     * Asserts the display of the submission file.
-     *
-     * @param attachment The attachment representing the submission file.
-     */
-    fun assertDisplaysSubmissionFile(attachment: Attachment) {
-        val parentMatcher = withParent(withId(R.id.commentSubmissionAttachmentView))
-        val match = onView(allOf(parentMatcher, withId(R.id.titleTextView)))
-        match.assertHasText(attachment.displayName!!)
-    }
-
-    /**
-     * Asserts that the comment field has the specified text.
-     *
-     * @param text The expected text in the comment field.
-     */
-    fun assertCommentFieldHasText(text: String) {
-        commentEditText.assertHasText(text)
-    }
-
-    /**
-     * Types the specified comment in the comment field.
-     *
-     * @param comment The comment to type.
-     */
-    fun typeComment(comment: String) {
-        onView(withId(R.id.commentEditText) + withAncestor(R.id.commentInputContainer)).typeText(comment)
-    }
-
-    /**
-     * Clears the comment field.
-     */
-    fun clearComment() {
-        onView(withId(R.id.commentEditText) + withAncestor(R.id.commentInputContainer)).clearText()
-    }
-
-    /**
-     * Sends the comment.
-     */
-    fun sendComment() {
-        onView(withId(R.id.sendCommentButton) + withEffectiveVisibility(Visibility.VISIBLE))
-            .click()
-    }
-
-    /**
-     * Clicks on the comment field.
-     */
-    fun clickCommentField() {
-        commentEditText.click()
-    }
-
-    /**
-     * Asserts the display of the empty state.
-     */
-    fun assertDisplaysEmptyState() {
-        onViewWithText(R.string.no_submission_comments).assertDisplayed()
-    }
-
-    /**
-     * Adds a comment with the specified text.
-     *
-     * @param comment The comment text.
-     */
-    fun addComment(comment: String) {
-        commentEditText.typeText(comment)
-        Espresso.closeSoftKeyboard()
-        callOnClick(withId(R.id.sendCommentButton))
-    }
 
     /**
      * Sends a video comment.
