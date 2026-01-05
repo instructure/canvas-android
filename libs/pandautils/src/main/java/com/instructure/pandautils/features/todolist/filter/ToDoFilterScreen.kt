@@ -139,7 +139,7 @@ fun ToDoFilterContent(
                 selectedOption = uiState.selectedPastOption,
                 onOptionSelected = uiState.onPastDaysChanged,
                 showDivider = true,
-                testTag = "ShowTasksFromOptions"
+                modifier = Modifier.testTag("ShowTasksFromOptions")
             )
         }
 
@@ -153,7 +153,7 @@ fun ToDoFilterContent(
                 selectedOption = uiState.selectedFutureOption,
                 onOptionSelected = uiState.onFutureDaysChanged,
                 showDivider = false,
-                testTag = "ShowTasksUntilOptions"
+                modifier = Modifier.testTag("ShowTasksUntilOptions")
             )
         }
     }
@@ -208,9 +208,9 @@ private fun DateRangeOptions(
     selectedOption: DateRangeSelection,
     onOptionSelected: (DateRangeSelection) -> Unit,
     showDivider: Boolean,
-    testTag: String = ""
+    modifier: Modifier = Modifier
 ) {
-    Column(modifier = Modifier.testTag(testTag)) {
+    Column(modifier = modifier) {
         options.forEachIndexed { index, option ->
             DateRangeOptionItem(
                 option = option,
