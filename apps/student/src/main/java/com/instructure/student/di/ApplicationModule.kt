@@ -22,6 +22,7 @@ import com.instructure.pandautils.utils.LogoutHelper
 import com.instructure.student.router.EnabledTabs
 import com.instructure.student.router.EnabledTabsImpl
 import com.instructure.student.util.StudentLogoutHelper
+import com.instructure.student.util.StudentPrefs
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -41,5 +42,11 @@ class ApplicationModule {
     @Singleton
     fun provideEnabledTabs(): EnabledTabs {
         return EnabledTabsImpl()
+    }
+
+    @Provides
+    @Singleton
+    fun provideStudentPrefs(): StudentPrefs {
+        return StudentPrefs
     }
 }

@@ -17,20 +17,12 @@
 package com.instructure.student.di
 
 import androidx.fragment.app.FragmentActivity
-import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
-import com.instructure.canvasapi2.apis.EnrollmentAPI
-import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
-import com.instructure.pandautils.room.offline.facade.EnrollmentFacade
-import com.instructure.pandautils.room.offline.facade.SubmissionFacade
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
-import com.instructure.student.features.grades.datasource.GradesListLocalDataSource
-import com.instructure.student.features.grades.datasource.GradesListNetworkDataSource
 import com.instructure.student.features.navigation.NavigationRepository
 import com.instructure.student.features.navigation.datasource.NavigationLocalDataSource
 import com.instructure.student.features.navigation.datasource.NavigationNetworkDataSource

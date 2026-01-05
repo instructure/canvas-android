@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 - present Instructure, Inc.
+ * Copyright (C) 2025 - present Instructure, Inc.
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -15,26 +15,14 @@
  *
  */
 
-package com.instructure.teacher.di
+package com.instructure.student.features.grades
 
-import com.instructure.pandautils.features.grades.GradesRepository
+import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.features.grades.GradesViewModelBehavior
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
 
-@Module
-@InstallIn(ViewModelComponent::class)
-class GradesModule {
+class StudentGradesViewModelBehavior : GradesViewModelBehavior {
 
-    @Provides
-    fun provideGradesRepository(): GradesRepository {
-        throw NotImplementedError()
-    }
-
-    @Provides
-    fun provideGradesViewModelBehavior(): GradesViewModelBehavior {
-        throw NotImplementedError()
+    override fun isWhatIfGradingEnabled(course: Course): Boolean {
+        return course.settings?.restrictQuantitativeData != true
     }
 }
