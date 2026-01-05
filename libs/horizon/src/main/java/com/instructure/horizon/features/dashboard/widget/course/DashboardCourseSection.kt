@@ -35,6 +35,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -70,7 +72,8 @@ fun DashboardCourseSection(
     mainNavController: NavHostController,
     homeNavController: NavHostController,
     shouldRefresh: Boolean,
-    refreshState: MutableStateFlow<List<Boolean>>
+    refreshState: MutableStateFlow<List<Boolean>>,
+    modifier: Modifier = Modifier,
 ) {
     val viewModel = hiltViewModel<DashboardCourseViewModel>()
     val state by viewModel.uiState.collectAsState()
@@ -84,14 +87,15 @@ fun DashboardCourseSection(
         }
     }
 
-    DashboardCourseSection(state, mainNavController, homeNavController)
+    DashboardCourseSection(state, mainNavController, homeNavController, modifier)
 }
 
 @Composable
 fun DashboardCourseSection(
     state: DashboardCourseUiState,
     mainNavController: NavHostController,
-    homeNavController: NavHostController
+    homeNavController: NavHostController,
+    modifier: Modifier = Modifier,
 ) {
     when(state.state) {
         DashboardItemState.LOADING -> {
@@ -99,14 +103,14 @@ fun DashboardCourseSection(
                 DashboardCourseCardState.Loading,
                 { handleClickAction(it, mainNavController, homeNavController) },
                 true,
-                modifier = Modifier.padding(horizontal = 24.dp)
+                modifier = modifier.padding(horizontal = 24.dp)
             )
         }
         DashboardItemState.ERROR -> {
-            DashboardCourseCardError({state.onRefresh {} }, Modifier.padding(horizontal = 24.dp))
+            DashboardCourseCardError({state.onRefresh {} }, modifier.padding(horizontal = 24.dp))
         }
         DashboardItemState.SUCCESS -> {
-            DashboardCourseSectionContent(state, mainNavController, homeNavController)
+            DashboardCourseSectionContent(state, mainNavController, homeNavController, modifier)
         }
     }
 }
@@ -115,13 +119,15 @@ fun DashboardCourseSection(
 private fun DashboardCourseSectionContent(
     state: DashboardCourseUiState,
     mainNavController: NavHostController,
-    homeNavController: NavHostController
+    homeNavController: NavHostController,
+    modifier: Modifier = Modifier,
 ) {
     // Display 4 cards at most
     val pagerState = rememberPagerState { min(4, state.courses.size) }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
     ) {
         if (state.programs.items.isNotEmpty()) {
             DashboardPaginatedWidgetCard(
@@ -151,6 +157,9 @@ private fun DashboardCourseSectionContent(
                                     val cardHeight = coordinates.size.height
                                     if (cardHeight > maxCardHeight) { maxCardHeight = cardHeight }
                                 }
+                                .semantics {
+                                    contentDescription = ""
+                                }
                         )
                     }
                     else -> {
@@ -164,7 +173,6 @@ private fun DashboardCourseSectionContent(
                         }
                     }
                 }
-
             }
 
             Button(

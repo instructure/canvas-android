@@ -39,6 +39,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -46,6 +47,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -57,6 +59,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.organisms.inputs.common.InputDropDownPopup
+import com.instructure.horizon.horizonui.selectable
 import com.instructure.pandautils.compose.modifiers.conditional
 
 data class DropdownItem<T>(
@@ -186,6 +189,7 @@ private fun <T> DropdownChipItem(
     selectedItem: DropdownItem<out T>?
 ) {
     val isSelected = selectedItem?.value == item.value
+    val context = LocalContext.current
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -196,6 +200,9 @@ private fun <T> DropdownChipItem(
                 )
             }
             .padding(horizontal = 12.dp, vertical = 10.dp)
+            .semantics {
+                selectable(context, isSelected)
+            }
     ) {
         item.iconRes?.let { iconRes ->
             Icon(

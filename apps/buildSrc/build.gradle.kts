@@ -19,8 +19,8 @@ repositories {
     mavenCentral()
 }
 
-val agpVersion= "8.6.1"
-val kotlinVersion = "2.0.21"
+val agpVersion= "8.13.2"
+val kotlinVersion = "2.2.21"
 
 dependencies {
     implementation("com.android.tools.build:gradle:$agpVersion")

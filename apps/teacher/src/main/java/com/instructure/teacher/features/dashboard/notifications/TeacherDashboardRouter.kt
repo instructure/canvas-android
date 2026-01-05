@@ -16,13 +16,18 @@
 
 package com.instructure.teacher.features.dashboard.notifications
 
+import android.content.Intent
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.features.dashboard.customize.CustomizeDashboardFragment
 import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
 import com.instructure.pandautils.fragments.HtmlContentFragment
+import com.instructure.teacher.activities.LoginActivity
 import com.instructure.teacher.fragments.FileListFragment
 import com.instructure.teacher.router.RouteMatcher
+import com.jakewharton.processphoenix.ProcessPhoenix
 
 class TeacherDashboardRouter(private val activity: FragmentActivity) : DashboardRouter {
     override fun routeToGlobalAnnouncement(subject: String, message: String) {
@@ -42,4 +47,14 @@ class TeacherDashboardRouter(private val activity: FragmentActivity) : Dashboard
     }
 
     override fun routeToSyncProgress() = Unit
+
+    override fun routeToCustomizeDashboard() {
+        RouteMatcher.route(activity, CustomizeDashboardFragment.makeRoute(), )
+    }
+
+    override fun restartApp() {
+        val startupIntent = Intent(ContextKeeper.appContext, LoginActivity::class.java)
+        startupIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+        ProcessPhoenix.triggerRebirth(activity, startupIntent)
+    }
 }

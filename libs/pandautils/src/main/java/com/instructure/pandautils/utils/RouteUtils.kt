@@ -16,18 +16,10 @@
 
 package com.instructure.pandautils.utils
 
-import android.net.Uri
-import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import okhttp3.Request
-import androidx.core.net.toUri
-import com.instructure.canvasapi2.builders.RestParams
-import okhttp3.Response
 
 object RouteUtils {
     fun retrieveFileUrl(
@@ -49,49 +41,5 @@ object RouteUtils {
         }
 
         block.invoke(fileUrl, context, needsAuth)
-    }
-
-    suspend fun getMediaUri(uri: Uri): Uri {
-        var response: Response? = null
-        val responseUri = withContext(Dispatchers.IO) {
-            try {
-                val client = CanvasRestAdapter.okHttpClient
-                    .newBuilder()
-                    .followRedirects(true)
-                    .cache(null)
-                    .build()
-
-                val request = Request.Builder()
-                    .head()
-                    .url(uri.toString())
-                    .tag(RestParams(disableFileVerifiers = false))
-                    .build()
-
-                response = client.newCall(request).execute()
-                response.use {
-                    var responseUrl = response.request.url.toString().toUri()
-                    if (responseUrl.toString().isEmpty()) {
-                        responseUrl = uri
-                    }
-                    val contentTypeHeader = response.header("content-type")
-                    if (contentTypeHeader != null) {
-                        if (contentTypeHeader.contains("dash") && !responseUrl.toString()
-                                .endsWith(".mpd")
-                        ) {
-                            ("$responseUrl.mpd").toUri()
-                        } else {
-                            responseUrl
-                        }
-                    } else {
-                        responseUrl
-                    }
-                }
-            } catch (e: Exception) {
-                response?.close()
-                return@withContext uri
-            }
-        }
-        response?.close()
-        return responseUri
     }
 }

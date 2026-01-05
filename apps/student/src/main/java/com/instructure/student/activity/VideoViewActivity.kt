@@ -21,8 +21,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.widget.ImageButton
 import androidx.annotation.OptIn
-import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
@@ -49,12 +49,12 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_VIDEO_VIEW
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.utils.RouteUtils
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.setGone
+import com.instructure.student.R
 import com.instructure.student.databinding.ActivityVideoViewBinding
 import com.instructure.student.util.Const
-import kotlinx.coroutines.launch
 
 @OptIn(UnstableApi::class)
 @ScreenView(SCREEN_VIEW_VIDEO_VIEW)
@@ -75,6 +75,7 @@ class VideoViewActivity : BaseCanvasActivity() {
         mainHandler = Handler()
         val videoTrackSelectionFactory: ExoTrackSelection.Factory = AdaptiveTrackSelection.Factory()
         trackSelector = DefaultTrackSelector(applicationContext, videoTrackSelectionFactory)
+        binding.playerView.findViewById<ImageButton>(R.id.fullscreenButton).setGone()
         fetchMediaUri(Uri.parse(intent?.extras?.getString(Const.URL)))
         ViewStyler.setStatusBarDark(this, ThemePrefs.primaryColor)
     }
@@ -85,17 +86,14 @@ class VideoViewActivity : BaseCanvasActivity() {
     }
 
     private fun fetchMediaUri(uri: Uri) {
-        lifecycleScope.launch {
-            val mediaUri = RouteUtils.getMediaUri(uri)
-            player = ExoPlayer.Builder(this@VideoViewActivity)
-                .setTrackSelector(trackSelector)
-                .setLoadControl(DefaultLoadControl())
-                .build()
-            binding.playerView.player = player
-            player?.playWhenReady = true
-            player?.setMediaSource(buildMediaSource(mediaUri))
-            player?.prepare()
-        }
+        player = ExoPlayer.Builder(this@VideoViewActivity)
+            .setTrackSelector(trackSelector)
+            .setLoadControl(DefaultLoadControl())
+            .build()
+        binding.playerView.player = player
+        player?.playWhenReady = true
+        player?.setMediaSource(buildMediaSource(uri))
+        player?.prepare()
     }
 
     private fun buildMediaSource(uri: Uri): MediaSource {

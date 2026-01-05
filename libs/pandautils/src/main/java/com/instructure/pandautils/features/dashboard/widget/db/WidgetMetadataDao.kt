@@ -19,6 +19,7 @@ package com.instructure.pandautils.features.dashboard.widget.db
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
@@ -39,6 +40,18 @@ interface WidgetMetadataDao {
 
     @Query("UPDATE widget_metadata SET isVisible = :isVisible WHERE widgetId = :widgetId")
     suspend fun updateVisibility(widgetId: String, isVisible: Boolean)
+
+    @Query("SELECT * FROM widget_metadata WHERE widgetId = :widgetId LIMIT 1")
+    suspend fun getMetadataSync(widgetId: String): WidgetMetadataEntity?
+
+    @Transaction
+    suspend fun swapPositions(widgetId1: String, widgetId2: String) {
+        val widget1 = getMetadataSync(widgetId1) ?: return
+        val widget2 = getMetadataSync(widgetId2) ?: return
+
+        updatePosition(widgetId1, widget2.position)
+        updatePosition(widgetId2, widget1.position)
+    }
 
     @Delete
     suspend fun deleteMetadata(metadata: WidgetMetadataEntity)

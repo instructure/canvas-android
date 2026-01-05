@@ -83,6 +83,7 @@ class CalendarE2ETest : ParentComposeTest() {
 
         Log.d(STEP_TAG, "Click on the 'Calendar' bottom menu to navigate to the Calendar page.")
         dashboardPage.clickCalendarBottomMenu()
+        composeTestRule.waitForIdle()
 
         Log.d(ASSERTION_TAG, "Assert that the student selector is displayed and the selected student is that the one is the first ordered by 'sortableName'.")
         dashboardPage.assertSelectedStudent(selectedShortName)
@@ -175,6 +176,7 @@ class CalendarE2ETest : ParentComposeTest() {
 
         Log.d(STEP_TAG, "Click on the 'Calendar' bottom menu to navigate to the Calendar page.")
         dashboardPage.clickCalendarBottomMenu()
+        composeTestRule.waitForIdle()
 
         Log.d(ASSERTION_TAG, "Assert that the student selector is displayed and the selected student is that the one is the first ordered by 'sortableName'.")
         dashboardPage.assertSelectedStudent(selectedShortName)
@@ -264,6 +266,7 @@ class CalendarE2ETest : ParentComposeTest() {
 
         Log.d(STEP_TAG, "Click on the 'Calendar' bottom menu to navigate to the Calendar page.")
         dashboardPage.clickCalendarBottomMenu()
+        composeTestRule.waitForIdle()
 
         Log.d(ASSERTION_TAG, "Assert that there is no item in Calendar yet.")
         calendarScreenPage.assertEmptyView()
@@ -395,6 +398,7 @@ class CalendarE2ETest : ParentComposeTest() {
 
         Log.d(STEP_TAG, "Click on the 'Calendar' bottom menu to navigate to the Calendar page.")
         dashboardPage.clickCalendarBottomMenu()
+        composeTestRule.waitForIdle()
 
         Log.d(ASSERTION_TAG, "Assert that the '${testEventFirstStudent.title}' is displayed only.")
         calendarScreenPage.assertItemDisplayed(testEventFirstStudent.title.orEmpty())

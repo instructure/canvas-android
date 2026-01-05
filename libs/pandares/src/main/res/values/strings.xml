@@ -1250,6 +1250,7 @@
     <string name="a11y_content_description_remove_all_from_dashboard">Remove all from dashboard</string>
     <string name="a11y_content_description_add_to_dashboard">Add to dashboard</string>
     <string name="a11y_content_description_add_all_to_dashboard">Add all to dashboard</string>
+    <string name="new_mobile_dashboard">New Mobile Dashboard</string>
 
     <!-- K5 Strings -->
     <string name="navDrawerAccount">Account</string>
@@ -2131,6 +2132,10 @@
         <item quantity="one">%s / %s pt</item>
         <item quantity="other">%s / %s pts</item>
     </plurals>
+    <plurals name="groupMemberCount">
+        <item quantity="one">Student</item>
+        <item quantity="other">Students</item>
+    </plurals>
     <string name="speedGraderLatePenaltyTitle">Late Penalty</string>
     <string name="gradingStatus_none">None</string>
     <string name="gradingStatus_late">Late</string>
@@ -2349,4 +2354,28 @@
 
     <!-- Institutional Announcements -->
     <string name="institutionalAnnouncementsTitle">Announcements (%d)</string>
+
+    <!-- Widget Display Names -->
+    <string name="widget_hello">Hello, %s</string>
+
+    <!-- Customize Dashboard -->
+    <string name="customize_dashboard">Customize Dashboard</string>
+    <string name="dashboard_widgets">Widgets</string>
+    <string name="move_up">Move up</string>
+    <string name="move_down">Move down</string>
+    <string name="no_widgets">No widgets available</string>
+    <string name="changing_dashboard_layout">Changing dashboard layout</string>
+    <string name="changing_dashboard_layout_message">To change the dashboard layout you have to restart the application</string>
+    <string name="restart_now">Restart now</string>
+    <string name="switched_back">Switched back?</string>
+    <string name="switched_back_message">Thanks for trying the new dashboard! Could you tell us why you switched back?</string>
+    <string name="what_could_we_improve">What could we improve?</string>
+    <string name="skip">Skip</string>
+    <string name="widget_setting_show_greeting">Show greeting</string>
+    <string name="background_color">Background color</string>
+    <string name="offline_content_available">Offline content available</string>
+    <string name="a11y_contentDescription_moreOptions">More options</string>
+    <string name="customizeCourse">Customize Course</string>
+    <string name="favoriteCoursesAndGroups">Favorite Courses and Groups</string>
+    <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
 </resources>
