@@ -194,6 +194,8 @@ open class CanvasWebViewWrapper @JvmOverloads constructor(
                 super.onRestoreInstanceState(state.superState)
                 themeSwitched = state.themeSwitched
                 html = state.html
+                // Reload content with restored theme after state is restored
+                handleConfigurationChange(reloadContent = true)
             }
             else -> super.onRestoreInstanceState(state)
         }
