@@ -32,6 +32,7 @@ query SubmissionCommentsQuery(
                     commentsConnection(first: 20, after: $commentCursor) {
                         edges {
                             node {
+                                _id
                                 author {
                                     _id
                                     name

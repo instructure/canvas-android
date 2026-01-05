@@ -35,6 +35,7 @@ class FakeSubmissionCommentsManager : SubmissionCommentsManager {
 
         val graphqlComments = submission?.submissionComments?.map { comment ->
             SubmissionCommentsQuery.Node1(
+                _id = comment.id.toString(),
                 author = SubmissionCommentsQuery.Author(
                     _id = comment.authorId.toString(),
                     name = comment.authorName,

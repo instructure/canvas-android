@@ -247,7 +247,7 @@ class SubmissionDetailsInteractionTest : StudentComposeTest() {
 
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
-    fun testComments_videoCommentPlayback() {
+    fun testComments_videoCommentDisplayed() {
         val data = getToCourse()
         val user = data.users.values.first()
         val assignment = data.addAssignment(
@@ -288,7 +288,7 @@ class SubmissionDetailsInteractionTest : StudentComposeTest() {
 
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
-    fun testComments_audioCommentPlayback() {
+    fun testComments_audioCommentDisplayed() {
         val data = getToCourse()
         val user = data.users.values.first()
         val assignment = data.addAssignment(

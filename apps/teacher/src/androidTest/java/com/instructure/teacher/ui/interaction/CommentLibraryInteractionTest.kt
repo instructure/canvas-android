@@ -125,6 +125,9 @@ class CommentLibraryInteractionTest : TeacherComposeTest() {
 
         speedGraderPage.assertCommentLibraryTitle()
         speedGraderPage.assertCommentLibraryItemCount(commentLibraryItems.size)
+        commentLibraryItems.forEach {
+            speedGraderPage.assertCommentLibraryItemDisplayed(it)
+        }
     }
 
     @Test

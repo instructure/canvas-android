@@ -169,7 +169,7 @@ class SpeedGraderCommentsInteractionTest : TeacherComposeTest() {
 
         val commentText = submission.submissionComments[0].comment!!
         speedGraderPage.assertCommentsLabelDisplayed(1)
-        speedGraderPage.assertCommentDisplayed(commentText, author = null)
+        speedGraderPage.assertCommentDisplayed(commentText)
         speedGraderPage.assertCommentAuthorNameNotDisplayed()
     }
 
@@ -190,18 +190,17 @@ class SpeedGraderCommentsInteractionTest : TeacherComposeTest() {
     fun displaysMultipleCommentsInOrder() {
         val submission = goToSpeedGraderCommentsPage(commentCount = 4)
 
-        val commentText1 = submission.submissionComments[0].comment!!
-        val commentText2 = submission.submissionComments[1].comment!!
-        val commentText3 = submission.submissionComments[2].comment!!
-        val commentText4 = submission.submissionComments[3].comment!!
+        val comment1 = submission.submissionComments[0]
+        val comment2 = submission.submissionComments[1]
+        val comment3 = submission.submissionComments[2]
+        val comment4 = submission.submissionComments[3]
 
         speedGraderPage.assertCommentsLabelDisplayed(4)
 
-        speedGraderPage.assertCommentTextDisplayed(commentText1, isOwnComment = false)
-        speedGraderPage.assertCommentTextDisplayed(commentText2, isOwnComment = true)
-        speedGraderPage.assertCommentTextDisplayed(commentText3, isOwnComment = false)
-        speedGraderPage.assertCommentTextDisplayed(commentText4, isOwnComment = true)
-
+        speedGraderPage.assertCommentTextDisplayed(comment1.comment!!, comment1.id.toString(), isOwnComment = false)
+        speedGraderPage.assertCommentTextDisplayed(comment2.comment!!, comment2.id.toString(), isOwnComment = true)
+        speedGraderPage.assertCommentTextDisplayed(comment3.comment!!, comment3.id.toString(), isOwnComment = false)
+        speedGraderPage.assertCommentTextDisplayed(comment4.comment!!, comment4.id.toString(), isOwnComment = true)
     }
 
     @Test

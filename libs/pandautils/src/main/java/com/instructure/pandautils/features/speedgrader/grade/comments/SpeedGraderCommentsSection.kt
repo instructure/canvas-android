@@ -65,6 +65,8 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.SemanticsPropertyKey
+import androidx.compose.ui.semantics.SemanticsPropertyReceiver
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -397,6 +399,8 @@ private fun SpeedGraderCommentItems(
     }
 }
 
+val CommentIdKey = SemanticsPropertyKey<String>("commentId")
+private var SemanticsPropertyReceiver.commentId by CommentIdKey
 @Composable
 fun SpeedGraderOwnCommentItem(
     comment: SpeedGraderComment,
@@ -438,7 +442,8 @@ fun SpeedGraderOwnCommentItem(
                             shape = RoundedCornerShape(size = 16.dp)
                         )
                         .padding(8.dp)
-                        .testTag("ownCommentText"),
+                        .testTag("ownCommentText")
+                        .semantics { commentId = comment.id },
                     fontSize = 14.sp,
                     lineHeight = 19.sp,
                     color = colorResource(id = R.color.textLightest),
@@ -714,7 +719,9 @@ fun SpeedGraderUserCommentItem(
             if (comment.content.isNotEmpty()) {
                 Text(
                     text = comment.content,
-                    modifier = Modifier.testTag("commentText"),
+                    modifier = Modifier
+                        .testTag("commentText")
+                        .semantics { commentId = comment.id },
                     fontSize = 14.sp,
                     lineHeight = 19.sp,
                     color = colorResource(id = R.color.textDarkest)

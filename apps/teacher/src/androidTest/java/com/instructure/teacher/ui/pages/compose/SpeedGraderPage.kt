@@ -17,7 +17,9 @@ package com.instructure.teacher.ui.pages.compose
 
 import androidx.annotation.StringRes
 import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextContains
@@ -66,6 +68,7 @@ import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withText
 import com.instructure.espresso.pageToItem
 import com.instructure.espresso.swipeToTop
+import com.instructure.pandautils.features.speedgrader.grade.comments.CommentIdKey
 import com.instructure.teacher.R
 import org.hamcrest.Matchers
 import org.hamcrest.Matchers.allOf
@@ -257,7 +260,7 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
             hasText(
                 targetText,
                 substring = true
-            ) and (hasTestTag("ownCommentText").not())
+            ) and (hasTestTagThatContains("ownCommentText").not())
         )
             .performScrollTo()
             .performClick()
@@ -295,6 +298,18 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
     }
 
     /**
+     * Asserts that a comment library item with the specified text is displayed.
+     *
+     * @param text The text of the comment library item to assert.
+     */
+    fun assertCommentLibraryItemDisplayed(text: String) {
+        composeTestRule.onNode(
+            hasTestTag("commentLibraryItem") and hasText(text, substring = true),
+            useUnmergedTree = true
+        ).assertIsDisplayed()
+    }
+
+    /**
      * Asserts that the comment with the specified text is displayed.
      *
      * @param comment The comment text to assert.
@@ -314,11 +329,12 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
      * where sibling matching becomes unreliable.
      *
      * @param comment The comment text to assert.
+     * @param commentId The unique ID of the comment.
      * @param isOwnComment If true, looks for "ownCommentText" tag, otherwise "commentText" tag.
      */
-    fun assertCommentTextDisplayed(comment: String, isOwnComment: Boolean = false) {
+    fun assertCommentTextDisplayed(comment: String, commentId: String, isOwnComment: Boolean = false) {
         val tag = if (isOwnComment) "ownCommentText" else "commentText"
-        composeTestRule.onNode(hasTestTag(tag) and hasText(comment), useUnmergedTree = true)
+        composeTestRule.onNode(hasTestTag(tag) and hasCommentId(commentId) and hasText(comment), useUnmergedTree = true)
             .performScrollTo()
             .assertIsDisplayed()
     }
@@ -453,7 +469,7 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
         try {
             Espresso.onView(
                 Matchers.allOf(
-                    ViewMatchers.withContentDescription(androidx.appcompat.R.string.abc_action_bar_up_description),
+                    ViewMatchers.withContentDescription(R.string.abc_action_bar_up_description),
                     ViewMatchers.isCompletelyDisplayed(),
                     ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.gradingToolbar))
                 )
@@ -566,3 +582,12 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
         onView(commentMatcher).assertDisplayed()
     }
 }
+
+/**
+ * Custom semantics matcher for finding comments by their unique ID.
+ * Uses the CommentIdKey from production code to match against comment IDs.
+ */
+fun hasCommentId(expectedId: String): SemanticsMatcher =
+    SemanticsMatcher("has commentId=$expectedId") { node ->
+        node.config.getOrNull(CommentIdKey) == expectedId
+    }

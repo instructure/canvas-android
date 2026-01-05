@@ -123,7 +123,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
                 node.let {
                     val isOwnComment = apiPrefs.user?.id?.toString() == it.author?._id
                     SpeedGraderComment(
-                        id = it.mediaCommentId.orEmpty(),
+                        id = it._id,
                         authorName = getAuthorName(
                             authorName = it.author?.name,
                             anonymousGrading = isAnonymousGrading,
