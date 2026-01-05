@@ -720,7 +720,8 @@ private fun ToDoItemContent(
                     fontSize = 16.sp,
                     color = colorResource(id = R.color.textDarkest),
                     maxLines = 3,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.testTag("todoItemTitle")
                 )
 
                 item.tag?.let {
