@@ -81,7 +81,12 @@ class CalendarScreenPage(private val composeTestRule: ComposeTestRule) : BasePag
 
     @OptIn(ExperimentalTestApi::class)
     fun assertItemDisplayed(itemTitle: String) {
-        composeTestRule.waitUntilExactlyOneExists(hasText(itemTitle), 5000)
+        composeTestRule.waitUntil(timeoutMillis = 5000) {
+            composeTestRule.onAllNodes(
+                hasTestTag("eventTitle") and hasText(itemTitle),
+                useUnmergedTree = true
+            ).fetchSemanticsNodes().size == 1
+        }
     }
 
     fun assertItemNotExist(itemTitle: String) {

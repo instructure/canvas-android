@@ -33,10 +33,10 @@ object CalendarEventApi {
             @Query("calendar_event[start_at]") startDate: String
         ): Call<ScheduleItemApiModel>
     }
-
     private fun calendarEventService(token: String): CalendarEventService {
         return CanvasNetworkAdapter.retrofitWithToken(token).create(CalendarEventService::class.java)
     }
+
 
     fun createCalendarEvent(token: String, contextCode: String, title: String, startDate: String): ScheduleItemApiModel = calendarEventService(token)
         .createCalendarEvent(contextCode, title, startDate)
