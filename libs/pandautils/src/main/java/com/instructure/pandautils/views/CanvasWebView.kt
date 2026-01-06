@@ -886,7 +886,7 @@ class JSInterface(private val onLtiButtonPressed: (String) -> Unit) {
             val ltiUrl = URLDecoder.decode(id, "UTF-8")
             onLtiButtonPressed(ltiUrl)
         } else {
-            Toast.makeText(ContextKeeper.appContext, R.string.ltiToolsOffline, Toast.LENGTH_SHORT).show()
+            ContextKeeper.appContext.toast(R.string.ltiToolsOffline)
         }
     }
 }

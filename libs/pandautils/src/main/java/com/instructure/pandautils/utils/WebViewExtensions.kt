@@ -84,7 +84,7 @@ class JsExternalToolInterface(private val callback: (ltiUrl: String) -> Unit) {
         if (isOnline) {
             callback(ltiUrl)
         } else {
-            android.widget.Toast.makeText(ContextKeeper.appContext, R.string.ltiToolsOffline, android.widget.Toast.LENGTH_SHORT).show()
+            ContextKeeper.appContext.toast(R.string.ltiToolsOffline)
         }
     }
 }

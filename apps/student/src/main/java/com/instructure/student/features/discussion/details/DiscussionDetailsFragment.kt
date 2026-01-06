@@ -27,7 +27,6 @@ import android.webkit.CookieManager
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.widget.ScrollView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
@@ -95,6 +94,7 @@ import com.instructure.pandautils.utils.setInvisible
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.pandautils.utils.setupAvatarA11y
+import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
@@ -480,7 +480,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
                     DiscussionUtils.launchIntent(requireContext(), authenticatedUrl)
                 }
             } else {
-                Toast.makeText(requireContext(), R.string.ltiToolsOffline, Toast.LENGTH_SHORT).show()
+                requireContext().toast(com.instructure.pandautils.R.string.ltiToolsOffline)
             }
         }
 

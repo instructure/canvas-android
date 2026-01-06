@@ -30,7 +30,6 @@ import android.webkit.JavascriptInterface
 import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
-import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
@@ -71,6 +70,7 @@ import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAvatarA11y
 import com.instructure.pandautils.utils.toPx
+import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.pandautils.views.CanvasWebViewWrapper
 import com.instructure.pandautils.views.EmptyView
@@ -197,7 +197,7 @@ private class JSInterface(private val onLtiButtonPressed: OnLtiButtonPressed) {
             val ltiUrl = URLDecoder.decode(id, "UTF-8")
             onLtiButtonPressed.onLtiButtonPressed(ltiUrl)
         } else {
-            Toast.makeText(ContextKeeper.appContext, R.string.ltiToolsOffline, Toast.LENGTH_SHORT).show()
+            ContextKeeper.appContext.toast(R.string.ltiToolsOffline)
         }
     }
 }
