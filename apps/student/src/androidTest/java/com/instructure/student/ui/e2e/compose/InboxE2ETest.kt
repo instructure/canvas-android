@@ -16,8 +16,11 @@
  */
 package com.instructure.student.ui.e2e.compose
 
+import android.content.ContentValues
+import android.os.Build
 import android.os.Environment
 import android.os.SystemClock.sleep
+import android.provider.MediaStore
 import android.util.Log
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers
@@ -611,16 +614,9 @@ class InboxE2ETest: StudentComposeTest() {
         val course = data.coursesList[0]
         val student = data.studentsList[0]
 
-        Log.d(PREPARATION_TAG, "Copy mp4 file to device Downloads folder for attachment.")
+        Log.d(PREPARATION_TAG, "Copy mp4 file to Downloads folder for attachment.")
         val videoFileName = "test_video.mp4"
-        val context = InstrumentationRegistry.getInstrumentation().context
-        val inputStream = context.assets.open(videoFileName)
-        val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-        val destFile = File(downloadsDir, videoFileName)
-
-        Log.d(PREPARATION_TAG, "Writing file to: ${destFile.absolutePath}")
-        destFile.outputStream().use { inputStream.copyTo(it) }
-        inputStream.close()
+        copyAssetToDownloads(videoFileName)
 
         val conversationSubject = "Need Help with Assignment"
         val conversationBody = "Can you please send me a demo video?"
@@ -775,16 +771,9 @@ class InboxE2ETest: StudentComposeTest() {
         val student1 = data.studentsList[0]
         val student2 = data.studentsList[1]
 
-        Log.d(PREPARATION_TAG, "Copy PDF file to device Downloads folder for attachment.")
+        Log.d(PREPARATION_TAG, "Copy PDF file to Downloads folder for attachment.")
         val pdfFileName = "samplepdf.pdf"
-        val context = InstrumentationRegistry.getInstrumentation().context
-        val inputStream = context.assets.open(pdfFileName)
-        val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-        val pdfFile = File(downloadsDir, pdfFileName)
-
-        Log.d(PREPARATION_TAG, "Writing file to: ${pdfFile.absolutePath}")
-        pdfFile.outputStream().use { inputStream.copyTo(it) }
-        inputStream.close()
+        copyAssetToDownloads(pdfFileName)
 
         val conversationSubject = "Project Documentation"
         val conversationBody = "Please review the attached document and share it with the team."
@@ -897,6 +886,100 @@ class InboxE2ETest: StudentComposeTest() {
 
         Log.d(ASSERTION_TAG, "Assert that the conversation is still displayed in inbox.")
         inboxPage.assertConversationDisplayed(conversationSubject)
+    }
+
+    /**
+     * Copy a file from test assets to the Downloads folder using MediaStore API (Android 10+)
+     * or legacy file system (Android 9 and below). This ensures files are accessible by the
+     * system file picker during E2E tests.
+     *
+     * If a file with the same name already exists, it will be deleted first to prevent duplicates.
+     */
+    private fun copyAssetToDownloads(fileName: String) {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+
+        // Delete existing file first to prevent duplicates
+        deleteFileFromDownloads(fileName)
+
+        val inputStream = InstrumentationRegistry.getInstrumentation().context.assets.open(fileName)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            // Android 10+ (API 29+): Use MediaStore API
+            val contentValues = ContentValues().apply {
+                put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+                put(MediaStore.MediaColumns.MIME_TYPE, getMimeType(fileName))
+                put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
+            }
+
+            val resolver = context.contentResolver
+            val uri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
+
+            uri?.let {
+                resolver.openOutputStream(it)?.use { outputStream ->
+                    inputStream.copyTo(outputStream)
+                }
+            }
+        } else {
+            // Android 9 and below: Use legacy file system
+            val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+            val destFile = File(downloadsDir, fileName)
+            destFile.outputStream().use { inputStream.copyTo(it) }
+        }
+
+        inputStream.close()
+    }
+
+    /**
+     * Delete a file from the Downloads folder if it exists.
+     * Uses MediaStore API for Android 10+ and legacy file system for Android 9 and below.
+     */
+    private fun deleteFileFromDownloads(fileName: String) {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            // Android 10+ (API 29+): Use MediaStore API to delete
+            val resolver = context.contentResolver
+            val projection = arrayOf(MediaStore.MediaColumns._ID)
+            val selection = "${MediaStore.MediaColumns.DISPLAY_NAME} = ? AND ${MediaStore.MediaColumns.RELATIVE_PATH} = ?"
+            val selectionArgs = arrayOf(fileName, "${Environment.DIRECTORY_DOWNLOADS}/")
+
+            resolver.query(
+                MediaStore.Downloads.EXTERNAL_CONTENT_URI,
+                projection,
+                selection,
+                selectionArgs,
+                null
+            )?.use { cursor ->
+                while (cursor.moveToNext()) {
+                    val idColumn = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID)
+                    val id = cursor.getLong(idColumn)
+                    val uri = android.content.ContentUris.withAppendedId(
+                        MediaStore.Downloads.EXTERNAL_CONTENT_URI,
+                        id
+                    )
+                    resolver.delete(uri, null, null)
+                    Log.d(PREPARATION_TAG, "Deleted existing file: $fileName")
+                }
+            }
+        } else {
+            // Android 9 and below: Use legacy file system to delete
+            val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+            val file = File(downloadsDir, fileName)
+            if (file.exists()) {
+                file.delete()
+                Log.d(PREPARATION_TAG, "Deleted existing file: $fileName")
+            }
+        }
+    }
+
+    private fun getMimeType(fileName: String): String {
+        return when {
+            fileName.endsWith(".mp4", ignoreCase = true) -> "video/mp4"
+            fileName.endsWith(".pdf", ignoreCase = true) -> "application/pdf"
+            fileName.endsWith(".jpg", ignoreCase = true) || fileName.endsWith(".jpeg", ignoreCase = true) -> "image/jpeg"
+            fileName.endsWith(".png", ignoreCase = true) -> "image/png"
+            else -> "application/octet-stream"
+        }
     }
 
 }
