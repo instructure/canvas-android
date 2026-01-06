@@ -898,10 +898,11 @@ class InboxE2ETest: StudentComposeTest() {
     private fun copyAssetToDownloads(fileName: String) {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
 
-        // Delete existing file first to prevent duplicates
         deleteFileFromDownloads(fileName)
 
         val inputStream = InstrumentationRegistry.getInstrumentation().context.assets.open(fileName)
+        val assetSize = inputStream.available()
+        Log.d(PREPARATION_TAG, "Asset file size: $assetSize bytes")
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             // Android 10+ (API 29+): Use MediaStore API
@@ -909,24 +910,52 @@ class InboxE2ETest: StudentComposeTest() {
                 put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
                 put(MediaStore.MediaColumns.MIME_TYPE, getMimeType(fileName))
                 put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
+                put(MediaStore.MediaColumns.SIZE, assetSize)
             }
 
             val resolver = context.contentResolver
             val uri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
 
-            uri?.let {
-                resolver.openOutputStream(it)?.use { outputStream ->
-                    inputStream.copyTo(outputStream)
+            if (uri != null) {
+                resolver.openOutputStream(uri)?.use { outputStream ->
+                    val bytesCopied = inputStream.copyTo(outputStream)
+                    outputStream.flush()
+                    Log.d(PREPARATION_TAG, "Copied $bytesCopied bytes to $fileName")
                 }
+
+                sleep(1000)
+
+                resolver.openInputStream(uri)?.use { verifyStream ->
+                    val writtenSize = verifyStream.available()
+                    Log.d(PREPARATION_TAG, "Verified file size: $writtenSize bytes")
+                    if (writtenSize == 0) {
+                        throw IllegalStateException("File was written but has 0 bytes: $fileName")
+                    }
+                }
+            } else {
+                throw IllegalStateException("Failed to create MediaStore entry for: $fileName")
             }
         } else {
             // Android 9 and below: Use legacy file system
             val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
             val destFile = File(downloadsDir, fileName)
-            destFile.outputStream().use { inputStream.copyTo(it) }
+
+            destFile.outputStream().use { outputStream ->
+                val bytesCopied = inputStream.copyTo(outputStream)
+                outputStream.flush()
+                Log.d(PREPARATION_TAG, "Copied $bytesCopied bytes to ${destFile.absolutePath}")
+            }
+
+            sleep(1000)
+
+            if (!destFile.exists() || destFile.length() == 0L) {
+                throw IllegalStateException("File was not written correctly: ${destFile.absolutePath}")
+            }
+            Log.d(PREPARATION_TAG, "Verified file size: ${destFile.length()} bytes")
         }
 
         inputStream.close()
+        Log.d(PREPARATION_TAG, "Successfully copied $fileName to Downloads")
     }
 
     /**
