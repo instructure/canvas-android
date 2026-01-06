@@ -905,32 +905,55 @@ class InboxE2ETest: StudentComposeTest() {
         Log.d(PREPARATION_TAG, "Asset file size: $assetSize bytes")
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            // Android 10+ (API 29+): Use MediaStore API
+            // Android 10+ (API 29+): Use MediaStore API with IS_PENDING flag
             val contentValues = ContentValues().apply {
                 put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
                 put(MediaStore.MediaColumns.MIME_TYPE, getMimeType(fileName))
                 put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
                 put(MediaStore.MediaColumns.SIZE, assetSize)
+                put(MediaStore.MediaColumns.IS_PENDING, 1) // Mark as pending while writing
             }
 
             val resolver = context.contentResolver
             val uri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
 
             if (uri != null) {
-                resolver.openOutputStream(uri)?.use { outputStream ->
-                    val bytesCopied = inputStream.copyTo(outputStream)
-                    outputStream.flush()
-                    Log.d(PREPARATION_TAG, "Copied $bytesCopied bytes to $fileName")
-                }
+                try {
+                    // Write the file
+                    resolver.openOutputStream(uri)?.use { outputStream ->
+                        val bytesCopied = inputStream.copyTo(outputStream)
+                        outputStream.flush()
 
-                sleep(1000)
+                        // Force sync to disk on API 26+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            (outputStream as? java.io.FileOutputStream)?.fd?.sync()
+                        }
 
-                resolver.openInputStream(uri)?.use { verifyStream ->
-                    val writtenSize = verifyStream.available()
-                    Log.d(PREPARATION_TAG, "Verified file size: $writtenSize bytes")
-                    if (writtenSize == 0) {
-                        throw IllegalStateException("File was written but has 0 bytes: $fileName")
+                        Log.d(PREPARATION_TAG, "Copied $bytesCopied bytes to $fileName")
                     }
+
+                    // Mark file as complete (no longer pending)
+                    val completeValues = ContentValues().apply {
+                        put(MediaStore.MediaColumns.IS_PENDING, 0)
+                    }
+                    resolver.update(uri, completeValues, null, null)
+                    Log.d(PREPARATION_TAG, "Marked $fileName as complete in MediaStore")
+
+                    // Wait for MediaStore to finish processing
+                    sleep(2000)
+
+                    // Verify the file was written correctly
+                    resolver.openInputStream(uri)?.use { verifyStream ->
+                        val writtenSize = verifyStream.available()
+                        Log.d(PREPARATION_TAG, "Verified file size: $writtenSize bytes")
+                        if (writtenSize == 0) {
+                            throw IllegalStateException("File was written but has 0 bytes: $fileName")
+                        }
+                    }
+                } catch (e: Exception) {
+                    // If anything fails, delete the entry and rethrow
+                    resolver.delete(uri, null, null)
+                    throw e
                 }
             } else {
                 throw IllegalStateException("Failed to create MediaStore entry for: $fileName")
