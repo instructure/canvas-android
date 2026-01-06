@@ -16,10 +16,10 @@
  */
 package com.instructure.horizon.features.aiassistant.common
 
-import com.instructure.canvasapi2.models.journey.JourneyAssistChatMessage
 import com.instructure.canvasapi2.models.journey.JourneyAssistState
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContextSource
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -27,7 +27,7 @@ import javax.inject.Singleton
 class AiAssistContextProvider @Inject constructor() {
     var aiAssistContext = AiAssistContext()
 
-    fun addMessageToChatHistory(message: JourneyAssistChatMessage) {
+    fun addMessageToChatHistory(message: AiAssistMessage) {
         aiAssistContext = aiAssistContext.copy(
             chatHistory = aiAssistContext.chatHistory + message
         )

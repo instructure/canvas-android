@@ -22,15 +22,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.instructure.canvasapi2.models.journey.JourneyAssistChatMessage
 import com.instructure.canvasapi2.models.journey.JourneyAssistRole
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
 
 @Composable
 fun AiAssistMessage(
-    message: JourneyAssistChatMessage,
+    message: AiAssistMessage,
     onSendPrompt: (String) -> Unit
 ) {
-    if (message.role == JourneyAssistRole.Assistant) {
+    if (!message.errorMessage.isNullOrBlank()) {
+        AiAssistResponseTextBlock(
+            text = message.errorMessage
+        )
+    } else if (message.role == JourneyAssistRole.Assistant) {
         AiAssistResponseTextBlock(
             text = message.text,
             footerState = AiAssistResponseTextBlockFooterState(

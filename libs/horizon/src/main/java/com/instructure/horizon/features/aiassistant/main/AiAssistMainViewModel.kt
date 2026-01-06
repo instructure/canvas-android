@@ -18,18 +18,18 @@ package com.instructure.horizon.features.aiassistant.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.instructure.canvasapi2.models.journey.JourneyAssistChatMessage
 import com.instructure.canvasapi2.models.journey.JourneyAssistRole
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
 import com.instructure.horizon.features.aiassistant.common.AiAssistRepository
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
 import com.instructure.horizon.features.aiassistant.common.model.toContextSourceList
+import com.instructure.horizon.features.aiassistant.common.model.toJourneyAssistChatMessages
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -69,10 +69,10 @@ class AiAssistMainViewModel @Inject constructor(
         }
     }
 
-    private suspend fun evaluatePrompt(prompt: String = ""): JourneyAssistChatMessage {
+    private suspend fun evaluatePrompt(prompt: String = ""): AiAssistMessage {
         val response = repository.answerPrompt(
             prompt,
-            aiAssistMessages,
+            aiAssistMessages.toJourneyAssistChatMessages(),
             aiAssistContextState
         )
         aiAssistContextState = response.state ?: aiAssistContextState
@@ -80,9 +80,7 @@ class AiAssistMainViewModel @Inject constructor(
     }
 
     private fun sendMessage(prompt: String) {
-        val userMessage = JourneyAssistChatMessage(
-            id = UUID.randomUUID().toString(),
-            prompt = prompt,
+        val userMessage = AiAssistMessage(
             text = prompt,
             role = JourneyAssistRole.User,
         )
@@ -95,7 +93,7 @@ class AiAssistMainViewModel @Inject constructor(
         aiAssistMessages.add(userMessage)
 
         viewModelScope.tryLaunch {
-            val response = evaluatePrompt(userMessage.prompt)
+            val response = evaluatePrompt(userMessage.text)
             aiAssistMessages.add(response)
             _uiState.update {
                 it.copy(

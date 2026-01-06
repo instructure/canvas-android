@@ -1,12 +1,11 @@
 package com.instructure.horizon.features.aiassistant.common.model
 
-import com.instructure.canvasapi2.models.journey.JourneyAssistChatMessage
 import com.instructure.canvasapi2.models.journey.JourneyAssistState
 
 data class AiAssistContext(
     val contextString: String? = null,
     val contextSources: List<AiAssistContextSource> = emptyList(),
-    val chatHistory: List<JourneyAssistChatMessage> = emptyList(),
+    val chatHistory: List<AiAssistMessage> = emptyList(),
 ) {
     val state: JourneyAssistState
         get() {

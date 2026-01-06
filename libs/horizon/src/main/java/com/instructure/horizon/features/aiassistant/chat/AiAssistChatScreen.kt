@@ -31,11 +31,11 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.instructure.canvasapi2.models.journey.JourneyAssistChatMessage
 import com.instructure.canvasapi2.models.journey.JourneyAssistRole
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.features.aiassistant.common.composable.AiAssistMessage
 import com.instructure.horizon.features.aiassistant.common.composable.AiAssistScaffold
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
 import com.instructure.horizon.features.aiassistant.navigation.AiAssistRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.molecules.Spinner
@@ -107,15 +107,11 @@ private fun AssistChatScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
     val state = AiAssistChatUiState(
         messages = listOf(
-            JourneyAssistChatMessage(
-                id = "1",
-                prompt = "Hello",
+            AiAssistMessage(
                 text = "Hello",
                 role = JourneyAssistRole.User,
             ),
-            JourneyAssistChatMessage(
-                id = "2",
-                prompt = "Hi there! How can I assist you today?",
+            AiAssistMessage(
                 text = "Hi there! How can I assist you today?",
                 role = JourneyAssistRole.Assistant
             )

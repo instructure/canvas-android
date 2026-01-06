@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
 import com.instructure.horizon.features.aiassistant.common.AiAssistRepository
+import com.instructure.horizon.features.aiassistant.common.model.toJourneyAssistChatMessages
 import com.instructure.horizon.features.aiassistant.quiz.composable.AiAssistQuizAnswerStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -93,8 +94,8 @@ class AiAssistQuizViewModel @Inject constructor(
 
                 val response = aiAssistRepository.answerPrompt(
                     prompt = aiAssistContextProvider.aiAssistContext.chatHistory
-                        .lastOrNull { it.role == JourneyAssistRole.User }?.prompt.orEmpty(),
-                    history = aiAssistContextProvider.aiAssistContext.chatHistory,
+                        .lastOrNull { it.role == JourneyAssistRole.User }?.text.orEmpty(),
+                    history = aiAssistContextProvider.aiAssistContext.chatHistory.toJourneyAssistChatMessages(),
                     state = aiAssistContextProvider.aiAssistContext.state
                 )
 

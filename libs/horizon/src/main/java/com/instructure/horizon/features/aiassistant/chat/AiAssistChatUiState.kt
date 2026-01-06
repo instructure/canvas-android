@@ -1,10 +1,10 @@
 package com.instructure.horizon.features.aiassistant.chat
 
 import androidx.compose.ui.text.input.TextFieldValue
-import com.instructure.canvasapi2.models.journey.JourneyAssistChatMessage
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
 
 data class AiAssistChatUiState(
-    val messages: List<JourneyAssistChatMessage> = emptyList(),
+    val messages: List<AiAssistMessage> = emptyList(),
     val isLoading: Boolean = false,
     val error: String? = null,
     val isFeedbackEnabled: Boolean = false,
