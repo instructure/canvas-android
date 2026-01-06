@@ -16,6 +16,8 @@
 package com.instructure.canvas.espresso.common.pages.compose
 
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onAllNodesWithText
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -43,14 +45,14 @@ class ToDoListPage(private val composeTestRule: ComposeTestRule) : BasePage() {
     }
 
     fun assertItemDisplayed(itemTitle: String) {
-        composeTestRule.onNodeWithText(itemTitle).assertIsDisplayed()
+        composeTestRule.onNode( hasTestTag("todoItemTitle") and hasText(itemTitle), useUnmergedTree = true).assertIsDisplayed()
     }
 
     fun assertItemNotDisplayed(itemTitle: String) {
-        composeTestRule.onNodeWithText(itemTitle).assertDoesNotExist()
+        composeTestRule.onNode(hasTestTag("todoItemTitle") and hasText(itemTitle), useUnmergedTree = true).assertDoesNotExist()
     }
 
-    fun clickCheckbox(itemId: Long) {
+    fun clickMarkToDoItemAsDone(itemId: Long) {
         composeTestRule.onNodeWithTag("todoCheckbox_$itemId")
             .performClick()
         composeTestRule.waitForIdle()
