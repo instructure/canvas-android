@@ -137,6 +137,7 @@ class SpeedGraderCommentsViewModelTest {
             every { data.submission } returns null
             every { comments } returns listOf(
                 SubmissionCommentsQuery.Node1(
+                    _id = "1",
                     comment = "Test comment",
                     author = SubmissionCommentsQuery.Author(
                         _id = "1",
@@ -172,6 +173,7 @@ class SpeedGraderCommentsViewModelTest {
             every { data.submission } returns null
             every { comments } returns listOf(
                 SubmissionCommentsQuery.Node1(
+                    _id = "1",
                     comment = "Test comment",
                     author = SubmissionCommentsQuery.Author(
                         _id = "1",
@@ -321,6 +323,7 @@ class SpeedGraderCommentsViewModelTest {
             every { data.submission } returns null
             every { comments } returns listOf(
                 SubmissionCommentsQuery.Node1(
+                    _id = "1",
                     comment = "Comment for no attempt",
                     author = SubmissionCommentsQuery.Author(
                         _id = "1",
@@ -356,6 +359,7 @@ class SpeedGraderCommentsViewModelTest {
             every { data.submission } returns null
             every { comments } returns listOf(
                 SubmissionCommentsQuery.Node1(
+                    _id = "1",
                     comment = "Comment for no attempt",
                     author = SubmissionCommentsQuery.Author(
                         _id = "1",
