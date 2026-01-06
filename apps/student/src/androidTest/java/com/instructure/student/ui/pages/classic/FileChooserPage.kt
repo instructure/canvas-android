@@ -65,6 +65,10 @@ class FileChooserPage : BasePage() {
         deviceButton.scrollTo().click()
     }
 
+    fun clickOkay() {
+        onView(withText("OKAY")).click()
+    }
+
     fun clickUpload() {
         onView(withText(R.string.upload)).click()
     }

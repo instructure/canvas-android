@@ -188,4 +188,14 @@ class InboxComposePage(private val composeTestRule: ComposeTestRule) {
             composeTestRule.onAllNodesWithTag("removeButton", true).onFirst().performClick()
         }
     }
+
+    fun clickAttachmentButton() {
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithContentDescription("Add attachment").performClick()
+    }
+
+    fun assertAttachmentDisplayed(fileName: String) {
+        composeTestRule.waitForIdle()
+        composeTestRule.onNode(hasText(fileName), useUnmergedTree = true).assertIsDisplayed()
+    }
 }

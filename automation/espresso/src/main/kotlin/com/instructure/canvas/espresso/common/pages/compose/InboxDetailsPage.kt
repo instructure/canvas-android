@@ -15,11 +15,13 @@
  */
 package com.instructure.canvas.espresso.common.pages.compose
 
+import android.view.View
 import androidx.compose.ui.semantics.SemanticsProperties.Text
 import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.filterToOne
+import androidx.compose.ui.test.hasAnyDescendant
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasTestTag
@@ -33,7 +35,15 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onParent
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.uiautomator.UiDevice
 import com.instructure.canvasapi2.models.Conversation
+import org.hamcrest.Description
+import org.hamcrest.TypeSafeMatcher
 
 class InboxDetailsPage(private val composeTestRule: ComposeTestRule) {
 
@@ -180,5 +190,78 @@ class InboxDetailsPage(private val composeTestRule: ComposeTestRule) {
         )
 
         overflowButton.performClick()
+    }
+
+    fun assertAttachmentDisplayed(fileName: String) {
+        composeTestRule.waitForIdle()
+        composeTestRule.onNode(
+            hasTestTag("attachment").and(hasAnyDescendant(hasText(fileName))),
+            useUnmergedTree = true
+        ).performScrollTo().assertIsDisplayed()
+    }
+
+    fun clickAttachment(fileName: String) {
+        composeTestRule.waitForIdle()
+        composeTestRule.onNode(
+            hasTestTag("attachment").and(hasAnyDescendant(hasText(fileName))),
+            useUnmergedTree = true
+        ).performScrollTo().performClick()
+    }
+
+    // Media player methods for video playback verification
+    fun assertPlayButtonDisplayed() {
+        onView(withId(com.instructure.pandautils.R.id.prepareMediaButton))
+            .check(matches(isDisplayed()))
+    }
+
+    fun clickPlayButton() {
+        onView(withId(com.instructure.pandautils.R.id.prepareMediaButton))
+            .perform(click())
+    }
+
+    fun clickScreenToShowControls(device: UiDevice) {
+        device.click(device.displayWidth / 2, device.displayHeight / 2)
+    }
+
+    fun assertPlayPauseButtonDisplayed() {
+        onView(withId(androidx.media3.ui.R.id.exo_play_pause))
+            .check(matches(isDisplayed()))
+    }
+
+    fun clickPlayPauseButton() {
+        onView(withId(androidx.media3.ui.R.id.exo_play_pause))
+            .perform(click())
+    }
+
+    fun getVideoPosition(): String {
+        var positionText = ""
+        onView(withId(androidx.media3.ui.R.id.exo_position))
+            .check { view, _ ->
+                if (view is android.widget.TextView) {
+                    positionText = view.text.toString()
+                }
+            }
+        return positionText
+    }
+
+    // PDF viewer method for PSPDFKit toolbar verification
+    fun assertPdfViewerToolbarDisplayed() {
+        onView(withResourceIdContaining("pspdf__toolbar_main"))
+            .check(matches(isDisplayed()))
+    }
+
+    private fun withResourceIdContaining(substring: String) = object : TypeSafeMatcher<View>() {
+        override fun describeTo(description: Description) {
+            description.appendText("with resource id containing: $substring")
+        }
+
+        override fun matchesSafely(view: View): Boolean {
+            val resourceId = try {
+                view.resources.getResourceName(view.id)
+            } catch (e: Exception) {
+                ""
+            }
+            return resourceId.contains(substring, ignoreCase = true)
+        }
     }
 }
