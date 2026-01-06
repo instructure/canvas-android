@@ -27,6 +27,7 @@ import android.webkit.CookieManager
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import android.widget.ScrollView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
@@ -78,6 +79,7 @@ import com.instructure.pandautils.utils.OnBackStackChangedEvent
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ProfileUtils
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.Utils
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.getModuleItemId
 import com.instructure.pandautils.utils.isAccessibilityEnabled
@@ -471,9 +473,14 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
         @JavascriptInterface
         fun onLtiToolButtonPressed(id: String) {
-            val ltiUrl = URLDecoder.decode(id, "UTF-8")
-            getAuthenticatedURL(ltiUrl) { authenticatedUrl, _ ->
-                DiscussionUtils.launchIntent(requireContext(), authenticatedUrl)
+            val isOnline = Utils.isNetworkAvailable(requireContext())
+            if (isOnline) {
+                val ltiUrl = URLDecoder.decode(id, "UTF-8")
+                getAuthenticatedURL(ltiUrl) { authenticatedUrl, _ ->
+                    DiscussionUtils.launchIntent(requireContext(), authenticatedUrl)
+                }
+            } else {
+                Toast.makeText(requireContext(), R.string.ltiToolsOffline, Toast.LENGTH_SHORT).show()
             }
         }
 

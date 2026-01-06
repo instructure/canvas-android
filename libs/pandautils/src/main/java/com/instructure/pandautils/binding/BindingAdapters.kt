@@ -30,6 +30,7 @@ import android.webkit.JavascriptInterface
 import android.widget.ImageView
 import android.widget.Spinner
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
@@ -46,6 +47,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
 import com.google.android.material.materialswitch.MaterialSwitch
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.BR
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.assignments.details.mobius.gradeCell.DonutChartView
@@ -58,6 +60,7 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.JsGoogleDocsInterface
 import com.instructure.pandautils.utils.ProfileUtils
+import com.instructure.pandautils.utils.Utils
 import com.instructure.pandautils.utils.accessibleTouchTarget
 import com.instructure.pandautils.utils.applyTheme
 import com.instructure.pandautils.utils.collapse
@@ -189,8 +192,13 @@ private class JSInterface(private val onLtiButtonPressed: OnLtiButtonPressed) {
 
     @JavascriptInterface
     fun onLtiToolButtonPressed(id: String) {
-        val ltiUrl = URLDecoder.decode(id, "UTF-8")
-        onLtiButtonPressed.onLtiButtonPressed(ltiUrl)
+        val isOnline = Utils.isNetworkAvailable(ContextKeeper.appContext)
+        if (isOnline) {
+            val ltiUrl = URLDecoder.decode(id, "UTF-8")
+            onLtiButtonPressed.onLtiButtonPressed(ltiUrl)
+        } else {
+            Toast.makeText(ContextKeeper.appContext, R.string.ltiToolsOffline, Toast.LENGTH_SHORT).show()
+        }
     }
 }
 
