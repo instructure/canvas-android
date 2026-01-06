@@ -694,10 +694,13 @@ class InboxE2ETest: StudentComposeTest() {
         Log.d(STEP_TAG, "Click OKAY button to confirm file selection.")
         fileChooserPage.clickOkay()
 
+        sleep(3000) // Wait for the file to be loaded.
+
         Log.d(ASSERTION_TAG, "Assert that the video file is displayed as attached in compose screen.")
         inboxComposePage.assertAttachmentDisplayed(videoFileName)
 
         Log.d(STEP_TAG, "Send the reply message with attachment.")
+        sleep(3000) //Wait for attachment to finish uploading
         inboxComposePage.pressSendButton()
 
         Log.d(ASSERTION_TAG, "Assert that the reply message is displayed in the conversation.")
@@ -861,10 +864,13 @@ class InboxE2ETest: StudentComposeTest() {
         Log.d(STEP_TAG, "Click OKAY button to confirm file selection.")
         fileChooserPage.clickOkay()
 
+        sleep(3000) // Wait for the file to be loaded.
+
         Log.d(ASSERTION_TAG, "Assert that the PDF file is displayed as attached in compose screen.")
         inboxComposePage.assertAttachmentDisplayed(pdfFileName)
 
         Log.d(STEP_TAG, "Send the forwarded message with attachment.")
+        sleep(3000) //Wait for attachment to finish uploading
         inboxComposePage.pressSendButton()
 
         Log.d(ASSERTION_TAG, "Assert that the forward message is displayed in the conversation.")
