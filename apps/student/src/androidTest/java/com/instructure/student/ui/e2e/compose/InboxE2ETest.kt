@@ -16,11 +16,7 @@
  */
 package com.instructure.student.ui.e2e.compose
 
-import android.content.ContentValues
-import android.os.Build
-import android.os.Environment
 import android.os.SystemClock.sleep
-import android.provider.MediaStore
 import android.util.Log
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers
@@ -889,149 +885,65 @@ class InboxE2ETest: StudentComposeTest() {
     }
 
     /**
-     * Copy a file from test assets to the Downloads folder using MediaStore API (Android 10+)
-     * or legacy file system (Android 9 and below). This ensures files are accessible by the
-     * system file picker during E2E tests.
+     * Copy a file from test assets to external files directory for E2E testing.
      *
-     * If a file with the same name already exists, it will be deleted first to prevent duplicates.
+     * For E2E tests that use the real Android file picker with UIAutomator, files must be placed
+     * in a location that the file picker can navigate to. We use getExternalFilesDir which:
+     * - Is accessible by the system file picker (unlike externalCacheDir)
+     * - Doesn't require special permissions (unlike public Downloads)
+     * - Works reliably on CI emulators
+     *
+     * This is different from interaction tests which stub the file picker intent and can use
+     * externalCacheDir with FileProvider URIs.
      */
     private fun copyAssetToDownloads(fileName: String) {
         val context = InstrumentationRegistry.getInstrumentation().targetContext
+        var inputStream: java.io.InputStream? = null
+        var outputStream: java.io.OutputStream? = null
 
-        deleteFileFromDownloads(fileName)
+        try {
+            // Use external files dir - accessible by system file picker for E2E tests
+            inputStream = InstrumentationRegistry.getInstrumentation().context.resources.assets.open(fileName)
 
-        val inputStream = InstrumentationRegistry.getInstrumentation().context.assets.open(fileName)
-        val assetSize = inputStream.available()
-        Log.d(PREPARATION_TAG, "Asset file size: $assetSize bytes")
+            // getExternalFilesDir(null) returns app-specific directory on external storage
+            // Path: /storage/emulated/0/Android/data/{package}/files/
+            val dir = context.getExternalFilesDir(null)
+            val file = File(dir, fileName)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            // Android 10+ (API 29+): Use MediaStore API with IS_PENDING flag
-            val contentValues = ContentValues().apply {
-                put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
-                put(MediaStore.MediaColumns.MIME_TYPE, getMimeType(fileName))
-                put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
-                put(MediaStore.MediaColumns.SIZE, assetSize)
-                put(MediaStore.MediaColumns.IS_PENDING, 1) // Mark as pending while writing
-            }
+            Log.d(PREPARATION_TAG, "Copying $fileName to external files directory: ${file.absolutePath}")
 
-            val resolver = context.contentResolver
-            val uri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
-
-            if (uri != null) {
-                try {
-                    // Write the file
-                    resolver.openOutputStream(uri)?.use { outputStream ->
-                        val bytesCopied = inputStream.copyTo(outputStream)
-                        outputStream.flush()
-
-                        // Force sync to disk on API 26+
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            (outputStream as? java.io.FileOutputStream)?.fd?.sync()
-                        }
-
-                        Log.d(PREPARATION_TAG, "Copied $bytesCopied bytes to $fileName")
-                    }
-
-                    // Mark file as complete (no longer pending)
-                    val completeValues = ContentValues().apply {
-                        put(MediaStore.MediaColumns.IS_PENDING, 0)
-                    }
-                    resolver.update(uri, completeValues, null, null)
-                    Log.d(PREPARATION_TAG, "Marked $fileName as complete in MediaStore")
-
-                    // Wait for MediaStore to finish processing
-                    sleep(2000)
-
-                    // Verify the file was written correctly
-                    resolver.openInputStream(uri)?.use { verifyStream ->
-                        val writtenSize = verifyStream.available()
-                        Log.d(PREPARATION_TAG, "Verified file size: $writtenSize bytes")
-                        if (writtenSize == 0) {
-                            throw IllegalStateException("File was written but has 0 bytes: $fileName")
-                        }
-                    }
-                } catch (e: Exception) {
-                    // If anything fails, delete the entry and rethrow
-                    resolver.delete(uri, null, null)
-                    throw e
-                }
-            } else {
-                throw IllegalStateException("Failed to create MediaStore entry for: $fileName")
-            }
-        } else {
-            // Android 9 and below: Use legacy file system
-            val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-            val destFile = File(downloadsDir, fileName)
-
-            destFile.outputStream().use { outputStream ->
-                val bytesCopied = inputStream.copyTo(outputStream)
-                outputStream.flush()
-                Log.d(PREPARATION_TAG, "Copied $bytesCopied bytes to ${destFile.absolutePath}")
-            }
-
-            sleep(1000)
-
-            if (!destFile.exists() || destFile.length() == 0L) {
-                throw IllegalStateException("File was not written correctly: ${destFile.absolutePath}")
-            }
-            Log.d(PREPARATION_TAG, "Verified file size: ${destFile.length()} bytes")
-        }
-
-        inputStream.close()
-        Log.d(PREPARATION_TAG, "Successfully copied $fileName to Downloads")
-    }
-
-    /**
-     * Delete a file from the Downloads folder if it exists.
-     * Uses MediaStore API for Android 10+ and legacy file system for Android 9 and below.
-     */
-    private fun deleteFileFromDownloads(fileName: String) {
-        val context = InstrumentationRegistry.getInstrumentation().targetContext
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            // Android 10+ (API 29+): Use MediaStore API to delete
-            val resolver = context.contentResolver
-            val projection = arrayOf(MediaStore.MediaColumns._ID)
-            val selection = "${MediaStore.MediaColumns.DISPLAY_NAME} = ? AND ${MediaStore.MediaColumns.RELATIVE_PATH} = ?"
-            val selectionArgs = arrayOf(fileName, "${Environment.DIRECTORY_DOWNLOADS}/")
-
-            resolver.query(
-                MediaStore.Downloads.EXTERNAL_CONTENT_URI,
-                projection,
-                selection,
-                selectionArgs,
-                null
-            )?.use { cursor ->
-                while (cursor.moveToNext()) {
-                    val idColumn = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID)
-                    val id = cursor.getLong(idColumn)
-                    val uri = android.content.ContentUris.withAppendedId(
-                        MediaStore.Downloads.EXTERNAL_CONTENT_URI,
-                        id
-                    )
-                    resolver.delete(uri, null, null)
-                    Log.d(PREPARATION_TAG, "Deleted existing file: $fileName")
-                }
-            }
-        } else {
-            // Android 9 and below: Use legacy file system to delete
-            val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-            val file = File(downloadsDir, fileName)
+            // Delete existing file if present
             if (file.exists()) {
                 file.delete()
-                Log.d(PREPARATION_TAG, "Deleted existing file: $fileName")
+                Log.d(PREPARATION_TAG, "Deleted existing file")
+            }
+
+            outputStream = java.io.FileOutputStream(file)
+            val bytesCopied = inputStream.copyTo(outputStream)
+
+            Log.d(PREPARATION_TAG, "Copied $bytesCopied bytes")
+        } finally {
+            inputStream?.close()
+            if (outputStream != null) {
+                outputStream.flush()
+                outputStream.close()
             }
         }
-    }
 
-    private fun getMimeType(fileName: String): String {
-        return when {
-            fileName.endsWith(".mp4", ignoreCase = true) -> "video/mp4"
-            fileName.endsWith(".pdf", ignoreCase = true) -> "application/pdf"
-            fileName.endsWith(".jpg", ignoreCase = true) || fileName.endsWith(".jpeg", ignoreCase = true) -> "image/jpeg"
-            fileName.endsWith(".png", ignoreCase = true) -> "image/png"
-            else -> "application/octet-stream"
+        // Verify the file was written correctly
+        val dir = context.getExternalFilesDir(null)
+        val file = File(dir, fileName)
+
+        if (!file.exists()) {
+            throw IllegalStateException("File was not created: ${file.absolutePath}")
         }
+
+        val fileSize = file.length()
+        if (fileSize == 0L) {
+            throw IllegalStateException("File has 0 bytes: ${file.absolutePath}")
+        }
+
+        Log.d(PREPARATION_TAG, "Verified file exists with size: $fileSize bytes at ${file.absolutePath}")
     }
 
 }
