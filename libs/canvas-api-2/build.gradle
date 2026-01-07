@@ -56,8 +56,8 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField "String", "REDWOOD_BASE_URL", "\"$redwoodReleaseBaseUrl\""
-            buildConfigField "String", "JOURNEY_BASE_URL", "\"$journeyReleaseBaseUrl\""
+            buildConfigField "String", "REDWOOD_BASE_URL", "\"$redwoodDebugBaseUrl\""
+            buildConfigField "String", "JOURNEY_BASE_URL", "\"$journeyDebugBaseUrl\""
         }
         release {
             buildConfigField "String", "REDWOOD_BASE_URL", "\"$redwoodReleaseBaseUrl\""
