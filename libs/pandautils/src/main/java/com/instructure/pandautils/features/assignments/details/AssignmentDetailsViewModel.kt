@@ -447,11 +447,11 @@ class AssignmentDetailsViewModel @Inject constructor(
         val partialLockedMessage = assignment.lockExplanation.takeIf { it.isValid() && assignment.lockDate?.before(Date()).orDefault() }.orEmpty()
 
         val submissionHistory = assignment.submission?.submissionHistory
-        val attempts = submissionHistory?.reversed()?.mapIndexedNotNull { index, submission ->
+        val attempts = submissionHistory?.sortedByDescending { it?.attempt }?.mapNotNull { submission ->
             submission?.submittedAt?.toFormattedString()?.let {
                 AssignmentDetailsAttemptItemViewModel(
                     AssignmentDetailsAttemptViewData(
-                        resources.getString(R.string.attempt, submissionHistory.size - index),
+                        resources.getString(R.string.attempt, submission.attempt),
                         it,
                         submission
                     )

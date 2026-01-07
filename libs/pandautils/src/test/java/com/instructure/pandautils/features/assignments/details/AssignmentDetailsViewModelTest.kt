@@ -436,14 +436,14 @@ class AssignmentDetailsViewModelTest {
 
     @Test
     fun `Select submission attempt`() {
-        val firstSubmission = Submission(submittedAt = Date(), grade = "A", postedAt = Date())
+        val firstSubmission = Submission(submittedAt = Date(), grade = "A", postedAt = Date(), attempt = 1)
         val assignment = Assignment(
             submission = Submission(
                 submissionHistory = listOf(
                     firstSubmission,
-                    Submission(submittedAt = Date(), grade = "B", postedAt = Date()),
-                    Submission(submittedAt = Date(), grade = "C", postedAt = Date()),
-                    Submission(grade = "D"),
+                    Submission(submittedAt = Date(), grade = "B", postedAt = Date(), attempt = 2),
+                    Submission(submittedAt = Date(), grade = "C", postedAt = Date(), attempt = 3),
+                    Submission(grade = "D", attempt = 4),
                 )
             )
         )
