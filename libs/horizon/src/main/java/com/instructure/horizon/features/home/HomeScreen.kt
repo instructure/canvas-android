@@ -97,7 +97,7 @@ fun HomeScreen(parentNavController: NavHostController, viewModel: HomeViewModel)
             Spinner(modifier = Modifier.fillMaxSize(), color = spinnerColor)
         } else {
             if (uiState.showAiAssist) {
-                AiAssistantScreen({ uiState.updateShowAiAssist(false) })
+                AiAssistantScreen(parentNavController, { uiState.updateShowAiAssist(false) })
             }
             HomeNavigation(navController, parentNavController, Modifier.padding(padding))
         }

@@ -30,6 +30,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
+import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.NavHostController
 import com.instructure.canvasapi2.models.journey.JourneyAssistRole
 import com.instructure.canvasapi2.utils.ContextKeeper
@@ -42,6 +44,7 @@ import com.instructure.horizon.horizonui.molecules.Spinner
 
 @Composable
 fun AiAssistChatScreen(
+    mainNavController: NavHostController,
     navController: NavHostController,
     onDismiss: () -> Unit,
     state: AiAssistChatUiState
@@ -81,9 +84,18 @@ fun AiAssistChatScreen(
             modifier = modifier
         ) {
             items(state.messages) { message ->
-                AiAssistMessage(message) { prompt ->
-                    state.onChipClicked(prompt)
-                }
+                AiAssistMessage(
+                    message = message,
+                    onSendPrompt =  { prompt ->
+                        state.onChipClicked(prompt)
+                    },
+                    onSourceSelected = {
+                        val request = NavDeepLinkRequest.Builder
+                            .fromUri(it.toUri())
+                            .build()
+                        mainNavController.navigate(request)
+                    }
+                )
             }
 
             if (state.isLoading) {
@@ -121,6 +133,7 @@ private fun AssistChatScreenPreview() {
     )
 
     AiAssistChatScreen(
+        mainNavController = NavHostController(LocalContext.current),
         navController = NavHostController(LocalContext.current),
         onDismiss = {},
         state = state

@@ -31,6 +31,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
+import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.NavHostController
 import com.instructure.horizon.features.aiassistant.common.composable.AiAssistMessage
 import com.instructure.horizon.features.aiassistant.common.composable.AiAssistScaffold
@@ -40,6 +42,7 @@ import com.instructure.horizon.horizonui.molecules.Spinner
 
 @Composable
 fun AiAssistMainScreen(
+    mainNavController: NavHostController,
     navController: NavHostController,
     state: AiAssistMainUiState,
     onDismiss: () -> Unit,
@@ -80,8 +83,14 @@ fun AiAssistMainScreen(
         ) {
             items(state.messages) {
                 AiAssistMessage(
-                    it,
-                    { state.sendMessage(it) }
+                    message = it,
+                    onSendPrompt = { state.sendMessage(it) },
+                    onSourceSelected = {
+                        val request = NavDeepLinkRequest.Builder
+                            .fromUri(it.toUri())
+                            .build()
+                        mainNavController.navigate(request)
+                    }
                 )
             }
             if (state.isLoading) {

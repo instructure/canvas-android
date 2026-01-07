@@ -24,11 +24,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.instructure.canvasapi2.models.journey.JourneyAssistRole
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
+import com.instructure.horizon.features.aiassistant.common.model.toDeepLink
 
 @Composable
 fun AiAssistMessage(
     message: AiAssistMessage,
-    onSendPrompt: (String) -> Unit
+    onSendPrompt: (String) -> Unit,
+    onSourceSelected: (String) -> Unit,
 ) {
     if (!message.errorMessage.isNullOrBlank()) {
         AiAssistResponseTextBlock(
@@ -42,9 +44,10 @@ fun AiAssistMessage(
                 sources = message.citations.map {
                     AiAssistResponseTextBlockSource(
                         label = it.title,
-                        url = ""
+                        url = it.toDeepLink()
                     )
-                }
+                },
+                onSourceSelected = { onSourceSelected(it.url) }
             ),
             chips = message.chipOptions.map {
                 AiAssistResponseTextBlockChipState(
@@ -53,8 +56,7 @@ fun AiAssistMessage(
                         onSendPrompt(it.prompt)
                     }
                 )
-            }
-
+            },
         )
     } else if (message.role == JourneyAssistRole.User) {
         Row(

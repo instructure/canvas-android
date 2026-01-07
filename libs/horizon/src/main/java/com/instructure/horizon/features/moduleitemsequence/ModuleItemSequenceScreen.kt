@@ -173,6 +173,7 @@ fun ModuleItemSequenceScreen(mainNavController: NavHostController, uiState: Modu
         Box(modifier = Modifier.padding(contentPadding)) {
             if (uiState.showAiAssist) {
                 AiAssistantScreen(
+                    mainNavController = mainNavController,
                     onDismiss = { uiState.updateShowAiAssist(false) },
                 )
             }
