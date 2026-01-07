@@ -34,20 +34,6 @@ abstract class DomainServicesGraphQLClientConfig(
     }
 }
 
-class PineGraphQLClientConfig @Inject constructor(
-    adapter: PineAdapter
-): DomainServicesGraphQLClientConfig(
-    url = BuildConfig.PINE_BASE_URL + "/graphql",
-    httpClient = adapter.buildOHttpClient()
-)
-
-class CedarGraphQLClientConfig @Inject constructor(
-    adapter: CedarAdapter
-): DomainServicesGraphQLClientConfig(
-    url = BuildConfig.CEDAR_BASE_URL + "/graphql",
-    httpClient = adapter.buildOHttpClient()
-)
-
 class RedwoodGraphQLClientConfig @Inject constructor(
     adapter: RedwoodAdapter
 ): DomainServicesGraphQLClientConfig(

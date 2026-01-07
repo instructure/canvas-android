@@ -14,20 +14,25 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.canvasapi2.models
+package com.instructure.canvasapi2.builders
 
 import com.instructure.canvasapi2.BuildConfig
+import com.instructure.canvasapi2.JourneyAdapter
+import com.instructure.canvasapi2.calladapter.DataResultCallAdapterFactory
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
 
-enum class DomainService(
-    val baseUrl: String,
-    val workflows: List<String>,
+class JourneyRestBuilder @Inject constructor(
+    private val journeyAdapter: JourneyAdapter
 ) {
-    REDWOOD(
-        baseUrl = BuildConfig.REDWOOD_BASE_URL,
-        workflows = listOf("redwood"),
-    ),
-    JOURNEY(
-        baseUrl = BuildConfig.JOURNEY_BASE_URL,
-        workflows = listOf("journey", "pine", "cedar"),
-    )
+    fun <T> build(clazz: Class<T>): T {
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.JOURNEY_BASE_URL + "/api/v1/")
+            .client(journeyAdapter.buildOHttpClient())
+            .addCallAdapterFactory(DataResultCallAdapterFactory())
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(clazz)
+    }
 }

@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -32,14 +31,12 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.instructure.canvasapi2.models.journey.JourneyAssistRole
 import com.instructure.canvasapi2.utils.ContextKeeper
-import com.instructure.horizon.features.aiassistant.common.composable.AiAssistResponseTextBlock
+import com.instructure.horizon.features.aiassistant.common.composable.AiAssistMessage
 import com.instructure.horizon.features.aiassistant.common.composable.AiAssistScaffold
-import com.instructure.horizon.features.aiassistant.common.composable.AiAssistUserTextBlock
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
-import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessagePrompt
-import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessageRole
-import com.instructure.horizon.features.aiassistant.common.model.toDisplayText
+import com.instructure.horizon.features.aiassistant.navigation.AiAssistRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.molecules.Spinner
 
@@ -49,14 +46,31 @@ fun AiAssistChatScreen(
     onDismiss: () -> Unit,
     state: AiAssistChatUiState
 ) {
+    LaunchedEffect(state.messages) {
+        val lastMessage = state.messages.lastOrNull()
+
+        if (lastMessage != null) {
+            when {
+                lastMessage.flashCards.isNotEmpty() -> {
+                    state.onNavigateToCards()
+                    navController.navigate(AiAssistRoute.AiAssistFlashcard.route)
+                }
+                lastMessage.quizItems.isNotEmpty() -> {
+                    state.onNavigateToCards()
+                    navController.navigate(AiAssistRoute.AiAssistQuiz.route)
+                }
+            }
+        }
+    }
+
     AiAssistScaffold(
         navController = navController,
+        onClearChatHistory = state.onClearChatHistory,
         onDismiss = { onDismiss() },
         inputTextValue = state.inputTextValue,
         onInputTextChanged = { state.onInputTextChanged(it) },
         onInputTextSubmitted = { state.onInputTextSubmitted() },
     ) { modifier ->
-        val context = LocalContext.current
         val scrollState = rememberLazyListState()
         LaunchedEffect(state.messages) {
             scrollState.animateScrollToItem(state.messages.size)
@@ -67,23 +81,8 @@ fun AiAssistChatScreen(
             modifier = modifier
         ) {
             items(state.messages) { message ->
-                Row(
-                    modifier = Modifier.fillMaxWidth()
-                ){
-                    when (message.role) {
-                        is AiAssistMessageRole.User -> {
-                            Spacer(modifier = Modifier.weight(1f))
-                            AiAssistUserTextBlock(
-                                text = message.prompt.toDisplayText(context),
-                                modifier = Modifier.padding(start = 24.dp)
-                            )
-                        }
-
-                        is AiAssistMessageRole.Assistant -> AiAssistResponseTextBlock(
-                            text = message.prompt.toDisplayText(context),
-                            modifier = Modifier.padding(end = 24.dp)
-                        )
-                    }
+                AiAssistMessage(message) { prompt ->
+                    state.onChipClicked(prompt)
                 }
             }
 
@@ -109,12 +108,12 @@ private fun AssistChatScreenPreview() {
     val state = AiAssistChatUiState(
         messages = listOf(
             AiAssistMessage(
-                prompt = AiAssistMessagePrompt.Custom("Hello"),
-                role = AiAssistMessageRole.User,
+                text = "Hello",
+                role = JourneyAssistRole.User,
             ),
             AiAssistMessage(
-                prompt = AiAssistMessagePrompt.Custom("Hi there! How can I assist you today?"),
-                role = AiAssistMessageRole.Assistant,
+                text = "Hi there! How can I assist you today?",
+                role = JourneyAssistRole.Assistant
             )
         ),
         inputTextValue = TextFieldValue("Hi,"),

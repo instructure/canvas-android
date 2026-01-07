@@ -45,6 +45,7 @@ fun AiAssistQuizScreen(
 ) {
     AiAssistScaffold(
         navController = navController,
+        onClearChatHistory = state.onClearChatHistory,
         onDismiss = { onDismiss() },
     ) { modifier ->
             if (state.isLoading) {
@@ -57,24 +58,25 @@ fun AiAssistQuizScreen(
                     )
                 }
             } else {
-                if (state.quizState != null) {
+                val currentQuiz = state.quizList.getOrNull(state.currentQuizIndex)
+                if (currentQuiz != null) {
                     Column(
                         modifier = modifier.verticalScroll(rememberScrollState())
                     ) {
                         AiAssistResponseTextBlock(
-                            text = state.quizState.question
+                            text = currentQuiz.question
                         )
 
                         HorizonSpace(SpaceSize.SPACE_16)
 
-                        state.quizState.options.forEachIndexed { index, option ->
+                        currentQuiz.options.forEachIndexed { index, option ->
                             AiAssistQuizAnswer(
                                 text = option.text,
-                                onClick = { if (!state.isChecked) { state.setSelectedIndex(index) } },
+                                onClick = { if (!currentQuiz.isChecked) { state.setSelectedIndex(index) } },
                                 status = option.status,
                             )
 
-                            if (index != state.quizState.options.lastIndex) {
+                            if (index != currentQuiz.options.lastIndex) {
                                 HorizonSpace(SpaceSize.SPACE_8)
                             }
                         }
@@ -82,7 +84,7 @@ fun AiAssistQuizScreen(
                         HorizonSpace(SpaceSize.SPACE_32)
 
                         AiAssistQuizFooter(
-                            checkButtonEnabled = state.quizState.selectedOptionIndex != null && !state.isChecked,
+                            checkButtonEnabled = currentQuiz.selectedOptionIndex != null && !currentQuiz.isChecked,
                             onCheckAnswerSelected = { state.checkQuiz() },
                             onRegenerateSelected = { state.regenerateQuiz() },
                         )
@@ -99,8 +101,8 @@ private fun AiAssistQuizScreenLoadingPreview() {
 
     val state = AiAssistQuizUiState(
         isLoading = true,
-        quizState = null,
-        isChecked = false,
+        quizList = emptyList(),
+        currentQuizIndex = 0,
         setSelectedIndex = {},
         checkQuiz = {},
         regenerateQuiz = {}
@@ -120,18 +122,33 @@ private fun AiAssistQuizScreenPreview() {
 
     val state = AiAssistQuizUiState(
         isLoading = false,
-        quizState = QuizState(
-            question = "What is the capital of France?",
-            answerIndex = 1,
-            options = listOf(
-                QuizAnswerState("Berlin", AiAssistQuizAnswerStatus.UNSELECTED),
-                QuizAnswerState("Paris", AiAssistQuizAnswerStatus.CORRECT),
-                QuizAnswerState("Madrid", AiAssistQuizAnswerStatus.INCORRECT),
-                QuizAnswerState("Rome", AiAssistQuizAnswerStatus.SELECTED)
+        quizList = listOf(
+            QuizState(
+                question = "What is the capital of France?",
+                answerIndex = 1,
+                options = listOf(
+                    QuizAnswerState("Berlin", AiAssistQuizAnswerStatus.UNSELECTED),
+                    QuizAnswerState("Paris", AiAssistQuizAnswerStatus.CORRECT),
+                    QuizAnswerState("Madrid", AiAssistQuizAnswerStatus.INCORRECT),
+                    QuizAnswerState("Rome", AiAssistQuizAnswerStatus.SELECTED)
+                ),
+                selectedOptionIndex = null,
+                isChecked = true
             ),
-            selectedOptionIndex = null
+            QuizState(
+                question = "What is the capital of Spain?",
+                answerIndex = 2,
+                options = listOf(
+                    QuizAnswerState("Berlin", AiAssistQuizAnswerStatus.UNSELECTED),
+                    QuizAnswerState("Paris", AiAssistQuizAnswerStatus.UNSELECTED),
+                    QuizAnswerState("Madrid", AiAssistQuizAnswerStatus.UNSELECTED),
+                    QuizAnswerState("Rome", AiAssistQuizAnswerStatus.UNSELECTED)
+                ),
+                selectedOptionIndex = null,
+                isChecked = false
+            )
         ),
-        isChecked = true,
+        currentQuizIndex = 0,
         setSelectedIndex = {},
         checkQuiz = {},
         regenerateQuiz = {}

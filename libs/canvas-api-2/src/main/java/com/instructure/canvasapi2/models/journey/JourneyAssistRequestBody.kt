@@ -14,13 +14,10 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.aiassistant.main
+package com.instructure.canvasapi2.models.journey
 
-import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
-
-data class AiAssistMainUiState(
-    val isLoading: Boolean = true,
-    val messages: List<AiAssistMessage> = emptyList(),
-    val sendMessage: (String) -> Unit = {},
-    val onNavigateToDetails: () -> Unit = {},
+data class JourneyAssistRequestBody(
+    val prompt: String,
+    val history: List<JourneyAssistChatMessage>,
+    val state: JourneyAssistState
 )
