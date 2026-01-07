@@ -55,6 +55,12 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.focused
+import androidx.compose.ui.semantics.onClick
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -688,10 +694,22 @@ private fun PercentageGradingTypeInput(uiState: SpeedGraderGradingUiState) {
                 fontSize = 16.sp
             )
             Spacer(modifier = Modifier.weight(1f))
+            val gradeHint = stringResource(R.string.percentageGradeHint)
+            val gradeDescription = if (textFieldScore.isNotEmpty()) {
+                val percentValue = textFieldScore.toIntOrNull() ?: 0
+                stringResource(R.string.gradePercentTextFieldAccessibility, percentValue, gradeHint)
+            } else {
+                gradeHint
+            }
             BasicTextFieldWithHintDecoration(
                 modifier = Modifier
                     .padding(end = 8.dp)
-                    .testTag("speedGraderCurrentGradeTextField"),
+                    .testTag("speedGraderCurrentGradeTextField")
+                    .clearAndSetSemantics {
+                        contentDescription = gradeDescription
+                        focused = false
+                        onClick(label = gradeHint) { true }
+                    },
                 value = textFieldScore,
                 onValueChange = {
                     textFieldScore = it
@@ -707,10 +725,15 @@ private fun PercentageGradingTypeInput(uiState: SpeedGraderGradingUiState) {
             )
         }
 
+        val percentageValue = round(sliderState.value).toInt()
+        val accessibilityDescription = stringResource(R.string.gradePercentAccessibility, percentageValue)
         Slider(
             modifier = Modifier
                 .padding(top = 16.dp)
-                .testTag("speedGraderSlider"),
+                .testTag("speedGraderSlider")
+                .semantics {
+                    stateDescription = accessibilityDescription
+                },
             state = sliderState,
             colors = SliderDefaults.colors(
                 thumbColor = LocalCourseColor.current,
@@ -820,10 +843,21 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
                 modifier = Modifier.testTag("speedGraderCurrentGradeGradeLabel")
             )
             Spacer(modifier = Modifier.weight(1f))
+            val gradeHint = stringResource(R.string.pointGradeHint)
+            val gradeDescription = if (textFieldScore.isNotEmpty()) {
+                stringResource(R.string.gradePointsTextFieldAccessibility, textFieldScore, gradeHint)
+            } else {
+                gradeHint
+            }
             BasicTextFieldWithHintDecoration(
                 modifier = Modifier
                     .padding(end = 8.dp)
-                    .testTag("speedGraderCurrentGradeTextField"),
+                    .testTag("speedGraderCurrentGradeTextField")
+                    .clearAndSetSemantics {
+                        contentDescription = gradeDescription
+                        focused = false
+                        onClick(label = gradeHint) { true }
+                    },
                 value = textFieldScore,
                 onValueChange = {
                     textFieldScore = it
@@ -856,10 +890,15 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
         if (uiState.pointsPossible != null && uiState.pointsPossible != 0.0 && (uiState.enteredScore
                 ?: 0f) <= 100.0
         ) {
+            val pointsValue = numberFormatter.format(sliderState.value.roundToInt().toFloat() / pointScale)
+            val accessibilityDescription = stringResource(R.string.gradePointsAccessibility, pointsValue)
             Slider(
                 modifier = Modifier
                     .padding(top = 16.dp)
-                    .testTag("speedGraderSlider"),
+                    .testTag("speedGraderSlider")
+                    .semantics {
+                        stateDescription = accessibilityDescription
+                    },
                 state = sliderState,
                 colors = SliderDefaults.colors(
                     thumbColor = LocalCourseColor.current,
