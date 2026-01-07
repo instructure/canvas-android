@@ -97,14 +97,6 @@ fun AiAssistResponseTextBlock(
                     }
                 }
             }
-
-            HorizonSpace(SpaceSize.SPACE_8)
-
-            AiAssistFeedback(
-                selected = footerState.selectedFeedback,
-                onPositiveFeedbackSelected = footerState.onPositiveFeedbackSelected,
-                onNegativeFeedbackSelected = footerState.onNegativeFeedbackSelected
-            )
         }
 
         if (chips.isNotEmpty()) {
