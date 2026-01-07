@@ -20,7 +20,7 @@
     <string name="bottomNav_learn">Learn</string>
     <string name="bottomNav_skillspace">Skillspace</string>
     <string name="bottomNav_account">Account</string>
-    <string name="bottomNav_aiAssist">AI assist</string>
+    <string name="bottomNav_igniteAI">IgniteAI</string>
     <string name="progressBar_percent">%1$s\%%</string>
     <string name="dashboard_resumeLearning">Resume learning</string>
     <string name="learningObject_assignment">Assignment</string>
@@ -183,10 +183,10 @@
     <string name="fileDetails_downloadFile">Download file</string>
     <string name="fileDetails_openWith">Open with</string>
     <string name="fileDetails_downloadError">File couldn’t be downloaded.</string>
-    <string name="aiAssistToolbarTitle">Assist</string>
-    <string name="aiAssistDismissContentDescription">Dismiss Assist</string>
-    <string name="a11y_aiAssistPositiveFeedback">Rate Assist with positive feedback</string>
-    <string name="a11y_aiAssistNegativeFeedback">Rate Assist with negative feedback</string>
+    <string name="igniteAIToolbarTitle">IgniteAI</string>
+    <string name="igniteAIDismissContentDescription">Dismiss IgniteAI</string>
+    <string name="a11y_igniteAIPositiveFeedback">Rate IgniteAI with positive feedback</string>
+    <string name="a11y_igniteAINegativeFeedback">Rate IgniteAI with negative feedback</string>
     <string name="aiAssistEnterAPromptLabel">Enter a prompt</string>
     <string name="aiAssistSubmitPrompt">Submit prompt</string>
     <string name="aiAssistCheckAnswerLabel">Check answer</string>
@@ -490,7 +490,7 @@
     <string name="a11y_unreadInboxMessage">Unread</string>
     <string name="a11y_previousModuleItem">Previous module item</string>
     <string name="a11y_previousModule">Previous module</string>
-    <string name="a11y_openAIAssistant">Open AI Assistant</string>
+    <string name="a11y_openIgniteAI">Open IgniteAI</string>
     <string name="a11y_openNotebook">Open notebook</string>
     <string name="a11y_openMoreOptions">Open more options</string>
     <string name="a11y_nextModuleItem">Next module item</string>
