@@ -885,32 +885,33 @@ class InboxE2ETest: StudentComposeTest() {
     }
 
     /**
-     * Copy a file from test assets to external files directory for E2E testing.
+     * Copy a file from test assets to external cache directory for E2E testing.
      *
-     * For E2E tests that use the real Android file picker with UIAutomator, files must be placed
-     * in a location that the file picker can navigate to. We use getExternalFilesDir which:
-     * - Is accessible by the system file picker (unlike externalCacheDir)
-     * - Doesn't require special permissions (unlike public Downloads)
-     * - Works reliably on CI emulators
-     *
-     * This is different from interaction tests which stub the file picker intent and can use
-     * externalCacheDir with FileProvider URIs.
+     * This uses the activity context to ensure proper permissions when the app reads the file
+     * back through the file picker. Files are placed in externalCacheDir/file_upload which:
+     * - Matches the production FileUploadUtils pattern
+     * - Is accessible with proper FileProvider URI permissions
+     * - Works reliably on CI emulators (avoids Android 10+ scoped storage issues)
      */
     private fun copyAssetToDownloads(fileName: String) {
-        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        // IMPORTANT: Use activityRule.activity context, not targetContext or instrumentation context
+        // This ensures the file is written with the correct app ownership and permissions
+        val context = activityRule.activity
         var inputStream: java.io.InputStream? = null
         var outputStream: java.io.OutputStream? = null
 
         try {
-            // Use external files dir - accessible by system file picker for E2E tests
+            // Use external cache dir with "file_upload" subfolder - matches production pattern
             inputStream = InstrumentationRegistry.getInstrumentation().context.resources.assets.open(fileName)
 
-            // getExternalFilesDir(null) returns app-specific directory on external storage
-            // Path: /storage/emulated/0/Android/data/{package}/files/
-            val dir = context.getExternalFilesDir(null)
-            val file = File(dir, fileName)
+            // This matches FileUploadUtils.getExternalCacheDir() in production code
+            val cacheDir = File(context.externalCacheDir, "file_upload")
+            if (!cacheDir.exists()) {
+                cacheDir.mkdirs()
+            }
+            val file = File(cacheDir, fileName)
 
-            Log.d(PREPARATION_TAG, "Copying $fileName to external files directory: ${file.absolutePath}")
+            Log.d(PREPARATION_TAG, "Copying $fileName to external cache: ${file.absolutePath}")
 
             // Delete existing file if present
             if (file.exists()) {
@@ -931,8 +932,8 @@ class InboxE2ETest: StudentComposeTest() {
         }
 
         // Verify the file was written correctly
-        val dir = context.getExternalFilesDir(null)
-        val file = File(dir, fileName)
+        val cacheDir = File(context.externalCacheDir, "file_upload")
+        val file = File(cacheDir, fileName)
 
         if (!file.exists()) {
             throw IllegalStateException("File was not created: ${file.absolutePath}")
