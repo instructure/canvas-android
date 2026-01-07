@@ -86,7 +86,6 @@ import com.instructure.student.ui.pages.classic.ShareExtensionStatusPage
 import com.instructure.student.ui.pages.classic.ShareExtensionTargetPage
 import com.instructure.student.ui.pages.classic.SubmissionDetailsPage
 import com.instructure.student.ui.pages.classic.SyllabusPage
-import com.instructure.student.ui.pages.classic.TodoPage
 import com.instructure.student.ui.pages.classic.UrlSubmissionUploadPage
 import com.instructure.student.ui.pages.classic.k5.ElementaryCoursePage
 import com.instructure.student.ui.pages.classic.k5.ElementaryDashboardPage
