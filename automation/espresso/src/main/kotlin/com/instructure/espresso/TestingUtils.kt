@@ -266,6 +266,7 @@ fun handleWorkManagerTask(workerTag: String, timeoutMillis: Long = 20000) {
     }
 
     endTime = System.currentTimeMillis() + timeoutMillis
+    var finishedWorkInfos: List<androidx.work.WorkInfo> = emptyList()
     while (System.currentTimeMillis() < endTime) {
         try {
             val workInfos = WorkManager.getInstance(app).getWorkInfosByTag(workerTag).get()
@@ -273,7 +274,7 @@ fun handleWorkManagerTask(workerTag: String, timeoutMillis: Long = 20000) {
                 Log.w("STUDENT_APP_TAG","WorkInfo: $work")
             }
 
-            val finishedWorkInfos = workInfos.filter { it.state.isFinished }
+            finishedWorkInfos = workInfos.filter { it.state.isFinished }
             if (finishedWorkInfos.isNotEmpty()) {
                 Log.w("STUDENT_APP_TAG", "Found ${finishedWorkInfos.size} finished WorkInfo(s):")
                 finishedWorkInfos.forEach { work ->
@@ -291,13 +292,14 @@ fun handleWorkManagerTask(workerTag: String, timeoutMillis: Long = 20000) {
         Thread.sleep(500)
     }
 
-    if (unfinishedWorkInfo == null) {
+    if (finishedWorkInfos.isEmpty() && unfinishedWorkInfo == null) {
         val workInfos = WorkManager.getInstance(app).getWorkInfosByTag(workerTag).get()
         Assert.fail("Unable to find WorkInfo with tag:'$workerTag' in ${timeoutMillis} ms. WorkInfos found: $workInfos")
     }
-
-    testDriver!!.setAllConstraintsMet(unfinishedWorkInfo!!.id)
-    waitForWorkManagerJobsToFinish(workerTag = workerTag)
+    else if(finishedWorkInfos.isEmpty() && unfinishedWorkInfo != null) {
+        testDriver!!.setAllConstraintsMet(unfinishedWorkInfo.id)
+        waitForWorkManagerJobsToFinish(workerTag = workerTag)
+    }
 }
 
 
