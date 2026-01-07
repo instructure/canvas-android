@@ -177,6 +177,7 @@ class TodoE2ETest : StudentComposeTest() {
         toDoListPage.clickMarkToDoItemAsDone(todayQuiz.id)
 
         Log.d(ASSERTION_TAG, "Assert that the To Do List Page is empty because of the (default) filters.")
+        toDoListPage.waitForItemToDisappear(todayQuiz.title)
         toDoListPage.assertEmptyState()
 
         Log.d(STEP_TAG, "Open the To Do Filter Page.")

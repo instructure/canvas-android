@@ -247,7 +247,7 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
     }
 
     fun assertAttemptSpinnerDisplayed() {
-        onView(withId(R.id.attemptSpinner)).assertDisplayed()
+        waitForView(withId(R.id.attemptSpinner)).assertDisplayed()
     }
 
     fun selectAttempt(attemptNumber: Int) {
