@@ -16,7 +16,6 @@
  */
 package com.instructure.horizon.features.aiassistant.flashcard
 
-import com.instructure.canvasapi2.models.journey.JourneyAssistChatMessage
 import com.instructure.canvasapi2.models.journey.JourneyAssistFlashCard
 import com.instructure.canvasapi2.models.journey.JourneyAssistRole
 import com.instructure.canvasapi2.models.journey.JourneyAssistState
@@ -24,6 +23,7 @@ import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvid
 import com.instructure.horizon.features.aiassistant.common.AiAssistRepository
 import com.instructure.horizon.features.aiassistant.common.AiAssistResponse
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -64,10 +64,8 @@ class AiAssistFlashcardViewModelTest {
         )
     )
 
-    private val testMessage = JourneyAssistChatMessage(
-        id = "test-1",
+    private val testMessage = AiAssistMessage(
         text = "Here are some flashcards",
-        prompt = "Generate flashcards",
         role = JourneyAssistRole.Assistant,
         flashCards = testFlashCards
     )
@@ -176,10 +174,8 @@ class AiAssistFlashcardViewModelTest {
             JourneyAssistFlashCard("New Q2", "New A2")
         )
 
-        val responseMessage = JourneyAssistChatMessage(
-            id = "response-1",
+        val responseMessage = AiAssistMessage(
             text = "More flashcards",
-            prompt = "More flashcards",
             role = JourneyAssistRole.Assistant,
             flashCards = newFlashCards
         )
@@ -203,10 +199,8 @@ class AiAssistFlashcardViewModelTest {
             JourneyAssistFlashCard("New Q2", "New A2")
         )
 
-        val responseMessage = JourneyAssistChatMessage(
-            id = "response-1",
+        val responseMessage = AiAssistMessage(
             text = "More flashcards",
-            prompt = "More flashcards",
             role = JourneyAssistRole.Assistant,
             flashCards = newFlashCards
         )
@@ -239,10 +233,8 @@ class AiAssistFlashcardViewModelTest {
             repository.answerPrompt(any(), any(), any())
         } coAnswers {
             kotlinx.coroutines.delay(100)
-            val message = JourneyAssistChatMessage(
-                id = "response-1",
+            val message = AiAssistMessage(
                 text = "Flashcards",
-                prompt = "Flashcards",
                 role = JourneyAssistRole.Assistant,
                 flashCards = listOf(JourneyAssistFlashCard("Q", "A"))
             )
@@ -279,10 +271,8 @@ class AiAssistFlashcardViewModelTest {
 
     @Test
     fun `regenerateFlashcards updates context with new message`() = runTest {
-        val responseMessage = JourneyAssistChatMessage(
-            id = "response-1",
+        val responseMessage = AiAssistMessage(
             text = "More flashcards",
-            prompt = "More flashcards",
             role = JourneyAssistRole.Assistant,
             flashCards = listOf(JourneyAssistFlashCard("Q", "A"))
         )

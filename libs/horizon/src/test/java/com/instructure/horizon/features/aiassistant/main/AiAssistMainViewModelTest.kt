@@ -16,13 +16,13 @@
  */
 package com.instructure.horizon.features.aiassistant.main
 
-import com.instructure.canvasapi2.models.journey.JourneyAssistChatMessage
 import com.instructure.canvasapi2.models.journey.JourneyAssistRole
 import com.instructure.canvasapi2.models.journey.JourneyAssistState
 import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
 import com.instructure.horizon.features.aiassistant.common.AiAssistRepository
 import com.instructure.horizon.features.aiassistant.common.AiAssistResponse
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -65,10 +65,8 @@ class AiAssistMainViewModelTest {
         Dispatchers.setMain(testDispatcher)
         every { aiAssistContextProvider.aiAssistContext } returns testContext
 
-        val testMessage = JourneyAssistChatMessage(
-            id = "init-1",
+        val testMessage = AiAssistMessage(
             text = "Welcome! How can I help?",
-            prompt = "",
             role = JourneyAssistRole.Assistant
         )
         coEvery {
@@ -84,10 +82,8 @@ class AiAssistMainViewModelTest {
 
     @Test
     fun `ViewModel initializes with loading state`() = runTest {
-        val initialMessage = JourneyAssistChatMessage(
-            id = "init-1",
+        val initialMessage = AiAssistMessage(
             text = "Welcome!",
-            prompt = "",
             role = JourneyAssistRole.Assistant
         )
 
@@ -125,10 +121,8 @@ class AiAssistMainViewModelTest {
 
     @Test
     fun `sendMessage calls repository and adds response`() = runTest {
-        val responseMessage = JourneyAssistChatMessage(
-            id = "response-1",
+        val responseMessage = AiAssistMessage(
             text = "Hi there!",
-            prompt = "Hi there!",
             role = JourneyAssistRole.Assistant
         )
 
@@ -154,10 +148,8 @@ class AiAssistMainViewModelTest {
             repository.answerPrompt(any(), any(), any())
         } coAnswers {
             kotlinx.coroutines.delay(100)
-            val message = JourneyAssistChatMessage(
-                id = "response-1",
+            val message = AiAssistMessage(
                 text = "Response",
-                prompt = "Response",
                 role = JourneyAssistRole.Assistant
             )
             AiAssistResponse(message, testState)
@@ -179,17 +171,13 @@ class AiAssistMainViewModelTest {
 
     @Test
     fun `messages are appended in correct order`() = runTest {
-        val response1 = JourneyAssistChatMessage(
-            id = "response-1",
+        val response1 = AiAssistMessage(
             text = "Response 1",
-            prompt = "Response 1",
             role = JourneyAssistRole.Assistant
         )
 
-        val response2 = JourneyAssistChatMessage(
-            id = "response-2",
+        val response2 = AiAssistMessage(
             text = "Response 2",
-            prompt = "Response 2",
             role = JourneyAssistRole.Assistant
         )
 
@@ -278,17 +266,13 @@ class AiAssistMainViewModelTest {
             pageID = "101"
         )
 
-        val message1 = JourneyAssistChatMessage(
-            id = "msg-1",
+        val message1 = AiAssistMessage(
             text = "First",
-            prompt = "First",
             role = JourneyAssistRole.Assistant
         )
 
-        val message2 = JourneyAssistChatMessage(
-            id = "msg-2",
+        val message2 = AiAssistMessage(
             text = "Second",
-            prompt = "Second",
             role = JourneyAssistRole.Assistant
         )
 

@@ -16,7 +16,6 @@
  */
 package com.instructure.horizon.features.aiassistant.quiz
 
-import com.instructure.canvasapi2.models.journey.JourneyAssistChatMessage
 import com.instructure.canvasapi2.models.journey.JourneyAssistQuizItem
 import com.instructure.canvasapi2.models.journey.JourneyAssistRole
 import com.instructure.canvasapi2.models.journey.JourneyAssistState
@@ -24,6 +23,7 @@ import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvid
 import com.instructure.horizon.features.aiassistant.common.AiAssistRepository
 import com.instructure.horizon.features.aiassistant.common.AiAssistResponse
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
 import com.instructure.horizon.features.aiassistant.quiz.composable.AiAssistQuizAnswerStatus
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -33,7 +33,6 @@ import io.mockk.unmockkAll
 import io.mockk.verify
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertFalse
-import junit.framework.TestCase.assertNotNull
 import junit.framework.TestCase.assertNull
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
@@ -65,10 +64,8 @@ class AiAssistQuizViewModelTest {
         )
     )
 
-    private val testMessage = JourneyAssistChatMessage(
-        id = "test-1",
+    private val testMessage = AiAssistMessage(
         text = "Here are some quiz questions",
-        prompt = "Generate quiz",
         role = JourneyAssistRole.Assistant,
         quizItems = testQuizItems
     )
@@ -185,10 +182,8 @@ class AiAssistQuizViewModelTest {
             )
         )
 
-        val responseMessage = JourneyAssistChatMessage(
-            id = "response-1",
+        val responseMessage = AiAssistMessage(
             text = "More quizzes",
-            prompt = "More quizzes",
             role = JourneyAssistRole.Assistant,
             quizItems = newQuizItems
         )
@@ -215,10 +210,8 @@ class AiAssistQuizViewModelTest {
             repository.answerPrompt(any(), any(), any())
         } coAnswers {
             kotlinx.coroutines.delay(100)
-            val message = JourneyAssistChatMessage(
-                id = "response-1",
+            val message = AiAssistMessage(
                 text = "Quiz",
-                prompt = "Quiz",
                 role = JourneyAssistRole.Assistant,
                 quizItems = listOf(
                     JourneyAssistQuizItem("Q?", listOf("A", "B"), 0)
@@ -257,10 +250,8 @@ class AiAssistQuizViewModelTest {
 
     @Test
     fun `regenerateQuiz updates context with new message`() = runTest {
-        val responseMessage = JourneyAssistChatMessage(
-            id = "response-1",
+        val responseMessage = AiAssistMessage(
             text = "More quizzes",
-            prompt = "More quizzes",
             role = JourneyAssistRole.Assistant,
             quizItems = listOf(JourneyAssistQuizItem("Q?", listOf("A", "B"), 0))
         )
