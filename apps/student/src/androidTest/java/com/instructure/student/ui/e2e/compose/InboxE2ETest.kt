@@ -31,6 +31,7 @@ import com.instructure.canvas.espresso.annotations.ReleaseExclude
 import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.api.ConversationsApi
 import com.instructure.dataseeding.api.GroupsApi
+import com.instructure.espresso.handleWorkManagerTask
 import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.extensions.seedData
@@ -701,6 +702,7 @@ class InboxE2ETest: StudentComposeTest() {
 */
         Log.d(STEP_TAG, "Click OKAY button to confirm file selection.")
         fileChooserPage.clickOkay()
+        handleWorkManagerTask("FileUploadWorker")
 
         Log.d(ASSERTION_TAG, "Assert that the video file is displayed as attached in compose screen.")
         inboxComposePage.assertAttachmentDisplayed(videoFileName)
@@ -873,6 +875,7 @@ class InboxE2ETest: StudentComposeTest() {
 
         Log.d(STEP_TAG, "Click OKAY button to confirm file selection.")
         fileChooserPage.clickOkay()
+        handleWorkManagerTask("FileUploadWorker")
 
         sleep(3000) // Wait for the file to be loaded.
 
