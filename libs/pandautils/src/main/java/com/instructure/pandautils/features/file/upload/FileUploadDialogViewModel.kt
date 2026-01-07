@@ -18,6 +18,7 @@ package com.instructure.pandautils.features.file.upload
 
 import android.content.res.Resources
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -292,9 +293,11 @@ class FileUploadDialogViewModel @Inject constructor(
             if (uploadType == FileUploadType.DISCUSSION) {
                 _events.value = Event(FileUploadAction.AttachmentSelectedAction(FileUploadDialogFragment.EVENT_ON_FILE_SELECTED, getAttachmentUri()))
             } else {
+                Log.w("FileUploadDialogViewModel", "Starting upload for ${uris.size} files.")
                 val worker = OneTimeWorkRequestBuilder<FileUploadWorker>()
                     .addTag("FileUploadWorker")
                     .build()
+                Log.w("FileUploadDialogViewModel", "FileUploadWorker created with id: ${worker.id}")
 
                 val input = getInputData(worker.id, uris)
                 fileUploadInputDao.insert(input)

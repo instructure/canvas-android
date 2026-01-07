@@ -249,7 +249,7 @@ fun getRecyclerViewFromMatcher(matcher: Matcher<View>): RecyclerView {
 fun handleWorkManagerTask(workerTag: String, timeoutMillis: Long = 20000) {
     val app = ApplicationProvider.getApplicationContext<TestAppManager>()
     var endTime = System.currentTimeMillis() + timeoutMillis
-    var workInfo: androidx.work.WorkInfo? = null
+    var unfinishedWorkInfo: androidx.work.WorkInfo? = null
 
     var testDriver = app.testDriver
     if (testDriver == null) {
@@ -272,9 +272,18 @@ fun handleWorkManagerTask(workerTag: String, timeoutMillis: Long = 20000) {
             for(work in workInfos) {
                 Log.w("STUDENT_APP_TAG","WorkInfo: $work")
             }
-            workInfo = workInfos.find { !it.state.isFinished }
 
-            if (workInfo != null) break
+            val finishedWorkInfos = workInfos.filter { it.state.isFinished }
+            if (finishedWorkInfos.isNotEmpty()) {
+                Log.w("STUDENT_APP_TAG", "Found ${finishedWorkInfos.size} finished WorkInfo(s):")
+                finishedWorkInfos.forEach { work ->
+                    Log.w("STUDENT_APP_TAG", "Already finished WorkInfo: $work (state: ${work.state})")
+                }
+                break
+            }
+
+            unfinishedWorkInfo = workInfos.find { !it.state.isFinished }
+            if (unfinishedWorkInfo != null) break
 
         } catch (e: Exception) {
             e.printStackTrace()
@@ -282,12 +291,12 @@ fun handleWorkManagerTask(workerTag: String, timeoutMillis: Long = 20000) {
         Thread.sleep(500)
     }
 
-    if (workInfo == null) {
+    if (unfinishedWorkInfo == null) {
         val workInfos = WorkManager.getInstance(app).getWorkInfosByTag(workerTag).get()
         Assert.fail("Unable to find WorkInfo with tag:'$workerTag' in ${timeoutMillis} ms. WorkInfos found: $workInfos")
     }
 
-    testDriver!!.setAllConstraintsMet(workInfo!!.id)
+    testDriver!!.setAllConstraintsMet(unfinishedWorkInfo!!.id)
     waitForWorkManagerJobsToFinish(workerTag = workerTag)
 }
 
