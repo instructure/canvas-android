@@ -168,7 +168,7 @@ object HelpLinksEndpoint : Endpoint( response = {
                                 availableTo=listOf("teacher", "admin"),
                                 url="https://community.canvaslms.com/community/answers",
                                 text="Ask the Community",
-                                subtext="Get help from a Canvas expert"
+                                subtext="Explore guides, updates, blogs, forums, and resources to help you find answers, collaborate with others, and keep learning."
                         ),
                         HelpLink(
                                 id="submit_feature_idea",
@@ -217,7 +217,7 @@ object HelpLinksEndpoint : Endpoint( response = {
                                 availableTo=listOf("teacher", "admin"),
                                 url="https://community.canvaslms.com/community/answers",
                                 text="Ask the Community",
-                                subtext="Get help from a Canvas expert"
+                                subtext="Explore guides, updates, blogs, forums, and resources to help you find answers, collaborate with others, and keep learning."
                         ),
                         HelpLink(
                                 id="submit_feature_idea",
