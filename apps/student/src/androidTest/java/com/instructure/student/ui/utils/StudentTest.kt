@@ -23,7 +23,6 @@ import android.net.Uri
 import android.os.Environment
 import android.view.View
 import androidx.core.content.FileProvider
-import androidx.test.espresso.Espresso
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.intent.Intents
@@ -44,7 +43,6 @@ import com.instructure.canvas.espresso.common.pages.WrongDomainPage
 import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.Searchable
-import com.instructure.espresso.swipeRight
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
@@ -164,7 +162,6 @@ abstract class StudentTest : CanvasTest() {
     val emailNotificationsPage = EmailNotificationsPage()
     val submissionDetailsPage = SubmissionDetailsPage()
     val syllabusPage = SyllabusPage()
-    val todoPage = TodoPage()
     val urlSubmissionUploadPage = UrlSubmissionUploadPage()
     val elementaryDashboardPage = ElementaryDashboardPage()
     val homeroomPage = HomeroomPage()
@@ -178,20 +175,14 @@ abstract class StudentTest : CanvasTest() {
     val manageOfflineContentPage = ManageOfflineContentPage()
     val syncProgressPage = SyncProgressPage()
 
-    // A no-op interaction to afford us an easy, harmless way to get a11y checking to trigger.
-    fun meaninglessSwipe() {
-        Espresso.onView(ViewMatchers.withId(R.id.action_bar_root)).swipeRight()
-    }
-
     // Get the number of files/avatars in our panda avatars folder
     fun getSavedPandaAvatarCount() : Int {
         val root = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), originalActivity.getString(R.string.pandaAvatarsFolderName))
 
-        if(root.isDirectory) {
-            return root.listFiles()?.size ?: 0
-        }
-        else {
-            return 0
+        return if(root.isDirectory) {
+            root.listFiles()?.size ?: 0
+        } else {
+            0
         }
     }
 
