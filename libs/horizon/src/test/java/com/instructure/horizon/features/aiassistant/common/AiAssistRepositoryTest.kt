@@ -23,7 +23,6 @@ import com.instructure.canvasapi2.models.journey.JourneyAssistCitation
 import com.instructure.canvasapi2.models.journey.JourneyAssistCitationType
 import com.instructure.canvasapi2.models.journey.JourneyAssistFlashCard
 import com.instructure.canvasapi2.models.journey.JourneyAssistQuizItem
-import com.instructure.canvasapi2.models.journey.JourneyAssistRequestBody
 import com.instructure.canvasapi2.models.journey.JourneyAssistResponse
 import com.instructure.canvasapi2.models.journey.JourneyAssistRole
 import com.instructure.canvasapi2.models.journey.JourneyAssistState
@@ -32,7 +31,6 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
-import junit.framework.TestCase.assertNotNull
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
@@ -102,9 +100,7 @@ class AiAssistRepositoryTest {
             state = testState
         )
 
-        assertNotNull(result.message.id)
         assertEquals("This is the AI response", result.message.text)
-        assertEquals("This is the AI response", result.message.prompt)
         assertEquals(JourneyAssistRole.Assistant, result.message.role)
         assertEquals(testChips, result.message.chipOptions)
         assertEquals(testFlashCards, result.message.flashCards)
@@ -131,7 +127,6 @@ class AiAssistRepositoryTest {
         )
 
         assertEquals("", result.message.text)
-        assertEquals("", result.message.prompt)
     }
 
     @Test
@@ -139,15 +134,11 @@ class AiAssistRepositoryTest {
         val prompt = "What is Kotlin?"
         val history = listOf(
             JourneyAssistChatMessage(
-                id = "1",
                 text = "Previous question",
-                prompt = "Previous question",
                 role = JourneyAssistRole.User
             ),
             JourneyAssistChatMessage(
-                id = "2",
                 text = "Previous answer",
-                prompt = "Previous answer",
                 role = JourneyAssistRole.Assistant
             )
         )
@@ -228,17 +219,5 @@ class AiAssistRepositoryTest {
                 match { it.history.isEmpty() }
             )
         }
-    }
-
-    @Test
-    fun `answerPrompt generates unique message ID`() = runTest {
-        coEvery {
-            journeyAssistAPI.answerPrompt(any())
-        } returns JourneyAssistResponse(response = "Response")
-
-        val result1 = repository.answerPrompt("Test 1", emptyList(), testState)
-        val result2 = repository.answerPrompt("Test 2", emptyList(), testState)
-
-        assert(result1.message.id != result2.message.id)
     }
 }

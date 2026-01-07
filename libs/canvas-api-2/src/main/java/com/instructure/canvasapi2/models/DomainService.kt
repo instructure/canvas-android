@@ -20,14 +20,14 @@ import com.instructure.canvasapi2.BuildConfig
 
 enum class DomainService(
     val baseUrl: String,
-    val workflow: String,
+    val workflows: List<String>,
 ) {
     REDWOOD(
         baseUrl = BuildConfig.REDWOOD_BASE_URL,
-        workflow = "redwood",
+        workflows = listOf("redwood"),
     ),
     JOURNEY(
         baseUrl = BuildConfig.JOURNEY_BASE_URL,
-        workflow = "journey",
+        workflows = listOf("journey", "pine", "cedar"),
     )
 }

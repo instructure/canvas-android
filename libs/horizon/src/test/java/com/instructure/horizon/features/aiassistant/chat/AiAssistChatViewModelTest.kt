@@ -17,7 +17,6 @@
 package com.instructure.horizon.features.aiassistant.chat
 
 import androidx.compose.ui.text.input.TextFieldValue
-import com.instructure.canvasapi2.models.journey.JourneyAssistChatMessage
 import com.instructure.canvasapi2.models.journey.JourneyAssistChipOption
 import com.instructure.canvasapi2.models.journey.JourneyAssistRole
 import com.instructure.canvasapi2.models.journey.JourneyAssistState
@@ -25,6 +24,7 @@ import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvid
 import com.instructure.horizon.features.aiassistant.common.AiAssistRepository
 import com.instructure.horizon.features.aiassistant.common.AiAssistResponse
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -67,10 +67,8 @@ class AiAssistChatViewModelTest {
         Dispatchers.setMain(testDispatcher)
         every { aiAssistContextProvider.aiAssistContext } returns testContext
 
-        val testMessage = JourneyAssistChatMessage(
-            id = "response-1",
+        val testMessage = AiAssistMessage(
             text = "Test response",
-            prompt = "Test response",
             role = JourneyAssistRole.Assistant
         )
         coEvery {
@@ -94,10 +92,8 @@ class AiAssistChatViewModelTest {
 
     @Test
     fun `ViewModel initializes with existing chat history`() = runTest {
-        val existingMessage = JourneyAssistChatMessage(
-            id = "msg-1",
+        val existingMessage = AiAssistMessage(
             text = "Existing message",
-            prompt = "Existing message",
             role = JourneyAssistRole.User
         )
         val contextWithHistory = testContext.copy(chatHistory = listOf(existingMessage))
@@ -155,10 +151,8 @@ class AiAssistChatViewModelTest {
             repository.answerPrompt(any(), any(), any())
         } coAnswers {
             kotlinx.coroutines.delay(100)
-            val message = JourneyAssistChatMessage(
-                id = "response-1",
+            val message = AiAssistMessage(
                 text = "Response",
-                prompt = "Response",
                 role = JourneyAssistRole.Assistant
             )
             AiAssistResponse(message, testState)
@@ -216,10 +210,8 @@ class AiAssistChatViewModelTest {
 
     @Test
     fun `Clear chat history updates context provider`() = runTest {
-        val existingMessage = JourneyAssistChatMessage(
-            id = "msg-1",
+        val existingMessage = AiAssistMessage(
             text = "Existing message",
-            prompt = "Existing message",
             role = JourneyAssistRole.User
         )
         val contextWithHistory = testContext.copy(chatHistory = listOf(existingMessage))
@@ -237,10 +229,8 @@ class AiAssistChatViewModelTest {
 
     @Test
     fun `Navigate to cards updates context and removes last message`() = runTest {
-        val responseMessage = JourneyAssistChatMessage(
-            id = "response-1",
+        val responseMessage = AiAssistMessage(
             text = "Response with cards",
-            prompt = "Response with cards",
             role = JourneyAssistRole.Assistant,
             chipOptions = listOf(JourneyAssistChipOption("Option 1", "prompt1"))
         )
@@ -297,10 +287,8 @@ class AiAssistChatViewModelTest {
             fileID = "789",
             pageID = "101"
         )
-        val message = JourneyAssistChatMessage(
-            id = "response-1",
+        val message = AiAssistMessage(
             text = "Response",
-            prompt = "Response",
             role = JourneyAssistRole.Assistant
         )
         coEvery {
