@@ -26,10 +26,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 
@@ -67,7 +69,7 @@ private fun TextAreaBox(
         innerTextField()
         if (value.text.isEmpty()) {
             Text(
-                text = "Enter a prompt",
+                text = stringResource(R.string.igniteAIEnterAPromptLabel),
                 style = HorizonTypography.p1,
                 color = HorizonColors.Text.timestamp(),
             )

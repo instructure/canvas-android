@@ -33,5 +33,5 @@ enum class JourneyAssistCitationType {
     ATTACHMENT,
 
     @SerializedName("unknown")
-    UNKOWN,
+    UNKNOWN,
 }

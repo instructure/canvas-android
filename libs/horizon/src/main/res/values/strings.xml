@@ -496,4 +496,5 @@
     <string name="a11y_nextModuleItem">Next module item</string>
     <string name="a11y_nextModule">Next module</string>
     <string name="a11y_notebookHighlightMarkedAs">%1$s, marked as %2$s, double tap to edit note</string>
+    <string name="igniteAIEnterAPromptLabel">Enter a prompt</string>
 </resources>
