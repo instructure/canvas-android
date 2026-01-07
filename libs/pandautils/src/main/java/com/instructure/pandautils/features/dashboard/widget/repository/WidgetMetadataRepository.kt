@@ -29,6 +29,7 @@ interface WidgetMetadataRepository {
     suspend fun saveMetadata(metadata: WidgetMetadata)
     suspend fun updatePosition(widgetId: String, position: Int)
     suspend fun updateVisibility(widgetId: String, isVisible: Boolean)
+    suspend fun swapPositions(widgetId1: String, widgetId2: String)
 }
 
 @Singleton
@@ -52,6 +53,10 @@ class WidgetMetadataRepositoryImpl @Inject constructor(
 
     override suspend fun updateVisibility(widgetId: String, isVisible: Boolean) {
         dao.updateVisibility(widgetId, isVisible)
+    }
+
+    override suspend fun swapPositions(widgetId1: String, widgetId2: String) {
+        dao.swapPositions(widgetId1, widgetId2)
     }
 
     private fun WidgetMetadataEntity.toMetadata() = WidgetMetadata(

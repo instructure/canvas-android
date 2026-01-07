@@ -39,7 +39,6 @@ import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.LoaderUtils
-import com.instructure.pandautils.utils.RouteUtils
 import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
 import com.instructure.student.fragment.InternalWebviewFragment
@@ -317,8 +316,7 @@ abstract class BaseRouterActivity : CallbackActivity(), FullScreenInteractions {
     }
 
     private suspend fun shouldOpenInternally(url: String): Boolean {
-        val mediaUrl = RouteUtils.getMediaUri(Uri.parse(url)).toString()
-        return (mediaUrl.endsWith(".mpd") || mediaUrl.endsWith(".m3u8") || mediaUrl.endsWith(".mp4"))
+        return (url.endsWith(".mpd") || url.endsWith(".m3u8") || url.endsWith(".mp4"))
     }
 
     override fun onDestroy() {

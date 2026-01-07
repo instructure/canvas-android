@@ -1562,6 +1562,132 @@ class ToDoListViewModelTest {
         assertEquals(0, viewModel.uiState.value.toDoCount)
     }
 
+    @Test
+    fun `ViewModel handles duplicate planner items with same ID`() = runTest {
+        val date1 = Date(1704067200000L) // Jan 1, 2024
+        val date2 = Date(1704153600000L) // Jan 2, 2024
+
+        // Create duplicate planner items with the same ID but different dates
+        val plannerItems = listOf(
+            createPlannerItem(id = 1L, title = "Assignment 1", plannableDate = date1),
+            createPlannerItem(id = 1L, title = "Assignment 1", plannableDate = date2), // Duplicate ID!
+            createPlannerItem(id = 2L, title = "Assignment 2", plannableDate = date1)
+        )
+
+        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(plannerItems)
+
+        val viewModel = getViewModel()
+
+        val uiState = viewModel.uiState.value
+        val allItems = uiState.itemsByDate.values.flatten()
+
+        // Should only have 2 unique items (duplicates removed)
+        assertEquals(2, allItems.size)
+
+        // Verify both unique IDs are present
+        assertTrue(allItems.any { it.id == "1" })
+        assertTrue(allItems.any { it.id == "2" })
+
+        // Verify no duplicate IDs exist
+        val itemIds = allItems.map { it.id }
+        assertEquals(itemIds.size, itemIds.distinct().size)
+    }
+
+    @Test
+    fun `ViewModel handles multiple duplicate planner items`() = runTest {
+        val date = Date(1704067200000L)
+
+        // Create multiple duplicates
+        val plannerItems = listOf(
+            createPlannerItem(id = 1L, title = "Assignment 1", plannableDate = date),
+            createPlannerItem(id = 1L, title = "Assignment 1", plannableDate = date), // Duplicate
+            createPlannerItem(id = 1L, title = "Assignment 1", plannableDate = date), // Duplicate
+            createPlannerItem(id = 2L, title = "Assignment 2", plannableDate = date),
+            createPlannerItem(id = 2L, title = "Assignment 2", plannableDate = date), // Duplicate
+            createPlannerItem(id = 3L, title = "Assignment 3", plannableDate = date)
+        )
+
+        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(plannerItems)
+
+        val viewModel = getViewModel()
+
+        val uiState = viewModel.uiState.value
+        val allItems = uiState.itemsByDate.values.flatten()
+
+        // Should only have 3 unique items
+        assertEquals(3, allItems.size)
+
+        // Verify all unique IDs are present
+        assertTrue(allItems.any { it.id == "1" })
+        assertTrue(allItems.any { it.id == "2" })
+        assertTrue(allItems.any { it.id == "3" })
+
+        // Verify no duplicate IDs exist
+        val itemIds = allItems.map { it.id }
+        assertEquals(itemIds.size, itemIds.distinct().size)
+    }
+
+    @Test
+    fun `ViewModel handles duplicates across different date groups`() = runTest {
+        val date1 = Date(1704067200000L) // Jan 1, 2024
+        val date2 = Date(1704153600000L) // Jan 2, 2024
+
+        // Same assignment appearing on two different dates (backend anomaly)
+        val plannerItems = listOf(
+            createPlannerItem(id = 1L, title = "Assignment 1", plannableDate = date1),
+            createPlannerItem(id = 1L, title = "Assignment 1", plannableDate = date2), // Same ID, different date
+            createPlannerItem(id = 2L, title = "Assignment 2", plannableDate = date1)
+        )
+
+        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(plannerItems)
+
+        val viewModel = getViewModel()
+
+        val uiState = viewModel.uiState.value
+
+        // Should have 2 unique items total (first occurrence of each ID kept)
+        val allItems = uiState.itemsByDate.values.flatten()
+        assertEquals(2, allItems.size)
+
+        // Verify IDs are unique
+        val itemIds = allItems.map { it.id }
+        assertEquals(itemIds.size, itemIds.distinct().size)
+
+        // Should still have items grouped by date, but no duplicate IDs
+        assertTrue(uiState.itemsByDate.keys.size <= 2)
+    }
+
+    @Test
+    fun `ViewModel preserves first occurrence when duplicates exist`() = runTest {
+        val date1 = Date(1704067200000L) // Jan 1, 2024
+        val date2 = Date(1704153600000L) // Jan 2, 2024
+
+        // First occurrence should be kept (Jan 1), second occurrence should be filtered out (Jan 2)
+        val plannerItems = listOf(
+            createPlannerItem(id = 1L, title = "Assignment 1", courseId = 100L, plannableDate = date1),
+            createPlannerItem(id = 1L, title = "Assignment 1 Duplicate", courseId = 200L, plannableDate = date2)
+        )
+
+        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
+        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(plannerItems)
+
+        val viewModel = getViewModel()
+
+        val uiState = viewModel.uiState.value
+        val allItems = uiState.itemsByDate.values.flatten()
+
+        // Should only have 1 item
+        assertEquals(1, allItems.size)
+
+        // First item should be kept (the one with date1)
+        val item = allItems.first()
+        assertEquals("1", item.id)
+        assertEquals(date1, item.date)
+    }
+
     // Helper functions
     private fun getViewModel(): ToDoListViewModel {
         return ToDoListViewModel(context, repository, networkStateProvider, firebaseCrashlytics, toDoFilterDao, apiPrefs, analytics, toDoListViewModelBehavior, calendarSharedEvents)

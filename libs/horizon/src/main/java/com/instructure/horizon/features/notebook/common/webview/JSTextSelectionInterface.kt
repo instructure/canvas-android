@@ -104,7 +104,8 @@ class JSTextSelectionInterface(
         val noteReactionString: String,
         val textSelectionStart: Int,
         val textSelectionEnd: Int,
-        val updatedAt: String
+        val updatedAt: String,
+        val accessibilityLabel: String
     )
 
     companion object {
@@ -652,7 +653,7 @@ const isNodeInRange = (range, node) => {
 ${JS_CODE_FROM_WEB}
 function highlightSelection(paramsJson) {
 	const params = JSON.parse(paramsJson);
-	const { noteId, selectedText, userComment, startOffset, startContainer, endOffset, endContainer, noteReactionString, textSelectionStart, textSelectionEnd, updatedAt } = params;
+	const { noteId, selectedText, userComment, startOffset, startContainer, endOffset, endContainer, noteReactionString, textSelectionStart, textSelectionEnd, updatedAt, accessibilityLabel } = params;
 
 	let parent = document.getElementById("parent-container");//document.documentElement;
 	if (!parent) return;
@@ -678,6 +679,9 @@ function highlightSelection(paramsJson) {
 		const highlightElement = document.createElement("span");
 		highlightElement.classList.add(highlightClassName);
 		highlightElement.classList.add(cssClass);
+		highlightElement.setAttribute('data-note-id', noteId);
+		highlightElement.setAttribute('role', 'button');
+		highlightElement.setAttribute('aria-label', accessibilityLabel);
 		highlightElement.onclick = function () { ${ JS_INTERFACE_NAME }.onHighlightedTextClicked(noteId, noteReactionString, selectedText, userComment, startOffset, startContainer, endOffset, endContainer, textSelectionStart, textSelectionEnd, updatedAt); };
 		highlightElement.textContent = textNode.textContent;
 
@@ -686,6 +690,17 @@ function highlightSelection(paramsJson) {
 		parent.replaceChild(highlightElement, textNode);
 	}
 
+}
+
+function getNotePosition(noteId) {
+	const highlights = document.getElementsByClassName('notebook-highlight');
+	for (const highlight of highlights) {
+		if (highlight.getAttribute('data-note-id') === noteId) {
+			const rect = highlight.getBoundingClientRect();
+			return rect.top + window.scrollY;
+		}
+	}
+	return 0;
 }
 javascript: (function () {
 	document.addEventListener("selectionchange", () => {
@@ -750,8 +765,13 @@ javascript: (function () {
             this.evaluateJavascript(JS_CODE, null)
         }
 
-        fun WebView.highlightNotes(notes: List<Note>) {
-            notes.forEach { note ->
+        fun WebView.highlightNotes(notes: List<Note>, onHighlighted: () -> Unit) {
+            notes.forEachIndexed { index, note ->
+                val accessibilityLabel = context.getString(
+                    com.instructure.horizon.R.string.a11y_notebookHighlightMarkedAs,
+                    note.highlightedText.selectedText,
+                    note.type.name
+                )
                 val params = HighlightParams(
                     noteId = note.id,
                     selectedText = note.highlightedText.selectedText,
@@ -763,12 +783,23 @@ javascript: (function () {
                     noteReactionString = note.type.name,
                     textSelectionStart = note.highlightedText.textPosition.start,
                     textSelectionEnd = note.highlightedText.textPosition.end,
-                    updatedAt = note.updatedAt.toNotebookLocalisedDateFormat()
+                    updatedAt = note.updatedAt.toNotebookLocalisedDateFormat(),
+                    accessibilityLabel = accessibilityLabel
                 )
                 val paramsJson = gson.toJson(params)
                 val quotedJson = JSONObject.quote(paramsJson)
                 val script = "javascript:highlightSelection($quotedJson)"
-                this.evaluateJavascript(script, null)
+                this.evaluateJavascript(script) {
+                    if (index == notes.lastIndex){ onHighlighted() }
+                }
+            }
+        }
+
+        fun WebView.getNoteYPosition(noteId: String, onResult: (Float?) -> Unit) {
+            val quotedNoteId = JSONObject.quote(noteId)
+            this.evaluateJavascript("getNotePosition($quotedNoteId)") { result ->
+                val position = result?.replace("\"", "")?.toFloatOrNull()
+                onResult(if (position != null && position >= 0) position else null)
             }
         }
     }

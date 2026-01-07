@@ -62,7 +62,7 @@ fun NotebookTypeSelect(
                     value = NotebookType.Important,
                     label = context.getString(NotebookType.Important.labelRes),
                     iconRes = NotebookType.Important.iconRes,
-                    iconTint = Color(context.getColor(NotebookType.Important.color)),
+                    iconTint = Color(context.getColor(NotebookType.Important.lineColor)),
                     backgroundColor = importantBgColor
                 )
             )
@@ -71,7 +71,7 @@ fun NotebookTypeSelect(
                     value = NotebookType.Confusing,
                     label = context.getString(NotebookType.Confusing.labelRes),
                     iconRes = NotebookType.Confusing.iconRes,
-                    iconTint = Color(context.getColor(NotebookType.Confusing.color)),
+                    iconTint = Color(context.getColor(NotebookType.Confusing.lineColor)),
                     backgroundColor = confusingBgColor
                 )
             )

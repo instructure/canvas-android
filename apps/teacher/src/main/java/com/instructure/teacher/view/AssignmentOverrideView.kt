@@ -30,7 +30,8 @@ import com.instructure.teacher.R
 import com.instructure.teacher.databinding.ViewAssignmentOverrideBinding
 import com.instructure.teacher.models.DueDateGroup
 import com.instructure.teacher.utils.formatOrDoubleDash
-import java.util.*
+import java.util.Calendar
+import java.util.Date
 import kotlin.properties.Delegates
 
 class AssignmentOverrideView @JvmOverloads constructor(
@@ -194,7 +195,11 @@ class AssignmentOverrideView @JvmOverloads constructor(
         if (!showRemove)
             removeOverride.setGone()
 
-        if (BuildConfig.IS_TESTING) removeOverride.contentDescription = "remove_override_button_$index"
+        if (BuildConfig.IS_TESTING) {
+            removeOverride.contentDescription = "remove_override_button_$index"
+            binding.dueDateTextInput.contentDescription = "due_date_$index"
+            binding.dueTimeTextInput.contentDescription = "due_time_$index"
+        }
 
         removeOverride.setOnClickListener {
             removeOverrideClickListener(dueDateGroup)
