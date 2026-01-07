@@ -19,10 +19,9 @@ package com.instructure.student.ui.e2e.compose
 import android.os.SystemClock.sleep
 import android.util.Log
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.uiautomator.UiDevice
-import androidx.test.uiautomator.UiSelector
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
@@ -612,7 +611,10 @@ class InboxE2ETest: StudentComposeTest() {
 
         Log.d(PREPARATION_TAG, "Copy mp4 file to Downloads folder for attachment.")
         val videoFileName = "test_video.mp4"
-        copyAssetToDownloads(videoFileName)
+       // copyAssetToDownloads(videoFileName)
+
+        setupFileOnDevice(videoFileName)
+        File(InstrumentationRegistry.getInstrumentation().targetContext.cacheDir, "file_upload").deleteRecursively()
 
         val conversationSubject = "Need Help with Assignment"
         val conversationBody = "Can you please send me a demo video?"
@@ -652,7 +654,16 @@ class InboxE2ETest: StudentComposeTest() {
         Log.d(STEP_TAG, "Click attachment button to open file picker dialog.")
         inboxComposePage.clickAttachmentButton()
 
-        Log.d(STEP_TAG, "Click on 'Device' option in file picker dialog.")
+        Log.d(PREPARATION_TAG, "Simulate file picker intent (again).")
+        Intents.init()
+        try {
+            stubFilePickerIntent(videoFileName)
+            fileChooserPage.chooseDevice()
+        }
+        finally {
+            Intents.release()
+        }
+  /*      Log.d(STEP_TAG, "Click on 'Device' option in file picker dialog.")
         fileChooserPage.chooseDevice()
 
         Log.d(STEP_TAG, "Select the video file from Android file picker using UIAutomator.")
@@ -687,6 +698,9 @@ class InboxE2ETest: StudentComposeTest() {
         fileChooserPage.clickOkay()
 
         sleep(3000) // Wait for the file to be loaded.
+*/
+        Log.d(STEP_TAG, "Click OKAY button to confirm file selection.")
+        fileChooserPage.clickOkay()
 
         Log.d(ASSERTION_TAG, "Assert that the video file is displayed as attached in compose screen.")
         inboxComposePage.assertAttachmentDisplayed(videoFileName)
@@ -769,7 +783,9 @@ class InboxE2ETest: StudentComposeTest() {
 
         Log.d(PREPARATION_TAG, "Copy PDF file to Downloads folder for attachment.")
         val pdfFileName = "samplepdf.pdf"
-        copyAssetToDownloads(pdfFileName)
+        //copyAssetToDownloads(pdfFileName)
+        setupFileOnDevice(pdfFileName)
+        File(InstrumentationRegistry.getInstrumentation().targetContext.cacheDir, "file_upload").deleteRecursively()
 
         val conversationSubject = "Project Documentation"
         val conversationBody = "Please review the attached document and share it with the team."
@@ -815,7 +831,16 @@ class InboxE2ETest: StudentComposeTest() {
         Log.d(STEP_TAG, "Click attachment button to open file picker dialog.")
         inboxComposePage.clickAttachmentButton()
 
-        Log.d(STEP_TAG, "Click on 'Device' option in file picker dialog.")
+        Log.d(PREPARATION_TAG, "Simulate file picker intent (again).")
+        Intents.init()
+        try {
+            stubFilePickerIntent(pdfFileName)
+            fileChooserPage.chooseDevice()
+        }
+        finally {
+            Intents.release()
+        }
+       /* Log.d(STEP_TAG, "Click on 'Device' option in file picker dialog.")
         fileChooserPage.chooseDevice()
 
         Log.d(STEP_TAG, "Select the PDF file from Android file picker using UIAutomator.")
@@ -844,7 +869,7 @@ class InboxE2ETest: StudentComposeTest() {
             if (pdfFileObject2.exists()) {
                 pdfFileObject2.click()
             }
-        }
+        }*/
 
         Log.d(STEP_TAG, "Click OKAY button to confirm file selection.")
         fileChooserPage.clickOkay()
