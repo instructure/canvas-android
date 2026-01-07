@@ -18,9 +18,14 @@ package com.instructure.pandautils.utils
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.*
+import android.content.ActivityNotFoundException
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.net.Uri
 import android.widget.Toast
 import com.instructure.canvasapi2.utils.ApiPrefs.domain
@@ -43,7 +48,10 @@ object Utils {
     @SuppressLint("MissingPermission")
     fun isNetworkAvailable(context: Context?): Boolean {
         val connectivityManager = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
-        return connectivityManager?.activeNetworkInfo?.isConnected == true
+            ?: return false
+        val network = connectivityManager.activeNetwork ?: return false
+        val networkCapabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
+        return networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
     }
 
     val referer: Map<String, String>
