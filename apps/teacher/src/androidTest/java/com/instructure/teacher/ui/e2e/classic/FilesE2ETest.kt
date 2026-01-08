@@ -152,11 +152,6 @@ class FilesE2ETest: TeacherComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the '${submissionUploadInfo.fileName}' file has selected.")
         speedGraderPage.assertSelectedAttachmentItemDisplayed(submissionUploadInfo.fileName)
 
-        Log.d(STEP_TAG, "Navigate to 'Grade & Rubric' tab.")
-        if (isCompactDevice()) speedGraderPage.clickExpandPanelButton()
-        speedGraderPage.selectTab("Grade & Rubric")
-        composeTestRule.waitForIdle()
-
         Log.d(ASSERTION_TAG, "Assert that Comments label is displayed with value '1' because only 1 comment was seeded.")
         speedGraderPage.assertCommentsLabelDisplayed(1)
 
@@ -219,11 +214,11 @@ class FilesE2ETest: TeacherComposeTest() {
         fileChooserPage.clickUpload()
         Thread.sleep(5000) // Wait for upload to complete and comment to be sent
 
-        Log.d(ASSERTION_TAG, "Assert that Comments label is displayed with value '2' because a new comment was added.")
-        speedGraderPage.assertCommentsLabelDisplayed(2)
-
         Log.d(ASSERTION_TAG, "Assert that PDF comment attachment '${pdfFile.name}' is displayed.")
         speedGraderPage.assertCommentAttachmentDisplayed(pdfFile.name)
+
+        Log.d(ASSERTION_TAG, "Assert that Comments label is displayed with value '2' because a new comment was added.")
+        speedGraderPage.assertCommentsLabelDisplayed(2)
 
         Log.d(STEP_TAG, "Navigate back to Dashboard Page.")
         pressBackButton(5)
