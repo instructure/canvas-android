@@ -51,6 +51,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.fragment.app.FragmentActivity
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
@@ -145,27 +146,31 @@ fun ForecastWidgetContent(
                             enter = expandVertically() + fadeIn(),
                             exit = shrinkVertically() + fadeOut()
                         ) {
-                            AnimatedContent(
-                                targetState = uiState.selectedSection,
-                                transitionSpec = {
-                                    fadeIn() togetherWith fadeOut()
-                                },
-                                label = "sectionContent"
-                            ) { section ->
-                                if (section != null) {
-                                    val assignments = when (section) {
-                                        ForecastSection.MISSING -> uiState.missingAssignments
-                                        ForecastSection.DUE -> uiState.dueAssignments
-                                        ForecastSection.RECENT_GRADES -> uiState.recentGrades
-                                    }
+                            if (uiState.isLoadingItems) {
+                                ForecastWidgetItemsLoadingState()
+                            } else {
+                                AnimatedContent(
+                                    targetState = uiState.selectedSection,
+                                    transitionSpec = {
+                                        fadeIn() togetherWith fadeOut()
+                                    },
+                                    label = "sectionContent"
+                                ) { section ->
+                                    if (section != null) {
+                                        val assignments = when (section) {
+                                            ForecastSection.MISSING -> uiState.missingAssignments
+                                            ForecastSection.DUE -> uiState.dueAssignments
+                                            ForecastSection.RECENT_GRADES -> uiState.recentGrades
+                                        }
 
-                                    if (assignments.isEmpty()) {
-                                        ForecastWidgetEmptyState(section = section)
-                                    } else {
-                                        AssignmentList(
-                                            assignments = assignments,
-                                            onAssignmentClick = uiState.onAssignmentClick
-                                        )
+                                        if (assignments.isEmpty()) {
+                                            ForecastWidgetEmptyState(section = section)
+                                        } else {
+                                            AssignmentList(
+                                                assignments = assignments,
+                                                onAssignmentClick = uiState.onAssignmentClick
+                                            )
+                                        }
                                     }
                                 }
                             }
@@ -180,7 +185,7 @@ fun ForecastWidgetContent(
 @Composable
 private fun AssignmentList(
     assignments: List<AssignmentItem>,
-    onAssignmentClick: (androidx.fragment.app.FragmentActivity, Long, Long) -> Unit,
+    onAssignmentClick: (FragmentActivity, Long, Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -275,6 +280,32 @@ private fun ForecastWidgetLoadingState(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun ForecastWidgetItemsLoadingState(
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .shadow(
+                elevation = 2.dp,
+                shape = RoundedCornerShape(8.dp)
+            )
+            .background(
+                color = colorResource(R.color.backgroundLightest),
+                shape = RoundedCornerShape(8.dp)
+            )
+            .padding(16.dp)
+    ) {
+        ShimmerBox(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(60.dp),
+            shape = RoundedCornerShape(4.dp)
+        )
     }
 }
 

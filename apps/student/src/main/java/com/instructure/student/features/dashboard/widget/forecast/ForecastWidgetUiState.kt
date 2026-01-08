@@ -48,6 +48,7 @@ data class AssignmentItem(
 
 data class ForecastWidgetUiState(
     val isLoading: Boolean = false,
+    val isLoadingItems: Boolean = false,
     val isError: Boolean = false,
     val weekPeriod: WeekPeriod? = null,
     val canNavigatePrevious: Boolean = true,

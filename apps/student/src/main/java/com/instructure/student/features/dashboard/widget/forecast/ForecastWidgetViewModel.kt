@@ -37,6 +37,9 @@ import com.instructure.pandautils.domain.usecase.assignment.LoadUpcomingAssignme
 import com.instructure.pandautils.domain.usecase.audit.LoadRecentGradeChangesParams
 import com.instructure.pandautils.domain.usecase.audit.LoadRecentGradeChangesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -68,6 +71,7 @@ class ForecastWidgetViewModel @Inject constructor(
     private var upcomingPlannerItems: List<PlannerItem> = emptyList()
     private var recentGradedSubmissions: List<GradedSubmission> = emptyList()
     private var currentWeekOffset: Int = 0
+    private var weekNavigationJob: Job? = null
 
     private val _uiState = MutableStateFlow(
         ForecastWidgetUiState(
@@ -81,7 +85,6 @@ class ForecastWidgetViewModel @Inject constructor(
     val uiState: StateFlow<ForecastWidgetUiState> = _uiState.asStateFlow()
 
     init {
-        // Calculate and set initial week period before loading data
         val initialWeekPeriod = calculateWeekPeriod(currentWeekOffset)
         _uiState.update { it.copy(weekPeriod = initialWeekPeriod) }
 
@@ -101,20 +104,28 @@ class ForecastWidgetViewModel @Inject constructor(
 
     private fun updateWeekPeriodAndReload() {
         val weekPeriod = calculateWeekPeriod(currentWeekOffset)
+
+        weekNavigationJob?.cancel()
+
         _uiState.update {
             it.copy(
                 weekPeriod = weekPeriod,
-                dueAssignments = mapUpcomingAssignments(upcomingPlannerItems)
+                dueAssignments = mapUpcomingAssignments(upcomingPlannerItems),
+                isLoadingItems = it.selectedSection != null
             )
         }
 
-        viewModelScope.launch {
+        weekNavigationJob = viewModelScope.launch {
+            delay(300)
+
             try {
                 loadUpcomingAssignments(forceRefresh = true)
                 loadRecentGrades(forceRefresh = true)
-                _uiState.update { it.copy(isLoading = false) }
+                _uiState.update { it.copy(isLoadingItems = false) }
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
-                _uiState.update { it.copy(isLoading = false, isError = true) }
+                _uiState.update { it.copy(isLoadingItems = false, isError = true) }
                 crashlytics.recordException(e)
             }
         }
