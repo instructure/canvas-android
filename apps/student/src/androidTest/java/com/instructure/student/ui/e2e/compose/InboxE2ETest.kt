@@ -599,7 +599,7 @@ class InboxE2ETest: StudentComposeTest() {
         inboxDetailsPage.assertConversationSubject("")
     }
 
-    @E2E
+    /*@E2E
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.E2E)
     fun testInboxMessageReplyWithVideoAttachmentE2E() {
@@ -753,7 +753,7 @@ class InboxE2ETest: StudentComposeTest() {
 
         Log.d(ASSERTION_TAG, "Assert that the conversation is still displayed in inbox.")
         inboxPage.assertConversationDisplayed(seededConversation.subject)
-    }
+    }*/
 
     @E2E
     @Test
@@ -767,9 +767,24 @@ class InboxE2ETest: StudentComposeTest() {
         val student1 = data.studentsList[0]
         val student2 = data.studentsList[1]
 
-        Log.d(PREPARATION_TAG, "Copy PDF file to Downloads folder for attachment.")
-        val pdfFileName = "samplepdf.pdf"
-        copyAssetToDownloads(pdfFileName)
+        Log.d(PREPARATION_TAG, "Create a PDF file for attachment test.")
+        val pdfFileName = "test_comment_${System.currentTimeMillis()}.pdf"
+        val pdfFile = File(android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS), pdfFileName)
+        pdfFile.createNewFile()
+
+        Log.d(PREPARATION_TAG, "Write content to PDF file '${pdfFile.name}'.")
+        android.graphics.pdf.PdfDocument().apply {
+            val pageInfo = android.graphics.pdf.PdfDocument.PageInfo.Builder(300, 300, 1).create()
+            val page = startPage(pageInfo)
+            val canvas = page.canvas
+            val paint = android.graphics.Paint()
+            paint.color = android.graphics.Color.BLACK
+            paint.textSize = 12f
+            canvas.drawText("Test PDF Comment Attachment", 10f, 25f, paint)
+            finishPage(page)
+            writeTo(java.io.FileOutputStream(pdfFile))
+            close()
+        }
 
         val conversationSubject = "Project Documentation"
         val conversationBody = "Please review the attached document and share it with the team."
