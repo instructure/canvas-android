@@ -19,6 +19,7 @@ package com.instructure.teacher.ui.e2e.classic
 import android.os.Environment
 import android.util.Log
 import androidx.test.espresso.Espresso
+import androidx.test.uiautomator.UiSelector
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
@@ -151,13 +152,79 @@ class FilesE2ETest: TeacherComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the '${submissionUploadInfo.fileName}' file has selected.")
         speedGraderPage.assertSelectedAttachmentItemDisplayed(submissionUploadInfo.fileName)
 
-        //TODO: Re-enable this and refactor when comments will be ready.
-        /*Log.d(STEP_TAG, "Select 'Comments' tab")
-        speedGraderPage.selectCommentsTab()
+        Log.d(STEP_TAG, "Navigate to 'Grade & Rubric' tab.")
+        if (isCompactDevice()) speedGraderPage.clickExpandPanelButton()
+        speedGraderPage.selectTab("Grade & Rubric")
+        composeTestRule.waitForIdle()
+
+        Log.d(ASSERTION_TAG, "Assert that Comments label is displayed with value '1' because only 1 comment was seeded.")
+        speedGraderPage.assertCommentsLabelDisplayed(1)
 
         Log.d(ASSERTION_TAG, "Assert that '${commentUploadInfo.fileName}' comment attachment is displayed.")
-        speedGraderPage.assertCommentAttachmentDisplayedCommon(commentUploadInfo.fileName, student.shortName)
-        */
+        speedGraderPage.assertCommentAttachmentDisplayed(commentUploadInfo.fileName)
+
+        Log.d(PREPARATION_TAG, "Create a PDF file for comment attachment test.")
+        val pdfFileName = "test_comment_${System.currentTimeMillis()}.pdf"
+        val pdfFile = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), pdfFileName)
+        pdfFile.createNewFile()
+
+        Log.d(PREPARATION_TAG, "Write content to PDF file '${pdfFile.name}'.")
+        android.graphics.pdf.PdfDocument().apply {
+            val pageInfo = android.graphics.pdf.PdfDocument.PageInfo.Builder(300, 300, 1).create()
+            val page = startPage(pageInfo)
+            val canvas = page.canvas
+            val paint = android.graphics.Paint()
+            paint.color = android.graphics.Color.BLACK
+            paint.textSize = 12f
+            canvas.drawText("Test PDF Comment Attachment", 10f, 25f, paint)
+            finishPage(page)
+            writeTo(java.io.FileOutputStream(pdfFile))
+            close()
+        }
+
+        Log.d(STEP_TAG, "Click on comment attachment button.")
+        speedGraderPage.clickCommentAttachmentButton()
+
+        Log.d(STEP_TAG, "Select 'Choose Files' from attachment type dialog.")
+        speedGraderPage.clickChooseFilesOption()
+
+        Log.d(STEP_TAG, "Select 'Device' as file source.")
+        fileChooserPage.chooseDevice()
+
+        Log.d(STEP_TAG, "Select the PDF file from Android file picker using UIAutomator.")
+        val pdfFileObject = device.findObject(UiSelector().textContains(pdfFileName))
+        if (pdfFileObject.exists()) {
+            Log.d(STEP_TAG, "Found PDF file with exact name, clicking...")
+            pdfFileObject.click()
+        } else {
+            Log.d(STEP_TAG, "PDF file not immediately visible, trying to navigate to Downloads...")
+            val showRootsButton = device.findObject(UiSelector().descriptionContains("Show roots"))
+            if (showRootsButton.exists()) {
+                showRootsButton.click()
+            }
+
+            val downloadsItem = device.findObject(UiSelector().textContains("Downloads"))
+            if (downloadsItem.exists()) {
+                downloadsItem.click()
+            }
+
+            val pdfFileObject2 = device.findObject(UiSelector().textContains(pdfFileName))
+            if (pdfFileObject2.exists()) {
+                pdfFileObject2.click()
+            }
+        }
+        device.waitForIdle()
+
+        Log.d(STEP_TAG, "Click 'UPLOAD' button.")
+        fileChooserPage.clickUpload()
+        Thread.sleep(5000) // Wait for upload to complete and comment to be sent
+
+        Log.d(ASSERTION_TAG, "Assert that Comments label is displayed with value '2' because a new comment was added.")
+        speedGraderPage.assertCommentsLabelDisplayed(2)
+
+        Log.d(ASSERTION_TAG, "Assert that PDF comment attachment '${pdfFile.name}' is displayed.")
+        speedGraderPage.assertCommentAttachmentDisplayed(pdfFile.name)
+
         Log.d(STEP_TAG, "Navigate back to Dashboard Page.")
         pressBackButton(5)
 
