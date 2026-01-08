@@ -21,10 +21,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.Assignment
-import com.instructure.pandautils.data.model.GradedSubmission
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.toDate
+import com.instructure.pandautils.data.model.GradedSubmission
+import com.instructure.pandautils.R
+import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.getAssignmentIcon
+import com.instructure.pandautils.utils.getIconForPlannerItem
 import com.instructure.pandautils.domain.usecase.assignment.LoadMissingAssignmentsParams
 import com.instructure.pandautils.domain.usecase.assignment.LoadMissingAssignmentsUseCase
 import com.instructure.pandautils.domain.usecase.assignment.LoadUpcomingAssignmentsParams
@@ -217,14 +222,13 @@ class ForecastWidgetViewModel @Inject constructor(
                 AssignmentItem(
                     id = assignment.id,
                     courseId = assignment.courseId,
-                    courseName = "", // TODO: Load course info
-                    courseColor = 0, // TODO: Load course color
+                    courseName = assignment.course?.name.orEmpty(),
                     assignmentName = assignment.name.orEmpty(),
                     dueDate = assignment.dueAt?.toDate(),
                     gradedDate = null,
                     pointsPossible = assignment.pointsPossible,
                     weight = null, // TODO: Add weight if available
-                    iconRes = 0, // TODO: Map assignment type to icon
+                    iconRes = assignment.getAssignmentIcon(),
                     url = assignment.htmlUrl.orEmpty()
                 )
             }
@@ -237,14 +241,13 @@ class ForecastWidgetViewModel @Inject constructor(
                 AssignmentItem(
                     id = item.plannable.id,
                     courseId = item.courseId ?: 0,
-                    courseName = "", // TODO: Load course info
-                    courseColor = 0, // TODO: Load course color
+                    courseName = item.contextName.orEmpty(),
                     assignmentName = item.plannable.title,
                     dueDate = item.plannableDate,
                     gradedDate = null,
                     pointsPossible = item.plannable.pointsPossible ?: 0.0,
                     weight = null,
-                    iconRes = 0, // TODO: Map planner type to icon
+                    iconRes = item.getIconForPlannerItem(),
                     url = item.htmlUrl.orEmpty()
                 )
             }
@@ -258,13 +261,12 @@ class ForecastWidgetViewModel @Inject constructor(
                     id = submission.assignmentId,
                     courseId = submission.courseId,
                     courseName = submission.courseName,
-                    courseColor = 0, // TODO: Load course color
                     assignmentName = submission.assignmentName,
                     dueDate = null,
                     gradedDate = submission.gradedAt,
                     pointsPossible = submission.pointsPossible ?: 0.0,
                     weight = null,
-                    iconRes = 0, // TODO: Map to icon
+                    iconRes = R.drawable.ic_assignment,
                     url = submission.assignmentUrl ?: ""
                 )
             }

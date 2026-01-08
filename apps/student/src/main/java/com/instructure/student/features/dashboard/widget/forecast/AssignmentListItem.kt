@@ -45,8 +45,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.FragmentActivity
+import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.color
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -57,12 +59,15 @@ fun AssignmentListItem(
     onAssignmentClick: (FragmentActivity, Long, Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val course = Course(id = assignment.courseId)
+    val courseColor = Color(course.color)
+
     Row(
         modifier = modifier
             .fillMaxWidth()
             .clickable { /* TODO: Pass activity and trigger onAssignmentClick */ }
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
+            .padding(horizontal = 16.dp, vertical = 12.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.Top
     ) {
         Icon(
@@ -71,27 +76,19 @@ fun AssignmentListItem(
                 else R.drawable.ic_assignment
             ),
             contentDescription = null,
-            tint = Color(assignment.courseColor),
+            tint = courseColor,
             modifier = Modifier.size(16.dp)
         )
 
         Box(
             modifier = Modifier
-                .width(1.dp)
+                .width(0.5.dp)
                 .height(16.dp)
-                .padding(horizontal = 0.dp)
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(16.dp)
-                    .border(
-                        width = 0.5.dp,
-                        color = colorResource(R.color.borderMedium),
-                        shape = RoundedCornerShape(2.dp)
-                    )
-            )
-        }
+                .border(
+                    width = 0.5.dp,
+                    color = colorResource(R.color.borderMedium)
+                )
+        )
 
         Column(
             modifier = Modifier.weight(1f),
@@ -106,7 +103,7 @@ fun AssignmentListItem(
                     text = assignment.courseName,
                     fontSize = 12.sp,
                     lineHeight = 16.sp,
-                    color = Color(assignment.courseColor),
+                    color = courseColor,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -114,7 +111,7 @@ fun AssignmentListItem(
                 assignment.weight?.let { weight ->
                     WeightChip(
                         weight = weight,
-                        color = Color(assignment.courseColor)
+                        color = courseColor
                     )
                 }
             }
@@ -228,7 +225,6 @@ private fun AssignmentListItemPreview() {
             id = 1,
             courseId = 101,
             courseName = "COGS101",
-            courseColor = 0xFFC54396.toInt(),
             assignmentName = "The Mind's Maze: Mapping Cognition",
             dueDate = Date(),
             gradedDate = null,
@@ -249,7 +245,6 @@ private fun AssignmentListItemNoWeightPreview() {
             id = 2,
             courseId = 204,
             courseName = "POLI204",
-            courseColor = 0xFF197EAB.toInt(),
             assignmentName = "Fix a hyperdrive motivator using only duct tape and panic before the ship explodes, and everyone gets frig...",
             dueDate = Date(System.currentTimeMillis() + 86400000),
             gradedDate = null,

@@ -37,7 +37,6 @@ data class AssignmentItem(
     val id: Long,
     val courseId: Long,
     val courseName: String,
-    val courseColor: Int,
     val assignmentName: String,
     val dueDate: Date?,
     val gradedDate: Date?,
