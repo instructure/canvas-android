@@ -16,12 +16,16 @@
  */
 package com.instructure.horizon.features.aiassistant.common.composable
 
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.semantics.semantics
 import com.instructure.canvasapi2.models.journey.JourneyAssistRole
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
 import com.instructure.horizon.features.aiassistant.common.model.toDeepLink
@@ -31,10 +35,20 @@ fun AiAssistMessage(
     message: AiAssistMessage,
     onSendPrompt: (String) -> Unit,
     onSourceSelected: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    focusRequester: FocusRequester? = null
 ) {
+    val focusModifier = focusRequester?.let {
+        Modifier
+            .semantics(mergeDescendants = true) {}
+            .focusRequester(it)
+            .focusable()
+    } ?: Modifier
+
     if (!message.errorMessage.isNullOrBlank()) {
         AiAssistResponseTextBlock(
-            text = message.errorMessage
+            text = message.errorMessage,
+            modifier = modifier.then(focusModifier)
         )
     } else if (message.role == JourneyAssistRole.Assistant) {
         AiAssistResponseTextBlock(
@@ -57,15 +71,19 @@ fun AiAssistMessage(
                     }
                 )
             },
+            modifier = modifier.then(focusModifier)
         )
     } else if (message.role == JourneyAssistRole.User) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .then(focusModifier),
             horizontalArrangement = Arrangement.End,
             verticalAlignment = Alignment.CenterVertically
         ){
             AiAssistUserTextBlock(
                 text = message.text,
+                modifier = modifier
             )
         }
     }
