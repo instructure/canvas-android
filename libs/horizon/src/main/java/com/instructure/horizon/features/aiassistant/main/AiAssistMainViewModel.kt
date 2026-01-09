@@ -90,6 +90,7 @@ class AiAssistMainViewModel @Inject constructor(
                 isLoading = true
             )
         }
+        aiAssistMessages = aiAssistMessages.map { it.copy(chipOptions = emptyList()) }.toMutableList()
         aiAssistMessages.add(userMessage)
 
         viewModelScope.tryLaunch {

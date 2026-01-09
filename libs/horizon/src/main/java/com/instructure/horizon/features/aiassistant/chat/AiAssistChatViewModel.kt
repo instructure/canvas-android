@@ -124,7 +124,7 @@ class AiAssistChatViewModel @Inject constructor(
     private fun onChipClicked(prompt: String) {
         val message = addMessage(prompt)
         _uiState.update {
-            it.copy(messages = it.messages + message)
+            it.copy(messages = it.messages.map { it.copy(chipOptions = emptyList()) } + message)
         }
         evaluatePrompt(message)
     }

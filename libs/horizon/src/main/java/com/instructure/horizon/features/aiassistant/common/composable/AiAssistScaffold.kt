@@ -27,6 +27,10 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.foundation.HorizonSpace
+import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.molecules.HorizonDivider
 
 @Composable
 fun AiAssistScaffold(
@@ -58,9 +62,11 @@ fun AiAssistScaffold(
                 null
             },
             modifier = Modifier
-                .padding(horizontal = 24.dp)
-                .padding(bottom = 32.dp)
+                .padding(horizontal = 16.dp)
         )
+
+        HorizonDivider(color = HorizonColors.Surface.pagePrimary())
+        HorizonSpace(SpaceSize.SPACE_16)
 
         content(Modifier.weight(1f).padding(horizontal = 24.dp))
 

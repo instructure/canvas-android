@@ -19,9 +19,11 @@ package com.instructure.horizon.features.aiassistant.common.model
 import com.instructure.canvasapi2.models.journey.JourneyAssistChatMessage
 import com.instructure.canvasapi2.models.journey.JourneyAssistChipOption
 import com.instructure.canvasapi2.models.journey.JourneyAssistCitation
+import com.instructure.canvasapi2.models.journey.JourneyAssistCitationType
 import com.instructure.canvasapi2.models.journey.JourneyAssistFlashCard
 import com.instructure.canvasapi2.models.journey.JourneyAssistQuizItem
 import com.instructure.canvasapi2.models.journey.JourneyAssistRole
+import com.instructure.canvasapi2.utils.ApiPrefs
 
 data class AiAssistMessage(
     val text: String = "",
@@ -49,4 +51,14 @@ fun List<AiAssistMessage>.toJourneyAssistChatMessages(): List<JourneyAssistChatM
             role = it.role,
         )
     }
+}
+
+fun JourneyAssistCitation.toDeepLink(baseUrl: String = ApiPrefs.fullDomain): String {
+    val objectType = when (this.sourceType) {
+        JourneyAssistCitationType.WIKI_PAGE -> "pages"
+        JourneyAssistCitationType.ATTACHMENT -> "files"
+        else -> "unknown"
+    }
+
+    return "$baseUrl/courses/${this.courseID}/${objectType}/${this.sourceID}"
 }

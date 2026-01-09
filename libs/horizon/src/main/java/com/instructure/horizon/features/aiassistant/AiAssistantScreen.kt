@@ -24,6 +24,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.instructure.horizon.features.aiassistant.navigation.AiAssistNavigation
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -31,6 +32,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonColors
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AiAssistantScreen(
+    mainNavController: NavHostController,
     onDismiss: () -> Unit,
 ) {
     val navController = rememberNavController()
@@ -48,7 +50,7 @@ fun AiAssistantScreen(
                     brush = HorizonColors.Surface.aiGradient()
                 )
         ) {
-            AiAssistNavigation(navController, onDismiss)
+            AiAssistNavigation(mainNavController, navController, onDismiss)
         }
     }
 }

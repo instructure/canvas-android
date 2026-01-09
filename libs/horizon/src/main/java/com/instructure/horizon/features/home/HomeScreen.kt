@@ -67,7 +67,7 @@ data class BottomNavItem(
 private val bottomNavItems = listOf(
     BottomNavItem(HomeNavigationRoute.Dashboard.route, R.string.bottomNav_home, R.drawable.home, R.drawable.home_filled),
     BottomNavItem(HomeNavigationRoute.Learn.route, R.string.bottomNav_learn, R.drawable.book_2, R.drawable.book_2_filled),
-    BottomNavItem(null, R.string.bottomNav_aiAssist, R.drawable.ai, R.drawable.ai_filled),
+    BottomNavItem(null, R.string.bottomNav_igniteAI, R.drawable.ai, R.drawable.ai_filled),
     BottomNavItem(HomeNavigationRoute.Skillspace.route, R.string.bottomNav_skillspace, R.drawable.hub, R.drawable.hub_filled),
     BottomNavItem(
         HomeNavigationRoute.Account.route,
@@ -97,7 +97,7 @@ fun HomeScreen(parentNavController: NavHostController, viewModel: HomeViewModel)
             Spinner(modifier = Modifier.fillMaxSize(), color = spinnerColor)
         } else {
             if (uiState.showAiAssist) {
-                AiAssistantScreen({ uiState.updateShowAiAssist(false) })
+                AiAssistantScreen(parentNavController, { uiState.updateShowAiAssist(false) })
             }
             HomeNavigation(navController, parentNavController, Modifier.padding(padding))
         }
