@@ -480,7 +480,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
                     DiscussionUtils.launchIntent(requireContext(), authenticatedUrl)
                 }
             } else {
-                requireContext().toast(com.instructure.pandautils.R.string.ltiToolsOffline)
+                requireContext().toast(R.string.ltiToolsOffline)
             }
         }
 
