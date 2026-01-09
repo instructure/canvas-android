@@ -95,6 +95,7 @@ dependencies {
     androidTestImplementation Libs.COMPOSE_UI_TEST
 
     implementation project(':pandautils')
+    implementation project(':rceditor')
 
     // last update: Sept 30 2017
     // old versions: $ANDROID_HOME/extras/android/m2repository/com/android/support/test/
