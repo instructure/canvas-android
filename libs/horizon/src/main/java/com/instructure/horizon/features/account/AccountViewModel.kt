@@ -155,7 +155,7 @@ class AccountViewModel @Inject constructor(
             initOptions()
             _uiState.update { it.copy(screenState = it.screenState.copy(isLoading = false)) }
         } catch {
-            // Do not display error state as the screen options might be needed
+            _uiState.update { it.copy(screenState = it.screenState.copy(isLoading = false, isError = true)) }
         }
     }
 
