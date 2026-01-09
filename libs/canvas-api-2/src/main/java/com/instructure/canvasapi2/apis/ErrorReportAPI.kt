@@ -21,10 +21,12 @@ import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.ErrorReport
 import com.instructure.canvasapi2.models.ErrorReportResult
+import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
 import retrofit2.http.Query
+import retrofit2.http.Tag
 
 
 object ErrorReportAPI {
@@ -52,6 +54,20 @@ object ErrorReportAPI {
             @Query("error[become_user]") becomeUser: String,
             @Body body: String
         ): Call<ErrorReportResult>
+
+        @POST("/api/v1/error_reports")
+        suspend fun postErrorReport(
+            @Query("error[subject]") subject: String,
+            @Query("error[url]") url: String,
+            @Query("error[email]") email: String,
+            @Query("error[comments]") comments: String,
+            @Query("error[user_perceived_severity]") userPerceivedSeverity: String,
+            @Query("error[name]") name: String,
+            @Query("error[user_roles]") userRoles: String,
+            @Query("error[become_user]") becomeUser: String,
+            @Body body: String,
+            @Tag params: RestParams,
+        ): DataResult<ErrorReportResult>
     }
 
     fun postErrorReport(

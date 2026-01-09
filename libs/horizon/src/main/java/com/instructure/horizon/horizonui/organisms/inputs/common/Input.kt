@@ -37,7 +37,7 @@ fun Input(
                 state = InputLabelState(
                     text = label,
                     required = required,
-                    isError = errorText == null,
+                    isError = errorText != null,
                 ),
             )
 
