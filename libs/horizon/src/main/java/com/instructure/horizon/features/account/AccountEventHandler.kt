@@ -14,14 +14,24 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.account.navigation
+package com.instructure.horizon.features.account
 
-sealed class AccountRoute(val route: String) {
-    data object Account : AccountRoute("account_home")
-    data object Profile : AccountRoute("profile")
-    data object Password : AccountRoute("password")
-    data object Notifications : AccountRoute("notifications")
-    data object CalendarFeed : AccountRoute("calendar_feed")
-    data object Advanced : AccountRoute("advanced")
-    data object ReportABug : AccountRoute("report_a_bug")
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import javax.inject.Inject
+import javax.inject.Singleton
+
+sealed interface AccountEvent {
+    data class ShowSnackbar(val message: String) : AccountEvent
+}
+
+@Singleton
+class AccountEventHandler @Inject constructor() {
+
+    private val _events = MutableSharedFlow<AccountEvent>(replay = 0)
+    val events = _events.asSharedFlow()
+
+    suspend fun postEvent(event: AccountEvent) {
+        _events.emit(event)
+    }
 }

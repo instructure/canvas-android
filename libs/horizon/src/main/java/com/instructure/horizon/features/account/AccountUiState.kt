@@ -42,7 +42,8 @@ data class AccountItemState(
     val visible: Boolean = true
 )
 
-sealed class AccountItemType(@DrawableRes val icon: Int) {
+sealed class AccountItemType(@DrawableRes val icon: Int?) {
+    data class OpenWithoutIndicator(val route: AccountRoute) : AccountItemType(null)
     data class Open(val route: AccountRoute) : AccountItemType(R.drawable.arrow_forward)
     data class OpenExternal(val route: AccountRoute) : AccountItemType(R.drawable.open_in_new)
     data object LogOut : AccountItemType(R.drawable.logout)

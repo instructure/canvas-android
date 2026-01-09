@@ -34,6 +34,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,7 +44,8 @@ class AccountViewModel @Inject constructor(
     private val logoutHelper: LogoutHelper,
     private val databaseProvider: DatabaseProvider,
     private val alarmScheduler: AlarmScheduler,
-    private val apiPrefs: ApiPrefs
+    private val apiPrefs: ApiPrefs,
+    private val accountEventHandler: AccountEventHandler
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(
         AccountUiState(
@@ -62,6 +64,18 @@ class AccountViewModel @Inject constructor(
 
     init {
         initData()
+
+        viewModelScope.launch {
+            accountEventHandler.events.collect { event ->
+                when (event) {
+                    is AccountEvent.ShowSnackbar -> {
+                        _uiState.update {
+                            it.copy(screenState = it.screenState.copy(snackbarMessage = event.message))
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun initOptions() {
@@ -70,7 +84,7 @@ class AccountViewModel @Inject constructor(
                 accountGroups = buildList {
                     if (showExperienceSwitcher) add(getExperienceGroup())
                     add(getSettingsGroup())
-                    add(getSupportGroup())
+                    add(getHelpGroup())
                     add(getLogOutGroup())
                 }
             )
@@ -114,12 +128,12 @@ class AccountViewModel @Inject constructor(
         )
     )
 
-    private fun getSupportGroup() = AccountGroupState(
-        title = context.getString(R.string.accountSupportHeading),
+    private fun getHelpGroup() = AccountGroupState(
+        title = context.getString(R.string.accountHelpHeading),
         items = listOf(
             AccountItemState(
-                title = context.getString(R.string.accountReportABug),
-                type = AccountItemType.OpenExternal(AccountRoute.BugReportWebView)
+                title = context.getString(R.string.accountReportAProblem),
+                type = AccountItemType.OpenWithoutIndicator(AccountRoute.ReportABug)
             )
         )
     )
@@ -141,15 +155,7 @@ class AccountViewModel @Inject constructor(
             initOptions()
             _uiState.update { it.copy(screenState = it.screenState.copy(isLoading = false)) }
         } catch {
-            _uiState.update {
-                it.copy(
-                    screenState = it.screenState.copy(
-                        isLoading = false,
-                        isError = true,
-                        errorMessage = context.getString(R.string.failedToLoadAccount)
-                    )
-                )
-            }
+            // Do not display error state as the screen options might be needed
         }
     }
 

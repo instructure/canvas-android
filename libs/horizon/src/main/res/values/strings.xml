@@ -44,7 +44,7 @@
     <string name="fileDropSheet_takeVideo">Take video</string>
     <string name="fileDropSheet_chooseFile">Choose file</string>
     <string name="avatar_contentDescription">Avatar</string>
-    <string name="requiredMark">" *"</string>
+    <string name="inputRequiredMark">"*"</string>
     <string name="optionalMark">" (optional)"</string>
     <string name="a11y_increaseValue">Increase value</string>
     <string name="a11y_decreaseValue">Decrease value</string>
@@ -119,9 +119,9 @@
     <string name="accountNotificationsLabel">Notifications</string>
     <string name="accountCalendarFeedLabel">Calendar feed</string>
     <string name="accountAdvancedLabel">Advanced</string>
-    <string name="accountSupportHeading">Support</string>
+    <string name="accountHelpHeading">Help</string>
     <string name="accountGiveFeedbackLabel">Give feedback</string>
-    <string name="accountReportABug">Report a bug</string>
+    <string name="accountReportAProblem">Report a problem</string>
     <string name="accountBetaCommunityLabel">Beta community</string>
     <string name="accountFullNameLabel">Full name</string>
     <string name="a11yNavigateBack">Navigate back</string>
@@ -167,6 +167,22 @@
     <string name="accountNotificationsEnableNotificationButtonLabel">Enable Android notifications</string>
     <string name="externalTool_openInANewTab">Open in a new tab</string>
     <string name="notificationsTitle">Notifications</string>
+    <string name="reportAProblemTitle">Report a problem</string>
+    <string name="reportAProblemTopic">Topic</string>
+    <string name="reportAProblemTopicSuggestion">Suggestion or comment</string>
+    <string name="reportAProblemTopicGeneralHelp">General help</string>
+    <string name="reportAProblemTopicMinorIssue">Minor issue</string>
+    <string name="reportAProblemTopicUrgentIssue">Urgent issue</string>
+    <string name="reportAProblemTopicCriticalError">Critical system error</string>
+    <string name="reportAProblemTopicRequired">Select a topic</string>
+    <string name="reportAProblemSubject">Subject</string>
+    <string name="reportAProblemDescription">Description</string>
+    <string name="reportAProblemCancel">Cancel</string>
+    <string name="reportAProblemSubmit">Submit ticket</string>
+    <string name="reportAProblemSubjectRequired">Enter a subject</string>
+    <string name="reportAProblemDescriptionRequired">Add a description</string>
+    <string name="reportAProblemSuccessMessage">Your ticket was submitted.</string>
+    <string name="reportAProblemErrorMessage">Your ticket couldn’t be submitted. Please try again.</string>
     <string name="notificationsEmptyMessage">No notification activity yet.</string>
     <string name="notificationsFailedToRefresh">Failed to refresh notifications</string>
     <string name="notificationsFailedToLoad">Failed to load notifications</string>
@@ -496,4 +512,5 @@
     <string name="a11y_nextModuleItem">Next module item</string>
     <string name="a11y_nextModule">Next module</string>
     <string name="a11y_notebookHighlightMarkedAs">%1$s, marked as %2$s, double tap to edit note</string>
+    <string name="reportAProblemDescriptionMessage">File a ticket for a personal response from our support team.</string>
 </resources>

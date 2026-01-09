@@ -7,13 +7,14 @@ import com.instructure.canvasapi2.apis.AccountNotificationAPI
 import com.instructure.canvasapi2.apis.AnnouncementAPI
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CalendarEventAPI
-import com.instructure.canvasapi2.apis.CommunicationChannelsAPI
 import com.instructure.canvasapi2.apis.CanvaDocsAPI
+import com.instructure.canvasapi2.apis.CommunicationChannelsAPI
 import com.instructure.canvasapi2.apis.ConferencesApi
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.DiscussionAPI
 import com.instructure.canvasapi2.apis.DomainServicesAuthenticationAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
+import com.instructure.canvasapi2.apis.ErrorReportAPI
 import com.instructure.canvasapi2.apis.ExperienceAPI
 import com.instructure.canvasapi2.apis.ExternalToolAPI
 import com.instructure.canvasapi2.apis.FeaturesAPI
@@ -445,6 +446,11 @@ class ApiModule {
     @Provides
     fun provideExternalToolApi(): ExternalToolAPI.ExternalToolInterface {
         return RestBuilder().build(ExternalToolAPI.ExternalToolInterface::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideErrorReportApi(): ErrorReportAPI.ErrorReportInterface {
+        return RestBuilder().build(ErrorReportAPI.ErrorReportInterface::class.java, RestParams())
     }
 }
 

@@ -165,6 +165,8 @@ private fun AccountItem(item: AccountItemState, navController: NavController, on
                 when (item.type) {
                     is AccountItemType.Open -> navController.navigate(item.type.route.route)
 
+                    is AccountItemType.OpenWithoutIndicator -> navController.navigate(item.type.route.route)
+
                     is AccountItemType.OpenExternal -> navController.navigate(item.type.route.route)
 
                     is AccountItemType.LogOut -> {
@@ -189,13 +191,15 @@ private fun AccountItem(item: AccountItemState, navController: NavController, on
 
             Spacer(modifier = Modifier.weight(1f))
 
-            Icon(
-                painter = painterResource(id = item.type.icon),
-                contentDescription = null,
-                tint = HorizonColors.Icon.medium(),
-                modifier = Modifier
-                    .size(24.dp)
-            )
+            item.type.icon?.let { icon ->
+                Icon(
+                    painter = painterResource(id = icon),
+                    contentDescription = null,
+                    tint = HorizonColors.Icon.medium(),
+                    modifier = Modifier
+                        .size(24.dp)
+                )
+            }
         }
     }
 }
