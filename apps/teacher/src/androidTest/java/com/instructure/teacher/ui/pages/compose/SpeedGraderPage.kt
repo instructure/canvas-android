@@ -206,6 +206,17 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
     fun clickCommentAttachmentButton() {
         composeTestRule
             .onNodeWithTag("commentAttachmentButton")
+            .performScrollTo()
+            .performClick()
+        composeTestRule.waitForIdle()
+    }
+
+    /**
+     * Clicks the "Choose Files" option in the attachment type selection dialog.
+     */
+    fun clickChooseFilesOption() {
+        composeTestRule
+            .onNodeWithText(getStringFromResource(R.string.choose_files))
             .performClick()
         composeTestRule.waitForIdle()
     }
