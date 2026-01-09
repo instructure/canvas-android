@@ -59,7 +59,13 @@ import com.pspdfkit.annotations.AnnotationFlags
 import com.pspdfkit.annotations.AnnotationProvider
 import com.pspdfkit.annotations.AnnotationType
 import com.pspdfkit.annotations.appearance.AssetAppearanceStreamGenerator
-import com.pspdfkit.annotations.configuration.*
+import com.pspdfkit.annotations.configuration.AnnotationProperty
+import com.pspdfkit.annotations.configuration.EraserToolConfiguration
+import com.pspdfkit.annotations.configuration.FreeTextAnnotationConfiguration
+import com.pspdfkit.annotations.configuration.InkAnnotationConfiguration
+import com.pspdfkit.annotations.configuration.MarkupAnnotationConfiguration
+import com.pspdfkit.annotations.configuration.ShapeAnnotationConfiguration
+import com.pspdfkit.annotations.configuration.StampAnnotationConfiguration
 import com.pspdfkit.annotations.stamps.CustomStampAppearanceStreamGenerator
 import com.pspdfkit.annotations.stamps.StampPickerItem
 import com.pspdfkit.configuration.PdfConfiguration
@@ -80,12 +86,17 @@ import com.pspdfkit.ui.special_mode.controller.AnnotationEditingController
 import com.pspdfkit.ui.special_mode.controller.AnnotationSelectionController
 import com.pspdfkit.ui.special_mode.controller.AnnotationTool
 import com.pspdfkit.ui.special_mode.manager.AnnotationManager
-import com.pspdfkit.ui.toolbar.*
+import com.pspdfkit.ui.toolbar.AnnotationCreationToolbar
+import com.pspdfkit.ui.toolbar.AnnotationEditingToolbar
+import com.pspdfkit.ui.toolbar.ContextualToolbar
+import com.pspdfkit.ui.toolbar.ContextualToolbarMenuItem
+import com.pspdfkit.ui.toolbar.ToolbarCoordinatorLayout
 import com.pspdfkit.ui.toolbar.grouping.MenuItemGroupingRule
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import okhttp3.Response
 import java.io.File
-import java.util.*
+import java.util.EnumSet
 
 @SuppressLint("ViewConstructor")
 abstract class PdfSubmissionView(context: Context, private val studentAnnotationView: Boolean = false, private val courseId: Long) : FrameLayout(context), AnnotationManager.OnAnnotationCreationModeChangeListener, AnnotationManager.OnAnnotationEditingModeChangeListener {
@@ -414,6 +425,12 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
         annotationsJob = tryWeave {
             // Snag them annotations with the session id
             val annotations = awaitApi { CanvaDocsManager.getAnnotations(apiValues.sessionId, apiValues.canvaDocsDomain, it) }
+            // There is a freeze in the PdfSubmissionView, where the root cause is unknown.
+            // The main issue is that the pdfFragment?.document?.annotationProvider?.addAnnotationToPage(annotation) completely freezes the thread.
+            // I suspect something under the hood is still loading in the PSPDFKit, but there was no way to detect it.
+            // Adding a delay to wait for this loading significantly reduces the probability of this freezing.
+            delay(200)
+
             // Grab all the annotations and sort them by type (descending).
             // This will result in all of the comments being iterated over first as the COMMENT_REPLY type is last in the AnnotationType enum.
             val sortedAnnotationList = annotations.data.sortedByDescending { it.annotationType }
