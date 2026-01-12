@@ -17,6 +17,7 @@
 package com.instructure.pandautils.features.speedgrader.grade.grading
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -46,6 +47,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
@@ -55,6 +58,12 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.focused
+import androidx.compose.ui.semantics.onClick
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -77,6 +86,7 @@ import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.RadioButtonText
 import com.instructure.pandautils.compose.composables.TextDropdown
+import com.instructure.pandautils.compose.modifiers.conditional
 import com.instructure.pandautils.utils.orDefault
 import java.text.DecimalFormat
 import java.util.Date
@@ -625,10 +635,16 @@ private fun PercentageGradingTypeInput(uiState: SpeedGraderGradingUiState) {
         mutableFloatStateOf(max(initialGradeAsFloat, 100f))
     }
 
+    var shouldClearSemanticsForTextField by remember { mutableStateOf(false) }
+    val gradeTextFieldFocusRequestor = remember { FocusRequester() }
+
     val sliderState = remember(maxScore) {
         SliderState(
             value = sliderDrivenScore.coerceIn(0f, maxScore),
             valueRange = 0f..maxScore,
+            onValueChangeFinished = {
+                shouldClearSemanticsForTextField = true
+            }
         )
     }
 
@@ -688,10 +704,30 @@ private fun PercentageGradingTypeInput(uiState: SpeedGraderGradingUiState) {
                 fontSize = 16.sp
             )
             Spacer(modifier = Modifier.weight(1f))
+            val gradeHint = stringResource(R.string.percentageGradeHint)
+            val gradeDescription = if (textFieldScore.isNotEmpty()) {
+                val percentValue = textFieldScore.toIntOrNull() ?: 0
+                stringResource(R.string.gradePercentTextFieldAccessibility, percentValue, gradeHint)
+            } else {
+                gradeHint
+            }
             BasicTextFieldWithHintDecoration(
                 modifier = Modifier
                     .padding(end = 8.dp)
-                    .testTag("speedGraderCurrentGradeTextField"),
+                    .focusable(true)
+                    .focusRequester(gradeTextFieldFocusRequestor)
+                    .testTag("speedGraderCurrentGradeTextField")
+                    .conditional(shouldClearSemanticsForTextField) {
+                        clearAndSetSemantics {
+                            contentDescription = gradeDescription
+                            focused = false
+                            onClick(label = gradeHint) {
+                                shouldClearSemanticsForTextField = false
+                                gradeTextFieldFocusRequestor.requestFocus()
+                                true
+                            }
+                        }
+                    },
                 value = textFieldScore,
                 onValueChange = {
                     textFieldScore = it
@@ -707,10 +743,15 @@ private fun PercentageGradingTypeInput(uiState: SpeedGraderGradingUiState) {
             )
         }
 
+        val percentageValue = round(sliderState.value).toInt()
+        val accessibilityDescription = stringResource(R.string.gradePercentAccessibility, percentageValue)
         Slider(
             modifier = Modifier
                 .padding(top = 16.dp)
-                .testTag("speedGraderSlider"),
+                .testTag("speedGraderSlider")
+                .semantics {
+                    stateDescription = accessibilityDescription
+                },
             state = sliderState,
             colors = SliderDefaults.colors(
                 thumbColor = LocalCourseColor.current,
@@ -758,11 +799,17 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
         )
     }
 
+    var shouldClearSemanticsForTextField by remember { mutableStateOf(false) }
+    val gradeTextFieldFocusRequestor = remember { FocusRequester() }
+
     val sliderState = remember(maxScore, minScore) {
         SliderState(
             value = sliderDrivenScore.coerceIn(minScore * pointScale, maxScore * pointScale),
             valueRange = minScore * pointScale..maxScore * pointScale,
-            steps = ((maxScore - minScore).roundToInt() * pointScale.roundToInt() - 1).coerceAtLeast(1)
+            steps = ((maxScore - minScore).roundToInt() * pointScale.roundToInt() - 1).coerceAtLeast(1),
+            onValueChangeFinished = {
+                shouldClearSemanticsForTextField = true
+            }
         )
     }
 
@@ -820,10 +867,29 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
                 modifier = Modifier.testTag("speedGraderCurrentGradeGradeLabel")
             )
             Spacer(modifier = Modifier.weight(1f))
+            val gradeHint = stringResource(R.string.pointGradeHint)
+            val gradeDescription = if (textFieldScore.isNotEmpty()) {
+                stringResource(R.string.gradePointsTextFieldAccessibility, textFieldScore, gradeHint)
+            } else {
+                gradeHint
+            }
             BasicTextFieldWithHintDecoration(
                 modifier = Modifier
                     .padding(end = 8.dp)
-                    .testTag("speedGraderCurrentGradeTextField"),
+                    .focusable(true)
+                    .focusRequester(gradeTextFieldFocusRequestor)
+                    .testTag("speedGraderCurrentGradeTextField")
+                    .conditional(shouldClearSemanticsForTextField) {
+                        clearAndSetSemantics {
+                            contentDescription = gradeDescription
+                            focused = false
+                            onClick(label = gradeHint) {
+                                shouldClearSemanticsForTextField = false
+                                gradeTextFieldFocusRequestor.requestFocus()
+                                true
+                            }
+                        }
+                    },
                 value = textFieldScore,
                 onValueChange = {
                     textFieldScore = it
@@ -856,10 +922,15 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
         if (uiState.pointsPossible != null && uiState.pointsPossible != 0.0 && (uiState.enteredScore
                 ?: 0f) <= 100.0
         ) {
+            val pointsValue = numberFormatter.format(sliderState.value.roundToInt().toFloat() / pointScale)
+            val accessibilityDescription = stringResource(R.string.gradePointsAccessibility, pointsValue)
             Slider(
                 modifier = Modifier
                     .padding(top = 16.dp)
-                    .testTag("speedGraderSlider"),
+                    .testTag("speedGraderSlider")
+                    .semantics {
+                        stateDescription = accessibilityDescription
+                    },
                 state = sliderState,
                 colors = SliderDefaults.colors(
                     thumbColor = LocalCourseColor.current,
