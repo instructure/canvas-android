@@ -71,12 +71,27 @@ object DiscussionTopicsApi {
                 .body()!!
     }
 
-    fun createDiscussionTopicWithCheckpoints(courseId: Long, token: String, discussionTitle: String, assignmentName: String) {
+    fun createDiscussionTopicWithCheckpoints(
+        courseId: Long,
+        token: String,
+        discussionTitle: String,
+        assignmentName: String,
+        replyToTopicDueDate: String? = null,
+        replyToEntryDueDate: String? = null
+    ) {
         val apolloClient = CanvasNetworkAdapter.getApolloClient(token)
 
-        val dates = listOf(
+        val replyToTopicDates = listOf(
             com.instructure.dataseedingapi.type.DiscussionCheckpointDate(
                 type = com.instructure.dataseedingapi.type.DiscussionCheckpointDateType.everyone,
+                dueAt = com.apollographql.apollo.api.Optional.presentIfNotNull(replyToTopicDueDate)
+            )
+        )
+
+        val replyToEntryDates = listOf(
+            com.instructure.dataseedingapi.type.DiscussionCheckpointDate(
+                type = com.instructure.dataseedingapi.type.DiscussionCheckpointDateType.everyone,
+                dueAt = com.apollographql.apollo.api.Optional.presentIfNotNull(replyToEntryDueDate)
             )
         )
 
@@ -84,13 +99,13 @@ object DiscussionTopicsApi {
             com.instructure.dataseedingapi.type.DiscussionCheckpoints(
                 checkpointLabel = com.instructure.dataseedingapi.type.CheckpointLabelType.reply_to_topic,
                 pointsPossible = 10.0,
-                dates = dates,
+                dates = replyToTopicDates,
                 repliesRequired = com.apollographql.apollo.api.Optional.present(1)
             ),
             com.instructure.dataseedingapi.type.DiscussionCheckpoints(
                 checkpointLabel = com.instructure.dataseedingapi.type.CheckpointLabelType.reply_to_entry,
                 pointsPossible = 5.0,
-                dates = dates,
+                dates = replyToEntryDates,
                 repliesRequired = com.apollographql.apollo.api.Optional.present(2)
             )
         )
