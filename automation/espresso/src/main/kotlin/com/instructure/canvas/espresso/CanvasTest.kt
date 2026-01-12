@@ -115,7 +115,7 @@ abstract class CanvasTest : InstructureTestingContract {
 
         val application = originalActivity.application as? TestAppManager
         application?.workerFactory = this.workerFactory
-        application?.initWorkManager(application)
+   //     application?.initWorkManager(application)
     }
 
     @Before

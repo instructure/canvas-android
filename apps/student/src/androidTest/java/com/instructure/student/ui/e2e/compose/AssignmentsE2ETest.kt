@@ -43,7 +43,6 @@ import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
-import com.instructure.espresso.handleWorkManagerTask
 import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.pandautils.utils.toFormattedString
 import com.instructure.student.R
@@ -148,7 +147,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         val newComment = "Comment for second attempt"
         Log.d(STEP_TAG, "Add a new comment ('$newComment') and send it.")
         submissionDetailsPage.addAndSendComment(newComment)
-        handleWorkManagerTask("SubmissionWorker")
+      //  handleWorkManagerTask("SubmissionWorker")
 
         Log.d(ASSERTION_TAG, "Assert that '$newComment' is displayed.")
         submissionDetailsPage.assertCommentDisplayed(newComment, student)
@@ -534,7 +533,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
     @Stub("Failing on CI, needs to be fixed in ticket MBL-18749")
-    fun testPercentageFileAssignmentWithCommentE2E() {
+    fun test02PercentageFileAssignmentWithCommentE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(teachers = 1, courses = 1, students = 1)
@@ -757,7 +756,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.COMMENTS, TestCategory.E2E)
     @Stub("Failing on CI, needs to be fixed in ticket MBL-18749")
-    fun testMediaCommentsE2E() {
+    fun test03MediaCommentsE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(teachers = 1, courses = 1, students = 1)
