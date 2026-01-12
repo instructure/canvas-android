@@ -16,13 +16,16 @@
 
 package com.instructure.pandautils.features.dashboard.widget.forecast
 
+import android.content.res.Resources
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.PlannerItem
+import com.instructure.canvasapi2.type.GradingType
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.toDate
 import com.instructure.pandautils.data.model.GradedSubmission
@@ -31,12 +34,15 @@ import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getAssignmentIcon
 import com.instructure.pandautils.utils.getIconForPlannerItem
+import com.instructure.pandautils.domain.usecase.assignment.LoadAssignmentGroupsUseCase
 import com.instructure.pandautils.domain.usecase.assignment.LoadMissingAssignmentsParams
 import com.instructure.pandautils.domain.usecase.assignment.LoadMissingAssignmentsUseCase
 import com.instructure.pandautils.domain.usecase.assignment.LoadUpcomingAssignmentsParams
 import com.instructure.pandautils.domain.usecase.assignment.LoadUpcomingAssignmentsUseCase
 import com.instructure.pandautils.domain.usecase.audit.LoadRecentGradeChangesParams
 import com.instructure.pandautils.domain.usecase.audit.LoadRecentGradeChangesUseCase
+import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCase
+import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCaseParams
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
@@ -63,10 +69,13 @@ class ForecastWidgetViewModel @Inject constructor(
     private val loadUpcomingAssignmentsUseCase: LoadUpcomingAssignmentsUseCase,
     private val loadRecentGradeChangesUseCase: LoadRecentGradeChangesUseCase,
     private val observeForecastConfigUseCase: ObserveForecastConfigUseCase,
-    private val forecastWidgetDataStore: ForecastWidgetDataStore,
+    private val loadCourseUseCase: LoadCourseUseCase,
+    private val loadAssignmentGroupsUseCase: LoadAssignmentGroupsUseCase,
+    private val assignmentWeightCalculator: AssignmentWeightCalculator,
     private val forecastWidgetRouter: ForecastWidgetRouter,
     private val apiPrefs: ApiPrefs,
-    private val crashlytics: FirebaseCrashlytics
+    private val crashlytics: FirebaseCrashlytics,
+    private val resources: Resources
 ) : ViewModel() {
 
     private var missingAssignments: List<Assignment> = emptyList()
@@ -74,6 +83,10 @@ class ForecastWidgetViewModel @Inject constructor(
     private var recentGradedSubmissions: List<GradedSubmission> = emptyList()
     private var currentWeekOffset: Int = 0
     private var weekNavigationJob: Job? = null
+
+    // Cache for courses and assignment groups
+    private val coursesCache = mutableMapOf<Long, Course>()
+    private val assignmentGroupsCache = mutableMapOf<Long, List<AssignmentGroup>>()
 
     private val _uiState = MutableStateFlow(
         ForecastWidgetUiState(
@@ -90,7 +103,6 @@ class ForecastWidgetViewModel @Inject constructor(
         val initialWeekPeriod = calculateWeekPeriod(currentWeekOffset)
         _uiState.update { it.copy(weekPeriod = initialWeekPeriod) }
 
-        observeSelectedSection()
         observeConfig()
         loadData(forceRefresh = false)
     }
@@ -113,7 +125,6 @@ class ForecastWidgetViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 weekPeriod = weekPeriod,
-                dueAssignments = mapUpcomingAssignments(upcomingPlannerItems),
                 isLoadingItems = it.selectedSection != null
             )
         }
@@ -135,11 +146,9 @@ class ForecastWidgetViewModel @Inject constructor(
     }
 
     private fun toggleSection(section: ForecastSection) {
-        viewModelScope.launch {
-            val currentSection = _uiState.value.selectedSection
-            val newSection = if (currentSection == section) null else section
-            forecastWidgetDataStore.setSelectedSection(newSection)
-        }
+        val currentSection = _uiState.value.selectedSection
+        val newSection = if (currentSection == section) null else section
+        _uiState.update { it.copy(selectedSection = newSection) }
     }
 
     private fun onAssignmentClick(activity: FragmentActivity, assignmentId: Long, courseId: Long) {
@@ -152,16 +161,6 @@ class ForecastWidgetViewModel @Inject constructor(
 
     fun refresh() {
         loadData(forceRefresh = true)
-    }
-
-    private fun observeSelectedSection() {
-        viewModelScope.launch {
-            forecastWidgetDataStore.observeSelectedSection()
-                .catch { crashlytics.recordException(it) }
-                .collect { section ->
-                    _uiState.update { it.copy(selectedSection = section) }
-                }
-        }
     }
 
     private fun observeConfig() {
@@ -199,8 +198,12 @@ class ForecastWidgetViewModel @Inject constructor(
 
     private suspend fun loadMissingAssignments(forceRefresh: Boolean) {
         missingAssignments = loadMissingAssignmentsUseCase(LoadMissingAssignmentsParams(forceRefresh))
+        val mappedAssignments = mapMissingAssignments(missingAssignments)
         _uiState.update {
-            it.copy(missingAssignments = mapMissingAssignments(missingAssignments))
+            it.copy(
+                missingAssignments = mappedAssignments,
+                selectedSection = if (mappedAssignments.isNotEmpty()) ForecastSection.MISSING else null
+            )
         }
     }
 
@@ -240,10 +243,11 @@ class ForecastWidgetViewModel @Inject constructor(
         }
     }
 
-    private fun mapMissingAssignments(assignments: List<Assignment>): List<AssignmentItem> {
+    private suspend fun mapMissingAssignments(assignments: List<Assignment>): List<AssignmentItem> {
         return assignments
             .sortedBy { it.dueAt }
             .map { assignment ->
+                val weight = calculateAssignmentWeight(assignment)
                 AssignmentItem(
                     id = assignment.id,
                     courseId = assignment.courseId,
@@ -252,17 +256,18 @@ class ForecastWidgetViewModel @Inject constructor(
                     dueDate = assignment.dueAt?.toDate(),
                     gradedDate = null,
                     pointsPossible = assignment.pointsPossible,
-                    weight = null, // TODO: Add weight if available
+                    weight = weight,
                     iconRes = assignment.getAssignmentIcon(),
                     url = assignment.htmlUrl.orEmpty()
                 )
             }
     }
 
-    private fun mapUpcomingAssignments(plannerItems: List<PlannerItem>): List<AssignmentItem> {
+    private suspend fun mapUpcomingAssignments(plannerItems: List<PlannerItem>): List<AssignmentItem> {
         return plannerItems
             .sortedBy { it.plannableDate }
             .map { item ->
+                val weight = calculatePlannerItemWeight(item)
                 AssignmentItem(
                     id = item.plannable.id,
                     courseId = item.courseId ?: 0,
@@ -271,7 +276,7 @@ class ForecastWidgetViewModel @Inject constructor(
                     dueDate = item.plannableDate,
                     gradedDate = null,
                     pointsPossible = item.plannable.pointsPossible ?: 0.0,
-                    weight = null,
+                    weight = weight,
                     iconRes = item.getIconForPlannerItem(),
                     url = item.htmlUrl.orEmpty()
                 )
@@ -294,21 +299,41 @@ class ForecastWidgetViewModel @Inject constructor(
                     iconRes = R.drawable.ic_assignment,
                     url = submission.assignmentUrl ?: "",
                     score = submission.score,
-                    grade = formatGrade(submission.grade)
+                    grade = formatGrade(submission)
                 )
             }
     }
 
-    private fun formatGrade(grade: String?): String? {
+    private fun formatGrade(submission: GradedSubmission): String? {
+        if (submission.excused) {
+            return resources.getString(R.string.gradingStatus_excused)
+        }
+
+        val grade = submission.grade
         if (grade.isNullOrBlank()) return null
 
+        // For point-based assignments, show "score/pointsPossible"
+        if (submission.gradingType == GradingType.points) {
+            val score = submission.score ?: return grade
+            val pointsPossible = submission.pointsPossible ?: return grade
+
+            val formattedScore = formatNumber(score)
+            val formattedPoints = formatNumber(pointsPossible)
+            return "$formattedScore / $formattedPoints"
+        }
+
+        // For other grading types, format the grade value
         return try {
             val number = grade.toDouble()
-            val formatted = "%.2f".format(Locale.US, number)
-            formatted.trimEnd('0').trimEnd('.')
+            formatNumber(number)
         } catch (_: NumberFormatException) {
             grade
         }
+    }
+
+    private fun formatNumber(number: Double): String {
+        val formatted = "%.2f".format(Locale.getDefault(), number)
+        return formatted.trimEnd('0').trimEnd('.')
     }
 
     private fun calculateWeekPeriod(offsetWeeks: Int): WeekPeriod {
@@ -339,6 +364,50 @@ class ForecastWidgetViewModel @Inject constructor(
             Locale.forLanguageTag(selectedLocale)
         } else {
             Locale.getDefault()
+        }
+    }
+
+    private suspend fun calculateAssignmentWeight(assignment: Assignment): Double? {
+        return try {
+            val course = getCourseOrLoad(assignment.courseId)
+            val assignmentGroups = getAssignmentGroupsOrLoad(assignment.courseId)
+
+            assignmentWeightCalculator.calculateWeight(assignment, course, assignmentGroups)
+        } catch (e: Exception) {
+            crashlytics.recordException(e)
+            null
+        }
+    }
+
+    private suspend fun calculatePlannerItemWeight(plannerItem: PlannerItem): Double? {
+        return try {
+            val courseId = plannerItem.courseId ?: return null
+            val assignmentId = plannerItem.plannable.id
+
+            val course = getCourseOrLoad(courseId)
+            val assignmentGroups = getAssignmentGroupsOrLoad(courseId)
+
+            val assignment = assignmentGroups
+                .flatMap { it.assignments }
+                .find { it.id == assignmentId }
+                ?: return null
+
+            assignmentWeightCalculator.calculateWeight(assignment, course, assignmentGroups)
+        } catch (e: Exception) {
+            crashlytics.recordException(e)
+            null
+        }
+    }
+
+    private suspend fun getCourseOrLoad(courseId: Long): Course {
+        return coursesCache.getOrPut(courseId) {
+            loadCourseUseCase(LoadCourseUseCaseParams(courseId, forceNetwork = false))
+        }
+    }
+
+    private suspend fun getAssignmentGroupsOrLoad(courseId: Long): List<AssignmentGroup> {
+        return assignmentGroupsCache.getOrPut(courseId) {
+            loadAssignmentGroupsUseCase(LoadAssignmentGroupsUseCase.Params(courseId, forceNetwork = false))
         }
     }
 }

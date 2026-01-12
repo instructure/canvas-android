@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -47,8 +48,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
-import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getFragmentActivity
 import java.text.SimpleDateFormat
@@ -75,35 +76,35 @@ fun AssignmentListItem(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.Top
     ) {
-        Icon(
-            painter = painterResource(
-                if (assignment.iconRes != 0) assignment.iconRes
-                else R.drawable.ic_assignment
-            ),
-            contentDescription = null,
-            tint = courseColor,
-            modifier = Modifier.size(16.dp)
-        )
-
-        Box(
-            modifier = Modifier
-                .width(0.5.dp)
-                .height(16.dp)
-                .border(
-                    width = 0.5.dp,
-                    color = colorResource(R.color.borderMedium)
-                )
-        )
-
         Column(
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                Icon(
+                    painter = painterResource(
+                        if (assignment.iconRes != 0) assignment.iconRes
+                        else R.drawable.ic_assignment
+                    ),
+                    contentDescription = null,
+                    tint = courseColor,
+                    modifier = Modifier.size(16.dp)
+                )
+
+                Box(
+                    modifier = Modifier
+                        .width(0.5.dp)
+                        .height(16.dp)
+                        .border(
+                            width = 0.5.dp,
+                            color = colorResource(R.color.borderMedium)
+                        )
+                )
+
                 Text(
                     text = assignment.courseName,
                     fontSize = 12.sp,
@@ -112,12 +113,23 @@ fun AssignmentListItem(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-
-                assignment.weight?.let { weight ->
-                    WeightChip(
-                        weight = weight,
-                        color = courseColor
-                    )
+                Spacer(modifier = Modifier.weight(1f))
+                when {
+                    assignment.weight != null -> {
+                        WeightChip(
+                            weight = assignment.weight,
+                            color = courseColor
+                        )
+                    }
+                    assignment.grade != null -> {
+                        Text(
+                            text = assignment.grade,
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            lineHeight = 19.sp,
+                            color = colorResource(R.color.textDarkest)
+                        )
+                    }
                 }
             }
 
@@ -134,7 +146,7 @@ fun AssignmentListItem(
 
             val dateText = assignment.dueDate?.let { formatDate(it) }
                 ?: assignment.gradedDate?.let { formatDate(it) }
-                ?: ""
+                    .orEmpty()
 
             if (dateText.isNotEmpty()) {
                 Text(
@@ -145,16 +157,6 @@ fun AssignmentListItem(
                     modifier = Modifier.fillMaxWidth()
                 )
             }
-        }
-
-        assignment.grade?.let { grade ->
-            Text(
-                text = grade,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.SemiBold,
-                lineHeight = 19.sp,
-                color = colorResource(R.color.textDarkest)
-            )
         }
     }
 }
@@ -222,7 +224,12 @@ private fun formatDate(date: Date): String {
 
     return when {
         dateMillis >= todayStart && dateMillis < tomorrowStart -> "Today, ${timeFormat.format(date)}"
-        dateMillis >= tomorrowStart && dateMillis <= tomorrowEnd -> "Tomorrow, ${timeFormat.format(date)}"
+        dateMillis >= tomorrowStart && dateMillis <= tomorrowEnd -> "Tomorrow, ${
+            timeFormat.format(
+                date
+            )
+        }"
+
         else -> dateFormat.format(date)
     }
 }
@@ -235,6 +242,7 @@ private fun formatDate(date: Date): String {
 )
 @Composable
 private fun AssignmentListItemPreview() {
+    ContextKeeper.appContext = LocalContext.current
     AssignmentListItem(
         assignment = AssignmentItem(
             id = 1,
@@ -255,6 +263,7 @@ private fun AssignmentListItemPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun AssignmentListItemNoWeightPreview() {
+    ContextKeeper.appContext = LocalContext.current
     AssignmentListItem(
         assignment = AssignmentItem(
             id = 2,
