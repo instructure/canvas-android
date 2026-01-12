@@ -28,7 +28,6 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
-import com.instructure.canvas.espresso.annotations.Stub
 import com.instructure.canvas.espresso.checkToastText
 import com.instructure.canvas.espresso.common.pages.compose.AssignmentListPage
 import com.instructure.canvas.espresso.pressBackButton
@@ -532,7 +531,6 @@ class AssignmentsE2ETest: StudentComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
-    @Stub("Failing on CI, needs to be fixed in ticket MBL-18749")
     fun test02PercentageFileAssignmentWithCommentE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
@@ -755,7 +753,6 @@ class AssignmentsE2ETest: StudentComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.COMMENTS, TestCategory.E2E)
-    @Stub("Failing on CI, needs to be fixed in ticket MBL-18749")
     fun test03MediaCommentsE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
