@@ -78,8 +78,7 @@ class SubmissionDetailsInteractionTest : StudentComposeTest() {
         courseBrowserPage.selectAssignments()
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.clickSubmit()
-        urlSubmissionUploadPage.submitText("https:" +
-                ",,//google.com")
+        urlSubmissionUploadPage.submitText("https://google.com")
       //  handleWorkManagerTask("SubmissionWorker")
 
         assignmentDetailsPage.assertAssignmentSubmitted()
