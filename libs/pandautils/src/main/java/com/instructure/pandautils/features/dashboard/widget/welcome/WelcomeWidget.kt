@@ -14,23 +14,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.student.features.dashboard.widget.welcome
+package com.instructure.pandautils.features.dashboard.widget.welcome
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.instructure.student.R
+import com.instructure.pandautils.R
 import kotlinx.coroutines.flow.SharedFlow
 
 @Composable
@@ -40,6 +44,12 @@ fun WelcomeWidget(
 ) {
     val viewModel: WelcomeWidgetViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(refreshSignal) {
+        refreshSignal.collect {
+            viewModel.refresh()
+        }
+    }
 
     WelcomeContent(
         modifier = modifier,
@@ -52,7 +62,17 @@ private fun WelcomeContent(
     modifier: Modifier = Modifier,
     uiState: WelcomeWidgetUiState
 ) {
-    Column(modifier = modifier.padding(horizontal = 16.dp)) {
+    val contentDescriptionText = stringResource(
+        R.string.welcomeWidgetContentDescription,
+        uiState.greeting,
+        uiState.message
+    )
+
+    Column(
+        modifier = modifier
+            .padding(horizontal = 16.dp)
+            .semantics { contentDescription = contentDescriptionText }
+    ) {
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = uiState.greeting,
@@ -61,22 +81,30 @@ private fun WelcomeContent(
             color = colorResource(R.color.textDarkest),
             lineHeight = 29.sp
         )
-        Text(modifier = Modifier.fillMaxWidth(),
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 2.dp),
             text = uiState.message,
             fontSize = 14.sp,
             color = colorResource(R.color.textDarkest),
-            lineHeight = 19.sp)
+            lineHeight = 19.sp
+        )
     }
 }
 
 @Preview(showBackground = true)
-@Preview(showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Preview(
+    showBackground = true,
+    uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES,
+    backgroundColor = 0x1F2124
+)
 @Composable
 fun WelcomeContentPreview() {
     WelcomeContent(
         uiState = WelcomeWidgetUiState(
-            greeting = "Welcome back, Student!",
-            message = "Here's what's happening in your courses today."
+            greeting = "Good morning, Riley!",
+            message = "Every small step you take is progress. Keep going!"
         )
     )
 }

@@ -199,7 +199,11 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                             refreshStateFlow
                         )
                         HorizonSpace(SpaceSize.SPACE_16)
-                        NumericWidgetRow(shouldRefresh, refreshStateFlow, homeNavController)
+                        NumericWidgetRow(
+                            shouldRefresh,
+                            refreshStateFlow,
+                            homeNavController
+                        )
                         DashboardSkillHighlightsWidget(
                             homeNavController,
                             shouldRefresh,
@@ -231,7 +235,7 @@ private fun HomeScreenTopBar(uiState: DashboardUiState, mainNavController: NavCo
         )
         Spacer(modifier = Modifier.weight(1f))
         IconButton(
-            iconRes = R.drawable.menu_book_notebook,
+            iconRes = R.drawable.edit_note,
             contentDescription = stringResource(R.string.a11y_dashboardNotebookButtonContentDescription),
             onClick = {
                 mainNavController.navigate(MainNavigationRoute.Notebook.route)
@@ -280,9 +284,12 @@ private fun HomeScreenTopBar(uiState: DashboardUiState, mainNavController: NavCo
 private fun NumericWidgetRow(
     shouldRefresh: Boolean,
     refreshStateFlow: MutableStateFlow<List<Boolean>>,
-    homeNavController: NavHostController
+    homeNavController: NavHostController,
+    modifier: Modifier = Modifier
 ) {
-    BoxWithConstraints {
+    BoxWithConstraints(
+        modifier = modifier
+    ) {
         val pageCount = 3
         val pagerState = rememberPagerState{ pageCount }
         if (this.isWideLayout) {

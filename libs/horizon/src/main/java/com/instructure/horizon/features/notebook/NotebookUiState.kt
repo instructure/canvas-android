@@ -16,20 +16,29 @@
  */
 package com.instructure.horizon.features.notebook
 
+import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
 import com.instructure.horizon.features.notebook.common.model.Note
 import com.instructure.horizon.features.notebook.common.model.NotebookType
+import com.instructure.horizon.horizonui.platform.LoadingState
 
 data class NotebookUiState(
-    val isLoading: Boolean = true,
+    val loadingState: LoadingState = LoadingState(),
+    val isLoadingMore: Boolean = false,
     val selectedFilter: NotebookType? = null,
     val onFilterSelected: (NotebookType?) -> Unit = {},
+    val selectedCourse: CourseWithProgress? = null,
+    val onCourseSelected: (CourseWithProgress?) -> Unit = {},
+    val courses: List<CourseWithProgress> = emptyList(),
     val notes: List<Note> = emptyList(),
-    val hasPreviousPage: Boolean = false,
     val hasNextPage: Boolean = false,
-    val loadPreviousPage: () -> Unit = {},
     val loadNextPage: () -> Unit = {},
-    val updateContent: (Long?, Pair<String, String>?) -> Unit,
     val showTopBar: Boolean = false,
     val showFilters: Boolean = false,
-    val navigateToEdit: Boolean = false
+    val navigateToEdit: Boolean = false,
+    val showNoteTypeFilter: Boolean = true,
+    val showCourseFilter: Boolean = true,
+    val showDeleteConfirmationForNote: Note? = null,
+    val updateShowDeleteConfirmation: (Note?) -> Unit = {},
+    val deleteNote: (Note?) -> Unit = {},
+    val deleteLoadingNote: Note? = null
 )

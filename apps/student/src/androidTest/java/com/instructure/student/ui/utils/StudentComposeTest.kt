@@ -35,6 +35,8 @@ import com.instructure.canvas.espresso.common.pages.compose.SelectContextPage
 import com.instructure.canvas.espresso.common.pages.compose.SettingsPage
 import com.instructure.canvas.espresso.common.pages.compose.SmartSearchPage
 import com.instructure.canvas.espresso.common.pages.compose.SmartSearchPreferencesPage
+import com.instructure.canvas.espresso.common.pages.compose.ToDoFilterPage
+import com.instructure.canvas.espresso.common.pages.compose.ToDoListPage
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.student.R
 import com.instructure.student.activity.LoginActivity
@@ -63,11 +65,7 @@ abstract class StudentComposeTest : StudentTest() {
     val smartSearchPreferencesPage = SmartSearchPreferencesPage(composeTestRule)
     val assignmentListPage = AssignmentListPage(composeTestRule)
     val inboxSignatureSettingsPage = InboxSignatureSettingsPage(composeTestRule)
-    val assignmentDetailsPage = StudentAssignmentDetailsPage(
-        ModuleItemInteractions(
-            R.id.moduleName,
-            R.id.next_item,
-            R.id.prev_item
-        ), composeTestRule
-    )
+    val toDoListPage = ToDoListPage(composeTestRule)
+    val toDoFilterPage = ToDoFilterPage(composeTestRule)
+    val assignmentDetailsPage = StudentAssignmentDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next_item, R.id.prev_item), composeTestRule)
 }

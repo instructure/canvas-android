@@ -196,6 +196,7 @@ object AnalyticsParamConstants {
     const val MEDIA_SOURCE = "media_source"
     const val MEDIA_TYPE = "media_type"
     const val ATTEMPT = "attempt"
+    const val RETRY = "retry"
 
     //todo filters
     const val FILTER_PERSONAL_TODOS = "filter_personal_todos"

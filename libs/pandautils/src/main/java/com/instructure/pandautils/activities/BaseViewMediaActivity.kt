@@ -29,7 +29,6 @@ import android.widget.LinearLayout
 import androidx.annotation.OptIn
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.HttpDataSource
 import androidx.media3.exoplayer.source.UnrecognizedInputFormatException
@@ -46,7 +45,6 @@ import com.instructure.pandautils.utils.ExoAgentState
 import com.instructure.pandautils.utils.ExoInfoListener
 import com.instructure.pandautils.utils.FileFolderDeletedEvent
 import com.instructure.pandautils.utils.FileFolderUpdatedEvent
-import com.instructure.pandautils.utils.RouteUtils
 import com.instructure.pandautils.utils.Utils
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.onClick
@@ -55,7 +53,6 @@ import com.instructure.pandautils.utils.setMenu
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAsCloseButton
 import com.instructure.pandautils.utils.viewExternally
-import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 
@@ -92,10 +89,8 @@ abstract class BaseViewMediaActivity : BaseCanvasActivity() {
             mediaProgressBar.announceForAccessibility(getString(R.string.loading))
             mediaProgressBar.setVisible()
         }
-        lifecycleScope.launch {
-            mediaUri = RouteUtils.getMediaUri(mUri)
-            attachMediaPlayer()
-        }
+        mediaUri = mUri
+        attachMediaPlayer()
     }
 
     private fun attachMediaPlayer() = with(binding) {
@@ -214,6 +209,9 @@ abstract class BaseViewMediaActivity : BaseCanvasActivity() {
 
     override fun onResume() {
         super.onResume()
+
+        // Pause all other playing videos to prevent multiple videos playing simultaneously
+        ExoAgent.pauseAllOtherAgents(mUri)
 
         val fileFolderDeletedEvent = EventBus.getDefault().getStickyEvent(FileFolderDeletedEvent::class.java)
         if (fileFolderDeletedEvent != null)

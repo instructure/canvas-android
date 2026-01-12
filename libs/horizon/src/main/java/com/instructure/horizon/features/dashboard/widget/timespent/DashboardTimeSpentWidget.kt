@@ -22,7 +22,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCardError
@@ -72,7 +72,7 @@ fun DashboardTimeSpentSection(
         }
         DashboardItemState.ERROR -> {
             DashboardWidgetCardError(
-                stringResource(R.string.dashboardTimeSpentTitle),
+                stringResource(R.string.dashboardTimeLearningTitle),
                 R.drawable.schedule,
                 HorizonColors.PrimitivesHoney.honey12(),
                 false,

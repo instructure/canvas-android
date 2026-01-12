@@ -1250,6 +1250,7 @@
     <string name="a11y_content_description_remove_all_from_dashboard">Remove all from dashboard</string>
     <string name="a11y_content_description_add_to_dashboard">Add to dashboard</string>
     <string name="a11y_content_description_add_all_to_dashboard">Add all to dashboard</string>
+    <string name="new_mobile_dashboard">New Mobile Dashboard</string>
 
     <!-- K5 Strings -->
     <string name="navDrawerAccount">Account</string>
@@ -2104,7 +2105,7 @@
     <string name="widgetErrorTitle">Oops! Something Went Wrong</string>
     <string name="widgetErrorSubtitle">We\'re having trouble showing your tasks right now. Please try again in a bit or head to the app.</string>
     <string name="widgetToDoEmptyTitle">You’re all done for now!</string>
-    <string name="widgetToDoEmptySubtitle">Looks like you\'re free for the next 4 weeks. Do you want to add some to-dos?</string>
+    <string name="widgetToDoEmptySubtitle">Looks like you are free, you have no upcoming tasks. Do you want to add some to-dos?</string>
     <string name="widgetNotLoggedInTitle">Let\'s Get You Logged In!</string>
     <string name="widgetToDoNotLoggedInSubtitle">To see your to-dos, please log in to your account in the app. It\'ll just take a sec!</string>
     <string name="a11y_widgetToDoOpenToDoList">Open To Do list screen</string>
@@ -2130,6 +2131,10 @@
     <plurals name="pointTotal">
         <item quantity="one">%s / %s pt</item>
         <item quantity="other">%s / %s pts</item>
+    </plurals>
+    <plurals name="groupMemberCount">
+        <item quantity="one">Student</item>
+        <item quantity="other">Students</item>
     </plurals>
     <string name="speedGraderLatePenaltyTitle">Late Penalty</string>
     <string name="gradingStatus_none">None</string>
@@ -2229,4 +2234,149 @@
     <string name="courseInvitationDeclined">Invitation to %s declined</string>
     <string name="courseInvitationDeclineConfirmTitle">Decline Invitation</string>
     <string name="courseInvitationDeclineConfirmMessage">Are you sure you want to decline the invitation to %s?</string>
+
+    <!-- Welcome Widget -->
+    <!-- Greetings with name (%s is the student's first name) -->
+    <string name="welcomeGreetingMorningWithName">Good morning, %s!</string>
+    <string name="welcomeGreetingAfternoonWithName">Good afternoon, %s!</string>
+    <string name="welcomeGreetingEveningWithName">Good evening, %s!</string>
+    <string name="welcomeGreetingNightWithName">Good night, %s!</string>
+
+    <!-- Greetings without name (fallback when user has no first name) -->
+    <string name="welcomeGreetingMorning">Good morning!</string>
+    <string name="welcomeGreetingAfternoon">Good afternoon!</string>
+    <string name="welcomeGreetingEvening">Good evening!</string>
+    <string name="welcomeGreetingNight">Good night!</string>
+
+    <!-- Welcome Widget Motivational Messages -->
+    <string-array name="welcomeMessagesGeneric">
+        <item>You\'ve got this.</item>
+        <item>Keep going — you\'re stronger than you feel right now.</item>
+        <item>One step at a time is still progress.</item>
+        <item>Don\'t give up — future you will thank you.</item>
+        <item>You\'re capable of more than you think.</item>
+        <item>Even on tough days, you\'re moving forward.</item>
+        <item>Trust yourself — you\'ve done hard things before.</item>
+        <item>Progress, not perfection. You\'re doing great.</item>
+        <item>Hang in there — you\'re not alone in this.</item>
+        <item>You\'re learning, growing, and doing better than you realize.</item>
+        <item>It\'s okay to stumble — you\'re still on the right path.</item>
+        <item>Keep pushing — you\'re closer than you think.</item>
+        <item>Small wins count too.</item>
+        <item>Keep going — you\'re closer than you think.</item>
+        <item>It\'s okay to pause. Breaks are part of learning.</item>
+        <item>Trying is already a win.</item>
+        <item>Progress &gt; perfection.</item>
+        <item>Showing up matters more than you know.</item>
+        <item>You\'re building skills, even on slow days.</item>
+        <item>Don\'t forget to breathe — you\'re doing fine.</item>
+        <item>Your pace is the right pace.</item>
+        <item>Not everything needs to be figured out today.</item>
+        <item>You belong here.</item>
+        <item>Every effort you make adds up.</item>
+        <item>It\'s okay to start again — as many times as you need.</item>
+        <item>What feels hard now will feel easier later.</item>
+        <item>Keep showing up — that\'s what counts.</item>
+        <item>Small steps move big mountains.</item>
+        <item>Rest is part of progress too.</item>
+        <item>You\'re doing better than you realize.</item>
+        <item>Even slow progress is still progress.</item>
+        <item>The future isn\'t built in a day — but you\'re on the way.</item>
+        <item>One assignment, one moment, one step at a time.</item>
+        <item>You don\'t have to be perfect to make an impact.</item>
+        <item>Learning is messy — and that\'s normal.</item>
+        <item>Every try is growth, even if it doesn\'t feel like it.</item>
+        <item>You\'ve done hard things before — you can do this too.</item>
+        <item>Your effort matters, even if no one sees it.</item>
+        <item>It\'s okay to take things slow.</item>
+        <item>You\'re moving forward, even on quiet days.</item>
+        <item>The path doesn\'t need to be clear yet — keep walking.</item>
+        <item>You\'re stronger than you feel right now.</item>
+        <item>Big goals are built from small steps.</item>
+        <item>Keep going — future you will thank you.</item>
+        <item>Even messy progress is still progress.</item>
+        <item>You\'re not behind — you\'re on your path.</item>
+        <item>It\'s okay to learn as you go.</item>
+        <item>You\'re growing in ways you might not see yet.</item>
+        <item>Your effort today is an investment in tomorrow.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesMorning">
+        <item>Morning! You\'ve got this — one class, one step at a time.</item>
+        <item>Not feeling ready? That\'s normal. Just start where you are.</item>
+        <item>Coffee helps, but kindness to yourself works better.</item>
+        <item>Tech acting up? Happens to all of us — don\'t stress.</item>
+        <item>Today doesn\'t need to be perfect, just possible.</item>
+        <item>Good morning — today is a new chance to learn and grow.</item>
+        <item>Even small steps this morning move you closer to your goals.</item>
+        <item>Take a breath — you don\'t need to have everything figured out yet.</item>
+        <item>Technology can be tricky, but you\'re not alone in learning it.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesAfternoon">
+        <item>Halfway there — you\'ve already done more than you think.</item>
+        <item>Feeling stuck? Everyone hits walls, just don\'t stop climbing.</item>
+        <item>Jobs, grades, the future… no one has it all figured out yet.</item>
+        <item>Brain tired? Quick break = better focus later.</item>
+        <item>Ask for help. Seriously, no one\'s doing this solo.</item>
+        <item>You\'ve already made it this far today — that\'s something to be proud of.</item>
+        <item>Need a pause? Recharging is part of learning too.</item>
+        <item>It\'s okay if the path feels uncertain — skills build step by step.</item>
+        <item>Reach out if you\'re stuck — support is always closer than it feels.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesEvening">
+        <item>Made it through the day — that\'s a win in itself.</item>
+        <item>Missing people? Shoot someone a quick "hey" — it helps.</item>
+        <item>Even if today felt messy, you showed up. That matters.</item>
+        <item>Remember: no grade measures your worth.</item>
+        <item>Relax, laugh, or scroll guilt-free — you earned it.</item>
+        <item>Well done getting through the day — progress counts, even when it\'s quiet.</item>
+        <item>Missing friends or mentors? Connection can come in small moments too.</item>
+        <item>Evenings are for reflection — notice what you\'ve learned today, not just what\'s left to do.</item>
+        <item>Your effort matters more than perfection.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesNight">
+        <item>Still grinding? Respect — but don\'t forget sleep exists.</item>
+        <item>Tomorrow you\'ll thank yourself for resting tonight.</item>
+        <item>Anxiety gets louder at night — don\'t believe all its noise.</item>
+        <item>You\'re not behind, you\'re just on your path.</item>
+        <item>Close the laptop — your brain needs dreams too.</item>
+        <item>It\'s okay to rest — tomorrow is waiting with new opportunities.</item>
+        <item>Learning is a marathon, not a sprint. Be kind to yourself tonight.</item>
+        <item>If worries feel heavy, remember you don\'t have to carry them alone.</item>
+        <item>End the day knowing that trying is already an achievement.</item>
+    </string-array>
+
+    <!-- Accessibility -->
+    <string name="welcomeWidgetContentDescription">Welcome message: %1$s. %2$s</string>
+
+    <!-- Institutional Announcements -->
+    <string name="institutionalAnnouncementsTitle">Announcements (%d)</string>
+
+    <!-- Widget Display Names -->
+    <string name="widget_hello">Hello, %s</string>
+
+    <!-- Customize Dashboard -->
+    <string name="customize_dashboard">Customize Dashboard</string>
+    <string name="dashboard_widgets">Widgets</string>
+    <string name="move_up">Move up</string>
+    <string name="move_down">Move down</string>
+    <string name="no_widgets">No widgets available</string>
+    <string name="changing_dashboard_layout">Changing dashboard layout</string>
+    <string name="changing_dashboard_layout_message">To change the dashboard layout you have to restart the application</string>
+    <string name="restart_now">Restart now</string>
+    <string name="switched_back">Switched back?</string>
+    <string name="switched_back_message">Thanks for trying the new dashboard! Could you tell us why you switched back?</string>
+    <string name="what_could_we_improve">What could we improve?</string>
+    <string name="skip">Skip</string>
+    <string name="widget_setting_show_greeting">Show greeting</string>
+    <string name="background_color">Background color</string>
+    <string name="offline_content_available">Offline content available</string>
+    <string name="a11y_contentDescription_moreOptions">More options</string>
+    <string name="customizeCourse">Customize Course</string>
+    <string name="favoriteCoursesAndGroups">Favorite Courses and Groups</string>
+    <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
+    <string name="ltiToolsOffline">External Tools are not available offline.</string>
 </resources>

@@ -250,7 +250,7 @@ class ToDoFilterDaoTest {
         assertEquals(false, foundFilter?.calendarEvents)
         assertEquals(false, foundFilter?.showCompleted)
         assertEquals(false, foundFilter?.favoriteCourses)
-        assertEquals(DateRangeSelection.ONE_WEEK, foundFilter?.pastDateRange)
-        assertEquals(DateRangeSelection.ONE_WEEK, foundFilter?.futureDateRange)
+        assertEquals(DateRangeSelection.FOUR_WEEKS, foundFilter?.pastDateRange)
+        assertEquals(DateRangeSelection.THIS_WEEK, foundFilter?.futureDateRange)
     }
 }

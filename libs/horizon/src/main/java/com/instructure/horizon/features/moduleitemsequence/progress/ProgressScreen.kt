@@ -24,11 +24,14 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -39,8 +42,13 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -64,6 +72,7 @@ import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.model.LearningObjectStatus
 import com.instructure.horizon.model.LearningObjectType
 import com.instructure.pandautils.compose.modifiers.conditional
+import kotlinx.coroutines.delay
 
 @Composable
 fun ProgressScreen(uiState: ProgressScreenUiState, loadingState: LoadingState, modifier: Modifier = Modifier) {
@@ -74,32 +83,57 @@ fun ProgressScreen(uiState: ProgressScreenUiState, loadingState: LoadingState, m
         dragHandle = null,
         modifier = Modifier.padding(top = 48.dp)
     ) {
-        Box(
+        Column(
             modifier = modifier
                 .fillMaxSize()
                 .background(color = HorizonColors.Surface.pagePrimary(), shape = HorizonCornerRadius.level5)
                 .padding(start = 24.dp, end = 24.dp)
         ) {
-            when {
-                loadingState.isLoading -> Spinner(modifier = Modifier.align(Alignment.Center))
-
-                loadingState.isError && uiState.pages.isEmpty() -> Text(
-                    text = stringResource(R.string.moduleProgressScreen_error),
-                    style = HorizonTypography.h3
+            Box {
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 30.dp)
+                        .align(Alignment.Center),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        painterResource(R.drawable.list_alt),
+                        contentDescription = null,
+                        tint = HorizonColors.Icon.default()
+                    )
+                    HorizonSpace(SpaceSize.SPACE_8)
+                    Text(
+                        text = stringResource(R.string.moduleProgressScreen_title),
+                        style = HorizonTypography.h3,
+                        modifier = Modifier
+                    )
+                }
+                IconButton(
+                    iconRes = R.drawable.close,
+                    contentDescription = stringResource(R.string.close),
+                    color = IconButtonColor.Inverse,
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(top = 30.dp),
+                    elevation = HorizonElevation.level4,
+                    onClick = uiState.onCloseClick,
+                    size = IconButtonSize.SMALL
                 )
-
-                else -> ProgressScreenContent(uiState)
             }
-            IconButton(
-                iconRes = R.drawable.close,
-                color = IconButtonColor.Inverse,
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(top = 30.dp),
-                elevation = HorizonElevation.level4,
-                onClick = uiState.onCloseClick,
-                size = IconButtonSize.SMALL
-            )
+            Box(modifier = Modifier.fillMaxHeight()) {
+                when {
+                    loadingState.isLoading -> Spinner(modifier = Modifier.align(Alignment.Center))
+
+                    loadingState.isError && uiState.pages.isEmpty() -> Text(
+                        text = stringResource(R.string.moduleProgressScreen_error),
+                        style = HorizonTypography.h3
+                    )
+
+                    else -> ProgressScreenContent(uiState)
+                }
+            }
         }
     }
 }
@@ -107,6 +141,8 @@ fun ProgressScreen(uiState: ProgressScreenUiState, loadingState: LoadingState, m
 @Composable
 private fun BoxScope.ProgressScreenContent(uiState: ProgressScreenUiState) {
     val currentPage = uiState.pages[uiState.currentPosition]
+    val hasPageChanged = remember { mutableStateOf(false) }
+
     AnimatedContent(
         currentPage,
         transitionSpec = { EnterTransition.None togetherWith ExitTransition.None }, label = "lazyListContent",
@@ -121,31 +157,19 @@ private fun BoxScope.ProgressScreenContent(uiState: ProgressScreenUiState) {
             )
         )
         }
+        val focusRequester = remember { FocusRequester() }
+        LaunchedEffect(uiState.currentPosition) {
+            if (hasPageChanged.value) {
+                delay(300)
+                focusRequester.requestFocus()
+            } else {
+                hasPageChanged.value = true
+            }
+        }
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             contentPadding = PaddingValues(top = 24.dp, bottom = 90.dp)
         ) {
-            item {
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp)
-                        .align(Alignment.Center),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        painterResource(R.drawable.list_alt),
-                        contentDescription = null,
-                        tint = HorizonColors.Icon.default()
-                    )
-                    HorizonSpace(SpaceSize.SPACE_8)
-                    Text(
-                        text = stringResource(R.string.moduleProgressScreen_title),
-                        style = HorizonTypography.h3
-                    )
-                }
-            }
             item {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -156,7 +180,10 @@ private fun BoxScope.ProgressScreenContent(uiState: ProgressScreenUiState) {
                     Text(
                         text = currentPageTarget.moduleName,
                         style = HorizonTypography.labelLargeBold,
-                        modifier = Modifier.padding(top = 16.dp)
+                        modifier = Modifier
+                            .padding(top = 16.dp)
+                            .focusRequester(focusRequester)
+                            .focusable()
                     )
                 }
             }
@@ -186,6 +213,7 @@ private fun BoxScope.ProgressScreenContent(uiState: ProgressScreenUiState) {
     }
     if (uiState.currentPosition > 0) IconButton(
         iconRes = R.drawable.chevron_left,
+        contentDescription = stringResource(R.string.a11y_previousModule),
         color = IconButtonColor.Inverse,
         modifier = Modifier
             .align(Alignment.BottomStart)
@@ -195,6 +223,7 @@ private fun BoxScope.ProgressScreenContent(uiState: ProgressScreenUiState) {
     )
     if (uiState.currentPosition < uiState.pages.size - 1) IconButton(
         iconRes = R.drawable.chevron_right,
+        contentDescription = stringResource(R.string.a11y_nextModule),
         color = IconButtonColor.Inverse,
         modifier = Modifier
             .align(Alignment.BottomEnd)

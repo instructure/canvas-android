@@ -36,6 +36,7 @@ import com.instructure.pandautils.features.dashboard.edit.itemviewmodels.EditDas
 import com.instructure.pandautils.features.dashboard.edit.itemviewmodels.EditDashboardGroupItemViewModel
 import com.instructure.pandautils.features.dashboard.edit.itemviewmodels.EditDashboardHeaderViewModel
 import com.instructure.pandautils.features.dashboard.edit.itemviewmodels.EditDashboardNoteItemViewModel
+import com.instructure.pandautils.features.calendar.CalendarSharedEvents
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.NetworkStateProvider
 import io.mockk.coEvery
@@ -68,6 +69,7 @@ class EditDashboardViewModelTest {
     private val groupManager: GroupManager = mockk(relaxed = true)
     private val repository: EditDashboardRepository = mockk(relaxed = true)
     private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
+    private val calendarSharedEvents: CalendarSharedEvents = mockk(relaxed = true)
 
     private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
     private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
@@ -99,7 +101,7 @@ class EditDashboardViewModelTest {
         coEvery { repository.getGroups() } returns groups
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider, calendarSharedEvents)
         viewModel.state.observe(lifecycleOwner) {}
 
         //Then
@@ -116,7 +118,7 @@ class EditDashboardViewModelTest {
         coEvery { repository.getGroups() } throws IllegalStateException()
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider, calendarSharedEvents)
         viewModel.state.observe(lifecycleOwner) {}
 
         //Then
@@ -133,7 +135,7 @@ class EditDashboardViewModelTest {
         coEvery { repository.getGroups() } returns emptyList()
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider, calendarSharedEvents)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
 
@@ -159,7 +161,7 @@ class EditDashboardViewModelTest {
         coEvery { repository.getGroups() } returns groups
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider, calendarSharedEvents)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
 
@@ -190,7 +192,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider, calendarSharedEvents)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
 
@@ -224,7 +226,7 @@ class EditDashboardViewModelTest {
         every { networkStateProvider.isOnline() } returns false
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider, calendarSharedEvents)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
 
@@ -257,7 +259,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider, calendarSharedEvents)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
 
@@ -286,7 +288,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider, calendarSharedEvents)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
 
@@ -315,7 +317,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider, calendarSharedEvents)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
 
@@ -349,7 +351,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider, calendarSharedEvents)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
 
@@ -385,7 +387,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider, calendarSharedEvents)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
         viewModel.events.observe(lifecycleOwner) {}
@@ -422,7 +424,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider, calendarSharedEvents)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
 
@@ -458,7 +460,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider, calendarSharedEvents)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
 
@@ -493,7 +495,7 @@ class EditDashboardViewModelTest {
         coEvery { repository.getGroups() } returns groups
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider, calendarSharedEvents)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
 
@@ -523,7 +525,7 @@ class EditDashboardViewModelTest {
         coEvery { repository.getGroups() } returns groups
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider, calendarSharedEvents)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
 
@@ -553,7 +555,7 @@ class EditDashboardViewModelTest {
         coEvery { repository.getGroups() } returns groups
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider, calendarSharedEvents)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
 
@@ -582,7 +584,7 @@ class EditDashboardViewModelTest {
         coEvery { repository.getGroups() } returns groups
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider, calendarSharedEvents)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
 
@@ -644,7 +646,7 @@ class EditDashboardViewModelTest {
         every { networkStateProvider.isOnline() } returns true
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider, calendarSharedEvents)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
         viewModel.events.observe(lifecycleOwner) {}
@@ -685,7 +687,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider, calendarSharedEvents)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
         viewModel.events.observe(lifecycleOwner) {}
@@ -729,7 +731,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider, calendarSharedEvents)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
         viewModel.events.observe(lifecycleOwner) {}
@@ -761,7 +763,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider, calendarSharedEvents)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
         viewModel.events.observe(lifecycleOwner) {}
@@ -796,7 +798,7 @@ class EditDashboardViewModelTest {
         }
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider, calendarSharedEvents)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
         viewModel.events.observe(lifecycleOwner) {}
@@ -827,7 +829,7 @@ class EditDashboardViewModelTest {
         coEvery { repository.offlineEnabled() } returns true
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider, calendarSharedEvents)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
 
@@ -854,7 +856,7 @@ class EditDashboardViewModelTest {
         coEvery { repository.offlineEnabled() } returns true
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider, calendarSharedEvents)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
 
@@ -884,7 +886,7 @@ class EditDashboardViewModelTest {
         coEvery { repository.offlineEnabled() } returns true
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider, calendarSharedEvents)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
 
@@ -910,7 +912,7 @@ class EditDashboardViewModelTest {
         coEvery { repository.offlineEnabled() } returns false
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider, calendarSharedEvents)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
 
@@ -936,7 +938,7 @@ class EditDashboardViewModelTest {
         coEvery { repository.offlineEnabled() } returns true
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider, calendarSharedEvents)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
 
@@ -961,7 +963,7 @@ class EditDashboardViewModelTest {
         coEvery { repository.getSyncedCourseIds() } returns setOf(1L)
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider, calendarSharedEvents)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
 
@@ -985,7 +987,7 @@ class EditDashboardViewModelTest {
         coEvery { repository.offlineEnabled() } returns true
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider, calendarSharedEvents)
         viewModel.state.observe(lifecycleOwner) {}
         viewModel.data.observe(lifecycleOwner) {}
 
@@ -1008,7 +1010,7 @@ class EditDashboardViewModelTest {
         every { networkStateProvider.isOnline() } returns true
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider, calendarSharedEvents)
         val stateUpdates = mutableListOf<ViewState>()
         viewModel.state.observeForever {
             stateUpdates.add(it)
@@ -1031,7 +1033,7 @@ class EditDashboardViewModelTest {
         every { networkStateProvider.isOnline() } returns false
 
         //When
-        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider, calendarSharedEvents)
         val stateUpdates = mutableListOf<ViewState>()
         viewModel.state.observeForever {
             stateUpdates.add(it)
@@ -1042,6 +1044,64 @@ class EditDashboardViewModelTest {
         //Then
         assertFalse(stateUpdates.contains(ViewState.Refresh))
         coVerify(exactly = 1) { repository.getCourses() }
+    }
+
+    @Test
+    fun `RefreshToDoList event is sent when course is added to favorites`() {
+        //Given
+        val courses = listOf(createCourse(1L, "Current course", false))
+
+        coEvery { repository.getCourses() } returns listOf(courses, emptyList(), emptyList())
+
+        every { repository.isFavoriteable(any()) } returns true
+
+        coEvery { repository.getGroups() } returns emptyList()
+
+        every { courseManager.addCourseToFavoritesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Favorite(1L))
+        }
+
+        //When
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider, calendarSharedEvents)
+        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleOwner) {}
+
+        val data = viewModel.data.value?.items ?: emptyList()
+
+        val itemViewModel = (data[3] as EditDashboardCourseItemViewModel)
+        itemViewModel.onFavoriteClick()
+
+        //Then
+        coVerify { calendarSharedEvents.sendEvent(any(), any<com.instructure.pandautils.features.calendar.SharedCalendarAction.RefreshToDoList>()) }
+    }
+
+    @Test
+    fun `RefreshToDoList event is sent when course is removed from favorites`() {
+        //Given
+        val courses = listOf(createCourse(1L, "Current course", true))
+
+        coEvery { repository.getCourses() } returns listOf(courses, emptyList(), emptyList())
+
+        every { repository.isFavoriteable(any()) } returns true
+
+        coEvery { repository.getGroups() } returns emptyList()
+
+        every { courseManager.removeCourseFromFavoritesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(Favorite(1L))
+        }
+
+        //When
+        viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider, calendarSharedEvents)
+        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleOwner) {}
+
+        val data = viewModel.data.value?.items ?: emptyList()
+
+        val itemViewModel = (data[3] as EditDashboardCourseItemViewModel)
+        itemViewModel.onFavoriteClick()
+
+        //Then
+        coVerify { calendarSharedEvents.sendEvent(any(), any<com.instructure.pandautils.features.calendar.SharedCalendarAction.RefreshToDoList>()) }
     }
 
     private fun createCourse(

@@ -39,9 +39,22 @@ class EnsureDefaultWidgetsUseCase @Inject constructor(
                 isFullWidth = true
             ),
             WidgetMetadata(
-                id = WidgetMetadata.WIDGET_ID_WELCOME,
+                id = WidgetMetadata.WIDGET_ID_INSTITUTIONAL_ANNOUNCEMENTS,
                 position = 1,
+                isVisible = true,
+                isEditable = false,
+                isFullWidth = true
+            ),
+            WidgetMetadata(
+                id = WidgetMetadata.WIDGET_ID_WELCOME,
+                position = 2,
                 isVisible = true
+            ),
+            WidgetMetadata(
+                id = WidgetMetadata.WIDGET_ID_COURSES,
+                position = 3,
+                isVisible = true,
+                isFullWidth = true
             )
         )
 

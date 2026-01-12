@@ -27,7 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -47,6 +47,7 @@ import com.instructure.horizon.horizonui.animation.enterTransition
 import com.instructure.horizon.horizonui.animation.exitTransition
 import com.instructure.horizon.horizonui.animation.popEnterTransition
 import com.instructure.horizon.horizonui.animation.popExitTransition
+import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.navigation.MainNavigationRoute.Companion.ASSIGNMENT_ID
 import com.instructure.horizon.navigation.MainNavigationRoute.Companion.COURSE_ID
 import com.instructure.horizon.navigation.MainNavigationRoute.Companion.PAGE_ID
@@ -66,7 +67,8 @@ sealed class MainNavigationRoute(val route: String) {
         val courseId: Long,
         val moduleItemId: Long? = null,
         val moduleItemAssetType: String? = null,
-        val moduleItemAssetId: String? = null
+        val moduleItemAssetId: String? = null,
+        val scrollToNoteId: String? = null
     ) :
         MainNavigationRoute("module_item_sequence")
 
@@ -87,13 +89,14 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     Scaffold(
+        containerColor = HorizonColors.Surface.pagePrimary(),
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
     ) { innerPadding ->
         NavHost(
-            enterTransition = { enterTransition },
-            exitTransition = { exitTransition },
-            popEnterTransition = { popEnterTransition },
-            popExitTransition = { popExitTransition },
+            enterTransition = { enterTransition() },
+            exitTransition = { exitTransition() },
+            popEnterTransition = { popEnterTransition() },
+            popExitTransition = { popExitTransition() },
             modifier = modifier.padding(innerPadding),
             navController = navController,
             startDestination = MainNavigationRoute.Home.route
@@ -112,7 +115,12 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
             composable(MainNavigationRoute.Home.route) {
                 HomeScreen(navController, hiltViewModel<HomeViewModel>())
             }
-            composable<MainNavigationRoute.ModuleItemSequence> {
+            composable<MainNavigationRoute.ModuleItemSequence>(
+                enterTransition = { enterTransition() },
+                exitTransition = { exitTransition() },
+                popEnterTransition = { popEnterTransition() },
+                popExitTransition = { popExitTransition() }
+            ) {
                 val viewModel = hiltViewModel<ModuleItemSequenceViewModel>()
                 val uiState by viewModel.uiState.collectAsState()
                 ModuleItemSequenceScreen(navController, uiState)
@@ -234,3 +242,4 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
         }
     }
 }
+

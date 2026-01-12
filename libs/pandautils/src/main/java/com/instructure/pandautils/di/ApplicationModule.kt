@@ -29,6 +29,8 @@ import com.instructure.canvasapi2.apis.FileFolderAPI
 import com.instructure.canvasapi2.apis.OAuthAPI
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.RemoteConfigPrefs
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.pandautils.dialogs.RatingDialog
 import com.instructure.pandautils.features.offline.sync.HtmlParser
 import com.instructure.pandautils.room.offline.daos.FileFolderDao
@@ -52,6 +54,7 @@ import org.threeten.bp.Clock
 import java.util.Locale
 import java.util.TimeZone
 import javax.inject.Singleton
+import kotlin.random.Random
 
 /**
  * Module that provides all the application scope dependencies, that are not related to other module.
@@ -188,5 +191,22 @@ class ApplicationModule {
     @Provides
     fun provideFileCache(): FileCache {
         return FileCache
+    }
+
+    @Provides
+    fun provideRandom(): Random {
+        return Random.Default
+    }
+
+    @Provides
+    @Singleton
+    fun provideRemoteConfigUtils(): RemoteConfigUtils {
+        return RemoteConfigUtils
+    }
+
+    @Provides
+    @Singleton
+    fun provideRemoteConfigPrefs(): RemoteConfigPrefs {
+        return RemoteConfigPrefs
     }
 }

@@ -136,7 +136,7 @@ abstract class ToDoListInteractionTest : CanvasComposeTest() {
 
         composeTestRule.waitForIdle()
         toDoListPage.clickFilterButton()
-        toDoFilterPage.toggleShowCalendarEvents()
+        toDoFilterPage.selectVisibleItemsOption(R.string.todoFilterShowCalendarEvents)
         toDoFilterPage.clickDone()
         composeTestRule.waitForIdle()
         toDoListPage.clickOnItem(event.title!!)
@@ -162,7 +162,7 @@ abstract class ToDoListInteractionTest : CanvasComposeTest() {
 
         composeTestRule.waitForIdle()
         toDoListPage.clickFilterButton()
-        toDoFilterPage.toggleShowPersonalToDos()
+        toDoFilterPage.selectVisibleItemsOption(R.string.todoFilterShowPersonalToDos)
         toDoFilterPage.clickDone()
         composeTestRule.waitForIdle()
         toDoListPage.clickOnItem(todo.plannable.title)
@@ -185,7 +185,7 @@ abstract class ToDoListInteractionTest : CanvasComposeTest() {
 
         composeTestRule.waitForIdle()
         toDoListPage.assertItemDisplayed(assignment.name!!)
-        toDoListPage.clickCheckbox(assignment.id)
+        toDoListPage.clickMarkToDoItemAsDone(assignment.id)
 
         // Wait for snackbar to appear
         toDoListPage.waitForSnackbar(assignment.name!!)
@@ -262,10 +262,16 @@ abstract class ToDoListInteractionTest : CanvasComposeTest() {
         goToToDoList(data)
 
         composeTestRule.waitForIdle()
+
+        // Ensure the assignment is visible by setting future range to cover 3 days ahead
+        toDoListPage.clickFilterButton()
+        toDoFilterPage.selectShowTasksUntilOption(R.string.todoFilterNextWeek)
+        toDoFilterPage.clickDone()
+
+        composeTestRule.waitForIdle()
         toDoListPage.assertItemDisplayed(assignment.name!!)
         toDoListPage.clickDateBadge(dayOfMonth)
 
-        composeTestRule.waitForIdle()
         calendarScreenPage.assertCalendarPageTitle()
     }
 
@@ -297,7 +303,7 @@ abstract class ToDoListInteractionTest : CanvasComposeTest() {
         toDoListPage.assertItemDisplayed(assignment.name!!)
 
         // Mark the assignment as done
-        toDoListPage.clickCheckbox(assignment.id)
+        toDoListPage.clickMarkToDoItemAsDone(assignment.id)
 
         // Wait for item to disappear
         toDoListPage.waitForItemToDisappear(assignment.name!!)
@@ -305,7 +311,7 @@ abstract class ToDoListInteractionTest : CanvasComposeTest() {
 
         // Open filter and enable "Show Completed"
         toDoListPage.clickFilterButton()
-        toDoFilterPage.toggleShowCompleted()
+        toDoFilterPage.selectVisibleItemsOption(R.string.todoFilterShowCompleted)
         toDoFilterPage.clickDone()
 
         composeTestRule.waitForIdle()
@@ -354,7 +360,7 @@ abstract class ToDoListInteractionTest : CanvasComposeTest() {
 
         // Enable personal todos filter
         toDoListPage.clickFilterButton()
-        toDoFilterPage.toggleShowPersonalToDos()
+        toDoFilterPage.selectVisibleItemsOption(R.string.todoFilterShowPersonalToDos)
         toDoFilterPage.clickDone()
 
         composeTestRule.waitForIdle()
@@ -392,7 +398,7 @@ abstract class ToDoListInteractionTest : CanvasComposeTest() {
 
         // Enable calendar events filter
         toDoListPage.clickFilterButton()
-        toDoFilterPage.toggleShowCalendarEvents()
+        toDoFilterPage.selectVisibleItemsOption(R.string.todoFilterShowCalendarEvents)
         toDoFilterPage.clickDone()
 
         composeTestRule.waitForIdle()
@@ -419,13 +425,13 @@ abstract class ToDoListInteractionTest : CanvasComposeTest() {
         toDoListPage.assertItemDisplayed(assignment.name!!)
 
         // Mark assignment as done so it's hidden
-        toDoListPage.clickCheckbox(assignment.id)
+        toDoListPage.clickMarkToDoItemAsDone(assignment.id)
         toDoListPage.waitForItemToDisappear(assignment.name!!)
         toDoListPage.assertItemNotDisplayed(assignment.name!!)
 
         // Open filter and toggle "Show Completed" but close without saving
         toDoListPage.clickFilterButton()
-        toDoFilterPage.toggleShowCompleted()
+        toDoFilterPage.selectVisibleItemsOption(R.string.todoFilterShowCompleted)
         toDoFilterPage.clickClose()
 
         composeTestRule.waitForIdle()
@@ -452,13 +458,13 @@ abstract class ToDoListInteractionTest : CanvasComposeTest() {
         toDoListPage.assertItemDisplayed(assignment.name!!)
 
         // Mark assignment as done so it's hidden
-        toDoListPage.clickCheckbox(assignment.id)
+        toDoListPage.clickMarkToDoItemAsDone(assignment.id)
         toDoListPage.waitForItemToDisappear(assignment.name!!)
         toDoListPage.assertItemNotDisplayed(assignment.name!!)
 
         // Open filter, toggle "Show Completed" and save
         toDoListPage.clickFilterButton()
-        toDoFilterPage.toggleShowCompleted()
+        toDoFilterPage.selectVisibleItemsOption(R.string.todoFilterShowCompleted)
         toDoFilterPage.clickDone()
 
         composeTestRule.waitForIdle()
@@ -475,13 +481,13 @@ abstract class ToDoListInteractionTest : CanvasComposeTest() {
         val course = data.courses.values.first()
         val calendar = Calendar.getInstance()
 
-        // Create assignment 2 weeks ago
-        calendar.add(Calendar.WEEK_OF_YEAR, -2)
-        val twoWeeksAgo = calendar.time
+        // Create assignment 3 weeks ago
+        calendar.add(Calendar.WEEK_OF_YEAR, -3)
+        val threeWeeksAgo = calendar.time
         val oldAssignment = data.addAssignment(
             course.id,
             name = "Old Assignment",
-            dueAt = twoWeeksAgo.toApiString()
+            dueAt = threeWeeksAgo.toApiString()
         )
 
         // Create assignment today
@@ -496,18 +502,29 @@ abstract class ToDoListInteractionTest : CanvasComposeTest() {
 
         composeTestRule.waitForIdle()
 
-        // By default, past date range is "Last Week" so assignment from 2 weeks ago should be hidden
+        // By default, past date range is "4 Weeks Ago" so assignment from 3 weeks ago should be visible
         toDoListPage.assertItemDisplayed(todayAssignment.name!!)
-        toDoListPage.assertItemNotDisplayed(oldAssignment.name!!)
+        toDoListPage.assertItemDisplayed(oldAssignment.name!!)
 
-        // Change past date range to "2 Weeks Ago"
+        // Change past date range to "Last Week" to hide the older assignment
         toDoListPage.clickFilterButton()
-        toDoFilterPage.selectPastDateRange(R.string.todoFilterTwoWeeks)
+        toDoFilterPage.selectShowTasksFromOption(R.string.todoFilterLastWeek)
         toDoFilterPage.clickDone()
 
         composeTestRule.waitForIdle()
 
-        // Now both assignments should be visible
+        // Assignment from 3 weeks ago should now be hidden (outside 1-week range)
+        toDoListPage.assertItemDisplayed(todayAssignment.name!!)
+        toDoListPage.assertItemNotDisplayed(oldAssignment.name!!)
+
+        // Change past date range to "4 Weeks Ago" to show the older assignment again
+        toDoListPage.clickFilterButton()
+        toDoFilterPage.selectShowTasksFromOption(R.string.todoFilterFourWeeks)
+        toDoFilterPage.clickDone()
+
+        composeTestRule.waitForIdle()
+
+        // Assignment from 3 weeks ago should now be visible again (within 4-week range)
         toDoListPage.assertItemDisplayed(todayAssignment.name!!)
         toDoListPage.assertItemDisplayed(oldAssignment.name!!)
     }
@@ -544,7 +561,7 @@ abstract class ToDoListInteractionTest : CanvasComposeTest() {
 
         // Change future date range to "In 2 Weeks"
         toDoListPage.clickFilterButton()
-        toDoFilterPage.selectFutureDateRange(R.string.todoFilterInTwoWeeks)
+        toDoFilterPage.selectShowTasksUntilOption(R.string.todoFilterInTwoWeeks)
         toDoFilterPage.clickDone()
 
         composeTestRule.waitForIdle()
@@ -587,7 +604,7 @@ abstract class ToDoListInteractionTest : CanvasComposeTest() {
 
         // Enable favorite courses filter
         toDoListPage.clickFilterButton()
-        toDoFilterPage.toggleFavoriteCourses()
+        toDoFilterPage.selectVisibleItemsOption(R.string.todoFilterFavoriteCoursesOnly)
         toDoFilterPage.clickDone()
 
         composeTestRule.waitForIdle()

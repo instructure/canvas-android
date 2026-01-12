@@ -423,8 +423,8 @@
     <string name="submitted_late">Laat ingezonden</string>
     <string name="havent_submitted_yet">Zijn nog niet ingezonden</string>
     <string name="havent_been_graded">Zijn niet beoordeeld</string>
-    <string name="scored_less_than">Lager gescoord dan&#8230;</string>
-    <string name="scored_more_than">Hoger gescoord dan&#8230;</string>
+    <string name="scored_less_than">Lager gescoord dan</string>
+    <string name="scored_more_than">Hoger gescoord dan</string>
     <string name="scored_less_than_value">Lager gescoord dan %s</string>
     <string name="scored_more_than_value">Hoger gescoord dan %s</string>
     <string name="add_comment">Opmerking toevoegen</string>

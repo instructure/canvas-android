@@ -277,6 +277,7 @@
     <string name="checkBoxFinalGradeOption">En fonction des travaux notés</string>
     <string name="checkBoxWhatIfGradeOption">Afficher le score hypothétique</string>
     <string name="whatIfDialogText">Score hypothétique</string>
+    <string name="whatIfScoreExceedsMaximum">Le score ne peut pas dépasser le nombre de points maximal</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s sur %2$s points, %3$s</string>
     <string name="inbox">Boîte de réception</string>
@@ -2052,6 +2053,8 @@
     <string name="allAssignments">Tous les travaux</string>
     <string name="statusFilter">Filtre d’état</string>
     <string name="a11y_contentDescription_filter">Filtre</string>
+    <string name="a11y_filter_active">Filtre actif</string>
+    <string name="a11y_filter_inactive">Filtre inactif</string>
     <string name="a11y_contentDescription_postPolicy">Stratégie de publication</string>
     <string name="late">En retard</string>
     <string name="a11y_contentDescription_expand">Développer</string>
@@ -2140,4 +2143,20 @@
     <string name="a11y_discussion_checkpoints">Points de contrôle des discussions</string>
     <string name="multipleDueDates">Dates limites multiples</string>
     <string name="courseConcludedError">Cours terminés. Impossible d’envoyer des messages !</string>
+    <string name="openInDetailView">Ouvrir dans la vue détaillée</string>
+    <string name="immersiveView">Vue immersive</string>
+    <string name="statuses">Statuts</string>
+    <string name="precise_filtering">Filtrage de précision</string>
+    <string name="differentiation_tags">Balises de différenciation</string>
+    <string name="students_without_differentiation_tags">Élèves sans balises de différenciation</string>
+    <string name="sort_by">Trier par</string>
+    <string name="student_sortable_name">Nom de tri de l’élève</string>
+    <string name="student_name">Nom de l’élève</string>
+    <string name="submission_date">Date de soumission</string>
+    <string name="submission_status">Statut de la soumission</string>
+    <string name="write_score_here">Indiquer le score ici</string>
+    <string name="scored_more_than_with_max">A obtenu plus de / %s pts</string>
+    <string name="scored_less_than_with_max">A obtenu moins de / %s pts</string>
+    <string name="scored_between_values">A obtenu entre %1$s et %2$s</string>
+    <string name="multiple_filters">Filtre multiple</string>
 </resources>

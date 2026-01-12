@@ -25,7 +25,9 @@ import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewFeature
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.managers.OAuthManager
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.weave.weave
+import com.instructure.pandautils.R
 import com.instructure.pandautils.views.CanvasWebView
 import kotlinx.coroutines.Job
 
@@ -78,7 +80,12 @@ data class Placeholder(val iframeHtml: String, val placeHolderHtml: String)
 class JsExternalToolInterface(private val callback: (ltiUrl: String) -> Unit) {
     @JavascriptInterface
     fun onLtiToolButtonPressed(ltiUrl: String) {
-        callback(ltiUrl)
+        val isOnline = Utils.isNetworkAvailable(ContextKeeper.appContext)
+        if (isOnline) {
+            callback(ltiUrl)
+        } else {
+            ContextKeeper.appContext.toast(R.string.ltiToolsOffline)
+        }
     }
 }
 

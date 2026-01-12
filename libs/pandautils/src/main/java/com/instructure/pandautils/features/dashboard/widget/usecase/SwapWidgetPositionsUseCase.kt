@@ -14,9 +14,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.student.features.dashboard.widget.welcome
+package com.instructure.pandautils.features.dashboard.widget.usecase
 
-data class WelcomeWidgetUiState(
-    val greeting: String = "",
-    val message: String = ""
-)
+import com.instructure.pandautils.domain.usecase.BaseUseCase
+import com.instructure.pandautils.features.dashboard.widget.repository.WidgetMetadataRepository
+import javax.inject.Inject
+
+class SwapWidgetPositionsUseCase @Inject constructor(
+    private val repository: WidgetMetadataRepository
+) : BaseUseCase<SwapWidgetPositionsUseCase.Params, Unit>() {
+
+    override suspend fun execute(params: Params) {
+        repository.swapPositions(params.widgetId1, params.widgetId2)
+    }
+
+    data class Params(
+        val widgetId1: String,
+        val widgetId2: String
+    )
+}

@@ -8,8 +8,19 @@ import com.instructure.horizon.R
 enum class NotebookType(
     @StringRes val labelRes: Int,
     @DrawableRes val iconRes: Int,
-    @ColorRes val color: Int
+    @ColorRes val highlightColor: Int,
+    @ColorRes val lineColor: Int
 ) {
-    Confusing(R.string.notebookTypeConfusing, R.drawable.help, R.color.icon_error),
-    Important(R.string.notebookTypeImportant, R.drawable.flag_2, R.color.icon_action),
+    Confusing(
+        R.string.notebookTypeUnclear,
+        R.drawable.help,
+        R.color.primitives_red12,
+        R.color.primitives_red57
+    ),
+    Important(
+        R.string.notebookTypeImportant,
+        R.drawable.keep_pin,
+        R.color.primitives_sea12,
+        R.color.primitives_sea57
+    ),
 }

@@ -104,7 +104,7 @@ private fun AnnouncementBannerItem.toPaginatedWidgetCardItemState(context: Conte
     return DashboardPaginatedWidgetCardItemState(
         headerState = DashboardPaginatedWidgetCardHeaderState(
             label = context.getString(R.string.notificationsAnnouncementCategoryLabel),
-            color = HorizonColors.Surface.institution().copy(alpha = 0.1f),
+            color = HorizonColors.PrimitivesSky.sky12,
             iconRes = R.drawable.campaign
         ),
         source = source,

@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2019 - present Instructure, Inc.
+ *
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ *
+ */
 package com.instructure.student.ui.e2e.classic
 
 import android.util.Log
@@ -16,6 +32,7 @@ import org.junit.Test
 
 @HiltAndroidTest
 class ConferencesE2ETest: StudentTest() {
+
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
@@ -72,6 +89,20 @@ class ConferencesE2ETest: StudentTest() {
         conferenceListPage.assertConferenceStatus(testConferenceTitle2,"Not Started")
         conferenceListPage.assertConferenceDescription(testConferenceTitle2, testConferenceDescription2)
 
+        Log.d(STEP_TAG, "Click on the expand/collapse button to COLLAPSE the 'New Conferences' group.")
+        conferenceListPage.clickExpandCollapseGroup("New Conferences")
+
+        Log.d(ASSERTION_TAG, "Assert that both '$testConferenceTitle' and '$testConferenceTitle2' conferences are NOT displayed after collapsing the 'New Conferences' group.")
+        conferenceListPage.assertConferenceNotDisplayed(testConferenceTitle)
+        conferenceListPage.assertConferenceNotDisplayed(testConferenceTitle2)
+
+        Log.d(STEP_TAG, "Click on the expand/collapse button to EXPAND the 'New Conferences' group.")
+        conferenceListPage.clickExpandCollapseGroup("New Conferences")
+
+        Log.d(ASSERTION_TAG, "Assert that both '$testConferenceTitle' and '$testConferenceTitle2' conferences are displayed again after expanding the 'New Conferences' group.")
+        conferenceListPage.assertConferenceDisplayed(testConferenceTitle)
+        conferenceListPage.assertConferenceDisplayed(testConferenceTitle2)
+
         Log.d(STEP_TAG, "Open '$testConferenceTitle' conference's detailer page.")
         conferenceListPage.openConferenceDetails(testConferenceTitle)
 
@@ -82,7 +113,6 @@ class ConferencesE2ETest: StudentTest() {
         conferenceDetailsPage.assertConferenceTitleDisplayed(testConferenceTitle)
         conferenceDetailsPage.assertConferenceStatus("Not Started")
         conferenceDetailsPage.assertDescription(testConferenceDescription)
-
     }
 
 }

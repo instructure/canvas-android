@@ -43,6 +43,15 @@ fun Context.getFragmentActivity(): FragmentActivity {
     else throw IllegalStateException("Not FragmentActivity context")
 }
 
+fun Context.getFragmentActivityOrNull(): FragmentActivity? {
+    var context = this
+    while (context is ContextWrapper) {
+        if (context is FragmentActivity) return context
+        context = context.baseContext
+    }
+    return null
+}
+
 fun Context.getActivityOrNull(): Activity? {
     var context = this
     while (context is ContextWrapper) {

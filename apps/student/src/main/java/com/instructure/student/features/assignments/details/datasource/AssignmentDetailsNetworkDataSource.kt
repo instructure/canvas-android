@@ -63,9 +63,9 @@ class AssignmentDetailsNetworkDataSource(
         return quizInterface.getQuiz(courseId, quizId, params).dataOrThrow
     }
 
-    override suspend fun getExternalToolLaunchUrl(courseId: Long, externalToolId: Long, assignmentId: Long, forceNetwork: Boolean): LTITool {
+    override suspend fun getExternalToolLaunchUrl(courseId: Long, externalToolId: Long, assignmentId: Long, forceNetwork: Boolean): LTITool? {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
-        return assignmentInterface.getExternalToolLaunchUrl(courseId, externalToolId, assignmentId, restParams = params).dataOrThrow
+        return assignmentInterface.getExternalToolLaunchUrl(courseId, externalToolId, assignmentId, restParams = params).dataOrNull
     }
 
     override suspend fun getLtiFromAuthenticationUrl(url: String, forceNetwork: Boolean): LTITool {
