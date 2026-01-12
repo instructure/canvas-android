@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.student.features.dashboard.widget.forecast
+package com.instructure.pandautils.features.dashboard.widget.forecast
 
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedContent
@@ -44,6 +44,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -101,7 +102,7 @@ fun ForecastWidgetContent(
         )
 
         Card(
-            colors = CardDefaults.cardColors(containerColor = colorResource(R.color.backgroundInfo)),
+            colors = CardDefaults.cardColors(containerColor = Color(uiState.backgroundColor.color())),
             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
             modifier = Modifier
                 .fillMaxWidth()
@@ -130,7 +131,8 @@ fun ForecastWidgetContent(
                         WeekNavigationHeader(
                             weekPeriod = weekPeriod,
                             onNavigatePrevious = uiState.onNavigatePrevious,
-                            onNavigateNext = uiState.onNavigateNext
+                            onNavigateNext = uiState.onNavigateNext,
+                            backgroundColor = Color(uiState.backgroundColor.color())
                         )
 
                         ForecastSegmentedControl(
@@ -138,7 +140,8 @@ fun ForecastWidgetContent(
                             dueCount = uiState.dueAssignments.size,
                             recentGradesCount = uiState.recentGrades.size,
                             selectedSection = uiState.selectedSection,
-                            onSectionSelected = uiState.onSectionSelected
+                            onSectionSelected = uiState.onSectionSelected,
+                            backgroundColor = Color(uiState.backgroundColor.color())
                         )
 
                         AnimatedVisibility(

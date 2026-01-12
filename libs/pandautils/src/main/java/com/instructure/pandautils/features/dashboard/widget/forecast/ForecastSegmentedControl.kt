@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.student.features.dashboard.widget.forecast
+package com.instructure.pandautils.features.dashboard.widget.forecast
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
@@ -58,7 +58,8 @@ fun ForecastSegmentedControl(
     recentGradesCount: Int,
     selectedSection: ForecastSection?,
     onSectionSelected: (ForecastSection) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    backgroundColor: Color = Color(0xFF2573DF)
 ) {
     Row(
         modifier = modifier
@@ -81,6 +82,7 @@ fun ForecastSegmentedControl(
             section = ForecastSection.MISSING,
             isSelected = selectedSection == ForecastSection.MISSING,
             onSelected = onSectionSelected,
+            backgroundColor = backgroundColor,
             modifier = Modifier.weight(1f)
         )
 
@@ -101,6 +103,7 @@ fun ForecastSegmentedControl(
             section = ForecastSection.DUE,
             isSelected = selectedSection == ForecastSection.DUE,
             onSelected = onSectionSelected,
+            backgroundColor = backgroundColor,
             modifier = Modifier.weight(1f)
         )
 
@@ -121,6 +124,7 @@ fun ForecastSegmentedControl(
             section = ForecastSection.RECENT_GRADES,
             isSelected = selectedSection == ForecastSection.RECENT_GRADES,
             onSelected = onSectionSelected,
+            backgroundColor = backgroundColor,
             modifier = Modifier.weight(1f)
         )
     }
@@ -133,6 +137,7 @@ private fun SegmentButton(
     section: ForecastSection,
     isSelected: Boolean,
     onSelected: (ForecastSection) -> Unit,
+    backgroundColor: Color,
     modifier: Modifier = Modifier
 ) {
     val rotation by animateFloatAsState(
@@ -149,7 +154,7 @@ private fun SegmentButton(
             )
             .background(
                 color = if (isSelected) {
-                    colorResource(R.color.backgroundInfo)
+                    backgroundColor
                 } else {
                     Color.Transparent
                 },

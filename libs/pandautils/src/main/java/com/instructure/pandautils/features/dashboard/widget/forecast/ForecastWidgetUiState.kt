@@ -14,9 +14,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.student.features.dashboard.widget.forecast
+package com.instructure.pandautils.features.dashboard.widget.forecast
 
 import androidx.fragment.app.FragmentActivity
+import com.instructure.pandautils.utils.ThemedColor
 import java.time.LocalDate
 import java.util.Date
 
@@ -43,7 +44,10 @@ data class AssignmentItem(
     val pointsPossible: Double,
     val weight: Double?,
     val iconRes: Int,
-    val url: String
+    val url: String,
+    val score: Double? = null,
+    val grade: String? = null,
+    val showGradeIndicator: Boolean = false
 )
 
 data class ForecastWidgetUiState(
@@ -57,6 +61,7 @@ data class ForecastWidgetUiState(
     val dueAssignments: List<AssignmentItem> = emptyList(),
     val recentGrades: List<AssignmentItem> = emptyList(),
     val selectedSection: ForecastSection? = null,
+    val backgroundColor: ThemedColor = ThemedColor(0xFF2573DF.toInt()),
     val onNavigatePrevious: () -> Unit = {},
     val onNavigateNext: () -> Unit = {},
     val onSectionSelected: (ForecastSection) -> Unit = {},

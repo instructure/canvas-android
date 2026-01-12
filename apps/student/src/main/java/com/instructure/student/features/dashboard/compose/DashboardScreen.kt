@@ -66,10 +66,10 @@ import com.instructure.pandautils.features.dashboard.widget.courseinvitation.Cou
 import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidget
 import com.instructure.pandautils.features.dashboard.widget.institutionalannouncements.InstitutionalAnnouncementsWidget
 import com.instructure.pandautils.features.dashboard.widget.welcome.WelcomeWidget
+import com.instructure.pandautils.features.dashboard.widget.forecast.ForecastWidget
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.student.R
 import com.instructure.student.activity.NavigationActivity
-import com.instructure.student.features.dashboard.widget.forecast.ForecastWidget
 import kotlinx.coroutines.flow.SharedFlow
 
 @Composable

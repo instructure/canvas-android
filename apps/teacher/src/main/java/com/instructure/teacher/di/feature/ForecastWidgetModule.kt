@@ -14,19 +14,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.student.features.dashboard.widget.forecast
+package com.instructure.teacher.di.feature
 
-import androidx.fragment.app.FragmentActivity
-import com.instructure.canvasapi2.models.Course
-import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.pandautils.features.dashboard.widget.forecast.ForecastWidgetRouter
-import com.instructure.student.router.RouteMatcher
+import com.instructure.teacher.features.dashboard.widget.forecast.TeacherForecastWidgetRouter
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
 
-class StudentForecastWidgetRouter : ForecastWidgetRouter {
+@Module
+@InstallIn(ViewModelComponent::class)
+class ForecastWidgetModule {
 
-    override fun routeToAssignmentDetails(activity: FragmentActivity, assignmentId: Long, courseId: Long) {
-        val canvasContext = Course(id = courseId)
-        val route = AssignmentDetailsFragment.makeRoute(canvasContext, assignmentId)
-        RouteMatcher.route(activity, route)
+    @Provides
+    fun provideForecastWidgetRouter(): ForecastWidgetRouter {
+        return TeacherForecastWidgetRouter()
     }
 }

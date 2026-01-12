@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.student.features.dashboard.widget.forecast
+package com.instructure.pandautils.features.dashboard.widget.forecast
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
@@ -47,13 +47,14 @@ fun WeekNavigationHeader(
     weekPeriod: WeekPeriod,
     onNavigatePrevious: () -> Unit,
     onNavigateNext: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    backgroundColor: Color = Color(0xFF2573DF)
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
             .background(
-                color = colorResource(R.color.backgroundInfo),
+                color = backgroundColor,
                 shape = RoundedCornerShape(8.dp)
             )
             .padding(vertical = 8.dp),

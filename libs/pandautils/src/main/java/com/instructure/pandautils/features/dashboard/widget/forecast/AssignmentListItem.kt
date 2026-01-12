@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.student.features.dashboard.widget.forecast
+package com.instructure.pandautils.features.dashboard.widget.forecast
 
 import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
@@ -71,7 +71,7 @@ fun AssignmentListItem(
             .clickable {
                 onAssignmentClick(context.getFragmentActivity(), assignment.id, assignment.courseId)
             }
-            .padding(horizontal = 16.dp, vertical = 12.dp),
+            .padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.Top
     ) {
@@ -145,6 +145,16 @@ fun AssignmentListItem(
                     modifier = Modifier.fillMaxWidth()
                 )
             }
+        }
+
+        assignment.grade?.let { grade ->
+            Text(
+                text = grade,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.SemiBold,
+                lineHeight = 19.sp,
+                color = colorResource(R.color.textDarkest)
+            )
         }
     }
 }

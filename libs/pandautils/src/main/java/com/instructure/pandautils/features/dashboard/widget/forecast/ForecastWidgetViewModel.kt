@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.student.features.dashboard.widget.forecast
+package com.instructure.pandautils.features.dashboard.widget.forecast
 
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.toDate
 import com.instructure.pandautils.data.model.GradedSubmission
 import com.instructure.pandautils.R
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getAssignmentIcon
 import com.instructure.pandautils.utils.getIconForPlannerItem
@@ -61,6 +62,7 @@ class ForecastWidgetViewModel @Inject constructor(
     private val loadMissingAssignmentsUseCase: LoadMissingAssignmentsUseCase,
     private val loadUpcomingAssignmentsUseCase: LoadUpcomingAssignmentsUseCase,
     private val loadRecentGradeChangesUseCase: LoadRecentGradeChangesUseCase,
+    private val observeForecastConfigUseCase: ObserveForecastConfigUseCase,
     private val forecastWidgetDataStore: ForecastWidgetDataStore,
     private val forecastWidgetRouter: ForecastWidgetRouter,
     private val apiPrefs: ApiPrefs,
@@ -89,6 +91,7 @@ class ForecastWidgetViewModel @Inject constructor(
         _uiState.update { it.copy(weekPeriod = initialWeekPeriod) }
 
         observeSelectedSection()
+        observeConfig()
         loadData(forceRefresh = false)
     }
 
@@ -157,6 +160,17 @@ class ForecastWidgetViewModel @Inject constructor(
                 .catch { crashlytics.recordException(it) }
                 .collect { section ->
                     _uiState.update { it.copy(selectedSection = section) }
+                }
+        }
+    }
+
+    private fun observeConfig() {
+        viewModelScope.launch {
+            observeForecastConfigUseCase(Unit)
+                .catch { crashlytics.recordException(it) }
+                .collect { config ->
+                    val themedColor = ColorKeeper.createThemedColor(config.backgroundColor)
+                    _uiState.update { it.copy(backgroundColor = themedColor) }
                 }
         }
     }
@@ -278,9 +292,23 @@ class ForecastWidgetViewModel @Inject constructor(
                     pointsPossible = submission.pointsPossible ?: 0.0,
                     weight = null,
                     iconRes = R.drawable.ic_assignment,
-                    url = submission.assignmentUrl ?: ""
+                    url = submission.assignmentUrl ?: "",
+                    score = submission.score,
+                    grade = formatGrade(submission.grade)
                 )
             }
+    }
+
+    private fun formatGrade(grade: String?): String? {
+        if (grade.isNullOrBlank()) return null
+
+        return try {
+            val number = grade.toDouble()
+            val formatted = "%.2f".format(Locale.US, number)
+            formatted.trimEnd('0').trimEnd('.')
+        } catch (_: NumberFormatException) {
+            grade
+        }
     }
 
     private fun calculateWeekPeriod(offsetWeeks: Int): WeekPeriod {

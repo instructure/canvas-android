@@ -23,6 +23,7 @@ import com.instructure.pandautils.features.dashboard.widget.SettingType
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.repository.WidgetConfigDataRepository
 import com.instructure.pandautils.features.dashboard.widget.welcome.WelcomeConfig
+import com.instructure.pandautils.features.dashboard.widget.forecast.ForecastConfig
 import com.instructure.pandautils.domain.usecase.BaseFlowUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -43,6 +44,7 @@ class ObserveWidgetConfigUseCase @Inject constructor(
     private fun getDefaultConfig(widgetId: String): com.instructure.pandautils.features.dashboard.widget.WidgetConfig? {
         return when (widgetId) {
             WidgetMetadata.WIDGET_ID_WELCOME -> WelcomeConfig()
+            WidgetMetadata.WIDGET_ID_FORECAST -> ForecastConfig()
             else -> null
         }
     }
@@ -51,6 +53,11 @@ class ObserveWidgetConfigUseCase @Inject constructor(
         return when (widgetId) {
             WidgetMetadata.WIDGET_ID_WELCOME -> try {
                 gson.fromJson(json, WelcomeConfig::class.java)
+            } catch (e: Exception) {
+                null
+            }
+            WidgetMetadata.WIDGET_ID_FORECAST -> try {
+                gson.fromJson(json, ForecastConfig::class.java)
             } catch (e: Exception) {
                 null
             }

@@ -20,6 +20,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.instructure.pandautils.features.dashboard.widget.WidgetConfig
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
+import com.instructure.pandautils.features.dashboard.widget.forecast.ForecastConfig
 import com.instructure.pandautils.features.dashboard.widget.repository.WidgetConfigDataRepository
 import com.instructure.pandautils.features.dashboard.widget.welcome.WelcomeConfig
 import com.instructure.pandautils.domain.usecase.BaseUseCase
@@ -58,6 +59,7 @@ class UpdateWidgetSettingUseCase @Inject constructor(
     private fun getDefaultConfig(widgetId: String): WidgetConfig? {
         return when (widgetId) {
             WidgetMetadata.WIDGET_ID_WELCOME -> WelcomeConfig()
+            WidgetMetadata.WIDGET_ID_FORECAST -> ForecastConfig()
             else -> null
         }
     }
@@ -66,6 +68,11 @@ class UpdateWidgetSettingUseCase @Inject constructor(
         return when (widgetId) {
             WidgetMetadata.WIDGET_ID_WELCOME -> try {
                 gson.fromJson(json, WelcomeConfig::class.java)
+            } catch (e: Exception) {
+                null
+            }
+            WidgetMetadata.WIDGET_ID_FORECAST -> try {
+                gson.fromJson(json, ForecastConfig::class.java)
             } catch (e: Exception) {
                 null
             }

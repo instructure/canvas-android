@@ -100,8 +100,8 @@ fun CoursesWidgetContent(
                         columns = columns,
                         itemCount = uiState.courses.size,
                         modifier = Modifier.padding(horizontal = 16.dp),
-                        horizontalSpacing = 12.dp,
-                        verticalSpacing = 12.dp
+                        horizontalSpacing = 6.dp,
+                        verticalSpacing = 6.dp
                     ) { index ->
                         val course = uiState.courses[index]
                         CourseCard(
@@ -128,8 +128,8 @@ fun CoursesWidgetContent(
                         columns = columns,
                         itemCount = uiState.groups.size,
                         modifier = Modifier.padding(horizontal = 16.dp),
-                        horizontalSpacing = 12.dp,
-                        verticalSpacing = 12.dp
+                        horizontalSpacing = 6.dp,
+                        verticalSpacing = 6.dp
                     ) { index ->
                         val group = uiState.groups[index]
                         GroupCard(
@@ -223,8 +223,8 @@ private fun CoursesWidgetLoadingState(columns: Int = 1) {
         columns = columns,
         itemCount = 3,
         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-        horizontalSpacing = 12.dp,
-        verticalSpacing = 12.dp
+        horizontalSpacing = 6.dp,
+        verticalSpacing = 6.dp
     ) {
         CourseCardShimmer()
     }
