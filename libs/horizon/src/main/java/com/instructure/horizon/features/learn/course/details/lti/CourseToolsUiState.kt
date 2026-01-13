@@ -13,19 +13,18 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.features.learn
+package com.instructure.horizon.features.learn.course.details.lti
 
-import androidx.annotation.StringRes
-import com.instructure.horizon.R
+import com.instructure.horizon.horizonui.platform.LoadingState
 
-data class LearnUiState(
-    val tabs: List<LearnTab> = LearnTab.entries,
-    val selectedTab: LearnTab = LearnTab.COURSES,
-    val updateSelectedTab: (Int) -> Unit = {},
+data class CourseToolsUiState(
+    val screenState: LoadingState = LoadingState(),
+    val courseId: Long = 0,
+    val ltiTools: List<LtiToolItem> = emptyList(),
 )
 
-enum class LearnTab(@get:StringRes val labelRes: Int) {
-    COURSES(R.string.learnCoursesTabLabel),
-    PROGRAMS(R.string.learnProgramsTabLabel)
-    // TODO: LEARNING_LIBRARY("Learning Library")
-}
+data class LtiToolItem(
+    val title: String,
+    val iconUrl: String?,
+    val url: String,
+)

@@ -50,7 +50,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.instructure.horizon.horizonui.foundation.HorizonColors
-import kotlin.math.max
+import com.instructure.horizon.horizonui.foundation.HorizonTypography
 
 @Composable
 fun <T> TabRow(
@@ -143,6 +143,55 @@ fun <T> TabRow(
                 .offset { IntOffset(currentOffset - scrollState.value, 0) }
         )
     }
+}
+
+@Composable
+fun <T> TabRow(
+    tabs: List<T>,
+    onTabSelected: (Int) -> Unit,
+    selectedIndex: Int,
+    modifier: Modifier = Modifier,
+    spacing: Dp = 24.dp,
+    tabAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
+    selectedIndicator: @Composable BoxScope.(Modifier) -> Unit = { SelectedTabIndicator(it) },
+    tabItemToLabel: @Composable (T) -> String,
+) {
+    TabRow(
+        tabs = tabs,
+        onTabSelected = onTabSelected,
+        selectedIndex = selectedIndex,
+        modifier = modifier,
+        spacing = spacing,
+        tabAlignment = tabAlignment,
+        selectedIndicator = selectedIndicator,
+        tab = { item, isSelected, modifier ->
+            Tab(
+                label = tabItemToLabel(item),
+                isSelected = isSelected,
+                modifier = modifier
+            )
+        }
+    )
+}
+
+@Composable
+private fun Tab(
+    label: String,
+    isSelected: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    val color = if (isSelected) {
+        HorizonColors.Text.surfaceInverseSecondary()
+    } else {
+        HorizonColors.Text.body()
+    }
+    Text(
+        label,
+        style = HorizonTypography.p1,
+        color = color,
+        modifier = modifier
+            .padding(top = 20.dp, bottom = 2.dp)
+    )
 }
 
 @Composable
