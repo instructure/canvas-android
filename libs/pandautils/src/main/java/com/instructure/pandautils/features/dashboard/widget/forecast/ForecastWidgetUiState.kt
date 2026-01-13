@@ -46,8 +46,7 @@ data class AssignmentItem(
     val iconRes: Int,
     val url: String,
     val score: Double? = null,
-    val grade: String? = null,
-    val showGradeIndicator: Boolean = false
+    val grade: String? = null
 )
 
 data class ForecastWidgetUiState(

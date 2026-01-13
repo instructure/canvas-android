@@ -19,6 +19,7 @@ package com.instructure.pandautils.features.dashboard.widget.forecast
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.GradingRule
 import javax.inject.Inject
 
 class AssignmentWeightCalculator @Inject constructor() {
@@ -28,7 +29,7 @@ class AssignmentWeightCalculator @Inject constructor() {
      * - Whether the course uses weighted assignment groups
      * - The assignment group's weight
      * - The assignment's points possible relative to other assignments in the group
-     * - Drop rules and omit_from_final_grade flags
+     * - Drop rules applied only to graded assignments
      *
      * Returns null if weight cannot be calculated or is not applicable
      */
@@ -57,11 +58,19 @@ class AssignmentWeightCalculator @Inject constructor() {
 
         if (groupAssignments.isEmpty()) return null
 
-        // Apply drop rules to determine which assignments actually count
-        val countingAssignments = applyDropRules(groupAssignments, assignmentGroup.rules)
+        // Separate graded and ungraded assignments
+        val gradedAssignments = groupAssignments.filter { it.submission?.isGraded == true }
+        val ungradedAssignments = groupAssignments.filter { it.submission?.isGraded != true }
 
-        // If this assignment is dropped, return null
-        if (!countingAssignments.any { it.id == assignment.id }) return null
+        // Apply drop rules only to graded assignments
+        val countingGradedAssignments = if (gradedAssignments.isNotEmpty()) {
+            applyDropRules(gradedAssignments, assignmentGroup.rules)
+        } else {
+            emptyList()
+        }
+
+        // Combine: graded assignments that weren't dropped + all ungraded assignments
+        val countingAssignments = countingGradedAssignments + ungradedAssignments
 
         // Calculate total points possible for counting assignments
         val totalPointsPossible = countingAssignments.sumOf { it.pointsPossible ?: 0.0 }
@@ -75,43 +84,46 @@ class AssignmentWeightCalculator @Inject constructor() {
     }
 
     /**
-     * Applies drop rules (drop_lowest, drop_highest, never_drop) to determine
-     * which assignments actually count towards the grade.
+     * Applies drop rules (drop_lowest, drop_highest, never_drop) to graded assignments.
+     * Uses actual scores to determine which to drop.
      */
     private fun applyDropRules(
         assignments: List<Assignment>,
-        rules: com.instructure.canvasapi2.models.GradingRule?
+        rules: GradingRule?
     ): List<Assignment> {
         if (rules == null || !rules.hasValidRule()) {
             return assignments
         }
 
-        // Start with all assignments
-        val mutableAssignments = assignments.toMutableList()
-
-        // Never drop these assignments (keep them in the list no matter what)
+        // Never drop these assignments
         val neverDropIds = rules.neverDrop.map { it.toLong() }.toSet()
 
-        // Sort by points earned to apply drop rules
-        // For forecast (upcoming/missing), we can't know the score, so we drop by points possible
-        val sortedByPoints = mutableAssignments
-            .filter { it.id !in neverDropIds }
-            .sortedBy { it.pointsPossible ?: 0.0 }
+        // Get assignments eligible for dropping (not in never-drop list)
+        val eligibleForDrop = assignments.filter { it.id !in neverDropIds }
+
+        // Sort by score percentage to apply drop rules
+        val sortedByPercentage = eligibleForDrop.sortedBy { assignment ->
+            val score = assignment.submission?.score ?: 0.0
+            val pointsPossible = assignment.pointsPossible ?: 1.0
+            score / pointsPossible
+        }
+
+        // Determine which assignments to drop
+        val toDrop = mutableSetOf<Long>()
 
         // Drop lowest
-        val toDrop = mutableSetOf<Long>()
-        if (rules.dropLowest > 0 && sortedByPoints.isNotEmpty()) {
-            sortedByPoints.take(rules.dropLowest.coerceAtMost(sortedByPoints.size))
+        if (rules.dropLowest > 0 && sortedByPercentage.isNotEmpty()) {
+            sortedByPercentage.take(rules.dropLowest.coerceAtMost(sortedByPercentage.size))
                 .forEach { toDrop.add(it.id) }
         }
 
         // Drop highest
-        if (rules.dropHighest > 0 && sortedByPoints.isNotEmpty()) {
-            sortedByPoints.reversed().take(rules.dropHighest.coerceAtMost(sortedByPoints.size))
+        if (rules.dropHighest > 0 && sortedByPercentage.isNotEmpty()) {
+            sortedByPercentage.reversed().take(rules.dropHighest.coerceAtMost(sortedByPercentage.size))
                 .forEach { toDrop.add(it.id) }
         }
 
         // Return assignments that weren't dropped
-        return mutableAssignments.filter { it.id !in toDrop }
+        return assignments.filter { it.id !in toDrop }
     }
 }
