@@ -23,7 +23,6 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.slot
-import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertTrue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -36,11 +35,11 @@ class UpdateWidgetSettingUseCaseTest {
     private val repository: WidgetConfigDataRepository = mockk(relaxed = true)
     private val gson = Gson()
 
-    private lateinit var useCase: UpdateWidgetSettingUseCase
+    private lateinit var useCase: UpdateWidgetConfigUseCase
 
     @Before
     fun setUp() {
-        useCase = UpdateWidgetSettingUseCase(repository, gson)
+        useCase = UpdateWidgetConfigUseCase(repository, gson)
     }
 
     @Test
@@ -49,7 +48,7 @@ class UpdateWidgetSettingUseCaseTest {
         val existingConfig = """{"widgetId":"welcome","showGreeting":true}"""
         coEvery { repository.getConfigJson(widgetId) } returns existingConfig
 
-        val params = UpdateWidgetSettingUseCase.Params(widgetId, "showGreeting", false)
+        val params = UpdateWidgetConfigUseCase.Params(widgetId, "showGreeting", false)
         useCase(params)
 
         val jsonSlot = slot<String>()
@@ -65,7 +64,7 @@ class UpdateWidgetSettingUseCaseTest {
         val existingConfig = """{"widgetId":"welcome","title":"Hello"}"""
         coEvery { repository.getConfigJson(widgetId) } returns existingConfig
 
-        val params = UpdateWidgetSettingUseCase.Params(widgetId, "title", "Welcome")
+        val params = UpdateWidgetConfigUseCase.Params(widgetId, "title", "Welcome")
         useCase(params)
 
         val jsonSlot = slot<String>()
@@ -81,7 +80,7 @@ class UpdateWidgetSettingUseCaseTest {
         val existingConfig = """{"widgetId":"welcome","backgroundColor":123456}"""
         coEvery { repository.getConfigJson(widgetId) } returns existingConfig
 
-        val params = UpdateWidgetSettingUseCase.Params(widgetId, "backgroundColor", 789012)
+        val params = UpdateWidgetConfigUseCase.Params(widgetId, "backgroundColor", 789012)
         useCase(params)
 
         val jsonSlot = slot<String>()
@@ -97,7 +96,7 @@ class UpdateWidgetSettingUseCaseTest {
         val existingConfig = """{"widgetId":"welcome","value":1.5}"""
         coEvery { repository.getConfigJson(widgetId) } returns existingConfig
 
-        val params = UpdateWidgetSettingUseCase.Params(widgetId, "value", 2.5)
+        val params = UpdateWidgetConfigUseCase.Params(widgetId, "value", 2.5)
         useCase(params)
 
         val jsonSlot = slot<String>()
@@ -112,7 +111,7 @@ class UpdateWidgetSettingUseCaseTest {
         val widgetId = WidgetMetadata.WIDGET_ID_WELCOME
         coEvery { repository.getConfigJson(widgetId) } returns null
 
-        val params = UpdateWidgetSettingUseCase.Params(widgetId, "showGreeting", false)
+        val params = UpdateWidgetConfigUseCase.Params(widgetId, "showGreeting", false)
         useCase(params)
 
         val jsonSlot = slot<String>()
@@ -128,7 +127,7 @@ class UpdateWidgetSettingUseCaseTest {
         val existingConfig = """{"widgetId":"welcome","showGreeting":true,"backgroundColor":123456}"""
         coEvery { repository.getConfigJson(widgetId) } returns existingConfig
 
-        val params = UpdateWidgetSettingUseCase.Params(widgetId, "showGreeting", false)
+        val params = UpdateWidgetConfigUseCase.Params(widgetId, "showGreeting", false)
         useCase(params)
 
         val jsonSlot = slot<String>()
@@ -144,7 +143,7 @@ class UpdateWidgetSettingUseCaseTest {
         val widgetId = WidgetMetadata.WIDGET_ID_WELCOME
         coEvery { repository.getConfigJson(widgetId) } returns "invalid json"
 
-        val params = UpdateWidgetSettingUseCase.Params(widgetId, "showGreeting", false)
+        val params = UpdateWidgetConfigUseCase.Params(widgetId, "showGreeting", false)
         useCase(params)
 
         val jsonSlot = slot<String>()

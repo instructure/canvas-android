@@ -18,7 +18,6 @@ package com.instructure.pandautils.data.repository.submission
 
 import com.instructure.canvasapi2.managers.graphql.RecentGradedSubmissionsManager
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.canvasapi2.utils.toDate
 import com.instructure.pandautils.data.model.GradedSubmission
 
 class SubmissionRepositoryImpl(
@@ -60,7 +59,8 @@ class SubmissionRepositoryImpl(
                                 gradedAt = submission.gradedAt,
                                 excused = submission.excused == true,
                                 assignmentUrl = assignment.htmlUrl,
-                                pointsPossible = assignment.pointsPossible
+                                pointsPossible = assignment.pointsPossible,
+                                gradingType = assignment.gradingType
                             )
                         } ?: emptyList()
                 } ?: emptyList()

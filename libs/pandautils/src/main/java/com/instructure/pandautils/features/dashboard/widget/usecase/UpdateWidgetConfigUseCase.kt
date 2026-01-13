@@ -25,10 +25,10 @@ import com.instructure.pandautils.features.dashboard.widget.forecast.ForecastCon
 import com.instructure.pandautils.features.dashboard.widget.repository.WidgetConfigDataRepository
 import javax.inject.Inject
 
-class UpdateWidgetSettingUseCase @Inject constructor(
+class UpdateWidgetConfigUseCase @Inject constructor(
     private val repository: WidgetConfigDataRepository,
     private val gson: Gson
-) : BaseUseCase<UpdateWidgetSettingUseCase.Params, Unit>() {
+) : BaseUseCase<UpdateWidgetConfigUseCase.Params, Unit>() {
 
     data class Params(
         val widgetId: String,

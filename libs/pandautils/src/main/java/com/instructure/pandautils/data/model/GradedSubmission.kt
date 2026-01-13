@@ -16,6 +16,7 @@
 
 package com.instructure.pandautils.data.model
 
+import com.instructure.canvasapi2.type.GradingType
 import java.util.Date
 
 data class GradedSubmission(
@@ -29,5 +30,6 @@ data class GradedSubmission(
     val gradedAt: Date?,
     val excused: Boolean,
     val assignmentUrl: String?,
-    val pointsPossible: Double?
+    val pointsPossible: Double?,
+    val gradingType: GradingType?
 )

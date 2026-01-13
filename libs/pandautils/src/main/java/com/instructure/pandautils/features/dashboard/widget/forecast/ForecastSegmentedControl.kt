@@ -175,14 +175,14 @@ private fun SegmentButton(
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
                     lineHeight = 26.sp,
-                    color = if (isSelected) Color.White else colorResource(R.color.textDarkest),
+                    color = if (isSelected) colorResource(R.color.textLightest) else colorResource(R.color.textDarkest),
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
                 )
                 Icon(
                     painter = painterResource(R.drawable.ic_chevron_down_small),
                     contentDescription = null,
-                    tint = if (isSelected) Color.White else colorResource(R.color.textDark),
+                    tint = if (isSelected) colorResource(R.color.textLight) else colorResource(R.color.textDark),
                     modifier = Modifier
                         .align(Alignment.CenterEnd)
                         .size(16.dp)
@@ -194,7 +194,7 @@ private fun SegmentButton(
                 text = label,
                 fontSize = 12.sp,
                 lineHeight = 16.sp,
-                color = if (isSelected) Color.White else colorResource(R.color.textDark),
+                color = if (isSelected) colorResource(R.color.textLight) else colorResource(R.color.textDark),
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
