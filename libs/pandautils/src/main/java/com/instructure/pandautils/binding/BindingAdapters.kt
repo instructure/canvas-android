@@ -46,6 +46,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
 import com.google.android.material.materialswitch.MaterialSwitch
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.BR
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.assignments.details.mobius.gradeCell.DonutChartView
@@ -58,6 +59,7 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.JsGoogleDocsInterface
 import com.instructure.pandautils.utils.ProfileUtils
+import com.instructure.pandautils.utils.Utils
 import com.instructure.pandautils.utils.accessibleTouchTarget
 import com.instructure.pandautils.utils.applyTheme
 import com.instructure.pandautils.utils.collapse
@@ -68,6 +70,7 @@ import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAvatarA11y
 import com.instructure.pandautils.utils.toPx
+import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.pandautils.views.CanvasWebViewWrapper
 import com.instructure.pandautils.views.EmptyView
@@ -189,8 +192,13 @@ private class JSInterface(private val onLtiButtonPressed: OnLtiButtonPressed) {
 
     @JavascriptInterface
     fun onLtiToolButtonPressed(id: String) {
-        val ltiUrl = URLDecoder.decode(id, "UTF-8")
-        onLtiButtonPressed.onLtiButtonPressed(ltiUrl)
+        val isOnline = Utils.isNetworkAvailable(ContextKeeper.appContext)
+        if (isOnline) {
+            val ltiUrl = URLDecoder.decode(id, "UTF-8")
+            onLtiButtonPressed.onLtiButtonPressed(ltiUrl)
+        } else {
+            ContextKeeper.appContext.toast(R.string.ltiToolsOffline)
+        }
     }
 }
 
