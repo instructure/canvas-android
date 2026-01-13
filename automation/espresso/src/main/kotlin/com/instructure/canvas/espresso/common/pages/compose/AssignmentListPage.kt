@@ -178,13 +178,13 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
            else {
                if(secondCheckpointDueAt != null) {
                    composeTestRule.onAllNodes(
-                       hasText("Due " + convertIso8601ToCanvasFormat(assignmentDueAt) + " 11:59 PM").and(
+                       hasText("Due " + convertIso8601ToCanvasFormat(assignmentDueAt) + " 2:59 PM").and(
                            hasParent(hasAnyDescendant(hasText(assignmentName)))
                        ),
                        true
                    ).assertCountEquals(1)
                    composeTestRule.onAllNodes(
-                       hasText("Due " + convertIso8601ToCanvasFormat(secondCheckpointDueAt) + " 11:59 PM").and(
+                       hasText("Due " + convertIso8601ToCanvasFormat(secondCheckpointDueAt) + " 2:59 PM").and(
                            hasParent(hasAnyDescendant(hasText(assignmentName)))
                        ),
                        true

@@ -227,7 +227,7 @@ class DiscussionsE2ETest: StudentComposeTest() {
         assignmentListPage.clickDiscussionCheckpointExpandCollapseIcon(discussionWithCheckpointsWithDueDatesTitle)
 
         Log.d(ASSERTION_TAG, "Assert that the checkpoints' details are displayed correctly (titles, due dates, points possible, grades).")
-        assignmentListPage.assertDiscussionCheckpointDetails(2, dueAtReplyToTopic = "Due " + convertIso8601ToCanvasFormat(replyToTopicDueDate) + " 11:59 PM", dueAtAdditionalReplies = "Due " + convertIso8601ToCanvasFormat(replyToEntryDueDate) + " 11:59 PM", gradeReplyToTopic = "-/10", gradeAdditionalReplies = "-/5")
+        assignmentListPage.assertDiscussionCheckpointDetails(2, dueAtReplyToTopic = "Due " + convertIso8601ToCanvasFormat(replyToTopicDueDate) + " 2:59 PM", dueAtAdditionalReplies = "Due " + convertIso8601ToCanvasFormat(replyToEntryDueDate) + " 2:59 PM", gradeReplyToTopic = "-/10", gradeAdditionalReplies = "-/5")
 
         Log.d(STEP_TAG, "Select '${discussionWithCheckpointsWithoutDueDatesTitle}' discussion.")
         assignmentListPage.clickAssignment(discussionWithCheckpointsWithoutDueDatesTitle)
@@ -293,7 +293,7 @@ class DiscussionsE2ETest: StudentComposeTest() {
         assignmentDetailsPage.assertCheckpointGradesView("Additional replies (2)", "-/5")
 
         Log.d(ASSERTION_TAG, "Assert that the checkpoints are displayed properly on the Assignment Details Page.")
-        assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Reply to topic due", convertIso8601ToCanvasFormat(replyToTopicDueDate) + " 11:59 PM")
-        assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Additional replies (2) due",convertIso8601ToCanvasFormat(replyToEntryDueDate) + " 11:59 PM")
+        assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Reply to topic due", convertIso8601ToCanvasFormat(replyToTopicDueDate) + " 2:59 PM")
+        assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Additional replies (2) due",convertIso8601ToCanvasFormat(replyToEntryDueDate) + " 2:59 PM")
     }
 }
