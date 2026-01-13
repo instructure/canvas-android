@@ -38,6 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -97,7 +98,7 @@ private fun AccountContentScreen(state: AccountUiState, navController: NavContro
         }
 
         state.accountGroups.forEach { accountGroup ->
-            if (accountGroup.title != null) {
+            if (accountGroup.title != null && accountGroup.items.isNotEmpty()) {
                 item {
                     Text(
                         text = accountGroup.title,
@@ -105,15 +106,17 @@ private fun AccountContentScreen(state: AccountUiState, navController: NavContro
                         color = HorizonColors.Text.title(),
                     )
                 }
-            }
-            item {
-                Spacer(modifier = Modifier.height(12.dp))
+
+                item {
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
             }
 
-            itemsIndexed(accountGroup.items) { index, accountItem  ->
+            val items = accountGroup.items.filter { it.visible }
+            itemsIndexed(items) { index, accountItem  ->
                 if (accountItem.visible) {
                     val clipModifier = when {
-                        accountGroup.items.lastIndex == 0 -> {
+                        items.lastIndex == 0 -> {
                             Modifier.clip(HorizonCornerRadius.level3)
                         }
 
@@ -121,7 +124,7 @@ private fun AccountContentScreen(state: AccountUiState, navController: NavContro
                             Modifier.clip(HorizonCornerRadius.level3Top)
                         }
 
-                        index == accountGroup.items.lastIndex -> {
+                        index == items.lastIndex -> {
                             Modifier.clip(HorizonCornerRadius.level3Bottom)
                         }
 
@@ -138,14 +141,14 @@ private fun AccountContentScreen(state: AccountUiState, navController: NavContro
                             clipModifier
                         )
 
-                        if (index != accountGroup.items.lastIndex) {
+                        if (index != items.lastIndex) {
                             HorizonDivider()
                         }
                     }
                 }
             }
 
-            if (accountGroup != state.accountGroups.last()) {
+            if (accountGroup != items.lastOrNull() && items.isNotEmpty()) {
                 item {
                     Spacer(modifier = Modifier.height(24.dp))
                 }
@@ -156,6 +159,7 @@ private fun AccountContentScreen(state: AccountUiState, navController: NavContro
 
 @Composable
 private fun AccountItem(item: AccountItemState, navController: NavController, onLogout: () -> Unit, switchExperience: () -> Unit, modifier: Modifier = Modifier) {
+    val uriHandler = LocalUriHandler.current
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
@@ -167,7 +171,7 @@ private fun AccountItem(item: AccountItemState, navController: NavController, on
 
                     is AccountItemType.OpenWithoutIndicator -> navController.navigate(item.type.route.route)
 
-                    is AccountItemType.OpenExternal -> navController.navigate(item.type.route.route)
+                    is AccountItemType.OpenExternal -> uriHandler.openUri(item.type.url)
 
                     is AccountItemType.LogOut -> {
                         onLogout()
@@ -187,9 +191,8 @@ private fun AccountItem(item: AccountItemState, navController: NavController, on
                 text = item.title,
                 style = HorizonTypography.labelLargeBold,
                 color = HorizonColors.Text.body(),
+                modifier = Modifier.weight(1f)
             )
-
-            Spacer(modifier = Modifier.weight(1f))
 
             item.type.icon?.let { icon ->
                 Icon(
@@ -197,6 +200,7 @@ private fun AccountItem(item: AccountItemState, navController: NavController, on
                     contentDescription = null,
                     tint = HorizonColors.Icon.medium(),
                     modifier = Modifier
+                        .padding(start = 8.dp)
                         .size(24.dp)
                 )
             }

@@ -17,14 +17,17 @@
 package com.instructure.horizon.features.account
 
 import com.instructure.canvasapi2.apis.ExperienceAPI
+import com.instructure.canvasapi2.apis.HelpLinksAPI
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.HelpLink
 import com.instructure.canvasapi2.models.User
 import javax.inject.Inject
 
 class AccountRepository @Inject constructor(
     private val userApi: UserAPI.UsersInterface,
-    private val experienceAPI: ExperienceAPI
+    private val experienceApi: ExperienceAPI,
+    private val helpLinksApi: HelpLinksAPI.HelpLinksAPI
 ) {
     suspend fun getUserDetails(forceRefresh: Boolean): User {
         val restParams = RestParams(isForceReadFromNetwork = forceRefresh)
@@ -33,6 +36,13 @@ class AccountRepository @Inject constructor(
 
     suspend fun getExperiences(forceRefresh: Boolean): List<String> {
         val restParams = RestParams(isForceReadFromNetwork = forceRefresh)
-        return experienceAPI.getExperienceSummary(restParams).dataOrNull?.availableApps ?: emptyList()
+        return experienceApi.getExperienceSummary(restParams).dataOrNull?.availableApps ?: emptyList()
+    }
+
+    suspend fun getHelpLinks(forceRefresh: Boolean): List<HelpLink> {
+        // This not an official, documented endpoint, we just use the same endpoint to the web implementation
+        return helpLinksApi.getCanvasHelpLinks(
+            RestParams(apiVersion = "", isForceReadFromNetwork = forceRefresh)
+        ).dataOrThrow
     }
 }

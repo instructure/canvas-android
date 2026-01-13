@@ -20,6 +20,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.ExperienceSummary
+import com.instructure.canvasapi2.models.HelpLink
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
@@ -61,6 +62,7 @@ class AccountViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     private var showExperienceSwitcher = false
+    private var helpLinks: List<HelpLink> = emptyList()
 
     init {
         initData()
@@ -130,12 +132,17 @@ class AccountViewModel @Inject constructor(
 
     private fun getHelpGroup() = AccountGroupState(
         title = context.getString(R.string.accountHelpHeading),
-        items = listOf(
-            AccountItemState(
-                title = context.getString(R.string.accountReportAProblem),
-                type = AccountItemType.OpenWithoutIndicator(AccountRoute.ReportABug)
-            )
-        )
+        items = helpLinks.map { helpLink ->
+            val enabledIds = listOf("report_a_problem", "training_services_portal")
+            val title = helpLink.text ?: helpLink.subtext ?: ""
+            val type = if (helpLink.id == "report_a_problem")
+                AccountItemType.OpenWithoutIndicator(AccountRoute.ReportABug)
+            else
+                AccountItemType.OpenExternal(helpLink.url.orEmpty())
+            val visible = enabledIds.contains(helpLink.id) || helpLink.type == "custom"
+
+            AccountItemState(title, type, visible)
+        }
     )
 
     private fun getLogOutGroup() = AccountGroupState(
@@ -164,6 +171,8 @@ class AccountViewModel @Inject constructor(
 
         val experiences = repository.getExperiences(forceRefresh = forceRefresh)
         showExperienceSwitcher = experiences.contains(ExperienceSummary.ACADEMIC_EXPERIENCE)
+
+        helpLinks = repository.getHelpLinks(forceRefresh = forceRefresh)
 
         _uiState.update {
             it.copy(

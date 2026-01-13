@@ -452,6 +452,11 @@ class ApiModule {
     fun provideErrorReportApi(): ErrorReportAPI.ErrorReportInterface {
         return RestBuilder().build(ErrorReportAPI.ErrorReportInterface::class.java, RestParams())
     }
+
+    @Provides
+    fun provideHelpLinksInterfaceApi(): HelpLinksAPI.HelpLinksAPI {
+        return RestBuilder().build(HelpLinksAPI.HelpLinksAPI::class.java, RestParams())
+    }
 }
 
 @EarlyEntryPoint
