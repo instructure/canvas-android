@@ -113,9 +113,44 @@ abstract class CanvasTest : InstructureTestingContract {
             Log.w("Test Inject", e.message ?: "")
         }
 
+        // Clean up WorkManager state BEFORE initialization to ensure fresh state
         val application = originalActivity.application as? TestAppManager
-        application?.workerFactory = this.workerFactory
-        application?.initWorkManager(application)
+        cleanupWorkManager(application)
+
+        // Set worker factory and initialize WorkManager
+        application?.workerFactory = workerFactory
+        application?.initializeTestWorkManager()
+    }
+
+    /**
+     * Cancels all WorkManager work to ensure clean state between tests.
+     * NOTE: We do NOT re-initialize WorkManager to avoid instance mismatches with Hilt-injected instances.
+     */
+    private fun cleanupWorkManager(application: TestAppManager?) {
+        try {
+            val context = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext
+
+            if (application?.workManagerInitialized == true) {
+                val workManager = androidx.work.WorkManager.getInstance(context)
+
+                val workInfos = workManager.getWorkInfos(
+                    androidx.work.WorkQuery.Builder.fromStates(
+                        listOf(
+                            androidx.work.WorkInfo.State.ENQUEUED,
+                            androidx.work.WorkInfo.State.RUNNING
+                        )
+                    ).build()
+                ).get()
+
+                if (workInfos.isNotEmpty()) {
+                    val cancelOperation = workManager.cancelAllWork()
+                    cancelOperation.result.get()
+                    Thread.sleep(200)
+                }
+            }
+        } catch (e: Exception) {
+            Log.w("CanvasTest", "Failed to cleanup WorkManager: ${e.message}")
+        }
     }
 
     @Before

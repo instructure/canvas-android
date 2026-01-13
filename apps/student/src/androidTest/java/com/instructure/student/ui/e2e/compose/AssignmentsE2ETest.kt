@@ -28,7 +28,6 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
-import com.instructure.canvas.espresso.annotations.Stub
 import com.instructure.canvas.espresso.checkToastText
 import com.instructure.canvas.espresso.common.pages.compose.AssignmentListPage
 import com.instructure.canvas.espresso.pressBackButton
@@ -43,8 +42,8 @@ import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
-import com.instructure.espresso.handleWorkManagerTask
 import com.instructure.espresso.retryWithIncreasingDelay
+import com.instructure.espresso.triggerWorkManagerJobs
 import com.instructure.pandautils.utils.toFormattedString
 import com.instructure.student.R
 import com.instructure.student.ui.utils.StudentComposeTest
@@ -75,9 +74,8 @@ class AssignmentsE2ETest: StudentComposeTest() {
 
     @E2E
     @Test
-    @Stub("Worker issue, failing on CI, needs to be fixed in ticket MBL-18749")
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SUBMISSIONS, TestCategory.E2E)
-    fun test01CommentsBelongToSubmissionAttempts() {
+    fun commentsBelongToSubmissionAttempts() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(teachers = 1, courses = 1, students = 1)
@@ -149,7 +147,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         val newComment = "Comment for second attempt"
         Log.d(STEP_TAG, "Add a new comment ('$newComment') and send it.")
         submissionDetailsPage.addAndSendComment(newComment)
-        handleWorkManagerTask("SubmissionWorker")
+        triggerWorkManagerJobs("SubmissionWorker")
 
         Log.d(ASSERTION_TAG, "Assert that '$newComment' is displayed.")
         submissionDetailsPage.assertCommentDisplayed(newComment, student)
@@ -534,7 +532,6 @@ class AssignmentsE2ETest: StudentComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
-    @Stub("Failing on CI, needs to be fixed in ticket MBL-18749")
     fun testPercentageFileAssignmentWithCommentE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
@@ -573,7 +570,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
 
         Log.d(ASSERTION_TAG, "Refresh the page. Assert that the '${percentageFileAssignment.name}' assignment has been submitted.")
         assignmentDetailsPage.refresh()
-        assignmentDetailsPage.assertAssignmentSubmitted()
+        assignmentDetailsPage.assertAssignmentSubmittedStatus()
 
         Log.d(PREPARATION_TAG, "Grade '${percentageFileAssignment.name}' assignment with 22 percentage.")
         SubmissionsApi.gradeSubmission(teacher.token, course.id, percentageFileAssignment.id, student.id, postedGrade = "22")
@@ -594,6 +591,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         val newComment = "My comment!!"
         Log.d(STEP_TAG, "Add a new comment ('$newComment') and send it.")
         submissionDetailsPage.addAndSendComment(newComment)
+        triggerWorkManagerJobs("SubmissionWorker")
 
         Log.d(ASSERTION_TAG, "Assert that '$newComment' is displayed.")
         submissionDetailsPage.assertCommentDisplayed(newComment, student)
@@ -757,7 +755,6 @@ class AssignmentsE2ETest: StudentComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.COMMENTS, TestCategory.E2E)
-    @Stub("Failing on CI, needs to be fixed in ticket MBL-18749")
     fun testMediaCommentsE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
@@ -789,6 +786,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
 
         Log.d(STEP_TAG, "Send a video comment.")
         submissionDetailsPage.addAndSendVideoComment()
+        triggerWorkManagerJobs("SubmissionWorker")
 
         sleep(5000) // wait for video comment submission to propagate
 

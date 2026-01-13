@@ -21,6 +21,7 @@ import android.app.Instrumentation
 import android.content.Intent
 import android.net.Uri
 import android.os.Environment
+import android.util.Log
 import android.view.View
 import androidx.core.content.FileProvider
 import androidx.test.espresso.UiController
@@ -43,6 +44,7 @@ import com.instructure.canvas.espresso.common.pages.WrongDomainPage
 import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.Searchable
+import com.instructure.pandautils.room.studentdb.StudentDb
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
@@ -101,11 +103,16 @@ import com.instructure.student.ui.pages.classic.offline.SyncProgressPage
 import instructure.rceditor.RCETextEditor
 import org.hamcrest.Matcher
 import org.hamcrest.core.AllOf
+import org.junit.Before
 import java.io.File
+import javax.inject.Inject
 
 abstract class StudentTest : CanvasTest() {
 
     val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+
+    @Inject
+    lateinit var studentDb: StudentDb
 
     override val isTesting = BuildConfig.IS_TESTING
 
@@ -175,6 +182,15 @@ abstract class StudentTest : CanvasTest() {
     val offlineSyncSettingsPage = OfflineSyncSettingsPage()
     val manageOfflineContentPage = ManageOfflineContentPage()
     val syncProgressPage = SyncProgressPage()
+
+    @Before
+    fun cleanupDatabase() {
+        try {
+            studentDb.clearAllTables()
+        } catch (e: Exception) {
+            Log.w("StudentTest", "Failed to clear database: ${e.message}")
+        }
+    }
 
     // Get the number of files/avatars in our panda avatars folder
     fun getSavedPandaAvatarCount() : Int {

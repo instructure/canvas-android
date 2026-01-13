@@ -12,53 +12,54 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- */package com.instructure.canvas.espresso
+ */
+package com.instructure.canvas.espresso
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.util.Log
 import androidx.work.Configuration
-import androidx.work.DefaultWorkerFactory
 import androidx.work.WorkerFactory
+import androidx.work.testing.SynchronousExecutor
 import androidx.work.testing.TestDriver
 import androidx.work.testing.WorkManagerTestInitHelper
 import com.instructure.canvasapi2.AppManager
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
 
-open class TestAppManager: AppManager() {
-
-    var testDriver: TestDriver? = null
+open class TestAppManager : AppManager() {
 
     var workerFactory: WorkerFactory? = null
+    var workManagerInitialized = false
+    var testDriver: TestDriver? = null
 
     @SuppressLint("RestrictedApi")
     override fun onCreate() {
         super.onCreate()
         RemoteConfigUtils.initialize()
-
-        if (workerFactory == null) {
-            workerFactory = getWorkManagerFactory()
-        }
     }
 
-    @SuppressLint("RestrictedApi")
     override fun getWorkManagerFactory(): WorkerFactory {
-        return workerFactory ?: DefaultWorkerFactory
+        return workerFactory
+            ?: throw IllegalStateException("WorkerFactory not set - ensure HiltWorkerFactory is injected before initializing WorkManager")
     }
 
     override fun performLogoutOnAuthError() = Unit
 
-    fun initWorkManager(context: Context) {
+    @SuppressLint("RestrictedApi")
+    fun initializeTestWorkManager() {
+        if (workManagerInitialized) return
+
         try {
             val config = Configuration.Builder()
                 .setMinimumLoggingLevel(Log.DEBUG)
-                .setExecutor(java.util.concurrent.Executors.newSingleThreadExecutor())
-                .setWorkerFactory(this.getWorkManagerFactory())
+                .setExecutor(SynchronousExecutor())
+                .setWorkerFactory(getWorkManagerFactory())
                 .build()
-            WorkManagerTestInitHelper.initializeTestWorkManager(context, config)
-            testDriver = WorkManagerTestInitHelper.getTestDriver(context)
+
+            WorkManagerTestInitHelper.initializeTestWorkManager(this, config)
+            testDriver = WorkManagerTestInitHelper.getTestDriver(this)
+            workManagerInitialized = true
         } catch (e: IllegalStateException) {
-            Log.w("TestAppManager", "WorkManager.initialize() failed, likely already initialized: ${e.message}")
+            Log.w("TestAppManager", e)
         }
     }
 }
