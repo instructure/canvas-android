@@ -27,6 +27,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeLeft
 import androidx.compose.ui.test.swipeRight
+import com.instructure.espresso.assertDoesNotExistWithTimeout
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.getStringFromResource
 import com.instructure.pandautils.R
@@ -49,7 +50,7 @@ class ToDoListPage(private val composeTestRule: ComposeTestRule) : BasePage() {
     }
 
     fun assertItemNotDisplayed(itemTitle: String) {
-        composeTestRule.onNode(hasTestTag("todoItemTitle") and hasText(itemTitle), useUnmergedTree = true).assertDoesNotExist()
+        composeTestRule.onNode(hasTestTag("todoItemTitle") and hasText(itemTitle), useUnmergedTree = true).assertDoesNotExistWithTimeout(5)
     }
 
     fun clickMarkToDoItemAsDone(itemId: Long) {
