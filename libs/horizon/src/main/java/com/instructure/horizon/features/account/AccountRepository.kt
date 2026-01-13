@@ -43,6 +43,6 @@ class AccountRepository @Inject constructor(
         // This not an official, documented endpoint, we just use the same endpoint to the web implementation
         return helpLinksApi.getCanvasHelpLinks(
             RestParams(apiVersion = "", isForceReadFromNetwork = forceRefresh)
-        ).dataOrThrow
+        ).dataOrNull.orEmpty()
     }
 }
