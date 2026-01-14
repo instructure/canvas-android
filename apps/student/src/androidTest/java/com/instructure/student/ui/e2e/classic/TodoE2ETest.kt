@@ -218,6 +218,29 @@ class TodoE2ETest : StudentComposeTest() {
         toDoListPage.assertItemDisplayed(favoriteCourseAssignment.name)
         toDoListPage.assertItemNotDisplayed(todayQuiz.title)
 
+        Log.d(STEP_TAG, "Navigate back to the Dashboard Page and open 'All Courses' page.")
+        Espresso.pressBack()
+        dashboardPage.openAllCoursesPage()
+
+        Log.d(ASSERTION_TAG, "Assert that the course, '${course.name}' is displayed and favorited on the All Courses Page.")
+        allCoursesPage.assertCourseDisplayed(course)
+        allCoursesPage.assertCourseFavorited(course)
+
+        Log.d(STEP_TAG, "Remove the course, '${course.name}' from the favorites on the All Courses Page.")
+        allCoursesPage.unfavoriteCourse(course)
+
+        Log.d(ASSERTION_TAG, "Assert that the course, '${course.name}' is NOT favorite any more on the All Courses Page.")
+        allCoursesPage.assertCourseNotFavorited(course)
+
+        Log.d(STEP_TAG, "Navigate back to the Dashboard Page.")
+        Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that the unfavorited course, '${course.name}' is NOT displayed on the Dashboard Page.")
+        dashboardPage.assertCourseNotDisplayed(course)
+
+        Log.d(STEP_TAG, "Navigate to 'To Do' Page via bottom-menu.")
+        dashboardPage.clickTodoTab()
+
         Log.d(STEP_TAG, "Open the To Do Filter Page.")
         toDoListPage.clickFilterButton()
 
