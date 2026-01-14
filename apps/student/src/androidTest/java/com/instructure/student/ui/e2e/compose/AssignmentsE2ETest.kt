@@ -423,7 +423,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.ASSIGNMENTS, TestCategory.E2E, SecondaryFeatureCategory.ASSIGNMENT_REMINDER)
+    @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.E2E, SecondaryFeatureCategory.ASSIGNMENT_REMINDER)
     fun testAssignmentNoDueDateCustomReminderE2E() {
         Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1)
@@ -479,7 +479,6 @@ class AssignmentsE2ETest: StudentComposeTest() {
 
         Log.d(ASSERTION_TAG, "Assert that the custom reminder is not displayed anymore.")
         assignmentReminderPage.assertReminderNotDisplayedWithText(reminderDate.time.toFormattedString())
-        futureDate.apply { add(Calendar.HOUR, 2) }
 
         Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to add another custom reminder.")
         assignmentReminderPage.clickAddReminder()
