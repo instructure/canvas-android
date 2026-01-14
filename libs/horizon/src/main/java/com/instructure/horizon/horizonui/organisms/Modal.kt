@@ -31,6 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -38,7 +39,6 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
-import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
@@ -104,9 +104,9 @@ private fun DialogHeader(
         Text(text = title, style = HorizonTypography.h3, modifier = Modifier.weight(1f))
         IconButton(
             iconRes = R.drawable.close,
+            contentDescription = stringResource(R.string.a11y_close),
             size = IconButtonSize.SMALL,
             color = IconButtonColor.Inverse,
-            elevation = HorizonElevation.level4,
             onClick = onDismiss
         )
     }

@@ -277,6 +277,7 @@
     <string name="checkBoxFinalGradeOption">Basat en activitats qualificades</string>
     <string name="checkBoxWhatIfGradeOption">Mostra la puntuació Què passaria si</string>
     <string name="whatIfDialogText">Puntuació Què passaria si</string>
+    <string name="whatIfScoreExceedsMaximum">La puntuació no pot superar la quantitat màxima de punts</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s de %2$s punts, %3$s</string>
     <string name="inbox">Safata d\'entrada</string>
@@ -2053,6 +2054,8 @@
     <string name="allAssignments">Totes les activitats</string>
     <string name="statusFilter">Filtre d\'estat</string>
     <string name="a11y_contentDescription_filter">Filtra</string>
+    <string name="a11y_filter_active">Filtre actiu</string>
+    <string name="a11y_filter_inactive">Filtre inactiu</string>
     <string name="a11y_contentDescription_postPolicy">Política de publicació</string>
     <string name="late">Endarrerit</string>
     <string name="a11y_contentDescription_expand">Desplega</string>
@@ -2141,4 +2144,20 @@
     <string name="a11y_discussion_checkpoints">Ítems dels fòrums</string>
     <string name="multipleDueDates">Dates de lliurament múltiples</string>
     <string name="courseConcludedError">L’assignatura ha conclòs. No es poden enviar missatges.</string>
+    <string name="openInDetailView">Visualització Obre-ho en detall</string>
+    <string name="immersiveView">Visualització immersiva</string>
+    <string name="statuses">Estats</string>
+    <string name="precise_filtering">Filtratge precís</string>
+    <string name="differentiation_tags">Etiquetes de diferenciació</string>
+    <string name="students_without_differentiation_tags">Estudiants sense etiquetes de diferenciació</string>
+    <string name="sort_by">Ordena per</string>
+    <string name="student_sortable_name">Nom ordenable de l’estudiant</string>
+    <string name="student_name">Nom de l\'estudiant</string>
+    <string name="submission_date">Data de l’entrega</string>
+    <string name="submission_status">Estat de l\'entrega</string>
+    <string name="write_score_here">Escriviu la puntuació aquí</string>
+    <string name="scored_more_than_with_max">La puntuació ha estat de més de / %s punts</string>
+    <string name="scored_less_than_with_max">La puntuació ha estat de menys de / %s punts</string>
+    <string name="scored_between_values">Puntuació de %1$s a %2$s</string>
+    <string name="multiple_filters">Diversos filtres</string>
 </resources>

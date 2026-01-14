@@ -1,0 +1,39 @@
+/*
+ * Copyright (C) 2025 - present Instructure, Inc.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, version 3 of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package com.instructure.pandautils.features.dashboard.widget.courses
+
+import androidx.fragment.app.FragmentActivity
+import com.instructure.pandautils.features.dashboard.widget.courses.model.CourseCardItem
+import com.instructure.pandautils.features.dashboard.widget.courses.model.GroupCardItem
+
+data class CoursesWidgetUiState(
+    val isLoading: Boolean = false,
+    val isError: Boolean = false,
+    val courses: List<CourseCardItem> = emptyList(),
+    val groups: List<GroupCardItem> = emptyList(),
+    val isCoursesExpanded: Boolean = true,
+    val isGroupsExpanded: Boolean = true,
+    val showGrades: Boolean = false,
+    val showColorOverlay: Boolean = false,
+    val onCourseClick: (FragmentActivity, Long) -> Unit = { _, _ -> },
+    val onGroupClick: (FragmentActivity, Long) -> Unit = { _, _ -> },
+    val onToggleCoursesExpanded: () -> Unit = {},
+    val onToggleGroupsExpanded: () -> Unit = {},
+    val onManageOfflineContent: (FragmentActivity, Long) -> Unit = { _, _ -> },
+    val onCustomizeCourse: (FragmentActivity, Long) -> Unit = { _, _ -> },
+    val onAllCourses: (FragmentActivity) -> Unit = {}
+)

@@ -47,6 +47,7 @@ import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.canvasapi2.utils.depaginate
+import com.instructure.canvasapi2.utils.isInvited
 import com.instructure.canvasapi2.utils.pageview.PandataInfo
 import com.instructure.canvasapi2.utils.pageview.PandataManager
 import com.instructure.canvasapi2.utils.toApiString
@@ -56,7 +57,6 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandautils.dialogs.RatingDialog
 import com.instructure.pandautils.features.inbox.list.OnUnreadCountInvalidated
-import com.instructure.pandautils.features.todolist.filter.DateRangeSelection
 import com.instructure.pandautils.room.appdatabase.daos.ToDoFilterDao
 import com.instructure.pandautils.room.appdatabase.entities.ToDoFilterEntity
 import com.instructure.pandautils.utils.AppType
@@ -81,7 +81,6 @@ import retrofit2.Call
 import retrofit2.Response
 import sdk.pendo.io.Pendo
 import javax.inject.Inject
-import kotlin.collections.filter
 
 @AndroidEntryPoint
 abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, NotificationListFragment.OnNotificationCountInvalidated {
@@ -256,17 +255,18 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
         }
 
         val filteredCourses = if (todoFilters.favoriteCourses) {
-            val restParams = RestParams(isForceReadFromNetwork = false)
-            val courses = courseApi.getFavoriteCourses(restParams).depaginate { nextUrl ->
+            val restParams = RestParams(isForceReadFromNetwork = true)
+            val allCourses = courseApi.getFirstPageCourses(restParams).depaginate { nextUrl ->
                 courseApi.next(nextUrl, restParams)
             }
-            courses.dataOrNull ?: emptyList()
+            allCourses.dataOrNull?.filter { !it.accessRestrictedByDate && !it.isInvited() }.orEmpty()
         } else {
             emptyList()
         }
 
         // Filter planner items - exclude announcements, assessment requests, completed items
         val todoCount = plannerItems.dataOrNull
+            ?.distinctBy { it.id }
             ?.filter { it.plannableType != PlannableType.ANNOUNCEMENT && it.plannableType != PlannableType.ASSESSMENT_REQUEST && !it.isComplete() }
             ?.filterByToDoFilters(todoFilters, filteredCourses)
             ?.count() ?: 0

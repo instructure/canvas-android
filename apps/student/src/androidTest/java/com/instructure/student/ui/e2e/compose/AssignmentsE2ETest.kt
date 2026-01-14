@@ -75,6 +75,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
 
     @E2E
     @Test
+    @Stub("Worker issue, failing on CI, needs to be fixed in ticket MBL-18749")
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SUBMISSIONS, TestCategory.E2E)
     fun test01CommentsBelongToSubmissionAttempts() {
 

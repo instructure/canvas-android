@@ -24,7 +24,6 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.annotation.OptIn
 import androidx.appcompat.widget.Toolbar
-import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.HttpDataSource
 import androidx.media3.exoplayer.source.UnrecognizedInputFormatException
@@ -51,7 +50,6 @@ import com.instructure.pandautils.utils.IntArg
 import com.instructure.pandautils.utils.NullableParcelableArg
 import com.instructure.pandautils.utils.NullableStringArg
 import com.instructure.pandautils.utils.ParcelableArg
-import com.instructure.pandautils.utils.RouteUtils
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.Utils
 import com.instructure.pandautils.utils.ViewStyler
@@ -66,7 +64,6 @@ import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.setupBackButtonWithExpandCollapseAndBack
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.utils.updateToolbarExpandCollapseIcon
-import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
 @ScreenView(SCREEN_VIEW_VIEW_MEDIA)
@@ -151,11 +148,9 @@ class ViewMediaFragment : BaseCanvasFragment(), ShareableFile {
     }
 
     private fun fetchMediaUri() {
-        lifecycleScope.launch {
-            mediaUri = RouteUtils.getMediaUri(uri)
-            if (isResumed) {
-                attachMediaPlayer()
-            }
+        mediaUri = uri
+        if (isResumed) {
+            attachMediaPlayer()
         }
     }
 

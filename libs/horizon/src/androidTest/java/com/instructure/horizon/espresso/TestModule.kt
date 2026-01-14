@@ -2,11 +2,64 @@ package com.instructure.horizon.espresso
 
 import android.content.Intent
 import com.instructure.canvasapi2.LoginRouter
+import com.instructure.canvasapi2.utils.pageview.PandataInfo
+import com.instructure.pandautils.features.about.AboutRepository
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsBehaviour
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsColorProvider
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRepository
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRouter
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsSubmissionHandler
+import com.instructure.pandautils.features.assignments.list.AssignmentListBehavior
+import com.instructure.pandautils.features.assignments.list.AssignmentListRepository
+import com.instructure.pandautils.features.assignments.list.AssignmentListRouter
+import com.instructure.pandautils.features.calendar.CalendarBehavior
+import com.instructure.pandautils.features.calendar.CalendarRepository
+import com.instructure.pandautils.features.calendar.CalendarRouter
+import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventRepository
+import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventViewModelBehavior
+import com.instructure.pandautils.features.calendarevent.details.EventRouter
+import com.instructure.pandautils.features.calendarevent.details.EventViewModelBehavior
+import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoRepository
+import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoViewModelBehavior
+import com.instructure.pandautils.features.calendartodo.details.ToDoRouter
+import com.instructure.pandautils.features.calendartodo.details.ToDoViewModelBehavior
+import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidgetBehavior
+import com.instructure.pandautils.features.dashboard.edit.EditDashboardRepository
+import com.instructure.pandautils.features.dashboard.edit.EditDashboardRouter
+import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
+import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragmentBehavior
+import com.instructure.pandautils.features.discussion.router.DiscussionRouteHelperRepository
+import com.instructure.pandautils.features.discussion.router.DiscussionRouter
+import com.instructure.pandautils.features.elementary.grades.GradesRouter
+import com.instructure.pandautils.features.elementary.homeroom.HomeroomRouter
+import com.instructure.pandautils.features.elementary.importantdates.ImportantDatesRouter
+import com.instructure.pandautils.features.elementary.resources.itemviewmodels.ResourcesRouter
+import com.instructure.pandautils.features.elementary.schedule.ScheduleRouter
+import com.instructure.pandautils.features.grades.GradesBehaviour
+import com.instructure.pandautils.features.grades.GradesRepository
+import com.instructure.pandautils.features.help.HelpDialogFragmentBehavior
+import com.instructure.pandautils.features.help.HelpLinkFilter
+import com.instructure.pandautils.features.inbox.compose.InboxComposeBehavior
+import com.instructure.pandautils.features.inbox.compose.InboxComposeRepository
+import com.instructure.pandautils.features.inbox.details.InboxDetailsBehavior
+import com.instructure.pandautils.features.inbox.list.InboxRepository
+import com.instructure.pandautils.features.inbox.list.InboxRouter
+import com.instructure.pandautils.features.legal.LegalRouter
+import com.instructure.pandautils.features.lti.LtiLaunchFragmentBehavior
 import com.instructure.pandautils.features.offline.sync.SyncRouter
+import com.instructure.pandautils.features.settings.SettingsBehaviour
+import com.instructure.pandautils.features.settings.SettingsRouter
+import com.instructure.pandautils.features.shareextension.ShareExtensionRouter
+import com.instructure.pandautils.features.smartsearch.SmartSearchRouter
+import com.instructure.pandautils.features.speedgrader.SpeedGraderPostPolicyRouter
 import com.instructure.pandautils.features.speedgrader.content.SpeedGraderContentRouter
 import com.instructure.pandautils.features.speedgrader.grade.comments.SpeedGraderCommentsAttachmentRouter
+import com.instructure.pandautils.features.todolist.ToDoListRouter
+import com.instructure.pandautils.features.todolist.ToDoListViewModelBehavior
+import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.receivers.alarm.AlarmReceiverNotificationHandler
 import com.instructure.pandautils.room.appdatabase.AppDatabase
+import com.instructure.pandautils.utils.LogoutHelper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -50,257 +103,267 @@ object HorizonTestModule {
     }
 
     @Provides
-    fun provideLogoutHelper(): com.instructure.pandautils.utils.LogoutHelper {
+    fun provideLogoutHelper(): LogoutHelper {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun providePandataInfoAppKey(): com.instructure.canvasapi2.utils.pageview.PandataInfo.AppKey {
+    fun providePandataInfoAppKey(): PandataInfo.AppKey {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideDiscussionRouteHelperRepository(): com.instructure.pandautils.features.discussion.router.DiscussionRouteHelperRepository {
+    fun provideDiscussionRouteHelperRepository(): DiscussionRouteHelperRepository {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideAssignmentDetailsRouter(): com.instructure.pandautils.features.assignments.details.AssignmentDetailsRouter {
+    fun provideAssignmentDetailsRouter(): AssignmentDetailsRouter {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideWebViewRouter(): com.instructure.pandautils.navigation.WebViewRouter {
+    fun provideWebViewRouter(): WebViewRouter {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideAssignmentDetailsBehaviour(): com.instructure.pandautils.features.assignments.details.AssignmentDetailsBehaviour {
+    fun provideAssignmentDetailsBehaviour(): AssignmentDetailsBehaviour {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideAssignmentListRouter(): com.instructure.pandautils.features.assignments.list.AssignmentListRouter {
+    fun provideAssignmentListRouter(): AssignmentListRouter {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideCalendarRouter(): com.instructure.pandautils.features.calendar.CalendarRouter {
+    fun provideCalendarRouter(): CalendarRouter {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideEventRouter(): com.instructure.pandautils.features.calendarevent.details.EventRouter {
+    fun provideEventRouter(): EventRouter {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideToDoRouter(): com.instructure.pandautils.features.calendartodo.details.ToDoRouter {
+    fun provideToDoRouter(): ToDoRouter {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideEditDashboardRouter(): com.instructure.pandautils.features.dashboard.edit.EditDashboardRouter {
+    fun provideEditDashboardRouter(): EditDashboardRouter {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideShareExtensionRouter(): com.instructure.pandautils.features.shareextension.ShareExtensionRouter {
+    fun provideShareExtensionRouter(): ShareExtensionRouter {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideDashboardRouter(): com.instructure.pandautils.features.dashboard.notifications.DashboardRouter {
+    fun provideDashboardRouter(): DashboardRouter {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideDiscussionRouter(): com.instructure.pandautils.features.discussion.router.DiscussionRouter {
+    fun provideDiscussionRouter(): DiscussionRouter {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideDiscussionDetailsWebViewFragmentBehavior(): com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragmentBehavior {
+    fun provideDiscussionDetailsWebViewFragmentBehavior(): DiscussionDetailsWebViewFragmentBehavior {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideGradesRouter(): com.instructure.pandautils.features.elementary.grades.GradesRouter {
+    fun provideGradesRouter(): GradesRouter {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideHomeroomRouter(): com.instructure.pandautils.features.elementary.homeroom.HomeroomRouter {
+    fun provideHomeroomRouter(): HomeroomRouter {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideImportantDatesRouter(): com.instructure.pandautils.features.elementary.importantdates.ImportantDatesRouter {
+    fun provideImportantDatesRouter(): ImportantDatesRouter {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideResourcesRouter(): com.instructure.pandautils.features.elementary.resources.itemviewmodels.ResourcesRouter {
+    fun provideResourcesRouter(): ResourcesRouter {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideScheduleRouter(): com.instructure.pandautils.features.elementary.schedule.ScheduleRouter {
+    fun provideScheduleRouter(): ScheduleRouter {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideHelpDialogFragmentBehavior(): com.instructure.pandautils.features.help.HelpDialogFragmentBehavior {
+    fun provideHelpDialogFragmentBehavior(): HelpDialogFragmentBehavior {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideInboxRouter(): com.instructure.pandautils.features.inbox.list.InboxRouter {
+    fun provideInboxRouter(): InboxRouter {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideLegalRouter(): com.instructure.pandautils.features.legal.LegalRouter {
+    fun provideLegalRouter(): LegalRouter {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideLtiLaunchFragmentBehavior(): com.instructure.pandautils.features.lti.LtiLaunchFragmentBehavior {
+    fun provideLtiLaunchFragmentBehavior(): LtiLaunchFragmentBehavior {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideSettingsRouter(): com.instructure.pandautils.features.settings.SettingsRouter {
+    fun provideSettingsRouter(): SettingsRouter {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideSmartSearchRouter(): com.instructure.pandautils.features.smartsearch.SmartSearchRouter {
+    fun provideSmartSearchRouter(): SmartSearchRouter {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideAboutRepository(): com.instructure.pandautils.features.about.AboutRepository {
+    fun provideAboutRepository(): AboutRepository {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideAssignmentDetailsRepository(): com.instructure.pandautils.features.assignments.details.AssignmentDetailsRepository {
+    fun provideAssignmentDetailsRepository(): AssignmentDetailsRepository {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideAssignmentDetailsSubmissionHandler(): com.instructure.pandautils.features.assignments.details.AssignmentDetailsSubmissionHandler {
+    fun provideAssignmentDetailsSubmissionHandler(): AssignmentDetailsSubmissionHandler {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideAssignmentDetailsColorProvider(): com.instructure.pandautils.features.assignments.details.AssignmentDetailsColorProvider {
+    fun provideAssignmentDetailsColorProvider(): AssignmentDetailsColorProvider {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideAssignmentListRepository(): com.instructure.pandautils.features.assignments.list.AssignmentListRepository {
+    fun provideAssignmentListRepository(): AssignmentListRepository {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideAssignmentListBehavior(): com.instructure.pandautils.features.assignments.list.AssignmentListBehavior {
+    fun provideAssignmentListBehavior(): AssignmentListBehavior {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideCalendarRepository(): com.instructure.pandautils.features.calendar.CalendarRepository {
+    fun provideCalendarRepository(): CalendarRepository {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideCalendarBehavior(): com.instructure.pandautils.features.calendar.CalendarBehavior {
+    fun provideCalendarBehavior(): CalendarBehavior {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideCreateUpdateEventRepository(): com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventRepository {
+    fun provideCreateUpdateEventRepository(): CreateUpdateEventRepository {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideCreateUpdateEventViewModelBehavior(): com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventViewModelBehavior {
+    fun provideCreateUpdateEventViewModelBehavior(): CreateUpdateEventViewModelBehavior {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideCreateUpdateToDoRepository(): com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoRepository {
+    fun provideCreateUpdateToDoRepository(): CreateUpdateToDoRepository {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideCreateUpdateToDoViewModelBehavior(): com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoViewModelBehavior {
+    fun provideCreateUpdateToDoViewModelBehavior(): CreateUpdateToDoViewModelBehavior {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideEditDashboardRepository(): com.instructure.pandautils.features.dashboard.edit.EditDashboardRepository {
+    fun provideEditDashboardRepository(): EditDashboardRepository {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideEventViewModelBehavior(): com.instructure.pandautils.features.calendarevent.details.EventViewModelBehavior {
+    fun provideEventViewModelBehavior(): EventViewModelBehavior {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideGradesBehaviour(): com.instructure.pandautils.features.grades.GradesBehaviour {
+    fun provideGradesBehaviour(): GradesBehaviour {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideGradesRepository(): com.instructure.pandautils.features.grades.GradesRepository {
+    fun provideGradesRepository(): GradesRepository {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideHelpLinkFilter(): com.instructure.pandautils.features.help.HelpLinkFilter {
+    fun provideHelpLinkFilter(): HelpLinkFilter {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideInboxComposeRepository(): com.instructure.pandautils.features.inbox.compose.InboxComposeRepository {
+    fun provideInboxComposeRepository(): InboxComposeRepository {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideInboxComposeBehavior(): com.instructure.pandautils.features.inbox.compose.InboxComposeBehavior {
+    fun provideInboxComposeBehavior(): InboxComposeBehavior {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideInboxDetailsBehavior(): com.instructure.pandautils.features.inbox.details.InboxDetailsBehavior {
+    fun provideInboxDetailsBehavior(): InboxDetailsBehavior {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideInboxRepository(): com.instructure.pandautils.features.inbox.list.InboxRepository {
+    fun provideInboxRepository(): InboxRepository {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideSettingsBehaviour(): com.instructure.pandautils.features.settings.SettingsBehaviour {
+    fun provideSettingsBehaviour(): SettingsBehaviour {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideSpeedGraderPostPolicyRouter(): com.instructure.pandautils.features.speedgrader.SpeedGraderPostPolicyRouter {
+    fun provideSpeedGraderPostPolicyRouter(): SpeedGraderPostPolicyRouter {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideToDoViewModelBehavior(): com.instructure.pandautils.features.calendartodo.details.ToDoViewModelBehavior {
+    fun provideToDoViewModelBehavior(): ToDoViewModelBehavior {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
     @Provides
-    fun provideToDoListRouter(): com.instructure.pandautils.features.todolist.ToDoListRouter {
+    fun provideToDoListRouter(): ToDoListRouter {
+        throw NotImplementedError("This is a test module. Implementation not required.")
+    }
+
+    @Provides
+    fun provideToDoListViewModelBehavior(): ToDoListViewModelBehavior {
+        throw NotImplementedError("This is a test module. Implementation not required.")
+    }
+
+    @Provides
+    fun provideCoursesWidgetBehavior(): CoursesWidgetBehavior {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 }

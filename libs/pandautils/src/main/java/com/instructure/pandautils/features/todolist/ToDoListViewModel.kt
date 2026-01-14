@@ -31,6 +31,8 @@ import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.isInvited
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.calendar.CalendarSharedEvents
+import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.features.todolist.filter.DateRangeSelection
 import com.instructure.pandautils.room.appdatabase.daos.ToDoFilterDao
 import com.instructure.pandautils.room.appdatabase.entities.ToDoFilterEntity
@@ -62,7 +64,9 @@ class ToDoListViewModel @Inject constructor(
     private val firebaseCrashlytics: FirebaseCrashlytics,
     private val toDoFilterDao: ToDoFilterDao,
     private val apiPrefs: ApiPrefs,
-    private val analytics: Analytics
+    private val analytics: Analytics,
+    private val toDoListViewModelBehavior: ToDoListViewModelBehavior,
+    private val calendarSharedEvents: CalendarSharedEvents,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -75,6 +79,8 @@ class ToDoListViewModel @Inject constructor(
         ))
 
     private fun onFiltersChanged(dateFiltersChanged: Boolean) {
+        // Update widget
+        toDoListViewModelBehavior.updateWidget(false)
         if (dateFiltersChanged) {
             loadData(forceRefresh = false)
         } else {
@@ -112,6 +118,20 @@ class ToDoListViewModel @Inject constructor(
 
     init {
         loadData()
+        observeCalendarSharedEvents()
+    }
+
+    private fun observeCalendarSharedEvents() {
+        viewModelScope.launch {
+            calendarSharedEvents.events.collect { action ->
+                when (action) {
+                    is SharedCalendarAction.RefreshToDoList -> {
+                        loadData(forceRefresh = true)
+                    }
+                    else -> {} // Ignore other calendar actions
+                }
+            }
+        }
     }
 
     private fun loadData(forceRefresh: Boolean = false) {
@@ -130,6 +150,7 @@ class ToDoListViewModel @Inject constructor(
                 val courses = repository.getCourses(forceRefresh).dataOrThrow
                 val plannerItems = repository.getPlannerItems(startDate, endDate, forceRefresh).dataOrThrow
                     .filter { it.plannableType != PlannableType.ANNOUNCEMENT && it.plannableType != PlannableType.ASSESSMENT_REQUEST }
+                    .distinctBy { it.id }
 
                 // Store planner items for later reference
                 plannerItemsMap.clear()
@@ -172,6 +193,10 @@ class ToDoListViewModel @Inject constructor(
 
         val itemId = plannerItem.plannable.id.toString()
 
+        // Account-level calendar events should not be clickable
+        val isAccountLevelEvent = plannerItem.contextType?.equals("Account", ignoreCase = true) == true
+        val isClickable = !(isAccountLevelEvent && itemType == ToDoItemType.CALENDAR_EVENT)
+
         return ToDoItemUiState(
             id = itemId,
             title = plannerItem.plannable.title,
@@ -184,6 +209,7 @@ class ToDoListViewModel @Inject constructor(
             iconRes = plannerItem.getIconForPlannerItem(),
             tag = plannerItem.getTagForPlannerItem(context),
             htmlUrl = plannerItem.getUrl(apiPrefs),
+            isClickable = isClickable,
             onSwipeToDone = { handleSwipeToDone(itemId) },
             onCheckboxToggle = { isChecked -> handleCheckboxToggle(itemId, isChecked) }
         )
@@ -372,6 +398,7 @@ class ToDoListViewModel @Inject constructor(
 
             // Invalidate planner cache
             repository.invalidateCachedResponses()
+            toDoListViewModelBehavior.updateWidget(true)
 
             // Track analytics event
             if (newIsChecked) {
@@ -471,8 +498,8 @@ class ToDoListViewModel @Inject constructor(
                 !filters.calendarEvents &&
                 !filters.showCompleted &&
                 !filters.favoriteCourses &&
-                filters.pastDateRange == DateRangeSelection.ONE_WEEK &&
-                filters.futureDateRange == DateRangeSelection.ONE_WEEK
+                filters.pastDateRange == DateRangeSelection.FOUR_WEEKS &&
+                filters.futureDateRange == DateRangeSelection.THIS_WEEK
 
         if (isDefaultFilter) {
             analytics.logEvent(AnalyticsEventConstants.TODO_LIST_LOADED_DEFAULT_FILTER)
@@ -491,6 +518,6 @@ class ToDoListViewModel @Inject constructor(
 
     private fun isFilterApplied(filters: ToDoFilterEntity): Boolean {
         return filters.personalTodos || filters.calendarEvents || filters.showCompleted || filters.favoriteCourses
-                || filters.pastDateRange != DateRangeSelection.ONE_WEEK || filters.futureDateRange != DateRangeSelection.ONE_WEEK
+                || filters.pastDateRange != DateRangeSelection.FOUR_WEEKS || filters.futureDateRange != DateRangeSelection.THIS_WEEK
     }
 }

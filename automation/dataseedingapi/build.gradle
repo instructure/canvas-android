@@ -12,6 +12,7 @@ buildscript {
 
     dependencies {
         classpath Plugins.KOTLIN
+        classpath Plugins.APOLLO
         classpath Libs.APOLLO_RUNTIME
     }
 }
@@ -24,7 +25,7 @@ apollo {
     service("canvas") {
         packageName.set("com.instructure.dataseedingapi")
         mapScalar("URL", "kotlin.String")
-        mapScalar("DateTime", "java.util.Date")
+        mapScalar("DateTime", "kotlin.String")
         mapScalar("ID", "kotlin.String")
     }
 }

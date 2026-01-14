@@ -17,6 +17,7 @@ package com.instructure.pandautils.room.studentdb
 
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -28,11 +29,15 @@ import junit.framework.TestCase.assertNull
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class CreateSubmissionDaoTest {
+
+    @get:Rule
+    var instantExecutorRule = InstantTaskExecutorRule()
 
     private lateinit var db: StudentDb
     private lateinit var dao: CreateSubmissionDao
@@ -251,5 +256,24 @@ class CreateSubmissionDaoTest {
 
         val result2 = dao.findSubmissionById(3L)
         assertEquals(entities[2], result2)
+    }
+
+    @Test
+    fun testUpdateSubmissionState() = runTest {
+        val entity = CreateSubmissionEntity(
+            id = 1,
+            assignmentId = 1,
+            userId = 1,
+            errorFlag = false,
+            submissionType = "online_text_entry",
+            canvasContext = CanvasContext.defaultCanvasContext(),
+        )
+
+        dao.insert(entity)
+
+        dao.updateSubmissionState(1, com.instructure.pandautils.room.studentdb.entities.SubmissionState.FAILED)
+
+        val result = dao.findSubmissionById(1)
+        assertEquals(com.instructure.pandautils.room.studentdb.entities.SubmissionState.FAILED, result?.submissionState)
     }
 }

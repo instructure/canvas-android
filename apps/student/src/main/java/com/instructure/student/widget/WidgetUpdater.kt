@@ -79,11 +79,12 @@ object WidgetUpdater {
         return intent
     }
 
-    fun getTodoWidgetUpdateIntent(appWidgetManager: AppWidgetManager): Intent {
+    fun getTodoWidgetUpdateIntent(appWidgetManager: AppWidgetManager, forceRefresh: Boolean = true): Intent {
         val intent = Intent(ContextKeeper.appContext, ToDoWidgetReceiver::class.java)
         intent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
         val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(ContextKeeper.appContext, ToDoWidgetReceiver::class.java))
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds)
+        intent.putExtra(ToDoWidgetReceiver.EXTRA_FORCE_REFRESH, forceRefresh)
         return intent
     }
 }

@@ -3,5 +3,6 @@
     <string name = "canvasNetwork" translatable="false">Canvas Network</string>
     <string name="studio" translatable="false">Studio</string>
     <string name="masteryConnect" translatable="false">Mastery</string>
+    <string name="portfolio" translatable="false">Portfolio</string>
     <string name="unsupportedContentMessage" translatable="false">This isn\'t right, you shouldn\'t be here.</string>
 </resources>

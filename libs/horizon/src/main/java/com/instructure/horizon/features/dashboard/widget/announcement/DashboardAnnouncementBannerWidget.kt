@@ -16,19 +16,21 @@
  */
 package com.instructure.horizon.features.dashboard.widget.announcement
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.ui.res.stringResource
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCard
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardState
-import com.instructure.horizon.features.dashboard.widget.announcement.card.DashboardAnnouncementBannerCardError
+import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCardError
+import com.instructure.horizon.features.dashboard.widget.DashboardWidgetPageState
+import com.instructure.horizon.horizonui.foundation.HorizonColors
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
@@ -37,7 +39,8 @@ fun DashboardAnnouncementBannerWidget(
     mainNavController: NavHostController,
     homeNavController: NavHostController,
     shouldRefresh: Boolean,
-    refreshState: MutableStateFlow<List<Boolean>>
+    refreshState: MutableStateFlow<List<Boolean>>,
+    modifier: Modifier = Modifier,
 ) {
     val viewModel = hiltViewModel<DashboardAnnouncementBannerViewModel>()
     val state by viewModel.uiState.collectAsState()
@@ -52,7 +55,7 @@ fun DashboardAnnouncementBannerWidget(
     }
 
     if (state.state != DashboardItemState.SUCCESS || state.cardState.items.isNotEmpty()) {
-        DashboardAnnouncementBannerSection(state, mainNavController, homeNavController)
+        DashboardAnnouncementBannerSection(state, mainNavController, homeNavController, modifier)
     }
 }
 
@@ -61,6 +64,7 @@ fun DashboardAnnouncementBannerSection(
     state: DashboardAnnouncementBannerUiState,
     mainNavController: NavHostController,
     homeNavController: NavHostController,
+    modifier: Modifier = Modifier,
 ) {
     when (state.state) {
         DashboardItemState.LOADING -> {
@@ -68,12 +72,18 @@ fun DashboardAnnouncementBannerSection(
                 DashboardPaginatedWidgetCardState.Loading,
                 mainNavController,
                 homeNavController,
+                modifier
             )
         }
         DashboardItemState.ERROR -> {
-            DashboardAnnouncementBannerCardError(
+            DashboardWidgetCardError(
+                stringResource(R.string.notificationsAnnouncementCategoryLabel),
+                R.drawable.campaign,
+                HorizonColors.PrimitivesSky.sky12,
+                false,
+                DashboardWidgetPageState.Empty,
                 { state.onRefresh {} },
-                Modifier.padding(horizontal = 16.dp)
+                modifier
             )
         }
         DashboardItemState.SUCCESS -> {
@@ -81,6 +91,7 @@ fun DashboardAnnouncementBannerSection(
                 state.cardState,
                 mainNavController,
                 homeNavController,
+                modifier
             )
         }
     }

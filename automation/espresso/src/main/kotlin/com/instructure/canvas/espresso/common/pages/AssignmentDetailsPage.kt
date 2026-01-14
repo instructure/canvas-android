@@ -178,6 +178,10 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
         onView(withId(R.id.submissionStatus)).waitForCheck(matches(withText(statusResourceId)))
     }
 
+    fun assertCustomStatus(status: String) {
+        onView(withId(R.id.submissionStatus)).waitForCheck(matches(withText(status)))
+    }
+
     fun assertStatusSubmitted() {
         assertStatus(R.string.submitted)
     }
@@ -243,7 +247,7 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
     }
 
     fun assertAttemptSpinnerDisplayed() {
-        onView(withId(R.id.attemptSpinner)).assertDisplayed()
+        waitForView(withId(R.id.attemptSpinner)).assertDisplayed()
     }
 
     fun selectAttempt(attemptNumber: Int) {

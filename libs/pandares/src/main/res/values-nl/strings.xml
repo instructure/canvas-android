@@ -277,6 +277,7 @@
     <string name="checkBoxFinalGradeOption">Gebaseerd op beoordeelde opdrachten</string>
     <string name="checkBoxWhatIfGradeOption">Toon What-If score</string>
     <string name="whatIfDialogText">What-If score</string>
+    <string name="whatIfScoreExceedsMaximum">Score kan het maximaal aantal punten niet overschrijden</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s van de %2$s punten, %3$s</string>
     <string name="inbox">Inbox</string>
@@ -2052,6 +2053,8 @@
     <string name="allAssignments">Alle opdrachten</string>
     <string name="statusFilter">Statusfilter</string>
     <string name="a11y_contentDescription_filter">Filter</string>
+    <string name="a11y_filter_active">Filter actief</string>
+    <string name="a11y_filter_inactive">Filter inactief</string>
     <string name="a11y_contentDescription_postPolicy">Beleid voor posten</string>
     <string name="late">Te laat</string>
     <string name="a11y_contentDescription_expand">Uitvouwen</string>
@@ -2140,4 +2143,20 @@
     <string name="a11y_discussion_checkpoints">Discussiecontrolemomenten</string>
     <string name="multipleDueDates">Meerdere inleverdatums</string>
     <string name="courseConcludedError">Cursus afgesloten. Kan geen berichten verzenden!</string>
+    <string name="openInDetailView">In Detailweergave openen</string>
+    <string name="immersiveView">Immersieve weergave</string>
+    <string name="statuses">Statussen</string>
+    <string name="precise_filtering">Nauwkeurige filtering</string>
+    <string name="differentiation_tags">Differentiatietags</string>
+    <string name="students_without_differentiation_tags">Cursisten zonder differentiatietags</string>
+    <string name="sort_by">Sorteren op</string>
+    <string name="student_sortable_name">Sorteerbare naam cursist</string>
+    <string name="student_name">Naam van cursist</string>
+    <string name="submission_date">Inleverdatum</string>
+    <string name="submission_status">Inleveringsstatus</string>
+    <string name="write_score_here">Noteer hier de score</string>
+    <string name="scored_more_than_with_max">Scoorde meer dan / %s punten</string>
+    <string name="scored_less_than_with_max">Scoorde minder dan / %s punten</string>
+    <string name="scored_between_values">Scoorde %1$s - %2$s</string>
+    <string name="multiple_filters">Meerdere filters</string>
 </resources>

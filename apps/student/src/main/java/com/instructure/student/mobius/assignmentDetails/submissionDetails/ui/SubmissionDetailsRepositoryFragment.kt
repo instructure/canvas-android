@@ -25,6 +25,8 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SUBMISSION_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.room.studentdb.StudentDb
+import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.utils.withArgs
@@ -33,8 +35,6 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.Submis
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsSharedEvent
 import com.instructure.student.mobius.common.FlowSource
 import com.instructure.student.mobius.common.LiveDataSource
-import com.instructure.pandautils.room.studentdb.StudentDb
-import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -49,7 +49,12 @@ class SubmissionDetailsRepositoryFragment : SubmissionDetailsFragment() {
     @Inject
     lateinit var studentDb: StudentDb
 
+    @Inject
+    lateinit var apiPrefs: ApiPrefs
+
     override fun getRepository() = submissionDetailsRepository
+
+    override fun getApiPreferences() = apiPrefs
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -606,7 +606,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
     }
 
     override val bookmark: Bookmarker
-        get() = Bookmarker(canvasContext.isCourseOrGroup, canvasContext)
+        get() = Bookmarker(canvasContext.isCourseOrGroup && folder?.isRoot == true, canvasContext)
 
     private fun animateFabs() = with(binding) {
         if (mFabOpen) {

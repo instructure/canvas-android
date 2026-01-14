@@ -425,8 +425,8 @@
     <string name="submitted_late">S\'ha entregat tard</string>
     <string name="havent_submitted_yet">Encara no s\'ha entregat</string>
     <string name="havent_been_graded">Encara no s\'ha qualificat</string>
-    <string name="scored_less_than">La puntuació és de menys de&#8230;</string>
-    <string name="scored_more_than">La puntuació és de més de&#8230;</string>
+    <string name="scored_less_than">La puntuació ha estat inferior a</string>
+    <string name="scored_more_than">La puntuació ha estat superior a</string>
     <string name="scored_less_than_value">La puntuació és de menys de %s</string>
     <string name="scored_more_than_value">La puntuació és de més de %s</string>
     <string name="add_comment">Afegeix un comentari</string>

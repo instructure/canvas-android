@@ -18,7 +18,10 @@ package com.instructure.horizon.features.notebook.common.webview
 
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
+import com.google.gson.Gson
+import com.instructure.horizon.features.notebook.common.composable.toNotebookLocalisedDateFormat
 import com.instructure.horizon.features.notebook.common.model.Note
+import org.json.JSONObject
 
 class JSTextSelectionInterface(
     private val onTextSelect: (
@@ -40,7 +43,8 @@ class JSTextSelectionInterface(
         endContainer: String,
         endOffset: Int,
         textSelectionStart: Int,
-        textSelectionEnd: Int
+        textSelectionEnd: Int,
+        updatedAt: String,
     ) -> Unit,
     private val onSelectionPositionChange: (
         left: Float,
@@ -83,12 +87,29 @@ class JSTextSelectionInterface(
         endOffset: Int,
         endContainer: String,
         textSelectionStart: Int,
-        textSelectionEnd: Int
+        textSelectionEnd: Int,
+        updatedAt: String,
     ) {
-        onHighlightedTextClick(noteId, noteType, selectedText, userComment, startContainer, startOffset, endContainer, endOffset, textSelectionStart, textSelectionEnd)
+        onHighlightedTextClick(noteId, noteType, selectedText, userComment, startContainer, startOffset, endContainer, endOffset, textSelectionStart, textSelectionEnd, updatedAt)
     }
 
+    data class HighlightParams(
+        val noteId: String,
+        val selectedText: String,
+        val userComment: String,
+        val startOffset: Int,
+        val startContainer: String,
+        val endOffset: Int,
+        val endContainer: String,
+        val noteReactionString: String,
+        val textSelectionStart: Int,
+        val textSelectionEnd: Int,
+        val updatedAt: String,
+        val accessibilityLabel: String
+    )
+
     companion object {
+        private val gson = Gson()
         private const val JS_INTERFACE_NAME = "TextSelectionInterface"
 		private const val JS_CODE_FROM_WEB = """
 let highlightCss = `
@@ -630,7 +651,10 @@ const isNodeInRange = (range, node) => {
 		"""
         private val JS_CODE = """
 ${JS_CODE_FROM_WEB}
-function highlightSelection(noteId, selectedText, userComment, startOffset, startContainer, endOffset, endContainer, noteReactionString, textSelectionStart, textSelectionEnd) {
+function highlightSelection(paramsJson) {
+	const params = JSON.parse(paramsJson);
+	const { noteId, selectedText, userComment, startOffset, startContainer, endOffset, endContainer, noteReactionString, textSelectionStart, textSelectionEnd, updatedAt, accessibilityLabel } = params;
+
 	let parent = document.getElementById("parent-container");//document.documentElement;
 	if (!parent) return;
 
@@ -655,7 +679,10 @@ function highlightSelection(noteId, selectedText, userComment, startOffset, star
 		const highlightElement = document.createElement("span");
 		highlightElement.classList.add(highlightClassName);
 		highlightElement.classList.add(cssClass);
-		highlightElement.onclick = function () { ${ JS_INTERFACE_NAME }.onHighlightedTextClicked(noteId, noteReactionString, selectedText, userComment, startOffset, startContainer, endOffset, endContainer, textSelectionStart, textSelectionEnd); };
+		highlightElement.setAttribute('data-note-id', noteId);
+		highlightElement.setAttribute('role', 'button');
+		highlightElement.setAttribute('aria-label', accessibilityLabel);
+		highlightElement.onclick = function () { ${ JS_INTERFACE_NAME }.onHighlightedTextClicked(noteId, noteReactionString, selectedText, userComment, startOffset, startContainer, endOffset, endContainer, textSelectionStart, textSelectionEnd, updatedAt); };
 		highlightElement.textContent = textNode.textContent;
 
 		if (!highlightElement) return;
@@ -663,6 +690,17 @@ function highlightSelection(noteId, selectedText, userComment, startOffset, star
 		parent.replaceChild(highlightElement, textNode);
 	}
 
+}
+
+function getNotePosition(noteId) {
+	const highlights = document.getElementsByClassName('notebook-highlight');
+	for (const highlight of highlights) {
+		if (highlight.getAttribute('data-note-id') === noteId) {
+			const rect = highlight.getBoundingClientRect();
+			return rect.top + window.scrollY;
+		}
+	}
+	return 0;
 }
 javascript: (function () {
 	document.addEventListener("selectionchange", () => {
@@ -709,7 +747,8 @@ javascript: (function () {
                 endContainer: String,
                 endOffset: Int,
                 textSelectionStart: Int,
-                textSelectionEnd: Int
+                textSelectionEnd: Int,
+                updatedAt: String,
             ) -> Unit,
             onSelectionPositionChange: (
                 left: Float,
@@ -726,10 +765,41 @@ javascript: (function () {
             this.evaluateJavascript(JS_CODE, null)
         }
 
-        fun WebView.highlightNotes(notes: List<Note>) {
-            notes.forEach { note ->
-                val script = "javascript:highlightSelection('${note.id}', '${note.highlightedText.selectedText.replace("\n", "\\n")}', '${note.userText.replace("\n", "\\n")}', ${note.highlightedText.range.startOffset}, '${note.highlightedText.range.startContainer}', ${note.highlightedText.range.endOffset}, '${note.highlightedText.range.endContainer}', '${note.type.name}', ${note.highlightedText.textPosition.start}, ${note.highlightedText.textPosition.end})"
-                this.evaluateJavascript(script, null)
+        fun WebView.highlightNotes(notes: List<Note>, onHighlighted: () -> Unit) {
+            notes.forEachIndexed { index, note ->
+                val accessibilityLabel = context.getString(
+                    com.instructure.horizon.R.string.a11y_notebookHighlightMarkedAs,
+                    note.highlightedText.selectedText,
+                    note.type.name
+                )
+                val params = HighlightParams(
+                    noteId = note.id,
+                    selectedText = note.highlightedText.selectedText,
+                    userComment = note.userText,
+                    startOffset = note.highlightedText.range.startOffset,
+                    startContainer = note.highlightedText.range.startContainer,
+                    endOffset = note.highlightedText.range.endOffset,
+                    endContainer = note.highlightedText.range.endContainer,
+                    noteReactionString = note.type.name,
+                    textSelectionStart = note.highlightedText.textPosition.start,
+                    textSelectionEnd = note.highlightedText.textPosition.end,
+                    updatedAt = note.updatedAt.toNotebookLocalisedDateFormat(),
+                    accessibilityLabel = accessibilityLabel
+                )
+                val paramsJson = gson.toJson(params)
+                val quotedJson = JSONObject.quote(paramsJson)
+                val script = "javascript:highlightSelection($quotedJson)"
+                this.evaluateJavascript(script) {
+                    if (index == notes.lastIndex){ onHighlighted() }
+                }
+            }
+        }
+
+        fun WebView.getNoteYPosition(noteId: String, onResult: (Float?) -> Unit) {
+            val quotedNoteId = JSONObject.quote(noteId)
+            this.evaluateJavascript("getNotePosition($quotedNoteId)") { result ->
+                val position = result?.replace("\"", "")?.toFloatOrNull()
+                onResult(if (position != null && position >= 0) position else null)
             }
         }
     }

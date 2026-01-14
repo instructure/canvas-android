@@ -73,6 +73,8 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.hideFromAccessibility
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -80,7 +82,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -324,6 +326,7 @@ private fun ModuleItemSequenceContent(
                         uiState.assignmentToolsOpened,
                         updateAiContext = uiState.updateAiAssistContext,
                         updateNotebookContext = uiState.updateObjectTypeAndId,
+                        scrollToNoteId = uiState.scrollToNoteId
                     )
                 }
             }
@@ -339,7 +342,12 @@ private fun ModuleHeaderContainer(
 ) {
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Row {
-            IconButton(iconRes = R.drawable.arrow_back, color = IconButtonColor.Institution, onClick = onBackPressed)
+            IconButton(
+                iconRes = R.drawable.arrow_back,
+                contentDescription = stringResource(R.string.a11yNavigateBack),
+                color = IconButtonColor.Institution,
+                onClick = onBackPressed
+            )
             Column(
                 modifier = Modifier
                     .weight(1f)
@@ -363,6 +371,7 @@ private fun ModuleHeaderContainer(
             }
             IconButton(
                 iconRes = R.drawable.list_alt,
+                contentDescription = stringResource(R.string.myProgress),
                 color = IconButtonColor.Institution,
                 onClick = uiState.onProgressClick
             )
@@ -378,7 +387,16 @@ private fun ModuleHeaderContainer(
                     if (index < uiState.currentItem?.detailTags?.lastIndex.orDefault()) listOf(item, "|") else listOf(item)
                 }
                 separatedFlowRowItems.forEach {
-                    Text(text = it, style = HorizonTypography.p2, color = HorizonColors.Text.surfaceColored())
+                    Text(
+                        text = it,
+                        style = HorizonTypography.p2,
+                        color = HorizonColors.Text.surfaceColored(),
+                        modifier = Modifier.semantics {
+                            if (it == "|") {
+                                hideFromAccessibility()
+                            }
+                        }
+                    )
                 }
             }
         }
@@ -422,6 +440,7 @@ private fun ModuleItemContentScreen(
     assignmentToolsOpened: () -> Unit,
     updateAiContext: (AiAssistContextSource, String) -> Unit,
     updateNotebookContext: (Pair<String, String>) -> Unit,
+    scrollToNoteId: String?,
     modifier: Modifier = Modifier
 ) {
     if (moduleItemUiState.isLoading) {
@@ -480,7 +499,8 @@ private fun ModuleItemContentScreen(
                     uiState = uiState,
                     scrollState = scrollState,
                     updateAiContext = { source, content -> updateAiContext(source, content) },
-                    mainNavController = mainNavController
+                    mainNavController = mainNavController,
+                    scrollToNoteId = scrollToNoteId
                 )
             }
             composable(
@@ -504,6 +524,7 @@ private fun ModuleItemContentScreen(
                 val uiState by viewModel.uiState.collectAsState()
                 FileDetailsContentScreen(
                     uiState = uiState,
+                    updateAiContext = { source, content -> updateAiContext(source, content) },
                     modifier = modifier
                 )
             }
@@ -569,6 +590,7 @@ private fun ModuleItemSequenceBottomBar(
         ) {
             if (showPreviousButton) IconButton(
                 iconRes = R.drawable.chevron_left,
+                contentDescription = stringResource(R.string.a11y_previousModuleItem),
                 color = IconButtonColor.Inverse,
                 elevation = HorizonElevation.level4,
                 onClick = onPreviousClick,
@@ -582,13 +604,15 @@ private fun ModuleItemSequenceBottomBar(
             ) {
                 IconButton(
                     iconRes = R.drawable.ai,
+                    contentDescription = stringResource(R.string.a11y_openAIAssistant),
                     enabled = aiAssistEnabled,
                     color = IconButtonColor.Ai,
                     elevation = HorizonElevation.level4,
                     onClick = onAiAssistClick,
                 )
                 if (showNotebookButton) IconButton(
-                    iconRes = R.drawable.menu_book_notebook,
+                    iconRes = R.drawable.edit_note,
+                    contentDescription = stringResource(R.string.a11y_openNotebook),
                     enabled = notebookEnabled,
                     color = IconButtonColor.Inverse,
                     elevation = HorizonElevation.level4,
@@ -596,6 +620,7 @@ private fun ModuleItemSequenceBottomBar(
                 )
                 if (showAssignmentToolsButton) IconButton(
                     iconRes = R.drawable.more_vert,
+                    contentDescription = stringResource(R.string.a11y_openMoreOptions),
                     color = IconButtonColor.Inverse,
                     elevation = HorizonElevation.level4,
                     onClick = onAssignmentToolsClick,
@@ -610,6 +635,7 @@ private fun ModuleItemSequenceBottomBar(
             }
             if (showNextButton) IconButton(
                 iconRes = R.drawable.chevron_right,
+                contentDescription = stringResource(R.string.a11y_nextModuleItem),
                 color = IconButtonColor.Inverse,
                 elevation = HorizonElevation.level4,
                 onClick = onNextClick,

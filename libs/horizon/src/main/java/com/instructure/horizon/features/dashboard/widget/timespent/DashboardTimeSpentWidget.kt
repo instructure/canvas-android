@@ -22,10 +22,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCardError
+import com.instructure.horizon.features.dashboard.widget.DashboardWidgetPageState
 import com.instructure.horizon.features.dashboard.widget.timespent.card.DashboardTimeSpentCardContent
 import com.instructure.horizon.features.dashboard.widget.timespent.card.DashboardTimeSpentCardState
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -36,6 +37,7 @@ import kotlinx.coroutines.flow.update
 fun DashboardTimeSpentWidget(
     shouldRefresh: Boolean,
     refreshState: MutableStateFlow<List<Boolean>>,
+    pageState: DashboardWidgetPageState,
     modifier: Modifier = Modifier
 ) {
     val viewModel = hiltViewModel<DashboardTimeSpentViewModel>()
@@ -50,12 +52,13 @@ fun DashboardTimeSpentWidget(
         }
     }
 
-    DashboardTimeSpentSection(state, modifier)
+    DashboardTimeSpentSection(state, pageState, modifier)
 }
 
 @Composable
 fun DashboardTimeSpentSection(
     state: DashboardTimeSpentUiState,
+    pageState: DashboardWidgetPageState,
     modifier: Modifier = Modifier
 ) {
     when (state.state) {
@@ -63,15 +66,17 @@ fun DashboardTimeSpentSection(
             DashboardTimeSpentCardContent(
                 DashboardTimeSpentCardState.Loading,
                 true,
+                pageState,
                 modifier
             )
         }
         DashboardItemState.ERROR -> {
             DashboardWidgetCardError(
-                stringResource(R.string.dashboardTimeSpentTitle),
+                stringResource(R.string.dashboardTimeLearningTitle),
                 R.drawable.schedule,
                 HorizonColors.PrimitivesHoney.honey12(),
                 false,
+                pageState,
                 { state.onRefresh {} },
                 modifier = modifier
             )
@@ -80,6 +85,7 @@ fun DashboardTimeSpentSection(
             DashboardTimeSpentCardContent(
                 state.cardState,
                 false,
+                pageState,
                 modifier
             )
         }

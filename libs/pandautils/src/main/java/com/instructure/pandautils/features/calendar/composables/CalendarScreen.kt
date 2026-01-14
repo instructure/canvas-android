@@ -62,6 +62,8 @@ import com.instructure.pandautils.compose.composables.CanvasScaffold
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.ExpandableFabItem
 import com.instructure.pandautils.compose.composables.ExpandableFloatingActionButton
+import com.instructure.pandautils.compose.isScreenReaderEnabled
+import com.instructure.pandautils.compose.modifiers.conditional
 import com.instructure.pandautils.features.calendar.CalendarAction
 import com.instructure.pandautils.features.calendar.CalendarEventsPageUiState
 import com.instructure.pandautils.features.calendar.CalendarEventsUiState
@@ -90,6 +92,7 @@ fun CalendarScreen(
     val focusRequester = remember { FocusRequester() }
     val todayFocusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
+    val isScreenReaderEnabled = isScreenReaderEnabled()
 
     CanvasTheme {
         val snackbarHostState = remember { SnackbarHostState() }
@@ -143,7 +146,7 @@ fun CalendarScreen(
                         navIconRes = R.drawable.ic_hamburger,
                         navIconContentDescription = stringResource(id = R.string.navigation_drawer_open),
                         modifier = Modifier
-                            .focusable()
+                            .conditional(isScreenReaderEnabled) { focusable() }
                             .focusRequester(focusRequester)
                             .semantics {
                                 heading()

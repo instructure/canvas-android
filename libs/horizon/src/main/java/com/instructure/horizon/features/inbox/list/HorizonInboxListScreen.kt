@@ -52,6 +52,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -195,6 +197,7 @@ private fun LazyListScope.inboxHeader(
             ) {
                 IconButton(
                     iconRes = R.drawable.arrow_back,
+                    contentDescription = stringResource(R.string.a11yNavigateBack),
                     size = IconButtonSize.NORMAL,
                     color = IconButtonColor.Inverse,
                     elevation = HorizonElevation.level4,
@@ -341,9 +344,14 @@ private fun InboxContentItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val readState = stringResource(R.string.a11y_readInboxMessage)
+    val unreadState = stringResource(R.string.a11y_unreadInboxMessage)
     Column(
         modifier = modifier
             .clickable { onClick() }
+            .semantics(true) {
+                stateDescription = if (item.isUnread) unreadState else readState
+            }
     ) {
         Column(
             modifier = Modifier

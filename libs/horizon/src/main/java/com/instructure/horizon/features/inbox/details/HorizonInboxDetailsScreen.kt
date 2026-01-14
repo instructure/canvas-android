@@ -21,8 +21,10 @@ import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -32,7 +34,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -51,10 +54,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.isTraversalGroup
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.utils.ContextKeeper
@@ -223,23 +228,39 @@ private fun HorizonInboxDetailsContent(
             .clip(HorizonCornerRadius.level4Top)
             .background(HorizonColors.Surface.pageSecondary())
     ) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(HorizonColors.Surface.pageSecondary()),
-            reverseLayout = state.bottomLayout,
-        ) {
-            if (state.replyState != null) {
-                stickyHeader { HorizonInboxReplyContent(state.replyState) }
+        val scrollState = rememberLazyListState(
+            if (state.bottomLayout) {
+                state.items.lastIndex
+            } else {
+                0
             }
-            items(state.items) {
+        )
+        LazyColumn(
+            verticalArrangement = if (state.bottomLayout) Arrangement.Bottom else Arrangement.Top,
+            state = scrollState,
+            modifier = Modifier
+                .weight(1f)
+                .background(HorizonColors.Surface.pageSecondary())
+                .semantics {
+                    isTraversalGroup = true
+                },
+            reverseLayout = state.bottomLayout,
+            contentPadding = PaddingValues(top = 16.dp)
+        ) {
+            itemsIndexed(state.items) { index, item ->
                 Column {
-                    HorizonInboxDetailsItem(it)
-                    if ((state.bottomLayout && it != state.items.firstOrNull()) || (!state.bottomLayout && it != state.items.lastOrNull())) {
+                    HorizonInboxDetailsItem(
+                        item,
+                        Modifier.semantics(true) {}
+                    )
+                    if (item != state.items.lastOrNull()) {
                         HorizonDivider()
                     }
                 }
             }
+        }
+        if (state.replyState != null) {
+            HorizonInboxReplyContent(state.replyState)
         }
     }
 }
@@ -472,7 +493,6 @@ private fun HorizonInboxDetailsScreenPreview() {
                 onReplyTextValueChange = {},
                 onSendReply = {}
             ),
-            bottomLayout = true
         )
     )
 }

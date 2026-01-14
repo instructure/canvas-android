@@ -235,10 +235,10 @@ class SubmissionDetailsView(
     }
 
     private fun setupSubmissionVersionSpinner(submissions: List<Pair<Long, String>>, selectedIdx: Int) {
-        val itemViewModels = submissions.mapIndexed { index, submission ->
+        val itemViewModels = submissions.map { submission ->
             AssignmentDetailsAttemptItemViewModel(
                 AssignmentDetailsAttemptViewData(
-                    context.getString(R.string.attempt, submissions.size - index),
+                    context.getString(R.string.attempt, submission.first),
                     submission.second
                 )
             )

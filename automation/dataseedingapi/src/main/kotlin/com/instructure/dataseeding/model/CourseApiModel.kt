@@ -31,7 +31,9 @@ data class CourseApiModel(
         @SerializedName("syllabus_body")
         val syllabusBody: String? = null,
         @SerializedName("default_view")
-        var homePage: String? = null
+        var homePage: String? = null,
+        @SerializedName("is_favorite")
+        var isFavorite: Boolean = false,
 )
 
 data class CreateCourse(

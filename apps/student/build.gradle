@@ -38,8 +38,8 @@ android {
         applicationId "com.instructure.candroid"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 280
-        versionName = '8.1.0'
+        versionCode = 285
+        versionName = '8.4.2'
 
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner 'com.instructure.student.espresso.StudentHiltTestRunner'
@@ -220,6 +220,10 @@ android {
         enableTransformForLocalTests = true
         enableAggregatingTask = false
         enableExperimentalClasspathAggregation = true
+    }
+
+    ksp {
+        arg("room.schemaLocation", "$projectDir/schemas".toString())
     }
 
     sourceSets {

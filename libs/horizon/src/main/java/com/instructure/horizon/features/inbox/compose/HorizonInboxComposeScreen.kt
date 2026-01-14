@@ -48,8 +48,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -165,13 +163,14 @@ private fun HorizonInboxComposeTopBar(
                 stringResource(R.string.inboxComposeTitle),
                 style = HorizonTypography.h2,
                 color = HorizonColors.Text.title(),
-                modifier = Modifier.padding(horizontal = 12.dp)
+                modifier = Modifier
+                    .padding(horizontal = 12.dp)
             )
         },
         actions = {
             IconButton(
                 iconRes = R.drawable.close,
-                contentDescription = null,
+                contentDescription = stringResource(R.string.close),
                 color = IconButtonColor.Inverse,
                 elevation = HorizonElevation.level4,
                 onClick = {
@@ -271,13 +270,7 @@ private fun CourseRecipientPickerSection(state: HorizonInboxComposeUiState) {
             onMenuOpenChanged = { isRecipientPickerOpened = it },
             minSearchQueryLengthForMenu = state.minQueryLength
         )
-        val context = LocalContext.current
-        MultiSelectSearch(
-            recipientPickerState,
-            Modifier.semantics {
-                contentDescription = context.getString(R.string.a11y_inboxComposeSelectCourse)
-            }
-        )
+        MultiSelectSearch(recipientPickerState)
 
         HorizonSpace(SpaceSize.SPACE_12)
     }

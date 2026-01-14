@@ -301,7 +301,7 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
             sortedTabs.sortBy { if (TabHelper.isHomeTab(it)) -1 else 1 }
 
             courseBrowserRecyclerView.adapter =
-                CourseBrowserAdapter(sortedTabs, canvasContext, homePageTitle) { tab ->
+                CourseBrowserAdapter(sortedTabs, canvasContext, homePageTitle, networkStateProvider.isOnline()) { tab ->
                     if (isHomeAPage && TabHelper.isHomeTab(tab, canvasContext as Course)) {
                         // Load Pages List
                         if (tabs.any { it.tabId == Tab.PAGES_ID }) {

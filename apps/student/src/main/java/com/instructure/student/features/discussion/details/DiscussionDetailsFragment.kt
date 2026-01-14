@@ -78,6 +78,7 @@ import com.instructure.pandautils.utils.OnBackStackChangedEvent
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ProfileUtils
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.Utils
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.applyBottomSystemBarInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
@@ -95,6 +96,7 @@ import com.instructure.pandautils.utils.setInvisible
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.pandautils.utils.setupAvatarA11y
+import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
@@ -475,9 +477,14 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
 
         @JavascriptInterface
         fun onLtiToolButtonPressed(id: String) {
-            val ltiUrl = URLDecoder.decode(id, "UTF-8")
-            getAuthenticatedURL(ltiUrl) { authenticatedUrl, _ ->
-                DiscussionUtils.launchIntent(requireContext(), authenticatedUrl)
+            val isOnline = Utils.isNetworkAvailable(requireContext())
+            if (isOnline) {
+                val ltiUrl = URLDecoder.decode(id, "UTF-8")
+                getAuthenticatedURL(ltiUrl) { authenticatedUrl, _ ->
+                    DiscussionUtils.launchIntent(requireContext(), authenticatedUrl)
+                }
+            } else {
+                requireContext().toast(R.string.ltiToolsOffline)
             }
         }
 

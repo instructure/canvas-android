@@ -20,6 +20,8 @@ package com.instructure.parentapp.ui.pages.compose
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsSelected
+import androidx.compose.ui.test.hasAnyAncestor
+import androidx.compose.ui.test.hasAnyChild
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
@@ -60,6 +62,11 @@ class CourseDetailsPage(private val composeTestRule: ComposeTestRule) {
 
     fun clickAssignment(assignmentName: String) {
         composeTestRule.onNode(hasTestTag("assignmentItem") and hasText(assignmentName)).performClick()
+        composeTestRule.waitForIdle()
+    }
+
+    fun assertAssignmentStatus(assignmentName: String, status: String) {
+        composeTestRule.onNode(hasText(status) and hasAnyAncestor(hasAnyChild(hasText( assignmentName))), useUnmergedTree = true).assertIsDisplayed()
     }
 
     fun assertAssignmentLabelTextColor(assignmentName: String, expectedTextColor: Long) {

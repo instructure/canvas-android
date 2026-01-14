@@ -97,6 +97,8 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
 
     var overrideDomains: MutableMap<Long, String?> = mutableMapOf()
 
+    var shardIds: MutableMap<Long, String?> = mutableMapOf()
+
     val fullDomain: String
         get() = if (isMasquerading || isStudentView)  {
             when {

@@ -7,8 +7,8 @@ import com.instructure.canvasapi2.apis.AccountNotificationAPI
 import com.instructure.canvasapi2.apis.AnnouncementAPI
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CalendarEventAPI
-import com.instructure.canvasapi2.apis.CommunicationChannelsAPI
 import com.instructure.canvasapi2.apis.CanvaDocsAPI
+import com.instructure.canvasapi2.apis.CommunicationChannelsAPI
 import com.instructure.canvasapi2.apis.ConferencesApi
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.DiscussionAPI
@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.apis.FileFolderAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.HelpLinksAPI
 import com.instructure.canvasapi2.apis.InboxApi
+import com.instructure.canvasapi2.apis.JourneyAssistAPI
 import com.instructure.canvasapi2.apis.LaunchDefinitionsAPI
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.apis.NotificationPreferencesAPI
@@ -41,6 +42,7 @@ import com.instructure.canvasapi2.apis.TabAPI
 import com.instructure.canvasapi2.apis.ThemeAPI
 import com.instructure.canvasapi2.apis.UnreadCountAPI
 import com.instructure.canvasapi2.apis.UserAPI
+import com.instructure.canvasapi2.builders.JourneyRestBuilder
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.AccountNotificationManager
@@ -67,9 +69,7 @@ import com.instructure.canvasapi2.managers.ToDoManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.CanvasAuthenticator
-import com.instructure.canvasapi2.utils.CedarApiPref
 import com.instructure.canvasapi2.utils.JourneyApiPref
-import com.instructure.canvasapi2.utils.PineApiPref
 import com.instructure.canvasapi2.utils.RedwoodApiPref
 import com.instructure.canvasapi2.utils.pageview.PandataApi
 import dagger.Module
@@ -415,18 +415,6 @@ class ApiModule {
 
     @Provides
     @Singleton
-    fun providePineApiPrefs(): PineApiPref {
-        return PineApiPref
-    }
-
-    @Provides
-    @Singleton
-    fun provideCedarApiPrefs(): CedarApiPref {
-        return CedarApiPref
-    }
-
-    @Provides
-    @Singleton
     fun provideRedwoodApiPrefs(): RedwoodApiPref {
         return RedwoodApiPref
     }
@@ -445,6 +433,13 @@ class ApiModule {
     @Provides
     fun provideExternalToolApi(): ExternalToolAPI.ExternalToolInterface {
         return RestBuilder().build(ExternalToolAPI.ExternalToolInterface::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideJourneyAssistApi(
+        journeyRestBuilder: JourneyRestBuilder,
+    ): JourneyAssistAPI {
+        return journeyRestBuilder.build(JourneyAssistAPI::class.java)
     }
 }
 

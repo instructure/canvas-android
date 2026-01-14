@@ -277,6 +277,7 @@
     <string name="checkBoxFinalGradeOption">ग्रेड की गई असाइनमेंट के आधार पर</string>
     <string name="checkBoxWhatIfGradeOption">क्या-अगर अंक दिखाएं</string>
     <string name="whatIfDialogText">क्या-अगर अंक</string>
+    <string name="whatIfScoreExceedsMaximum">अंक अधिकतम पॉइंट्स से अधिक नहीं हो सकते</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%2$s पॉइंट्स में से %1$s, %3$s</string>
     <string name="inbox">इनबॉक्स</string>
@@ -2060,6 +2061,8 @@
     <string name="allAssignments">सभी असाइनमेंट</string>
     <string name="statusFilter">स्थिति फ़िल्टर</string>
     <string name="a11y_contentDescription_filter">फ़िल्टर</string>
+    <string name="a11y_filter_active">फ़िल्टर सक्रिय</string>
+    <string name="a11y_filter_inactive">फ़िल्टर निष्क्रिय</string>
     <string name="a11y_contentDescription_postPolicy">पोस्ट नीति</string>
     <string name="late">विलंब</string>
     <string name="a11y_contentDescription_expand">बढ़ाएं</string>
@@ -2148,4 +2151,20 @@
     <string name="a11y_discussion_checkpoints">चर्चा जांच बिंदु</string>
     <string name="multipleDueDates">एकाधिक नियत तिथियां</string>
     <string name="courseConcludedError">पाठ्यक्रम समाप्त हुआ। संदेश भेजने में असमर्थ!</string>
+    <string name="openInDetailView">विवरण दृश्य में खोलें</string>
+    <string name="immersiveView">इमर्सिव दृश्य</string>
+    <string name="statuses">स्थितियां</string>
+    <string name="precise_filtering">सटीक फ़िल्टरिंग</string>
+    <string name="differentiation_tags">विभेदन टैग</string>
+    <string name="students_without_differentiation_tags">बिना विभेदन टैग वाले छात्र</string>
+    <string name="sort_by">इस के आधार पर क्रमबद्ध करें:</string>
+    <string name="student_sortable_name">छात्र क्रमबद्ध नाम</string>
+    <string name="student_name">छात्र का नाम</string>
+    <string name="submission_date">सबमिशन तिथि</string>
+    <string name="submission_status">सबमिशन स्थिति</string>
+    <string name="write_score_here">यहाँ अंक लिखें</string>
+    <string name="scored_more_than_with_max">/ %s पॉइंट्स से अधिक अंक पाए</string>
+    <string name="scored_less_than_with_max">/ %s पॉइंट्स से कम अंक पाए</string>
+    <string name="scored_between_values">%1$s - %2$s अंक पाए</string>
+    <string name="multiple_filters">एकाधिक फ़िल्टर</string>
 </resources>

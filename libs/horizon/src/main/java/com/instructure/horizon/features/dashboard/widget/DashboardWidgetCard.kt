@@ -18,7 +18,6 @@ package com.instructure.horizon.features.dashboard.widget
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -38,9 +37,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.horizon.R
@@ -52,12 +53,22 @@ import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.pandautils.compose.modifiers.conditional
 
+data class DashboardWidgetPageState(
+    val currentPageNumber: Int,
+    val pageCount: Int
+) {
+    companion object {
+        val Empty = DashboardWidgetPageState(0, 0)
+    }
+}
+
 @Composable
 fun DashboardWidgetCard(
     title: String,
     @DrawableRes iconRes: Int,
     widgetColor: Color,
     modifier: Modifier = Modifier,
+    pageState: DashboardWidgetPageState? = null,
     isLoading: Boolean = false,
     useMinWidth: Boolean = true,
     onClick: (() -> Unit)? = null,
@@ -66,11 +77,14 @@ fun DashboardWidgetCard(
     val context = LocalContext.current
     DashboardCard(
         modifier
-            .semantics(mergeDescendants = true) { }
             .conditional(isLoading) {
                 clearAndSetSemantics {
                     contentDescription =
                         context.getString(R.string.a11y_dashboardWidgetLoadingContentDescription, title)
+                }
+            }.conditional(!isLoading) {
+                semantics {
+                    contentDescription = ""
                 }
             },
         onClick
@@ -83,19 +97,12 @@ fun DashboardWidgetCard(
                 }
         ) {
             Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .width(IntrinsicSize.Max)
+                    .padding(bottom = 16.dp)
             ) {
-                Text(
-                    text = title,
-                    style = HorizonTypography.labelMediumBold,
-                    color = HorizonColors.Text.dataPoint(),
-                    modifier = Modifier
-                        .padding(end = 8.dp)
-                        .shimmerEffect(isLoading)
-                )
-
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
@@ -116,9 +123,32 @@ fun DashboardWidgetCard(
                             .size(16.dp)
                     )
                 }
-            }
+                HorizonSpace(SpaceSize.SPACE_8)
+                Text(
+                    text = title,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    style = HorizonTypography.labelMediumBold,
+                    color = HorizonColors.Text.dataPoint(),
+                    modifier = Modifier
+                        .weight(1f)
+                        .shimmerEffect(isLoading)
+                )
 
-            HorizonSpace(SpaceSize.SPACE_8)
+                if (pageState != null && pageState.pageCount > 1) {
+                    HorizonSpace(SpaceSize.SPACE_8)
+                    Text(
+                        stringResource(
+                            R.string.dashboardPaginatedWidgetPagerMessage,
+                            pageState.currentPageNumber,
+                            pageState.pageCount
+                        ),
+                        style = HorizonTypography.p2,
+                        color = HorizonColors.Text.dataPoint(),
+                        modifier = Modifier.shimmerEffect(isLoading)
+                    )
+                }
+            }
 
             content()
         }
@@ -130,6 +160,23 @@ fun DashboardWidgetCard(
 private fun DashboardTimeSpentCardPreview() {
     DashboardWidgetCard(
         title = "Time",
+        iconRes = R.drawable.schedule,
+        widgetColor = HorizonColors.PrimitivesBlue.blue12()
+    ) {
+        Text(
+            text = "Content",
+            style = HorizonTypography.h1,
+            color = HorizonColors.Text.body()
+        )
+    }
+}
+
+@Composable
+@Preview
+private fun DashboardTimeSpentCardPaginatedPreview() {
+    DashboardWidgetCard(
+        title = "Time",
+        pageState = DashboardWidgetPageState(1, 2),
         iconRes = R.drawable.schedule,
         widgetColor = HorizonColors.PrimitivesBlue.blue12()
     ) {

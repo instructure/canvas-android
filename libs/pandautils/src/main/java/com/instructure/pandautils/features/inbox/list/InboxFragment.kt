@@ -161,6 +161,7 @@ class InboxFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInterac
     private fun handleSharedViewModelAction(action: InboxSharedAction) {
         when (action) {
             is InboxSharedAction.RefreshListScreen -> {
+                viewModel.invalidateCache()
                 viewModel.refresh()
             }
             else -> {}

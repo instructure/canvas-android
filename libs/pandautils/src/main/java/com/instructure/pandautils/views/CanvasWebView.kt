@@ -74,6 +74,7 @@ import androidx.core.view.ViewCompat
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.utils.APIHelper.simplifyHTML
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.FileUtils.getAssetsFile
 import com.instructure.canvasapi2.utils.Logger.e
 import com.instructure.pandautils.R
@@ -880,7 +881,12 @@ class JSInterface(private val onLtiButtonPressed: (String) -> Unit) {
 
     @JavascriptInterface
     fun onLtiToolButtonPressed(id: String) {
-        val ltiUrl = URLDecoder.decode(id, "UTF-8")
-        onLtiButtonPressed(ltiUrl)
+        val isOnline = Utils.isNetworkAvailable(ContextKeeper.appContext)
+        if (isOnline) {
+            val ltiUrl = URLDecoder.decode(id, "UTF-8")
+            onLtiButtonPressed(ltiUrl)
+        } else {
+            ContextKeeper.appContext.toast(R.string.ltiToolsOffline)
+        }
     }
 }

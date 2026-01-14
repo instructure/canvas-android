@@ -77,9 +77,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInParent
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -271,26 +273,31 @@ fun ToDoListScreen(
 }
 
 @Composable
-private fun ToDoListContent(
+internal fun ToDoListContent(
     uiState: ToDoListUiState,
     onOpenToDoItem: (String) -> Unit,
     onDateClick: (Date) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // Filter out items that are being removed
+    val filteredItemsByDate = uiState.itemsByDate.mapValues { (_, items) ->
+        items.filter { it.id !in uiState.removingItemIds }
+    }.filterValues { it.isNotEmpty() }
+
     when {
         uiState.isLoading -> {
-            Loading(modifier = modifier.fillMaxSize())
+            Loading(modifier = modifier.fillMaxSize().testTag("todoListLoading"))
         }
 
         uiState.isError -> {
             ErrorContent(
                 errorMessage = stringResource(id = R.string.errorLoadingToDos),
                 retryClick = uiState.onRefresh,
-                modifier = modifier.fillMaxSize()
+                modifier = modifier.fillMaxSize().testTag("todoListError")
             )
         }
 
-        uiState.itemsByDate.isEmpty() -> {
+        filteredItemsByDate.isEmpty() -> {
             EmptyContent(
                 emptyTitle = stringResource(id = R.string.noToDosForNow),
                 emptyMessage = stringResource(id = R.string.noToDosForNowSubtext),
@@ -298,15 +305,15 @@ private fun ToDoListContent(
                 modifier = modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
+                    .testTag("todoListEmpty")
             )
         }
 
         else -> {
             ToDoItemsList(
-                itemsByDate = uiState.itemsByDate,
+                itemsByDate = filteredItemsByDate,
                 onItemClicked = onOpenToDoItem,
                 onDateClick = onDateClick,
-                removingItemIds = uiState.removingItemIds,
                 modifier = modifier
             )
         }
@@ -318,18 +325,13 @@ private fun ToDoItemsList(
     itemsByDate: Map<Date, List<ToDoItemUiState>>,
     onItemClicked: (String) -> Unit,
     onDateClick: (Date) -> Unit,
-    modifier: Modifier = Modifier,
-    removingItemIds: Set<String> = emptySet()
+    modifier: Modifier = Modifier
 ) {
-    // Filter out items that are being removed
-    val filteredItemsByDate = itemsByDate.mapValues { (_, items) ->
-        items.filter { it.id !in removingItemIds }
-    }.filterValues { it.isNotEmpty() }
-
-    val dateGroups = filteredItemsByDate.entries.toList()
+    val dateGroups = itemsByDate.entries.toList()
     val listState = rememberLazyListState()
-    val itemPositions = remember { mutableStateMapOf<String, Float>() }
-    val itemSizes = remember { mutableStateMapOf<String, Int>() }
+    val configuration = LocalConfiguration.current
+    val itemPositions = remember(configuration) { mutableStateMapOf<String, Float>() }
+    val itemSizes = remember(configuration) { mutableStateMapOf<String, Int>() }
     val density = LocalDensity.current
     var listHeight by remember { mutableIntStateOf(0) }
 
@@ -341,7 +343,7 @@ private fun ToDoItemsList(
     )
 
     // Calculate content height from last item's position + size
-    val listContentHeight by remember(dateGroups) {
+    val listContentHeight by remember(dateGroups, itemPositions) {
         derivedStateOf {
             if (dateGroups.isEmpty()) return@derivedStateOf 0
             val lastGroup = dateGroups.last()
@@ -364,6 +366,7 @@ private fun ToDoItemsList(
             state = listState,
             modifier = Modifier
                 .fillMaxSize()
+                .testTag("todoList")
                 .onGloballyPositioned { coordinates ->
                     listHeight = coordinates.size.height
                 }
@@ -525,6 +528,7 @@ private fun ToDoItem(
     Box(
         modifier = modifier
             .fillMaxWidth()
+            .testTag("todoItem_${item.id}")
             .onGloballyPositioned { coordinates ->
                 itemWidth = coordinates.size.width.toFloat()
             }
@@ -665,7 +669,7 @@ private fun ToDoItemContent(
         modifier = modifier
             .fillMaxWidth()
             .background(colorResource(id = R.color.backgroundLightest))
-            .clickable(onClick = onClick)
+            .clickable(enabled = item.isClickable, onClick = onClick)
             .padding(start = 12.dp, end = 16.dp, top = 8.dp, bottom = 8.dp),
         verticalAlignment = Alignment.Top
     ) {
@@ -717,7 +721,8 @@ private fun ToDoItemContent(
                     fontSize = 16.sp,
                     color = colorResource(id = R.color.textDarkest),
                     maxLines = 3,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.testTag("todoItemTitle")
                 )
 
                 item.tag?.let {
@@ -753,7 +758,8 @@ private fun ToDoItemContent(
                 colors = CheckboxDefaults.colors(
                     checkedColor = Color(ThemePrefs.brandColor),
                     uncheckedColor = colorResource(id = R.color.textDark)
-                )
+                ),
+                modifier = Modifier.testTag("todoCheckbox_${item.id}")
             )
         }
     }
@@ -840,7 +846,7 @@ private fun rememberStickyHeaderState(
     itemPositions: Map<String, Float>,
     density: Density
 ): StickyHeaderState {
-    return remember(dateGroups) {
+    return remember(dateGroups, itemPositions) {
         derivedStateOf {
             calculateStickyHeaderState(dateGroups, listState, itemPositions, density)
         }

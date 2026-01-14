@@ -24,31 +24,43 @@ import androidx.compose.ui.platform.ComposeView
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.compose.CanvasTheme
+import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.student.fragment.ParentFragment
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class DashboardFragment : ParentFragment() {
+
+    @Inject
+    lateinit var router: DashboardRouter
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        applyTheme()
         return ComposeView(requireContext()).apply {
             setContent {
                 CanvasTheme {
-                    DashboardScreen()
+                    DashboardScreen(router = router)
                 }
             }
         }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        applyTheme()
     }
 
     override fun title(): String = ""
 
     override fun applyTheme() {
         navigation?.attachNavigationDrawer(this, null)
+        ViewStyler.setStatusBarDark(requireActivity(), ThemePrefs.primaryColor)
     }
 
     companion object {

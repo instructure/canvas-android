@@ -39,6 +39,7 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.Sub
 import com.instructure.student.mobius.common.FlowSource
 import com.spotify.mobius.functions.Consumer
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
@@ -62,7 +63,8 @@ import java.io.File
 class SubmissionDetailsEffectHandlerTest : Assert() {
     private val view: SubmissionDetailsView = mockk(relaxed = true)
     private val repository: SubmissionDetailsRepository = mockk(relaxed = true)
-    private val effectHandler = SubmissionDetailsEffectHandler(repository).apply { view = this@SubmissionDetailsEffectHandlerTest.view }
+    private val apiPrefs: ApiPrefs = mockk(relaxed = true)
+    private val effectHandler = SubmissionDetailsEffectHandler(repository, apiPrefs).apply { view = this@SubmissionDetailsEffectHandlerTest.view }
     private val eventConsumer: Consumer<SubmissionDetailsEvent> = mockk(relaxed = true)
     private val connection = effectHandler.connect(eventConsumer)
     private val testDispatcher = UnconfinedTestDispatcher()
@@ -492,4 +494,61 @@ class SubmissionDetailsEffectHandlerTest : Assert() {
         assertEquals(expectedEvent, deferred.await())
     }
 
+    @Test
+    fun `loadData uses global user ID for cross-shard course`() {
+        val courseId = 1234L
+        val userId = 5678L
+        val courseShardId = "7053"
+        val tokenShardId = "8000"
+        val expectedGlobalUserId = 80000000000005678L
+
+        val assignment = Assignment().copy(submissionTypesRaw = listOf(Assignment.SubmissionType.ONLINE_QUIZ.apiString))
+        val submission = Submission()
+        val user = User(id = userId)
+
+        // Mock apiPrefs to return different shard IDs
+        every { apiPrefs.user } returns user
+        every { apiPrefs.shardIds } returns mutableMapOf(courseId to courseShardId)
+        every { apiPrefs.accessToken } returns "$tokenShardId~abcdef1234567890"
+
+        coEvery { repository.getObserveeEnrollments(any()) } returns DataResult.Success(listOf())
+        coEvery { repository.getAssignment(any(), any(), any()) } returns DataResult.Success(assignment)
+        coEvery { repository.getSingleSubmission(any(), any(), any(), any()) } returns DataResult.Success(submission)
+        coEvery { repository.getCourseFeatures(any(), any()) } returns DataResult.Success(listOf("assignments_2_student"))
+
+        connection.accept(SubmissionDetailsEffect.LoadData(courseId, assignment.id))
+
+        // Verify that getSingleSubmission was called with the global user ID
+        coVerify(timeout = 100) {
+            repository.getSingleSubmission(courseId, assignment.id, expectedGlobalUserId, true)
+        }
+    }
+
+    @Test
+    fun `loadData uses original user ID for same-shard course`() {
+        val courseId = 1234L
+        val userId = 5678L
+        val shardId = "7053"
+
+        val assignment = Assignment().copy(submissionTypesRaw = listOf(Assignment.SubmissionType.ONLINE_QUIZ.apiString))
+        val submission = Submission()
+        val user = User(id = userId)
+
+        // Mock apiPrefs to return same shard ID
+        every { apiPrefs.user } returns user
+        every { apiPrefs.shardIds } returns mutableMapOf(courseId to shardId)
+        every { apiPrefs.accessToken } returns "$shardId~abcdef1234567890"
+
+        coEvery { repository.getObserveeEnrollments(any()) } returns DataResult.Success(listOf())
+        coEvery { repository.getAssignment(any(), any(), any()) } returns DataResult.Success(assignment)
+        coEvery { repository.getSingleSubmission(any(), any(), any(), any()) } returns DataResult.Success(submission)
+        coEvery { repository.getCourseFeatures(any(), any()) } returns DataResult.Success(listOf("assignments_2_student"))
+
+        connection.accept(SubmissionDetailsEffect.LoadData(courseId, assignment.id))
+
+        // Verify that getSingleSubmission was called with the original user ID (not converted)
+        coVerify(timeout = 100) {
+            repository.getSingleSubmission(courseId, assignment.id, userId, true)
+        }
+    }
 }
