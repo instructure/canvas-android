@@ -24,7 +24,6 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
-import com.instructure.horizon.features.aiassistant.common.model.AiAssistContextSource
 import com.instructure.pandautils.utils.LocaleUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -64,9 +63,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun updateShowAiAssist(showAiAssist: Boolean) {
-        aiAssistContextProvider.aiAssistContext = AiAssistContext(
-            contextSources = courseIds.map { AiAssistContextSource.CourseId(it.toString()) },
-        )
+        aiAssistContextProvider.aiAssistContext = AiAssistContext()
         _uiState.update { it.copy(showAiAssist = showAiAssist) }
     }
 
