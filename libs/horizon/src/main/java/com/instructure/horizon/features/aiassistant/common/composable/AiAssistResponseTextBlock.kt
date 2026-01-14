@@ -114,6 +114,22 @@ fun AiAssistResponseTextBlock(
                 }
             }
         }
+
+        if (chips.isNotEmpty()) {
+            HorizonSpace(SpaceSize.SPACE_8)
+
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                chips.forEach { chip ->
+                    AiAssistSuggestionTextBlock(
+                        text = chip.label,
+                        onClick = chip.onClick
+                    )
+                }
+            }
+        }
     }
 }
 
