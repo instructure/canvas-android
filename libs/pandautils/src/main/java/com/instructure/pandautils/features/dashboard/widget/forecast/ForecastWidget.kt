@@ -131,8 +131,7 @@ fun ForecastWidgetContent(
                         WeekNavigationHeader(
                             weekPeriod = weekPeriod,
                             onNavigatePrevious = uiState.onNavigatePrevious,
-                            onNavigateNext = uiState.onNavigateNext,
-                            backgroundColor = Color(uiState.backgroundColor.color())
+                            onNavigateNext = uiState.onNavigateNext
                         )
 
                         ForecastSegmentedControl(

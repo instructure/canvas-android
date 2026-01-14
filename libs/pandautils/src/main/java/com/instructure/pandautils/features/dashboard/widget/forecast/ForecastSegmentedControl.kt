@@ -147,10 +147,11 @@ private fun SegmentButton(
 
     Box(
         modifier = modifier
+            .fillMaxHeight()
             .clickable { onSelected(section) }
             .shadow(
                 elevation = if (isSelected) 2.dp else 0.dp,
-                shape = RoundedCornerShape(4.dp)
+                shape = RoundedCornerShape(6.dp)
             )
             .background(
                 color = if (isSelected) {
@@ -214,7 +215,7 @@ private fun ForecastSegmentedControlPreview() {
         missingCount = 2,
         dueCount = 3,
         recentGradesCount = 4,
-        selectedSection = ForecastSection.DUE,
+        selectedSection = ForecastSection.MISSING,
         onSectionSelected = {}
     )
 }
