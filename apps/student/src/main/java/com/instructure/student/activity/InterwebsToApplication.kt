@@ -36,6 +36,7 @@ import com.instructure.canvasapi2.utils.PendoInitCallbackHandler
 import com.instructure.canvasapi2.utils.weave.apiAsync
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
+import com.instructure.horizon.HorizonActivity
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.loginapi.login.util.QRLogin.performSSOLogin
 import com.instructure.loginapi.login.util.QRLogin.verifySSOLoginUri
@@ -46,6 +47,7 @@ import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.Utils.generateUserAgent
+import com.instructure.pandautils.utils.orDefault
 import com.instructure.student.R
 import com.instructure.student.databinding.InterwebsToApplicationBinding
 import com.instructure.student.databinding.LoadingCanvasViewBinding
@@ -209,9 +211,27 @@ class InterwebsToApplication : BaseCanvasActivity() {
                 finish()
                 return@tryWeave
             } else {
-                // Allow the UI to show
                 delay(700)
-                RouteMatcher.routeUrl(this@InterwebsToApplication, url, domain)
+                if (ApiPrefs.canvasCareerView.orDefault()) {
+                    val intent = Intent(this@InterwebsToApplication, HorizonActivity::class.java)
+
+                    val pathSegments = data.pathSegments
+                    if (pathSegments.size >= 2) {
+                        when (pathSegments[0]) {
+                            "courses" -> {
+                                intent.putExtra("learningItemId", "course_${pathSegments[1]}")
+                            }
+                            "programs" -> {
+                                intent.putExtra("learningItemId", "program_${pathSegments[1]}")
+                            }
+                        }
+                    }
+
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
+                } else {
+                    RouteMatcher.routeUrl(this@InterwebsToApplication, url, domain)
+                }
                 finish()
             }
 
