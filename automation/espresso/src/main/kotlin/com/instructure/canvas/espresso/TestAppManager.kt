@@ -36,9 +36,9 @@ open class TestAppManager: AppManager() {
         super.onCreate()
         RemoteConfigUtils.initialize()
 
-        if (workerFactory == null) {
+        /*if (workerFactory == null) {
             workerFactory = getWorkManagerFactory()
-        }
+        }*/
     }
 
     @SuppressLint("RestrictedApi")

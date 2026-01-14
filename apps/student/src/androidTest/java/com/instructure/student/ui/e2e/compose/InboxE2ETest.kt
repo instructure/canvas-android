@@ -19,10 +19,9 @@ package com.instructure.student.ui.e2e.compose
 import android.os.SystemClock.sleep
 import android.util.Log
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
-import androidx.test.uiautomator.UiDevice
-import androidx.test.uiautomator.UiSelector
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
@@ -32,6 +31,7 @@ import com.instructure.canvas.espresso.annotations.ReleaseExclude
 import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.api.ConversationsApi
 import com.instructure.dataseeding.api.GroupsApi
+import com.instructure.espresso.handleWorkManagerTask
 import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.extensions.seedData
@@ -599,7 +599,7 @@ class InboxE2ETest: StudentComposeTest() {
         inboxDetailsPage.assertConversationSubject("")
     }
 
-    /*@E2E
+    @E2E
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.E2E)
     fun testInboxMessageReplyWithVideoAttachmentE2E() {
@@ -612,7 +612,10 @@ class InboxE2ETest: StudentComposeTest() {
 
         Log.d(PREPARATION_TAG, "Copy mp4 file to Downloads folder for attachment.")
         val videoFileName = "test_video.mp4"
-        copyAssetToDownloads(videoFileName)
+       // copyAssetToDownloads(videoFileName)
+
+        setupFileOnDevice(videoFileName)
+        File(InstrumentationRegistry.getInstrumentation().targetContext.cacheDir, "file_upload").deleteRecursively()
 
         val conversationSubject = "Need Help with Assignment"
         val conversationBody = "Can you please send me a demo video?"
@@ -652,7 +655,16 @@ class InboxE2ETest: StudentComposeTest() {
         Log.d(STEP_TAG, "Click attachment button to open file picker dialog.")
         inboxComposePage.clickAttachmentButton()
 
-        Log.d(STEP_TAG, "Click on 'Device' option in file picker dialog.")
+        Log.d(PREPARATION_TAG, "Simulate file picker intent (again).")
+        Intents.init()
+        try {
+            stubFilePickerIntent(videoFileName)
+            fileChooserPage.chooseDevice()
+        }
+        finally {
+            Intents.release()
+        }
+  /*      Log.d(STEP_TAG, "Click on 'Device' option in file picker dialog.")
         fileChooserPage.chooseDevice()
 
         Log.d(STEP_TAG, "Select the video file from Android file picker using UIAutomator.")
@@ -687,6 +699,10 @@ class InboxE2ETest: StudentComposeTest() {
         fileChooserPage.clickOkay()
 
         sleep(3000) // Wait for the file to be loaded.
+*/
+        Log.d(STEP_TAG, "Click OKAY button to confirm file selection.")
+        fileChooserPage.clickOkay()
+        handleWorkManagerTask("FileUploadWorker")
 
         Log.d(ASSERTION_TAG, "Assert that the video file is displayed as attached in compose screen.")
         inboxComposePage.assertAttachmentDisplayed(videoFileName)
@@ -753,7 +769,7 @@ class InboxE2ETest: StudentComposeTest() {
 
         Log.d(ASSERTION_TAG, "Assert that the conversation is still displayed in inbox.")
         inboxPage.assertConversationDisplayed(seededConversation.subject)
-    }*/
+    }
 
     @E2E
     @Test
@@ -767,6 +783,11 @@ class InboxE2ETest: StudentComposeTest() {
         val student1 = data.studentsList[0]
         val student2 = data.studentsList[1]
 
+        Log.d(PREPARATION_TAG, "Copy PDF file to Downloads folder for attachment.")
+        val pdfFileName = "samplepdf.pdf"
+        //copyAssetToDownloads(pdfFileName)
+        setupFileOnDevice(pdfFileName)
+        File(InstrumentationRegistry.getInstrumentation().targetContext.cacheDir, "file_upload").deleteRecursively()
         Log.d(PREPARATION_TAG, "Create a PDF file for attachment test.")
         val pdfFileName = "test_comment_${System.currentTimeMillis()}.pdf"
         val pdfFile = File(android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS), pdfFileName)
@@ -830,7 +851,16 @@ class InboxE2ETest: StudentComposeTest() {
         Log.d(STEP_TAG, "Click attachment button to open file picker dialog.")
         inboxComposePage.clickAttachmentButton()
 
-        Log.d(STEP_TAG, "Click on 'Device' option in file picker dialog.")
+        Log.d(PREPARATION_TAG, "Simulate file picker intent (again).")
+        Intents.init()
+        try {
+            stubFilePickerIntent(pdfFileName)
+            fileChooserPage.chooseDevice()
+        }
+        finally {
+            Intents.release()
+        }
+       /* Log.d(STEP_TAG, "Click on 'Device' option in file picker dialog.")
         fileChooserPage.chooseDevice()
 
         Log.d(STEP_TAG, "Select the PDF file from Android file picker using UIAutomator.")
@@ -859,10 +889,11 @@ class InboxE2ETest: StudentComposeTest() {
             if (pdfFileObject2.exists()) {
                 pdfFileObject2.click()
             }
-        }
+        }*/
 
         Log.d(STEP_TAG, "Click OKAY button to confirm file selection.")
         fileChooserPage.clickOkay()
+        handleWorkManagerTask("FileUploadWorker")
 
         sleep(3000) // Wait for the file to be loaded.
 
