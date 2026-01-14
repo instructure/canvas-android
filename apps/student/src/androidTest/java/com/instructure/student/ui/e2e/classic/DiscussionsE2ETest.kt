@@ -196,6 +196,8 @@ class DiscussionsE2ETest: StudentComposeTest() {
         val replyToEntryDueDate = "2029-11-19T22:59:00Z"
         DiscussionTopicsApi.createDiscussionTopicWithCheckpoints(course.id, teacher.token, discussionWithCheckpointsWithDueDatesTitle, assignmentName, replyToTopicDueDate, replyToEntryDueDate)
 
+        val convertedReplyToTopicDueDate = "Due " + convertIso8601ToCanvasFormat("2029-11-12T22:59:00Z") + " 2:59 PM"
+        val convertedReplyToEntryDueDate = "Due " + convertIso8601ToCanvasFormat("2029-11-19T22:59:00Z") + " 2:59 PM"
         Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
 
@@ -211,7 +213,7 @@ class DiscussionsE2ETest: StudentComposeTest() {
 
         Log.d(ASSERTION_TAG, "Assert that the '${discussionWithCheckpointsWithoutDueDatesTitle}' discussions are present along with 2 date info (For the 2 checkpoints).")
         assignmentListPage.assertHasAssignmentWithCheckpoints(discussionWithCheckpointsWithoutDueDatesTitle, expectedGrade = "-/15")
-        assignmentListPage.assertHasAssignmentWithCheckpoints(discussionWithCheckpointsWithDueDatesTitle, dueAtString = replyToTopicDueDate, dueAtStringSecondCheckpoint = replyToEntryDueDate, expectedGrade = "-/15")
+        assignmentListPage.assertHasAssignmentWithCheckpoints(discussionWithCheckpointsWithDueDatesTitle, dueAtString = convertedReplyToTopicDueDate, dueAtStringSecondCheckpoint = convertedReplyToEntryDueDate, expectedGrade = "-/15")
 
         Log.d(STEP_TAG, "Click on the expand icon for the '$discussionWithCheckpointsWithoutDueDatesTitle' discussion (to see the checkpoints' details).")
         assignmentListPage.clickDiscussionCheckpointExpandCollapseIcon(discussionWithCheckpointsWithoutDueDatesTitle)
@@ -227,7 +229,7 @@ class DiscussionsE2ETest: StudentComposeTest() {
         assignmentListPage.clickDiscussionCheckpointExpandCollapseIcon(discussionWithCheckpointsWithDueDatesTitle)
 
         Log.d(ASSERTION_TAG, "Assert that the checkpoints' details are displayed correctly (titles, due dates, points possible, grades).")
-        assignmentListPage.assertDiscussionCheckpointDetails(2, dueAtReplyToTopic = "Due " + convertIso8601ToCanvasFormat(replyToTopicDueDate) + " 2:59 PM", dueAtAdditionalReplies = "Due " + convertIso8601ToCanvasFormat(replyToEntryDueDate) + " 2:59 PM", gradeReplyToTopic = "-/10", gradeAdditionalReplies = "-/5")
+        assignmentListPage.assertDiscussionCheckpointDetails(2, dueAtReplyToTopic = convertedReplyToTopicDueDate, dueAtAdditionalReplies = convertedReplyToEntryDueDate, gradeReplyToTopic = "-/10", gradeAdditionalReplies = "-/5")
 
         Log.d(STEP_TAG, "Select '${discussionWithCheckpointsWithoutDueDatesTitle}' discussion.")
         assignmentListPage.clickAssignment(discussionWithCheckpointsWithoutDueDatesTitle)
@@ -262,6 +264,8 @@ class DiscussionsE2ETest: StudentComposeTest() {
         val assignmentName = "Test Assignment with Checkpoints"
         DiscussionTopicsApi.createDiscussionTopicWithCheckpoints(course.id, teacher.token, discussionWithCheckpointsTitle, assignmentName, replyToTopicDueDate, replyToEntryDueDate)
 
+        val convertedReplyToTopicDueDate = convertIso8601ToCanvasFormat("2029-11-12T22:59:00Z") + " 2:59 PM"
+        val convertedReplyToEntryDueDate = convertIso8601ToCanvasFormat("2029-11-19T22:59:00Z") + " 2:59 PM"
         Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
 
@@ -293,7 +297,7 @@ class DiscussionsE2ETest: StudentComposeTest() {
         assignmentDetailsPage.assertCheckpointGradesView("Additional replies (2)", "-/5")
 
         Log.d(ASSERTION_TAG, "Assert that the checkpoints are displayed properly on the Assignment Details Page.")
-        assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Reply to topic due", convertIso8601ToCanvasFormat(replyToTopicDueDate) + " 2:59 PM")
-        assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Additional replies (2) due",convertIso8601ToCanvasFormat(replyToEntryDueDate) + " 2:59 PM")
+        assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Reply to topic due", convertedReplyToTopicDueDate)
+        assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Additional replies (2) due",convertedReplyToEntryDueDate)
     }
 }

@@ -17,6 +17,7 @@
 
 package com.instructure.dataseeding.api
 
+import com.apollographql.apollo.api.Optional
 import com.instructure.dataseeding.model.CreateDiscussionTopic
 import com.instructure.dataseeding.model.DiscussionApiModel
 import com.instructure.dataseeding.model.DiscussionTopicEntryReplyRequest
@@ -25,7 +26,15 @@ import com.instructure.dataseeding.model.DiscussionTopicEntryRequest
 import com.instructure.dataseeding.model.DiscussionTopicEntryResponse
 import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.Randomizer
+import com.instructure.dataseedingapi.CreateDiscussionTopicMinimalMutation
+import com.instructure.dataseedingapi.type.AssignmentCreate
+import com.instructure.dataseedingapi.type.CheckpointLabelType
+import com.instructure.dataseedingapi.type.DiscussionCheckpointDate
+import com.instructure.dataseedingapi.type.DiscussionCheckpointDateType
+import com.instructure.dataseedingapi.type.DiscussionCheckpoints
 import com.instructure.dataseedingapi.type.DiscussionTopicContextType
+import com.instructure.dataseedingapi.type.GradingType
+import kotlinx.coroutines.runBlocking
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -82,42 +91,42 @@ object DiscussionTopicsApi {
         val apolloClient = CanvasNetworkAdapter.getApolloClient(token)
 
         val replyToTopicDates = listOf(
-            com.instructure.dataseedingapi.type.DiscussionCheckpointDate(
-                type = com.instructure.dataseedingapi.type.DiscussionCheckpointDateType.everyone,
-                dueAt = com.apollographql.apollo.api.Optional.presentIfNotNull(replyToTopicDueDate)
+            DiscussionCheckpointDate(
+                type = DiscussionCheckpointDateType.everyone,
+                dueAt = Optional.presentIfNotNull(replyToTopicDueDate)
             )
         )
 
         val replyToEntryDates = listOf(
-            com.instructure.dataseedingapi.type.DiscussionCheckpointDate(
-                type = com.instructure.dataseedingapi.type.DiscussionCheckpointDateType.everyone,
-                dueAt = com.apollographql.apollo.api.Optional.presentIfNotNull(replyToEntryDueDate)
+            DiscussionCheckpointDate(
+                type = DiscussionCheckpointDateType.everyone,
+                dueAt = Optional.presentIfNotNull(replyToEntryDueDate)
             )
         )
 
         val checkpoints = listOf(
-            com.instructure.dataseedingapi.type.DiscussionCheckpoints(
-                checkpointLabel = com.instructure.dataseedingapi.type.CheckpointLabelType.reply_to_topic,
+            DiscussionCheckpoints(
+                checkpointLabel = CheckpointLabelType.reply_to_topic,
                 pointsPossible = 10.0,
                 dates = replyToTopicDates,
-                repliesRequired = com.apollographql.apollo.api.Optional.present(1)
+                repliesRequired = Optional.present(1)
             ),
-            com.instructure.dataseedingapi.type.DiscussionCheckpoints(
-                checkpointLabel = com.instructure.dataseedingapi.type.CheckpointLabelType.reply_to_entry,
+            DiscussionCheckpoints(
+                checkpointLabel = CheckpointLabelType.reply_to_entry,
                 pointsPossible = 5.0,
                 dates = replyToEntryDates,
-                repliesRequired = com.apollographql.apollo.api.Optional.present(2)
+                repliesRequired = Optional.present(2)
             )
         )
 
-        val assignment = com.instructure.dataseedingapi.type.AssignmentCreate(
+        val assignment = AssignmentCreate(
             name = assignmentName,
             courseId = courseId.toString(),
-            gradingType = com.apollographql.apollo.api.Optional.present(com.instructure.dataseedingapi.type.GradingType.points),
-            forCheckpoints = com.apollographql.apollo.api.Optional.present(true),
+            gradingType = Optional.present(GradingType.points),
+            forCheckpoints = Optional.present(true),
         )
 
-        val mutation = com.instructure.dataseedingapi.CreateDiscussionTopicMinimalMutation(
+        val mutation = CreateDiscussionTopicMinimalMutation(
             contextId = courseId.toString(),
             contextType = DiscussionTopicContextType.Course,
             title = discussionTitle,
@@ -125,7 +134,7 @@ object DiscussionTopicsApi {
             checkpoints = checkpoints
         )
 
-        kotlinx.coroutines.runBlocking {
+        runBlocking {
                 apolloClient.mutation(mutation).execute()
         }
     }

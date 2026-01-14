@@ -46,7 +46,6 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.dataseeding.model.AssignmentApiModel
 import com.instructure.dataseeding.model.QuizApiModel
 import com.instructure.espresso.R
-import com.instructure.espresso.convertIso8601ToCanvasFormat
 import com.instructure.espresso.page.plus
 import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.pandautils.utils.toFormattedString
@@ -178,13 +177,13 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
            else {
                if(secondCheckpointDueAt != null) {
                    composeTestRule.onAllNodes(
-                       hasText("Due " + convertIso8601ToCanvasFormat(assignmentDueAt) + " 2:59 PM").and(
+                       hasText(assignmentDueAt).and(
                            hasParent(hasAnyDescendant(hasText(assignmentName)))
                        ),
                        true
                    ).assertCountEquals(1)
                    composeTestRule.onAllNodes(
-                       hasText("Due " + convertIso8601ToCanvasFormat(secondCheckpointDueAt) + " 2:59 PM").and(
+                       hasText(secondCheckpointDueAt).and(
                            hasParent(hasAnyDescendant(hasText(assignmentName)))
                        ),
                        true
