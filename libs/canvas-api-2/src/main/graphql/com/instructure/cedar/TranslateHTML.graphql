@@ -1,5 +1,0 @@
-mutation TranslateHTML($input: TranslateInput!) {
-    translateHTML(input: $input) {
-        translation
-    }
-}
