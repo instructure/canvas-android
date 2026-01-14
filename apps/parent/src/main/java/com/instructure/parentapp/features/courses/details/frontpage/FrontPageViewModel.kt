@@ -21,6 +21,8 @@ import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.toBaseUrl
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.features.grades.COURSE_ID_KEY
@@ -65,7 +67,8 @@ class FrontPageViewModel @Inject constructor(
                 it.copy(
                     studentColor = parentPrefs.currentStudent.studentColor,
                     isLoading = it.htmlContent.isEmpty(),
-                    isRefreshing = it.htmlContent.isNotEmpty()
+                    isRefreshing = it.htmlContent.isNotEmpty(),
+                    baseUrl = CanvasContext.emptyCourseContext(courseId).toBaseUrl()
                 )
             }
 
