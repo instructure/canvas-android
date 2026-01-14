@@ -16,11 +16,34 @@
  */
 package com.instructure.horizon.features.aiassistant.common
 
+import com.instructure.canvasapi2.models.journey.JourneyAssistState
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistContextSource
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class AiAssistContextProvider @Inject constructor() {
     var aiAssistContext = AiAssistContext()
+
+    fun addMessageToChatHistory(message: AiAssistMessage) {
+        aiAssistContext = aiAssistContext.copy(
+            chatHistory = aiAssistContext.chatHistory + message
+        )
+    }
+
+    fun updateContextFromState(state: JourneyAssistState?) {
+        if (state == null) return
+
+        val updatedSources = aiAssistContext.contextSources
+            .filterNot { it is AiAssistContextSource.Course || it is AiAssistContextSource.Page || it is AiAssistContextSource.File }
+            .toMutableList()
+
+        state.courseID?.let { updatedSources.add(AiAssistContextSource.Course(it)) }
+        state.pageID?.let { updatedSources.add(AiAssistContextSource.Page(it)) }
+        state.fileID?.let { updatedSources.add(AiAssistContextSource.File(it)) }
+
+        aiAssistContext = aiAssistContext.copy(contextSources = updatedSources)
+    }
 }

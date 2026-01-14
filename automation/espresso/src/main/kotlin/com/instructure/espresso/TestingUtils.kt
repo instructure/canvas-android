@@ -77,6 +77,22 @@ fun getDateInCanvasFormat(date: LocalDateTime? = null): String {
     return "$monthString $dayString, $yearString"
 }
 
+fun convertIso8601ToCanvasFormat(iso8601Date: String): String {
+    val iso8601Format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()).apply {
+        timeZone = TimeZone.getTimeZone("UTC")
+    }
+    val date = iso8601Format.parse(iso8601Date) ?: throw IllegalArgumentException("Invalid date format: $iso8601Date")
+
+    val calendar = Calendar.getInstance()
+    calendar.time = date
+
+    val monthString = capitalizeFirstLetter(SimpleDateFormat("MMM", Locale.getDefault()).format(date))
+    val dayString = calendar.get(Calendar.DAY_OF_MONTH)
+    val yearString = calendar.get(Calendar.YEAR)
+
+    return "$monthString $dayString, $yearString"
+}
+
 
 fun getDateInCanvasCalendarFormat(dateString: String? = getCurrentDateInIso8601()): String {
     val calendar = Calendar.getInstance()

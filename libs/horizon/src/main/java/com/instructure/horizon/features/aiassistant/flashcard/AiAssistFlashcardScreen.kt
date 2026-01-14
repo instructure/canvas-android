@@ -48,7 +48,8 @@ fun AiAssistFlashcardScreen(
 ) {
     AiAssistScaffold(
         navController,
-        onDismiss
+        onClearChatHistory = state.onClearChatHistory,
+        onDismiss = onDismiss
     ) { modifier ->
         if (state.isLoading) {
             Box(

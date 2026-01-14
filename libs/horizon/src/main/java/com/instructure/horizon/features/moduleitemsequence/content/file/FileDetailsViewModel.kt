@@ -81,6 +81,7 @@ class FileDetailsViewModel @Inject constructor(
             fileFolder?.let { file ->
                 _uiState.update {
                     it.copy(
+                        fileId = file.id,
                         loadingState = it.loadingState.copy(isLoading = false),
                         fileName = file.displayName.orEmpty(),
                         filePreview = getFilePreview(file, authUrl),
