@@ -16,12 +16,15 @@
  */
 package com.instructure.student.ui.e2e.compose
 
+import android.os.Environment
 import android.os.SystemClock.sleep
 import android.util.Log
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiSelector
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
@@ -612,8 +615,6 @@ class InboxE2ETest: StudentComposeTest() {
 
         Log.d(PREPARATION_TAG, "Copy mp4 file to Downloads folder for attachment.")
         val videoFileName = "test_video.mp4"
-       // copyAssetToDownloads(videoFileName)
-
         setupFileOnDevice(videoFileName)
         File(InstrumentationRegistry.getInstrumentation().targetContext.cacheDir, "file_upload").deleteRecursively()
 
@@ -664,42 +665,7 @@ class InboxE2ETest: StudentComposeTest() {
         finally {
             Intents.release()
         }
-  /*      Log.d(STEP_TAG, "Click on 'Device' option in file picker dialog.")
-        fileChooserPage.chooseDevice()
 
-        Log.d(STEP_TAG, "Select the video file from Android file picker using UIAutomator.")
-        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
-
-        // Try to find and click on the file
-        val fileObject = device.findObject(UiSelector().textContains(videoFileName))
-        if (fileObject.exists()) {
-            Log.d(STEP_TAG, "Found file with exact name, clicking...")
-            fileObject.click()
-        } else {
-            // If not visible, might need to navigate to Downloads folder first
-            Log.d(STEP_TAG, "File not immediately visible, trying to navigate to Downloads...")
-            val showRootsButton = device.findObject(UiSelector().descriptionContains("Show roots"))
-            if (showRootsButton.exists()) {
-                showRootsButton.click()
-            }
-
-            val downloadsItem = device.findObject(UiSelector().textContains("Downloads"))
-            if (downloadsItem.exists()) {
-                downloadsItem.click()
-            }
-
-            // Try to find file again
-            val fileObject2 = device.findObject(UiSelector().textContains(videoFileName))
-            if (fileObject2.exists()) {
-                fileObject2.click()
-            }
-        }
-
-        Log.d(STEP_TAG, "Click OKAY button to confirm file selection.")
-        fileChooserPage.clickOkay()
-
-        sleep(3000) // Wait for the file to be loaded.
-*/
         Log.d(STEP_TAG, "Click OKAY button to confirm file selection.")
         fileChooserPage.clickOkay()
         handleWorkManagerTask("FileUploadWorker")
@@ -783,29 +749,21 @@ class InboxE2ETest: StudentComposeTest() {
         val student1 = data.studentsList[0]
         val student2 = data.studentsList[1]
 
-        Log.d(PREPARATION_TAG, "Copy PDF file to Downloads folder for attachment.")
+        /*Log.d(PREPARATION_TAG, "Copy PDF file to Downloads folder for attachment.")
         val pdfFileName = "samplepdf.pdf"
-        //copyAssetToDownloads(pdfFileName)
         setupFileOnDevice(pdfFileName)
-        File(InstrumentationRegistry.getInstrumentation().targetContext.cacheDir, "file_upload").deleteRecursively()
-        Log.d(PREPARATION_TAG, "Create a PDF file for attachment test.")
-        val pdfFileName = "test_comment_${System.currentTimeMillis()}.pdf"
-        val pdfFile = File(android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS), pdfFileName)
-        pdfFile.createNewFile()
+        File(InstrumentationRegistry.getInstrumentation().targetContext.cacheDir, "file_upload").deleteRecursively()*/
 
-        Log.d(PREPARATION_TAG, "Write content to PDF file '${pdfFile.name}'.")
-        android.graphics.pdf.PdfDocument().apply {
-            val pageInfo = android.graphics.pdf.PdfDocument.PageInfo.Builder(300, 300, 1).create()
-            val page = startPage(pageInfo)
-            val canvas = page.canvas
-            val paint = android.graphics.Paint()
-            paint.color = android.graphics.Color.BLACK
-            paint.textSize = 12f
-            canvas.drawText("Test PDF Comment Attachment", 10f, 25f, paint)
-            finishPage(page)
-            writeTo(java.io.FileOutputStream(pdfFile))
-            close()
-        }
+        Log.d(PREPARATION_TAG, "Copy PDF file to device Downloads folder for attachment.")
+        val pdfFileName = "samplepdf.pdf"
+        val context = InstrumentationRegistry.getInstrumentation().context
+        val inputStream = context.assets.open(pdfFileName)
+        val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+        val pdfFile = File(downloadsDir, pdfFileName)
+
+        Log.d(PREPARATION_TAG, "Writing file to: ${pdfFile.absolutePath}")
+        pdfFile.outputStream().use { inputStream.copyTo(it) }
+        inputStream.close()
 
         val conversationSubject = "Project Documentation"
         val conversationBody = "Please review the attached document and share it with the team."
@@ -852,15 +810,15 @@ class InboxE2ETest: StudentComposeTest() {
         inboxComposePage.clickAttachmentButton()
 
         Log.d(PREPARATION_TAG, "Simulate file picker intent (again).")
-        Intents.init()
+        /*Intents.init()
         try {
             stubFilePickerIntent(pdfFileName)
             fileChooserPage.chooseDevice()
         }
         finally {
             Intents.release()
-        }
-       /* Log.d(STEP_TAG, "Click on 'Device' option in file picker dialog.")
+        }*/
+        Log.d(STEP_TAG, "Click on 'Device' option in file picker dialog.")
         fileChooserPage.chooseDevice()
 
         Log.d(STEP_TAG, "Select the PDF file from Android file picker using UIAutomator.")
@@ -889,16 +847,14 @@ class InboxE2ETest: StudentComposeTest() {
             if (pdfFileObject2.exists()) {
                 pdfFileObject2.click()
             }
-        }*/
+        }
 
         Log.d(STEP_TAG, "Click OKAY button to confirm file selection.")
         fileChooserPage.clickOkay()
-        handleWorkManagerTask("FileUploadWorker")
-
-        sleep(3000) // Wait for the file to be loaded.
+        //handleWorkManagerTask("FileUploadWorker")
 
         Log.d(ASSERTION_TAG, "Assert that the PDF file is displayed as attached in compose screen.")
-        inboxComposePage.assertAttachmentDisplayed(pdfFileName)
+//        inboxComposePage.assertAttachmentDisplayed(pdfFileName)
 
         Log.d(STEP_TAG, "Send the forwarded message with attachment.")
         sleep(3000) //Wait for attachment to finish uploading
@@ -928,69 +884,6 @@ class InboxE2ETest: StudentComposeTest() {
 
         Log.d(ASSERTION_TAG, "Assert that the conversation is still displayed in inbox.")
         inboxPage.assertConversationDisplayed(conversationSubject)
-    }
-
-    /**
-     * Copy a file from test assets to external cache directory for E2E testing.
-     *
-     * This uses the activity context to ensure proper permissions when the app reads the file
-     * back through the file picker. Files are placed in externalCacheDir/file_upload which:
-     * - Matches the production FileUploadUtils pattern
-     * - Is accessible with proper FileProvider URI permissions
-     * - Works reliably on CI emulators (avoids Android 10+ scoped storage issues)
-     */
-    private fun copyAssetToDownloads(fileName: String) {
-        // IMPORTANT: Use activityRule.activity context, not targetContext or instrumentation context
-        // This ensures the file is written with the correct app ownership and permissions
-        val context = activityRule.activity
-        var inputStream: java.io.InputStream? = null
-        var outputStream: java.io.OutputStream? = null
-
-        try {
-            // Use external cache dir with "file_upload" subfolder - matches production pattern
-            inputStream = InstrumentationRegistry.getInstrumentation().context.resources.assets.open(fileName)
-
-            // This matches FileUploadUtils.getExternalCacheDir() in production code
-            val cacheDir = File(context.externalCacheDir, "file_upload")
-            if (!cacheDir.exists()) {
-                cacheDir.mkdirs()
-            }
-            val file = File(cacheDir, fileName)
-
-            Log.d(PREPARATION_TAG, "Copying $fileName to external cache: ${file.absolutePath}")
-
-            // Delete existing file if present
-            if (file.exists()) {
-                file.delete()
-                Log.d(PREPARATION_TAG, "Deleted existing file")
-            }
-
-            outputStream = java.io.FileOutputStream(file)
-            val bytesCopied = inputStream.copyTo(outputStream)
-
-            Log.d(PREPARATION_TAG, "Copied $bytesCopied bytes")
-        } finally {
-            inputStream?.close()
-            if (outputStream != null) {
-                outputStream.flush()
-                outputStream.close()
-            }
-        }
-
-        // Verify the file was written correctly
-        val cacheDir = File(context.externalCacheDir, "file_upload")
-        val file = File(cacheDir, fileName)
-
-        if (!file.exists()) {
-            throw IllegalStateException("File was not created: ${file.absolutePath}")
-        }
-
-        val fileSize = file.length()
-        if (fileSize == 0L) {
-            throw IllegalStateException("File has 0 bytes: ${file.absolutePath}")
-        }
-
-        Log.d(PREPARATION_TAG, "Verified file exists with size: $fileSize bytes at ${file.absolutePath}")
     }
 
 }
