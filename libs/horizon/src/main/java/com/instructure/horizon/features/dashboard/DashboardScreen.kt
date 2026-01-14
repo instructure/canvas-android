@@ -199,7 +199,11 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                             refreshStateFlow
                         )
                         HorizonSpace(SpaceSize.SPACE_16)
-                        NumericWidgetRow(shouldRefresh, refreshStateFlow, homeNavController)
+                        NumericWidgetRow(
+                            shouldRefresh,
+                            refreshStateFlow,
+                            homeNavController
+                        )
                         DashboardSkillHighlightsWidget(
                             homeNavController,
                             shouldRefresh,
@@ -280,9 +284,12 @@ private fun HomeScreenTopBar(uiState: DashboardUiState, mainNavController: NavCo
 private fun NumericWidgetRow(
     shouldRefresh: Boolean,
     refreshStateFlow: MutableStateFlow<List<Boolean>>,
-    homeNavController: NavHostController
+    homeNavController: NavHostController,
+    modifier: Modifier = Modifier
 ) {
-    BoxWithConstraints {
+    BoxWithConstraints(
+        modifier = modifier
+    ) {
         val pageCount = 3
         val pagerState = rememberPagerState{ pageCount }
         if (this.isWideLayout) {

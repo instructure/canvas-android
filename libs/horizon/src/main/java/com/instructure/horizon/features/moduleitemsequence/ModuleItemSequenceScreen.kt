@@ -68,6 +68,8 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.hideFromAccessibility
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -171,6 +173,7 @@ fun ModuleItemSequenceScreen(mainNavController: NavHostController, uiState: Modu
         Box(modifier = Modifier.padding(contentPadding)) {
             if (uiState.showAiAssist) {
                 AiAssistantScreen(
+                    mainNavController = mainNavController,
                     onDismiss = { uiState.updateShowAiAssist(false) },
                 )
             }
@@ -326,7 +329,12 @@ private fun ModuleHeaderContainer(
 ) {
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Row {
-            IconButton(iconRes = R.drawable.arrow_back, color = IconButtonColor.Institution, onClick = onBackPressed)
+            IconButton(
+                iconRes = R.drawable.arrow_back,
+                contentDescription = stringResource(R.string.a11yNavigateBack),
+                color = IconButtonColor.Institution,
+                onClick = onBackPressed
+            )
             Column(
                 modifier = Modifier
                     .weight(1f)
@@ -350,6 +358,7 @@ private fun ModuleHeaderContainer(
             }
             IconButton(
                 iconRes = R.drawable.list_alt,
+                contentDescription = stringResource(R.string.myProgress),
                 color = IconButtonColor.Institution,
                 onClick = uiState.onProgressClick
             )
@@ -365,7 +374,16 @@ private fun ModuleHeaderContainer(
                     if (index < uiState.currentItem?.detailTags?.lastIndex.orDefault()) listOf(item, "|") else listOf(item)
                 }
                 separatedFlowRowItems.forEach {
-                    Text(text = it, style = HorizonTypography.p2, color = HorizonColors.Text.surfaceColored())
+                    Text(
+                        text = it,
+                        style = HorizonTypography.p2,
+                        color = HorizonColors.Text.surfaceColored(),
+                        modifier = Modifier.semantics {
+                            if (it == "|") {
+                                hideFromAccessibility()
+                            }
+                        }
+                    )
                 }
             }
         }
@@ -493,6 +511,7 @@ private fun ModuleItemContentScreen(
                 val uiState by viewModel.uiState.collectAsState()
                 FileDetailsContentScreen(
                     uiState = uiState,
+                    updateAiContext = { source, content -> updateAiContext(source, content) },
                     modifier = modifier
                 )
             }
@@ -568,7 +587,7 @@ private fun ModuleItemSequenceBottomBar(
             ) {
                 IconButton(
                     iconRes = R.drawable.ai,
-                    contentDescription = stringResource(R.string.a11y_openAIAssistant),
+                    contentDescription = stringResource(R.string.a11y_openIgniteAI),
                     enabled = aiAssistEnabled,
                     color = IconButtonColor.Ai,
                     elevation = HorizonElevation.level4,

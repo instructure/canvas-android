@@ -17,7 +17,9 @@ package com.instructure.teacher.ui.pages.compose
 
 import androidx.annotation.StringRes
 import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextContains
@@ -31,6 +33,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
+import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTextReplacement
 import androidx.test.espresso.Espresso
@@ -65,6 +68,7 @@ import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withText
 import com.instructure.espresso.pageToItem
 import com.instructure.espresso.swipeToTop
+import com.instructure.pandautils.features.speedgrader.grade.comments.CommentIdKey
 import com.instructure.teacher.R
 import org.hamcrest.Matchers
 import org.hamcrest.Matchers.allOf
@@ -113,29 +117,6 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
             .onNodeWithTag("collapsePanelButton", useUnmergedTree = true)
             .performClick()
         composeTestRule.waitForIdle()
-    }
-
-    /**
-     * Enters a new grade in the Compose grade input field.
-     *
-     * @param grade The grade value to input.
-     */
-    fun enterNewGrade(grade: String) {
-        composeTestRule
-            .onNodeWithTag("gradeInputField")
-            .performTextInput(grade)
-    }
-
-    /**
-     * Asserts that the final grade is displayed in the Compose UI.
-     *
-     * @param grade The expected grade value to be displayed.
-     */
-    fun assertFinalGradeIsDisplayed(grade: String) {
-        composeTestRule
-            .onNodeWithTag("finalGradeValue")
-            .assertTextContains(grade, substring = true)
-            .assertIsDisplayed()
     }
 
     /**
@@ -195,10 +176,15 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
      *
      * @param commentCount The expected comment count to be displayed in the label.
      */
+    @OptIn(ExperimentalTestApi::class)
     fun assertCommentsLabelDisplayed(commentCount: Int) {
-        composeTestRule.onNode(
-            hasTestTag("commentsLabel") and hasText("Comments ($commentCount)"), useUnmergedTree = true
-        ).performScrollTo().assertIsDisplayed()
+        composeTestRule.onNodeWithTag("commentsLabel").performScrollTo().assertIsDisplayed()
+        composeTestRule.waitUntilExactlyOneExists(
+            hasTestTag("commentsLabel") and hasText("Comments ($commentCount)"), timeoutMillis = 5000)
+        composeTestRule
+            .onNodeWithTag("commentsLabel")
+            .assertTextContains("Comments ($commentCount)", substring = true)
+            .assertIsDisplayed()
     }
 
     /**
@@ -225,11 +211,24 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
     }
 
     /**
-     * Types the specified comment in the comment input field.
+     * Types a comment in the main SpeedGrader comment input field.
+     *
+     * @param comment The comment text to type.
+     */
+    fun typeCommentInInputField(comment: String) {
+        composeTestRule
+            .onNodeWithTag("speedGraderCommentInputField")
+            .performTextInput(comment)
+        closeSoftKeyboard()
+        composeTestRule.waitForIdle()
+    }
+
+    /**
+     * Types the specified comment in the comment library filter input field.
      *
      * @param comment The comment to type.
      */
-    fun typeComment(comment: String) {
+    fun typeCommentInCommentLibraryInputField(comment: String) {
         composeTestRule
             .onNodeWithTag("commentLibraryFilterInputField")
             .performTextInput(comment)
@@ -241,10 +240,7 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
      * Clears the comment input field.
      */
     fun clearComment() {
-        composeTestRule
-            .onNodeWithTag("commentLibraryFilterInputField")
-            .performTextReplacement("") // There's no clearText() in compose testing yet
-        closeSoftKeyboard()
+        composeTestRule.onNodeWithTag("commentLibraryFilterInputField").performTextClearance()
         composeTestRule.waitForIdle()
     }
 
@@ -264,7 +260,7 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
             hasText(
                 targetText,
                 substring = true
-            ) and (hasTestTag("ownCommentText").not())
+            ) and (hasTestTagThatContains("ownCommentText").not())
         )
             .performScrollTo()
             .performClick()
@@ -282,6 +278,7 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
         } else {
             composeTestRule
                 .onNodeWithTag("sendCommentButton")
+                .performScrollTo()
                 .performClick()
         }
         composeTestRule.waitForIdle()
@@ -301,16 +298,64 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
     }
 
     /**
+     * Asserts that a comment library item with the specified text is displayed.
+     *
+     * @param text The text of the comment library item to assert.
+     */
+    fun assertCommentLibraryItemDisplayed(text: String) {
+        composeTestRule.onNode(
+            hasTestTag("commentLibraryItem") and hasText(text, substring = true),
+            useUnmergedTree = true
+        ).assertIsDisplayed()
+    }
+
+    /**
      * Asserts that the comment with the specified text is displayed.
      *
      * @param comment The comment text to assert.
      */
     fun assertCommentDisplayed(comment: String, author: String? = null) { // if author is null, that means it's an own comment because in that case we don't display the author name.
         if (author != null) {
-            composeTestRule.onNode(hasTestTag("commentAuthorName") and hasText(author), useUnmergedTree = true).assertIsDisplayed()
-            composeTestRule.onNode(hasTestTag("commentCreatedAtDate") and hasAnySibling(hasTestTag("commentAuthorName") and hasText(author)), useUnmergedTree = true).assertIsDisplayed()
+            composeTestRule.onNode(hasTestTag("commentAuthorName") and hasText(author), useUnmergedTree = true).performScrollTo().assertIsDisplayed()
+            composeTestRule.onNode(hasTestTag("commentCreatedAtDate") and hasAnySibling(hasTestTag("commentAuthorName") and hasText(author)), useUnmergedTree = true).performScrollTo().assertIsDisplayed()
+            composeTestRule.onNode(hasTestTag("commentText") and hasAnySibling(hasTestTag("commentAuthorName") and hasText(author)), useUnmergedTree = true).performScrollTo().assertIsDisplayed()
         }
-        else composeTestRule.onNode(hasTestTag("ownCommentText") and hasText(comment), useUnmergedTree = true).assertIsDisplayed()
+        else composeTestRule.onNode(hasTestTag("ownCommentText") and hasText(comment), useUnmergedTree = true).performScrollTo().assertIsDisplayed()
+    }
+
+    /**
+     * Asserts that a comment text is displayed without checking for author.
+     * This is useful when you have multiple comments from the same author,
+     * where sibling matching becomes unreliable.
+     *
+     * @param comment The comment text to assert.
+     * @param commentId The unique ID of the comment.
+     * @param isOwnComment If true, looks for "ownCommentText" tag, otherwise "commentText" tag.
+     */
+    fun assertCommentTextDisplayed(comment: String, commentId: String, isOwnComment: Boolean = false) {
+        val tag = if (isOwnComment) "ownCommentText" else "commentText"
+        composeTestRule.onNode(hasTestTag(tag) and hasCommentId(commentId) and hasText(comment), useUnmergedTree = true)
+            .performScrollTo()
+            .assertIsDisplayed()
+    }
+
+    /**
+     * Asserts that the comment author name is not displayed.
+     * This is useful for verifying that own comments (teacher comments) don't show the author name.
+     */
+    fun assertCommentAuthorNameNotDisplayed() {
+        composeTestRule.onNodeWithTag("commentAuthorName").assertDoesNotExist()
+    }
+
+    /**
+     * Asserts that a comment attachment with the specified name is displayed.
+     *
+     * @param attachmentName The name of the attachment to assert.
+     */
+    fun assertCommentAttachmentDisplayed(attachmentName: String) {
+        composeTestRule.onNode(hasText(attachmentName), useUnmergedTree = true)
+            .performScrollTo()
+            .assertIsDisplayed()
     }
 
     /**
@@ -330,6 +375,30 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
      */
     fun assertCommentLibraryTitle() {
         composeTestRule.onNodeWithText("Comment Library").assertIsDisplayed()
+    }
+
+    /**
+     * Types text in the comment library filter input field and closes the keyboard.
+     *
+     * @param text The text to type in the filter field.
+     */
+    fun typeInCommentLibraryFilter(text: String) {
+        composeTestRule.onNodeWithTag("commentLibraryFilterInputField").performClick().performTextReplacement(text)
+        try {
+            closeSoftKeyboard()
+        } catch (_: Exception) {
+            // Ignore if keyboard is already closed
+        }
+        composeTestRule.waitForIdle()
+    }
+
+    /**
+     * Asserts that the comment library filter input field contains the specified text.
+     *
+     * @param text The text that should be contained in the filter field.
+     */
+    fun assertCommentLibraryFilterContains(text: String) {
+        composeTestRule.onNodeWithTag("commentLibraryFilterInputField").assertTextContains(text)
     }
 
     /**
@@ -400,7 +469,7 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
         try {
             Espresso.onView(
                 Matchers.allOf(
-                    ViewMatchers.withContentDescription(androidx.appcompat.R.string.abc_action_bar_up_description),
+                    ViewMatchers.withContentDescription(R.string.abc_action_bar_up_description),
                     ViewMatchers.isCompletelyDisplayed(),
                     ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.gradingToolbar))
                 )
@@ -513,3 +582,12 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
         onView(commentMatcher).assertDisplayed()
     }
 }
+
+/**
+ * Custom semantics matcher for finding comments by their unique ID.
+ * Uses the CommentIdKey from production code to match against comment IDs.
+ */
+fun hasCommentId(expectedId: String): SemanticsMatcher =
+    SemanticsMatcher("has commentId=$expectedId") { node ->
+        node.config.getOrNull(CommentIdKey) == expectedId
+    }

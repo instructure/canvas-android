@@ -17,7 +17,9 @@
 package com.instructure.horizon.features.aiassistant.common.composable
 
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
@@ -48,10 +50,16 @@ data class AiAssistResponseTextBlockFooterState(
     val onNegativeFeedbackSelected: () -> Unit = {},
 )
 
+data class AiAssistResponseTextBlockChipState(
+    val label: String,
+    val onClick: () -> Unit,
+)
+
 @Composable
 fun AiAssistResponseTextBlock(
     text: String,
     footerState: AiAssistResponseTextBlockFooterState = AiAssistResponseTextBlockFooterState(),
+    chips: List<AiAssistResponseTextBlockChipState> = emptyList(),
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -89,14 +97,38 @@ fun AiAssistResponseTextBlock(
                     }
                 }
             }
+        }
 
+        if (chips.isNotEmpty()) {
             HorizonSpace(SpaceSize.SPACE_8)
 
-            AiAssistFeedback(
-                selected = footerState.selectedFeedback,
-                onPositiveFeedbackSelected = footerState.onPositiveFeedbackSelected,
-                onNegativeFeedbackSelected = footerState.onNegativeFeedbackSelected
-            )
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                chips.forEach { chip ->
+                    AiAssistSuggestionTextBlock(
+                        text = chip.label,
+                        onClick = chip.onClick
+                    )
+                }
+            }
+        }
+
+        if (chips.isNotEmpty()) {
+            HorizonSpace(SpaceSize.SPACE_8)
+
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                chips.forEach { chip ->
+                    AiAssistSuggestionTextBlock(
+                        text = chip.label,
+                        onClick = chip.onClick
+                    )
+                }
+            }
         }
     }
 }
@@ -106,5 +138,27 @@ fun AiAssistResponseTextBlock(
 private fun AiAssistResponseTextBlockPreview() {
     AiAssistResponseTextBlock(
         text = "This is a sample response text block.",
+    )
+}
+
+@Composable
+@Preview
+private fun AiAssistResponseTextBlockWithChipsPreview() {
+    AiAssistResponseTextBlock(
+        text = "This is a sample response text block.",
+        chips = listOf(
+            AiAssistResponseTextBlockChipState(
+                label = "Chip 1",
+                onClick = {}
+            ),
+            AiAssistResponseTextBlockChipState(
+                label = "Chip 2",
+                onClick = {}
+            ),
+            AiAssistResponseTextBlockChipState(
+                label = "Chip 3",
+                onClick = {}
+            ),
+        )
     )
 }

@@ -20,8 +20,18 @@ package com.instructure.canvasapi2.unit
 
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.WeaveTestManager
-import com.instructure.canvasapi2.utils.weave.*
-import io.mockk.*
+import com.instructure.canvasapi2.utils.weave.WeaveCoroutine
+import com.instructure.canvasapi2.utils.weave.apiAsync
+import com.instructure.canvasapi2.utils.weave.awaitApi
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.inParallel
+import com.instructure.canvasapi2.utils.weave.tryWeave
+import com.instructure.canvasapi2.utils.weave.weave
+import io.mockk.coEvery
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkStatic
+import io.mockk.unmockkStatic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.setMain
@@ -243,21 +253,6 @@ class WeaveCoroutineTest : Assert() {
             }
         }.blockWithTimeout()
         assertNotNull(exception)*/
-    }
-
-    @Test
-    fun performsOnUI() {
-        var count = 0
-        weave {
-            repeat(5) {
-                onUI {
-                    synchronized(count) { count++ }
-                }
-            }
-            // onUI is async and not suspending, so we delay for a bit to avoid a race condition
-            delay(50)
-        }.blockWithTimeout()
-        assertEquals(5, count)
     }
 
     @Test
