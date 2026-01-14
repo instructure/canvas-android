@@ -46,41 +46,37 @@ class ObserveWidgetConfigUseCaseTest {
 
     @Test
     fun testObserveConfigWithExistingJson() = runTest {
-        val widgetId = WidgetMetadata.WIDGET_ID_WELCOME
-        val configJson = """{"widgetId":"welcome","showGreeting":true,"backgroundColor":123456}"""
+        val widgetId = WidgetMetadata.WIDGET_ID_FORECAST
+        val configJson = """{"backgroundColor":123456}"""
         coEvery { repository.observeConfigJson(widgetId) } returns flowOf(configJson)
 
         val result = useCase(widgetId).first()
 
-        assertEquals(2, result.size)
-        assertEquals("showGreeting", result[0].key)
-        assertEquals(true, result[0].value)
-        assertEquals(SettingType.BOOLEAN, result[0].type)
-        assertEquals("backgroundColor", result[1].key)
-        assertEquals(SettingType.COLOR, result[1].type)
+        assertEquals(1, result.size)
+        assertEquals("backgroundColor", result[0].key)
+        assertEquals(SettingType.COLOR, result[0].type)
     }
 
     @Test
     fun testObserveConfigWithNoExistingJson() = runTest {
-        val widgetId = WidgetMetadata.WIDGET_ID_WELCOME
+        val widgetId = WidgetMetadata.WIDGET_ID_FORECAST
         coEvery { repository.observeConfigJson(widgetId) } returns flowOf(null)
 
         val result = useCase(widgetId).first()
 
-        assertEquals(2, result.size)
-        assertEquals("showGreeting", result[0].key)
-        assertEquals(true, result[0].value)
-        assertEquals(SettingType.BOOLEAN, result[0].type)
+        assertEquals(1, result.size)
+        assertEquals("backgroundColor", result[0].key)
+        assertEquals(SettingType.COLOR, result[0].type)
     }
 
     @Test
     fun testObserveConfigWithInvalidJson() = runTest {
-        val widgetId = WidgetMetadata.WIDGET_ID_WELCOME
+        val widgetId = WidgetMetadata.WIDGET_ID_FORECAST
         coEvery { repository.observeConfigJson(widgetId) } returns flowOf("invalid json")
 
         val result = useCase(widgetId).first()
 
-        assertEquals(2, result.size)
+        assertEquals(1, result.size)
     }
 
     @Test
@@ -105,16 +101,18 @@ class ObserveWidgetConfigUseCaseTest {
 
     @Test
     fun testObserveConfigUpdatesOnJsonChange() = runTest {
-        val widgetId = WidgetMetadata.WIDGET_ID_WELCOME
-        val configJson1 = """{"widgetId":"welcome","showGreeting":true,"backgroundColor":123456}"""
-        val configJson2 = """{"widgetId":"welcome","showGreeting":false,"backgroundColor":789012}"""
+        val widgetId = WidgetMetadata.WIDGET_ID_FORECAST
+        val configJson1 = """{"backgroundColor":123456}"""
+        val configJson2 = """{"backgroundColor":789012}"""
         coEvery { repository.observeConfigJson(widgetId) } returns flowOf(configJson1, configJson2)
 
         val results = mutableListOf<List<WidgetSettingItem>>()
         useCase(widgetId).collect { results.add(it) }
 
         assertEquals(2, results.size)
-        assertEquals(true, results[0][0].value)
-        assertEquals(false, results[1][0].value)
+        assertEquals("backgroundColor", results[0][0].key)
+        assertEquals("backgroundColor", results[1][0].key)
+        assertEquals(SettingType.COLOR, results[0][0].type)
+        assertEquals(SettingType.COLOR, results[1][0].type)
     }
 }

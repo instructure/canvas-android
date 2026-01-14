@@ -29,7 +29,7 @@ import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetConfigUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetMetadataUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.SwapWidgetPositionsUseCase
-import com.instructure.pandautils.features.dashboard.widget.usecase.UpdateWidgetSettingUseCase
+import com.instructure.pandautils.features.dashboard.widget.usecase.UpdateWidgetConfigUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.UpdateWidgetVisibilityUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -64,7 +64,7 @@ class CustomizeDashboardViewModelTest {
     private val swapWidgetPositionsUseCase: SwapWidgetPositionsUseCase = mockk(relaxed = true)
     private val updateWidgetVisibilityUseCase: UpdateWidgetVisibilityUseCase = mockk(relaxed = true)
     private val observeWidgetConfigUseCase: ObserveWidgetConfigUseCase = mockk(relaxed = true)
-    private val updateWidgetSettingUseCase: UpdateWidgetSettingUseCase = mockk(relaxed = true)
+    private val updateWidgetConfigUseCase: UpdateWidgetConfigUseCase = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val remoteConfigUtils: RemoteConfigUtils = mockk(relaxed = true)
@@ -96,7 +96,7 @@ class CustomizeDashboardViewModelTest {
             swapWidgetPositionsUseCase,
             updateWidgetVisibilityUseCase,
             observeWidgetConfigUseCase,
-            updateWidgetSettingUseCase,
+            updateWidgetConfigUseCase,
             resources,
             apiPrefs,
             remoteConfigUtils,
@@ -316,8 +316,8 @@ class CustomizeDashboardViewModelTest {
         viewModel.uiState.value.onUpdateSetting("widget1", "key1", "value1")
 
         coVerify {
-            updateWidgetSettingUseCase(
-                UpdateWidgetSettingUseCase.Params("widget1", "key1", "value1")
+            updateWidgetConfigUseCase(
+                UpdateWidgetConfigUseCase.Params("widget1", "key1", "value1")
             )
         }
     }

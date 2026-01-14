@@ -30,6 +30,7 @@ import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionContentMan
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionDetailsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionGradeManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeDifferentiationTagsManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeRecentGradedSubmissionsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionRubricManager
 import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvasapi2.di.GraphQlApiModule
@@ -40,6 +41,7 @@ import com.instructure.canvasapi2.managers.StudentContextManager
 import com.instructure.canvasapi2.managers.SubmissionRubricManager
 import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
 import com.instructure.canvasapi2.managers.graphql.DifferentiationTagsManager
+import com.instructure.canvasapi2.managers.graphql.RecentGradedSubmissionsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionCommentsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionDetailsManager
@@ -106,6 +108,10 @@ class SpeedGraderInteractionTest : TeacherComposeTest() {
     @BindValue
     @JvmField
     val submissionCommentsManager: SubmissionCommentsManager = FakeSubmissionCommentsManager()
+
+    @BindValue
+    @JvmField
+    val recentGradedSubmissionsManager: RecentGradedSubmissionsManager = FakeRecentGradedSubmissionsManager()
 
     @Stub
     @Test

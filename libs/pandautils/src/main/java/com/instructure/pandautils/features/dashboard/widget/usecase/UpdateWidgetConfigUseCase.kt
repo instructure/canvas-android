@@ -18,18 +18,17 @@ package com.instructure.pandautils.features.dashboard.widget.usecase
 
 import com.google.gson.Gson
 import com.google.gson.JsonObject
+import com.instructure.pandautils.domain.usecase.BaseUseCase
 import com.instructure.pandautils.features.dashboard.widget.WidgetConfig
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
+import com.instructure.pandautils.features.dashboard.widget.forecast.ForecastConfig
 import com.instructure.pandautils.features.dashboard.widget.repository.WidgetConfigDataRepository
-import com.instructure.pandautils.features.dashboard.widget.welcome.WelcomeConfig
-import com.instructure.pandautils.domain.usecase.BaseUseCase
-import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
 
-class UpdateWidgetSettingUseCase @Inject constructor(
+class UpdateWidgetConfigUseCase @Inject constructor(
     private val repository: WidgetConfigDataRepository,
     private val gson: Gson
-) : BaseUseCase<UpdateWidgetSettingUseCase.Params, Unit>() {
+) : BaseUseCase<UpdateWidgetConfigUseCase.Params, Unit>() {
 
     data class Params(
         val widgetId: String,
@@ -57,15 +56,15 @@ class UpdateWidgetSettingUseCase @Inject constructor(
 
     private fun getDefaultConfig(widgetId: String): WidgetConfig? {
         return when (widgetId) {
-            WidgetMetadata.WIDGET_ID_WELCOME -> WelcomeConfig()
+            WidgetMetadata.WIDGET_ID_FORECAST -> ForecastConfig()
             else -> null
         }
     }
 
     private fun deserializeConfig(widgetId: String, json: String): WidgetConfig? {
         return when (widgetId) {
-            WidgetMetadata.WIDGET_ID_WELCOME -> try {
-                gson.fromJson(json, WelcomeConfig::class.java)
+            WidgetMetadata.WIDGET_ID_FORECAST -> try {
+                gson.fromJson(json, ForecastConfig::class.java)
             } catch (e: Exception) {
                 null
             }
