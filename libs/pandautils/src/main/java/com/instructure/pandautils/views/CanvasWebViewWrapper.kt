@@ -109,7 +109,7 @@ open class CanvasWebViewWrapper @JvmOverloads constructor(
 
         // This is needed for captions to work in offline studio videos.
         // We need to use the user files path for base url in this case.
-        if (html.contains(getCaptionsHtmlPattern())) {
+        if (html.contains(getCaptionsHtmlPattern())) { // TODO offline check
             binding.contentWebView.settings.allowUniversalAccessFromFileURLs = true
             this.baseUrl = getUserFilesPath()
         } else {

@@ -89,9 +89,9 @@ import com.instructure.student.features.quiz.list.QuizListFragment
 import com.instructure.student.fragment.AnnouncementListFragment
 import com.instructure.student.fragment.BasicQuizViewFragment
 import com.instructure.student.fragment.CourseSettingsFragment
-import com.instructure.student.fragment.OldDashboardFragment
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.fragment.NotificationListFragment
+import com.instructure.student.fragment.OldDashboardFragment
 import com.instructure.student.fragment.OldToDoListFragment
 import com.instructure.student.fragment.ProfileSettingsFragment
 import com.instructure.student.fragment.StudioWebViewFragment
@@ -561,13 +561,12 @@ object RouteMatcher : BaseRouteMatcher() {
 
         // Check for Studio embed immersive view BEFORE other routing logic
         // This prevents it from being caught by the LTI route matcher
-        Logger.e("RouteMatcher - Checking route: ${route?.uri?.toString()}")
-        if (route?.uri?.toString()?.contains("external_tools/retrieve") == true &&
-            route.uri?.toString()?.contains("custom_arc_launch_type") == true &&
-            route.uri?.toString()?.contains("immersive_view") == true) {
-            Logger.e("RouteMatcher - Detected Studio embed immersive view URL in route()")
+        val uri = route?.uri
+        if (uri?.toString()?.contains("external_tools/retrieve") == true
+            && uri.toString().contains("custom_arc_launch_type")
+            && uri.toString().contains("immersive_view")
+        ) {
             // Handle Studio embed immersive view - pass the full URL and title to InternalWebviewFragment
-            val uri = route.uri!!
             val urlString = uri.toString()
 
             route.primaryClass = InternalWebviewFragment::class.java
@@ -577,8 +576,6 @@ object RouteMatcher : BaseRouteMatcher() {
             // Extract title from URL query parameter if present, otherwise use fallback
             val title = uri.getQueryParameter("title") ?: activity.getString(R.string.immersiveView)
             route.arguments.putString(Const.ACTION_BAR_TITLE, title)
-
-            Logger.e("RouteMatcher - Routing to InternalWebviewFragment with URL: $urlString")
 
             if (activity.resources.getBoolean(R.bool.isDeviceTablet)) {
                 handleTabletRoute(activity, route)

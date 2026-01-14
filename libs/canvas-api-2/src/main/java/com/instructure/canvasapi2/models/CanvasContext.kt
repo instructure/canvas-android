@@ -17,6 +17,7 @@
 
 package com.instructure.canvasapi2.models
 
+import com.instructure.canvasapi2.utils.ApiPrefs
 import java.util.Date
 import java.util.Locale
 
@@ -153,4 +154,12 @@ abstract class CanvasContext : CanvasModel<CanvasContext>() {
         fun emptyUserContext(): CanvasContext = getGenericContext(Type.USER, 0, "")
         fun currentUserContext(user: User): CanvasContext = getGenericContext(Type.USER, user.id, user.name)
     }
+}
+
+/**
+ * Creates a base URL for this CanvasContext using the current domain and context type/id
+ * Example: https://tamaskozmer.instructure.com/courses/20781
+ */
+fun CanvasContext.toBaseUrl(): String {
+    return "${ApiPrefs.fullDomain}/${type.apiString}/$id"
 }

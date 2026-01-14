@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.utils.weave.apiAsync
 import com.instructure.pandautils.R
 import com.instructure.pandautils.discussions.DiscussionHtmlTemplates
 import com.instructure.pandautils.views.CanvasWebView
+import java.net.URLDecoder
 import java.net.URLEncoder
 import java.util.regex.Pattern
 
@@ -228,7 +229,7 @@ class HtmlContentFormatter(
             val encodedLtiUrl = urlMatcher.group(1) ?: return srcUrl
 
             // Decode the LTI URL to modify it
-            var decodedLtiUrl = java.net.URLDecoder.decode(encodedLtiUrl, "UTF-8")
+            var decodedLtiUrl = URLDecoder.decode(encodedLtiUrl, "UTF-8")
 
             // Replace launch type with immersive_view
             decodedLtiUrl = decodedLtiUrl

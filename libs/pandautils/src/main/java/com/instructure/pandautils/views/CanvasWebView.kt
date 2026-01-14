@@ -47,7 +47,6 @@ import android.os.Parcelable
 import android.provider.MediaStore
 import android.text.Html
 import android.util.AttributeSet
-import android.util.Log
 import android.util.Patterns
 import android.view.ContextMenu
 import android.view.MenuItem
@@ -73,7 +72,6 @@ import androidx.core.view.NestedScrollingChild
 import androidx.core.view.NestedScrollingChildHelper
 import androidx.core.view.ViewCompat
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.google.firebase.crashlytics.recordException
 import com.instructure.canvasapi2.utils.APIHelper.simplifyHTML
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
