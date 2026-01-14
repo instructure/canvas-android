@@ -16,9 +16,15 @@
  */
 package com.instructure.horizon.features.learn.course.list
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.organisms.CollapsableHeaderScreen
 
@@ -32,12 +38,14 @@ fun LearnCourseListScreen() {
             )
         },
         bodyContent = {
-            (1..10).forEach {
-                Card {
-                    Text(
-                        text = "Dummy course $it",
-                        style = HorizonTypography.p1
-                    )
+            Column(Modifier.verticalScroll(rememberScrollState())) {
+                (1..20).forEach {
+                    Card(Modifier.padding(16.dp)) {
+                        Text(
+                            text = "Dummy course $it",
+                            style = HorizonTypography.p1
+                        )
+                    }
                 }
             }
         }

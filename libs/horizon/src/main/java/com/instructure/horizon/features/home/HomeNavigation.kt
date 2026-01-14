@@ -32,6 +32,7 @@ import com.instructure.horizon.features.dashboard.widget.course.list.DashboardCo
 import com.instructure.horizon.features.dashboard.widget.course.list.DashboardCourseListViewModel
 import com.instructure.horizon.features.learn.LearnScreen
 import com.instructure.horizon.features.learn.LearnViewModel
+import com.instructure.horizon.features.learn.navigation.learnNavigation
 import com.instructure.horizon.features.skillspace.SkillspaceScreen
 import com.instructure.horizon.features.skillspace.SkillspaceViewModel
 import com.instructure.horizon.horizonui.animation.NavigationTransitionAnimation
@@ -73,6 +74,7 @@ fun HomeNavigation(navController: NavHostController, mainNavController: NavHostC
         popExitTransition = { popExitTransition(NavigationTransitionAnimation.SCALE) },
         startDestination = HomeNavigationRoute.Dashboard.route, modifier = modifier
     ) {
+        learnNavigation(navController, mainNavController)
         composable(HomeNavigationRoute.Dashboard.route) {
             val viewModel = hiltViewModel<DashboardViewModel>()
             val uiState by viewModel.uiState.collectAsState()

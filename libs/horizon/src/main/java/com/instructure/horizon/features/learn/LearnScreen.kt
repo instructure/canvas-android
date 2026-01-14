@@ -26,8 +26,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.utils.ContextKeeper
-import com.instructure.horizon.features.learn.course.navigation.LearnCourseNavigation
-import com.instructure.horizon.features.learn.program.navigation.LearnProgramNavigation
+import com.instructure.horizon.features.learn.course.list.LearnCourseListScreen
+import com.instructure.horizon.features.learn.program.list.LearnProgramListScreen
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.organisms.CollapsableScaffold
 import com.instructure.horizon.horizonui.organisms.tabrow.TabRow
@@ -49,10 +49,10 @@ fun LearnScreen(state: LearnUiState, mainNavController: NavHostController) {
     ) {
         when(state.selectedTab) {
             LearnTab.COURSES -> {
-                LearnCourseNavigation(mainNavController)
+                LearnCourseListScreen()
             }
             LearnTab.PROGRAMS -> {
-                LearnProgramNavigation(mainNavController)
+                LearnProgramListScreen()
             }
         }
     }

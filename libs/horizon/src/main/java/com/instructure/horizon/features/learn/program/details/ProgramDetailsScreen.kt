@@ -25,7 +25,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -55,13 +54,7 @@ import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun ProgramDetailsScreen(uiState: ProgramDetailsUiState, mainNavController: NavHostController, onCourseSelected: (Long) -> Unit, modifier: Modifier = Modifier) {
-    LaunchedEffect(uiState.navigateToCourseId) {
-        uiState.navigateToCourseId?.let { courseId ->
-            onCourseSelected(courseId)
-            uiState.onNavigateToCourse()
-        }
-    }
+fun ProgramDetailsScreen(uiState: ProgramDetailsUiState, mainNavController: NavHostController, modifier: Modifier = Modifier) {
 
     LoadingStateWrapper(loadingState = uiState.loadingState) {
         Column(
@@ -171,6 +164,6 @@ private fun ProgramDetailsScreenPreview() {
                     )
                 )
             )
-        ), rememberNavController(), onCourseSelected = {}
+        ), rememberNavController(),
     )
 }
