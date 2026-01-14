@@ -252,7 +252,7 @@ fun getRecyclerViewFromMatcher(matcher: Matcher<View>): RecyclerView {
  * This allows workers with network/battery/storage constraints to run in tests.
  *
  * @param tag Optional tag to filter workers. If null, triggers all enqueued workers.
- * @param timeoutMillis Maximum time to wait for workers to be enqueued (default: 5000ms)
+ * @param timeoutMillis Maximum time to wait for workers to be enqueued (default: 10000ms)
  */
 fun triggerWorkManagerJobs(tag: String? = null, timeoutMillis: Long = 10000) {
     val app = ApplicationProvider.getApplicationContext<TestAppManager>()

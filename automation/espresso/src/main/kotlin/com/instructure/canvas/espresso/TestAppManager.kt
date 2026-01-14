@@ -19,11 +19,11 @@ import android.annotation.SuppressLint
 import android.util.Log
 import androidx.work.Configuration
 import androidx.work.WorkerFactory
-import androidx.work.testing.SynchronousExecutor
 import androidx.work.testing.TestDriver
 import androidx.work.testing.WorkManagerTestInitHelper
 import com.instructure.canvasapi2.AppManager
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
+import java.util.concurrent.Executors
 
 open class TestAppManager : AppManager() {
 
@@ -51,7 +51,7 @@ open class TestAppManager : AppManager() {
         try {
             val config = Configuration.Builder()
                 .setMinimumLoggingLevel(Log.DEBUG)
-                .setExecutor(SynchronousExecutor())
+                .setExecutor(Executors.newSingleThreadExecutor())
                 .setWorkerFactory(getWorkManagerFactory())
                 .build()
 

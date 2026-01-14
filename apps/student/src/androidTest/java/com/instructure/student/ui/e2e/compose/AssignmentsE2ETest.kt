@@ -569,8 +569,10 @@ class AssignmentsE2ETest: StudentComposeTest() {
         SubmissionsApi.submitCourseAssignment(course.id, student.token, percentageFileAssignment.id, SubmissionType.ONLINE_UPLOAD, fileIds = mutableListOf(uploadInfo.id))
 
         Log.d(ASSERTION_TAG, "Refresh the page. Assert that the '${percentageFileAssignment.name}' assignment has been submitted.")
-        assignmentDetailsPage.refresh()
-        assignmentDetailsPage.assertAssignmentSubmittedStatus()
+        retryWithIncreasingDelay {
+            assignmentDetailsPage.refresh()
+            assignmentDetailsPage.assertAssignmentSubmittedStatus()
+        }
 
         Log.d(PREPARATION_TAG, "Grade '${percentageFileAssignment.name}' assignment with 22 percentage.")
         SubmissionsApi.gradeSubmission(teacher.token, course.id, percentageFileAssignment.id, student.id, postedGrade = "22")
@@ -786,19 +788,21 @@ class AssignmentsE2ETest: StudentComposeTest() {
 
         Log.d(STEP_TAG, "Send a video comment.")
         submissionDetailsPage.addAndSendVideoComment()
-        triggerWorkManagerJobs("SubmissionWorker")
-
-        sleep(5000) // wait for video comment submission to propagate
 
         Log.d(ASSERTION_TAG, "Assert that the video comment has been displayed.")
-        submissionDetailsPage.assertVideoCommentDisplayed()
+        retryWithIncreasingDelay {
+            triggerWorkManagerJobs("SubmissionWorker")
+            submissionDetailsPage.assertVideoCommentDisplayed()
+        }
 
         Log.d(STEP_TAG, "Send an audio comment.")
         submissionDetailsPage.addAndSendAudioComment()
-        sleep(5000) // Wait for audio comment submission to propagate
 
         Log.d(ASSERTION_TAG, "Assert that the audio comment has been displayed.")
-        submissionDetailsPage.assertAudioCommentDisplayed()
+        retryWithIncreasingDelay {
+            triggerWorkManagerJobs("SubmissionWorker")
+            submissionDetailsPage.assertAudioCommentDisplayed()
+        }
     }
 
     @E2E

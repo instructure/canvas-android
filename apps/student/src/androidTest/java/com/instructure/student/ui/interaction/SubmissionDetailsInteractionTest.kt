@@ -129,6 +129,11 @@ class SubmissionDetailsInteractionTest : StudentComposeTest() {
         submissionDetailsPage.addAndSendComment("Hey!")
         triggerWorkManagerJobs("SubmissionWorker")
 
+        Espresso.pressBack()
+        assignmentDetailsPage.goToSubmissionDetails()
+        submissionDetailsPage.selectAttempt("Attempt 1")
+        submissionDetailsPage.openComments()
+
         submissionDetailsPage.assertCommentDisplayed("Hey!", data.users.values.first())
 
         submissionDetailsPage.selectAttempt("Attempt 2")
