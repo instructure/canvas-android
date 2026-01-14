@@ -15,8 +15,8 @@
   ~
   -->
 <resources>
-    <color name="ai_gradient_start">#09508C</color>
-    <color name="ai_gradient_end">#02672D</color>
+    <color name="ai_gradient_start">#9E58BD</color>
+    <color name="ai_gradient_end">#00828E</color>
 
     <color name="icon_action">#0E68B3</color>
     <color name="icon_actionSecondary">#0A5A9E</color>
