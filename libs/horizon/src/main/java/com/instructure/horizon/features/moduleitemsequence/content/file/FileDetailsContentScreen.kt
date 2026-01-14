@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.account.filepreview.FilePreview
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistContextSource
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
@@ -62,6 +63,7 @@ import com.instructure.pandautils.utils.openFile
 @Composable
 fun FileDetailsContentScreen(
     uiState: FileDetailsUiState,
+    updateAiContext: (AiAssistContextSource, String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -70,6 +72,13 @@ fun FileDetailsContentScreen(
             context.openFile(uiState.filePathToOpen, uiState.mimeType, context.getString(R.string.fileDetails_openWith))
             uiState.onFileOpened()
         }
+    }
+
+    LaunchedEffect(uiState.fileId) {
+        updateAiContext(
+            AiAssistContextSource.File(uiState.fileId.toString()),
+            ""
+        )
     }
 
     Column(
@@ -154,6 +163,7 @@ fun FileDetailsContentScreenPreview() {
         uiState = FileDetailsUiState(
             url = "https://example.com/file.pdf"
         ),
+        { _, _ -> },
         modifier = Modifier.fillMaxSize()
     )
 }
@@ -167,6 +177,7 @@ fun FileDetailsContentScreenErrorPreview() {
             url = "https://example.com/file.pdf",
             downloadState = ERROR
         ),
+        { _, _ -> },
         modifier = Modifier.fillMaxSize()
     )
 }
