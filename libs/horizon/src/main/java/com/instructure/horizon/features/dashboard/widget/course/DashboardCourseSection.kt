@@ -233,7 +233,7 @@ private fun handleClickAction(
             action.onClick()
         }
         is CardClickAction.NavigateToCourse -> {
-            homeNavController.navigate(HomeNavigationRoute.Learn.withCourse(action.courseId)) {
+            homeNavController.navigate(HomeNavigationRoute.Learn.route) {
                 popUpTo(homeNavController.graph.findStartDestination().id) {
                     saveState = true
                 }
@@ -250,7 +250,7 @@ private fun handleClickAction(
             )
         }
         is CardClickAction.NavigateToProgram -> {
-            homeNavController.navigate(HomeNavigationRoute.Learn.withProgram(action.programId)) {
+            homeNavController.navigate(HomeNavigationRoute.Learn.route) {
                 popUpTo(homeNavController.graph.findStartDestination().id) {
                     saveState = true
                 }

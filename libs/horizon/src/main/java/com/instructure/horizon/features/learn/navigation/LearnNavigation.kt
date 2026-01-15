@@ -25,7 +25,11 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
+import androidx.navigation.navigation
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.horizon.features.home.HomeNavigationRoute
+import com.instructure.horizon.features.learn.LearnScreen
+import com.instructure.horizon.features.learn.LearnViewModel
 import com.instructure.horizon.features.learn.course.details.CourseDetailsScreen
 import com.instructure.horizon.features.learn.course.details.CourseDetailsViewModel
 import com.instructure.horizon.features.learn.program.details.ProgramDetailsScreen
@@ -35,39 +39,53 @@ fun NavGraphBuilder.learnNavigation(
     homeNavController: NavHostController,
     mainNavController: NavHostController,
 ) {
-    composable(
-        route = LearnRoute.LearnCourseDetailsScreen.route,
-        arguments = listOf(
-            navArgument(LearnRoute.LearnCourseDetailsScreen.courseIdAttr) {
-                type = NavType.LongType
-            }
-        ),
-        deepLinks = listOf(
-            navDeepLink {
-                uriPattern = "${ApiPrefs.fullDomain}/${LearnRoute.LearnCourseDetailsScreen.route}"
-            }
-        )
-    ) {
-        val viewModel = hiltViewModel<CourseDetailsViewModel>()
-        val state by viewModel.state.collectAsState()
-        CourseDetailsScreen(state, mainNavController)
-    }
-    composable(
-        route = LearnRoute.LearnProgramDetailsScreen.route,
-        arguments = listOf(
-            navArgument(LearnRoute.LearnProgramDetailsScreen.programIdAttr) {
-                type = NavType.StringType
-            }
-        ),
-        deepLinks = listOf(
-            navDeepLink {
-                uriPattern = "${ApiPrefs.fullDomain}/${LearnRoute.LearnProgramDetailsScreen.route}"
-            }
-        )
-    ) {
-        val viewModel = hiltViewModel<ProgramDetailsViewModel>()
-        val state by viewModel.state.collectAsState()
-        ProgramDetailsScreen(state, mainNavController)
+    navigation(
+        route = HomeNavigationRoute.Learn.route,
+        startDestination  =LearnRoute.LearnScreen.route
+    ){
+        composable(
+            LearnRoute.LearnScreen.route
+        ) {
+            val viewModel = hiltViewModel<LearnViewModel>()
+            val uiState by viewModel.state.collectAsState()
+            LearnScreen(uiState, mainNavController = mainNavController)
+        }
+        composable(
+            route = LearnRoute.LearnCourseDetailsScreen.route,
+            arguments = listOf(
+                navArgument(LearnRoute.LearnCourseDetailsScreen.courseIdAttr) {
+                    type = NavType.LongType
+                }
+            ),
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern =
+                        "${ApiPrefs.fullDomain}/${LearnRoute.LearnCourseDetailsScreen.route}"
+                }
+            )
+        ) {
+            val viewModel = hiltViewModel<CourseDetailsViewModel>()
+            val state by viewModel.state.collectAsState()
+            CourseDetailsScreen(state, mainNavController)
+        }
+        composable(
+            route = LearnRoute.LearnProgramDetailsScreen.route,
+            arguments = listOf(
+                navArgument(LearnRoute.LearnProgramDetailsScreen.programIdAttr) {
+                    type = NavType.StringType
+                }
+            ),
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern =
+                        "${ApiPrefs.fullDomain}/${LearnRoute.LearnProgramDetailsScreen.route}"
+                }
+            )
+        ) {
+            val viewModel = hiltViewModel<ProgramDetailsViewModel>()
+            val state by viewModel.state.collectAsState()
+            ProgramDetailsScreen(state, mainNavController)
 
+        }
     }
 }

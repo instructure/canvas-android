@@ -163,7 +163,7 @@ private fun CourseItemCard(
     DashboardCard(
         modifier = Modifier.padding(horizontal = 16.dp),
         onClick = {
-            homeNavController.navigate(HomeNavigationRoute.Learn.withCourse(courseState.courseId))
+            homeNavController.navigate(HomeNavigationRoute.Learn.route)
         }
     ) {
         Column(
@@ -171,7 +171,7 @@ private fun CourseItemCard(
         ) {
             if (courseState.parentPrograms.isNotEmpty()) {
                 ProgramsText(courseState.parentPrograms) {
-                    homeNavController.navigate(HomeNavigationRoute.Learn.withProgram(it))
+                    homeNavController.navigate(HomeNavigationRoute.Learn.route)
                 }
                 HorizonSpace(SpaceSize.SPACE_16)
             }

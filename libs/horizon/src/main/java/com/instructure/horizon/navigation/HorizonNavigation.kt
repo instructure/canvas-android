@@ -35,8 +35,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.horizon.features.home.HomeScreen
-import com.instructure.horizon.features.home.HomeViewModel
+import com.instructure.horizon.features.home.HomeBottomNavigationBar
+import com.instructure.horizon.features.home.horizonHomeNavigation
 import com.instructure.horizon.features.inbox.navigation.horizonInboxNavigation
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemSequenceScreen
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemSequenceViewModel
@@ -91,6 +91,7 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
     Scaffold(
         containerColor = HorizonColors.Surface.pagePrimary(),
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        bottomBar = { BottomNavigationBar(navController) }
     ) { innerPadding ->
         NavHost(
             enterTransition = { enterTransition() },
@@ -101,6 +102,7 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
             navController = navController,
             startDestination = MainNavigationRoute.Home.route
         ) {
+            horizonHomeNavigation(navController)
             notebookNavigation(navController) { snackbarMessage, onDismiss ->
                 scope.launch {
                     if (snackbarMessage != null) {
@@ -112,9 +114,6 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
                 }
             }
             horizonInboxNavigation(navController)
-            composable(MainNavigationRoute.Home.route) {
-                HomeScreen(navController, hiltViewModel<HomeViewModel>())
-            }
             composable<MainNavigationRoute.ModuleItemSequence>(
                 enterTransition = { enterTransition() },
                 exitTransition = { exitTransition() },
@@ -241,5 +240,10 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
             }
         }
     }
+}
+
+@Composable
+private fun BottomNavigationBar(navController: NavHostController) {
+    HomeBottomNavigationBar(navController)
 }
 
