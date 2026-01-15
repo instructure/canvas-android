@@ -214,19 +214,7 @@ class InterwebsToApplication : BaseCanvasActivity() {
                 delay(700)
                 if (ApiPrefs.canvasCareerView.orDefault()) {
                     val intent = Intent(this@InterwebsToApplication, HorizonActivity::class.java)
-
-                    val pathSegments = data.pathSegments
-                    if (pathSegments.size >= 2) {
-                        when (pathSegments[0]) {
-                            "courses" -> {
-                                intent.putExtra("learningItemId", "course_${pathSegments[1]}")
-                            }
-                            "programs" -> {
-                                intent.putExtra("learningItemId", "program_${pathSegments[1]}")
-                            }
-                        }
-                    }
-
+                    intent.data = Uri.parse(url)
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
                     startActivity(intent)
                 } else {

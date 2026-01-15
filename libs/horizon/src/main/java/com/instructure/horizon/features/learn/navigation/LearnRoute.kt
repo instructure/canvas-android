@@ -19,7 +19,7 @@ package com.instructure.horizon.features.learn.navigation
 sealed class LearnRoute {
     data class LearnCourseDetailsScreen(val courseId: Long): LearnRoute() {
         companion object {
-            private const val courseIdAttr = "courseId"
+            const val courseIdAttr = "courseId"
             private const val baseUrl = "learn/courses"
             const val route = "$baseUrl/{$courseIdAttr}"
             fun route(courseId: Long) = "$baseUrl/$courseId"
@@ -28,7 +28,7 @@ sealed class LearnRoute {
 
     data class LearnProgramDetailsScreen(val courseId: Long): LearnRoute() {
         companion object {
-            private const val programIdAttr = "programId"
+            const val programIdAttr = "programId"
             private const val baseUrl = "learn/programs"
             const val route = "$baseUrl/{$programIdAttr}"
             fun route(courseId: Long) = "$baseUrl/$courseId"

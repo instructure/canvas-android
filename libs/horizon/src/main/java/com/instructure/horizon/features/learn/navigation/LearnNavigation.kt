@@ -21,7 +21,11 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.horizon.features.learn.course.details.CourseDetailsScreen
 import com.instructure.horizon.features.learn.course.details.CourseDetailsViewModel
 import com.instructure.horizon.features.learn.program.details.ProgramDetailsScreen
@@ -32,14 +36,34 @@ fun NavGraphBuilder.learnNavigation(
     mainNavController: NavHostController,
 ) {
     composable(
-        route = LearnRoute.LearnCourseDetailsScreen.route
+        route = LearnRoute.LearnCourseDetailsScreen.route,
+        arguments = listOf(
+            navArgument(LearnRoute.LearnCourseDetailsScreen.courseIdAttr) {
+                type = NavType.LongType
+            }
+        ),
+        deepLinks = listOf(
+            navDeepLink {
+                uriPattern = "${ApiPrefs.fullDomain}/${LearnRoute.LearnCourseDetailsScreen.route}"
+            }
+        )
     ) {
         val viewModel = hiltViewModel<CourseDetailsViewModel>()
         val state by viewModel.state.collectAsState()
         CourseDetailsScreen(state, mainNavController)
     }
     composable(
-        route = LearnRoute.LearnProgramDetailsScreen.route
+        route = LearnRoute.LearnProgramDetailsScreen.route,
+        arguments = listOf(
+            navArgument(LearnRoute.LearnProgramDetailsScreen.programIdAttr) {
+                type = NavType.StringType
+            }
+        ),
+        deepLinks = listOf(
+            navDeepLink {
+                uriPattern = "${ApiPrefs.fullDomain}/${LearnRoute.LearnProgramDetailsScreen.route}"
+            }
+        )
     ) {
         val viewModel = hiltViewModel<ProgramDetailsViewModel>()
         val state by viewModel.state.collectAsState()
