@@ -39,6 +39,9 @@ open class TestAppManager : AppManager() {
     }
 
     override fun getWorkManagerFactory(): WorkerFactory {
+        if (workerFactory == null) {
+            Log.w("TestAppManager", "getWorkManagerFactory() called but HiltWorkerFactory not yet injected! Caller: ${Thread.currentThread().stackTrace.take(10).joinToString("\n")}")
+        }
         return workerFactory ?: DefaultWorkerFactory
     }
 
@@ -51,12 +54,17 @@ open class TestAppManager : AppManager() {
             return
         }
 
-        Log.d("TestAppManager", "Initializing WorkManager with async single-thread executor")
+        if (workerFactory == null) {
+            Log.w("TestAppManager", "Cannot initialize WorkManager - HiltWorkerFactory not yet injected")
+            return
+        }
+
+        Log.d("TestAppManager", "Initializing WorkManager with async single-thread executor and HiltWorkerFactory")
         try {
             val config = Configuration.Builder()
                 .setMinimumLoggingLevel(Log.DEBUG)
                 .setExecutor(Executors.newSingleThreadExecutor())
-                .setWorkerFactory(getWorkManagerFactory())
+                .setWorkerFactory(workerFactory!!)
                 .build()
 
             WorkManagerTestInitHelper.initializeTestWorkManager(this, config)
