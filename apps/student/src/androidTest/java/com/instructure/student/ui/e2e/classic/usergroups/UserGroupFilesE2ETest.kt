@@ -109,7 +109,6 @@ class UserGroupFilesE2ETest : StudentTest() {
 
         retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = {
             triggerWorkManagerJobs("FileUploadWorker", 20000)
-            fileListPage.refresh()
         })
         {
             Log.d(ASSERTION_TAG, "Assert that the file upload was successful.")

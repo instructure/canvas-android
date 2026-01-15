@@ -46,8 +46,12 @@ open class TestAppManager : AppManager() {
 
     @SuppressLint("RestrictedApi")
     fun initializeTestWorkManager() {
-        if (workManagerInitialized) return
+        if (workManagerInitialized) {
+            Log.d("TestAppManager", "WorkManager already initialized, skipping")
+            return
+        }
 
+        Log.d("TestAppManager", "Initializing WorkManager with async single-thread executor")
         try {
             val config = Configuration.Builder()
                 .setMinimumLoggingLevel(Log.DEBUG)
@@ -58,8 +62,9 @@ open class TestAppManager : AppManager() {
             WorkManagerTestInitHelper.initializeTestWorkManager(this, config)
             testDriver = WorkManagerTestInitHelper.getTestDriver(this)
             workManagerInitialized = true
+            Log.d("TestAppManager", "WorkManager initialized successfully with testDriver: ${testDriver != null}")
         } catch (e: IllegalStateException) {
-            Log.w("TestAppManager", e)
+            Log.w("TestAppManager", "Failed to initialize WorkManager", e)
         }
     }
 }

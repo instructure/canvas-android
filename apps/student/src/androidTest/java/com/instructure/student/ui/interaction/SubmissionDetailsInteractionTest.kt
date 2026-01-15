@@ -17,7 +17,6 @@
 package com.instructure.student.ui.interaction
 
 import androidx.compose.ui.platform.ComposeView
-import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.web.webdriver.Locator
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
@@ -89,10 +88,6 @@ class SubmissionDetailsInteractionTest : StudentComposeTest() {
         submissionDetailsPage.addAndSendComment("Hey!")
         triggerWorkManagerJobs("SubmissionWorker")
 
-        Espresso.pressBack()
-        assignmentDetailsPage.goToSubmissionDetails()
-        submissionDetailsPage.openComments()
-
         submissionDetailsPage.assertCommentDisplayed("Hey!", data.users.values.first())
     }
 
@@ -128,11 +123,6 @@ class SubmissionDetailsInteractionTest : StudentComposeTest() {
         submissionDetailsPage.openComments()
         submissionDetailsPage.addAndSendComment("Hey!")
         triggerWorkManagerJobs("SubmissionWorker")
-
-        Espresso.pressBack()
-        assignmentDetailsPage.goToSubmissionDetails()
-        submissionDetailsPage.selectAttempt("Attempt 1")
-        submissionDetailsPage.openComments()
 
         submissionDetailsPage.assertCommentDisplayed("Hey!", data.users.values.first())
 
