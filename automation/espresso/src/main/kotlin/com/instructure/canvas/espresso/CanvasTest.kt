@@ -37,6 +37,9 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
 import androidx.test.uiautomator.UiDevice
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
+import androidx.work.WorkQuery
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils.matchesCheckNames
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils.matchesViews
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityViewCheckResult
@@ -132,13 +135,13 @@ abstract class CanvasTest : InstructureTestingContract {
             val context = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext
 
             if (application?.workManagerInitialized == true) {
-                val workManager = androidx.work.WorkManager.getInstance(context)
+                val workManager = WorkManager.getInstance(context)
 
                 val workInfos = workManager.getWorkInfos(
-                    androidx.work.WorkQuery.Builder.fromStates(
+                    WorkQuery.Builder.fromStates(
                         listOf(
-                            androidx.work.WorkInfo.State.ENQUEUED,
-                            androidx.work.WorkInfo.State.RUNNING
+                            WorkInfo.State.ENQUEUED,
+                            WorkInfo.State.RUNNING
                         )
                     ).build()
                 ).get()
