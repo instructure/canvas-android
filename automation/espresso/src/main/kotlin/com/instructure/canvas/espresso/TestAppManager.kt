@@ -28,8 +28,9 @@ import java.util.concurrent.Executors
 
 open class TestAppManager : AppManager() {
 
-    var workerFactory: WorkerFactory? = null
+    private var workerFactory: WorkerFactory? = null
     var workManagerInitialized = false
+        private set
     var testDriver: TestDriver? = null
 
     @SuppressLint("RestrictedApi")
@@ -39,32 +40,25 @@ open class TestAppManager : AppManager() {
     }
 
     override fun getWorkManagerFactory(): WorkerFactory {
-        if (workerFactory == null) {
-            Log.w("TestAppManager", "getWorkManagerFactory() called but HiltWorkerFactory not yet injected! Caller: ${Thread.currentThread().stackTrace.take(10).joinToString("\n")}")
-        }
         return workerFactory ?: DefaultWorkerFactory
     }
 
     override fun performLogoutOnAuthError() = Unit
 
     @SuppressLint("RestrictedApi")
-    fun initializeTestWorkManager() {
+    fun initializeTestWorkManager(factory: WorkerFactory) {
         if (workManagerInitialized) {
             Log.d("TestAppManager", "WorkManager already initialized, skipping")
             return
         }
 
-        if (workerFactory == null) {
-            Log.w("TestAppManager", "Cannot initialize WorkManager - HiltWorkerFactory not yet injected")
-            return
-        }
-
+        workerFactory = factory
         Log.d("TestAppManager", "Initializing WorkManager with async single-thread executor and HiltWorkerFactory")
         try {
             val config = Configuration.Builder()
                 .setMinimumLoggingLevel(Log.DEBUG)
                 .setExecutor(Executors.newSingleThreadExecutor())
-                .setWorkerFactory(workerFactory!!)
+                .setWorkerFactory(factory)
                 .build()
 
             WorkManagerTestInitHelper.initializeTestWorkManager(this, config)

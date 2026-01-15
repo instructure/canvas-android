@@ -116,9 +116,8 @@ abstract class CanvasTest : InstructureTestingContract {
             val application = originalActivity.application as? TestAppManager
             cleanupWorkManager(application)
 
-            // Set worker factory and initialize WorkManager
-            application?.workerFactory = workerFactory
-            application?.initializeTestWorkManager()
+            // Initialize WorkManager with HiltWorkerFactory
+            application?.initializeTestWorkManager(workerFactory)
         } catch (e: IllegalStateException) {
             // Catch this exception to avoid multiple injection
             // Don't re-setup WorkManager on subsequent inject attempts
@@ -127,12 +126,35 @@ abstract class CanvasTest : InstructureTestingContract {
     }
 
     /**
-     * Cancels all WorkManager work to ensure clean state between tests.
-     * NOTE: We do NOT re-initialize WorkManager to avoid instance mismatches with Hilt-injected instances.
+     * Ensures WorkManager is properly initialized with HiltWorkerFactory.
+     * If WorkManager was initialized early (before HiltWorkerFactory injection), resets the singleton.
+     * Cancels all pending WorkManager jobs to ensure clean state between tests.
      */
     private fun cleanupWorkManager(application: TestAppManager?) {
         try {
             val context = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext
+
+            // Check if WorkManager was initialized early (before HiltWorkerFactory injection)
+            if (application?.workManagerInitialized == false) {
+                try {
+                    // Try to get WorkManager instance - if it exists, it was initialized early
+                    WorkManager.getInstance(context)
+                    Log.d("CanvasTest", "WorkManager was initialized early (before HiltWorkerFactory injection) - forcing reset")
+
+                    // Use reflection to reset WorkManager singleton
+                    val workManagerClass = WorkManager::class.java
+                    val field = workManagerClass.getDeclaredField("sDefaultInstance")
+                    field.isAccessible = true
+                    field.set(null, null)
+
+                    Log.d("CanvasTest", "WorkManager singleton reset complete - will be re-initialized with HiltWorkerFactory")
+                } catch (e: IllegalStateException) {
+                    // WorkManager not initialized yet - this is good, no action needed
+                    Log.d("CanvasTest", "WorkManager not yet initialized - will initialize with HiltWorkerFactory")
+                } catch (e: Exception) {
+                    Log.w("CanvasTest", "Failed to reset WorkManager singleton: ${e.message}")
+                }
+            }
 
             if (application?.workManagerInitialized == true) {
                 val workManager = WorkManager.getInstance(context)
