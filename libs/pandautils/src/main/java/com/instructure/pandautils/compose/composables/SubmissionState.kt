@@ -39,13 +39,18 @@ import com.instructure.pandautils.utils.drawableId
 
 
 @Composable
-fun SubmissionState(submissionStateLabel: SubmissionStateLabel, testTag: String) {
+fun SubmissionState(
+    submissionStateLabel: SubmissionStateLabel,
+    testTag: String,
+    colorOverride: Int? = null
+) {
     if (submissionStateLabel != SubmissionStateLabel.None) {
+        val color = colorOverride ?: submissionStateLabel.colorRes
         Row {
             Icon(
                 painter = painterResource(id = submissionStateLabel.iconRes),
                 contentDescription = null,
-                tint = colorResource(id = submissionStateLabel.colorRes),
+                tint = colorResource(id = color),
                 modifier = Modifier
                     .size(16.dp)
                     .align(Alignment.CenterVertically)
@@ -59,7 +64,7 @@ fun SubmissionState(submissionStateLabel: SubmissionStateLabel, testTag: String)
                     is SubmissionStateLabel.Predefined -> stringResource(id = submissionStateLabel.labelRes)
                     is SubmissionStateLabel.Custom -> submissionStateLabel.label
                 },
-                color = colorResource(id = submissionStateLabel.colorRes),
+                color = colorResource(id = color),
                 fontSize = 14.sp,
                 modifier = Modifier.testTag(testTag)
             )

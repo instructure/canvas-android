@@ -1209,6 +1209,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         dashboardPage.assertCourseGrade(course.name, "49.47%")
     }
 
+    @Stub("Grades screen has been redesigned, needs to be fixed in ticket MBL-19258")
     @E2E
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.GRADES, TestCategory.E2E)

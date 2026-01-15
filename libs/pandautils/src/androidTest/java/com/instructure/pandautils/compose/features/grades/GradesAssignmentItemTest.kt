@@ -51,7 +51,8 @@ class GradesAssignmentItemTest {
             AssignmentItem(
                 uiState = getUiState(),
                 actionHandler = {},
-                userColor = android.graphics.Color.RED
+                contextColor = android.graphics.Color.RED,
+                showWhatIfScore = false
             )
         }
 
@@ -83,7 +84,8 @@ class GradesAssignmentItemTest {
                     submissionStateLabel = SubmissionStateLabel.Submitted
                 ),
                 actionHandler = {},
-                userColor = android.graphics.Color.RED
+                contextColor = android.graphics.Color.RED,
+                showWhatIfScore = false
             )
         }
 
@@ -105,7 +107,8 @@ class GradesAssignmentItemTest {
                     submissionStateLabel = SubmissionStateLabel.Missing
                 ),
                 actionHandler = {},
-                userColor = android.graphics.Color.RED
+                contextColor = android.graphics.Color.RED,
+                showWhatIfScore = false
             )
         }
 
@@ -127,7 +130,8 @@ class GradesAssignmentItemTest {
                     submissionStateLabel = SubmissionStateLabel.Late
                 ),
                 actionHandler = {},
-                userColor = android.graphics.Color.RED
+                contextColor = android.graphics.Color.RED,
+                showWhatIfScore = false
             )
         }
 
@@ -149,7 +153,8 @@ class GradesAssignmentItemTest {
                     submissionStateLabel = SubmissionStateLabel.Graded
                 ),
                 actionHandler = {},
-                userColor = android.graphics.Color.RED
+                contextColor = android.graphics.Color.RED,
+                showWhatIfScore = false
             )
         }
 
@@ -171,7 +176,8 @@ class GradesAssignmentItemTest {
                     submissionStateLabel = SubmissionStateLabel.Custom(R.drawable.ic_flag, R.color.textInfo, "Custom Status")
                 ),
                 actionHandler = {},
-                userColor = android.graphics.Color.RED
+                contextColor = android.graphics.Color.RED,
+                showWhatIfScore = false
             )
         }
 
@@ -182,12 +188,155 @@ class GradesAssignmentItemTest {
             .assertTextColor(labelColor)
     }
 
+    @Test
+    fun assertWhatIfScoreDisplayedWhenEnabled() {
+        composeTestRule.setContent {
+            AssignmentItem(
+                uiState = getUiState().copy(
+                    score = 10.0,
+                    displayGrade = DisplayGrade("10/15", "10 out of 15"),
+                    whatIfScore = 14.0
+                ),
+                actionHandler = {},
+                contextColor = android.graphics.Color.RED,
+                showWhatIfScore = true
+            )
+        }
+
+        // Regular grade should be displayed
+        composeTestRule.onNodeWithText("10/15", useUnmergedTree = true)
+            .assertIsDisplayed()
+
+        // What-if score should be displayed
+        composeTestRule.onNodeWithText("What-if: 14/15", useUnmergedTree = true)
+            .assertIsDisplayed()
+    }
+
+    @Test
+    fun assertWhatIfScoreNotDisplayedWhenDisabled() {
+        composeTestRule.setContent {
+            AssignmentItem(
+                uiState = getUiState().copy(
+                    score = 10.0,
+                    displayGrade = DisplayGrade("10/15", "10 out of 15"),
+                    whatIfScore = 14.0
+                ),
+                actionHandler = {},
+                contextColor = android.graphics.Color.RED,
+                showWhatIfScore = false
+            )
+        }
+
+        // Regular grade should be displayed
+        composeTestRule.onNodeWithText("10/15", useUnmergedTree = true)
+            .assertIsDisplayed()
+
+        // What-if score should NOT be displayed
+        composeTestRule.onNodeWithText("What-if: 14/15", useUnmergedTree = true)
+            .assertDoesNotExist()
+    }
+
+    @Test
+    fun assertWhatIfScoreNotDisplayedWhenNull() {
+        composeTestRule.setContent {
+            AssignmentItem(
+                uiState = getUiState().copy(
+                    score = 10.0,
+                    displayGrade = DisplayGrade("10/15", "10 out of 15"),
+                    whatIfScore = null
+                ),
+                actionHandler = {},
+                contextColor = android.graphics.Color.RED,
+                showWhatIfScore = true
+            )
+        }
+
+        // Regular grade should be displayed
+        composeTestRule.onNodeWithText("10/15", useUnmergedTree = true)
+            .assertIsDisplayed()
+
+        // What-if score should NOT be displayed when null
+        composeTestRule.onNodeWithText("What-if: 14/15", useUnmergedTree = true)
+            .assertDoesNotExist()
+    }
+
+    @Test
+    fun assertWhatIfScoreDisplayedWithoutExistingGrade() {
+        composeTestRule.setContent {
+            AssignmentItem(
+                uiState = getUiState().copy(
+                    score = null,
+                    displayGrade = DisplayGrade("", ""),
+                    whatIfScore = 12.0
+                ),
+                actionHandler = {},
+                contextColor = android.graphics.Color.RED,
+                showWhatIfScore = true
+            )
+        }
+
+        // What-if score should be displayed
+        composeTestRule.onNodeWithText("What-if: 12/15", useUnmergedTree = true)
+            .assertIsDisplayed()
+    }
+
+    @Test
+    fun assertWhatIfScoreWithZeroScore() {
+        composeTestRule.setContent {
+            AssignmentItem(
+                uiState = getUiState().copy(
+                    score = 0.0,
+                    displayGrade = DisplayGrade("0/15", "0 out of 15"),
+                    whatIfScore = 10.0
+                ),
+                actionHandler = {},
+                contextColor = android.graphics.Color.RED,
+                showWhatIfScore = true
+            )
+        }
+
+        // Regular grade should be displayed
+        composeTestRule.onNodeWithText("0/15", useUnmergedTree = true)
+            .assertIsDisplayed()
+
+        // What-if score should be displayed
+        composeTestRule.onNodeWithText("What-if: 10/15", useUnmergedTree = true)
+            .assertIsDisplayed()
+    }
+
+    @Test
+    fun assertWhatIfScoreWithFullScore() {
+        composeTestRule.setContent {
+            AssignmentItem(
+                uiState = getUiState().copy(
+                    score = 15.0,
+                    displayGrade = DisplayGrade("15/15", "15 out of 15"),
+                    whatIfScore = 15.0
+                ),
+                actionHandler = {},
+                contextColor = android.graphics.Color.RED,
+                showWhatIfScore = true
+            )
+        }
+
+        // Regular grade should be displayed
+        composeTestRule.onNodeWithText("15/15", useUnmergedTree = true)
+            .assertIsDisplayed()
+
+        // What-if score should be displayed
+        composeTestRule.onNodeWithText("What-if: 15/15", useUnmergedTree = true)
+            .assertIsDisplayed()
+    }
+
     private fun getUiState() = AssignmentUiState(
         id = 1,
         iconRes = R.drawable.ic_assignment,
         name = "Assignment",
         dueDate = "No due date",
         submissionStateLabel = SubmissionStateLabel.NotSubmitted,
-        displayGrade = DisplayGrade("-/15", "Content description")
+        displayGrade = DisplayGrade("-/15", "Content description"),
+        score = null,
+        maxScore = 15.0,
+        whatIfScore = null
     )
 }
