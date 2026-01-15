@@ -108,18 +108,19 @@ abstract class CanvasTest : InstructureTestingContract {
         originalActivity = activityRule.activity
         try {
             hiltRule.inject()
+
+            // Clean up WorkManager state BEFORE initialization to ensure fresh state
+            val application = originalActivity.application as? TestAppManager
+            cleanupWorkManager(application)
+
+            // Set worker factory and initialize WorkManager
+            application?.workerFactory = workerFactory
+            application?.initializeTestWorkManager()
         } catch (e: IllegalStateException) {
             // Catch this exception to avoid multiple injection
+            // Don't re-setup WorkManager on subsequent inject attempts
             Log.w("Test Inject", e.message ?: "")
         }
-
-        // Clean up WorkManager state BEFORE initialization to ensure fresh state
-        val application = originalActivity.application as? TestAppManager
-        cleanupWorkManager(application)
-
-        // Set worker factory and initialize WorkManager
-        application?.workerFactory = workerFactory
-        application?.initializeTestWorkManager()
     }
 
     /**
