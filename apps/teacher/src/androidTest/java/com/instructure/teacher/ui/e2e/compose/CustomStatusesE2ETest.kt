@@ -9,6 +9,7 @@ import com.instructure.canvas.espresso.annotations.E2E
 import com.instructure.canvas.espresso.pressBackButton
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.CustomStatusApi
+import com.instructure.dataseeding.api.DifferentiationTagsApi
 import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.SubmissionType
@@ -129,6 +130,93 @@ class CustomStatusesE2ETest: TeacherComposeTest() {
 
         Log.d(ASSERTION_TAG, "The current status became 'Graded' as the submission is already graded.")
         speedGraderGradePage.assertCurrentStatus("Graded", student.name)
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.COMMON, FeatureCategory.CUSTOM_STATUSES, TestCategory.E2E)
+    fun testFilterCustomStatusesAndDifferentiationTagsE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(teachers = 1, courses = 1, students = 2)
+        val student = data.studentsList[0]
+        val student2 = data.studentsList[1]
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+
+        Log.d(PREPARATION_TAG, "Seeding a custom status ('AMAZING') with the admin user.")
+        customStatusId = CustomStatusApi.upsertCustomGradeStatus(adminToken, name = "AMAZING", color = "#FF0000")
+
+        val groupSetId = DifferentiationTagsApi.createGroupSet(
+            token = teacher.token,
+            courseId = course.id.toString(),
+            name = "Differentiation Tags Group Set",
+            nonCollaborative = true
+        )
+
+        val firstDifferentiationTag = DifferentiationTagsApi.createGroup(
+            token = teacher.token,
+            groupSetId = groupSetId,
+            name = "First Diff Tag"
+        )
+
+        val secondDifferentiationTag = DifferentiationTagsApi.createGroup(
+            token = teacher.token,
+            groupSetId = groupSetId,
+            name = "Second Diff Tag"
+        )
+
+        DifferentiationTagsApi.addUserToGroup(
+            token = teacher.token,
+            groupId = firstDifferentiationTag.toLong(),
+            userId = student.id
+        )
+
+        DifferentiationTagsApi.addUserToGroup(
+            token = teacher.token,
+            groupId = secondDifferentiationTag.toLong(),
+            userId = student2.id
+        )
+
+        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course.")
+        val testAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
+
+        Log.d(PREPARATION_TAG, "Student submits the assignment.")
+        SubmissionsApi.submitCourseAssignment(
+            courseId = course.id,
+            studentToken = student.token,
+            assignmentId = testAssignment.id,
+            submissionType = SubmissionType.ONLINE_TEXT_ENTRY
+        )
+
+        Log.d(PREPARATION_TAG, "Teacher grades submission with custom status 'AMAZING' for '${student.name}' student.")
+        SubmissionsApi.gradeSubmission(
+            teacherToken = teacher.token,
+            courseId = course.id,
+            assignmentId = testAssignment.id,
+            studentId = student.id,
+            postedGrade = "12",
+            customGradeStatusId = customStatusId
+        )
+
+        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
+        tokenLogin(teacher)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Open '${course.name}' course.")
+        dashboardPage.openCourse(course.name)
+
+        Log.d(STEP_TAG, "Navigate to '${course.name}' course's Assignments Tab.")
+        courseBrowserPage.openAssignmentsTab()
+
+        Log.d(STEP_TAG, "Click on '${testAssignment.name}' assignment.")
+        assignmentListPage.clickAssignment(testAssignment)
+
+        Log.d(STEP_TAG, "Open the 'All Submissions' page and click on the filter icon on the top-right corner.")
+        assignmentDetailsPage.clickAllSubmissions()
+        assignmentSubmissionListPage.clickFilterButton()
+
+        sleep(2000)
     }
 
     @After
