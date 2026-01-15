@@ -108,6 +108,9 @@ class SubmissionWorker @AssistedInject constructor(
     private lateinit var notificationBuilder: NotificationCompat.Builder
 
     override suspend fun doWork(): Result {
+        Log.d("WorkManagerTest", "SubmissionWorker.doWork() started - Worker@${System.identityHashCode(this)}, Context@${System.identityHashCode(context)}")
+        Log.d("WorkManagerTest", "Worker created via: ${this.javaClass.classLoader}")
+
         try {
             val action = inputData.getString(Const.ACTION) ?: ""
 

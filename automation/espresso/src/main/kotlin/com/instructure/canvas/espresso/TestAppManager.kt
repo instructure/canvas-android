@@ -37,23 +37,41 @@ open class TestAppManager : AppManager() {
     override fun onCreate() {
         super.onCreate()
         RemoteConfigUtils.initialize()
+        Log.d("WorkManagerTest", "TestAppManager.onCreate() - Application@${System.identityHashCode(this)}")
     }
 
+    override val workManagerConfiguration: Configuration
+        get() {
+            val factory = workerFactory ?: DefaultWorkerFactory
+            Log.d("WorkManagerTest", "workManagerConfiguration accessed - Application@${System.identityHashCode(this)}, workerFactory=${factory.javaClass.simpleName}@${System.identityHashCode(factory)}, isHilt=${workerFactory != null}")
+            Log.d("WorkManagerTest", "Stack trace: ${Thread.currentThread().stackTrace.take(15).joinToString("\n")}")
+            return Configuration.Builder()
+                .setWorkerFactory(factory)
+                .setMinimumLoggingLevel(Log.DEBUG)
+                .setExecutor(Executors.newSingleThreadExecutor())
+                .build()
+        }
+
     override fun getWorkManagerFactory(): WorkerFactory {
-        return workerFactory ?: DefaultWorkerFactory
+        val factory = workerFactory ?: DefaultWorkerFactory
+        Log.d("WorkManagerTest", "getWorkManagerFactory() - Application@${System.identityHashCode(this)}, returning ${factory.javaClass.simpleName}@${System.identityHashCode(factory)}, isHilt=${workerFactory != null}")
+        return factory
     }
 
     override fun performLogoutOnAuthError() = Unit
 
     @SuppressLint("RestrictedApi")
     fun initializeTestWorkManager(factory: WorkerFactory) {
+        Log.d("WorkManagerTest", "initializeTestWorkManager() called - Application@${System.identityHashCode(this)}, factory=${factory.javaClass.simpleName}@${System.identityHashCode(factory)}, workManagerInitialized=$workManagerInitialized")
+
         if (workManagerInitialized) {
-            Log.d("TestAppManager", "WorkManager already initialized, skipping")
+            Log.d("WorkManagerTest", "Test WorkManager already initialized, skipping")
             return
         }
 
         workerFactory = factory
-        Log.d("TestAppManager", "Initializing WorkManager with async single-thread executor and HiltWorkerFactory")
+        Log.d("WorkManagerTest", "Set workerFactory to HiltWorkerFactory@${System.identityHashCode(factory)}")
+
         try {
             val config = Configuration.Builder()
                 .setMinimumLoggingLevel(Log.DEBUG)
@@ -61,12 +79,14 @@ open class TestAppManager : AppManager() {
                 .setWorkerFactory(factory)
                 .build()
 
+            Log.d("WorkManagerTest", "Calling WorkManagerTestInitHelper.initializeTestWorkManager()")
+            // WorkManagerTestInitHelper sets up a test delegate that overrides any existing initialization
             WorkManagerTestInitHelper.initializeTestWorkManager(this, config)
             testDriver = WorkManagerTestInitHelper.getTestDriver(this)
             workManagerInitialized = true
-            Log.d("TestAppManager", "WorkManager initialized successfully with testDriver: ${testDriver != null}")
+            Log.d("WorkManagerTest", "Test WorkManager initialized successfully - testDriver@${System.identityHashCode(testDriver)}")
         } catch (e: IllegalStateException) {
-            Log.w("TestAppManager", "Failed to initialize WorkManager", e)
+            Log.e("WorkManagerTest", "Failed to initialize WorkManager - already initialized with wrong factory?", e)
         }
     }
 }

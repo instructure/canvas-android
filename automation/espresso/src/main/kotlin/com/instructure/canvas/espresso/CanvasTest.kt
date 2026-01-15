@@ -109,11 +109,15 @@ abstract class CanvasTest : InstructureTestingContract {
     @Before
     fun recordOriginalActivity() {
         originalActivity = activityRule.activity
+        val application = originalActivity.application as? TestAppManager
+        Log.d("WorkManagerTest", "CanvasTest.recordOriginalActivity() - Application@${System.identityHashCode(application)}")
+
         try {
+            Log.d("WorkManagerTest", "Calling hiltRule.inject()")
             hiltRule.inject()
+            Log.d("WorkManagerTest", "HiltWorkerFactory injected: ${workerFactory.javaClass.simpleName}@${System.identityHashCode(workerFactory)}")
 
             // Clean up WorkManager state BEFORE initialization to ensure fresh state
-            val application = originalActivity.application as? TestAppManager
             cleanupWorkManager(application)
 
             // Initialize WorkManager with HiltWorkerFactory
@@ -121,43 +125,20 @@ abstract class CanvasTest : InstructureTestingContract {
         } catch (e: IllegalStateException) {
             // Catch this exception to avoid multiple injection
             // Don't re-setup WorkManager on subsequent inject attempts
-            Log.w("Test Inject", e.message ?: "")
+            Log.w("WorkManagerTest", "Hilt injection failed or already injected: ${e.message}")
         }
     }
 
     /**
-     * Ensures WorkManager is properly initialized with HiltWorkerFactory.
-     * If WorkManager was initialized early (before HiltWorkerFactory injection), resets the singleton.
      * Cancels all pending WorkManager jobs to ensure clean state between tests.
      */
     private fun cleanupWorkManager(application: TestAppManager?) {
+        Log.d("WorkManagerTest", "cleanupWorkManager() - Application@${System.identityHashCode(application)}, workManagerInitialized=${application?.workManagerInitialized}")
         try {
-            val context = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext
-
-            // Check if WorkManager was initialized early (before HiltWorkerFactory injection)
-            if (application?.workManagerInitialized == false) {
-                try {
-                    // Try to get WorkManager instance - if it exists, it was initialized early
-                    WorkManager.getInstance(context)
-                    Log.d("CanvasTest", "WorkManager was initialized early (before HiltWorkerFactory injection) - forcing reset")
-
-                    // Use reflection to reset WorkManager singleton
-                    val workManagerClass = WorkManager::class.java
-                    val field = workManagerClass.getDeclaredField("sDefaultInstance")
-                    field.isAccessible = true
-                    field.set(null, null)
-
-                    Log.d("CanvasTest", "WorkManager singleton reset complete - will be re-initialized with HiltWorkerFactory")
-                } catch (e: IllegalStateException) {
-                    // WorkManager not initialized yet - this is good, no action needed
-                    Log.d("CanvasTest", "WorkManager not yet initialized - will initialize with HiltWorkerFactory")
-                } catch (e: Exception) {
-                    Log.w("CanvasTest", "Failed to reset WorkManager singleton: ${e.message}")
-                }
-            }
-
             if (application?.workManagerInitialized == true) {
+                val context = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext
                 val workManager = WorkManager.getInstance(context)
+                Log.d("WorkManagerTest", "WorkManager@${System.identityHashCode(workManager)}")
 
                 val workInfos = workManager.getWorkInfos(
                     WorkQuery.Builder.fromStates(
@@ -169,13 +150,14 @@ abstract class CanvasTest : InstructureTestingContract {
                 ).get()
 
                 if (workInfos.isNotEmpty()) {
+                    Log.d("WorkManagerTest", "Cancelling ${workInfos.size} pending WorkManager jobs")
                     val cancelOperation = workManager.cancelAllWork()
                     cancelOperation.result.get()
                     Thread.sleep(200)
                 }
             }
         } catch (e: Exception) {
-            Log.w("CanvasTest", "Failed to cleanup WorkManager: ${e.message}")
+            Log.w("WorkManagerTest", "Failed to cleanup WorkManager: ${e.message}")
         }
     }
 
