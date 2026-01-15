@@ -333,7 +333,12 @@ class GradesScreenTest {
                 uiState = GradesUiState(
                     isLoading = false,
                     items = emptyList(),
-                    gradeText = "87% A"
+                    gradeText = "87% A",
+                    gradePreferencesUiState = GradePreferencesUiState(
+                        gradingPeriods = listOf(
+                            GradingPeriod(id = 1L, title = "Spring 2024")
+                        )
+                    )
                 ),
                 actionHandler = {},
                 canvasContextColor = Color.RED
@@ -355,7 +360,10 @@ class GradesScreenTest {
                     items = emptyList(),
                     gradeText = "87% A",
                     gradePreferencesUiState = GradePreferencesUiState(
-                        selectedGradingPeriod = null
+                        selectedGradingPeriod = null,
+                        gradingPeriods = listOf(
+                            GradingPeriod(id = 1L, title = "Spring 2024")
+                        )
                     )
                 ),
                 actionHandler = {},
@@ -383,7 +391,8 @@ class GradesScreenTest {
                     items = emptyList(),
                     gradeText = "87% A",
                     gradePreferencesUiState = GradePreferencesUiState(
-                        selectedGradingPeriod = gradingPeriod
+                        selectedGradingPeriod = gradingPeriod,
+                        gradingPeriods = listOf(gradingPeriod)
                     )
                 ),
                 actionHandler = {},
@@ -396,6 +405,29 @@ class GradesScreenTest {
         composeTestRule.onNodeWithText("Spring 2024")
             .assertIsDisplayed()
         composeTestRule.onNodeWithText("All Grading Periods")
+            .assertIsNotDisplayed()
+    }
+
+    @Test
+    fun assertGradingPeriodHiddenWhenNoGradingPeriods() {
+        composeTestRule.setContent {
+            GradesScreen(
+                uiState = GradesUiState(
+                    isLoading = false,
+                    items = emptyList(),
+                    gradeText = "87% A",
+                    gradePreferencesUiState = GradePreferencesUiState(
+                        gradingPeriods = emptyList()
+                    )
+                ),
+                actionHandler = {},
+                canvasContextColor = Color.RED
+            )
+        }
+
+        composeTestRule.onNodeWithTag("gradingPeriodLabel")
+            .assertIsNotDisplayed()
+        composeTestRule.onNodeWithTag("gradingPeriodName")
             .assertIsNotDisplayed()
     }
 

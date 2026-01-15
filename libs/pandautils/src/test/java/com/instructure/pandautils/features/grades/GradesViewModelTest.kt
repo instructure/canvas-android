@@ -1284,6 +1284,74 @@ class GradesViewModelTest {
         verify { gradeFormatter.getGradeString(any(), any(), any()) }
     }
 
+    @Test
+    fun `What-if scores preserved when sorting changes`() {
+        val today = LocalDateTime.now()
+        val assignmentGroups = listOf(
+            AssignmentGroup(
+                id = 1,
+                name = "Group 1",
+                assignments = listOf(
+                    Assignment(
+                        id = 1,
+                        name = "Assignment 1",
+                        pointsPossible = 10.0,
+                        dueAt = today.plusDays(1).toApiString(),
+                        submissionTypesRaw = listOf(
+                            SubmissionType.online_text_entry.rawValue
+                        ),
+                        submission = Submission(
+                            score = 5.0
+                        )
+                    ),
+                    Assignment(
+                        id = 2,
+                        name = "Assignment 2",
+                        pointsPossible = 20.0,
+                        dueAt = today.plusDays(2).toApiString(),
+                        submissionTypesRaw = listOf(
+                            SubmissionType.online_text_entry.rawValue
+                        ),
+                        submission = Submission(
+                            score = 15.0
+                        )
+                    )
+                )
+            )
+        )
+
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns listOf()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns assignmentGroups
+        every { gradeCalculator.calculateGrade(any(), any(), any(), any()) } returns 85.0
+
+        createViewModel()
+
+        viewModel.handleAction(GradesAction.ShowWhatIfScoreSwitchCheckedChange(true))
+        viewModel.handleAction(GradesAction.UpdateWhatIfScore(1, 9.0))
+        viewModel.handleAction(GradesAction.UpdateWhatIfScore(2, 18.0))
+
+        val assignmentBefore = viewModel.uiState.value.items.flatMap { it.assignments }.find { it.id == 1L }
+        Assert.assertEquals(9.0, assignmentBefore?.whatIfScore.orDefault(), 0.01)
+
+        viewModel.handleAction(GradesAction.GradePreferencesUpdated(null, SortBy.GROUP))
+
+        val assignment1After = viewModel.uiState.value.items.flatMap { it.assignments }.find { it.id == 1L }
+        val assignment2After = viewModel.uiState.value.items.flatMap { it.assignments }.find { it.id == 2L }
+        Assert.assertEquals(9.0, assignment1After?.whatIfScore.orDefault(), 0.01)
+        Assert.assertEquals(18.0, assignment2After?.whatIfScore.orDefault(), 0.01)
+
+        verify {
+            gradeCalculator.calculateGrade(
+                groups = assignmentGroups,
+                whatIfScores = mapOf(1L to 9.0, 2L to 18.0),
+                applyGroupWeights = false,
+                onlyGraded = true
+            )
+        }
+    }
+
     private fun createViewModel() {
         viewModel = GradesViewModel(
             context,

@@ -456,29 +456,31 @@ private fun GradesScreenContent(
                     }
                 }
 
-                CanvasDivider(modifier = Modifier.padding(horizontal = 16.dp))
+                if (uiState.gradePreferencesUiState.gradingPeriods.isNotEmpty()) {
+                    CanvasDivider(modifier = Modifier.padding(horizontal = 16.dp))
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .defaultMinSize(minHeight = 48.dp)
-                        .padding(all = 16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.gradePreferencesHeaderGradingPeriod),
-                        fontSize = 14.sp,
-                        color = colorResource(id = R.color.textDark),
-                        modifier = Modifier.testTag("gradingPeriodLabel")
-                    )
-                    Text(
-                        text = uiState.gradePreferencesUiState.selectedGradingPeriod?.title
-                            ?: stringResource(id = R.string.allGradingPeriods),
-                        fontSize = 16.sp,
-                        color = colorResource(id = R.color.textDarkest),
-                        modifier = Modifier.testTag("gradingPeriodName")
-                    )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .defaultMinSize(minHeight = 48.dp)
+                            .padding(all = 16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.gradePreferencesHeaderGradingPeriod),
+                            fontSize = 14.sp,
+                            color = colorResource(id = R.color.textDark),
+                            modifier = Modifier.testTag("gradingPeriodLabel")
+                        )
+                        Text(
+                            text = uiState.gradePreferencesUiState.selectedGradingPeriod?.title
+                                ?: stringResource(id = R.string.allGradingPeriods),
+                            fontSize = 16.sp,
+                            color = colorResource(id = R.color.textDarkest),
+                            modifier = Modifier.testTag("gradingPeriodName")
+                        )
+                    }
                 }
 
                 if (uiState.items.isEmpty()) {

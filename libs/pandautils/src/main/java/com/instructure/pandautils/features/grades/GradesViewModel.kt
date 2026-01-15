@@ -104,6 +104,18 @@ class GradesViewModel @Inject constructor(
     }
 
     private fun loadGrades(forceRefresh: Boolean, initialize: Boolean = false) {
+        val currentWhatIfScores = if (!forceRefresh) {
+            _uiState.value.items
+                .flatMap { it.assignments }
+                .filter { it.whatIfScore != null }
+                .associate { it.id to it.whatIfScore }
+        } else {
+            emptyMap()
+        }
+
+        val currentShowWhatIfScore = _uiState.value.showWhatIfScore
+        val currentOnlyGraded = _uiState.value.onlyGradedAssignmentsSwitchEnabled
+
         viewModelScope.tryLaunch {
             _uiState.update {
                 it.copy(
@@ -146,9 +158,21 @@ class GradesViewModel @Inject constructor(
                 it.assignments.isNotEmpty()
             }
 
+            if (currentWhatIfScores.isNotEmpty()) {
+                allItems = currentWhatIfScores.entries.fold(allItems) { items, (assignmentId, score) ->
+                    updateAssignmentWhatIfScore(items, assignmentId, score)
+                }
+            }
+
             val filteredItems = filterItems(allItems, _uiState.value.searchQuery)
 
             val isWhatIfGradingEnabled = gradesViewModelBehavior.isWhatIfGradingEnabled(course)
+
+            val gradeText = if (currentWhatIfScores.isNotEmpty() && currentShowWhatIfScore) {
+                calculateWhatIfGrade(filteredItems, currentOnlyGraded)
+            } else {
+                gradeFormatter.getGradeString(course, courseGrade, !currentOnlyGraded)
+            }
 
             _uiState.update {
                 it.copy(
@@ -162,7 +186,7 @@ class GradesViewModel @Inject constructor(
                         selectedGradingPeriod = selectedGradingPeriod,
                         sortBy = sortBy
                     ),
-                    gradeText = gradeFormatter.getGradeString(course, courseGrade, !it.onlyGradedAssignmentsSwitchEnabled),
+                    gradeText = gradeText,
                     isGradeLocked = courseGrade?.isLocked.orDefault(),
                     isWhatIfGradingEnabled = isWhatIfGradingEnabled,
                     showWhatIfScore = if (isWhatIfGradingEnabled) it.showWhatIfScore else false
