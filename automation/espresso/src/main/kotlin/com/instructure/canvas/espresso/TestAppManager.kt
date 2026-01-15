@@ -18,6 +18,7 @@ package com.instructure.canvas.espresso
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.work.Configuration
+import androidx.work.DefaultWorkerFactory
 import androidx.work.WorkerFactory
 import androidx.work.testing.TestDriver
 import androidx.work.testing.WorkManagerTestInitHelper
@@ -38,8 +39,7 @@ open class TestAppManager : AppManager() {
     }
 
     override fun getWorkManagerFactory(): WorkerFactory {
-        return workerFactory
-            ?: throw IllegalStateException("WorkerFactory not set - ensure HiltWorkerFactory is injected before initializing WorkManager")
+        return workerFactory ?: DefaultWorkerFactory
     }
 
     override fun performLogoutOnAuthError() = Unit
