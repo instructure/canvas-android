@@ -112,7 +112,7 @@ open class InternalWebviewFragment : ParentFragment() {
     var shouldRouteInternally: Boolean by BooleanArg(key = SHOULD_ROUTE_INTERNALLY, default = true)
     private var shouldLoadUrl = true
     private var sessionAuthJob: Job? = null
-    private var shouldCloseFragment = false
+    private var shouldCloseFragment: Boolean by BooleanArg(key = SHOULD_CLOSE_FRAGMENT, default = false)
 
     //region Fragment Lifecycle Overrides
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -311,7 +311,7 @@ open class InternalWebviewFragment : ParentFragment() {
     //endregion
 
     //region Parent Fragment Overrides
-    override fun handleBackPressed() = binding.canvasWebViewWrapper.webView.handleGoBack() ?: false
+    override fun handleBackPressed() = if (shouldCloseFragment) false else binding.canvasWebViewWrapper.webView.handleGoBack()
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.launchExternalWeb) {
@@ -365,7 +365,7 @@ open class InternalWebviewFragment : ParentFragment() {
     //region Functionality
     fun canGoBack(): Boolean {
         return if (!shouldCloseFragment) {
-            binding.canvasWebViewWrapper.webView.canGoBack() ?: false
+            binding.canvasWebViewWrapper.webView.canGoBack()
         } else false
     }
 
@@ -447,6 +447,7 @@ open class InternalWebviewFragment : ParentFragment() {
 
     companion object {
         internal const val SHOULD_ROUTE_INTERNALLY = "shouldRouteInternally"
+        internal const val SHOULD_CLOSE_FRAGMENT = "shouldCloseFragment"
         const val ALLOW_ROUTING_THE_SAME_URL_INTERNALLY = "allowRoutingTheSameUrlInternally"
         const val ALLOW_ROUTING_TO_LOGIN = "allowRoutingToLogin"
         const val ALLOW_EMBED_ROUTING = "allowEmbedRouting"

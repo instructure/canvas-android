@@ -572,6 +572,9 @@ object RouteMatcher : BaseRouteMatcher() {
             route.primaryClass = InternalWebviewFragment::class.java
             route.routeContext = RouteContext.INTERNAL
             route.arguments.putString(Const.INTERNAL_URL, urlString)
+            // These are needed to prevent double back presses for navigation. In some cases Studio does redirects that messes up back navigation.
+            route.arguments.putBoolean(InternalWebviewFragment.SHOULD_ROUTE_INTERNALLY, false)
+            route.arguments.putBoolean(InternalWebviewFragment.SHOULD_CLOSE_FRAGMENT, true)
 
             // Extract title from URL query parameter if present, otherwise use fallback
             val title = uri.getQueryParameter("title") ?: activity.getString(R.string.immersiveView)
