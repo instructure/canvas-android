@@ -33,15 +33,18 @@ import com.instructure.horizon.horizonui.organisms.CollapsableScaffold
 import com.instructure.horizon.horizonui.organisms.tabrow.TabRow
 
 @Composable
-fun LearnScreen(state: LearnUiState, mainNavController: NavHostController) {
-
+fun LearnScreen(
+    state: LearnUiState,
+    mainNavController: NavHostController,
+    homeNavController: NavHostController? = null
+) {
     CollapsableScaffold(
         containerColor = HorizonColors.Surface.pagePrimary(),
         topBar = {
             TabRow(
                 tabs = state.tabs,
                 selectedIndex = state.tabs.indexOf(state.selectedTab),
-                onTabSelected = { state.updateSelectedTab(it) },
+                onTabSelected = { state.updateSelectedTabIndex(it) },
                 tabAlignment = Alignment.Start,
                 tabItemToLabel = { stringResource(it.labelRes) }
             )

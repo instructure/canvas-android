@@ -21,7 +21,8 @@ import com.instructure.horizon.R
 data class LearnUiState(
     val tabs: List<LearnTab> = LearnTab.entries,
     val selectedTab: LearnTab = LearnTab.COURSES,
-    val updateSelectedTab: (Int) -> Unit = {},
+    val updateSelectedTabIndex: (Int) -> Unit = {},
+    val updateSelectedTab: (String) -> Unit = {},
 )
 
 enum class LearnTab(@get:StringRes val labelRes: Int, val stringValue: String) {

@@ -26,9 +26,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LearnViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(LearnUiState(updateSelectedTab = ::updateSelectedTab))
+    private val _uiState = MutableStateFlow(LearnUiState(
+        updateSelectedTab = ::updateSelectedTab,
+        updateSelectedTabIndex = ::updateSelectedTabIndex
+    ))
     val state = _uiState.asStateFlow()
 
     init {
@@ -38,9 +41,17 @@ class LearnViewModel @Inject constructor(
         }
     }
 
-    private fun updateSelectedTab(tabIndex: Int) {
+    private fun updateSelectedTabIndex(tabIndex: Int) {
         _uiState.value = _uiState.value.copy(
             selectedTab = LearnTab.entries[tabIndex]
         )
+    }
+
+    private fun updateSelectedTab(tabStringValue: String) {
+        LearnTab.fromStringValue(tabStringValue)?.let { tab ->
+            _uiState.value = _uiState.value.copy(
+                selectedTab = tab
+            )
+        }
     }
 }
