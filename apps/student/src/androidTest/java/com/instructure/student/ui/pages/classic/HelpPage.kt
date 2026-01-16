@@ -140,7 +140,11 @@ class HelpPage : BasePage(R.id.helpDialog) {
     }
 
     fun assertHelpMenuURL(helpMenuText: String, expectedURL: String) {
-        val expectedIntent = CoreMatchers.allOf(
+        val expectedIntent = CoreMatchers.anyOf(
+            CoreMatchers.allOf(
+                IntentMatchers.hasAction(android.content.Intent.ACTION_VIEW),
+                IntentMatchers.hasData(expectedURL)
+            ),
             IntentMatchers.hasExtras(
                 BundleMatchers.hasEntry(
                     "bundledExtras",

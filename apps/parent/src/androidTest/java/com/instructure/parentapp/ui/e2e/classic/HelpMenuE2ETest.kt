@@ -78,9 +78,9 @@ class HelpMenuE2ETest : ParentComposeTest() {
         Intents.init()
 
         try {
-            helpPage.assertHelpMenuURL(HelpMenu.SEARCH_GUIDES_TITLE, "https://community.canvaslms.com/t5/Canvas/ct-p/canvas")
+            helpPage.assertHelpMenuURL(HelpMenu.SEARCH_GUIDES_TITLE, "https://community.instructure.com/en/all-guides")
             helpPage.assertHelpMenuURL(HelpMenu.SUBMIT_FEATURE_TITLE, "https://community.canvaslms.com/t5/Idea-Conversations/idb-p/ideas")
-            helpPage.assertHelpMenuURL(HelpMenu.SHARE_LOVE_TITLE, "https://community.canvaslms.com/t5/Canvas/ct-p/canvas")
+            helpPage.assertHelpMenuURL(HelpMenu.SHARE_LOVE_TITLE, "market://details?id=com.instructure.parentapp")
         }
         finally {
             Intents.release()
