@@ -15,6 +15,8 @@
  */
 package com.instructure.horizon.navigation
 
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -27,6 +29,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -37,6 +41,7 @@ import androidx.navigation.navDeepLink
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.horizon.features.home.HomeBottomNavigationBar
 import com.instructure.horizon.features.home.horizonHomeNavigation
+import com.instructure.horizon.features.home.isBottomBarVisible
 import com.instructure.horizon.features.inbox.navigation.horizonInboxNavigation
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemSequenceScreen
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemSequenceViewModel
@@ -88,17 +93,27 @@ sealed class MainNavigationRoute(val route: String) {
 fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Modifier) {
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+    val layoutDirection = LocalLayoutDirection.current
+    val bottomBarVisible = isBottomBarVisible(navController)
+
     Scaffold(
         containerColor = HorizonColors.Surface.pagePrimary(),
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         bottomBar = { BottomNavigationBar(navController) }
     ) { innerPadding ->
+        val animatedBottomPadding = if (bottomBarVisible) innerPadding.calculateBottomPadding() else 0.dp
+
         NavHost(
             enterTransition = { enterTransition() },
             exitTransition = { exitTransition() },
             popEnterTransition = { popEnterTransition() },
             popExitTransition = { popExitTransition() },
-            modifier = modifier.padding(innerPadding),
+            modifier = modifier.padding(
+                start = innerPadding.calculateStartPadding(layoutDirection),
+                top = innerPadding.calculateTopPadding(),
+                end = innerPadding.calculateEndPadding(layoutDirection),
+                bottom = animatedBottomPadding
+            ),
             navController = navController,
             startDestination = MainNavigationRoute.Home.route
         ) {

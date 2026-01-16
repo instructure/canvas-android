@@ -65,6 +65,14 @@ private val bottomNavItems = listOf(
     )
 )
 
+@Composable
+fun isBottomBarVisible(navController: NavController): Boolean {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
+
+    return bottomNavItems.map { it.route }.contains(currentDestination?.route)
+            || bottomNavItems.filter { it.containsSubPages }.map { it.route }.contains(currentDestination?.parent?.route)
+}
 
 @Composable
 fun HomeBottomNavigationBar(
@@ -75,9 +83,7 @@ fun HomeBottomNavigationBar(
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-
-    val visible = bottomNavItems.map { it.route }.contains(navController.currentBackStackEntry?.destination?.route)
-            || bottomNavItems.filter { it.containsSubPages }.map { it.route }.contains(navController.currentBackStackEntry?.destination?.parent?.route)
+    val visible = isBottomBarVisible(navController)
 
     AnimatedVisibility(
         visible = visible,
