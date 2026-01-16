@@ -114,6 +114,10 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
 
     fun assertAssignmentSubmitted() {
         onView(withText(R.string.submissionStatusSuccessTitle)).scrollTo().assertDisplayed()
+        assertAssignmentSubmittedStatus()
+    }
+
+    fun assertAssignmentSubmittedStatus() {
         onView(allOf(withId(R.id.submissionStatus), withText(R.string.submitted))).scrollTo().assertDisplayed()
     }
 

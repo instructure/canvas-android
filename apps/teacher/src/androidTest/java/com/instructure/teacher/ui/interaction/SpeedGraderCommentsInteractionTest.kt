@@ -174,7 +174,7 @@ class SpeedGraderCommentsInteractionTest : TeacherComposeTest() {
     }
 
     @Test
-    fun sendsCommentFromCommentLibrary() {
+    fun sendCommentFromCommentLibrary() {
         goToSpeedGraderCommentsPage(seedCommentLibrary = true)
 
         speedGraderPage.clickCommentLibraryButton()

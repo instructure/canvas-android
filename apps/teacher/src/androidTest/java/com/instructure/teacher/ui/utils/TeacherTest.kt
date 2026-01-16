@@ -74,7 +74,6 @@ import com.instructure.teacher.ui.pages.classic.QuizDetailsPage
 import com.instructure.teacher.ui.pages.classic.QuizListPage
 import com.instructure.teacher.ui.pages.classic.QuizPreviewPage
 import com.instructure.teacher.ui.pages.classic.RemoteConfigSettingsPage
-import com.instructure.teacher.ui.pages.classic.SpeedGraderCommentsPage
 import com.instructure.teacher.ui.pages.classic.SpeedGraderQuizSubmissionPage
 import com.instructure.teacher.ui.pages.classic.StudentContextPage
 import com.instructure.teacher.ui.pages.classic.SyllabusPage
@@ -138,7 +137,6 @@ abstract class TeacherTest : CanvasTest() {
     val quizDetailsPage = QuizDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next, R.id.previous))
     val quizListPage = QuizListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn, R.id.backButton))
     val quizPreviewPage = QuizPreviewPage()
-    val speedGraderCommentsPage = SpeedGraderCommentsPage()
     val speedGraderQuizSubmissionPage = SpeedGraderQuizSubmissionPage()
     val personContextPage = PersonContextPage()
     val studentContextPage = StudentContextPage()
@@ -147,12 +145,6 @@ abstract class TeacherTest : CanvasTest() {
     val webViewLoginPage = WebViewLoginPage()
     val fileListPage = FileListPage(Searchable(R.id.search, R.id.queryInput, R.id.clearButton, R.id.backButton))
     val updateFilePermissionsPage = UpdateFilePermissionsPage()
-
-    @Before
-    fun setupWorkerFactory() {
-        val application = activityRule.activity.application as? TestAppManager
-        application?.workerFactory = workerFactory
-    }
 }
 
 /*
