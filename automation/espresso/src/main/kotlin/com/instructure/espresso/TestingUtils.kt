@@ -34,7 +34,6 @@ import androidx.test.espresso.web.webdriver.Locator
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkQuery
-import com.instructure.canvas.espresso.TestAppManager
 import com.instructure.espresso.page.plus
 import com.instructure.pandautils.binding.BindableViewHolder
 import org.apache.commons.lang3.StringUtils
@@ -271,13 +270,14 @@ fun getRecyclerViewFromMatcher(matcher: Matcher<View>): RecyclerView {
  * @param timeoutMillis Maximum time to wait for workers to be enqueued (default: 10000ms)
  */
 fun triggerWorkManagerJobs(tag: String? = null, timeoutMillis: Long = 10000) {
-    val app = ApplicationProvider.getApplicationContext<TestAppManager>()
-    val workManager = WorkManager.getInstance(app)
-    val testDriver = app.testDriver
+    val app = ApplicationProvider.getApplicationContext<android.app.Application>() as? com.instructure.canvas.espresso.WorkManagerTestAppManager
+    val testDriver = app?.testDriver
 
     if (testDriver == null) {
         return
     }
+
+    val workManager = WorkManager.getInstance(ApplicationProvider.getApplicationContext())
 
     val endTime = System.currentTimeMillis() + timeoutMillis
     var workInfos: List<WorkInfo>
@@ -311,8 +311,7 @@ fun triggerWorkManagerJobs(tag: String? = null, timeoutMillis: Long = 10000) {
  * @param timeoutMillis Maximum time to wait (default: 10000ms)
  */
 private fun waitForWorkManagerJobsToComplete(tag: String? = null, timeoutMillis: Long = 10000) {
-    val app = ApplicationProvider.getApplicationContext<TestAppManager>()
-    val workManager = WorkManager.getInstance(app)
+    val workManager = WorkManager.getInstance(ApplicationProvider.getApplicationContext())
     val startTime = System.currentTimeMillis()
 
     while (System.currentTimeMillis() - startTime < timeoutMillis) {

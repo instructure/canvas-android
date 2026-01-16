@@ -16,21 +16,14 @@
 package com.instructure.canvas.espresso
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.work.Configuration
-import androidx.work.DefaultWorkerFactory
 import androidx.work.WorkerFactory
-import androidx.work.testing.TestDriver
-import androidx.work.testing.WorkManagerTestInitHelper
 import com.instructure.canvasapi2.AppManager
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
-import java.util.concurrent.Executors
 
-open class TestAppManager : AppManager() {
+open class TestAppManager : AppManager(), WorkManagerTestAppManager {
 
-    private val delegatingFactory = DelegatingWorkerFactory()
-    private var workManagerInitialized = false
-    var testDriver: TestDriver? = null
+    override val workManagerTestHelper = WorkManagerTestHelper()
 
     @SuppressLint("RestrictedApi")
     override fun onCreate() {
@@ -39,25 +32,9 @@ open class TestAppManager : AppManager() {
     }
 
     override val workManagerConfiguration: Configuration
-        get() = Configuration.Builder()
-            .setWorkerFactory(delegatingFactory)
-            .setMinimumLoggingLevel(Log.DEBUG)
-            .setExecutor(Executors.newSingleThreadExecutor())
-            .build()
+        get() = workManagerTestHelper.workManagerConfiguration
 
-    override fun getWorkManagerFactory(): WorkerFactory = delegatingFactory
+    override fun getWorkManagerFactory(): WorkerFactory = workManagerTestHelper.getWorkManagerFactory()
 
     override fun performLogoutOnAuthError() = Unit
-
-    @SuppressLint("RestrictedApi")
-    fun initializeTestWorkManager(factory: WorkerFactory) {
-        if (!workManagerInitialized) {
-            WorkManagerTestInitHelper.initializeTestWorkManager(this, workManagerConfiguration)
-            testDriver = WorkManagerTestInitHelper.getTestDriver(this)
-            workManagerInitialized = true
-        }
-
-        // Update the delegate to use the provided factory
-        delegatingFactory.setDelegate(factory)
-    }
 }

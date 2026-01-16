@@ -106,14 +106,14 @@ abstract class CanvasTest : InstructureTestingContract {
     @Before
     fun recordOriginalActivity() {
         originalActivity = activityRule.activity
-        val application = originalActivity.application as? TestAppManager
+        val application = originalActivity.application as? WorkManagerTestAppManager
 
         // Inject Hilt into test class (for test's @Inject fields)
         try {
             hiltRule.inject()
 
             // Initialize WorkManager with HiltWorkerFactory (or update delegate if already initialized)
-            application?.initializeTestWorkManager(workerFactory)
+            application?.initializeTestWorkManager(workerFactory, originalActivity.application)
         } catch (e: IllegalStateException) {
             // Catch this exception to avoid multiple injection with orchestrator
             // WorkManager already has HiltWorkerFactory from first test, no need to reinitialize
