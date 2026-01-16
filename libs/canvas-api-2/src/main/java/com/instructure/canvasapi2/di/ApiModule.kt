@@ -14,6 +14,7 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.DiscussionAPI
 import com.instructure.canvasapi2.apis.DomainServicesAuthenticationAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
+import com.instructure.canvasapi2.apis.ErrorReportAPI
 import com.instructure.canvasapi2.apis.ExperienceAPI
 import com.instructure.canvasapi2.apis.ExternalToolAPI
 import com.instructure.canvasapi2.apis.FeaturesAPI
@@ -440,6 +441,16 @@ class ApiModule {
         journeyRestBuilder: JourneyRestBuilder,
     ): JourneyAssistAPI {
         return journeyRestBuilder.build(JourneyAssistAPI::class.java)
+    }
+
+    @Provides
+    fun provideErrorReportApi(): ErrorReportAPI.ErrorReportInterface {
+        return RestBuilder().build(ErrorReportAPI.ErrorReportInterface::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideHelpLinksInterfaceApi(): HelpLinksAPI.HelpLinksAPI {
+        return RestBuilder().build(HelpLinksAPI.HelpLinksAPI::class.java, RestParams())
     }
 }
 

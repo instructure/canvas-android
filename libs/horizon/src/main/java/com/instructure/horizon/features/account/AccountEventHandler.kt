@@ -14,15 +14,24 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.horizonui.organisms.inputs.textfield
+package com.instructure.horizon.features.account
 
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-sealed class TextFieldInputSize(
-    val verticalPadding: Dp,
-    val horizontalPadding: Dp
-) {
-    data object Small: TextFieldInputSize(3.dp, 12.dp)
-    data object Medium: TextFieldInputSize(11.dp, 12.dp)
+sealed interface AccountEvent {
+    data class ShowSnackbar(val message: String) : AccountEvent
+}
+
+@Singleton
+class AccountEventHandler @Inject constructor() {
+
+    private val _events = MutableSharedFlow<AccountEvent>(replay = 0)
+    val events = _events.asSharedFlow()
+
+    suspend fun postEvent(event: AccountEvent) {
+        _events.emit(event)
+    }
 }

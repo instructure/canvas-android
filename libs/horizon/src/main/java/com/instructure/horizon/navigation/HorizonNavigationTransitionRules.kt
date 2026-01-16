@@ -64,11 +64,6 @@ val animationRules = listOf(
     ),
     NavigationTransitionAnimationRule(
         from = HomeNavigationRoute.Account.route,
-        to = AccountRoute.BugReportWebView.route,
-        style = NavigationTransitionAnimation.SLIDE
-    ),
-    NavigationTransitionAnimationRule(
-        from = HomeNavigationRoute.Account.route,
         to = AccountRoute.CalendarFeed.route,
         style = NavigationTransitionAnimation.SLIDE
     ),

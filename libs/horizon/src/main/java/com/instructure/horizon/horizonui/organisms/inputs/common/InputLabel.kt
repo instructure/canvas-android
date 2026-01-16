@@ -60,7 +60,7 @@ fun InputLabel(
                     HorizonColors.Text.body()
                 }
                 Text(
-                    stringResource(R.string.requiredMark),
+                    stringResource(R.string.inputRequiredMark),
                     style = HorizonTypography.labelLargeBold,
                     color = requiredColor,
                 )

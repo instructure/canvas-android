@@ -17,8 +17,10 @@
 package com.instructure.horizon.features.account
 
 import com.instructure.canvasapi2.apis.ExperienceAPI
+import com.instructure.canvasapi2.apis.HelpLinksAPI
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.models.ExperienceSummary
+import com.instructure.canvasapi2.models.HelpLink
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.DataResult
 import io.mockk.coEvery
@@ -31,6 +33,7 @@ import org.junit.Test
 class AccountRepositoryTest {
     private val userApi: UserAPI.UsersInterface = mockk(relaxed = true)
     private val experienceAPI: ExperienceAPI = mockk(relaxed = true)
+    private val helpLinksApi: HelpLinksAPI.HelpLinksAPI = mockk(relaxed = true)
 
     @Test
     fun `Test successful user details retrieval`() = runTest {
@@ -70,7 +73,31 @@ class AccountRepositoryTest {
         assertTrue(result.isEmpty())
     }
 
+    @Test
+    fun `Test successful help link retrieval`() = runTest {
+        val links = listOf(
+            HelpLink(id = "report_a_problem", type = "default", availableTo = emptyList(), url = "", text = "", subtext = ""),
+            HelpLink(id = "custom_id", type = "custom", availableTo = emptyList(), url = "", text = "", subtext = "")
+        )
+        coEvery { helpLinksApi.getCanvasHelpLinks(any()) } returns DataResult.Success(links)
+
+        val result = getRepository().getHelpLinks(false)
+
+        assertEquals(2, result.size)
+        assertEquals(result[0].id,  "report_a_problem")
+        assertEquals(result[1].id,  "custom_id")
+    }
+
+    @Test
+    fun `Test failed help link retrieval returns empty list`() = runTest {
+        coEvery { helpLinksApi.getCanvasHelpLinks(any()) } returns DataResult.Fail()
+
+        val result = getRepository().getHelpLinks(false)
+
+        assertTrue(result.isEmpty())
+    }
+
     private fun getRepository(): AccountRepository {
-        return AccountRepository(userApi, experienceAPI)
+        return AccountRepository(userApi, experienceAPI, helpLinksApi)
     }
 }
