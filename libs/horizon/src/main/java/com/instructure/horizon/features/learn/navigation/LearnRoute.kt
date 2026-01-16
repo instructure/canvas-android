@@ -16,14 +16,25 @@
  */
 package com.instructure.horizon.features.learn.navigation
 
+import com.instructure.horizon.features.learn.LearnTab
+
 sealed class LearnRoute {
     data object LearnScreen: LearnRoute() {
-        val route = "learn_screen"
+        const val selectedTabAttr = "selectedTab"
+        const val selectedTabFromDetailsKey = "selectedTabFromDetails"
+        private const val baseUrl = "learn_screen"
+        const val route = "$baseUrl/{$selectedTabAttr}"
+        fun route(selectedTab: LearnTab? = null): String {
+            return if (selectedTab == null)
+                "$baseUrl"
+            else
+                "$baseUrl/${selectedTab.stringValue}"
+        }
     }
     data class LearnCourseDetailsScreen(val courseId: Long): LearnRoute() {
         companion object {
             const val courseIdAttr = "courseId"
-            private const val baseUrl = "courses"
+            const val baseUrl = "courses"
             const val route = "$baseUrl/{$courseIdAttr}"
             fun route(courseId: Long) = "$baseUrl/$courseId"
         }
@@ -32,7 +43,7 @@ sealed class LearnRoute {
     data class LearnProgramDetailsScreen(val courseId: Long): LearnRoute() {
         companion object {
             const val programIdAttr = "programId"
-            private const val baseUrl = "programs"
+            const val baseUrl = "programs"
             const val route = "$baseUrl/{$programIdAttr}"
             fun route(courseId: Long) = "$baseUrl/$courseId"
         }

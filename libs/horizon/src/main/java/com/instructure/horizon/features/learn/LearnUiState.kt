@@ -24,8 +24,14 @@ data class LearnUiState(
     val updateSelectedTab: (Int) -> Unit = {},
 )
 
-enum class LearnTab(@get:StringRes val labelRes: Int) {
-    COURSES(R.string.learnCoursesTabLabel),
-    PROGRAMS(R.string.learnProgramsTabLabel)
+enum class LearnTab(@get:StringRes val labelRes: Int, val stringValue: String) {
+    COURSES(R.string.learnCoursesTabLabel, "courses"),
+    PROGRAMS(R.string.learnProgramsTabLabel, "programs")
     // TODO: LEARNING_LIBRARY("Learning Library")
+    ;
+    companion object {
+        fun fromStringValue(stringValue: String?): LearnTab? {
+            return entries.find { it.stringValue == stringValue }
+        }
+    }
 }

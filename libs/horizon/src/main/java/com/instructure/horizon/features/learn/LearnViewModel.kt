@@ -15,17 +15,28 @@
  */
 package com.instructure.horizon.features.learn
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import com.instructure.horizon.features.learn.navigation.LearnRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
 class LearnViewModel @Inject constructor(
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(LearnUiState(updateSelectedTab = ::updateSelectedTab))
     val state = _uiState.asStateFlow()
+
+    init {
+        val selectedTabValue = savedStateHandle.get<String>(LearnRoute.LearnScreen.selectedTabAttr)
+        LearnTab.fromStringValue(selectedTabValue)?.let { selectedTab ->
+            _uiState.update { it.copy(selectedTab = selectedTab) }
+        }
+    }
 
     private fun updateSelectedTab(tabIndex: Int) {
         _uiState.value = _uiState.value.copy(

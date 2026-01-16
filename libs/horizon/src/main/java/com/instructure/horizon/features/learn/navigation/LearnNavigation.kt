@@ -41,10 +41,21 @@ fun NavGraphBuilder.learnNavigation(
 ) {
     navigation(
         route = HomeNavigationRoute.Learn.route,
-        startDestination  =LearnRoute.LearnScreen.route
+        startDestination = LearnRoute.LearnScreen.route
     ){
         composable(
-            LearnRoute.LearnScreen.route
+            LearnRoute.LearnScreen.route,
+            arguments = listOf(
+                navArgument(LearnRoute.LearnScreen.selectedTabAttr) {
+                    type = NavType.StringType
+                    nullable = true
+                }
+            ),
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = "${ApiPrefs.fullDomain}/{${LearnRoute.LearnScreen.selectedTabAttr}}"
+                }
+            )
         ) {
             val viewModel = hiltViewModel<LearnViewModel>()
             val uiState by viewModel.state.collectAsState()
@@ -85,7 +96,6 @@ fun NavGraphBuilder.learnNavigation(
             val viewModel = hiltViewModel<ProgramDetailsViewModel>()
             val state by viewModel.state.collectAsState()
             ProgramDetailsScreen(state, mainNavController)
-
         }
     }
 }
