@@ -56,6 +56,7 @@ import com.instructure.pandautils.utils.PermissionUtils
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.argsWithContext
+import com.instructure.pandautils.utils.enableAlgorithmicDarkening
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
@@ -94,6 +95,7 @@ open class InternalWebviewFragment : ParentFragment() {
     )
     var allowRoutingToLogin: Boolean by BooleanArg(default = true, key = ALLOW_ROUTING_TO_LOGIN)
     var allowEmbedRouting: Boolean by BooleanArg(default = true, key = ALLOW_EMBED_ROUTING)
+    var enableAlgorithmicDarkening: Boolean by BooleanArg(default = false, key = ENABLE_ALGORITHMIC_DARKENING)
 
     var hideToolbar: Boolean by BooleanArg(key = Const.HIDDEN_TOOLBAR)
 
@@ -131,6 +133,7 @@ open class InternalWebviewFragment : ParentFragment() {
         canvasWebViewWrapper.webView.settings.loadWithOverviewMode = true
         canvasWebViewWrapper.webView.setInitialScale(100)
         webViewLoading.setVisible(true)
+        if (enableAlgorithmicDarkening) canvasWebViewWrapper.webView.enableAlgorithmicDarkening()
 
         canvasWebViewWrapper.webView.canvasWebChromeClientCallback =
             object : CanvasWebView.CanvasWebChromeClientCallback {
@@ -448,6 +451,7 @@ open class InternalWebviewFragment : ParentFragment() {
     companion object {
         internal const val SHOULD_ROUTE_INTERNALLY = "shouldRouteInternally"
         internal const val SHOULD_CLOSE_FRAGMENT = "shouldCloseFragment"
+        internal const val ENABLE_ALGORITHMIC_DARKENING = "enableAlgorithmicDarkening"
         const val ALLOW_ROUTING_THE_SAME_URL_INTERNALLY = "allowRoutingTheSameUrlInternally"
         const val ALLOW_ROUTING_TO_LOGIN = "allowRoutingToLogin"
         const val ALLOW_EMBED_ROUTING = "allowEmbedRouting"

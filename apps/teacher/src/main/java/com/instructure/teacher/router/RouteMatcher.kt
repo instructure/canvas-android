@@ -388,6 +388,7 @@ object RouteMatcher : BaseRouteMatcher() {
         route.primaryClass = FullscreenInternalWebViewFragment::class.java
         route.routeContext = RouteContext.INTERNAL
         route.arguments.putString(InternalWebViewFragment.URL, urlString)
+        route.arguments.putBoolean(InternalWebViewFragment.ENABLE_ALGORITHMIC_DARKENING, true)
 
         // Extract title from URL query parameter if present, otherwise use fallback
         val title = uri?.getQueryParameter("title") ?: activity.getString(R.string.immersiveView)
