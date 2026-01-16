@@ -93,6 +93,9 @@ import com.instructure.horizon.horizonui.organisms.AnimatedHorizontalPager
 import com.instructure.horizon.horizonui.organisms.CollapsableHeaderScreen
 import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.pandautils.compose.modifiers.conditional
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.getActivityOrNull
 import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
@@ -111,6 +114,14 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
     val refreshState by refreshStateFlow.collectAsState()
 
     NotificationPermissionRequest()
+
+    val activity = LocalContext.current.getActivityOrNull()
+    if (activity != null) ViewStyler.setStatusBarColor(activity, ContextCompat.getColor(activity, R.color.surface_pagePrimary))
+
+    LaunchedEffect(key1 = uiState.theme) {
+        val theme = uiState.theme
+        if (theme != null && activity != null && !ThemePrefs.isThemeApplied) ThemePrefs.applyCanvasTheme(theme, activity)
+    }
 
     LaunchedEffect(shouldRefresh) {
         if (shouldRefresh) {

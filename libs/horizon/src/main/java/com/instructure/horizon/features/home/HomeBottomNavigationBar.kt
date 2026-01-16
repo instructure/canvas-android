@@ -29,6 +29,9 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -37,6 +40,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.instructure.horizon.R
+import com.instructure.horizon.features.aiassistant.AiAssistantScreen
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.molecules.IconButton
@@ -78,9 +82,12 @@ fun isBottomBarVisible(navController: NavController): Boolean {
 fun HomeBottomNavigationBar(
     navController: NavController,
     buttonsEnabled: Boolean = true,
-    updateShowAiAssist: (Boolean) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
+    var isAiAssistVisible by rememberSaveable { mutableStateOf(false) }
+    if (isAiAssistVisible) {
+        AiAssistantScreen { isAiAssistVisible = false }
+    }
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
     val visible = isBottomBarVisible(navController)
@@ -100,7 +107,7 @@ fun HomeBottomNavigationBar(
                         currentDestination?.hierarchy?.any { it.route == item.route } == true
                     if (item.route == null) {
                         AiAssistantItem(item, buttonsEnabled, onClick = {
-                            updateShowAiAssist(true)
+                            isAiAssistVisible = true
                         })
                     } else {
                         SelectableNavigationItem(item, selected, buttonsEnabled, onClick = {
