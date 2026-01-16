@@ -158,7 +158,6 @@ abstract class CanvasContext : CanvasModel<CanvasContext>() {
 
 /**
  * Creates a base URL for this CanvasContext using the current domain and context type/id
- * Example: https://tamaskozmer.instructure.com/courses/20781
  */
 fun CanvasContext.toBaseUrl(): String {
     return "${ApiPrefs.fullDomain}/${type.apiString}/$id"

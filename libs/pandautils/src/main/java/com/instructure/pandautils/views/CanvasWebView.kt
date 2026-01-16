@@ -852,7 +852,6 @@ class CanvasWebView @JvmOverloads constructor(
 
     /**
      * Extracts the context URL from a base URL
-     * Example: "https://tamaskozmer.instructure.com/courses/20781/pages/..." -> "https://tamaskozmer.instructure.com/courses/20781/"
      */
     private fun extractContextUrl(baseUrl: String): String? {
         val regex = Regex("(https?://[^/]+/(courses|groups|users)/\\d+)/")
