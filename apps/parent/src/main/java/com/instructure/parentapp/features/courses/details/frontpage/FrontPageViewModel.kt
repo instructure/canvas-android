@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.models.toBaseUrl
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.features.grades.COURSE_ID_KEY
+import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.studentColor
 import com.instructure.parentapp.R
@@ -46,7 +47,8 @@ class FrontPageViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     savedStateHandle: SavedStateHandle,
     private val repository: FrontPageRepository,
-    private val parentPrefs: ParentPrefs
+    private val parentPrefs: ParentPrefs,
+    private val htmlContentFormatter: HtmlContentFormatter
 ) : ViewModel() {
 
     private val courseId = savedStateHandle.get<Long>(COURSE_ID_KEY).orDefault()
@@ -76,7 +78,7 @@ class FrontPageViewModel @Inject constructor(
 
             _uiState.update {
                 it.copy(
-                    htmlContent = frontPage.body.orEmpty(),
+                    htmlContent = htmlContentFormatter.formatHtmlWithIframes(frontPage.body.orEmpty(), courseId),
                     isLoading = false,
                     isRefreshing = false,
                     isError = false
