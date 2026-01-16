@@ -44,7 +44,8 @@ internal fun CourseDetailsWebViewScreen(
     studentColor: Int,
     onRefresh: () -> Unit,
     applyOnWebView: (CanvasWebView) -> Unit,
-    onLtiButtonPressed: (String) -> Unit
+    onLtiButtonPressed: (String) -> Unit,
+    baseUrl: String? = null
 ) {
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
@@ -62,7 +63,8 @@ internal fun CourseDetailsWebViewScreen(
         ComposeCanvasWebViewWrapper(
             content = html,
             onLtiButtonPressed = onLtiButtonPressed,
-            applyOnWebView = applyOnWebView
+            applyOnWebView = applyOnWebView,
+            baseUrl = baseUrl
         )
         PullRefreshIndicator(
             refreshing = isRefreshing,

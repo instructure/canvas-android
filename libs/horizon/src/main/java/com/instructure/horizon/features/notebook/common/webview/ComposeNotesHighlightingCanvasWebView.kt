@@ -69,6 +69,7 @@ fun ComposeNotesHighlightingCanvasWebView(
     contentType: String = "text/html",
     useInAppFormatting: Boolean = true,
     title: String? = null,
+    baseUrl: String? = null,
     onLtiButtonPressed: ((ltiUrl: String) -> Unit)? = null,
     applyOnWebView: (CanvasWebView.() -> Unit)? = null,
     webViewCallbacks: ComposeWebViewCallbacks = ComposeWebViewCallbacks(),
@@ -216,7 +217,7 @@ fun ComposeNotesHighlightingCanvasWebView(
             update = {
                 if (webViewState.isEmpty) {
                     if (useInAppFormatting) {
-                        it.loadHtml(content, title)
+                        it.loadHtml(content, title, baseUrl)
                     } else {
                         it.loadDataWithBaseUrl(CanvasWebView.getReferrer(true), content, contentType, "UTF-8", null)
                     }
@@ -229,7 +230,7 @@ fun ComposeNotesHighlightingCanvasWebView(
                         it.webView.addJavascriptInterface(JsGoogleDocsInterface(it.context), Const.GOOGLE_DOCS)
                     }
                 } else {
-                    it.loadHtml(content, title)
+                    it.loadHtml(content, title, baseUrl)
                 }
 
                 it.webView.addTextSelectionInterface(

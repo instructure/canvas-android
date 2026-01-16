@@ -440,7 +440,8 @@ class AssignmentDetailsViewModel @Inject constructor(
                 submissionStatusTint = submissionStatusTint,
                 submissionStatusVisible = submissionStatusVisible,
                 fullLocked = true,
-                lockedMessage = lockedMessage
+                lockedMessage = lockedMessage,
+                baseUrl = assignment.htmlUrl
             )
         }
 
@@ -629,7 +630,8 @@ class AssignmentDetailsViewModel @Inject constructor(
             discussionHeaderViewData = discussionHeaderViewData,
             quizDetails = quizViewViewData,
             attemptsViewData = attemptsViewData,
-            hasDraft = hasDraft
+            hasDraft = hasDraft,
+            baseUrl = assignment.htmlUrl
         )
     }
 

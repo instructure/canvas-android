@@ -172,9 +172,15 @@ private fun getOrCreateAdapter(recyclerView: RecyclerView): BindableRecyclerView
     }
 }
 
-@BindingAdapter(value = ["htmlContent", "htmlTitle", "onLtiButtonPressed"], requireAll = false)
-fun bindHtmlContent(webViewWrapper: CanvasWebViewWrapper, html: String?, title: String?, onLtiButtonPressed: OnLtiButtonPressed?) {
-    webViewWrapper.loadHtml(html.orEmpty(), title.orEmpty())
+@BindingAdapter(value = ["htmlContent", "htmlTitle", "onLtiButtonPressed", "baseUrl"], requireAll = false)
+fun bindHtmlContent(
+    webViewWrapper: CanvasWebViewWrapper,
+    html: String?,
+    title: String?,
+    onLtiButtonPressed: OnLtiButtonPressed?,
+    baseUrl: String?
+) {
+    webViewWrapper.loadHtml(html.orEmpty(), title.orEmpty(), baseUrl)
     if (onLtiButtonPressed != null) {
         webViewWrapper.webView.addJavascriptInterface(JSInterface(onLtiButtonPressed), Const.LTI_TOOL)
     }

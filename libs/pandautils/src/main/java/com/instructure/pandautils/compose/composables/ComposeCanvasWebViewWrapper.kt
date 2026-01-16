@@ -43,6 +43,7 @@ fun ComposeCanvasWebViewWrapper(
     contentType: String = "text/html",
     useInAppFormatting: Boolean = true,
     title: String? = null,
+    baseUrl: String? = null,
     onLtiButtonPressed: ((ltiUrl: String) -> Unit)? = null,
     applyOnWebView: (CanvasWebView.() -> Unit)? = null,
     applyOnUpdate: (CanvasWebViewWrapper.() -> Unit)? = null,
@@ -99,7 +100,7 @@ fun ComposeCanvasWebViewWrapper(
                 savedHtml.value = content // Update saved HTML on each update
                 if (webViewState.isEmpty) {
                     if (useInAppFormatting) {
-                        view.loadHtml(savedHtml.value, title)
+                        view.loadHtml(savedHtml.value, title, baseUrl)
                     } else {
                         view.loadDataWithBaseUrl(CanvasWebView.getReferrer(true), savedHtml.value, contentType, "UTF-8", null)
                     }

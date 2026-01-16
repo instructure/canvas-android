@@ -25,7 +25,9 @@ import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.parentapp.R
 import com.instructure.parentapp.util.ParentPrefs
@@ -64,6 +66,7 @@ class FrontPageViewModelTest {
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val repository: FrontPageRepository = mockk(relaxed = true)
     private val parentPrefs: ParentPrefs = mockk(relaxed = true)
+    private val htmlContentFormatter: HtmlContentFormatter = mockk(relaxed = true)
 
     private lateinit var viewModel: FrontPageViewModel
 
@@ -76,6 +79,9 @@ class FrontPageViewModelTest {
         coEvery { savedStateHandle.get<Long>(Navigation.COURSE_ID) } returns 1
         every { parentPrefs.currentStudent } returns User(shortName = "User 1")
         every { context.getString(R.string.frontPageRefreshFailed) } returns "Failed to refresh front page"
+        coEvery { htmlContentFormatter.formatHtmlWithIframes(any(), any()) } answers { firstArg() }
+        mockkObject(ApiPrefs)
+        every { ApiPrefs.fullDomain } returns "domain"
     }
 
     @After
@@ -94,7 +100,8 @@ class FrontPageViewModelTest {
             studentColor = 1,
             isLoading = false,
             isError = false,
-            htmlContent = "Front Page"
+            htmlContent = "Front Page",
+            baseUrl = "domain/courses/1"
         )
 
         Assert.assertEquals(expected, viewModel.uiState.value)
@@ -109,7 +116,8 @@ class FrontPageViewModelTest {
         val expected = FrontPageUiState(
             studentColor = 1,
             isLoading = false,
-            isError = true
+            isError = true,
+            baseUrl = "domain/courses/1"
         )
 
         Assert.assertEquals(expected, viewModel.uiState.value)
@@ -125,7 +133,8 @@ class FrontPageViewModelTest {
             studentColor = 1,
             isLoading = false,
             isError = false,
-            htmlContent = "Front Page"
+            htmlContent = "Front Page",
+            baseUrl = "domain/courses/1"
         )
 
         Assert.assertEquals(expected, viewModel.uiState.value)
@@ -160,7 +169,8 @@ class FrontPageViewModelTest {
             isLoading = false,
             isError = false,
             isRefreshing = false,
-            htmlContent = "Front Page"
+            htmlContent = "Front Page",
+            baseUrl = "domain/courses/1"
         )
         Assert.assertEquals(expectedUiState, viewModel.uiState.value)
     }
@@ -178,12 +188,13 @@ class FrontPageViewModelTest {
             studentColor = 1,
             isLoading = false,
             isError = true,
-            isRefreshing = false
+            isRefreshing = false,
+            baseUrl = "domain/courses/1"
         )
         Assert.assertEquals(expectedUiState, viewModel.uiState.value)
     }
 
     private fun createViewModel() {
-        viewModel = FrontPageViewModel(context, savedStateHandle, repository, parentPrefs)
+        viewModel = FrontPageViewModel(context, savedStateHandle, repository, parentPrefs, htmlContentFormatter)
     }
 }

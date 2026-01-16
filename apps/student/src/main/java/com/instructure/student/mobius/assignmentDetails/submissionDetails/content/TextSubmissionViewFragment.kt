@@ -26,6 +26,7 @@ import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.replaceFirstAfter
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.utils.NullableStringArg
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
@@ -40,6 +41,7 @@ class TextSubmissionViewFragment : BaseCanvasFragment() {
     private val binding by viewBinding(FragmentTextSubmissionBinding::bind)
 
     private var submissionText by StringArg()
+    private var baseUrl by NullableStringArg()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_text_submission, container, false)
@@ -80,7 +82,7 @@ class TextSubmissionViewFragment : BaseCanvasFragment() {
             override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
         }
 
-        textSubmissionWebViewWrapper.loadHtml(submissionText, getString(R.string.a11y_submissionText)) { formatted ->
+        textSubmissionWebViewWrapper.loadHtml(submissionText, getString(R.string.a11y_submissionText), baseUrl = baseUrl) { formatted ->
             /* If the source content begins with a paragraph tag, the WebView automatically applies some vertical padding.
            For other content, we need to apply the padding ourselves. */
             val verticalPadding = if (submissionText.startsWith("<p")) "0px" else "16px"
@@ -96,8 +98,9 @@ class TextSubmissionViewFragment : BaseCanvasFragment() {
     }
 
     companion object {
-        fun newInstance(text: String) = TextSubmissionViewFragment().apply {
+        fun newInstance(text: String, baseUrl: String? = null) = TextSubmissionViewFragment().apply {
             submissionText = text
+            this.baseUrl = baseUrl
         }
     }
 

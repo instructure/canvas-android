@@ -27,6 +27,7 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_TEXT_SUBMIS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.utils.NullableStringArg
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
@@ -43,6 +44,7 @@ class SpeedGraderTextSubmissionFragment : BaseCanvasFragment(), SpeedGraderWebNa
     private val binding by viewBinding(FragmentSpeedGraderTextSubmissionBinding::bind)
 
     private var submissionText by StringArg()
+    private var baseUrl by NullableStringArg()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_speed_grader_text_submission, container, false)
@@ -85,7 +87,7 @@ class SpeedGraderTextSubmissionFragment : BaseCanvasFragment(), SpeedGraderWebNa
 
         textSubmissionWebViewWrapper.webView.setInitialScale(100)
 
-        textSubmissionWebViewWrapper.loadHtml(submissionText, getString(R.string.a11y_submissionText))
+        textSubmissionWebViewWrapper.loadHtml(submissionText, getString(R.string.a11y_submissionText), baseUrl = baseUrl)
     }
 
     override fun onStop() {
@@ -96,14 +98,16 @@ class SpeedGraderTextSubmissionFragment : BaseCanvasFragment(), SpeedGraderWebNa
     companion object {
 
         const val SUBMISSION_TEXT = "submissionText"
+        const val BASE_URL = "baseUrl"
 
-        fun newInstance(text: String) = SpeedGraderTextSubmissionFragment().apply {
-            arguments = createBundle(text)
+        fun newInstance(text: String, baseUrl: String?) = SpeedGraderTextSubmissionFragment().apply {
+            arguments = createBundle(text, baseUrl)
             submissionText = text
         }
 
-        fun createBundle(text: String) = Bundle().apply {
+        fun createBundle(text: String, baseUrl: String?) = Bundle().apply {
             putString(SUBMISSION_TEXT, text)
+            putString(BASE_URL, baseUrl)
         }
     }
 
