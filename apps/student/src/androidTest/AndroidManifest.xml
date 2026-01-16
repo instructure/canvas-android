@@ -25,13 +25,4 @@
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.SET_ANIMATION_SCALE" />
-
-    <application>
-        <!-- Disable WorkManager's automatic initialization to prevent early initialization with wrong factory.
-             Tests must manually initialize WorkManager via TestAppManager.initializeTestWorkManager() -->
-        <provider
-            android:name="androidx.work.impl.WorkManagerInitializer"
-            android:authorities="${applicationId}.workmanager-init"
-            tools:node="remove" />
-    </application>
 </manifest>

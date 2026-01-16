@@ -37,48 +37,28 @@ open class TestAppManager : AppManager() {
     override fun onCreate() {
         super.onCreate()
         RemoteConfigUtils.initialize()
-        Log.d("WorkManagerTest", "TestAppManager.onCreate() - Application@${System.identityHashCode(this)}")
     }
 
     override val workManagerConfiguration: Configuration
-        get() {
-            Log.d("WorkManagerTest", "workManagerConfiguration accessed - Application@${System.identityHashCode(this)}, using DelegatingWorkerFactory")
-            return Configuration.Builder()
-                .setWorkerFactory(delegatingFactory)
-                .setMinimumLoggingLevel(Log.DEBUG)
-                .setExecutor(Executors.newSingleThreadExecutor())
-                .build()
-        }
+        get() = Configuration.Builder()
+            .setWorkerFactory(delegatingFactory)
+            .setMinimumLoggingLevel(Log.DEBUG)
+            .setExecutor(Executors.newSingleThreadExecutor())
+            .build()
 
-    override fun getWorkManagerFactory(): WorkerFactory {
-        Log.d("WorkManagerTest", "getWorkManagerFactory() - Application@${System.identityHashCode(this)}, returning DelegatingWorkerFactory")
-        return delegatingFactory
-    }
-
-    fun setWorkerFactory(factory: WorkerFactory) {
-        Log.d("WorkManagerTest", "setWorkerFactory() called with ${factory.javaClass.simpleName}")
-        delegatingFactory.setDelegate(factory)
-    }
+    override fun getWorkManagerFactory(): WorkerFactory = delegatingFactory
 
     override fun performLogoutOnAuthError() = Unit
 
     @SuppressLint("RestrictedApi")
     fun initializeTestWorkManager(factory: WorkerFactory) {
-        Log.d(
-            "WorkManagerTest",
-            "initializeTestWorkManager() called - factory=${factory.javaClass.simpleName}, workManagerInitialized=$workManagerInitialized"
-        )
-
         if (!workManagerInitialized) {
-            // First time: Initialize WorkManager with the delegating factory
-            Log.d("WorkManagerTest", "Initializing WorkManager with DelegatingWorkerFactory")
             WorkManagerTestInitHelper.initializeTestWorkManager(this, workManagerConfiguration)
             testDriver = WorkManagerTestInitHelper.getTestDriver(this)
             workManagerInitialized = true
         }
 
-        // Update the delegate to use the new factory
+        // Update the delegate to use the provided factory
         delegatingFactory.setDelegate(factory)
-        Log.d("WorkManagerTest", "WorkManager factory delegate updated to ${factory.javaClass.simpleName}")
     }
 }

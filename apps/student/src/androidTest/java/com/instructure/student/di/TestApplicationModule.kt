@@ -1,11 +1,7 @@
 package com.instructure.student.di
 
 import android.content.Context
-import android.util.Log
-import androidx.work.DefaultWorkerFactory
 import androidx.work.WorkManager
-import androidx.work.testing.WorkManagerTestInitHelper
-import com.instructure.canvas.espresso.TestAppManager
 import com.instructure.pandautils.di.WorkManagerModule
 import com.instructure.pandautils.utils.LogoutHelper
 import com.instructure.student.espresso.fakes.FakeEnabledTabs
@@ -27,12 +23,8 @@ import javax.inject.Singleton
 class TestWorkManagerModule {
     @Provides
     fun provideWorkManager(@ApplicationContext context: Context): WorkManager {
-        Log.d("WorkManagerTest", "TestWorkManagerModule.provideWorkManager() called")
-
         // Just return the instance - CanvasTest @Before will handle initialization
-        val workManager = WorkManager.getInstance(context)
-        Log.d("WorkManagerTest", "Returning WorkManager@${System.identityHashCode(workManager)}")
-        return workManager
+        return WorkManager.getInstance(context)
     }
 }
 

@@ -275,10 +275,7 @@ fun triggerWorkManagerJobs(tag: String? = null, timeoutMillis: Long = 10000) {
     val workManager = WorkManager.getInstance(app)
     val testDriver = app.testDriver
 
-    android.util.Log.d("WorkManagerTest", "triggerWorkManagerJobs() - tag: $tag, timeout: $timeoutMillis, Application@${System.identityHashCode(app)}, WorkManager@${System.identityHashCode(workManager)}, testDriver@${System.identityHashCode(testDriver)}")
-
     if (testDriver == null) {
-        android.util.Log.w("WorkManagerTest", "TestDriver is null, cannot trigger workers")
         return
     }
 
@@ -295,22 +292,16 @@ fun triggerWorkManagerJobs(tag: String? = null, timeoutMillis: Long = 10000) {
         }
 
         if (workInfos.isNotEmpty()) {
-            android.util.Log.d("WorkManagerTest", "Found ${workInfos.size} enqueued workers")
             workInfos.forEach { workInfo ->
-                android.util.Log.d("WorkManagerTest", "Triggering worker: id=${workInfo.id}, tags=${workInfo.tags}, state=${workInfo.state}")
                 testDriver.setAllConstraintsMet(workInfo.id)
             }
             Thread.sleep(200)
-            android.util.Log.d("WorkManagerTest", "Waiting for workers to complete...")
             waitForWorkManagerJobsToComplete(tag, timeoutMillis)
-            android.util.Log.d("WorkManagerTest", "Workers completed")
             return
         }
 
         Thread.sleep(100)
     }
-
-    android.util.Log.w("WorkManagerTest", "No enqueued workers found within timeout")
 }
 
 /**
@@ -320,11 +311,9 @@ fun triggerWorkManagerJobs(tag: String? = null, timeoutMillis: Long = 10000) {
  * @param timeoutMillis Maximum time to wait (default: 10000ms)
  */
 private fun waitForWorkManagerJobsToComplete(tag: String? = null, timeoutMillis: Long = 10000) {
-    android.util.Log.d("WorkManagerTest", "waitForWorkManagerJobsToComplete() started - tag: $tag, timeout: $timeoutMillis")
     val app = ApplicationProvider.getApplicationContext<TestAppManager>()
     val workManager = WorkManager.getInstance(app)
     val startTime = System.currentTimeMillis()
-    var lastLogTime = startTime
 
     while (System.currentTimeMillis() - startTime < timeoutMillis) {
         val workInfos = if (tag != null) {
@@ -344,21 +333,11 @@ private fun waitForWorkManagerJobsToComplete(tag: String? = null, timeoutMillis:
             !it.state.isFinished
         }
 
-        // Log every second to track progress
-        val currentTime = System.currentTimeMillis()
-        if (currentTime - lastLogTime >= 1000) {
-            android.util.Log.d("WorkManagerTest", "Still waiting... unfinished workers: ${unfinished.size}, states: ${unfinished.map { "${it.id.toString().takeLast(8)}: ${it.state}" }}")
-            lastLogTime = currentTime
-        }
-
         if (unfinished.isEmpty()) {
-            android.util.Log.d("WorkManagerTest", "All workers completed. Final states: ${workInfos.map { "${it.id.toString().takeLast(8)}: ${it.state}" }}")
             Espresso.onIdle()
             return
         }
 
         Thread.sleep(100)
     }
-
-    android.util.Log.e("WorkManagerTest", "Timeout waiting for workers to complete!")
 }

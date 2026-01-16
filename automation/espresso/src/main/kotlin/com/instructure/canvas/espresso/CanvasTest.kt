@@ -37,9 +37,6 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
 import androidx.test.uiautomator.UiDevice
-import androidx.work.WorkInfo
-import androidx.work.WorkManager
-import androidx.work.WorkQuery
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils.matchesCheckNames
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils.matchesViews
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityViewCheckResult
@@ -110,62 +107,17 @@ abstract class CanvasTest : InstructureTestingContract {
     fun recordOriginalActivity() {
         originalActivity = activityRule.activity
         val application = originalActivity.application as? TestAppManager
-        Log.d(
-            "WorkManagerTest",
-            "CanvasTest.recordOriginalActivity() - Application@${System.identityHashCode(application)}, workManagerInitialized=${application?.workManagerInitialized}"
-        )
 
         // Inject Hilt into test class (for test's @Inject fields)
         try {
             hiltRule.inject()
-            Log.d(
-                "WorkManagerTest",
-                "HiltWorkerFactory injected into test: ${workerFactory.javaClass.simpleName}@${
-                    System.identityHashCode(workerFactory)
-                }"
-            )
 
             // Initialize WorkManager with HiltWorkerFactory (or update delegate if already initialized)
-            if (application != null) {
-                Log.d("WorkManagerTest", "Initializing WorkManager with HiltWorkerFactory")
-                application.initializeTestWorkManager(workerFactory)
-            }
+            application?.initializeTestWorkManager(workerFactory)
         } catch (e: IllegalStateException) {
             // Catch this exception to avoid multiple injection with orchestrator
             // WorkManager already has HiltWorkerFactory from first test, no need to reinitialize
-            Log.w("Test Inject", "Hilt already injected: ${e.message}")
-        }
-    }
-
-    /**
-     * Cancels all pending WorkManager jobs to ensure clean state between tests.
-     */
-    private fun cleanupWorkManager(application: TestAppManager?) {
-        Log.d("WorkManagerTest", "cleanupWorkManager() - Application@${System.identityHashCode(application)}, workManagerInitialized=${application?.workManagerInitialized}")
-        try {
-            if (application?.workManagerInitialized == true) {
-                val context = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext
-                val workManager = WorkManager.getInstance(context)
-                Log.d("WorkManagerTest", "WorkManager@${System.identityHashCode(workManager)}")
-
-                val workInfos = workManager.getWorkInfos(
-                    WorkQuery.Builder.fromStates(
-                        listOf(
-                            WorkInfo.State.ENQUEUED,
-                            WorkInfo.State.RUNNING
-                        )
-                    ).build()
-                ).get()
-
-                if (workInfos.isNotEmpty()) {
-                    Log.d("WorkManagerTest", "Cancelling ${workInfos.size} pending WorkManager jobs")
-                    val cancelOperation = workManager.cancelAllWork()
-                    cancelOperation.result.get()
-                    Thread.sleep(200)
-                }
-            }
-        } catch (e: Exception) {
-            Log.w("WorkManagerTest", "Failed to cleanup WorkManager: ${e.message}")
+            Log.w("Test Inject", e.message ?: "")
         }
     }
 

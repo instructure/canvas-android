@@ -30,7 +30,6 @@ import com.instructure.loginapi.login.viewmodel.Experience
 import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.services.PushNotificationRegistrationWorker
-import com.instructure.student.BuildConfig
 import com.instructure.student.activity.NavigationActivity
 import com.instructure.student.tasks.StudentLogoutTask
 import com.instructure.student.widget.NotificationWidgetProvider
@@ -50,12 +49,7 @@ class StudentLoginNavigation(
     }
 
     override fun initMainActivityIntent(experience: Experience): Intent {
-        // Skip push notification scheduling in test builds to prevent early WorkManager initialization
-        // Tests will initialize WorkManager with HiltWorkerFactory first
-        if (!BuildConfig.IS_TESTING) {
-            PushNotificationRegistrationWorker.scheduleJob(activity, ApiPrefs.isMasquerading)
-        }
-
+        PushNotificationRegistrationWorker.scheduleJob(activity, ApiPrefs.isMasquerading)
         CookieManager.getInstance().flush()
 
         return when (experience) {
