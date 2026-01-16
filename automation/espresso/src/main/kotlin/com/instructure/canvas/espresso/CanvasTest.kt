@@ -108,8 +108,8 @@ abstract class CanvasTest : InstructureTestingContract {
     // that we can reference it safely later.
     @Before
     fun recordOriginalActivity() {
-        originalActivity = activityRule.activity
-        val application = originalActivity.application as? TestAppManager
+        // Get application before launching activity
+        val application = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as? TestAppManager
         Log.d("WorkManagerTest", "CanvasTest.recordOriginalActivity() - Application@${System.identityHashCode(application)}, workManagerInitialized=${application?.workManagerInitialized}")
 
         // Try to inject Hilt (will throw on subsequent tests in same shard)
@@ -124,11 +124,16 @@ abstract class CanvasTest : InstructureTestingContract {
         // Only initialize WorkManager once per Application instance
         // With orchestrator, Application persists across tests in same shard
         if (application?.workManagerInitialized == false) {
-            Log.d("WorkManagerTest", "Initializing WorkManager")
+            Log.d("WorkManagerTest", "Initializing WorkManager with HiltWorkerFactory BEFORE launching activity")
             application.initializeTestWorkManager(workerFactory)
         } else {
             Log.d("WorkManagerTest", "WorkManager already initialized, skipping")
         }
+
+        // NOW launch the activity - WorkManager is ready with HiltWorkerFactory
+        Log.d("WorkManagerTest", "Launching activity now that WorkManager is initialized")
+        originalActivity = activityRule.launchActivity(null)
+        Log.d("WorkManagerTest", "Activity launched: ${originalActivity.javaClass.simpleName}@${System.identityHashCode(originalActivity)}")
     }
 
     /**

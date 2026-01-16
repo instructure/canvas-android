@@ -25,7 +25,11 @@ import com.instructure.pandautils.utils.PandaAppResetter
 import com.instructure.student.util.CacheControlFlags
 import com.instructure.student.util.StudentPrefs
 
-class StudentActivityTestRule<T : Activity>(activityClass: Class<T>) : InstructureActivityTestRule<T>(activityClass) {
+class StudentActivityTestRule<T : Activity>(
+    activityClass: Class<T>,
+    initialTouchMode: Boolean = false,
+    launchActivity: Boolean = false  // Don't launch until WorkManager is initialized in @Before
+) : InstructureActivityTestRule<T>(activityClass, initialTouchMode, launchActivity) {
 
     override fun performReset(context: Context) {
         PandaAppResetter.reset(context)

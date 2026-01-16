@@ -22,7 +22,11 @@ import androidx.test.espresso.intent.rule.IntentsTestRule
 import androidx.test.runner.MonitoringInstrumentationAccessor
 
 
-abstract class InstructureActivityTestRule<T : Activity>(activityClass: Class<T>) : IntentsTestRule<T>(activityClass) {
+abstract class InstructureActivityTestRule<T : Activity>(
+    activityClass: Class<T>,
+    initialTouchMode: Boolean = false,
+    launchActivity: Boolean = true
+) : IntentsTestRule<T>(activityClass, initialTouchMode, launchActivity) {
 
     abstract fun performReset(context: Context)
 

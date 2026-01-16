@@ -17,7 +17,6 @@ package com.instructure.canvas.espresso
 
 import android.annotation.SuppressLint
 import android.util.Log
-import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import androidx.work.DefaultWorkerFactory
 import androidx.work.WorkerFactory
@@ -25,19 +24,9 @@ import androidx.work.testing.TestDriver
 import androidx.work.testing.WorkManagerTestInitHelper
 import com.instructure.canvasapi2.AppManager
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
-import dagger.hilt.EntryPoint
-import dagger.hilt.EntryPoints
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import java.util.concurrent.Executors
 
 open class TestAppManager : AppManager() {
-
-    @EntryPoint
-    @InstallIn(SingletonComponent::class)
-    interface WorkerFactoryEntryPoint {
-        fun hiltWorkerFactory(): HiltWorkerFactory
-    }
 
     private var workerFactory: WorkerFactory? = null
     var workManagerInitialized = false
@@ -49,16 +38,6 @@ open class TestAppManager : AppManager() {
         super.onCreate()
         RemoteConfigUtils.initialize()
         Log.d("WorkManagerTest", "TestAppManager.onCreate() - Application@${System.identityHashCode(this)}")
-
-        // Get HiltWorkerFactory early via EntryPointAccessors so it's available before activities are created
-        try {
-            val entryPoint = EntryPoints.get(this, WorkerFactoryEntryPoint::class.java)
-            val hiltFactory = entryPoint.hiltWorkerFactory()
-            Log.d("WorkManagerTest", "TestAppManager.onCreate() - Retrieved HiltWorkerFactory@${System.identityHashCode(hiltFactory)} via EntryPoint")
-            initializeTestWorkManager(hiltFactory)
-        } catch (e: Exception) {
-            Log.w("WorkManagerTest", "Failed to get HiltWorkerFactory in onCreate(), will retry in test setup", e)
-        }
     }
 
     override val workManagerConfiguration: Configuration
