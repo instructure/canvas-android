@@ -134,11 +134,17 @@ class AccountViewModel @Inject constructor(
         title = context.getString(R.string.accountHelpHeading),
         items = helpLinks.map { helpLink ->
             val enabledIds = listOf("report_a_problem", "training_services_portal")
-            val title = helpLink.text ?: helpLink.subtext ?: ""
+
+            val title = if (helpLink.id == "report_a_problem")
+                context.getString(R.string.reportProblem)
+            else
+                helpLink.text ?: helpLink.subtext ?: ""
+
             val type = if (helpLink.id == "report_a_problem")
                 AccountItemType.OpenWithoutIndicator(AccountRoute.ReportABug)
             else
                 AccountItemType.OpenExternal(helpLink.url.orEmpty())
+
             val visible = enabledIds.contains(helpLink.id) || helpLink.type == "custom"
 
             AccountItemState(title, type, visible)

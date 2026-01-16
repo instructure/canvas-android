@@ -131,7 +131,6 @@ fun ReportABugScreen(
                         onMenuOpenChanged = uiState.onTopicMenuOpenChanged,
                         errorText = uiState.topicError,
                         isFocused = false,
-                        isFullWidth = true,
                         onFocusChanged = {},
                         enabled = !uiState.isLoading,
                         required = InputLabelRequired.Required
