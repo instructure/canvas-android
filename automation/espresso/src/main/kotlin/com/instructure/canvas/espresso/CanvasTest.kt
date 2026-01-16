@@ -108,32 +108,33 @@ abstract class CanvasTest : InstructureTestingContract {
     // that we can reference it safely later.
     @Before
     fun recordOriginalActivity() {
-        // Get application before launching activity
-        val application = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as? TestAppManager
-        Log.d("WorkManagerTest", "CanvasTest.recordOriginalActivity() - Application@${System.identityHashCode(application)}, workManagerInitialized=${application?.workManagerInitialized}")
+        originalActivity = activityRule.activity
+        val application = originalActivity.application as? TestAppManager
+        Log.d(
+            "WorkManagerTest",
+            "CanvasTest.recordOriginalActivity() - Application@${System.identityHashCode(application)}, workManagerInitialized=${application?.workManagerInitialized}"
+        )
 
-        // Try to inject Hilt (will throw on subsequent tests in same shard)
+        // Inject Hilt into test class (for test's @Inject fields)
         try {
             hiltRule.inject()
-            Log.d("WorkManagerTest", "HiltWorkerFactory injected: ${workerFactory.javaClass.simpleName}@${System.identityHashCode(workerFactory)}")
+            Log.d(
+                "WorkManagerTest",
+                "HiltWorkerFactory injected into test: ${workerFactory.javaClass.simpleName}@${
+                    System.identityHashCode(workerFactory)
+                }"
+            )
+
+            // Reinitialize WorkManager with HiltWorkerFactory
+            if (application != null) {
+                Log.d("WorkManagerTest", "Reinitializing WorkManager with HiltWorkerFactory")
+                application.initializeTestWorkManager(workerFactory)
+            }
         } catch (e: IllegalStateException) {
-            // Catch this exception to avoid multiple injection
+            // Catch this exception to avoid multiple injection with orchestrator
+            // WorkManager already has HiltWorkerFactory from first test, no need to reinitialize
             Log.w("Test Inject", "Hilt already injected: ${e.message}")
         }
-
-        // Only initialize WorkManager once per Application instance
-        // With orchestrator, Application persists across tests in same shard
-        if (application?.workManagerInitialized == false) {
-            Log.d("WorkManagerTest", "Initializing WorkManager with HiltWorkerFactory BEFORE launching activity")
-            application.initializeTestWorkManager(workerFactory)
-        } else {
-            Log.d("WorkManagerTest", "WorkManager already initialized, skipping")
-        }
-
-        // NOW launch the activity - WorkManager is ready with HiltWorkerFactory
-        Log.d("WorkManagerTest", "Launching activity now that WorkManager is initialized")
-        originalActivity = activityRule.launchActivity(null)
-        Log.d("WorkManagerTest", "Activity launched: ${originalActivity.javaClass.simpleName}@${System.identityHashCode(originalActivity)}")
     }
 
     /**

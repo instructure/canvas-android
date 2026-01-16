@@ -62,31 +62,23 @@ open class TestAppManager : AppManager() {
 
     @SuppressLint("RestrictedApi")
     fun initializeTestWorkManager(factory: WorkerFactory) {
-        Log.d("WorkManagerTest", "initializeTestWorkManager() called - Application@${System.identityHashCode(this)}, factory=${factory.javaClass.simpleName}@${System.identityHashCode(factory)}, workManagerInitialized=$workManagerInitialized")
-
-        if (workManagerInitialized) {
-            Log.d("WorkManagerTest", "Test WorkManager already initialized, skipping")
-            return
-        }
+        Log.d(
+            "WorkManagerTest",
+            "initializeTestWorkManager() called - factory=${factory.javaClass.simpleName}@${System.identityHashCode(factory)}, workManagerInitialized=$workManagerInitialized"
+        )
 
         workerFactory = factory
-        Log.d("WorkManagerTest", "Set workerFactory to HiltWorkerFactory@${System.identityHashCode(factory)}")
 
-        try {
-            val config = Configuration.Builder()
-                .setMinimumLoggingLevel(Log.DEBUG)
-                .setExecutor(Executors.newSingleThreadExecutor())
-                .setWorkerFactory(factory)
-                .build()
+        val config = Configuration.Builder()
+            .setMinimumLoggingLevel(Log.DEBUG)
+            .setExecutor(Executors.newSingleThreadExecutor())
+            .setWorkerFactory(factory)
+            .build()
 
-            Log.d("WorkManagerTest", "Calling WorkManagerTestInitHelper.initializeTestWorkManager()")
-            // WorkManagerTestInitHelper sets up a test delegate that overrides any existing initialization
-            WorkManagerTestInitHelper.initializeTestWorkManager(this, config)
-            testDriver = WorkManagerTestInitHelper.getTestDriver(this)
-            workManagerInitialized = true
-            Log.d("WorkManagerTest", "Test WorkManager initialized successfully - testDriver@${System.identityHashCode(testDriver)}")
-        } catch (e: IllegalStateException) {
-            Log.e("WorkManagerTest", "Failed to initialize WorkManager - already initialized with wrong factory?", e)
-        }
+        Log.d("WorkManagerTest", "Calling WorkManagerTestInitHelper.initializeTestWorkManager()")
+        WorkManagerTestInitHelper.initializeTestWorkManager(this, config)
+        testDriver = WorkManagerTestInitHelper.getTestDriver(this)
+        workManagerInitialized = true
+        Log.d("WorkManagerTest", "WorkManager initialized with ${factory.javaClass.simpleName}")
     }
 }
