@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 - present Instructure, Inc.
+ * Copyright (C) 2025 - present Instructure, Inc.
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -17,14 +17,12 @@
 
 package com.instructure.parentapp.features.grades
 
-import com.instructure.pandautils.features.grades.GradesBehaviour
-import com.instructure.pandautils.utils.studentColor
-import com.instructure.parentapp.util.ParentPrefs
+import com.instructure.canvasapi2.models.Course
+import com.instructure.pandautils.features.grades.GradesViewModelBehavior
 
+class ParentGradesViewModelBehavior : GradesViewModelBehavior {
 
-class ParentGradesBehaviour(
-    parentPrefs: ParentPrefs
-) : GradesBehaviour {
-
-    override val canvasContextColor = parentPrefs.currentStudent.studentColor
+    override fun isWhatIfGradingEnabled(course: Course): Boolean {
+        return false
+    }
 }

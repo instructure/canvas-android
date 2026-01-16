@@ -20,6 +20,8 @@ package com.instructure.canvas.espresso.common.pages.compose
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.assertTextEquals
+import androidx.compose.ui.test.hasAnyAncestor
+import androidx.compose.ui.test.hasAnyDescendant
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
@@ -30,6 +32,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performScrollToNode
+import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeDown
 import androidx.compose.ui.test.swipeUp
@@ -143,5 +146,60 @@ class GradesPage(private val composeTestRule: ComposeTestRule) {
         composeTestRule.onNode(hasTestTag("GradePreferencesToolbar") and hasText("Grade Preferences"), useUnmergedTree = true).assertIsDisplayed()
         composeTestRule.onNodeWithText("Grading Period", useUnmergedTree = true).assertIsDisplayed()
         composeTestRule.onNodeWithText("Sort By", useUnmergedTree = true).assertIsDisplayed()
+    }
+
+    fun assertToolbarTitles(subtitle: String) {
+        composeTestRule.onNodeWithText("Grades", useUnmergedTree = true).assertIsDisplayed()
+        composeTestRule.onNodeWithText(subtitle, useUnmergedTree = true).assertIsDisplayed()
+    }
+
+    fun clickShowWhatIfScore() {
+        composeTestRule.onNodeWithTag("showWhatIfScoreLabel", useUnmergedTree = true)
+            .performClick()
+    }
+
+    fun assertShowWhatIfScoreIsDisplayed() {
+        composeTestRule.onNodeWithTag("showWhatIfScoreLabel", useUnmergedTree = true)
+            .assertIsDisplayed()
+    }
+
+    fun clickEditWhatIfScore(assignmentName: String) {
+        composeTestRule.onNodeWithTag("gradesList")
+            .performScrollToNode(hasText(assignmentName))
+        composeTestRule.onNode(
+            hasTestTag("editWhatIfScore") and hasAnyAncestor(
+                hasTestTag("assignmentItem") and hasAnyDescendant(hasText(assignmentName))
+            ),
+            useUnmergedTree = true
+        ).performClick()
+    }
+
+    fun enterWhatIfScore(score: String) {
+        composeTestRule.onNodeWithTag("whatIfScoreInput")
+            .performClick()
+        composeTestRule.onNodeWithTag("whatIfScoreInput")
+            .performTextInput(score)
+    }
+
+    fun clickDoneInWhatIfDialog() {
+        composeTestRule.onNodeWithTag("doneButton")
+            .performClick()
+    }
+
+    fun clickCancelInWhatIfDialog() {
+        composeTestRule.onNodeWithTag("cancelButton")
+            .performClick()
+    }
+
+    fun clickClearWhatIfScore() {
+        composeTestRule.onNodeWithTag("clearWhatIfScoreButton")
+            .performClick()
+    }
+
+    fun assertWhatIfGradeText(assignmentName: String, gradeText: String) {
+        composeTestRule.onNodeWithTag("gradesList")
+            .performScrollToNode(hasText(assignmentName))
+        composeTestRule.onNodeWithTag("whatIfGradeText", useUnmergedTree = true)
+            .assertTextEquals(gradeText)
     }
 }

@@ -423,6 +423,85 @@ class AssignmentsE2ETest: StudentComposeTest() {
 
     @E2E
     @Test
+    @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.E2E, SecondaryFeatureCategory.ASSIGNMENT_REMINDER)
+    fun testAssignmentNoDueDateCustomReminderE2E() {
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+        val futureDate = 1.days.fromNow
+
+        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course with NO due date.")
+        val noDueDateAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, pointsPossible = 15.0, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
+
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
+        tokenLogin(student)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Select course: '${course.name}'.")
+        dashboardPage.selectCourse(course)
+
+        Log.d(STEP_TAG, "Navigate to course Assignments Page.")
+        courseBrowserPage.selectAssignments()
+
+        Log.d(STEP_TAG, "Click on assignment '${noDueDateAssignment.name}'.")
+        assignmentListPage.clickAssignment(noDueDateAssignment)
+
+        Log.d(ASSERTION_TAG, "Assert that the corresponding views are displayed on the Assignment Details Page." +
+                "Assert that the reminder section is displayed.")
+        assignmentDetailsPage.assertPageObjects()
+        assignmentReminderPage.assertReminderSectionDisplayed()
+
+        Log.d(STEP_TAG, "Click on the '+' (Add reminder) button.")
+        assignmentReminderPage.clickAddReminder()
+
+        val reminderDate = futureDate.apply { add(Calendar.HOUR, -1) }
+        Log.d(STEP_TAG, "For no due date assignment, select custom date and time.")
+        assignmentReminderPage.selectDate(reminderDate)
+        assignmentReminderPage.selectTime(reminderDate)
+
+        Log.d(ASSERTION_TAG, "Assert that the reminder has been added and displayed on the Assignment Details Page.")
+        assignmentReminderPage.assertReminderDisplayedWithText(reminderDate.time.toFormattedString())
+
+        Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to add the same reminder again.")
+        assignmentReminderPage.clickAddReminder()
+
+        Log.d(STEP_TAG, "Try to add the same custom reminder again.")
+        assignmentReminderPage.selectDate(reminderDate)
+        assignmentReminderPage.selectTime(reminderDate)
+
+        Log.d(ASSERTION_TAG, "Assert that a toast message is displayed warning that we cannot add the same reminder twice.")
+        checkToastText(R.string.reminderAlreadySet, activityRule.activity)
+
+        Log.d(STEP_TAG, "Remove the custom reminder and confirm the deletion dialog.")
+        assignmentReminderPage.removeReminderWithText(reminderDate.time.toFormattedString())
+
+        Log.d(ASSERTION_TAG, "Assert that the custom reminder is not displayed anymore.")
+        assignmentReminderPage.assertReminderNotDisplayedWithText(reminderDate.time.toFormattedString())
+
+        Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to add another custom reminder.")
+        assignmentReminderPage.clickAddReminder()
+
+        val reminderDate2 = futureDate.apply { add(Calendar.DAY_OF_MONTH, 1) }
+        Log.d(STEP_TAG, "Add a different custom reminder with a different date and time.")
+        assignmentReminderPage.selectDate(reminderDate2)
+        assignmentReminderPage.selectTime(reminderDate2)
+
+        Log.d(ASSERTION_TAG, "Assert that the second custom reminder has been added and displayed.")
+        assignmentReminderPage.assertReminderDisplayedWithText(reminderDate2.time.toFormattedString())
+
+        Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder and select date and time.")
+        assignmentReminderPage.clickAddReminder()
+        assignmentReminderPage.selectDate(futureDate)
+        assignmentReminderPage.selectCustomTime(KeyEvent.KEYCODE_0, KeyEvent.KEYCODE_0)
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Invalid time' error is shown when we typed '0' hour and '0' minutes for the custom reminder.")
+        assignmentReminderPage.assertInvalidTimeShown()
+    }
+
+    @E2E
+    @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
     fun testPointsGradeTextAssignmentE2E() {
 
@@ -1128,6 +1207,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         dashboardPage.assertCourseGrade(course.name, "49.47%")
     }
 
+    @Stub("Grades screen has been redesigned, needs to be fixed in ticket MBL-19258")
     @E2E
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.GRADES, TestCategory.E2E)

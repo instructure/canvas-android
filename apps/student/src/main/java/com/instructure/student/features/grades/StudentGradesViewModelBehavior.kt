@@ -14,24 +14,15 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.canvasapi2.models.journey
 
-import com.google.gson.annotations.SerializedName
+package com.instructure.student.features.grades
 
-data class JourneyAssistCitation(
-    val title: String,
-    val courseID: String?,
-    val sourceID: String?,
-    val sourceType: JourneyAssistCitationType?
-)
+import com.instructure.canvasapi2.models.Course
+import com.instructure.pandautils.features.grades.GradesViewModelBehavior
 
-enum class JourneyAssistCitationType {
-    @SerializedName("wiki_page")
-    WIKI_PAGE,
+class StudentGradesViewModelBehavior : GradesViewModelBehavior {
 
-    @SerializedName("attachment")
-    ATTACHMENT,
-
-    @SerializedName("unknown")
-    UNKNOWN,
+    override fun isWhatIfGradingEnabled(course: Course): Boolean {
+        return course.settings?.restrictQuantitativeData != true
+    }
 }
