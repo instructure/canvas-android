@@ -50,6 +50,7 @@ class StudentLoginNavigation(
 
     override fun initMainActivityIntent(experience: Experience): Intent {
         PushNotificationRegistrationWorker.scheduleJob(activity, ApiPrefs.isMasquerading)
+
         CookieManager.getInstance().flush()
 
         return when (experience) {

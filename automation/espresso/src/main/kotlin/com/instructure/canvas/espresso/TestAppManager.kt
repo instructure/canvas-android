@@ -29,8 +29,7 @@ import java.util.concurrent.Executors
 open class TestAppManager : AppManager() {
 
     private val delegatingFactory = DelegatingWorkerFactory()
-    var workManagerInitialized = false
-        private set
+    private var workManagerInitialized = false
     var testDriver: TestDriver? = null
 
     @SuppressLint("RestrictedApi")

@@ -112,6 +112,12 @@ class ApplicationModule {
 
     @Provides
     @Singleton
+    fun provideWorkManager(@ApplicationContext context: Context): WorkManager {
+        return WorkManager.getInstance(context)
+    }
+
+    @Provides
+    @Singleton
     fun provideCookieManager(): CookieManager {
         return CookieManager.getInstance()
     }
@@ -190,12 +196,6 @@ class ApplicationModule {
     @Provides
     fun provideRandom(): Random {
         return Random.Default
-    }
-
-    @Provides
-    @Singleton
-    fun provideWorkManager(@ApplicationContext context: Context): WorkManager {
-        return WorkManager.getInstance(context)
     }
 
     @Provides
