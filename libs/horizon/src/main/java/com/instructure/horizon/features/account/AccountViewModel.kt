@@ -145,7 +145,7 @@ class AccountViewModel @Inject constructor(
             else
                 AccountItemType.OpenExternal(helpLink.url.orEmpty())
 
-            val visible = enabledIds.contains(helpLink.id) || helpLink.type == "custom"
+            val visible = (enabledIds.contains(helpLink.id) || helpLink.type == "custom") && helpLink.availableTo.contains("student")
 
             AccountItemState(title, type, visible)
         }
