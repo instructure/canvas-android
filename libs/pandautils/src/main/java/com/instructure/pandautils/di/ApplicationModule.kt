@@ -194,6 +194,12 @@ class ApplicationModule {
 
     @Provides
     @Singleton
+    fun provideWorkManager(@ApplicationContext context: Context): WorkManager {
+        return WorkManager.getInstance(context)
+    }
+
+    @Provides
+    @Singleton
     fun provideRemoteConfigUtils(): RemoteConfigUtils {
         return RemoteConfigUtils
     }
