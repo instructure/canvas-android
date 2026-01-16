@@ -110,22 +110,24 @@ abstract class CanvasTest : InstructureTestingContract {
     fun recordOriginalActivity() {
         originalActivity = activityRule.activity
         val application = originalActivity.application as? TestAppManager
-        Log.d("WorkManagerTest", "CanvasTest.recordOriginalActivity() - Application@${System.identityHashCode(application)}")
+        Log.d("WorkManagerTest", "CanvasTest.recordOriginalActivity() - Application@${System.identityHashCode(application)}, workManagerInitialized=${application?.workManagerInitialized}")
 
+        // Try to inject Hilt (will throw on subsequent tests in same shard)
         try {
-            Log.d("WorkManagerTest", "Calling hiltRule.inject()")
             hiltRule.inject()
             Log.d("WorkManagerTest", "HiltWorkerFactory injected: ${workerFactory.javaClass.simpleName}@${System.identityHashCode(workerFactory)}")
-
-            // Clean up WorkManager state BEFORE initialization to ensure fresh state
-            cleanupWorkManager(application)
-
-            // Initialize WorkManager with HiltWorkerFactory
-            application?.initializeTestWorkManager(workerFactory)
         } catch (e: IllegalStateException) {
             // Catch this exception to avoid multiple injection
-            // Don't re-setup WorkManager on subsequent inject attempts
-            Log.w("WorkManagerTest", "Hilt injection failed or already injected: ${e.message}")
+            Log.w("Test Inject", "Hilt already injected: ${e.message}")
+        }
+
+        // Only initialize WorkManager once per Application instance
+        // With orchestrator, Application persists across tests in same shard
+        if (application?.workManagerInitialized == false) {
+            Log.d("WorkManagerTest", "Initializing WorkManager")
+            application.initializeTestWorkManager(workerFactory)
+        } else {
+            Log.d("WorkManagerTest", "WorkManager already initialized, skipping")
         }
     }
 

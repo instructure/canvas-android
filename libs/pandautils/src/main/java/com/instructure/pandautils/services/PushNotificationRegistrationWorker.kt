@@ -17,7 +17,13 @@
 package com.instructure.pandautils.services
 
 import android.content.Context
-import androidx.work.*
+import androidx.work.Constraints
+import androidx.work.ExistingWorkPolicy
+import androidx.work.ListenableWorker
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.WorkerParameters
 import androidx.work.impl.utils.futures.SettableFuture
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.common.util.concurrent.ListenableFuture
@@ -26,6 +32,7 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.managers.CommunicationChannelsManager
 import com.instructure.canvasapi2.utils.Logger
+import com.instructure.pandautils.BuildConfig
 import okhttp3.ResponseBody
 import retrofit2.Response
 
@@ -94,6 +101,13 @@ class PushNotificationRegistrationWorker(appContext: Context, params: WorkerPara
     companion object {
         fun scheduleJob(context: Context, isMasquerading: Boolean) {
             Logger.d("PushNotificationRegistrationWorker : scheduleJob() isMasquerading: $isMasquerading")
+
+            // Skip automatic scheduling in test builds to prevent early WorkManager initialization
+            // Tests can manually call this after WorkManager is properly initialized if needed
+            if (BuildConfig.IS_TESTING) {
+                Logger.d("PushNotificationRegistrationWorker : Skipping automatic scheduling in test build")
+                return
+            }
 
             if (!isMasquerading) {
                 val constraints: Constraints = Constraints.Builder().apply {
