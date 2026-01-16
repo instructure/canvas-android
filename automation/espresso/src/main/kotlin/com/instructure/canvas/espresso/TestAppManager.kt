@@ -28,7 +28,7 @@ import java.util.concurrent.Executors
 
 open class TestAppManager : AppManager() {
 
-    private var workerFactory: WorkerFactory? = null
+    private val delegatingFactory = DelegatingWorkerFactory()
     var workManagerInitialized = false
         private set
     var testDriver: TestDriver? = null
@@ -42,20 +42,22 @@ open class TestAppManager : AppManager() {
 
     override val workManagerConfiguration: Configuration
         get() {
-            val factory = workerFactory ?: DefaultWorkerFactory
-            Log.d("WorkManagerTest", "workManagerConfiguration accessed - Application@${System.identityHashCode(this)}, workerFactory=${factory.javaClass.simpleName}@${System.identityHashCode(factory)}, isHilt=${workerFactory != null}")
-            Log.d("WorkManagerTest", "Stack trace: ${Thread.currentThread().stackTrace.take(15).joinToString("\n")}")
+            Log.d("WorkManagerTest", "workManagerConfiguration accessed - Application@${System.identityHashCode(this)}, using DelegatingWorkerFactory")
             return Configuration.Builder()
-                .setWorkerFactory(factory)
+                .setWorkerFactory(delegatingFactory)
                 .setMinimumLoggingLevel(Log.DEBUG)
                 .setExecutor(Executors.newSingleThreadExecutor())
                 .build()
         }
 
     override fun getWorkManagerFactory(): WorkerFactory {
-        val factory = workerFactory ?: DefaultWorkerFactory
-        Log.d("WorkManagerTest", "getWorkManagerFactory() - Application@${System.identityHashCode(this)}, returning ${factory.javaClass.simpleName}@${System.identityHashCode(factory)}, isHilt=${workerFactory != null}")
-        return factory
+        Log.d("WorkManagerTest", "getWorkManagerFactory() - Application@${System.identityHashCode(this)}, returning DelegatingWorkerFactory")
+        return delegatingFactory
+    }
+
+    fun setWorkerFactory(factory: WorkerFactory) {
+        Log.d("WorkManagerTest", "setWorkerFactory() called with ${factory.javaClass.simpleName}")
+        delegatingFactory.setDelegate(factory)
     }
 
     override fun performLogoutOnAuthError() = Unit
@@ -64,21 +66,19 @@ open class TestAppManager : AppManager() {
     fun initializeTestWorkManager(factory: WorkerFactory) {
         Log.d(
             "WorkManagerTest",
-            "initializeTestWorkManager() called - factory=${factory.javaClass.simpleName}@${System.identityHashCode(factory)}, workManagerInitialized=$workManagerInitialized"
+            "initializeTestWorkManager() called - factory=${factory.javaClass.simpleName}, workManagerInitialized=$workManagerInitialized"
         )
 
-        workerFactory = factory
+        if (!workManagerInitialized) {
+            // First time: Initialize WorkManager with the delegating factory
+            Log.d("WorkManagerTest", "Initializing WorkManager with DelegatingWorkerFactory")
+            WorkManagerTestInitHelper.initializeTestWorkManager(this, workManagerConfiguration)
+            testDriver = WorkManagerTestInitHelper.getTestDriver(this)
+            workManagerInitialized = true
+        }
 
-        val config = Configuration.Builder()
-            .setMinimumLoggingLevel(Log.DEBUG)
-            .setExecutor(Executors.newSingleThreadExecutor())
-            .setWorkerFactory(factory)
-            .build()
-
-        Log.d("WorkManagerTest", "Calling WorkManagerTestInitHelper.initializeTestWorkManager()")
-        WorkManagerTestInitHelper.initializeTestWorkManager(this, config)
-        testDriver = WorkManagerTestInitHelper.getTestDriver(this)
-        workManagerInitialized = true
-        Log.d("WorkManagerTest", "WorkManager initialized with ${factory.javaClass.simpleName}")
+        // Update the delegate to use the new factory
+        delegatingFactory.setDelegate(factory)
+        Log.d("WorkManagerTest", "WorkManager factory delegate updated to ${factory.javaClass.simpleName}")
     }
 }

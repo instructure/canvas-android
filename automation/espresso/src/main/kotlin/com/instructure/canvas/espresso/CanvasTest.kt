@@ -125,9 +125,9 @@ abstract class CanvasTest : InstructureTestingContract {
                 }"
             )
 
-            // Reinitialize WorkManager with HiltWorkerFactory
+            // Initialize WorkManager with HiltWorkerFactory (or update delegate if already initialized)
             if (application != null) {
-                Log.d("WorkManagerTest", "Reinitializing WorkManager with HiltWorkerFactory")
+                Log.d("WorkManagerTest", "Initializing WorkManager with HiltWorkerFactory")
                 application.initializeTestWorkManager(workerFactory)
             }
         } catch (e: IllegalStateException) {

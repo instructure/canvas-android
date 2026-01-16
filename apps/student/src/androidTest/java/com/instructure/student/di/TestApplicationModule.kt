@@ -2,6 +2,7 @@ package com.instructure.student.di
 
 import android.content.Context
 import android.util.Log
+import androidx.work.DefaultWorkerFactory
 import androidx.work.WorkManager
 import androidx.work.testing.WorkManagerTestInitHelper
 import com.instructure.canvas.espresso.TestAppManager
@@ -25,20 +26,13 @@ import javax.inject.Singleton
 )
 class TestWorkManagerModule {
     @Provides
-    @Singleton
     fun provideWorkManager(@ApplicationContext context: Context): WorkManager {
         Log.d("WorkManagerTest", "TestWorkManagerModule.provideWorkManager() called")
 
-        val application = context.applicationContext as? TestAppManager
-        if (application != null && !application.workManagerInitialized) {
-            Log.d("WorkManagerTest", "WorkManager not yet initialized, initializing with WorkManagerTestInitHelper")
-            WorkManagerTestInitHelper.initializeTestWorkManager(context)
-            Log.d("WorkManagerTest", "WorkManager initialized, will be overridden in @Before with HiltWorkerFactory")
-        } else {
-            Log.d("WorkManagerTest", "WorkManager already initialized by @Before, skipping")
-        }
-
-        return WorkManager.getInstance(context)
+        // Just return the instance - CanvasTest @Before will handle initialization
+        val workManager = WorkManager.getInstance(context)
+        Log.d("WorkManagerTest", "Returning WorkManager@${System.identityHashCode(workManager)}")
+        return workManager
     }
 }
 
