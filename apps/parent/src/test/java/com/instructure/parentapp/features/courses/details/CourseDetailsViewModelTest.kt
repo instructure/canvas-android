@@ -86,6 +86,8 @@ class CourseDetailsViewModelTest {
         every { context.getString(R.string.regardingHiddenMessage, any(), any()) } returns "https://domain.com/courses/1"
         every { context.getString(R.string.regardingHiddenMessage, any(), "") } returns "Regarding: User 1"
         every { context.getString(R.string.courseRefreshFailed) } returns "Failed to refresh course"
+        mockkObject(ApiPrefs)
+        every { ApiPrefs.fullDomain } returns "domain"
     }
 
     @After
@@ -106,7 +108,8 @@ class CourseDetailsViewModelTest {
             studentColor = 1,
             isLoading = false,
             isError = false,
-            tabs = listOf(TabType.GRADES, TabType.FRONT_PAGE)
+            tabs = listOf(TabType.GRADES, TabType.FRONT_PAGE),
+            baseUrl = "domain/courses/1"
         )
 
         Assert.assertEquals(expected, viewModel.uiState.value)
@@ -130,7 +133,8 @@ class CourseDetailsViewModelTest {
             isLoading = false,
             isError = false,
             tabs = listOf(TabType.GRADES, TabType.SYLLABUS),
-            syllabus = "Syllabus body"
+            syllabus = "Syllabus body",
+            baseUrl = "domain/courses/1"
         )
 
         Assert.assertEquals(expected, viewModel.uiState.value)
@@ -155,7 +159,8 @@ class CourseDetailsViewModelTest {
             isLoading = false,
             isError = false,
             tabs = listOf(TabType.GRADES, TabType.SYLLABUS, TabType.SUMMARY),
-            syllabus = "Syllabus body"
+            syllabus = "Syllabus body",
+            baseUrl = "domain/courses/1"
         )
 
         Assert.assertEquals(expected, viewModel.uiState.value)
@@ -170,7 +175,8 @@ class CourseDetailsViewModelTest {
         val expected = CourseDetailsUiState(
             studentColor = 1,
             isLoading = false,
-            isError = true
+            isError = true,
+            baseUrl = "domain/courses/1"
         )
 
         Assert.assertEquals(expected, viewModel.uiState.value)
@@ -188,7 +194,8 @@ class CourseDetailsViewModelTest {
             studentColor = 1,
             isLoading = false,
             isError = false,
-            tabs = listOf(TabType.GRADES)
+            tabs = listOf(TabType.GRADES),
+            baseUrl = "domain/courses/1"
         )
 
         Assert.assertEquals(expected, viewModel.uiState.value)
@@ -225,7 +232,8 @@ class CourseDetailsViewModelTest {
             studentColor = 1,
             isLoading = false,
             isError = false,
-            tabs = listOf(TabType.GRADES)
+            tabs = listOf(TabType.GRADES),
+            baseUrl = "domain/courses/1"
         )
 
         Assert.assertEquals(expected, viewModel.uiState.value)
@@ -259,7 +267,8 @@ class CourseDetailsViewModelTest {
             studentColor = 1,
             isLoading = false,
             isError = false,
-            tabs = listOf(TabType.GRADES)
+            tabs = listOf(TabType.GRADES),
+            baseUrl = "domain/courses/1"
         )
 
         Assert.assertEquals(expected, viewModel.uiState.value)
