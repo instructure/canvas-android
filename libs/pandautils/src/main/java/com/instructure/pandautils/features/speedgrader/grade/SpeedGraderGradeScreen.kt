@@ -27,6 +27,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.instructure.pandautils.features.speedgrader.grade.comments.SpeedGraderCommentsScreen
 import com.instructure.pandautils.features.speedgrader.grade.grading.SpeedGraderGradingScreen
@@ -45,6 +46,7 @@ fun SpeedGraderGradeScreen() {
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
+            .testTag("speedGraderGradeScrollContainer")
     ) {
         val showRubric = speedGraderRubricUiState.loading || speedGraderRubricUiState.criterions.isNotEmpty()
         commentsFixed = speedGraderRubricUiState.criterions.isEmpty()

@@ -41,7 +41,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.RubricCriterion
 import com.instructure.canvasapi2.models.RubricCriterionRating
 import com.instructure.canvasapi2.models.SubmissionComment
-import com.instructure.espresso.handleWorkManagerTask
+import com.instructure.espresso.triggerWorkManagerJobs
 import com.instructure.student.ui.pages.classic.WebViewTextCheck
 import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.extensions.tokenLogin
@@ -79,13 +79,14 @@ class SubmissionDetailsInteractionTest : StudentComposeTest() {
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.clickSubmit()
         urlSubmissionUploadPage.submitText("https://google.com")
-        handleWorkManagerTask("SubmissionWorker")
+        triggerWorkManagerJobs("SubmissionWorker")
+        assignmentDetailsPage.refresh()
 
         assignmentDetailsPage.assertAssignmentSubmitted()
         assignmentDetailsPage.goToSubmissionDetails()
         submissionDetailsPage.openComments()
         submissionDetailsPage.addAndSendComment("Hey!")
-        handleWorkManagerTask("SubmissionWorker")
+        triggerWorkManagerJobs("SubmissionWorker")
 
         submissionDetailsPage.assertCommentDisplayed("Hey!", data.users.values.first())
     }
@@ -104,14 +105,16 @@ class SubmissionDetailsInteractionTest : StudentComposeTest() {
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.clickSubmit()
         urlSubmissionUploadPage.submitText("https://google.com")
-        handleWorkManagerTask("SubmissionWorker")
+        triggerWorkManagerJobs("SubmissionWorker")
+        assignmentDetailsPage.refresh()
 
         assignmentDetailsPage.assertAssignmentSubmitted()
         assignmentDetailsPage.assertNoAttemptSpinner()
 
         assignmentDetailsPage.clickSubmit()
         urlSubmissionUploadPage.submitText("https://google.com")
-        handleWorkManagerTask("SubmissionWorker")
+        triggerWorkManagerJobs("SubmissionWorker")
+        assignmentDetailsPage.refresh()
 
         assignmentDetailsPage.goToSubmissionDetails()
 
@@ -119,7 +122,7 @@ class SubmissionDetailsInteractionTest : StudentComposeTest() {
         submissionDetailsPage.assertSelectedAttempt("Attempt 1")
         submissionDetailsPage.openComments()
         submissionDetailsPage.addAndSendComment("Hey!")
-        handleWorkManagerTask("SubmissionWorker")
+        triggerWorkManagerJobs("SubmissionWorker")
 
         submissionDetailsPage.assertCommentDisplayed("Hey!", data.users.values.first())
 
