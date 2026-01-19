@@ -14,6 +14,7 @@
  *     limitations under the License.
  *
  */
+
 package com.instructure.student.ui.e2e.classic
 
 import android.os.SystemClock.sleep

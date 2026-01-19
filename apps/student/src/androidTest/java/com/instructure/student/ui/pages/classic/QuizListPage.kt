@@ -14,6 +14,7 @@
  *     limitations under the License.
  *
  */
+
 package com.instructure.student.ui.pages.classic
 
 import android.view.View
@@ -26,6 +27,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvasapi2.models.Quiz
+import com.instructure.dataseeding.model.NewQuizApiModel
 import com.instructure.dataseeding.model.QuizApiModel
 import com.instructure.espresso.RecyclerViewItemCountAssertion
 import com.instructure.espresso.Searchable
@@ -89,6 +91,18 @@ class QuizListPage(val searchable: Searchable) : BasePage(R.id.quizListPage) {
 
     fun assertQuizNotDisplayed(quiz: QuizApiModel) {
         onView(withText(quiz.title)).check(doesNotExist())
+    }
+
+    fun assertNewQuizDisplayed(newQuiz: NewQuizApiModel) {
+        assertMatcherDisplayed(allOf(withId(R.id.title), withText(newQuiz.title)))
+    }
+
+    fun selectNewQuiz(newQuiz: NewQuizApiModel) {
+        clickMatcher(allOf(withId(R.id.title), withText(newQuiz.title)))
+    }
+
+    fun assertNewQuizNotDisplayed(newQuiz: NewQuizApiModel) {
+        onView(withText(newQuiz.title)).check(doesNotExist())
     }
 
     fun refresh() {
