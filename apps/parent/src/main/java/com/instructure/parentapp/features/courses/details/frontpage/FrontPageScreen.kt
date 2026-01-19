@@ -94,7 +94,8 @@ internal fun FrontPageContent(
                 studentColor = uiState.studentColor,
                 onRefresh = { actionHandler(FrontPageAction.Refresh) },
                 applyOnWebView = applyOnWebView,
-                onLtiButtonPressed = onLtiButtonPressed
+                onLtiButtonPressed = onLtiButtonPressed,
+                baseUrl = uiState.baseUrl
             )
         }
     }
