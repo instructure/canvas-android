@@ -27,6 +27,7 @@ import com.instructure.canvas.espresso.common.pages.compose.CalendarFilterPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarScreenPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarToDoCreateUpdatePage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarToDoDetailsPage
+import com.instructure.canvas.espresso.common.pages.compose.GradesPage
 import com.instructure.canvas.espresso.common.pages.compose.InboxComposePage
 import com.instructure.canvas.espresso.common.pages.compose.InboxDetailsPage
 import com.instructure.canvas.espresso.common.pages.compose.InboxSignatureSettingsPage
@@ -76,4 +77,5 @@ abstract class StudentComposeTest : StudentTest() {
         ), composeTestRule
     )
     val textSubmissionUploadPage = TextSubmissionUploadPage(composeTestRule)
+    val gradeListPage = GradesPage(composeTestRule)
 }

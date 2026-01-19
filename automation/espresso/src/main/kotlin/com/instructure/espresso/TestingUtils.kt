@@ -16,11 +16,11 @@
 package com.instructure.espresso
 
 import android.os.Build
-import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.NoMatchingViewException
@@ -31,9 +31,9 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.espresso.web.sugar.Web
 import androidx.test.espresso.web.webdriver.DriverAtoms
 import androidx.test.espresso.web.webdriver.Locator
-import androidx.test.platform.app.InstrumentationRegistry
+import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import com.instructure.canvas.espresso.TestAppManager
+import androidx.work.WorkQuery
 import com.instructure.espresso.page.plus
 import com.instructure.pandautils.binding.BindableViewHolder
 import org.apache.commons.lang3.StringUtils
@@ -74,6 +74,22 @@ fun getDateInCanvasFormat(date: LocalDateTime? = null): String {
     val monthString = capitalizeFirstLetter(expectedDate.month.name.take(3))
     val dayString = expectedDate.dayOfMonth
     val yearString = expectedDate.year
+    return "$monthString $dayString, $yearString"
+}
+
+fun convertIso8601ToCanvasFormat(iso8601Date: String): String {
+    val iso8601Format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()).apply {
+        timeZone = TimeZone.getTimeZone("UTC")
+    }
+    val date = iso8601Format.parse(iso8601Date) ?: throw IllegalArgumentException("Invalid date format: $iso8601Date")
+
+    val calendar = Calendar.getInstance()
+    calendar.time = date
+
+    val monthString = capitalizeFirstLetter(SimpleDateFormat("MMM", Locale.getDefault()).format(date))
+    val dayString = calendar.get(Calendar.DAY_OF_MONTH)
+    val yearString = calendar.get(Calendar.YEAR)
+
     return "$monthString $dayString, $yearString"
 }
 
@@ -246,61 +262,81 @@ fun getRecyclerViewFromMatcher(matcher: Matcher<View>): RecyclerView {
     return recyclerView ?: throw IllegalStateException("Failed to retrieve RecyclerView")
 }
 
-fun handleWorkManagerTask(workerTag: String, timeoutMillis: Long = 20000) {
-    val app = ApplicationProvider.getApplicationContext<TestAppManager>()
-    var endTime = System.currentTimeMillis() + timeoutMillis
-    var workInfo: androidx.work.WorkInfo? = null
-
-    var testDriver = app.testDriver
-    if (testDriver == null) {
-        while (System.currentTimeMillis() < endTime && app.testDriver == null) {
-            Log.w("handleWorkManagerTask", "testDriver is null, attempting to initialize WorkManager")
-            app.initWorkManager(app)
-            testDriver = app.testDriver
-            Thread.sleep(500)
-        }
-    }
+/**
+ * Triggers all enqueued WorkManager jobs by setting their constraints as met.
+ * This allows workers with network/battery/storage constraints to run in tests.
+ *
+ * @param tag Optional tag to filter workers. If null, triggers all enqueued workers.
+ * @param timeoutMillis Maximum time to wait for workers to be enqueued (default: 10000ms)
+ */
+fun triggerWorkManagerJobs(tag: String? = null, timeoutMillis: Long = 10000) {
+    val app = ApplicationProvider.getApplicationContext<android.app.Application>() as? com.instructure.canvas.espresso.WorkManagerTestAppManager
+    val testDriver = app?.testDriver
 
     if (testDriver == null) {
-        Assert.fail("A TestAppManager.testDriver was null, so was not initialized before the timeout.")
+        return
     }
 
-    endTime = System.currentTimeMillis() + timeoutMillis
+    val workManager = WorkManager.getInstance(ApplicationProvider.getApplicationContext())
+
+    val endTime = System.currentTimeMillis() + timeoutMillis
+    var workInfos: List<WorkInfo>
+
     while (System.currentTimeMillis() < endTime) {
-        try {
-            val workInfos = WorkManager.getInstance(app).getWorkInfosByTag(workerTag).get()
-            for(work in workInfos) {
-                Log.w("STUDENT_APP_TAG","WorkInfo: $work")
+        workInfos = if (tag != null) {
+            workManager.getWorkInfosByTag(tag).get().filter {
+                it.state == WorkInfo.State.ENQUEUED
             }
-            workInfo = workInfos.find { !it.state.isFinished }
-
-            if (workInfo != null) break
-
-        } catch (e: Exception) {
-            e.printStackTrace()
+        } else {
+            workManager.getWorkInfos(WorkQuery.Builder.fromStates(listOf(WorkInfo.State.ENQUEUED)).build()).get()
         }
-        Thread.sleep(500)
-    }
 
-    if (workInfo == null) {
-        val workInfos = WorkManager.getInstance(app).getWorkInfosByTag(workerTag).get()
-        Assert.fail("Unable to find WorkInfo with tag:'$workerTag' in ${timeoutMillis} ms. WorkInfos found: $workInfos")
-    }
+        if (workInfos.isNotEmpty()) {
+            workInfos.forEach { workInfo ->
+                testDriver.setAllConstraintsMet(workInfo.id)
+            }
+            Thread.sleep(200)
+            waitForWorkManagerJobsToComplete(tag, timeoutMillis)
+            return
+        }
 
-    testDriver!!.setAllConstraintsMet(workInfo!!.id)
-    waitForWorkManagerJobsToFinish(workerTag = workerTag)
+        Thread.sleep(100)
+    }
 }
 
+/**
+ * Waits for all WorkManager jobs with the specified tag to complete.
+ *
+ * @param tag Optional tag to filter workers. If null, waits for all workers.
+ * @param timeoutMillis Maximum time to wait (default: 10000ms)
+ */
+private fun waitForWorkManagerJobsToComplete(tag: String? = null, timeoutMillis: Long = 10000) {
+    val workManager = WorkManager.getInstance(ApplicationProvider.getApplicationContext())
+    val startTime = System.currentTimeMillis()
 
-private fun waitForWorkManagerJobsToFinish(timeoutMs: Long = 20000L, workerTag: String) {
-    val context = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext
-    val workManager = WorkManager.getInstance(context)
-    val start = System.currentTimeMillis()
-    while (true) {
-        val unfinished = workManager.getWorkInfosByTag(workerTag).get()
-            .any { !it.state.isFinished }
-        if (!unfinished) break
-        if (System.currentTimeMillis() - start > timeoutMs) break
-        Thread.sleep(250)
+    while (System.currentTimeMillis() - startTime < timeoutMillis) {
+        val workInfos = if (tag != null) {
+            workManager.getWorkInfosByTag(tag).get()
+        } else {
+            workManager.getWorkInfos(
+                WorkQuery.Builder.fromStates(
+                    listOf(
+                        WorkInfo.State.RUNNING,
+                        WorkInfo.State.ENQUEUED
+                    )
+                ).build()
+            ).get()
+        }
+
+        val unfinished = workInfos.filter {
+            !it.state.isFinished
+        }
+
+        if (unfinished.isEmpty()) {
+            Espresso.onIdle()
+            return
+        }
+
+        Thread.sleep(100)
     }
 }

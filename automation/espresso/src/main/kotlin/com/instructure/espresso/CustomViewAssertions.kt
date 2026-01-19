@@ -20,6 +20,7 @@ import android.graphics.Color
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.IdRes
+import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.NoMatchingViewException
@@ -155,4 +156,23 @@ class RCETextEditorHtmlAssertion(private val expectedHtml: String) : ViewAsserti
             actualHtml.contains(expectedHtml)
         )
     }
+}
+
+fun SemanticsNodeInteraction.assertDoesNotExistWithTimeout(
+    timeoutInSeconds: Long,
+    pollIntervalInSeconds: Long = 1L
+): SemanticsNodeInteraction {
+    var elapsedTime = 0L
+
+    while (elapsedTime < timeoutInSeconds * 1000) {
+        try {
+            assertDoesNotExist()
+            return this
+        } catch (e: AssertionError) {
+            Thread.sleep(pollIntervalInSeconds * 1000)
+            elapsedTime += (pollIntervalInSeconds * 1000)
+        }
+    }
+
+    throw AssertionError("Compose node still exists after $timeoutInSeconds seconds.")
 }

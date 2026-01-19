@@ -43,8 +43,8 @@ import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
-import com.instructure.espresso.handleWorkManagerTask
 import com.instructure.espresso.retryWithIncreasingDelay
+import com.instructure.espresso.triggerWorkManagerJobs
 import com.instructure.pandautils.utils.toFormattedString
 import com.instructure.student.R
 import com.instructure.student.ui.utils.StudentComposeTest
@@ -75,9 +75,8 @@ class AssignmentsE2ETest: StudentComposeTest() {
 
     @E2E
     @Test
-    @Stub("Worker issue, failing on CI, needs to be fixed in ticket MBL-18749")
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SUBMISSIONS, TestCategory.E2E)
-    fun test01CommentsBelongToSubmissionAttempts() {
+    fun testCommentsBelongToSubmissionAttempts() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(teachers = 1, courses = 1, students = 1)
@@ -149,7 +148,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         val newComment = "Comment for second attempt"
         Log.d(STEP_TAG, "Add a new comment ('$newComment') and send it.")
         submissionDetailsPage.addAndSendComment(newComment)
-        handleWorkManagerTask("SubmissionWorker")
+        triggerWorkManagerJobs("SubmissionWorker")
 
         Log.d(ASSERTION_TAG, "Assert that '$newComment' is displayed.")
         submissionDetailsPage.assertCommentDisplayed(newComment, student)
@@ -423,6 +422,85 @@ class AssignmentsE2ETest: StudentComposeTest() {
 
     @E2E
     @Test
+    @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.E2E, SecondaryFeatureCategory.ASSIGNMENT_REMINDER)
+    fun testAssignmentNoDueDateCustomReminderE2E() {
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+        val futureDate = 1.days.fromNow
+
+        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course with NO due date.")
+        val noDueDateAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, pointsPossible = 15.0, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
+
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
+        tokenLogin(student)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Select course: '${course.name}'.")
+        dashboardPage.selectCourse(course)
+
+        Log.d(STEP_TAG, "Navigate to course Assignments Page.")
+        courseBrowserPage.selectAssignments()
+
+        Log.d(STEP_TAG, "Click on assignment '${noDueDateAssignment.name}'.")
+        assignmentListPage.clickAssignment(noDueDateAssignment)
+
+        Log.d(ASSERTION_TAG, "Assert that the corresponding views are displayed on the Assignment Details Page." +
+                "Assert that the reminder section is displayed.")
+        assignmentDetailsPage.assertPageObjects()
+        assignmentReminderPage.assertReminderSectionDisplayed()
+
+        Log.d(STEP_TAG, "Click on the '+' (Add reminder) button.")
+        assignmentReminderPage.clickAddReminder()
+
+        val reminderDate = futureDate.apply { add(Calendar.HOUR, -1) }
+        Log.d(STEP_TAG, "For no due date assignment, select custom date and time.")
+        assignmentReminderPage.selectDate(reminderDate)
+        assignmentReminderPage.selectTime(reminderDate)
+
+        Log.d(ASSERTION_TAG, "Assert that the reminder has been added and displayed on the Assignment Details Page.")
+        assignmentReminderPage.assertReminderDisplayedWithText(reminderDate.time.toFormattedString())
+
+        Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to add the same reminder again.")
+        assignmentReminderPage.clickAddReminder()
+
+        Log.d(STEP_TAG, "Try to add the same custom reminder again.")
+        assignmentReminderPage.selectDate(reminderDate)
+        assignmentReminderPage.selectTime(reminderDate)
+
+        Log.d(ASSERTION_TAG, "Assert that a toast message is displayed warning that we cannot add the same reminder twice.")
+        checkToastText(R.string.reminderAlreadySet, activityRule.activity)
+
+        Log.d(STEP_TAG, "Remove the custom reminder and confirm the deletion dialog.")
+        assignmentReminderPage.removeReminderWithText(reminderDate.time.toFormattedString())
+
+        Log.d(ASSERTION_TAG, "Assert that the custom reminder is not displayed anymore.")
+        assignmentReminderPage.assertReminderNotDisplayedWithText(reminderDate.time.toFormattedString())
+
+        Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to add another custom reminder.")
+        assignmentReminderPage.clickAddReminder()
+
+        val reminderDate2 = futureDate.apply { add(Calendar.DAY_OF_MONTH, 1) }
+        Log.d(STEP_TAG, "Add a different custom reminder with a different date and time.")
+        assignmentReminderPage.selectDate(reminderDate2)
+        assignmentReminderPage.selectTime(reminderDate2)
+
+        Log.d(ASSERTION_TAG, "Assert that the second custom reminder has been added and displayed.")
+        assignmentReminderPage.assertReminderDisplayedWithText(reminderDate2.time.toFormattedString())
+
+        Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder and select date and time.")
+        assignmentReminderPage.clickAddReminder()
+        assignmentReminderPage.selectDate(futureDate)
+        assignmentReminderPage.selectCustomTime(KeyEvent.KEYCODE_0, KeyEvent.KEYCODE_0)
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Invalid time' error is shown when we typed '0' hour and '0' minutes for the custom reminder.")
+        assignmentReminderPage.assertInvalidTimeShown()
+    }
+
+    @E2E
+    @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
     fun testPointsGradeTextAssignmentE2E() {
 
@@ -534,7 +612,6 @@ class AssignmentsE2ETest: StudentComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
-    @Stub("Worker issue, failing on CI, needs to be fixed in ticket MBL-18749")
     fun testPercentageFileAssignmentWithCommentE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
@@ -572,8 +649,10 @@ class AssignmentsE2ETest: StudentComposeTest() {
         SubmissionsApi.submitCourseAssignment(course.id, student.token, percentageFileAssignment.id, SubmissionType.ONLINE_UPLOAD, fileIds = mutableListOf(uploadInfo.id))
 
         Log.d(ASSERTION_TAG, "Refresh the page. Assert that the '${percentageFileAssignment.name}' assignment has been submitted.")
-        assignmentDetailsPage.refresh()
-        assignmentDetailsPage.assertAssignmentSubmitted()
+        retryWithIncreasingDelay {
+            assignmentDetailsPage.refresh()
+            assignmentDetailsPage.assertAssignmentSubmittedStatus()
+        }
 
         Log.d(PREPARATION_TAG, "Grade '${percentageFileAssignment.name}' assignment with 22 percentage.")
         SubmissionsApi.gradeSubmission(teacher.token, course.id, percentageFileAssignment.id, student.id, postedGrade = "22")
@@ -594,6 +673,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         val newComment = "My comment!!"
         Log.d(STEP_TAG, "Add a new comment ('$newComment') and send it.")
         submissionDetailsPage.addAndSendComment(newComment)
+        triggerWorkManagerJobs("SubmissionWorker")
 
         Log.d(ASSERTION_TAG, "Assert that '$newComment' is displayed.")
         submissionDetailsPage.assertCommentDisplayed(newComment, student)
@@ -757,7 +837,6 @@ class AssignmentsE2ETest: StudentComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.COMMENTS, TestCategory.E2E)
-    @Stub("Worker issue, failing on CI, needs to be fixed in ticket MBL-18749")
     fun testMediaCommentsE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
@@ -790,17 +869,20 @@ class AssignmentsE2ETest: StudentComposeTest() {
         Log.d(STEP_TAG, "Send a video comment.")
         submissionDetailsPage.addAndSendVideoComment()
 
-        sleep(5000) // wait for video comment submission to propagate
-
         Log.d(ASSERTION_TAG, "Assert that the video comment has been displayed.")
-        submissionDetailsPage.assertVideoCommentDisplayed()
+        retryWithIncreasingDelay {
+            triggerWorkManagerJobs("SubmissionWorker")
+            submissionDetailsPage.assertVideoCommentDisplayed()
+        }
 
         Log.d(STEP_TAG, "Send an audio comment.")
         submissionDetailsPage.addAndSendAudioComment()
-        sleep(5000) // Wait for audio comment submission to propagate
 
         Log.d(ASSERTION_TAG, "Assert that the audio comment has been displayed.")
-        submissionDetailsPage.assertAudioCommentDisplayed()
+        retryWithIncreasingDelay {
+            triggerWorkManagerJobs("SubmissionWorker")
+            submissionDetailsPage.assertAudioCommentDisplayed()
+        }
     }
 
     @E2E
@@ -925,7 +1007,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
-    fun test1DraftAssignmentE2E() {
+    fun testDraftAssignmentE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(teachers = 1, courses = 1, students = 1)
@@ -987,7 +1069,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
 
         Log.d(STEP_TAG, "Click on the 'Submit' button to submit the draft assignment.")
         textSubmissionUploadPage.clickOnSubmitButton()
-        handleWorkManagerTask("SubmissionWorker")
+        triggerWorkManagerJobs("SubmissionWorker")
 
         Log.d(ASSERTION_TAG, "Assert that the assignment's status is submitted and the 'Successfully submitted!' label is displayed.")
         assignmentDetailsPage.assertStatusSubmitted()
@@ -1200,6 +1282,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         dashboardPage.assertCourseGrade(course.name, "49.47%")
     }
 
+    @Stub("Grades screen has been redesigned, needs to be fixed in ticket MBL-19258")
     @E2E
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.GRADES, TestCategory.E2E)

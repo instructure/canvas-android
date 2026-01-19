@@ -1,9 +1,0 @@
-mutation EvaluateTopicResponse($input: EvaluateTopicResponseInput!) {
-    evaluateTopicResponse(input: $input) {
-        complianceStatus
-        relevanceScore
-        qualityScore
-        finalLabel
-        feedback
-    }
-}

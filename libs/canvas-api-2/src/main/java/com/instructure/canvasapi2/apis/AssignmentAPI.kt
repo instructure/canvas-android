@@ -108,10 +108,10 @@ object AssignmentAPI {
         @GET("courses/{courseId}/assignment_groups?include[]=assignments&include[]=discussion_topic&include[]=submission&override_assignment_dates=true&include[]=all_dates&include[]=overrides")
         fun getFirstPageAssignmentGroupListWithAssignmentsForGradingPeriod(@Path("courseId") courseId: Long, @Query("grading_period_id") gradingPeriodId: Long, @Query("scope_assignments_to_student") scopeToStudent: Boolean, @Query("order") order: String = "id"): Call<List<AssignmentGroup>>
 
-        @GET("courses/{courseId}/assignment_groups?include[]=assignments&include[]=discussion_topic&include[]=submission&override_assignment_dates=true&include[]=all_dates&include[]=overrides")
+        @GET("courses/{courseId}/assignment_groups?include[]=assignments&include[]=discussion_topic&include[]=submission&override_assignment_dates=true&include[]=all_dates&include[]=overrides&include[]=checkpoints&include[]=discussion_topic&include[]=sub_assignment_submissions")
         suspend fun getFirstPageAssignmentGroupListWithAssignmentsForGradingPeriod(
             @Path("courseId") courseId: Long,
-            @Query("grading_period_id") gradingPeriodId: Long,
+            @Query("grading_period_id") gradingPeriodId: Long?,
             @Query("scope_assignments_to_student") scopeToStudent: Boolean,
             @Query("order") order: String = "id",
             @Tag restParams: RestParams

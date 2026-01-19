@@ -74,6 +74,7 @@ import androidx.core.view.ViewCompat
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.utils.APIHelper.simplifyHTML
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.FileUtils.getAssetsFile
 import com.instructure.canvasapi2.utils.Logger.e
 import com.instructure.pandautils.R
@@ -91,6 +92,7 @@ import java.net.MalformedURLException
 import java.net.URISyntaxException
 import java.net.URLConnection
 import java.net.URLDecoder
+import java.net.URLEncoder
 import java.util.Locale
 
 class CanvasWebView @JvmOverloads constructor(
@@ -105,6 +107,8 @@ class CanvasWebView @JvmOverloads constructor(
     private var firstScroll = true
     private var childHelper: NestedScrollingChildHelper? = null
     private var addedJavascriptInterface: Boolean = false
+    private var shouldInjectStudioScript: Boolean = false
+    private var currentBaseUrl: String? = null
 
     interface CanvasWebViewClientCallback {
         fun openMediaFromWebView(mime: String, url: String, filename: String)
@@ -152,6 +156,33 @@ class CanvasWebView @JvmOverloads constructor(
         fun notifyVideoEnd() {
             // This code is not executed in the UI thread, so we must force that to happen
             Handler(Looper.getMainLooper()).post { webChromeClient?.onHideCustomView() }
+        }
+    }
+
+    inner class StudioMessageHandler {
+        @android.webkit.JavascriptInterface
+        fun handleFullWindowLaunch(messageJson: String) {
+            Handler(Looper.getMainLooper()).post {
+                try {
+                    // Parse the message to extract data
+                    val message = org.json.JSONObject(messageJson)
+                    val data = message.optJSONObject("data")
+                    val mediaUrl = data?.optString("url")
+
+                    if (mediaUrl != null && mediaUrl.isNotEmpty()) {
+                        val baseUrl = currentBaseUrl
+                        if (baseUrl != null) {
+                            val contextUrl = extractContextUrl(baseUrl)
+                            if (contextUrl != null) {
+                                val studioUrl = buildStudioUrl(contextUrl, mediaUrl)
+                                canvasWebViewClientCallback?.routeInternallyCallback(studioUrl)
+                            }
+                        }
+                    }
+                } catch (e: Exception) {
+                    FirebaseCrashlytics.getInstance().recordException(e)
+                }
+            }
         }
     }
 
@@ -236,7 +267,11 @@ class CanvasWebView @JvmOverloads constructor(
         if (!addedJavascriptInterface) {
             // Add javascript interface to be called when the video ends (must be done before page load)
             addJavascriptInterface(JavascriptInterface(), VideoWebChromeClient.JsInterfaceName)
-            addedJavascriptInterface = true
+            if (shouldInjectStudioScript) {
+                // Add javascript interface for Studio full window launch messages
+                addJavascriptInterface(StudioMessageHandler(), "CanvasStudioInterface")
+                addedJavascriptInterface = true
+            }
         }
     }
 
@@ -495,6 +530,7 @@ class CanvasWebView @JvmOverloads constructor(
 
         override fun onPageFinished(view: WebView, url: String) {
             super.onPageFinished(view, url)
+            evaluateStudioButtonScript(view)
             canvasWebViewClientCallback?.onPageFinishedCallback(view, url)
         }
 
@@ -510,16 +546,24 @@ class CanvasWebView @JvmOverloads constructor(
     }
 
     override fun loadData(data: String, mimeType: String?, encoding: String?) {
+        // We can't route to Studio without a baseUrl
+        shouldInjectStudioScript = false
         addJavascriptInterface()
         super.loadData(data, mimeType, encoding)
     }
 
     override fun loadDataWithBaseURL(url: String?, data: String, mimeType: String?, encoding: String?, history: String?) {
+        // Store baseUrl for Studio URL building
+        currentBaseUrl = url
+        // Check if HTML contains Studio/LTI content
+        shouldInjectStudioScript = containsStudioContent(data)
         addJavascriptInterface()
         super.loadDataWithBaseURL(url, data, mimeType, encoding, history)
     }
 
     override fun loadUrl(url: String) {
+        // Loading URL directly, not HTML content - don't inject Studio script
+        shouldInjectStudioScript = false
         addJavascriptInterface()
         super.loadUrl(url)
     }
@@ -806,6 +850,49 @@ class CanvasWebView @JvmOverloads constructor(
         return childHelper?.dispatchNestedPreFling(velocityX, velocityY) == true
     }
 
+    /**
+     * Extracts the context URL from a base URL
+     */
+    private fun extractContextUrl(baseUrl: String): String? {
+        val regex = Regex("(https?://[^/]+/(courses|groups|users)/\\d+)/")
+        return regex.find(baseUrl)?.groupValues?.get(1)?.let { "$it/" }
+    }
+
+    /**
+     * Builds the Studio URL for launching in immersive view
+     * Format: {contextUrl}external_tools/retrieve?display=borderless&url={encodedMediaUrl}
+     */
+    private fun buildStudioUrl(contextUrl: String, mediaUrl: String): String {
+        val encodedMediaUrl = URLEncoder.encode(mediaUrl, "UTF-8")
+        return "${contextUrl}external_tools/retrieve?display=borderless&url=$encodedMediaUrl"
+    }
+
+    /**
+     * Checks if the HTML content contains Studio LTI embed iframes
+     */
+    private fun containsStudioContent(html: String): Boolean {
+        return html.contains(URLEncoder.encode("custom_arc_launch_type=immersive_view", "UTF-8"), ignoreCase = true)
+    }
+
+    private fun evaluateStudioButtonScript(view: WebView) {
+        // Only inject if we detected Studio/LTI content when loading HTML
+        if (!shouldInjectStudioScript) {
+            return
+        }
+
+        try {
+            val jsCode = context.assets.open("CanvasLTIPostMessageHandler.js")
+                .bufferedReader()
+                .use { it.readText() }
+            view.evaluateJavascript(jsCode, null)
+        } catch (e: Exception) {
+            FirebaseCrashlytics.getInstance().recordException(e)
+        } finally {
+            // Reset flag after injection
+            shouldInjectStudioScript = false
+        }
+    }
+
     companion object {
         private const val VIDEO_PICKER_RESULT_CODE = 1202
         private const val COPY_LINK_ID = 9357
@@ -880,7 +967,12 @@ class JSInterface(private val onLtiButtonPressed: (String) -> Unit) {
 
     @JavascriptInterface
     fun onLtiToolButtonPressed(id: String) {
-        val ltiUrl = URLDecoder.decode(id, "UTF-8")
-        onLtiButtonPressed(ltiUrl)
+        val isOnline = Utils.isNetworkAvailable(ContextKeeper.appContext)
+        if (isOnline) {
+            val ltiUrl = URLDecoder.decode(id, "UTF-8")
+            onLtiButtonPressed(ltiUrl)
+        } else {
+            ContextKeeper.appContext.toast(R.string.ltiToolsOffline)
+        }
     }
 }

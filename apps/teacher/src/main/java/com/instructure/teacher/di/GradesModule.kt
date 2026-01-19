@@ -17,8 +17,8 @@
 
 package com.instructure.teacher.di
 
-import com.instructure.pandautils.features.grades.GradesBehaviour
 import com.instructure.pandautils.features.grades.GradesRepository
+import com.instructure.pandautils.features.grades.GradesViewModelBehavior
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,7 +34,7 @@ class GradesModule {
     }
 
     @Provides
-    fun provideGradesBehaviour(): GradesBehaviour {
+    fun provideGradesViewModelBehavior(): GradesViewModelBehavior {
         throw NotImplementedError()
     }
 }
