@@ -237,6 +237,7 @@ private fun ModuleItemSequenceContent(
     onBackPressed: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val parentNavController = navController
     val scrollConnectionSaver = Saver<MutableState<CollapsingAppBarNestedScrollConnection>, Pair<Int, Int>>(
         save = { it.value.appBarMaxHeight to it.value.appBarOffset },
         restore = { (mutableStateOf(CollapsingAppBarNestedScrollConnection(it.first).apply { appBarOffset = it.second })) }
@@ -307,7 +308,7 @@ private fun ModuleItemSequenceContent(
                         moduleItemUiState,
                         scrollState = contentScrollState,
                         moduleHeaderHeight = moduleHeaderHeight,
-                        navController,
+                        parentNavController,
                         uiState.showAssignmentToolsForId,
                         uiState.assignmentToolsOpened,
                         updateAiContext = uiState.updateAiAssistContext,
@@ -421,7 +422,7 @@ private fun ModuleItemContentScreen(
     moduleItemUiState: ModuleItemUiState,
     scrollState: ScrollState,
     moduleHeaderHeight: Dp,
-    navController: NavHostController,
+    parentNavController: NavHostController,
     assignmentToolsForId: Long?,
     assignmentToolsOpened: () -> Unit,
     updateAiContext: (AiAssistContextSource, String) -> Unit,
@@ -485,7 +486,7 @@ private fun ModuleItemContentScreen(
                     uiState = uiState,
                     scrollState = scrollState,
                     updateAiContext = { source, content -> updateAiContext(source, content) },
-                    navController = navController,
+                    navController = parentNavController,
                     scrollToNoteId = scrollToNoteId
                 )
             }
