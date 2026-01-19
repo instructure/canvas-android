@@ -26,7 +26,8 @@ data class FrontPageUiState(
     val isLoading: Boolean = true,
     val isError: Boolean = false,
     val isRefreshing: Boolean = false,
-    val htmlContent: String = ""
+    val htmlContent: String = "",
+    val baseUrl: String? = null
 )
 
 sealed class FrontPageAction {
