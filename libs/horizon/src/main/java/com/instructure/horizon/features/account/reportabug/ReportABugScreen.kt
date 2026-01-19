@@ -88,7 +88,7 @@ fun ReportABugScreen(
     }
 
     Scaffold (
-        topBar = { ReportABugScreen(navController) },
+        topBar = { ReportABugScreenAppBar(navController) },
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         containerColor = HorizonColors.Surface.cardPrimary()
     ) { paddingValues ->
@@ -197,6 +197,7 @@ fun ReportABugScreen(
                         color = ButtonColor.Black,
                         width = ButtonWidth.RELATIVE,
                         loading = uiState.isLoading,
+                        fixedLoadingSize = true,
                         enabled = !uiState.isLoading,
                         contentAlignment = Alignment.Center,
                         onClick = uiState.onSubmit
@@ -209,18 +210,16 @@ fun ReportABugScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ReportABugScreen(
+private fun ReportABugScreenAppBar(
     navController: NavHostController,
 ) {
-    Column {
+    Column(Modifier.fillMaxWidth()) {
         TopAppBar(
             title = {
                 Text(
                     stringResource(R.string.reportAProblemTitle),
                     style = HorizonTypography.h3,
                     color = HorizonColors.Text.title(),
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
                 )
             },
             actions = {
@@ -231,7 +230,6 @@ private fun ReportABugScreen(
                     onClick = {
                         navController.popBackStack()
                     },
-                    modifier = Modifier.padding(horizontal = 16.dp)
                 )
             },
             colors = TopAppBarDefaults.topAppBarColors(
