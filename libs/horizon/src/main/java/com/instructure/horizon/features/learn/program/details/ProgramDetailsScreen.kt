@@ -54,7 +54,7 @@ import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun ProgramDetailsScreen(uiState: ProgramDetailsUiState, mainNavController: NavHostController, modifier: Modifier = Modifier) {
+fun ProgramDetailsScreen(uiState: ProgramDetailsUiState, navController: NavHostController, modifier: Modifier = Modifier) {
 
     LoadingStateWrapper(loadingState = uiState.loadingState) {
         Column(

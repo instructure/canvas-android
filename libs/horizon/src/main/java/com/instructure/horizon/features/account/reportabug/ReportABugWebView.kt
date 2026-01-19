@@ -31,7 +31,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.organisms.scaffolds.HorizonScaffold
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebViewWrapper
@@ -42,7 +42,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun ReportABugWebView(
-    navController: NavController,
+    navController: NavHostController,
 ) {
     HorizonScaffold(
         title = stringResource(R.string.accountReportABug),

@@ -35,8 +35,7 @@ import com.instructure.horizon.horizonui.organisms.tabrow.TabRow
 @Composable
 fun LearnScreen(
     state: LearnUiState,
-    mainNavController: NavHostController,
-    homeNavController: NavHostController? = null
+    navController: NavHostController,
 ) {
     CollapsableScaffold(
         containerColor = HorizonColors.Surface.pagePrimary(),

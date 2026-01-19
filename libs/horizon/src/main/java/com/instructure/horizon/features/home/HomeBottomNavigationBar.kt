@@ -35,9 +35,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.instructure.horizon.R
 import com.instructure.horizon.features.aiassistant.AiAssistantScreen
@@ -70,7 +70,7 @@ private val bottomNavItems = listOf(
 )
 
 @Composable
-fun isBottomBarVisible(navController: NavController): Boolean {
+fun isBottomBarVisible(navController: NavHostController): Boolean {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
@@ -80,7 +80,7 @@ fun isBottomBarVisible(navController: NavController): Boolean {
 
 @Composable
 fun HomeBottomNavigationBar(
-    navController: NavController,
+    navController: NavHostController,
     buttonsEnabled: Boolean = true,
     modifier: Modifier = Modifier
 ) {

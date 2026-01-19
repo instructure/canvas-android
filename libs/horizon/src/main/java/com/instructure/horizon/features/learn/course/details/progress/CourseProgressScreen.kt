@@ -39,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -57,7 +58,7 @@ import com.instructure.horizon.navigation.MainNavigationRoute
 @Composable
 fun CourseProgressScreen(
     courseId: Long,
-    mainNavController: NavController,
+    navController: NavHostController,
     modifier: Modifier = Modifier,
     viewModel: CourseProgressViewModel = hiltViewModel()
 ) {
@@ -75,7 +76,7 @@ fun CourseProgressScreen(
             state,
             modifier,
             courseId,
-            mainNavController
+            navController
         )
     }
 }
@@ -85,7 +86,7 @@ private fun LearnProgressContent(
     state: CourseProgressUiState,
     modifier: Modifier = Modifier,
     courseId: Long,
-    mainNavController: NavController
+    navController: NavHostController
 ) {
     Box(
         modifier = modifier
@@ -104,7 +105,7 @@ private fun LearnProgressContent(
                         if (moduleItemState is ModuleItemState.ModuleItemCard) {
                             ModuleItemCard(
                                 state = moduleItemState.cardState.copy(onClick = {
-                                    mainNavController.navigate(MainNavigationRoute.ModuleItemSequence(courseId, moduleItemState.moduleItemId))
+                                    navController.navigate(MainNavigationRoute.ModuleItemSequence(courseId, moduleItemState.moduleItemId))
                                 }),
                                 modifier = Modifier.padding(bottom = 8.dp),
                             )
@@ -163,5 +164,5 @@ private fun LearnProgressScreenPreview() {
             )
         )
     )
-    LearnProgressContent(state, courseId = 1, mainNavController = rememberNavController())
+    LearnProgressContent(state, courseId = 1, navController = rememberNavController())
 }

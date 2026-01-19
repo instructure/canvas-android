@@ -14,7 +14,6 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-@file:OptIn(ExperimentalComposeUiApi::class)
 
 package com.instructure.horizon.features.learn.course.details.score
 
@@ -43,14 +42,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.invisibleToUser
+import androidx.compose.ui.semantics.hideFromAccessibility
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -85,7 +83,7 @@ import com.instructure.pandautils.utils.stringValueWithoutTrailingZeros
 @Composable
 fun CourseScoreScreen(
     courseId: Long,
-    mainNavController: NavHostController,
+    navController: NavHostController,
     modifier: Modifier = Modifier,
     viewModel: CourseScoreViewModel = hiltViewModel()
 ) {
@@ -102,7 +100,7 @@ fun CourseScoreScreen(
         LearnScoreContent(
             state,
             courseId,
-            mainNavController,
+            navController,
             { viewModel.updateSelectedSortOption(it) },
             modifier
         )
@@ -113,7 +111,7 @@ fun CourseScoreScreen(
 private fun LearnScoreContent(
     state: CourseScoreUiState,
     courseId: Long,
-    mainNavController: NavHostController,
+    navController: NavHostController,
     onSelectedSortOptionChanged: (CourseScoreSortOption) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -147,7 +145,7 @@ private fun LearnScoreContent(
                 AssignmentsContent(
                     state = state,
                     navigateToAssignment = { assignmentId ->
-                        mainNavController.navigate(
+                        navController.navigate(
                             MainNavigationRoute.ModuleItemSequence(
                                 courseId = courseId,
                                 moduleItemAssetType = "Assignment",
@@ -378,7 +376,7 @@ private fun GroupWeightItem(assignmentGroup: AssignmentGroupScoreItem) {
                 text = assignmentGroup.name,
                 style = HorizonTypography.p1,
                 color = HorizonColors.Text.body(),
-                modifier = Modifier.semantics { invisibleToUser() }
+                modifier = Modifier.semantics { hideFromAccessibility() }
             )
 
             HorizonSpace(SpaceSize.SPACE_8)
@@ -387,7 +385,7 @@ private fun GroupWeightItem(assignmentGroup: AssignmentGroupScoreItem) {
                 text = groupWeightText,
                 style = HorizonTypography.p1,
                 color = HorizonColors.Text.body(),
-                modifier = Modifier.semantics { invisibleToUser() }
+                modifier = Modifier.semantics { hideFromAccessibility() }
             )
         }
     }

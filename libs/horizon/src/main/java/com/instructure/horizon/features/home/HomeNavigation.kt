@@ -61,11 +61,11 @@ fun NavGraphBuilder.horizonHomeNavigation(
         popEnterTransition = { popEnterTransition(NavigationTransitionAnimation.SCALE) },
         popExitTransition = { popExitTransition(NavigationTransitionAnimation.SCALE) },
     ) {
-        learnNavigation(navController, navController)
+        learnNavigation(navController)
         composable(HomeNavigationRoute.Dashboard.route) {
             val viewModel = hiltViewModel<DashboardViewModel>()
             val uiState by viewModel.uiState.collectAsState()
-            DashboardScreen(uiState, navController, navController)
+            DashboardScreen(uiState, navController)
         }
         composable(HomeNavigationRoute.Skillspace.route) {
             val viewModel = hiltViewModel<SkillspaceViewModel>()

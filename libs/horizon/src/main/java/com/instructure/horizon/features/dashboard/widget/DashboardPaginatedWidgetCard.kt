@@ -47,8 +47,7 @@ import java.util.Date
 @Composable
 fun DashboardPaginatedWidgetCard(
     state: DashboardPaginatedWidgetCardState,
-    mainNavController: NavHostController,
-    homeNavController: NavHostController,
+    navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
     val pagerState = rememberPagerState(pageCount = { state.items.size })
@@ -82,11 +81,11 @@ fun DashboardPaginatedWidgetCard(
                         item.route?.let { route ->
                             when (route) {
                                 is DashboardPaginatedWidgetCardButtonRoute.HomeRoute -> {
-                                    homeNavController.navigate(route.route)
+                                    navController.navigate(route.route)
                                 }
 
                                 is DashboardPaginatedWidgetCardButtonRoute.MainRoute -> {
-                                    mainNavController.navigate(route.route)
+                                    navController.navigate(route.route)
                                 }
                             }
                         }
@@ -198,7 +197,6 @@ private fun DashboardPaginatedWidgetCardAnnouncementContentPreview() {
             )
         ),
         rememberNavController(),
-        rememberNavController(),
     )
 }
 
@@ -208,7 +206,6 @@ private fun DashboardPaginatedWidgetCardAnnouncementLoadingPreview() {
     ContextKeeper.appContext = LocalContext.current
     DashboardPaginatedWidgetCard(
         state = DashboardPaginatedWidgetCardState.Loading,
-        rememberNavController(),
         rememberNavController(),
     )
 }

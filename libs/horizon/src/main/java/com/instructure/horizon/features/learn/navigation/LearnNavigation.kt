@@ -39,8 +39,7 @@ import com.instructure.horizon.features.learn.program.details.ProgramDetailsScre
 import com.instructure.horizon.features.learn.program.details.ProgramDetailsViewModel
 
 fun NavGraphBuilder.learnNavigation(
-    homeNavController: NavHostController,
-    mainNavController: NavHostController,
+    navController: NavHostController,
 ) {
     navigation(
         route = HomeNavigationRoute.Learn.route,
@@ -64,7 +63,7 @@ fun NavGraphBuilder.learnNavigation(
             val uiState by viewModel.state.collectAsState()
 
             val selectedTabFromDetailsFlow = remember {
-                homeNavController.currentBackStackEntry?.savedStateHandle?.getStateFlow<String?>(
+                navController.currentBackStackEntry?.savedStateHandle?.getStateFlow<String?>(
                     LearnRoute.LearnScreen.selectedTabFromDetailsKey,
                     null
                 )
@@ -74,7 +73,7 @@ fun NavGraphBuilder.learnNavigation(
             LaunchedEffect(selectedTabFromDetails) {
                 selectedTabFromDetails?.let { tabValue ->
                     uiState.updateSelectedTab(tabValue)
-                    homeNavController.currentBackStackEntry?.savedStateHandle?.remove<String>(
+                    navController.currentBackStackEntry?.savedStateHandle?.remove<String>(
                         LearnRoute.LearnScreen.selectedTabFromDetailsKey
                     )
                 }
@@ -82,8 +81,7 @@ fun NavGraphBuilder.learnNavigation(
 
             LearnScreen(
                 state = uiState,
-                mainNavController = mainNavController,
-                homeNavController = homeNavController
+                navController = navController,
             )
         }
         composable(
@@ -100,7 +98,7 @@ fun NavGraphBuilder.learnNavigation(
                 }
             )
         ) {
-            val previousBackStackEntry = homeNavController.previousBackStackEntry
+            val previousBackStackEntry = navController.previousBackStackEntry
             previousBackStackEntry?.savedStateHandle?.set(
                 LearnRoute.LearnScreen.selectedTabFromDetailsKey,
                 LearnTab.COURSES.stringValue
@@ -108,7 +106,7 @@ fun NavGraphBuilder.learnNavigation(
 
             val viewModel = hiltViewModel<CourseDetailsViewModel>()
             val state by viewModel.state.collectAsState()
-            CourseDetailsScreen(state, mainNavController)
+            CourseDetailsScreen(state, navController)
         }
         composable(
             route = LearnRoute.LearnProgramDetailsScreen.route,
@@ -124,7 +122,7 @@ fun NavGraphBuilder.learnNavigation(
                 }
             )
         ) {
-            val previousBackStackEntry = homeNavController.previousBackStackEntry
+            val previousBackStackEntry = navController.previousBackStackEntry
             previousBackStackEntry?.savedStateHandle?.set(
                 LearnRoute.LearnScreen.selectedTabFromDetailsKey,
                 LearnTab.PROGRAMS.stringValue
@@ -132,7 +130,7 @@ fun NavGraphBuilder.learnNavigation(
 
             val viewModel = hiltViewModel<ProgramDetailsViewModel>()
             val state by viewModel.state.collectAsState()
-            ProgramDetailsScreen(state, mainNavController)
+            ProgramDetailsScreen(state, navController)
         }
     }
 }

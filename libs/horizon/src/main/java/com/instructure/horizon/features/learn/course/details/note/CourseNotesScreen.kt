@@ -29,7 +29,7 @@ import com.instructure.horizon.features.notebook.NotebookViewModel
 @Composable
 fun CourseNotesScreen(
     courseId: Long,
-    mainNavController: NavHostController,
+    navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
     val viewModel: NotebookViewModel = hiltViewModel()
@@ -44,7 +44,7 @@ fun CourseNotesScreen(
         modifier = modifier
     ) {
         NotebookScreen(
-            mainNavController,
+            navController,
             viewModel
         )
     }

@@ -55,7 +55,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun CourseDetailsScreen(
     state: CourseDetailsUiState,
-    mainNavController: NavHostController
+    navController: NavHostController
 ) {
     val pagerState = rememberPagerState(initialPage = 0) { state.availableTabs.size }
     val coroutineScope = rememberCoroutineScope()
@@ -109,19 +109,19 @@ fun CourseDetailsScreen(
 
                         1 -> CourseProgressScreen(
                             state.selectedCourse?.courseId ?: -1,
-                            mainNavController,
+                            navController,
                             Modifier.clip(RoundedCornerShape(cornerAnimation))
                         )
 
                         2 -> CourseScoreScreen(
                             state.selectedCourse?.courseId ?: -1,
-                            mainNavController,
+                            navController,
                             Modifier.clip(RoundedCornerShape(cornerAnimation))
                         )
 
                         3 -> CourseNotesScreen(
                             state.selectedCourse?.courseId ?: -1,
-                            mainNavController,
+                            navController,
                             Modifier.clip(RoundedCornerShape(cornerAnimation))
                         )
 
