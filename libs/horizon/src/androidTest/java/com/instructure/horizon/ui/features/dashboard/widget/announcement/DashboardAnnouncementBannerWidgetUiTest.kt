@@ -55,7 +55,7 @@ class DashboardAnnouncementBannerWidgetUiTest {
         )
 
         composeTestRule.setContent {
-            DashboardAnnouncementBannerSection(uiState, rememberNavController(), rememberNavController())
+            DashboardAnnouncementBannerSection(uiState, rememberNavController())
         }
 
         composeTestRule.waitForIdle()
@@ -73,7 +73,7 @@ class DashboardAnnouncementBannerWidgetUiTest {
         )
 
         composeTestRule.setContent {
-            DashboardAnnouncementBannerSection(uiState, rememberNavController(), rememberNavController())
+            DashboardAnnouncementBannerSection(uiState, rememberNavController())
         }
 
         val errorMessage = context.getString(R.string.dashboardAnnouncementBannerErrorMessage)
@@ -109,7 +109,7 @@ class DashboardAnnouncementBannerWidgetUiTest {
         )
 
         composeTestRule.setContent {
-            DashboardAnnouncementBannerSection(uiState, rememberNavController(), rememberNavController())
+            DashboardAnnouncementBannerSection(uiState, rememberNavController())
         }
 
         val announcementLabel = context.getString(R.string.notificationsAnnouncementCategoryLabel)
@@ -154,7 +154,7 @@ class DashboardAnnouncementBannerWidgetUiTest {
         )
 
         composeTestRule.setContent {
-            DashboardAnnouncementBannerSection(uiState, rememberNavController(), rememberNavController())
+            DashboardAnnouncementBannerSection(uiState, rememberNavController())
         }
 
         composeTestRule.onNodeWithText("First Announcement").assertIsDisplayed()
@@ -184,7 +184,7 @@ class DashboardAnnouncementBannerWidgetUiTest {
         )
 
         composeTestRule.setContent {
-            DashboardAnnouncementBannerSection(uiState, rememberNavController(), rememberNavController())
+            DashboardAnnouncementBannerSection(uiState, rememberNavController())
         }
 
         val announcementLabel = context.getString(R.string.notificationsAnnouncementCategoryLabel)
@@ -214,7 +214,7 @@ class DashboardAnnouncementBannerWidgetUiTest {
         )
 
         composeTestRule.setContent {
-            DashboardAnnouncementBannerSection(uiState, rememberNavController(), rememberNavController())
+            DashboardAnnouncementBannerSection(uiState, rememberNavController())
         }
 
 
@@ -245,7 +245,7 @@ class DashboardAnnouncementBannerWidgetUiTest {
         )
 
         composeTestRule.setContent {
-            DashboardAnnouncementBannerSection(uiState, rememberNavController(), rememberNavController())
+            DashboardAnnouncementBannerSection(uiState, rememberNavController())
         }
 
         composeTestRule.onNodeWithText("Jan 01, 2024").assertIsDisplayed()
@@ -272,7 +272,7 @@ class DashboardAnnouncementBannerWidgetUiTest {
         )
 
         composeTestRule.setContent {
-            DashboardAnnouncementBannerSection(uiState, rememberNavController(), rememberNavController())
+            DashboardAnnouncementBannerSection(uiState, rememberNavController())
         }
 
         composeTestRule.onNodeWithText("No Date Announcement").assertIsDisplayed()
@@ -300,7 +300,7 @@ class DashboardAnnouncementBannerWidgetUiTest {
         )
 
         composeTestRule.setContent {
-            DashboardAnnouncementBannerSection(uiState, rememberNavController(), rememberNavController())
+            DashboardAnnouncementBannerSection(uiState, rememberNavController())
         }
 
         composeTestRule.onNodeWithText(longTitle).assertIsDisplayed()
