@@ -29,10 +29,6 @@ open class TestAppManager : AppManager(), WorkManagerTestAppManager {
     override fun onCreate() {
         super.onCreate()
         RemoteConfigUtils.initialize()
-
-        /*if (workerFactory == null) {
-            workerFactory = getWorkManagerFactory()
-        }*/
     }
 
     override val workManagerConfiguration: Configuration
