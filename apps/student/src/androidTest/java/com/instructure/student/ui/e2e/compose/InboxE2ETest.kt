@@ -705,7 +705,7 @@ class InboxE2ETest: StudentComposeTest() {
         inboxComposePage.assertAttachmentDisplayed(videoFileName)
 
         Log.d(STEP_TAG, "Send the reply message with attachment.")
-        sleep(3000) //Wait for attachment to finish uploading
+        sleep(2000) //Wait for attachment to finish uploading
         inboxComposePage.pressSendButton()
 
         Log.d(ASSERTION_TAG, "Assert that the reply message is displayed in the conversation.")
@@ -871,7 +871,7 @@ class InboxE2ETest: StudentComposeTest() {
         inboxComposePage.assertAttachmentDisplayed(pdfFileName)
 
         Log.d(STEP_TAG, "Send the forwarded message with attachment.")
-        sleep(3000) //Wait for attachment to finish uploading
+        sleep(2000) //Wait for attachment to finish uploading
         inboxComposePage.pressSendButton()
 
         Log.d(ASSERTION_TAG, "Assert that the forward message is displayed in the conversation.")
