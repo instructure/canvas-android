@@ -16,6 +16,8 @@
  */
 package com.instructure.canvasapi2.models.journey
 
+import com.google.gson.annotations.SerializedName
+
 data class JourneyAssistCitation(
     val title: String,
     val courseID: String?,
@@ -23,8 +25,13 @@ data class JourneyAssistCitation(
     val sourceType: JourneyAssistCitationType?
 )
 
-enum class JourneyAssistCitationType(val apiValue: String) {
-    WIKI_PAGE("wiki_page"),
-    ATTACHMENT("attachment"),
-    UNKOWN("unknown"),
+enum class JourneyAssistCitationType {
+    @SerializedName("wiki_page")
+    WIKI_PAGE,
+
+    @SerializedName("attachment")
+    ATTACHMENT,
+
+    @SerializedName("unknown")
+    UNKNOWN,
 }
