@@ -51,7 +51,7 @@ class GradesE2ETest: StudentComposeTest() {
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
-    @Stub("Grades screen has been redesigned, needs to be fixed in ticket MBL-19258")
+    @Stub("Grades screen has been redesigned, needs to be fixed in ticket MBL-19640")
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.GRADES, TestCategory.E2E)
