@@ -58,7 +58,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -138,7 +137,6 @@ import kotlin.math.abs
 @Composable
 fun ModuleItemSequenceScreen(mainNavController: NavHostController, uiState: ModuleItemSequenceUiState) {
     if (uiState.progressScreenState.visible) ProgressScreen(uiState.progressScreenState, uiState.loadingState)
-    val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
     HorizonEdgeToEdgeSystemBars(

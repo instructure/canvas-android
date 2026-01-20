@@ -19,6 +19,7 @@ package com.instructure.horizon.horizonui.organisms
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.offset
@@ -49,6 +50,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.max
+import com.instructure.horizon.util.topSafeDrawing
 
 @Composable
 fun CollapsableHeaderScreen(
@@ -133,7 +135,7 @@ fun CollapsableScaffold(
     }
 
     val collapsedTopBarPadding = max(
-        0.dp,
+        WindowInsets.topSafeDrawing.asPaddingValues().calculateTopPadding(),
         with(density) { topBarHeight.toDp() } + with(density) { nestedScrollConnection.topBarOffset.toDp() })
 
     val collapsedBottomBarPadding = max(
@@ -142,7 +144,8 @@ fun CollapsableScaffold(
 
     Scaffold(
         modifier = modifier
-            .nestedScroll(nestedScrollConnection),
+            .nestedScroll(nestedScrollConnection)
+            .padding(contentWindowInsets.asPaddingValues()),
         topBar = {
             Box(
                 Modifier.offset { IntOffset(0, nestedScrollConnection.topBarOffset) }
@@ -186,7 +189,6 @@ fun CollapsableScaffold(
         floatingActionButtonPosition = floatingActionButtonPosition,
         containerColor = containerColor,
         contentColor = contentColor,
-        contentWindowInsets = contentWindowInsets,
         content = { paddingValues ->
             val layoutDirection = LocalLayoutDirection.current
             Box(

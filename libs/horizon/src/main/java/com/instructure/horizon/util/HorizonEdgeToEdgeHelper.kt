@@ -18,8 +18,11 @@ package com.instructure.horizon.util
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
@@ -33,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -123,3 +127,25 @@ val WindowInsets.Companion.bottomSafeDrawing: WindowInsets
 val WindowInsets.Companion.fullScreenInsets: WindowInsets
     @Composable
     get() = WindowInsets.safeDrawing
+
+@Composable
+operator fun PaddingValues.plus(other: PaddingValues): PaddingValues {
+    val layoutDirection = LocalLayoutDirection.current
+    return PaddingValues(
+        start = this.calculateStartPadding(layoutDirection) + other.calculateStartPadding(layoutDirection),
+        top = this.calculateTopPadding() + other.calculateTopPadding(),
+        end = this.calculateEndPadding(layoutDirection) + other.calculateEndPadding(layoutDirection),
+        bottom = this.calculateBottomPadding() + other.calculateBottomPadding()
+    )
+}
+
+@Composable
+operator fun PaddingValues.minus(other: PaddingValues): PaddingValues {
+    val layoutDirection = LocalLayoutDirection.current
+    return PaddingValues(
+        start = this.calculateStartPadding(layoutDirection) - other.calculateStartPadding(layoutDirection),
+        top = this.calculateTopPadding() - other.calculateTopPadding(),
+        end = this.calculateEndPadding(layoutDirection) - other.calculateEndPadding(layoutDirection),
+        bottom = this.calculateBottomPadding() - other.calculateBottomPadding()
+    )
+}

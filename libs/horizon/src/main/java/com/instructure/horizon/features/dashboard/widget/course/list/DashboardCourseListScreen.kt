@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -71,6 +72,8 @@ import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSel
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectInputSize
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
+import com.instructure.horizon.util.HorizonEdgeToEdgeSystemBars
+import com.instructure.horizon.util.zeroScreenInsets
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -79,37 +82,45 @@ fun DashboardCourseListScreen(
     state: DashboardCourseListUiState,
     homeNavController: NavHostController,
 ) {
-    LoadingStateWrapper(state.loadingState) {
-        CollapsableScaffold(
-            containerColor = HorizonColors.Surface.pagePrimary(),
-            topBar = { DashboardCourseListTopBar(homeNavController) },
-        ) {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                contentPadding = PaddingValues(top = 8.dp, bottom = 24.dp),
+    HorizonEdgeToEdgeSystemBars(
+        statusBarColor = HorizonColors.Surface.pagePrimary(),
+    ){
+        LoadingStateWrapper(state.loadingState) {
+            CollapsableScaffold(
+                containerColor = HorizonColors.Surface.pagePrimary(),
+                contentWindowInsets = WindowInsets.zeroScreenInsets,
+                topBar = { DashboardCourseListTopBar(homeNavController) },
             ) {
-                stickyHeader {
-                    DashboardCourseListHeader(state)
-                }
-                if (state.courses.isEmpty()) {
-                    item {
-                        EmptyCoursesMessage()
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    contentPadding = PaddingValues(top = 8.dp, bottom = 24.dp)
+                ) {
+                    stickyHeader {
+                        DashboardCourseListHeader(
+                            state,
+                            //Modifier.padding(WindowInsets.bottomNavigationScreenInsets.asPaddingValues())
+                        )
                     }
-                } else {
-                    val visibleCourses = state.courses.take(state.visibleCourseCount)
-                    items(visibleCourses) {
-                        CourseItemCard(it, homeNavController)
-                    }
-
-                    if (state.courses.size > state.visibleCourseCount) {
+                    if (state.courses.isEmpty()) {
                         item {
-                            Button(
-                                label = stringResource(R.string.dashboardCourseListShowMore),
-                                width = ButtonWidth.FILL,
-                                color = ButtonColor.WhiteWithOutline,
-                                onClick = state.onShowMoreCourses,
-                                modifier = Modifier.padding(horizontal = 16.dp)
-                            )
+                            EmptyCoursesMessage()
+                        }
+                    } else {
+                        val visibleCourses = state.courses.take(state.visibleCourseCount)
+                        items(visibleCourses) {
+                            CourseItemCard(it, homeNavController)
+                        }
+
+                        if (state.courses.size > state.visibleCourseCount) {
+                            item {
+                                Button(
+                                    label = stringResource(R.string.dashboardCourseListShowMore),
+                                    width = ButtonWidth.FILL,
+                                    color = ButtonColor.WhiteWithOutline,
+                                    onClick = state.onShowMoreCourses,
+                                    modifier = Modifier.padding(horizontal = 16.dp)
+                                )
+                            }
                         }
                     }
                 }
@@ -119,10 +130,10 @@ fun DashboardCourseListScreen(
 }
 
 @Composable
-private fun DashboardCourseListHeader(state: DashboardCourseListUiState) {
+private fun DashboardCourseListHeader(state: DashboardCourseListUiState, modifier: Modifier = Modifier) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .background(HorizonColors.Surface.pagePrimary())
             .padding(16.dp)

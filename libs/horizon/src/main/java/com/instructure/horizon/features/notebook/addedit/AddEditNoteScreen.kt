@@ -51,7 +51,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedData
@@ -78,8 +77,6 @@ import com.instructure.horizon.horizonui.organisms.ModalDialogState
 import com.instructure.horizon.horizonui.organisms.inputs.common.InputLabelRequired
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextArea
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextAreaState
-import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.getActivityOrNull
 import kotlinx.coroutines.delay
 
 @Composable
@@ -88,11 +85,6 @@ fun AddEditNoteScreen(
     state: AddEditNoteUiState,
     onShowSnackbar: (String?, () -> Unit) -> Unit
 ) {
-    val activity = LocalContext.current.getActivityOrNull()
-    LaunchedEffect(Unit) {
-        if (activity != null) ViewStyler.setStatusBarColor(activity, ContextCompat.getColor(activity, R.color.surface_pageSecondary))
-    }
-
     LaunchedEffect(state.snackbarMessage) {
         onShowSnackbar(state.snackbarMessage, state.onSnackbarDismiss)
     }

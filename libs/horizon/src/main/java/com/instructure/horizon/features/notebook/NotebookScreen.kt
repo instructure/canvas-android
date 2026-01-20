@@ -22,6 +22,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,7 +35,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -49,7 +50,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
 import com.instructure.canvasapi2.utils.ContextKeeper
@@ -82,11 +82,10 @@ import com.instructure.horizon.horizonui.organisms.CollapsableHeaderScreen
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.horizon.util.HorizonEdgeToEdgeSystemBars
-import com.instructure.horizon.util.topBarScreenInsets
-import com.instructure.horizon.util.zeroScreenInsets
+import com.instructure.horizon.util.bottomNavigationScreenInsets
+import com.instructure.horizon.util.bottomSafeDrawing
+import com.instructure.horizon.util.plus
 import com.instructure.pandautils.compose.modifiers.conditional
-import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.localisedFormat
 
 @Composable
@@ -108,14 +107,6 @@ fun NotebookScreen(
     navController: NavHostController,
     state: NotebookUiState
 ) {
-    val activity = LocalContext.current.getActivityOrNull()
-    LaunchedEffect(Unit) {
-        if (activity != null) ViewStyler.setStatusBarColor(
-            activity,
-            ContextCompat.getColor(activity, R.color.surface_pagePrimary)
-        )
-    }
-
     val scrollState = rememberLazyListState()
 
     NoteDeleteConfirmationDialog(
@@ -126,124 +117,135 @@ fun NotebookScreen(
         }
     )
 
-    CollapsableHeaderScreen(
-        modifier = Modifier.background(HorizonColors.Surface.pagePrimary()),
-        headerContent = {
-            if (state.showTopBar) {
-                if (state.showCourseFilter) {
-                    NotebookAppBar(
-                        navigateBack = { navController.popBackStack() },
-                        centeredTitle = true
-                    )
-                } else {
-                    NotebookAppBar(
-                        onClose = { navController.popBackStack() },
-                        centeredTitle = false
-                    )
-                }
-
-            }
-        },
-        bodyContent = {
-            LoadingStateWrapper(state.loadingState) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) {
-                    if ((state.showNoteTypeFilter || state.showCourseFilter)) {
-                        FilterContent(
-                            state,
-                            scrollState,
-                            Modifier
-                                .background(HorizonColors.Surface.pagePrimary())
-                                .clip(HorizonCornerRadius.level5)
-                                .conditional(scrollState.canScrollBackward) {
-                                    horizonBorderShadow(
-                                        HorizonColors.Surface.inversePrimary(),
-                                        bottom = 1.dp,
-                                    )
-                                }
-                                .background(HorizonColors.Surface.pageSecondary())
+    HorizonEdgeToEdgeSystemBars(
+        statusBarColor = HorizonColors.Surface.pagePrimary(),
+        navigationBarColor = HorizonColors.Surface.cardPrimary(),
+    ) {
+        CollapsableHeaderScreen(
+            modifier = Modifier
+                .padding(WindowInsets.bottomNavigationScreenInsets.asPaddingValues())
+                .background(HorizonColors.Surface.pagePrimary()),
+            headerContent = {
+                if (state.showTopBar) {
+                    if (state.showCourseFilter) {
+                        NotebookAppBar(
+                            navigateBack = { navController.popBackStack() },
+                            centeredTitle = true
+                        )
+                    } else {
+                        NotebookAppBar(
+                            onClose = { navController.popBackStack() },
+                            centeredTitle = false
                         )
                     }
 
-                    LazyColumn(
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                        state = scrollState,
+                }
+            },
+            bodyContent = {
+                LoadingStateWrapper(state.loadingState) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
-                            .fillMaxHeight()
-                            .background(HorizonColors.Surface.pageSecondary()),
-                        contentPadding = PaddingValues(
-                            start = 16.dp,
-                            end = 16.dp,
-                            top = 2.dp,
-                            bottom = 16.dp
-                        )
+                            .fillMaxSize()
                     ) {
-                        if (state.notes.isEmpty()) {
-                            item {
-                                if (state.selectedCourse != null || state.selectedFilter != null) {
-                                    EmptyFilteredContent()
-                                } else {
-                                    EmptyContent()
+                        if ((state.showNoteTypeFilter || state.showCourseFilter)) {
+                            FilterContent(
+                                state,
+                                scrollState,
+                                Modifier
+                                    .background(HorizonColors.Surface.pagePrimary())
+                                    .clip(HorizonCornerRadius.level5)
+                                    .conditional(scrollState.canScrollBackward) {
+                                        horizonBorderShadow(
+                                            HorizonColors.Surface.inversePrimary(),
+                                            bottom = 1.dp,
+                                        )
+                                    }
+                                    .background(HorizonColors.Surface.pageSecondary())
+                            )
+                        }
+
+                        LazyColumn(
+                            verticalArrangement = Arrangement.spacedBy(16.dp),
+                            state = scrollState,
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .background(HorizonColors.Surface.pageSecondary()),
+                            contentPadding = PaddingValues(
+                                start = 16.dp,
+                                end = 16.dp,
+                                top = 2.dp,
+                                bottom = 16.dp
+                            ) + WindowInsets.bottomSafeDrawing.asPaddingValues()
+                        ) {
+                            if (state.notes.isEmpty()) {
+                                item {
+                                    if (state.selectedCourse != null || state.selectedFilter != null) {
+                                        EmptyFilteredContent()
+                                    } else {
+                                        EmptyContent()
+                                    }
                                 }
-                            }
-                        } else {
-                            items(state.notes) { note ->
-                                Column {
-                                    val courseName = if (state.showCourseFilter) {
-                                        state.courses.firstOrNull { it.courseId == note.courseId }?.courseName
-                                    } else null
-                                    NoteContent(note, courseName, state.deleteLoadingNote, onDeleteClick = {
-                                        state.updateShowDeleteConfirmation(note)
-                                    }) {
-                                        if (state.navigateToEdit) {
-                                            navController.navigate(
-                                                NotebookRoute.EditNotebook(
-                                                    noteId = note.id,
-                                                    highlightedTextStartOffset = note.highlightedText.range.startOffset,
-                                                    highlightedTextEndOffset = note.highlightedText.range.endOffset,
-                                                    highlightedTextStartContainer = note.highlightedText.range.startContainer,
-                                                    highlightedTextEndContainer = note.highlightedText.range.endContainer,
-                                                    textSelectionStart = note.highlightedText.textPosition.start,
-                                                    textSelectionEnd = note.highlightedText.textPosition.end,
-                                                    highlightedText = note.highlightedText.selectedText,
-                                                    noteType = note.type.name,
-                                                    userComment = note.userText,
-                                                    updatedAt = note.updatedAt.toNotebookLocalisedDateFormat()
+                            } else {
+                                items(state.notes) { note ->
+                                    Column {
+                                        val courseName = if (state.showCourseFilter) {
+                                            state.courses.firstOrNull { it.courseId == note.courseId }?.courseName
+                                        } else null
+                                        NoteContent(
+                                            note,
+                                            courseName,
+                                            state.deleteLoadingNote,
+                                            onDeleteClick = {
+                                                state.updateShowDeleteConfirmation(note)
+                                            }) {
+                                            if (state.navigateToEdit) {
+                                                navController.navigate(
+                                                    NotebookRoute.EditNotebook(
+                                                        noteId = note.id,
+                                                        highlightedTextStartOffset = note.highlightedText.range.startOffset,
+                                                        highlightedTextEndOffset = note.highlightedText.range.endOffset,
+                                                        highlightedTextStartContainer = note.highlightedText.range.startContainer,
+                                                        highlightedTextEndContainer = note.highlightedText.range.endContainer,
+                                                        textSelectionStart = note.highlightedText.textPosition.start,
+                                                        textSelectionEnd = note.highlightedText.textPosition.end,
+                                                        highlightedText = note.highlightedText.selectedText,
+                                                        noteType = note.type.name,
+                                                        userComment = note.userText,
+                                                        updatedAt = note.updatedAt.toNotebookLocalisedDateFormat()
+                                                    )
                                                 )
-                                            )
-                                        } else {
-                                            navController.navigate(
-                                                MainNavigationRoute.ModuleItemSequence(
-                                                    courseId = note.courseId,
-                                                    moduleItemAssetType = note.objectType.value,
-                                                    moduleItemAssetId = note.objectId,
-                                                    scrollToNoteId = note.id
+                                            } else {
+                                                navController.navigate(
+                                                    MainNavigationRoute.ModuleItemSequence(
+                                                        courseId = note.courseId,
+                                                        moduleItemAssetType = note.objectType.value,
+                                                        moduleItemAssetId = note.objectId,
+                                                        scrollToNoteId = note.id
+                                                    )
                                                 )
-                                            )
+                                            }
+                                        }
+
+                                        if (state.notes.lastOrNull() != note) {
+                                            HorizonSpace(SpaceSize.SPACE_4)
                                         }
                                     }
-
-                                    if (state.notes.lastOrNull() != note) {
-                                        HorizonSpace(SpaceSize.SPACE_4)
-                                    }
                                 }
-                            }
 
-                            if (state.hasNextPage) {
-                                item {
-                                    if (state.isLoadingMore) {
-                                        LoadingContent()
-                                    } else {
-                                        Button(
-                                            label = stringResource(R.string.showMore),
-                                            height = ButtonHeight.SMALL,
-                                            width = ButtonWidth.FILL,
-                                            color = ButtonColor.WhiteWithOutline,
-                                            onClick = { state.loadNextPage() },
-                                        )
+                                if (state.hasNextPage) {
+                                    item {
+                                        if (state.isLoadingMore) {
+                                            LoadingContent()
+                                        } else {
+                                            Button(
+                                                label = stringResource(R.string.showMore),
+                                                height = ButtonHeight.SMALL,
+                                                width = ButtonWidth.FILL,
+                                                color = ButtonColor.WhiteWithOutline,
+                                                onClick = { state.loadNextPage() },
+                                            )
+                                        }
                                     }
                                 }
                             }
@@ -251,8 +253,8 @@ fun NotebookScreen(
                     }
                 }
             }
-        }
-    )
+        )
+    }
 }
 
 @Composable
