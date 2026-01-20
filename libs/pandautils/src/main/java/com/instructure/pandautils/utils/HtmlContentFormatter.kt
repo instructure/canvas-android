@@ -234,11 +234,14 @@ class HtmlContentFormatter(
             decodedLtiUrl = decodedLtiUrl
                 .replace("custom_arc_launch_type=thumbnail_embed", "custom_arc_launch_type=immersive_view")
                 .replace("custom_arc_launch_type=learn_embed", "custom_arc_launch_type=immersive_view")
+                .replace("custom_arc_launch_type=collaboration_embed", "custom_arc_launch_type=immersive_view")
+                .replace("custom_arc_launch_type=quiz_embed", "custom_arc_launch_type=immersive_view")
 
             // Add source view type based on original embed type
             val sourceViewType = when {
                 encodedLtiUrl.contains("thumbnail_embed") -> "thumbnail_embed"
                 encodedLtiUrl.contains("learn_embed") -> "learn_embed"
+                encodedLtiUrl.contains("quiz_embed") -> "quiz_embed"
                 else -> "collaboration_embed"
             }
 
