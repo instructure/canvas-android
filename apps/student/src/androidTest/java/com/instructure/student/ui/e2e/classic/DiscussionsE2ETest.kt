@@ -29,6 +29,8 @@ import com.instructure.canvas.espresso.pressBackButton
 import com.instructure.dataseeding.api.DiscussionTopicsApi
 import com.instructure.dataseeding.api.EnrollmentsApi
 import com.instructure.dataseeding.model.EnrollmentTypes.STUDENT_ENROLLMENT
+import com.instructure.dataseeding.model.EnrollmentTypes.TEACHER_ENROLLMENT
+import com.instructure.espresso.convertIso8601ToCanvasFormat
 import com.instructure.espresso.getDateInCanvasFormat
 import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.extensions.seedData
@@ -174,23 +176,34 @@ class DiscussionsE2ETest: StudentComposeTest() {
         Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
-        val courseId = 3594441L
-        val courseName = "Kristof Deak Dedicated Test Course"
-        val discussionWithCheckpointsTitle = "Discussion with Checkpoints"
-        val discussionWithCheckpointsId = 22475794L
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
 
-        Log.d(PREPARATION_TAG, "Enroll '${student.name}' student to the dedicated course ($courseName) with '$courseId' id.")
-        EnrollmentsApi.enrollUser(courseId, student.id, STUDENT_ENROLLMENT)
+        Log.d(PREPARATION_TAG, "Enroll '${student.name}' student to the dedicated course (${course.name}) with '${course.id}' id.")
+        EnrollmentsApi.enrollUser(course.id, student.id, STUDENT_ENROLLMENT)
 
-        // This will be the GraphQL way of creating a discussion with checkpoints when available. See INTEROP-9901 ticket for details.
-        //val disc = DiscussionTopicsApi.createDiscussionTopicWithCheckpoints(course.id, teacher.token, "Test Discussion with Checkpoints", "Test Assignment with Checkpoints")
+        Log.d(PREPARATION_TAG, "Enroll '${teacher.name}' teacher to the dedicated course (${course.name}) with '${course.id}' id.")
+        EnrollmentsApi.enrollUser(course.id, teacher.id, TEACHER_ENROLLMENT)
 
+        Log.d(PREPARATION_TAG, "Seed a discussion topic with checkpoints for '${course.name}' course.")
+        val discussionWithCheckpointsWithoutDueDatesTitle = "Test Discussion with Checkpoints"
+        val assignmentName = "Test Assignment with Checkpoints"
+        DiscussionTopicsApi.createDiscussionTopicWithCheckpoints(course.id, teacher.token, discussionWithCheckpointsWithoutDueDatesTitle, assignmentName)
+
+        Log.d(PREPARATION_TAG, "Seed a discussion topic with checkpoints for '${course.name}' course.")
+        val discussionWithCheckpointsWithDueDatesTitle = "Test Discussion with Checkpoints with Due Dates"
+        val replyToTopicDueDate = "2029-11-12T22:59:00Z"
+        val replyToEntryDueDate = "2029-11-19T22:59:00Z"
+        DiscussionTopicsApi.createDiscussionTopicWithCheckpoints(course.id, teacher.token, discussionWithCheckpointsWithDueDatesTitle, assignmentName, replyToTopicDueDate, replyToEntryDueDate)
+
+        val convertedReplyToTopicDueDate = "Due " + convertIso8601ToCanvasFormat("2029-11-12T22:59:00Z") + " 2:59 PM"
+        val convertedReplyToEntryDueDate = "Due " + convertIso8601ToCanvasFormat("2029-11-19T22:59:00Z") + " 2:59 PM"
         Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
 
-        Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Select course: '${courseName}'.")
+        Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Select course: '${course.name}'.")
         dashboardPage.waitForRender()
-        dashboardPage.selectCourse(courseName)
+        dashboardPage.selectCourse(course.name)
 
         Log.d(ASSERTION_TAG, "Assert that the 'Discussions' Tab is displayed on the CourseBrowser Page.")
         courseBrowserPage.assertTabDisplayed("Discussions")
@@ -198,22 +211,33 @@ class DiscussionsE2ETest: StudentComposeTest() {
         Log.d(STEP_TAG, "Navigate to Assignment List Page.")
         courseBrowserPage.selectAssignments()
 
-        Log.d(ASSERTION_TAG, "Assert that the '$discussionWithCheckpointsTitle' discussion is present along with 2 date info (For the 2 checkpoints).")
-        assignmentListPage.assertHasAssignmentWithCheckpoints(discussionWithCheckpointsTitle, expectedGrade = "-/15")
+        Log.d(ASSERTION_TAG, "Assert that the '${discussionWithCheckpointsWithoutDueDatesTitle}' discussions are present along with 2 date info (For the 2 checkpoints).")
+        assignmentListPage.assertHasAssignmentWithCheckpoints(discussionWithCheckpointsWithoutDueDatesTitle, expectedGrade = "-/15")
+        assignmentListPage.assertHasAssignmentWithCheckpoints(discussionWithCheckpointsWithDueDatesTitle, dueAtString = convertedReplyToTopicDueDate, dueAtStringSecondCheckpoint = convertedReplyToEntryDueDate, expectedGrade = "-/15")
 
-        Log.d(STEP_TAG, "Click on the expand icon for the '$discussionWithCheckpointsTitle' discussion (to see the checkpoints' details).")
-        assignmentListPage.clickDiscussionCheckpointExpandCollapseIcon(discussionWithCheckpointsTitle)
+        Log.d(STEP_TAG, "Click on the expand icon for the '$discussionWithCheckpointsWithoutDueDatesTitle' discussion (to see the checkpoints' details).")
+        assignmentListPage.clickDiscussionCheckpointExpandCollapseIcon(discussionWithCheckpointsWithoutDueDatesTitle)
 
         Log.d(ASSERTION_TAG, "Assert that the checkpoints' details are displayed correctly (titles, due dates, points possible, grades).")
         assignmentListPage.assertDiscussionCheckpointDetails(2, "No due date", gradeReplyToTopic = "-/10", gradeAdditionalReplies = "-/5")
 
-        Log.d(STEP_TAG, "Select '${discussionWithCheckpointsTitle}' discussion.")
-        assignmentListPage.clickAssignment(discussionWithCheckpointsTitle)
+        Log.d(STEP_TAG, "Click on the expand icon for the '$discussionWithCheckpointsWithoutDueDatesTitle' discussion (to see the checkpoints' details).")
+        assignmentListPage.clickDiscussionCheckpointExpandCollapseIcon(discussionWithCheckpointsWithoutDueDatesTitle)
+        sleep(2000) // Allow some time for the collapse action to propagate
+
+        Log.d(STEP_TAG, "Click on the expand icon for the '$discussionWithCheckpointsWithDueDatesTitle' discussion (to see the checkpoints' details).")
+        assignmentListPage.clickDiscussionCheckpointExpandCollapseIcon(discussionWithCheckpointsWithDueDatesTitle)
+
+        Log.d(ASSERTION_TAG, "Assert that the checkpoints' details are displayed correctly (titles, due dates, points possible, grades).")
+        assignmentListPage.assertDiscussionCheckpointDetails(2, dueAtReplyToTopic = convertedReplyToTopicDueDate, dueAtAdditionalReplies = convertedReplyToEntryDueDate, gradeReplyToTopic = "-/10", gradeAdditionalReplies = "-/5")
+
+        Log.d(STEP_TAG, "Select '${discussionWithCheckpointsWithoutDueDatesTitle}' discussion.")
+        assignmentListPage.clickAssignment(discussionWithCheckpointsWithoutDueDatesTitle)
 
         Log.d(ASSERTION_TAG, "Assert that the Assignment Details Page is displayed properly with the correct toolbar title and subtitle.")
         assignmentDetailsPage.assertPageObjects()
         assignmentDetailsPage.assertDisplayToolbarTitle()
-        assignmentDetailsPage.assertDisplayToolbarSubtitle(courseName)
+        assignmentDetailsPage.assertDisplayToolbarSubtitle(course.name)
 
         Log.d(ASSERTION_TAG, "Assert that the checkpoints are displayed properly on the Assignment Details Page.")
         assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Reply to topic due","No Due Date")
@@ -227,52 +251,53 @@ class DiscussionsE2ETest: StudentComposeTest() {
         Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1, syllabusBody = "this is the syllabus body") // This course and syllabus will be used once the seeding will be fixed
         val student = data.studentsList[0]
-        val courseId = 3594441L
-        val courseName = "Kristof Deak Dedicated Test Course"
-        val discussionWithCheckpointsNoDueDateTitle = "Discussion with Checkpoints"
-        val discussionWithCheckpointsWithDueDateTitle = "Discussion Checkpoint with due dates"
-        val discussionWithCheckpointsNoDueDateId = 22475794L
-        val discussionWithCheckpointsWithDueDatesId = 345L
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
 
-        Log.d(PREPARATION_TAG, "Enroll '${student.name}' student to the dedicated course ($courseName) with '$courseId' id.")
-        EnrollmentsApi.enrollUser(courseId, student.id, STUDENT_ENROLLMENT)
+        Log.d(PREPARATION_TAG, "Enroll '${student.name}' student to the dedicated course (${course.name}) with '$course.id' id.")
+        EnrollmentsApi.enrollUser(course.id, student.id, STUDENT_ENROLLMENT)
 
-        // This will be the GraphQL way of creating a discussion with checkpoints when available. See INTEROP-9901 ticket for details.
-        //val disc = DiscussionTopicsApi.createDiscussionTopicWithCheckpoints(course.id, teacher.token, "Test Discussion with Checkpoints", "Test Assignment with Checkpoints")
+        Log.d(PREPARATION_TAG, "Seed a discussion topic with checkpoints for '${course.name}' course.")
+        val discussionWithCheckpointsTitle = "Test Discussion with Checkpoints"
+        val replyToTopicDueDate = "2029-11-12T22:59:00Z"
+        val replyToEntryDueDate = "2029-11-19T22:59:00Z"
+        val assignmentName = "Test Assignment with Checkpoints"
+        DiscussionTopicsApi.createDiscussionTopicWithCheckpoints(course.id, teacher.token, discussionWithCheckpointsTitle, assignmentName, replyToTopicDueDate, replyToEntryDueDate)
 
+        val convertedReplyToTopicDueDate = convertIso8601ToCanvasFormat("2029-11-12T22:59:00Z") + " 2:59 PM"
+        val convertedReplyToEntryDueDate = convertIso8601ToCanvasFormat("2029-11-19T22:59:00Z") + " 2:59 PM"
         Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
 
-        Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Select course: '${courseName}'.")
+        Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Select course: '${course.name}'.")
         dashboardPage.waitForRender()
-        dashboardPage.selectCourse(courseName)
+        dashboardPage.selectCourse(course.name)
 
         Log.d(ASSERTION_TAG, "Assert that the 'Syllabus' Tab is displayed on the CourseBrowser Page.")
         courseBrowserPage.assertTabDisplayed("Syllabus")
 
-        Log.d(STEP_TAG, "Navigate to Syllabus Page.")
+        Log.d(STEP_TAG, "Navigate to Syllabus Page and the 'Summary' tab within it.")
         courseBrowserPage.selectSyllabus()
+        syllabusPage.selectSummaryTab()
 
         Log.d(ASSERTION_TAG, "Assert that all the discussions with and all their checkpoints are displayed as a separate assignment.")
-        syllabusPage.assertItemDisplayed("$discussionWithCheckpointsNoDueDateTitle Reply to Topic")
-        syllabusPage.assertItemDisplayed("$discussionWithCheckpointsNoDueDateTitle Required Replies (2)")
-        syllabusPage.assertItemDisplayed("$discussionWithCheckpointsWithDueDateTitle Reply to Topic")
-        syllabusPage.assertItemDisplayed("$discussionWithCheckpointsWithDueDateTitle Required Replies (1)")
+        syllabusPage.assertItemDisplayed("$discussionWithCheckpointsTitle Reply to Topic")
+        syllabusPage.assertItemDisplayed("$discussionWithCheckpointsTitle Required Replies (2)")
 
-        Log.d(STEP_TAG, "Select '$discussionWithCheckpointsNoDueDateTitle Reply to Topic' syllabus summary event.")
-        syllabusPage.selectSummaryEvent("$discussionWithCheckpointsNoDueDateTitle Reply to Topic")
+        Log.d(STEP_TAG, "Select '$discussionWithCheckpointsTitle Reply to Topic' syllabus summary event.")
+        syllabusPage.selectSummaryEvent("$discussionWithCheckpointsTitle Reply to Topic")
 
         Log.d(ASSERTION_TAG, "Assert that the Assignment Details Page is displayed properly with the correct toolbar title and subtitle.")
         assignmentDetailsPage.assertPageObjects()
         assignmentDetailsPage.assertDisplayToolbarTitle()
-        assignmentDetailsPage.assertDisplayToolbarSubtitle(courseName)
+        assignmentDetailsPage.assertDisplayToolbarSubtitle(course.name)
 
         Log.d(ASSERTION_TAG, "Assert that there is a separate view (box) for the checkpoints with their corresponding grades.")
-        assignmentDetailsPage.assertCheckpointGradesView("Reply to topic", "-/100")
-        assignmentDetailsPage.assertCheckpointGradesView("Additional replies (1)", "-/3")
+        assignmentDetailsPage.assertCheckpointGradesView("Reply to topic", "-/10")
+        assignmentDetailsPage.assertCheckpointGradesView("Additional replies (2)", "-/5")
 
         Log.d(ASSERTION_TAG, "Assert that the checkpoints are displayed properly on the Assignment Details Page.")
-        assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Reply to topic due","Nov 12, 2025 10:59 PM")
-        assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Additional replies (1) due","Nov 19, 2025 10:59 PM")
+        assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Reply to topic due", convertedReplyToTopicDueDate)
+        assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Additional replies (2) due",convertedReplyToEntryDueDate)
     }
 }

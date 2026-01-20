@@ -533,8 +533,9 @@ class InboxE2ETest: StudentComposeTest() {
     fun testHelpMenuAskYourInstructorMessage() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
-        val data = seedData(students = 2, teachers = 1, courses = 1)
+        val data = seedData(students = 2, teachers = 2, courses = 1)
         val teacher = data.teachersList[0]
+        val teacher2 = data.teachersList[1]
         val course = data.coursesList[0]
         val student = data.studentsList[0]
 
@@ -549,7 +550,8 @@ class InboxE2ETest: StudentComposeTest() {
         helpPage.assertHelpMenuDisplayed()
 
         val questionText = "Can you see message this Instructor?"
-        val recipientList = student.shortName + ", " + teacher.shortName
+        val recipientListWithFirstTeacher = student.shortName + ", " + teacher.shortName
+        val recipientListWithSecondTeacher = student.shortName + ", " + teacher2.shortName
         Log.d(STEP_TAG, "Send the '$questionText' question to the instructor ('${teacher.shortName}') from the student ('${student.shortName}').")
         helpPage.sendQuestionToInstructor(course, questionText)
 
@@ -561,10 +563,11 @@ class InboxE2ETest: StudentComposeTest() {
         inboxPage.filterInbox("Sent")
 
         Log.d(ASSERTION_TAG, "Assert that the conversations is displayed there with the proper recipients.")
-        inboxPage.assertConversationWithRecipientsDisplayed(recipientList)
+        inboxPage.assertConversationWithRecipientsDisplayed(recipientListWithFirstTeacher)
+        inboxPage.assertConversationWithRecipientsDisplayed(recipientListWithSecondTeacher)
 
         Log.d(STEP_TAG, "Open the conversation.")
-        inboxPage.openConversationWithRecipients(recipientList)
+        inboxPage.openConversationWithRecipients(recipientListWithFirstTeacher)
 
         Log.d(ASSERTION_TAG, "Assert that the message body is equal to which the student asked in the 'Ask Your Instructor' dialog: '$questionText'.")
         inboxDetailsPage.assertMessageDisplayed(questionText)
@@ -582,13 +585,40 @@ class InboxE2ETest: StudentComposeTest() {
         Log.d(STEP_TAG, "Open Inbox Page.")
         dashboardPage.clickInboxTab()
 
-        Log.d(ASSERTION_TAG, "Assert that the asked question is displayed in the teacher's inbox with the proper recipients ('$recipientList'), subject and message ('$questionText').")
-        inboxPage.assertConversationWithRecipientsDisplayed(recipientList)
+        Log.d(ASSERTION_TAG, "Assert that the asked question is displayed in the teacher's inbox with the proper recipients ('$recipientListWithFirstTeacher'), subject and message ('$questionText').")
+        inboxPage.assertConversationWithRecipientsDisplayed(recipientListWithFirstTeacher)
+        inboxPage.assertConversationNotDisplayed(recipientListWithSecondTeacher)
         inboxPage.assertConversationSubject("(No Subject)")
         inboxPage.assertConversationDisplayed(questionText)
 
         Log.d(STEP_TAG, "Open the conversation.")
-        inboxPage.openConversationWithRecipients(recipientList)
+        inboxPage.openConversationWithRecipients(recipientListWithFirstTeacher)
+
+        Log.d(ASSERTION_TAG, "Assert that there is no subject of the conversation and the message body is equal to which the student typed in the 'Ask Your Instructor' dialog: '$questionText'.")
+        inboxDetailsPage.assertMessageDisplayed(questionText)
+        inboxDetailsPage.assertConversationSubject("")
+
+        Log.d(STEP_TAG, "Navigate back to Inbox Page.")
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG, "Log out with '${teacher.name}' teacher.")
+        leftSideNavigationDrawerPage.logout()
+
+        Log.d(STEP_TAG, "Login with user: '${teacher2.name}', login id: '${teacher2.loginId}'.")
+        tokenLogin(teacher2)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Open Inbox Page.")
+        dashboardPage.clickInboxTab()
+
+        Log.d(ASSERTION_TAG, "Assert that the asked question is displayed in the teacher's inbox with the proper recipients ('$recipientListWithSecondTeacher'), subject and message ('$questionText').")
+        inboxPage.assertConversationWithRecipientsDisplayed(recipientListWithSecondTeacher)
+        inboxPage.assertConversationNotDisplayed(recipientListWithFirstTeacher)
+        inboxPage.assertConversationSubject("(No Subject)")
+        inboxPage.assertConversationDisplayed(questionText)
+
+        Log.d(STEP_TAG, "Open the conversation.")
+        inboxPage.openConversationWithRecipients(recipientListWithSecondTeacher)
 
         Log.d(ASSERTION_TAG, "Assert that there is no subject of the conversation and the message body is equal to which the student typed in the 'Ask Your Instructor' dialog: '$questionText'.")
         inboxDetailsPage.assertMessageDisplayed(questionText)

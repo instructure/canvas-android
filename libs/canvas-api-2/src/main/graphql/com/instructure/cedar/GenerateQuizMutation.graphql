@@ -1,7 +1,0 @@
-mutation GenerateQuiz($input: QuizInput!) {
-    generateQuiz(input: $input) {
-        question
-        options
-        result
-    }
-}

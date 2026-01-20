@@ -32,7 +32,7 @@ import com.instructure.pandautils.features.inbox.details.InboxDetailsFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.student.activity.BaseRouterActivity
 import com.instructure.student.features.discussion.list.DiscussionListFragment
-import com.instructure.student.features.grades.GradesListFragment
+import com.instructure.student.features.grades.GradesFragment
 import com.instructure.student.features.modules.list.ModuleListFragment
 import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
 import com.instructure.student.features.pages.list.PageListFragment
@@ -282,7 +282,7 @@ class RouterUtilsTest : TestCase() {
     fun testGetInternalRoute_grades() {
         val route = callGetInternalRoute("https://mobiledev.instructure.com/courses/836357/grades")
         assertNotNull(route)
-        assertEquals(GradesListFragment::class.java, route!!.primaryClass)
+        assertEquals(GradesFragment::class.java, route!!.primaryClass)
 
         val expectedParams = HashMap<String, String>()
         expectedParams[RouterParams.COURSE_ID] = "836357"

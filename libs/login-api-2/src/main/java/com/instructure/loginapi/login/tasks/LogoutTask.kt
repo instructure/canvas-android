@@ -26,11 +26,9 @@ import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.managers.CommunicationChannelsManager
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.CedarApiPref
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.JourneyApiPref
 import com.instructure.canvasapi2.utils.MasqueradeHelper
-import com.instructure.canvasapi2.utils.PineApiPref
 import com.instructure.canvasapi2.utils.RedwoodApiPref
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.loginapi.login.util.PreviousUsersUtils
@@ -124,8 +122,6 @@ abstract class LogoutTask(
                 ApiPrefs.clearAllData()
                 FilePrefs.clearPrefs()
                 ThemePrefs.safeClearPrefs()
-                PineApiPref.clearPrefs()
-                CedarApiPref.clearPrefs()
                 RedwoodApiPref.clearPrefs()
                 JourneyApiPref.clearPrefs()
 

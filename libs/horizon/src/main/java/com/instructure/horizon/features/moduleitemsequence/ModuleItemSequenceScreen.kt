@@ -173,6 +173,7 @@ fun ModuleItemSequenceScreen(navController: NavHostController, uiState: ModuleIt
         Box(modifier = Modifier.padding(contentPadding)) {
             if (uiState.showAiAssist) {
                 AiAssistantScreen(
+                    mainNavController = mainNavController,
                     onDismiss = { uiState.updateShowAiAssist(false) },
                 )
             }
@@ -511,6 +512,7 @@ private fun ModuleItemContentScreen(
                 val uiState by viewModel.uiState.collectAsState()
                 FileDetailsContentScreen(
                     uiState = uiState,
+                    updateAiContext = { source, content -> updateAiContext(source, content) },
                     modifier = modifier
                 )
             }
@@ -586,7 +588,7 @@ private fun ModuleItemSequenceBottomBar(
             ) {
                 IconButton(
                     iconRes = R.drawable.ai,
-                    contentDescription = stringResource(R.string.a11y_openAIAssistant),
+                    contentDescription = stringResource(R.string.a11y_openIgniteAI),
                     enabled = aiAssistEnabled,
                     color = IconButtonColor.Ai,
                     elevation = HorizonElevation.level4,
