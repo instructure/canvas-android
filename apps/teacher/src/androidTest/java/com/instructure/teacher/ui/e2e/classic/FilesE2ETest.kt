@@ -40,6 +40,7 @@ import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.model.FileUploadType
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.Randomizer
+import com.instructure.espresso.triggerWorkManagerJobs
 import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.extensions.seedData
 import com.instructure.teacher.ui.utils.extensions.tokenLogin
@@ -339,9 +340,10 @@ class FilesE2ETest: TeacherComposeTest() {
 
         Log.d(STEP_TAG, "Click 'UPLOAD' button.")
         fileChooserPage.clickUpload()
-        Thread.sleep(5000) // Wait for upload to complete and comment to be sent
+        triggerWorkManagerJobs("FileUploadWorker")
 
         Log.d(ASSERTION_TAG, "Assert that PDF comment attachment '${pdfFile.name}' is displayed.")
+        Thread.sleep(5000) // Wait for upload to complete and comment to be sent
         speedGraderPage.assertCommentAttachmentDisplayed(pdfFile.name)
 
         Log.d(ASSERTION_TAG, "Assert that Comments label is displayed with value '1' because one comment with attachment was uploaded.")

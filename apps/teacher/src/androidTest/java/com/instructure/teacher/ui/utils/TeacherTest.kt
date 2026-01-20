@@ -39,7 +39,6 @@ import com.instructure.espresso.Searchable
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.LoginActivity
-import com.instructure.teacher.espresso.TestAppManager
 import com.instructure.teacher.ui.pages.classic.AnnouncementsListPage
 import com.instructure.teacher.ui.pages.classic.AssigneeListPage
 import com.instructure.teacher.ui.pages.classic.AssignmentDetailsPage
@@ -75,7 +74,6 @@ import com.instructure.teacher.ui.pages.classic.QuizDetailsPage
 import com.instructure.teacher.ui.pages.classic.QuizListPage
 import com.instructure.teacher.ui.pages.classic.QuizPreviewPage
 import com.instructure.teacher.ui.pages.classic.RemoteConfigSettingsPage
-import com.instructure.teacher.ui.pages.classic.SpeedGraderCommentsPage
 import com.instructure.teacher.ui.pages.classic.SpeedGraderQuizSubmissionPage
 import com.instructure.teacher.ui.pages.classic.StudentContextPage
 import com.instructure.teacher.ui.pages.classic.SyllabusPage
@@ -84,7 +82,6 @@ import com.instructure.teacher.ui.pages.classic.UpdateFilePermissionsPage
 import com.instructure.teacher.ui.pages.classic.WebViewLoginPage
 import instructure.rceditor.RCETextEditor
 import org.hamcrest.Matcher
-import org.junit.Before
 
 abstract class TeacherTest : CanvasTest() {
 
@@ -148,12 +145,6 @@ abstract class TeacherTest : CanvasTest() {
     val fileListPage = FileListPage(Searchable(R.id.search, R.id.queryInput, R.id.clearButton, R.id.backButton))
     val updateFilePermissionsPage = UpdateFilePermissionsPage()
     val fileChooserPage = FileChooserPage()
-
-    @Before
-    fun setupWorkerFactory() {
-        val application = activityRule.activity.application as? TestAppManager
-        application?.workerFactory = workerFactory
-    }
 }
 
 /*
