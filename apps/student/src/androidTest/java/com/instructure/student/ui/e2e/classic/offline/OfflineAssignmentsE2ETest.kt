@@ -132,8 +132,8 @@ class OfflineAssignmentsE2ETest : StudentComposeTest() {
         Log.d(STEP_TAG, "Navigate to course Assignments Page.")
         courseBrowserPage.selectAssignments()
 
-        Log.d(ASSERTION_TAG, "Assert that the grading period label is 'Grading Period: All'.")
-        assignmentListPage.assertGradingPeriodLabel()
+        Log.d(ASSERTION_TAG, "Assert that the grading period label does not exists because we only have one grading period and we don't show the label in this case.")
+        assignmentListPage.assertGradingPeriodLabelDoesNotExist()
 
         Log.d(ASSERTION_TAG, "Assert that all the previously seeded (4) assignments are displayed on the Assignment List Page.")
         assignmentListPage.assertHasAssignment(notSubmittedAssignment)
