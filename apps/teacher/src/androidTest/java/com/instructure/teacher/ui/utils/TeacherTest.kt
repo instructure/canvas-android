@@ -139,7 +139,6 @@ abstract class TeacherTest : CanvasTest() {
     val quizDetailsPage = QuizDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next, R.id.previous))
     val quizListPage = QuizListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn, R.id.backButton))
     val quizPreviewPage = QuizPreviewPage()
-    val speedGraderCommentsPage = SpeedGraderCommentsPage()
     val speedGraderQuizSubmissionPage = SpeedGraderQuizSubmissionPage()
     val personContextPage = PersonContextPage()
     val studentContextPage = StudentContextPage()

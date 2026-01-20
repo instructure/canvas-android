@@ -102,6 +102,12 @@ sealed class IconButtonColor(
         HorizonColors.LineAndBorder.lineStroke()
     )
 
+    data object WhiteOutline : IconButtonColor(
+        Color.Transparent,
+        HorizonColors.Icon.surfaceColored(),
+        HorizonColors.Surface.cardPrimary()
+    )
+
     data object Ai : IconButtonColor(
         HorizonColors.Surface.aiGradientStart(),
         HorizonColors.Icon.surfaceColored(),
