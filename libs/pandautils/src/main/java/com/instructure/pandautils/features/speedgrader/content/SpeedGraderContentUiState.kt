@@ -32,7 +32,8 @@ data class SpeedGraderContentUiState(
     val attachmentSelectorUiState: SelectorUiState = SelectorUiState(),
     val attemptSelectorUiState: SelectorUiState = SelectorUiState(),
     val anonymous: Boolean = false,
-    val group: Boolean = false
+    val group: Boolean = false,
+    val baseUrl: String? = null
 )
 
 @Parcelize

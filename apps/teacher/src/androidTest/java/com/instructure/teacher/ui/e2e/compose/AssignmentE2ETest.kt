@@ -16,7 +16,6 @@
  */
 package com.instructure.teacher.ui.e2e.compose
 
-import android.os.SystemClock.sleep
 import android.util.Log
 import androidx.test.espresso.Espresso
 import androidx.test.rule.GrantPermissionRule
@@ -26,7 +25,6 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
-import com.instructure.canvas.espresso.annotations.Stub
 import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.SectionsApi
@@ -38,6 +36,7 @@ import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
 import com.instructure.espresso.retryWithIncreasingDelay
+import com.instructure.espresso.triggerWorkManagerJobs
 import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.extensions.seedAssignmentSubmission
 import com.instructure.teacher.ui.utils.extensions.seedAssignments
@@ -359,7 +358,6 @@ class AssignmentE2ETest : TeacherComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.COMMENTS, TestCategory.E2E)
-    @Stub("Failing on CI, needs to be fixed in ticket MBL-18749")
     fun testMediaCommentsE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
@@ -371,20 +369,24 @@ class AssignmentE2ETest : TeacherComposeTest() {
         Log.d(PREPARATION_TAG, "Seeding assignment for '${course.name}' course.")
         val assignment = AssignmentsApi.createAssignment(
             AssignmentsApi.CreateAssignmentRequest(
-            courseId = course.id,
-            submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
-            gradingType = GradingType.POINTS,
-            teacherToken = teacher.token,
-            pointsPossible = 15.0,
-            dueAt = 1.days.fromNow.iso8601
-        ))
+                courseId = course.id,
+                submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+                gradingType = GradingType.POINTS,
+                teacherToken = teacher.token,
+                pointsPossible = 15.0,
+                dueAt = 1.days.fromNow.iso8601
+            )
+        )
 
         Log.d(PREPARATION_TAG, "Submit '${assignment.name}' assignment for '${student.name}' student.")
-        SubmissionsApi.seedAssignmentSubmission(course.id, student.token, assignment.id,
-            submissionSeedsList = listOf(SubmissionsApi.SubmissionSeedInfo(
-                amount = 1,
-                submissionType = SubmissionType.ONLINE_TEXT_ENTRY
-            ))
+        SubmissionsApi.seedAssignmentSubmission(
+            course.id, student.token, assignment.id,
+            submissionSeedsList = listOf(
+                SubmissionsApi.SubmissionSeedInfo(
+                    amount = 1,
+                    submissionType = SubmissionType.ONLINE_TEXT_ENTRY
+                )
+            )
         )
 
         Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
@@ -401,34 +403,43 @@ class AssignmentE2ETest : TeacherComposeTest() {
         Log.d(STEP_TAG, "Open '${student.name}' student's submission and switch to submission details Comments Tab.")
         assignmentDetailsPage.clickAllSubmissions()
         assignmentSubmissionListPage.clickSubmission(student)
-        speedGraderPage.selectCommentsTab()
 
-        Log.d(STEP_TAG, "Send an audio comment.")
-        speedGraderCommentsPage.sendAudioComment()
-        sleep(5000) // wait for audio comment submission to propagate
+        Log.d(STEP_TAG, "Click on the comment attachment button.")
+        speedGraderPage.clickCommentAttachmentButton()
 
-        Log.d(ASSERTION_TAG, "Assert that is displayed among the comments.")
-        speedGraderCommentsPage.assertAudioCommentDisplayed()
+        Log.d(STEP_TAG, "Select 'Record Audio' and send an audio comment.")
+        speedGraderPage.sendAudioComment()
 
-        Log.d(STEP_TAG, "Send a video comment.")
-        speedGraderCommentsPage.sendVideoComment()
-        sleep(5000) // wait for video comment submission to propagate
+        Log.d(ASSERTION_TAG, "Assert that the audio comment is displayed among the comments.")
+        retryWithIncreasingDelay {
+            triggerWorkManagerJobs("NotoriousUploadWorker")
+            speedGraderPage.assertMediaCommentDisplayed("Media Upload - Audio")
+        }
 
-        Log.d(ASSERTION_TAG, "Assert that is displayed among the comments.")
-        speedGraderCommentsPage.assertVideoCommentDisplayed()
+        Log.d(STEP_TAG, "Click on the comment attachment button.")
+        speedGraderPage.clickCommentAttachmentButton()
+
+        Log.d(STEP_TAG, "Select 'Record Video' and send an video comment.")
+        speedGraderPage.sendVideoComment()
+
+        Log.d(ASSERTION_TAG, "Assert that the video comment is displayed among the comments.")
+        retryWithIncreasingDelay {
+            triggerWorkManagerJobs("NotoriousUploadWorker")
+            speedGraderPage.assertMediaCommentDisplayed("Media Upload - Video")
+        }
 
         Log.d(STEP_TAG, "Click on the previously uploaded audio comment.")
-        speedGraderCommentsPage.clickOnAudioComment()
+        speedGraderPage.clickOnMediaComment("Media Upload - Audio")
 
         Log.d(ASSERTION_TAG, "Assert that the media comment preview (and the 'Play button') is displayed.")
-        speedGraderCommentsPage.assertMediaCommentPreviewDisplayed()
+        speedGraderPage.assertMediaCommentPreviewDisplayed()
 
         Log.d(STEP_TAG, "Navigate back. Click on the previously uploaded video comment.")
         Espresso.pressBack()
-        speedGraderCommentsPage.clickOnVideoComment()
+        speedGraderPage.clickOnMediaComment("Media Upload - Video")
 
         Log.d(ASSERTION_TAG, "Assert that the media comment preview (and the 'Play button') is displayed.")
-        speedGraderCommentsPage.assertMediaCommentPreviewDisplayed()
+        speedGraderPage.assertMediaCommentPreviewDisplayed()
     }
 
     @E2E

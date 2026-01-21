@@ -650,6 +650,7 @@ fun SpeedGraderMediaAttachmentComponent(
                     colorResource(id = R.color.backgroundLight),
                     shape = RoundedCornerShape(size = 12.dp)
                 )
+                .testTag("mediaAttachmentBox")
         ) {
             Icon(
                 painter = painterResource(if (mediaObject.mediaType == MediaType.VIDEO) R.drawable.ic_video else R.drawable.ic_audio),

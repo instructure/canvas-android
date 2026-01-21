@@ -108,10 +108,12 @@ fun AssignmentDetailsScreen(
         AttemptSelectorBottomSheet(uiState.attemptSelectorUiState)
     }
 
-    updateAiContext(
-        AiAssistContextSource.Assignment(uiState.assignmentId.toString()),
-        uiState.instructions
-    )
+    LaunchedEffect(uiState.instructions, uiState.assignmentId) {
+        updateAiContext(
+            AiAssistContextSource.Assignment(uiState.assignmentId.toString()),
+            uiState.instructions
+        )
+    }
 
     if (uiState.openCommentsBottomSheetParams != null) {
         val commentsViewModel = hiltViewModel<CommentsViewModel>()
