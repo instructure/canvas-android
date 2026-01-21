@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.Group
 import com.instructure.pandautils.features.dashboard.widget.courses.model.GradeDisplay
+import com.instructure.pandautils.domain.usecase.announcements.LoadCourseAnnouncementsUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadFavoriteCoursesParams
 import com.instructure.pandautils.domain.usecase.courses.LoadFavoriteCoursesUseCase
@@ -71,6 +72,7 @@ class CoursesWidgetViewModelTest {
     private val loadFavoriteCoursesUseCase: LoadFavoriteCoursesUseCase = mockk()
     private val loadGroupsUseCase: LoadGroupsUseCase = mockk()
     private val loadCourseUseCase: LoadCourseUseCase = mockk()
+    private val loadCourseAnnouncementsUseCase: LoadCourseAnnouncementsUseCase = mockk()
     private val sectionExpandedStateDataStore: SectionExpandedStateDataStore = mockk(relaxed = true)
     private val coursesWidgetBehavior: CoursesWidgetBehavior = mockk(relaxed = true)
     private val courseSyncSettingsDao: CourseSyncSettingsDao = mockk()
@@ -98,6 +100,7 @@ class CoursesWidgetViewModelTest {
     private fun setupDefaultMocks() {
         coEvery { loadFavoriteCoursesUseCase(any()) } returns emptyList()
         coEvery { loadGroupsUseCase(any()) } returns emptyList()
+        coEvery { loadCourseAnnouncementsUseCase(any()) } returns emptyList()
         every { sectionExpandedStateDataStore.observeCoursesExpanded() } returns flowOf(true)
         every { sectionExpandedStateDataStore.observeGroupsExpanded() } returns flowOf(true)
         every { coursesWidgetBehavior.observeGradeVisibility() } returns flowOf(false)
@@ -470,9 +473,10 @@ class CoursesWidgetViewModelTest {
     @Test
     fun `broadcast with COURSE_FAVORITES true triggers refresh`() {
         setupDefaultMocks()
-        val intent: Intent = mockk()
+        val intent: Intent = mockk(relaxed = true)
         val extras: Bundle = mockk()
         every { intent.extras } returns extras
+        every { intent.getLongExtra(Const.COURSE_ID, -1L) } returns -1L
         every { extras.getBoolean(Const.COURSE_FAVORITES) } returns true
 
         viewModel = createViewModel()
@@ -491,9 +495,10 @@ class CoursesWidgetViewModelTest {
     @Test
     fun `broadcast without COURSE_FAVORITES does not trigger refresh`() {
         setupDefaultMocks()
-        val intent: Intent = mockk()
+        val intent: Intent = mockk(relaxed = true)
         val extras: Bundle = mockk()
         every { intent.extras } returns extras
+        every { intent.getLongExtra(Const.COURSE_ID, -1L) } returns -1L
         every { extras.getBoolean(Const.COURSE_FAVORITES) } returns false
 
         viewModel = createViewModel()
@@ -520,11 +525,244 @@ class CoursesWidgetViewModelTest {
         assertFalse(viewModel.uiState.value.isLoading)
     }
 
+    @Test
+    fun `init loads announcements for each course`() {
+        setupDefaultMocks()
+        val courses = listOf(
+            Course(id = 1, name = "Course 1", isFavorite = true),
+            Course(id = 2, name = "Course 2", isFavorite = true)
+        )
+        val announcements1 = listOf(
+            mockk<com.instructure.canvasapi2.models.DiscussionTopicHeader>(relaxed = true)
+        )
+        val announcements2 = listOf(
+            mockk<com.instructure.canvasapi2.models.DiscussionTopicHeader>(relaxed = true),
+            mockk<com.instructure.canvasapi2.models.DiscussionTopicHeader>(relaxed = true)
+        )
+
+        coEvery { loadFavoriteCoursesUseCase(any()) } returns courses
+        coEvery { loadCourseAnnouncementsUseCase(any()) } returns emptyList()
+        coEvery { loadCourseAnnouncementsUseCase(match { it.courseId == 1L }) } returns announcements1
+        coEvery { loadCourseAnnouncementsUseCase(match { it.courseId == 2L }) } returns announcements2
+
+        viewModel = createViewModel()
+
+        val state = viewModel.uiState.value
+        assertEquals(1, state.courses[0].announcements.size)
+        assertEquals(2, state.courses[1].announcements.size)
+    }
+
+    @Test
+    fun `init handles announcement loading failure gracefully`() {
+        setupDefaultMocks()
+        val courses = listOf(
+            Course(id = 1, name = "Course 1", isFavorite = true),
+            Course(id = 2, name = "Course 2", isFavorite = true)
+        )
+        val exception = Exception("Failed to load announcements")
+
+        coEvery { loadFavoriteCoursesUseCase(any()) } returns courses
+        coEvery { loadCourseAnnouncementsUseCase(match { it.courseId == 1L }) } throws exception
+        coEvery { loadCourseAnnouncementsUseCase(match { it.courseId == 2L }) } returns emptyList()
+
+        viewModel = createViewModel()
+
+        val state = viewModel.uiState.value
+        assertFalse(state.isError)
+        assertEquals(0, state.courses[0].announcements.size)
+        assertEquals(0, state.courses[1].announcements.size)
+        verify { crashlytics.recordException(exception) }
+    }
+
+    @Test
+    fun `onAnnouncementClick finds course and calls behavior with announcements`() {
+        setupDefaultMocks()
+        val courses = listOf(
+            Course(id = 1, name = "Course 1", isFavorite = true)
+        )
+        val announcements = listOf(
+            mockk<com.instructure.canvasapi2.models.DiscussionTopicHeader>(relaxed = true)
+        )
+        val activity: FragmentActivity = mockk(relaxed = true)
+
+        coEvery { loadFavoriteCoursesUseCase(any()) } returns courses
+        coEvery { loadCourseAnnouncementsUseCase(any()) } returns announcements
+
+        viewModel = createViewModel()
+
+        viewModel.uiState.value.onAnnouncementClick(activity, 1L)
+
+        verify { coursesWidgetBehavior.onAnnouncementClick(activity, courses[0], announcements) }
+    }
+
+    @Test
+    fun `onAnnouncementClick does nothing when course not found`() {
+        setupDefaultMocks()
+        val courses = listOf(
+            Course(id = 1, name = "Course 1", isFavorite = true)
+        )
+        val activity: FragmentActivity = mockk(relaxed = true)
+
+        coEvery { loadFavoriteCoursesUseCase(any()) } returns courses
+
+        viewModel = createViewModel()
+
+        viewModel.uiState.value.onAnnouncementClick(activity, 999L)
+
+        verify(exactly = 0) { coursesWidgetBehavior.onAnnouncementClick(any(), any(), any()) }
+    }
+
+    @Test
+    fun `onGroupMessageClick finds group and calls behavior`() {
+        setupDefaultMocks()
+        val groups = listOf(
+            Group(id = 1, name = "Group 1", isFavorite = true)
+        )
+        val activity: FragmentActivity = mockk(relaxed = true)
+
+        coEvery { loadGroupsUseCase(any()) } returns groups
+
+        viewModel = createViewModel()
+
+        viewModel.uiState.value.onGroupMessageClick(activity, 1L)
+
+        verify { coursesWidgetBehavior.onGroupMessageClick(activity, groups[0]) }
+    }
+
+    @Test
+    fun `onGroupMessageClick does nothing when group not found`() {
+        setupDefaultMocks()
+        val groups = listOf(
+            Group(id = 1, name = "Group 1", isFavorite = true)
+        )
+        val activity: FragmentActivity = mockk(relaxed = true)
+
+        coEvery { loadGroupsUseCase(any()) } returns groups
+
+        viewModel = createViewModel()
+
+        viewModel.uiState.value.onGroupMessageClick(activity, 999L)
+
+        verify(exactly = 0) { coursesWidgetBehavior.onGroupMessageClick(any(), any()) }
+    }
+
+    @Test
+    fun `broadcast receiver with COURSE_ID reloads specific course`() {
+        setupDefaultMocks()
+        val initialCourses = listOf(
+            Course(id = 1, name = "Course 1", isFavorite = true),
+            Course(id = 2, name = "Course 2", isFavorite = true)
+        )
+        val updatedCourse = Course(id = 1, name = "Updated Course 1", isFavorite = true)
+        val announcements = listOf(
+            mockk<com.instructure.canvasapi2.models.DiscussionTopicHeader>(relaxed = true)
+        )
+
+        coEvery { loadFavoriteCoursesUseCase(any()) } returns initialCourses
+        coEvery { loadCourseUseCase(any()) } returns updatedCourse
+        coEvery { loadCourseAnnouncementsUseCase(any()) } returns announcements
+
+        viewModel = createViewModel()
+
+        val receiverSlot = slot<BroadcastReceiver>()
+        verify { localBroadcastManager.registerReceiver(capture(receiverSlot), any()) }
+
+        val intent: Intent = mockk(relaxed = true)
+        every { intent.getLongExtra(Const.COURSE_ID, -1L) } returns 1L
+
+        receiverSlot.captured.onReceive(mockk(), intent)
+
+        coVerify(exactly = 1) { loadCourseUseCase(match { it.courseId == 1L && it.forceNetwork }) }
+        coVerify(exactly = 1) { loadCourseAnnouncementsUseCase(match { it.courseId == 1L && it.forceNetwork }) }
+
+        val state = viewModel.uiState.value
+        assertEquals("Updated Course 1", state.courses.find { it.id == 1L }?.name)
+    }
+
+    @Test
+    fun `broadcast receiver with COURSE_FAVORITES triggers full refresh`() {
+        setupDefaultMocks()
+        val courses = listOf(
+            Course(id = 1, name = "Course 1", isFavorite = true)
+        )
+
+        coEvery { loadFavoriteCoursesUseCase(any()) } returns courses
+
+        viewModel = createViewModel()
+
+        val receiverSlot = slot<BroadcastReceiver>()
+        verify { localBroadcastManager.registerReceiver(capture(receiverSlot), any()) }
+
+        val intent: Intent = mockk(relaxed = true)
+        val extras: Bundle = mockk()
+        every { intent.extras } returns extras
+        every { intent.getLongExtra(Const.COURSE_ID, -1L) } returns -1L
+        every { extras.getBoolean(Const.COURSE_FAVORITES) } returns true
+
+        receiverSlot.captured.onReceive(mockk(), intent)
+
+        coVerify(atLeast = 2) { loadFavoriteCoursesUseCase(any()) }
+    }
+
+    @Test
+    fun `reloadCourse handles announcement loading failure`() {
+        setupDefaultMocks()
+        val initialCourses = listOf(
+            Course(id = 1, name = "Course 1", isFavorite = true)
+        )
+        val updatedCourse = Course(id = 1, name = "Updated Course 1", isFavorite = true)
+        val exception = Exception("Failed to load announcements")
+
+        coEvery { loadFavoriteCoursesUseCase(any()) } returns initialCourses
+        coEvery { loadCourseUseCase(any()) } returns updatedCourse
+        coEvery { loadCourseAnnouncementsUseCase(any()) } throws exception
+
+        viewModel = createViewModel()
+
+        val receiverSlot = slot<BroadcastReceiver>()
+        verify { localBroadcastManager.registerReceiver(capture(receiverSlot), any()) }
+
+        val intent: Intent = mockk(relaxed = true)
+        every { intent.getLongExtra(Const.COURSE_ID, -1L) } returns 1L
+
+        receiverSlot.captured.onReceive(mockk(), intent)
+
+        verify { crashlytics.recordException(exception) }
+        val state = viewModel.uiState.value
+        assertEquals("Updated Course 1", state.courses.find { it.id == 1L }?.name)
+        assertEquals(0, state.courses.find { it.id == 1L }?.announcements?.size)
+    }
+
+    @Test
+    fun `reloadCourse handles course loading failure gracefully`() {
+        setupDefaultMocks()
+        val initialCourses = listOf(
+            Course(id = 1, name = "Course 1", isFavorite = true)
+        )
+        val exception = Exception("Failed to load course")
+
+        coEvery { loadFavoriteCoursesUseCase(any()) } returns initialCourses
+        coEvery { loadCourseUseCase(any()) } throws exception
+
+        viewModel = createViewModel()
+
+        val receiverSlot = slot<BroadcastReceiver>()
+        verify { localBroadcastManager.registerReceiver(capture(receiverSlot), any()) }
+
+        val intent: Intent = mockk(relaxed = true)
+        every { intent.getLongExtra(Const.COURSE_ID, -1L) } returns 1L
+
+        receiverSlot.captured.onReceive(mockk(), intent)
+
+        verify { crashlytics.recordException(exception) }
+    }
+
     private fun createViewModel(): CoursesWidgetViewModel {
         return CoursesWidgetViewModel(
             loadFavoriteCoursesUseCase = loadFavoriteCoursesUseCase,
             loadGroupsUseCase = loadGroupsUseCase,
             loadCourseUseCase = loadCourseUseCase,
+            loadCourseAnnouncementsUseCase = loadCourseAnnouncementsUseCase,
             sectionExpandedStateDataStore = sectionExpandedStateDataStore,
             coursesWidgetBehavior = coursesWidgetBehavior,
             courseSyncSettingsDao = courseSyncSettingsDao,

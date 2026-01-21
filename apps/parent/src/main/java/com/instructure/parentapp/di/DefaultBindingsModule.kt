@@ -23,6 +23,7 @@ import com.instructure.pandautils.features.dashboard.edit.EditDashboardRouter
 import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
 import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidgetBehavior
 import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidgetRouter
+import com.instructure.pandautils.features.dashboard.widget.courses.customize.CustomizeCourseBehavior
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragmentBehavior
 import com.instructure.pandautils.features.discussion.router.DiscussionRouteHelperRepository
 import com.instructure.pandautils.features.discussion.router.DiscussionRouter
@@ -138,6 +139,11 @@ class DefaultBindingsModule {
 
     @Provides
     fun provideCoursesWidgetBehavior(): CoursesWidgetBehavior {
+        throw NotImplementedError()
+    }
+
+    @Provides
+    fun provideCustomizeCourseBehavior(): CustomizeCourseBehavior {
         throw NotImplementedError()
     }
 }
