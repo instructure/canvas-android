@@ -53,6 +53,8 @@ class PickerSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup, va
     init {
         binding.toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
         binding.toolbar.title = context.getString(if (mode.isForComment) R.string.commentUpload else R.string.submission)
+        binding.toolbar.applyTopSystemBarInsets()
+        binding.sourcesContainer.applyBottomSystemBarInsets()
 
         binding.filePickerRecycler.layoutManager = LinearLayoutManager(context)
         binding.filePickerRecycler.adapter = adapter

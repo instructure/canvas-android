@@ -111,6 +111,25 @@ fun View.applyBottomSystemBarInsets() {
     }
 }
 
+private val TAG_ORIGINAL_MIN_HEIGHT = "originalMinHeight".hashCode()
+
+fun View.applyBottomSystemBarInsetsWithHeight() {
+    // Only capture original minHeight once to prevent accumulation on multiple calls
+    val originalMinHeight = getTag(TAG_ORIGINAL_MIN_HEIGHT) as? Int ?: minimumHeight.also {
+        setTag(TAG_ORIGINAL_MIN_HEIGHT, it)
+    }
+    ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
+        val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+        view.updatePadding(bottom = systemBars.bottom)
+        view.minimumHeight = originalMinHeight + systemBars.bottom
+        insets
+    }
+    // Request insets to be dispatched immediately if view is attached
+    if (isAttachedToWindow) {
+        ViewCompat.requestApplyInsets(this)
+    }
+}
+
 fun View.applyBottomSystemBarMargin() {
     val originalBottomMargin = (layoutParams as? android.view.ViewGroup.MarginLayoutParams)?.bottomMargin ?: 0
     ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->

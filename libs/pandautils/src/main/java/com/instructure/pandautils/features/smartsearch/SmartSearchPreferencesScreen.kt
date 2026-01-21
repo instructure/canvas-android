@@ -23,6 +23,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -78,6 +79,7 @@ fun SmartSearchPreferencesScreen(
     var selectedSort by remember { mutableStateOf(sortType) }
     FullScreenDialog(onDismissRequest = onCancel) {
         CanvasScaffold(
+            contentWindowInsets = WindowInsets(0),
             topBar = {
                 CanvasAppBar(
                     backgroundColor = color,
