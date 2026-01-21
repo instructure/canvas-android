@@ -42,7 +42,8 @@ import com.instructure.canvas.espresso.withResourceIdContaining
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
-import com.instructure.espresso.getVideoPosition
+import com.instructure.pandautils.R
+import androidx.media3.ui.R as Media3R
 
 class InboxDetailsPage(private val composeTestRule: ComposeTestRule) {
 
@@ -209,12 +210,12 @@ class InboxDetailsPage(private val composeTestRule: ComposeTestRule) {
 
     // Media player methods for video playback verification
     fun assertPlayButtonDisplayed() {
-        onView(withId(com.instructure.pandautils.R.id.prepareMediaButton))
+        onView(withId(R.id.prepareMediaButton))
             .assertDisplayed()
     }
 
     fun clickPlayButton() {
-        onView(withId(com.instructure.pandautils.R.id.prepareMediaButton))
+        onView(withId(R.id.prepareMediaButton))
             .click()
     }
 
@@ -223,17 +224,13 @@ class InboxDetailsPage(private val composeTestRule: ComposeTestRule) {
     }
 
     fun assertPlayPauseButtonDisplayed() {
-        onView(withId(androidx.media3.ui.R.id.exo_play_pause))
+        onView(withId(Media3R.id.exo_play_pause))
             .assertDisplayed()
     }
 
     fun clickPlayPauseButton() {
-        onView(withId(androidx.media3.ui.R.id.exo_play_pause))
+        onView(withId(Media3R.id.exo_play_pause))
             .click()
-    }
-
-    fun getVideoPosition(): String {
-        return getVideoPosition(androidx.media3.ui.R.id.exo_position)
     }
 
     // PDF viewer method for PSPDFKit toolbar verification

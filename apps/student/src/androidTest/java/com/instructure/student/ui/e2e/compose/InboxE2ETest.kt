@@ -20,6 +20,7 @@ package com.instructure.student.ui.e2e.compose
 import android.os.Environment
 import android.os.SystemClock.sleep
 import android.util.Log
+import androidx.media3.ui.R
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.matcher.ViewMatchers
@@ -35,6 +36,7 @@ import com.instructure.canvas.espresso.annotations.ReleaseExclude
 import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.api.ConversationsApi
 import com.instructure.dataseeding.api.GroupsApi
+import com.instructure.espresso.getVideoPosition
 import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.extensions.seedData
@@ -732,7 +734,7 @@ class InboxE2ETest: StudentComposeTest() {
         inboxDetailsPage.clickPlayPauseButton()
 
         Log.d(STEP_TAG, "Get the current video position.")
-        val firstPositionText = inboxDetailsPage.getVideoPosition()
+        val firstPositionText = getVideoPosition(R.id.exo_position)
         Log.d(ASSERTION_TAG, "First position: $firstPositionText")
 
         Log.d(STEP_TAG, "Click play/pause button to resume video playback, wait for video to play for 2 seconds then click play/pause button to pause again.")
@@ -741,7 +743,7 @@ class InboxE2ETest: StudentComposeTest() {
         inboxDetailsPage.clickPlayPauseButton()
 
         Log.d(STEP_TAG, "Get the video position again.")
-        val secondPositionText = inboxDetailsPage.getVideoPosition()
+        val secondPositionText = getVideoPosition(R.id.exo_position)
         Log.d(ASSERTION_TAG, "Second position: $secondPositionText")
 
         Log.d(ASSERTION_TAG, "Assert that the video position has changed, confirming video is playing.")
