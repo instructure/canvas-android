@@ -36,12 +36,16 @@ import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTextReplacement
+import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.swipeUp
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.closeSoftKeyboard
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
 import com.instructure.composetest.hasTestTagThatContains
@@ -62,12 +66,14 @@ import com.instructure.espresso.page.getStringFromResource
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.onViewWithText
 import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.page.waitForViewWithId
 import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withParent
 import com.instructure.espresso.page.withText
 import com.instructure.espresso.pageToItem
-import com.instructure.espresso.swipeToTop
+import com.instructure.espresso.scrollTo
 import com.instructure.pandautils.features.speedgrader.grade.comments.CommentIdKey
 import com.instructure.teacher.R
 import org.hamcrest.Matchers
@@ -91,7 +97,7 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
     private val submissionPager by OnViewWithId(R.id.submissionContentPager)
 
     private val gradeTab by OnViewWithStringText(getStringFromResource(R.string.sg_tab_grade).uppercase(Locale.getDefault()))
-    private val commentsTab by OnViewWithStringText(getStringFromResource(R.string.sg_tab_comments).uppercase(Locale.getDefault()))
+    private val commentsLabel by OnViewWithStringText(getStringFromResource(R.string.sg_tab_comments).uppercase(Locale.getDefault()))
 
     private val submissionDropDown by WaitForViewWithId(R.id.submissionVersionsSpinner)
     private val submissionVersionDialogTitle by WaitForViewWithText(R.string.submission_versions)
@@ -206,6 +212,7 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
     fun clickCommentAttachmentButton() {
         composeTestRule
             .onNodeWithTag("commentAttachmentButton")
+            .performScrollTo()
             .performClick()
         composeTestRule.waitForIdle()
     }
@@ -282,6 +289,73 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
                 .performClick()
         }
         composeTestRule.waitForIdle()
+    }
+
+    /**
+     * Sends an audio comment.
+     */
+    fun sendAudioComment() {
+        composeTestRule.onNodeWithText("Record Audio", useUnmergedTree = true).performClick()
+        composeTestRule.waitForIdle()
+        swipeUpGradeAndRubric()
+        waitForView(withId(R.id.recordAudioButton)).click()
+        Thread.sleep(3000) // Let the audio recording go for a bit
+        waitForView(withId(R.id.stopButton)).click()
+        waitForView(withId(R.id.sendAudioButton)).click()
+        composeTestRule.waitForIdle()
+    }
+
+    /**
+     * Asserts the display of an media comment.
+     *
+     * @param text The expected text to be displayed.
+     */
+    fun assertMediaCommentDisplayed(text: String) {
+        composeTestRule.onNode(hasText(text), useUnmergedTree = true)
+            .performScrollTo()
+            .assertIsDisplayed()
+    }
+
+    /**
+     * Sends a video comment.
+     */
+    fun sendVideoComment() {
+        composeTestRule.onNodeWithText("Record Video", useUnmergedTree = true).performClick()
+        composeTestRule.waitForIdle()
+        swipeUpGradeAndRubric()
+        waitForView(withId(R.id.startRecordingButton)).click()
+        Thread.sleep(3000) // Let the video recording go for a bit
+        waitForView(withId(R.id.endRecordingButton)).click()
+        waitForView(withId(R.id.sendButton)).click()
+        composeTestRule.waitForIdle()
+    }
+
+    /**
+     * Asserts the display of a video comment.
+     */
+    fun assertVideoCommentDisplayed() {
+        val videoCommentMatcher = allOf(
+            withId(R.id.commentHolder),
+            hasDescendant(allOf(containsTextCaseInsensitive("video"), withId(R.id.attachmentNameTextView)))
+        )
+
+        waitForView(videoCommentMatcher).scrollTo().assertDisplayed()
+    }
+
+    /**
+     * Clicks on a media comment with the specified text.
+     *
+     * @param mediaCommentText The text of the media comment to click.
+     */
+    fun clickOnMediaComment(mediaCommentText: String) {
+        composeTestRule.onNode(hasText(mediaCommentText) and hasAnySibling(hasTestTag("mediaAttachmentBox")), useUnmergedTree = true).performScrollTo().performClick()
+    }
+
+    /**
+     * Asserts the display of the media comment preview.
+     */
+    fun assertMediaCommentPreviewDisplayed() {
+        onView(allOf(withId(R.id.prepareMediaButton), withParent(R.id.mediaPreviewContainer))).assertDisplayed()
     }
 
     /**
@@ -402,24 +476,15 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
     }
 
     /**
-     * Selects the "Comments" tab.
+     * Swipes up the "Grade & Rubric" section to reveal its bottom content.
+     * This performs a swipe gesture on the actual scrollable container to scroll down
+     * and reveal the bottom of the Grade & Rubric tab.
      */
-    fun selectCommentsTab() {
-        commentsTab.click()
-    }
-
-    /**
-     * Swipes up the "Comments" tab.
-     */
-    fun swipeUpCommentsTab() {
-        commentsTab.swipeToTop()
-    }
-
-    /**
-     * Swipes up the "Grades" tab.
-     */
-    fun swipeUpGradesTab() {
-        gradeTab.swipeToTop()
+    fun swipeUpGradeAndRubric() {
+        composeTestRule
+            .onNodeWithTag("speedGraderGradeScrollContainer", useUnmergedTree = true)
+            .performTouchInput { swipeUp() }
+        composeTestRule.waitForIdle()
     }
 
     /**

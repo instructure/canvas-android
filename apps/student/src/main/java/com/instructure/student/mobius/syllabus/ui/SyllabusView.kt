@@ -25,6 +25,7 @@ import androidx.fragment.app.FragmentActivity
 import com.google.android.material.tabs.TabLayout
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ScheduleItem
+import com.instructure.canvasapi2.models.toBaseUrl
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.navigation.WebViewRouter
@@ -168,7 +169,8 @@ class SyllabusView(
 
             loadHtml(
                 syllabus,
-                context.getString(com.instructure.pandares.R.string.syllabus)
+                context.getString(com.instructure.pandares.R.string.syllabus),
+                canvasContext.toBaseUrl()
             )
         }
     }

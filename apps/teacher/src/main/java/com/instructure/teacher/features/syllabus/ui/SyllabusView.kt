@@ -28,6 +28,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ScheduleItem
+import com.instructure.canvasapi2.models.toBaseUrl
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
@@ -164,7 +165,7 @@ class SyllabusView(
         syllabusPager.setCurrentItem(if (state.syllabus == null) SUMMARY_TAB_POSITION else SYLLABUS_TAB_POSITION, false)
 
         val syllabusWebViewWrapper = binding.root.findViewById<CanvasWebViewWrapper>(R.id.syllabusWebViewWrapper)
-        if (state.syllabus != null) syllabusWebViewWrapper?.loadHtml(state.syllabus, context.getString(com.instructure.pandares.R.string.syllabus))
+        if (state.syllabus != null) syllabusWebViewWrapper?.loadHtml(state.syllabus, context.getString(R.string.syllabus), baseUrl = canvasContext.toBaseUrl())
         if (state.eventsState != null) renderEvents(state.eventsState)
     }
 

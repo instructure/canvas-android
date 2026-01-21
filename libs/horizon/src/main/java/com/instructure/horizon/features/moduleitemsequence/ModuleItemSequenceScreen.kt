@@ -181,6 +181,7 @@ fun ModuleItemSequenceScreen(mainNavController: NavHostController, uiState: Modu
             Box(modifier = Modifier.padding(contentPadding)) {
                 if (uiState.showAiAssist) {
                     AiAssistantScreen(
+                        mainNavController = mainNavController,
                         onDismiss = { uiState.updateShowAiAssist(false) },
                     )
                 }
@@ -604,7 +605,7 @@ private fun ModuleItemSequenceBottomBar(
             ) {
                 IconButton(
                     iconRes = R.drawable.ai,
-                    contentDescription = stringResource(R.string.a11y_openAIAssistant),
+                    contentDescription = stringResource(R.string.a11y_openIgniteAI),
                     enabled = aiAssistEnabled,
                     color = IconButtonColor.Ai,
                     elevation = HorizonElevation.level4,

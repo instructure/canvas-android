@@ -31,6 +31,7 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.tabs.TabLayout
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.toBaseUrl
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.AnalyticsParamConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -316,7 +317,7 @@ class SubmissionDetailsView(
             )
             is SubmissionDetailsContentType.UrlContent -> UrlSubmissionViewFragment.newInstance(type.url, type.previewUrl)
             is SubmissionDetailsContentType.QuizContent -> getFragmentWithOnlineCheck(QuizSubmissionViewFragment.newInstance(type.url), isOnline)
-            is SubmissionDetailsContentType.TextContent -> TextSubmissionViewFragment.newInstance(type.text)
+            is SubmissionDetailsContentType.TextContent -> TextSubmissionViewFragment.newInstance(type.text, canvasContext.toBaseUrl())
             is SubmissionDetailsContentType.DiscussionContent -> getFragmentWithOnlineCheck(
                 DiscussionSubmissionViewFragment.newInstance(type.previewUrl.orEmpty()),
                 isOnline

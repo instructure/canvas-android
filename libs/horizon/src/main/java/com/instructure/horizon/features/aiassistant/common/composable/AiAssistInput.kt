@@ -16,20 +16,27 @@
  */
 package com.instructure.horizon.features.aiassistant.common.composable
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
-import com.instructure.horizon.horizonui.foundation.HorizonSpace
-import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
+import com.instructure.horizon.horizonui.molecules.HorizonDivider
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
+import com.instructure.horizon.horizonui.molecules.IconButtonSize
 
 @Composable
 fun AiAssistInput(
@@ -39,27 +46,37 @@ fun AiAssistInput(
     modifier: Modifier = Modifier,
     label: String = stringResource(R.string.aiAssistEnterAPromptLabel),
 ) {
-    Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.Bottom,
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(
+                HorizonColors.Surface.cardPrimary(),
+                HorizonCornerRadius.level2
+            )
     ) {
         AiAssistTextArea(
+            modifier = Modifier
+                .fillMaxWidth(),
             value = value,
             onValueChange = onValueChange,
-            label = label,
-            onSend = { onSubmitPressed() },
-            modifier = Modifier.weight(1f),
+            onSend = { onSubmitPressed() }
         )
 
-        HorizonSpace(SpaceSize.SPACE_16)
+        HorizonDivider()
 
-        IconButton(
-            iconRes = R.drawable.arrow_upward,
-            contentDescription = stringResource(R.string.aiAssistSubmitPrompt),
-            color = IconButtonColor.Inverse,
-            enabled = value.text.isNotBlank(),
-            onClick = onSubmitPressed,
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(12.dp),
+            horizontalArrangement = Arrangement.End
+        ) {
+            IconButton(
+                iconRes = R.drawable.send_filled,
+                contentDescription = stringResource(R.string.aiAssistSubmitPrompt),
+                color = IconButtonColor.Black,
+                size = IconButtonSize.SMALL,
+                enabled = value.text.isNotBlank(),
+                onClick = onSubmitPressed,
+            )
+        }
     }
 }
 

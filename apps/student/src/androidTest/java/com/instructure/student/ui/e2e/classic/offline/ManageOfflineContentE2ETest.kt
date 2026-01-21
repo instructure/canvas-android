@@ -25,6 +25,7 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.OfflineE2E
+import com.instructure.canvas.espresso.annotations.Stub
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.extensions.seedData
 import com.instructure.student.ui.utils.extensions.tokenLogin
@@ -41,6 +42,7 @@ class ManageOfflineContentE2ETest : StudentTest() {
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @OfflineE2E
+    @Stub("Stubbed because of What-if and Grades changes, fix in MBL-19640")
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.OFFLINE_CONTENT, TestCategory.E2E, SecondaryFeatureCategory.OFFLINE_MODE)
     fun testManageOfflineContentE2ETest() {

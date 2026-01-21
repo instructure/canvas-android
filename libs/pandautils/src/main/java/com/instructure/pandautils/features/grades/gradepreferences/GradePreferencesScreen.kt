@@ -62,7 +62,8 @@ import com.instructure.pandautils.compose.composables.ListHeaderItem
 fun GradePreferencesScreen(
     uiState: GradePreferencesUiState,
     onPreferenceChangeSaved: (GradingPeriod?, SortBy) -> Unit,
-    navigationActionClick: () -> Unit
+    navigationActionClick: () -> Unit,
+    canvasContextColor: Int
 ) {
     var selectedPeriod by rememberSaveable { mutableStateOf(uiState.selectedGradingPeriod) }
     var selectedSortBy by rememberSaveable { mutableStateOf(uiState.sortBy) }
@@ -76,7 +77,7 @@ fun GradePreferencesScreen(
                 navigationActionClick = navigationActionClick,
                 navIconRes = R.drawable.ic_close,
                 navIconContentDescription = stringResource(id = R.string.close),
-                backgroundColor = Color(color = uiState.canvasContextColor),
+                backgroundColor = Color(color = canvasContextColor),
                 contentColor = colorResource(id = R.color.textLightest),
                 modifier = Modifier.testTag("GradePreferencesToolbar")
             ) {
@@ -107,6 +108,7 @@ fun GradePreferencesScreen(
             onSortByChanged = { sortBy ->
                 selectedSortBy = sortBy
             },
+            canvasContextColor = canvasContextColor,
             modifier = Modifier
                 .padding(it)
                 .fillMaxSize()
@@ -121,6 +123,7 @@ private fun GradePreferencesContent(
     selectedGradingPeriod: GradingPeriod?,
     onGradingPeriodChanged: (GradingPeriod?) -> Unit,
     onSortByChanged: (SortBy) -> Unit,
+    canvasContextColor: Int,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -131,7 +134,7 @@ private fun GradePreferencesContent(
         }
         item {
             GradePreferencesItem(
-                color = Color(color = uiState.canvasContextColor),
+                color = Color(color = canvasContextColor),
                 itemTitle = stringResource(id = R.string.allGradingPeriods),
                 id = 0,
                 selected = selectedGradingPeriod == null,
@@ -146,7 +149,7 @@ private fun GradePreferencesContent(
         ) { gradingPeriod ->
             val selected = gradingPeriod == selectedGradingPeriod
             GradePreferencesItem(
-                color = Color(color = uiState.canvasContextColor),
+                color = Color(color = canvasContextColor),
                 itemTitle = gradingPeriod.title.orEmpty(),
                 id = gradingPeriod.id,
                 selected = selected,
@@ -168,7 +171,7 @@ private fun GradePreferencesContent(
         ) { sortBy ->
             val selected = sortBy == selectedSortBy
             GradePreferencesItem(
-                color = Color(color = uiState.canvasContextColor),
+                color = Color(color = canvasContextColor),
                 itemTitle = stringResource(id = sortBy.titleRes),
                 id = sortBy.ordinal.toLong(),
                 selected = selected,
@@ -250,6 +253,7 @@ private fun GradePreferencesPreview() {
             )
         ),
         onPreferenceChangeSaved = { _, _ -> },
-        navigationActionClick = {}
+        navigationActionClick = {},
+        canvasContextColor = android.graphics.Color.RED
     )
 }

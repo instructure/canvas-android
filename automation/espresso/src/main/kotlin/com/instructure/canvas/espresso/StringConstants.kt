@@ -28,13 +28,13 @@ object StringConstants {
     object HelpMenu {
         // Common titles and subtitles across all apps
         const val SEARCH_GUIDES_TITLE = "Search the Canvas Guides"
-        const val SEARCH_GUIDES_SUBTITLE = "Find answers to common questions"
+        const val SEARCH_GUIDES_SUBTITLE = "Find answers to common questions."
 
         const val CUSTOM_LINK_TITLE = "CUSTOM LINK"
         const val CUSTOM_LINK_SUBTITLE = "This is a custom help link."
 
         const val REPORT_PROBLEM_TITLE = "Report a Problem"
-        const val REPORT_PROBLEM_SUBTITLE = "If Canvas misbehaves, tell us about it"
+        const val REPORT_PROBLEM_SUBTITLE = "If Canvas misbehaves, tell us about it."
 
         const val SUBMIT_FEATURE_TITLE = "Submit a Feature Idea"
         const val SUBMIT_FEATURE_SUBTITLE = "Have an idea to improve Canvas?"
@@ -45,16 +45,16 @@ object StringConstants {
         // Student-specific
         object Student {
             const val ASK_INSTRUCTOR_TITLE = "Ask Your Instructor a Question"
-            const val ASK_INSTRUCTOR_SUBTITLE = "Questions are submitted to your instructor"
+            const val ASK_INSTRUCTOR_SUBTITLE = "Questions are submitted to your instructor."
         }
 
         // Teacher-specific
         object Teacher {
             const val CONFERENCE_GUIDES_TITLE = "Conference Guides for Remote Classrooms"
-            const val CONFERENCE_GUIDES_SUBTITLE = "Get help on how to use and configure conferences in canvas."
+            const val CONFERENCE_GUIDES_SUBTITLE = "Get help on how to use and configure conferences in Canvas."
 
-            const val ASK_COMMUNITY_TITLE = "Ask the Community"
-            const val ASK_COMMUNITY_SUBTITLE = "Explore guides, updates, blogs, forums, and resources to help you find answers, collaborate with others, and keep learning."
+            const val ASK_COMMUNITY_TITLE = "Visit the Community"
+            const val ASK_COMMUNITY_SUBTITLE = "Explore guides, updates, blogs, forums, and resources to help you find answers."
 
             const val TRAINING_PORTAL_TITLE = "Training Services Portal"
             const val TRAINING_PORTAL_SUBTITLE = "Access Canvas training videos and courses"

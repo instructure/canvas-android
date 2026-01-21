@@ -535,6 +535,7 @@
                         android:visibility="@{viewModel.data.description.empty || viewModel.data.fullLocked ? View.GONE : View.VISIBLE}"
                         app:htmlContent="@{viewModel.data.description}"
                         app:htmlTitle="@{viewModel.data.assignmentName}"
+                        app:baseUrl="@{viewModel.data.baseUrl}"
                         app:layout_constraintTop_toBottomOf="@id/authoredDate"
                         app:onLtiButtonPressed="@{(url) -> viewModel.onLtiButtonPressed(url)}" />
 

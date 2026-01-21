@@ -46,6 +46,7 @@ import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.applyBottomSystemBarInsets
 import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.enableAlgorithmicDarkening
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.toast
@@ -73,6 +74,7 @@ open class InternalWebViewFragment : BaseFragment() {
     var shouldRouteInternally: Boolean by BooleanArg(key = SHOULD_ROUTE_INTERNALLY, default = true)
     private var isInModulesPager: Boolean by BooleanArg(key = IS_IN_MODULES_PAGER, default = false)
     private var allowRoutingTheSameUrlInternally: Boolean by BooleanArg(key = ALLOW_ROUTING_THE_SAME_URL_INTERNALLY, default = true)
+    var enableAlgorithmicDarkening: Boolean by BooleanArg(key = ENABLE_ALGORITHMIC_DARKENING, default = false)
 
     private var shouldLoadUrl = true
     private var mSessionAuthJob: Job? = null
@@ -147,6 +149,7 @@ open class InternalWebViewFragment : BaseFragment() {
         canvasWebView.settings.setSupportZoom(true)
         canvasWebView.addVideoClient(requireActivity())
         canvasWebView.setInitialScale(100)
+        if (enableAlgorithmicDarkening) canvasWebView.enableAlgorithmicDarkening()
 
         canvasWebView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {
@@ -270,6 +273,7 @@ open class InternalWebViewFragment : BaseFragment() {
         const val HTML = "html"
         const val DARK_TOOLBAR = "darkToolbar"
         const val AUTHENTICATE = "authenticate"
+        const val ENABLE_ALGORITHMIC_DARKENING = "enableAlgorithmicDarkening"
         private const val SHOULD_ROUTE_INTERNALLY = "shouldRouteInternally"
         private const val IS_IN_MODULES_PAGER = "isInModulesPager"
         private const val ALLOW_ROUTING_THE_SAME_URL_INTERNALLY = "allowRoutingTheSameUrlInternally"
@@ -298,6 +302,7 @@ open class InternalWebViewFragment : BaseFragment() {
             shouldRouteInternally = args.getBoolean(SHOULD_ROUTE_INTERNALLY)
             isInModulesPager = args.getBoolean(IS_IN_MODULES_PAGER)
             allowRoutingTheSameUrlInternally = args.getBoolean(ALLOW_ROUTING_THE_SAME_URL_INTERNALLY)
+            enableAlgorithmicDarkening = args.getBoolean(ENABLE_ALGORITHMIC_DARKENING)
         }
 
         @JvmOverloads
