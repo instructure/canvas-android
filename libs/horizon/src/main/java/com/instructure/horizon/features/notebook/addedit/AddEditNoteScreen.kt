@@ -29,7 +29,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -77,6 +76,7 @@ import com.instructure.horizon.horizonui.organisms.ModalDialogState
 import com.instructure.horizon.horizonui.organisms.inputs.common.InputLabelRequired
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextArea
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextAreaState
+import com.instructure.horizon.horizonui.organisms.scaffolds.EdgeToEdgeScaffold
 import kotlinx.coroutines.delay
 
 @Composable
@@ -97,7 +97,9 @@ fun AddEditNoteScreen(
         }
     }
 
-    Scaffold(
+    EdgeToEdgeScaffold(
+        statusBarColor = HorizonColors.Surface.cardPrimary(),
+        navigationBarColor = HorizonColors.Surface.cardPrimary(),
         containerColor = HorizonColors.Surface.pageSecondary(),
         topBar = { AddEditNoteAppBar(state, navigateBack = { navController.popBackStack() }) },
     ) { padding ->

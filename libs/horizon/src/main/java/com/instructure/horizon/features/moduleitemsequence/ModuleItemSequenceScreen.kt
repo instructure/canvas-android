@@ -30,13 +30,11 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
@@ -45,7 +43,6 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
@@ -126,9 +123,8 @@ import com.instructure.horizon.horizonui.molecules.PillCase
 import com.instructure.horizon.horizonui.molecules.PillType
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.molecules.SpinnerSize
+import com.instructure.horizon.horizonui.organisms.scaffolds.EdgeToEdgeScaffold
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
-import com.instructure.horizon.util.HorizonEdgeToEdgeSystemBars
-import com.instructure.horizon.util.horizontalSafeDrawing
 import com.instructure.pandautils.compose.modifiers.conditional
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.orDefault
@@ -139,59 +135,53 @@ fun ModuleItemSequenceScreen(mainNavController: NavHostController, uiState: Modu
     if (uiState.progressScreenState.visible) ProgressScreen(uiState.progressScreenState, uiState.loadingState)
     val snackbarHostState = remember { SnackbarHostState() }
 
-    HorizonEdgeToEdgeSystemBars(
+    EdgeToEdgeScaffold(
         statusBarColor = HorizonColors.Surface.institution(),
-        navigationBarColor = HorizonColors.Surface.pagePrimary(),
-        modifier = Modifier.padding(WindowInsets.horizontalSafeDrawing.asPaddingValues())
-    ){
-        Scaffold(
-            contentWindowInsets = WindowInsets.horizontalSafeDrawing,
-            containerColor = HorizonColors.Surface.pagePrimary(),
-            snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-            bottomBar = {
-                ModuleItemSequenceBottomBar(
-                    showNextButton = uiState.currentPosition < uiState.items.size - 1,
-                    showPreviousButton = uiState.currentPosition > 0,
-                    showNotebookButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Page,
-                    showAssignmentToolsButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Assignment,
-                    onNextClick = uiState.onNextClick,
-                    onPreviousClick = uiState.onPreviousClick,
-                    onAssignmentToolsClick = uiState.onAssignmentToolsClick,
-                    onAiAssistClick = { uiState.updateShowAiAssist(true) },
-                    onNotebookClick = {
-                        mainNavController.navigate(
-                            NotebookRoute.Notebook.route(
-                                uiState.courseId.toString(),
-                                uiState.objectTypeAndId.first,
-                                uiState.objectTypeAndId.second,
-                                true,
-                                false,
-                                true
-                            )
+        statusBarAlpha = 1f,
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        bottomBar = {
+            ModuleItemSequenceBottomBar(
+                showNextButton = uiState.currentPosition < uiState.items.size - 1,
+                showPreviousButton = uiState.currentPosition > 0,
+                showNotebookButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Page,
+                showAssignmentToolsButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Assignment,
+                onNextClick = uiState.onNextClick,
+                onPreviousClick = uiState.onPreviousClick,
+                onAssignmentToolsClick = uiState.onAssignmentToolsClick,
+                onAiAssistClick = { uiState.updateShowAiAssist(true) },
+                onNotebookClick = {
+                    mainNavController.navigate(
+                        NotebookRoute.Notebook.route(
+                            uiState.courseId.toString(),
+                            uiState.objectTypeAndId.first,
+                            uiState.objectTypeAndId.second,
+                            true,
+                            false,
+                            true
                         )
-                    },
-                    notebookEnabled = uiState.notebookButtonEnabled,
-                    aiAssistEnabled = uiState.aiAssistButtonEnabled,
-                    hasUnreadComments = uiState.hasUnreadComments
+                    )
+                },
+                notebookEnabled = uiState.notebookButtonEnabled,
+                aiAssistEnabled = uiState.aiAssistButtonEnabled,
+                hasUnreadComments = uiState.hasUnreadComments
+            )
+        }
+    ) { contentPadding ->
+        Box(modifier = Modifier.padding(contentPadding)) {
+            if (uiState.showAiAssist) {
+                AiAssistantScreen(
+                    onDismiss = { uiState.updateShowAiAssist(false) },
                 )
             }
-        ) { contentPadding ->
-            Box(modifier = Modifier.padding(contentPadding)) {
-                if (uiState.showAiAssist) {
-                    AiAssistantScreen(
-                        onDismiss = { uiState.updateShowAiAssist(false) },
-                    )
-                }
-                ModuleItemSequenceContent(
-                    uiState = uiState,
-                    mainNavController = mainNavController,
-                    onBackPressed = {
-                        mainNavController.popBackStack()
-                    })
-                val markAsDoneState = uiState.currentItem?.markAsDoneUiState
-                if (markAsDoneState != null && !uiState.currentItem.isLoading) {
-                    MarkAsDoneButton(markAsDoneState)
-                }
+            ModuleItemSequenceContent(
+                uiState = uiState,
+                mainNavController = mainNavController,
+                onBackPressed = {
+                    mainNavController.popBackStack()
+                })
+            val markAsDoneState = uiState.currentItem?.markAsDoneUiState
+            if (markAsDoneState != null && !uiState.currentItem.isLoading) {
+                MarkAsDoneButton(markAsDoneState)
             }
         }
     }
@@ -278,7 +268,6 @@ private fun ModuleItemSequenceContent(
                 uiState = uiState,
                 modifier = Modifier
                     .background(HorizonColors.Surface.institution())
-                    .windowInsetsPadding(WindowInsets.statusBars)
                     .padding(start = 24.dp, end = 24.dp, top = 16.dp, bottom = 24.dp)
                     .wrapContentHeight(),
                 onBackPressed = onBackPressed

@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -67,13 +66,11 @@ import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
 import com.instructure.horizon.horizonui.molecules.ProgressBarSmall
 import com.instructure.horizon.horizonui.molecules.ProgressBarStyle
-import com.instructure.horizon.horizonui.organisms.CollapsableScaffold
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelect
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectInputSize
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectState
+import com.instructure.horizon.horizonui.organisms.scaffolds.CollapsableScaffold
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
-import com.instructure.horizon.util.HorizonEdgeToEdgeSystemBars
-import com.instructure.horizon.util.zeroScreenInsets
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -82,45 +79,38 @@ fun DashboardCourseListScreen(
     state: DashboardCourseListUiState,
     homeNavController: NavHostController,
 ) {
-    HorizonEdgeToEdgeSystemBars(
+    CollapsableScaffold(
+        containerColor = HorizonColors.Surface.pagePrimary(),
         statusBarColor = HorizonColors.Surface.pagePrimary(),
-    ){
-        LoadingStateWrapper(state.loadingState) {
-            CollapsableScaffold(
-                containerColor = HorizonColors.Surface.pagePrimary(),
-                contentWindowInsets = WindowInsets.zeroScreenInsets,
-                topBar = { DashboardCourseListTopBar(homeNavController) },
+        topBar = { DashboardCourseListTopBar(homeNavController) },
+    ) { contentPadding ->
+        LoadingStateWrapper(state.loadingState, modifier = Modifier.padding(contentPadding)) {
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                contentPadding = PaddingValues(top = 8.dp, bottom = 24.dp)
             ) {
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
-                    contentPadding = PaddingValues(top = 8.dp, bottom = 24.dp)
-                ) {
-                    stickyHeader {
-                        DashboardCourseListHeader(
-                            state,
-                            //Modifier.padding(WindowInsets.bottomNavigationScreenInsets.asPaddingValues())
-                        )
+                stickyHeader {
+                    DashboardCourseListHeader(state)
+                }
+                if (state.courses.isEmpty()) {
+                    item {
+                        EmptyCoursesMessage()
                     }
-                    if (state.courses.isEmpty()) {
-                        item {
-                            EmptyCoursesMessage()
-                        }
-                    } else {
-                        val visibleCourses = state.courses.take(state.visibleCourseCount)
-                        items(visibleCourses) {
-                            CourseItemCard(it, homeNavController)
-                        }
+                } else {
+                    val visibleCourses = state.courses.take(state.visibleCourseCount)
+                    items(visibleCourses) {
+                        CourseItemCard(it, homeNavController)
+                    }
 
-                        if (state.courses.size > state.visibleCourseCount) {
-                            item {
-                                Button(
-                                    label = stringResource(R.string.dashboardCourseListShowMore),
-                                    width = ButtonWidth.FILL,
-                                    color = ButtonColor.WhiteWithOutline,
-                                    onClick = state.onShowMoreCourses,
-                                    modifier = Modifier.padding(horizontal = 16.dp)
-                                )
-                            }
+                    if (state.courses.size > state.visibleCourseCount) {
+                        item {
+                            Button(
+                                label = stringResource(R.string.dashboardCourseListShowMore),
+                                width = ButtonWidth.FILL,
+                                color = ButtonColor.WhiteWithOutline,
+                                onClick = state.onShowMoreCourses,
+                                modifier = Modifier.padding(horizontal = 16.dp)
+                            )
                         }
                     }
                 }

@@ -16,19 +16,26 @@
  */
 package com.instructure.horizon.util
 
+import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
+import androidx.compose.foundation.layout.windowInsetsEndWidth
+import androidx.compose.foundation.layout.windowInsetsStartWidth
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
@@ -48,12 +55,25 @@ fun HorizonEdgeToEdgeSystemBars(
     modifier: Modifier = Modifier,
     statusBarAlpha: Float = 0.8f,
     navigationBarAlpha: Float = 0.8f,
-    content: @Composable () -> Unit
+    content: @Composable (statusBarWindowInsets: WindowInsets, navigationBarWindowInsets: WindowInsets) -> Unit
 ) {
+    val statusBarWindowsInsets = if (statusBarColor != null) {
+        WindowInsets.statusBars.union(
+            WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)
+        )
+    } else {
+        WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)
+    }
+
+    val navigationBarWindowsInsets = if (navigationBarColor != null) {
+        WindowInsets.navigationBars
+    } else {
+        WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)
+    }
     val view = LocalView.current
 
     SideEffect {
-        val window = (view.context as? android.app.Activity)?.window ?: return@SideEffect
+        val window = (view.context as? Activity)?.window ?: return@SideEffect
         val insetsController = WindowCompat.getInsetsController(window, view)
 
         statusBarColor?.let { color ->
@@ -68,13 +88,14 @@ fun HorizonEdgeToEdgeSystemBars(
     }
 
     Box {
-        content()
+        content(statusBarWindowsInsets, navigationBarWindowsInsets)
         statusBarColor?.let {
             Box(
                 modifier = modifier
                     .align(Alignment.TopCenter)
                     .fillMaxWidth()
                     .windowInsetsTopHeight(WindowInsets.statusBars)
+                    .padding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal).asPaddingValues())
                     .background(statusBarColor.copy(alpha = statusBarAlpha))
             )
         }
@@ -85,9 +106,26 @@ fun HorizonEdgeToEdgeSystemBars(
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
                     .windowInsetsBottomHeight(WindowInsets.navigationBars)
+                    .padding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal).asPaddingValues())
                     .background(navigationBarColor.copy(alpha = navigationBarAlpha))
             )
         }
+
+        Box(
+            modifier = modifier
+                .align(Alignment.CenterStart)
+                .fillMaxHeight()
+                .windowInsetsStartWidth(WindowInsets.navigationBars)
+                .background(navigationBarColor?.copy(alpha = navigationBarAlpha) ?: Color.Transparent)
+        )
+
+        Box(
+            modifier = modifier
+                .align(Alignment.CenterEnd)
+                .fillMaxHeight()
+                .windowInsetsEndWidth(WindowInsets.navigationBars)
+                .background(navigationBarColor?.copy(alpha = navigationBarAlpha) ?: Color.Transparent)
+        )
     }
 }
 
@@ -100,11 +138,11 @@ private val WindowInsetsSides.Companion.TopHorizontalSides: WindowInsetsSides
 val WindowInsets.Companion.zeroScreenInsets: WindowInsets
     get() = WindowInsets(0, 0, 0, 0)
 
-val WindowInsets.Companion.bottomNavigationScreenInsets: WindowInsets
+val WindowInsets.Companion.topHorizontalWindowInsets: WindowInsets
     @Composable
     get() = WindowInsets.safeDrawing.only(WindowInsetsSides.TopHorizontalSides)
 
-val WindowInsets.Companion.topBarScreenInsets: WindowInsets
+val WindowInsets.Companion.bottomHorizontalWindowInsets: WindowInsets
     @Composable
     get() = WindowInsets.safeDrawing.only(WindowInsetsSides.BottomHorizontalSides)
 

@@ -24,14 +24,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
@@ -88,8 +86,7 @@ import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextAreaState
 import com.instructure.horizon.horizonui.organisms.inputs.textfield.TextField
 import com.instructure.horizon.horizonui.organisms.inputs.textfield.TextFieldInputSize
 import com.instructure.horizon.horizonui.organisms.inputs.textfield.TextFieldState
-import com.instructure.horizon.util.HorizonEdgeToEdgeSystemBars
-import com.instructure.horizon.util.topBarScreenInsets
+import com.instructure.horizon.horizonui.organisms.scaffolds.EdgeToEdgeScaffold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -108,46 +105,45 @@ fun HorizonInboxComposeScreen(
         }
     }
 
-    HorizonEdgeToEdgeSystemBars(null, null) {
-        Scaffold(
-            contentWindowInsets = WindowInsets.topBarScreenInsets,
-            snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-            containerColor = HorizonColors.Surface.pageSecondary(),
-            topBar = {
-                HorizonInboxComposeTopBar(state, navController)
-            }
-        ) { innerPadding ->
-            BackHandler { onExit(state, navController) }
+    EdgeToEdgeScaffold(
+        statusBarColor = HorizonColors.Surface.pageSecondary(),
+        navigationBarColor = HorizonColors.Surface.pageSecondary(),
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        containerColor = HorizonColors.Surface.pageSecondary(),
+        topBar = {
+            HorizonInboxComposeTopBar(state, navController)
+        }
+    ) { innerPadding ->
+        BackHandler { onExit(state, navController) }
 
-            HorizonInboxAttachmentPicker(
-                showBottomSheet = state.showAttachmentPicker,
-                onDismissBottomSheet = { state.onShowAttachmentPickerChanged(false) },
-                state = pickerState,
-                onFilesChanged = state.onAttachmentsChanged
-            )
+        HorizonInboxAttachmentPicker(
+            showBottomSheet = state.showAttachmentPicker,
+            onDismissBottomSheet = { state.onShowAttachmentPickerChanged(false) },
+            state = pickerState,
+            onFilesChanged = state.onAttachmentsChanged
+        )
 
-            if (state.showExitConfirmationDialog) {
-                Modal(
-                    dialogState = ModalDialogState(
-                        title = stringResource(R.string.exitConfirmationTitle),
-                        message = stringResource(R.string.exitConfirmationMessage),
-                        primaryButtonTitle = stringResource(R.string.exitConfirmationExitButtonLabel),
-                        secondaryButtonTitle = stringResource(R.string.exitConfirmationCancelButtonLabel),
-                        primaryButtonClick = {
-                            state.updateShowExitConfirmationDialog(false)
-                            navController.popBackStack()
-                        },
-                        secondaryButtonClick = { state.updateShowExitConfirmationDialog(false) }
-                    )
+        if (state.showExitConfirmationDialog) {
+            Modal(
+                dialogState = ModalDialogState(
+                    title = stringResource(R.string.exitConfirmationTitle),
+                    message = stringResource(R.string.exitConfirmationMessage),
+                    primaryButtonTitle = stringResource(R.string.exitConfirmationExitButtonLabel),
+                    secondaryButtonTitle = stringResource(R.string.exitConfirmationCancelButtonLabel),
+                    primaryButtonClick = {
+                        state.updateShowExitConfirmationDialog(false)
+                        navController.popBackStack()
+                    },
+                    secondaryButtonClick = { state.updateShowExitConfirmationDialog(false) }
                 )
-            }
-
-            HorizonInboxComposeContent(
-                state,
-                navController,
-                Modifier.padding(innerPadding)
             )
         }
+
+        HorizonInboxComposeContent(
+            state,
+            navController,
+            Modifier.padding(innerPadding)
+        )
     }
 }
 
