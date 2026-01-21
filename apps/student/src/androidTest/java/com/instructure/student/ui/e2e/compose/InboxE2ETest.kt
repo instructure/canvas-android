@@ -36,7 +36,6 @@ import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.api.ConversationsApi
 import com.instructure.dataseeding.api.GroupsApi
 import com.instructure.espresso.retryWithIncreasingDelay
-import com.instructure.espresso.triggerWorkManagerJobs
 import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.extensions.seedData
 import com.instructure.student.ui.utils.extensions.tokenLogin
@@ -670,7 +669,7 @@ class InboxE2ETest: StudentComposeTest() {
         Log.d(STEP_TAG, "Open the conversation.")
         inboxPage.openConversation(seededConversation.subject)
 
-        Log.d(ASSERTION_TAG, "Assert that the conversation subject and body are displayed.")
+        Log.d(ASSERTION_TAG, "Assert that the '${conversationSubject}' and '${conversationBody}' are displayed.")
         inboxDetailsPage.assertConversationSubject(conversationSubject)
         inboxDetailsPage.assertMessageDisplayed(conversationBody)
 
@@ -699,7 +698,6 @@ class InboxE2ETest: StudentComposeTest() {
 
         Log.d(STEP_TAG, "Click OKAY button to confirm file selection.")
         fileChooserPage.clickOkay()
-        triggerWorkManagerJobs("FileUploadWorker")
 
         Log.d(ASSERTION_TAG, "Assert that the video file is displayed as attached in the screen.")
         inboxComposePage.assertAttachmentDisplayed(videoFileName)
@@ -723,11 +721,9 @@ class InboxE2ETest: StudentComposeTest() {
         Log.d(ASSERTION_TAG, "Wait for video to load and assert that the media play button is visible.")
         inboxDetailsPage.assertPlayButtonDisplayed()
 
-        Log.d(STEP_TAG, "Click the play button to start the video.")
+        Log.d(STEP_TAG, "Click the play button to start the video and on the screen to show media controls.")
         inboxDetailsPage.clickPlayButton()
-
-        Log.d(STEP_TAG, "Click on the screen to show media controls.")
-        inboxDetailsPage.clickScreenToShowControls(device)
+        inboxDetailsPage.clickScreenCenterToShowControls(device)
 
         Log.d(ASSERTION_TAG, "Assert that the play/pause button is visible in the media controls.")
         inboxDetailsPage.assertPlayPauseButtonDisplayed()
@@ -739,13 +735,9 @@ class InboxE2ETest: StudentComposeTest() {
         val firstPositionText = inboxDetailsPage.getVideoPosition()
         Log.d(ASSERTION_TAG, "First position: $firstPositionText")
 
-        Log.d(STEP_TAG, "Click play/pause button to resume video playback.")
+        Log.d(STEP_TAG, "Click play/pause button to resume video playback, wait for video to play for 2 seconds then click play/pause button to pause again.")
         inboxDetailsPage.clickPlayPauseButton()
-
-        Log.d(STEP_TAG, "Wait for video to play for 2 seconds.")
         sleep(2000)
-
-        Log.d(STEP_TAG, "Click play/pause button to pause again.")
         inboxDetailsPage.clickPlayPauseButton()
 
         Log.d(STEP_TAG, "Get the video position again.")
@@ -757,7 +749,7 @@ class InboxE2ETest: StudentComposeTest() {
             "Video position did not change. First: $firstPositionText, Second: $secondPositionText"
         }
 
-        Log.d(STEP_TAG, "Navigate back to conversation details and assert that the conversation subject is displayed.")
+        Log.d(STEP_TAG, "Navigate back to conversation details and assert that the '${conversationSubject}' is displayed.")
         Espresso.pressBack()
         inboxDetailsPage.assertConversationSubject(conversationSubject)
 
@@ -812,7 +804,7 @@ class InboxE2ETest: StudentComposeTest() {
         Log.d(STEP_TAG, "Open the conversation.")
         inboxPage.openConversation(seededConversation.subject)
 
-        Log.d(ASSERTION_TAG, "Assert that the conversation subject and body are displayed.")
+        Log.d(ASSERTION_TAG, "Assert that the '${conversationSubject}' and '${conversationBody}' are displayed.")
         inboxDetailsPage.assertConversationSubject(conversationSubject)
         inboxDetailsPage.assertMessageDisplayed(conversationBody)
 
@@ -865,7 +857,6 @@ class InboxE2ETest: StudentComposeTest() {
 
         Log.d(STEP_TAG, "Click OKAY button to confirm file selection.")
         fileChooserPage.clickOkay()
-        triggerWorkManagerJobs("FileUploadWorker")
 
         Log.d(ASSERTION_TAG, "Assert that the PDF file is displayed as attached in the screen.")
         inboxComposePage.assertAttachmentDisplayed(pdfFileName)
@@ -889,19 +880,15 @@ class InboxE2ETest: StudentComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that PSPDFKit toolbar is displayed, confirming PDF loaded successfully.")
         inboxDetailsPage.assertPdfViewerToolbarDisplayed()
 
-        Log.d(STEP_TAG, "Navigate back to conversation details and assert that the conversation subject is displayed.")
+        Log.d(STEP_TAG, "Navigate back to conversation details and assert that the '${conversationSubject}' is displayed.")
         Espresso.pressBack()
         inboxDetailsPage.assertConversationSubject(conversationSubject)
 
-        Log.d(STEP_TAG, "Navigate back to inbox.")
+        Log.d(STEP_TAG, "Navigate back to Inbox conversation list page.")
         Espresso.pressBack()
 
         Log.d(ASSERTION_TAG, "Assert that the conversation is still displayed in inbox.")
         inboxPage.assertConversationDisplayed(conversationSubject)
-
-        Log.d(STEP_TAG, "Navigate back to Dashboard Page.")
-        dashboardPage.goToDashboard()
-        dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Log out with '${student1.name}' student.")
         leftSideNavigationDrawerPage.logout()
@@ -919,20 +906,15 @@ class InboxE2ETest: StudentComposeTest() {
         Log.d(STEP_TAG, "Open the forwarded conversation.")
         inboxPage.openConversation(conversationSubject)
 
-        Log.d(ASSERTION_TAG, "Assert that the conversation subject is displayed.")
+        Log.d(ASSERTION_TAG, "Assert that the '${conversationSubject}' and '${conversationBody}' are displayed.")
         inboxDetailsPage.assertConversationSubject(conversationSubject)
+        inboxDetailsPage.assertMessageDisplayed(conversationBody)
 
         Log.d(ASSERTION_TAG, "Assert that the forwarded message from ${student1.name} is displayed.")
         inboxDetailsPage.assertMessageDisplayed(forwardMessage)
 
         Log.d(ASSERTION_TAG, "Assert that the PDF attachment is displayed to ${student2.name}.")
         inboxDetailsPage.assertAttachmentDisplayed(pdfFileName)
-
-        Log.d(STEP_TAG, "Navigate back to inbox.")
-        Espresso.pressBack()
-
-        Log.d(ASSERTION_TAG, "Assert that the conversation is displayed in ${student2.name}'s inbox.")
-        inboxPage.assertConversationDisplayed(conversationSubject)
     }
 
     @E2E
@@ -968,7 +950,7 @@ class InboxE2ETest: StudentComposeTest() {
         Log.d(STEP_TAG, "Open the conversation.")
         inboxPage.openConversation(seededConversation.subject)
 
-        Log.d(ASSERTION_TAG, "Assert that the conversation subject and body are displayed.")
+        Log.d(ASSERTION_TAG, "Assert that the '${conversationSubject}' and '${conversationBody}' are displayed.")
         inboxDetailsPage.assertConversationSubject(conversationSubject)
         inboxDetailsPage.assertMessageDisplayed(conversationBody)
 
@@ -997,15 +979,11 @@ class InboxE2ETest: StudentComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the original message is still displayed.")
         inboxDetailsPage.assertMessageDisplayed(conversationBody)
 
-        Log.d(STEP_TAG, "Navigate back to inbox.")
+        Log.d(STEP_TAG, "Navigate back to Inbox conversation list page.")
         Espresso.pressBack()
 
         Log.d(ASSERTION_TAG, "Assert that the conversation is still displayed in inbox.")
         inboxPage.assertConversationDisplayed(conversationSubject)
-
-        Log.d(STEP_TAG, "Navigate back to Dashboard Page.")
-        dashboardPage.goToDashboard()
-        dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Log out with '${student1.name}' student.")
         leftSideNavigationDrawerPage.logout()
@@ -1023,20 +1001,15 @@ class InboxE2ETest: StudentComposeTest() {
         Log.d(STEP_TAG, "Open the forwarded conversation.")
         inboxPage.openConversation(conversationSubject)
 
-        Log.d(ASSERTION_TAG, "Assert that the conversation subject is displayed.")
+        Log.d(ASSERTION_TAG, "Assert that the '${conversationSubject}' and '${conversationBody}' are displayed.")
         inboxDetailsPage.assertConversationSubject(conversationSubject)
+        inboxDetailsPage.assertMessageDisplayed(conversationBody)
 
         Log.d(ASSERTION_TAG, "Assert that the forwarded message from ${student1.name} is displayed.")
         inboxDetailsPage.assertMessageDisplayed(forwardMessage)
 
         Log.d(ASSERTION_TAG, "Assert that the original message is also displayed.")
         inboxDetailsPage.assertMessageDisplayed(conversationBody)
-
-        Log.d(STEP_TAG, "Navigate back to inbox.")
-        Espresso.pressBack()
-
-        Log.d(ASSERTION_TAG, "Assert that the conversation is displayed in ${student2.name}'s inbox.")
-        inboxPage.assertConversationDisplayed(conversationSubject)
     }
 
 }

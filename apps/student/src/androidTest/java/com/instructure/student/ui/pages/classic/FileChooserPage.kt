@@ -14,6 +14,7 @@
  *     limitations under the License.
  *
  */
+
 package com.instructure.student.ui.pages.classic
 
 import androidx.test.espresso.Espresso.onView
@@ -35,6 +36,7 @@ import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withParent
 import com.instructure.espresso.page.withText
 import com.instructure.espresso.scrollTo
+import com.instructure.espresso.triggerWorkManagerJobs
 import com.instructure.student.R
 
 class FileChooserPage : BasePage() {
@@ -66,7 +68,8 @@ class FileChooserPage : BasePage() {
     }
 
     fun clickOkay() {
-        onView(withText("OKAY")).click()
+        onView(withText(R.string.okay)).click()
+        triggerWorkManagerJobs("FileUploadWorker")
     }
 
     fun clickUpload() {

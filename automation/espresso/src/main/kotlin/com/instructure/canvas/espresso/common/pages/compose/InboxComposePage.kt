@@ -13,6 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package com.instructure.canvas.espresso.common.pages.compose
 
 import androidx.compose.ui.test.assert
@@ -190,12 +191,11 @@ class InboxComposePage(private val composeTestRule: ComposeTestRule) {
     }
 
     fun clickAttachmentButton() {
-        composeTestRule.waitForIdle()
         composeTestRule.onNodeWithContentDescription("Add attachment").performClick()
+        composeTestRule.waitForIdle()
     }
 
     fun assertAttachmentDisplayed(fileName: String) {
-        composeTestRule.waitForIdle()
         composeTestRule.onNode(hasText(fileName), useUnmergedTree = true).assertIsDisplayed()
     }
 }
