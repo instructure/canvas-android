@@ -20,10 +20,10 @@ package com.instructure.parentapp.di.feature
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
-import com.instructure.pandautils.features.grades.GradesBehaviour
 import com.instructure.pandautils.features.grades.GradesRepository
-import com.instructure.parentapp.features.grades.ParentGradesBehaviour
+import com.instructure.pandautils.features.grades.GradesViewModelBehavior
 import com.instructure.parentapp.features.grades.ParentGradesRepository
+import com.instructure.parentapp.features.grades.ParentGradesViewModelBehavior
 import com.instructure.parentapp.util.ParentPrefs
 import dagger.Module
 import dagger.Provides
@@ -45,9 +45,7 @@ class GradesModule {
     }
 
     @Provides
-    fun provideGradesBehaviour(
-        parentPrefs: ParentPrefs
-    ): GradesBehaviour {
-        return ParentGradesBehaviour(parentPrefs)
+    fun provideGradesViewModelBehavior(): GradesViewModelBehavior {
+        return ParentGradesViewModelBehavior()
     }
 }

@@ -28,6 +28,8 @@ import com.instructure.pandautils.adapters.BasicItemBinder
 import com.instructure.pandautils.adapters.BasicItemCallback
 import com.instructure.pandautils.adapters.BasicRecyclerAdapter
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAsBackButton
@@ -46,6 +48,11 @@ class UploadStatusSubmissionView(inflater: LayoutInflater, parent: ViewGroup) :
     ) {
 
     private var dialog: AlertDialog? = null
+
+    init {
+        binding.toolbar.applyTopSystemBarInsets()
+        binding.uploadStatusRecycler.applyBottomSystemBarInsets()
+    }
 
     private val adapter = UploadRecyclerAdapter(object : UploadListCallback {
         override fun deleteClicked(position: Int) {

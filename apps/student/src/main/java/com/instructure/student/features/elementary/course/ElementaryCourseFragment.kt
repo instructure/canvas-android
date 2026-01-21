@@ -44,7 +44,7 @@ import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.student.databinding.FragmentElementaryCourseBinding
 import com.instructure.student.features.coursebrowser.CourseBrowserFragment
-import com.instructure.student.features.grades.GradesListFragment
+import com.instructure.student.features.grades.GradesFragment
 import com.instructure.student.features.modules.list.ModuleListFragment
 import com.instructure.student.router.RouteMatcher
 import dagger.hilt.android.AndroidEntryPoint
@@ -129,7 +129,7 @@ class ElementaryCourseFragment : BaseCanvasFragment() {
     private fun handleAction(action: ElementaryCourseAction) {
         when (action) {
             is ElementaryCourseAction.RedirectToCourseBrowserPage -> redirect(CourseBrowserFragment.makeRoute(canvasContext))
-            is ElementaryCourseAction.RedirectToGrades -> redirect(GradesListFragment.makeRoute(canvasContext))
+            is ElementaryCourseAction.RedirectToGrades -> redirect(GradesFragment.makeRoute(canvasContext))
             is ElementaryCourseAction.RedirectToModules -> redirect(ModuleListFragment.makeRoute(canvasContext))
         }
     }

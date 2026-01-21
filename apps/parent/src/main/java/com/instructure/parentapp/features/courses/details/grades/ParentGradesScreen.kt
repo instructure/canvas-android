@@ -26,6 +26,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.instructure.pandautils.features.grades.GradesScreen
 import com.instructure.pandautils.features.grades.GradesViewModel
 import com.instructure.pandautils.features.grades.GradesViewModelAction
+import com.instructure.pandautils.utils.studentColor
+import com.instructure.parentapp.util.ParentPrefs
 
 
 @Composable
@@ -33,7 +35,7 @@ internal fun ParentGradesScreen(
     navigateToAssignmentDetails: (Long, Long) -> Unit
 ) {
     val gradesViewModel: GradesViewModel = viewModel()
-    val gradeUiState by remember { gradesViewModel.uiState }.collectAsState()
+    val gradesUiState by remember { gradesViewModel.uiState }.collectAsState()
     val events = gradesViewModel.events
     LaunchedEffect(events) {
         events.collect { action ->
@@ -45,5 +47,5 @@ internal fun ParentGradesScreen(
         }
     }
 
-    GradesScreen(gradeUiState, gradesViewModel::handleAction)
+    GradesScreen(gradesUiState, gradesViewModel::handleAction, ParentPrefs.currentStudent.studentColor)
 }

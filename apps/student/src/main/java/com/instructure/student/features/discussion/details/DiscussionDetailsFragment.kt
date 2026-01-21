@@ -608,7 +608,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
     private fun populateDiscussionData(forceRefresh: Boolean = false, topLevelReplyPosted: Boolean = false) = with(binding) {
         lifecycleScope.tryLaunch {
             discussionProgressBar.setVisible()
-            discussionRepliesWebViewWrapper.loadHtml("", "")
+            discussionRepliesWebViewWrapper.loadHtml("", "", baseUrl = discussionTopicHeader.htmlUrl)
             discussionRepliesWebViewWrapper.setInvisible()
             discussionTopicRepliesTitle.setInvisible()
             postBeforeViewingRepliesTextView.setGone()

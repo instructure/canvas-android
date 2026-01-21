@@ -21,6 +21,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.graphics.ColorUtils
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.FileFolder
@@ -35,6 +38,7 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.isUser
 import com.instructure.pandautils.utils.makeBundle
@@ -88,6 +92,19 @@ class FileSearchFragment : ParentFragment(), FileSearchView {
             adapter = searchAdapter
         }
         setupViews()
+        setupWindowInsets()
+    }
+
+    private fun setupWindowInsets() = with(binding) {
+        searchHeader.applyTopSystemBarInsets()
+        ViewCompat.setOnApplyWindowInsetsListener(fileSearchRecyclerView) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.updatePadding(bottom = systemBars.bottom)
+            insets
+        }
+        if (fileSearchRecyclerView.isAttachedToWindow) {
+            ViewCompat.requestApplyInsets(fileSearchRecyclerView)
+        }
     }
 
     override fun onRefreshStarted() {

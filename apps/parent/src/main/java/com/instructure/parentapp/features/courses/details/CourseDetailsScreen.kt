@@ -176,7 +176,8 @@ private fun CourseDetailsScreenContent(
                         applyOnWebView = applyOnWebView,
                         onLtiButtonPressed = {
                             actionHandler(CourseDetailsAction.OnLtiClicked(it))
-                        }
+                        },
+                        baseUrl = uiState.baseUrl
                     )
                 }
             }
