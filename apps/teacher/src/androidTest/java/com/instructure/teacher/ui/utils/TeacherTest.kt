@@ -39,7 +39,6 @@ import com.instructure.espresso.Searchable
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.LoginActivity
-import com.instructure.teacher.espresso.TestAppManager
 import com.instructure.teacher.ui.pages.classic.AnnouncementsListPage
 import com.instructure.teacher.ui.pages.classic.AssigneeListPage
 import com.instructure.teacher.ui.pages.classic.AssignmentDetailsPage
@@ -58,6 +57,7 @@ import com.instructure.teacher.ui.pages.classic.EditPageDetailsPage
 import com.instructure.teacher.ui.pages.classic.EditProfileSettingsPage
 import com.instructure.teacher.ui.pages.classic.EditQuizDetailsPage
 import com.instructure.teacher.ui.pages.classic.EditSyllabusPage
+import com.instructure.teacher.ui.pages.classic.FileChooserPage
 import com.instructure.teacher.ui.pages.classic.FileListPage
 import com.instructure.teacher.ui.pages.classic.HelpPage
 import com.instructure.teacher.ui.pages.classic.LeftSideNavigationDrawerPage
@@ -82,7 +82,6 @@ import com.instructure.teacher.ui.pages.classic.UpdateFilePermissionsPage
 import com.instructure.teacher.ui.pages.classic.WebViewLoginPage
 import instructure.rceditor.RCETextEditor
 import org.hamcrest.Matcher
-import org.junit.Before
 
 abstract class TeacherTest : CanvasTest() {
 
@@ -145,6 +144,7 @@ abstract class TeacherTest : CanvasTest() {
     val webViewLoginPage = WebViewLoginPage()
     val fileListPage = FileListPage(Searchable(R.id.search, R.id.queryInput, R.id.clearButton, R.id.backButton))
     val updateFilePermissionsPage = UpdateFilePermissionsPage()
+    val fileChooserPage = FileChooserPage()
 }
 
 /*
