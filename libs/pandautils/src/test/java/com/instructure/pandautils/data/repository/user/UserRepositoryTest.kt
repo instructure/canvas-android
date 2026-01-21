@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.data.repository.user
 
+import com.instructure.canvasapi2.apis.CourseNicknameAPI
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.models.Account
 import com.instructure.canvasapi2.utils.DataResult
@@ -32,11 +33,12 @@ import org.junit.Test
 class UserRepositoryTest {
 
     private val userApi: UserAPI.UsersInterface = mockk(relaxed = true)
+    private val courseNicknameApi: CourseNicknameAPI.NicknameInterface = mockk(relaxed = true)
     private lateinit var repository: UserRepository
 
     @Before
     fun setup() {
-        repository = UserRepositoryImpl(userApi)
+        repository = UserRepositoryImpl(userApi, courseNicknameApi)
     }
 
     @After

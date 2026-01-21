@@ -18,6 +18,7 @@ package com.instructure.pandautils.domain.usecase.announcements
 
 import com.instructure.canvasapi2.apis.AnnouncementAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.pandautils.domain.usecase.BaseUseCase
 import javax.inject.Inject
@@ -35,7 +36,7 @@ class LoadCourseAnnouncementsUseCase @Inject constructor(
         )
 
         val result = announcementAPI.getFirstPageAnnouncementsList(
-            "courses",
+            CanvasContext.Type.COURSE.apiString,
             params.courseId,
             restParams
         )
@@ -44,7 +45,7 @@ class LoadCourseAnnouncementsUseCase @Inject constructor(
 
         // Filter for unread announcements only
         return announcements.filter { announcement ->
-            announcement.unreadCount > 0 || announcement.readState == "unread"
+            announcement.unreadCount > 0 || announcement.readState == DiscussionTopicHeader.ReadState.UNREAD.name
         }
     }
 }

@@ -18,9 +18,19 @@ package com.instructure.teacher.features.dashboard.widget.courses
 
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.models.Recipient
+import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
 import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidgetRouter
+import com.instructure.pandautils.features.dashboard.widget.courses.customize.CustomizeCourseFragment
+import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
+import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsDefaultValues
+import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsMode
+import com.instructure.teacher.fragments.AnnouncementListFragment
 import com.instructure.teacher.fragments.CourseBrowserFragment
 import com.instructure.teacher.router.RouteMatcher
 
@@ -44,5 +54,17 @@ class TeacherCoursesWidgetRouter : CoursesWidgetRouter {
 
     override fun routeToAllCourses(activity: FragmentActivity) {
         RouteMatcher.route(activity, EditDashboardFragment.makeRoute())
+    }
+
+    override fun routeToAnnouncement(activity: FragmentActivity, course: Course, announcement: DiscussionTopicHeader) {
+        // TODO: Navigate to announcement details
+    }
+
+    override fun routeToAnnouncementList(activity: FragmentActivity, course: Course) {
+        // TODO: Navigate to announcement list
+    }
+
+    override fun routeToGroupMessage(activity: FragmentActivity, group: Group) {
+        // TODO: Navigate to group message compose
     }
 }

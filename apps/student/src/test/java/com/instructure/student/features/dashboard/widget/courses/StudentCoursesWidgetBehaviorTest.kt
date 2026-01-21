@@ -18,6 +18,7 @@ package com.instructure.student.features.dashboard.widget.courses
 
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
 import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidgetRouter
 import io.mockk.every
@@ -138,5 +139,52 @@ class StudentCoursesWidgetBehaviorTest {
         behavior.onAllCoursesClicked(activity)
 
         verify { router.routeToAllCourses(activity) }
+    }
+
+    @Test
+    fun `onAnnouncementClick with single announcement routes to announcement details`() {
+        val activity: FragmentActivity = mockk()
+        val course = Course(id = 1, name = "Test Course")
+        val announcement = DiscussionTopicHeader(id = 1, title = "Test Announcement")
+        val announcements = listOf(announcement)
+
+        behavior.onAnnouncementClick(activity, course, announcements)
+
+        verify { router.routeToAnnouncement(activity, course, announcement) }
+    }
+
+    @Test
+    fun `onAnnouncementClick with multiple announcements routes to announcement list`() {
+        val activity: FragmentActivity = mockk()
+        val course = Course(id = 1, name = "Test Course")
+        val announcements = listOf(
+            DiscussionTopicHeader(id = 1, title = "Announcement 1"),
+            DiscussionTopicHeader(id = 2, title = "Announcement 2")
+        )
+
+        behavior.onAnnouncementClick(activity, course, announcements)
+
+        verify { router.routeToAnnouncementList(activity, course) }
+    }
+
+    @Test
+    fun `onAnnouncementClick with empty list routes to announcement list`() {
+        val activity: FragmentActivity = mockk()
+        val course = Course(id = 1, name = "Test Course")
+        val announcements = emptyList<DiscussionTopicHeader>()
+
+        behavior.onAnnouncementClick(activity, course, announcements)
+
+        verify { router.routeToAnnouncementList(activity, course) }
+    }
+
+    @Test
+    fun `onGroupMessageClick delegates to router`() {
+        val activity: FragmentActivity = mockk()
+        val group = Group(id = 1, name = "Test Group")
+
+        behavior.onGroupMessageClick(activity, group)
+
+        verify { router.routeToGroupMessage(activity, group) }
     }
 }

@@ -26,7 +26,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
+import com.instructure.pandautils.domain.usecase.announcements.LoadCourseAnnouncementsParams
+import com.instructure.pandautils.domain.usecase.announcements.LoadCourseAnnouncementsUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCaseParams
 import com.instructure.pandautils.domain.usecase.courses.LoadFavoriteCoursesParams
@@ -40,6 +43,7 @@ import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.pandautils.utils.color
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -55,6 +59,7 @@ class CoursesWidgetViewModel @Inject constructor(
     private val loadFavoriteCoursesUseCase: LoadFavoriteCoursesUseCase,
     private val loadGroupsUseCase: LoadGroupsUseCase,
     private val loadCourseUseCase: LoadCourseUseCase,
+    private val loadCourseAnnouncementsUseCase: LoadCourseAnnouncementsUseCase,
     private val sectionExpandedStateDataStore: SectionExpandedStateDataStore,
     private val coursesWidgetBehavior: CoursesWidgetBehavior,
     private val courseSyncSettingsDao: CourseSyncSettingsDao,
@@ -75,14 +80,21 @@ class CoursesWidgetViewModel @Inject constructor(
             onToggleGroupsExpanded = ::toggleGroupsExpanded,
             onManageOfflineContent = ::onManageOfflineContent,
             onCustomizeCourse = ::onCustomizeCourse,
-            onAllCourses = ::onAllCourses
+            onAllCourses = ::onAllCourses,
+            onAnnouncementClick = ::onAnnouncementClick,
+            onGroupMessageClick = ::onGroupMessageClick
         )
     )
     val uiState: StateFlow<CoursesWidgetUiState> = _uiState.asStateFlow()
 
     private val somethingChangedReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent?) {
-            if (intent?.extras?.getBoolean(Const.COURSE_FAVORITES) == true) {
+            val courseId = intent?.getLongExtra(Const.COURSE_ID, -1L)
+            if (courseId != null && courseId != -1L) {
+                // Reload specific course
+                reloadCourse(courseId)
+            } else if (intent?.extras?.getBoolean(Const.COURSE_FAVORITES) == true) {
+                // Full refresh for favorites changes
                 refresh()
             }
         }
@@ -121,6 +133,17 @@ class CoursesWidgetViewModel @Inject constructor(
         coursesWidgetBehavior.onCustomizeCourse(activity, course)
     }
 
+    private fun onAnnouncementClick(activity: FragmentActivity, courseId: Long) {
+        val course = courses.find { it.id == courseId } ?: return
+        val courseCardUiState = _uiState.value.courses.find { it.id == courseId } ?: return
+        coursesWidgetBehavior.onAnnouncementClick(activity, course, courseCardUiState.announcements)
+    }
+
+    private fun onGroupMessageClick(activity: FragmentActivity, groupId: Long) {
+        val group = groups.find { it.id == groupId } ?: return
+        coursesWidgetBehavior.onGroupMessageClick(activity, group)
+    }
+
     fun refresh() {
         loadData(forceRefresh = true)
     }
@@ -147,7 +170,16 @@ class CoursesWidgetViewModel @Inject constructor(
                 courses = loadFavoriteCoursesUseCase(LoadFavoriteCoursesParams(forceRefresh))
                 groups = loadGroupsUseCase(LoadGroupsParams(forceRefresh))
 
-                val courseCards = mapCoursesToCardItems(courses)
+                val announcementsMap = courses.associate { course ->
+                    course.id to try {
+                        loadCourseAnnouncementsUseCase(LoadCourseAnnouncementsParams(course.id, forceRefresh))
+                    } catch (e: Exception) {
+                        crashlytics.recordException(e)
+                        emptyList()
+                    }
+                }
+
+                val courseCards = mapCoursesToCardItems(courses, announcementsMap)
                 val groupCards = mapGroupsToCardItems(groups)
 
                 _uiState.update {
@@ -169,7 +201,10 @@ class CoursesWidgetViewModel @Inject constructor(
         }
     }
 
-    private suspend fun mapCoursesToCardItems(courses: List<Course>): List<CourseCardItem> {
+    private suspend fun mapCoursesToCardItems(
+        courses: List<Course>,
+        announcementsMap: Map<Long, List<DiscussionTopicHeader>> = emptyMap()
+    ): List<CourseCardItem> {
         val syncedIds = getSyncedCourseIds()
         val isOnline = networkStateProvider.isOnline()
 
@@ -180,8 +215,9 @@ class CoursesWidgetViewModel @Inject constructor(
                 name = course.name,
                 courseCode = course.courseCode,
                 imageUrl = course.imageUrl,
+                color = course.color,
                 grade = mapGrade(course),
-                announcementCount = 0,
+                announcements = announcementsMap[course.id] ?: emptyList(),
                 isSynced = isSynced,
                 isClickable = isOnline || isSynced
             )
@@ -276,5 +312,29 @@ class CoursesWidgetViewModel @Inject constructor(
 
     private fun onAllCourses(activity: FragmentActivity) {
         coursesWidgetBehavior.onAllCoursesClicked(activity)
+    }
+
+    private fun reloadCourse(courseId: Long) {
+        viewModelScope.launch {
+            try {
+                val updatedCourse = loadCourseUseCase(LoadCourseUseCaseParams(courseId, forceNetwork = true))
+                val announcements = try {
+                    loadCourseAnnouncementsUseCase(LoadCourseAnnouncementsParams(courseId, forceNetwork = true))
+                } catch (e: Exception) {
+                    crashlytics.recordException(e)
+                    emptyList()
+                }
+
+                courses = courses.map { course ->
+                    if (course.id == courseId) updatedCourse else course
+                }
+
+                val announcementsMap = mapOf(courseId to announcements)
+                val courseCards = mapCoursesToCardItems(courses, announcementsMap)
+                _uiState.update { it.copy(courses = courseCards) }
+            } catch (e: Exception) {
+                crashlytics.recordException(e)
+            }
+        }
     }
 }

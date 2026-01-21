@@ -17,6 +17,7 @@ package com.instructure.parentapp.features.inbox.compose
 
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.FeaturesAPI
+import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.RecipientAPI
 import com.instructure.canvasapi2.builders.RestParams
@@ -31,12 +32,13 @@ import com.instructure.parentapp.util.ParentPrefs
 
 class ParentInboxComposeRepository(
     private val courseAPI: CourseAPI.CoursesInterface,
+    private val groupAPI: GroupAPI.GroupInterface,
     private val parentPrefs: ParentPrefs,
     private val featuresApi: FeaturesAPI.FeaturesInterface,
     recipientAPI: RecipientAPI.RecipientInterface,
     inboxAPI: InboxApi.InboxInterface,
     inboxSettingsManager: InboxSettingsManager
-): InboxComposeRepository(courseAPI, recipientAPI, inboxAPI, inboxSettingsManager) {
+): InboxComposeRepository(courseAPI, groupAPI, recipientAPI, inboxAPI, inboxSettingsManager) {
 
     override suspend fun getCourses(forceRefresh: Boolean): DataResult<List<Course>> {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceRefresh)

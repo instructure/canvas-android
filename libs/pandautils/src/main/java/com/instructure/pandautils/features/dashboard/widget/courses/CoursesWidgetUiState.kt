@@ -35,5 +35,7 @@ data class CoursesWidgetUiState(
     val onToggleGroupsExpanded: () -> Unit = {},
     val onManageOfflineContent: (FragmentActivity, Long) -> Unit = { _, _ -> },
     val onCustomizeCourse: (FragmentActivity, Long) -> Unit = { _, _ -> },
-    val onAllCourses: (FragmentActivity) -> Unit = {}
+    val onAllCourses: (FragmentActivity) -> Unit = {},
+    val onAnnouncementClick: (FragmentActivity, Long) -> Unit = { _, _ -> },
+    val onGroupMessageClick: (FragmentActivity, Long) -> Unit = { _, _ -> }
 )

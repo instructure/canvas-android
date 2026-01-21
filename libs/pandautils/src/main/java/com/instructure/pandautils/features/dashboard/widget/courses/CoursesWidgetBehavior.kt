@@ -18,6 +18,7 @@ package com.instructure.pandautils.features.dashboard.widget.courses
 
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
 import kotlinx.coroutines.flow.Flow
 
@@ -29,4 +30,6 @@ interface CoursesWidgetBehavior {
     fun onManageOfflineContent(activity: FragmentActivity, course: Course)
     fun onCustomizeCourse(activity: FragmentActivity, course: Course)
     fun onAllCoursesClicked(activity: FragmentActivity)
+    fun onAnnouncementClick(activity: FragmentActivity, course: Course, announcements: List<DiscussionTopicHeader>)
+    fun onGroupMessageClick(activity: FragmentActivity, group: Group)
 }

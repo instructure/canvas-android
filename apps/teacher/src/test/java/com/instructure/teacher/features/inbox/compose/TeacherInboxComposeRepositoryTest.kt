@@ -3,6 +3,7 @@ package com.instructure.teacher.features.inbox.compose
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.apis.FeaturesAPI
+import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.RecipientAPI
 import com.instructure.canvasapi2.managers.InboxSettingsManager
@@ -19,25 +20,27 @@ import com.instructure.canvasapi2.utils.LinkHeaders
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.unmockkAll
-import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import org.junit.After
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class TeacherInboxComposeRepositoryTest {
 
     private val courseAPI: CourseAPI.CoursesInterface = mockk(relaxed = true)
+    private val groupAPI: GroupAPI.GroupInterface = mockk(relaxed = true)
+    private val featuresApi: FeaturesAPI.FeaturesInterface = mockk(relaxed = true)
     private val recipientAPI: RecipientAPI.RecipientInterface = mockk(relaxed = true)
     private val inboxAPI: InboxApi.InboxInterface = mockk(relaxed = true)
     private val inboxSettingsManager: InboxSettingsManager = mockk(relaxed = true)
-    private val featuresApi: FeaturesAPI.FeaturesInterface = mockk(relaxed = true)
 
     private val inboxComposeRepository = TeacherInboxComposeRepository(
         courseAPI,
+        groupAPI,
         featuresApi,
         recipientAPI,
         inboxAPI,

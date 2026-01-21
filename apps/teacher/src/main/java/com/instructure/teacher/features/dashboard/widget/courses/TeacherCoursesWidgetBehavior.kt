@@ -18,6 +18,7 @@ package com.instructure.teacher.features.dashboard.widget.courses
 
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
 import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidgetBehavior
 import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidgetRouter
@@ -55,5 +56,13 @@ class TeacherCoursesWidgetBehavior @Inject constructor(
 
     override fun onAllCoursesClicked(activity: FragmentActivity) {
         router.routeToAllCourses(activity)
+    }
+
+    override fun onAnnouncementClick(activity: FragmentActivity, course: Course, announcements: List<DiscussionTopicHeader>) {
+        // TODO: Implement announcement click handling
+    }
+
+    override fun onGroupMessageClick(activity: FragmentActivity, group: Group) {
+        // TODO: Implement group message click handling
     }
 }

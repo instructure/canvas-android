@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.features.dashboard.customize.course
+package com.instructure.pandautils.features.dashboard.widget.courses.customize
 
 data class CustomizeCourseUiState(
     val courseId: Long = 0L,
@@ -24,5 +24,13 @@ data class CustomizeCourseUiState(
     val nickname: String = "",
     val selectedColor: Int = 0,
     val availableColors: List<Int> = emptyList(),
-    val isLoading: Boolean = false
+    val showColorOverlay: Boolean = true,
+    val isLoading: Boolean = false,
+    val errorMessage: String? = null,
+    val shouldNavigateBack: Boolean = false,
+    val onNicknameChanged: (String) -> Unit = {},
+    val onColorSelected: (Int) -> Unit = {},
+    val onDone: () -> Unit = {},
+    val onNavigationHandled: () -> Unit = {},
+    val onErrorHandled: () -> Unit = {}
 )

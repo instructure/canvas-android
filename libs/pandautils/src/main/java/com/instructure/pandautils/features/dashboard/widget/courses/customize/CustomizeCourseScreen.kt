@@ -14,41 +14,45 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.features.dashboard.customize.course
+package com.instructure.pandautils.features.dashboard.widget.courses.customize
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.SnackbarHost
+import androidx.compose.material.SnackbarHostState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -57,163 +61,159 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
+import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.ColorPicker
 import com.instructure.pandautils.utils.ColorKeeper
 
 @Composable
 fun CustomizeCourseScreen(
-    onNavigateBack: () -> Unit,
-    onShowError: () -> Unit
+    onNavigateBack: () -> Unit
 ) {
     val viewModel: CustomizeCourseViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
-    val events by viewModel.events.collectAsState()
 
-    LaunchedEffect(events) {
-        when (events) {
-            CustomizeCourseEvent.NavigateBack -> onNavigateBack()
-            CustomizeCourseEvent.ShowError -> onShowError()
-            null -> {}
+    LaunchedEffect(uiState.shouldNavigateBack) {
+        if (uiState.shouldNavigateBack) {
+            uiState.onNavigationHandled()
+            onNavigateBack()
         }
     }
 
     CustomizeCourseScreenContent(
         uiState = uiState,
-        onNicknameChanged = viewModel::onNicknameChanged,
-        onColorSelected = viewModel::onColorSelected,
-        onDone = viewModel::onDone,
-        onBack = onNavigateBack
+        onNavigateBack = onNavigateBack
     )
 }
 
 @Composable
 fun CustomizeCourseScreenContent(
     uiState: CustomizeCourseUiState,
-    onNicknameChanged: (String) -> Unit,
-    onColorSelected: (Int) -> Unit,
-    onDone: () -> Unit,
-    onBack: () -> Unit
+    onNavigateBack: () -> Unit
 ) {
-    Scaffold(
-        modifier = Modifier.fillMaxSize()
-    ) { paddingValues ->
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(uiState.errorMessage) {
+        uiState.errorMessage?.let { message ->
+            snackbarHostState.showSnackbar(message)
+            uiState.onErrorHandled()
+        }
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(colorResource(R.color.backgroundLight))
+    ) {
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
+            modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(0.dp)
         ) {
             item {
                 CourseHeader(
-                    courseName = uiState.courseName,
-                    courseCode = uiState.courseCode,
                     imageUrl = uiState.imageUrl,
-                    onBack = onBack,
-                    onDone = onDone,
-                    isLoading = uiState.isLoading
+                    color = uiState.selectedColor,
+                    showColorOverlay = uiState.showColorOverlay
                 )
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
             }
 
             item {
                 NicknameCard(
                     nickname = uiState.nickname,
-                    onNicknameChanged = onNicknameChanged,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                    onNicknameChanged = uiState.onNicknameChanged,
+                    modifier = Modifier.padding(horizontal = 16.dp)
                 )
             }
 
             item {
-                ColorCard(
-                    selectedColor = uiState.selectedColor,
-                    availableColors = uiState.availableColors,
-                    onColorSelected = onColorSelected,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                )
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
+            item {
+                Card(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .fillMaxWidth(),
+                    colors = CardDefaults.cardColors(
+                        containerColor = colorResource(R.color.backgroundLightest)
+                    ),
+                    shape = RoundedCornerShape(16.dp),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                ) {
+                    ColorPicker(
+                        label = stringResource(R.string.dashboardCourseColor),
+                        selectedColor = uiState.selectedColor,
+                        colors = uiState.availableColors.map { ColorKeeper.createThemedColor(it) },
+                        onColorSelected = uiState.onColorSelected,
+                        isCollapsible = false,
+                        expandedBackgroundColor = Color.Transparent,
+                        titleModifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+                    )
+                }
             }
         }
+
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier.align(Alignment.BottomCenter)
+        )
+
+        CanvasThemedAppBar(
+            title = uiState.courseName,
+            subtitle = uiState.courseCode,
+            navIconRes = R.drawable.ic_close_lined,
+            navIconContentDescription = stringResource(R.string.close),
+            navigationActionClick = onNavigateBack,
+            backgroundColor = if (uiState.showColorOverlay) Color.Transparent else Color.Black.copy(alpha = 0.5f),
+            contentColor = colorResource(R.color.textLightest),
+            actions = {
+                TextButton(
+                    onClick = uiState.onDone,
+                    enabled = !uiState.isLoading
+                ) {
+                    Text(
+                        text = stringResource(R.string.done),
+                        color = Color.White,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        lineHeight = 19.sp
+                    )
+                }
+            }
+        )
     }
 }
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 private fun CourseHeader(
-    courseName: String,
-    courseCode: String,
     imageUrl: String?,
-    onBack: () -> Unit,
-    onDone: () -> Unit,
-    isLoading: Boolean
+    color: Int,
+    showColorOverlay: Boolean
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(308.dp)
+            .height(300.dp)
     ) {
-        GlideImage(
-            model = imageUrl,
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
-
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.5f))
+                .background(Color(color))
         )
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 16.dp)
-                .align(Alignment.TopCenter),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            IconButton(onClick = onBack) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_close_lined),
-                    contentDescription = stringResource(R.string.close),
-                    tint = Color.White
-                )
-            }
-
-            TextButton(
-                onClick = onDone,
-                enabled = !isLoading
-            ) {
-                Text(
-                    text = stringResource(R.string.done),
-                    color = Color.White,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium
-                )
-            }
-        }
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomStart)
-                .padding(horizontal = 16.dp, vertical = 24.dp)
-        ) {
-            Text(
-                text = courseName,
-                color = Color.White,
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Bold,
-                lineHeight = 28.sp
+        if (imageUrl != null) {
+            GlideImage(
+                model = imageUrl,
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .alpha(if (showColorOverlay) 0.4f else 1f),
+                contentScale = ContentScale.Crop
             )
-
-            if (courseCode.isNotEmpty()) {
-                Text(
-                    text = courseCode,
-                    color = Color.White.copy(alpha = 0.9f),
-                    fontSize = 14.sp,
-                    lineHeight = 19.sp,
-                    modifier = Modifier.padding(top = 4.dp)
-                )
-            }
         }
     }
 }
@@ -224,6 +224,8 @@ private fun NicknameCard(
     onNicknameChanged: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var isFocused by remember { mutableStateOf(false) }
+
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
@@ -232,72 +234,53 @@ private fun NicknameCard(
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
-        Column(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(horizontal = 16.dp, vertical = 2.dp)
+                .padding(top = 12.dp, bottom = 14.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = stringResource(R.string.courseNickname),
+                text = stringResource(R.string.dashboardCourseNickname),
                 fontSize = 16.sp,
-                fontWeight = FontWeight.Medium,
+                fontWeight = FontWeight.SemiBold,
                 lineHeight = 21.sp,
-                color = colorResource(R.color.textDarkest),
-                modifier = Modifier.padding(bottom = 8.dp)
+                color = colorResource(R.color.textDarkest)
             )
 
-            OutlinedTextField(
+            BasicTextField(
                 value = nickname,
                 onValueChange = onNicknameChanged,
-                placeholder = {
-                    Text(
-                        text = stringResource(R.string.courseNicknameHint),
-                        color = colorResource(R.color.textDark)
-                    )
-                },
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(8.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedTextColor = colorResource(R.color.textDarkest),
-                    unfocusedTextColor = colorResource(R.color.textDarkest),
-                    focusedBorderColor = colorResource(R.color.borderMedium),
-                    unfocusedBorderColor = colorResource(R.color.borderMedium),
-                    focusedContainerColor = colorResource(R.color.backgroundLightest),
-                    unfocusedContainerColor = colorResource(R.color.backgroundLightest)
-                )
-            )
-        }
-    }
-}
-
-@Composable
-private fun ColorCard(
-    selectedColor: Int,
-    availableColors: List<Int>,
-    onColorSelected: (Int) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = colorResource(R.color.backgroundLightest)
-        ),
-        shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            val themedColors = availableColors.map { ColorKeeper.createThemedColor(it) }
-
-            ColorPicker(
-                label = stringResource(R.string.courseColor),
-                selectedColor = selectedColor,
-                colors = themedColors,
-                onColorSelected = onColorSelected,
-                titleModifier = Modifier.padding(bottom = 8.dp)
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 8.dp)
+                    .onFocusChanged { isFocused = it.isFocused },
+                textStyle = TextStyle(
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Normal,
+                    lineHeight = 21.sp,
+                    color = colorResource(R.color.textDarkest),
+                    textAlign = TextAlign.End
+                ),
+                decorationBox = { innerTextField ->
+                    Box(
+                        contentAlignment = Alignment.CenterEnd
+                    ) {
+                        if (nickname.isEmpty() && !isFocused) {
+                            Text(
+                                text = stringResource(R.string.dashboardCourseNickname),
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Normal,
+                                lineHeight = 21.sp,
+                                color = colorResource(R.color.textDark),
+                                textAlign = TextAlign.End
+                            )
+                        }
+                        innerTextField()
+                    }
+                }
             )
         }
     }
@@ -322,12 +305,14 @@ private fun CustomizeCourseScreenPreview() {
                     0xFFFC5E13.toInt(),
                     0xFF8F3E97.toInt(),
                     0xFF00AC18.toInt()
-                )
+                ),
+                onNicknameChanged = {},
+                onColorSelected = {},
+                onDone = {},
+                onNavigationHandled = {},
+                onErrorHandled = {}
             ),
-            onNicknameChanged = {},
-            onColorSelected = {},
-            onDone = {},
-            onBack = {}
+            onNavigateBack = {}
         )
     }
 }

@@ -395,20 +395,7 @@ private fun getSettingLabel(key: String): String {
 @Composable
 private fun getAvailableColors(): List<ThemedColor> {
     val context = LocalContext.current
-    val lightColors = listOf(
-        context.getColor(R.color.courseColor1light),
-        context.getColor(R.color.courseColor2light),
-        context.getColor(R.color.courseColor3light),
-        context.getColor(R.color.courseColor4light),
-        context.getColor(R.color.courseColor5light),
-        context.getColor(R.color.courseColor6light),
-        context.getColor(R.color.courseColor7light),
-        context.getColor(R.color.courseColor8light),
-        context.getColor(R.color.courseColor9light),
-        context.getColor(R.color.courseColor10light),
-        context.getColor(R.color.courseColor11light),
-        context.getColor(R.color.courseColor12light),
-    )
+    val lightColors = ColorKeeper.courseColors.map { context.getColor(it) }
     val themedColors = lightColors.map { ColorKeeper.createThemedColor(it) }.toMutableList().apply {
         add(
             ThemedColor(

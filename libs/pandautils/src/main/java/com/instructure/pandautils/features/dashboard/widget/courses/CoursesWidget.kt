@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.dashboard.widget.courses.model.CourseCardItem
@@ -110,7 +111,8 @@ fun CoursesWidgetContent(
                             showColorOverlay = uiState.showColorOverlay,
                             onCourseClick = uiState.onCourseClick,
                             onManageOfflineContent = uiState.onManageOfflineContent,
-                            onCustomizeCourse = uiState.onCustomizeCourse
+                            onCustomizeCourse = uiState.onCustomizeCourse,
+                            onAnnouncementClick = uiState.onAnnouncementClick
                         )
                     }
                 }
@@ -134,7 +136,8 @@ fun CoursesWidgetContent(
                         val group = uiState.groups[index]
                         GroupCard(
                             groupCard = group,
-                            onGroupClick = uiState.onGroupClick
+                            onGroupClick = uiState.onGroupClick,
+                            onMessageClick = uiState.onGroupMessageClick
                         )
                     }
                 }
@@ -249,9 +252,12 @@ private fun CoursesWidgetContentPreview() {
                     courseCode = "CS 101",
                     imageUrl = null,
                     grade = GradeDisplay.Percentage("85%"),
-                    announcementCount = 2,
+                    announcements = listOf(
+                        DiscussionTopicHeader(id = 1L, title = "Announcement")
+                    ),
                     isSynced = true,
-                    isClickable = true
+                    isClickable = true,
+                    color = android.graphics.Color.RED
                 ),
                 CourseCardItem(
                     id = 2,
@@ -259,9 +265,10 @@ private fun CoursesWidgetContentPreview() {
                     courseCode = "MATH 201",
                     imageUrl = null,
                     grade = GradeDisplay.Letter("A-"),
-                    announcementCount = 0,
+                    announcements = emptyList(),
                     isSynced = false,
-                    isClickable = true
+                    isClickable = true,
+                    color = android.graphics.Color.RED
                 )
             ),
             groups = listOf(
@@ -300,9 +307,12 @@ private fun CoursesWidgetTabletContentPreview() {
                     courseCode = "CS 101",
                     imageUrl = null,
                     grade = GradeDisplay.Percentage("85%"),
-                    announcementCount = 2,
+                    announcements = listOf(
+                        DiscussionTopicHeader(id = 1L, title = "Announcement")
+                    ),
                     isSynced = true,
-                    isClickable = true
+                    isClickable = true,
+                    color = android.graphics.Color.RED
                 ),
                 CourseCardItem(
                     id = 2,
@@ -310,9 +320,10 @@ private fun CoursesWidgetTabletContentPreview() {
                     courseCode = "MATH 201",
                     imageUrl = null,
                     grade = GradeDisplay.Letter("A-"),
-                    announcementCount = 0,
+                    announcements = emptyList(),
                     isSynced = false,
-                    isClickable = true
+                    isClickable = true,
+                    color = android.graphics.Color.RED
                 )
             ),
             groups = listOf(

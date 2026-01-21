@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.features.dashboard.customize.course
+package com.instructure.pandautils.features.dashboard.widget.courses.customize
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,12 +24,9 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.router.Route
-import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.utils.withArgs
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -41,20 +38,12 @@ class CustomizeCourseFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        ViewStyler.setStatusBarDark(requireActivity(), ThemePrefs.primaryColor)
+        ViewStyler.setStatusBarLight(requireActivity())
         return ComposeView(requireContext()).apply {
             setContent {
                 CanvasTheme {
                     CustomizeCourseScreen(
-                        onNavigateBack = {
-                            requireActivity().supportFragmentManager.popBackStack()
-                            androidx.localbroadcastmanager.content.LocalBroadcastManager
-                                .getInstance(requireContext())
-                                .sendBroadcast(android.content.Intent(Const.COURSE_THING_CHANGED))
-                        },
-                        onShowError = {
-                            requireContext().toast(R.string.errorOccurred)
-                        }
+                        onNavigateBack = requireActivity()::onBackPressed
                     )
                 }
             }

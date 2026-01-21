@@ -36,7 +36,7 @@ class StudentInboxComposeRepository(
     recipientAPI: RecipientAPI.RecipientInterface,
     inboxAPI: InboxApi.InboxInterface,
     inboxSettingsManager: InboxSettingsManager
-): InboxComposeRepository(courseAPI, recipientAPI, inboxAPI, inboxSettingsManager) {
+): InboxComposeRepository(courseAPI, groupApi, recipientAPI, inboxAPI, inboxSettingsManager) {
 
     override suspend fun getCourses(forceRefresh: Boolean): DataResult<List<Course>> {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceRefresh)

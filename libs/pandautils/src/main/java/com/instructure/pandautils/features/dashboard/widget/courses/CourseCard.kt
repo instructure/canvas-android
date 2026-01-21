@@ -32,6 +32,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -64,6 +65,7 @@ import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.Shimmer
@@ -80,9 +82,9 @@ fun CourseCard(
     showColorOverlay: Boolean,
     onCourseClick: (FragmentActivity, Long) -> Unit,
     modifier: Modifier = Modifier,
-    onMenuClick: ((Long) -> Unit)? = null,
     onManageOfflineContent: ((FragmentActivity, Long) -> Unit)? = null,
     onCustomizeCourse: ((FragmentActivity, Long) -> Unit)? = null,
+    onAnnouncementClick: ((FragmentActivity, Long) -> Unit)? = null,
 ) {
     var showMenu by remember { mutableStateOf(false) }
     val hasMenu = onManageOfflineContent != null && onCustomizeCourse != null
@@ -118,7 +120,7 @@ fun CourseCard(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(
-                            color = Color(CanvasContext.emptyCourseContext(id = courseCard.id).color),
+                            color = Color(courseCard.color),
                             shape = RoundedCornerShape(14.dp)
                         )
                 )
@@ -220,9 +222,13 @@ fun CourseCard(
                 lineHeight = 21.sp
             )
 
-            if (courseCard.announcementCount > 0) {
+            if (courseCard.announcements.isNotEmpty()) {
                 Box(
-                    modifier = Modifier.padding(start = 8.dp, end = 16.dp)
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .size(48.dp)
+                        .clickable { activity?.let { onAnnouncementClick?.invoke(it, courseCard.id) } },
+                    contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_announcement),
@@ -233,7 +239,7 @@ fun CourseCard(
                     Box(
                         modifier = Modifier
                             .align(Alignment.TopEnd)
-                            .offset(x = 8.dp, y = (-8).dp)
+                            .offset(x = (-8).dp, y = 6.dp)
                             .background(
                                 color = Color(CanvasContext.emptyCourseContext(id = courseCard.id).color),
                                 shape = RoundedCornerShape(12.dp)
@@ -241,7 +247,7 @@ fun CourseCard(
                             .padding(horizontal = 5.dp, vertical = 2.dp)
                     ) {
                         Text(
-                            text = courseCard.announcementCount.toString(),
+                            text = courseCard.announcements.size.toString(),
                             fontSize = 10.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = Color.White,
@@ -369,16 +375,19 @@ private fun CourseCardPreview() {
             courseCode = "CS 101",
             imageUrl = null,
             grade = GradeDisplay.Percentage("85%"),
-            announcementCount = 4,
+            announcements = listOf(
+                DiscussionTopicHeader(id = 1L, title = "Announcement")
+            ),
             isSynced = true,
-            isClickable = true
+            isClickable = true,
+            color = android.graphics.Color.RED
         ),
         showGrade = true,
         showColorOverlay = true,
         onCourseClick = {_, _ ->},
-        onMenuClick = {},
         onCustomizeCourse = {_, _ ->},
-        onManageOfflineContent = {_, _ ->}
+        onManageOfflineContent = {_, _ ->},
+        onAnnouncementClick = {_, _ ->}
     )
 }
 

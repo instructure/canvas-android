@@ -18,6 +18,7 @@ package com.instructure.pandautils.di
 
 import com.instructure.canvasapi2.apis.AccountNotificationAPI
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.CourseNicknameAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.UserAPI
@@ -68,9 +69,10 @@ class RepositoryModule {
     @Provides
     @Singleton
     fun provideUserRepository(
-        userApi: UserAPI.UsersInterface
+        userApi: UserAPI.UsersInterface,
+        courseNicknameApi: CourseNicknameAPI.NicknameInterface
     ): UserRepository {
-        return UserRepositoryImpl(userApi)
+        return UserRepositoryImpl(userApi, courseNicknameApi)
     }
 
     @Provides

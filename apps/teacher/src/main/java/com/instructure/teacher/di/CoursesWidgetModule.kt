@@ -18,8 +18,10 @@ package com.instructure.teacher.di
 
 import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidgetBehavior
 import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidgetRouter
+import com.instructure.pandautils.features.dashboard.widget.courses.customize.CustomizeCourseBehavior
 import com.instructure.teacher.features.dashboard.widget.courses.TeacherCoursesWidgetBehavior
 import com.instructure.teacher.features.dashboard.widget.courses.TeacherCoursesWidgetRouter
+import com.instructure.teacher.features.dashboard.widget.courses.TeacherCustomizeCourseBehavior
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -39,5 +41,12 @@ class CoursesWidgetModule {
         teacherCoursesWidgetBehavior: TeacherCoursesWidgetBehavior
     ): CoursesWidgetBehavior {
         return teacherCoursesWidgetBehavior
+    }
+
+    @Provides
+    fun provideCustomizeCourseBehavior(
+        teacherCustomizeCourseBehavior: TeacherCustomizeCourseBehavior
+    ): CustomizeCourseBehavior {
+        return teacherCustomizeCourseBehavior
     }
 }

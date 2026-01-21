@@ -14,13 +14,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.features.dashboard.customize.course
+package com.instructure.pandautils.features.dashboard.widget.courses.customize
 
+import android.content.Intent
 import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.instructure.canvasapi2.models.Course
+import com.instructure.pandautils.R
 import com.instructure.pandautils.domain.usecase.course.SetCourseColorParams
 import com.instructure.pandautils.domain.usecase.course.SetCourseColorUseCase
 import com.instructure.pandautils.domain.usecase.course.SetCourseNicknameParams
@@ -41,70 +44,114 @@ class CustomizeCourseViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val setCourseNicknameUseCase: SetCourseNicknameUseCase,
     private val setCourseColorUseCase: SetCourseColorUseCase,
-    private val resources: Resources
+    private val resources: Resources,
+    private val colorKeeper: ColorKeeper,
+    private val localBroadcastManager: LocalBroadcastManager,
+    private val customizeCourseBehavior: CustomizeCourseBehavior
 ) : ViewModel() {
 
     private val course: Course = savedStateHandle.get<Course>(Const.COURSE) ?: throw IllegalArgumentException("Course can not be null")
+    private val originalNickname = course.originalName?.let { course.name }.orEmpty()
 
-    private val _uiState = MutableStateFlow(createInitialState())
+    private val _uiState = MutableStateFlow(
+        createInitialState(
+            onNicknameChanged = this::onNicknameChanged,
+            onColorSelected = this::onColorSelected,
+            onDone = this::onDone,
+            onNavigationHandled = this::onNavigationHandled,
+            onErrorHandled = this::onErrorHandled
+        )
+    )
     val uiState: StateFlow<CustomizeCourseUiState> = _uiState.asStateFlow()
 
-    private fun createInitialState(): CustomizeCourseUiState {
+    private fun createInitialState(
+        onNicknameChanged: (String) -> Unit,
+        onColorSelected: (Int) -> Unit,
+        onDone: () -> Unit,
+        onNavigationHandled: () -> Unit,
+        onErrorHandled: () -> Unit
+    ): CustomizeCourseUiState {
         val availableColors = getAvailableColors()
         val currentColor = course.color
+        val showColorOverlay = getShowColorOverlay()
 
         return CustomizeCourseUiState(
             courseId = course.id,
             courseName = course.name,
             courseCode = course.courseCode.orEmpty(),
             imageUrl = course.imageUrl,
-            nickname = course.originalName?.let { course.name } ?: "",
+            nickname = course.originalName?.let { course.name }.orEmpty(),
             selectedColor = currentColor,
-            availableColors = availableColors
+            availableColors = availableColors,
+            showColorOverlay = showColorOverlay,
+            onNicknameChanged = onNicknameChanged,
+            onColorSelected = onColorSelected,
+            onDone = onDone,
+            onNavigationHandled = onNavigationHandled,
+            onErrorHandled = onErrorHandled
         )
     }
 
-    private fun getAvailableColors(): List<Int> {
-        return ColorKeeper.courseColors.map { resources.getColor(it, null) }
+    private fun getShowColorOverlay(): Boolean {
+        return customizeCourseBehavior.shouldShowColorOverlay()
     }
 
-    fun onNicknameChanged(nickname: String) {
+    private fun getAvailableColors(): List<Int> {
+        return colorKeeper.courseColors.map { resources.getColor(it, null) }
+    }
+
+    private fun onNicknameChanged(nickname: String) {
         _uiState.update { it.copy(nickname = nickname) }
     }
 
-    fun onColorSelected(color: Int) {
+    private fun onColorSelected(color: Int) {
         _uiState.update { it.copy(selectedColor = color) }
     }
 
-    fun onDone() {
+    private fun onDone() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
 
             try {
-                val nicknameResult = setCourseNicknameUseCase(
-                    SetCourseNicknameParams(course.id, _uiState.value.nickname)
-                )
+                if (_uiState.value.nickname != originalNickname) {
+                    setCourseNicknameUseCase(
+                        SetCourseNicknameParams(course.id, _uiState.value.nickname)
+                    )
+                }
 
-                val colorResult = setCourseColorUseCase(
+                setCourseColorUseCase(
                     SetCourseColorParams(course.contextId, _uiState.value.selectedColor)
                 )
 
-                ColorKeeper.addToCache(course.contextId, _uiState.value.selectedColor)
+                colorKeeper.addToCache(course.contextId, _uiState.value.selectedColor)
 
-                _uiState.update { it.copy(isLoading = false) }
-                _events.emit(CustomizeCourseEvent.NavigateBack)
-            } catch (e: Exception) {
-                _uiState.update { it.copy(isLoading = false) }
-                _events.emit(CustomizeCourseEvent.ShowError)
+                val intent = Intent(Const.COURSE_THING_CHANGED).apply {
+                    putExtra(Const.COURSE_ID, course.id)
+                }
+                localBroadcastManager.sendBroadcast(intent)
+
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        shouldNavigateBack = true
+                    )
+                }
+            } catch (_: Exception) {
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        errorMessage = resources.getString(R.string.errorOccurred)
+                    )
+                }
             }
         }
     }
 
-    private val _events = MutableStateFlow<CustomizeCourseEvent?>(null)
-    val events: StateFlow<CustomizeCourseEvent?> = _events.asStateFlow()
-}
+    private fun onNavigationHandled() {
+        _uiState.update { it.copy(shouldNavigateBack = false) }
+    }
 
-sealed class CustomizeCourseEvent {
-    data object NavigateBack : CustomizeCourseEvent()
-    data object ShowError : CustomizeCourseEvent()
+    private fun onErrorHandled() {
+        _uiState.update { it.copy(errorMessage = null) }
+    }
 }

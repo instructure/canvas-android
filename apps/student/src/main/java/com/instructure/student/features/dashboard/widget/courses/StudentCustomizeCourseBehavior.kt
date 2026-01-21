@@ -20,8 +20,10 @@ import com.instructure.pandautils.features.dashboard.widget.courses.customize.Cu
 import com.instructure.student.util.StudentPrefs
 import javax.inject.Inject
 
-class StudentCustomizeCourseBehavior @Inject constructor() : CustomizeCourseBehavior {
+class StudentCustomizeCourseBehavior @Inject constructor(
+    private val studentPrefs: StudentPrefs
+) : CustomizeCourseBehavior {
     override fun shouldShowColorOverlay(): Boolean {
-        return !StudentPrefs.hideCourseColorOverlay
+        return !studentPrefs.hideCourseColorOverlay
     }
 }
