@@ -218,6 +218,16 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
     }
 
     /**
+     * Clicks the "Choose Files" option in the attachment type selection dialog.
+     */
+    fun clickChooseFilesOption() {
+        composeTestRule
+            .onNodeWithText(getStringFromResource(R.string.choose_files))
+            .performClick()
+        composeTestRule.waitForIdle()
+    }
+
+    /**
      * Types a comment in the main SpeedGrader comment input field.
      *
      * @param comment The comment text to type.
