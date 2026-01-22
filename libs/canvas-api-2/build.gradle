@@ -22,8 +22,8 @@ apply plugin: 'kotlin-parcelize'
 apply plugin: 'com.google.devtools.ksp'
 apply plugin: 'dagger.hilt.android.plugin'
 
-def journeyDebugBaseUrl = "https://journey-server-edge.journey.nonprod.inseng.io"
-def journeyReleaseBaseUrl = "https://journey-server-prod.{region}.temp.prod.inseng.io"
+def journeyDebugBaseUrl = "https://journey-server-edge.us-east-1.core.inseng.io"
+def journeyReleaseBaseUrl = "https://journey-server-prod.{region}.core.inseng.io"
 
 static String isTesting() {
     if ( System.getenv("IS_TESTING") == "true" ) {
