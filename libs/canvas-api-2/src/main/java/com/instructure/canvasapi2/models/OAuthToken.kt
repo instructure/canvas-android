@@ -31,7 +31,9 @@ data class OAuthTokenResponse(
         val refreshToken: String? = null,
         @SerializedName("real_user")
         val realUser: TokenUser? = null,
-        val user: TokenUser? = null
+        val user: TokenUser? = null,
+        @SerializedName("canvas_region")
+        val canvasRegion: String? = null,
 )
 
 /**
