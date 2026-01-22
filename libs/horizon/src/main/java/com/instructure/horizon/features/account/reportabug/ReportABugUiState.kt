@@ -16,12 +16,14 @@
  */
 package com.instructure.horizon.features.account.reportabug
 
+import androidx.compose.ui.text.input.TextFieldValue
+
 data class ReportABugUiState(
     val selectedTopic: String? = null,
     val isTopicMenuOpen: Boolean = false,
     val topicError: String? = null,
-    val subject: String = "",
-    val description: String = "",
+    val subject: TextFieldValue = TextFieldValue(""),
+    val description: TextFieldValue = TextFieldValue(""),
     val subjectError: String? = null,
     val descriptionError: String? = null,
     val isLoading: Boolean = false,
@@ -29,8 +31,8 @@ data class ReportABugUiState(
     val shouldNavigateBack: Boolean = false,
     val onTopicSelected: (String) -> Unit = {},
     val onTopicMenuOpenChanged: (Boolean) -> Unit = {},
-    val onSubjectChanged: (String) -> Unit = {},
-    val onDescriptionChanged: (String) -> Unit = {},
+    val onSubjectChanged: (TextFieldValue) -> Unit = {},
+    val onDescriptionChanged: (TextFieldValue) -> Unit = {},
     val onSubmit: () -> Unit = {},
     val onSnackbarDismissed: () -> Unit = {}
 )

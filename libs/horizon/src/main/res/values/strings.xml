@@ -516,4 +516,6 @@
     <string name="igniteAIEnterAPromptLabel">Enter a prompt</string>
     <string name="a11y_igniteAiLoadingContentDescription">Loading response</string>
     <string name="a11y_aiAssistFlashcardClickActionLabel">Flip the card</string>
+    <string name="a11y_inputErrorMessage">Error: %1$s</string>
+    <string name="a11y_required">Required</string>
 </resources>

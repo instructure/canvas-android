@@ -17,6 +17,7 @@
 package com.instructure.horizon.features.account.reportabug
 
 import android.content.Context
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.apis.ErrorReportAPI
@@ -65,11 +66,11 @@ class ReportABugViewModel @Inject constructor(
         _uiState.update { it.copy(isTopicMenuOpen = isOpen) }
     }
 
-    private fun updateSubject(subject: String) {
+    private fun updateSubject(subject: TextFieldValue) {
         _uiState.update { it.copy(subject = subject, subjectError = null) }
     }
 
-    private fun updateDescription(description: String) {
+    private fun updateDescription(description: TextFieldValue) {
         _uiState.update { it.copy(description = description, descriptionError = null) }
     }
 
@@ -81,11 +82,11 @@ class ReportABugViewModel @Inject constructor(
             context.getString(R.string.reportAProblemTopicRequired)
         } else null
 
-        val subjectError = if (currentState.subject.isBlank()) {
+        val subjectError = if (currentState.subject.text.isBlank()) {
             context.getString(R.string.reportAProblemSubjectRequired)
         } else null
 
-        val descriptionError = if (currentState.description.isBlank()) {
+        val descriptionError = if (currentState.description.text.isBlank()) {
             context.getString(R.string.reportAProblemDescriptionRequired)
         } else null
 
@@ -107,8 +108,8 @@ class ReportABugViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 repository.submitErrorReport(
-                    subject = currentState.subject,
-                    description = currentState.description,
+                    subject = currentState.subject.text,
+                    description = currentState.description.text,
                     email = email,
                     severity = severity
                 )

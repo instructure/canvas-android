@@ -21,7 +21,10 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -59,10 +62,14 @@ fun InputLabel(
                 } else {
                     HorizonColors.Text.body()
                 }
+                val context = LocalContext.current
                 Text(
                     stringResource(R.string.inputRequiredMark),
                     style = HorizonTypography.labelLargeBold,
                     color = requiredColor,
+                    modifier = Modifier.semantics {
+                        contentDescription = context.getString(R.string.a11y_required)
+                    }
                 )
             }
 

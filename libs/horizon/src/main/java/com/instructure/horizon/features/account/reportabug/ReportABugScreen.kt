@@ -35,14 +35,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.instructure.horizon.R
@@ -109,9 +105,6 @@ fun ReportABugScreen(
                     color = HorizonColors.Text.body()
                 )
 
-                var subjectValue by remember { mutableStateOf(TextFieldValue("")) }
-                var descriptionValue by remember { mutableStateOf(TextFieldValue("")) }
-
                 val topicOptions = listOf(
                     stringResource(R.string.reportAProblemTopicSuggestion),
                     stringResource(R.string.reportAProblemTopicGeneralHelp),
@@ -141,10 +134,9 @@ fun ReportABugScreen(
                     TextFieldState(
                         label = stringResource(R.string.reportAProblemSubject),
                         size = TextFieldInputSize.Medium,
-                        value = subjectValue,
+                        value = uiState.subject,
                         onValueChange = {
-                            subjectValue = it
-                            uiState.onSubjectChanged(it.text)
+                            uiState.onSubjectChanged(it)
                         },
                         errorText = uiState.subjectError,
                         isFocused = false,
@@ -157,10 +149,9 @@ fun ReportABugScreen(
                 TextArea(
                     TextAreaState(
                         label = stringResource(R.string.reportAProblemDescription),
-                        value = descriptionValue,
+                        value = uiState.description,
                         onValueChange = {
-                            descriptionValue = it
-                            uiState.onDescriptionChanged(it.text)
+                            uiState.onDescriptionChanged(it)
                         },
                         errorText = uiState.descriptionError,
                         isFocused = false,
