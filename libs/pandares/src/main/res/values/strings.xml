@@ -2403,4 +2403,7 @@
     <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
     <string name="ltiToolsOffline">External Tools are not available offline.</string>
     <string name="widget_weekly_summary">Weekly Summary</string>
+    <string name="widget_toDo">Daily To-do</string>
+    <string name="dailyToDoWidgetTitle">Daily To-do</string>
+    <string name="todoWidget_showCompleted">Show Completed</string>
 </resources>
