@@ -17,6 +17,7 @@
 package com.instructure.canvasapi2
 
 import com.apollographql.apollo.cache.http.HttpFetchPolicy
+import com.instructure.canvasapi2.models.DomainService
 import okhttp3.OkHttpClient
 import javax.inject.Inject
 
@@ -45,7 +46,7 @@ class RedwoodGraphQLClientConfig @Inject constructor(
 class JourneyGraphQLClientConfig @Inject constructor(
     adapter: JourneyAdapter
 ): DomainServicesGraphQLClientConfig(
-    url = BuildConfig.JOURNEY_BASE_URL + "/graphql",
+    url = DomainService.JOURNEY.getBaseUrl() + "/graphql",
     httpClient = adapter.buildOHttpClient(),
     fetchPolicy = HttpFetchPolicy.CacheFirst
 )

@@ -26,7 +26,7 @@ def redwoodDebugBaseUrl = "https://redwood-api-dev.us-east-1.core.inseng.io"
 def redwoodReleaseBaseUrl = "https://redwood-api.us-east-1.core.inseng.io"
 
 def journeyDebugBaseUrl = "https://journey-server-dev.journey.nonprod.inseng.io"
-def journeyReleaseBaseUrl = "https://journey-server-prod.us-east-1.temp.prod.inseng.io"
+def journeyReleaseBaseUrl = "https://journey-server-prod.{region}.temp.prod.inseng.io"
 
 
 static String isTesting() {
