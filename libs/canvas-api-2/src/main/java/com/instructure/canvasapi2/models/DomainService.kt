@@ -23,13 +23,9 @@ enum class DomainService(
     private val baseUrlTemplate: String,
     val workflows: List<String>,
 ) {
-    REDWOOD(
-        baseUrlTemplate = BuildConfig.REDWOOD_BASE_URL,
-        workflows = listOf("redwood"),
-    ),
     JOURNEY(
         baseUrlTemplate = BuildConfig.JOURNEY_BASE_URL,
-        workflows = listOf("journey", "pine", "cedar"),
+        workflows = listOf("journey", "pine", "cedar", "redwood"),
     );
 
     fun getBaseUrl(): String {

@@ -35,14 +35,6 @@ abstract class DomainServicesGraphQLClientConfig(
     }
 }
 
-class RedwoodGraphQLClientConfig @Inject constructor(
-    adapter: RedwoodAdapter
-): DomainServicesGraphQLClientConfig(
-    url = BuildConfig.REDWOOD_BASE_URL + "/graphql",
-    httpClient = adapter.buildOHttpClient(),
-    fetchPolicy = HttpFetchPolicy.CacheFirst
-)
-
 class JourneyGraphQLClientConfig @Inject constructor(
     adapter: JourneyAdapter
 ): DomainServicesGraphQLClientConfig(

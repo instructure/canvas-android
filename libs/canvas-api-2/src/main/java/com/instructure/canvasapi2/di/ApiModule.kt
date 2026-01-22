@@ -70,7 +70,6 @@ import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.CanvasAuthenticator
 import com.instructure.canvasapi2.utils.JourneyApiPref
-import com.instructure.canvasapi2.utils.RedwoodApiPref
 import com.instructure.canvasapi2.utils.pageview.PandataApi
 import dagger.Module
 import dagger.Provides
@@ -411,12 +410,6 @@ class ApiModule {
     @Provides
     fun provideDomainServicesAuthenticationAPI(): DomainServicesAuthenticationAPI {
         return RestBuilder().build(DomainServicesAuthenticationAPI::class.java, RestParams())
-    }
-
-    @Provides
-    @Singleton
-    fun provideRedwoodApiPrefs(): RedwoodApiPref {
-        return RedwoodApiPref
     }
 
     @Provides
