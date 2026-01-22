@@ -77,6 +77,7 @@ import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
 import com.instructure.pandautils.features.dashboard.widget.SettingType
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
+import com.instructure.pandautils.features.dashboard.widget.courses.CoursesConfig
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ThemedColor
@@ -388,6 +389,8 @@ private fun getSettingLabel(key: String): String {
     return when (key) {
         "showGreeting" -> stringResource(R.string.widget_setting_show_greeting)
         "backgroundColor" -> stringResource(R.string.background_color)
+        CoursesConfig.KEY_SHOW_GRADES -> stringResource(R.string.widget_setting_show_grades)
+        CoursesConfig.KEY_SHOW_COLOR_OVERLAY -> stringResource(R.string.widget_setting_show_color_overlay)
         else -> key
     }
 }

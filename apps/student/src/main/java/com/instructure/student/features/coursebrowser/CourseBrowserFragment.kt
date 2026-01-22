@@ -28,11 +28,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.appbar.AppBarLayout
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.utils.RemoteConfigParam
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
@@ -48,6 +51,9 @@ import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.SearchBar
+import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
+import com.instructure.pandautils.features.dashboard.widget.courses.CoursesConfig
+import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetConfigUseCase
 import com.instructure.pandautils.features.smartsearch.SmartSearchFragment
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.ParcelableArg
@@ -72,6 +78,7 @@ import com.instructure.student.util.StudentPrefs
 import com.instructure.student.util.TabHelper
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import javax.inject.Inject
@@ -88,12 +95,28 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
     @Inject
     lateinit var networkStateProvider: NetworkStateProvider
 
+    @Inject
+    lateinit var observeWidgetConfigUseCase: ObserveWidgetConfigUseCase
+
     private val binding by viewBinding(FragmentCourseBrowserBinding::bind)
 
     private var apiCalls: Job? = null
 
     @get:PageViewUrlParam("canvasContext")
     var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
+
+    private var hideColorOverlayFromConfig: Boolean = false
+
+    /**
+     * Returns whether to hide the color overlay.
+     * Uses widget config if dashboard redesign is enabled, otherwise uses StudentPrefs.
+     */
+    private val hideColorOverlay: Boolean
+        get() = if (RemoteConfigUtils.getBoolean(RemoteConfigParam.DASHBOARD_REDESIGN)) {
+            hideColorOverlayFromConfig
+        } else {
+            StudentPrefs.hideCourseColorOverlay
+        }
 
     override val navigation: Navigation?
         get() = if (activity is Navigation) activity as Navigation else null
@@ -108,6 +131,22 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Observe widget config for color overlay setting when dashboard redesign is enabled
+        if (RemoteConfigUtils.getBoolean(RemoteConfigParam.DASHBOARD_REDESIGN)) {
+            viewLifecycleOwner.lifecycleScope.launch {
+                observeWidgetConfigUseCase(WidgetMetadata.WIDGET_ID_COURSES).collect { settings ->
+                    val showColorOverlay = settings.firstOrNull { it.key == CoursesConfig.KEY_SHOW_COLOR_OVERLAY }?.value as? Boolean ?: true
+                    hideColorOverlayFromConfig = !showColorOverlay
+
+                    // Update UI when setting changes
+                    (canvasContext as? Course)?.let {
+                        courseImage.setCourseImage(it, it.color, !hideColorOverlay)
+                    }
+                    updateToolbarVisibility()
+                }
+            }
+        }
 
         networkStateProvider.isOnlineLiveData.observe(viewLifecycleOwner) { isOnline ->
             searchBar.setVisible(isOnline)
@@ -153,7 +192,7 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
         courseBrowserTitle.text = canvasContext.name
 
         (canvasContext as? Course)?.let {
-            courseImage.setCourseImage(it, it.color, !StudentPrefs.hideCourseColorOverlay)
+            courseImage.setCourseImage(it, it.color, !hideColorOverlay)
             courseBrowserSubtitle.text = it.term?.name ?: ""
             binding.courseBrowserHeader.courseBrowserHeader.setTitleAndSubtitle(
                 it.name,
@@ -177,7 +216,7 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
 
         // Hide image placeholder if color overlay is disabled and there is no valid image
         val hasImage = (canvasContext as? Course)?.imageUrl?.isValid() == true
-        val hideImagePlaceholder = StudentPrefs.hideCourseColorOverlay && !hasImage
+        val hideImagePlaceholder = hideColorOverlay && !hasImage
 
         if (requireContext().a11yManager.isSwitchAccessEnabled || hideImagePlaceholder) {
             appBarLayout.setExpanded(false, false)
@@ -207,13 +246,13 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
     @Subscribe(sticky = true)
     fun onColorOverlayToggled(event: CourseColorOverlayToggledEvent) {
         (canvasContext as? Course)?.let {
-            binding.courseImage.setCourseImage(it, it.color, !StudentPrefs.hideCourseColorOverlay)
+            binding.courseImage.setCourseImage(it, it.color, !hideColorOverlay)
         }
         updateToolbarVisibility()
     }
 
     private fun updateToolbarVisibility() = with(binding) {
-        val useOverlay = !StudentPrefs.hideCourseColorOverlay
+        val useOverlay = !hideColorOverlay
         if (!useOverlay) {
             overlayToolbar.removeView(searchBar)
             noOverlayToolbar.addView(searchBar)
@@ -235,7 +274,7 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
             binding.courseImage.setCourseImage(
                 it,
                 it.color,
-                !StudentPrefs.hideCourseColorOverlay
+                !hideColorOverlay
             )
         }
     }

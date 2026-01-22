@@ -62,6 +62,7 @@ import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.OverflowMenu
+import com.instructure.pandautils.compose.composables.rememberWithRequireNetwork
 import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.courseinvitation.CourseInvitationsWidget
@@ -120,6 +121,10 @@ fun DashboardScreenContent(
 
     var showMenu by remember { mutableStateOf(false) }
 
+    val manageOfflineContentClick = rememberWithRequireNetwork {
+        router.routeToManageOfflineContent()
+    }
+
     Scaffold(
         modifier = Modifier.background(colorResource(R.color.backgroundLight)),
         topBar = {
@@ -138,6 +143,7 @@ fun DashboardScreenContent(
                     ) {
                         DropdownMenuItem(onClick = {
                             showMenu = !showMenu
+                            manageOfflineContentClick()
                         }) {
                             Text(
                                 stringResource(R.string.course_menu_manage_offline_content),

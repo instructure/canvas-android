@@ -22,22 +22,11 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
 import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidgetBehavior
 import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidgetRouter
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class StudentCoursesWidgetBehavior @Inject constructor(
-    private val observeGradeVisibilityUseCase: ObserveGradeVisibilityUseCase,
-    private val observeColorOverlayUseCase: ObserveColorOverlayUseCase,
     private val router: CoursesWidgetRouter
 ) : CoursesWidgetBehavior {
-
-    override fun observeGradeVisibility(): Flow<Boolean> {
-        return observeGradeVisibilityUseCase(Unit)
-    }
-
-    override fun observeColorOverlay(): Flow<Boolean> {
-        return observeColorOverlayUseCase(Unit)
-    }
 
     override fun onCourseClick(activity: FragmentActivity, course: Course) {
         router.routeToCourse(activity, course)

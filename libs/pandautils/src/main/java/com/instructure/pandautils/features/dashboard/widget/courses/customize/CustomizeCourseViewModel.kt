@@ -28,6 +28,9 @@ import com.instructure.pandautils.domain.usecase.course.SetCourseColorParams
 import com.instructure.pandautils.domain.usecase.course.SetCourseColorUseCase
 import com.instructure.pandautils.domain.usecase.course.SetCourseNicknameParams
 import com.instructure.pandautils.domain.usecase.course.SetCourseNicknameUseCase
+import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
+import com.instructure.pandautils.features.dashboard.widget.courses.CoursesConfig
+import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetConfigUseCase
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.color
@@ -35,6 +38,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -47,7 +51,7 @@ class CustomizeCourseViewModel @Inject constructor(
     private val resources: Resources,
     private val colorKeeper: ColorKeeper,
     private val localBroadcastManager: LocalBroadcastManager,
-    private val customizeCourseBehavior: CustomizeCourseBehavior
+    private val observeWidgetConfigUseCase: ObserveWidgetConfigUseCase
 ) : ViewModel() {
 
     private val course: Course = savedStateHandle.get<Course>(Const.COURSE) ?: throw IllegalArgumentException("Course can not be null")
@@ -64,6 +68,10 @@ class CustomizeCourseViewModel @Inject constructor(
     )
     val uiState: StateFlow<CustomizeCourseUiState> = _uiState.asStateFlow()
 
+    init {
+        loadShowColorOverlay()
+    }
+
     private fun createInitialState(
         onNicknameChanged: (String) -> Unit,
         onColorSelected: (Int) -> Unit,
@@ -73,7 +81,6 @@ class CustomizeCourseViewModel @Inject constructor(
     ): CustomizeCourseUiState {
         val availableColors = getAvailableColors()
         val currentColor = course.color
-        val showColorOverlay = getShowColorOverlay()
 
         return CustomizeCourseUiState(
             courseId = course.id,
@@ -83,7 +90,7 @@ class CustomizeCourseViewModel @Inject constructor(
             nickname = course.originalName?.let { course.name }.orEmpty(),
             selectedColor = currentColor,
             availableColors = availableColors,
-            showColorOverlay = showColorOverlay,
+            showColorOverlay = false,
             onNicknameChanged = onNicknameChanged,
             onColorSelected = onColorSelected,
             onDone = onDone,
@@ -92,8 +99,12 @@ class CustomizeCourseViewModel @Inject constructor(
         )
     }
 
-    private fun getShowColorOverlay(): Boolean {
-        return customizeCourseBehavior.shouldShowColorOverlay()
+    private fun loadShowColorOverlay() {
+        viewModelScope.launch {
+            val settings = observeWidgetConfigUseCase(WidgetMetadata.WIDGET_ID_COURSES).first()
+            val showColorOverlay = settings.firstOrNull { it.key == CoursesConfig.KEY_SHOW_COLOR_OVERLAY }?.value as? Boolean ?: false
+            _uiState.update { it.copy(showColorOverlay = showColorOverlay) }
+        }
     }
 
     private fun getAvailableColors(): List<Int> {

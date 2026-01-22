@@ -33,6 +33,10 @@ import com.instructure.pandautils.domain.usecase.courses.LoadFavoriteCoursesPara
 import com.instructure.pandautils.domain.usecase.courses.LoadFavoriteCoursesUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadGroupsParams
 import com.instructure.pandautils.domain.usecase.courses.LoadGroupsUseCase
+import com.instructure.pandautils.features.dashboard.customize.WidgetSettingItem
+import com.instructure.pandautils.features.dashboard.widget.SettingType
+import com.instructure.pandautils.features.dashboard.widget.courses.CoursesConfig
+import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetConfigUseCase
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.utils.ColorKeeper
@@ -80,6 +84,7 @@ class CoursesWidgetViewModelTest {
     private val featureFlagProvider: FeatureFlagProvider = mockk()
     private val crashlytics: FirebaseCrashlytics = mockk(relaxed = true)
     private val localBroadcastManager: LocalBroadcastManager = mockk()
+    private val observeWidgetConfigUseCase: ObserveWidgetConfigUseCase = mockk()
 
     private lateinit var viewModel: CoursesWidgetViewModel
 
@@ -103,8 +108,12 @@ class CoursesWidgetViewModelTest {
         coEvery { loadCourseAnnouncementsUseCase(any()) } returns emptyList()
         every { sectionExpandedStateDataStore.observeCoursesExpanded() } returns flowOf(true)
         every { sectionExpandedStateDataStore.observeGroupsExpanded() } returns flowOf(true)
-        every { coursesWidgetBehavior.observeGradeVisibility() } returns flowOf(false)
-        every { coursesWidgetBehavior.observeColorOverlay() } returns flowOf(false)
+        every { observeWidgetConfigUseCase(any<String>()) } returns flowOf(
+            listOf(
+                WidgetSettingItem(key = CoursesConfig.KEY_SHOW_GRADES, value = false, type = SettingType.BOOLEAN),
+                WidgetSettingItem(key = CoursesConfig.KEY_SHOW_COLOR_OVERLAY, value = false, type = SettingType.BOOLEAN)
+            )
+        )
         coEvery { featureFlagProvider.offlineEnabled() } returns false
         every { networkStateProvider.isOnline() } returns true
         every { localBroadcastManager.registerReceiver(any(), any()) } returns Unit
@@ -194,7 +203,12 @@ class CoursesWidgetViewModelTest {
     @Test
     fun `observeGradeVisibility updates showGrades in ui state`() {
         setupDefaultMocks()
-        every { coursesWidgetBehavior.observeGradeVisibility() } returns flowOf(true)
+        every { observeWidgetConfigUseCase(any<String>()) } returns flowOf(
+            listOf(
+                WidgetSettingItem(key = CoursesConfig.KEY_SHOW_GRADES, value = true, type = SettingType.BOOLEAN),
+                WidgetSettingItem(key = CoursesConfig.KEY_SHOW_COLOR_OVERLAY, value = false, type = SettingType.BOOLEAN)
+            )
+        )
 
         viewModel = createViewModel()
 
@@ -205,7 +219,12 @@ class CoursesWidgetViewModelTest {
     @Test
     fun `observeColorOverlay updates showColorOverlay in ui state`() {
         setupDefaultMocks()
-        every { coursesWidgetBehavior.observeColorOverlay() } returns flowOf(true)
+        every { observeWidgetConfigUseCase(any<String>()) } returns flowOf(
+            listOf(
+                WidgetSettingItem(key = CoursesConfig.KEY_SHOW_GRADES, value = false, type = SettingType.BOOLEAN),
+                WidgetSettingItem(key = CoursesConfig.KEY_SHOW_COLOR_OVERLAY, value = true, type = SettingType.BOOLEAN)
+            )
+        )
 
         viewModel = createViewModel()
 
@@ -769,7 +788,8 @@ class CoursesWidgetViewModelTest {
             networkStateProvider = networkStateProvider,
             featureFlagProvider = featureFlagProvider,
             crashlytics = crashlytics,
-            localBroadcastManager = localBroadcastManager
+            localBroadcastManager = localBroadcastManager,
+            observeWidgetConfigUseCase = observeWidgetConfigUseCase
         )
     }
 }

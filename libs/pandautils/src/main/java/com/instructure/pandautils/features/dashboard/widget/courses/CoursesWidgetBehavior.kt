@@ -20,11 +20,8 @@ import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
-import kotlinx.coroutines.flow.Flow
 
 interface CoursesWidgetBehavior {
-    fun observeGradeVisibility(): Flow<Boolean>
-    fun observeColorOverlay(): Flow<Boolean>
     fun onCourseClick(activity: FragmentActivity, course: Course)
     fun onGroupClick(activity: FragmentActivity, group: Group)
     fun onManageOfflineContent(activity: FragmentActivity, course: Course)

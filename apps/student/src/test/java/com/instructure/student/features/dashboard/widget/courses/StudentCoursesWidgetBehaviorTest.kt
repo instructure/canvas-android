@@ -21,23 +21,15 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
 import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidgetRouter
-import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import io.mockk.verify
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.runTest
 import org.junit.After
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
 class StudentCoursesWidgetBehaviorTest {
 
-    private val observeGradeVisibilityUseCase: ObserveGradeVisibilityUseCase = mockk()
-    private val observeColorOverlayUseCase: ObserveColorOverlayUseCase = mockk()
     private val router: CoursesWidgetRouter = mockk(relaxed = true)
 
     private lateinit var behavior: StudentCoursesWidgetBehavior
@@ -45,8 +37,6 @@ class StudentCoursesWidgetBehaviorTest {
     @Before
     fun setup() {
         behavior = StudentCoursesWidgetBehavior(
-            observeGradeVisibilityUseCase = observeGradeVisibilityUseCase,
-            observeColorOverlayUseCase = observeColorOverlayUseCase,
             router = router
         )
     }
@@ -54,42 +44,6 @@ class StudentCoursesWidgetBehaviorTest {
     @After
     fun teardown() {
         unmockkAll()
-    }
-
-    @Test
-    fun `observeGradeVisibility returns flow from use case`() = runTest {
-        every { observeGradeVisibilityUseCase(Unit) } returns flowOf(true)
-
-        val result = behavior.observeGradeVisibility().first()
-
-        assertTrue(result)
-    }
-
-    @Test
-    fun `observeGradeVisibility returns false when use case returns false`() = runTest {
-        every { observeGradeVisibilityUseCase(Unit) } returns flowOf(false)
-
-        val result = behavior.observeGradeVisibility().first()
-
-        assertFalse(result)
-    }
-
-    @Test
-    fun `observeColorOverlay returns flow from use case`() = runTest {
-        every { observeColorOverlayUseCase(Unit) } returns flowOf(true)
-
-        val result = behavior.observeColorOverlay().first()
-
-        assertTrue(result)
-    }
-
-    @Test
-    fun `observeColorOverlay returns false when use case returns false`() = runTest {
-        every { observeColorOverlayUseCase(Unit) } returns flowOf(false)
-
-        val result = behavior.observeColorOverlay().first()
-
-        assertFalse(result)
     }
 
     @Test

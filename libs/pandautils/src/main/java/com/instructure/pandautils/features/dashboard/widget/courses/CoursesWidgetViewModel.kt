@@ -36,9 +36,11 @@ import com.instructure.pandautils.domain.usecase.courses.LoadFavoriteCoursesPara
 import com.instructure.pandautils.domain.usecase.courses.LoadFavoriteCoursesUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadGroupsParams
 import com.instructure.pandautils.domain.usecase.courses.LoadGroupsUseCase
+import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.courses.model.CourseCardItem
 import com.instructure.pandautils.features.dashboard.widget.courses.model.GradeDisplay
 import com.instructure.pandautils.features.dashboard.widget.courses.model.GroupCardItem
+import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetConfigUseCase
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -50,6 +52,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -66,7 +69,8 @@ class CoursesWidgetViewModel @Inject constructor(
     private val networkStateProvider: NetworkStateProvider,
     private val featureFlagProvider: FeatureFlagProvider,
     private val crashlytics: FirebaseCrashlytics,
-    private val localBroadcastManager: LocalBroadcastManager
+    private val localBroadcastManager: LocalBroadcastManager,
+    private val observeWidgetConfigUseCase: ObserveWidgetConfigUseCase
 ) : ViewModel() {
 
     private var courses: List<Course> = emptyList()
@@ -167,8 +171,14 @@ class CoursesWidgetViewModel @Inject constructor(
             _uiState.update { it.copy(isLoading = true, isError = false) }
 
             try {
+                val isOnline = networkStateProvider.isOnline()
+
                 courses = loadFavoriteCoursesUseCase(LoadFavoriteCoursesParams(forceRefresh))
-                groups = loadGroupsUseCase(LoadGroupsParams(forceRefresh))
+                groups = if (isOnline) {
+                    loadGroupsUseCase(LoadGroupsParams(forceRefresh))
+                } else {
+                    emptyList()
+                }
 
                 val announcementsMap = courses.associate { course ->
                     course.id to try {
@@ -292,7 +302,10 @@ class CoursesWidgetViewModel @Inject constructor(
 
     private fun observeGradeVisibility() {
         viewModelScope.launch {
-            coursesWidgetBehavior.observeGradeVisibility()
+            observeWidgetConfigUseCase(WidgetMetadata.WIDGET_ID_COURSES)
+                .map { settings ->
+                    settings.firstOrNull { it.key == CoursesConfig.KEY_SHOW_GRADES }?.value as? Boolean ?: false
+                }
                 .catch { }
                 .collect { showGrades ->
                     _uiState.update { it.copy(showGrades = showGrades) }
@@ -302,7 +315,10 @@ class CoursesWidgetViewModel @Inject constructor(
 
     private fun observeColorOverlay() {
         viewModelScope.launch {
-            coursesWidgetBehavior.observeColorOverlay()
+            observeWidgetConfigUseCase(WidgetMetadata.WIDGET_ID_COURSES)
+                .map { settings ->
+                    settings.firstOrNull { it.key == CoursesConfig.KEY_SHOW_COLOR_OVERLAY }?.value as? Boolean ?: false
+                }
                 .catch { }
                 .collect { showColorOverlay ->
                     _uiState.update { it.copy(showColorOverlay = showColorOverlay) }

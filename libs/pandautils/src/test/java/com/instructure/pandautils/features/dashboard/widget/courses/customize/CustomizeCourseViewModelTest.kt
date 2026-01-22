@@ -27,6 +27,10 @@ import com.instructure.pandautils.domain.usecase.course.SetCourseColorParams
 import com.instructure.pandautils.domain.usecase.course.SetCourseColorUseCase
 import com.instructure.pandautils.domain.usecase.course.SetCourseNicknameParams
 import com.instructure.pandautils.domain.usecase.course.SetCourseNicknameUseCase
+import com.instructure.pandautils.features.dashboard.customize.WidgetSettingItem
+import com.instructure.pandautils.features.dashboard.widget.SettingType
+import com.instructure.pandautils.features.dashboard.widget.courses.CoursesConfig
+import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetConfigUseCase
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import io.mockk.coEvery
@@ -41,6 +45,7 @@ import junit.framework.TestCase.assertNull
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -65,7 +70,7 @@ class CustomizeCourseViewModelTest {
     private val resources: Resources = mockk(relaxed = true)
     private val colorKeeper: ColorKeeper = mockk(relaxed = true)
     private val localBroadcastManager: LocalBroadcastManager = mockk(relaxed = true)
-    private val customizeCourseBehavior: CustomizeCourseBehavior = mockk(relaxed = true)
+    private val observeWidgetConfigUseCase: ObserveWidgetConfigUseCase = mockk(relaxed = true)
 
     private lateinit var viewModel: CustomizeCourseViewModel
 
@@ -84,7 +89,12 @@ class CustomizeCourseViewModelTest {
         ContextKeeper.appContext = mockk(relaxed = true)
 
         every { savedStateHandle.get<Course>(Const.COURSE) } returns testCourse
-        every { customizeCourseBehavior.shouldShowColorOverlay() } returns true
+        every { observeWidgetConfigUseCase(any<String>()) } returns flowOf(
+            listOf(
+                WidgetSettingItem(key = CoursesConfig.KEY_SHOW_GRADES, value = false, type = SettingType.BOOLEAN),
+                WidgetSettingItem(key = CoursesConfig.KEY_SHOW_COLOR_OVERLAY, value = true, type = SettingType.BOOLEAN)
+            )
+        )
         every { resources.getColor(any(), any()) } returns 0xFF0000FF.toInt()
         every { resources.getString(R.string.errorOccurred) } returns "An error occurred"
 
@@ -98,7 +108,7 @@ class CustomizeCourseViewModelTest {
             resources = resources,
             colorKeeper = colorKeeper,
             localBroadcastManager = localBroadcastManager,
-            customizeCourseBehavior = customizeCourseBehavior
+            observeWidgetConfigUseCase = observeWidgetConfigUseCase
         )
     }
 
@@ -109,7 +119,9 @@ class CustomizeCourseViewModelTest {
     }
 
     @Test
-    fun `initial state has correct course information`() {
+    fun `initial state has correct course information`() = runTest {
+        advanceUntilIdle()
+
         val state = viewModel.uiState.value
 
         assertEquals(testCourse.id, state.courseId)
@@ -120,11 +132,17 @@ class CustomizeCourseViewModelTest {
         assertFalse(state.isLoading)
         assertFalse(state.shouldNavigateBack)
         assertNull(state.errorMessage)
+        assertTrue(state.showColorOverlay)
     }
 
     @Test
-    fun `initial state has showColorOverlay from behavior`() {
-        every { customizeCourseBehavior.shouldShowColorOverlay() } returns false
+    fun `initial state loads showColorOverlay from widget config`() = runTest {
+        every { observeWidgetConfigUseCase(any<String>()) } returns flowOf(
+            listOf(
+                WidgetSettingItem(key = CoursesConfig.KEY_SHOW_GRADES, value = false, type = SettingType.BOOLEAN),
+                WidgetSettingItem(key = CoursesConfig.KEY_SHOW_COLOR_OVERLAY, value = false, type = SettingType.BOOLEAN)
+            )
+        )
 
         val viewModel = CustomizeCourseViewModel(
             savedStateHandle = savedStateHandle,
@@ -133,8 +151,10 @@ class CustomizeCourseViewModelTest {
             resources = resources,
             colorKeeper = colorKeeper,
             localBroadcastManager = localBroadcastManager,
-            customizeCourseBehavior = customizeCourseBehavior
+            observeWidgetConfigUseCase = observeWidgetConfigUseCase
         )
+
+        advanceUntilIdle()
 
         assertFalse(viewModel.uiState.value.showColorOverlay)
     }
@@ -297,7 +317,7 @@ class CustomizeCourseViewModelTest {
             resources = resources,
             colorKeeper = colorKeeper,
             localBroadcastManager = localBroadcastManager,
-            customizeCourseBehavior = customizeCourseBehavior
+            observeWidgetConfigUseCase = observeWidgetConfigUseCase
         )
 
         assertEquals("", viewModel.uiState.value.nickname)

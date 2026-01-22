@@ -22,21 +22,11 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
 import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidgetBehavior
 import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidgetRouter
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
 import javax.inject.Inject
 
 class TeacherCoursesWidgetBehavior @Inject constructor(
     private val router: CoursesWidgetRouter
 ) : CoursesWidgetBehavior {
-
-    override fun observeGradeVisibility(): Flow<Boolean> {
-        return flowOf(false)
-    }
-
-    override fun observeColorOverlay(): Flow<Boolean> {
-        return flowOf(true)
-    }
 
     override fun onCourseClick(activity: FragmentActivity, course: Course) {
         router.routeToCourse(activity, course)
@@ -59,10 +49,10 @@ class TeacherCoursesWidgetBehavior @Inject constructor(
     }
 
     override fun onAnnouncementClick(activity: FragmentActivity, course: Course, announcements: List<DiscussionTopicHeader>) {
-        // TODO: Implement announcement click handling
+        throw NotImplementedError()
     }
 
     override fun onGroupMessageClick(activity: FragmentActivity, group: Group) {
-        // TODO: Implement group message click handling
+        throw NotImplementedError()
     }
 }

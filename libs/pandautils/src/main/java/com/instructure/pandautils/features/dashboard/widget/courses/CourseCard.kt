@@ -69,6 +69,7 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.Shimmer
+import com.instructure.pandautils.compose.composables.rememberWithRequireNetwork
 import com.instructure.pandautils.features.dashboard.widget.courses.model.CourseCardItem
 import com.instructure.pandautils.features.dashboard.widget.courses.model.GradeDisplay
 import com.instructure.pandautils.utils.color
@@ -91,6 +92,10 @@ fun CourseCard(
 
     val activity = LocalActivity.current?.getFragmentActivityOrNull()
 
+    val openMenuClick = rememberWithRequireNetwork {
+        showMenu = true
+    }
+
     val cardShape = RoundedCornerShape(16.dp)
 
     Box(modifier = modifier.testTag("CourseCard_${courseCard.id}")) {
@@ -102,7 +107,9 @@ fun CourseCard(
         colors = CardDefaults.cardColors(
             containerColor = colorResource(R.color.backgroundLightest)
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = if (courseCard.isClickable) 2.dp else 0.dp
+        )
     ) {
         Row(
             modifier = Modifier
@@ -137,7 +144,7 @@ fun CourseCard(
                     )
                 }
 
-                if (hasMenu) {
+                if (hasMenu && courseCard.isClickable) {
                     Box(
                         modifier = Modifier
                             .align(Alignment.TopStart)
@@ -146,7 +153,7 @@ fun CourseCard(
                         Box(
                             modifier = Modifier
                                 .size(24.dp)
-                                .clickable { showMenu = true }
+                                .clickable(onClick = openMenuClick)
                                 .background(
                                     color = colorResource(R.color.backgroundLightest),
                                     shape = RoundedCornerShape(12.dp)
