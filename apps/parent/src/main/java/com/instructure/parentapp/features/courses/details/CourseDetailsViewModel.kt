@@ -21,8 +21,10 @@ import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.models.toBaseUrl
 import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
@@ -70,7 +72,8 @@ class CourseDetailsViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     isLoading = true,
-                    studentColor = parentPrefs.currentStudent.studentColor
+                    studentColor = parentPrefs.currentStudent.studentColor,
+                    baseUrl = CanvasContext.emptyCourseContext(courseId).toBaseUrl()
                 )
             }
 
