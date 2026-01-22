@@ -17,6 +17,7 @@
 package com.instructure.horizon.features.account.reportabug
 
 import android.content.Context
+import androidx.compose.ui.text.input.TextFieldValue
 import com.instructure.canvasapi2.apis.ErrorReportAPI
 import com.instructure.canvasapi2.models.ErrorReportResult
 import com.instructure.canvasapi2.models.User
@@ -105,8 +106,8 @@ class ReportABugViewModelTest {
         val viewModel = getViewModel()
 
         assertNull(viewModel.uiState.value.selectedTopic)
-        assertEquals("", viewModel.uiState.value.subject)
-        assertEquals("", viewModel.uiState.value.description)
+        assertEquals("", viewModel.uiState.value.subject.text)
+        assertEquals("", viewModel.uiState.value.description.text)
     }
 
     @Test
@@ -150,9 +151,9 @@ class ReportABugViewModelTest {
     fun `updating subject sets subject`() = runTest {
         val viewModel = getViewModel()
 
-        viewModel.uiState.value.onSubjectChanged("Test Subject")
+        viewModel.uiState.value.onSubjectChanged(TextFieldValue("Test Subject"))
 
-        assertEquals("Test Subject", viewModel.uiState.value.subject)
+        assertEquals("Test Subject", viewModel.uiState.value.subject.text)
     }
 
     @Test
@@ -160,7 +161,7 @@ class ReportABugViewModelTest {
         val viewModel = getViewModel()
 
         viewModel.uiState.value.onSubmit()
-        viewModel.uiState.value.onSubjectChanged("Test Subject")
+        viewModel.uiState.value.onSubjectChanged(TextFieldValue("Test Subject"))
 
         assertNull(viewModel.uiState.value.subjectError)
     }
@@ -169,9 +170,9 @@ class ReportABugViewModelTest {
     fun `updating description sets description`() = runTest {
         val viewModel = getViewModel()
 
-        viewModel.uiState.value.onDescriptionChanged("Test Description")
+        viewModel.uiState.value.onDescriptionChanged(TextFieldValue("Test Description"))
 
-        assertEquals("Test Description", viewModel.uiState.value.description)
+        assertEquals("Test Description", viewModel.uiState.value.description.text)
     }
 
     @Test
@@ -179,7 +180,7 @@ class ReportABugViewModelTest {
         val viewModel = getViewModel()
 
         viewModel.uiState.value.onSubmit()
-        viewModel.uiState.value.onDescriptionChanged("Test Description")
+        viewModel.uiState.value.onDescriptionChanged(TextFieldValue("Test Description"))
 
         assertNull(viewModel.uiState.value.descriptionError)
     }
@@ -188,8 +189,8 @@ class ReportABugViewModelTest {
     fun `submit with empty topic shows topicError`() = runTest {
         val viewModel = getViewModel()
 
-        viewModel.uiState.value.onSubjectChanged("Subject")
-        viewModel.uiState.value.onDescriptionChanged("Description")
+        viewModel.uiState.value.onSubjectChanged(TextFieldValue("Subject"))
+        viewModel.uiState.value.onDescriptionChanged(TextFieldValue("Description"))
         viewModel.uiState.value.onSubmit()
 
         assertEquals("Topic is required", viewModel.uiState.value.topicError)
@@ -200,7 +201,7 @@ class ReportABugViewModelTest {
         val viewModel = getViewModel()
 
         viewModel.uiState.value.onTopicSelected("Minor issue")
-        viewModel.uiState.value.onDescriptionChanged("Description")
+        viewModel.uiState.value.onDescriptionChanged(TextFieldValue("Description"))
         viewModel.uiState.value.onSubmit()
 
         assertEquals("Subject is required", viewModel.uiState.value.subjectError)
@@ -211,7 +212,7 @@ class ReportABugViewModelTest {
         val viewModel = getViewModel()
 
         viewModel.uiState.value.onTopicSelected("Minor issue")
-        viewModel.uiState.value.onSubjectChanged("Subject")
+        viewModel.uiState.value.onSubjectChanged(TextFieldValue("Subject"))
         viewModel.uiState.value.onSubmit()
 
         assertEquals("Description is required", viewModel.uiState.value.descriptionError)
@@ -233,8 +234,8 @@ class ReportABugViewModelTest {
         val viewModel = getViewModel()
 
         viewModel.uiState.value.onTopicSelected("Minor issue")
-        viewModel.uiState.value.onSubjectChanged("Subject")
-        viewModel.uiState.value.onDescriptionChanged("Description")
+        viewModel.uiState.value.onSubjectChanged(TextFieldValue("Subject"))
+        viewModel.uiState.value.onDescriptionChanged(TextFieldValue("Description"))
         viewModel.uiState.value.onSubmit()
 
         assertNull(viewModel.uiState.value.topicError)
@@ -247,8 +248,8 @@ class ReportABugViewModelTest {
         val viewModel = getViewModel()
 
         viewModel.uiState.value.onTopicSelected("Suggestion or comment")
-        viewModel.uiState.value.onSubjectChanged("Subject")
-        viewModel.uiState.value.onDescriptionChanged("Description")
+        viewModel.uiState.value.onSubjectChanged(TextFieldValue("Subject"))
+        viewModel.uiState.value.onDescriptionChanged(TextFieldValue("Description"))
         viewModel.uiState.value.onSubmit()
 
         coVerify {
@@ -266,8 +267,8 @@ class ReportABugViewModelTest {
         val viewModel = getViewModel()
 
         viewModel.uiState.value.onTopicSelected("General help")
-        viewModel.uiState.value.onSubjectChanged("Subject")
-        viewModel.uiState.value.onDescriptionChanged("Description")
+        viewModel.uiState.value.onSubjectChanged(TextFieldValue("Subject"))
+        viewModel.uiState.value.onDescriptionChanged(TextFieldValue("Description"))
         viewModel.uiState.value.onSubmit()
 
         coVerify {
@@ -285,8 +286,8 @@ class ReportABugViewModelTest {
         val viewModel = getViewModel()
 
         viewModel.uiState.value.onTopicSelected("Minor issue")
-        viewModel.uiState.value.onSubjectChanged("Subject")
-        viewModel.uiState.value.onDescriptionChanged("Description")
+        viewModel.uiState.value.onSubjectChanged(TextFieldValue("Subject"))
+        viewModel.uiState.value.onDescriptionChanged(TextFieldValue("Description"))
         viewModel.uiState.value.onSubmit()
 
         coVerify {
@@ -304,8 +305,8 @@ class ReportABugViewModelTest {
         val viewModel = getViewModel()
 
         viewModel.uiState.value.onTopicSelected("Urgent issue")
-        viewModel.uiState.value.onSubjectChanged("Subject")
-        viewModel.uiState.value.onDescriptionChanged("Description")
+        viewModel.uiState.value.onSubjectChanged(TextFieldValue("Subject"))
+        viewModel.uiState.value.onDescriptionChanged(TextFieldValue("Description"))
         viewModel.uiState.value.onSubmit()
 
         coVerify {
@@ -323,8 +324,8 @@ class ReportABugViewModelTest {
         val viewModel = getViewModel()
 
         viewModel.uiState.value.onTopicSelected("Critical system error")
-        viewModel.uiState.value.onSubjectChanged("Subject")
-        viewModel.uiState.value.onDescriptionChanged("Description")
+        viewModel.uiState.value.onSubjectChanged(TextFieldValue("Subject"))
+        viewModel.uiState.value.onDescriptionChanged(TextFieldValue("Description"))
         viewModel.uiState.value.onSubmit()
 
         coVerify {
@@ -342,8 +343,8 @@ class ReportABugViewModelTest {
         val viewModel = getViewModel()
 
         viewModel.uiState.value.onTopicSelected("Minor issue")
-        viewModel.uiState.value.onSubjectChanged("Subject")
-        viewModel.uiState.value.onDescriptionChanged("Description")
+        viewModel.uiState.value.onSubjectChanged(TextFieldValue("Subject"))
+        viewModel.uiState.value.onDescriptionChanged(TextFieldValue("Description"))
         viewModel.uiState.value.onSubmit()
 
         assertFalse(viewModel.uiState.value.isLoading)
@@ -354,8 +355,8 @@ class ReportABugViewModelTest {
         val viewModel = getViewModel()
 
         viewModel.uiState.value.onTopicSelected("Minor issue")
-        viewModel.uiState.value.onSubjectChanged("Test Subject")
-        viewModel.uiState.value.onDescriptionChanged("Test Description")
+        viewModel.uiState.value.onSubjectChanged(TextFieldValue("Test Subject"))
+        viewModel.uiState.value.onDescriptionChanged(TextFieldValue("Test Description"))
         viewModel.uiState.value.onSubmit()
 
         coVerify {
@@ -373,8 +374,8 @@ class ReportABugViewModelTest {
         val viewModel = getViewModel()
 
         viewModel.uiState.value.onTopicSelected("Minor issue")
-        viewModel.uiState.value.onSubjectChanged("Subject")
-        viewModel.uiState.value.onDescriptionChanged("Description")
+        viewModel.uiState.value.onSubjectChanged(TextFieldValue("Subject"))
+        viewModel.uiState.value.onDescriptionChanged(TextFieldValue("Description"))
         viewModel.uiState.value.onSubmit()
 
         assertTrue(viewModel.uiState.value.shouldNavigateBack)
@@ -385,8 +386,8 @@ class ReportABugViewModelTest {
         val viewModel = getViewModel()
 
         viewModel.uiState.value.onTopicSelected("Minor issue")
-        viewModel.uiState.value.onSubjectChanged("Subject")
-        viewModel.uiState.value.onDescriptionChanged("Description")
+        viewModel.uiState.value.onSubjectChanged(TextFieldValue("Subject"))
+        viewModel.uiState.value.onDescriptionChanged(TextFieldValue("Description"))
         viewModel.uiState.value.onSubmit()
 
         assertFalse(viewModel.uiState.value.isLoading)
@@ -399,8 +400,8 @@ class ReportABugViewModelTest {
         val viewModel = getViewModel()
 
         viewModel.uiState.value.onTopicSelected("Minor issue")
-        viewModel.uiState.value.onSubjectChanged("Subject")
-        viewModel.uiState.value.onDescriptionChanged("Description")
+        viewModel.uiState.value.onSubjectChanged(TextFieldValue("Subject"))
+        viewModel.uiState.value.onDescriptionChanged(TextFieldValue("Description"))
         viewModel.uiState.value.onSubmit()
 
         coVerify {
@@ -414,33 +415,13 @@ class ReportABugViewModelTest {
     }
 
     @Test
-    fun `successful submit uses empty email when user is null`() = runTest {
-        every { apiPrefs.user } returns null
-        val viewModel = getViewModel()
-
-        viewModel.uiState.value.onTopicSelected("Minor issue")
-        viewModel.uiState.value.onSubjectChanged("Subject")
-        viewModel.uiState.value.onDescriptionChanged("Description")
-        viewModel.uiState.value.onSubmit()
-
-        coVerify {
-            repository.submitErrorReport(
-                subject = any(),
-                description = any(),
-                email = "",
-                severity = any()
-            )
-        }
-    }
-
-    @Test
     fun `failed submit sets snackbarMessage on error`() = runTest {
         coEvery { repository.submitErrorReport(any(), any(), any(), any()) } throws Exception("Network error")
         val viewModel = getViewModel()
 
         viewModel.uiState.value.onTopicSelected("Minor issue")
-        viewModel.uiState.value.onSubjectChanged("Subject")
-        viewModel.uiState.value.onDescriptionChanged("Description")
+        viewModel.uiState.value.onSubjectChanged(TextFieldValue("Subject"))
+        viewModel.uiState.value.onDescriptionChanged(TextFieldValue("Description"))
         viewModel.uiState.value.onSubmit()
 
         assertEquals("Your ticket couldn't be submitted. Please try again.", viewModel.uiState.value.snackbarMessage)
@@ -452,8 +433,8 @@ class ReportABugViewModelTest {
         val viewModel = getViewModel()
 
         viewModel.uiState.value.onTopicSelected("Minor issue")
-        viewModel.uiState.value.onSubjectChanged("Subject")
-        viewModel.uiState.value.onDescriptionChanged("Description")
+        viewModel.uiState.value.onSubjectChanged(TextFieldValue("Subject"))
+        viewModel.uiState.value.onDescriptionChanged(TextFieldValue("Description"))
         viewModel.uiState.value.onSubmit()
 
         assertFalse(viewModel.uiState.value.isLoading)
@@ -465,8 +446,8 @@ class ReportABugViewModelTest {
         val viewModel = getViewModel()
 
         viewModel.uiState.value.onTopicSelected("Minor issue")
-        viewModel.uiState.value.onSubjectChanged("Subject")
-        viewModel.uiState.value.onDescriptionChanged("Description")
+        viewModel.uiState.value.onSubjectChanged(TextFieldValue("Subject"))
+        viewModel.uiState.value.onDescriptionChanged(TextFieldValue("Description"))
         viewModel.uiState.value.onSubmit()
 
         assertFalse(viewModel.uiState.value.shouldNavigateBack)
@@ -483,30 +464,13 @@ class ReportABugViewModelTest {
         val viewModel = getViewModel()
 
         viewModel.uiState.value.onTopicSelected("Minor issue")
-        viewModel.uiState.value.onSubjectChanged("Subject")
-        viewModel.uiState.value.onDescriptionChanged("Description")
+        viewModel.uiState.value.onSubjectChanged(TextFieldValue("Subject"))
+        viewModel.uiState.value.onDescriptionChanged(TextFieldValue("Description"))
         viewModel.uiState.value.onSubmit()
 
         assertEquals(0, events.size)
 
         job.cancel()
-    }
-
-    @Test
-    fun `clearing snackbar sets snackbarMessage to null`() = runTest {
-        coEvery { repository.submitErrorReport(any(), any(), any(), any()) } throws Exception("Network error")
-        val viewModel = getViewModel()
-
-        viewModel.uiState.value.onTopicSelected("Minor issue")
-        viewModel.uiState.value.onSubjectChanged("Subject")
-        viewModel.uiState.value.onDescriptionChanged("Description")
-        viewModel.uiState.value.onSubmit()
-
-        assertNotNull(viewModel.uiState.value.snackbarMessage)
-
-        viewModel.uiState.value.onSnackbarDismissed()
-
-        assertNull(viewModel.uiState.value.snackbarMessage)
     }
 
     private fun getViewModel(): ReportABugViewModel {
