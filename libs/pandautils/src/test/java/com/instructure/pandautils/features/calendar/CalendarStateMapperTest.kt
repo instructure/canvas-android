@@ -15,6 +15,9 @@
  */
 package com.instructure.pandautils.features.calendar
 
+import com.instructure.pandautils.compose.composables.calendar.CalendarDayUiState
+import com.instructure.pandautils.compose.composables.calendar.CalendarRowUiState
+import com.instructure.pandautils.compose.composables.calendar.CalendarStateMapper
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue

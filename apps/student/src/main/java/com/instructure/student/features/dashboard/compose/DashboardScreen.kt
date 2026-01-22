@@ -65,6 +65,7 @@ import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.courseinvitation.CourseInvitationsWidget
 import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidget
 import com.instructure.pandautils.features.dashboard.widget.institutionalannouncements.InstitutionalAnnouncementsWidget
+import com.instructure.pandautils.features.dashboard.widget.todo.TodoWidget
 import com.instructure.pandautils.features.dashboard.widget.welcome.WelcomeWidget
 import com.instructure.pandautils.features.dashboard.widget.forecast.ForecastWidget
 import com.instructure.pandautils.utils.ThemePrefs
@@ -275,6 +276,8 @@ private fun GetWidgetComposable(
         )
 
         WidgetMetadata.WIDGET_ID_FORECAST -> ForecastWidget(refreshSignal = refreshSignal)
+        WidgetMetadata.WIDGET_ID_TODO -> TodoWidget(refreshSignal = refreshSignal)
+
         else -> {}
     }
 }

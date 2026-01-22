@@ -183,6 +183,7 @@ class CustomizeDashboardViewModel @Inject constructor(
         return when (widgetId) {
             WidgetMetadata.WIDGET_ID_WELCOME -> resources.getString(R.string.widget_hello, apiPrefs.user?.shortName)
             WidgetMetadata.WIDGET_ID_FORECAST -> resources.getString(R.string.widget_weekly_summary)
+            WidgetMetadata.WIDGET_ID_TODO -> resources.getString(R.string.widget_toDo)
             else -> widgetId
         }
     }

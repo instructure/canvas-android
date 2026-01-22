@@ -14,20 +14,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.features.dashboard.widget
+package com.instructure.pandautils.features.dashboard.widget.todo
 
-data class WidgetMetadata(
-    val id: String,
-    val position: Int,
-    val isVisible: Boolean,
-    val isEditable: Boolean = true
-) {
-    companion object {
-        const val WIDGET_ID_COURSE_INVITATIONS = "course_invitations"
-        const val WIDGET_ID_INSTITUTIONAL_ANNOUNCEMENTS = "institutional_announcements"
-        const val WIDGET_ID_WELCOME = "welcome"
-        const val WIDGET_ID_COURSES = "courses"
-        const val WIDGET_ID_FORECAST = "forecast"
-        const val WIDGET_ID_TODO = "todo"
-    }
+import androidx.fragment.app.FragmentActivity
+import com.instructure.canvasapi2.models.ToDo
+
+interface TodoWidgetRouter {
+    fun routeToTodo(activity: FragmentActivity, todo: ToDo)
+    fun routeToAllTodos(activity: FragmentActivity)
 }
