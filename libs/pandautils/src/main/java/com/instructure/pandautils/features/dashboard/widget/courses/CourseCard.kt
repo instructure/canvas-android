@@ -222,6 +222,17 @@ fun CourseCard(
                 lineHeight = 21.sp
             )
 
+            if (courseCard.isSynced) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_offline_synced),
+                    contentDescription = stringResource(R.string.offline_content_available),
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        .size(24.dp),
+                    tint = colorResource(R.color.textDark)
+                )
+            }
+
             if (courseCard.announcements.isNotEmpty()) {
                 Box(
                     modifier = Modifier
