@@ -210,6 +210,7 @@ abstract class StudentTest : CanvasTest() {
             file
         )
         resultData.data = newFileUri
+        resultData.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 
         Intents.intending(
             AllOf.allOf(
