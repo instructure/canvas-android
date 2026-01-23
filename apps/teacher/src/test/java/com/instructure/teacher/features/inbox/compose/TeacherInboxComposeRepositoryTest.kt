@@ -3,7 +3,6 @@ package com.instructure.teacher.features.inbox.compose
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.apis.FeaturesAPI
-import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.RecipientAPI
 import com.instructure.canvasapi2.managers.InboxSettingsManager
@@ -32,7 +31,6 @@ import org.junit.Test
 class TeacherInboxComposeRepositoryTest {
 
     private val courseAPI: CourseAPI.CoursesInterface = mockk(relaxed = true)
-    private val groupAPI: GroupAPI.GroupInterface = mockk(relaxed = true)
     private val featuresApi: FeaturesAPI.FeaturesInterface = mockk(relaxed = true)
     private val recipientAPI: RecipientAPI.RecipientInterface = mockk(relaxed = true)
     private val inboxAPI: InboxApi.InboxInterface = mockk(relaxed = true)
@@ -40,7 +38,6 @@ class TeacherInboxComposeRepositoryTest {
 
     private val inboxComposeRepository = TeacherInboxComposeRepository(
         courseAPI,
-        groupAPI,
         featuresApi,
         recipientAPI,
         inboxAPI,

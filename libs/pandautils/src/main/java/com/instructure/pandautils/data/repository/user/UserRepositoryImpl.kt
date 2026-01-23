@@ -46,7 +46,7 @@ class UserRepositoryImpl(
     }
 
     override suspend fun setCourseColor(contextId: String, color: Int): DataResult<ColorChangeResponse> {
-        val params = RestParams()
+        val params = RestParams(isForceReadFromNetwork = true)
         return userApi.setColor(contextId, color.toApiHexString(), params)
     }
 }

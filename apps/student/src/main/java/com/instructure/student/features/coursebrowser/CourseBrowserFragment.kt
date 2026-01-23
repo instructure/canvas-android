@@ -105,14 +105,18 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
     @get:PageViewUrlParam("canvasContext")
     var canvasContext: CanvasContext by ParcelableArg(key = Const.CANVAS_CONTEXT)
 
-    private var hideColorOverlayFromConfig: Boolean = false
+    private val isDashboardRedesignEnabled by lazy {
+        RemoteConfigUtils.getBoolean(RemoteConfigParam.DASHBOARD_REDESIGN)
+    }
+
+    private var hideColorOverlayFromConfig: Boolean = true
 
     /**
      * Returns whether to hide the color overlay.
      * Uses widget config if dashboard redesign is enabled, otherwise uses StudentPrefs.
      */
     private val hideColorOverlay: Boolean
-        get() = if (RemoteConfigUtils.getBoolean(RemoteConfigParam.DASHBOARD_REDESIGN)) {
+        get() = if (isDashboardRedesignEnabled) {
             hideColorOverlayFromConfig
         } else {
             StudentPrefs.hideCourseColorOverlay
@@ -133,10 +137,10 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
         super.onViewCreated(view, savedInstanceState)
 
         // Observe widget config for color overlay setting when dashboard redesign is enabled
-        if (RemoteConfigUtils.getBoolean(RemoteConfigParam.DASHBOARD_REDESIGN)) {
+        if (isDashboardRedesignEnabled) {
             viewLifecycleOwner.lifecycleScope.launch {
                 observeWidgetConfigUseCase(WidgetMetadata.WIDGET_ID_COURSES).collect { settings ->
-                    val showColorOverlay = settings.firstOrNull { it.key == CoursesConfig.KEY_SHOW_COLOR_OVERLAY }?.value as? Boolean ?: true
+                    val showColorOverlay = settings.firstOrNull { it.key == CoursesConfig.KEY_SHOW_COLOR_OVERLAY }?.value as? Boolean ?: false
                     hideColorOverlayFromConfig = !showColorOverlay
 
                     // Update UI when setting changes
@@ -254,8 +258,10 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
     private fun updateToolbarVisibility() = with(binding) {
         val useOverlay = !hideColorOverlay
         if (!useOverlay) {
-            overlayToolbar.removeView(searchBar)
-            noOverlayToolbar.addView(searchBar)
+            if (searchBar.parent == overlayToolbar) {
+                overlayToolbar.removeView(searchBar)
+                noOverlayToolbar.addView(searchBar)
+            }
         } else {
             if (searchBar.parent == noOverlayToolbar) {
                 noOverlayToolbar.removeView(searchBar)

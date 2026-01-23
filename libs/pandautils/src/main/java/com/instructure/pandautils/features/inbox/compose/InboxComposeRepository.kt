@@ -16,7 +16,6 @@
 package com.instructure.pandautils.features.inbox.compose
 
 import com.instructure.canvasapi2.apis.CourseAPI
-import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.RecipientAPI
 import com.instructure.canvasapi2.builders.RestParams
@@ -35,7 +34,6 @@ import kotlinx.coroutines.withTimeoutOrNull
 
 abstract class InboxComposeRepository(
     private val courseAPI: CourseAPI.CoursesInterface,
-    private val groupAPI: GroupAPI.GroupInterface,
     private val recipientAPI: RecipientAPI.RecipientInterface,
     private val inboxAPI: InboxApi.InboxInterface,
     private val inboxSettingsManager: InboxSettingsManager
@@ -105,19 +103,11 @@ abstract class InboxComposeRepository(
 
     open suspend fun canSendToAll(context: CanvasContext): DataResult<Boolean> {
         val restParams = RestParams()
-        val permissionResponse = when (context.type) {
-            CanvasContext.Type.COURSE -> courseAPI.getCoursePermissions(
-                context.id,
-                listOf(CanvasContextPermission.SEND_MESSAGES_ALL),
-                restParams
-            )
-            CanvasContext.Type.GROUP -> groupAPI.getGroupPermissions(
-                context.id,
-                listOf(CanvasContextPermission.SEND_MESSAGES_ALL),
-                restParams
-            )
-            else -> return DataResult.Fail()
-        }
+        val permissionResponse = courseAPI.getCoursePermissions(
+            context.id,
+            listOf(CanvasContextPermission.SEND_MESSAGES_ALL),
+            restParams
+        )
 
         return permissionResponse.map {
             it.send_messages_all

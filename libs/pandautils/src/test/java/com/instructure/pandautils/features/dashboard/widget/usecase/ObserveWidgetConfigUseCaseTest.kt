@@ -117,4 +117,66 @@ class ObserveWidgetConfigUseCaseTest {
         assertEquals(true, results[0][0].value)
         assertEquals(false, results[1][0].value)
     }
+
+    @Test
+    fun testObserveCoursesConfigWithExistingJson() = runTest {
+        val widgetId = WidgetMetadata.WIDGET_ID_COURSES
+        val configJson = """{"widgetId":"courses","showGrades":true,"showColorOverlay":false}"""
+        coEvery { repository.observeConfigJson(widgetId) } returns flowOf(configJson)
+
+        val result = useCase(widgetId).first()
+
+        assertEquals(2, result.size)
+        assertEquals("showGrades", result[0].key)
+        assertEquals(true, result[0].value)
+        assertEquals(SettingType.BOOLEAN, result[0].type)
+        assertEquals("showColorOverlay", result[1].key)
+        assertEquals(false, result[1].value)
+        assertEquals(SettingType.BOOLEAN, result[1].type)
+    }
+
+    @Test
+    fun testObserveCoursesConfigWithNoExistingJson() = runTest {
+        val widgetId = WidgetMetadata.WIDGET_ID_COURSES
+        coEvery { repository.observeConfigJson(widgetId) } returns flowOf(null)
+
+        val result = useCase(widgetId).first()
+
+        assertEquals(2, result.size)
+        assertEquals("showGrades", result[0].key)
+        assertEquals(false, result[0].value)
+        assertEquals(SettingType.BOOLEAN, result[0].type)
+        assertEquals("showColorOverlay", result[1].key)
+        assertEquals(false, result[1].value)
+        assertEquals(SettingType.BOOLEAN, result[1].type)
+    }
+
+    @Test
+    fun testObserveCoursesConfigWithInvalidJson() = runTest {
+        val widgetId = WidgetMetadata.WIDGET_ID_COURSES
+        coEvery { repository.observeConfigJson(widgetId) } returns flowOf("invalid json")
+
+        val result = useCase(widgetId).first()
+
+        assertEquals(2, result.size)
+        assertEquals("showGrades", result[0].key)
+        assertEquals("showColorOverlay", result[1].key)
+    }
+
+    @Test
+    fun testObserveCoursesConfigUpdatesOnJsonChange() = runTest {
+        val widgetId = WidgetMetadata.WIDGET_ID_COURSES
+        val configJson1 = """{"widgetId":"courses","showGrades":false,"showColorOverlay":true}"""
+        val configJson2 = """{"widgetId":"courses","showGrades":true,"showColorOverlay":false}"""
+        coEvery { repository.observeConfigJson(widgetId) } returns flowOf(configJson1, configJson2)
+
+        val results = mutableListOf<List<WidgetSettingItem>>()
+        useCase(widgetId).collect { results.add(it) }
+
+        assertEquals(2, results.size)
+        assertEquals(false, results[0][0].value)
+        assertEquals(true, results[0][1].value)
+        assertEquals(true, results[1][0].value)
+        assertEquals(false, results[1][1].value)
+    }
 }

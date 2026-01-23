@@ -48,6 +48,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -103,6 +104,7 @@ fun CustomizeCourseScreenContent(
         modifier = Modifier
             .fillMaxSize()
             .background(colorResource(R.color.backgroundLight))
+            .testTag("customizeCourseScreen")
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
@@ -124,7 +126,9 @@ fun CustomizeCourseScreenContent(
                 NicknameCard(
                     nickname = uiState.nickname,
                     onNicknameChanged = uiState.onNicknameChanged,
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .testTag("nicknameCard")
                 )
             }
 
@@ -136,7 +140,8 @@ fun CustomizeCourseScreenContent(
                 Card(
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .testTag("colorPickerCard"),
                     colors = CardDefaults.cardColors(
                         containerColor = colorResource(R.color.backgroundLightest)
                     ),
@@ -172,7 +177,8 @@ fun CustomizeCourseScreenContent(
             actions = {
                 TextButton(
                     onClick = uiState.onDone,
-                    enabled = !uiState.isLoading
+                    enabled = !uiState.isLoading,
+                    modifier = Modifier.testTag("doneButton")
                 ) {
                     Text(
                         text = stringResource(R.string.done),
@@ -198,6 +204,7 @@ private fun CourseHeader(
         modifier = Modifier
             .fillMaxWidth()
             .height(300.dp)
+            .testTag("courseHeader")
     ) {
         Box(
             modifier = Modifier
@@ -256,6 +263,7 @@ private fun NicknameCard(
                 modifier = Modifier
                     .weight(1f)
                     .padding(start = 8.dp)
+                    .testTag("nicknameInput")
                     .onFocusChanged { isFocused = it.isFocused },
                 textStyle = TextStyle(
                     fontSize = 16.sp,
