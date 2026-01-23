@@ -868,7 +868,12 @@ class CanvasWebView @JvmOverloads constructor(
      * Format: {contextUrl}external_tools/retrieve?display=borderless&url={encodedMediaUrl}&title={encodedTitle}
      */
     private fun buildStudioUrl(contextUrl: String, mediaUrl: String, title: String?): String {
-        val encodedMediaUrl = URLEncoder.encode(mediaUrl, "UTF-8")
+        val mediaUrlWithoutHeader = Uri.parse(mediaUrl)
+            .buildUpon()
+            .appendQueryParameter("custom_embed_hide_header", "true")
+            .build()
+            .toString()
+        val encodedMediaUrl = URLEncoder.encode(mediaUrlWithoutHeader, "UTF-8")
         var url = "${contextUrl}external_tools/retrieve?display=borderless&url=$encodedMediaUrl"
         if (!title.isNullOrEmpty()) {
             val encodedTitle = URLEncoder.encode(title, "UTF-8")
@@ -934,6 +939,7 @@ class CanvasWebView @JvmOverloads constructor(
             Uri.parse(url)
                 .buildUpon()
                 .appendQueryParameter("title", title)
+                .appendQueryParameter("custom_embed_hide_header", "true")
                 .build()
                 .toString()
         } else {
