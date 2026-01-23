@@ -18,13 +18,13 @@ package com.instructure.pandautils.features.dashboard.widget.todo
 
 import androidx.fragment.app.FragmentActivity
 import com.instructure.pandautils.compose.composables.calendar.CalendarBodyUiState
-import com.instructure.pandautils.features.dashboard.widget.todo.model.TodoItem
+import com.instructure.pandautils.compose.composables.todo.ToDoItemUiState
 import org.threeten.bp.LocalDate
 
 data class TodoWidgetUiState(
     val todosLoading: Boolean = false,
     val todosError: Boolean = false,
-    val todos: List<TodoItem> = emptyList(),
+    val todos: List<ToDoItemUiState> = emptyList(),
     val selectedDay: LocalDate = LocalDate.now(),
     val calendarBodyUiState: CalendarBodyUiState? = null,
     val showCompleted: Boolean = false,

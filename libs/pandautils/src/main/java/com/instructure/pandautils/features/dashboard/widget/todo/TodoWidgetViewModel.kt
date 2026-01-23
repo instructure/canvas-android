@@ -19,12 +19,18 @@ package com.instructure.pandautils.features.dashboard.widget.todo
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.models.ToDo
 import com.instructure.canvasapi2.utils.toApiStringSafe
 import com.instructure.pandautils.compose.composables.calendar.CalendarStateMapper
+import com.instructure.pandautils.compose.composables.todo.ToDoItemUiState
+import com.instructure.pandautils.compose.composables.todo.ToDoStateMapper
+import com.instructure.pandautils.domain.usecase.courses.LoadAvailableCoursesParams
+import com.instructure.pandautils.domain.usecase.courses.LoadAvailableCoursesUseCase
 import com.instructure.pandautils.domain.usecase.planner.LoadPlannerItemsUseCase
-import com.instructure.pandautils.features.dashboard.widget.todo.model.TodoItem
+import com.instructure.pandautils.utils.isComplete
+import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
@@ -47,13 +53,16 @@ import javax.inject.Inject
 class TodoWidgetViewModel @Inject constructor(
     private val todoWidgetBehavior: TodoWidgetBehavior,
     private val calendarStateMapper: CalendarStateMapper,
+    private val toDoStateMapper: ToDoStateMapper,
     private val loadPlannerItemsUseCase: LoadPlannerItemsUseCase,
+    private val loadAvailableCoursesUseCase: LoadAvailableCoursesUseCase,
     clock: Clock
 ) : ViewModel() {
 
     private var todos: List<ToDo> = emptyList()
     private var selectedDay = LocalDate.now(clock)
     private var showCompleted = false
+    private var courseMap = mapOf<Long, Course>()
 
     private val eventsByDay = mutableMapOf<LocalDate, MutableList<PlannerItem>>()
     private val loadingDays = mutableSetOf<LocalDate>()
@@ -139,11 +148,19 @@ class TodoWidgetViewModel @Inject constructor(
         )
     }
 
-    private fun createTodoItemsForSelectedDay(): List<TodoItem> {
-        // TODO: Implement mapping from PlannerItem to TodoItem
-        // Filter by selectedDay
-        // Filter by showCompleted
-        return emptyList()
+    private fun createTodoItemsForSelectedDay(): List<ToDoItemUiState> {
+        val plannerItems = eventsByDay[selectedDay] ?: return emptyList()
+
+        return plannerItems
+            .filter { showCompleted || !it.isComplete() }
+            .map { plannerItem ->
+                toDoStateMapper.mapToUiState(
+                    plannerItem = plannerItem,
+                    courseMap = courseMap,
+                    onSwipeToDone = {}, // Disregard actions for now
+                    onCheckboxToggle = {} // Disregard actions for now
+                )
+            }
     }
 
     private fun createEventIndicators(): Map<LocalDate, Int> {
@@ -164,19 +181,29 @@ class TodoWidgetViewModel @Inject constructor(
         return selectedDay.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
     }
 
-    private fun loadVisibleWeeks() {
+    private fun loadVisibleWeeks(refresh: Boolean = false) {
         viewModelScope.launch {
-            val weekField = WeekFields.of(Locale.getDefault())
-            val currentWeekStart = selectedDay.with(weekField.dayOfWeek(), 1)
+            try {
+                // Load courses
+                val courses = loadAvailableCoursesUseCase(LoadAvailableCoursesParams(forceRefresh = refresh))
+                courseMap = courses.associateBy { it.id }
 
-            val loadedStates = listOf(
-                async { loadEventsForWeek(currentWeekStart.minusWeeks(1)) },
-                async { loadEventsForWeek(currentWeekStart) },
-                async { loadEventsForWeek(currentWeekStart.plusWeeks(1)) }
-            ).awaitAll()
+                // Load planner items for visible weeks
+                val weekField = WeekFields.of(Locale.getDefault())
+                val currentWeekStart = selectedDay.with(weekField.dayOfWeek(), 1)
 
-            if (loadedStates.all { it }) {
-                _uiState.update { createNewUiState() }
+                val loadedStates = listOf(
+                    async { loadEventsForWeek(currentWeekStart.minusWeeks(1), refresh) },
+                    async { loadEventsForWeek(currentWeekStart, refresh) },
+                    async { loadEventsForWeek(currentWeekStart.plusWeeks(1), refresh) }
+                ).awaitAll()
+
+                if (loadedStates.all { it }) {
+                    _uiState.update { createNewUiState() }
+                }
+            } catch (e: Exception) {
+                // Handle error - courses might not be available but continue with planner items
+                e.printStackTrace()
             }
         }
     }
@@ -261,19 +288,6 @@ class TodoWidgetViewModel @Inject constructor(
     }
 
     fun refresh() {
-        viewModelScope.launch {
-            val weekField = WeekFields.of(Locale.getDefault())
-            val currentWeekStart = selectedDay.with(weekField.dayOfWeek(), 1)
-
-            val loadedStates = listOf(
-                async { loadEventsForWeek(currentWeekStart.minusWeeks(1), refresh = true) },
-                async { loadEventsForWeek(currentWeekStart, refresh = true) },
-                async { loadEventsForWeek(currentWeekStart.plusWeeks(1), refresh = true) }
-            ).awaitAll()
-
-            if (loadedStates.all { it }) {
-                _uiState.update { createNewUiState() }
-            }
-        }
+        loadVisibleWeeks(refresh = true)
     }
 }
