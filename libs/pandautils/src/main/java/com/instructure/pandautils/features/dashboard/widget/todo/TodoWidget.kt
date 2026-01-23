@@ -32,7 +32,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -48,8 +47,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInParent
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -58,13 +57,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.CanvasDivider
 import com.instructure.pandautils.compose.composables.CanvasSwitch
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.calendar.CalendarStateMapper
-import com.instructure.pandautils.features.dashboard.widget.todo.model.TodoItem
+import com.instructure.pandautils.compose.composables.todo.ToDoItem
+import com.instructure.pandautils.compose.composables.todo.ToDoItemType
+import com.instructure.pandautils.compose.composables.todo.ToDoItemUiState
 import com.instructure.pandautils.utils.ThemePrefs
 import com.jakewharton.threetenabp.AndroidThreeTen
 import kotlinx.coroutines.flow.SharedFlow
@@ -263,7 +265,7 @@ private fun CalendarNavigationButton(
 private fun TodoItemsContainer(
     todosLoading: Boolean,
     todosError: Boolean,
-    todos: List<TodoItem>,
+    todos: List<ToDoItemUiState>,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -276,12 +278,15 @@ private fun TodoItemsContainer(
             todosLoading -> {
                 TodoItemsLoading()
             }
+
             todosError -> {
                 TodoItemsError()
             }
+
             todos.isEmpty() -> {
                 TodoItemsEmpty()
             }
+
             else -> {
                 TodoItemsList(todos = todos)
             }
@@ -320,17 +325,20 @@ private fun TodoItemsEmpty() {
 }
 
 @Composable
-private fun TodoItemsList(todos: List<TodoItem>) {
+private fun TodoItemsList(todos: List<ToDoItemUiState>, modifier: Modifier = Modifier) {
     Column(
-        modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        modifier = modifier.fillMaxWidth()
     ) {
-        // TODO: Implement todo items list
-        Text(
-            text = "Todo items (${todos.size})",
-            fontSize = 14.sp,
-            color = colorResource(R.color.textDark)
-        )
+        todos.forEach { todo ->
+            ToDoItem(
+                item = todo,
+                onCheckedChange = {},
+                onClick = {},
+            )
+            if (todo != todos.last()) {
+                CanvasDivider(modifier = Modifier.fillMaxWidth())
+            }
+        }
     }
 }
 
@@ -363,21 +371,29 @@ private fun TodoWidgetContentPreview() {
                 Locale.getDefault()
             ),
             todos = listOf(
-                TodoItem(
-                    id = 1,
+                ToDoItemUiState(
+                    id = "1",
                     title = "Complete Assignment 1",
-                    courseName = "Introduction to Computer Science",
-                    courseColor = "#FF0000",
-                    dueDate = Date(),
-                    points = 100.0
+                    date = Date(),
+                    dateLabel = "Due Today",
+                    contextLabel = "Introduction to Computer Science",
+                    canvasContext = CanvasContext.emptyCourseContext(1),
+                    itemType = ToDoItemType.ASSIGNMENT,
+                    isChecked = false,
+                    iconRes = R.drawable.ic_assignment,
+                    tag = "100 pts"
                 ),
-                TodoItem(
-                    id = 2,
+                ToDoItemUiState(
+                    id = "2",
                     title = "Read Chapter 5",
-                    courseName = "Advanced Mathematics",
-                    courseColor = "#00FF00",
-                    dueDate = Date(),
-                    points = 50.0
+                    date = Date(),
+                    dateLabel = "Due Tomorrow",
+                    contextLabel = "Advanced Mathematics",
+                    canvasContext = CanvasContext.emptyCourseContext(2),
+                    itemType = ToDoItemType.ASSIGNMENT,
+                    isChecked = false,
+                    iconRes = R.drawable.ic_assignment,
+                    tag = "50 pts"
                 )
             )
         )
