@@ -16,32 +16,22 @@
 
 package com.instructure.pandautils.domain.usecase.announcements
 
-import com.instructure.canvasapi2.apis.AnnouncementAPI
-import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.pandautils.data.repository.course.CourseRepository
 import com.instructure.pandautils.domain.usecase.BaseUseCase
 import javax.inject.Inject
 
 data class LoadCourseAnnouncementsParams(val courseId: Long, val forceNetwork: Boolean = false)
 
 class LoadCourseAnnouncementsUseCase @Inject constructor(
-    private val announcementAPI: AnnouncementAPI.AnnouncementInterface
+    private val courseRepository: CourseRepository
 ) : BaseUseCase<LoadCourseAnnouncementsParams, List<DiscussionTopicHeader>>() {
 
     override suspend fun execute(params: LoadCourseAnnouncementsParams): List<DiscussionTopicHeader> {
-        val restParams = RestParams(
-            isForceReadFromNetwork = params.forceNetwork,
-            usePerPageQueryParam = true
-        )
-
-        val result = announcementAPI.getFirstPageAnnouncementsList(
-            CanvasContext.Type.COURSE.apiString,
-            params.courseId,
-            restParams
-        )
-
-        val announcements = result.dataOrThrow
+        val announcements = courseRepository.getCourseAnnouncements(
+            courseId = params.courseId,
+            forceRefresh = params.forceNetwork
+        ).dataOrThrow
 
         // Filter for unread announcements only
         return announcements.filter { announcement ->

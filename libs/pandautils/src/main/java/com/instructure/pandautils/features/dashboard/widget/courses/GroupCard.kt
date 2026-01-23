@@ -177,7 +177,7 @@ fun GroupCard(
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_inbox),
-                    contentDescription = stringResource(R.string.inbox),
+                    contentDescription = stringResource(R.string.messageGroup),
                     modifier = Modifier.size(24.dp),
                     tint = colorResource(R.color.textDark)
                 )

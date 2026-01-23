@@ -103,7 +103,7 @@ fun CustomizeCourseScreenContent(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(R.color.backgroundLight))
+            .background(colorResource(R.color.backgroundLightest))
             .testTag("customizeCourseScreen")
     ) {
         LazyColumn(
@@ -182,7 +182,7 @@ fun CustomizeCourseScreenContent(
                 ) {
                     Text(
                         text = stringResource(R.string.done),
-                        color = Color.White,
+                        color = colorResource(R.color.textLightest),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold,
                         lineHeight = 19.sp
@@ -278,7 +278,7 @@ private fun NicknameCard(
                     ) {
                         if (nickname.isEmpty() && !isFocused) {
                             Text(
-                                text = stringResource(R.string.dashboardCourseNickname),
+                                text = stringResource(R.string.dashboardCourseNicknameHint),
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Normal,
                                 lineHeight = 21.sp,

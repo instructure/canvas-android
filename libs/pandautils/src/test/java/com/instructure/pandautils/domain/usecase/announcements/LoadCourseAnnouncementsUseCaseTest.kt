@@ -16,10 +16,9 @@
 
 package com.instructure.pandautils.domain.usecase.announcements
 
-import com.instructure.canvasapi2.apis.AnnouncementAPI
-import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.pandautils.data.repository.course.CourseRepository
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.unmockkAll
@@ -31,8 +30,8 @@ import org.junit.Test
 
 class LoadCourseAnnouncementsUseCaseTest {
 
-    private val announcementAPI: AnnouncementAPI.AnnouncementInterface = mockk(relaxed = true)
-    private val useCase = LoadCourseAnnouncementsUseCase(announcementAPI)
+    private val courseRepository: CourseRepository = mockk(relaxed = true)
+    private val useCase = LoadCourseAnnouncementsUseCase(courseRepository)
 
     @After
     fun tearDown() {
@@ -51,11 +50,7 @@ class LoadCourseAnnouncementsUseCaseTest {
         )
 
         coEvery {
-            announcementAPI.getFirstPageAnnouncementsList(
-                CanvasContext.Type.COURSE.apiString,
-                courseId,
-                any()
-            )
+            courseRepository.getCourseAnnouncements(courseId, any())
         } returns DataResult.Success(announcements)
 
         val result = useCase(params)
@@ -77,11 +72,7 @@ class LoadCourseAnnouncementsUseCaseTest {
         )
 
         coEvery {
-            announcementAPI.getFirstPageAnnouncementsList(
-                CanvasContext.Type.COURSE.apiString,
-                courseId,
-                any()
-            )
+            courseRepository.getCourseAnnouncements(courseId, any())
         } returns DataResult.Success(announcements)
 
         val result = useCase(params)
@@ -104,11 +95,7 @@ class LoadCourseAnnouncementsUseCaseTest {
         )
 
         coEvery {
-            announcementAPI.getFirstPageAnnouncementsList(
-                CanvasContext.Type.COURSE.apiString,
-                courseId,
-                any()
-            )
+            courseRepository.getCourseAnnouncements(courseId, any())
         } returns DataResult.Success(announcements)
 
         val result = useCase(params)
@@ -128,11 +115,7 @@ class LoadCourseAnnouncementsUseCaseTest {
         )
 
         coEvery {
-            announcementAPI.getFirstPageAnnouncementsList(
-                CanvasContext.Type.COURSE.apiString,
-                courseId,
-                any()
-            )
+            courseRepository.getCourseAnnouncements(courseId, any())
         } returns DataResult.Success(announcements)
 
         val result = useCase(params)
@@ -146,11 +129,7 @@ class LoadCourseAnnouncementsUseCaseTest {
         val params = LoadCourseAnnouncementsParams(courseId)
 
         coEvery {
-            announcementAPI.getFirstPageAnnouncementsList(
-                CanvasContext.Type.COURSE.apiString,
-                courseId,
-                any()
-            )
+            courseRepository.getCourseAnnouncements(courseId, any())
         } returns DataResult.Success(emptyList())
 
         val result = useCase(params)
@@ -164,11 +143,7 @@ class LoadCourseAnnouncementsUseCaseTest {
         val params = LoadCourseAnnouncementsParams(courseId)
 
         coEvery {
-            announcementAPI.getFirstPageAnnouncementsList(
-                CanvasContext.Type.COURSE.apiString,
-                courseId,
-                any()
-            )
+            courseRepository.getCourseAnnouncements(courseId, any())
         } returns DataResult.Fail()
 
         useCase(params)

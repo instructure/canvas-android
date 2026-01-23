@@ -129,7 +129,7 @@ class GroupCardTest {
             )
         }
 
-        composeTestRule.onNodeWithContentDescription(context.getString(R.string.inbox))
+        composeTestRule.onNodeWithContentDescription(context.getString(R.string.messageGroup))
             .assertIsDisplayed()
     }
 
