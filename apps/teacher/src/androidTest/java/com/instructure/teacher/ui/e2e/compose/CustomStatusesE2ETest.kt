@@ -138,15 +138,17 @@ class CustomStatusesE2ETest: TeacherComposeTest() {
     fun testFilterCustomStatusesAndDifferentiationTagsE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
-        val data = seedData(teachers = 1, courses = 1, students = 2)
+        val data = seedData(teachers = 1, courses = 1, students = 3)
         val student = data.studentsList[0]
         val student2 = data.studentsList[1]
+        val studentWithoutTag = data.studentsList[2]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG, "Seeding a custom status ('AMAZING') with the admin user.")
         customStatusId = CustomStatusApi.upsertCustomGradeStatus(adminToken, name = "AMAZING", color = "#FF0000")
 
+        Log.d(PREPARATION_TAG, "Create 'Differentiation Tags Group Set' differentiation group set for '${course.name}' course.")
         val groupSetId = DifferentiationTagsApi.createGroupSet(
             token = teacher.token,
             courseId = course.id.toString(),
@@ -154,24 +156,35 @@ class CustomStatusesE2ETest: TeacherComposeTest() {
             nonCollaborative = true
         )
 
+        Log.d(PREPARATION_TAG, "Seeding 'First Diff Tag' differentiation tags for '${course.name}' course.")
         val firstDifferentiationTag = DifferentiationTagsApi.createGroup(
             token = teacher.token,
             groupSetId = groupSetId,
             name = "First Diff Tag"
         )
 
+        Log.d(PREPARATION_TAG, "Seeding 'Second Diff Tag' differentiation tags for '${course.name}' course.")
         val secondDifferentiationTag = DifferentiationTagsApi.createGroup(
             token = teacher.token,
             groupSetId = groupSetId,
             name = "Second Diff Tag"
         )
 
+        Log.d(PREPARATION_TAG, "Seeding 'Third Diff Tag' differentiation tags for '${course.name}' course.")
+        val thirdDifferentiationTag = DifferentiationTagsApi.createGroup(
+            token = teacher.token,
+            groupSetId = groupSetId,
+            name = "Third Diff Tag"
+        )
+
+        Log.d(PREPARATION_TAG, "Assigning 'First Diff Tag' differentiation tag to '${student.name}' student.")
         DifferentiationTagsApi.addUserToGroup(
             token = teacher.token,
             groupId = firstDifferentiationTag.toLong(),
             userId = student.id
         )
 
+        Log.d(PREPARATION_TAG, "Assigning 'Second Diff Tag' differentiation tag to '${student2.name}' student.")
         DifferentiationTagsApi.addUserToGroup(
             token = teacher.token,
             groupId = secondDifferentiationTag.toLong(),
@@ -212,11 +225,123 @@ class CustomStatusesE2ETest: TeacherComposeTest() {
         Log.d(STEP_TAG, "Click on '${testAssignment.name}' assignment.")
         assignmentListPage.clickAssignment(testAssignment)
 
-        Log.d(STEP_TAG, "Open the 'All Submissions' page and click on the filter icon on the top-right corner.")
+        Log.d(STEP_TAG, "Open the 'All Submissions' page.")
         assignmentDetailsPage.clickAllSubmissions()
+
+        Log.d(ASSERTION_TAG, "Assert that all the 3 students are displayed by default on the 'All Submissions' page before applying any filter.")
+        assignmentSubmissionListPage.assertHasSubmission(3)
+        assignmentSubmissionListPage.assertHasStudentSubmission(student)
+        assignmentSubmissionListPage.assertHasStudentSubmission(student2)
+        assignmentSubmissionListPage.assertHasStudentSubmission(studentWithoutTag)
+
+        Log.d(STEP_TAG, "Click on the filter icon on the top-right corner again.")
         assignmentSubmissionListPage.clickFilterButton()
 
-        sleep(2000)
+        Log.d(ASSERTION_TAG, "Assert that all the custom status filter text is displayed among the filtering options.")
+        assignmentSubmissionListPage.assertCustomStatusFilterOption("AMAZING")
+
+        Log.d(ASSERTION_TAG, "Assert that all the corresponding differentiation tag filter texts are displayed among the filtering options.")
+        assignmentSubmissionListPage.assertDifferentiationTagFilterOption("Students without Differentiation tags")
+        assignmentSubmissionListPage.assertDifferentiationTagFilterOption("First Diff Tag")
+        assignmentSubmissionListPage.assertDifferentiationTagFilterOption("Second Diff Tag")
+        assignmentSubmissionListPage.assertDifferentiationTagFilterOption("Third Diff Tag")
+
+        // Check 'First Diff Tag' differentiation tag filter option
+        Log.d(STEP_TAG, "Select the 'First Diff Tag' differentiation tag filter and click on 'Done'.")
+        assignmentSubmissionListPage.clickDifferentiationTagFilter("First Diff Tag")
+        assignmentSubmissionListPage.clickFilterDialogDone()
+
+        Log.d(ASSERTION_TAG, "Assert that there is 1 submission displayed, and it is for '${student.name}' student since we applied a filter to the 'First Diff Tag' differentiation tag only.")
+        assignmentSubmissionListPage.assertHasSubmission(1)
+        assignmentSubmissionListPage.assertHasStudentSubmission(student)
+        assignmentSubmissionListPage.assertCustomStatusTag("AMAZING") // The displayed submission has the custom status tag 'AMAZING'
+        assignmentSubmissionListPage.assertStudentSubmissionNotDisplayed(student2)
+
+        // Check 'Second Diff Tag' differentiation tag filter option
+        Log.d(STEP_TAG, "Click on the filter icon on the top-right corner again.")
+        assignmentSubmissionListPage.clickFilterButton()
+
+        Log.d(STEP_TAG, "Unselect the 'First Diff Tag' and select the 'Second Diff Tag' differentiation tag filter and click on 'Done'.")
+        assignmentSubmissionListPage.clickDifferentiationTagFilter("First Diff Tag")
+        assignmentSubmissionListPage.clickDifferentiationTagFilter("Second Diff Tag")
+        assignmentSubmissionListPage.clickFilterDialogDone()
+
+        Log.d(ASSERTION_TAG, "Assert that there is 1 submission displayed, and it is for '${student2.name}' student since we applied a filter to the 'Second Diff Tag' differentiation tag only.")
+        assignmentSubmissionListPage.assertHasSubmission(1)
+        assignmentSubmissionListPage.assertHasStudentSubmission(student2)
+        assignmentSubmissionListPage.assertStudentSubmissionNotDisplayed(student)
+
+        // Check 'Students without Differentiation tags' filter option
+        Log.d(STEP_TAG, "Click on the filter icon on the top-right corner again.")
+        assignmentSubmissionListPage.clickFilterButton()
+
+        Log.d(STEP_TAG, "Unselect the 'Second Diff Tag' and select the 'Students without Differentiation tags' differentiation tag filter and click on 'Done'.")
+        assignmentSubmissionListPage.clickDifferentiationTagFilter("Second Diff Tag")
+        assignmentSubmissionListPage.clickDifferentiationTagFilter("Students without Differentiation tags")
+        assignmentSubmissionListPage.clickFilterDialogDone()
+
+        Log.d(ASSERTION_TAG, "Assert that there is 1 submission displayed, and it is for '${studentWithoutTag.name}' student since we applied the 'Students without Differentiation tags' filter.")
+        assignmentSubmissionListPage.assertHasSubmission(1)
+        assignmentSubmissionListPage.assertHasStudentSubmission(studentWithoutTag)
+        assignmentSubmissionListPage.assertStudentSubmissionNotDisplayed(student)
+        assignmentSubmissionListPage.assertStudentSubmissionNotDisplayed(student2)
+
+        // Check 'AMAZING' custom status filter option
+        Log.d(STEP_TAG, "Click on the filter icon on the top-right corner again.")
+        assignmentSubmissionListPage.clickFilterButton()
+
+        Log.d(STEP_TAG, "Unselect the 'Students without Differentiation tags' differentiation tag and select 'AMAZING' custom status filter and click on 'Done'.")
+        assignmentSubmissionListPage.clickDifferentiationTagFilter("Students without Differentiation tags")
+        assignmentSubmissionListPage.clickFilterCustomStatus("AMAZING")
+        assignmentSubmissionListPage.clickFilterDialogDone()
+
+        Log.d(ASSERTION_TAG, "Assert that there is 1 submission displayed, and it is for '${student.name}' student since we applied a filter to the 'First Diff Tag' differentiation tag only.")
+        assignmentSubmissionListPage.assertHasSubmission(1)
+        assignmentSubmissionListPage.assertHasStudentSubmission(student)
+        assignmentSubmissionListPage.assertCustomStatusTag("AMAZING") // The displayed submission has the custom status tag 'AMAZING'
+        assignmentSubmissionListPage.assertStudentSubmissionNotDisplayed(student2)
+
+        // Check 'Third Diff Tag' differentiation tag filter option
+        Log.d(STEP_TAG, "Click on the filter icon on the top-right corner again.")
+        assignmentSubmissionListPage.clickFilterButton()
+
+        Log.d(STEP_TAG, "Unselect the 'AMAZING' custom status filter option and select the 'Third Diff Tag' differentiation tag and click on 'Done'.")
+        assignmentSubmissionListPage.clickFilterCustomStatus("AMAZING")
+        assignmentSubmissionListPage.clickDifferentiationTagFilter("Third Diff Tag")
+        assignmentSubmissionListPage.clickFilterDialogDone()
+
+        Log.d(ASSERTION_TAG, "Assert that there is no submission displayed since there are no students with 'Third Diff Tag' differentiation tag, so the empty view is displayed.")
+        assignmentSubmissionListPage.assertHasNoSubmission()
+        assignmentSubmissionListPage.assertEmptyViewDisplayed()
+
+        // Check 'Missing' (aka. 'Not Submitted') status filter option AND 'Second Diff Tag' differentiation tag filter option together
+        // Important info: Filter groups behave with AND logic between them and OR logic within them.
+        Log.d(STEP_TAG, "Click on the filter icon on the top-right corner again.")
+        assignmentSubmissionListPage.clickFilterButton()
+
+        Log.d(STEP_TAG, "Select the 'Missing' status filter and 'Second Diff Tag' differentiation tag and click on 'Done'.")
+        assignmentSubmissionListPage.clickFilterNotSubmitted()
+        assignmentSubmissionListPage.clickDifferentiationTagFilter("Second Diff Tag")
+        assignmentSubmissionListPage.clickFilterDialogDone()
+
+        Log.d(ASSERTION_TAG, "Assert that there is 1 submission displayed, one for '${student2.name}' student since we applied the 'Missing' status filter and 'Second Diff Tag' differentiation tag filter simultaneously.")
+        assignmentSubmissionListPage.assertHasSubmission(1)
+        assignmentSubmissionListPage.assertHasStudentSubmission(student2)
+        assignmentSubmissionListPage.assertStudentSubmissionNotDisplayed(student)
+        assignmentSubmissionListPage.assertStudentSubmissionNotDisplayed(studentWithoutTag)
+
+        // Check 'AMAZING' custom status filter option AND 'Second Diff Tag' differentiation tag filter option together to check the AND logic between filter groups
+        Log.d(STEP_TAG, "Click on the filter icon on the top-right corner again.")
+        assignmentSubmissionListPage.clickFilterButton()
+
+        Log.d(STEP_TAG, "Unselect the 'Missing' status filter select 'AMAZING' custom status filter and click on 'Done'.")
+        assignmentSubmissionListPage.clickFilterNotSubmitted()
+        assignmentSubmissionListPage.clickFilterCustomStatus("AMAZING")
+        assignmentSubmissionListPage.clickFilterDialogDone()
+
+        Log.d(ASSERTION_TAG, "Assert that there is no submission displayed since there is no student submission which has the 'AMAZING' custom status and the 'Second Diff Tag' differentiation tag simultaneously.")
+        assignmentSubmissionListPage.assertHasNoSubmission()
+        assignmentSubmissionListPage.assertEmptyViewDisplayed()
     }
 
     @After
