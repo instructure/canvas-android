@@ -20,14 +20,23 @@ package com.instructure.canvasapi2.apis
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.HelpLink
 import com.instructure.canvasapi2.models.HelpLinks
+import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.Tag
 
 object HelpLinksAPI {
     interface HelpLinksAPI {
         @GET("accounts/self/help_links")
         fun getHelpLinks(): Call<HelpLinks>
+
+        @GET("accounts/self/help_links")
+        suspend fun getHelpLinks(@Tag params: RestParams): DataResult<HelpLinks>
+
+        @GET("/help_links")
+        suspend fun getCanvasHelpLinks(@Tag params: RestParams): DataResult<List<HelpLink>>
     }
 
     fun getHelpLinks(adapter: RestBuilder, params: RestParams, callback: StatusCallback<HelpLinks>) {
