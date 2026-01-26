@@ -27,6 +27,7 @@ import com.instructure.canvas.espresso.common.pages.compose.CalendarFilterPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarScreenPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarToDoCreateUpdatePage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarToDoDetailsPage
+import com.instructure.canvas.espresso.common.pages.compose.GradesPage
 import com.instructure.canvas.espresso.common.pages.compose.InboxComposePage
 import com.instructure.canvas.espresso.common.pages.compose.InboxDetailsPage
 import com.instructure.canvas.espresso.common.pages.compose.InboxSignatureSettingsPage
@@ -35,10 +36,13 @@ import com.instructure.canvas.espresso.common.pages.compose.SelectContextPage
 import com.instructure.canvas.espresso.common.pages.compose.SettingsPage
 import com.instructure.canvas.espresso.common.pages.compose.SmartSearchPage
 import com.instructure.canvas.espresso.common.pages.compose.SmartSearchPreferencesPage
+import com.instructure.canvas.espresso.common.pages.compose.ToDoFilterPage
+import com.instructure.canvas.espresso.common.pages.compose.ToDoListPage
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.student.R
 import com.instructure.student.activity.LoginActivity
 import com.instructure.student.ui.pages.classic.StudentAssignmentDetailsPage
+import com.instructure.student.ui.pages.compose.TextSubmissionUploadPage
 import org.junit.Rule
 
 abstract class StudentComposeTest : StudentTest() {
@@ -63,6 +67,8 @@ abstract class StudentComposeTest : StudentTest() {
     val smartSearchPreferencesPage = SmartSearchPreferencesPage(composeTestRule)
     val assignmentListPage = AssignmentListPage(composeTestRule)
     val inboxSignatureSettingsPage = InboxSignatureSettingsPage(composeTestRule)
+    val toDoListPage = ToDoListPage(composeTestRule)
+    val toDoFilterPage = ToDoFilterPage(composeTestRule)
     val assignmentDetailsPage = StudentAssignmentDetailsPage(
         ModuleItemInteractions(
             R.id.moduleName,
@@ -70,4 +76,6 @@ abstract class StudentComposeTest : StudentTest() {
             R.id.prev_item
         ), composeTestRule
     )
+    val textSubmissionUploadPage = TextSubmissionUploadPage(composeTestRule)
+    val gradeListPage = GradesPage(composeTestRule)
 }

@@ -52,6 +52,7 @@
     <color name="textSuccess">#139C4C</color>
     <color name="textWarning">#E06123</color>
     <color name="shadowColor">#66FFFFFF</color>
+    <color name="disabledColor">#FFABB1B5</color>
 
     <!-- We had to define custom colors for the switches because in dark mode the previously used light/medium didn't work, because one is a shade of blue -->
     <color name="switchThumbColor">#565D64</color>

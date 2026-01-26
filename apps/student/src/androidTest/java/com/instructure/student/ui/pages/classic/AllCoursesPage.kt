@@ -55,6 +55,11 @@ class AllCoursesPage : BasePage(R.id.editDashboardPage) {
         onView(itemMatcher).assertDisplayed()
     }
 
+    fun assertCourseDisplayed(course: CourseApiModel) {
+        val itemMatcher = allOf(withText(containsString(course.name)), withId(R.id.title))
+        onView(itemMatcher).assertDisplayed()
+    }
+
     fun assertCourseNotFavorited(course: Course) {
         val childMatcher = withContentDescription("Add to dashboard")
         val itemMatcher = allOf(
@@ -64,7 +69,20 @@ class AllCoursesPage : BasePage(R.id.editDashboardPage) {
         onView(itemMatcher).assertDisplayed()
     }
 
+    fun assertCourseNotFavorited(course: CourseApiModel) {
+        val childMatcher = withContentDescription("Add to dashboard")
+        val itemMatcher = allOf(
+            withContentDescription(containsString(", not favorite")),
+            withContentDescription(containsString(course.name)),
+            hasDescendant(childMatcher))
+        onView(itemMatcher).assertDisplayed()
+    }
+
     fun unfavoriteCourse(course: Course) {
+        unfavoriteCourse(course.name)
+    }
+
+    fun unfavoriteCourse(course: CourseApiModel) {
         unfavoriteCourse(course.name)
     }
 

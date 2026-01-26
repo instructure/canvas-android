@@ -1,0 +1,142 @@
+/*
+ * Copyright (C) 2025 - present Instructure, Inc.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, version 3 of the License.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package com.instructure.student.features.dashboard.widget.courses
+
+import androidx.fragment.app.FragmentActivity
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Group
+import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidgetRouter
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.unmockkAll
+import io.mockk.verify
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.runTest
+import org.junit.After
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
+import org.junit.Before
+import org.junit.Test
+
+class StudentCoursesWidgetBehaviorTest {
+
+    private val observeGradeVisibilityUseCase: ObserveGradeVisibilityUseCase = mockk()
+    private val observeColorOverlayUseCase: ObserveColorOverlayUseCase = mockk()
+    private val router: CoursesWidgetRouter = mockk(relaxed = true)
+
+    private lateinit var behavior: StudentCoursesWidgetBehavior
+
+    @Before
+    fun setup() {
+        behavior = StudentCoursesWidgetBehavior(
+            observeGradeVisibilityUseCase = observeGradeVisibilityUseCase,
+            observeColorOverlayUseCase = observeColorOverlayUseCase,
+            router = router
+        )
+    }
+
+    @After
+    fun teardown() {
+        unmockkAll()
+    }
+
+    @Test
+    fun `observeGradeVisibility returns flow from use case`() = runTest {
+        every { observeGradeVisibilityUseCase(Unit) } returns flowOf(true)
+
+        val result = behavior.observeGradeVisibility().first()
+
+        assertTrue(result)
+    }
+
+    @Test
+    fun `observeGradeVisibility returns false when use case returns false`() = runTest {
+        every { observeGradeVisibilityUseCase(Unit) } returns flowOf(false)
+
+        val result = behavior.observeGradeVisibility().first()
+
+        assertFalse(result)
+    }
+
+    @Test
+    fun `observeColorOverlay returns flow from use case`() = runTest {
+        every { observeColorOverlayUseCase(Unit) } returns flowOf(true)
+
+        val result = behavior.observeColorOverlay().first()
+
+        assertTrue(result)
+    }
+
+    @Test
+    fun `observeColorOverlay returns false when use case returns false`() = runTest {
+        every { observeColorOverlayUseCase(Unit) } returns flowOf(false)
+
+        val result = behavior.observeColorOverlay().first()
+
+        assertFalse(result)
+    }
+
+    @Test
+    fun `onCourseClick delegates to router`() {
+        val activity: FragmentActivity = mockk()
+        val course = Course(id = 1, name = "Test Course")
+
+        behavior.onCourseClick(activity, course)
+
+        verify { router.routeToCourse(activity, course) }
+    }
+
+    @Test
+    fun `onGroupClick delegates to router`() {
+        val activity: FragmentActivity = mockk()
+        val group = Group(id = 1, name = "Test Group")
+
+        behavior.onGroupClick(activity, group)
+
+        verify { router.routeToGroup(activity, group) }
+    }
+
+    @Test
+    fun `onManageOfflineContent delegates to router`() {
+        val activity: FragmentActivity = mockk()
+        val course = Course(id = 1, name = "Test Course")
+
+        behavior.onManageOfflineContent(activity, course)
+
+        verify { router.routeToManageOfflineContent(activity, course) }
+    }
+
+    @Test
+    fun `onCustomizeCourse delegates to router`() {
+        val activity: FragmentActivity = mockk()
+        val course = Course(id = 1, name = "Test Course")
+
+        behavior.onCustomizeCourse(activity, course)
+
+        verify { router.routeToCustomizeCourse(activity, course) }
+    }
+
+    @Test
+    fun `onAllCoursesClicked delegates to router`() {
+        val activity: FragmentActivity = mockk()
+
+        behavior.onAllCoursesClicked(activity)
+
+        verify { router.routeToAllCourses(activity) }
+    }
+}

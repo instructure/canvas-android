@@ -487,6 +487,7 @@
     <string name="a11y_markAsDoneWithName">%s als erledigt markieren</string>
     <string name="a11y_markAsNotDoneWithName">%s als nicht erledigt markieren</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="a11y_expand_collapse">Abschnitt erweitern oder reduzieren</string>
     <string name="inboxSignatureError">Laden von Posteingangs-Signatur fehlgeschlagen</string>
     <string name="inboxSignatureSettingsUpdated">Posteingangseinstellungen gespeichert!</string>
     <string name="inboxSignatureSettingsError">Speichern der Posteingangseinstellungen fehlgeschlagen</string>

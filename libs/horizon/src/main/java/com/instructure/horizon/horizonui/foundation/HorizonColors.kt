@@ -393,8 +393,8 @@ object HorizonColors {
             )
         )
         fun institution() = Color(ThemePrefs.brandColor)
-        fun aiGradientStart() = Color(0xFF09508C)
-        fun aiGradientEnd() = Color(0xFF02672D)
+        fun aiGradientStart() = Color(0xFF9E58BD)
+        fun aiGradientEnd() = Color(0xFF00828E)
     }
 
     object Text {

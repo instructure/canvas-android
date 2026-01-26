@@ -20,7 +20,7 @@ package com.instructure.canvasapi2.models
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
-import java.util.*
+import java.util.Date
 
 @Parcelize
 data class AssignmentGroup(
@@ -43,9 +43,5 @@ data class GradingRule(
     @SerializedName("drop_highest")
     val dropHighest: Int = 0,
     @SerializedName("never_drop")
-    val neverDrop: List<Int> = ArrayList()
-) : Parcelable {
-    fun hasValidRule() : Boolean {
-        return dropLowest != 0 || dropHighest != 0 || neverDrop.isNotEmpty()
-    }
-}
+    val neverDrop: List<Long> = ArrayList()
+) : Parcelable

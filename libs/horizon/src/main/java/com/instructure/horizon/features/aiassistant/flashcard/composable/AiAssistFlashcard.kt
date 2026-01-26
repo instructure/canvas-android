@@ -37,7 +37,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.onClick
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.horizon.R
@@ -53,34 +58,55 @@ fun AiAssistFlashcard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
     val flipAnimation by animateFloatAsState(
         targetValue = if (isFlippedToAnswer) 180f else 0f,
         label = "FlipAnimation",
-        animationSpec = tween(durationMillis = 1000)
+        animationSpec = tween(durationMillis = 1000),
     )
     val zAxisDistance = 20f
 
-    val cardModifier = modifier
-        .fillMaxSize()
-        .clickable(
-            indication = null,
-            interactionSource = remember { MutableInteractionSource() }
-        ) { onClick() }
-        .graphicsLayer {
-            rotationY = flipAnimation
-            cameraDistance = zAxisDistance
-        }
-    Box {
+    val cardStateDescription = if (flipAnimation >= 90f)
+        stringResource(R.string.aiAsistFlashcardAnswerTitle)
+    else
+        stringResource(R.string.aiAsistFlashcardQuestionTitle)
+
+    val cardContentDescription = if (flipAnimation >= 90f)
+        answer
+    else
+        question
+
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .clickable(
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() }
+            ) { onClick() }
+            .graphicsLayer {
+                rotationY = flipAnimation
+                cameraDistance = zAxisDistance
+            }
+            .clearAndSetSemantics {
+                onClick(
+                    label = context.getString(R.string.a11y_aiAssistFlashcardClickActionLabel),
+                    action = { onClick(); true }
+                )
+                contentDescription = cardContentDescription
+                stateDescription = cardStateDescription
+            }
+    ) {
         if (flipAnimation >= 90f) {
             AnswerContent(
                 answerText = answer,
-                modifier = cardModifier
+                modifier = Modifier
+                    .fillMaxSize()
                     .scale(scaleX = -1f, scaleY = 1f)
             )
         } else {
             QuestionContent(
                 questionText = question,
-                modifier = cardModifier
+                modifier = Modifier.fillMaxSize()
             )
         }
     }

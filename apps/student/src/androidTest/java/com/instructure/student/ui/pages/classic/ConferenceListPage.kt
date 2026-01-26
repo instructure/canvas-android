@@ -18,6 +18,7 @@ package com.instructure.student.ui.pages.classic
 
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
+import com.instructure.espresso.DoesNotExistAssertion
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
@@ -47,6 +48,10 @@ open class ConferenceListPage : BasePage(R.id.conferenceListPage) {
         onView(allOf(withId(R.id.title), withText(conferenceTitle))).assertDisplayed()
     }
 
+    fun assertConferenceNotDisplayed(conferenceTitle: String) {
+        onView(allOf(withId(R.id.title), withText(conferenceTitle))).check(DoesNotExistAssertion(5))
+    }
+
     fun assertConferenceDescription(conferenceTitle: String, expectedDescription: String) {
         onView(allOf(withId(R.id.subtitle), withText(expectedDescription), hasSibling(allOf(withId(R.id.title), withText(conferenceTitle)))))
     }
@@ -74,5 +79,9 @@ open class ConferenceListPage : BasePage(R.id.conferenceListPage) {
 
     fun assertNewConferencesDisplayed() {
         onView(withId(R.id.title) + withText(R.string.newConferences) + withAncestor(R.id.conferenceListPage)).assertDisplayed()
+    }
+
+    fun clickExpandCollapseGroup(groupName: String) {
+        onView(withId(R.id.title) + withText(groupName)).click()
     }
 }

@@ -481,6 +481,7 @@
     <string name="a11y_markAsDoneWithName">%s 完了としてマークする</string>
     <string name="a11y_markAsNotDoneWithName">%s 未完了としてマークする</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="a11y_expand_collapse">セクションを展開する、または折りたたむ</string>
     <string name="inboxSignatureError">受信トレイの署名を読み込めませんでした</string>
     <string name="inboxSignatureSettingsUpdated">受信トレイの設定が保存されました！</string>
     <string name="inboxSignatureSettingsError">受信トレイの設定を保存できませんでした</string>

@@ -69,6 +69,7 @@ class ToDoWidgetUpdater(
                 }
                 // Other errors are handled in catch
                 val plannerItems = plannerItemsDataResult.dataOrThrow
+                    .distinctBy { it.id }
                     .filterByToDoFilters(todoFilters, courses)
                     .filter { !it.isComplete() }
                     .sortedBy { it.comparisonDate }

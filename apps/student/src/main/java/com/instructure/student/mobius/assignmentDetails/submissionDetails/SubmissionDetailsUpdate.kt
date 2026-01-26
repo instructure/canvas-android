@@ -31,6 +31,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.pandautils.utils.AssignmentUtils2
 import com.instructure.pandautils.utils.isAllowedToSubmitWithOverrides
+import com.instructure.pandautils.utils.orDefault
 import com.instructure.student.mobius.common.ui.UpdateInit
 import com.instructure.student.util.Const
 import com.spotify.mobius.First
@@ -178,7 +179,7 @@ class SubmissionDetailsUpdate : UpdateInit<SubmissionDetailsModel, SubmissionDet
                     SubmissionDetailsContentType.ExternalToolContent(canvasContext, ltiTool, assignment.name.orEmpty(), assignment.ltiToolType())
                 else SubmissionDetailsContentType.LockedContent
             }
-            submission?.submissionType == null -> SubmissionDetailsContentType.NoSubmissionContent(canvasContext, assignment!!, isStudioEnabled!!, quiz, studioLTITool, isObserver, ltiTool)
+            submission?.submissionType == null -> SubmissionDetailsContentType.NoSubmissionContent(canvasContext, assignment!!, isStudioEnabled.orDefault(), quiz, studioLTITool, isObserver, ltiTool)
             submission.workflowState != "submitted" && AssignmentUtils2.getAssignmentState(assignment, submission) in listOf(AssignmentUtils2.ASSIGNMENT_STATE_MISSING, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_MISSING) -> SubmissionDetailsContentType.NoSubmissionContent(canvasContext, assignment!!, isStudioEnabled!!, quiz)
             else -> when (Assignment.getSubmissionTypeFromAPIString(submission.submissionType)) {
 

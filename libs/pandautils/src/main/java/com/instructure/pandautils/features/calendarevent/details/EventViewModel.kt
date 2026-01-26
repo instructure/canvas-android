@@ -26,6 +26,7 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ScheduleItem
+import com.instructure.canvasapi2.models.toBaseUrl
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.weave.catch
@@ -153,7 +154,8 @@ class EventViewModel @Inject constructor(
                 formattedDescription = htmlContentFormatter.formatHtmlWithIframes(scheduleItem.description.orEmpty(), scheduleItem.courseId),
                 isSeriesEvent = scheduleItem.isRecurring,
                 isSeriesHead = scheduleItem.seriesHead,
-                isMessageFabEnabled = eventViewModelBehavior.shouldShowMessageFab && scheduleItem.contextType == CanvasContext.Type.COURSE
+                isMessageFabEnabled = eventViewModelBehavior.shouldShowMessageFab && scheduleItem.contextType == CanvasContext.Type.COURSE,
+                baseUrl = canvasContext?.toBaseUrl()
             )
         }
     }

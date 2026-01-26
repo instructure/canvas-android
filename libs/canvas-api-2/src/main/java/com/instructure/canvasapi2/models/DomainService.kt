@@ -17,25 +17,26 @@
 package com.instructure.canvasapi2.models
 
 import com.instructure.canvasapi2.BuildConfig
+import com.instructure.canvasapi2.utils.ApiPrefs
 
 enum class DomainService(
-    val baseUrl: String,
-    val workflow: String,
+    private val baseUrlTemplate: String,
+    val workflows: List<String>,
 ) {
-    PINE(
-        baseUrl = BuildConfig.PINE_BASE_URL,
-        workflow = "pine",
-    ),
-    CEDAR(
-        baseUrl = BuildConfig.CEDAR_BASE_URL,
-        workflow = "cedar",
-    ),
-    REDWOOD(
-        baseUrl = BuildConfig.REDWOOD_BASE_URL,
-        workflow = "redwood",
-    ),
     JOURNEY(
-        baseUrl = BuildConfig.JOURNEY_BASE_URL,
-        workflow = "journey",
-    )
+        baseUrlTemplate = BuildConfig.JOURNEY_BASE_URL,
+        workflows = listOf("journey", "pine", "cedar", "redwood"),
+    );
+
+    fun getBaseUrl(): String {
+        return resolveRegion(baseUrlTemplate)
+    }
+
+    private fun resolveRegion(urlTemplate: String): String {
+        if (!urlTemplate.contains("{region}")) {
+            return urlTemplate
+        }
+        val region = ApiPrefs.canvasRegion?.takeIf { it.isNotEmpty() } ?: "us-east-1"
+        return urlTemplate.replace("{region}", region)
+    }
 }

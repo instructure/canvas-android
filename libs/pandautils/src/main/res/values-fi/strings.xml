@@ -487,6 +487,7 @@
     <string name="a11y_markAsDoneWithName">%s Merkitse valmiiksi</string>
     <string name="a11y_markAsNotDoneWithName">%s Merkitse ei valmiiksi</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="a11y_expand_collapse">Laajenna tai kutista osio</string>
     <string name="inboxSignatureError">Tulevien postien allekirjoitus epäonnistui</string>
     <string name="inboxSignatureSettingsUpdated">Tulevien postien asetukset tallennettu</string>
     <string name="inboxSignatureSettingsError">Tulevien asetusten tallentaminen epäonnistui</string>

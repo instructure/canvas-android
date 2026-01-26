@@ -151,7 +151,7 @@ private fun SpeedGraderContentScreen(
             }
             uiState.content?.let { content ->
                 key(content) {
-                    val route = router.getRouteForContent(content)
+                    val route = router.getRouteForContent(content, uiState.baseUrl)
                     AndroidFragment(
                         clazz = route.clazz,
                         arguments = route.bundle,
@@ -558,7 +558,7 @@ private fun SpeedGraderContentScreenPreview() {
     SpeedGraderContentScreen(
         uiState = uiState,
         router = object : SpeedGraderContentRouter {
-            override fun getRouteForContent(content: GradeableContent): SpeedGraderContentRoute {
+            override fun getRouteForContent(content: GradeableContent, baseUrl: String?): SpeedGraderContentRoute {
                 throw NotImplementedError("No need for Preview")
             }
         },

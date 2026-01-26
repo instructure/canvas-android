@@ -5,11 +5,8 @@ import com.instructure.canvasapi2.apis.DomainServicesAuthenticationAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.DomainService
 import com.instructure.canvasapi2.models.DomainServicesWorkflow
-import com.instructure.canvasapi2.utils.CedarApiPref
 import com.instructure.canvasapi2.utils.DomainServicesApiPref
 import com.instructure.canvasapi2.utils.JourneyApiPref
-import com.instructure.canvasapi2.utils.PineApiPref
-import com.instructure.canvasapi2.utils.RedwoodApiPref
 import java.util.Date
 import javax.inject.Inject
 import kotlin.io.encoding.Base64
@@ -35,11 +32,11 @@ abstract class DomainServicesAuthenticationManager(
 
     @OptIn(ExperimentalEncodingApi::class)
     private suspend fun requestAuthenticationToken(domainService: DomainService): String {
-        val workflow = domainService.workflow
+        val workflows = domainService.workflows
         val params = RestParams()
         val newToken = domainServicesAuthenticationAPI
             .getDomainServiceAuthentication(null, false,
-                DomainServicesWorkflow(listOf(workflow)), params)
+                DomainServicesWorkflow(workflows), params)
             .map { it.token }
             .dataOrNull
             .orEmpty()
@@ -54,33 +51,6 @@ abstract class DomainServicesAuthenticationManager(
         return false
     }
 }
-
-class PineAuthenticationManager @Inject constructor(
-    domainServicesAuthenticationAPI: DomainServicesAuthenticationAPI,
-    pineApiPref: PineApiPref
-) : DomainServicesAuthenticationManager(
-    domainServicesAuthenticationAPI,
-    pineApiPref,
-    DomainService.PINE
-)
-
-class CedarAuthenticationManager @Inject constructor(
-    domainServicesAuthenticationAPI: DomainServicesAuthenticationAPI,
-    cedarApiPref: CedarApiPref
-) : DomainServicesAuthenticationManager(
-    domainServicesAuthenticationAPI,
-    cedarApiPref,
-    DomainService.CEDAR
-)
-
-class RedwoodAuthenticationManager @Inject constructor(
-    domainServicesAuthenticationAPI: DomainServicesAuthenticationAPI,
-    redwoodApiPref: RedwoodApiPref
-) : DomainServicesAuthenticationManager(
-    domainServicesAuthenticationAPI,
-    redwoodApiPref,
-    DomainService.REDWOOD
-)
 
 class JourneyAuthenticationManager @Inject constructor(
     domainServicesAuthenticationAPI: DomainServicesAuthenticationAPI,

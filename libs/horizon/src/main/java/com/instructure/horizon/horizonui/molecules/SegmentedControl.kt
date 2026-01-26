@@ -42,6 +42,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -53,6 +54,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.selectable
 import com.instructure.pandautils.utils.toDp
 
 /**
@@ -84,6 +86,7 @@ fun SegmentedControl(
     )
 
     Box(modifier = modifier.fillMaxWidth()) {
+        val context = LocalContext.current
         Row(
             verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween,
             modifier = modifier
@@ -110,6 +113,9 @@ fun SegmentedControl(
                         .weight(1f)
                         .onGloballyPositioned {
                             itemWidth.intValue = it.size.width
+                        }
+                        .semantics {
+                            selectable(context, selectedIndex == index)
                         }
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {

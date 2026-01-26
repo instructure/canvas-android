@@ -1045,6 +1045,8 @@
 
     <string name="downloading">Laster ned</string>
     <string name="downloadComplete">Nedlasting fullført</string>
+    <string name="fileDownloadNotificationPermissionDenied">Nedlasting startet. Aktiver varsling for å se fremdrift.</string>
+
     <string name="notificationChannelNameFileDownloadsName">Last ned varslinger</string>
     <string name="notificationChannelNameFileDownloadsDescription">Canvas-varslinger for pågående nedlastinger.</string>
     <string name="full_due_date_details">Fulle forfallsdato detaljer</string>
@@ -1249,6 +1251,7 @@
     <string name="a11y_content_description_add_to_dashboard">Legg til oversikt</string>
     <string name="a11y_content_description_add_all_to_dashboard">Legg til alle til oversikt</string>
 
+    <string name="new_mobile_dashboard">Ny mobiloversikt</string>
     <!-- K5 Strings -->
     <string name="navDrawerAccount">Konto</string>
     <string name="dashboardTabHomeroom">Hjem</string>
@@ -1368,6 +1371,10 @@
         <item quantity="other">%s uleste varslinger</item>
     </plurals>
 
+    <plurals name="a11y_todoBadgeCount">
+        <item quantity="one">%s gjøremålselement</item>
+        <item quantity="other">%s gjøremålselementer</item>
+    </plurals>
     <string name="noAnnotationSelected">Ingen merknad valgt</string>
     <string name="emailNotifications">E-post varslinger</string>
     <string name="emailNotificationsImmediately">Umiddelbart</string>
@@ -1908,6 +1915,8 @@
     <string name="gradePreferencesHeaderSortBy">Sortert på</string>
     <string name="gradesEmptyTitle">Ingen oppgaver</string>
     <string name="gradesEmptyMessage">Det ser ut som det ikke er opprettet oppgaver i dette området enda.</string>
+    <string name="noMatchingAssignments">Ingen matchende oppgaver</string>
+    <string name="noMatchingAssignmentsDescription">Ingen oppgaver matcher søket ditt. Prøv et annet søkeord.</string>
     <string name="errorLoadingGrades">Vi har problemer med å laste inn elevenes vurderinger. Prøv å laste inn siden på nytt eller sjekk innom senere.</string>
     <string name="errorLoadingCourse">Vi har problemer med å laste inn elevenes fagdetaljer. Prøv å laste inn siden på nytt eller sjekk innom senere.</string>
     <string name="gradesFilterContentDescription">Filter</string>
@@ -2079,7 +2088,8 @@
     <string name="widgetErrorTitle">Obs! Noe gikk galt</string>
     <string name="widgetErrorSubtitle">Vi har problemer med å vise oppgavene dine akkurat nå. Prøv igjen om litt eller gå til appen.</string>
     <string name="widgetToDoEmptyTitle">Du er ferdig for nå!</string>
-    <string name="widgetToDoEmptySubtitle">Det ser ut til at du har fri de neste fire ukene. Vil du legge til noen gjøremål?</string>
+    <string name="widgetToDoEmptySubtitle">Ser ut som du er ledig, du har ingen kommende oppgaver. Vil du legge til noen gjøremål?</string>
+
     <string name="widgetNotLoggedInTitle">La oss logge deg inn!</string>
     <string name="widgetToDoNotLoggedInSubtitle">For å se gjøremålene dine, logg inn på kontoen din i appen. Det tar bare et øyeblikk!</string>
     <string name="a11y_widgetToDoOpenToDoList">Åpne gjøremålsliste-skjermen</string>
@@ -2104,6 +2114,11 @@
         <item quantity="one">%s / %s poeng</item>
         <item quantity="other">%s / %s poeng</item>
     </plurals>
+    <plurals name="groupMemberCount">
+        <item quantity="one">Elev</item>
+        <item quantity="other">Elever</item>
+    </plurals>
+
     <string name="speedGraderLatePenaltyTitle">Forsinkelsesstraff</string>
     <string name="gradingStatus_none">Ingen</string>
     <string name="gradingStatus_late">Sent</string>
@@ -2160,4 +2175,189 @@
     <string name="scored_less_than_with_max">Fikk mindre enn / %s poeng</string>
     <string name="scored_between_values">Fikk %1$s - %2$s</string>
     <string name="multiple_filters">Flere filtre</string>
+    <string name="a11y_contentDescriptionToDoFilter">Filter</string>
+    <string name="errorLoadingToDos">Det oppsto en feil under lastingen av gjøremålene dine. Kontroller tilkoblingen og prøv på nytt.</string>
+    <string name="errorUpdatingToDo">Det oppsto en feil ved oppdatering av gjøremålet. Kontroller tilkoblingen og prøv på nytt.</string>
+    <string name="noToDosForNow">Nye gjøremål for nå!</string>
+    <string name="noToDosForNowSubtext">Det ser ut som dette er et godt tidspunkt å slappe av, hvile og lade batteriene.</string>
+    <string name="todoSwipeDone">Ferdig</string>
+    <string name="todoSwipeUndo">Angre</string>
+    <string name="todoMarkedAsDone">%s merket som ferdig</string>
+    <string name="todoMarkedAsNotDone">%s merket som ikke ferdig</string>
+    <string name="todoMarkedAsDoneSnackbarUndo">Angre</string>
+    <string name="todoActionOffline">Denne handlingen kan ikke utføres frakoblet</string>
+
+    <!-- To Do List Filter Screen -->
+    <string name="todoFilterPreferences">Innstillinger for gjøremålsliste</string>
+    <string name="todoFilterVisibleItems">Synlige elementer</string>
+    <string name="todoFilterShowPersonalToDos">Vis personlige gjøremål</string>
+    <string name="todoFilterShowCalendarEvents">Vis kalenderoppføringer</string>
+    <string name="todoFilterShowCompleted">Vis fullført</string>
+    <string name="todoFilterFavoriteCoursesOnly">Kun favorittfag</string>
+    <string name="todoFilterShowTasksFrom">Vis oppgaver fra</string>
+    <string name="todoFilterShowTasksUntil">Vis oppgaver til</string>
+    <string name="todoFilterToday">I dag</string>
+    <string name="todoFilterThisWeek">Denne uken</string>
+    <string name="todoFilterLastWeek">Forrige uke</string>
+    <string name="todoFilterTwoWeeks">2 uker siden</string>
+    <string name="todoFilterThreeWeeks">3 uker siden</string>
+    <string name="todoFilterFourWeeks">4 uker siden</string>
+    <string name="todoFilterNextWeek">Neste uke</string>
+    <string name="todoFilterInTwoWeeks">Om 2 uker</string>
+    <string name="todoFilterInThreeWeeks">Om 3 uker</string>
+    <string name="todoFilterInFourWeeks">Om 4 uker</string>
+    <string name="todoFilterFromDate">Fra %s</string>
+    <string name="todoFilterUntilDate">Til %s</string>
+    <string name="a11y_buttonSelectionSelected">valgt</string>
+    <string name="a11y_buttonSelectionNotSelected">ikke valgt</string>
+    <!-- Course Invitations -->
+    <string name="courseInvitationsTitle">Faginvitasjoner (%d)</string>
+    <string name="courseInvitationAccepted">Invitasjon til %s akseptert</string>
+    <string name="courseInvitationDeclined">Invitasjon til %s avslått</string>
+    <string name="courseInvitationDeclineConfirmTitle">Avvis invitasjon</string>
+    <string name="courseInvitationDeclineConfirmMessage">Er du sikker på at du vil avslå invitasjonen til %s?</string>
+
+    <!-- Welcome Widget -->
+    <!-- Greetings with name (%s is the student's first name) -->
+    <string name="welcomeGreetingMorningWithName">God morgen, %s!</string>
+    <string name="welcomeGreetingAfternoonWithName">God ettermiddag, %s!</string>
+    <string name="welcomeGreetingEveningWithName">God kveld, %s!</string>
+    <string name="welcomeGreetingNightWithName">God natt, %s!</string>
+
+    <!-- Greetings without name (fallback when user has no first name) -->
+    <string name="welcomeGreetingMorning">God morgen!</string>
+    <string name="welcomeGreetingAfternoon">God ettermiddag!</string>
+    <string name="welcomeGreetingEvening">God kveld!</string>
+    <string name="welcomeGreetingNight">God natt!</string>
+
+    <!-- Welcome Widget Motivational Messages -->
+    <string-array name="welcomeMessagesGeneric">
+        <item>Du klarer dette.</item>
+        <item>Fortsett sånn – du er sterkere enn du føler deg akkurat nå.</item>
+        <item>Ett steg av gangen er fortsatt fremgang.</item>
+        <item>Ikke gi opp – du vil takke deg i fremtiden.</item>
+        <item>Du er i stand til mer enn du tror.</item>
+        <item>Selv på tøffe dager går du fremover.</item>
+        <item>Stol på deg selv – du har gjort vanskelige ting før.</item>
+        <item>Fremgang, ikke perfeksjon. Du gjør det kjempebra.</item>
+        <item>Hold ut – du er ikke alene om dette.</item>
+        <item>Du lærer, vokser og gjør det bedre enn du tror.</item>
+        <item>Det er greit å snuble – du er fortsatt på rett vei.</item>
+        <item>Fortsett å presse på – du er nærmere enn du tror.</item>
+        <item>Små seire teller også.</item>
+        <item>Fortsett – du er nærmere enn du tror.</item>
+        <item>Det er greit å ta en pause. Pauser er en del av læringen.</item>
+        <item>Å prøve er allerede en seier.</item>
+        <item>Fremgang &gt; perfeksjon.</item>
+        <item>Å møte opp betyr mer enn du aner.</item>
+        <item>Du bygger opp ferdigheter, selv på rolige dager.</item>
+        <item>Ikke glem å puste – du klarer deg fint.</item>
+        <item>Tempoet ditt er riktig tempo.</item>
+        <item>Du trenger ikke finne ut av alt i dag.</item>
+        <item>Du hører til her.</item>
+        <item>All innsats du legger ned teller.</item>
+        <item>Det er greit å starte på nytt – så mange ganger du trenger.</item>
+        <item>Det som føles vanskelig nå, vil føles lettere senere.</item>
+        <item>Fortsett å møte opp – det er det som teller.</item>
+        <item>Små skritt flytter store fjell.</item>
+        <item>Hvile er også en del av fremgangen.</item>
+        <item>Du gjør det bedre enn du aner.</item>
+        <item>Langsom fremgang er fortsatt fremgang.</item>
+        <item>Fremtiden bygges ikke på én dag – men du er på vei.</item>
+        <item>Én oppgave, ett øyeblikk, ett steg av gangen.</item>
+        <item>Du trenger ikke å være perfekt for å gjøre en forskjell.</item>
+        <item>Læring er rotete – og det er normalt.</item>
+        <item>Hvert forsøk er vekst, selv om det ikke føles slik.</item>
+        <item>Du har gjort vanskelige ting før – du kan klare dette også.</item>
+        <item>Innsatsen din er viktig, selv om ingen ser den.</item>
+        <item>Det er greit å ta ting sakte.</item>
+        <item>Du går fremover, selv på rolige dager.</item>
+        <item>Stien trenger ikke å være tydelig – bare fortsett å gå.</item>
+        <item>Du er sterkere enn du føler deg akkurat nå.</item>
+        <item>Store mål bygges fra små skritt.</item>
+        <item>Fortsett sånn – du vil takke deg i fremtiden.</item>
+        <item>Selv rotete fremgang er fortsatt fremgang.</item>
+        <item>Du er ikke bakpå – du er på vei.</item>
+        <item>Det er greit å lære underveis.</item>
+        <item>Du vokser på måter du kanskje ikke ser ennå.</item>
+        <item>Innsatsen i dag er en investering i morgendagen.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesMorning">
+        <item>God morgen! Du har dette – ett fag, ett trinn om gangen.</item>
+        <item>Føler du deg ikke klar? Det er normalt. Bare start der du er.</item>
+        <item>Kaffe hjelper, men å være god mot deg selv fungerer bedre.</item>
+        <item>Fungerer ikke teknologien som den skal? Det skjer med oss ​​alle – ikke stress.</item>
+        <item>Dagen i dag trenger ikke å være perfekt, bare mulig.</item>
+        <item>God morgen – i dag er en ny mulighet til å lære og vokse.</item>
+        <item>Selv små skritt denne morgenen tar deg nærmere målene dine.</item>
+        <item>Pust dypt – du trenger ikke å ha funnet ut av alt ennå.</item>
+        <item>Teknologi kan være vanskelig, men du er ikke alene om å lære det.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesAfternoon">
+        <item>Du er halvveis – du har allerede gjort mer enn du tror.</item>
+        <item>Føler du at du sitter fast? Alle møter en vegg. Bare ikke slutt å klatre.</item>
+        <item>Jobber, vurderinger, fremtiden &#8230; ingen har funnet ut av alt ennå.</item>
+        <item>Trøtt i hodet? Rask pause = bedre fokus senere.</item>
+        <item>Be om hjelp. Seriøst, ingen gjør dette alene.</item>
+        <item>Du har allerede kommet så langt i dag – det er noe å være stolt av.</item>
+        <item>Trenger du en pause? Opplading er også en del av læringen.</item>
+        <item>Det er greit hvis veien føles usikker – ferdigheter bygges steg for steg.</item>
+        <item>Ta kontakt hvis du står fast – støtten er alltid nærmere enn den føles.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesEvening">
+        <item>Du kom deg gjennom dagen – det er en seier i seg selv.</item>
+        <item>Savner du noen? Send et raskt «hei» til noen – det hjelper.</item>
+        <item>Selv om det føltes rotete i dag, så møtte du opp. Det betyr noe.</item>
+        <item>Husk: ingen vurderinger måler verdien din.</item>
+        <item>Hvil deg, le eller bla uten skyldfølelse – du har fortjent det.</item>
+        <item>Bra jobbet med å komme deg gjennom dagen – fremgang teller, selv når den er stille.</item>
+        <item>Savner du venner eller mentorer? Relasjoner kan også skapes i små øyeblikk.</item>
+        <item>Kvelder er til for refleksjon – legg merke til hva du har lært i dag, ikke bare hva som gjenstår.</item>
+        <item>Innsatsen din er viktigere enn perfeksjon.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesNight">
+        <item>Jobber du fortsatt på? Respekt – men ikke glem at søvn finnes.</item>
+        <item>I morgen vil du takke deg selv for at du hvilte i natt.</item>
+        <item>Angsten blir høyere om natten – ikke tro på all ulyden.</item>
+        <item>Du er ikke bakpå, du er bare på vei.</item>
+        <item>Lukk den bærbare PC-en – hjernen din trenger også drømmer.</item>
+        <item>Det er greit å hvile – morgendagen venter med nye muligheter.</item>
+        <item>Læring er et maraton, ikke en sprint. Vær snill mot deg selv i kveld.</item>
+        <item>Hvis bekymringene føles tunge, husk at du ikke trenger å bære dem alene.</item>
+        <item>Avslutt dagen med vissheten om at det å prøve allerede er en prestasjon.</item>
+    </string-array>
+
+    <!-- Accessibility -->
+    <string name="welcomeWidgetContentDescription">Velkomstmelding: %1$s. %2$s</string>
+
+    <!-- Institutional Announcements -->
+    <string name="institutionalAnnouncementsTitle">Beskjeder (%d)</string>
+    <!-- Widget Display Names -->
+    <string name="widget_hello">Hei, %s!</string>
+
+    <!-- Customize Dashboard -->
+    <string name="customize_dashboard">Tilpass oversikt</string>
+    <string name="dashboard_widgets">Widgets</string>
+    <string name="move_up">Flytt opp</string>
+    <string name="move_down">Flytt ned</string>
+    <string name="no_widgets">Ingen widgets tilgjengelig</string>
+    <string name="changing_dashboard_layout">Endre oversikt layout</string>
+    <string name="changing_dashboard_layout_message">For å endre oversikt layout, må du starte applikasjonen på nytt</string>
+    <string name="restart_now">Start på nytt nå</string>
+    <string name="switched_back">Byttet tilbake?</string>
+    <string name="switched_back_message">Takk for at du prøver det nye oversikten! Kan du fortelle oss hvorfor du byttet tilbake?</string>
+    <string name="what_could_we_improve">Hva kan vi forbedre?</string>
+    <string name="skip">Hopp over</string>
+    <string name="widget_setting_show_greeting">Vis hilsen</string>
+    <string name="background_color">Bakgrunnsfarge</string>
+    <string name="offline_content_available">Frakoblet innhold tilgjengelig</string>
+    <string name="a11y_contentDescription_moreOptions">Flere alternativer</string>
+    <string name="customizeCourse">Skreddersy fag</string>
+    <string name="favoriteCoursesAndGroups">Favorittfag og -grupper</string>
+    <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
+    <string name="ltiToolsOffline">Eksterne verktøy er ikke tilgjengelige i frakoblet modus</string>
 </resources>

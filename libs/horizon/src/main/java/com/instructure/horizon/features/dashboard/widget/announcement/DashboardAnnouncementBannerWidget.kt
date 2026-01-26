@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -38,7 +39,8 @@ fun DashboardAnnouncementBannerWidget(
     mainNavController: NavHostController,
     homeNavController: NavHostController,
     shouldRefresh: Boolean,
-    refreshState: MutableStateFlow<List<Boolean>>
+    refreshState: MutableStateFlow<List<Boolean>>,
+    modifier: Modifier = Modifier,
 ) {
     val viewModel = hiltViewModel<DashboardAnnouncementBannerViewModel>()
     val state by viewModel.uiState.collectAsState()
@@ -53,7 +55,7 @@ fun DashboardAnnouncementBannerWidget(
     }
 
     if (state.state != DashboardItemState.SUCCESS || state.cardState.items.isNotEmpty()) {
-        DashboardAnnouncementBannerSection(state, mainNavController, homeNavController)
+        DashboardAnnouncementBannerSection(state, mainNavController, homeNavController, modifier)
     }
 }
 
@@ -62,6 +64,7 @@ fun DashboardAnnouncementBannerSection(
     state: DashboardAnnouncementBannerUiState,
     mainNavController: NavHostController,
     homeNavController: NavHostController,
+    modifier: Modifier = Modifier,
 ) {
     when (state.state) {
         DashboardItemState.LOADING -> {
@@ -69,6 +72,7 @@ fun DashboardAnnouncementBannerSection(
                 DashboardPaginatedWidgetCardState.Loading,
                 mainNavController,
                 homeNavController,
+                modifier
             )
         }
         DashboardItemState.ERROR -> {
@@ -79,6 +83,7 @@ fun DashboardAnnouncementBannerSection(
                 false,
                 DashboardWidgetPageState.Empty,
                 { state.onRefresh {} },
+                modifier
             )
         }
         DashboardItemState.SUCCESS -> {
@@ -86,6 +91,7 @@ fun DashboardAnnouncementBannerSection(
                 state.cardState,
                 mainNavController,
                 homeNavController,
+                modifier
             )
         }
     }

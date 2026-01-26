@@ -39,7 +39,6 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
-import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
@@ -108,7 +107,6 @@ private fun DialogHeader(
             contentDescription = stringResource(R.string.a11y_close),
             size = IconButtonSize.SMALL,
             color = IconButtonColor.Inverse,
-            elevation = HorizonElevation.level4,
             onClick = onDismiss
         )
     }

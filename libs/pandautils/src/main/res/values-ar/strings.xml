@@ -511,6 +511,7 @@
     <string name="a11y_markAsDoneWithName">تم وضع علامة تم على %s</string>
     <string name="a11y_markAsNotDoneWithName">لم يتم وضع علامة تم على %s</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="a11y_expand_collapse">توسعة أو طي القسم</string>
     <string name="inboxSignatureError">تعذر تحميل توقيع صندوق الوارد</string>
     <string name="inboxSignatureSettingsUpdated">تم حفظ إعدادات صندوق الوارد!</string>
     <string name="inboxSignatureSettingsError">تعذر حفظ إعدادات صندوق الوارد</string>

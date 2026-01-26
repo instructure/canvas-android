@@ -23,6 +23,7 @@ import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.instructure.canvas.espresso.StringConstants.HelpMenu
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.espresso.OnViewWithStringTextIgnoreCase
 import com.instructure.espresso.OnViewWithText
@@ -91,20 +92,20 @@ class HelpPage : BasePage(R.id.helpDialog) {
 
     fun assertHelpMenuContent() {
 
-        onView(withId(R.id.title) + withText("Search the Canvas Guides")).assertDisplayed()
-        onView(withId(R.id.subtitle) + withText("Find answers to common questions")).assertDisplayed()
+        onView(withId(R.id.title) + withText(HelpMenu.SEARCH_GUIDES_TITLE)).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText(HelpMenu.SEARCH_GUIDES_SUBTITLE)).assertDisplayed()
 
-        onView(withId(R.id.title) + withText("CUSTOM LINK")).assertDisplayed()
-        onView(withId(R.id.subtitle) + withText("This is a custom help link.")).assertDisplayed()
+        onView(withId(R.id.title) + withText(HelpMenu.CUSTOM_LINK_TITLE)).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText(HelpMenu.CUSTOM_LINK_SUBTITLE)).assertDisplayed()
 
-        onView(withId(R.id.title) + withText("Report a Problem")).assertDisplayed()
-        onView(withId(R.id.subtitle) + withText("If Canvas misbehaves, tell us about it")).assertDisplayed()
+        onView(withId(R.id.title) + withText(HelpMenu.REPORT_PROBLEM_TITLE)).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText(HelpMenu.REPORT_PROBLEM_SUBTITLE)).assertDisplayed()
 
-        onView(withId(R.id.title) + withText("Submit a Feature Idea")).assertDisplayed()
-        onView(withId(R.id.subtitle) + withText("Have an idea to improve Canvas?")).assertDisplayed()
+        onView(withId(R.id.title) + withText(HelpMenu.SUBMIT_FEATURE_TITLE)).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText(HelpMenu.SUBMIT_FEATURE_SUBTITLE)).assertDisplayed()
 
-        onView(withId(R.id.title) + withText("Share Your Love for the App")).assertDisplayed()
-        onView(withId(R.id.subtitle) + withText("Tell us about your favorite parts of the app")).assertDisplayed()
+        onView(withId(R.id.title) + withText(HelpMenu.SHARE_LOVE_TITLE)).assertDisplayed()
+        onView(withId(R.id.subtitle) + withText(HelpMenu.SHARE_LOVE_SUBTITLE)).assertDisplayed()
     }
 
     fun assertHelpMenuURL(helpMenuText: String, expectedURL: String) {
@@ -117,9 +118,9 @@ class HelpPage : BasePage(R.id.helpDialog) {
         Intents.intending(expectedIntent).respondWith(Instrumentation.ActivityResult(0, null))
 
         when (helpMenuText) {
-            "Search the Canvas Guides" -> clickSearchGuidesLabel()
-            "Submit a Feature Idea" -> clickSubmitFeatureLabel()
-            "Share Your Love for the App" -> clickShareLoveLabel()
+            HelpMenu.SEARCH_GUIDES_TITLE -> clickSearchGuidesLabel()
+            HelpMenu.SUBMIT_FEATURE_TITLE -> clickSubmitFeatureLabel()
+            HelpMenu.SHARE_LOVE_TITLE -> clickShareLoveLabel()
         }
 
         Intents.intended(expectedIntent)

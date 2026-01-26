@@ -150,6 +150,7 @@ class ToDoListViewModel @Inject constructor(
                 val courses = repository.getCourses(forceRefresh).dataOrThrow
                 val plannerItems = repository.getPlannerItems(startDate, endDate, forceRefresh).dataOrThrow
                     .filter { it.plannableType != PlannableType.ANNOUNCEMENT && it.plannableType != PlannableType.ASSESSMENT_REQUEST }
+                    .distinctBy { it.id }
 
                 // Store planner items for later reference
                 plannerItemsMap.clear()

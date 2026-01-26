@@ -18,6 +18,7 @@ package com.instructure.pandautils.data.repository.course
 
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DashboardCard
 import com.instructure.canvasapi2.utils.DataResult
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -99,6 +100,163 @@ class CourseRepositoryTest {
             courseId = 100L,
             forceRefresh = false
         )
+
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun `getCourses returns success with depaginated courses`() = runTest {
+        val courses = listOf(
+            Course(id = 1L, name = "Course 1"),
+            Course(id = 2L, name = "Course 2")
+        )
+        val expected = DataResult.Success(courses)
+        coEvery {
+            courseApi.getFirstPageCourses(any())
+        } returns expected
+        coEvery {
+            courseApi.next(any(), any())
+        } returns DataResult.Success(emptyList())
+
+        val result = repository.getCourses(forceRefresh = false)
+
+        assertEquals(expected, result)
+        coVerify {
+            courseApi.getFirstPageCourses(match {
+                !it.isForceReadFromNetwork && it.usePerPageQueryParam
+            })
+        }
+    }
+
+    @Test
+    fun `getCourses with forceRefresh passes correct params`() = runTest {
+        val courses = listOf(Course(id = 1L, name = "Course 1"))
+        val expected = DataResult.Success(courses)
+        coEvery {
+            courseApi.getFirstPageCourses(any())
+        } returns expected
+        coEvery {
+            courseApi.next(any(), any())
+        } returns DataResult.Success(emptyList())
+
+        val result = repository.getCourses(forceRefresh = true)
+
+        assertEquals(expected, result)
+        coVerify {
+            courseApi.getFirstPageCourses(match {
+                it.isForceReadFromNetwork && it.usePerPageQueryParam
+            })
+        }
+    }
+
+    @Test
+    fun `getCourses returns failure`() = runTest {
+        val expected = DataResult.Fail()
+        coEvery {
+            courseApi.getFirstPageCourses(any())
+        } returns expected
+
+        val result = repository.getCourses(forceRefresh = false)
+
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun `getFavoriteCourses returns success with courses`() = runTest {
+        val courses = listOf(
+            Course(id = 1L, name = "Course 1"),
+            Course(id = 2L, name = "Course 2")
+        )
+        val expected = DataResult.Success(courses)
+        coEvery {
+            courseApi.getFavoriteCourses(any())
+        } returns expected
+        coEvery {
+            courseApi.next(any(), any())
+        } returns DataResult.Success(emptyList())
+
+        val result = repository.getFavoriteCourses(forceRefresh = false)
+
+        assertEquals(expected, result)
+        coVerify {
+            courseApi.getFavoriteCourses(match { !it.isForceReadFromNetwork })
+        }
+    }
+
+    @Test
+    fun `getFavoriteCourses with forceRefresh passes correct params`() = runTest {
+        val courses = listOf(Course(id = 1L, name = "Course 1"))
+        val expected = DataResult.Success(courses)
+        coEvery {
+            courseApi.getFavoriteCourses(any())
+        } returns expected
+        coEvery {
+            courseApi.next(any(), any())
+        } returns DataResult.Success(emptyList())
+
+        val result = repository.getFavoriteCourses(forceRefresh = true)
+
+        assertEquals(expected, result)
+        coVerify {
+            courseApi.getFavoriteCourses(match { it.isForceReadFromNetwork })
+        }
+    }
+
+    @Test
+    fun `getFavoriteCourses returns failure`() = runTest {
+        val expected = DataResult.Fail()
+        coEvery {
+            courseApi.getFavoriteCourses(any())
+        } returns expected
+
+        val result = repository.getFavoriteCourses(forceRefresh = false)
+
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun `getDashboardCards returns success with cards`() = runTest {
+        val cards = listOf(
+            DashboardCard(id = 1L, position = 0),
+            DashboardCard(id = 2L, position = 1)
+        )
+        val expected = DataResult.Success(cards)
+        coEvery {
+            courseApi.getDashboardCourses(any())
+        } returns expected
+
+        val result = repository.getDashboardCards(forceRefresh = false)
+
+        assertEquals(expected, result)
+        coVerify {
+            courseApi.getDashboardCourses(match { !it.isForceReadFromNetwork })
+        }
+    }
+
+    @Test
+    fun `getDashboardCards with forceRefresh passes correct params`() = runTest {
+        val cards = listOf(DashboardCard(id = 1L, position = 0))
+        val expected = DataResult.Success(cards)
+        coEvery {
+            courseApi.getDashboardCourses(any())
+        } returns expected
+
+        val result = repository.getDashboardCards(forceRefresh = true)
+
+        assertEquals(expected, result)
+        coVerify {
+            courseApi.getDashboardCourses(match { it.isForceReadFromNetwork })
+        }
+    }
+
+    @Test
+    fun `getDashboardCards returns failure`() = runTest {
+        val expected = DataResult.Fail()
+        coEvery {
+            courseApi.getDashboardCourses(any())
+        } returns expected
+
+        val result = repository.getDashboardCards(forceRefresh = false)
 
         assertEquals(expected, result)
     }

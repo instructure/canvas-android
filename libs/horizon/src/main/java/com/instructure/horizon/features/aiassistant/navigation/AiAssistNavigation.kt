@@ -37,6 +37,7 @@ import com.instructure.horizon.features.aiassistant.quiz.AiAssistQuizViewModel
 
 @Composable
 fun AiAssistNavigation(
+    mainNavController: NavHostController,
     navController: NavHostController,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
@@ -53,12 +54,12 @@ fun AiAssistNavigation(
         composable(AiAssistRoute.AiAssistMain.route) {
             val viewModel: AiAssistMainViewModel = hiltViewModel()
             val uiState by viewModel.uiState.collectAsState()
-            AiAssistMainScreen(navController, uiState, onDismiss)
+            AiAssistMainScreen(mainNavController, navController, uiState, onDismiss)
         }
         composable(AiAssistRoute.AiAssistChat.route) {
             val viewModel: AiAssistChatViewModel = hiltViewModel()
             val state by viewModel.uiState.collectAsState()
-            AiAssistChatScreen(navController, onDismiss, state)
+            AiAssistChatScreen(mainNavController, navController, onDismiss, state)
         }
 
         composable(AiAssistRoute.AiAssistQuiz.route) {

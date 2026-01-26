@@ -481,6 +481,7 @@
     <string name="a11y_markAsDoneWithName">%s 標記為已完成</string>
     <string name="a11y_markAsNotDoneWithName">%s 標記為未完成</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="a11y_expand_collapse">展開或收起</string>
     <string name="inboxSignatureError">無法載入收件匣簽名</string>
     <string name="inboxSignatureSettingsUpdated">收件匣設定已儲存！</string>
     <string name="inboxSignatureSettingsError">無法儲存收件匣設定</string>

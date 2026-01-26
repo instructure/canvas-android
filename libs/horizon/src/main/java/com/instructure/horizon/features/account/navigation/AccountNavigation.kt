@@ -34,7 +34,8 @@ import com.instructure.horizon.features.account.notifications.AccountNotificatio
 import com.instructure.horizon.features.account.password.AccountPasswordScreen
 import com.instructure.horizon.features.account.profile.AccountProfileScreen
 import com.instructure.horizon.features.account.profile.AccountProfileViewModel
-import com.instructure.horizon.features.account.reportabug.ReportABugWebView
+import com.instructure.horizon.features.account.reportabug.ReportABugScreen
+import com.instructure.horizon.features.account.reportabug.ReportABugViewModel
 import com.instructure.horizon.features.home.HomeNavigationRoute
 import com.instructure.horizon.horizonui.animation.NavigationTransitionAnimation
 import com.instructure.horizon.horizonui.animation.enterTransition
@@ -89,8 +90,10 @@ fun NavGraphBuilder.accountNavigation(
             AccountAdvancedScreen(uiState, navController)
         }
 
-        composable(AccountRoute.BugReportWebView.route) {
-            ReportABugWebView(navController)
+        composable(AccountRoute.ReportABug.route) {
+            val viewModel = hiltViewModel<ReportABugViewModel>()
+            val uiState by viewModel.uiState.collectAsState()
+            ReportABugScreen(uiState, navController)
         }
     }
 }

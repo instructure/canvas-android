@@ -45,16 +45,21 @@ val animationRules = listOf(
         to = NotebookRoute.Notebook.route,
         style = NavigationTransitionAnimation.SCALE
     ),
+    NavigationTransitionAnimationRule(
+        from = MainNavigationRoute.ModuleItemSequence.serializableRoute,
+        to = NotebookRoute.AddNotebook.serializableRoute,
+        style = NavigationTransitionAnimation.SCALE
+    ),
+    NavigationTransitionAnimationRule(
+        from = MainNavigationRoute.ModuleItemSequence.serializableRoute,
+        to = NotebookRoute.EditNotebook.serializableRoute,
+        style = NavigationTransitionAnimation.SCALE
+    ),
 
     //Account
     NavigationTransitionAnimationRule(
         from = HomeNavigationRoute.Account.route,
         to = AccountRoute.Advanced.route,
-        style = NavigationTransitionAnimation.SLIDE
-    ),
-    NavigationTransitionAnimationRule(
-        from = HomeNavigationRoute.Account.route,
-        to = AccountRoute.BugReportWebView.route,
         style = NavigationTransitionAnimation.SLIDE
     ),
     NavigationTransitionAnimationRule(

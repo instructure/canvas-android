@@ -28,7 +28,7 @@ class HorizonHomePage(private val composeTestRule: ComposeTestRule) {
             .assertIsDisplayed()
         composeTestRule.onNodeWithText("Learn")
             .assertIsDisplayed()
-        composeTestRule.onNodeWithContentDescription("AI assist")
+        composeTestRule.onNodeWithContentDescription("IgniteAI")
             .assertIsDisplayed()
         composeTestRule.onNodeWithText("Skillspace")
             .assertIsDisplayed()
@@ -47,7 +47,7 @@ class HorizonHomePage(private val composeTestRule: ComposeTestRule) {
     }
 
     fun clickAiAssistantTab() {
-        composeTestRule.onNodeWithContentDescription("AI assist")
+        composeTestRule.onNodeWithContentDescription("IgniteAI")
             .performClick()
     }
 

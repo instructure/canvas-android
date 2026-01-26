@@ -1077,6 +1077,8 @@
 
     <string name="downloading">Скачивание</string>
     <string name="downloadComplete">Скачивание завершено</string>
+    <string name="fileDownloadNotificationPermissionDenied">Скачивание запущено. Включить уведомления, чтобы следить за прогрессом.</string>
+
     <string name="notificationChannelNameFileDownloadsName">Уведомления о скачивании</string>
     <string name="notificationChannelNameFileDownloadsDescription">Уведомления Canvas для текущих скачиваний.</string>
     <string name="full_due_date_details">Полная информация о сроке выполнения</string>
@@ -1291,6 +1293,7 @@
     <string name="a11y_content_description_add_to_dashboard">Добавить на информационную панель</string>
     <string name="a11y_content_description_add_all_to_dashboard">Добавить все на информационную панель</string>
 
+    <string name="new_mobile_dashboard">Новая мобильная панель управления</string>
     <!-- K5 Strings -->
     <string name="navDrawerAccount">Учетная запись</string>
     <string name="dashboardTabHomeroom">«Домашняя комната»</string>
@@ -1413,6 +1416,12 @@
         <item quantity="other">%s непрочитанных уведомлений(-я)</item>
     </plurals>
 
+    <plurals name="a11y_todoBadgeCount">
+        <item quantity="one">%s элемент задачи</item>
+        <item quantity="few">%s элемента(-ов) задачи</item>
+        <item quantity="many">%s элемента(-ов) задачи</item>
+        <item quantity="other">%s элемента(-ов) задачи</item>
+    </plurals>
     <string name="noAnnotationSelected">Аннотация не выбрана</string>
     <string name="emailNotifications">Уведомления по электронной почте</string>
     <string name="emailNotificationsImmediately">Немедленно</string>
@@ -1973,6 +1982,8 @@
     <string name="gradePreferencesHeaderSortBy">Сортировать по</string>
     <string name="gradesEmptyTitle">Задания отсутствуют</string>
     <string name="gradesEmptyMessage">Похоже, что в этом разделе пока что не было создано ни одного задания.</string>
+    <string name="noMatchingAssignments">Нет подходящих заданий</string>
+    <string name="noMatchingAssignmentsDescription">Ни одно задание не соответствует вашим критериям поиска. Попробуйте другой поисковый термин.</string>
     <string name="errorLoadingGrades">У нас возникли проблемы с загрузкой оценок вашего учащегося. Попробуйте перезагрузить страницу или проверьте еще раз через некоторое время.</string>
     <string name="errorLoadingCourse">У нас возникли проблемы с загрузкой информации о курсе вашего учащегося. Попробуйте перезагрузить страницу или проверьте еще раз через некоторое время.</string>
     <string name="gradesFilterContentDescription">Фильтровать</string>
@@ -2148,7 +2159,8 @@
     <string name="widgetErrorTitle">Ой! Что-то пошло не так</string>
     <string name="widgetErrorSubtitle">В настоящее время у нас возникли проблемы с отображением ваших задач. Попробуйте снова через некоторое время или перейдите в приложение.</string>
     <string name="widgetToDoEmptyTitle">К настоящему времени вы все выполнили!</string>
-    <string name="widgetToDoEmptySubtitle">Похоже, у вас нет планов на следующие 4 недели. Хотите добавить несколько задач?</string>
+    <string name="widgetToDoEmptySubtitle">Похоже, вы свободны, у вас нет предстоящих заданий. Хотите добавить несколько задач?</string>
+
     <string name="widgetNotLoggedInTitle">Давайте войдем в систему!</string>
     <string name="widgetToDoNotLoggedInSubtitle">Чтобы увидеть свои задачи, войдите в свою учетную запись в приложении. Это займет всего секунду!</string>
     <string name="a11y_widgetToDoOpenToDoList">Открыть окно со списком задач</string>
@@ -2175,6 +2187,13 @@
         <item quantity="many">%s / %s баллов</item>
         <item quantity="other">%s / %s баллов</item>
     </plurals>
+    <plurals name="groupMemberCount">
+        <item quantity="one">Учащийся</item>
+        <item quantity="few">Учащиеся</item>
+        <item quantity="many">Учащиеся</item>
+        <item quantity="other">Учащиеся</item>
+    </plurals>
+
     <string name="speedGraderLatePenaltyTitle">Снижение оценки за опоздание</string>
     <string name="gradingStatus_none">Нет</string>
     <string name="gradingStatus_late">Поздно</string>
@@ -2231,4 +2250,189 @@
     <string name="scored_less_than_with_max">Оценено меньше чем / %s пунктов</string>
     <string name="scored_between_values">Оценено %1$s - %2$s</string>
     <string name="multiple_filters">Несколько фильтров</string>
+    <string name="a11y_contentDescriptionToDoFilter">Фильтровать</string>
+    <string name="errorLoadingToDos">Произошла ошибка при загрузке ваших задач. Проверьте подключение и попробуйте еще раз.</string>
+    <string name="errorUpdatingToDo">Произошла ошибка при обновлении задачи. Проверьте подключение и попробуйте еще раз.</string>
+    <string name="noToDosForNow">Нет задач на данный момент!</string>
+    <string name="noToDosForNowSubtext">Похоже, что можно отдохнуть, расслабиться и набраться сил.</string>
+    <string name="todoSwipeDone">Готово</string>
+    <string name="todoSwipeUndo">Отменить</string>
+    <string name="todoMarkedAsDone">%s отмечено как выполненное</string>
+    <string name="todoMarkedAsNotDone">%s отмечено как невыполненное</string>
+    <string name="todoMarkedAsDoneSnackbarUndo">Отменить</string>
+    <string name="todoActionOffline">Это действие нельзя выполнить в автономном режиме.</string>
+
+    <!-- To Do List Filter Screen -->
+    <string name="todoFilterPreferences">Предпочтения списка задач</string>
+    <string name="todoFilterVisibleItems">Видимые позиции</string>
+    <string name="todoFilterShowPersonalToDos">Показать персональные задачи</string>
+    <string name="todoFilterShowCalendarEvents">Показать календарные события</string>
+    <string name="todoFilterShowCompleted">Показать завершенные</string>
+    <string name="todoFilterFavoriteCoursesOnly">Только избранные курсы</string>
+    <string name="todoFilterShowTasksFrom">Показать задания с</string>
+    <string name="todoFilterShowTasksUntil">Показать задания до</string>
+    <string name="todoFilterToday">Сегодня</string>
+    <string name="todoFilterThisWeek">Это неделя</string>
+    <string name="todoFilterLastWeek">На прошлой неделе</string>
+    <string name="todoFilterTwoWeeks">2 недели назад</string>
+    <string name="todoFilterThreeWeeks">3 недели назад</string>
+    <string name="todoFilterFourWeeks">4 недели назад</string>
+    <string name="todoFilterNextWeek">На следующей неделе</string>
+    <string name="todoFilterInTwoWeeks">Через 2 недели</string>
+    <string name="todoFilterInThreeWeeks">Через 3 недели</string>
+    <string name="todoFilterInFourWeeks">Через 4 недели</string>
+    <string name="todoFilterFromDate">От %s</string>
+    <string name="todoFilterUntilDate">До %s</string>
+    <string name="a11y_buttonSelectionSelected">выбрано</string>
+    <string name="a11y_buttonSelectionNotSelected">не выбрано</string>
+    <!-- Course Invitations -->
+    <string name="courseInvitationsTitle">Приглашения на курсы (%d)</string>
+    <string name="courseInvitationAccepted">Приглашение на %s принято</string>
+    <string name="courseInvitationDeclined">Приглашение на %s отклонено</string>
+    <string name="courseInvitationDeclineConfirmTitle">Отклонить приглашение</string>
+    <string name="courseInvitationDeclineConfirmMessage">Вы действительно хотите отклонить приглашение на %s?</string>
+
+    <!-- Welcome Widget -->
+    <!-- Greetings with name (%s is the student's first name) -->
+    <string name="welcomeGreetingMorningWithName">Доброе утро %s!</string>
+    <string name="welcomeGreetingAfternoonWithName">Добрый день %s!</string>
+    <string name="welcomeGreetingEveningWithName">Добрый вечер %s!</string>
+    <string name="welcomeGreetingNightWithName">Добрый вечер %s!</string>
+
+    <!-- Greetings without name (fallback when user has no first name) -->
+    <string name="welcomeGreetingMorning">Доброе утро!</string>
+    <string name="welcomeGreetingAfternoon">Добрый день!</string>
+    <string name="welcomeGreetingEvening">Добрый вечер!</string>
+    <string name="welcomeGreetingNight">Добрый вечер!</string>
+
+    <!-- Welcome Widget Motivational Messages -->
+    <string-array name="welcomeMessagesGeneric">
+        <item>У вас все получится.</item>
+        <item>Продолжай — вы сильнее, чем вам сейчас кажется.</item>
+        <item>Шаг за шагом — это и есть прогресс.</item>
+        <item>Не сдавайтесь — в будущем вы сами скажете себе спасибо.</item>
+        <item>Вы способны на большее, чем думаете.</item>
+        <item>Даже в трудные дни вы движетесь вперед.</item>
+        <item>Доверьтесь себе — вы уже сталкивались с трудностями.</item>
+        <item>Прогресс, а не совершенство. У вас все отлично получается.</item>
+        <item>Держитесь — вы не одиноки в этом.</item>
+        <item>Вы учитесь, развиваетесь и добиваетесь большего, чем думаете.</item>
+        <item>Спотыкаться — это нормально, вы все равно на правильном пути.</item>
+        <item>Продолжайте двигаться вперед — вы ближе к цели, чем думаете.</item>
+        <item>Даже небольшие победы имеют значение.</item>
+        <item>Продолжайте идти вперед — вы ближе к цели, чем думаете.</item>
+        <item>Можно сделать паузу. Перерывы — неотъемлемая часть процесса обучения.</item>
+        <item>Сама попытка — это уже победа.</item>
+        <item>Прогресс &gt; совершенство.</item>
+        <item>Проявить себя значит больше, чем вы думаете.</item>
+        <item>Вы развиваете навыки, даже в дни затишья.</item>
+        <item>Не забывайте дышать — у вас всё хорошо.</item>
+        <item>Ваш темп — правильный.</item>
+        <item>Невозможно все понять за один день.</item>
+        <item>Вы в правильном месте.</item>
+        <item>Все ваши усилия в сумме дают положительный результат.</item>
+        <item>Начинать заново — это нормально, и столько раз, сколько потребуется.</item>
+        <item>То, что сейчас кажется трудным, позже станет легче.</item>
+        <item>Продолжайте проявлять себя — это самое главное.</item>
+        <item>Малые достижения для большого успеха</item>
+        <item>Отдых тоже является частью прогресса.</item>
+        <item>Вы добиваетесь большего, чем думаете.</item>
+        <item>Даже медленное продвижение вперед — это все равно прогресс.</item>
+        <item>Будущее не строится за один день, но вы на пути к нему.</item>
+        <item>Одно задание, один момент, один шаг за раз.</item>
+        <item>Чтобы добиться успеха, не обязательно быть идеальным.</item>
+        <item>Обучение — это непростой процесс, и это нормально.</item>
+        <item>Каждая попытка — это шаг вперед, даже если вам так не кажется.</item>
+        <item>Вы уже сталкивались с трудностями — справитесь и с этим.</item>
+        <item>Ваши усилия имеют значение, даже если никто этого не замечает.</item>
+        <item>Не спешите.</item>
+        <item>Вы двигаетесь вперед, даже в спокойные дни.</item>
+        <item>Путь еще не обязательно должен быть свободен — продолжайте идти.</item>
+        <item>Вы сильнее, чем вам сейчас кажется.</item>
+        <item>Большие цели достигаются маленькими шагами.</item>
+        <item>Продолжайте в том же духе — в будущем вы скажете себе спасибо.</item>
+        <item>Даже хаотичное продвижение вперед — это все равно прогресс.</item>
+        <item>Вы не отстаете, вы на верном пути.</item>
+        <item>Учиться в процессе работы — это нормально.</item>
+        <item>Вы развиваетесь таким образом, который, возможно, пока не замечаете.</item>
+        <item>Ваши сегодняшние усилия — это инвестиции в завтрашний день.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesMorning">
+        <item>Доброе утро! У вас все получится — шаг за шагом, одно занятие за другим.</item>
+        <item>Чувствуете, что не готовы? Это нормально. Начните с того места, где вы сейчас находитесь.</item>
+        <item>Кофе помогает, но проявление доброты к себе работает лучше.</item>
+        <item>Технические неполадки? Такое случается со всеми — не переживайте.</item>
+        <item>Сегодняшний день не обязательно должен быть идеальным, достаточно, чтобы он предоставлял возможности.</item>
+        <item>Доброе утро! Сегодня у вас есть новая возможность учиться и развиваться.</item>
+        <item>Даже небольшие шаги этим утром приближают вас к достижению ваших целей.</item>
+        <item>Сделайте глубокий вдох — вам не нужно пока все продумывать до мелочей.</item>
+        <item>Технологии могут быть сложными, но вы не одиноки в своем стремлении их освоить.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesAfternoon">
+        <item>Вы уже на полпути — и сделали больше, чем думаете.</item>
+        <item>Чувствуете, что зашли в тупик? Все сталкиваются с трудностями, главное — не прекращайте восхождение.</item>
+        <item>Работа, оценки, будущее&#8230; никто еще не знает всего.</item>
+        <item>Утомились? Короткий перерыв сейчас для лучшей концентрации внимания позже.</item>
+        <item>Обратитесь за помощью. Серьезно, никто не делает это в одиночку.</item>
+        <item>Вы уже сегодня достигли этого — этим можно гордиться.</item>
+        <item>Нужна пауза? Восстановление сил — это тоже часть процесса обучения.</item>
+        <item>Ничего страшного, если путь кажется неопределенным — навыки приобретаются постепенно.</item>
+        <item>Обратитесь за помощью, если у вас возникли трудности — поддержка всегда ближе, чем кажется.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesEvening">
+        <item>Пережили этот день — это уже само по себе победа.</item>
+        <item>Скучаете по кому-то? Просто поздоровайтесь с кем-нибудь — это помогает.</item>
+        <item>Даже если сегодня все шло не так, как надо, вы все равно проявили себя. Это важно.</item>
+        <item>Помните: никакая оценка не определяет вашу ценность.</item>
+        <item>Расслабьтесь, посмейтесь или просто пролистайте ленту без угрызений совести — вы это заслужили.</item>
+        <item>Вы молодец, ведь вы справились с сегодняшним днем ​​— прогресс важен, даже когда все идет спокойно.</item>
+        <item>Скучаете по друзьям или наставникам? Связь может возникать и в мелочах.</item>
+        <item>Вечера предназначены для размышлений — обращайте внимание на то, чему вы научились сегодня, а не только на то, что еще предстоит сделать.</item>
+        <item>Ваши усилия важнее совершенства.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesNight">
+        <item>Все еще работаете? Это заслуживает уважения, но не забывайте о существовании сна.</item>
+        <item>Завтра вы поблагодарите себя за то, что отдохнули сегодня ночью.</item>
+        <item>Тревога усиливается ночью — не верьте всему этому шуму.</item>
+        <item>Вы не отстаете, вы точно на верном пути.</item>
+        <item>Закройте ноутбук — вашему мозгу тоже нужны сны.</item>
+        <item>Отдыхать — это нормально, ведь завтрашний день обещает новые возможности.</item>
+        <item>Обучение — это марафон, а не спринт. Позаботьтесь о себе сегодня вечером.</item>
+        <item>Если вас одолевают сильные тревоги, помните, что вам не нужно переживать их в одиночку.</item>
+        <item>Завершите день с осознанием того, что сама попытка уже является достижением.</item>
+    </string-array>
+
+    <!-- Accessibility -->
+    <string name="welcomeWidgetContentDescription">Приветственное сообщение: %1$s. %2$s</string>
+
+    <!-- Institutional Announcements -->
+    <string name="institutionalAnnouncementsTitle">Объявления (%d)</string>
+    <!-- Widget Display Names -->
+    <string name="widget_hello">Здравствуйте, %s</string>
+
+    <!-- Customize Dashboard -->
+    <string name="customize_dashboard">Настроить панель управления</string>
+    <string name="dashboard_widgets">Виджеты</string>
+    <string name="move_up">Подняться</string>
+    <string name="move_down">Спуститься</string>
+    <string name="no_widgets">Нет доступных виджетов</string>
+    <string name="changing_dashboard_layout">Изменение компоновки панели управления</string>
+    <string name="changing_dashboard_layout_message">Чтобы изменить компоновку панели управления, необходимо перезапустить приложение</string>
+    <string name="restart_now">Перезапустить сейчас</string>
+    <string name="switched_back">Переключились обратно?</string>
+    <string name="switched_back_message">Спасибо за использование новой панели управления! Не могли бы вы указать, почему вы переключились обратно?</string>
+    <string name="what_could_we_improve">Что мы могли бы улучшить?</string>
+    <string name="skip">Пропустить</string>
+    <string name="widget_setting_show_greeting">Показать приветствие</string>
+    <string name="background_color">Цвет фона</string>
+    <string name="offline_content_available">Доступно автономное содержимое</string>
+    <string name="a11y_contentDescription_moreOptions">Дополнительные опции</string>
+    <string name="customizeCourse">Настроить курс</string>
+    <string name="favoriteCoursesAndGroups">Избранные курсы и группы</string>
+    <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
+    <string name="ltiToolsOffline">Внешние инструменты недоступны в режиме офлайн.</string>
 </resources>

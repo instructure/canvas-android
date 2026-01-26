@@ -10,6 +10,7 @@ import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpda
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoFragment
 import com.instructure.pandautils.features.calendartodo.details.ToDoFragment
+import com.instructure.pandautils.features.dashboard.customize.CustomizeDashboardFragment
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
 import com.instructure.pandautils.features.discussion.create.CreateDiscussionWebViewFragment
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
@@ -37,7 +38,7 @@ import com.instructure.student.features.elementary.course.ElementaryCourseFragme
 import com.instructure.student.features.files.details.FileDetailsFragment
 import com.instructure.student.features.files.list.FileListFragment
 import com.instructure.student.features.files.search.FileSearchFragment
-import com.instructure.student.features.grades.GradesListFragment
+import com.instructure.student.features.grades.GradesFragment
 import com.instructure.student.features.modules.list.ModuleListFragment
 import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
 import com.instructure.student.features.modules.progression.ModuleQuizDecider
@@ -135,7 +136,7 @@ object RouteResolver {
             cls.isA<PageDetailsFragment>() -> PageDetailsFragment.newInstance(route)
             cls.isA<LtiLaunchFragment>() -> LtiLaunchFragment.newInstance(route)
             cls.isA<SyllabusRepositoryFragment>() -> SyllabusRepositoryFragment.newInstance(route)
-            cls.isA<GradesListFragment>() -> GradesListFragment.newInstance(route)
+            cls.isA<GradesFragment>() -> GradesFragment.newInstance(route)
             cls.isA<ModuleListFragment>() -> ModuleListFragment.newInstance(route)
             cls.isA<CourseSettingsFragment>() -> CourseSettingsFragment.newInstance(route)
             cls.isA<AnnouncementListFragment>() -> AnnouncementListFragment.newInstance(route)
@@ -187,6 +188,7 @@ object RouteResolver {
             cls.isA<RemoteConfigParamsFragment>() -> RemoteConfigParamsFragment()
             cls.isA<SmartSearchFragment>() -> SmartSearchFragment.newInstance(route)
             cls.isA<InboxSignatureFragment>() -> InboxSignatureFragment()
+            cls.isA<CustomizeDashboardFragment>() -> CustomizeDashboardFragment.newInstance(route)
             cls.isA<InternalWebviewFragment>() -> InternalWebviewFragment.newInstance(route) // Keep this at the end
             else -> null
         }

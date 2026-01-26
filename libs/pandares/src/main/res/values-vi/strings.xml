@@ -1045,6 +1045,8 @@
 
     <string name="downloading">Đang tải xuống</string>
     <string name="downloadComplete">Tải xuống thành công</string>
+    <string name="fileDownloadNotificationPermissionDenied">Đã bắt đầu tải xuống. Bật thông báo để xem tiến trình.</string>
+
     <string name="notificationChannelNameFileDownloadsName">Thông Báo Tải Xuống</string>
     <string name="notificationChannelNameFileDownloadsDescription">Thông báo Canvas cho các mục tải xuống đang diễn ra.</string>
     <string name="full_due_date_details">Thông Tin Chi Tiết Ngày Đến Hạn Đầy Đủ</string>
@@ -1249,6 +1251,7 @@
     <string name="a11y_content_description_add_to_dashboard">Thêm vào bảng điều khiển</string>
     <string name="a11y_content_description_add_all_to_dashboard">Thêm tất cả vào bảng điều khiển</string>
 
+    <string name="new_mobile_dashboard">Bảng Điều Khiển Mới cho Di Động</string>
     <!-- K5 Strings -->
     <string name="navDrawerAccount">Tài Khoản</string>
     <string name="dashboardTabHomeroom">Phòng Chính</string>
@@ -1368,6 +1371,10 @@
         <item quantity="other">%s thông báo chưa đọc</item>
     </plurals>
 
+    <plurals name="a11y_todoBadgeCount">
+        <item quantity="one">%s mục việc cần làm</item>
+        <item quantity="other">%s mục việc cần làm</item>
+    </plurals>
     <string name="noAnnotationSelected">Không có chú thích nào được chọn</string>
     <string name="emailNotifications">Thông Báo Email</string>
     <string name="emailNotificationsImmediately">Ngay Lập Tức</string>
@@ -1908,6 +1915,8 @@
     <string name="gradePreferencesHeaderSortBy">Sắp Xếp Theo</string>
     <string name="gradesEmptyTitle">Không Có Bài Tập</string>
     <string name="gradesEmptyMessage">Có vẻ bài tập chưa được tạo trong không gian này.</string>
+    <string name="noMatchingAssignments">Không Có Bài Tập Nào Khớp</string>
+    <string name="noMatchingAssignmentsDescription">Không có bài tập nào khớp với tìm kiếm của bạn. Thử một từ khóa tìm kiếm khác.</string>
     <string name="errorLoadingGrades">Chúng tôi đang gặp khó khăn khi tải điểm sinh viên của bạn. Vui lòng thử tải lại trang hoặc kiểm tra lại sau.</string>
     <string name="errorLoadingCourse">Chúng tôi đang gặp khó khăn khi tải chi tiết khóa học của sinh viên của bạn. Vui lòng thử tải lại trang hoặc kiểm tra lại sau.</string>
     <string name="gradesFilterContentDescription">Lọc</string>
@@ -2079,7 +2088,8 @@
     <string name="widgetErrorTitle">Rất tiếc! Đã Xảy Ra Vấn Đề</string>
     <string name="widgetErrorSubtitle">Chúng tôi đang gặp sự cố khi hiển thị các nhiệm vụ của bạn ngay lúc này. Vui lòng thử lại sau một lúc hoặc truy cập ứng dụng.</string>
     <string name="widgetToDoEmptyTitle">Bây giờ, bạn đã hoàn tất mọi việc!</string>
-    <string name="widgetToDoEmptySubtitle">Có vẻ như bạn rảnh trong 4 tuần tới. Bạn có muốn thêm một số việc cần làm không?</string>
+    <string name="widgetToDoEmptySubtitle">Có vẻ như bạn đang rảnh, bạn không có nhiệm vụ nào sắp tới. Bạn có muốn thêm một số việc cần làm không?</string>
+
     <string name="widgetNotLoggedInTitle">Hãy Tiến Hành Đăng Nhập!</string>
     <string name="widgetToDoNotLoggedInSubtitle">Để xem các việc cần làm của bạn, vui lòng đăng nhập vào tài khoản của bạn trong ứng dụng. Sẽ chỉ mất một lát thôi!</string>
     <string name="a11y_widgetToDoOpenToDoList">Mở màn hình danh sách Việc Cần Làm</string>
@@ -2104,6 +2114,11 @@
         <item quantity="one">%s / %s điểm</item>
         <item quantity="other">%s / %s điểm</item>
     </plurals>
+    <plurals name="groupMemberCount">
+        <item quantity="one">Sinh Viên</item>
+        <item quantity="other">Sinh Viên</item>
+    </plurals>
+
     <string name="speedGraderLatePenaltyTitle">Phạt Do Muộn</string>
     <string name="gradingStatus_none">Không Có</string>
     <string name="gradingStatus_late">Muộn</string>
@@ -2160,4 +2175,189 @@
     <string name="scored_less_than_with_max">Đạt Dưới / %s điểm thành phần</string>
     <string name="scored_between_values">Đã chấm điểm %1$s - %2$s</string>
     <string name="multiple_filters">Nhiều bộ lọc</string>
+    <string name="a11y_contentDescriptionToDoFilter">Lọc</string>
+    <string name="errorLoadingToDos">Đã xảy ra lỗi khi tải các mục việc cần làm. Vui lòng kiểm tra kết nối của bạn rồi thử lại.</string>
+    <string name="errorUpdatingToDo">Đã xảy ra lỗi khi cập nhật các mục việc cần làm. Vui lòng kiểm tra kết nối của bạn rồi thử lại.</string>
+    <string name="noToDosForNow">Hiện chưa có Việc Cần Làm!</string>
+    <string name="noToDosForNowSubtext">Có vẻ là thời điểm tuyệt vời để nghỉ ngơi, thư giãn và hồi sức.</string>
+    <string name="todoSwipeDone">Đã Xong</string>
+    <string name="todoSwipeUndo">Hoàn tác</string>
+    <string name="todoMarkedAsDone">%s được đánh dấu là đã xong</string>
+    <string name="todoMarkedAsNotDone">%s không được đánh dấu là đã xong</string>
+    <string name="todoMarkedAsDoneSnackbarUndo">Hoàn tác</string>
+    <string name="todoActionOffline">Thao tác này không thể thực hiện ngoại tuyến</string>
+
+    <!-- To Do List Filter Screen -->
+    <string name="todoFilterPreferences">Tùy Chọn danh sách Việc Cần Làm</string>
+    <string name="todoFilterVisibleItems">Các Mục Hiển Thị</string>
+    <string name="todoFilterShowPersonalToDos">Hiển Thị Việc Cần Làm Cá Nhân</string>
+    <string name="todoFilterShowCalendarEvents">Hiển Thị Sự Kiện Lịch</string>
+    <string name="todoFilterShowCompleted">Hiển Thị Mục Đã Hoàn Thành</string>
+    <string name="todoFilterFavoriteCoursesOnly">Chỉ Khóa Học Yêu Thích</string>
+    <string name="todoFilterShowTasksFrom">Hiển thị nhiệm vụ từ</string>
+    <string name="todoFilterShowTasksUntil">Hiển thị nhiệm vụ cho đến</string>
+    <string name="todoFilterToday">Hôm Nay</string>
+    <string name="todoFilterThisWeek">Tuần Này</string>
+    <string name="todoFilterLastWeek">Tuần Trước</string>
+    <string name="todoFilterTwoWeeks">2 Tuần Trước</string>
+    <string name="todoFilterThreeWeeks">3 Tuần Trước</string>
+    <string name="todoFilterFourWeeks">4 Tuần Trước</string>
+    <string name="todoFilterNextWeek">Tuần Sau</string>
+    <string name="todoFilterInTwoWeeks">2 Tuần Qua</string>
+    <string name="todoFilterInThreeWeeks">3 Tuần Qua</string>
+    <string name="todoFilterInFourWeeks">4 Tuần Qua</string>
+    <string name="todoFilterFromDate">Từ %s</string>
+    <string name="todoFilterUntilDate">Đến %s</string>
+    <string name="a11y_buttonSelectionSelected">được chọn</string>
+    <string name="a11y_buttonSelectionNotSelected">không được chọn</string>
+    <!-- Course Invitations -->
+    <string name="courseInvitationsTitle">Lời Mời Tham Gia Khóa Học (%d)</string>
+    <string name="courseInvitationAccepted">Đã chấp nhận lời mời đến %s</string>
+    <string name="courseInvitationDeclined">Đã từ chối lời mời đến %s</string>
+    <string name="courseInvitationDeclineConfirmTitle">Từ Chối Lời Mời</string>
+    <string name="courseInvitationDeclineConfirmMessage">Bạn có chắc chắn muốn từ chối lời mời đến %s?</string>
+
+    <!-- Welcome Widget -->
+    <!-- Greetings with name (%s is the student's first name) -->
+    <string name="welcomeGreetingMorningWithName">Chào buổi sáng, %s!</string>
+    <string name="welcomeGreetingAfternoonWithName">Chào buổi chiều, %s!</string>
+    <string name="welcomeGreetingEveningWithName">Chào buổi tối, %s!</string>
+    <string name="welcomeGreetingNightWithName">Chúc ngủ ngon, %s!</string>
+
+    <!-- Greetings without name (fallback when user has no first name) -->
+    <string name="welcomeGreetingMorning">Chào buổi sáng!</string>
+    <string name="welcomeGreetingAfternoon">Chào buổi chiều!</string>
+    <string name="welcomeGreetingEvening">Chào buổi tối!</string>
+    <string name="welcomeGreetingNight">Chúc ngủ ngon!</string>
+
+    <!-- Welcome Widget Motivational Messages -->
+    <string-array name="welcomeMessagesGeneric">
+        <item>Bạn làm được mà.</item>
+        <item>Hãy tiếp tục cố gắng — bạn mạnh mẽ hơn những gì bạn cảm thấy lúc này.</item>
+        <item>Đi từng bước một vẫn là tiến bộ.</item>
+        <item>Đừng bỏ cuộc — chính bạn trong tương lai sẽ cảm ơn bạn.</item>
+        <item>Bạn có thể làm được nhiều thứ hơn bạn nghĩ.</item>
+        <item>Ngay cả những ngày khó khăn, bạn vẫn đang tiến lên phía trước.</item>
+        <item>Hãy tin vào bản thân — bạn đã từng vượt qua nhiều điều khó khăn rồi mà.</item>
+        <item>Quan trọng là tiến bộ, không phải sự hoàn hảo. Bạn đang làm rất tốt.</item>
+        <item>Cố gắng lên — bạn không đơn độc đâu.</item>
+        <item>Bạn đang học hỏi, trưởng thành, và làm tốt hơn bạn nghĩ.</item>
+        <item>Vấp ngã cũng không sao — bạn vẫn đang đi đúng hướng.</item>
+        <item>Tiếp tục cố gắng nào — bạn đang ở gần chiến thắng hơn bạn nghĩ.</item>
+        <item>Những chiến thắng nhỏ cũng có giá trị.</item>
+        <item>Hãy tiếp tục cố gắng — bạn đang ở gần chiến thắng hơn bạn nghĩ.</item>
+        <item>Dừng lại đôi chút cũng không sao. Nghỉ ngơi là một phần của việc học.</item>
+        <item>Việc bạn cố gắng đã là một chiến thắng rồi.</item>
+        <item>Tiến bộ &gt; hoàn hảo.</item>
+        <item>Việc bạn có mặt quan trọng hơn nhiều so với những gì bạn nghĩ.</item>
+        <item>Bạn đang xây dựng kỹ năng, ngay cả trong những ngày chậm rãi.</item>
+        <item>Đừng quên hít thở nhé — bạn đang làm tốt lắm.</item>
+        <item>Tốc độ của bạn chính là tốc độ đúng.</item>
+        <item>Không phải mọi thứ đều cần được giải quyết hôm nay đâu.</item>
+        <item>Bạn thuộc về nơi này.</item>
+        <item>Mọi nỗ lực bạn bỏ ra đều sẽ tích lũy.</item>
+        <item>Bắt đầu lại cũng không sao — bao nhiêu lần cũng được.</item>
+        <item>Điều gì cảm thấy khó khăn vào lúc này sẽ trở nên dễ dàng hơn về sau.</item>
+        <item>Tiếp tục có mặt — đó mới là điều quan trọng.</item>
+        <item>Những bước đi nhỏ có thể dịch chuyển cả ngọn núi lớn.</item>
+        <item>Nghỉ ngơi cũng là một phần của tiến bộ.</item>
+        <item>Bạn đang làm tốt hơn nhiều so với những gì bạn nghĩ.</item>
+        <item>Ngay cả tiến bộ chậm cũng vẫn là tiến bộ.</item>
+        <item>Tương lai không thể xây dựng trong một ngày — nhưng bạn đang ở ngay trên hành trình đó.</item>
+        <item>Từng bài tập, từng khoảnh khắc, từng bước một.</item>
+        <item>Bạn không cần hoàn hảo để tạo ra tác động.</item>
+        <item>Học tập thường lộn xộn — và đó là điều bình thường.</item>
+        <item>Mỗi lần thử đều là sự trưởng thành, ngay cả khi bạn không cảm thấy như vậy.</item>
+        <item>Bạn đã từng vượt qua nhiều điều khó khăn trước đây — bạn cũng có thể làm được lần này.</item>
+        <item>Nỗ lực của bạn có giá trị, ngay cả khi không ai nhìn thấy.</item>
+        <item>Đi chậm cũng không sao.</item>
+        <item>Bạn vẫn đang tiến lên, ngay cả trong những ngày yên ắng.</item>
+        <item>Con đường chưa cần phải rõ ràng ngay — cứ tiếp tục bước đi.</item>
+        <item>Bạn mạnh mẽ hơn nhiều so với những gì bạn cảm thấy.</item>
+        <item>Mục tiêu lớn được xây dựng từ những bước nhỏ.</item>
+        <item>Hãy tiếp tục cố gắng — chính bạn trong tương lai sẽ cảm ơn bạn.</item>
+        <item>Ngay cả tiến bộ lộn xộn cũng vẫn là tiến bộ.</item>
+        <item>Bạn không hề tụt lại — bạn đang đi trên con đường của riêng mình.</item>
+        <item>Vừa học vừa đi cũng không sao.</item>
+        <item>Bạn đang trưởng thành theo những cách mà có thể bạn chưa thấy.</item>
+        <item>Nỗ lực hôm nay là khoản đầu tư cho ngày mai.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesMorning">
+        <item>Chào buổi sáng! Bạn làm được mà — từng lớp học, từng bước một.</item>
+        <item>Chưa sẵn sàng ư? Điều đó là bình thường. Chỉ cần bắt đầu từ nơi bạn đang đứng.</item>
+        <item>Cà phê có thể giúp, nhưng sự tử tế với bản thân còn hiệu quả hơn.</item>
+        <item>Công nghệ trục trặc à? Ai cũng gặp thôi — đừng căng thẳng.</item>
+        <item>Ngày hôm nay không cần hoàn hảo, chỉ cần khả thi thôi.</item>
+        <item>Chào buổi sáng — hôm nay là một cơ hội mới để học và trưởng thành.</item>
+        <item>Ngay cả những bước nhỏ trong sáng nay cũng đưa bạn gần hơn tới mục tiêu.</item>
+        <item>Hãy hít một hơi — bạn chưa cần phải hiểu hết mọi thứ ngay.</item>
+        <item>Công nghệ có thể khó, nhưng bạn không đơn độc trong việc học nó.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesAfternoon">
+        <item>Đã đi được nửa chặng — bạn đã làm được nhiều hơn bạn nghĩ.</item>
+        <item>Cảm thấy mắc kẹt ư? Ai cũng gặp phải những bức tường, chỉ cần đừng ngừng leo.</item>
+        <item>Công việc, điểm số, tương lai&#8230; không ai có tất cả câu trả lời.</item>
+        <item>Não bạn hơi mệt mỏi? Nghỉ vài phút = tập trung tốt hơn sau đó.</item>
+        <item>Hãy nhờ giúp đỡ. Nghiêm túc mà nói, không ai làm điều này một mình cả.</item>
+        <item>Bạn đã đi được đến đây hôm nay — đó là điều đáng tự hào.</item>
+        <item>Cần nghỉ ngơi? Nạp lại năng lượng cũng là một phần của học tập.</item>
+        <item>Con đường cảm thấy chưa chắc chắn cũng không sao — kỹ năng được xây từng bước.</item>
+        <item>Nếu cảm thấy mắc kẹt, hãy tìm sự hỗ trợ — hỗ trợ luôn ở gần hơn bạn nghĩ.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesEvening">
+        <item>Vượt qua một ngày — đó đã là một chiến thắng.</item>
+        <item>Cảm thấy nhớ ai đó? Gửi một lời “chào” nhanh — sẽ giúp ích.</item>
+        <item>Ngay cả khi hôm nay lộn xộn, bạn vẫn ở đây. Điều đó rất quan trọng.</item>
+        <item>Hãy nhớ: không điểm số nào đo được giá trị của bạn.</item>
+        <item>Thư giãn, cười, hoặc lướt mạng thoải mái — bạn xứng đáng.</item>
+        <item>Tốt lắm, bạn đã vượt qua ngày hôm nay — tiến bộ vẫn là tiến bộ, dù yên ắng.</item>
+        <item>Bạn thấy nhớ bạn bè hoặc thầy cô? Sự kết nối có thể đến từ những khoảnh khắc nhỏ.</item>
+        <item>Buổi tối là lúc để suy ngẫm — hãy chú ý đến những gì bạn đã học hôm nay, không chỉ những gì còn chưa làm.</item>
+        <item>Nỗ lực của bạn quan trọng hơn sự hoàn hảo.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesNight">
+        <item>Vẫn đang cày à? Tôn trọng thật — nhưng đừng quên đi ngủ nhé.</item>
+        <item>Ngày mai bạn sẽ cảm ơn chính mình vì đã nghỉ ngơi tối nay.</item>
+        <item>Lo âu thường lớn tiếng hơn vào ban đêm — đừng tin hết những tiếng ồn đó.</item>
+        <item>Bạn không hề tụt lại, bạn đang đi trên con đường của riêng mình.</item>
+        <item>Đóng laptop lại — não bạn cũng cần những giấc mơ.</item>
+        <item>Nghỉ ngơi cũng không sao — ngày mai đang chờ với những cơ hội mới.</item>
+        <item>Học tập là một cuộc chạy marathon, không phải chạy nước rút. Hãy tử tế với bản thân tối nay.</item>
+        <item>Nếu lo âu trở nên nặng nề, hãy nhớ bạn không phải mang gánh nặng này một mình.</item>
+        <item>Hãy kết thúc một ngày tin rằng việc cố gắng đã là một thành tựu.</item>
+    </string-array>
+
+    <!-- Accessibility -->
+    <string name="welcomeWidgetContentDescription">Thông điệp chào mừng: %1$s. %2$s</string>
+
+    <!-- Institutional Announcements -->
+    <string name="institutionalAnnouncementsTitle">Thông báo chung (%d)</string>
+    <!-- Widget Display Names -->
+    <string name="widget_hello">Xin chào, %s</string>
+
+    <!-- Customize Dashboard -->
+    <string name="customize_dashboard">Tùy Chỉnh Bảng Điều Khiển</string>
+    <string name="dashboard_widgets">Tiện Ích</string>
+    <string name="move_up">Di chuyển lên</string>
+    <string name="move_down">Di chuyển xuống</string>
+    <string name="no_widgets">Không có tiện ích nào khả dụng</string>
+    <string name="changing_dashboard_layout">Đang thay đổi bố cục bảng điều khiển</string>
+    <string name="changing_dashboard_layout_message">Để thay đổi bố cục bảng điều khiển, bạn phải khởi động lại ứng dụng</string>
+    <string name="restart_now">Khởi động lại ngay</string>
+    <string name="switched_back">Bạn đã chuyển lại rồi à?</string>
+    <string name="switched_back_message">Cảm ơn bạn đã thử dùng bảng điều khiển mới! Bạn có thể cho chúng tôi biết lý do bạn chuyển lại không?</string>
+    <string name="what_could_we_improve">Chúng tôi có thể cải thiện điều gì?</string>
+    <string name="skip">Bỏ Qua</string>
+    <string name="widget_setting_show_greeting">Hiển thị phần chào hỏi</string>
+    <string name="background_color">Màu nền</string>
+    <string name="offline_content_available">Không có nội dung ngoại tuyến nào khả dụng</string>
+    <string name="a11y_contentDescription_moreOptions">Tùy chọn khác</string>
+    <string name="customizeCourse">Tùy Chỉnh Khóa Học</string>
+    <string name="favoriteCoursesAndGroups">Khóa Học và Nhóm Yêu Thích</string>
+    <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
+    <string name="ltiToolsOffline">Công Cụ Ngoài không khả dụng ngoại tuyến.</string>
 </resources>

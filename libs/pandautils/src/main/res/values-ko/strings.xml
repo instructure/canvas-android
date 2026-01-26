@@ -1,0 +1,494 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="chooseMedia">미디어 선택</string>
+    <string name="takeVideo">동영상 촬영</string>
+    <string name="noCameraOnDevice">카메라 없음</string>
+    <string name="takePhoto">사진 찍기</string>
+    <string name="choosePhotoFromGallery">갤러리에서 사진 선택</string>
+
+    <string name="utils_edit">편집</string>
+
+    <!-- NotoriousPicker/uploadService -->
+    <string name="notificationTitle">Canvas에 업로드</string>
+    <string name="preparingUpload">업로드 준비 중</string>
+    <string name="loadingFilesIndeterminate">파일 로드 중&#8230;</string>
+    <string name="fileUploadSuccess">업로드됨</string>
+    <string name="noNetwork">네트워크를 사용할 수 없습니다. 나중에 다시 시도하세요.</string>
+    <string name="uploadMessage">"업로드가 진행 중입니다. 알림에서 업로드 상태를 확인하세요.</string>
+    <string name="uploadingFile">파일 업로드&#8230;</string>
+    <string name="errorUploadingFile">파일을 업로드하는 데 오류가 발생했습니다. 다시 시도하세요.</string>
+    <string name="fileSubmission">파일 제출</string>
+    <string name="uploadFiles">파일 업로드</string>
+    <string name="upload">업로드</string>
+    <string name="errorSendingMessage">메시지를 보내는 데 오류가 발생했습니다. 다시 시도하세요.</string>
+
+    <string name="notificationChannelNameFileUploadsName">알림 업로드</string>
+    <string name="notificationChannelNameFileUploadsDescription">계속되는 업로드에 대한 Canvas 알림.</string>
+
+
+    <!-- Turn in Files -->
+    <string name="addFile">파일 추가</string>
+
+    <string name="fromCamera">카메라</string>
+    <string name="fromGallery">갤러리</string>
+    <string name="fromDevice">장치</string>
+    <string name="fromDocumentScanning">스캐너</string>
+    <string name="fromOtherApplication">기타</string>
+    <string name="Domain">도메인</string>
+    <string name="files">파일</string>
+    <string name="file">파일</string>
+    <string name="fileTalkBack">파일 %s</string>
+    <string name="folderTalkBack">폴더 %s</string>
+    <string name="addItem">항목 추가</string>
+    <string name="assignment">과제</string>
+    <string name="attachedFiles">첨부된 파일</string>
+    <string name="turnIn">제출</string>
+    <string name="course">과목</string>
+    <string name="sending">보내기&#8230;</string>
+
+    <!--rating dialog-->
+    <string name="star1">별 등급 하나</string>
+    <string name="star2">별 등급 둘</string>
+    <string name="star3">별 등급 셋</string>
+    <string name="star4">별 등급 넷</string>
+    <string name="star5">별 등급 다섯</string>
+
+    <!-- Submitting files -->
+    <string name="fileQuotaExceeded">현재 파일 스토리지 할당량을 초과했습니다.</string>
+    <string name="errorSubmittingFiles">파일을 제출하는 데 오류가 발생했습니다. 다시 시도하세요.</string>
+    <string name="errorLoadingFiles">파일을 로드하는 데 오류가 발생했습니다. 인터넷 연결을 확인하고 다시 시도하세요.</string>
+    <string name="filesUploadedSuccessfully">제출을 업로드했습니다.</string>
+    <string name="filesSubmittedSuccessfully">제출을 제출했습니다.</string>
+    <string name="messageSentSuccessfully">메시지를 보냈습니다.</string>
+    <string name="shareWithCanvas">다른 앱으로 Canvas와 파일을 공유할 수 있습니다. 아래에 앱에서 아이콘을 찾고 Canvas를 탭합니다.</string>
+    <string name="shareWithCanvas2">이 앱이 시작됩니다. 그런 다음 파일을 제출하려는 과목 및 과제를 선택합니다.</string>
+    <string name="contentDescriptionSocialShare">공유 아이콘</string>
+    <string name="submitAssignment">과제 제출</string>
+    <string name="assignmentHeader">과제:</string>
+    <string name="submittingAssignment">과제 제출&#8230;</string>
+    <string name="conversations">대화 </string>
+    <string name="inbox">수신함 </string>
+    <string name="divider">나누기 기능</string>
+    <string name="legal">법률</string>
+    <string name="completeHomework">숙제 완료</string>
+    <string name="takeExam">시험 풀기</string>
+    <string name="fileIcon">파일 아이콘</string>
+    <string name="uploadingFileNum" formatted="false">업로드 %d/%d</string>
+    <string name="fileLocked" formatted="false">%s은(는) 잠겼습니다.</string>
+    <string name="filePermissionGranted">파일은 이제 다운로드가 준비되었습니다. 다시 시도하세요.</string>
+    <string name="filePermissionDenied">권한을 부여하지 않으면 파일을 다운로드할 수 없습니다.</string>
+    <string name="pleaseTryAgain">권한이 부여되었습니다. 다시 시도하세요.</string>
+    <string name="pickFile">파일 선택</string>
+    <string name="assignmentSubmissionUpload">%s에 대한 제출 업로드</string>
+    <string name="assignmentSubmissionError">%s에 대한 제출 실패</string>
+    <string name="assignmentSubmissionComplete">%s을(를) 제출했습니다</string>
+
+    <!--Errors-->
+    <string name="errorOccurred">예상치 못한 오류가 발생했습니다.</string>
+    <string name="serverError">서버 오류가 발생했습니다.</string>
+    <string name="unauthorized">액세스하는 것이 허용되지 않습니다. 권한이 없거나 아직 액세스가 없음(예를 들어 과목이 아직 시작되지 않음)</string>
+    <string name="fileNoLongerExists">해당 파일이 더 이상 없습니다.</string>
+    <string name="invalidAccessToken">세션이 만료되었습니다. 로그인하여 새 세션을 시작하세요.</string>
+    <string name="uploadingFromSourceFailed">이 출처에서 파일 업로드를 완료할 수 없습니다.</string>
+    <string name="errorGettingPhoto">사진을 가져오는 데 오류가 있었습니다. 다시 시도하세요.</string>
+    <string name="errorTextMissing">텍스트를 추가하여 메시지 보내기</string>
+
+    <string name="fileUploadNotSupported">선택한 과제에 파일을 업로드할 수 없습니다.</string>
+    <string name="noCourseSelected">과목을 선택하세요</string>
+    <string name="selectCourse">과목 선택</string>
+    <string name="selectAssignment">과제를 선택</string>
+    <string name="loadingAssignments">과제 로드 중...</string>
+    <string name="noAssignmentSelected">과제를 선택하세요</string>
+    <string name="noAssignmentsWithFileUpload">이 과목에는 파일 업로드를 허용하는 과제가 없습니다.</string>
+    <string name="teacherNotAllowedFileSubmission">이 과목의 교사는 파일을 제출할 수 없습니다</string>
+    <string name="noFilesUploaded">파일을 선택하지 않았습니다.</string>
+    <string name="oneOrMoreExtensionNotAllowed">한 개 이상의 파일에 허용되지 않는 파일 연장자가 있습니다</string>
+    <string name="extensionNotAllowed">선택한 파일 유형은 허용되지 않습니다.</string>
+    <string name="allowedExtensions">허용된 확장자:&#160;</string>
+
+    <!-- Media Task Loader -->
+    <string name="noDataConnection"> 데이터 연결을 확인하고 다시 시도하세요. </string>
+    <string name="noApps">장치에는 이 파일을 처리할 수 있는 애플리케이션이 설치되지 않았습니다.</string>
+    <string name="noAppsShort">열 수 없음</string>
+    <string name="unexpectedErrorOpeningFile">파일을 열려고 시도하는 동안 예상치 못한 오류가 발생했습니다.</string>
+    <string name="unexpectedErrorDownloadingFile">파일을 다운로드하려고 시도하는 동안 예상치 못한 오류가 발생했습니다.</string>
+
+    <string name="done">완료</string>
+
+    <!--Permissions-->
+    <string name="permissionDenied">이 기능을 사용하려면 먼저 권한을 부여해야 합니다.</string>
+    <string name="noConnection">연결 없음</string>
+
+    <!--Empty Screens-->
+    <string name="emptyCourseListMessage">즐겨 찾는 과목 및 그룹은 여기에 표시됩니다.</string>
+    <string name="addCoursesGroups">과목/그룹 추가</string>
+    <string name="noDiscussions">토론 없음</string>
+    <string name="noDiscussionsSubtext">다른 사용자와 대화를 시작합니다.</string>
+    <string name="noDiscussionsTeacher">학생과 대화를 시작합니다.</string>
+    <string name="nothingUnread">수신함이 깨끗합니다!</string>
+    <string name="nothingUnreadSubtext">모두 확인했습니다!</string>
+    <string name="nothingStarred">별표 표시된 메시지 없음</string>
+    <string name="nothingStarredSubtext">각 메시지에 별표 표시를 탭하여 중요한 메시지를 이 섹션에 유지합니다.</string>
+    <string name="nothingSent">보내지 않음</string>
+    <string name="nothingSentSubtext">메시지를 보낸 적이 없습니다.</string>
+    <string name="nothingArchived">보관되지 않음</string>
+    <string name="nothingArchivedSubtext">메시지를 보관한 적이 없습니다.</string>
+    <string name="noQuizzes">퀴즈 없음</string>
+    <string name="noQuizzesSubtext">죄송합니다. 아직 퀴즈가 없습니다.</string>
+    <string name="noQuizzesTeacher">표시할 게시된 퀴즈가 없습니다.</string>
+    <string name="noAnnouncements">공지 없음</string>
+    <string name="noAnnouncementsSubtext">아직 공지가 없습니다.</string>
+    <string name="noCourses">과목 없음</string>
+    <string name="noCoursesSubtext">이 계정과 연결된 과목이 없는 것 같습니다. 지금 웹에서 방문하여 과목을 만듭니다.</string>
+    <string name="noAssignments">과제 없음</string>
+    <string name="noAssignmentsSubtext">이 공간에는 과제를 만들지 않은 것 같습니다. 다른 곳에서 둘러볼 시간입니다.</string>
+    <string name="noAssignmentsTeacher">아직 과제가 게시되지 않은 것 같습니다.</string>
+    <string name="noFiles">파일 없음</string>
+    <string name="noFilesForAssignment">이 제출에 대한 파일이 없습니다</string>
+    <string name="noFilesSubtext">이 계정과 연결된 파일이 없습니다.</string>
+    <string name="emptyFolder">이 폴더는 비어 있습니다</string>
+    <string name="notSupported">지원되지　않음</string>
+    <string name="noEvents">오늘 이벤트가 없습니다.</string>
+    <string name="noEventsSubtext">오늘은 편하게 쉬기 좋은 날입니다.</string>
+    <string name="noSubmission">제출 없음</string>
+    <string name="noSubmissionTeacher">이 학생은 아직 제출이 없습니다.</string>
+    <string name="locked">잠김</string>
+    <string name="lockedSubtext">이 과제는 %2$s에 %1$s까지 잠겨 있습니다.</string>
+    <string name="chooseFile">파일 선택</string>
+    <string name="chooseFileSubtext">아래 옵션을 탭하여 제출에 파일을 첨부합니다.</string>
+    <string name="chooseFileForUploadSubtext">아래 옵션을 탭하여 업로드할 파일을 선택</string>
+    <string name="noNotifications">알림 없음</string>
+    <string name="noNotificationsSubtext">아직 알릴 것이 없습니다.</string>
+    <string name="noTodos">잘하셨습니다.</string>
+    <string name="noTodosSubtext">할 일 목록이 비어 있습니다. 활력을 재충전할 시간입니다.</string>
+    <string name="noSyllabus">강의 계획안 없음</string>
+    <string name="noSyllabusSubtext">강의 계획안을 아직 만들지 않았습니다.</string>
+    <string name="noBookmarks">북마크 없음</string>
+    <string name="noBookmarksSubtext">북마크는 앱에 화면에 대한 바로 가기입니다. 북마크하려는 화면에서 추가합니다.</string>
+    <string name="noModules">모듈 없음</string>
+    <string name="noModulesSubtext">아직 만든 모듈이 없는 것 같습니다.</string>
+    <string name="noPages">페이지 없음</string>
+    <string name="noPagesSubtext">아직 페이지를 만들지 않은 것 같습니다.</string>
+    <string name="modulesLockedSubtext">이 과목에 대한 모듈을 사용 중지했습니다.</string>
+    <string name="modulesLocked">문제가 발생했습니다</string>
+
+    <!--General-->
+    <string name="yes">예</string>
+    <string name="no">아니요</string>
+
+    <string name="inbox_all">수신함</string>
+    <string name="inbox_unread">읽지 않음</string>
+    <string name="inbox_starred">별표 표시됨</string>
+    <string name="inbox_sent">보냄</string>
+    <string name="inbox_archived">보관됨</string>
+
+    <string name="forbidden">답변은 하나 이상의 답변을 게시한 사용자에게만 표시됩니다.</string>
+
+    <string name="like">좋아요</string>
+    <string name="likes">좋아요</string>
+    <string name="lockedAssignmentNotModule">이 과제는 잠겨 있습니다.</string>
+    <string name="deletedEntryNoChildren">이 삭제된 토론 항목에는 답변이 없습니다.</string>
+    <string name="deleted">삭제됨</string>
+    <string name="deleted_by">[%1$s 님이 삭제]</string>
+    <string name="lockedDiscussionDesc">이 토론은 %s 모듈의 일부분이며 아직 잠금 해제되지 않았습니다.</string>
+    <string name="gradedDiscussion">채점된 토론</string>
+    <string name="pointsPossible">가능한 점수</string>
+    <string name="sideCommentEntry">이 유형의 토론에서는 이 수준의 항목에 댓글을 추가할 수 없습니다.</string>
+
+    <string name="accessibility_overflow">오버플로우</string>
+
+    <string name="discussion_response">의견/댓글</string>
+    <string name="discussion_responses">의견/댓글</string>
+    <string name="discussion_unread">읽지 않음</string>
+    <string name="discussion_reply">회신</string>
+    <string name="close">닫기</string>
+
+    <string name="noInternetConnectionTitle">인터넷에 연결되지 않음</string>
+    <string name="noInternetConnectionMessage">이 작업은 인터넷에 연결이 필요합니다.</string>
+    <string name="content_description_avatar">아바타</string>
+    <string name="a11y_avatarNameFormatted">%s 아바타</string>
+    <string name="formattedAvatarAction">%s 님의 사용자 세부 정보를확인합니다.</string>
+
+    <!-- App Names -->
+    <string name="utils_canvas">Canvas</string>
+    <string name="utils_canvasTeacher">Canvas Teacher</string>
+    <string name="utils_canvasParent">Canvas Parent</string>
+    <string name="utils_speedgrader">Speedgrader</string>
+
+    <!-- Rating Dialog -->
+    <string name="utils_howAreWeDoing">어떻게 되가고 있나요?</string>
+    <string name="utils_rateUs">Canvas에 어떤 등급을 주시겠습니까?</string>
+    <string name="utils_doBetter">어떻게 더 잘할 수 있을까요?</string>
+    <string name="utils_sendFeedback">피드백 보내기</string>
+    <string name="utils_suggestions">Android에 대한 제안</string>
+    <string name="utils_domain">도메인</string>
+    <string name="utils_versionNum">버전:</string>
+    <string name="utils_userId">사용자 ID</string>
+    <string name="utils_email">이메일</string>
+    <string name="utils_dontShowAgain">다시 표시하지 않음</string>
+    <string name="utils_installDate">설치 날자:</string>
+    <string name="utils_device">장치</string>
+    <string name="utils_osVersion">OS 버전</string>
+    <string name="loading">로드</string>
+    <string name="save">저장</string>
+    <string name="cropInstructions">손가락으로 확대/축소하고 끌어서 이미지를 조정합니다.</string>
+
+    <!--Discussions-->
+    <plurals name="utils_discussionsReplies">
+        <item quantity="other">%s개 답변</item>
+    </plurals>
+
+    <string name="utils_discussionsDeleted" formatted="false">이 답변을 삭제함 %s</string>
+    <string name="utils_discussionsUnknownAuthor">알 수 없는 작성자</string>
+    <string name="utils_discussionsReply">회신</string>
+    <string name="utils_discussionsEdit">편집</string>
+    <string name="utils_discussionsDeleteWarning">이 답변을 삭제하시겠습니까?</string>
+    <string name="utils_availableToLabel">사용 가능 시작:</string>
+    <string name="utils_availableFromLabel">사용 가능 시작:</string>
+    <string name="utils_dueDateHeaderLabel">기한</string>
+    <string name="utils_dueLabel">기한:</string>
+    <string name="utils_delete">삭제</string>
+    <string name="utils_dueDateAtTime" formatted="false">%1s %2s에 기한</string>
+    <string name="utils_noDateFiller">--</string>
+    <string name="utils_availabilityLabel">사용 가능:</string>
+    <string name="utils_pinnedIcon">고정된 토론에 대한 아이콘</string>
+    <string name="utils_pinDiscussion">토론 고정</string>
+    <string name="utils_unpinDiscussion">토론 고정 해제</string>
+    <string name="utils_discussionPinned">토론 고정됨</string>
+    <string name="utils_pinnedDiscussions">고정됨</string>
+    <string name="utils_discussionUnpinned">토론</string>
+    <string name="utils_emptyDiscussions">이 분반에 표시할 토론이 없습니다.</string>
+    <string name="utils_description">설명</string>
+    <string name="utils_allowThreadedReplies">스레드 답변을 허용</string>
+    <string name="utils_usersMustPost">사용자는 답변을 보려면 게시해야 합니다</string>
+    <string name="utils_discussionsClosed">댓글 추가할 수 없음</string>
+    <string name="utils_discussionsOpen">댓글 추가할 수 있음</string>
+    <string name="utils_discussionsPin">고정</string>
+    <string name="utils_discussionsUnpin">고정 해제</string>
+    <string name="utils_discussionsOptions">옵션</string>
+    <string name="utils_discussionsDeleteTitle">토론을 삭제하시겠습니까?</string>
+    <string name="utils_discussionsDelete">토론 삭제</string>
+    <string name="utils_discussionsDeleteMessage">전체 토론 및 스레드가 삭제됩니다.</string>
+    <string name="utils_discussionSentSuccess">토론에 답변했습니다.</string>
+    <string name="utils_discussionUpdateSuccess">토론을 편집했습니다.</string>
+    <string name="utils_discussionSentEmpty">토론 답변은 비어 있을 수 없습니다.</string>
+    <string name="utils_discussionSentFailure">지금은 토론 답변을 보낼 수 없었습니다.</string>
+    <string name="utils_createDiscussion">새 토론</string>
+    <string name="utils_editDiscussion">토론 편집</string>
+    <string name="utils_discussionDetails">토론 세부 정보</string>
+    <string name="utils_discussionSuccessfullyUpdated">토론이 업데이트되었습니다.</string>
+    <string name="utils_saving">저장</string>
+    <string name="utils_discussionSuccessfullyCreated">토론을 만들었습니다.</string>
+    <string name="utils_discussionSuccessfulAttachmentNot">첨부 파일을 이 토론에 추가할 수 없습니다. 파일 할당을 확인하고 다시 시도하세요.</string>
+    <string name="utils_noTitle">제목 없음</string>
+    <string name="utils_discussionsReplies_Title">회신</string>
+    <string name="utils_contentDescriptionDiscussionsOverflow">더 많은 옵션</string>
+    <string name="utils_discussionsUnreadRepliesBlank" formatted="false">%s %s %s</string>
+    <string name="utils_lastPost" formatted="false">마지막 게시 %s</string>
+    <string name="utils_postedOnDate">%s에 게시됨</string>
+    <string name="utils_discussionPostBeforeRepliesEmptyText">답변은 하나 이상의 답변을 게시한 사용자에게만 표시됩니다.</string>
+    <string name="utils_createAnnouncementDelayPosting">게시 지연</string>
+    <string name="utils_postAt">게시 시간</string>
+    <string name="utils_postDate">게시 날짜</string>
+    <string name="utils_postTime">게시 시간</string>
+    <string name="utils_editAnnouncementTitle">공지 편집</string>
+    <string name="utils_createAnnouncementTitle">새 공지</string>
+    <string name="utils_announcementDetails">공지 세부 정보</string>
+    <string name="utils_createAnnouncementNoDescription">설명은 필수입니다</string>
+    <string name="utils_errorSavingAnnouncement">이 공지를 저장하려고 시도하는 데 오류가 발생했습니다. 다시 시도하세요.</string>
+    <string name="utils_announcementSuccessfullyUpdated">공지가 업데이트되었습니다．</string>
+    <string name="utils_announcementSuccessfullyCreated">공지를 만들었습니다.</string>
+
+    <plurals name="utils_discussionsUnread">
+        <item quantity="other">%s개 읽지 않음</item>
+    </plurals>
+
+    <plurals name="utils_addAttachment">
+        <item quantity="zero">첨부 파일 추가</item>
+        <item quantity="other">첨부 파일 추가</item>
+    </plurals>
+
+    <!-- Assignment Override !-->
+    <string name="utils_unlockAfterDueDateError">잠금 해제 날짜는 기한 이후일 수 없음</string>
+    <string name="utils_lockBeforeDueDateError">잠금 날짜는 기한 날짜 이전일 수 없음</string>
+    <string name="utils_lockAfterUnlockError">잠금 날짜는 잠금 해제 날짜 이전일 수 없음</string>
+    <string name="utils_assigneeBlankError">할당 대상자는 비어 있을 수 없음</string>
+    <string name="utils_assignTo">할당 대상</string>
+    <string name="utils_availableFrom">사용 가능 시작</string>
+    <string name="utils_availableTo">사용 가능 마감</string>
+    <string name="utils_availableFromDate">사용 가능 시작 날짜</string>
+    <string name="utils_availableFromTime">사용 가능 시작 시간</string>
+    <string name="utils_availableToDate">사용 가능 마감 날짜</string>
+    <string name="utils_availableToTime">사용 가능 마감 시간</string>
+    <string name="utils_dueDate">기한 날짜</string>
+    <string name="utils_dueTime">기한 시간</string>
+    <string name="utils_addNew">새로 추가</string>
+
+    <!--Attachment Layout-->
+    <string name="utils_downloadAttachment">첨부 다운로드</string>
+    <string name="utils_removeAttachment">첨부 파일 제거</string>
+
+    <!--Unsaved Changes-->
+    <string name="utils_continueWithoutSavingTitle">저장하지 않고 계속하시겠습니까?</string>
+    <string name="utils_continueWithoutSavingMessage">정말로 저장하지 않고 계속하시겠습니까?</string>
+    <string name="utils_continueUnsaved">계속</string>
+    <string name="utils_exitWithoutSavingTitle">저장하지 않고 나가시겠습니까?</string>
+    <string name="utils_exitWithoutSavingMessage">정말로 저장하지 않고 나가시겠습니까?</string>
+    <string name="utils_exitUnsaved">나가기</string>
+    <string name="utils_cancel">취소</string>
+
+    <string name="utils_contentDescriptionFiles">파일 아이콘</string>
+    <string name="utils_turn_in">제출</string>
+    <string name="utils_upload">업로드</string>
+    <string name="utils_okay">확인</string>
+    <string name="utils_loadingFilesIndeterminate">파일 로드 중&#8230;</string>
+    <string name="utils_allowedExtensions">허용된 확장자:&#160;</string>
+    <string name="utils_extensionNotAllowed">선택한 파일 유형은 허용되지 않습니다.</string>
+    <string name="utils_errorUploadingFile">파일을 업로드하는 데 오류가 발생했습니다. 다시 시도하세요.</string>
+    <string name="utils_filesUploadedSuccessfully">제출을 업로드했습니다.</string>
+    <string name="utils_uploadingFiles">파일 업로드&#8230;</string>
+    <string name="utils_uploadingFile">파일 업로드&#8230;</string>
+    <string name="utils_noApps">장치에는 이 파일을 처리할 수 있는 애플리케이션이 설치되지 않았습니다.</string>
+    <string name="utils_errorGettingPhoto">사진을 가져오는 데 오류가 있었습니다. 다시 시도하세요.</string>
+    <string name="utils_oneOrMoreExtensionNotAllowed">한 개 이상의 파일에 허용되지 않는 파일 연장자가 있습니다</string>
+    <string name="utils_fileUploadNotSupported">선택한 과제에 파일을 업로드할 수 없습니다.</string>
+    <string name="utils_noFilesUploaded">파일을 선택하지 않았습니다.</string>
+    <string name="utils_attachments">첨부 파일</string>
+    <string name="utils_uploadTo">업로드 위치 </string>
+    <string name="utils_uploadToCanvas">Canvas에 업로드</string>
+    <string name="utils_uploadMyFiles">내 파일</string>
+    <string name="utils_uploadCourseFiles">과목 파일</string>
+    <string name="utils_uploadGroupFiles">그룹 파일</string>
+    <string name="utils_uploadToSubmissionComment">제출 의견에 업로드</string>
+    <string name="utils_attachFile">파일 첨부</string>
+    <string name="utils_with">포함/및</string>
+
+    <string name="notificationPrimaryInboxTitle">Canvas 알림</string>
+    <string name="notificationChannelNamePrimary">일반적 Canvas 알림</string>
+    <string name="notificationChannelDescriptionPrimary">추가적 알림 구성은 Canvas 알림 기본 설정 섹션에서 설정할 수 있습니다.</string>
+    <plurals name="notificationGroupContent">
+        <!--Will always be 2 or more, but some languages require specific formatting for 2 items-->
+        <item quantity="other">%d개 새 알림</item>
+    </plurals>
+
+    <string name="copyLinkAddress">링크 주소 복사</string>
+    <string name="copyLink">링크 복사</string>
+    <string name="linkCopied">링크 복사됨</string>
+    <string name="link">링크</string>
+    <string name="fileExists">파일이 있음</string>
+    <string name="replace">바꾸기</string>
+    <string name="shareLink">공유 링크</string>
+
+    <string name="utils_launchExternalTool">외부 도구 시작</string>
+    <string name="utils_externalToolTitle">외부 도구</string>
+    <string name="utils_placeholderTitle">외부 도구</string>
+    <string name="utils_placeholderDescription">Canvas 웹 계정을 방문하여 외부 도구를 편집합니다.</string>
+    <string name="utils_unableToViewInBrowser">이 LTI 도구를 표시할 외부 앱을 찾을 수 없습니다.</string>
+
+    <string name="utils_unsupportedFileMessage">이 파일은 표시할 수 없습니다. 아래 버튼을 사용하여 장치의 다른 앱으로 파일을 엽니다.</string>
+    <string name="utils_openWithAnotherApp">다른 프로그램으로 열기...</string>
+    <string name="utils_couldNotPlayFormat">이 미디어 형식은 지원되지 않습니다</string>
+    <string name="utils_fullscreen">전체 화면</string>
+
+    <string name="utils_dataUsageWarningTitle">데이터 사용 경고</string>
+    <string name="utils_dataUsageWarningMessage">이 작업은 많은 양의 데이터를 사용하여 잠재적으로 사용량 초과 청구가 발생할 수 있습니다. 계속하시겠습니까?</string>
+    <string name="utils_doNotShowMessageAgain">이 메시지를 다시 표시하지 않음</string>
+
+    <string name="utils_no_data_connection">데이터 연결을 확인하고 다시 시도하세요.</string>
+    <string name="utils_playMedia">미디어 재생</string>
+    <string name="utils_tryAgain">다시 시도</string>
+    <string name="image_uploading">이미지 업로드...</string>
+    <string name="image_upload_error">이미지 업로드 오류</string>
+    <string name="retry">다시 시도</string>
+    <string name="search">검색</string>
+    <string name="searchAssignmentsHint">과제 검색</string>
+    <string name="searchAnnouncementsHint">공지 검색</string>
+    <string name="searchDiscussionsHint">토론 검색</string>
+    <string name="searchPagesHint">페이지 검색</string>
+    <string name="searchQuizzesHint">퀴즈 검색</string>
+    <string name="noItemsMatchingQuery">\"%s\"과(와) 일치하는 항목 없음</string>
+
+    <string name="selected">선택됨</string>
+
+    <string name="notificationChannelNameInAppUpdate">앱 업데이트 알림</string>
+    <string name="notificationChannelDescriptionInAppUpdate">인앱 업데이트에 대한 Canvas 알림입니다.</string>
+    <string name="appUpdateReadyTitle">앱 업데이트 준비 완료</string>
+    <string name="appUpdateReadyDescription">앱을 다시 시작하여 새 버전을 설치</string>
+    <string name="nothing_planned_yet">아직 계획된 사항 없음</string>
+    <string name="schedule_tag_graded">채점됨</string>
+    <plurals name="schedule_tag_replies">
+        <item quantity="other">%d개 답변</item>
+    </plurals>
+    <string name="schedule_tag_feedback">피드백</string>
+    <string name="schedule_tag_late">늦게 제출</string>
+    <string name="schedule_tag_redo">다시 실행</string>
+    <string name="schedule_tag_excused">인정됨</string>
+    <string name="tomorrow">내일</string>
+    <string name="yesterday">어제</string>
+    <string name="schedule_calendar_event_due_text"> %s에</string>
+    <string name="schedule_calendar_event_interval_text">%1$s부터 %2$s</string>
+    <string name="schedule_todo_due_text">할 일: %s</string>
+    <string name="schedule_due_text">기한: %s</string>
+    <string name="show_missing_items_title">%d개 누락된 항목 표시</string>
+    <string name="hide_missing_items_title">%d개 누락된 항목 숨기기</string>
+    <string name="schedule_error_message">일정을 검색할 수 ㅇ벗음</string>
+    <string name="schedule_todo_title">할 일</string>
+    <plurals name="schedule_points">
+        <item quantity="zero">%s점</item>
+        <item quantity="other">%s점</item>
+    </plurals>
+    <plurals name="a11y_schedule_points">
+        <item quantity="zero">%.1f점</item>
+        <item quantity="other">%.1f점</item>
+    </plurals>
+    <string name="schedule_all_day_event_text">하루 종일</string>
+    <string name="schedule_tag_missing">누락됨</string>
+    <string name="previous_week">이전 주</string>
+    <string name="next_week">다음 주</string>
+    <string name="a11y_schedule_day_header_content_description">%1$s, %2$s</string>
+    <string name="a11y_schedule_course_header_content_description">과목 %s</string>
+    <string name="a11y_announcement">공지</string>
+    <string name="a11y_discussion_topic">토론</string>
+    <string name="a11y_calendar_event">캘린더 이벤트</string>
+    <string name="a11y_assignment">과제</string>
+    <string name="a11y_planner_note">플래너 메모</string>
+    <string name="a11y_quiz">퀴즈</string>
+    <string name="a11y_todo">할 일</string>
+    <string name="a11y_page">페이지</string>
+    <string name="a11y_assessment_request">평가 요청</string>
+    <string name="a11y_marked_as_done">완료로 표시</string>
+    <string name="a11y_not_marked_as_done">완료로 표시되지 않음</string>
+    <string name="error_loading_course_details">죄송합니다. 과목 세부 정보를 로드하는 동안 오류가 발생했습니다.</string>
+    <string name="a11y_schedule_marked_as_not_done">%s 완료되지 않음으로 표시됨</string>
+    <string name="a11y_markAsDoneWithName">%s 완료로 표시</string>
+    <string name="a11y_markAsNotDoneWithName">%s 완료되지 않음으로 표시</string>
+    <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="inboxSignatureError">수신함 서명을 로드하지 못함</string>
+    <string name="inboxSignatureSettingsUpdated">수신함 설정이 저장되었습니다.</string>
+    <string name="inboxSignatureSettingsError">수신함 설정을 저장하지 못함</string>
+    <string name="inboxSignatureTextFieldPlaceholder">여기에 서명을 작성</string>
+    <plurals name="durationHours">
+        <item quantity="other">%d시간</item>
+    </plurals>
+    <plurals name="durationMins">
+        <item quantity="other">%d분</item>
+    </plurals>
+</resources>
