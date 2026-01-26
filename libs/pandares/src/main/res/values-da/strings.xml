@@ -1045,6 +1045,8 @@
 
     <string name="downloading">Downloader</string>
     <string name="downloadComplete">Download fuldført</string>
+    <string name="fileDownloadNotificationPermissionDenied">Download startet. Aktiver meddelelser for at se fremskridt.</string>
+
     <string name="notificationChannelNameFileDownloadsName">Downloadmeddelelser</string>
     <string name="notificationChannelNameFileDownloadsDescription">Canvas-meddelelser for igangværende downloads.</string>
     <string name="full_due_date_details">Fulde oplysninger om afleveringsdato</string>
@@ -1249,6 +1251,7 @@
     <string name="a11y_content_description_add_to_dashboard">Tilføj til oversigten</string>
     <string name="a11y_content_description_add_all_to_dashboard">Føj alle til oversigten</string>
 
+    <string name="new_mobile_dashboard">Ny mobil oversigt</string>
     <!-- K5 Strings -->
     <string name="navDrawerAccount">Konto</string>
     <string name="dashboardTabHomeroom">Klasselokale</string>
@@ -1367,6 +1370,10 @@
         <item quantity="other">%s ulæste meddelelser</item>
     </plurals>
 
+    <plurals name="a11y_todoBadgeCount">
+        <item quantity="one">%s element på opgavelisten</item>
+        <item quantity="other">%s elementer på opgavelisten</item>
+    </plurals>
     <string name="noAnnotationSelected">Der er ikke valgt nogen anmærkning</string>
     <string name="emailNotifications">E-mail-meddelelser</string>
     <string name="emailNotificationsImmediately">Straks</string>
@@ -1907,6 +1914,8 @@
     <string name="gradePreferencesHeaderSortBy">Sorter efter</string>
     <string name="gradesEmptyTitle">Ingen opgaver</string>
     <string name="gradesEmptyMessage">Det ser ud til, at der ikke er blevet oprettet nogen opgaver i dette rum endnu.</string>
+    <string name="noMatchingAssignments">Ingen matchende opgaver</string>
+    <string name="noMatchingAssignmentsDescription">Ingen opgaver matcher din søgning. Prøv et andet søgeord.</string>
     <string name="errorLoadingGrades">Vi har problemer med at indlæse din studerendes karakterer. Prøv at genindlæse siden, eller kom tilbage senere.</string>
     <string name="errorLoadingCourse">Vi har problemer med at indlæse din studerendes fagoplysninger. Prøv at genindlæse siden, eller kom tilbage senere.</string>
     <string name="gradesFilterContentDescription">Filter</string>
@@ -2078,7 +2087,8 @@
     <string name="widgetErrorTitle">Ups! Noget gik galt</string>
     <string name="widgetErrorSubtitle">Vi har problemer med at vise dine opgaver lige nu. Prøv igen om lidt, eller brug appen.</string>
     <string name="widgetToDoEmptyTitle">Du er færdig for nu!</string>
-    <string name="widgetToDoEmptySubtitle">Det ser ud til, at du har fri de næste 4 uger. Vil du tilføje noget til opgavelisten?</string>
+    <string name="widgetToDoEmptySubtitle">Det ser ud til, at du er ledig, du har ingen kommende opgaver. Vil du tilføje noget til opgavelisten?</string>
+
     <string name="widgetNotLoggedInTitle">Lad os få dig logget ind!</string>
     <string name="widgetToDoNotLoggedInSubtitle">For at se din opgaveliste skal du logge ind på din konto i appen. Det tager kun et øjeblik!</string>
     <string name="a11y_widgetToDoOpenToDoList">Åbn skærmen med opgavelisten</string>
@@ -2103,6 +2113,11 @@
         <item quantity="one">%s / %s pkt</item>
         <item quantity="other">%s / %s point</item>
     </plurals>
+    <plurals name="groupMemberCount">
+        <item quantity="one">Studerende</item>
+        <item quantity="other">Studerende</item>
+    </plurals>
+
     <string name="speedGraderLatePenaltyTitle">Straf for sen aflevering</string>
     <string name="gradingStatus_none">Ingen</string>
     <string name="gradingStatus_late">Sen</string>
@@ -2159,4 +2174,189 @@
     <string name="scored_less_than_with_max">Opnåede mindre end / %s point</string>
     <string name="scored_between_values">Opnåede %1$s - %2$s</string>
     <string name="multiple_filters">Flere filtre</string>
+    <string name="a11y_contentDescriptionToDoFilter">Filter</string>
+    <string name="errorLoadingToDos">Der opstod en fejl under indlæsning af dine elementer på opgavelisten. Kontrollér forbindelsen, og prøv igen.</string>
+    <string name="errorUpdatingToDo">Der opstod en fejl under indlæsning af dit element på opgavelisten. Kontrollér forbindelsen, og prøv igen.</string>
+    <string name="noToDosForNow">Ingen elementer på opgavelisten indtil videre!</string>
+    <string name="noToDosForNowSubtext">Det ser ud til at være et godt tidspunkt til at hvile sig og slappe af.</string>
+    <string name="todoSwipeDone">Udført</string>
+    <string name="todoSwipeUndo">Fortryd</string>
+    <string name="todoMarkedAsDone">%s markeret som færdig</string>
+    <string name="todoMarkedAsNotDone">%s markeret som ikke færdig</string>
+    <string name="todoMarkedAsDoneSnackbarUndo">Fortryd</string>
+    <string name="todoActionOffline">Denne handling kan ikke udføres offline</string>
+
+    <!-- To Do List Filter Screen -->
+    <string name="todoFilterPreferences">Præferencer for opgavelister</string>
+    <string name="todoFilterVisibleItems">Synlige elementer</string>
+    <string name="todoFilterShowPersonalToDos">Vis personlig opgaveliste</string>
+    <string name="todoFilterShowCalendarEvents">Vis kalenderbegivenheder</string>
+    <string name="todoFilterShowCompleted">Vis afsluttet</string>
+    <string name="todoFilterFavoriteCoursesOnly">Kun favoritfag</string>
+    <string name="todoFilterShowTasksFrom">Vis opgaver fra</string>
+    <string name="todoFilterShowTasksUntil">Vis opgaver indtil</string>
+    <string name="todoFilterToday">I dag</string>
+    <string name="todoFilterThisWeek">Denne uge</string>
+    <string name="todoFilterLastWeek">Sidste uge</string>
+    <string name="todoFilterTwoWeeks">For 2 uger siden</string>
+    <string name="todoFilterThreeWeeks">For 3 uger siden</string>
+    <string name="todoFilterFourWeeks">For 4 uger siden</string>
+    <string name="todoFilterNextWeek">Næste uge</string>
+    <string name="todoFilterInTwoWeeks">Om 2 uger</string>
+    <string name="todoFilterInThreeWeeks">Om 3 uger</string>
+    <string name="todoFilterInFourWeeks">Om 4 uger</string>
+    <string name="todoFilterFromDate">Fra %s</string>
+    <string name="todoFilterUntilDate">Indtil %s</string>
+    <string name="a11y_buttonSelectionSelected">valgt</string>
+    <string name="a11y_buttonSelectionNotSelected">ikke valgt</string>
+    <!-- Course Invitations -->
+    <string name="courseInvitationsTitle">Faginvitationer (%d)</string>
+    <string name="courseInvitationAccepted">Invitation til %s accepteret</string>
+    <string name="courseInvitationDeclined">Invitation til %s afvist</string>
+    <string name="courseInvitationDeclineConfirmTitle">Afvis invitation</string>
+    <string name="courseInvitationDeclineConfirmMessage">Er du sikker på, at du vil afvise invitationen til %s?</string>
+
+    <!-- Welcome Widget -->
+    <!-- Greetings with name (%s is the student's first name) -->
+    <string name="welcomeGreetingMorningWithName">Godmorgen %s!</string>
+    <string name="welcomeGreetingAfternoonWithName">God eftermiddag %s!</string>
+    <string name="welcomeGreetingEveningWithName">God aften %s!</string>
+    <string name="welcomeGreetingNightWithName">Godnat %s!</string>
+
+    <!-- Greetings without name (fallback when user has no first name) -->
+    <string name="welcomeGreetingMorning">Godmorgen!</string>
+    <string name="welcomeGreetingAfternoon">God eftermiddag!</string>
+    <string name="welcomeGreetingEvening">God aften!</string>
+    <string name="welcomeGreetingNight">Godnat!</string>
+
+    <!-- Welcome Widget Motivational Messages -->
+    <string-array name="welcomeMessagesGeneric">
+        <item>Det her skal du nok klare.</item>
+        <item>Bliv ved – du er stærkere, end du føler dig lige nu.</item>
+        <item>Et skridt ad gangen er stadig fremskridt.</item>
+        <item>Giv ikke op – du vil takke dig selv i fremtiden.</item>
+        <item>Du kan meget mere, end du tror.</item>
+        <item>Selv på de hårde dage, bevæger du dig fremad.</item>
+        <item>Stol på dig selv – du har klaret svære ting før.</item>
+        <item>Fremskridt, ikke perfektion. Du klarer dig fantastisk.</item>
+        <item>Hold ud – du er ikke alene om det.</item>
+        <item>Du lærer, vokser og klarer dig bedre, end du er klar over.</item>
+        <item>Det er okay at snuble – du er stadig på rette vej.</item>
+        <item>Bare bliv ved – du er tættere på, end du tror.</item>
+        <item>Små sejre tæller også.</item>
+        <item>Fortsæt bare – du er tættere på, end du tror.</item>
+        <item>Det er okay at holde en pause. Pauser er en del af at lære.</item>
+        <item>At prøve er allerede en sejr.</item>
+        <item>Fremskridt &gt; perfektion.</item>
+        <item>At møde op betyder mere, end du aner.</item>
+        <item>Du opbygger færdigheder, selv på de mere rolige dage.</item>
+        <item>Glem ikke at trække vejret – du klarer det godt.</item>
+        <item>Dit tempo er det rigtige tempo.</item>
+        <item>Ikke alt behøver at blive ordnet i dag.</item>
+        <item>Du hører til her.</item>
+        <item>Enhver indsats, du gør, tæller.</item>
+        <item>Det er okay at starte forfra – så mange gange du har brug for.</item>
+        <item>Det, der føles svært nu, vil føles lettere senere.</item>
+        <item>Bliv ved med at møde op – det er det, der tæller.</item>
+        <item>Små skridt flytter store bjerge.</item>
+        <item>Hvile er også en del af fremskridt.</item>
+        <item>Du klarer dig bedre, end du er klar over.</item>
+        <item>Selv langsomme fremskridt er stadig fremskridt.</item>
+        <item>Fremtiden bygges ikke på én dag – men du er på vej.</item>
+        <item>Én opgave, ét øjeblik, ét skridt ad gangen.</item>
+        <item>Du behøver ikke at være perfekt for at gøre en forskel.</item>
+        <item>Det kan være rodet at lære – og det er helt normalt.</item>
+        <item>Hvert forsøg er vækst, selvom det ikke føles sådan.</item>
+        <item>Du har gjort svære ting før – du kan også gøre det her.</item>
+        <item>Din indsats betyder noget, også selvom ingen ser den.</item>
+        <item>Det er helt okay at tage tingene langsomt.</item>
+        <item>Du bevæger dig fremad, selv på de stille dage.</item>
+        <item>Stien behøver ikke at være tydelig endnu – bare fortsæt med at gå fremad.</item>
+        <item>Du er stærkere, end du føler dig lige nu.</item>
+        <item>Store mål bygges af små skridt.</item>
+        <item>Fortsæt – du vil takke dig selv i fremtiden.</item>
+        <item>Selv rodede fremskridt er stadig fremskridt.</item>
+        <item>Du er ikke bagud – du finder din helt egen vej.</item>
+        <item>Det er okay at lære undervejs.</item>
+        <item>Du vokser på måder, du måske ikke kan se endnu.</item>
+        <item>Din indsats i dag er en investering i morgendagen.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesMorning">
+        <item>Godmorgen! Du skal nok klare det her – et trin ad gangen.</item>
+        <item>Føler du dig ikke klar? Det er helt normalt. Bare start der, hvor du er.</item>
+        <item>Kaffe hjælper, men venlighed over for dig selv virker endnu bedre.</item>
+        <item>Problemer med teknologien? Det sker for os alle – ingen grund til stress.</item>
+        <item>I dag behøver det ikke at være perfekt.</item>
+        <item>Godmorgen – i dag er en ny chance for at lære og vokse.</item>
+        <item>Selv små skridt her til morgen bringer dig tættere på dine mål.</item>
+        <item>Tag en dyb indånding – du behøver ikke at have styr på det hele endnu.</item>
+        <item>Teknologi er ikke altid helt let, men du er ikke alene om at lære det.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesAfternoon">
+        <item>Du er der næsten – du har allerede opnået mere, end du tror.</item>
+        <item>Føler du dig fastlåst? Alle støder på problemer, men prøv bare at tage et skridt ad gangen.</item>
+        <item>Job, karakterer, fremtiden &#8230; ingen har fundet ud af det hele endnu.</item>
+        <item>Træt i hovedet? En lille pause = bedre fokus senere.</item>
+        <item>Bed om hjælp. Seriøst, ingen gør det her solo.</item>
+        <item>Du har allerede nået meget i dag – det kan du godt være stolt af.</item>
+        <item>Brug for en pause? Genopladning er også en del af at lære.</item>
+        <item>Det er okay, hvis vejen føles usikker – du opbygger dine færdigheder trin for trin.</item>
+        <item>Bed om hjælp, hvis du sidder fast – støtten er altid tættere på, end den føles.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesEvening">
+        <item>Du klarede dagen – det er en sejr i sig selv.</item>
+        <item>Savner du nogen? Send et hurtigt "hej" til en du kan lide – det hjælper.</item>
+        <item>Selvom i dag ikke var helt optimal, så gjorde du dit bedste. Det betyder noget.</item>
+        <item>Husk: Ingen karakter måler dit værd.</item>
+        <item>Du kan slappe af, grine eller scrolle uden skyldfølelse – du har fortjent det.</item>
+        <item>Godt gået med at komme igennem dagen – fremskridt tæller, selv når de er små.</item>
+        <item>Savner du venner eller mentorer? Forbindelse kan også komme i små øjeblikke.</item>
+        <item>Aftener er til refleksion – husk at lægge mærke til, hvad du har lært i dag, ikke kun alt det der stadig skal gøres.</item>
+        <item>Din indsats er vigtigere end perfektion.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesNight">
+        <item>Arbejder du hårdt? Respekt – men glem ikke, at søvn også er vigtig.</item>
+        <item>I morgen vil du takke dig selv for at have hvilet dig i nat.</item>
+        <item>Angsten kan føles mere larmende om natten – tro ikke på al dens støj.</item>
+        <item>Du er ikke bagud – du finder bare din helt egen vej.</item>
+        <item>Luk den bærbare computer – din hjerne har også brug for at drømme.</item>
+        <item>Det er helt okay at hvile sig – morgendagen venter med nye muligheder.</item>
+        <item>Læring er et maraton, ikke en sprint. Vær god ved dig selv i aften.</item>
+        <item>Hvis bekymringerne føles tunge, så husk, at du ikke behøver at bære dem alene.</item>
+        <item>Slut dagen af med at vide, at det at forsøge allerede er en præstation.</item>
+    </string-array>
+
+    <!-- Accessibility -->
+    <string name="welcomeWidgetContentDescription">Velkomstbesked: %1$s. %2$s</string>
+
+    <!-- Institutional Announcements -->
+    <string name="institutionalAnnouncementsTitle">Beskeder (%d)</string>
+    <!-- Widget Display Names -->
+    <string name="widget_hello">Hej %s</string>
+
+    <!-- Customize Dashboard -->
+    <string name="customize_dashboard">Tilpas oversigt</string>
+    <string name="dashboard_widgets">Widgets</string>
+    <string name="move_up">Flyt op</string>
+    <string name="move_down">Flyt ned</string>
+    <string name="no_widgets">Ingen widgets tilgængelige</string>
+    <string name="changing_dashboard_layout">Skift oversigtens layout</string>
+    <string name="changing_dashboard_layout_message">For at skifte oversigtens layout skal du genstarte applikationen.</string>
+    <string name="restart_now">Genstart nu</string>
+    <string name="switched_back">Skiftede tilbage?</string>
+    <string name="switched_back_message">Tak, fordi du prøvede den nye oversigt! Kan du fortælle os, hvorfor du skiftede tilbage?</string>
+    <string name="what_could_we_improve">Hvad kunne vi forbedre?</string>
+    <string name="skip">Spring over</string>
+    <string name="widget_setting_show_greeting">Vis hilsen</string>
+    <string name="background_color">Baggrundsfarve</string>
+    <string name="offline_content_available">Offlineindhold tilgængeligt</string>
+    <string name="a11y_contentDescription_moreOptions">Flere indstillinger:</string>
+    <string name="customizeCourse">Tilpas fag</string>
+    <string name="favoriteCoursesAndGroups">Favoritfag og -grupper</string>
+    <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
+    <string name="ltiToolsOffline">Eksterne værktøjer er ikke tilgængelige offline.</string>
 </resources>

@@ -1045,6 +1045,8 @@
 
     <string name="downloading">Telechajman</string>
     <string name="downloadComplete">Telechajman fini</string>
+    <string name="fileDownloadNotificationPermissionDenied">Telechajman an kòmanse. Aktive notifikasyon yo pou w ka wè pwogrè a.</string>
+
     <string name="notificationChannelNameFileDownloadsName">Avi Telechajman</string>
     <string name="notificationChannelNameFileDownloadsDescription">Notifikasyon Canvas pou telechajman k ap fèt yo</string>
     <string name="full_due_date_details">Tout detay delè</string>
@@ -1249,6 +1251,7 @@
     <string name="a11y_content_description_add_to_dashboard">Ajoute nan tablo</string>
     <string name="a11y_content_description_add_all_to_dashboard">Ajoute tout nan tablo</string>
 
+    <string name="new_mobile_dashboard">Tablodbò Nouvo Modil</string>
     <!-- K5 Strings -->
     <string name="navDrawerAccount">Kont</string>
     <string name="dashboardTabHomeroom">Sal kou</string>
@@ -1367,6 +1370,10 @@
         <item quantity="other">%s notofikasyon ki poko li</item>
     </plurals>
 
+    <plurals name="a11y_todoBadgeCount">
+        <item quantity="one">%s tach pou fè</item>
+        <item quantity="other">%s tach pou fè yo</item>
+    </plurals>
     <string name="noAnnotationSelected">Pa gen anotasyon ki seleksyone</string>
     <string name="emailNotifications">Avètisman Imèl</string>
     <string name="emailNotificationsImmediately">Kounye a menm</string>
@@ -1907,6 +1914,8 @@
     <string name="gradePreferencesHeaderSortBy">Triye Pa</string>
     <string name="gradesEmptyTitle">Okenn Sesyon</string>
     <string name="gradesEmptyMessage">Ta sanble devwa yo poko kreye nan espas sa a.</string>
+    <string name="noMatchingAssignments">Pa gen Devwa ki Koresponn</string>
+    <string name="noMatchingAssignmentsDescription">Pa gen devwa ki koresponn a rechèch ou a. Eseye yon lòt tèm rechèch.</string>
     <string name="errorLoadingGrades">Nou gen pwoblèm pou chaje nòt elèv ou yo. Eseye aktyalize paj la oswa eseye ankò pita.</string>
     <string name="errorLoadingCourse">Nou gen pwoblèm pou chaje detay kou elèv ou yo. Eseye aktyalize paj la oswa eseye ankò pita.</string>
     <string name="gradesFilterContentDescription">Filtè</string>
@@ -2078,7 +2087,8 @@
     <string name="widgetErrorTitle">Oops! Gen yon Bagay ki Pase Mal</string>
     <string name="widgetErrorSubtitle">Nou gen difikilte pou montre devwa ou yo pou kounye a. Eseye ankò apre yon ti tan oswa ale sou aplikasyon an.</string>
     <string name="widgetToDoEmptyTitle">Ou fini kounye a!</string>
-    <string name="widgetToDoEmptySubtitle">Ta sanble ou lib pou pwochen 4 semèn yo. Èske w vle ajoute kèk bagay pou w fè?</string>
+    <string name="widgetToDoEmptySubtitle">Sanble ou lib, ou pa gen okenn travay kap vini Èske w vle ajoute kèk bagay pou w fè?</string>
+
     <string name="widgetNotLoggedInTitle">An n Konekte w!</string>
     <string name="widgetToDoNotLoggedInSubtitle">Pou w wè sa w gen pou w fè yo, tanpri konekte sou kont ou nan aplikasyon an. L ap pran yon segonn!</string>
     <string name="a11y_widgetToDoOpenToDoList">Ouvri ekran Sa w Gen Pou w Fè</string>
@@ -2103,6 +2113,11 @@
         <item quantity="one">%s / %s pwen</item>
         <item quantity="other">%s / %s pwen</item>
     </plurals>
+    <plurals name="groupMemberCount">
+        <item quantity="one">Elèv</item>
+        <item quantity="other">Elèv</item>
+    </plurals>
+
     <string name="speedGraderLatePenaltyTitle">Penalite pou Reta</string>
     <string name="gradingStatus_none">Okenn</string>
     <string name="gradingStatus_late">An reta</string>
@@ -2159,4 +2174,189 @@
     <string name="scored_less_than_with_max">Te fè mwens pase / %s pwen</string>
     <string name="scored_between_values">Te fè %1$s - %2$s</string>
     <string name="multiple_filters">Plizyè filtè</string>
+    <string name="a11y_contentDescriptionToDoFilter">Filtè</string>
+    <string name="errorLoadingToDos">Te gen yon erè pandan y ap chaje tach pou w fè yo. Tanpri verifye koneksyon ou a epi eseye ankò.</string>
+    <string name="errorUpdatingToDo">Te gen yon erè nan aktyalizasyon tach pou w fè yo. Tanpri verifye koneksyon ou a epi eseye ankò.</string>
+    <string name="noToDosForNow">Sa pou Pa Fè Kounye a!</string>
+    <string name="noToDosForNowSubtext">Sanble se yon bon moman pou repoze, detann, epi rekipere enèji.</string>
+    <string name="todoSwipeDone">Fini</string>
+    <string name="todoSwipeUndo">Defèt</string>
+    <string name="todoMarkedAsDone">%s make ke li fini</string>
+    <string name="todoMarkedAsNotDone">%s make ke li poko fini</string>
+    <string name="todoMarkedAsDoneSnackbarUndo">Defèt</string>
+    <string name="todoActionOffline">Aksyon sa a pa ka fèt san koneksyon.</string>
+
+    <!-- To Do List Filter Screen -->
+    <string name="todoFilterPreferences">Preferans Lis Tach pou Fè</string>
+    <string name="todoFilterVisibleItems">Atik Vizib</string>
+    <string name="todoFilterShowPersonalToDos">Montre Tach Pèsonèl pou Fè yo</string>
+    <string name="todoFilterShowCalendarEvents">Montre Evènman ki nan Kalandriye yo</string>
+    <string name="todoFilterShowCompleted">Montre sa ki Fini</string>
+    <string name="todoFilterFavoriteCoursesOnly">Kou Favori yo Sèlman</string>
+    <string name="todoFilterShowTasksFrom">Montre tach pou fè ki soti nan</string>
+    <string name="todoFilterShowTasksUntil">Montre tach pou fè jiska</string>
+    <string name="todoFilterToday">Jodi a</string>
+    <string name="todoFilterThisWeek">Semèn sa a</string>
+    <string name="todoFilterLastWeek">Semèn Pase</string>
+    <string name="todoFilterTwoWeeks">2 Semèn de sa</string>
+    <string name="todoFilterThreeWeeks">3 Semèn de sa</string>
+    <string name="todoFilterFourWeeks">4 Semèn de sa</string>
+    <string name="todoFilterNextWeek">Semèn Pwochen</string>
+    <string name="todoFilterInTwoWeeks">Nan 2 Semèn</string>
+    <string name="todoFilterInThreeWeeks">Nan 3 Semèn</string>
+    <string name="todoFilterInFourWeeks">Nan 4 Semèn</string>
+    <string name="todoFilterFromDate">De %s</string>
+    <string name="todoFilterUntilDate">Jiska %s</string>
+    <string name="a11y_buttonSelectionSelected">seleksyone</string>
+    <string name="a11y_buttonSelectionNotSelected">pa seleksyone</string>
+    <!-- Course Invitations -->
+    <string name="courseInvitationsTitle">Envitasyon nan Kou (%d)</string>
+    <string name="courseInvitationAccepted">Envitasyon nan %s aksepte</string>
+    <string name="courseInvitationDeclined">Envitasyon nan %s refize</string>
+    <string name="courseInvitationDeclineConfirmTitle">Refize Envitasyon</string>
+    <string name="courseInvitationDeclineConfirmMessage">Èske ou sèten ou vle refize envitasyon an pou %s?</string>
+
+    <!-- Welcome Widget -->
+    <!-- Greetings with name (%s is the student's first name) -->
+    <string name="welcomeGreetingMorningWithName">Bonjou, %s!</string>
+    <string name="welcomeGreetingAfternoonWithName">Bonswa, %s!</string>
+    <string name="welcomeGreetingEveningWithName">Bonswa, %s!</string>
+    <string name="welcomeGreetingNightWithName">Bon lannwit, %s!</string>
+
+    <!-- Greetings without name (fallback when user has no first name) -->
+    <string name="welcomeGreetingMorning">Bonjou!</string>
+    <string name="welcomeGreetingAfternoon">Bonswa!</string>
+    <string name="welcomeGreetingEvening">Bonswa!</string>
+    <string name="welcomeGreetingNight">Bon lannwit!</string>
+
+    <!-- Welcome Widget Motivational Messages -->
+    <string-array name="welcomeMessagesGeneric">
+        <item>Ou ka fè sa.</item>
+        <item>Kontinye — ou pi fò pase jan w santi w kounye a.</item>
+        <item>Ti pa ti pa se toujou pwogrè.</item>
+        <item>Pa lage — a lavni w ap remèsye tèt ou.</item>
+        <item>Ou ka fè plis ke sa w panse.</item>
+        <item>Menm nan jou ki difisil yo, w ap avanse.</item>
+        <item>Fè tèt ou konfyans — Ou te deja fè bagay ki difisil deja.</item>
+        <item>Pwogrè, se pa pèfeksyon. W ap byen pase.</item>
+        <item>Kenbe fèm — ou pa pou kont ou nan sa.</item>
+        <item>W ap aprann, w ap grandi, epi w ap pi bon pase sa ou te ka imajine.</item>
+        <item>Pa gen pwoblèm si ou bite — ou toujou sou bon chemen an.</item>
+        <item>Pa lage — ou pi pre pase sa w ta panse.</item>
+        <item>Ti viktwa yo konte tou.</item>
+        <item>Kontinye — ou pi pre pase sa w ta panse.</item>
+        <item>Pa gen pwoblèm pou fè yon poz. Poz yo se fè pati aprantisaj la.</item>
+        <item>Eseye se deja yon viktwa.</item>
+        <item>Pwogrè &gt; pèfeksyon.</item>
+        <item>Parèt pi enpòtan pase sa w te panse.</item>
+        <item>Wap devlope konpetans, menm nan sou trankil yo.</item>
+        <item>Pa bliye respire — w ap degaje w.</item>
+        <item>Jan w ap avanse a bon.</item>
+        <item>Se pa tout bagay ki bezwen rezoud jodi a.</item>
+        <item>Ou gen plas ou isit la.</item>
+        <item>Chak efò ou fè konte.</item>
+        <item>Pa gen pwoblèm pou w rekòmanse — otan fwa ou wè sa nesesè.</item>
+        <item>Sa ki parèt difisil kounye a ap vin pi fasil demen.</item>
+        <item>Kontinye prezan — se sa ki konte.</item>
+        <item>Ti pa deplase gwo mòn.</item>
+        <item>Repo fè pati pwogrè a tou.</item>
+        <item>W ap pi bon pase sa ou te ka imajine.</item>
+        <item>Menm pwogrè ki fèt dousman toujou se pwogrè.</item>
+        <item>Lavi kap vini an pa konstwi nan yon sèl jou — men w sou wout la.</item>
+        <item>Yon devwa, yon moman, ti pa ti pa.</item>
+        <item>Ou pa bezwen pafè pou w fè enpak.</item>
+        <item>Aprantisaj konn dezòdone — e sa nòmal</item>
+        <item>Chak tantativ se kwasans, menm si li pa sanble ak sa</item>
+        <item>Ou te deja fè bagay ki difisil — ou ka fè sa tou.</item>
+        <item>Efò ou fè gen valè, menm si pèsonn pa wè li.</item>
+        <item>Pa gen pwoblèm si w pran bagay yo dousman.</item>
+        <item>W ap avanse, menm nan jou ki trankil</item>
+        <item>Chemen an poko bezwen klè — sèlman kontinye avanse.</item>
+        <item>Ou pi fò pase sa ou santi kounye a.</item>
+        <item>Gwo objektif yo bati apati de ti pa.</item>
+        <item>Kontinye — lavni ap remèsye w.</item>
+        <item>Menm pwogrè ki fèt an dezòd yo toujou se pwogrè.</item>
+        <item>Ou pa anreta — ou sou wout ou.</item>
+        <item>Pa gen pwoblèm si w aprann pandan w ap avanse.</item>
+        <item>W ap grandi nan fason ou poko ka wè.</item>
+        <item>Efò ou fè jodi a se yon envestisman pou demen.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesMorning">
+        <item>Bonjou! Ou ka fè sa — yon klas, pazapa.</item>
+        <item>Ou pa santi w pare? Se nòmal. Kòmanse kote w ye a.</item>
+        <item>Kafe ede, men janti anvè tèt ou pi efikas.</item>
+        <item>Pwoblèm teknik? Sa rive tout moun — pa strese.</item>
+        <item>Jodi a pa bezwen pafè, li jis bezwen posib.</item>
+        <item>Bonjou — jodi a se yon nouvo opòtinite pou aprann ak grandi.</item>
+        <item>Menm si w fè yon ti bagay maten an, sa ap ede w rive kote w vle a.</item>
+        <item>Pran yon ti souf — ou pa bezwen gen tout bagay kalkile deja.</item>
+        <item>Teknoloji ka difisil, men ou pa pou kont ou nan aprann li.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesAfternoon">
+        <item>Ou rive nan mwatye wout la — ou deja fè plis pase sa w panse.</item>
+        <item>Ou santi w bloke? Tout moun rive nan pwen kote yo bloke, jis pa sispann grenpe.</item>
+        <item>Travay, nòt, lavni... pèsonn poko gen tout bagay fikse byen.</item>
+        <item>Sèvo w bouke? Yon ti poz rapid = pi bon konsantrasyon apre.</item>
+        <item>Mande èd. Vreman vre, pèsonn pa fè bagay sa a poukont li.</item>
+        <item>Ou deja rive lwen konsa jodi a — sa se yon bagay pou w fyè de li.</item>
+        <item>Ou bezwen yon poz? Rechaje fè pati aprantisaj la tou.</item>
+        <item>Li nòmal si w pa fin konnen kote w prale a — w ap devlope konpetans ou etap pa etap.</item>
+        <item>Kontakte nou si w bloke — èd la toujou pi pre pase sa w santi.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesEvening">
+        <item>Mwen reyisi pase jounen an — sa se deja yon viktwa.</item>
+        <item>Moun ki disparèt? Voye yon "hey" rapid bay yon moun — sa ede.</item>
+        <item>Menm si jodi a te yon dezòd, ou te la. Se sa ki konte.</item>
+        <item>Sonje: okenn nòt pa mezire valè w.</item>
+        <item>Detann ou, ri, oswa defile san w pa santi w koupab — ou merite li.</item>
+        <item>Bravo paske w rive pase jounen an — pwogrè konte, menm lè li fèt an silans.</item>
+        <item>Ou santi w manke zanmi w oswa moun k ap gide w yo? Ou ka konekte ak moun menm nan ti moman yo tou.</item>
+        <item>Aswe yo la pou w reflechi — gade sa w aprann jodi a, olye w gade sèlman sa w poko fè.</item>
+        <item>Efò w ap fè a pi enpòtan pase pèfeksyon.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesNight">
+        <item>Ou toujou ap travay di? Respè — men sonje dòmi enpòtan.</item>
+        <item>Demen w ap remèsye tèt ou paske w repoze aswè a.</item>
+        <item>Lè lannwit, w ap santi w plis enkyete — pa koute tout sa li di w yo.</item>
+        <item>Ou pa anreta, ou sou wout ou.</item>
+        <item>Fèmen òdinatè a — sèvo w bezwen reve tou.</item>
+        <item>Li nòmal pou w repoze — demen ap tann ou ak nouvo opòtinite.</item>
+        <item>Aprantisaj se yon maraton, se pa yon kous rapid. Aswè a, fè tèt ou plezi.</item>
+        <item>Si w santi enkyetid yo twòp pou ou, sonje ou pa oblije pote yo pou kont ou.</item>
+        <item>Fini jounen an avèk lide depi w eseye, se deja yon akonplisman.</item>
+    </string-array>
+
+    <!-- Accessibility -->
+    <string name="welcomeWidgetContentDescription">Mesaj akèy: %1$s. %2$s</string>
+
+    <!-- Institutional Announcements -->
+    <string name="institutionalAnnouncementsTitle">Anons (%d)</string>
+    <!-- Widget Display Names -->
+    <string name="widget_hello">Bonjou, %s</string>
+
+    <!-- Customize Dashboard -->
+    <string name="customize_dashboard">Pèsonalize Tablodbò</string>
+    <string name="dashboard_widgets">Widgets</string>
+    <string name="move_up">Deplase anwo</string>
+    <string name="move_down">Deplase anba</string>
+    <string name="no_widgets">Pa gen widget disponib</string>
+    <string name="changing_dashboard_layout">Chanje aranjman tablodbò</string>
+    <string name="changing_dashboard_layout_message">Pou chanje aranjman tablodbò a fòk ou redemare aplikasyon an</string>
+    <string name="restart_now">Redemare kounye a</string>
+    <string name="switched_back">Tounen sou sa anvan an?</string>
+    <string name="switched_back_message">Mèsi paske w eseye nouvo tablodbò a! Èske ou ka di nou poukisa ou tounen sou sa anvan an?</string>
+    <string name="what_could_we_improve">Kisa nou ta ka amelyore?</string>
+    <string name="skip">Sote</string>
+    <string name="widget_setting_show_greeting">Montre salitasyon an</string>
+    <string name="background_color">Koulè fon</string>
+    <string name="offline_content_available">Kontni disponib san entènèt</string>
+    <string name="a11y_contentDescription_moreOptions">Plis opsyon</string>
+    <string name="customizeCourse">Pèsonalize Kou</string>
+    <string name="favoriteCoursesAndGroups">Kou ak Gwoup Prefere</string>
+    <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
+    <string name="ltiToolsOffline">Zouti Ekstèn yo pa disponib san entènèt.</string>
 </resources>

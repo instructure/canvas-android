@@ -16,23 +16,10 @@
  */
 package com.instructure.canvasapi2.managers.graphql.horizon.redwood
 
-import com.apollographql.apollo.ApolloClient
-import com.apollographql.apollo.api.Optional
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import com.instructure.canvasapi2.di.RedwoodApolloClient
-import com.instructure.canvasapi2.enqueueMutation
-import com.instructure.canvasapi2.enqueueQuery
-import com.instructure.redwood.CreateNoteMutation
-import com.instructure.redwood.DeleteNoteMutation
 import com.instructure.redwood.QueryNotesQuery
-import com.instructure.redwood.UpdateNoteMutation
-import com.instructure.redwood.type.CreateNoteInput
 import com.instructure.redwood.type.NoteFilterInput
 import com.instructure.redwood.type.OrderByInput
-import com.instructure.redwood.type.UpdateNoteInput
 import java.util.Date
-import javax.inject.Inject
 
 enum class NoteObjectType(val value: String) {
     Assignment("Assignment"),
@@ -117,104 +104,4 @@ interface RedwoodApiManager {
     )
 
     suspend fun deleteNote(noteId: String)
-}
-
-class RedwoodApiManagerImpl @Inject constructor(
-    @RedwoodApolloClient private val redwoodClient: ApolloClient
-) : RedwoodApiManager {
-    override suspend fun getNotes(
-        filter: NoteFilterInput?,
-        firstN: Int?,
-        lastN: Int?,
-        after: String?,
-        before: String?,
-        orderBy: OrderByInput?,
-        forceNetwork: Boolean
-    ): QueryNotesQuery.Notes {
-        val query = QueryNotesQuery(
-            filter = Optional.presentIfNotNull(filter),
-            first = Optional.presentIfNotNull(firstN?.toDouble()),
-            last = Optional.presentIfNotNull(lastN?.toDouble()),
-            after = Optional.presentIfNotNull(after),
-            before = Optional.presentIfNotNull(before),
-            orderBy = Optional.presentIfNotNull(orderBy),
-        )
-        val result = redwoodClient
-            .enqueueQuery(query, forceNetwork)
-            .dataAssertNoErrors.notes
-
-        return result
-    }
-
-    override suspend fun createNote(
-        courseId: String,
-        objectId: String,
-        objectType: String,
-        userText: String?,
-        notebookType: String?,
-        highlightData: NoteHighlightedData?
-    ) {
-        val reaction = if (notebookType == null) {
-            Optional.absent()
-        } else {
-            Optional.present(listOf(notebookType))
-        }
-        val mutation = CreateNoteMutation(
-            CreateNoteInput(
-                courseId = courseId,
-                objectId = objectId,
-                objectType = objectType,
-                userText = Optional.presentIfNotNull(userText),
-                reaction = reaction,
-                highlightData = Optional.presentIfNotNull(getHighlightDataAsJson(highlightData))
-            )
-        )
-
-        redwoodClient
-            .enqueueMutation(mutation)
-            .dataAssertNoErrors
-    }
-
-    override suspend fun updateNote(
-        id: String,
-        userText: String?,
-        notebookType: String?,
-        highlightData: NoteHighlightedData?
-    ) {
-        val reaction = if (notebookType == null) {
-            Optional.absent()
-        } else {
-            Optional.present(listOf(notebookType))
-        }
-
-        val mutation = UpdateNoteMutation(
-            id = id,
-            input = UpdateNoteInput(
-                userText = Optional.presentIfNotNull(userText),
-                reaction = reaction,
-                highlightData = Optional.presentIfNotNull(getHighlightDataAsJson(highlightData))
-            )
-        )
-
-        redwoodClient
-            .enqueueMutation(mutation)
-            .dataAssertNoErrors
-    }
-
-    override suspend fun deleteNote(noteId: String) {
-        val mutation = DeleteNoteMutation(noteId)
-
-        redwoodClient
-            .enqueueMutation(mutation)
-            .dataAssertNoErrors
-    }
-
-    private fun getHighlightDataAsJson(highlightedData: NoteHighlightedData?): Map<String, Any>? {
-        return highlightedData?.let {
-            val gson = Gson()
-            val jsonTree = gson.toJsonTree(highlightedData)
-            val mapType = object : TypeToken<Map<String, Any>>() {}.type
-            gson.fromJson(jsonTree, mapType)
-        }
-    }
 }
