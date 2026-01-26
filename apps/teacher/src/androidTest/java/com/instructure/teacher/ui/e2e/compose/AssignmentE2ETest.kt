@@ -25,6 +25,7 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
+import com.instructure.canvas.espresso.annotations.ReleaseExclude
 import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.SectionsApi
@@ -61,6 +62,7 @@ class AssignmentE2ETest : TeacherComposeTest() {
         android.Manifest.permission.CAMERA
     )
 
+    @ReleaseExclude
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
@@ -503,6 +505,7 @@ class AssignmentE2ETest : TeacherComposeTest() {
         speedGraderPage.assertCommentDisplayed(commentUploadInfo.fileName, student.name)
     }
 
+    @ReleaseExclude
     @E2E
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.E2E, SecondaryFeatureCategory.SECTIONS)
