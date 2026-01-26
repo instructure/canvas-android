@@ -1,0 +1,6 @@
+mutation ExecuteRedwoodQuery($input: RedwoodQueryInput!) {
+    executeRedwoodQuery(input: $input) {
+        data
+        errors
+    }
+}
