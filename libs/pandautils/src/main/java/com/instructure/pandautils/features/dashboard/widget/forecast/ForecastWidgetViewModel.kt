@@ -27,13 +27,10 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.type.GradingType
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.canvasapi2.utils.toDate
-import com.instructure.pandautils.data.model.GradedSubmission
 import com.instructure.pandautils.R
-import com.instructure.pandautils.utils.ColorKeeper
-import com.instructure.pandautils.utils.color
-import com.instructure.pandautils.utils.getAssignmentIcon
-import com.instructure.pandautils.utils.getIconForPlannerItem
+import com.instructure.pandautils.data.model.GradedSubmission
 import com.instructure.pandautils.domain.usecase.assignment.LoadAssignmentGroupsUseCase
 import com.instructure.pandautils.domain.usecase.assignment.LoadMissingAssignmentsParams
 import com.instructure.pandautils.domain.usecase.assignment.LoadMissingAssignmentsUseCase
@@ -43,6 +40,9 @@ import com.instructure.pandautils.domain.usecase.audit.LoadRecentGradeChangesPar
 import com.instructure.pandautils.domain.usecase.audit.LoadRecentGradeChangesUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCaseParams
+import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.getAssignmentIcon
+import com.instructure.pandautils.utils.getIconForPlannerItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
@@ -52,14 +52,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.TemporalAdjusters
 import java.time.temporal.WeekFields
-import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
 
@@ -125,7 +123,8 @@ class ForecastWidgetViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 weekPeriod = weekPeriod,
-                isLoadingItems = it.selectedSection != null
+                isLoadingItems = it.selectedSection != null,
+                isError = false
             )
         }
 
@@ -139,8 +138,11 @@ class ForecastWidgetViewModel @Inject constructor(
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
-                _uiState.update { it.copy(isLoadingItems = false, isError = true) }
-                crashlytics.recordException(e)
+                // Only set error state if this job wasn't cancelled by new navigation
+                if (isActive) {
+                    _uiState.update { it.copy(isLoadingItems = false, isError = true) }
+                    crashlytics.recordException(e)
+                }
             }
         }
     }
@@ -209,13 +211,13 @@ class ForecastWidgetViewModel @Inject constructor(
 
     private suspend fun loadUpcomingAssignments(forceRefresh: Boolean) {
         val weekPeriod = _uiState.value.weekPeriod ?: calculateWeekPeriod(currentWeekOffset)
-        val startDate = weekPeriod.startDate.atStartOfDay(ZoneId.systemDefault()).toInstant()
-        val endDate = weekPeriod.endDate.atTime(23, 59, 59).atZone(ZoneId.systemDefault()).toInstant()
+        val startDate = weekPeriod.startDate.atStartOfDay().toApiString()
+        val endDate = weekPeriod.endDate.atTime(23, 59, 59).toApiString()
 
         upcomingPlannerItems = loadUpcomingAssignmentsUseCase(
             LoadUpcomingAssignmentsParams(
-                startDate = startDate.toString(),
-                endDate = endDate.toString(),
+                startDate = startDate.orEmpty(),
+                endDate = endDate.orEmpty(),
                 forceRefresh = forceRefresh
             )
         )
@@ -227,14 +229,14 @@ class ForecastWidgetViewModel @Inject constructor(
     private suspend fun loadRecentGrades(forceRefresh: Boolean) {
         val userId = apiPrefs.user?.id ?: return
         val weekPeriod = _uiState.value.weekPeriod ?: calculateWeekPeriod(currentWeekOffset)
-        val startDate = weekPeriod.startDate.atStartOfDay(ZoneId.systemDefault()).toInstant()
-        val endDate = weekPeriod.endDate.atTime(23, 59, 59).atZone(ZoneId.systemDefault()).toInstant()
+        val startDate = weekPeriod.startDate.atStartOfDay().toApiString()
+        val endDate = weekPeriod.endDate.atTime(23, 59, 59).toApiString()
 
         recentGradedSubmissions = loadRecentGradeChangesUseCase(
             LoadRecentGradeChangesParams(
                 studentId = userId,
-                startTime = startDate.toString(),
-                endTime = endDate.toString(),
+                startTime = startDate.orEmpty(),
+                endTime = endDate.orEmpty(),
                 forceRefresh = forceRefresh
             )
         )
@@ -283,10 +285,15 @@ class ForecastWidgetViewModel @Inject constructor(
             }
     }
 
-    private fun mapRecentGrades(submissions: List<GradedSubmission>): List<AssignmentItem> {
+    private suspend fun mapRecentGrades(submissions: List<GradedSubmission>): List<AssignmentItem> {
         return submissions
             .sortedByDescending { it.gradedAt }
             .map { submission ->
+                val course = try {
+                    getCourseOrLoad(submission.courseId)
+                } catch (e: Exception) {
+                    null
+                }
                 AssignmentItem(
                     id = submission.assignmentId,
                     courseId = submission.courseId,
@@ -299,18 +306,25 @@ class ForecastWidgetViewModel @Inject constructor(
                     iconRes = R.drawable.ic_assignment,
                     url = submission.assignmentUrl ?: "",
                     score = submission.score,
-                    grade = formatGrade(submission)
+                    grade = formatGrade(submission, course)
                 )
             }
     }
 
-    private fun formatGrade(submission: GradedSubmission): String? {
+    private fun formatGrade(submission: GradedSubmission, course: Course?): String? {
         if (submission.excused) {
             return resources.getString(R.string.gradingStatus_excused)
         }
 
         val grade = submission.grade
         if (grade.isNullOrBlank()) return null
+
+        val restrictQuantitativeData = course?.settings?.restrictQuantitativeData == true
+
+        // When quantitative data is restricted, only show the grade string (letter grade)
+        if (restrictQuantitativeData) {
+            return grade
+        }
 
         // For point-based assignments, show "score/pointsPossible"
         if (submission.gradingType == GradingType.points) {
@@ -337,16 +351,28 @@ class ForecastWidgetViewModel @Inject constructor(
     }
 
     private fun calculateWeekPeriod(offsetWeeks: Int): WeekPeriod {
-        val locale = getLocale()
+        val locale = Locale.getDefault()
         val today = LocalDate.now()
-        val firstDayOfWeek = if (locale.country == "US") DayOfWeek.SUNDAY else DayOfWeek.MONDAY
+        val firstDayOfWeek = WeekFields.of(locale).firstDayOfWeek
 
         val currentWeekStart = today.with(TemporalAdjusters.previousOrSame(firstDayOfWeek))
         val targetWeekStart = currentWeekStart.plusWeeks(offsetWeeks.toLong())
         val targetWeekEnd = targetWeekStart.plusDays(6)
 
-        val formatter = DateTimeFormatter.ofPattern("MMM d", locale)
-        val displayText = "${targetWeekStart.format(formatter)} - ${targetWeekEnd.format(formatter)}"
+        val currentYear = today.year
+        val startYear = targetWeekStart.year
+        val endYear = targetWeekEnd.year
+
+        val displayText = when {
+            startYear != currentYear || endYear != currentYear -> {
+                val formatterWithYear = DateTimeFormatter.ofPattern("MMM d, yyyy", locale)
+                "${targetWeekStart.format(formatterWithYear)} - ${targetWeekEnd.format(formatterWithYear)}"
+            }
+            else -> {
+                val formatter = DateTimeFormatter.ofPattern("MMM d", locale)
+                "${targetWeekStart.format(formatter)} - ${targetWeekEnd.format(formatter)}"
+            }
+        }
 
         val weekNumber = targetWeekStart.get(WeekFields.of(locale).weekOfYear())
 
@@ -356,15 +382,6 @@ class ForecastWidgetViewModel @Inject constructor(
             displayText = displayText,
             weekNumber = weekNumber
         )
-    }
-
-    private fun getLocale(): Locale {
-        val selectedLocale = apiPrefs.selectedLocale
-        return if (!selectedLocale.isNullOrEmpty()) {
-            Locale.forLanguageTag(selectedLocale)
-        } else {
-            Locale.getDefault()
-        }
     }
 
     private suspend fun calculateAssignmentWeight(assignment: Assignment): Double? {

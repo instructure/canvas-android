@@ -219,6 +219,7 @@
 
     <!-- Date strings -->
     <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
     <string name="past">Past</string>
     <string name="noDate">No Date</string>
     <string name="future">Future</string>

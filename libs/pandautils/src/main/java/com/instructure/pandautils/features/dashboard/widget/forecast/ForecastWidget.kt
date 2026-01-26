@@ -19,6 +19,7 @@ package com.instructure.pandautils.features.dashboard.widget.forecast
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -42,6 +43,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -145,8 +147,14 @@ fun ForecastWidgetContent(
 
                         AnimatedVisibility(
                             visible = uiState.selectedSection != null,
-                            enter = expandVertically() + fadeIn(),
-                            exit = shrinkVertically() + fadeOut()
+                            enter = expandVertically(
+                                expandFrom = Alignment.Top,
+                                animationSpec = tween(durationMillis = 300)
+                            ) + fadeIn(animationSpec = tween(durationMillis = 300)),
+                            exit = shrinkVertically(
+                                shrinkTowards = Alignment.Top,
+                                animationSpec = tween(durationMillis = 300)
+                            ) + fadeOut(animationSpec = tween(durationMillis = 300))
                         ) {
                             if (uiState.isLoadingItems) {
                                 ForecastWidgetItemsLoadingState()
@@ -361,7 +369,8 @@ private fun ForecastWidgetEmptyState(
                     color = colorResource(R.color.backgroundLightest),
                     shape = RoundedCornerShape(8.dp)
                 )
-                .padding(16.dp)
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
                 painter = painterResource(emptyIcon),

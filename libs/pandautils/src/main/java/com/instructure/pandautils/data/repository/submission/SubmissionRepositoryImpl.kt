@@ -33,7 +33,7 @@ class SubmissionRepositoryImpl(
             val data = recentGradedSubmissionsManager.getRecentGradedSubmissions(
                 studentId = studentId,
                 gradedSince = gradedSince,
-                pageSize = 50,
+                pageSize = 20,
                 forceNetwork = forceRefresh
             )
 
@@ -44,7 +44,7 @@ class SubmissionRepositoryImpl(
                             val submission = edge?.node ?: return@mapNotNull null
                             val assignment = submission.assignment ?: return@mapNotNull null
 
-                            if (submission.gradeHidden == true) {
+                            if (submission.gradeHidden) {
                                 return@mapNotNull null
                             }
 

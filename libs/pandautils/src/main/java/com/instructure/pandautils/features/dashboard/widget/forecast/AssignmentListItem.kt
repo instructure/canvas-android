@@ -29,10 +29,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,12 +49,11 @@ import androidx.compose.ui.unit.sp
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.canvasapi2.utils.formatRelativeWithTime
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getFragmentActivity
-import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.Locale
 
 @Composable
 fun AssignmentListItem(
@@ -95,14 +94,10 @@ fun AssignmentListItem(
                     modifier = Modifier.size(16.dp)
                 )
 
-                Box(
-                    modifier = Modifier
-                        .width(0.5.dp)
-                        .height(16.dp)
-                        .border(
-                            width = 0.5.dp,
-                            color = colorResource(R.color.borderMedium)
-                        )
+                VerticalDivider(
+                    modifier = Modifier.height(16.dp),
+                    thickness = 0.5.dp,
+                    color = colorResource(R.color.borderMedium)
                 )
 
                 Text(
@@ -144,8 +139,8 @@ fun AssignmentListItem(
                 modifier = Modifier.fillMaxWidth()
             )
 
-            val dateText = assignment.dueDate?.let { formatDate(it) }
-                ?: assignment.gradedDate?.let { formatDate(it) }
+            val dateText = assignment.dueDate?.formatRelativeWithTime(context)
+                ?: assignment.gradedDate?.formatRelativeWithTime(context)
                     .orEmpty()
 
             if (dateText.isNotEmpty()) {
@@ -185,52 +180,6 @@ private fun WeightChip(
             lineHeight = 14.sp,
             color = color
         )
-    }
-}
-
-private fun formatDate(date: Date): String {
-    val now = Date()
-    val calendar = java.util.Calendar.getInstance()
-
-    calendar.time = now
-    val todayStart = calendar.apply {
-        set(java.util.Calendar.HOUR_OF_DAY, 0)
-        set(java.util.Calendar.MINUTE, 0)
-        set(java.util.Calendar.SECOND, 0)
-        set(java.util.Calendar.MILLISECOND, 0)
-    }.timeInMillis
-
-    calendar.time = now
-    calendar.add(java.util.Calendar.DAY_OF_YEAR, 1)
-    val tomorrowStart = calendar.apply {
-        set(java.util.Calendar.HOUR_OF_DAY, 0)
-        set(java.util.Calendar.MINUTE, 0)
-        set(java.util.Calendar.SECOND, 0)
-        set(java.util.Calendar.MILLISECOND, 0)
-    }.timeInMillis
-
-    calendar.time = now
-    calendar.add(java.util.Calendar.DAY_OF_YEAR, 1)
-    val tomorrowEnd = calendar.apply {
-        set(java.util.Calendar.HOUR_OF_DAY, 23)
-        set(java.util.Calendar.MINUTE, 59)
-        set(java.util.Calendar.SECOND, 59)
-        set(java.util.Calendar.MILLISECOND, 999)
-    }.timeInMillis
-
-    val dateMillis = date.time
-    val timeFormat = SimpleDateFormat("h:mm a", Locale.getDefault())
-    val dateFormat = SimpleDateFormat("d MMM yyyy, h:mm a", Locale.getDefault())
-
-    return when {
-        dateMillis >= todayStart && dateMillis < tomorrowStart -> "Today, ${timeFormat.format(date)}"
-        dateMillis >= tomorrowStart && dateMillis <= tomorrowEnd -> "Tomorrow, ${
-            timeFormat.format(
-                date
-            )
-        }"
-
-        else -> dateFormat.format(date)
     }
 }
 
