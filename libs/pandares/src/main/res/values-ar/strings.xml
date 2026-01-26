@@ -1108,6 +1108,8 @@
 
     <string name="downloading">جارٍ التنزيل</string>
     <string name="downloadComplete">اكتمل التنزيل</string>
+    <string name="fileDownloadNotificationPermissionDenied">بدأ التنزيل. تمكين الإعلامات لمتابعة التقدم.</string>
+
     <string name="notificationChannelNameFileDownloadsName">إعلامات التنزيل</string>
     <string name="notificationChannelNameFileDownloadsDescription">إعلامات Canvas لعمليات التنزيل الجارية.</string>
     <string name="full_due_date_details">التفاصيل الكاملة لتاريخ الاستحقاق</string>
@@ -1332,6 +1334,7 @@
     <string name="a11y_content_description_add_to_dashboard">الإضافة إلى لوحة المعلومات</string>
     <string name="a11y_content_description_add_all_to_dashboard">إضافة الكل إلى لوحة المعلومات</string>
 
+    <string name="new_mobile_dashboard">لوحة معلومات جديدة للجوال</string>
     <!-- K5 Strings -->
     <string name="navDrawerAccount">الحساب</string>
     <string name="dashboardTabHomeroom">صف التسجيل</string>
@@ -1458,6 +1461,14 @@
         <item quantity="other">%s من الإشعارات غير المقروءة</item>
     </plurals>
 
+    <plurals name="a11y_todoBadgeCount">
+        <item quantity="zero">%s من عناصر قائمة المهام</item>
+        <item quantity="one">%s عنصر قائمة مهام</item>
+        <item quantity="two">%s من عناصر قائمة المهام</item>
+        <item quantity="few">%s من عناصر قائمة المهام</item>
+        <item quantity="many">%s من عناصر قائمة المهام</item>
+        <item quantity="other">%s من عناصر قائمة المهام</item>
+    </plurals>
     <string name="noAnnotationSelected">لم يتم تحديد تعليق توضيحي</string>
     <string name="emailNotifications">إعلامات البريد الإلكتروني</string>
     <string name="emailNotificationsImmediately">فورًا</string>
@@ -2038,6 +2049,8 @@
     <string name="gradePreferencesHeaderSortBy">الفزر حسب</string>
     <string name="gradesEmptyTitle">لا توجد أي مهام</string>
     <string name="gradesEmptyMessage">يبدو أنه لم يتم إنشاء مهام في هذه المساحة حتى الآن.</string>
+    <string name="noMatchingAssignments">لا توجد مهام مطابقة</string>
+    <string name="noMatchingAssignmentsDescription">لا توجد مهام مطابقة لبحثك. جرب مصطلح بحث مختلفًا.</string>
     <string name="errorLoadingGrades">أنت تواجه مشكلة في تحميل درجات الطالب. يرجى محاولة إعادة تحميل الصفحة أو إعادة المحاولة لاحقًا.</string>
     <string name="errorLoadingCourse">أنت تواجه مشكلة في تحميل تفاصيل مساق الطالب. يرجى محاولة إعادة تحميل الصفحة أو إعادة المحاولة لاحقًا.</string>
     <string name="gradesFilterContentDescription">عامل تصفية</string>
@@ -2217,7 +2230,8 @@
     <string name="widgetErrorTitle">عذراً! حدث خطأ ما</string>
     <string name="widgetErrorSubtitle">نواجه مشكلة في عرض مهامك في الوقت الحالي. يُرجى إعادة المحاولة بعد فترة وجيزة أو توجه إلى التطبيق.</string>
     <string name="widgetToDoEmptyTitle">أنت جاهز تمامًا في الوقت الحالي!</string>
-    <string name="widgetToDoEmptySubtitle">يبدو أنك متفرغ للأسابيع الأربعة التالية. هل تريد أن تضيف بعض المهام؟</string>
+    <string name="widgetToDoEmptySubtitle">يبدو أنك متفرغ، وليس لديك أي مهام قادمة. هل تريد أن تضيف بعض المهام؟</string>
+
     <string name="widgetNotLoggedInTitle">فلنساعدك في تسجيل الدخول!</string>
     <string name="widgetToDoNotLoggedInSubtitle">لتر قائمة مهامك، يُرجى تسجيل الدخول في حسابك في التطبيق. سيستغرق الأمر ثانية فحسب!</string>
     <string name="a11y_widgetToDoOpenToDoList">فتح شاشة قائمة المهام</string>
@@ -2246,6 +2260,15 @@
         <item quantity="many">%s / %s نقاط</item>
         <item quantity="other">%s / %s نقاط</item>
     </plurals>
+    <plurals name="groupMemberCount">
+        <item quantity="zero">الطلاب</item>
+        <item quantity="one">طالب</item>
+        <item quantity="two">الطلاب</item>
+        <item quantity="few">الطلاب</item>
+        <item quantity="many">الطلاب</item>
+        <item quantity="other">الطلاب</item>
+    </plurals>
+
     <string name="speedGraderLatePenaltyTitle">عقوبة التأخير:</string>
     <string name="gradingStatus_none">بلا</string>
     <string name="gradingStatus_late">متأخر</string>
@@ -2302,4 +2325,189 @@
     <string name="scored_less_than_with_max">تم إحراز نقاط أقل من / %s من النقاط</string>
     <string name="scored_between_values">تم إحراز %1$s - %2$s</string>
     <string name="multiple_filters">عدة عوامل تصفية</string>
+    <string name="a11y_contentDescriptionToDoFilter">عامل تصفية</string>
+    <string name="errorLoadingToDos">وقع خطأ أثناء تحميل عناصر قائم المهام الخاصة بك. يرجى التحقق من الاتصال وإعادة المحاولة.</string>
+    <string name="errorUpdatingToDo">وقع خطأ أثناء تحدث عنصر قائم المهام الخاص بك. يرجى التحقق من الاتصال وإعادة المحاولة.</string>
+    <string name="noToDosForNow">لا توجد قوائم مهام في الوقت الحالي!</string>
+    <string name="noToDosForNowSubtext">يبدو أننا في وقت رائع للراحة والاسترخاء والاستعداد للعمل من جديد.</string>
+    <string name="todoSwipeDone">تم</string>
+    <string name="todoSwipeUndo">تراجع</string>
+    <string name="todoMarkedAsDone">تم وضع علامة تم على %s</string>
+    <string name="todoMarkedAsNotDone">لم يتم وضع علامة تم على %s</string>
+    <string name="todoMarkedAsDoneSnackbarUndo">تراجع</string>
+    <string name="todoActionOffline">لا يمكن تنفيذ هذا الإجراء دون اتصال</string>
+
+    <!-- To Do List Filter Screen -->
+    <string name="todoFilterPreferences">تفضيلات قائمة المهام</string>
+    <string name="todoFilterVisibleItems">عناصر ظاهرة</string>
+    <string name="todoFilterShowPersonalToDos">إظهار قوائم المهام الشخصية</string>
+    <string name="todoFilterShowCalendarEvents">إظهار أحداث التقويم</string>
+    <string name="todoFilterShowCompleted">إظهار المكتمل</string>
+    <string name="todoFilterFavoriteCoursesOnly">تفضيل الدورات التدريبية فقط</string>
+    <string name="todoFilterShowTasksFrom">إظهار المهام بدءًا من</string>
+    <string name="todoFilterShowTasksUntil">إظهار المهام حتى</string>
+    <string name="todoFilterToday">اليوم</string>
+    <string name="todoFilterThisWeek">هذا الأسبوع</string>
+    <string name="todoFilterLastWeek">الأسبوع الماضي</string>
+    <string name="todoFilterTwoWeeks">منذ أسبوعين</string>
+    <string name="todoFilterThreeWeeks">منذ 3 أسابيع</string>
+    <string name="todoFilterFourWeeks">منذ 4 أسابيع</string>
+    <string name="todoFilterNextWeek">الأسبوع القادم</string>
+    <string name="todoFilterInTwoWeeks">خلال أسبوعين</string>
+    <string name="todoFilterInThreeWeeks">خلال 3 أسابيع</string>
+    <string name="todoFilterInFourWeeks">خلال 4 أسابيع</string>
+    <string name="todoFilterFromDate">من %s</string>
+    <string name="todoFilterUntilDate">حتى %s</string>
+    <string name="a11y_buttonSelectionSelected">تم التحديد</string>
+    <string name="a11y_buttonSelectionNotSelected">غير محدد</string>
+    <!-- Course Invitations -->
+    <string name="courseInvitationsTitle">دعوات المساق (%d)</string>
+    <string name="courseInvitationAccepted">تم قبول الدعوة إلى %s</string>
+    <string name="courseInvitationDeclined">تم رفض الدعوة إلى %s</string>
+    <string name="courseInvitationDeclineConfirmTitle">رفض الدعوة</string>
+    <string name="courseInvitationDeclineConfirmMessage">هل أنت متأكد من أنك تريد رفض الدعوة إلى %s؟</string>
+
+    <!-- Welcome Widget -->
+    <!-- Greetings with name (%s is the student's first name) -->
+    <string name="welcomeGreetingMorningWithName">صباح الخير يا %s!</string>
+    <string name="welcomeGreetingAfternoonWithName">مساء الخير يا %s!</string>
+    <string name="welcomeGreetingEveningWithName">عمت مساءً يا %s!</string>
+    <string name="welcomeGreetingNightWithName">طابت ليلتك يا %s!</string>
+
+    <!-- Greetings without name (fallback when user has no first name) -->
+    <string name="welcomeGreetingMorning">صباح الخير!</string>
+    <string name="welcomeGreetingAfternoon">مساء الخير!</string>
+    <string name="welcomeGreetingEvening">عمت مساءً!</string>
+    <string name="welcomeGreetingNight">طابت ليلتك!</string>
+
+    <!-- Welcome Widget Motivational Messages -->
+    <string-array name="welcomeMessagesGeneric">
+        <item>أنت قادر على تحقيق ذلك.</item>
+        <item>استمر — أنت أقوى مما تشعر به الآن.</item>
+        <item>خطوة واحدة صغيرة لا تزال تقدمًا نحو تحقيق الهدف.</item>
+        <item>لا تستسلم — ستشكر نفسك مستقبلاً على المواصلة.</item>
+        <item>أنت قادر على تحقيق أكثر مما تظن.</item>
+        <item>حتى في الأيام الصعبة، لا تزال قادرًا على التقدم نحو الأمام.</item>
+        <item>ثق في قدراتك — لقد أنجزت أمور صعبة من قبل.</item>
+        <item>المهم هو التقدم، وليس تحقيق المثالية. أنت تؤدي بشكل رائع.</item>
+        <item>لا تستسلم — أنت لست وحيدًا في هذا المسار.</item>
+        <item>أنت تتعلم وتتطور وتقدم أفضل مما تعتقد.</item>
+        <item>لا مانع في أن نتعثر — هذا لا يمنع أنك لا تزال في المسار الصحيح.</item>
+        <item>واصل بجد — لقد اقتربت أكثر مما تعتقد.</item>
+        <item>الانتصارات الصغيرة مهمة أيضًا.</item>
+        <item>استمر — لقد اقتربت أكثر مما تعتقد.</item>
+        <item>لا مانع في أن تتوقف لبرهة. الاستراحات جزء لا يتجزأ من رحلة التعلم.</item>
+        <item>التجربة بمثابة انتصار بالفعل.</item>
+        <item>التقدم &gt; المثالية</item>
+        <item>أن تؤدي أقل ما عليك أهم مما تظن.</item>
+        <item>أنت تصقل مهاراتك حتى في أيامك التي لا تشعر فيها بأفضل حال.</item>
+        <item>لا تنس أن تلتقط أنفاسك — أنت تؤدي بشكل رائع.</item>
+        <item>إيقاعك هو الإيقاع الصحيح.</item>
+        <item>لست ملزمًا بأن تنجز كل شيء اليوم.</item>
+        <item>أنت تنتمي إلى هنا.</item>
+        <item>كل مجهود تبذله هو حجر أساس.</item>
+        <item>لا توجد مشكلة في أن تبدأ من جديد — وليس هناك أي حد لكم من المرات يمكنك أن تفعل ذلك.</item>
+        <item>كل يبدو صعبًا الآن سيكون سهلاً غدًا.</item>
+        <item>الاستمرارية هي المفتاح — وهذا ما سيصنع الفارق.</item>
+        <item>الخطوات الصغيرة تصنع الرحلات إلى أبعد الأماكن.</item>
+        <item>الراحة جزء من التقدم كذلك.</item>
+        <item>أنت تؤدي بشكل أفضل مما تظن.</item>
+        <item>حتى التقدم البطيء يُعد تقدمًا.</item>
+        <item>لن تحقق المستقبل في يوم واحد — لكنك في طريقك لتحققه.</item>
+        <item>مهمة واحدة ولحظة واحدة وخطوة واحدة في المرة.</item>
+        <item>لست ملزمًا بأن تكون مثاليًا لتحدث الفارق.</item>
+        <item>التعلم ليس سهلاً — وهذا أمر طبيعي.</item>
+        <item>كل محاولة هي تطور في ذاتها، حتى لو لم تشعر بذلك.</item>
+        <item>لقد أنجزت أمور صعبة من قبل — ويمكنك أن تنجز هذا الأمر كذلك.</item>
+        <item>مجهودك هو ما يهم، حتى لو لم يره أحد.</item>
+        <item>لا مانع في أن تأخذ الأمور بتروي.</item>
+        <item>أنت تتقدم نحو الأمام، حتى في أيامك البطيئة.</item>
+        <item>لا توجد حاجة لأن يكون المسار واضحًا بعد — استمر في طريقك.</item>
+        <item>أنت أقوى مما تشعر به الآن.</item>
+        <item>الأهداف الكبرى تصنعها الخطوات الصغرى.</item>
+        <item>استمر — ستشكر نفسك مستقبلاً.</item>
+        <item>حتى التقدم غير المنظم يُعد تقدمًا.</item>
+        <item>أنت لست متأخرًا — أنت في مسارك الصحيح.</item>
+        <item>لا توجد مشكلة في أن تتعلم في مشوارك.</item>
+        <item>أنت تتطور بطرق قد لا تكون واضحة بالنسبة لك بعد.</item>
+        <item>مجهودك اليوم هو استثمار في الغد.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesMorning">
+        <item>صباح الخير! أنت قادر على تحقيق هذا — فصل واحد، وخطوة واحدة في المرة.</item>
+        <item>ألا تشعر بأنك جاهز؟ هذا طبيعي. ابدأ من مكانك فحسب.</item>
+        <item>القهوة تساعد، لكن التلطف بنفسك يساعد أكثر.</item>
+        <item>هل تواجه مشاكل تقنية؟ هذا يحدث لنا جميًعا — لا تضغط على نفسك.</item>
+        <item>لا نحتاج لأن يكون اليوم مثاليًا، نحتاج لأن يكون معقولاً فحسب.</item>
+        <item>صباح الخير —  اليوم هو فرصة جديدة للتعلم والتطور.</item>
+        <item>حتى الخطوات الصغيرة التي تقطعها في هذا الصباح ستقربك من أهدافك.</item>
+        <item>التقط أنفاسك — أنت لست ملزمًا بأن تعرف كل شيء بعد.</item>
+        <item>أحيانًا لا تكون التقنية سهلة، لكنك لست وحيدًا في تعلمها.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesAfternoon">
+        <item>أنت في منتصف الطريق —  لقد حققت أكثر مما تظن.</item>
+        <item>هل تشعر بأنك عالق في مكانك؟ الجميع يشعر بأنه وصل إلى حائط سد، لكننا نواصل ونعبر من فوقه.</item>
+        <item>لا يوجد شخص قد أدرك كل شيء... قد نحصل على الشهادات وندرك الوظائف، لكننا لا نعرف أبدًا المستقبل.</item>
+        <item>هل تشعر بأن عقلك مجهد؟ استراحة سريعة = تركيز أفضل لاحقًا.</item>
+        <item>اطلب المساعدة. لا يوجد شخص ينجز هذا بمفرده، وأنا أعني ذلك.</item>
+        <item>لقد نجحت في الوصول إلى هنا اليوم — وهذا أمر عليك أن تكون فخورًا به.</item>
+        <item>هل أنت بحاجة لاستراحة وجيزة؟ استعادة طاقتك هو جزء من التعلم كذلك.</item>
+        <item>لا توجد مشكلة في أن تشعر بعدم اليقين — فالمهارات تصقل خطوة بخطوة.</item>
+        <item>تواصل إذا كنت تشعر بأنك عالق في مكانك — فالدعم دائمًا أقرب مما نتصور.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesEvening">
+        <item>إذا نجحت في إنجاز ما عليك اليوم، فهذا فوز في حد ذاته.</item>
+        <item>هل تفتد إلى الاجتماعيات؟ دردش سريعًا مع أحد ما — فهذا سيساعدك.</item>
+        <item>حتى لو شعرت إن الأمور مربكة، فأنت حضرت. وهذا ما يهم.</item>
+        <item>تذكر: قيمتك لا تستمد من درجتك.</item>
+        <item>استرخ أو امرح أو تصفح الإنترنت دون أن تشعر بالذنب — فأنت تستحق هذا.</item>
+        <item>أحسنت صنعًا في إنجاز مهامك لليوم —  التقدم مهم، حتى عندما تكون الأمور بطيئة.</item>
+        <item>هل تفتقد أصدقاءك أو معلميك؟ يمكن أن تتواصل للحظات قصيرة فحسب.</item>
+        <item>الأمسيات مثالية للتأمل — ألق نظرة على ما تعلمته اليوم، وليس ما عليك فعله فحسب.</item>
+        <item>مجهودك أهم من تحقيق المثالية.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesNight">
+        <item>هل لا تزال تبذل قصارى جهدك؟ أحترمك لذلك — لكن لا تنس أن تحظى بقسط من النوم.</item>
+        <item>وغدًا ستشكر نفسك لأنك استرحت الليلة.</item>
+        <item>القلق يعلو صوته ليلاً — وتلك الضوضاء الصاخبة ليست حقيقية.</item>
+        <item>أنت لست متأخرًا — أنت في مسارك الصحيح فحسب.</item>
+        <item>أغلق الكمبيوتر المحمول — عقلك يحتاج لأن يحلم كذلك.</item>
+        <item>يمكنك أن تستريح — غدًا بانتظارك وفي جعبته فرص جديدة.</item>
+        <item>التعلم مشوار طويل يؤخذ بتروي وليس مسافة قصيرة نقطعها هرولة. كن لطيفًا مع نفسك.</item>
+        <item>إذا كانت المخاوف ثقيلة، فتذكر أنك غير مضطر لأن تحملها وحيدًا.</item>
+        <item>قم بإنهاء اليوم وأنت تعرف أن المحاولة في حد ذاتها إنجاز.</item>
+    </string-array>
+
+    <!-- Accessibility -->
+    <string name="welcomeWidgetContentDescription">رسالة ترحيب: %1$s. %2$s</string>
+
+    <!-- Institutional Announcements -->
+    <string name="institutionalAnnouncementsTitle">الإعلانات (%d)</string>
+    <!-- Widget Display Names -->
+    <string name="widget_hello">مرحبًا يا %s</string>
+
+    <!-- Customize Dashboard -->
+    <string name="customize_dashboard">تخصيص لوحة المعلومات</string>
+    <string name="dashboard_widgets">عناصر واجهة المستخدم</string>
+    <string name="move_up">تحريك لأعلى</string>
+    <string name="move_down">تحريك لأسفل</string>
+    <string name="no_widgets">لا تتوفر عناصر واجهة مستخدم</string>
+    <string name="changing_dashboard_layout">جارٍ تغيير تخطيط لوحة المعلومات</string>
+    <string name="changing_dashboard_layout_message">لتغيير تخطيط لوحة المعلومات، عليك أن تعيد تشغيل التطبيق</string>
+    <string name="restart_now">إعادة التشغيل الآن</string>
+    <string name="switched_back">هل تريد التبديل إلى الشكل القديم؟</string>
+    <string name="switched_back_message">شكرًا لك على تجربة لوحة المعلومات الجديدة! هل من الممكن أن تخبرنا لماذا قمت بالرجوع إلى الشكل القديم؟</string>
+    <string name="what_could_we_improve">ما الذي يمكننا أن نحسنه؟</string>
+    <string name="skip">تخطي</string>
+    <string name="widget_setting_show_greeting">إظهار شاشة الترحيب</string>
+    <string name="background_color">لون الخلفية</string>
+    <string name="offline_content_available">يتوفر محتوى بدون اتصال</string>
+    <string name="a11y_contentDescription_moreOptions">المزيد من الخيارات</string>
+    <string name="customizeCourse">تخصيص مساق</string>
+    <string name="favoriteCoursesAndGroups">تفضيل المساقات والمجموعات</string>
+    <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
+    <string name="ltiToolsOffline">الأدوات الخارجية غير متوفرة بدون اتصال.</string>
 </resources>

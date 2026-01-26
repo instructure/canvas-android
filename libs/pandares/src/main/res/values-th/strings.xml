@@ -1045,6 +1045,8 @@
 
     <string name="downloading">ดาวน์โหลด</string>
     <string name="downloadComplete">ดาวน์โหลดเสร็จสิ้น</string>
+    <string name="fileDownloadNotificationPermissionDenied">เริ่มดาวน์โหลดแล้ว เปิดใช้การแจ้งข้อมูลเพื่อดูสถานะ</string>
+
     <string name="notificationChannelNameFileDownloadsName">ดาวน์โหลดข้อมูลที่แจ้ง</string>
     <string name="notificationChannelNameFileDownloadsDescription">การแจ้งข้อมูลของ Canvas สำหรับการดาวน์โหลดที่กำลังดำเนินการ</string>
     <string name="full_due_date_details">รายละเอียดวันครบกำหนดทั้งหมด</string>
@@ -1249,6 +1251,7 @@
     <string name="a11y_content_description_add_to_dashboard">เพิ่มไปยังแผงข้อมูล</string>
     <string name="a11y_content_description_add_all_to_dashboard">เพิ่งทั้งหมดไปยังแผงข้อมูล</string>
 
+    <string name="new_mobile_dashboard">แผงข้อมูลใหม่สำหรับอุปกรณ์พกพา</string>
     <!-- K5 Strings -->
     <string name="navDrawerAccount">บัญชี</string>
     <string name="dashboardTabHomeroom">โฮมรูม</string>
@@ -1367,6 +1370,10 @@
         <item quantity="other">%s การแจ้งข้อมูลที่ไม่ได้อ่าน</item>
     </plurals>
 
+    <plurals name="a11y_todoBadgeCount">
+        <item quantity="one">%s รายการสิ่งที่ต้องทำ</item>
+        <item quantity="other">%s รายการสิ่งที่ต้องทำ</item>
+    </plurals>
     <string name="noAnnotationSelected">ไม่ได้เลือกหมายเหตุกำกับใด ๆ</string>
     <string name="emailNotifications">การแจ้งข้อมูลทางอีเมล</string>
     <string name="emailNotificationsImmediately">ทันที</string>
@@ -1907,6 +1914,8 @@
     <string name="gradePreferencesHeaderSortBy">จัดเรียงจาก</string>
     <string name="gradesEmptyTitle">ไม่มีภารกิจ</string>
     <string name="gradesEmptyMessage">ดูเหมือนจะยังไม่ได้จัดทำภารกิจในพื้นที่นี้</string>
+    <string name="noMatchingAssignments">ไม่มีภารกิจที่ตรงกัน</string>
+    <string name="noMatchingAssignmentsDescription">ไม่มีภารกิจที่ตรงกับการค้นหาของคุณ ลองคำค้นหาอื่น</string>
     <string name="errorLoadingGrades">เรามีปัญหาในการโหลดเกรดสำหรับผู้เรียนของคุณ กรุณาลองโหลดหน้าเพจใหม่หรือลองใหม่อีกครั้งในภายหลัง</string>
     <string name="errorLoadingCourse">เรามีปัญหาในการโหลดรายละเอียดบทเรียนของผู้เรียน กรุณาลองโหลดหน้าเพจใหม่หรือลองใหม่อีกครั้งในภายหลัง</string>
     <string name="gradesFilterContentDescription">ตัวกรอง</string>
@@ -2078,7 +2087,8 @@
     <string name="widgetErrorTitle">อุ๊ปส์! มีบางอย่างผิดปกติ</string>
     <string name="widgetErrorSubtitle">เรามีปัญหาในการแสดงงานของคุณในตอนนี้ กรุณาลองใหม่อีกครั้งอีกสักครู่หรือเข้าไปที่แอพ</string>
     <string name="widgetToDoEmptyTitle">เสร็จสิ้นแล้วในตอนนี้!</string>
-    <string name="widgetToDoEmptySubtitle">ดูเหมือนคุณจะว่างต่อไปอีก 4 สัปดาห์ ต้องการเพิ่มรายการดำเนินการหรือไม่</string>
+    <string name="widgetToDoEmptySubtitle">ดูเหมือนคุณจะว่าง ไม่มีงานในอนาคตค้างอยู่ ต้องการเพิ่มรายการดำเนินการหรือไม่</string>
+
     <string name="widgetNotLoggedInTitle">ล็อกอินกันก่อนเลย!</string>
     <string name="widgetToDoNotLoggedInSubtitle">ดูรายการที่ต้องดำเนินการโดยล็อกอินไปยังบัญชีของคุณในแอพ แป๊ปเดียวเท่านั้น!</string>
     <string name="a11y_widgetToDoOpenToDoList">เปิดหน้าจอรายการ สิ่งที่ต้องทำ</string>
@@ -2103,6 +2113,11 @@
         <item quantity="one">%s / %s คะแนน</item>
         <item quantity="other">%s / %s คะแนน</item>
     </plurals>
+    <plurals name="groupMemberCount">
+        <item quantity="one">ผู้เรียน</item>
+        <item quantity="other">ผู้เรียน</item>
+    </plurals>
+
     <string name="speedGraderLatePenaltyTitle">โทษปรับล่าช้า</string>
     <string name="gradingStatus_none">ไม่มี</string>
     <string name="gradingStatus_late">ล่าช้า</string>
@@ -2159,4 +2174,189 @@
     <string name="scored_less_than_with_max">คะแนนน้อยกว่า / %s คะแนน</string>
     <string name="scored_between_values">คะแนน %1$s - %2$s</string>
     <string name="multiple_filters">หลายตัวกรอง</string>
+    <string name="a11y_contentDescriptionToDoFilter">ตัวกรอง</string>
+    <string name="errorLoadingToDos">มีข้อผิดพลาดในการโหลดรายการสิ่งที่ต้องทำของคุณ กรุณาตรวจสอบการเชื่อมต่อของคุณและลองใหม่อีกครั้ง</string>
+    <string name="errorUpdatingToDo">มีข้อผิดพลาดในการอัพเดตรายการสิ่งที่ต้องทำ กรุณาตรวจสอบการเชื่อมต่อของคุณและลองใหม่อีกครั้ง</string>
+    <string name="noToDosForNow">ไม่มีรายการสิ่งที่ต้องทำตอนนี้!</string>
+    <string name="noToDosForNowSubtext">ดูเหมือนนี่จะเป็นเวลาที่เหมาะสำหรับพัก ผ่อนคลายและเติมพลัง</string>
+    <string name="todoSwipeDone">เสร็จสิ้น</string>
+    <string name="todoSwipeUndo">เลิกทำ</string>
+    <string name="todoMarkedAsDone">%s กำกับว่าเสร็จสิ้นแล้ว</string>
+    <string name="todoMarkedAsNotDone">%s กำลังไว้ว่าไม่เสร็จสิ้น</string>
+    <string name="todoMarkedAsDoneSnackbarUndo">เลิกทำ</string>
+    <string name="todoActionOffline">ไม่สามารถดำเนินการแบบออฟไลน์ได้</string>
+
+    <!-- To Do List Filter Screen -->
+    <string name="todoFilterPreferences">ค่าปรับแต่งรายการสิ่งที่ต้องทำ</string>
+    <string name="todoFilterVisibleItems">รายการที่จัดแสดง</string>
+    <string name="todoFilterShowPersonalToDos">แสดงรายการสิ่งที่ต้องทำส่วนบุคคล</string>
+    <string name="todoFilterShowCalendarEvents">แสดงกิจกรรมในปฏิทิน</string>
+    <string name="todoFilterShowCompleted">แสดงรายการที่เสร็จสิ้นแล้ว</string>
+    <string name="todoFilterFavoriteCoursesOnly">เฉพาะบทเรียนโปรด</string>
+    <string name="todoFilterShowTasksFrom">แสดงงานจาก</string>
+    <string name="todoFilterShowTasksUntil">แสดงงานถึง</string>
+    <string name="todoFilterToday">วันนี้</string>
+    <string name="todoFilterThisWeek">สัปดาห์นี้</string>
+    <string name="todoFilterLastWeek">สัปดาห์ที่แล้ว</string>
+    <string name="todoFilterTwoWeeks">2 สัปดาห์ที่ผ่านมา</string>
+    <string name="todoFilterThreeWeeks">3 สัปดาห์ที่ผ่านมา</string>
+    <string name="todoFilterFourWeeks">4 สัปดาห์ที่ผ่านมา</string>
+    <string name="todoFilterNextWeek">สัปดาห์ถัดไป</string>
+    <string name="todoFilterInTwoWeeks">ภายใน 2 สัปดาห์</string>
+    <string name="todoFilterInThreeWeeks">ภายใน 3 สัปดาห์</string>
+    <string name="todoFilterInFourWeeks">ภายใน 4 สัปดาห์</string>
+    <string name="todoFilterFromDate">จาก %s</string>
+    <string name="todoFilterUntilDate">จนถึง %s</string>
+    <string name="a11y_buttonSelectionSelected">ที่เลือกไว้</string>
+    <string name="a11y_buttonSelectionNotSelected">ไม่ได้เลือก</string>
+    <!-- Course Invitations -->
+    <string name="courseInvitationsTitle">คำเชิญเข้าร่วมบทเรียน (%d)</string>
+    <string name="courseInvitationAccepted">ตอบรับคำเชิญ %s แล้ว</string>
+    <string name="courseInvitationDeclined">ปฏิเสธคำเชิญ %s แล้ว</string>
+    <string name="courseInvitationDeclineConfirmTitle">ปฏิเสธคำเชิญ</string>
+    <string name="courseInvitationDeclineConfirmMessage">แน่ใจว่าต้องการปฏิเสธคำเชิญ %s หรือไม่</string>
+
+    <!-- Welcome Widget -->
+    <!-- Greetings with name (%s is the student's first name) -->
+    <string name="welcomeGreetingMorningWithName">สวัสดีตอนเช้า %s!</string>
+    <string name="welcomeGreetingAfternoonWithName">สวัสดีตอนบ่าย %s!</string>
+    <string name="welcomeGreetingEveningWithName">สวัสดีตอนเย็น %s!</string>
+    <string name="welcomeGreetingNightWithName">สวัสดียามค่ำคืน %s!</string>
+
+    <!-- Greetings without name (fallback when user has no first name) -->
+    <string name="welcomeGreetingMorning">สวัสดีตอนเช้า!</string>
+    <string name="welcomeGreetingAfternoon">สวัสดีตอนบ่าย!</string>
+    <string name="welcomeGreetingEvening">สวัสดีตอนเย็น!</string>
+    <string name="welcomeGreetingNight">สวัสดียามค่ำคืน!</string>
+
+    <!-- Welcome Widget Motivational Messages -->
+    <string-array name="welcomeMessagesGeneric">
+        <item>คุณทำได้</item>
+        <item>อย่ายอมแพ้ คุณเก่งกว่าที่คุณคิด</item>
+        <item>ก้าวไปทีละก้าวแต่ไม่ยอมแพ้</item>
+        <item>อย่ายอมแพ้ ตัวคุณในอนาคตจะต้องขอบคุณคุณ</item>
+        <item>คุณเก่งกว่าที่คุณคิด</item>
+        <item>วันที่ยาก ๆ คุณก็ยังก้าวไปข้างหน้าได้</item>
+        <item>เชื่อมั่นในตัวเอง คุณทำสิ่งที่ยากมาก่อนนี้แล้ว</item>
+        <item>ไม่หยุดอยู่กับที่ ไม่จำเป็นต้องสมบูรณ์แบบ คุณทำได้ดีแล้ว</item>
+        <item>อย่าถอย คุณไม่ได้อยู่ตามลำพัง</item>
+        <item>คุณกำลังเรียนรู้ เติมโตและทำได้ดีกว่าเดิมอย่างที่คุณไม่รู้ตัว</item>
+        <item>ล้มบ้างเป็นเรื่องปกติ คุณเดินถูกทางแล้ว</item>
+        <item>ก้าวต่อไป คุณใกล้ถึงจุดหมายมากกว่าที่คิด</item>
+        <item>ชัยชนะเล็ก ๆ ที่สำคัญไม่แพ้กัน</item>
+        <item>ไปต่อ คุณใกล้ถึงจุดหมายมากกว่าที่คิด</item>
+        <item>หยุดพักบ้างก็ได้ พักสักนิดก็เป็นส่วนหนึ่งของการเรียนรู้</item>
+        <item>การได้ลองก็คือชัยชนะแล้ว</item>
+        <item>ความก้าวหน้า &gt; ความสมบูรณ์แบบ</item>
+        <item>การไม่หายไปไหนสำคัญมากกว่าที่คุณคิด</item>
+        <item>คุณกำลังพัฒนาทักษะแม้ในวันที่ดูเหมือนไม่เดินหน้าไปไหน</item>
+        <item>อย่าลืมหายใจเข้าลึก ๆ คุณทำได้ดีแล้ว</item>
+        <item>คุณกำลังเดินไปในเส้นทางที่ถูกต้องแล้ว</item>
+        <item>ไม่จำเป็นต้องได้คำตอบทุกอย่างในตอนนี้</item>
+        <item>คุณคือพวกเรา</item>
+        <item>ทุกความพยายามมีผลลัพธ์</item>
+        <item>เริ่มอีกครั้งก็ไม่เป็นไร เท่าไรก็ได้อย่าท้อ</item>
+        <item>สิ่งที่ยากตอนนี้จะง่ายขึ้นเรื่อย ๆ</item>
+        <item>อย่าหายไปไหน นั่นคือสิ่งทีสำคัญที่สุด</item>
+        <item>ก้าวเล็ก ๆ ที่จะเคลื่อนภูเขา</item>
+        <item>การพักผ่อนเป็นส่วนหนึ่งของพัฒนาการเช่นกัน</item>
+        <item>คุณทำได้ดีกว่าที่คุณคิด</item>
+        <item>ความก้าวหน้าแม้เพียงเล็กน้อยก็คือความก้าวหน้า</item>
+        <item>อนาคตไม่ได้เกิดขึ้นในวันเดียว แต่คุณกำลังไปสู่จุดหมายนั้น</item>
+        <item>หนึ่งภารกิจ หนึ่งช่วงเวลา ก้าวไปทีละก้าว</item>
+        <item>ไม่ต้องสมบูรณ์แบบเพื่อจะสร้างความแตกต่าง</item>
+        <item>การเรียนรู้เป็นเรื่องซับซ้อน แต่นั่นคือความจริงที่พบได้ทั่วไป</item>
+        <item>ทุก ๆ การพยายามคือการเติบโต แม้ว่าจะเหมือนไม่มีอะไรเกิดขึ้นก็ตาม</item>
+        <item>ทุกเคยทำเรื่องยาก ๆ มากแล้ว คุณทำเรื่องนี้ได้เช่นกัน</item>
+        <item>ความพยายามของคุณสำคัญ แม้ว่าจะไม่มีใครเห็นก็ตาม</item>
+        <item>ไปช้า ๆ ก็ไม่เป็นไร</item>
+        <item>คุณกำลังก้าวไปข้างหน้า แม้ในวันที่ดูเหมือนเงียบเหงา</item>
+        <item>เส้นทางไม่ต้องชัดเจนเสมอไป เดินต่อไปเรื่อย ๆ</item>
+        <item>คุณแกร่งกว่าที่คุณคิดในตอนนี้</item>
+        <item>เป้าหมายใหญ่เริ่มต้นจากก้าวเล็ก ๆ</item>
+        <item>ไปต่อเลย อนาคตจะต้องขอบคุณคุณ</item>
+        <item>ความก้าวหน้าที่ดูสับสนก็คือความก้าวหน้า</item>
+        <item>คุณไม่ได้ล้าหลัง คุณยังอยู่ในเส้นทาง</item>
+        <item>ก้าวไปและเรียนรู้ไปในเวลาเดียวกันก็ได้</item>
+        <item>คุณกำลังเติบโตอย่างที่คุณเองก็มองไม่เห็น</item>
+        <item>ความพยายามของคุณในวันนี้คือการลงทุนเพื่อวันพรุ่งนี้</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesMorning">
+        <item>มอร์นิ่ง! คุณทำได้ ทีละคลาส ทีละก้าว</item>
+        <item>รู้สึกไม่พร้อมเหรอ เรื่องปกติ แค่เริ่มจากจุดที่คุณยืน</item>
+        <item>กาแฟช่วยได้ ให้รางวัลตัวเองเพื่อให้รู้สึกกระฉับกระเฉง</item>
+        <item>อุปกรณ์มีปัญหาเหรอ เรื่องปกติสำหรับทุกคน อย่าเครียด</item>
+        <item>วันนี้ไม่ต้องดีที่สุด แค่เป็นไปได้ก็พอแล้ว</item>
+        <item>สวัสดีตอนเช้า วันนี้คือโอกาสใหม่ในการเรียนรู้และเติบโต</item>
+        <item>ก้าวเล็ก ๆ เช้านี้จะทำให้คุณใกล้เป้าหมายมากยิ่งขึ้น</item>
+        <item>หายใจลึก ๆ ยังไม่ต้องสำเร็จไปทุกเรื่องก็ได้</item>
+        <item>เทคโนโลยีก็เป็นปัญหาได้เช่นกัน แต่คุณไม่ได้เรียนรู้อยู่คนเดียวนะ</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesAfternoon">
+        <item>ไปครึ่งทางแล้ว คุณทำได้มากกว่าที่คุณคิด</item>
+        <item>รู้สึกไม่ไปไหนใช่หรือไม่ ทุกคนก็เจอทางตันบ้าง อย่าหยุดที่จะปีนให้สูงกว่าเดิม</item>
+        <item>งาน เกรด อนาคต...ค่อยเป็นค่อยไป</item>
+        <item>สมองล้าแล้วใช่ไหม พักก่อน = เดี่ยวค่อยมาตั้งใจต่อ</item>
+        <item>ขอความช่วยเหลือสิ ไม่มีใครทำอะไรคนเดียวไปตลอด</item>
+        <item>คุณมาได้ขนาดนี้วันนี้ นั่นคือสิ่งที่น่าภาคภูมิใจ</item>
+        <item>อยากพักสักครู่ใช่ไหม การเติมพลังเป็นส่วนหนึ่งของการเรียนรู้เช่นกัน</item>
+        <item>เป็นเรื่องปกติที่จะรู้สึกสับสนบ้าง ทักษะต้องค่อย ๆ พัฒนา</item>
+        <item>ขอความช่วยเหลือหากพบปัญหา ความช่วยเหลือไม่ได้ไกลตัวอย่างที่คุณคิด</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesEvening">
+        <item>ผ่านวันนี้ไปให้ได้ นั่นคืออีกหนึ่งชัยชนะ</item>
+        <item>คิดถึงใครอยู่ใช่ไหม “ทักทาย” ใครสักคนก็ช่วยได้นะ</item>
+        <item>แม้ว่าวันนี้จะรู้สึกสับสน แต่คุณก็ไม่ได้หายไปไหน นั่นล่ะสิ่งสำคัญ</item>
+        <item>จำไว้ว่าเกรดไม่ได้วัดคุณค่าของคุณ</item>
+        <item>ผ่อนคลาย หัวเราะและดูโน่นดูนี่ไปบ้าง คุณสมควรให้รางวัลกับตัวเอง</item>
+        <item>ผ่านวันนี้ไปได้ดีแล้ว ทุก ๆ ก้าวมีความสำคัญแม้จะเป็นก้าวเล็ก ๆ ก็ตาม</item>
+        <item>คิดถึงเพื่อนหรือพี่เลี้ยงใช่ไหม ติดตามถามไถ่เล็ก ๆ น้อย ๆ บ้างสิ</item>
+        <item>เวลาค่ำคือช่วงเวลาแห่งการทบทวน พิจารณาสิ่งที่คุณได้เรียนรู้วันนี้ ไม่ใช่แค่สิ่งที่ยังต้องทำ</item>
+        <item>ความพยายามของคุณสำคัญมากกว่าความสมบูรณ์แบบ</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesNight">
+        <item>ยังงุ่นง่านอยู่ใช่ไหม ยกนิ้วให้เลย แต่นอนพักบ้างก็ได้</item>
+        <item>พรุ่งนี้คุณจะขอบคุณตัวเองที่ตัดสินใจพักในคืนนี้</item>
+        <item>ความกังวลจะรบกวนมากเป็นพิเศษในเวลากลางคืน อย่าฟังเสียงพวกนี้</item>
+        <item>คุณไม่ได้ล้าหลัง คุณยังอยู่ในเส้นทาง</item>
+        <item>ปิดโน้ตบุ๊กซะ สมองของคุณอยากจะล่องลอยไปตามฝันบ้าง</item>
+        <item>พักบ้างก็ได้ พรุ่งนี้ก็มีอะไรใหม่ ๆ รออยู่</item>
+        <item>การเรียนรู้เป็นเหมือนกับมาราธอน ไม่ใช่การวิ่งระยะสั้น ใจดีกับตัวเองสักหน่อยคืนนี้</item>
+        <item>หากรู้สึกกังวลมากเป็นพิเศษ จำไว้ว่าคุณไม่ต้องแบกรับทุกสิ่งตามลำพัง</item>
+        <item>ปิดท้ายวันโดยระลึกเสมอว่าการพยายามคือความสำเร็จแล้ว</item>
+    </string-array>
+
+    <!-- Accessibility -->
+    <string name="welcomeWidgetContentDescription">ข้อความต้อนรับ: %1$s. %2$s</string>
+
+    <!-- Institutional Announcements -->
+    <string name="institutionalAnnouncementsTitle">ประกาศ (%d)</string>
+    <!-- Widget Display Names -->
+    <string name="widget_hello">สวัสดี %s</string>
+
+    <!-- Customize Dashboard -->
+    <string name="customize_dashboard">กำหนดค่าแผงข้อมูล</string>
+    <string name="dashboard_widgets">Widgets</string>
+    <string name="move_up">ย้ายขึ้น</string>
+    <string name="move_down">ย้ายลง</string>
+    <string name="no_widgets">ไม่มีวิดเจ็ท</string>
+    <string name="changing_dashboard_layout">การปรับเค้าโครงแผงข้อมูล</string>
+    <string name="changing_dashboard_layout_message">แก้ไขเค้าโครงแผงข้อมูลโดยคุณจะต้องรีสตาร์ทแอพพลิเคชั่น</string>
+    <string name="restart_now">รีสตาร์ทตอนนี้</string>
+    <string name="switched_back">เปลี่ยนกลับหรือไม่</string>
+    <string name="switched_back_message">ขอบคุณที่ทดลองใช้แผงข้อมูลใหม่ กรุณาแจ้งให้เราทราบว่าทำไมคุณถึงเปลี่ยนกลับ</string>
+    <string name="what_could_we_improve">มีอะไรที่เราสามารถปรับปรุงได้บ้าง</string>
+    <string name="skip">ข้าม</string>
+    <string name="widget_setting_show_greeting">แสดงคำทักทาย</string>
+    <string name="background_color">สีพื้นหลัง</string>
+    <string name="offline_content_available">มีเนื้อหาออฟไลน์</string>
+    <string name="a11y_contentDescription_moreOptions">ตัวเลือกเพิ่มเติม</string>
+    <string name="customizeCourse">ปรับแต่งบทเรียน</string>
+    <string name="favoriteCoursesAndGroups">บทเรียนโปรดและกลุ่ม</string>
+    <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
+    <string name="ltiToolsOffline">เครื่องมือจากภายนอกไม่สามารถใช้งานแบบออฟไลน์ได้</string>
 </resources>

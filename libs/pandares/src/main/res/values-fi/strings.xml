@@ -1045,6 +1045,8 @@
 
     <string name="downloading">Ladataan</string>
     <string name="downloadComplete">Lataus valmis</string>
+    <string name="fileDownloadNotificationPermissionDenied">Lataus alkaa. Ota ilmoitukset käyttöön nähdäksesi edistymisen.</string>
+
     <string name="notificationChannelNameFileDownloadsName">Latausilmoitukset</string>
     <string name="notificationChannelNameFileDownloadsDescription">Canvas-ilmoitukset meneillään oleville latauksille.</string>
     <string name="full_due_date_details">Täydelliset palautuspäivää koskevat tiedot</string>
@@ -1249,6 +1251,7 @@
     <string name="a11y_content_description_add_to_dashboard">Lisää koontinäytölle</string>
     <string name="a11y_content_description_add_all_to_dashboard">Lisää kaikki koontinäyttöön</string>
 
+    <string name="new_mobile_dashboard">Uusi mobiilikoontinäyttö</string>
     <!-- K5 Strings -->
     <string name="navDrawerAccount">Tili</string>
     <string name="dashboardTabHomeroom">Homeroom</string>
@@ -1367,6 +1370,10 @@
         <item quantity="other">%s lukemattomat huomautukset</item>
     </plurals>
 
+    <plurals name="a11y_todoBadgeCount">
+        <item quantity="one">%s tehtävä</item>
+        <item quantity="other">%s tehtävää</item>
+    </plurals>
     <string name="noAnnotationSelected">Merkintää ei valittu</string>
     <string name="emailNotifications">Sähköposti-ilmoitukset</string>
     <string name="emailNotificationsImmediately">Välittömästi</string>
@@ -1907,6 +1914,8 @@
     <string name="gradePreferencesHeaderSortBy">Lajitteluperuste</string>
     <string name="gradesEmptyTitle">Ei tehtäviä</string>
     <string name="gradesEmptyMessage">Näyttää siltä kuin tehtäviä ei vielä olisi luotu tässä tilassa.</string>
+    <string name="noMatchingAssignments">Ei täsmääviä tehtäviä</string>
+    <string name="noMatchingAssignmentsDescription">Hakuasi ei vastaa yhtään tehtävää. Yritä erilaista hakutermiä.</string>
     <string name="errorLoadingGrades">Opiskelijasi arvosanojen latauksessa ilmeni virhe. Yritä ladata sivua uudelleen tai yritä myöhemmin uudelleen.</string>
     <string name="errorLoadingCourse">Opiskelijasi kurssitietojen latauksessa ilmeni virhe. Yritä ladata sivua uudelleen tai yritä myöhemmin uudelleen.</string>
     <string name="gradesFilterContentDescription">Suodatin</string>
@@ -2078,7 +2087,8 @@
     <string name="widgetErrorTitle">Hups! Jotakin meni pieleen</string>
     <string name="widgetErrorSubtitle">Tehtäviesi näyttämisessä on tällä hetkellä ongelmia. Yritä uudelleen hetken kuluttua tai siirry sovellukseen.</string>
     <string name="widgetToDoEmptyTitle">Olet nyt valmis!</string>
-    <string name="widgetToDoEmptySubtitle">Näyttää siltä, ​​että olet vapaa seuraavat neljä viikkoa. Haluatko lisätä tämän osan?</string>
+    <string name="widgetToDoEmptySubtitle">Näyttää siltä, että olet vapaa, sinulla ei ole tulevia tehtäviä. Haluatko lisätä tämän osan?</string>
+
     <string name="widgetNotLoggedInTitle">Kirjaudutaan sisään!</string>
     <string name="widgetToDoNotLoggedInSubtitle">Nähdäksesi tehtävälistasi, kirjaudu tilillesi sovelluksessa. Se vie vain hetken!</string>
     <string name="a11y_widgetToDoOpenToDoList">Avaa tehtävälistanäyttö</string>
@@ -2103,6 +2113,11 @@
         <item quantity="one">%s / %s piste</item>
         <item quantity="other">%s / %s pistettä</item>
     </plurals>
+    <plurals name="groupMemberCount">
+        <item quantity="one">Opiskelija</item>
+        <item quantity="other">Opiskelijat</item>
+    </plurals>
+
     <string name="speedGraderLatePenaltyTitle">Rangaistus myöhästymisestä</string>
     <string name="gradingStatus_none">Ei mitään</string>
     <string name="gradingStatus_late">Myöhään</string>
@@ -2159,4 +2174,189 @@
     <string name="scored_less_than_with_max">Sai vähemmän kuin / %s pistettä</string>
     <string name="scored_between_values">Pistemäärä %1$s - %2$s</string>
     <string name="multiple_filters">Useita suodattimia</string>
+    <string name="a11y_contentDescriptionToDoFilter">Suodatin</string>
+    <string name="errorLoadingToDos">Tehtäväkohteiden latauksessa ilmeni virhe. Tarkasta yhteytesi ja yritä uudelleen.</string>
+    <string name="errorUpdatingToDo">Tehtävien päivittämisessä tapahtui virhe. Tarkasta yhteytesi ja yritä uudelleen.</string>
+    <string name="noToDosForNow">Ei tehtäviä nyt!</string>
+    <string name="noToDosForNowSubtext">Näyttää olevan hyvä päivä levätä, rentoutua ja latautua.</string>
+    <string name="todoSwipeDone">Valmis</string>
+    <string name="todoSwipeUndo">Peruuta</string>
+    <string name="todoMarkedAsDone">%s merkitty tehdyksi</string>
+    <string name="todoMarkedAsNotDone">%s merkitty ei valmiiksi</string>
+    <string name="todoMarkedAsDoneSnackbarUndo">Peruuta</string>
+    <string name="todoActionOffline">Tämä toimenpidettä ei voida suorittaa verkon ulkopuolella</string>
+
+    <!-- To Do List Filter Screen -->
+    <string name="todoFilterPreferences">Tehtävälistan asetukset</string>
+    <string name="todoFilterVisibleItems">Näkyvät kohteet</string>
+    <string name="todoFilterShowPersonalToDos">Näytä henkilökohtaiset tehtävät</string>
+    <string name="todoFilterShowCalendarEvents">Näytä kalenteritapahtumat</string>
+    <string name="todoFilterShowCompleted">Näytä suoritetut</string>
+    <string name="todoFilterFavoriteCoursesOnly">Vain suosikkikurssit</string>
+    <string name="todoFilterShowTasksFrom">Näytä tehtävät alkaen</string>
+    <string name="todoFilterShowTasksUntil">Näytä tehtävät asti</string>
+    <string name="todoFilterToday">Tänään</string>
+    <string name="todoFilterThisWeek">Tällä viikolla</string>
+    <string name="todoFilterLastWeek">Viime viikko</string>
+    <string name="todoFilterTwoWeeks">2 viikkoa sitten</string>
+    <string name="todoFilterThreeWeeks">3 viikkoa sitten</string>
+    <string name="todoFilterFourWeeks">4 viikkoa sitten</string>
+    <string name="todoFilterNextWeek">Ensi viikolla</string>
+    <string name="todoFilterInTwoWeeks">2 viikon sisällä</string>
+    <string name="todoFilterInThreeWeeks">3 viikon sisällä</string>
+    <string name="todoFilterInFourWeeks">4 viikon sisällä</string>
+    <string name="todoFilterFromDate">Lähettäjältä %s</string>
+    <string name="todoFilterUntilDate">%s asti</string>
+    <string name="a11y_buttonSelectionSelected">valittu</string>
+    <string name="a11y_buttonSelectionNotSelected">ei valittu</string>
+    <!-- Course Invitations -->
+    <string name="courseInvitationsTitle">Kurssin kutsut (%d)</string>
+    <string name="courseInvitationAccepted">Kutsu kohteeseen %s hyväksytty</string>
+    <string name="courseInvitationDeclined">Kutsu kohteeseen %s hylätty</string>
+    <string name="courseInvitationDeclineConfirmTitle">Kieltäydy kutsusta</string>
+    <string name="courseInvitationDeclineConfirmMessage">Haluatko varmasti kieltäytyä kutsusta kohteeseen %s?</string>
+
+    <!-- Welcome Widget -->
+    <!-- Greetings with name (%s is the student's first name) -->
+    <string name="welcomeGreetingMorningWithName">Hyvää huomenta, %s!</string>
+    <string name="welcomeGreetingAfternoonWithName">Hyvää iltapäivää, %s!</string>
+    <string name="welcomeGreetingEveningWithName">Hyvää iltaa, %s!</string>
+    <string name="welcomeGreetingNightWithName">Hyvää yötä, %s!</string>
+
+    <!-- Greetings without name (fallback when user has no first name) -->
+    <string name="welcomeGreetingMorning">Hyvää huomenta!</string>
+    <string name="welcomeGreetingAfternoon">Hyvää iltapäivää!</string>
+    <string name="welcomeGreetingEvening">Hyvää iltaa!</string>
+    <string name="welcomeGreetingNight">Hyvää yötä!</string>
+
+    <!-- Welcome Widget Motivational Messages -->
+    <string-array name="welcomeMessagesGeneric">
+        <item>Onnistut.</item>
+        <item>Jatka eteenpäin – olet vahvempi kuin tunnet juuri nyt.</item>
+        <item>Yksi askel kerrallaan on silti edistystä.</item>
+        <item>Älä luovuta – tulevaisuudessa kiität itseäsi.</item>
+        <item>Pystyt enemmän kuin luuletkaan.</item>
+        <item>Vaikeinakin päivinä liikut eteenpäin.</item>
+        <item>Luota itseesi – olet tehnyt vaikeita asioita aiemmin.</item>
+        <item>Edistystä - ei täydellisyyttä. Hyvää työtä.</item>
+        <item>Jatka - et ole tässä yksin!</item>
+        <item>Opit, kasvat, ja suoriudut paremmin kuin huomaatkaan.</item>
+        <item>On ihan ok kompastella – olet edelleen oikealla tiellä.</item>
+        <item>Jatka eteenpäin – olet lähempänä kuin luuletkaan.</item>
+        <item>Pienet voitotkin merkitsevät.</item>
+        <item>Jatka eteenpäin – olet lähempänä kuin luuletkaan.</item>
+        <item>On ihan ok pitää taukoja. Tauot ovat osa oppimista.</item>
+        <item>Yrittäjyys on jo voitto.</item>
+        <item>Edistyminen &gt; täydellisyyteen.</item>
+        <item>Paikalla oleminen on tärkeämpää kuin uskotkaan.</item>
+        <item>Kehität taitojasi, jopa hiljaisina päivinä.</item>
+        <item>Älä unohda hengittää – pärjäät kyllä.</item>
+        <item>Vauhtisi on oikea.</item>
+        <item>Kaikkea ei tarvitse selvittää tänään.</item>
+        <item>Sinä kuulut tänne.</item>
+        <item>Jokainen ponnistelusi vie sinua eteenpäin.</item>
+        <item>On ok aloittaa uudelleen - niin monta kerta kertaa kuin on tarpeen.</item>
+        <item>Se, mikä tuntuu vaikealta nyt, on helpompaa myöhemmin.</item>
+        <item>Näyttäydy elämässäsi - se merkitsee.</item>
+        <item>Pienet askeleet siirtävät vuoria.</item>
+        <item>Lepo on myös osa edistystä.</item>
+        <item>Pärjäät paremmin kuin tajuatkaan.</item>
+        <item>Hidaskin edistyminen on edistystä.</item>
+        <item>Tulevaisuutta ei rakenneta päivässä – mutta olet matkalla.</item>
+        <item>Yksi tehtävä, yksi hetki, yksi askel kerrallaan.</item>
+        <item>Sinun ei tarvitse olla täydellinen vaikuttaaksesi.</item>
+        <item>Oppiminen on sotkuista – ja se on normaalia.</item>
+        <item>Jokainen yritys on kasvua, vaikka se ei siltä tuntuisi.</item>
+        <item>Olet tehnyt vaikeita asioita aiemmin – sinä pystyt tähänkin</item>
+        <item>Ponnisteluillasi on merkitystä, vaikka kukaan ei näkisi sitä.</item>
+        <item>On ihan ok ottaa asioita hitaasti.</item>
+        <item>Olet menossa eteenpäin, jopa hiljaisina päivinä.</item>
+        <item>Poun ei tarvitse olla vielä selvä – jatka kävelyä.</item>
+        <item>Jatka eteenpäin – olet vahvempi kuin tunnet juuri nyt.</item>
+        <item>Suuret tavoitteet rakennetaan pienistä askeleista.</item>
+        <item>Jatka – tulevaisuudessa kiität itseäsi.</item>
+        <item>Hidaskin edistyminen on edistystä.</item>
+        <item>Et ole jäljessä – olet polullasi.</item>
+        <item>On ihan ok oppia matkan varrella.</item>
+        <item>Kasvat tavoilla, joita et ehkä vielä näe.</item>
+        <item>Tämän päivän ponnistelusi on sijoitus huomiseen.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesMorning">
+        <item>Huomenta! Selviät kyllä - yksi oppitunti, yksi askel kerrallaan.</item>
+        <item>Etkö tunne olevasi valmis? Se on normaalia. Aloita siitä, missä olet.</item>
+        <item>Kahvi auttaa, mutta ysätävällisyys itseäsi kohtaan toimii paremmin.</item>
+        <item>Tekniset ongelmat aiheuttavat stressiä. Se tapahtuu meille kaikille - älä stressaa.</item>
+        <item>Tämän päivän ei tarvitse olla täydellinen, vain mahdollinen.</item>
+        <item>Hyvää huomenta – tänään on uusi mahdollisuus oppia ja kasvaa.</item>
+        <item>Jopa pienet askeleet tänä aamuna vievät sinua lähemmäs tavoitteitasi.</item>
+        <item>Hengitä rauhassa — sinun ei tarvitse vielä tietää kaikkea.</item>
+        <item>Teknologia voi olla haastavaa, mutta et ole yksin sen opettelussa.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesAfternoon">
+        <item>Puolivälissä — olet jo tehnyt enemmän kuin luulet.</item>
+        <item>Tuntuuko siltä, että olet jumissa? Kaikki törmäävät esteisiin — älä vain lopeta kiipeämistä.</item>
+        <item>Työt, arvosanat, tulevaisuus&#8230; kenelläkään ei ole kaikkea selvillä.</item>
+        <item>Aivot väsyneet? Nopea tauko = parempi keskittyminen myöhemmin.</item>
+        <item>Pyydä apua. Ihan oikeasti — kukaan ei selviydy kaikesta yksin.</item>
+        <item>Olet jo päässyt näin pitkälle tänään — siitä voi olla ylpeä.</item>
+        <item>Tarvitsetko tauon? Latautuminen on myös osa oppimista.</item>
+        <item>On ihan okei, jos polku tuntuu epävarmalta — taidot rakentuvat askel askeleelta.</item>
+        <item>Ota yhteyttä, jos olet jumissa — tuki on aina lähempänä kuin miltä tuntuu.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesEvening">
+        <item>Selvisit päivästä — sekin on jo voitto.</item>
+        <item>Kaipaatko ihmisiä? Lähetä jollekin nopea "hei" — se auttaa.</item>
+        <item>Vaikka päivä tuntui sekavalta, sinä olit paikalla. Sillä on merkitystä.</item>
+        <item>Muista: mikään arvosana ei mittaa arvoasi.</item>
+        <item>Rentoudu, naura tai selaa syyllisyydettä — olet ansainnut sen.</item>
+        <item>Hyvin tehty, kun selvisit päivästä — edistys lasketaan, vaikka se olisi hiljaista.</item>
+        <item>Ikävöitkö ystäviä tai mentoreita? Yhteys voi syntyä myös pienissä hetkissä.</item>
+        <item>Illat ovat pohdintaa varten — huomaa, mitä opit tänään, älä vain sitä mitä jäi tekemättä.</item>
+        <item>Ponnistelusi merkitsee enemmän kuin täydellisyys.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesNight">
+        <item>Vieläkö painat täysillä? Arvostettavaa — mutta muista, että uni on osa elämää.</item>
+        <item>Huomenna kiität itseäsi siitä, että lepäät tänä iltana.</item>
+        <item>Ahdistus voimistuu öisin — älä usko kaikkea sen melua.</item>
+        <item>Et ole jäljessä – olet polullasi.</item>
+        <item>Sulje läppäri — aivosi tarvitsevat myös unia.</item>
+        <item>On ihan okei levätä — huominen odottaa uusien mahdollisuuksien kanssa.</item>
+        <item>Oppiminen on maratoni, ei sprintti. Ole lempeä itsellesi tänä iltana.</item>
+        <item>Jos huolet tuntuvat raskailta, muista ettet kanna niitä yksin.</item>
+        <item>Päätä päivä tietäen, että yrittäminenkin on jo saavutus.</item>
+    </string-array>
+
+    <!-- Accessibility -->
+    <string name="welcomeWidgetContentDescription">Tervetuloviesti: %1$s. %2$s</string>
+
+    <!-- Institutional Announcements -->
+    <string name="institutionalAnnouncementsTitle">Ilmoitukset (%d)</string>
+    <!-- Widget Display Names -->
+    <string name="widget_hello">Hei, %s</string>
+
+    <!-- Customize Dashboard -->
+    <string name="customize_dashboard">Mukauta koontinäyttöä</string>
+    <string name="dashboard_widgets">Pienoisohjelmat</string>
+    <string name="move_up">Siirrä ylös</string>
+    <string name="move_down">Siirrä alas</string>
+    <string name="no_widgets">Ei widgetejä saatavilla</string>
+    <string name="changing_dashboard_layout">Koontinäytön asettelun muuttaminen</string>
+    <string name="changing_dashboard_layout_message">Jos haluat muuttaa koontinäytön asettelua, sinun täytyy käynnistää sovellus uudelleen</string>
+    <string name="restart_now">Käynnistä nyt uudelleen</string>
+    <string name="switched_back">Vaihdetaanko takaisin?</string>
+    <string name="switched_back_message">Kiitos uuden koontinäytön kokeilemisesta! Voitko kertoa, miksi vaihdoit takaisin?</string>
+    <string name="what_could_we_improve">Mitä voisimme parantaa?</string>
+    <string name="skip">Ohita</string>
+    <string name="widget_setting_show_greeting">Näytä tervehdys</string>
+    <string name="background_color">Taustaväri</string>
+    <string name="offline_content_available">Offline-sisältöä saatavilla</string>
+    <string name="a11y_contentDescription_moreOptions">Lisäasetukset</string>
+    <string name="customizeCourse">Mukauta kurssi</string>
+    <string name="favoriteCoursesAndGroups">Suosikkikurssit ja ryhmät</string>
+    <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
+    <string name="ltiToolsOffline">Ulkoiset työkalut eivät ole saatavilla verkon ulkopuolella.</string>
 </resources>

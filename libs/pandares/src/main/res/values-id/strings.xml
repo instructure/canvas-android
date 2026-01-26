@@ -1045,6 +1045,8 @@
 
     <string name="downloading">Mengunduh</string>
     <string name="downloadComplete">Pengunduhan selesai</string>
+    <string name="fileDownloadNotificationPermissionDenied">Unduhan dimulai. Aktifkan notifikasi untuk melihat kemajuan.</string>
+
     <string name="notificationChannelNameFileDownloadsName">Notifikasi Pengunduhan</string>
     <string name="notificationChannelNameFileDownloadsDescription">Notifikasi Canvas untuk pengunduhan yang sedang berlangsung.</string>
     <string name="full_due_date_details">Detail tanggal batas lengkap</string>
@@ -1247,6 +1249,7 @@
     <string name="a11y_content_description_add_to_dashboard">Tambah ke dashboard</string>
     <string name="a11y_content_description_add_all_to_dashboard">Tambah semua ke dashboard</string>
 
+    <string name="new_mobile_dashboard">Dashboard Seluler Baru</string>
     <!-- K5 Strings -->
     <string name="navDrawerAccount">Akun</string>
     <string name="dashboardTabHomeroom">Homeroom</string>
@@ -1372,6 +1375,10 @@
         <item quantity="other">%s notifikasi belum dibaca</item>
     </plurals>
 
+    <plurals name="a11y_todoBadgeCount">
+        <item quantity="one">%s item harus dilakukan</item>
+        <item quantity="other">%s item harus dilakukan</item>
+    </plurals>
     <string name="noAnnotationSelected">Anotasi tidak dipilih</string>
 
     <string name="emailNotifications">Notifikasi Email</string>
@@ -1910,6 +1917,8 @@
     <string name="gradePreferencesHeaderSortBy">Sortir Menurut</string>
     <string name="gradesEmptyTitle">Tidak Ada Tugas</string>
     <string name="gradesEmptyMessage">Sepertinya tugas belum dibuat di ruang ini.</string>
+    <string name="noMatchingAssignments">Tidak Ada Tugas yang Cocok</string>
+    <string name="noMatchingAssignmentsDescription">Tidak ada tugas yang cocok dengan pencarian Anda. Coba istilah pencarian lain.</string>
     <string name="errorLoadingGrades">Kami kesulitan memuat nilai siswa Anda. Silakan memuat ulang halaman atau coba lagi nanti.</string>
     <string name="errorLoadingCourse">Kami kesulitan memuat detail kursus siswa Anda. Silakan memuat ulang halaman atau coba lagi nanti.</string>
     <string name="gradesFilterContentDescription">Filter</string>
@@ -2081,7 +2090,8 @@
     <string name="widgetErrorTitle">Waduh! Ada Sesuatu yang Salah</string>
     <string name="widgetErrorSubtitle">Kami kesulitan menampilkan tugas Anda saat ini. Silakan coba lagi sebentar lagi atau pergi ke app.</string>
     <string name="widgetToDoEmptyTitle">Anda hampir selesai saat ini!</string>
-    <string name="widgetToDoEmptySubtitle">Sepertinya Anda bebas selama 4 minggu berikutnya. Mau menambah beberapa to-do?</string>
+    <string name="widgetToDoEmptySubtitle">Sepertinya Anda bebas, Anda tidak ada tugas dalam waktu dekat ini. Mau menambah beberapa to-do?</string>
+
     <string name="widgetNotLoggedInTitle">Ayo Kita Log In!</string>
     <string name="widgetToDoNotLoggedInSubtitle">Untuk melihat to-do Anda, silakan login ke akun Anda di aplikasi. Hanya butuh waktu sebentar!</string>
     <string name="a11y_widgetToDoOpenToDoList">Buka layar To Do</string>
@@ -2106,6 +2116,11 @@
         <item quantity="one">%s / %s pt</item>
         <item quantity="other">%s / %s pt</item>
     </plurals>
+    <plurals name="groupMemberCount">
+        <item quantity="one">Siswa</item>
+        <item quantity="other">Siswa</item>
+    </plurals>
+
     <string name="speedGraderLatePenaltyTitle">Penalti Terlambat:</string>
     <string name="gradingStatus_none">Tidak ada</string>
     <string name="gradingStatus_late">Terlambat</string>
@@ -2162,4 +2177,189 @@
     <string name="scored_less_than_with_max">Mendapat skor Kurang dari / %s pts</string>
     <string name="scored_between_values">Mendapat skor %1$s - %2$s</string>
     <string name="multiple_filters">Gandakan filter</string>
+    <string name="a11y_contentDescriptionToDoFilter">Filter</string>
+    <string name="errorLoadingToDos">Terjadi kesalahan saat memuat item harus dilakukan Anda. Silakan periksa sambungan internet Anda dan coba lagi.</string>
+    <string name="errorUpdatingToDo">Terjadi kesalahan saat memperbarui item harus dilakukan. Silakan periksa sambungan internet Anda dan coba lagi.</string>
+    <string name="noToDosForNow">Tidak ada yang harus dilakukan sekarang!</string>
+    <string name="noToDosForNowSubtext">Sepertinya waktu yang tepat untuk beristirahat, bersantai, dan memulihkan tenaga.</string>
+    <string name="todoSwipeDone">Selesai</string>
+    <string name="todoSwipeUndo">Urungkan</string>
+    <string name="todoMarkedAsDone">%s ditandai sebagai selesai</string>
+    <string name="todoMarkedAsNotDone">%s ditandai sebagai selesai</string>
+    <string name="todoMarkedAsDoneSnackbarUndo">Urungkan</string>
+    <string name="todoActionOffline">Tindakan ini tidak dapat dilakukan secara offline</string>
+
+    <!-- To Do List Filter Screen -->
+    <string name="todoFilterPreferences">Preferensi Daftar Yang Harus Dilakukan</string>
+    <string name="todoFilterVisibleItems">Item Tampak</string>
+    <string name="todoFilterShowPersonalToDos">Tampilkan Daftar Harus Dilakukan Pribadi</string>
+    <string name="todoFilterShowCalendarEvents">Tampilkan Acara Kalender</string>
+    <string name="todoFilterShowCompleted">Tampilkan Selesai</string>
+    <string name="todoFilterFavoriteCoursesOnly">Kursus Favorit Saja</string>
+    <string name="todoFilterShowTasksFrom">Tampilkan tugas dari</string>
+    <string name="todoFilterShowTasksUntil">Tampilkan tugas hingga</string>
+    <string name="todoFilterToday">Hari Ini</string>
+    <string name="todoFilterThisWeek">Minggu Ini</string>
+    <string name="todoFilterLastWeek">Minggu Lalu</string>
+    <string name="todoFilterTwoWeeks">2 Minggu Lalu</string>
+    <string name="todoFilterThreeWeeks">3 Minggu Lalu</string>
+    <string name="todoFilterFourWeeks">4 Minggu Lalu</string>
+    <string name="todoFilterNextWeek">Minggu Depan</string>
+    <string name="todoFilterInTwoWeeks">Dalam 2 Minggu</string>
+    <string name="todoFilterInThreeWeeks">Dalam 3 Minggu</string>
+    <string name="todoFilterInFourWeeks">Dalam 4 Minggu</string>
+    <string name="todoFilterFromDate">Dari %s</string>
+    <string name="todoFilterUntilDate">Hingga %s</string>
+    <string name="a11y_buttonSelectionSelected">memilih</string>
+    <string name="a11y_buttonSelectionNotSelected">tidak dipilih</string>
+    <!-- Course Invitations -->
+    <string name="courseInvitationsTitle">Undangan Kursus (%d)</string>
+    <string name="courseInvitationAccepted">Undangan untuk %s diterima</string>
+    <string name="courseInvitationDeclined">Undangan ke %s ditolak</string>
+    <string name="courseInvitationDeclineConfirmTitle">Tolak Undangan</string>
+    <string name="courseInvitationDeclineConfirmMessage">Anda yakin mau menolak undangan dari %s?</string>
+
+    <!-- Welcome Widget -->
+    <!-- Greetings with name (%s is the student's first name) -->
+    <string name="welcomeGreetingMorningWithName">Selamat pagi, %s!</string>
+    <string name="welcomeGreetingAfternoonWithName">Selamat siang, %s!</string>
+    <string name="welcomeGreetingEveningWithName">Selamat petang, %s!</string>
+    <string name="welcomeGreetingNightWithName">Selamat malam, %s!</string>
+
+    <!-- Greetings without name (fallback when user has no first name) -->
+    <string name="welcomeGreetingMorning">Selamat pagi!</string>
+    <string name="welcomeGreetingAfternoon">Selamat siang!</string>
+    <string name="welcomeGreetingEvening">Selamat petang!</string>
+    <string name="welcomeGreetingNight">Selamat malam!</string>
+
+    <!-- Welcome Widget Motivational Messages -->
+    <string-array name="welcomeMessagesGeneric">
+        <item>Anda pasti bisa.</item>
+        <item>Terus maju — Anda lebih kuat dari yang Anda rasakan saat ini.</item>
+        <item>Selangkah demi selangkah tetaplah sebuah kemajuan.</item>
+        <item>Jangan menyerah — dirimu di masa depan akan berterima kasih padamu.</item>
+        <item>Anda mampu melakukan lebih dari yang dipikirkan.</item>
+        <item>Bahkan di hari-hari sulit, Anda terus maju.</item>
+        <item>Percayalah pada diri sendiri — Anda pernah melakukan hal-hal sulit sebelumnya.</item>
+        <item>Kemajuan, bukan kesempurnaan. Anda luar biasa.</item>
+        <item>Bertahanlah — Anda tidak sendirian dalam hal ini.</item>
+        <item>Anda sedang belajar, berkembang, dan melakukan lebih baik dari yang Anda sadari.</item>
+        <item>Tidak apa-apa jika tersandung — Anda masih berada di jalan yang benar.</item>
+        <item>Teruslah berjuang — Anda lebih dekat dari yang Anda pikirkan.</item>
+        <item>Kemenangan kecil pun penting.</item>
+        <item>Teruslah maju — Anda lebih dekat dari yang Anda pikirkan.</item>
+        <item>Tidak apa-apa untuk berhenti sejenak. Istirahat adalah bagian dari pembelajaran.</item>
+        <item>Mencoba sudah merupakan kemenangan.</item>
+        <item>Kemajuan &gt; kesempurnaan.</item>
+        <item>Kehadiran lebih penting daripada yang Anda sadari.</item>
+        <item>Anda sedang membangun keterampilan, bahkan di hari-hari yang lambat.</item>
+        <item>Jangan lupa bernapas — Anda baik-baik saja.</item>
+        <item>Tempo Anda sudah tepat.</item>
+        <item>Tidak semua hal perlu dipecahkan hari ini.</item>
+        <item>Anda pantas berada di sini.</item>
+        <item>Setiap usaha yang Anda lakukan akan membuahkan hasil.</item>
+        <item>Tidak apa-apa untuk memulai lagi — sebanyak yang Anda butuhkan.</item>
+        <item>Yang terasa sulit sekarang akan terasa lebih mudah nanti.</item>
+        <item>Teruslah hadir — itulah yang terpenting.</item>
+        <item>Langkah kecil dapat memindahkan gunung besar.</item>
+        <item>Istirahat juga bagian dari kemajuan.</item>
+        <item>Anda melakukan lebih baik daripada yang Anda sadari.</item>
+        <item>Bahkan kemajuan yang lambat pun tetaplah kemajuan.</item>
+        <item>Masa depan tidak dibangun dalam sehari — tetapi Anda sedang menuju ke sana.</item>
+        <item>Satu tugas, satu momen, satu langkah demi satu langkah.</item>
+        <item>Anda tidak harus sempurna untuk memberikan dampak.</item>
+        <item>Belajar itu berantakan — dan itu normal.</item>
+        <item>Setiap percobaan adalah pertumbuhan, meskipun tidak terasa seperti itu.</item>
+        <item>Anda pernah melakukan hal-hal sulit sebelumnya — Anda juga bisa melakukan ini.</item>
+        <item>Usaha Anda penting, meskipun tidak ada yang melihatnya.</item>
+        <item>Tidak apa-apa untuk melakukan sesuatu secara perlahan.</item>
+        <item>Anda terus maju, bahkan di hari-hari yang tenang.</item>
+        <item>Jalannya tidak perlu jelas sekarang — teruslah berjalan.</item>
+        <item>Anda lebih kuat dari yang Anda rasakan saat ini.</item>
+        <item>Tujuan besar dibangun dari langkah-langkah kecil.</item>
+        <item>Teruslah maju — diri Anda di masa depan akan berterima kasih pada Anda.</item>
+        <item>Bahkan kemajuan yang berantakan pun tetaplah kemajuan.</item>
+        <item>Anda tidak tertinggal — Anda berada di jalur Anda.</item>
+        <item>Tidak apa-apa untuk belajar sambil jalan.</item>
+        <item>Anda tumbuh dengan cara yang mungkin belum Anda sadari.</item>
+        <item>Usaha Anda hari ini adalah investasi untuk hari esok.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesMorning">
+        <item>Pagi! Anda pasti bisa — satu kelas, selangkah demi selangkah.</item>
+        <item>Merasa belum siap? Itu normal. Mulailah dari tempat Anda sekarang.</item>
+        <item>Kopi membantu, tetapi bersikap baik pada diri sendiri lebih efektif.</item>
+        <item>Teknologi bermasalah? Kita semua mengalaminya — jangan stres.</item>
+        <item>Hari ini tidak perlu sempurna, cukup mungkin.</item>
+        <item>Selamat pagi — hari ini adalah kesempatan baru untuk belajar dan berkembang.</item>
+        <item>Bahkan langkah kecil pagi ini akan membawamu lebih dekat ke tujuan Anda.</item>
+        <item>Tarik napas — Anda tidak perlu memikirkan semuanya.</item>
+        <item>Teknologi bisa rumit, tetapi Anda tidak sendirian dalam mempelajarinya.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesAfternoon">
+        <item>Sudah setengah jalan — Anda sudah melakukan lebih dari yang Anda pikirkan.</item>
+        <item>Merasa buntu? Semua orang pasti pernah mengalami kesulitan, jangan berhenti berusaha.</item>
+        <item>Pekerjaan, nilai, masa depan&#8230; belum ada yang memahami semuanya.</item>
+        <item>Otak lelah? Istirahat sejenak = fokus lebih baik nanti.</item>
+        <item>Mintalah bantuan. Serius, tidak ada yang melakukan ini sendirian.</item>
+        <item>Anda sudah sampai sejauh ini hari ini — itu sesuatu yang patut dibanggakan.</item>
+        <item>Butuh istirahat? Beristirahat juga merupakan bagian dari pembelajaran.</item>
+        <item>Tidak apa-apa jika jalannya terasa tidak pasti — keterampilan dibangun selangkah demi selangkah.</item>
+        <item>Mintalah bantuan jika Anda mengalami kesulitan — dukungan selalu lebih dekat daripada yang Anda rasakan.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesEvening">
+        <item>Berhasil melewati hari ini — itu sendiri sudah merupakan kemenangan.</item>
+        <item>Merindukan orang-orang? Kirimkan sapaan singkat "hai" kepada seseorang — itu membantu.</item>
+        <item>Meskipun hari ini terasa berantakan, Anda tetap hadir. Itu penting.</item>
+        <item>Ingat: tidak ada nilai yang mengukur kepatutan Anda.</item>
+        <item>Bersantai, tertawa, atau gulirkan layar tanpa rasa bersalah — Anda pantas mendapatkannya.</item>
+        <item>Bagus sekali telah melewati hari ini — kemajuan tetap penting, bahkan ketika suasananya tenang.</item>
+        <item>Merindukan teman atau mentor? Koneksi juga bisa datang dalam momen-momen kecil.</item>
+        <item>Malam hari adalah untuk refleksi — perhatikan apa yang telah Anda pelajari hari ini, bukan hanya apa yang masih harus dilakukan.</item>
+        <item>Usaha Anda lebih penting daripada kesempurnaan.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesNight">
+        <item>Masih berjuang? Keren — tetapi jangan lupa bahwa tidur itu penting.</item>
+        <item>Besok Anda akan berterima kasih pada diri sendiri karena telah beristirahat malam ini.</item>
+        <item>Kecemasan semakin menggelegar di malam hari — jangan percaya semua kebisingannya.</item>
+        <item>Anda tidak tertinggal, Anda hanya sedang berada di jalur sendiri.</item>
+        <item>Tutup laptop — otak Anda juga butuh mimpi.</item>
+        <item>Tidak apa-apa untuk beristirahat — hari esok menunggu dengan peluang baru.</item>
+        <item>Belajar adalah maraton, bukan lari cepat. Bersikap baiklah pada dirimu sendiri malam ini.</item>
+        <item>Jika kekhawatiran terasa berat, ingatlah Anda tidak harus menanggungnya sendirian.</item>
+        <item>Akhiri hari dengan mengetahui bahwa mencoba sudah merupakan sebuah pencapaian.</item>
+    </string-array>
+
+    <!-- Accessibility -->
+    <string name="welcomeWidgetContentDescription">Pesan selamat datang: %1$s. %2$s</string>
+
+    <!-- Institutional Announcements -->
+    <string name="institutionalAnnouncementsTitle">Pengumuman (%d)</string>
+    <!-- Widget Display Names -->
+    <string name="widget_hello">Halo, %s</string>
+
+    <!-- Customize Dashboard -->
+    <string name="customize_dashboard">Sesuaikan Dashboard</string>
+    <string name="dashboard_widgets">Widget</string>
+    <string name="move_up">Pindahkan ke atas</string>
+    <string name="move_down">Pindah ke bawah</string>
+    <string name="no_widgets">Widget tidak tersedia</string>
+    <string name="changing_dashboard_layout">Mengubah tata letak dashboard</string>
+    <string name="changing_dashboard_layout_message">Untuk mengubah tata letak dashboard, Anda harus memulai ulang aplikasi.</string>
+    <string name="restart_now">Mulai ulang sekarang</string>
+    <string name="switched_back">Beralih kembali?</string>
+    <string name="switched_back_message">Terima kasih telah mencoba dashboard baru! Bisakah Anda memberi tahu kami mengapa Anda beralih kembali?</string>
+    <string name="what_could_we_improve">Apa yang dapat kami tingkatkan?</string>
+    <string name="skip">Lewati</string>
+    <string name="widget_setting_show_greeting">Tampilkan sapaan</string>
+    <string name="background_color">Warna latar belakang</string>
+    <string name="offline_content_available">Konten offline tersedia</string>
+    <string name="a11y_contentDescription_moreOptions">Opsi lain</string>
+    <string name="customizeCourse">Kustomisasikan Kursus</string>
+    <string name="favoriteCoursesAndGroups">Favoritkan Kursus dan Grup</string>
+    <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
+    <string name="ltiToolsOffline">Alat Eksternal tidak tersedia offline.</string>
 </resources>

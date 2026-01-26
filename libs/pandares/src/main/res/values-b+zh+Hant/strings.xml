@@ -1029,6 +1029,8 @@
 
     <string name="downloading">正在下載</string>
     <string name="downloadComplete">完成下載</string>
+    <string name="fileDownloadNotificationPermissionDenied">下載開始。啟用通知以查看進度。</string>
+
     <string name="notificationChannelNameFileDownloadsName">下載通知</string>
     <string name="notificationChannelNameFileDownloadsDescription">持續下載的 Canvas 通知。</string>
     <string name="full_due_date_details">所有截止日期詳情</string>
@@ -1228,6 +1230,7 @@
     <string name="a11y_content_description_add_to_dashboard">添加到控制面板中</string>
     <string name="a11y_content_description_add_all_to_dashboard">全部添加到控制面板中</string>
 
+    <string name="new_mobile_dashboard">新的行動端控制面板</string>
     <!-- K5 Strings -->
     <string name="navDrawerAccount">帳戶</string>
     <string name="dashboardTabHomeroom">主教室</string>
@@ -1344,6 +1347,9 @@
         <item quantity="other">%s 則未讀通知</item>
     </plurals>
 
+    <plurals name="a11y_todoBadgeCount">
+        <item quantity="other">%s 個待辦項目</item>
+    </plurals>
     <string name="noAnnotationSelected">未選擇任何註釋</string>
     <string name="emailNotifications">電子郵件通知</string>
     <string name="emailNotificationsImmediately">立即</string>
@@ -1874,6 +1880,8 @@
     <string name="gradePreferencesHeaderSortBy">排序依據</string>
     <string name="gradesEmptyTitle">無作業</string>
     <string name="gradesEmptyMessage">似乎尚未在此空間中建立任何作業。</string>
+    <string name="noMatchingAssignments">沒有符合的作業</string>
+    <string name="noMatchingAssignmentsDescription">沒有符合您的搜尋的作業。請嘗試其他搜尋字詞。</string>
     <string name="errorLoadingGrades">我們在載入您學生的成績時遇到問題。請嘗試重新載入頁面或稍後回來查看。</string>
     <string name="errorLoadingCourse">我們在載入您學生的課程詳細資料時遇到問題。請嘗試重新載入頁面或稍後回來查看。</string>
     <string name="gradesFilterContentDescription">篩選器</string>
@@ -2043,7 +2051,8 @@
     <string name="widgetErrorTitle">抱歉！發生問題</string>
     <string name="widgetErrorSubtitle">我們現在無法顯示您的任務。請稍後重試或前往應用程式。</string>
     <string name="widgetToDoEmptyTitle">您現在已全部完成！</string>
-    <string name="widgetToDoEmptySubtitle">您似乎在接下來的 4 週內都有空。您想添加一些待辦事項嗎？</string>
+    <string name="widgetToDoEmptySubtitle">看起來您目前空閒，沒有即將到來的任務。您想添加一些待辦事項嗎？</string>
+
     <string name="widgetNotLoggedInTitle">讓我們幫您登入！</string>
     <string name="widgetToDoNotLoggedInSubtitle">若要查看您的待辦事項，請在應用程式中登入您的帳戶。只需一秒鐘！</string>
     <string name="a11y_widgetToDoOpenToDoList">開啟待辦事項清單畫面</string>
@@ -2067,6 +2076,10 @@
     <plurals name="pointTotal">
         <item quantity="other">%s/%s 分</item>
     </plurals>
+    <plurals name="groupMemberCount">
+        <item quantity="other">學生</item>
+    </plurals>
+
     <string name="speedGraderLatePenaltyTitle">逾期懲罰</string>
     <string name="gradingStatus_none">無</string>
     <string name="gradingStatus_late">遲交</string>
@@ -2123,4 +2136,189 @@
     <string name="scored_less_than_with_max">得分低於/%s 分</string>
     <string name="scored_between_values">%1$s - %2$s 分</string>
     <string name="multiple_filters">多個篩選器</string>
+    <string name="a11y_contentDescriptionToDoFilter">篩選器</string>
+    <string name="errorLoadingToDos">載入您的待辦項目時發生錯誤。請檢查您的連接然後重試。</string>
+    <string name="errorUpdatingToDo">更新待辦項目時發生錯誤。請檢查您的連接然後重試。</string>
+    <string name="noToDosForNow">目前沒有待辦事項！</string>
+    <string name="noToDosForNowSubtext">看來是適合休息、放鬆和充電的時候。</string>
+    <string name="todoSwipeDone">已完成</string>
+    <string name="todoSwipeUndo">復原</string>
+    <string name="todoMarkedAsDone">%s 標記為已完成</string>
+    <string name="todoMarkedAsNotDone">%s 標記為未完成</string>
+    <string name="todoMarkedAsDoneSnackbarUndo">復原</string>
+    <string name="todoActionOffline">此操作無法離線執行</string>
+
+    <!-- To Do List Filter Screen -->
+    <string name="todoFilterPreferences">待辦事項清單偏好設定</string>
+    <string name="todoFilterVisibleItems">可見項目</string>
+    <string name="todoFilterShowPersonalToDos">顯示個人待辦事項</string>
+    <string name="todoFilterShowCalendarEvents">顯示行事曆事件</string>
+    <string name="todoFilterShowCompleted">顯示已完成</string>
+    <string name="todoFilterFavoriteCoursesOnly">僅顯示最愛課程</string>
+    <string name="todoFilterShowTasksFrom">顯示開始任務</string>
+    <string name="todoFilterShowTasksUntil">顯示結束任務</string>
+    <string name="todoFilterToday">今天</string>
+    <string name="todoFilterThisWeek">本週</string>
+    <string name="todoFilterLastWeek">上週</string>
+    <string name="todoFilterTwoWeeks">2 週以前</string>
+    <string name="todoFilterThreeWeeks">3 週以前</string>
+    <string name="todoFilterFourWeeks">4 週以前</string>
+    <string name="todoFilterNextWeek">下週</string>
+    <string name="todoFilterInTwoWeeks">2 週後</string>
+    <string name="todoFilterInThreeWeeks">3 週後</string>
+    <string name="todoFilterInFourWeeks">4 週後</string>
+    <string name="todoFilterFromDate">來自 %s</string>
+    <string name="todoFilterUntilDate">直到 %s</string>
+    <string name="a11y_buttonSelectionSelected">已選擇</string>
+    <string name="a11y_buttonSelectionNotSelected">未選定</string>
+    <!-- Course Invitations -->
+    <string name="courseInvitationsTitle">課程邀請 (%d)</string>
+    <string name="courseInvitationAccepted">已接受 %s 邀請</string>
+    <string name="courseInvitationDeclined">已拒絕 %s 邀請</string>
+    <string name="courseInvitationDeclineConfirmTitle">拒絕邀請</string>
+    <string name="courseInvitationDeclineConfirmMessage">是否確定要拒絕 %s 邀請？</string>
+
+    <!-- Welcome Widget -->
+    <!-- Greetings with name (%s is the student's first name) -->
+    <string name="welcomeGreetingMorningWithName">早上好，%s！</string>
+    <string name="welcomeGreetingAfternoonWithName">下午好，%s！</string>
+    <string name="welcomeGreetingEveningWithName">晚上好，%s！</string>
+    <string name="welcomeGreetingNightWithName">晚安，%s！</string>
+
+    <!-- Greetings without name (fallback when user has no first name) -->
+    <string name="welcomeGreetingMorning">早上好！</string>
+    <string name="welcomeGreetingAfternoon">下午好！</string>
+    <string name="welcomeGreetingEvening">晚上好！</string>
+    <string name="welcomeGreetingNight">晚安！</string>
+
+    <!-- Welcome Widget Motivational Messages -->
+    <string-array name="welcomeMessagesGeneric">
+        <item>你行的。</item>
+        <item>繼續努力 — 你比你現在感覺的更強大。</item>
+        <item>一步一腳印也是進步。</item>
+        <item>不要放棄 — 未來的你會感謝現在的自己。</item>
+        <item>你的能力遠超乎你的想像。</item>
+        <item>即使在艱難的日子裡，你也在前進。</item>
+        <item>相信自己 — 你以前也經歷過困難的事。</item>
+        <item>追求進步，而非完美。你做得很好。</item>
+        <item>堅持下去 — 你並不孤單。</item>
+        <item>你正在學習、成長，而且做得比你想像的還要好。</item>
+        <item>跌倒也沒關係 — 你仍然走在正確的道路上。</item>
+        <item>繼續努力 — 你比想像中更接近目標。</item>
+        <item>小小的勝利也很重要。</item>
+        <item>繼續前進 — 你比想像中更接近目標。</item>
+        <item>停下來休息一下也沒關係。休息是學習的一部分。</item>
+        <item>嘗試本身就是一種勝利。</item>
+        <item>進步 &gt; 完美。</item>
+        <item>堅持不懈比你想像的更重要。</item>
+        <item>即使在進展緩慢的日子裡，你也在不斷提升技能。</item>
+        <item>別忘了深呼吸 — 你做得很好。</item>
+        <item>你的節奏很合適。</item>
+        <item>並非所有事情都需要今天就解決。</item>
+        <item>你屬於這裡。</item>
+        <item>你的每一次努力都會累積起來。</item>
+        <item>重新開始沒關係 — 只要你需要，就重新開始。</item>
+        <item>現在感覺困難的事情，以後會感覺更容易。</item>
+        <item>堅持不懈 — 這才是最重要的。</item>
+        <item>積少成多。</item>
+        <item>休息也是進步的一部分。</item>
+        <item>你做得比你想像的要好。</item>
+        <item>即使進步緩慢，也是進步。</item>
+        <item>未來不是一天建成的 — 但你正在路上。</item>
+        <item>一次完成一項任務，把握每一個瞬間，一步一腳印。</item>
+        <item>你不必完美才能有所作為。</item>
+        <item>學習的過程總是充滿挑戰 — 這很正常。</item>
+        <item>每一次嘗試都是成長，即使你感覺不到。</item>
+        <item>你以前也做過難事 — 這次你也能做到。</item>
+        <item>你的努力很重要，即使無人知曉。</item>
+        <item>慢慢來沒關係。</item>
+        <item>即使在平靜的日子裡，你也在前進。</item>
+        <item>道路不必現在就清晰 — 繼續走下去。</item>
+        <item>你比現在感覺的更強大。</item>
+        <item>偉大的目標是由小步累積而成的。</item>
+        <item>堅持下去 — 未來的你會感謝現在的自己。</item>
+        <item>即使是跌跌撞撞的進步也是進步。</item>
+        <item>你沒有落後 — 你正走在你的道路上。</item>
+        <item>邊做邊學沒關係。</item>
+        <item>你正在以你尚未察覺的方式成長。</item>
+        <item>你今天的努力是對明天的投資。</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesMorning">
+        <item>早安！你可以的 — 一堂課，一步一步來。</item>
+        <item>感覺還沒準備好？這很正常。就從你現在的位置開始。</item>
+        <item>咖啡提神，但善待自己效果更佳。</item>
+        <item>科技產品故障了？這種情況我們都遇過 — 別擔心。</item>
+        <item>今天不必完美，只要一切都有可能。</item>
+        <item>早安－今天是學習成長的新契機。</item>
+        <item>即使是今天早上邁出的小一步，也能讓你離目標更近一步。</item>
+        <item>深呼吸 — 你無需現在就把所有事情都想明白。</item>
+        <item>科技可能比較複雜，但你並非孤軍奮戰。</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesAfternoon">
+        <item>已經走了一半 — 你已經做得比你想像的要多得多。</item>
+        <item>感覺卡住了？每個人都會遇到瓶頸，但不要停止攀登。</item>
+        <item>工作、成績、未來&#8230;&#8230;沒有人能完全掌控一切。</item>
+        <item>大腦累了嗎？短暫休息 = 之後更專注。</item>
+        <item>尋求幫助。說真的，沒有人能獨自完成這一切。</item>
+        <item>你今天已經走到這一步了 — 這本身就值得驕傲。</item>
+        <item>需要休息一下嗎？充電也是學習的一部分。</item>
+        <item>即使前路迷茫也沒關係 — 技能是一步一步累積起來的。</item>
+        <item>如果你遇到困難，請尋求幫助 — 支持總是比你想像的更近。</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesEvening">
+        <item>今天過得很充實 — 這本身就是一種勝利。</item>
+        <item>想念成員嗎？給某人發個「嗨」— 這很有幫助。</item>
+        <item>即使今天感覺很糟糕，但你還是來了。這很重要。</item>
+        <item>記住：分數並不能衡量你的價值。</item>
+        <item>放鬆、大笑或隨意瀏覽網頁，無需感到內疚 — 這是你應得的。</item>
+        <item>恭喜你順利度過了一天 — 即使是平靜的日子，進步也至關重要。</item>
+        <item>想念朋友或導師嗎？人與人之間的連結也可以存在於細微之處。</item>
+        <item>夜晚是反思的時間 — 想想你今天學到了什麼，而不僅僅是還剩下什麼要做。</item>
+        <item>你的努力比完美更重要。</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesNight">
+        <item>還在努力嗎？尊重你的付出 — 但別忘了睡眠也很重要。</item>
+        <item>明天你會感謝自己今晚好好休息。</item>
+        <item>焦慮在夜晚會更加強烈 — 別被它的聲音所迷惑。</item>
+        <item>你沒有落後，你只是在前進的路上。</item>
+        <item>關掉電腦 — 你的大腦也需要休息。</item>
+        <item>休息一下沒關係 — 明天充滿新的機會。</item>
+        <item>學習是一場馬拉松，而不是短跑。今晚善待自己。</item>
+        <item>如果憂慮讓你感到沉重，請記住你無需獨自承受。</item>
+        <item>在一天結束時，請記住，嘗試本身就是一種成就。</item>
+    </string-array>
+
+    <!-- Accessibility -->
+    <string name="welcomeWidgetContentDescription">歡迎訊息：%1$s。%2$s</string>
+
+    <!-- Institutional Announcements -->
+    <string name="institutionalAnnouncementsTitle">通告 (%d)</string>
+    <!-- Widget Display Names -->
+    <string name="widget_hello">您好，%s</string>
+
+    <!-- Customize Dashboard -->
+    <string name="customize_dashboard">自訂控制面板</string>
+    <string name="dashboard_widgets">小部件</string>
+    <string name="move_up">向上移動</string>
+    <string name="move_down">向下移動</string>
+    <string name="no_widgets">無可用小工具</string>
+    <string name="changing_dashboard_layout">變更控制面板佈局</string>
+    <string name="changing_dashboard_layout_message">若要變更控制面板佈局，您必須重新啟動應用程式</string>
+    <string name="restart_now">立即重新啟動</string>
+    <string name="switched_back">已切換回原來的佈局？</string>
+    <string name="switched_back_message">感謝您試用新的控制面板！請問您切換回原來的佈局的原因是什麼？</string>
+    <string name="what_could_we_improve">我們可以改進哪些地方？</string>
+    <string name="skip">跳過</string>
+    <string name="widget_setting_show_greeting">顯示問候語</string>
+    <string name="background_color">背景顏色</string>
+    <string name="offline_content_available">離線內容可用</string>
+    <string name="a11y_contentDescription_moreOptions">更多選項</string>
+    <string name="customizeCourse">定制課程</string>
+    <string name="favoriteCoursesAndGroups">最愛課程和群組</string>
+    <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
+    <string name="ltiToolsOffline">外部工具無法離線使用。</string>
 </resources>
