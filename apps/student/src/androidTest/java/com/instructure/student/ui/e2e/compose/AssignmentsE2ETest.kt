@@ -28,6 +28,7 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
+import com.instructure.canvas.espresso.annotations.ReleaseExclude
 import com.instructure.canvas.espresso.annotations.Stub
 import com.instructure.canvas.espresso.checkToastText
 import com.instructure.canvas.espresso.common.pages.compose.AssignmentListPage
@@ -1076,6 +1077,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         assignmentDetailsPage.assertAssignmentSubmitted()
     }
 
+    @ReleaseExclude
     @E2E
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
