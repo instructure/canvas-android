@@ -45,8 +45,7 @@ import com.instructure.pandautils.features.inbox.utils.InboxSharedAction
 import com.instructure.pandautils.features.inbox.utils.InboxSharedEvents
 import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.WindowInsetsHelper
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.utils.withArgs
@@ -92,9 +91,7 @@ class InboxDetailsFragment : BaseCanvasFragment(), FragmentInteractions {
 
     override fun title(): String = getString(R.string.message)
 
-    override fun applyTheme() {
-        ViewStyler.setStatusBarDark(requireActivity(), ThemePrefs.primaryColor)
-    }
+    override fun applyTheme() {}
 
     override fun getFragment(): Fragment {
         return this

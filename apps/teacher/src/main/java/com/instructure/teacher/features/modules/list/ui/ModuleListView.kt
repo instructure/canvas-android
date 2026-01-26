@@ -30,6 +30,8 @@ import com.instructure.pandarecycler.PaginatedScrollListener
 import com.instructure.pandautils.features.progress.ProgressDialogFragment
 import com.instructure.pandautils.room.appdatabase.entities.ModuleBulkProgressEntity
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.showThemed
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentModuleListBinding
@@ -134,6 +136,7 @@ class ModuleListView(
     init {
         // Toolbar setup
         binding.toolbar.apply {
+            applyTopSystemBarInsets()
             subtitle = course.name
             setupBackButton(activity)
             ViewStyler.themeToolbarColored(activity, this, course)
@@ -197,8 +200,11 @@ class ModuleListView(
             addOnScrollListener(scrollListener)
         }
 
-        binding.swipeRefreshLayout.setOnRefreshListener {
-            consumer?.accept(ModuleListEvent.PullToRefresh)
+        binding.swipeRefreshLayout.apply {
+            setOnRefreshListener {
+                consumer?.accept(ModuleListEvent.PullToRefresh)
+            }
+            applyBottomSystemBarInsets()
         }
     }
 

@@ -36,6 +36,9 @@ import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.addSearch
+import com.instructure.pandautils.utils.applyBottomAndRightSystemBarPadding
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.closeSearch
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getDrawableCompat
@@ -175,6 +178,7 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
     override fun perPageCount() = ApiPrefs.perPageCount
 
     private fun setupToolbar() = with(binding) {
+        pageListToolbar.applyTopSystemBarInsets()
         pageListToolbar.title = getString(R.string.tab_pages)
         pageListToolbar.subtitle = canvasContext.name
         pageListToolbar.setupBackButton(this@PageListFragment)
@@ -190,6 +194,8 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
     }
 
     private fun setupViews() = with(binding) {
+        swipeRefreshLayout.applyBottomSystemBarInsets()
+
         createNewPage.setGone()
         createNewPage.backgroundTintList = ViewStyler.makeColorStateListForButton()
         createNewPage.setImageDrawable(ColorUtils.colorIt(ThemePrefs.buttonTextColor, createNewPage.drawable))
@@ -197,6 +203,7 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
             val args = CreateOrEditPageDetailsFragment.newInstanceCreate(canvasContext).nonNullArgs
             RouteMatcher.route(requireActivity(), Route(CreateOrEditPageDetailsFragment::class.java, null, args))
         }
+        createNewPage.applyBottomAndRightSystemBarPadding()
     }
 
     @Suppress("unused")

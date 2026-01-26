@@ -21,6 +21,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -108,6 +109,7 @@ internal fun EventScreen(
 
         Scaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
+            contentWindowInsets = WindowInsets(0, 0, 0, 0),
             topBar = {
                 CanvasThemedAppBar(
                     title = title,

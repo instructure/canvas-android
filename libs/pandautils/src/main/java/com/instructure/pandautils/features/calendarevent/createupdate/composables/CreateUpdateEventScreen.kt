@@ -35,7 +35,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.SnackbarResult
@@ -80,6 +79,7 @@ import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasAppBar
+import com.instructure.pandautils.compose.composables.CanvasScaffold
 import com.instructure.pandautils.compose.composables.LabelValueRow
 import com.instructure.pandautils.compose.composables.SelectContextScreen
 import com.instructure.pandautils.compose.composables.SelectContextUiState
@@ -177,7 +177,7 @@ internal fun CreateUpdateEventScreen(
         }
     }
 
-    Scaffold(
+    CanvasScaffold(
         backgroundColor = colorResource(id = R.color.backgroundLightest),
         topBar = {
             CreateUpdateEventTopAppBar(

@@ -16,11 +16,14 @@
  */
 package com.instructure.pandautils.features.inbox.list.filter
 
+import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -34,6 +37,7 @@ import com.instructure.pandautils.databinding.FragmentContextFilterBinding
 import com.instructure.pandautils.features.inbox.list.InboxSharedViewModel
 import com.instructure.pandautils.utils.ParcelableArrayListArg
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.setMenu
 import com.instructure.pandautils.utils.setupAsCloseButton
 import com.instructure.pandautils.utils.withArgs
@@ -54,6 +58,23 @@ class ContextFilterFragment : BaseCanvasBottomSheetDialogFragment() {
     private val canvasContexts by ParcelableArrayListArg<CanvasContext>(key = CANVAS_CONTEXTS)
 
     override fun isFullScreen() = true
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState)
+        dialog.setOnShowListener {
+            val bottomSheetDialog = dialog as? BottomSheetDialog ?: return@setOnShowListener
+            // Enable edge-to-edge for the dialog window
+            bottomSheetDialog.window?.let { window ->
+                WindowCompat.setDecorFitsSystemWindows(window, false)
+            }
+            // Disable fitsSystemWindows on the bottom sheet container
+            bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)?.let { bottomSheet ->
+                bottomSheet.fitsSystemWindows = false
+                ViewCompat.requestApplyInsets(bottomSheet)
+            }
+        }
+        return dialog
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentContextFilterBinding.inflate(inflater, container, false)
@@ -77,6 +98,7 @@ class ContextFilterFragment : BaseCanvasBottomSheetDialogFragment() {
         }
 
         ViewStyler.themeToolbarLight(requireActivity(), binding.toolbar)
+        binding.toolbar.applyTopSystemBarInsets()
         setFullScreen()
 
         viewModel.events.observe(viewLifecycleOwner) { event ->

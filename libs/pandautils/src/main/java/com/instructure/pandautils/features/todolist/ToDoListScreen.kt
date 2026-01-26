@@ -102,6 +102,7 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasDivider
+import com.instructure.pandautils.compose.composables.CanvasScaffold
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
@@ -196,7 +197,7 @@ fun ToDoListScreen(
         onRefresh = uiState.onRefresh
     )
 
-    Scaffold(
+    CanvasScaffold(
         backgroundColor = colorResource(R.color.backgroundLightest),
         topBar = {
             CanvasThemedAppBar(

@@ -43,6 +43,8 @@ import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.PermissionUtils
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getModuleItemId
 import com.instructure.pandautils.utils.isTablet
@@ -138,6 +140,7 @@ class PageDetailsFragment : BasePresenterFragment<
             presenter.getPage(page.url ?: "", canvasContext, true)
         }
         setupToolbar()
+        canvasWebViewWraper.applyBottomSystemBarInsets()
 
         canvasWebViewWraper.webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {
@@ -222,6 +225,7 @@ class PageDetailsFragment : BasePresenterFragment<
     }
 
     private fun setupToolbar() = with(binding) {
+        toolbar.applyTopSystemBarInsets()
         toolbar.setupMenu(R.menu.menu_page_details) { openEditPage(page) }
 
         toolbar.setupBackButtonWithExpandCollapseAndBack(this@PageDetailsFragment) {

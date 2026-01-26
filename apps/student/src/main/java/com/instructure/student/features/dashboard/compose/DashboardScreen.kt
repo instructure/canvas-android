@@ -21,6 +21,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -122,6 +123,7 @@ fun DashboardScreenContent(
 
     Scaffold(
         modifier = Modifier.background(colorResource(R.color.backgroundLight)),
+        contentWindowInsets = WindowInsets(0),
         topBar = {
             CanvasThemedAppBar(
                 title = stringResource(id = R.string.dashboard),

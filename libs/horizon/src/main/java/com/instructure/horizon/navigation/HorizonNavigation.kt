@@ -15,6 +15,7 @@
  */
 package com.instructure.horizon.navigation
 
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -52,6 +53,7 @@ import com.instructure.horizon.navigation.MainNavigationRoute.Companion.ASSIGNME
 import com.instructure.horizon.navigation.MainNavigationRoute.Companion.COURSE_ID
 import com.instructure.horizon.navigation.MainNavigationRoute.Companion.PAGE_ID
 import com.instructure.horizon.navigation.MainNavigationRoute.Companion.QUIZ_ID
+import com.instructure.horizon.util.zeroScreenInsets
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
@@ -89,6 +91,7 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     Scaffold(
+        contentWindowInsets = WindowInsets.zeroScreenInsets,
         containerColor = HorizonColors.Surface.pagePrimary(),
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
     ) { innerPadding ->
@@ -144,7 +147,8 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
                 ),
                 deepLinks = listOf(
                     navDeepLink {
-                        uriPattern = "${ApiPrefs.fullDomain}/courses/{${COURSE_ID}}/assignments/{${ASSIGNMENT_ID}}"
+                        uriPattern =
+                            "${ApiPrefs.fullDomain}/courses/{${COURSE_ID}}/assignments/{${ASSIGNMENT_ID}}"
                     }
                 )
             ) { backStackEntry ->
@@ -163,7 +167,9 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
                             moduleItemAssetId = assignmentId?.toString()
                         )
                     ) {
-                        popUpTo(MainNavigationRoute.AssignmentDetailsDeepLink.route) { inclusive = true }
+                        popUpTo(MainNavigationRoute.AssignmentDetailsDeepLink.route) {
+                            inclusive = true
+                        }
                     }
                 }
             }
@@ -181,7 +187,8 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
                 ),
                 deepLinks = listOf(
                     navDeepLink {
-                        uriPattern = "${ApiPrefs.fullDomain}/courses/{${COURSE_ID}}/quizzes/{${QUIZ_ID}}"
+                        uriPattern =
+                            "${ApiPrefs.fullDomain}/courses/{${COURSE_ID}}/quizzes/{${QUIZ_ID}}"
                     }
                 )
             ) { backStackEntry ->
@@ -200,7 +207,9 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
                             moduleItemAssetId = quizId?.toString()
                         )
                     ) {
-                        popUpTo(MainNavigationRoute.QuizDetailsDeepLink.route) { inclusive = true }
+                        popUpTo(MainNavigationRoute.QuizDetailsDeepLink.route) {
+                            inclusive = true
+                        }
                     }
                 }
             }
@@ -218,7 +227,8 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
                 ),
                 deepLinks = listOf(
                     navDeepLink {
-                        uriPattern = "${ApiPrefs.fullDomain}/courses/{${COURSE_ID}}/pages/{${PAGE_ID}}"
+                        uriPattern =
+                            "${ApiPrefs.fullDomain}/courses/{${COURSE_ID}}/pages/{${PAGE_ID}}"
                     }
                 )
             ) { backStackEntry ->
@@ -235,7 +245,9 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
                             moduleItemAssetId = pageId
                         )
                     ) {
-                        popUpTo(MainNavigationRoute.PageDetailsDeepLink.route) { inclusive = true }
+                        popUpTo(MainNavigationRoute.PageDetailsDeepLink.route) {
+                            inclusive = true
+                        }
                     }
                 }
             }

@@ -24,6 +24,7 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_NOTHING_TO_SEE_HERE
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentNothingToSeeHereBinding
@@ -46,6 +47,7 @@ class NothingToSeeHereFragment : ParentFragment() {
 
     override fun applyTheme() {
         binding.toolbar.setupAsBackButton(this)
+        binding.toolbar.applyTopSystemBarInsets()
         ViewStyler.themeToolbarLight(requireActivity(), binding.toolbar)
     }
 

@@ -52,6 +52,8 @@ import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.RecyclerViewUtils
 import com.instructure.teacher.utils.setupBackButtonAsBackPressedOnly
 import com.instructure.teacher.viewinterface.ToDoView
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -110,6 +112,7 @@ class ToDoFragment : BaseSyncFragment<ToDo, ToDoPresenter, ToDoView, ToDoViewHol
     }
 
     private fun setupToolbar() = with(binding) {
+        toDoToolbar.applyTopSystemBarInsets()
         val activity = requireActivity()
         if (activity is InitActivity) {
             activity.attachNavigationDrawer()

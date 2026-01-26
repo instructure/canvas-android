@@ -32,6 +32,7 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.utils.Utils.copyToClipboard
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.teacher.R
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.setupBackButtonWithExpandCollapseAndBack
@@ -82,6 +83,10 @@ class ViewHtmlFragment : InternalWebViewFragment() {
     }
 
     override fun setupToolbar(courseColor: Int) {
+        if (isInModulesPager || (isTablet && toolbarColor != 0)) {
+            toolbar?.applyTopSystemBarInsets()
+        }
+
         editableFile?.let {
             // Check if we need to update the file name
             val fileFolderUpdatedEvent = EventBus.getDefault().getStickyEvent(FileFolderUpdatedEvent::class.java)
