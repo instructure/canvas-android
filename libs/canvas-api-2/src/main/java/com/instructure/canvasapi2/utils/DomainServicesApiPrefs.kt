@@ -4,6 +4,6 @@ abstract class DomainServicesApiPref(preferenceName: String): PrefManager(prefer
     abstract var token: String?
 }
 
-object JourneyApiPref: DomainServicesApiPref("journey_api_prefs") {
+object JourneyApiPref: DomainServicesApiPref("journey_api_pref") {
     override var token: String? by NStringPref(null, "journey_token")
 }
