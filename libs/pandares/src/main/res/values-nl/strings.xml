@@ -1045,6 +1045,8 @@
 
     <string name="downloading">Bezig met downloaden</string>
     <string name="downloadComplete">Downloaden voltooid</string>
+    <string name="fileDownloadNotificationPermissionDenied">Downloaden gestart. Meldingen inschakelen om voortgang te bekijken.</string>
+
     <string name="notificationChannelNameFileDownloadsName">Meldingen downloaden</string>
     <string name="notificationChannelNameFileDownloadsDescription">Canvas-meldingen voor lopende downloads.</string>
     <string name="full_due_date_details">Alle details inleverdatum</string>
@@ -1249,6 +1251,7 @@
     <string name="a11y_content_description_add_to_dashboard">Toevoegen aan Dashboard</string>
     <string name="a11y_content_description_add_all_to_dashboard">Alles toevoegen aan Dashboard</string>
 
+    <string name="new_mobile_dashboard">Nieuw mobiel Dashboard</string>
     <!-- K5 Strings -->
     <string name="navDrawerAccount">Account</string>
     <string name="dashboardTabHomeroom">Klas</string>
@@ -1367,6 +1370,10 @@
         <item quantity="other">%s ongelezen meldingen</item>
     </plurals>
 
+    <plurals name="a11y_todoBadgeCount">
+        <item quantity="one">%s to-do-item</item>
+        <item quantity="other">%s to-do-items</item>
+    </plurals>
     <string name="noAnnotationSelected">Geen aantekening geselecteerd</string>
     <string name="emailNotifications">E-mail meldingen</string>
     <string name="emailNotificationsImmediately">Onmiddellijk</string>
@@ -1907,6 +1914,8 @@
     <string name="gradePreferencesHeaderSortBy">Sorteren op</string>
     <string name="gradesEmptyTitle">Geen opdrachten</string>
     <string name="gradesEmptyMessage">Het lijkt erop dat er in deze ruimte nog geen opdrachten zijn gemaakt.</string>
+    <string name="noMatchingAssignments">Geen overeenkomende opdrachten</string>
+    <string name="noMatchingAssignmentsDescription">Geen opdrachten die overeenkomen met je zoekopdracht. Probeer een andere zoekterm.</string>
     <string name="errorLoadingGrades">We ondervinden problemen bij het laden van de cijfers van je student. Probeer de pagina opnieuw te laden of kom later terug.</string>
     <string name="errorLoadingCourse">We ondervinden problemen bij het laden van de cursusgegevens van je student. Probeer de pagina opnieuw te laden of kom later terug.</string>
     <string name="gradesFilterContentDescription">Filter</string>
@@ -2078,7 +2087,8 @@
     <string name="widgetErrorTitle">Oeps! Er is iets misgegaan</string>
     <string name="widgetErrorSubtitle">We kunnen je taken op dit moment niet weergeven. Probeer het wat later nog een keer of open de app.</string>
     <string name="widgetToDoEmptyTitle">Voor nu ben je klaar!</string>
-    <string name="widgetToDoEmptySubtitle">Het lijkt erop dat je de komende 4 weken vrij hebt. Wil je een paar opdrachten toevoegen?</string>
+    <string name="widgetToDoEmptySubtitle">Het lijkt erop dat je vrij hebt, je hebt geen aankomende taken. Wil je een paar opdrachten toevoegen?</string>
+
     <string name="widgetNotLoggedInTitle">Laten we je aanmelden!</string>
     <string name="widgetToDoNotLoggedInSubtitle">Meld je in de app aan bij je account om je lijst met opdrachten te bekijken. Het kost je maar een momentje!</string>
     <string name="a11y_widgetToDoOpenToDoList">Open het scherm van de lijst met opdrachten</string>
@@ -2103,6 +2113,11 @@
         <item quantity="one">%s / %s pt</item>
         <item quantity="other">%s / %s ptn</item>
     </plurals>
+    <plurals name="groupMemberCount">
+        <item quantity="one">Cursist</item>
+        <item quantity="other">Cursisten</item>
+    </plurals>
+
     <string name="speedGraderLatePenaltyTitle">Sanctie indien te laat</string>
     <string name="gradingStatus_none">Geen</string>
     <string name="gradingStatus_late">Te laat</string>
@@ -2159,4 +2174,190 @@
     <string name="scored_less_than_with_max">Scoorde minder dan / %s punten</string>
     <string name="scored_between_values">Scoorde %1$s - %2$s</string>
     <string name="multiple_filters">Meerdere filters</string>
+    <string name="a11y_contentDescriptionToDoFilter">Filteren</string>
+    <string name="errorLoadingToDos">Er is een fout opgetreden bij het laden van je to-do-items. Controleer je verbinding en probeer het opnieuw.</string>
+    <string name="errorUpdatingToDo">Er is een fout opgetreden bij het bijwerken van het to-do-item. Controleer je verbinding en probeer het opnieuw.</string>
+    <string name="noToDosForNow">Er zijn op dit moment geen to-do\'s!</string>
+    <string name="noToDosForNowSubtext">Dit lijkt een prima moment om uit te rusten, te ontspannen en nieuwe energie op te doen.</string>
+    <string name="todoSwipeDone">Gereed</string>
+    <string name="todoSwipeUndo">Ongedaan maken</string>
+    <string name="todoMarkedAsDone">%s gemarkeerd als klaar</string>
+    <string name="todoMarkedAsNotDone">%s niet gemarkeerd als klaar</string>
+    <string name="todoMarkedAsDoneSnackbarUndo">Ongedaan maken</string>
+    <string name="todoActionOffline">Deze actie kan niet offline worden uitgevoerd</string>
+
+    <!-- To Do List Filter Screen -->
+    <string name="todoFilterPreferences">Voorkeuren voor to-do-lijst</string>
+    <string name="todoFilterVisibleItems">Zichtbare items</string>
+    <string name="todoFilterShowPersonalToDos">Persoonlijke to-do\'s weergeven</string>
+    <string name="todoFilterShowCalendarEvents">Kalenderevenementen weergeven</string>
+    <string name="todoFilterShowCompleted">Voltooid weergeven</string>
+    <string name="todoFilterFavoriteCoursesOnly">Alleen favoriete cursus</string>
+    <string name="todoFilterShowTasksFrom">Taken weergeven vanaf </string>
+    <string name="todoFilterShowTasksUntil">Taken weergeven tot</string>
+    <string name="todoFilterToday">Vandaag</string>
+    <string name="todoFilterThisWeek">Deze week</string>
+    <string name="todoFilterLastWeek">Afgelopen week</string>
+    <string name="todoFilterTwoWeeks">2 weken geleden</string>
+    <string name="todoFilterThreeWeeks">3 weken geleden</string>
+    <string name="todoFilterFourWeeks">4 weken geleden</string>
+    <string name="todoFilterNextWeek">Volgende week</string>
+    <string name="todoFilterInTwoWeeks">Over 2 weken</string>
+    <string name="todoFilterInThreeWeeks">Over 3 weken</string>
+    <string name="todoFilterInFourWeeks">Over 4 weken</string>
+    <string name="todoFilterFromDate">Vanaf %s</string>
+    <string name="todoFilterUntilDate">Tot %s</string>
+    <string name="a11y_buttonSelectionSelected">geselecteerd</string>
+    <string name="a11y_buttonSelectionNotSelected">niet geselecteerd</string>
+    <!-- Course Invitations -->
+    <string name="courseInvitationsTitle">Cursusuitnodigingen (%d)</string>
+    <string name="courseInvitationAccepted">Uitnodiging voor %s geaccepteerd</string>
+    <string name="courseInvitationDeclined">Uitnodiging voor %s geweigerd</string>
+    <string name="courseInvitationDeclineConfirmTitle">Uitnodiging weigeren</string>
+    <string name="courseInvitationDeclineConfirmMessage">Weet je zeker dat je de uitnodiging voor %s wilt weigeren?</string>
+
+    <!-- Welcome Widget -->
+    <!-- Greetings with name (%s is the student's first name) -->
+    <string name="welcomeGreetingMorningWithName">Goedemorgen %s!</string>
+    <string name="welcomeGreetingAfternoonWithName">Goedemiddag %s!</string>
+    <string name="welcomeGreetingEveningWithName">Goedenavond %s!</string>
+    <string name="welcomeGreetingNightWithName">Goedenacht %s!</string>
+
+    <!-- Greetings without name (fallback when user has no first name) -->
+    <string name="welcomeGreetingMorning">Goedemorgen!</string>
+    <string name="welcomeGreetingAfternoon">Goedemiddag!</string>
+    <string name="welcomeGreetingEvening">Goedenavond!</string>
+    <string name="welcomeGreetingNight">Goedenacht!</string>
+
+    <!-- Welcome Widget Motivational Messages -->
+    <string-array name="welcomeMessagesGeneric">
+        <item>Je kunt het.</item>
+        <item>Ga door – je bent sterker dan je je nu voelt.</item>
+        <item>Stap voor stap is nog steeds vooruitgang.</item>
+        <item>Geef niet op – Je toekomstige zelf zal je dankbaar zijn.
+</item>
+        <item>Je kunt meer dan je denkt.</item>
+        <item>Zelfs op moeilijke dagen ga je vooruit.</item>
+        <item>Vertrouw jezelf – je hebt vaker moeilijke dingen gedaan.</item>
+        <item>Vooruitgang, geen perfectie. Je bent geweldig bezig.</item>
+        <item>Hou vol – je bent niet de enige.</item>
+        <item>Je leert, groeit en doet het beter dan je je realiseert.</item>
+        <item>Het is geen probleem om te struikelen – je bent nog steeds op het juiste pad.</item>
+        <item>Blijf doorgaan – je bent dichterbij dan je denkt.</item>
+        <item>Kleine overwinningen tellen ook.</item>
+        <item>Blijf doorgaan – je bent dichterbij dan je denkt.</item>
+        <item>Het is oké om even te pauzeren. Pauzes maken deel uit van het leerproces.</item>
+        <item>Het proberen is al een overwinning.</item>
+        <item>Vooruitgang &gt; perfectie.</item>
+        <item>Meedoen is belangrijker dan je denkt.</item>
+        <item>Je bouwt vaardigheden op, zelfs op trage dagen.</item>
+        <item>Vergeet niet te ademen – je doet het prima.</item>
+        <item>Jouw tempo is het juiste tempo.</item>
+        <item>Niet alles hoeft je vandaag al duidelijk te zijn.</item>
+        <item>Je hoort hier thuis.</item>
+        <item>Elke poging die je doet vormt een bijdrage.</item>
+        <item>Het is oké om opnieuw te beginnen – zo vaak als je wilt.</item>
+        <item>Wat nu moeilijk voelt, voelt later makkelijker.</item>
+        <item>Blijf opdagen – dat is het belangrijkste.</item>
+        <item>Kleine stappen verzetten bergen.</item>
+        <item>Rust is ook een deel van de vooruitgang.</item>
+        <item>Je doet het beter dan je je realiseert.</item>
+        <item>Ook langzame vooruitgang is vooruitgang.</item>
+        <item>De toekomst is niet in een dag gebouwd – maar je bent op weg.</item>
+        <item>Eén opdracht, één moment, één stap per keer.</item>
+        <item>Je hoeft niet perfect te zijn om een impact te maken.</item>
+        <item>Leren is gedoe – en dat is normaal.</item>
+        <item>Elke poging is groei, zelfs als het niet zo aanvoelt.</item>
+        <item>Je het vaker moeilijke dingen gedaan – je kunt dit ook doen.</item>
+        <item>Je inspanning doet ertoe, ook als niemand het ziet.</item>
+        <item>Het is oké om het wat langzamer aan te doen.</item>
+        <item>Je gaat vooruit, ook op rustige dagen.</item>
+        <item>Het pad hoeft nog niet duidelijk te zijn – blijf lopen.</item>
+        <item>Je bent sterker dan je je nu voelt.</item>
+        <item>Grote doelen zijn opgebouwd uit kleine stappen.</item>
+        <item>Blijf doorgaan – de toekomst zal je dankbaar zijn.</item>
+        <item>Ook rommelige vooruitgang is vooruitgang.</item>
+        <item>Je loopt niet achter – je bent op jouw pad.</item>
+        <item>Het is oké om gaandeweg te leren.</item>
+        <item>Je groeit op manieren die je nu misschien nog niet ziet.</item>
+        <item>De inspanning die je vandaag verricht is een investering in morgen.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesMorning">
+        <item>Goedemorgen! Je kunt dit – één klas, één stap per keer.</item>
+        <item>Voel je je er nog niet klaar voor? Dat is normaal. Begin gewoon waar je bent.</item>
+        <item>Koffie helpt, maar vriendelijk zijn tegen jezelf werkt beter.</item>
+        <item>Problemen met technologie? Dat overkomt iedereen – schiet niet in de stress.</item>
+        <item>Vandaag hoeft niet perfect te zijn, alleen maar mogelijk.</item>
+        <item>Goedemorgen – vandaag is een nieuwe kans om te leren en te groeien.</item>
+        <item>Ook de kleine stappen van deze morgen brengen je dichter bij je doelen.</item>
+        <item>Haal even diep adem – alles hoeft je vandaag nog niet duidelijk te zijn.</item>
+        <item>Technologie kan lastig zijn, maar je bent niet de enige die het moet leren.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesAfternoon">
+        <item>Je bent halverwege – je het meer gedaan dan je denkt.</item>
+        <item>Heb je het gevoel dat je vast zit? Iedereen loopt weleens tegen muren op, blijf gewoon klimmen.</item>
+        <item>Banen, cijfers, de toekomst... niemand heeft het al helemaal uitgevogeld. </item>
+        <item>Zijn je hersenen moe? Korte pauze = betere focus later.</item>
+        <item>Vraag om hulp. Serieus, niemand doet dit alleen.</item>
+        <item>Je hebt dit punt al bereikt vandaag – dat is iets om trots op te zijn.</item>
+        <item>Een pauze nodig? Nieuwe energie opdoen maakt ook deel van het leerproces.</item>
+        <item>Het is oké dat het pad onzeker voelt – vaardigheden worden stap voor stap opgebouwd.</item>
+        <item>Vraag om hulp als je vastzit – hulp is altijd dichterbij dan je denkt.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesEvening">
+        <item>Je bent de dag doorgekomen – dat is op zichzelf al een overwinning.</item>
+        <item>Mis je mensen? Zeg iemand even gedag – het helpt.</item>
+        <item>Ondanks dat vandaag rommelig aanvoelde, kwam je wel opdagen. Dat is belangrijk.</item>
+        <item>Onthoud: er is geen cijfer die je waarde meet.</item>
+        <item>Ontspan, lach en scroll zonder je schuldig te voelen – je hebt het verdiend.</item>
+        <item>Goed gedaan, je bent de dag doorgekomen – vooruitgang telt, zelfs als het rustig is.</item>
+        <item>Mis je vrienden of mentors? Korte momentjes kunnen al voldoende zijn voor verbinding.</item>
+        <item>De avonden zijn voor reflectie – schenk aandacht aan wat je vandaag hebt geleerd, niet alleen aan wat je nog moet doen.</item>
+        <item>Je inspanning is belangrijker dan perfectie.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesNight">
+        <item>Nog steeds aan het zwoegen? Respect – maar vergeet niet dat er ook zoiets als slaap bestaat.</item>
+        <item>Morgen ben je dankbaar dat je vanavond rust hebt genomen.</item>
+        <item>Zorgen klinken \'s nachts luider – je hoeft niet al hun herrie te geloven.</item>
+        <item>Je loopt niet achter – je bent alleen maar op jouw pad.</item>
+        <item>Sluit de laptop – je hersenen hebben ook dromen nodig.</item>
+        <item>Het is oké om uit te rusten – morgen wachten je nieuwe mogelijkheden.</item>
+        <item>Leren is een marathon, geen sprint. Wees vanavond aardig voor jezelf.</item>
+        <item>Als je zorgen zwaar wegen, bedenk dan dat je ze niet alleen hoeft te dragen.</item>
+        <item>Beëindig de dag in de wetenschap dat het proberen zelf al een prestatie is.</item>
+    </string-array>
+
+    <!-- Accessibility -->
+    <string name="welcomeWidgetContentDescription">Welkomstbericht: %1$s. %2$s</string>
+
+    <!-- Institutional Announcements -->
+    <string name="institutionalAnnouncementsTitle">Aankondigingen (%d)</string>
+    <!-- Widget Display Names -->
+    <string name="widget_hello">Hallo, %s</string>
+
+    <!-- Customize Dashboard -->
+    <string name="customize_dashboard">Dashboard aanpassen</string>
+    <string name="dashboard_widgets">Widgets</string>
+    <string name="move_up">Naar boven</string>
+    <string name="move_down">Naar beneden</string>
+    <string name="no_widgets">Geen widgets beschikbaar</string>
+    <string name="changing_dashboard_layout">Lay-out van dashboard wordt gewijzigd</string>
+    <string name="changing_dashboard_layout_message">Je moet de applicatie opnieuw starten om de lay-out van het dashboard te wijzigen</string>
+    <string name="restart_now">Nu opnieuw starten</string>
+    <string name="switched_back">Teruggekeerd?</string>
+    <string name="switched_back_message">Bedankt dat je het nieuwe dashboard hebt geprobeerd! Kun je ons vertellen waarom je bent teruggekeerd naar het oude dashboard?</string>
+    <string name="what_could_we_improve">Wat kunnen we verbeteren?</string>
+    <string name="skip">Overslaan</string>
+    <string name="widget_setting_show_greeting">Begroeting weergeven</string>
+    <string name="background_color">Achtergrondkleur</string>
+    <string name="offline_content_available">Er is offline inhoud beschikbaar</string>
+    <string name="a11y_contentDescription_moreOptions">Meer opties</string>
+    <string name="customizeCourse">Cursus aanpassen</string>
+    <string name="favoriteCoursesAndGroups">Favoriete cursussen en groepen</string>
+    <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
+    <string name="ltiToolsOffline">Er zijn offline geen externe tools beschikbaar</string>
 </resources>
