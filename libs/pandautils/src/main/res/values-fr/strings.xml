@@ -487,6 +487,7 @@
     <string name="a11y_markAsDoneWithName">%s marquer comme fait</string>
     <string name="a11y_markAsNotDoneWithName">%s marquer comme non fait</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="a11y_expand_collapse">Développer ou réduire la section</string>
     <string name="inboxSignatureError">Échec de chargement de la signature de la boîte de réception</string>
     <string name="inboxSignatureSettingsUpdated">Paramètres de boîte de réception enregistrés !</string>
     <string name="inboxSignatureSettingsError">Échec d’enregistrement des paramètres de boîte de réception</string>

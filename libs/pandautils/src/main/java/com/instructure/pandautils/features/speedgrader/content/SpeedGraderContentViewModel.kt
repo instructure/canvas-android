@@ -28,7 +28,9 @@ import com.instructure.canvasapi2.fragment.SubmissionFields
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Assignment.SubmissionType
 import com.instructure.canvasapi2.models.Attachment
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.QuizSubmission
+import com.instructure.canvasapi2.models.toBaseUrl
 import com.instructure.canvasapi2.type.SubmissionState
 import com.instructure.canvasapi2.type.SubmissionStatusTagType
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -148,7 +150,8 @@ class SpeedGraderContentViewModel @Inject constructor(
                     onItemSelected = { onAttemptSelected(submission, submissionHistory, it) }
                 ),
                 anonymous = anonymousGrading,
-                group = groupSubmission
+                group = groupSubmission,
+                baseUrl = CanvasContext.emptyCourseContext(courseId).toBaseUrl()
             )
         }
     }

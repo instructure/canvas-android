@@ -487,6 +487,7 @@
     <string name="a11y_markAsDoneWithName">%s Marcar como feito</string>
     <string name="a11y_markAsNotDoneWithName">%s Marcar como não feito</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="a11y_expand_collapse">Expandir ou recolher seção</string>
     <string name="inboxSignatureError">Falha ao carregar a assinatura da caixa de entrada</string>
     <string name="inboxSignatureSettingsUpdated">Configurações da caixa de entrada salvas!</string>
     <string name="inboxSignatureSettingsError">Falha ao salvar as configurações da caixa de entrada</string>

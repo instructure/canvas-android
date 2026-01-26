@@ -19,6 +19,7 @@ package com.instructure.pandautils.di
 import com.instructure.canvasapi2.apis.AccountNotificationAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
+import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.pandautils.data.repository.accountnotification.AccountNotificationRepository
 import com.instructure.pandautils.data.repository.accountnotification.AccountNotificationRepositoryImpl
@@ -26,6 +27,8 @@ import com.instructure.pandautils.data.repository.course.CourseRepository
 import com.instructure.pandautils.data.repository.course.CourseRepositoryImpl
 import com.instructure.pandautils.data.repository.enrollment.EnrollmentRepository
 import com.instructure.pandautils.data.repository.enrollment.EnrollmentRepositoryImpl
+import com.instructure.pandautils.data.repository.group.GroupRepository
+import com.instructure.pandautils.data.repository.group.GroupRepositoryImpl
 import com.instructure.pandautils.data.repository.user.UserRepository
 import com.instructure.pandautils.data.repository.user.UserRepositoryImpl
 import dagger.Module
@@ -68,5 +71,13 @@ class RepositoryModule {
         userApi: UserAPI.UsersInterface
     ): UserRepository {
         return UserRepositoryImpl(userApi)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGroupRepository(
+        groupApi: GroupAPI.GroupInterface
+    ): GroupRepository {
+        return GroupRepositoryImpl(groupApi)
     }
 }

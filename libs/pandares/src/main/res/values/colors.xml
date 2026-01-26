@@ -64,6 +64,7 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="shadowColor">#66000000</color>
+    <color name="disabledColor">#FFABB1B5</color>
 
     <color name="backgroundDarkMode">#151D24</color>
     <color name="textOnColorDark">#273540</color>

@@ -26,6 +26,7 @@ import com.instructure.pandautils.features.calendartodo.details.ToDoViewModelBeh
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardRepository
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardRouter
 import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
+import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidgetBehavior
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragmentBehavior
 import com.instructure.pandautils.features.discussion.router.DiscussionRouteHelperRepository
 import com.instructure.pandautils.features.discussion.router.DiscussionRouter
@@ -34,8 +35,8 @@ import com.instructure.pandautils.features.elementary.homeroom.HomeroomRouter
 import com.instructure.pandautils.features.elementary.importantdates.ImportantDatesRouter
 import com.instructure.pandautils.features.elementary.resources.itemviewmodels.ResourcesRouter
 import com.instructure.pandautils.features.elementary.schedule.ScheduleRouter
-import com.instructure.pandautils.features.grades.GradesBehaviour
 import com.instructure.pandautils.features.grades.GradesRepository
+import com.instructure.pandautils.features.grades.GradesViewModelBehavior
 import com.instructure.pandautils.features.help.HelpDialogFragmentBehavior
 import com.instructure.pandautils.features.help.HelpLinkFilter
 import com.instructure.pandautils.features.inbox.compose.InboxComposeBehavior
@@ -302,7 +303,7 @@ object HorizonTestModule {
     }
 
     @Provides
-    fun provideGradesBehaviour(): GradesBehaviour {
+    fun provideGradesViewModelBehaviour(): GradesViewModelBehavior {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 
@@ -358,6 +359,11 @@ object HorizonTestModule {
 
     @Provides
     fun provideToDoListViewModelBehavior(): ToDoListViewModelBehavior {
+        throw NotImplementedError("This is a test module. Implementation not required.")
+    }
+
+    @Provides
+    fun provideCoursesWidgetBehavior(): CoursesWidgetBehavior {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 }

@@ -434,7 +434,7 @@ class QuizDetailsFragment : BasePresenterFragment<
 
         // Load instructions
         loadHtmlJob = instructionsWebViewWrapper.webView.loadHtmlWithIframes(requireContext(), featureFlagProvider, quiz.description, {
-            instructionsWebViewWrapper.loadHtml(it, quiz.title, baseUrl = this@QuizDetailsFragment.quiz.htmlUrl)
+            instructionsWebViewWrapper.loadHtml(it, quiz.title, baseUrl = quiz.htmlUrl)
         }, onLtiButtonPressed = {
             RouteMatcher.route(requireActivity(), LtiLaunchFragment.makeSessionlessLtiUrlRoute(requireActivity(), canvasContext, it))
         }, courseId = canvasContext?.id)

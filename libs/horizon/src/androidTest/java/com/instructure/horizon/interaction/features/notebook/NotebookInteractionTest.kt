@@ -25,7 +25,6 @@ import com.instructure.canvas.espresso.mockcanvas.fakes.FakeRedwoodApiManager
 import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvasapi2.di.graphql.GetCoursesModule
 import com.instructure.canvasapi2.di.graphql.JourneyModule
-import com.instructure.canvasapi2.di.graphql.RedwoodModule
 import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetProgramsManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetSkillsManager
@@ -44,7 +43,7 @@ import org.junit.Before
 import org.junit.Test
 
 @HiltAndroidTest
-@UninstallModules(GetCoursesModule::class, JourneyModule::class, RedwoodModule::class)
+@UninstallModules(GetCoursesModule::class, JourneyModule::class)
 class NotebookInteractionTest : HorizonTest() {
     private val fakeGetHorizonCourseManager = FakeGetHorizonCourseManager()
     private val fakeGetProgramsManager = FakeGetProgramsManager()

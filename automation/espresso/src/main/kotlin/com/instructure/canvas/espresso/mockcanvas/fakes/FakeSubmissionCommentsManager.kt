@@ -15,10 +15,13 @@
  */
 package com.instructure.canvas.espresso.mockcanvas.fakes
 
+import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvasapi2.CreateSubmissionCommentMutation
 import com.instructure.canvasapi2.SubmissionCommentsQuery
 import com.instructure.canvasapi2.managers.graphql.SubmissionCommentsManager
+import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.canvasapi2.models.SubmissionCommentsResponseWrapper
+import java.util.Date
 
 class FakeSubmissionCommentsManager : SubmissionCommentsManager {
     override suspend fun getSubmissionComments(
@@ -26,8 +29,46 @@ class FakeSubmissionCommentsManager : SubmissionCommentsManager {
         assignmentId: Long,
         forceNetwork: Boolean
     ): SubmissionCommentsResponseWrapper {
+        val data = MockCanvas.data
+
+        val submission = data.submissions[assignmentId]?.find { it.userId == userId }
+
+        val graphqlComments = submission?.submissionComments?.map { comment ->
+            SubmissionCommentsQuery.Node1(
+                _id = comment.id.toString(),
+                author = SubmissionCommentsQuery.Author(
+                    _id = comment.authorId.toString(),
+                    name = comment.authorName,
+                    email = null,
+                    avatarUrl = null,
+                    pronouns = comment.authorPronouns
+                ),
+                mediaObject = null,
+                comment = comment.comment,
+                mediaCommentId = null,
+                createdAt = comment.createdAt ?: Date(),
+                canReply = true,
+                draft = false,
+                attempt = comment.attempt?.toInt() ?: 1,
+                read = true,
+                attachments = comment.attachments.map { attachment ->
+                    SubmissionCommentsQuery.Attachment(
+                        _id = attachment.id.toString(),
+                        id = attachment.id.toString(),
+                        contentType = attachment.contentType,
+                        createdAt = attachment.createdAt,
+                        displayName = attachment.displayName,
+                        title = attachment.filename,
+                        size = attachment.size.toString(),
+                        thumbnailUrl = attachment.thumbnailUrl,
+                        url = attachment.url
+                    )
+                }
+            )
+        } ?: emptyList()
+
         return SubmissionCommentsResponseWrapper(
-            comments = emptyList(),
+            comments = graphqlComments,
             data = SubmissionCommentsQuery.Data(
                 submission = null
             )
@@ -40,6 +81,25 @@ class FakeSubmissionCommentsManager : SubmissionCommentsManager {
         attempt: Int?,
         isGroupComment: Boolean
     ): CreateSubmissionCommentMutation.Data {
+        val data = MockCanvas.data
+
+        val submission = data.submissions.values.flatten().find { it.id == submissionId }
+
+        if (submission != null) {
+            val newComment = SubmissionComment(
+                id = data.newItemId(),
+                authorId = data.currentUser?.id ?: 0L,
+                authorName = data.currentUser?.shortName ?: "Teacher",
+                authorPronouns = data.currentUser?.pronouns,
+                attempt = attempt?.toLong() ?: submission.attempt,
+                comment = comment,
+                createdAt = Date(),
+                attachments = arrayListOf()
+            )
+
+            submission.submissionComments = submission.submissionComments + newComment
+        }
+
         return CreateSubmissionCommentMutation.Data(null)
     }
 }

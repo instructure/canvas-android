@@ -16,6 +16,13 @@
 package com.instructure.teacher.ui.pages.classic
 
 import androidx.test.InstrumentationRegistry
+import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
+import androidx.test.espresso.web.sugar.Web.onWebView
+import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
+import androidx.test.espresso.web.webdriver.DriverAtoms.getText
+import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.dataseeding.model.QuizApiModel
 import com.instructure.espresso.ModuleItemInteractions
@@ -33,11 +40,15 @@ import com.instructure.espresso.assertVisible
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.scrollTo
 import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withText
 import com.instructure.espresso.swipeDown
 import com.instructure.teacher.R
+import org.hamcrest.Matchers
+import org.hamcrest.Matchers.containsString
 
 /**
  * Represents the Quiz Details page.
@@ -71,6 +82,7 @@ class QuizDetailsPage(val moduleItemInteractions: ModuleItemInteractions) : Base
     private val gradedDonut by OnViewWithId(R.id.gradedWrapper)
     private val ungradedDonut by OnViewWithId(R.id.ungradedWrapper)
     private val notSubmittedDonut by OnViewWithId(R.id.notSubmittedWrapper)
+    private val quizPreviewButton by OnViewWithId(R.id.quizPreviewButton)
 
     /**
      * Asserts that the instructions for the quiz are displayed.
@@ -91,7 +103,16 @@ class QuizDetailsPage(val moduleItemInteractions: ModuleItemInteractions) : Base
      * Opens the All Dates page for the quiz.
      */
     fun openAllDatesPage() {
+        scrollTo(R.id.dueLayout)
         dueDatesLayout.click()
+    }
+
+    /**
+     * Asserts that the due dates section displays "Multiple Due Dates".
+     */
+    fun assertMultipleDueDatesTextDisplayed() {
+        dueSectionLabel.assertDisplayed()
+        onView(withId(R.id.otherDueDateTextView) + withText(R.string.multiple_due_dates)).assertDisplayed()
     }
 
     /**
@@ -107,6 +128,14 @@ class QuizDetailsPage(val moduleItemInteractions: ModuleItemInteractions) : Base
     fun openSubmissionsPage() {
         scrollTo(R.id.viewAllSubmissions)
         viewAllSubmissions.click()
+    }
+
+    /**
+     * Opens the Preview page for the quiz.
+     */
+    fun openPreviewPage() {
+        scrollTo(R.id.quizPreviewButton)
+        quizPreviewButton.click()
     }
 
     /**
@@ -169,12 +198,48 @@ class QuizDetailsPage(val moduleItemInteractions: ModuleItemInteractions) : Base
     }
 
     /**
-     * Asserts that the quiz name has changed to the specified new quiz name.
+     * Asserts that the quiz title is displayed with the specified text.
      *
-     * @param newQuizName The new quiz name to assert.
+     * @param quizTitle The quiz title to assert.
      */
-    fun assertQuizNameChanged(newQuizName: String) {
-        quizTitleTextView.assertHasText(newQuizName)
+    fun assertQuizTitleDisplayed(quizTitle: String) {
+        quizTitleTextView.assertHasText(quizTitle)
+    }
+
+    /**
+     * Asserts that the quiz description is displayed with the specified text.
+     *
+     * @param description The description to assert.
+     */
+    fun assertQuizDescriptionDisplayed(description: String) {
+        scrollTo(R.id.contentWebView)
+        instructionsWebView.assertVisible()
+        onWebView()
+            .withElement(findElement(Locator.TAG_NAME, "body"))
+            .check(webMatches(getText(), containsString(description)))
+    }
+
+    /**
+     * Asserts that the quiz title is NOT displayed with the specified text.
+     *
+     * @param quizTitle The quiz title that should not be displayed.
+     */
+    fun assertQuizTitleNotDisplayed(quizTitle: String) {
+        onView(withId(R.id.quizTitleTextView))
+            .check(ViewAssertions.matches(Matchers.not(ViewMatchers.withText(quizTitle))))
+    }
+
+    /**
+     * Asserts that the quiz description is NOT displayed with the specified text.
+     *
+     * @param description The description that should not be displayed.
+     */
+    fun assertQuizDescriptionNotDisplayed(description: String?) {
+        scrollTo(R.id.contentWebView)
+        instructionsWebView.assertVisible()
+        onWebView()
+            .withElement(findElement(Locator.TAG_NAME, "body"))
+            .check(webMatches(getText(), Matchers.not(containsString(description))))
     }
 
     /**

@@ -1045,6 +1045,8 @@
 
     <string name="downloading">Laddar ned</string>
     <string name="downloadComplete">Nedladdning slutförd</string>
+    <string name="fileDownloadNotificationPermissionDenied">Nedladdningen har startat. Aktivera aviseringar för att se framsteg.</string>
+
     <string name="notificationChannelNameFileDownloadsName">Nedladdningsaviseringar</string>
     <string name="notificationChannelNameFileDownloadsDescription">Canvas-aviseringar för pågående nedladdningar.</string>
     <string name="full_due_date_details">Fullständiga detaljer för inlämningsdatum</string>
@@ -1249,6 +1251,7 @@
     <string name="a11y_content_description_add_to_dashboard">Lägg till i översikten</string>
     <string name="a11y_content_description_add_all_to_dashboard">Lägga till alla i översikten</string>
 
+    <string name="new_mobile_dashboard">Ny mobil översikt</string>
     <!-- K5 Strings -->
     <string name="navDrawerAccount">Konto</string>
     <string name="dashboardTabHomeroom">Hemrum</string>
@@ -1367,6 +1370,10 @@
         <item quantity="other">%s olästa aviseringar</item>
     </plurals>
 
+    <plurals name="a11y_todoBadgeCount">
+        <item quantity="one">%s att göra-objekt</item>
+        <item quantity="other">%s att göra-objekt</item>
+    </plurals>
     <string name="noAnnotationSelected">Inga noteringar har valts</string>
     <string name="emailNotifications">E-postaviseringar</string>
     <string name="emailNotificationsImmediately">Omedelbart</string>
@@ -1907,6 +1914,8 @@
     <string name="gradePreferencesHeaderSortBy">Sortera efter</string>
     <string name="gradesEmptyTitle">Inga uppgifter</string>
     <string name="gradesEmptyMessage">Det verkar som om inga uppgifter har skapats i det här utrymmet än.</string>
+    <string name="noMatchingAssignments">Inga matchande uppgifter</string>
+    <string name="noMatchingAssignmentsDescription">Inga uppgifter matchar din sökning. Prova en annan sökterm.</string>
     <string name="errorLoadingGrades">Vi har problem med att läsa in din elevs bedömningar. Försök läsa in sidan igen eller försök igen senare.</string>
     <string name="errorLoadingCourse">Vi har problem med att läsa in din elevs kursinformation. Försök läsa in sidan igen eller försök igen senare.</string>
     <string name="gradesFilterContentDescription">Filtrera</string>
@@ -2078,7 +2087,8 @@
     <string name="widgetErrorTitle">Hoppsan! Något gick fel</string>
     <string name="widgetErrorSubtitle">Vi har problem med att visa dig uppgifter för tillfället. Försök igen om en stund eller gå till appen.</string>
     <string name="widgetToDoEmptyTitle">Du är klar för tillfället!</string>
-    <string name="widgetToDoEmptySubtitle">Det ser ut som om du är tillgänglig de kommande fyra veckorna. Vill du lägga till några att göra-uppgifter?</string>
+    <string name="widgetToDoEmptySubtitle">Det ser ut som om du är ledig. Du har inga kommande uppgifter. Vill du lägga till några att göra-uppgifter?</string>
+
     <string name="widgetNotLoggedInTitle">Då loggar vi in dig!</string>
     <string name="widgetToDoNotLoggedInSubtitle">Om du vill se dina att göra-uppgifter loggar du in på ditt konto i appen. Det tar bara en sekund!</string>
     <string name="a11y_widgetToDoOpenToDoList">Öppna skärmen med att göra-listan</string>
@@ -2103,6 +2113,11 @@
         <item quantity="one">%s / %s poäng</item>
         <item quantity="other">%s / %s poäng</item>
     </plurals>
+    <plurals name="groupMemberCount">
+        <item quantity="one">Elev</item>
+        <item quantity="other">Elever</item>
+    </plurals>
+
     <string name="speedGraderLatePenaltyTitle">Förseningsavdrag</string>
     <string name="gradingStatus_none">Inga</string>
     <string name="gradingStatus_late">Sen</string>
@@ -2159,4 +2174,189 @@
     <string name="scored_less_than_with_max">Fick mindre än/%s poäng</string>
     <string name="scored_between_values">Fick %1$s–%2$s</string>
     <string name="multiple_filters">Flera filter</string>
+    <string name="a11y_contentDescriptionToDoFilter">Filtrera</string>
+    <string name="errorLoadingToDos">Det gick inte att läsa in dina att göra-objekt. Kontrollera din anslutning och försök igen.</string>
+    <string name="errorUpdatingToDo">Det gick inte att uppdatera att göra-objektet. Kontrollera din anslutning och försök igen.</string>
+    <string name="noToDosForNow">Du har inga att göra-objekt för tillfället!</string>
+    <string name="noToDosForNowSubtext">Det verkar vara en bra tid för vila, slappna av och ladda om batterierna.</string>
+    <string name="todoSwipeDone">Klar</string>
+    <string name="todoSwipeUndo">Ångra</string>
+    <string name="todoMarkedAsDone">%s har markerats som färdig</string>
+    <string name="todoMarkedAsNotDone">%s har markerats som ej färdig</string>
+    <string name="todoMarkedAsDoneSnackbarUndo">Ångra</string>
+    <string name="todoActionOffline">Den här åtgärden kan inte göras offline</string>
+
+    <!-- To Do List Filter Screen -->
+    <string name="todoFilterPreferences">Inställningar för att göra-lista</string>
+    <string name="todoFilterVisibleItems">Synliga objekt</string>
+    <string name="todoFilterShowPersonalToDos">Visa personliga att göra-objekt</string>
+    <string name="todoFilterShowCalendarEvents">Visa kalenderhändelser</string>
+    <string name="todoFilterShowCompleted">Visa slutförda</string>
+    <string name="todoFilterFavoriteCoursesOnly">Endast favoritkurser</string>
+    <string name="todoFilterShowTasksFrom">Visa uppgifter från</string>
+    <string name="todoFilterShowTasksUntil">Visa uppgifter till</string>
+    <string name="todoFilterToday">I dag</string>
+    <string name="todoFilterThisWeek">Den här veckan</string>
+    <string name="todoFilterLastWeek">Senaste veckan</string>
+    <string name="todoFilterTwoWeeks">2 veckor sedan</string>
+    <string name="todoFilterThreeWeeks">3 veckor sedan</string>
+    <string name="todoFilterFourWeeks">4 veckor sedan</string>
+    <string name="todoFilterNextWeek">Nästa vecka</string>
+    <string name="todoFilterInTwoWeeks">Om 2 veckor</string>
+    <string name="todoFilterInThreeWeeks">Om 3 veckor</string>
+    <string name="todoFilterInFourWeeks">Om 4 veckor</string>
+    <string name="todoFilterFromDate">Från %s</string>
+    <string name="todoFilterUntilDate">Tills %s</string>
+    <string name="a11y_buttonSelectionSelected">valda</string>
+    <string name="a11y_buttonSelectionNotSelected">ej vald</string>
+    <!-- Course Invitations -->
+    <string name="courseInvitationsTitle">Kursinbjudningar (%d)</string>
+    <string name="courseInvitationAccepted">Inbjudan till %s har accepterats</string>
+    <string name="courseInvitationDeclined">Inbjudan till %s avvisad</string>
+    <string name="courseInvitationDeclineConfirmTitle">Avvisa inbjudan</string>
+    <string name="courseInvitationDeclineConfirmMessage">Är du säker på att du vill avvisa inbjudan till %s?</string>
+
+    <!-- Welcome Widget -->
+    <!-- Greetings with name (%s is the student's first name) -->
+    <string name="welcomeGreetingMorningWithName">God morgon %s!</string>
+    <string name="welcomeGreetingAfternoonWithName">God eftermiddag %s!</string>
+    <string name="welcomeGreetingEveningWithName">God kväll %s!</string>
+    <string name="welcomeGreetingNightWithName">God natt %s!</string>
+
+    <!-- Greetings without name (fallback when user has no first name) -->
+    <string name="welcomeGreetingMorning">God morgon!</string>
+    <string name="welcomeGreetingAfternoon">God eftermiddag!</string>
+    <string name="welcomeGreetingEvening">God kväll!</string>
+    <string name="welcomeGreetingNight">God natt!</string>
+
+    <!-- Welcome Widget Motivational Messages -->
+    <string-array name="welcomeMessagesGeneric">
+        <item>Du kan det här.</item>
+        <item>Fortsätt – du är starkare än vad du tycker just nu.</item>
+        <item>Ett steg i taget är fortfarande framsteg.</item>
+        <item>Ge inte upp – framtiden kommer att tacka dig.</item>
+        <item>Du klarar mer än vad du tror.</item>
+        <item>Även tuffa dagar gör du framsteg.</item>
+        <item>Lita på dig själv – du har klarat svåra saker förut.</item>
+        <item>Framsteg, inte perfektion. Det går jättebra för dig.</item>
+        <item>Håll ut – du är inte ensam i det här</item>
+        <item>Du lär, växer och klarar dig bättre än vad du tror.</item>
+        <item>Det är ok att snubbla, men du är trots allt på rätt väg.</item>
+        <item>Fortsätt att trycka på – du är närmare än vad du tror.</item>
+        <item>Små vinster räknas de också.</item>
+        <item>Fortsätt – du är närmare än vad du tror.</item>
+        <item>Det är ok att ta en paus. En paus är en del av inlärningen.</item>
+        <item>Ett försök är en vinst i sig.</item>
+        <item>Framsteg &gt; perfektion.</item>
+        <item>Att delta räknas mer än vad du tror.</item>
+        <item>Du bygger upp dina förmågor, även under tröga dagar.</item>
+        <item>Glöm inte att andas – du gör bra ifrån dig.</item>
+        <item>Du har rätt takt.</item>
+        <item>Du behöver inte lära dig allt idag.</item>
+        <item>Det är här du hör hemma.</item>
+        <item>Varje insats du gör för dig framåt.</item>
+        <item>Det är ok att börja om igen – så många gånger du behöver.</item>
+        <item>Det som är svårt nu kommer att bli lättare framöver.</item>
+        <item>Fortsätt att närvara – det är det som räknas.</item>
+        <item>Många små steg tar dig långt.</item>
+        <item>Att vila är en del av processen.</item>
+        <item>Du gör bättre ifrån dig än vad du tror.</item>
+        <item>Även långsamma framsteg är framsteg.</item>
+        <item>Du bygger inte din framtid på en dag – men du är på rätt väg.</item>
+        <item>En uppgift, ett ögonblick, ett steg i taget.</item>
+        <item>Du behöver inte vara perfekt för att påverka.</item>
+        <item>Inlärning kan vara svårt – det är normalt.</item>
+        <item>Du växer med varje försök, även om det inte känns så.</item>
+        <item>Du har klarat svåra saker förr – du klarar detta med.</item>
+        <item>Dina insatser räknas, även om ingen ser dem.</item>
+        <item>Det är ok att ta det lugnt.</item>
+        <item>Du gör framsteg, även under tröga dagar.</item>
+        <item>Du behöver inte kratta hela manegen än.</item>
+        <item>Du är starkare än vad du tycker just nu.</item>
+        <item>Stora mål nås med små steg.</item>
+        <item>Kämpa vidare – framtiden väntar på dig.</item>
+        <item>Framsteg är alltid framsteg, stora som små.</item>
+        <item>Du ligger inte efter – du är på rätt väg.</item>
+        <item>Det är ok att lära sig i sin egen takt.</item>
+        <item>Du utvecklas på sätt som du ännu inte kan se.</item>
+        <item>Dina insatser idag är en investering i morgondagen.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesMorning">
+        <item>God morgon! Du fixar detta – en lektion, ett steg i taget.</item>
+        <item>Känner du dig inte redo? Det är normalt. Börja där du befinner dig.</item>
+        <item>Kaffe hjälper men att vara snäll mot sig själv hjälper bättre.</item>
+        <item>Fungerar inte tekniken? Det är lätt hänt – bli inte stressad.</item>
+        <item>Dagen behöver inte bli perfekt, bara genomförd.</item>
+        <item>God morgon! – idag har du en ny chans att lära och utvecklas.</item>
+        <item>Även små insatser den här morgonen för dig närmare ditt mål.</item>
+        <item>Ta ett andetag – du behöver inte förstå allt riktigt än.</item>
+        <item>Tekniken kan krångla – men det är du inte ensam om.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesAfternoon">
+        <item>Du är halvvägs – du har redan gjort mer än vad du tror.</item>
+        <item>Känns det som att du har fastnat? Alla fastnar någon gång – det lossnar snart.</item>
+        <item>Jobb, bedömningar, framtiden – allt behöver inte vara på plats än.</item>
+        <item>Hjärntrött? Ta en rast så fokuserar du bättre efteråt.</item>
+        <item>Be om hjälp. Ingen klarar allt själv.</item>
+        <item>Du har redan kommit så här långt – var stolt över det.</item>
+        <item>Behöver du en paus? Vi behöver alla ladda om batterierna.</item>
+        <item>Det är ok att känna sig osäker – kunskaper byggs upp steg för steg.</item>
+        <item>Be om hjälp om du har fastnat – den finns närmare än vad du tror.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesEvening">
+        <item>En avklarad dag är en vinst i sig.</item>
+        <item>Saknar du dina vänner? Skicka iväg en hälsning – det hjälper.</item>
+        <item>Även om dagen var tung så tog du dig igenom den. Det räknas.</item>
+        <item>Kom ihåg att ingen bedömning mäter ditt värde.</item>
+        <item>Koppla av, skratta eller surfa utan skuldkänslor – du förtjänar det.</item>
+        <item>Bra jobb idag – framsteg räknas, även om du inte kan se det just nu.</item>
+        <item>Saknar du vänner eller mentorer? Hjälp kan komma från många håll.</item>
+        <item>Reflektera på kvällen – tänk på det du lärt dig under dagen och inte på vad du har kvar.</item>
+        <item>Dina insatser betyder mer än perfektion.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesNight">
+        <item>Kämpar du vidare? Respekt – men glöm inte bort att sova.</item>
+        <item>Imorgon kommer du att tacka dig själv för att du vilade ikväll.</item>
+        <item>Ångesten är värre på natten – låt den inte vinna.</item>
+        <item>Du ligger inte efter, du är på rätt väg.</item>
+        <item>Stäng datorn – din hjärna behöver vila.</item>
+        <item>Det är ok att vila – morgondagen väntar med nya möjligheter.</item>
+        <item>Inlärning är ett maraton, inte en kapplöpning. Var snäll mot dig själv ikväll.</item>
+        <item>Om du oroar dig, kom ihåg att du inte är ensam.</item>
+        <item>Avsluta din dag med kunskapen om att dina insatser är framsteg.</item>
+    </string-array>
+
+    <!-- Accessibility -->
+    <string name="welcomeWidgetContentDescription">Välkomstmeddelande: %1$s. %2$s</string>
+
+    <!-- Institutional Announcements -->
+    <string name="institutionalAnnouncementsTitle">Meddelanden (%d)</string>
+    <!-- Widget Display Names -->
+    <string name="widget_hello">Hej %s!</string>
+
+    <!-- Customize Dashboard -->
+    <string name="customize_dashboard">Anpassa översikt</string>
+    <string name="dashboard_widgets">Widgetar</string>
+    <string name="move_up">Flytta upp</string>
+    <string name="move_down">Flytta ned</string>
+    <string name="no_widgets">Inga widgetar tillgängliga</string>
+    <string name="changing_dashboard_layout">Ändrar layouten för översikten</string>
+    <string name="changing_dashboard_layout_message">Om du vill ändra layouten för översikten måste du starta om appen.</string>
+    <string name="restart_now">Starta om nu</string>
+    <string name="switched_back">Ändrade du tillbaka?</string>
+    <string name="switched_back_message">Tack för att du provade den nya översikten! Vill du berätta varför du ändrade tillbaka?</string>
+    <string name="what_could_we_improve">Vad kan vi förbättra?</string>
+    <string name="skip">Hoppa över</string>
+    <string name="widget_setting_show_greeting">Visa hälsning</string>
+    <string name="background_color">Bakgrundsfärg</string>
+    <string name="offline_content_available">Offlineinnehåll tillgängligt</string>
+    <string name="a11y_contentDescription_moreOptions">Fler alternativ</string>
+    <string name="customizeCourse">Anpassa kurs</string>
+    <string name="favoriteCoursesAndGroups">Favoritkurser och grupper</string>
+    <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
+    <string name="ltiToolsOffline">Externa verktyg är inte tillgängliga offline.</string>
 </resources>

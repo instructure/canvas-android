@@ -138,7 +138,8 @@ fun ToDoFilterContent(
                 options = uiState.pastDateOptions,
                 selectedOption = uiState.selectedPastOption,
                 onOptionSelected = uiState.onPastDaysChanged,
-                showDivider = true
+                showDivider = true,
+                modifier = Modifier.testTag("ShowTasksFromOptions")
             )
         }
 
@@ -151,7 +152,8 @@ fun ToDoFilterContent(
                 options = uiState.futureDateOptions,
                 selectedOption = uiState.selectedFutureOption,
                 onOptionSelected = uiState.onFutureDaysChanged,
-                showDivider = false
+                showDivider = false,
+                modifier = Modifier.testTag("ShowTasksUntilOptions")
             )
         }
     }
@@ -205,9 +207,10 @@ private fun DateRangeOptions(
     options: List<DateRangeOption>,
     selectedOption: DateRangeSelection,
     onOptionSelected: (DateRangeSelection) -> Unit,
-    showDivider: Boolean
+    showDivider: Boolean,
+    modifier: Modifier = Modifier
 ) {
-    Column {
+    Column(modifier = modifier) {
         options.forEachIndexed { index, option ->
             DateRangeOptionItem(
                 option = option,
@@ -232,6 +235,7 @@ private fun DateRangeOptionItem(
         modifier = Modifier
             .fillMaxWidth()
             .defaultMinSize(minHeight = 56.dp)
+            .testTag("radioButtonRow")
             .clickable(onClick = onSelected)
             .padding(start = 16.dp, end = 4.dp)
             .semantics(mergeDescendants = true) {
@@ -247,7 +251,9 @@ private fun DateRangeOptionItem(
                 selectedColor = Color(ThemePrefs.brandColor),
                 unselectedColor = Color(ThemePrefs.brandColor)
             ),
-            modifier = Modifier.size(24.dp)
+            modifier = Modifier
+                .size(24.dp)
+                .testTag("radioButtonItem")
         )
 
         Spacer(modifier = Modifier.width(16.dp))

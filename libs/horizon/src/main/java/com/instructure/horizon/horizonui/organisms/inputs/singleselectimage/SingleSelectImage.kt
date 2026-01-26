@@ -42,6 +42,12 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
@@ -58,7 +64,8 @@ fun SingleSelectImage(
     state: SingleSelectImageState,
     modifier: Modifier = Modifier
 ) {
-
+    val expandedState = stringResource(R.string.a11y_expanded)
+    val collapsedState = stringResource(R.string.a11y_collapsed)
     Input(
         label = state.label,
         helperText = state.helperText,
@@ -67,6 +74,15 @@ fun SingleSelectImage(
         modifier = modifier
             .onFocusChanged {
                 state.onFocusChanged(it.isFocused)
+            }
+            .clearAndSetSemantics {
+                role = Role.DropdownList
+                stateDescription = if (state.isMenuOpen) expandedState else collapsedState
+                contentDescription = if (state.selectedOption != null) {
+                    "${state.label}, ${state.selectedOption}"
+                } else {
+                    state.label ?: ""
+                }
             }
     ) {
         Column(

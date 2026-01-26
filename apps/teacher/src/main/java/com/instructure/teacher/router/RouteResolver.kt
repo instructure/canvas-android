@@ -10,6 +10,7 @@ import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpda
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoFragment
 import com.instructure.pandautils.features.calendartodo.details.ToDoFragment
+import com.instructure.pandautils.features.dashboard.customize.CustomizeDashboardFragment
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
 import com.instructure.pandautils.features.discussion.create.CreateDiscussionWebViewFragment
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
@@ -234,6 +235,8 @@ object RouteResolver {
             fragment = InboxSignatureFragment()
         } else if (ModuleProgressionFragment::class.java.isAssignableFrom(cls)) {
             fragment = ModuleProgressionFragment.newInstance(route.copy(canvasContext = canvasContext))
+        } else if (CustomizeDashboardFragment::class.java.isAssignableFrom(cls)) {
+            fragment = CustomizeDashboardFragment.newInstance(route)
         } else if (FullscreenInternalWebViewFragment::class.java.isAssignableFrom(cls)) {
             fragment = FullscreenInternalWebViewFragment.newInstance(route.arguments)
         } else if (InternalWebViewFragment::class.java.isAssignableFrom(cls)) {

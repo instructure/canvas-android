@@ -16,116 +16,129 @@
  */
 package com.instructure.horizon.features.aiassistant.main
 
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
+import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.NavHostController
 import com.instructure.horizon.R
-import com.instructure.horizon.features.aiassistant.common.composable.AiAssistResponseTextBlock
+import com.instructure.horizon.features.aiassistant.common.composable.AiAssistMessage
 import com.instructure.horizon.features.aiassistant.common.composable.AiAssistScaffold
-import com.instructure.horizon.features.aiassistant.common.composable.AiAssistSuggestionTextBlock
-import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
-import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessagePrompt
-import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessageRole
 import com.instructure.horizon.features.aiassistant.navigation.AiAssistRoute
+import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.molecules.Spinner
 
 @Composable
 fun AiAssistMainScreen(
+    mainNavController: NavHostController,
     navController: NavHostController,
     state: AiAssistMainUiState,
     onDismiss: () -> Unit,
 ) {
+    LaunchedEffect(state.messages) {
+        val lastMessage = state.messages.lastOrNull()
+
+        if (lastMessage != null && state.messages.size > 2) {
+            state.onNavigateToDetails()
+            when {
+                lastMessage.flashCards.isNotEmpty() -> {
+                    navController.navigate(AiAssistRoute.AiAssistFlashcard.route)
+                }
+                lastMessage.quizItems.isNotEmpty() -> {
+                    navController.navigate(AiAssistRoute.AiAssistQuiz.route)
+                }
+                else -> {
+                    navController.navigate(AiAssistRoute.AiAssistChat.route)
+                }
+            }
+        }
+    }
     var promptInput by remember { mutableStateOf(TextFieldValue("")) }
+
+    val loadingFocusRequester = remember { FocusRequester() }
+    val lastMessageFocusRequester = remember { FocusRequester() }
+    val scrollState = rememberLazyListState()
+
+    LaunchedEffect(state.isLoading) {
+        if (state.isLoading) {
+            loadingFocusRequester.requestFocus()
+        }
+    }
+
+    LaunchedEffect(state.messages.size) {
+        if (state.messages.isNotEmpty()) {
+            scrollState.animateScrollToItem(state.messages.size)
+            if (!state.isLoading) {
+                lastMessageFocusRequester.requestFocus()
+            }
+        }
+    }
     AiAssistScaffold(
         navController = navController,
+        onClearChatHistory = { },
         onDismiss = { onDismiss() },
         inputTextValue = promptInput,
         onInputTextChanged = { promptInput = it },
         onInputTextSubmitted = {
-            state.onSetAiAssistContextMessage(
-                AiAssistMessage(
-                    role = AiAssistMessageRole.User,
-                    prompt = AiAssistMessagePrompt.Custom(promptInput.text)
-                )
-            )
-            navController.navigate(AiAssistRoute.AiAssistChat.route)
-       }
+            state.sendMessage(promptInput.text)
+            promptInput = TextFieldValue("")
+        }
     ) { modifier ->
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(16.dp),
+            state = scrollState,
             modifier = modifier
         ) {
-            if (state.isAiContextEmpty) {
+            itemsIndexed(state.messages) { index, message ->
+                val isLastMessage = index == state.messages.lastIndex
+                AiAssistMessage(
+                    message = message,
+                    onSendPrompt = { state.sendMessage(it) },
+                    onSourceSelected = {
+                        val request = NavDeepLinkRequest.Builder
+                            .fromUri(it.toUri())
+                            .build()
+                        mainNavController.navigate(request)
+                    },
+                    focusRequester = if (isLastMessage) lastMessageFocusRequester else null
+                )
+            }
+            if (state.isLoading) {
                 item {
-                    AiAssistResponseTextBlock(
-                        text = stringResource(R.string.ai_HowCanIHelpYou)
-                    )
-                }
-            } else {
-                item {
-                    AiAssistSuggestionTextBlock(
-                        text = stringResource(R.string.ai_QuizMe),
-                        onClick = {
-                            navController.navigate(AiAssistRoute.AiAssistQuiz.route)
-                        }
-                    )
-                }
-                item {
-                    AiAssistSuggestionTextBlock(
-                        text = stringResource(R.string.ai_summarize),
-                        onClick = {
-                            state.onSetAiAssistContextMessage(
-                                AiAssistMessage(
-                                    role = AiAssistMessageRole.User,
-                                    prompt = AiAssistMessagePrompt.Summarize
-                                )
-                            )
-                            navController.navigate(AiAssistRoute.AiAssistChat.route)
-                        }
-                    )
-                }
-                item {
-                    AiAssistSuggestionTextBlock(
-                        text = stringResource(R.string.ai_giveMeKeyTakeaways),
-                        onClick = {
-                            state.onSetAiAssistContextMessage(
-                                AiAssistMessage(
-                                    role = AiAssistMessageRole.User,
-                                    prompt = AiAssistMessagePrompt.KeyTakeAway
-                                )
-                            )
-                            navController.navigate(AiAssistRoute.AiAssistChat.route)
-                        }
-                    )
-                }
-                item {
-                    AiAssistSuggestionTextBlock(
-                        text = stringResource(R.string.ai_tellMeMore),
-                        onClick = {
-                            state.onSetAiAssistContextMessage(
-                                AiAssistMessage(
-                                    role = AiAssistMessageRole.User,
-                                    prompt = AiAssistMessagePrompt.TellMeMore
-                                )
-                            )
-                            navController.navigate(AiAssistRoute.AiAssistChat.route)
-                        }
-                    )
-                }
-                item {
-                    AiAssistSuggestionTextBlock(
-                        text = stringResource(R.string.ai_generateFlashcards),
-                        onClick = {
-                            navController.navigate(AiAssistRoute.AiAssistFlashcard.route)
-                        }
-                    )
+                    val context = LocalContext.current
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .semantics {
+                                contentDescription = context.getString(R.string.a11y_igniteAiLoadingContentDescription)
+                            }
+                            .focusRequester(loadingFocusRequester)
+                            .focusable()
+                    ){
+                        Spacer(modifier = Modifier.weight(1f))
+                        Spinner(color = HorizonColors.Surface.cardPrimary())
+                        Spacer(modifier = Modifier.weight(1f))
+                    }
                 }
             }
         }

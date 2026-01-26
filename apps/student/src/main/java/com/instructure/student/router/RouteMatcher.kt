@@ -78,7 +78,7 @@ import com.instructure.student.features.discussion.details.DiscussionDetailsFrag
 import com.instructure.student.features.discussion.list.DiscussionListFragment
 import com.instructure.student.features.elementary.course.ElementaryCourseFragment
 import com.instructure.student.features.files.list.FileListFragment
-import com.instructure.student.features.grades.GradesListFragment
+import com.instructure.student.features.grades.GradesFragment
 import com.instructure.student.features.modules.list.ModuleListFragment
 import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
 import com.instructure.student.features.pages.details.PageDetailsFragment
@@ -89,9 +89,9 @@ import com.instructure.student.features.quiz.list.QuizListFragment
 import com.instructure.student.fragment.AnnouncementListFragment
 import com.instructure.student.fragment.BasicQuizViewFragment
 import com.instructure.student.fragment.CourseSettingsFragment
-import com.instructure.student.fragment.OldDashboardFragment
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.fragment.NotificationListFragment
+import com.instructure.student.fragment.OldDashboardFragment
 import com.instructure.student.fragment.OldToDoListFragment
 import com.instructure.student.fragment.ProfileSettingsFragment
 import com.instructure.student.fragment.StudioWebViewFragment
@@ -221,12 +221,12 @@ object RouteMatcher : BaseRouteMatcher() {
         if (ApiPrefs.showElementaryView) {
             routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/grades"), ElementaryCourseFragment::class.java, tabId = Tab.GRADES_ID))
         } else {
-            routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/grades"), GradesListFragment::class.java))
+            routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/grades"), GradesFragment::class.java))
         }
         routes.add(
             Route(
                 courseOrGroup("/:${RouterParams.COURSE_ID}/grades/:${RouterParams.ASSIGNMENT_ID}"),
-                GradesListFragment::class.java,
+                GradesFragment::class.java,
                 AssignmentDetailsFragment::class.java
             )
         )
@@ -403,6 +403,13 @@ object RouteMatcher : BaseRouteMatcher() {
                 AssignmentDetailsFragment::class.java
             )
         )
+        routes.add(
+            Route(
+                courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/:${RouterParams.ASSIGNMENT_ID}"),
+                QuizListFragment::class.java,
+                AssignmentDetailsFragment::class.java
+            )
+        ) // Route for new quizzes opened from the quiz list. New quizzes are shown on the Assignment details. This is needed for the bookmarker to find the correct route.
 
         // Studio
         routes.add(
@@ -551,6 +558,37 @@ object RouteMatcher : BaseRouteMatcher() {
             activity.toast(R.string.route_not_available)
             return
         }
+
+        // Check for Studio embed immersive view BEFORE other routing logic
+        // This prevents it from being caught by the LTI route matcher
+        val uri = route?.uri
+        if (uri?.toString()?.contains("external_tools/retrieve") == true
+            && uri.toString().contains("custom_arc_launch_type")
+            && uri.toString().contains("immersive_view")
+        ) {
+            // Handle Studio embed immersive view - pass the full URL and title to InternalWebviewFragment
+            val urlString = uri.toString()
+
+            route.primaryClass = InternalWebviewFragment::class.java
+            route.routeContext = RouteContext.INTERNAL
+            route.arguments.putString(Const.INTERNAL_URL, urlString)
+            // These are needed to prevent double back presses for navigation. In some cases Studio does redirects that messes up back navigation.
+            route.arguments.putBoolean(InternalWebviewFragment.SHOULD_ROUTE_INTERNALLY, false)
+            route.arguments.putBoolean(InternalWebviewFragment.SHOULD_CLOSE_FRAGMENT, true)
+            route.arguments.putBoolean(InternalWebviewFragment.ENABLE_ALGORITHMIC_DARKENING, true)
+
+            // Extract title from URL query parameter if present, otherwise use fallback
+            val title = uri.getQueryParameter("title") ?: activity.getString(R.string.immersiveView)
+            route.arguments.putString(Const.ACTION_BAR_TITLE, title)
+
+            if (activity.resources.getBoolean(R.bool.isDeviceTablet)) {
+                handleTabletRoute(activity, route)
+            } else {
+                handleFullscreenRoute(activity, route)
+            }
+            return
+        }
+
         if (route == null || route.routeContext == RouteContext.DO_NOT_ROUTE) {
             if (route?.uri != null) {
                 // No route, no problem
@@ -571,6 +609,12 @@ object RouteMatcher : BaseRouteMatcher() {
             }
 
             route.arguments.putString(Const.INTERNAL_URL, urlString)
+
+            // These are needed to prevent double back presses for navigation. In some cases Studio does redirects that messes up back navigation.
+            route.arguments.putBoolean(InternalWebviewFragment.SHOULD_ROUTE_INTERNALLY, false)
+            route.arguments.putBoolean(InternalWebviewFragment.SHOULD_CLOSE_FRAGMENT, true)
+
+            route.arguments.putBoolean(InternalWebviewFragment.ENABLE_ALGORITHMIC_DARKENING, true)
 
             // Extract title from URL query parameter if present, otherwise use fallback
             val title = uri.getQueryParameter("title") ?: activity.getString(R.string.immersiveView)

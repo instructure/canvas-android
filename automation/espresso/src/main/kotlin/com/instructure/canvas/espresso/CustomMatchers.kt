@@ -14,6 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 package com.instructure.canvas.espresso
 
 import android.content.Intent
@@ -546,5 +547,24 @@ class ImageViewDrawableMatcher(val resourceId: Int, val color: Int? = null) : Ty
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight())
         drawable.draw(canvas)
         return bitmap
+    }
+}
+
+/**
+ * Matches views whose resource ID contains the specified substring.
+ * Useful for matching PSPDFKit or other third-party library views with dynamic resource IDs.
+ */
+fun withResourceIdContaining(substring: String) = object : TypeSafeMatcher<View>() {
+    override fun describeTo(description: Description) {
+        description.appendText("with resource id containing: $substring")
+    }
+
+    override fun matchesSafely(view: View): Boolean {
+        val resourceId = try {
+            view.resources.getResourceName(view.id)
+        } catch (e: Exception) {
+            ""
+        }
+        return resourceId.contains(substring, ignoreCase = true)
     }
 }

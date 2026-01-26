@@ -123,7 +123,6 @@ fun AiAssistDetailedFeedback(
 
         var textFieldValue by remember { mutableStateOf(TextFieldValue()) }
         AiAssistTextArea(
-            label = stringResource(R.string.aiAssistFeedbackMessageLabel),
             value = textFieldValue,
             onValueChange = { textFieldValue = it },
             modifier = Modifier.padding(vertical = 16.dp)

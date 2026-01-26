@@ -29,6 +29,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.ViewCanvasWebViewWrapperBinding
 import com.instructure.pandautils.utils.ColorUtils
+import com.instructure.pandautils.utils.Utils
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
@@ -109,7 +110,7 @@ open class CanvasWebViewWrapper @JvmOverloads constructor(
 
         // This is needed for captions to work in offline studio videos.
         // We need to use the user files path for base url in this case.
-        if (html.contains(getCaptionsHtmlPattern())) {
+        if (html.contains(getCaptionsHtmlPattern()) && Utils.isNetworkAvailable(context)) {
             binding.contentWebView.settings.allowUniversalAccessFromFileURLs = true
             this.baseUrl = getUserFilesPath()
         } else {
@@ -194,6 +195,8 @@ open class CanvasWebViewWrapper @JvmOverloads constructor(
                 super.onRestoreInstanceState(state.superState)
                 themeSwitched = state.themeSwitched
                 html = state.html
+                // Reload content with restored theme after state is restored
+                handleConfigurationChange(reloadContent = true)
             }
             else -> super.onRestoreInstanceState(state)
         }

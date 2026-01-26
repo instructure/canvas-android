@@ -1045,6 +1045,8 @@
 
     <string name="downloading">Llwytho i lawr</string>
     <string name="downloadComplete">Wedi gorffen llwytho i lawr</string>
+    <string name="fileDownloadNotificationPermissionDenied">Wedi dechrau llwytho i lawr. Galluogi hysbysiadau i weld cynnydd.</string>
+
     <string name="notificationChannelNameFileDownloadsName">Hysbysiadau llwytho i lawr</string>
     <string name="notificationChannelNameFileDownloadsDescription">Hysbysiadau Canvas ar gyfer ffeiliau sy’n cael eu llwytho i lawr ar hyn o bryd.</string>
     <string name="full_due_date_details">Manylion llawn dyddiad erbyn</string>
@@ -1249,6 +1251,7 @@
     <string name="a11y_content_description_add_to_dashboard">Ychwanegu at y dangosfwrdd</string>
     <string name="a11y_content_description_add_all_to_dashboard">Ychwanegu’r cyfan at y dangosfwrdd</string>
 
+    <string name="new_mobile_dashboard">Dangosfwrdd symudol newydd</string>
     <!-- K5 Strings -->
     <string name="navDrawerAccount">Cyfrif</string>
     <string name="dashboardTabHomeroom">Ystafell hafan</string>
@@ -1367,6 +1370,10 @@
         <item quantity="other">%s hysbysiad heb eu darllen</item>
     </plurals>
 
+    <plurals name="a11y_todoBadgeCount">
+        <item quantity="one">%s eitem i’w gwneud</item>
+        <item quantity="other">%s eitem i’w gwneud</item>
+    </plurals>
     <string name="noAnnotationSelected">Dim anodiad wedi’i ddewis</string>
     <string name="emailNotifications">Hysbysiadau E-bost</string>
     <string name="emailNotificationsImmediately">Yn syth</string>
@@ -1907,6 +1914,8 @@
     <string name="gradePreferencesHeaderSortBy">Trefnu yn ôl</string>
     <string name="gradesEmptyTitle">Dim Aseiniadau</string>
     <string name="gradesEmptyMessage">Mae’n ymddangos nad oes aseiniadau wedi cael eu creu yn y gofod hwn eto.</string>
+    <string name="noMatchingAssignments">Does dim Aseiniadau sy\'n Cyfateb</string>
+    <string name="noMatchingAssignmentsDescription">Does dim aseiniadau’n cyfateb i’ch chwiliad. Rhowch gynnig ar derm chwilio gwahanol.</string>
     <string name="errorLoadingGrades">Rydym yn cael trafferth llwytho graddau eich myfyriwr. Ceisiwch ail-lwytho\'r dudalen neu roi cynnig arall arni yn nes ymlaen.</string>
     <string name="errorLoadingCourse">Rydym yn cael trafferth llwytho manylion cwrs eich myfyriwr. Ceisiwch ail-lwytho\'r dudalen neu roi cynnig arall arni yn nes ymlaen.</string>
     <string name="gradesFilterContentDescription">Hidlo</string>
@@ -2078,7 +2087,8 @@
     <string name="widgetErrorTitle">Wps! Aeth rhywbeth o’i le</string>
     <string name="widgetErrorSubtitle">Rydyn ni’n cael trafferth dangos eich tasgau ar hyn o bryd. Rhowch gynnig arall arni nes ymlaen neu ewch i’r ap.</string>
     <string name="widgetToDoEmptyTitle">Rydych chi wedi gorffen popeth am y tro!</string>
-    <string name="widgetToDoEmptySubtitle">Mae’n ymddangos eich bod chi’n rhydd am y 4 wythnos nesaf. Ydych chi am ychwanegu pethau i’w gwneud?</string>
+    <string name="widgetToDoEmptySubtitle">Rydych chi’n rhydd, does gennych chi ddim tasgau ar y gweill. Ydych chi am ychwanegu pethau i’w gwneud?</string>
+
     <string name="widgetNotLoggedInTitle">Dewch i ni Fewngofnodi!</string>
     <string name="widgetToDoNotLoggedInSubtitle">I weld eich pethau i’w gwneud, mewngofnodwch i’ch cyfrif ar yr ap. Fyddwch chi ddim chwinciad!</string>
     <string name="a11y_widgetToDoOpenToDoList">Agor sgrin y rhestr I’w Gwneud</string>
@@ -2103,6 +2113,11 @@
         <item quantity="one">%s / %s pwynt</item>
         <item quantity="other">%s / %s pwynt</item>
     </plurals>
+    <plurals name="groupMemberCount">
+        <item quantity="one">Myfyriwr</item>
+        <item quantity="other">Myfyrwyr</item>
+    </plurals>
+
     <string name="speedGraderLatePenaltyTitle">Cosb am fod yn hwyr</string>
     <string name="gradingStatus_none">Dim</string>
     <string name="gradingStatus_late">Yn Hwyr</string>
@@ -2159,4 +2174,189 @@
     <string name="scored_less_than_with_max">Wedi cael sgôr o lai na / %s pwynt</string>
     <string name="scored_between_values">Wedi sgorio %1$s - %2$s</string>
     <string name="multiple_filters">Mwy nag un hidlydd</string>
+    <string name="a11y_contentDescriptionToDoFilter">Hidlo</string>
+    <string name="errorLoadingToDos">Gwall wrth lwytho eich eitemau i’w gwneud. Gwiriwch eich cysylltiad a rhowch gynnig arall arni.</string>
+    <string name="errorUpdatingToDo">Gwall wrth ddiweddaru’r eitem i\'w gwneud. Gwiriwch eich cysylltiad a rhowch gynnig arall arni.</string>
+    <string name="noToDosForNow">Does dim eitemau i’w gwneud ar hyn o bryd!</string>
+    <string name="noToDosForNowSubtext">Mae’n edrych fel amser gwych i orffwys, ymlacio a dod atoch eich hun.</string>
+    <string name="todoSwipeDone">Wedi gorffen</string>
+    <string name="todoSwipeUndo">Dad-wneud</string>
+    <string name="todoMarkedAsDone">%s wedi’i farcio fel wedi gorffen</string>
+    <string name="todoMarkedAsNotDone">%s wedi’i farcio fel heb ei gwblhau</string>
+    <string name="todoMarkedAsDoneSnackbarUndo">Dad-wneud</string>
+    <string name="todoActionOffline">Does dim modd gwneud hyn all-lein</string>
+
+    <!-- To Do List Filter Screen -->
+    <string name="todoFilterPreferences">Dewisiadau rhestr i’w Gwneud</string>
+    <string name="todoFilterVisibleItems">Eitemau Gweladwy</string>
+    <string name="todoFilterShowPersonalToDos">Dangos Eitemau Personol i\'w Gwneud</string>
+    <string name="todoFilterShowCalendarEvents">Dangos Digwyddiadau Calendr</string>
+    <string name="todoFilterShowCompleted">Dangos rhai sydd wedi\'u Cwblhau</string>
+    <string name="todoFilterFavoriteCoursesOnly">Hoff Gyrsiau yn unig</string>
+    <string name="todoFilterShowTasksFrom">Dangos tasgau o</string>
+    <string name="todoFilterShowTasksUntil">Dangos tasgau tan</string>
+    <string name="todoFilterToday">Heddiw</string>
+    <string name="todoFilterThisWeek">Yr Wythnos hon</string>
+    <string name="todoFilterLastWeek">Wythnos Diwethaf</string>
+    <string name="todoFilterTwoWeeks">Bythefnos yn ôl</string>
+    <string name="todoFilterThreeWeeks">3 wythnos yn ôl</string>
+    <string name="todoFilterFourWeeks">4 wythnos yn ôl</string>
+    <string name="todoFilterNextWeek">Wythnos Nesaf</string>
+    <string name="todoFilterInTwoWeeks">Mewn 2 wythnos</string>
+    <string name="todoFilterInThreeWeeks">Mewn 3 wythnos</string>
+    <string name="todoFilterInFourWeeks">Mewn 4 wythnos</string>
+    <string name="todoFilterFromDate">Gan %s</string>
+    <string name="todoFilterUntilDate">Tan %s</string>
+    <string name="a11y_buttonSelectionSelected">wedi dewis</string>
+    <string name="a11y_buttonSelectionNotSelected">heb ei ddewis</string>
+    <!-- Course Invitations -->
+    <string name="courseInvitationsTitle">Gwahoddiadau Cwrs (%d)</string>
+    <string name="courseInvitationAccepted">Gwahoddiad i %s wedi’i dderbyn</string>
+    <string name="courseInvitationDeclined">Gwahoddiad i %s wedi’i wrthod</string>
+    <string name="courseInvitationDeclineConfirmTitle">Gwrthod Gwahoddiad</string>
+    <string name="courseInvitationDeclineConfirmMessage">Ydych chi’n siŵr eich bod am wrthod y gwahoddiad i %s?</string>
+
+    <!-- Welcome Widget -->
+    <!-- Greetings with name (%s is the student's first name) -->
+    <string name="welcomeGreetingMorningWithName">Bore da, %s!</string>
+    <string name="welcomeGreetingAfternoonWithName">Prynhawn da, %s!</string>
+    <string name="welcomeGreetingEveningWithName">Noswaith dda, %s!</string>
+    <string name="welcomeGreetingNightWithName">Nos da, %s!</string>
+
+    <!-- Greetings without name (fallback when user has no first name) -->
+    <string name="welcomeGreetingMorning">Bore da!</string>
+    <string name="welcomeGreetingAfternoon">Prynhawn da!</string>
+    <string name="welcomeGreetingEvening">Noswaith dda!</string>
+    <string name="welcomeGreetingNight">Nos da!</string>
+
+    <!-- Welcome Widget Motivational Messages -->
+    <string-array name="welcomeMessagesGeneric">
+        <item>Ti’n gallu gwneud hyn.</item>
+        <item>Dal ati — rwyt ti’n gryfach na’r wyt ti’n teimlo ar hyn o bryd.</item>
+        <item>Mae un cam ar y tro yn gynnydd.</item>
+        <item>Paid â rhoi’r ffidil yn y to — byddi di’n falch yn y diwedd.</item>
+        <item>Rwyt ti’n gallu gwneud mwy nag wyt ti’n meddwl.</item>
+        <item>Hyd yn oed ar ddyddiau anodd, rwyt ti\'n gwneud cynnydd.</item>
+        <item>Ymddiried yn dy hun — rwyt ti wedi gwneud pethau anodd o’r blaen.</item>
+        <item>Cynnydd, nid perffeithrwydd. Rwyt ti’n gwneud yn wych.</item>
+        <item>Dal ati — dwyt ti ddim ar dy ben dy hun.</item>
+        <item>Rwyt ti’n dysgu, yn tyfu, ac yn gwneud yn well nag wyt ti’n meddwl.</item>
+        <item>Paid â phoeni os byddi di’n baglu — rwyt ti’n dal i fod ar y llwybr cywir.</item>
+        <item>Dal ati — rwyt ti’n agosach nag wyt ti’n meddwl.</item>
+        <item>Cofia ddathlu’r pethau bychain.</item>
+        <item>Dal ati — rwyt ti’n agosach nag wyt ti’n meddwl.</item>
+        <item>Mae’n bwysig cymryd egwyl. Mae cymryd egwyl yn rhan o ddysgu.</item>
+        <item>Mae ymdrech yn bwysig.</item>
+        <item>Cynnydd &gt; perffeithrwydd.</item>
+        <item>Mae bod yn bresennol yn bwysicach na dim.</item>
+        <item>Rwyt ti’n datblygu sgiliau, hyd yn oed ar ddiwrnodau araf.</item>
+        <item>Cofia anadlu’n ddwfn — rwyt ti’n gwneud yn iawn.</item>
+        <item>Rwyt ti’n mynd ar dy gyflymder dy hun.</item>
+        <item>Does dim angen i ti gael yr atebion i gyd heddiw.</item>
+        <item>Rwyt ti’n perthyn.</item>
+        <item>Mae pob ymdrech rwyt ti’n ei gwneud yn cyfri.</item>
+        <item>Does dim o’i le â dechrau eto — sawl bynnag gwaith rwyt ti’n dymuno.</item>
+        <item>Bydd y pethau anodd yn teimlo’n haws mewn dim.</item>
+        <item>Dal ati — dyna sy’n bwysig.</item>
+        <item>Mae camau bach yn arwain at gynnydd mawr.</item>
+        <item>Mae gorffwys yn rhan bwysig o gynnydd hefyd.</item>
+        <item>Rwyt ti’n gwneud yn well nag wyt ti’n meddwl.</item>
+        <item>Mae cynnydd bach yn gynnydd yr un fath.</item>
+        <item>Dwyt ti ddim yn gallu creu dy ddyfodol mewn diwrnod — ond rwyt ti ar dy ffordd.</item>
+        <item>Un aseiniad, un foment, yn cam ar y tro.</item>
+        <item>Does dim rhaid i ti fod yn berffaith i greu argraff.</item>
+        <item>Mae dysgu yn broses flêr – mae hynny’n normal.</item>
+        <item>Rwyt ti’n gwneud cynnydd bob tro rwyt ti’n rhoi cynnig ar rywbeth, hyd yn oed os nad yw’n teimlo felly.</item>
+        <item>Rwyt ti wedi gwneud pethau anodd o’r blaen — galli di wneud hyn hefyd.</item>
+        <item>Mae dy ymdrech yn bwysig, hyd yn oed os nad oes neb yn ei weld.</item>
+        <item>Does dim byd o’i le â gwneud cynnydd yn araf.</item>
+        <item>Rwyt ti’n gwneud cynnydd, hyd yn oed ar ddiwrnod tawel.</item>
+        <item>Does dim rhaid i’r llwybr fod yn glir ar hyn o bryd — dal ati.</item>
+        <item>Rwyt ti’n gryfach na beth wyt ti’n meddwl.</item>
+        <item>Mae nodau mawr yn cael eu creu drwy gamau bach.</item>
+        <item>Dal ati — byddi di’n falch yn y dyfodol.</item>
+        <item>Mae cynnydd blêr yn gynnydd.</item>
+        <item>Dwyt ti ddim ar ei hôl hi — rwyt ti ar y llwybr cywir.</item>
+        <item>Galli di ddysgu wrth fynd yn dy flaen.</item>
+        <item>Rwyt ti’n datblygu mewn ffyrdd sydd ddim yn amlwg i ti eto.</item>
+        <item>Mae dy ymdrech heddiw yn fuddsoddiad yn dy ddyfodol.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesMorning">
+        <item>Bore da! Galli di wneud hyn — un dosbarth, un cam ar y tro.</item>
+        <item>Ddim yn teimlo’n barod? Mae hynny’n normal. Dechreua lle wyt ti.</item>
+        <item>Mae coffi’n helpu, ond mae bod yn garedig â ti dy hun yn helpu mwy.</item>
+        <item>Problemau technegol? Mae’n digwydd i bawb — paid â phoeni.</item>
+        <item>Does dim rhaid i heddiw fod yn berffaith, dim ond yn bosibl.</item>
+        <item>Bore da — mae heddiw yn gyfle newydd i ddysgu a datblygu.</item>
+        <item>Bydd hyd yn oed y camau lleiaf y bore ‘ma yn mynd â ti yn agosach at dy nod.</item>
+        <item>Anadla’n ddwfn — does dim angen i ti wybod y cyfan ar hyn o bryd.</item>
+        <item>Mae technoleg yn gallu bod yn anodd, ond dwyt ti ddim ar dy ben dy hun.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesAfternoon">
+        <item>Rwyt ti hanner ffordd — rwyt ti wedi gwneud mwy nag wyt ti’n meddwl.</item>
+        <item>Teimlo’n sownd? Mae pawb yn mynd yn sownd o dro i dro, ond paid ag aros yn sownd.</item>
+        <item>Swyddi, graddau, y dyfodol... does neb yn gwybod y cyfan eto.</item>
+        <item>Wedi blino? Egwyl fer = gallu canolbwyntio’n well wedyn.</item>
+        <item>Paid â bod ofn gofyn am help. Go iawn, does neb yn gwneud popeth ar ei ben ei hun.</item>
+        <item>Rwyt ti wedi goroesi heddiw — dylet ti fod yn falch o dy hun am hynny.</item>
+        <item>Angen egwyl? Mae gorffwys yn rhan bwysig o ddysgu.</item>
+        <item>Os yw dy lwybr yn teimlo’n ansicr, mae hynny’n iawn – un cam ar y tro.</item>
+        <item>Os wyt ti’n teimlo’n sownd, chwilia am gymorth – mae’n agosach nag wyt ti’n meddwl.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesEvening">
+        <item>Rwyt ti wedi goroesi heddiw — mae hynny’n llwyddiant.</item>
+        <item>Hiraethu? Beth am anfon neges at rywun? Mae’n helpu.</item>
+        <item>Hyd yn oed os nad oedd heddiw’n berffaith, fe ddest ti drwyddi. Dyna sy’n bwysig.</item>
+        <item>Cofia: dydy graddau ddim yn mesur dy werth.</item>
+        <item>Cer i ymlacio, chwerthin, neu sgrolio ar dy ffôn — rwyt ti’n ei haeddu.</item>
+        <item>Mae cynnydd yn cyfri hyd yn oed os yw’n gynnydd tawel.</item>
+        <item>Hiraethu am dy ffrindiau neu fentoriaid? Gall cysylltiad ddigwydd mewn eiliadau bach hefyd.</item>
+        <item>Mae nosweithiau’n gyfle i fyfyrio — meddylia am yr hyn rwyt ti wedi\'i ddysgu heddiw, nid dim ond yr hyn sydd ar ôl i\'w wneud.</item>
+        <item>Mae ymdrech yn bwysicach na pherffeithrwydd.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesNight">
+        <item>Dal wrthi? Parch — ond cofia bod cwsg yn bwysig hefyd.</item>
+        <item>Byddi di’n falch yfory dy fod wedi gorffwys heno.</item>
+        <item>Mae’n hawdd poeni mwy gyda’r nos — paid â gadael iddo dy lethu di.</item>
+        <item>Dwyt ti ddim ar ei hôl hi, rwyt ti ar dy lwybr dy hun.</item>
+        <item>Cau’r cyfrifiadur — mae dy ymennydd angen gorffwys hefyd.</item>
+        <item>Mae gorffwys yn bwysig — mae yfory yn gyfle newydd.</item>
+        <item>Marathon, ac nid sbrint, yw dysgu. Bydd yn garedig â ti dy hun heno.</item>
+        <item>Os wyt ti’n poeni, cofia rannu dy boenau ag eraill.</item>
+        <item>Gorffenna’r diwrnod yn gwybod bod rhoi cynnig arni yn llwyddiant yn ei hun.</item>
+    </string-array>
+
+    <!-- Accessibility -->
+    <string name="welcomeWidgetContentDescription">Neges groeso: %1$s. %2$s</string>
+
+    <!-- Institutional Announcements -->
+    <string name="institutionalAnnouncementsTitle">Cyhoeddiadau (%d)</string>
+    <!-- Widget Display Names -->
+    <string name="widget_hello">Helo, %s</string>
+
+    <!-- Customize Dashboard -->
+    <string name="customize_dashboard">Addasu Dangosfwrdd</string>
+    <string name="dashboard_widgets">Teclynnau</string>
+    <string name="move_up">Symud i fyny</string>
+    <string name="move_down">Symud i lawr</string>
+    <string name="no_widgets">Dim teclynnau ar gael</string>
+    <string name="changing_dashboard_layout">Wrthi’n newid cynllun y dangosfwrdd</string>
+    <string name="changing_dashboard_layout_message">I newid cynllun y dangosfwrdd, mae\'n rhaid i chi ailddechrau’r rhaglen</string>
+    <string name="restart_now">Ailddechrau nawr</string>
+    <string name="switched_back">Wedi newid yn ôl?</string>
+    <string name="switched_back_message">Diolch am roi cynnig ar y dangosfwrdd newydd! Allech chi ddweud wrthyn ni pam eich bod wedi newid yn ôl?</string>
+    <string name="what_could_we_improve">Beth allen ni ei wella?</string>
+    <string name="skip">Anwybyddu</string>
+    <string name="widget_setting_show_greeting">Dangos cyfarchiad</string>
+    <string name="background_color">Lliw\'r cefndir</string>
+    <string name="offline_content_available">Cynnwys all-lein ar gael</string>
+    <string name="a11y_contentDescription_moreOptions">Mwy o opsiynau</string>
+    <string name="customizeCourse">Personoli Cwrs</string>
+    <string name="favoriteCoursesAndGroups">Hoff Gyrsiau a Grwpiau</string>
+    <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
+    <string name="ltiToolsOffline">Nid yw Adnoddau Allanol ar gael all-lein.</string>
 </resources>

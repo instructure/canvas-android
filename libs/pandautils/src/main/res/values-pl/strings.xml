@@ -501,6 +501,7 @@
     <string name="a11y_markAsDoneWithName">%s Oznacz jako gotowe</string>
     <string name="a11y_markAsNotDoneWithName">%s Oznacz jako niegotowe</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="a11y_expand_collapse">Rozwiń lub zwiń sekcję</string>
     <string name="inboxSignatureError">Nie udało się wczytać podpisu skrzynki odbiorczej</string>
     <string name="inboxSignatureSettingsUpdated">Zapisano ustawienia skrzynki odbiorczej!</string>
     <string name="inboxSignatureSettingsError">Nie udało się zapisać ustawień skrzynki odbiorczej</string>

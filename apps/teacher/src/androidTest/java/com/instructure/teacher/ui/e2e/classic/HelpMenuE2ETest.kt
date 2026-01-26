@@ -21,10 +21,10 @@ import androidx.test.espresso.intent.Intents
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
+import com.instructure.canvas.espresso.StringConstants.HelpMenu
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
-import com.instructure.canvas.espresso.annotations.Stub
 import com.instructure.canvas.espresso.checkToastText
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.TeacherTest
@@ -76,11 +76,11 @@ class HelpMenuE2ETest: TeacherTest() {
         Intents.init()
 
         try {
-            helpPage.assertHelpMenuURL("Search the Canvas Guides", "https://community.canvaslms.com/t5/Canvas/ct-p/canvas")
-            helpPage.assertHelpMenuURL("Submit a Feature Idea", "https://community.canvaslms.com/t5/Idea-Conversations/idb-p/ideas")
-            helpPage.assertHelpMenuURL("Ask the Community", "https://community.canvaslms.com/community/answers")
-            helpPage.assertHelpMenuURL("Conference Guides for Remote Classrooms", "https://community.canvaslms.com/docs/DOC-18572-conferences-resources")
-            helpPage.assertHelpMenuURL("Share Your Love for the App", "https://community.canvaslms.com/t5/Canvas/ct-p/canvas")
+            helpPage.assertHelpMenuURL(HelpMenu.SEARCH_GUIDES_TITLE, "https://community.instructure.com/en/all-guides")
+            helpPage.assertHelpMenuURL(HelpMenu.SUBMIT_FEATURE_TITLE, "https://community.canvaslms.com/t5/Idea-Conversations/idb-p/ideas")
+            helpPage.assertHelpMenuURL(HelpMenu.Teacher.ASK_COMMUNITY_TITLE, "https://community.instructure.com")
+            helpPage.assertHelpMenuURL(HelpMenu.Teacher.CONFERENCE_GUIDES_TITLE, "https://community.canvaslms.com/docs/DOC-18572-conferences-resources")
+            helpPage.assertHelpMenuURL(HelpMenu.SHARE_LOVE_TITLE, "market://details?id=com.instructure.teacher")
         }
         finally {
             Intents.release()

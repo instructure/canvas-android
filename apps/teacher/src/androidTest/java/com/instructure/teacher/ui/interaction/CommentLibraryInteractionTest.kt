@@ -16,18 +16,18 @@
  */
 package com.instructure.teacher.ui.interaction
 
-import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
-import com.instructure.canvas.espresso.annotations.Stub
 import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvas.espresso.mockcanvas.addAssignment
 import com.instructure.canvas.espresso.mockcanvas.addCoursePermissions
 import com.instructure.canvas.espresso.mockcanvas.addSubmissionForAssignment
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeAssignmentDetailsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeCommentLibraryManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeCustomGradeStatusesManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeDifferentiationTagsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeInboxSettingsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakePostPolicyManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeStudentContextManager
@@ -35,24 +35,25 @@ import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionCommentsMa
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionContentManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionDetailsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionGradeManager
-import com.instructure.canvas.espresso.mockcanvas.fakes.FakeDifferentiationTagsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionRubricManager
 import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvasapi2.di.GraphQlApiModule
+import com.instructure.canvasapi2.di.graphql.CustomGradeStatusModule
 import com.instructure.canvasapi2.managers.CommentLibraryManager
 import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.canvasapi2.managers.PostPolicyManager
 import com.instructure.canvasapi2.managers.StudentContextManager
 import com.instructure.canvasapi2.managers.SubmissionRubricManager
 import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
+import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.managers.graphql.DifferentiationTagsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionCommentsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionDetailsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionGradeManager
-import com.instructure.pandautils.di.DifferentiationTagsModule
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContextPermission
+import com.instructure.pandautils.di.DifferentiationTagsModule
 import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.BindValue
@@ -60,7 +61,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import org.junit.Test
 
-@UninstallModules(GraphQlApiModule::class, DifferentiationTagsModule::class)
+@UninstallModules(GraphQlApiModule::class, DifferentiationTagsModule::class, CustomGradeStatusModule::class)
 @HiltAndroidTest
 class CommentLibraryInteractionTest : TeacherComposeTest() {
 
@@ -110,187 +111,152 @@ class CommentLibraryInteractionTest : TeacherComposeTest() {
     @JvmField
     val submissionCommentsManager: SubmissionCommentsManager = FakeSubmissionCommentsManager()
 
-    @Stub
+    @BindValue
+    @JvmField
+    val customGradeStatusesManager: CustomGradeStatusesManager = FakeCustomGradeStatusesManager()
+
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun showAllItemsWhenCommentFieldIsClicked() {
         val commentLibraryItems = createCommentLibraryMockData()
         goToSpeedGraderCommentsPage()
 
-        speedGraderCommentsPage.clickCommentField()
-        commentLibraryPage.assertPageObjects()
-        commentLibraryPage.assertSuggestionsCount(commentLibraryItems.size)
+        speedGraderPage.clickCommentLibraryButton()
+
+        speedGraderPage.assertCommentLibraryTitle()
+        speedGraderPage.assertCommentLibraryItemCount(commentLibraryItems.size)
         commentLibraryItems.forEach {
-            commentLibraryPage.assertSuggestionVisible(it)
+            speedGraderPage.assertCommentLibraryItemDisplayed(it)
         }
     }
 
-    @Stub
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
-    fun showAndSelectFilteredCommentCloseCommentLibrary() {
+    fun selectCommentLibrarySuggestionComment() {
         createCommentLibraryMockData()
-        val isTablet = isTabletDevice()
-        val isLandScape = isLandscapeDevice()
         goToSpeedGraderCommentsPage()
 
-        speedGraderCommentsPage.typeComment("great work")
-        if(isTablet || isLandScape) Espresso.pressBack()
-        commentLibraryPage.assertPageObjects()
-        commentLibraryPage.assertSuggestionsCount(1)
+        speedGraderPage.clickCommentLibraryButton()
+        speedGraderPage.assertCommentLibraryTitle()
+
+        speedGraderPage.typeInCommentLibraryFilter("Great work")
+        speedGraderPage.assertCommentLibraryItemCount(1)
+        speedGraderPage.selectCommentLibraryResultItem(0)
 
         val filteredSuggestion = "Great work! But it seems that you may have submitted the wrong file. Please double-check, attach the correct file, and resubmit."
-        commentLibraryPage.assertSuggestionVisible(filteredSuggestion)
-        commentLibraryPage.selectSuggestion(filteredSuggestion)
-
-        speedGraderCommentsPage.assertCommentFieldHasText(filteredSuggestion)
-        speedGraderPage.assertCommentLibraryNotVisible()
+        speedGraderPage.assertCommentLibraryFilterContains(filteredSuggestion)
     }
 
-    @Stub
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun selectCommentLibrarySuggestionAndSendComment() {
         createCommentLibraryMockData()
-        val isTablet = isTabletDevice()
-        val isLandScape = isLandscapeDevice()
         goToSpeedGraderCommentsPage()
 
-        speedGraderCommentsPage.typeComment("great work")
-        if(isTablet || isLandScape) Espresso.pressBack()
-        commentLibraryPage.assertPageObjects()
-        commentLibraryPage.assertSuggestionsCount(1)
+        speedGraderPage.clickCommentLibraryButton()
+        speedGraderPage.assertCommentLibraryTitle()
+
+        speedGraderPage.typeInCommentLibraryFilter("Great work")
+        speedGraderPage.assertCommentLibraryItemCount(1)
+        speedGraderPage.selectCommentLibraryResultItem(0)
 
         val filteredSuggestion = "Great work! But it seems that you may have submitted the wrong file. Please double-check, attach the correct file, and resubmit."
-        commentLibraryPage.assertSuggestionVisible(filteredSuggestion)
-        commentLibraryPage.selectSuggestion(filteredSuggestion)
+        speedGraderPage.assertCommentLibraryFilterContains(filteredSuggestion)
 
-        // Check that the input field was populated with the selected comment
-        speedGraderCommentsPage.assertCommentFieldHasText(filteredSuggestion)
-        speedGraderPage.assertCommentLibraryNotVisible()
-
-        // Check sending selected comment
-        speedGraderCommentsPage.sendComment()
-        speedGraderCommentsPage.assertDisplaysCommentText(filteredSuggestion)
-        speedGraderPage.assertCommentLibraryNotVisible()
+        speedGraderPage.clickSendCommentButton(commentLibraryOpened = true)
+        speedGraderPage.assertCommentDisplayed(filteredSuggestion, author = null)
     }
 
-    @Stub
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun sendCommentFromCommentLibraryWithoutSelectingSuggestion() {
         createCommentLibraryMockData()
-        val isTablet = isTabletDevice()
-        val isLandScape = isLandscapeDevice()
         goToSpeedGraderCommentsPage()
-        val comment = "Great work"
 
-        speedGraderCommentsPage.typeComment(comment)
-        if(isTablet || isLandScape) Espresso.pressBack()
-        commentLibraryPage.assertPageObjects()
-        commentLibraryPage.assertSuggestionsCount(1)
+        speedGraderPage.clickCommentLibraryButton()
+        speedGraderPage.assertCommentLibraryTitle()
 
-        val filteredSuggestion = "Great work! But it seems that you may have submitted the wrong file. Please double-check, attach the correct file, and resubmit."
-        commentLibraryPage.assertSuggestionVisible(filteredSuggestion)
-        if(isTablet || isLandScape) Espresso.pressBack()
-        speedGraderCommentsPage.sendComment()
+        speedGraderPage.typeInCommentLibraryFilter("Great work")
+        speedGraderPage.assertCommentLibraryItemCount(1)
 
-        speedGraderCommentsPage.assertDisplaysCommentText(comment)
-        speedGraderPage.assertCommentLibraryNotVisible()
+        speedGraderPage.clickCloseCommentLibraryButton()
+
+        speedGraderPage.clickSendCommentButton()
+
+        speedGraderPage.assertCommentDisplayed("Great work", author = null)
     }
 
-    @Stub
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun reopenCommentLibraryWhenTextIsModified() {
         createCommentLibraryMockData()
-        val isTablet = isTabletDevice()
-        val isLandScape = isLandscapeDevice()
         goToSpeedGraderCommentsPage()
 
-        speedGraderCommentsPage.typeComment("great ")
-        if(isTablet || isLandScape) Espresso.pressBack()
-        commentLibraryPage.assertPageObjects()
-        commentLibraryPage.assertSuggestionsCount(3)
+        speedGraderPage.clickCommentLibraryButton()
+        speedGraderPage.assertCommentLibraryTitle()
+        speedGraderPage.typeInCommentLibraryFilter("great ")
+        speedGraderPage.assertCommentLibraryItemCount(3)
 
-        commentLibraryPage.closeCommentLibrary()
-        speedGraderPage.assertCommentLibraryNotVisible()
+        speedGraderPage.clickCloseCommentLibraryButton()
 
-        speedGraderCommentsPage.typeComment("start")
-        if(isTablet || isLandScape) Espresso.pressBack()
-        commentLibraryPage.assertPageObjects()
-        commentLibraryPage.assertSuggestionsCount(1)
+        speedGraderPage.clickCommentLibraryButton()
+        speedGraderPage.assertCommentLibraryTitle()
 
-        val filteredSuggestion = "You are off to a great start. Please add more detail to justify your reasoning."
-        commentLibraryPage.assertSuggestionVisible(filteredSuggestion)
+        speedGraderPage.typeInCommentLibraryFilter("start")
+        speedGraderPage.assertCommentLibraryItemCount(1)
     }
 
-    @Stub
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun showEmptyViewWhenFilteringHasNoSuggestion() {
         createCommentLibraryMockData()
         goToSpeedGraderCommentsPage()
 
-        speedGraderCommentsPage.typeComment("great work, bro") // Type something that is not present in the comment library
-        commentLibraryPage.assertSuggestionListNotVisible()
-        commentLibraryPage.assertEmptyViewVisible()
+        speedGraderPage.clickCommentLibraryButton()
+        speedGraderPage.assertCommentLibraryTitle()
+
+        speedGraderPage.typeInCommentLibraryFilter("Great work! bro")
+        speedGraderPage.assertCommentLibraryItemCount(0)
     }
 
-    @Stub
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun selectCommentLibrarySuggestionFromMultipleItemResult() {
         createCommentLibraryMockData()
-        val isTablet = isTabletDevice()
-        val isLandScape = isLandscapeDevice()
         goToSpeedGraderCommentsPage()
-        speedGraderCommentsPage.typeComment("great")
-        if(isTablet || isLandScape) Espresso.pressBack()
-        commentLibraryPage.assertPageObjects()
-        commentLibraryPage.assertSuggestionsCountGreaterThan(1) //Make sure that we have more than 1 filter result
+
+        speedGraderPage.clickCommentLibraryButton()
+        speedGraderPage.assertCommentLibraryTitle()
+
+        speedGraderPage.typeInCommentLibraryFilter("great")
+        speedGraderPage.assertCommentLibraryItemCount(3)
+        speedGraderPage.selectCommentLibraryResultItem(1)
+
         val filteredSuggestion = "Great work! But it seems that you may have submitted the wrong file. Please double-check, attach the correct file, and resubmit."
-        commentLibraryPage.selectSuggestion(filteredSuggestion)
+        speedGraderPage.assertCommentLibraryFilterContains(filteredSuggestion)
 
-        // Check that the input field was populated with the selected comment
-        speedGraderCommentsPage.assertCommentFieldHasText(filteredSuggestion)
-        speedGraderPage.assertCommentLibraryNotVisible()
-
-        // Check sending selected comment
-        speedGraderCommentsPage.sendComment()
-        speedGraderCommentsPage.assertDisplaysCommentText(filteredSuggestion)
-        speedGraderPage.assertCommentLibraryNotVisible()
+        speedGraderPage.clickSendCommentButton(commentLibraryOpened = true)
+        speedGraderPage.assertCommentDisplayed(filteredSuggestion, author = null)
     }
 
-    @Stub
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun showAllCommentLibraryItemsAfterClearingCommentFieldFilter() {
         val commentLibraryItems = createCommentLibraryMockData()
-        val isTablet = isTabletDevice()
-        val isLandScape = isLandscapeDevice()
-
         goToSpeedGraderCommentsPage()
 
-        speedGraderCommentsPage.typeComment("Great work!")
-        if(isTablet || isLandScape) Espresso.pressBack()
-        commentLibraryPage.assertPageObjects()
-        commentLibraryPage.assertSuggestionsCount(1)
+        speedGraderPage.clickCommentLibraryButton()
+        speedGraderPage.assertCommentLibraryTitle()
 
-        //Select filtered suggestion and verify if it's displayed within the comment text field.
+        speedGraderPage.typeInCommentLibraryFilter("Great work!")
+        speedGraderPage.assertCommentLibraryItemCount(1)
+        speedGraderPage.selectCommentLibraryResultItem(0)
+
         val filteredSuggestion = "Great work! But it seems that you may have submitted the wrong file. Please double-check, attach the correct file, and resubmit."
-        commentLibraryPage.assertSuggestionVisible(filteredSuggestion)
-        commentLibraryPage.selectSuggestion(filteredSuggestion)
+        speedGraderPage.assertCommentLibraryFilterContains(filteredSuggestion)
 
-        speedGraderCommentsPage.assertCommentFieldHasText(filteredSuggestion)
-        speedGraderPage.assertCommentLibraryNotVisible()
-
-        //Clearing the comment text field.
-        speedGraderCommentsPage.clearComment()
-
-        //Verify that after clearing the comment text field, all of the comment library suggestions are visible.
-        commentLibraryPage.assertPageObjects()
-        commentLibraryPage.assertSuggestionsCount(commentLibraryItems.size)
+        speedGraderPage.clearComment()
+        speedGraderPage.assertCommentLibraryItemCount(commentLibraryItems.size)
     }
 
     private fun createCommentLibraryMockData(): List<String> {
@@ -305,7 +271,7 @@ class CommentLibraryInteractionTest : TeacherComposeTest() {
 
         data.addCoursePermissions(
             course.id,
-            CanvasContextPermission() // Just need to have some sort of permissions object registered
+            CanvasContextPermission()
         )
 
         val settings = data.userSettings[teacher.id]!!.copy(commentLibrarySuggestions = true)
@@ -346,6 +312,9 @@ class CommentLibraryInteractionTest : TeacherComposeTest() {
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.clickAllSubmissions()
         assignmentSubmissionListPage.clickSubmission(student)
-        speedGraderPage.selectCommentsTab()
+        composeTestRule.waitForIdle()
+        if (isCompactDevice()) speedGraderPage.clickExpandPanelButton()
+        speedGraderPage.selectTab("Grade & Rubric")
+        composeTestRule.waitForIdle()
     }
 }

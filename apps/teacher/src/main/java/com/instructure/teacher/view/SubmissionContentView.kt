@@ -62,6 +62,7 @@ import com.instructure.canvasapi2.models.StudentAssignee
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotation
+import com.instructure.canvasapi2.models.toBaseUrl
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.Logger
@@ -691,7 +692,7 @@ class SubmissionContentView(
                         fallbackIcon = iconRes
                 ))
             }
-            is TextContent -> setFragment(SpeedGraderTextSubmissionFragment.newInstance(content.text))
+            is TextContent -> setFragment(SpeedGraderTextSubmissionFragment.newInstance(content.text, course.toBaseUrl()))
             is MediaContent -> setFragment(ViewMediaFragment.newInstance(content))
             is ImageContent -> load(content.url) { setFragment(ViewImageFragment.newInstance(content.url, it, content.contentType, false)) }
             is NoneContent -> showMessageFragment(R.string.speedGraderNoneMessage)

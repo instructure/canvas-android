@@ -30,6 +30,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedData
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedDataRange
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedDataTextPosition
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContextSource
 import com.instructure.horizon.features.notebook.common.webview.ComposeNotesHighlightingCanvasWebView
 import com.instructure.horizon.features.notebook.common.webview.NotesCallback
@@ -51,7 +54,8 @@ fun PageDetailsContentScreen(
     scrollState: ScrollState,
     updateAiContext: (AiAssistContextSource, String) -> Unit,
     mainNavController: NavHostController,
-    modifier: Modifier = Modifier
+    scrollToNoteId: String?,
+    modifier: Modifier = Modifier,
 ) {
     val activity = LocalContext.current.getActivityOrNull()
     LaunchedEffect(uiState.urlToOpen) {
@@ -60,10 +64,12 @@ fun PageDetailsContentScreen(
             uiState.onUrlOpened()
         }
     }
-    updateAiContext(
-        AiAssistContextSource.Page(uiState.pageHtmlContent.orEmpty()),
-        uiState.pageHtmlContent.orEmpty()
-    )
+    LaunchedEffect(uiState.pageHtmlContent, uiState.pageId){
+        updateAiContext(
+            AiAssistContextSource.Page(uiState.pageId.toString()),
+            uiState.pageHtmlContent.orEmpty()
+        )
+    }
     uiState.pageHtmlContent?.let {
         Box(
             contentAlignment = Alignment.Center,
@@ -81,6 +87,7 @@ fun PageDetailsContentScreen(
                 ComposeNotesHighlightingCanvasWebView(
                     content = "<div id=\"parent-container\"><div>$it</div></div>",
                     notes = uiState.notes,
+                    scrollToNoteId = scrollToNoteId,
                     applyOnWebView = {
                         activity?.let { addVideoClient(it) }
                         overrideHtmlFormatColors = HorizonColors.htmlFormatColors
@@ -112,20 +119,21 @@ fun PageDetailsContentScreen(
                             )
                         },
                         onNoteAdded = { selectedText, noteType, startContainer, startOffset, endContainer, endOffset, textSelectionStart, textSelectionEnd ->
-                            mainNavController.navigate(
-                                NotebookRoute.AddNotebook(
-                                    courseId = uiState.courseId.toString(),
-                                    objectType = "Page",
-                                    objectId = uiState.pageId.toString(),
-                                    highlightedTextStartOffset = startOffset,
-                                    highlightedTextEndOffset = endOffset,
-                                    highlightedTextStartContainer = startContainer,
-                                    highlightedTextEndContainer = endContainer,
-                                    highlightedText = selectedText,
-                                    textSelectionStart = textSelectionStart,
-                                    textSelectionEnd = textSelectionEnd,
-                                    noteType = noteType
-                                )
+                            uiState.addNote(
+                                NoteHighlightedData(
+                                    selectedText = selectedText,
+                                    range = NoteHighlightedDataRange(
+                                        startOffset = startOffset,
+                                        endOffset = endOffset,
+                                        startContainer = startContainer,
+                                        endContainer = endContainer
+                                    ),
+                                    textPosition = NoteHighlightedDataTextPosition(
+                                        start = textSelectionStart,
+                                        end = textSelectionEnd
+                                    )
+                                ),
+                                noteType
                             )
                         }
                     )

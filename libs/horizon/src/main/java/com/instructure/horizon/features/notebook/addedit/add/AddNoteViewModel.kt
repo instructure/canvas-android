@@ -27,11 +27,13 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
 import com.instructure.horizon.features.notebook.addedit.AddEditViewModel
+import com.instructure.horizon.features.notebook.common.composable.toNotebookLocalisedDateFormat
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.horizon.features.notebook.navigation.NotebookRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.update
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -57,6 +59,7 @@ class AddNoteViewModel @Inject constructor(
             it.copy(
                 title = context.getString(R.string.createNoteTitle),
                 hasContentChange = true,
+                lastModifiedDate = Date().toNotebookLocalisedDateFormat(),
                 highlightedData = NoteHighlightedData(
                     selectedText = highlightedText,
                     range = NoteHighlightedDataRange(

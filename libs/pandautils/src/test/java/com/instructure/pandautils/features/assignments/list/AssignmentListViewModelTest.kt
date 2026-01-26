@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Checkpoint
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.models.ExternalToolAttributes
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.canvasapi2.models.SubAssignmentSubmission
 import com.instructure.canvasapi2.models.Submission
@@ -482,21 +483,38 @@ class AssignmentListViewModelTest {
             submissionTypesRaw = listOf(Assignment.SubmissionType.ONLINE_QUIZ.apiString),
             dueAt = (Calendar.getInstance().apply { add(Calendar.DATE, -2)}.time).toApiString()
         )
+        val assignment4 = Assignment(
+            id = 4,
+            name = "Assignment 4 (New Quizzes)",
+            assignmentGroupId = 4,
+            submissionTypesRaw = listOf(Assignment.SubmissionType.EXTERNAL_TOOL.apiString),
+            externalToolAttributes = ExternalToolAttributes(url = "https://example.com/quiz-lti"),
+            dueAt = (Calendar.getInstance().apply { add(Calendar.DATE, 1)}.time).toApiString()
+        )
         val assignmentGroups = listOf(
             AssignmentGroup(
                 id = 1,
                 name = "Group 1",
-                assignments = listOf(assignment1)
+                assignments = listOf(assignment1),
+                position = 1
             ),
             AssignmentGroup(
                 id = 2,
                 name = "Group 2",
-                assignments = listOf(assignment2)
+                assignments = listOf(assignment2),
+                position = 2
             ),
             AssignmentGroup(
                 id = 3,
                 name = "Group 3",
-                assignments = listOf(assignment3)
+                assignments = listOf(assignment3),
+                position = 3
+            ),
+            AssignmentGroup(
+                id = 4,
+                name = "Group 4",
+                assignments = listOf(assignment4),
+                position = 4
             ),
         )
         val dueDateGroups = listOf(
@@ -508,7 +526,7 @@ class AssignmentListViewModelTest {
             AssignmentGroup(
                 id = 1,
                 name = "Upcoming Assignments",
-                assignments = listOf(assignment2)
+                assignments = listOf(assignment4, assignment2)
             ),
             AssignmentGroup(
                 id = 2,
@@ -530,22 +548,24 @@ class AssignmentListViewModelTest {
             AssignmentGroup(
                 id = 2,
                 name = "Quizzes",
-                assignments = listOf(assignment3)
+                assignments = listOf(assignment3, assignment4)
             ),
         )
 
         val groupItem1 = AssignmentGroupItemState(course, assignment1, emptyList())
         val groupItem2 = AssignmentGroupItemState(course, assignment2, emptyList())
         val groupItem3 = AssignmentGroupItemState(course, assignment3, emptyList())
+        val groupItem4 = AssignmentGroupItemState(course, assignment4, emptyList())
         every { behavior.getAssignmentGroupItemState(course, assignment1, emptyList(), emptyList()) } returns groupItem1
         every { behavior.getAssignmentGroupItemState(course, assignment2, emptyList(), emptyList()) } returns groupItem2
         every { behavior.getAssignmentGroupItemState(course, assignment3, emptyList(), emptyList()) } returns groupItem3
+        every { behavior.getAssignmentGroupItemState(course, assignment4, emptyList(), emptyList()) } returns groupItem4
         coEvery { repository.getAssignments(any(), any()) } returns assignmentGroups
         val viewModel = getViewModel()
 
         var newFilter = AssignmentListSelectedFilters(selectedGroupByOption = AssignmentGroupByOption.AssignmentGroup)
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
-        assertEquals(assignmentGroups.reversed().map { it.assignments }, viewModel.uiState.value.listState.values.map { it.map { it.assignment } } )
+        assertEquals(assignmentGroups.map { it.assignments }, viewModel.uiState.value.listState.values.map { group -> group.map { it.assignment } } )
 
         newFilter = newFilter.copy(selectedGroupByOption = AssignmentGroupByOption.DueDate)
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))

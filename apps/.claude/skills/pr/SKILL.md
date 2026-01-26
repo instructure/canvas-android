@@ -105,14 +105,17 @@ Provide a user-facing description of changes. This should be:
 
 Complete the following items before marking PR as ready:
 
-- [ ] Dark/light mode testing
-- [ ] Landscape/tablet testing
-- [ ] Accessibility testing
-- [ ] Product approval (if needed)
+- [ ] Follow-up e2e test ticket created or not needed
+- [ ] Run E2E test suite
+- [ ] Tested in dark mode
+- [ ] Tested in light mode
+- [ ] Test in landscape mode and/or tablet
+- [ ] A11y checked
+- [ ] Approve from product
 
 ## Important Notes
 
-- **DO NOT** include E2E tests or screenshots sections unless specifically needed
+- **DO NOT** include this checkbox item "- [ ] Run E2E test suite" or screenshots sections unless specifically needed
 - Always include the `affects:` field to specify which apps are impacted
 - Reference the related issue(s) with `refs:`
 - Complete the checklist before marking the PR as ready for review

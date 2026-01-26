@@ -34,12 +34,12 @@ import com.instructure.student.databinding.AdapterCourseBrowserHomeBinding
 import com.instructure.student.databinding.AdapterCourseBrowserWebViewBinding
 import com.instructure.student.util.TabHelper
 
-class CourseBrowserAdapter(val items: List<Tab>, val canvasContext: CanvasContext, private val homePageTitle: String? = null, val callback: (Tab) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class CourseBrowserAdapter(val items: List<Tab>, val canvasContext: CanvasContext, private val homePageTitle: String? = null, private val isOnline: Boolean = true, val callback: (Tab) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             HOME -> CourseBrowserHomeViewHolder(LayoutInflater.from(parent.context)
-                    .inflate(CourseBrowserHomeViewHolder.HOLDER_RES_ID, parent, false), canvasContext, homePageTitle)
+                    .inflate(CourseBrowserHomeViewHolder.HOLDER_RES_ID, parent, false), canvasContext, homePageTitle, isOnline)
             WEB_VIEW_ITEM -> CourseBrowserWebViewHolder(LayoutInflater.from(parent.context)
                     .inflate(CourseBrowserWebViewHolder.HOLDER_RES_ID, parent, false), canvasContext.color)
             else -> CourseBrowserViewHolder(LayoutInflater.from(parent.context)
@@ -73,7 +73,7 @@ class CourseBrowserAdapter(val items: List<Tab>, val canvasContext: CanvasContex
     }
 }
 
-class CourseBrowserHomeViewHolder(view: View, val canvasContext: CanvasContext, private val homePageTitle: String? = null) : RecyclerView.ViewHolder(view) {
+class CourseBrowserHomeViewHolder(view: View, val canvasContext: CanvasContext, private val homePageTitle: String? = null, private val isOnline: Boolean = true) : RecyclerView.ViewHolder(view) {
 
     fun bind(holder: CourseBrowserHomeViewHolder, tab: Tab, clickedCallback: (Tab) -> Unit) {
         val binding = AdapterCourseBrowserHomeBinding.bind(holder.itemView)
@@ -81,8 +81,19 @@ class CourseBrowserHomeViewHolder(view: View, val canvasContext: CanvasContext, 
 
         if(canvasContext is Course && TabHelper.isHomeTabAPage(canvasContext)) binding.homeSubLabel.text = homePageTitle
         else binding.homeSubLabel.text = TabHelper.getHomePageDisplayString(canvasContext)
-        holder.itemView.setOnClickListener {
-            clickedCallback(tab)
+
+        val isRecentActivityHome = (canvasContext as? Course)?.homePageID == Tab.NOTIFICATIONS_ID
+        val shouldDisable = !isOnline && isRecentActivityHome
+
+        holder.itemView.isEnabled = !shouldDisable
+        holder.itemView.alpha = if (shouldDisable) 0.5f else 1f
+
+        if (!shouldDisable) {
+            holder.itemView.setOnClickListener {
+                clickedCallback(tab)
+            }
+        } else {
+            holder.itemView.setOnClickListener(null)
         }
     }
 

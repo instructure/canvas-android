@@ -22,7 +22,7 @@ import com.google.gson.annotations.SerializedName
 
 data class ScheduleItemApiModel(
     val id: String? = null,
-    val title: String? = null,
+    val title: String,
     var description: String? = null,
     @SerializedName("start_at")
     val startAt: String? = null

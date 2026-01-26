@@ -4,7 +4,6 @@ mutation CreateWidget(
 ) {
     createWidget(input: $input, userAccountId: $userAccountId) {
         id
-        name
         type
         position
         createdAt

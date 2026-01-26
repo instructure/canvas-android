@@ -29,6 +29,8 @@ import com.instructure.canvasapi2.apis.FileFolderAPI
 import com.instructure.canvasapi2.apis.OAuthAPI
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.RemoteConfigPrefs
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.pandautils.dialogs.RatingDialog
 import com.instructure.pandautils.features.offline.sync.HtmlParser
 import com.instructure.pandautils.room.offline.daos.FileFolderDao
@@ -194,5 +196,17 @@ class ApplicationModule {
     @Provides
     fun provideRandom(): Random {
         return Random.Default
+    }
+
+    @Provides
+    @Singleton
+    fun provideRemoteConfigUtils(): RemoteConfigUtils {
+        return RemoteConfigUtils
+    }
+
+    @Provides
+    @Singleton
+    fun provideRemoteConfigPrefs(): RemoteConfigPrefs {
+        return RemoteConfigPrefs
     }
 }

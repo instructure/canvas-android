@@ -71,7 +71,6 @@ class PdfStudentSubmissionView(
 
     private val binding: ViewPdfStudentSubmissionBinding
 
-    private var initJob: Job? = null
     private var deleteJob: Job? = null
 
     override val annotationToolbarLayout: ToolbarCoordinatorLayout
@@ -184,7 +183,6 @@ class PdfStudentSubmissionView(
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        initJob?.cancel()
         EventBus.getDefault().unregister(this)
     }
 

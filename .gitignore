@@ -36,8 +36,6 @@ mkmf.log
 parent/app/src/androidTest/java/com/instructure/parentapp/ui/utils/espresso_secrets/
 parent/app/src/androidTest/java/com/instructure/parentapp/ui/data/
 dataseedingapi/out/
-soseedygrpc/out/
-dataseedingapi/src/main/java/com/instructure/soseedy/
 local.properties
 libs/canvas-api-2/target/pacts/
 apps/true/

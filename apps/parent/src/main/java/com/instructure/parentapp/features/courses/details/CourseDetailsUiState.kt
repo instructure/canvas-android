@@ -33,7 +33,8 @@ data class CourseDetailsUiState(
     val tabs: List<TabType> = emptyList(),
     val currentTab: TabType? = null,
     val syllabus: String = "",
-    val snackbarMessage: String? = null
+    val snackbarMessage: String? = null,
+    val baseUrl: String? = null
 )
 
 enum class TabType(@StringRes val labelRes: Int) {
