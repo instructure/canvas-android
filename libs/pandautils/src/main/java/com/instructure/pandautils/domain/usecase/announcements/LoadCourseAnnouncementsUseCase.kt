@@ -21,13 +21,13 @@ import com.instructure.pandautils.data.repository.course.CourseRepository
 import com.instructure.pandautils.domain.usecase.BaseUseCase
 import javax.inject.Inject
 
-data class LoadCourseAnnouncementsParams(val courseId: Long, val forceNetwork: Boolean = false)
-
 class LoadCourseAnnouncementsUseCase @Inject constructor(
     private val courseRepository: CourseRepository
-) : BaseUseCase<LoadCourseAnnouncementsParams, List<DiscussionTopicHeader>>() {
+) : BaseUseCase<LoadCourseAnnouncementsUseCase.Params, List<DiscussionTopicHeader>>() {
 
-    override suspend fun execute(params: LoadCourseAnnouncementsParams): List<DiscussionTopicHeader> {
+    data class Params(val courseId: Long, val forceNetwork: Boolean = false)
+
+    override suspend fun execute(params: Params): List<DiscussionTopicHeader> {
         val announcements = courseRepository.getCourseAnnouncements(
             courseId = params.courseId,
             forceRefresh = params.forceNetwork

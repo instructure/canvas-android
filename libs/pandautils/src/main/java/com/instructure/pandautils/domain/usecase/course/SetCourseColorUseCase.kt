@@ -19,16 +19,16 @@ import com.instructure.pandautils.data.repository.user.UserRepository
 import com.instructure.pandautils.domain.usecase.BaseUseCase
 import javax.inject.Inject
 
-data class SetCourseColorParams(
-    val contextId: String,
-    val color: Int
-)
-
 class SetCourseColorUseCase @Inject constructor(
     private val userRepository: UserRepository
-) : BaseUseCase<SetCourseColorParams, Unit>() {
+) : BaseUseCase<SetCourseColorUseCase.Params, Unit>() {
 
-    override suspend fun execute(params: SetCourseColorParams) {
+    data class Params(
+        val contextId: String,
+        val color: Int
+    )
+
+    override suspend fun execute(params: Params) {
         userRepository.setCourseColor(
             contextId = params.contextId,
             color = params.color

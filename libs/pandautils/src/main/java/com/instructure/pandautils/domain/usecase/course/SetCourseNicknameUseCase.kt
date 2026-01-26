@@ -19,16 +19,16 @@ import com.instructure.pandautils.data.repository.user.UserRepository
 import com.instructure.pandautils.domain.usecase.BaseUseCase
 import javax.inject.Inject
 
-data class SetCourseNicknameParams(
-    val courseId: Long,
-    val nickname: String
-)
-
 class SetCourseNicknameUseCase @Inject constructor(
     private val userRepository: UserRepository
-) : BaseUseCase<SetCourseNicknameParams, Unit>() {
+) : BaseUseCase<SetCourseNicknameUseCase.Params, Unit>() {
 
-    override suspend fun execute(params: SetCourseNicknameParams) {
+    data class Params(
+        val courseId: Long,
+        val nickname: String
+    )
+
+    override suspend fun execute(params: Params) {
         if (params.nickname.isEmpty()) {
             userRepository.deleteCourseNickname(params.courseId).dataOrThrow
         } else {

@@ -41,7 +41,7 @@ class LoadCourseAnnouncementsUseCaseTest {
     @Test
     fun `execute returns only unread announcements with unreadCount greater than 0`() = runTest {
         val courseId = 1L
-        val params = LoadCourseAnnouncementsParams(courseId)
+        val params = LoadCourseAnnouncementsUseCase.Params(courseId)
 
         val announcements = listOf(
             DiscussionTopicHeader(id = 1, unreadCount = 2, readState = DiscussionTopicHeader.ReadState.READ.name),
@@ -64,7 +64,7 @@ class LoadCourseAnnouncementsUseCaseTest {
     @Test
     fun `execute returns announcements with UNREAD status`() = runTest {
         val courseId = 1L
-        val params = LoadCourseAnnouncementsParams(courseId)
+        val params = LoadCourseAnnouncementsUseCase.Params(courseId)
 
         val announcements = listOf(
             DiscussionTopicHeader(id = 1, unreadCount = 0, readState = DiscussionTopicHeader.ReadState.UNREAD.name),
@@ -85,7 +85,7 @@ class LoadCourseAnnouncementsUseCaseTest {
     @Test
     fun `execute returns announcements with either unreadCount or UNREAD status`() = runTest {
         val courseId = 1L
-        val params = LoadCourseAnnouncementsParams(courseId)
+        val params = LoadCourseAnnouncementsUseCase.Params(courseId)
 
         val announcements = listOf(
             DiscussionTopicHeader(id = 1, unreadCount = 2, readState = DiscussionTopicHeader.ReadState.READ.name),
@@ -107,7 +107,7 @@ class LoadCourseAnnouncementsUseCaseTest {
     @Test
     fun `execute returns empty list when no unread announcements`() = runTest {
         val courseId = 1L
-        val params = LoadCourseAnnouncementsParams(courseId)
+        val params = LoadCourseAnnouncementsUseCase.Params(courseId)
 
         val announcements = listOf(
             DiscussionTopicHeader(id = 1, unreadCount = 0, readState = DiscussionTopicHeader.ReadState.READ.name),
@@ -126,7 +126,7 @@ class LoadCourseAnnouncementsUseCaseTest {
     @Test
     fun `execute returns empty list when API returns empty list`() = runTest {
         val courseId = 1L
-        val params = LoadCourseAnnouncementsParams(courseId)
+        val params = LoadCourseAnnouncementsUseCase.Params(courseId)
 
         coEvery {
             courseRepository.getCourseAnnouncements(courseId, any())
@@ -140,7 +140,7 @@ class LoadCourseAnnouncementsUseCaseTest {
     @Test(expected = IllegalStateException::class)
     fun `execute throws exception when API call fails`() = runTest {
         val courseId = 1L
-        val params = LoadCourseAnnouncementsParams(courseId)
+        val params = LoadCourseAnnouncementsUseCase.Params(courseId)
 
         coEvery {
             courseRepository.getCourseAnnouncements(courseId, any())
