@@ -40,6 +40,12 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.utils.ContextKeeper
@@ -58,6 +64,9 @@ fun MultiSelect(
     state: MultiSelectState,
     modifier: Modifier = Modifier
 ) {
+    val expandedState = stringResource(R.string.a11y_expanded)
+    val collapsedState = stringResource(R.string.a11y_collapsed)
+
     Input(
         label = state.label,
         helperText = state.helperText,
@@ -70,6 +79,15 @@ fun MultiSelect(
     ) {
         Column(
             modifier = Modifier
+                .semantics(mergeDescendants = false) {
+                    role = Role.DropdownList
+                    stateDescription = if (state.isMenuOpen) expandedState else collapsedState
+                    contentDescription = if (state.selectedOptions.isEmpty()) {
+                        state.label ?: ""
+                    } else {
+                        "${state.label}, ${state.selectedOptions.size} items selected"
+                    }
+                }
         ) {
             val localDensity = LocalDensity.current
             var heightInPx by remember { mutableIntStateOf(0) }
@@ -141,6 +159,7 @@ private fun MultiSelectContent(state: MultiSelectState) {
                             MultiSelectInputSize.Small -> TagSize.SMALL
                             MultiSelectInputSize.Medium -> TagSize.MEDIUM
                         },
+                        enabled = state.enabled,
                         dismissible = true,
                         onDismiss = {
                             state.onOptionRemoved(selectedOption)

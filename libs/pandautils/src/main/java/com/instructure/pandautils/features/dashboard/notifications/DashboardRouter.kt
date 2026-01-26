@@ -27,4 +27,8 @@ interface DashboardRouter {
     fun routeToMyFiles(canvasContext: CanvasContext, folderId: Long)
 
     fun routeToSyncProgress()
+
+    fun routeToCustomizeDashboard()
+
+    fun restartApp()
 }

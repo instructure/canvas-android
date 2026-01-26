@@ -38,7 +38,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.invisibleToUser
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -70,11 +69,12 @@ fun CollapsableContentCard(
             modifier = Modifier
                 .padding(vertical = 16.dp)
         ) {
+            val context = LocalContext.current
             Column(
                 modifier = Modifier
                     .clickable { onExpandChanged(!expanded) }
-                    .semantics {
-                        invisibleToUser()
+                    .semantics(mergeDescendants = true) {
+                        expandable(context, expanded)
                     }
             ){
                 Text(
@@ -91,14 +91,10 @@ fun CollapsableContentCard(
                     targetValue = if (expanded) 180f else 0f,
                     label = "rotationAnimation"
                 )
-                val context = LocalContext.current
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 24.dp)
-                        .semantics(mergeDescendants = true) {
-                            expandable(context, expanded)
-                        }
 
                 ) {
                     Icon(

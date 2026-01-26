@@ -24,8 +24,13 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.utils.RouteUtils
-import io.mockk.*
-import kotlinx.coroutines.runBlocking
+import io.mockk.Runs
+import io.mockk.coEvery
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.mockkStatic
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -161,35 +166,5 @@ class RouteUtilsTest : Assert() {
         RouteUtils.retrieveFileUrl(route, fileId) { _, context, _ ->
             assertEquals(CanvasContext.currentUserContext(user), context)
         }
-    }
-
-    @Test
-    fun `getMediaUri returns proper dash url if content-type is dash`() = runBlocking {
-        val result = RouteUtils.getMediaUri(requestUri)
-        assertEquals(dashUri, result)
-    }
-
-    @Test
-    fun `getMediaUri returns responseUri if if content-type is not dash`() = runBlocking {
-        every { response.header("content-type") } returns "application/mp4"
-
-        val result = RouteUtils.getMediaUri(responseUri)
-        assertEquals(responseUri, result)
-    }
-
-    @Test
-    fun `getMediaUri returns responseUri if if content-type is null`() = runBlocking {
-        every { response.header("content-type") } returns null
-
-        val result = RouteUtils.getMediaUri(responseUri)
-        assertEquals(responseUri, result)
-    }
-
-    @Test
-    fun `getMediaUri returns original uri on exception`() = runBlocking {
-        coEvery { call.execute() } throws Exception("Network error")
-
-        val result = RouteUtils.getMediaUri(requestUri)
-        assertEquals(requestUri, result)
     }
 }

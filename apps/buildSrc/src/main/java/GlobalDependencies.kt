@@ -2,23 +2,23 @@
 
 object Versions {
     /* SDK Versions */
-    const val COMPILE_SDK = 35
+    const val COMPILE_SDK = 36
     const val MIN_SDK = 28
     const val TARGET_SDK = 35
 
     /* Build/tooling */
-    const val ANDROID_GRADLE_TOOLS = "8.6.1"
+    const val ANDROID_GRADLE_TOOLS = "8.13.2"
     const val BUILD_TOOLS = "35.0.0"
 
     /* Testing */
     const val JUNIT = "4.13.2"
-    const val ROBOLECTRIC = "4.13"
+    const val ROBOLECTRIC = "4.16"
     const val JACOCO_ANDROID = "0.1.5"
 
     /* Kotlin */
-    const val KOTLIN = "2.0.21"
-    const val KOTLIN_COROUTINES = "1.9.0"
-    const val KSP = "2.0.21-1.0.27"
+    const val KOTLIN = "2.2.21"
+    const val KOTLIN_COROUTINES = "1.10.2"
+    const val KSP = "2.2.21-2.0.4"
 
     /* Google, Play Services */
     const val GOOGLE_SERVICES = "4.4.3"
@@ -30,18 +30,18 @@ object Versions {
     const val MOBIUS = "1.2.1"
     const val HILT = "2.57.2"
     const val HILT_ANDROIDX = "1.3.0"
-    const val LIFECYCLE = "2.9.4"
+    const val LIFECYCLE = "2.10.0"
     const val FRAGMENT = "1.8.9"
-    const val WORK_MANAGER = "2.10.5"
+    const val WORK_MANAGER = "2.11.0"
     const val GLIDE_VERSION = "5.0.5"
-    const val RETROFIT = "2.11.0"
+    const val RETROFIT = "3.0.0"
     const val OKHTTP = "4.12.0"
-    const val ROOM = "2.7.0"
+    const val ROOM = "2.8.4"
     const val HAMCREST = "3.0"
-    const val NAVIGATION = "2.9.5"
+    const val NAVIGATION = "2.9.6"
     const val MEDIA3 = "1.8.0"
-    const val DATASTORE = "1.1.7"
-    const val LOTTIE = "6.6.6"
+    const val DATASTORE = "1.2.0"
+    const val LOTTIE = "6.7.0"
     const val ENCRYPTED_SHARED_PREFERENCES = "1.1.0"
     const val JAVA_JWT = "4.5.0"
     const val GLANCE = "1.1.1"
@@ -61,31 +61,30 @@ object Libs {
     const val APOLLO_HTTP_CACHE = "com.apollographql.apollo:apollo-http-cache:${Versions.APOLLO}"
 
     /* Androidx libraries */
-    const val ANDROIDX_ANNOTATION = "androidx.annotation:annotation:1.9.0"
-    const val ANDROIDX_APPCOMPAT = "androidx.appcompat:appcompat:1.7.0"
-    const val ANDROIDX_BROWSER = "androidx.browser:browser:1.8.0"
+    const val ANDROIDX_ANNOTATION = "androidx.annotation:annotation:1.9.1"
+    const val ANDROIDX_APPCOMPAT = "androidx.appcompat:appcompat:1.7.1"
+    const val ANDROIDX_BROWSER = "androidx.browser:browser:1.9.0"
     const val ANDROIDX_CARDVIEW = "androidx.cardview:cardview:1.0.0"
-    const val ANDROIDX_CONSTRAINT_LAYOUT = "androidx.constraintlayout:constraintlayout:2.2.0"
-    const val ANDROIDX_EXIF = "androidx.exifinterface:exifinterface:1.3.7"
+    const val ANDROIDX_CONSTRAINT_LAYOUT = "androidx.constraintlayout:constraintlayout:2.2.1"
+    const val ANDROIDX_EXIF = "androidx.exifinterface:exifinterface:1.4.2"
     const val ANDROIDX_FRAGMENT = "androidx.fragment:fragment:${Versions.FRAGMENT}"
     const val ANDROIDX_FRAGMENT_KTX = "androidx.fragment:fragment-ktx:${Versions.FRAGMENT}"
     const val ANDROIDX_PALETTE = "androidx.palette:palette:1.0.0"
     const val ANDROIDX_PERCENT = "androidx.percentlayout:percentlayout:1.0.0"
     const val ANDROIDX_RECYCLERVIEW = "androidx.recyclerview:recyclerview:1.4.0"
     const val ANDROIDX_VECTOR = "androidx.vectordrawable:vectordrawable:1.2.0"
-    const val ANDROIDX_SWIPE_REFRESH_LAYOUT = "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+    const val ANDROIDX_SWIPE_REFRESH_LAYOUT = "androidx.swiperefreshlayout:swiperefreshlayout:1.2.0"
     const val ANDROIDX_CORE_TESTING = "androidx.arch.core:core-testing:2.2.0"
     const val ANDROIDX_WORK_MANAGER = "androidx.work:work-runtime:${Versions.WORK_MANAGER}"
     const val ANDROIDX_WORK_MANAGER_KTX = "androidx.work:work-runtime-ktx:${Versions.WORK_MANAGER}"
     const val ANDROIDX_WORK_TEST = "androidx.work:work-testing:${Versions.WORK_MANAGER}"
-    const val ANDROIDX_WEBKIT = "androidx.webkit:webkit:1.12.0"
-    const val ANDROIDX_COMPOSE_ACTIVITY = "androidx.activity:activity-compose:1.10.0"
+    const val ANDROIDX_WEBKIT = "androidx.webkit:webkit:1.14.0"
+    const val ANDROIDX_COMPOSE_ACTIVITY = "androidx.activity:activity-compose:1.12.1"
     const val DATASTORE = "androidx.datastore:datastore-preferences:${Versions.DATASTORE}"
     const val ENCRYPTED_SHARED_PREFERENCES = "androidx.security:security-crypto:${Versions.ENCRYPTED_SHARED_PREFERENCES}"
-    const val JAVA_JWT = "com.auth0:java-jwt:${Versions.JAVA_JWT}"
 
     /* Firebase */
-    const val FIREBASE_BOM = "com.google.firebase:firebase-bom:34.3.0"
+    const val FIREBASE_BOM = "com.google.firebase:firebase-bom:34.6.0"
     const val FIREBASE_CRASHLYTICS = "com.google.firebase:firebase-crashlytics"
     const val FIREBASE_MESSAGING = "com.google.firebase:firebase-messaging"
     const val FIREBASE_CONFIG = "com.google.firebase:firebase-config"
@@ -105,11 +104,12 @@ object Libs {
     /* Testing */
     const val JUNIT = "junit:junit:${Versions.JUNIT}"
     const val ROBOLECTRIC = "org.robolectric:robolectric:${Versions.ROBOLECTRIC}"
-    const val ANDROIDX_TEST_JUNIT = "androidx.test.ext:junit:1.2.1"
-    const val MOCKK = "io.mockk:mockk:1.13.13"
-    const val THREETEN_BP = "org.threeten:threetenbp:1.7.0"
+    const val ANDROIDX_TEST_JUNIT = "androidx.test.ext:junit:1.3.0"
+    const val MOCKK = "io.mockk:mockk:1.14.7"
+    const val THREETEN_BP = "org.threeten:threetenbp:1.7.2"
     const val UI_AUTOMATOR = "androidx.test.uiautomator:uiautomator:2.3.0"
-    const val TEST_ORCHESTRATOR = "androidx.test:orchestrator:1.5.1"
+    const val TEST_ORCHESTRATOR = "androidx.test:orchestrator:1.6.1"
+    const val HAMCREST = "org.hamcrest:hamcrest:${Versions.HAMCREST}"
 
     /* Qr Code (zxing) */
     const val JOURNEY_ZXING = "com.journeyapps:zxing-android-embedded:4.3.0"
@@ -130,7 +130,7 @@ object Libs {
     const val VIEW_MODE_SAVED_STATE = "androidx.lifecycle:lifecycle-viewmodel-savedstate:${Versions.LIFECYCLE}"
     const val LIFECYCLE_COMPILER = "androidx.lifecycle:lifecycle-compiler:${Versions.LIFECYCLE}"
     const val COMPOSE_VIEW_MODEL = "androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.LIFECYCLE}"
-    const val COMPOSE_NAVIGATION = "androidx.navigation:navigation-compose:2.8.9"
+
     /* Media and content handling */
     const val NUTRIENT = "io.nutrient:nutrient:${Versions.NUTRIENT}"
     const val MEDIA3 = "androidx.media3:media3-exoplayer:${Versions.MEDIA3}"
@@ -156,7 +156,7 @@ object Libs {
     const val OKHTTP = "com.squareup.okhttp3:okhttp:${Versions.OKHTTP}"
     const val OKHTTP_LOGGING = "com.squareup.okhttp3:logging-interceptor:${Versions.OKHTTP}"
     const val OKHTTP_URL_CONNECTION = "com.squareup.okhttp3:okhttp-urlconnection:${Versions.OKHTTP}"
-    const val OKIO = "com.squareup.okio:okio:3.9.1"
+    const val OKIO = "com.squareup.okio:okio:3.16.2"
 
     /* Other */
     const val LOTTIE = "com.airbnb.android:lottie:${Versions.LOTTIE}"
@@ -164,20 +164,20 @@ object Libs {
     const val SLIDING_UP_PANEL = "com.sothree.slidinguppanel:library:3.3.1"
     const val DISK_LRU_CACHE = "com.jakewharton:disklrucache:2.0.2"
     const val EVENTBUS = "org.greenrobot:eventbus:3.3.1"
-    const val JW_THREETEN_BP = "com.jakewharton.threetenabp:threetenabp:1.4.6"
+    const val JW_THREETEN_BP = "com.jakewharton.threetenabp:threetenabp:1.4.9"
     const val PROCESS_PHOENIX = "com.jakewharton:process-phoenix:2.1.2"
     const val KEYBOARD_VISIBILITY_LISTENER = "net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.2.1"
     const val APACHE_COMMONS_TEXT = "org.apache.commons:commons-text:1.12.0"
     const val CAMERA_VIEW = "com.otaliastudios:cameraview:2.7.2"
+    const val JAVA_JWT = "com.auth0:java-jwt:${Versions.JAVA_JWT}"
 
-    const val PENDO = "sdk.pendo.io:pendoIO:3.7.+"
+    const val PENDO = "sdk.pendo.io:pendoIO:3.9.+"
 
+    /* Database */
     const val ROOM = "androidx.room:room-runtime:${Versions.ROOM}"
     const val ROOM_COMPILER = "androidx.room:room-compiler:${Versions.ROOM}"
     const val ROOM_COROUTINES = "androidx.room:room-ktx:${Versions.ROOM}"
     const val ROOM_TEST = "androidx.room:room-testing:${Versions.ROOM}"
-
-    const val HAMCREST = "org.hamcrest:hamcrest:${Versions.HAMCREST}"
 
     const val RRULE = "org.scala-saddle:google-rfc-2445:20110304"
 
@@ -207,7 +207,7 @@ object Libs {
     const val NAVIGATION_KTX = "androidx.navigation:navigation-ui-ktx:${Versions.NAVIGATION}"
     const val NAVIGATION_COMPOSE = "androidx.navigation:navigation-compose:${Versions.NAVIGATION}"
 
-    const val KOTLIN_SERIALIZABLE = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0"
+    const val KOTLIN_SERIALIZABLE = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0"
 }
 
 object Plugins {

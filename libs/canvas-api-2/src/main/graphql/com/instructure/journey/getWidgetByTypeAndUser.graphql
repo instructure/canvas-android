@@ -7,7 +7,6 @@ query GetWidgetByTypeAndUser(
         type: $type
     ) {
         id
-        name
         type
         position
         createdAt

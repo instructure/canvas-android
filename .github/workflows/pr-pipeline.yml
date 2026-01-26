@@ -4,7 +4,9 @@ on:
   pull_request:
     types: [opened, synchronize, labeled]
     branches-ignore:
-      - 'release/**'
+      - 'release/student'
+      - 'release/teacher'
+      - 'release/parent'
 
 concurrency:
   group: ${{ github.head_ref || github.run_id }}
@@ -104,10 +106,14 @@ jobs:
           mv ./libs/pandautils/build/outputs/apk/androidTest/debug/pandautils-debug-androidTest.apk ./libs/pandautils/pandautils-test.apk
           ./gradle/gradlew -p apps :pandautils:assembleDebugAndroidTest -DtestApplicationId=com.instructure.pandautils
           mv ./libs/pandautils/build/outputs/apk/androidTest/debug/pandautils-debug-androidTest.apk ./libs/pandautils/pandautils-app.apk
+        env:
+          GRADLE_OPTS: "-Djava.net.preferIPv4Stack=true"
 
       - name: Run submodule unit tests
         run: |
           ./gradle/gradlew -p apps testDebugUnitTest -x :dataseedingapi:test -x :teacher:test -x :student:test
+        env:
+          GRADLE_OPTS: "-Djava.net.preferIPv4Stack=true"
 
       - name: Upload submodule test results
         if: always()
@@ -173,6 +179,8 @@ jobs:
             --no-daemon \
             -Dorg.gradle.jvmargs="-Xmx6g -XX:+HeapDumpOnOutOfMemoryError" \
             -Dkotlin.compiler.execution.strategy=in-process
+        env:
+          GRADLE_OPTS: "-Djava.net.preferIPv4Stack=true"
 
       - name: Upload parent test results
         if: always()
@@ -225,6 +233,8 @@ jobs:
             --no-daemon \
             -Dorg.gradle.jvmargs="-Xmx6g -XX:+HeapDumpOnOutOfMemoryError" \
             -Dkotlin.compiler.execution.strategy=in-process
+        env:
+          GRADLE_OPTS: "-Djava.net.preferIPv4Stack=true"
 
       - name: Upload student test results
         if: always()
@@ -277,6 +287,8 @@ jobs:
             --no-daemon \
             -Dorg.gradle.jvmargs="-Xmx6g -XX:+HeapDumpOnOutOfMemoryError" \
             -Dkotlin.compiler.execution.strategy=in-process
+        env:
+          GRADLE_OPTS: "-Djava.net.preferIPv4Stack=true"
 
       - name: Upload teacher test results
         if: always()
@@ -340,6 +352,8 @@ jobs:
             --no-daemon \
             -Dorg.gradle.jvmargs="-Xmx6g -XX:+HeapDumpOnOutOfMemoryError" \
             -Dkotlin.compiler.execution.strategy=in-process
+        env:
+          GRADLE_OPTS: "-Djava.net.preferIPv4Stack=true"
 
       - name: Upload horizon test results
         if: always()
@@ -403,6 +417,8 @@ jobs:
             --no-daemon \
             -Dorg.gradle.jvmargs="-Xmx6g -XX:+HeapDumpOnOutOfMemoryError" \
             -Dkotlin.compiler.execution.strategy=in-process
+        env:
+          GRADLE_OPTS: "-Djava.net.preferIPv4Stack=true"
 
       - name: Upload Horizon test APK
         uses: actions/upload-artifact@v4

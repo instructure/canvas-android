@@ -136,7 +136,7 @@ class AddEditNoteScreenUiTest {
             AddEditNoteScreen(navController, state) { _, _ -> }
         }
 
-        composeTestRule.onNodeWithText(context.getString(R.string.addNoteAddANoteLabel))
+        composeTestRule.onNodeWithText(context.getString(R.string.addNoteAddANoteOptionalLabel))
             .assertIsDisplayed()
     }
 

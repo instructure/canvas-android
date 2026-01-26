@@ -381,7 +381,7 @@ class AssignmentListViewModel @Inject constructor(
                     Assignment.SubmissionType.DISCUSSION_TOPIC.apiString in it.submissionTypesRaw
                 }.toSet()
                 val quizzesGroup = (filteredAssignments - discussionsGroup).filter {
-                    Assignment.SubmissionType.ONLINE_QUIZ.apiString in it.submissionTypesRaw
+                    it.isQuiz()
                 }.toSet()
                 val assignmentGroup = filteredAssignments - discussionsGroup - quizzesGroup
 

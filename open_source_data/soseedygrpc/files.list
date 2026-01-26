@@ -1,6 +1,0 @@
-# Private info for iOS data seeding server
-ca.crt=src/main/resources/ca.crt
-server.crt=src/main/resources/server.crt
-server.pem=src/main/resources/server.pem
-client.crt=src/main/resources/client.crt
-client.pem=src/main/resources/client.pem

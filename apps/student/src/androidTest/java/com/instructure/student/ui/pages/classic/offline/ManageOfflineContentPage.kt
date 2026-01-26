@@ -45,8 +45,10 @@ import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withParent
 import com.instructure.espresso.page.withText
 import com.instructure.espresso.scrollTo
+import com.instructure.espresso.triggerWorkManagerJobs
 import com.instructure.pandautils.R
 import com.instructure.pandautils.binding.BindableViewHolder
+import com.instructure.pandautils.features.offline.sync.OfflineSyncWorker
 import org.hamcrest.CoreMatchers.allOf
 
 class ManageOfflineContentPage : BasePage(R.id.manageOfflineContentPage) {
@@ -75,6 +77,7 @@ class ManageOfflineContentPage : BasePage(R.id.manageOfflineContentPage) {
     fun clickOnSyncButtonAndConfirm() {
         clickOnSyncButton()
         confirmSync()
+        triggerWorkManagerJobs(OfflineSyncWorker.ONE_TIME_TAG)
     }
 
     private fun confirmSync() {

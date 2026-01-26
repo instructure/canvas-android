@@ -36,6 +36,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.disabled
+import androidx.compose.ui.semantics.hideFromAccessibility
+import androidx.compose.ui.semantics.onClick
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -78,7 +83,24 @@ fun Tag(
     }
     val badgePadding = if (dismissible && type == TagType.INLINE) PaddingValues(top = 8.dp, end = 8.dp) else PaddingValues()
     val alphaModifier = if (enabled) modifier else modifier.alpha(0.5f)
-    Box(contentAlignment = Alignment.TopEnd, modifier = alphaModifier.padding(badgePadding)) {
+    val dismissText = stringResource(R.string.tag_dismiss)
+
+    Box(
+        contentAlignment = Alignment.TopEnd,
+        modifier = alphaModifier
+            .padding(badgePadding)
+            .semantics(mergeDescendants = true) {
+                if (!enabled) {
+                    disabled()
+                }
+                if (dismissible && enabled) {
+                    onClick(label = dismissText) {
+                        onDismiss()
+                        true
+                    }
+                }
+            }
+    ) {
         Box(
             modifier = Modifier
                 .background(
@@ -96,10 +118,13 @@ fun Tag(
                     Icon(
                         painter = painterResource(R.drawable.close),
                         tint = HorizonColors.Icon.default(),
-                        contentDescription = stringResource(R.string.tag_dismiss),
+                        contentDescription = null,
                         modifier = Modifier
                             .size(size.iconSize)
-                            .clickable { onDismiss() })
+                            .clickable(enabled = enabled) { onDismiss() }
+                            .clearAndSetSemantics { hideFromAccessibility() }
+                    )
+
                 }
             }
         }
@@ -107,7 +132,7 @@ fun Tag(
             Badge(
                 content = BadgeContent.Icon(
                     iconRes = R.drawable.close_small,
-                    contentDescription = stringResource(R.string.tag_dismiss)
+                    contentDescription = null
                 ),
                 modifier = Modifier.offset(x = 8.dp, y = (-8).dp)
             )

@@ -59,7 +59,7 @@ fun AiAssistToolbar(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.ai),
+                    painter = painterResource(R.drawable.ai_filled),
                     contentDescription = null,
                     tint = HorizonColors.Icon.surfaceColored(),
                     modifier = Modifier
@@ -69,7 +69,7 @@ fun AiAssistToolbar(
                 HorizonSpace(SpaceSize.SPACE_4)
 
                 Text(
-                    text = stringResource(R.string.aiAssistToolbarTitle),
+                    text = stringResource(R.string.igniteAIToolbarTitle),
                     style = HorizonTypography.h3,
                     color = HorizonColors.Text.surfaceColored()
                 )
@@ -81,7 +81,7 @@ fun AiAssistToolbar(
                     iconRes = R.drawable.arrow_back,
                     contentDescription = stringResource(R.string.a11yNavigateBack),
                     size = IconButtonSize.SMALL,
-                    color = IconButtonColor.Inverse,
+                    color = IconButtonColor.WhiteOutline,
                     onClick = onBackPressed,
                 )
             }
@@ -89,9 +89,9 @@ fun AiAssistToolbar(
         actions = {
             IconButton(
                 iconRes = R.drawable.close,
-                contentDescription = stringResource(R.string.aiAssistDismissContentDescription),
+                contentDescription = stringResource(R.string.igniteAIDismissContentDescription),
                 size = IconButtonSize.SMALL,
-                color = IconButtonColor.Inverse,
+                color = IconButtonColor.WhiteOutline,
                 onClick = onDismissPressed,
             )
         }

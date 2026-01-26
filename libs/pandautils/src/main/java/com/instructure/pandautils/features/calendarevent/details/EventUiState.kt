@@ -23,7 +23,8 @@ data class EventUiState(
     val isSeriesEvent: Boolean = false,
     val isSeriesHead: Boolean = false,
     val errorSnack: String? = null,
-    val isMessageFabEnabled: Boolean = false
+    val isMessageFabEnabled: Boolean = false,
+    val baseUrl: String? = null
 )
 
 data class ToolbarUiState(

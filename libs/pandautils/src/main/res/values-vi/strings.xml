@@ -488,6 +488,7 @@
     <string name="a11y_markAsDoneWithName">%s Đánh dấu là đã xong</string>
     <string name="a11y_markAsNotDoneWithName">%s Đánh dấu là chưa xong</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="a11y_expand_collapse">Mở rộng hoặc thu gọn phần</string>
     <string name="inboxSignatureError">Tải chữ ký hộp thư đến không thành công</string>
     <string name="inboxSignatureSettingsUpdated">Đã lưu cài đặt hộp thư đến!</string>
     <string name="inboxSignatureSettingsError">Lưu cài đặt hộp thư đến không thành công</string>

@@ -27,17 +27,24 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
@@ -52,6 +59,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.pandautils.compose.modifiers.conditional
 
 enum class ButtonHeight(val height: Dp, val textStyle: TextStyle, val verticalPadding: Dp, val horizontalPadding: Dp) {
     SMALL(32.dp, HorizonTypography.buttonTextMedium, 6.dp, 12.dp),
@@ -167,27 +175,40 @@ fun LoadingButton(
     iconPosition: ButtonIconPosition = ButtonIconPosition.NoIcon,
     enabled: Boolean = true,
     loading: Boolean = true,
+    fixedLoadingSize: Boolean = false,
     height: ButtonHeight = ButtonHeight.NORMAL,
     onClick: () -> Unit = {},
     badge: @Composable (() -> Unit)? = null
 ) {
+    val density = LocalDensity.current
+    var buttonWidth by remember { mutableStateOf(0.dp) }
+
     Box(
         contentAlignment = contentAlignment,
         modifier = modifier
-            .animateContentSize()
+            .conditional(!fixedLoadingSize) {
+                animateContentSize()
+            }
     ) {
         if (loading) {
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
+                    .conditional(fixedLoadingSize && buttonWidth != 0.dp) {
+                        width(buttonWidth)
+                    }
+                    .conditional(fixedLoadingSize) {
+                        defaultMinSize(minHeight = height.height)
+                    }
                     .background(color = color.backgroundColor, shape = HorizonCornerRadius.level6)
             ) {
                 Spinner(
                     size = SpinnerSize.EXTRA_SMALL,
                     color = color.contentColor,
                     modifier = Modifier
-                        .align(Alignment.Center)
-                        .padding(horizontal = height.horizontalPadding, vertical = height.verticalPadding),
+                        .conditional(!fixedLoadingSize) {
+                            padding(horizontal = height.horizontalPadding, vertical = height.verticalPadding)
+                        }
                 )
             }
         } else {
@@ -199,7 +220,12 @@ fun LoadingButton(
                 iconPosition = iconPosition,
                 onClick = onClick,
                 enabled = enabled,
-                badge = badge
+                badge = badge,
+                modifier = Modifier.onGloballyPositioned { coordinates ->
+                    with(density) {
+                        buttonWidth = coordinates.size.width.toDp()
+                    }
+                }
             )
         }
     }

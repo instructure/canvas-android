@@ -487,6 +487,7 @@
     <string name="a11y_markAsDoneWithName">%s Marcáil mar dhéanta</string>
     <string name="a11y_markAsNotDoneWithName">%s Marcáil mar neamhdhéanta</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="a11y_expand_collapse">Leathnaigh nó leacaigh an grúpa</string>
     <string name="inboxSignatureError">Theip ar lódáil síniú an bhosca isteach</string>
     <string name="inboxSignatureSettingsUpdated">Sábháladh socruithe an bhosca isteach!</string>
     <string name="inboxSignatureSettingsError">Theip ar shábháil socruithe an bhosca isteach</string>

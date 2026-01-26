@@ -40,7 +40,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.Role.Companion.Switch
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -48,6 +52,7 @@ import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.toggleable
 import com.instructure.pandautils.utils.toPx
 
 private const val ANIMATION_DURATION = 250
@@ -62,7 +67,15 @@ data class SwitchItemState(
 @Composable
 fun SwitchItem(state: SwitchItemState, modifier: Modifier = Modifier) {
     val alphaModifier = if (state.enabled) modifier else modifier.alpha(0.5f)
-    Row(modifier = alphaModifier) {
+    val context = LocalContext.current
+    Row(modifier = alphaModifier
+        .semantics(mergeDescendants = true) {
+            role = Switch
+            toggleable(
+                context = context,
+                toggledOn = state.checked
+            )
+        }) {
         HorizonSwitch(
             checked = state.checked,
             onCheckedChange = state.onCheckedChanged,

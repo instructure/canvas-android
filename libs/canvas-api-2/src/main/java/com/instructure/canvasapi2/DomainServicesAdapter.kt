@@ -17,11 +17,8 @@
 package com.instructure.canvasapi2
 
 import android.content.Context
-import com.instructure.canvasapi2.utils.CedarAuthenticator
 import com.instructure.canvasapi2.utils.DomainServicesAuthenticator
 import com.instructure.canvasapi2.utils.JourneyAuthenticator
-import com.instructure.canvasapi2.utils.PineAuthenticator
-import com.instructure.canvasapi2.utils.RedwoodAuthenticator
 import dagger.hilt.android.qualifiers.ApplicationContext
 import okhttp3.Cache
 import okhttp3.Dispatcher
@@ -66,36 +63,6 @@ abstract class DomainServicesAdapter(
         const val TIMEOUT_SECONDS = 60
     }
 }
-
-class PineAdapter @Inject constructor(
-    @ApplicationContext context: Context,
-    pineRequestInterceptor: PineRequestInterceptor,
-    pineAuthenticator: PineAuthenticator
-) : DomainServicesAdapter(
-    File(context.cacheDir, "pine_cache"),
-    pineAuthenticator,
-    pineRequestInterceptor
-)
-
-class CedarAdapter @Inject constructor(
-    @ApplicationContext context: Context,
-    cedarRequestInterceptor: CedarRequestInterceptor,
-    cedarAuthenticator: CedarAuthenticator
-) : DomainServicesAdapter(
-    File(context.cacheDir, "cedar_cache"),
-    cedarAuthenticator,
-    cedarRequestInterceptor
-)
-
-class RedwoodAdapter @Inject constructor(
-    @ApplicationContext context: Context,
-    redwoodRequestInterceptor: RedwoodRequestInterceptor,
-    redwoodAuthenticator: RedwoodAuthenticator
-) : DomainServicesAdapter(
-    File(context.cacheDir, "redwood_cache"),
-    redwoodAuthenticator,
-    redwoodRequestInterceptor
-)
 
 class JourneyAdapter @Inject constructor(
     @ApplicationContext context: Context,

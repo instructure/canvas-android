@@ -90,19 +90,13 @@ object CanvasNetworkAdapter {
             .build()
     }
 
-    private class DateTimeAdapter : com.apollographql.apollo.api.Adapter<java.util.Date> {
-        override fun fromJson(reader: com.apollographql.apollo.api.json.JsonReader, customScalarAdapters: com.apollographql.apollo.api.CustomScalarAdapters): java.util.Date {
-            val dateString = reader.nextString()
-            return java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").apply {
-                timeZone = java.util.TimeZone.getTimeZone("UTC")
-            }.parse(dateString) ?: throw IllegalArgumentException("Invalid date: $dateString")
+    private class DateTimeAdapter : com.apollographql.apollo.api.Adapter<String> {
+        override fun fromJson(reader: com.apollographql.apollo.api.json.JsonReader, customScalarAdapters: com.apollographql.apollo.api.CustomScalarAdapters): String {
+            return reader.nextString() ?: ""
         }
 
-        override fun toJson(writer: com.apollographql.apollo.api.json.JsonWriter, customScalarAdapters: com.apollographql.apollo.api.CustomScalarAdapters, value: java.util.Date) {
-            val dateString = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").apply {
-                timeZone = java.util.TimeZone.getTimeZone("UTC")
-            }.format(value)
-            writer.value(dateString)
+        override fun toJson(writer: com.apollographql.apollo.api.json.JsonWriter, customScalarAdapters: com.apollographql.apollo.api.CustomScalarAdapters, value: String) {
+            writer.value(value)
         }
     }
 

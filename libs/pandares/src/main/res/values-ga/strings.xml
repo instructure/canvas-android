@@ -1046,6 +1046,8 @@
 
     <string name="downloading">Ag íoslódáil</string>
     <string name="downloadComplete">Íoslódáil críochnaithe</string>
+    <string name="fileDownloadNotificationPermissionDenied">Cuireadh tús leis an íoslódáil. Cumasaigh fógraí chun dul chun cinn a fheiceáil.</string>
+
     <string name="notificationChannelNameFileDownloadsName">Fógraí Íoslódála</string>
     <string name="notificationChannelNameFileDownloadsDescription">Fógraí Canbhás le haghaidh íoslódálacha atá ar siúl.</string>
     <string name="full_due_date_details">Sonraí iomlána faoin dáta dlite</string>
@@ -1248,6 +1250,7 @@
     <string name="a11y_content_description_add_to_dashboard">Cuir leis an ndeais</string>
     <string name="a11y_content_description_add_all_to_dashboard">Cuir go léir leis an deais</string>
 
+    <string name="new_mobile_dashboard">Deais Mhóibíleach Nua</string>
     <!-- K5 Strings -->
     <string name="navDrawerAccount">Cuntas</string>
     <string name="dashboardTabHomeroom">Seomra baile</string>
@@ -1373,6 +1376,10 @@
         <item quantity="other">%s fógra neamhléite</item>
     </plurals>
 
+    <plurals name="a11y_todoBadgeCount">
+        <item quantity="one">%s mír le déanamh</item>
+        <item quantity="other">%s mír le déanamh</item>
+    </plurals>
     <string name="noAnnotationSelected">Níl aon nóta mínithe roghnaithe</string>
 
     <string name="emailNotifications">Fógraí Ríomhphoist</string>
@@ -1922,6 +1929,8 @@
     <string name="gradePreferencesHeaderSortBy">Sórtáil de réir</string>
     <string name="gradesEmptyTitle">Níl aon Tascanna ann</string>
     <string name="gradesEmptyMessage">Tá an chuma ar an scéal nár cruthaíodh tascanna sa spás seo go fóill.</string>
+    <string name="noMatchingAssignments">Gan aon Tascanna ag Meaitseáil</string>
+    <string name="noMatchingAssignmentsDescription">Níl aon tascanna a mheaitseálann do do chuardach. Bain triail as téarma cuardaigh difriúil.</string>
     <string name="errorLoadingGrades">Tá deacracht againn marcanna do mhic léinn a lódáil. Bain triail as an leathanach a athlódáil nó seiceáil ar ais ar ball.</string>
     <string name="errorLoadingCourse">Tá deacracht againn sonraí cúrsa do mhic léinn a lódáil. Bain triail as an leathanach a athlódáil nó seiceáil ar ais ar ball.</string>
     <string name="gradesFilterContentDescription">Scag</string>
@@ -2093,7 +2102,8 @@
     <string name="widgetErrorTitle">Úps! Chuaigh rud eigin mícheart</string>
     <string name="widgetErrorSubtitle">Tá deacrachtaí againn do thascanna a thaispeáint faoi láthair. Bain triail eile as ar ball nó téigh chuig an aip.</string>
     <string name="widgetToDoEmptyTitle">Tá tú críochnaithe anois!</string>
-    <string name="widgetToDoEmptySubtitle">Is cosúil go bhfuil tú saor don chéad 4 seachtaine eile. An bhfuil tú ag iarraidh roinnt tascanna le cur leis?</string>
+    <string name="widgetToDoEmptySubtitle">Is cosúil go bhfuil tú saor, níl aon tascanna le teacht agat. An bhfuil tú ag iarraidh roinnt \'Le Déanamh\' a chur leis?</string>
+
     <string name="widgetNotLoggedInTitle">Lig dúinn tú a logáil isteach!</string>
     <string name="widgetToDoNotLoggedInSubtitle">Chun do liosta le déanamh a fheiceáil, logáil isteach i do chuntas san aip le do thoil. Ní thógfaidh sé ach soicind!</string>
     <string name="a11y_widgetToDoOpenToDoList">Oscail scáileán Liosta Le Déanamh</string>
@@ -2118,6 +2128,11 @@
         <item quantity="one">%s / %s pte</item>
         <item quantity="other">%s / %s pte</item>
     </plurals>
+    <plurals name="groupMemberCount">
+        <item quantity="one">Mac Léinn</item>
+        <item quantity="other">Mic léinn</item>
+    </plurals>
+
     <string name="speedGraderLatePenaltyTitle">Pionós Déanach</string>
     <string name="gradingStatus_none">Dada</string>
     <string name="gradingStatus_late">Déanach</string>
@@ -2174,4 +2189,189 @@
     <string name="scored_less_than_with_max">Scóráladh Níos lú ná / %s (b)p(h)ointe</string>
     <string name="scored_between_values">Scóráilte %1$s - %2$s</string>
     <string name="multiple_filters">Scagairí iolracha</string>
+    <string name="a11y_contentDescriptionToDoFilter">Scag</string>
+    <string name="errorLoadingToDos">Tharla earráid agus do chuid míreanna le déanamh á lódáil. Seiceáil do cheangal agus bain triail eile as.</string>
+    <string name="errorUpdatingToDo">Tharla earráid agus an mhír le déanamh á nuashonrú. Seiceáil do cheangal agus bain triail eile as.</string>
+    <string name="noToDosForNow">Gan aon Rudaí le Déanamh faoi láthair!</string>
+    <string name="noToDosForNowSubtext">Dealraíonn sé gur am iontach é chun scíth a ligean, suaimhneas a ligean agus athlódáil.</string>
+    <string name="todoSwipeDone">Déanta</string>
+    <string name="todoSwipeUndo">Cealaigh</string>
+    <string name="todoMarkedAsDone">%s marcáilte mar dhéanta</string>
+    <string name="todoMarkedAsNotDone">Níl %s marcáilte mar neamhdhéanta</string>
+    <string name="todoMarkedAsDoneSnackbarUndo">Cealaigh</string>
+    <string name="todoActionOffline">Ní féidir an gníomh seo a dhéanamh as líne</string>
+
+    <!-- To Do List Filter Screen -->
+    <string name="todoFilterPreferences">Roghanna liosta le déanamh</string>
+    <string name="todoFilterVisibleItems">Míreanna Infheicthe</string>
+    <string name="todoFilterShowPersonalToDos">Taispeáin Rudaí Pearsanta le Déanamh</string>
+    <string name="todoFilterShowCalendarEvents">Taispeáin Imeachtaí Féilire</string>
+    <string name="todoFilterShowCompleted">Taispeáin Críochnaithe</string>
+    <string name="todoFilterFavoriteCoursesOnly">Cúrsaí is Fearr Leat Amháin</string>
+    <string name="todoFilterShowTasksFrom">Taispeáin tascanna ó</string>
+    <string name="todoFilterShowTasksUntil">Taispeáin tascanna go dtí</string>
+    <string name="todoFilterToday">Inniu</string>
+    <string name="todoFilterThisWeek">An tSeachtain seo</string>
+    <string name="todoFilterLastWeek">An tseachtain seo caite</string>
+    <string name="todoFilterTwoWeeks">2 Sheachtain Ó shin</string>
+    <string name="todoFilterThreeWeeks">3 Sheachtain ó shin</string>
+    <string name="todoFilterFourWeeks">4 Sheachtain ó shin</string>
+    <string name="todoFilterNextWeek">An tseachtain seo chugainn</string>
+    <string name="todoFilterInTwoWeeks">I gceann 2 sheachtain</string>
+    <string name="todoFilterInThreeWeeks">I 3 Sheachtain</string>
+    <string name="todoFilterInFourWeeks">I gceann 4 sheachtain</string>
+    <string name="todoFilterFromDate">Ó %s</string>
+    <string name="todoFilterUntilDate">Go dtí %s</string>
+    <string name="a11y_buttonSelectionSelected">roghnaithe</string>
+    <string name="a11y_buttonSelectionNotSelected">nach bhfuil roghnaithe</string>
+    <!-- Course Invitations -->
+    <string name="courseInvitationsTitle">Cuirí Cúrsa (%d)</string>
+    <string name="courseInvitationAccepted">Cuireadh chuig %s glactha</string>
+    <string name="courseInvitationDeclined">Cuireadh chuig %s diúltaithe</string>
+    <string name="courseInvitationDeclineConfirmTitle">Diúltaigh don Chuireadh</string>
+    <string name="courseInvitationDeclineConfirmMessage">An bhfuil tú cinnte gur mian leat an cuireadh a dhiúltú chuig %s?</string>
+
+    <!-- Welcome Widget -->
+    <!-- Greetings with name (%s is the student's first name) -->
+    <string name="welcomeGreetingMorningWithName">Maidin mhaith, %s!</string>
+    <string name="welcomeGreetingAfternoonWithName">Tráthnóna maith, %s!</string>
+    <string name="welcomeGreetingEveningWithName">Tráthnóna maith, %s!</string>
+    <string name="welcomeGreetingNightWithName">Oíche mhaith, %s!</string>
+
+    <!-- Greetings without name (fallback when user has no first name) -->
+    <string name="welcomeGreetingMorning">Maidin mhaith!</string>
+    <string name="welcomeGreetingAfternoon">Tráthnóna maith!</string>
+    <string name="welcomeGreetingEvening">Tráthnóna maith!</string>
+    <string name="welcomeGreetingNight">Oíche mhaith!</string>
+
+    <!-- Welcome Widget Motivational Messages -->
+    <string-array name="welcomeMessagesGeneric">
+        <item>Tá seo agat.</item>
+        <item>Lean ort — tá tú níos láidre ná mar a bhraitheann tú faoi láthair.</item>
+        <item>Is dul chun cinn fós céim amháin ag an am.</item>
+        <item>Ná tabhair suas - beidh tú buíoch díot amach anseo.</item>
+        <item>Tá tú in ann níos mó a dhéanamh ná mar a cheapann tú.</item>
+        <item>Fiú ar laethanta crua, tá tú ag bogadh ar aghaidh.</item>
+        <item>Muinín a bheith agat ionat féin — tá rudaí deacra déanta agat cheana.</item>
+        <item>Dul chun cinn, ní foirfeacht. Tá tú ag déanamh go hiontach.</item>
+        <item>Fan ann - níl tú i d\'aonar sa chás seo.</item>
+        <item>Tá tú ag foghlaim, ag fás, agus ag déanamh níos fearr ná mar a thuigeann tú.</item>
+        <item>Tá sé ceart go leor tuisleáil - tá tú fós ar an mbóthar ceart.</item>
+        <item>Coinnigh ort ag brú - tá tú níos gaire ná mar a cheapfá.</item>
+        <item>Tá buanna beaga tábhachtach freisin.</item>
+        <item>Lean ort — tá tú níos gaire ná mar a cheapfá.</item>
+        <item>Tá sé ceart go leor sos a ghlacadh. Is cuid den fhoghlaim iad sosanna.</item>
+        <item>Is bua cheana féin é iarracht a dhéanamh.</item>
+        <item>Dul Chun Cinn &gt; foirfeacht.</item>
+        <item>Tá níos mó tábhacht le bheith i láthair ná mar a cheapann tú.</item>
+        <item>Tá tú ag forbairt scileanna, fiú ar laethanta socair.</item>
+        <item>Ná déan dearmad análú - tá tú go breá.</item>
+        <item>Is é do luas an luas ceart.</item>
+        <item>Ní gá gach rud a réiteach inniu.</item>
+        <item>Baineann tú leis an áit seo.</item>
+        <item>Cuireann gach iarracht a dhéanann tú leis.</item>
+        <item>Tá sé ceart go leor tosú arís - an oiread uaireanta agus is gá duit.</item>
+        <item>An rud a bhraitheann deacair anois, beidh sé níos éasca níos déanaí.</item>
+        <item>Coinnigh ort ag teacht - sin an rud is tábhachtaí.</item>
+        <item>Bogann céimeanna beaga sléibhte móra.</item>
+        <item>Is cuid den dul chun cinn an scíth freisin.</item>
+        <item>Tá tú ag déanamh níos fearr ná mar a thuigeann tú.</item>
+        <item>Is dul chun cinn fós é fiú dul chun cinn mall.</item>
+        <item>Ní thógtar an todhchaí i lá amháin - ach tá tú ar an mbealach.</item>
+        <item>Tasc amháin, nóiméad amháin, céim amháin ag an am.</item>
+        <item>Ní gá duit a bheith foirfe chun tionchar a imirt.</item>
+        <item>Is praiseach an fhoghlaim — agus is gnách sin.</item>
+        <item>Is fás gach iarracht, fiú mura mbraitheann sé amhlaidh.</item>
+        <item>Tá rudaí deacra déanta agat cheana - is féidir leat é seo a dhéanamh freisin.</item>
+        <item>Tá tábhacht le do chuid iarrachtaí, fiú mura bhfeiceann aon duine í.</item>
+        <item>Tá sé ceart go leor rudaí a thógáil go mall.</item>
+        <item>Tá tú ag bogadh ar aghaidh, fiú ar laethanta ciúine.</item>
+        <item>Ní gá go mbeadh an cosán soiléir fós - coinnigh ort ag siúl.</item>
+        <item>Tá tú níos láidre ná mar a bhraitheann tú faoi láthair.</item>
+        <item>Tógtar spriocanna móra ó chéimeanna beaga.</item>
+        <item>Lean ort — beidh buíochas agat as an todhchaí.</item>
+        <item>Is dul chun cinn fós é fiú dul chun cinn míshlachtmhar.</item>
+        <item>Níl tú ar gcúl - tá tú ar do chosán.</item>
+        <item>Tá sé ceart go leor foghlaim de réir mar a théann tú ar aghaidh.</item>
+        <item>Tá tú ag fás ar bhealaí nach bhfeiceann tú go fóill, b\'fhéidir.</item>
+        <item>Is infheistíocht san amárach do chuid iarrachtaí inniu.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesMorning">
+        <item>Maidin! Tá seo agat - rang amháin, céim amháin ag an am.</item>
+        <item>Nach bhfuil tú réidh? Sin gnáth. Tosaigh san áit a bhfuil tú.</item>
+        <item>Cuidíonn caife, ach oibríonn cineáltas leat féin níos fearr.</item>
+        <item>An bhfuil an teicneolaíocht ag déanamh botúin? Tarlaíonn sé dúinn go léir - ná bíodh strus ort.</item>
+        <item>Ní gá go mbeadh an lá inniu foirfe, ach is féidir é.</item>
+        <item>Maidin mhaith — is deis nua í inniu chun foghlaim agus fás.</item>
+        <item>Tugann fiú céimeanna beaga ar maidin níos gaire duit do do spriocanna.</item>
+        <item>Tarraing anáil - ní gá duit gach rud a bheith socraithe agat fós.</item>
+        <item>Is féidir leis an teicneolaíocht a bheith deacair, ach níl tú i d\'aonar á foghlaim.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesAfternoon">
+        <item>Leath bealaigh ann — tá níos mó déanta agat cheana féin ná mar a cheapfá.</item>
+        <item>Ag mothú sáinnithe? Buaileann gach duine ballaí, ná stop ag dreapadh.</item>
+        <item>Poist, gráid, an todhchaí&#8230; níl gach rud socraithe ag aon duine fós.</item>
+        <item>Tuirseach den inchinn? Sos tapaidh = díriú níos fearr níos déanaí.</item>
+        <item>Iarr cabhair. Dáiríre, níl aon duine ag déanamh seo ina n-aonar.</item>
+        <item>Tá an méid seo bainte amach agat inniu cheana féin - is rud é sin le bheith bródúil as.</item>
+        <item>An bhfuil sos uait? Is cuid den fhoghlaim freisin an athluchtú.</item>
+        <item>Tá sé ceart go leor mura bhfuil an cosán cinnte — forbraítear scileanna céim ar chéim.</item>
+        <item>Téigh i dteagmháil má tá tú i bhfostú — bíonn tacaíocht i gcónaí níos gaire ná mar a shíleann tú.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesEvening">
+        <item>D\'éirigh liom an lá a shárú — is bua ann féin é sin.</item>
+        <item>Daoine ar iarraidh? Abair "haigh" go gasta le duine éigin — cuidíonn sé.</item>
+        <item>Fiú má bhí an lá inniu praiseach, bhí tú ann. Tá tábhacht leis sin.</item>
+        <item>Cuimhnigh: ní thomhaiseann aon ghrád do luach.</item>
+        <item>Lig do scíth, gáire, nó scrollaigh gan chiontacht — thuill tú é.</item>
+        <item>Maith thú as an lá a chríochnú — tá dul chun cinn tábhachtach, fiú nuair atá ciúineas ann.</item>
+        <item>Cairde nó meantóirí ar iarraidh? Is féidir ceangal teacht i nóiméid bheaga freisin.</item>
+        <item>Is le haghaidh machnaimh atá na tráthnónta — tabhair faoi deara a bhfuil foghlamtha agat inniu, ní hamháin a bhfuil le déanamh fós.</item>
+        <item>Tá do chuid iarrachtaí níos tábhachtaí ná foirfeacht.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesNight">
+        <item>Ag meilt fós? Meas — ach ná déan dearmad go bhfuil codladh ann.</item>
+        <item>Amárach beidh tú buíoch duit féin as scíth a ligean anocht.</item>
+        <item>Éiríonn an imní níos airde san oíche - ná creid a torann ar fad.</item>
+        <item>Níl tú ar gcúl, tá tú díreach ar do chosán.</item>
+        <item>Dún an ríomhaire glúine — teastaíonn aislingí ó d’inchinn freisin.</item>
+        <item>Tá sé ceart go leor scíth a ligean - tá an lá amárach ag fanacht leat le deiseanna nua.</item>
+        <item>Is maratón an fhoghlaim, ní sprint. Bí cineálta leat féin anocht.</item>
+        <item>Má bhraitheann imní trom, cuimhnigh nach gá duit iad a iompar leat féin.</item>
+        <item>Críochnaigh an lá agus a fhios agat gur éacht cheana féin é an iarracht.</item>
+    </string-array>
+
+    <!-- Accessibility -->
+    <string name="welcomeWidgetContentDescription">Teachtaireacht fáilte: %1$s. %2$s</string>
+
+    <!-- Institutional Announcements -->
+    <string name="institutionalAnnouncementsTitle">Fógraí (%d)</string>
+    <!-- Widget Display Names -->
+    <string name="widget_hello">Haigh, %s</string>
+
+    <!-- Customize Dashboard -->
+    <string name="customize_dashboard">Saincheap an Deais</string>
+    <string name="dashboard_widgets">Giuirléidí</string>
+    <string name="move_up">Bog suas</string>
+    <string name="move_down">Bog síos</string>
+    <string name="no_widgets">Níl aon ghiuirléidí ar fáil</string>
+    <string name="changing_dashboard_layout">Leagan amach an deais rialaithe a athrú</string>
+    <string name="changing_dashboard_layout_message">Chun leagan amach an deais rialaithe a athrú, ní mór duit an feidhmchlár a atosú.</string>
+    <string name="restart_now">Atosaigh anois</string>
+    <string name="switched_back">Ar athraigh tú ar ais?</string>
+    <string name="switched_back_message">Go raibh maith agat as an deais nua a thriail! An bhféadfá a insint dúinn cén fáth ar athraigh tú ar ais?</string>
+    <string name="what_could_we_improve">Cad a d’fhéadfaimis a fheabhsú?</string>
+    <string name="skip">Scipeáil</string>
+    <string name="widget_setting_show_greeting">Taispeáin beannú</string>
+    <string name="background_color">Dath an chúlra</string>
+    <string name="offline_content_available">Ábhar as líne ar fáil</string>
+    <string name="a11y_contentDescription_moreOptions">Tuilleadh roghanna</string>
+    <string name="customizeCourse">Saincheap an Cúrsa</string>
+    <string name="favoriteCoursesAndGroups">Cúrsaí agus Grúpaí is Fearr Leat</string>
+    <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
+    <string name="ltiToolsOffline">Níl Uirlisí Seachtracha ar fáil as líne.</string>
 </resources>

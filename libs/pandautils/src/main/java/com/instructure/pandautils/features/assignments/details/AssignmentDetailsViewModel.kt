@@ -440,22 +440,57 @@ class AssignmentDetailsViewModel @Inject constructor(
                 submissionStatusTint = submissionStatusTint,
                 submissionStatusVisible = submissionStatusVisible,
                 fullLocked = true,
-                lockedMessage = lockedMessage
+                lockedMessage = lockedMessage,
+                baseUrl = assignment.htmlUrl
             )
         }
 
         val partialLockedMessage = assignment.lockExplanation.takeIf { it.isValid() && assignment.lockDate?.before(Date()).orDefault() }.orEmpty()
 
         val submissionHistory = assignment.submission?.submissionHistory
-        val attempts = submissionHistory?.reversed()?.mapIndexedNotNull { index, submission ->
-            submission?.submittedAt?.toFormattedString()?.let {
-                AssignmentDetailsAttemptItemViewModel(
-                    AssignmentDetailsAttemptViewData(
-                        resources.getString(R.string.attempt, submissionHistory.size - index),
-                        it,
-                        submission
+        val attempts = submissionHistory?.let { history ->
+            // Check if any attempt number is missing or invalid
+            val hasAnyMissingAttemptNumber = history.any { it?.attempt == null || it?.attempt == 0L }
+
+            val sortedHistory = if (hasAnyMissingAttemptNumber) {
+                // Fallback: sort by submittedAt descending
+                history.sortedByDescending { it?.submittedAt }
+            } else {
+                // Normal case: sort by attempt number descending
+                history.sortedByDescending { it?.attempt }
+            }
+
+            if (hasAnyMissingAttemptNumber) {
+                // Filter out null submissions and those without submittedAt, then index from newest to 1
+                val validSubmissions = sortedHistory.mapNotNull { submission ->
+                    submission?.submittedAt?.toFormattedString()?.let { formattedDate ->
+                        submission to formattedDate
+                    }
+                }
+
+                validSubmissions.mapIndexed { index, (submission, formattedDate) ->
+                    val attemptNumber = validSubmissions.size - index
+                    AssignmentDetailsAttemptItemViewModel(
+                        AssignmentDetailsAttemptViewData(
+                            resources.getString(R.string.attempt, attemptNumber),
+                            formattedDate,
+                            submission
+                        )
                     )
-                )
+                }
+            } else {
+                // Use original attempt numbers
+                sortedHistory.mapNotNull { submission ->
+                    submission?.submittedAt?.toFormattedString()?.let { formattedDate ->
+                        AssignmentDetailsAttemptItemViewModel(
+                            AssignmentDetailsAttemptViewData(
+                                resources.getString(R.string.attempt, submission.attempt),
+                                formattedDate,
+                                submission
+                            )
+                        )
+                    }
+                }
             }
         }.orEmpty()
 
@@ -595,7 +630,8 @@ class AssignmentDetailsViewModel @Inject constructor(
             discussionHeaderViewData = discussionHeaderViewData,
             quizDetails = quizViewViewData,
             attemptsViewData = attemptsViewData,
-            hasDraft = hasDraft
+            hasDraft = hasDraft,
+            baseUrl = assignment.htmlUrl
         )
     }
 

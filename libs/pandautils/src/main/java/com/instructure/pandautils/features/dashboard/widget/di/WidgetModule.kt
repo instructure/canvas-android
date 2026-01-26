@@ -18,11 +18,13 @@ package com.instructure.pandautils.features.dashboard.widget.di
 
 import android.content.Context
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.google.gson.Gson
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.dashboard.widget.db.WidgetConfigDao
 import com.instructure.pandautils.features.dashboard.widget.db.WidgetDatabase
 import com.instructure.pandautils.features.dashboard.widget.db.WidgetDatabaseProvider
 import com.instructure.pandautils.features.dashboard.widget.db.WidgetMetadataDao
+import com.instructure.pandautils.features.dashboard.widget.repository.WidgetConfigDataRepository
 import com.instructure.pandautils.features.dashboard.widget.repository.WidgetMetadataRepository
 import com.instructure.pandautils.features.dashboard.widget.repository.WidgetMetadataRepositoryImpl
 import dagger.Module
@@ -72,5 +74,17 @@ class WidgetModule {
     @Singleton
     fun provideWidgetMetadataRepository(dao: WidgetMetadataDao): WidgetMetadataRepository {
         return WidgetMetadataRepositoryImpl(dao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideWidgetConfigDataRepository(dao: WidgetConfigDao): WidgetConfigDataRepository {
+        return WidgetConfigDataRepository(dao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGson(): Gson {
+        return Gson()
     }
 }

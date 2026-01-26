@@ -1045,6 +1045,8 @@
 
     <string name="downloading">Tikiake ana</string>
     <string name="downloadComplete">Kua oti te tango</string>
+    <string name="fileDownloadNotificationPermissionDenied">Kua tīmata te tango. Whakahohehia ngā whakamōhiotanga kia kite i te ahunga whakamua.</string>
+
     <string name="notificationChannelNameFileDownloadsName">Ngā Pānui Tikiake</string>
     <string name="notificationChannelNameFileDownloadsDescription">Ngā pānui Canvas mō ngā tikiake tonu.</string>
     <string name="full_due_date_details">Ngā taipitopito katoa o ngā rā e tika ana</string>
@@ -1249,6 +1251,7 @@
     <string name="a11y_content_description_add_to_dashboard">Tāpiri ki papatohu</string>
     <string name="a11y_content_description_add_all_to_dashboard">Tāpiri katoa ki papatohu</string>
 
+    <string name="new_mobile_dashboard">Papatohu Waea Pūkoro Hou</string>
     <!-- K5 Strings -->
     <string name="navDrawerAccount">Pūkete</string>
     <string name="dashboardTabHomeroom">Kainga rūma</string>
@@ -1367,6 +1370,10 @@
         <item quantity="other">%s nga whakamohiotanga kaore ano kia panuitia</item>
     </plurals>
 
+    <plurals name="a11y_todoBadgeCount">
+        <item quantity="one">%s ki te mahi i te tūemi</item>
+        <item quantity="other">%s ki te mahi i ngā tūemi</item>
+    </plurals>
     <string name="noAnnotationSelected">Karekau he tuhipoka i tohua</string>
     <string name="emailNotifications">Ngā Īmēra Whakamōhiotanga</string>
     <string name="emailNotificationsImmediately">Tonu</string>
@@ -1907,6 +1914,8 @@
     <string name="gradePreferencesHeaderSortBy">Wehewehe e</string>
     <string name="gradesEmptyTitle">Kaore ngā whakataunga</string>
     <string name="gradesEmptyMessage">Te ahua nei kaore ano kia hanga taumahi ki tenei waahi.</string>
+    <string name="noMatchingAssignments">Kāore he Taumahi e ōrite ana</string>
+    <string name="noMatchingAssignmentsDescription">Kāore he taumahi e ōrite ana ki tāu rapunga. Whakamātauria tētahi atu kupu rapu.</string>
     <string name="errorLoadingGrades">Kei te raru matou ki te uta i nga tohu a to tauira. Tena koa ngana ki te uta ano i te wharangi, tirohia ranei a muri ake nei.</string>
     <string name="errorLoadingCourse">Kei te raru matou ki te uta i nga taipitopito akoranga a to tauira. Tena koa ngana ki te uta ano i te wharangi, tirohia ranei a muri ake nei.</string>
     <string name="gradesFilterContentDescription">Tātari</string>
@@ -2078,7 +2087,8 @@
     <string name="widgetErrorTitle">Aue! I raruraru tētahi mea</string>
     <string name="widgetErrorSubtitle">Kei te raru matou ki te whakaatu i o mahi inaianei. Tena koa ngana ano mo te wa poto, haere ranei ki te taupānga.</string>
     <string name="widgetToDoEmptyTitle">Kua oti katoa koe inaianei!</string>
-    <string name="widgetToDoEmptySubtitle">Te ahua nei kei te waatea koe mo nga wiki e 4 e whai ake nei. Kei te hiahia koe ki te taapiri i etahi mahi?</string>
+    <string name="widgetToDoEmptySubtitle">Te āhua nei kua wātea koe, kāore he mahi e haere ake nei. Kei te hiahia koe ki te taapiri i etahi mahi?</string>
+
     <string name="widgetNotLoggedInTitle">Kia Takiuru koe!</string>
     <string name="widgetToDoNotLoggedInSubtitle">Hei kite i o mahi, tena koa takiuru ki to putea i roto i te taupānga. He wa poto noa iho!</string>
     <string name="a11y_widgetToDoOpenToDoList">Whakatuwherahia te mata rarangi Mahi</string>
@@ -2103,6 +2113,11 @@
         <item quantity="one">%s / %s koinga</item>
         <item quantity="other">%s / %s ngā koinga</item>
     </plurals>
+    <plurals name="groupMemberCount">
+        <item quantity="one">Ākonga</item>
+        <item quantity="other">Ngā ākonga</item>
+    </plurals>
+
     <string name="speedGraderLatePenaltyTitle">Whiu tōmuri</string>
     <string name="gradingStatus_none">Kaore</string>
     <string name="gradingStatus_late">Tōmuri</string>
@@ -2159,4 +2174,189 @@
     <string name="scored_less_than_with_max">I whiwhihia i raro iho i te / %s ngā tohu</string>
     <string name="scored_between_values">I whiwhihia %1$s - %2$s</string>
     <string name="multiple_filters">Ngā tātari maha</string>
+    <string name="a11y_contentDescriptionToDoFilter">Tātari</string>
+    <string name="errorLoadingToDos">I hapa i te utaina o nga mea hei mahi. Tēnā koa tirohia tō hononga ana ka tarai anō.</string>
+    <string name="errorUpdatingToDo">I hapa te whakahōu i te tūemi hei mahi. Tēnā koa tirohia tō hononga ana ka tarai anō.</string>
+    <string name="noToDosForNow">Kaore he mahi mo tenei wa!</string>
+    <string name="noToDosForNowSubtext">He wā pai tēnei ki te okioki, ki te wātea, me te whakahou i te tinana.</string>
+    <string name="todoSwipeDone">Kua mahia</string>
+    <string name="todoSwipeUndo">Wete</string>
+    <string name="todoMarkedAsDone">%s kua tohua kua oti</string>
+    <string name="todoMarkedAsNotDone">%s kua tohua hei karekau i oti</string>
+    <string name="todoMarkedAsDoneSnackbarUndo">Wete</string>
+    <string name="todoActionOffline">Kāore e taea te mahi i tēnei mahi tuimotu</string>
+
+    <!-- To Do List Filter Screen -->
+    <string name="todoFilterPreferences">Ngā Manakohanga o te Rārangi Mahi</string>
+    <string name="todoFilterVisibleItems">Ngā Tuemi e Kitea Ana</string>
+    <string name="todoFilterShowPersonalToDos">Whakaatuhia ngā Mahi Whaiaro</string>
+    <string name="todoFilterShowCalendarEvents">Whakaatuhia ngā Takahanga Maramataka</string>
+    <string name="todoFilterShowCompleted">Whakaatuhia ngā Mea Kua Oti</string>
+    <string name="todoFilterFavoriteCoursesOnly">Ngā Akoranga Tino Pai Anake</string>
+    <string name="todoFilterShowTasksFrom">Whakaatuhia ngā mahi mai i</string>
+    <string name="todoFilterShowTasksUntil">Whakaatuhia ngā mahi tae noa ki</string>
+    <string name="todoFilterToday">I tēnei rā tonu</string>
+    <string name="todoFilterThisWeek">I Tēnei Wiki</string>
+    <string name="todoFilterLastWeek">Wiki Whakamutunga</string>
+    <string name="todoFilterTwoWeeks">2 Wiki Ki Muri</string>
+    <string name="todoFilterThreeWeeks">3 Wiki Ki Muri</string>
+    <string name="todoFilterFourWeeks">4 Wiki Ki Muri</string>
+    <string name="todoFilterNextWeek">Wiki Muri</string>
+    <string name="todoFilterInTwoWeeks">I roto i ngā Wiki e 2</string>
+    <string name="todoFilterInThreeWeeks">I roto i ngā Wiki e 3</string>
+    <string name="todoFilterInFourWeeks">I roto i ngā Wiki e 4</string>
+    <string name="todoFilterFromDate">Mai i %s</string>
+    <string name="todoFilterUntilDate">Tae noa ki %s</string>
+    <string name="a11y_buttonSelectionSelected">i tīpakohia</string>
+    <string name="a11y_buttonSelectionNotSelected">kaore i tīpakotia</string>
+    <!-- Course Invitations -->
+    <string name="courseInvitationsTitle">Ngā Pōwhiri Akoranga (%d)</string>
+    <string name="courseInvitationAccepted">Pōwhiri ki %s whakaaetia</string>
+    <string name="courseInvitationDeclined">Pōwhiri ki %s i whakakāhoretia</string>
+    <string name="courseInvitationDeclineConfirmTitle">Whakakore i te Pōwhiri</string>
+    <string name="courseInvitationDeclineConfirmMessage">Kei te tino hiahia koe ki te whakakore i te pōwhiri ki %s?</string>
+
+    <!-- Welcome Widget -->
+    <!-- Greetings with name (%s is the student's first name) -->
+    <string name="welcomeGreetingMorningWithName">Mōrena, %s!</string>
+    <string name="welcomeGreetingAfternoonWithName">Ngā mihi o te ahiahi, %s!</string>
+    <string name="welcomeGreetingEveningWithName">Ngā mihi o te ahiahi, %s!</string>
+    <string name="welcomeGreetingNightWithName">Pō mārie, %s!</string>
+
+    <!-- Greetings without name (fallback when user has no first name) -->
+    <string name="welcomeGreetingMorning">Mōrena!</string>
+    <string name="welcomeGreetingAfternoon">Ngā mihi o te ahiahi!</string>
+    <string name="welcomeGreetingEvening">Ngā mihi o te ahiahi!</string>
+    <string name="welcomeGreetingNight">Pō mārie!</string>
+
+    <!-- Welcome Widget Motivational Messages -->
+    <string-array name="welcomeMessagesGeneric">
+        <item>Kei a koe tēnei.</item>
+        <item>Haere tonu — he kaha ake koe i tōu āhua o nāianei.</item>
+        <item>Kotahi te taahiraa i ia wā, he ahunga whakamua tonu.</item>
+        <item>Kaua e ngenge — ka mihi koe ki a koe i te heke mai.</item>
+        <item>He nui atu āu e taea ai i tō whakaaro.</item>
+        <item>Ahakoa ngā rā uaua, kei te anga whakamua tonu koe.</item>
+        <item>Whakawhirinaki ki a koe anō - kua oti kē i a koe ngā mea uaua i mua.</item>
+        <item>Te ahunga whakamua, kaua te tino pai. Kei te tino pai koe.</item>
+        <item>Kia kaha - kāore koe i te mokemoke i tēnei.</item>
+        <item>Kei te ako koe, kei te tipu, kei te mahi pai ake i tō whakaaro.</item>
+        <item>Kāore he aha te tūtuki — kei te ara tika tonu koe.</item>
+        <item>Kia kaha tonu — kei te tata atu koe i tō whakaaro.</item>
+        <item>He mea nui anō hoki ngā wikitoria iti.</item>
+        <item>Me haere tonu — kei te tata atu koe i tō whakaaro.</item>
+        <item>He pai te okioki. He wāhanga o te ako ngā okiokinga.</item>
+        <item>He wikitoria kē te ngana.</item>
+        <item>Te ahunga whakamua &gt; tino pai.</item>
+        <item>He mea nui ake te whakaatu i tō kaha i tō mōhio.</item>
+        <item>Kei te whakapakari pūkenga koe, ahakoa i ngā rā pōturi.</item>
+        <item>Kaua e wareware ki te manawa - kei te pai koe.</item>
+        <item>Ko tō tere te tere tika.</item>
+        <item>Kāore e hiahiatia kia whakatauhia ngā mea katoa i tēnei rā.</item>
+        <item>Nō konei koe.</item>
+        <item>Ka whai hua ngā mahi katoa e mahia ana e koe.</item>
+        <item>He pai ki te tīmata anō - kia maha ngā wā e hiahiatia ana.</item>
+        <item>Ko te mea e ahua uaua ana ināianei ka ngawari ake i muri mai.</item>
+        <item>Me haere tonu ki te whakaatu - koinā te mea nui.</item>
+        <item>Ko ngā takahanga iti ka nekehia ngā maunga nui.</item>
+        <item>Ko te okiokinga he wāhanga hoki o te ahunga whakamua.</item>
+        <item>Kei te pai ake tāu mahi i tō whakaaro.</item>
+        <item>Ahakoa te ahunga whakamua puhoi, he ahunga whakamua tonu.</item>
+        <item>Kāore te heke mai e hangaia i roto i te rā kotahi - engari kei te haere tonu koe.</item>
+        <item>Kotahi te mahi, kotahi te wā, kotahi te takahanga i ia wā.</item>
+        <item>Kāore koe e hiahia kia tino tika kia whai pānga ai.</item>
+        <item>He pōrearea te ako — ā, he mea noa tēnā.</item>
+        <item>He tipu ia nganatanga, ahakoa kāore i te rite.</item>
+        <item>Kua mahi koe i ngā mea uaua i mua — ka taea hoki e koe tēnei.</item>
+        <item>He mea nui tō kaha, ahakoa kāore tetahi e kite.</item>
+        <item>Kāore he aha te āta haere.</item>
+        <item>Kei te neke whakamua koe, ahakoa i ngā rā marino.</item>
+        <item>Kāore e hiahiatia kia mārama te ara i tēnei wā - me haere tonu.</item>
+        <item>He kaha ake koe i tōu āhua o nāianei.</item>
+        <item>Ka hangaia ngā whāinga nui mai i ngā takahanga iti.</item>
+        <item>Me haere tonu - ka mihi koe ki a koe i te heke mai.</item>
+        <item>Ahakoa te ahunga whakamua pōrearea, he ahunga whakamua tonu.</item>
+        <item>Kāore koe i muri — kei tō ara koe.</item>
+        <item>He pai ki te ako i a koe e haere ana.</item>
+        <item>Kei te tipu koe i ngā huarahi kāore pea koe e kite.</item>
+        <item>Ko tō kaha i tēnei rā he haumitanga mō āpōpō.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesMorning">
+        <item>Mōrena! Kei a koe tēnei — kotahi te akomanga, kotahi te taahiraa i ia wā.</item>
+        <item>Kāore anō kia rite? He mea noa tēnā. Tīmata noa i tō tūranga.</item>
+        <item>He āwhina te kawhe, engari he pai ake te mahi a te atawhai ki a koe anō.</item>
+        <item>Kei te hē te hangarau? Ka pā ki a tātou katoa — kaua e manukanuka.</item>
+        <item>Kāore e hiahiatia kia tino tika te rā nei, engari me taea.</item>
+        <item>Mōrena — he whai wāhitanga hou tēnei rā ki te ako me te tipu.</item>
+        <item>Ahakoa ngā taahiraa iti i tēnei ata ka neke ake koe ki ō whāinga.</item>
+        <item>Mā te manawa - kāore koe e hiahia kia mōhio ki ngā mea katoa i tēnei wā.</item>
+        <item>He uaua pea te hangarau, engari ehara i te mea ko koe anake kei te ako.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesAfternoon">
+        <item>I waenganui - kua nui ake āu mahi i tāu i whakaaro ai.</item>
+        <item>Kei te noho pūmau koe? Ka pā te katoa ki ngā pakitara, kaua e mutu te piki.</item>
+        <item>Ngā mahi, ngā māka, te heke mai&#8230; kāore anō kia mōhiotia e tetahi.</item>
+        <item>Kua ngenge te roro? He wā okioki tere = he pai ake te arotahi i muri mai.</item>
+        <item>Inoi atu mō te āwhina. He pono, kāore he tangata e mahi takitahi ana i tēnei.</item>
+        <item>Kua tae kē koe ki konei i tēnei rā — he mea whakahīhī tēnā.</item>
+        <item>Me whai wā okioki? He wāhanga anō hoki o te ako te whakakaha tinana.</item>
+        <item>Kāore he aha mēnā he āhua pōhēhē te ara — ka whanake ngā pūkenga i ia taahiraa, i ia taahiraa.</item>
+        <item>Whakapā mai mēnā kei te raru koe — he tata tonu te tautoko i te mea e whakaarohia ana.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesEvening">
+        <item>I angitu koe i te rā — he wikitoria tēnā.</item>
+        <item>I ngaro koe i te tangata? Pāpā atu ki tētahi — he āwhina.</item>
+        <item>Ahakoa i pōrearea te āhua o te rā nei, i tae mai koe. He mea nui tēnā.</item>
+        <item>Kia mahara: kāore he māka e ine i tō uara.</item>
+        <item>Whakangāwari, kata, panuku rānei i te whārangi me te kore hara — he tika tāu mahi.</item>
+        <item>Ka pai tō mahi i te rā — he mea nui te ahunga whakamua, ahakoa he marino.</item>
+        <item>Kei te ngaro ngā hoa, ngā kaiārahi rānei? Ka taea hoki te hono atu i roto i ngā wā poto.</item>
+        <item>He mea whakaaroaro ngā ahiahi — tirohia ngā mea kua akohia e koe i tēnei rā, kaua ko ngā mea anake hei mahi.</item>
+        <item>He mea nui ake tō kaha i te tino pai.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesNight">
+        <item>Kei te mahi tonu koe? Whakaute - engari kaua e wareware kei reira te moe.</item>
+        <item>Āpōpō ka mihi koe ki a koe anō mō ​​te okiokinga i tēnei pō.</item>
+        <item>Ka nui haere te manukanuka i te pō - kaua e whakapono ki ōna haruru katoa.</item>
+        <item>Kāore koe i muri, kei runga noa koe i tō ara.</item>
+        <item>Katia te pona - me moemoeā anō hoki tō roro.</item>
+        <item>He pai ki te okioki - kei te tatari a āpōpō me ngā whai wāhitanga hou.</item>
+        <item>He marathon te ako, ehara i te oma tere. Kia atawhai koe i a koe anō i tēnei pō.</item>
+        <item>Ki te taumaha ngā āwangawanga, kia mahara kāore koe e hiahia ki te kawe i aua āwangawanga ko koe anake.</item>
+        <item>Whakamutua te rā me te mōhio he whakatutukitanga kē te ngana.</item>
+    </string-array>
+
+    <!-- Accessibility -->
+    <string name="welcomeWidgetContentDescription">He karere powhiri: %1$s. %2$s</string>
+
+    <!-- Institutional Announcements -->
+    <string name="institutionalAnnouncementsTitle">Panuitanga (%d)</string>
+    <!-- Widget Display Names -->
+    <string name="widget_hello">Kia ora, %s</string>
+
+    <!-- Customize Dashboard -->
+    <string name="customize_dashboard">Whakaritea te Papatohu</string>
+    <string name="dashboard_widgets">Ngā taputapu</string>
+    <string name="move_up">Neke runga</string>
+    <string name="move_down">Neke Raro</string>
+    <string name="no_widgets">Kāore he widget e wātea ana</string>
+    <string name="changing_dashboard_layout">Kei te huri i te tahora o te papaaho</string>
+    <string name="changing_dashboard_layout_message">Hei huri i te tahora o te papaaho me tīmata anō te tono</string>
+    <string name="restart_now">Tīmata anō inaianei</string>
+    <string name="switched_back">Kua hoki anō?</string>
+    <string name="switched_back_message">Ngā mihi mō te whakamātau i te papaaho hou! Ka taea e koe te kōrero mai he aha koe i hoki anō ai?</string>
+    <string name="what_could_we_improve">He aha tā mātou e taea te whakapai ake?</string>
+    <string name="skip">Tīpoka</string>
+    <string name="widget_setting_show_greeting">Whakaatu mihi</string>
+    <string name="background_color">Tae papamuri</string>
+    <string name="offline_content_available">Kei te wātea ngā ihirangi tuimotu</string>
+    <string name="a11y_contentDescription_moreOptions">Kōwhiringa atu</string>
+    <string name="customizeCourse">Whakarite akoranga</string>
+    <string name="favoriteCoursesAndGroups">Ngā Akoranga me ngā Rōpū Tino Pai</string>
+    <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
+    <string name="ltiToolsOffline">Kāore ngā Utauta o Waho e wātea ana tuimotu.</string>
 </resources>

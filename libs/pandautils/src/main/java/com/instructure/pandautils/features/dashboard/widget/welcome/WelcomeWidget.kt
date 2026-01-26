@@ -19,7 +19,7 @@ package com.instructure.pandautils.features.dashboard.widget.welcome
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -94,7 +94,11 @@ private fun WelcomeContent(
 }
 
 @Preview(showBackground = true)
-@Preview(showBackground = true, uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES)
+@Preview(
+    showBackground = true,
+    uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES,
+    backgroundColor = 0x1F2124
+)
 @Composable
 fun WelcomeContentPreview() {
     WelcomeContent(

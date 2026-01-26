@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.utils.ContextKeeper
@@ -45,6 +46,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.selectable
 import com.instructure.horizon.model.LearningObjectStatus
 import com.instructure.horizon.model.LearningObjectType
 import com.instructure.pandautils.utils.localisedFormatMonthDay
@@ -66,6 +68,7 @@ data class ModuleItemCardState(
 @Composable
 fun ModuleItemCard(state: ModuleItemCardState, modifier: Modifier = Modifier) {
     val onClick = state.onClick
+    val context = LocalContext.current
     Card(
         shape = HorizonCornerRadius.level2,
         colors = CardDefaults.cardColors().copy(containerColor = HorizonColors.Surface.cardPrimary()),
@@ -73,7 +76,14 @@ fun ModuleItemCard(state: ModuleItemCardState, modifier: Modifier = Modifier) {
         modifier = modifier
     ) {
         val clickModifier = if (onClick != null) Modifier.clickable { onClick() } else Modifier
-        Row(verticalAlignment = Alignment.CenterVertically, modifier = clickModifier) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = clickModifier.semantics {
+                if (state.selected) {
+                    selectable(context, true)
+                }
+            }
+        ) {
             Column(
                 modifier = Modifier
                     .padding(vertical = 12.dp, horizontal = 16.dp)

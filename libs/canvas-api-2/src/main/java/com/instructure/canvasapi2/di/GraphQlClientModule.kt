@@ -16,11 +16,8 @@
 package com.instructure.canvasapi2.di
 
 import com.apollographql.apollo.ApolloClient
-import com.instructure.canvasapi2.CedarGraphQLClientConfig
 import com.instructure.canvasapi2.JourneyGraphQLClientConfig
-import com.instructure.canvasapi2.PineGraphQLClientConfig
 import com.instructure.canvasapi2.QLClientConfig
-import com.instructure.canvasapi2.RedwoodGraphQLClientConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,18 +30,6 @@ annotation class DefaultApolloClient
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
-annotation class RedwoodApolloClient
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class CedarApolloClient
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class PineApolloClient
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
 annotation class JourneyApolloClient
 
 @Module
@@ -54,33 +39,6 @@ class GraphQlClientModule {
     @DefaultApolloClient
     fun provideDefaultApolloClient(): ApolloClient {
         val config = QLClientConfig()
-        return config.buildClient()
-    }
-
-    @Provides
-    @RedwoodApolloClient
-    fun provideRedwoodApolloClient(redwoodGraphQLClientConfig: RedwoodGraphQLClientConfig): ApolloClient {
-        val config = QLClientConfig()
-        val block = redwoodGraphQLClientConfig.createClientConfigBlock()
-        config.block()
-        return config.buildClient()
-    }
-
-    @Provides
-    @CedarApolloClient
-    fun provideCedarApolloClient(cedarGraphQLClientConfig: CedarGraphQLClientConfig): ApolloClient {
-        val config = QLClientConfig()
-        val block = cedarGraphQLClientConfig.createClientConfigBlock()
-        config.block()
-        return config.buildClient()
-    }
-
-    @Provides
-    @PineApolloClient
-    fun providePineApolloClient(pineGraphQLClientConfig: PineGraphQLClientConfig): ApolloClient {
-        val config = QLClientConfig()
-        val block = pineGraphQLClientConfig.createClientConfigBlock()
-        config.block()
         return config.buildClient()
     }
 

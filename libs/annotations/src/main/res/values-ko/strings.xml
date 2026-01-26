@@ -1,0 +1,41 @@
+﻿<!--
+  ~ Copyright (C) 2018 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="inputText">입력 텍스트</string>
+    <string name="cancel">취소</string>
+    <string name="comment">의견/댓글</string>
+    <string name="skip">건너뛰기</string>
+    <string name="comments">의견/댓글</string>
+    <string name="error_loading_submission">이 제출을 로드하는 데 문제가 있었습니다.</string>
+    <string name="retry">다시 시도</string>
+    <string name="annotationErrorOccurred">메모를 로드하는 동안 예상치 못한 오류가 발생했습니다.</string>
+    <string name="annotationError">메모 오류</string>
+    <string name="annotationDialogMessage">다른 출처에서 메모가 삭제되었습니다.</string>
+    <string name="errorSendingMessage">이 메시지를 보낼 수 없습니다. 탭하여 다시 시도하세요.</string>
+    <string name="addAnnotationComment">의견/댓글 추가</string>
+    <string name="editComment">의견/댓글 편집</string>
+    <string name="deleteComment">의견/댓글 삭제</string>
+    <string name="deleteAnnotation">메모 삭제</string>
+    <string name="deleteCommentConfirmation">이 의견/댓글을 삭제하시겠습니까?</string>
+    <string name="deleteHeadCommentConfirmation">이 의견/댓글을 삭제하면 이 메모와 연결된 모든 의견/댓글이 삭제됩니다. 이 작업을 실행하시겠습니까?</string>
+    <string name="sendingSimple">보내는 중</string>
+    <string name="pspdf__annotation_type_stamp">메모 색</string>
+    <string name="removedComment">%2$s이(가) %1$s 제거</string>
+    <string name="pspdf__stamp_standard_section"></string>
+</resources>

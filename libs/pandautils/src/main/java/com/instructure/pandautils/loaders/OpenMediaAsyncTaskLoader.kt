@@ -30,7 +30,6 @@ import com.instructure.canvasapi2.CanvasRestAdapter.Companion.okHttpClient
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.HttpHelper.redirectURL
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.pandautils.R
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader.LoadedMedia
@@ -44,9 +43,7 @@ import okio.buffer
 import okio.sink
 import java.io.File
 import java.io.IOException
-import java.net.HttpURLConnection
 import java.net.MalformedURLException
-import java.net.URL
 import java.net.URLConnection
 import java.util.regex.Pattern
 
@@ -81,6 +78,12 @@ class OpenMediaAsyncTaskLoader(context: Context, args: Bundle?) : AsyncTaskLoade
         }
 
     }
+
+    data class DownloadResult(
+        val file: File,
+        val mimeType: String?,
+        val filename: String?
+    )
 
     private var mimeType: String? = null
     var url: String = ""
@@ -150,20 +153,21 @@ class OpenMediaAsyncTaskLoader(context: Context, args: Bundle?) : AsyncTaskLoade
                 loadedMedia.setHtmlBundle(bundle)
             } else {
                 loadedMedia.isHtmlFile = isHtmlFile
-                val uri = if (url.isNotBlank()) {
-                    attemptConnection(url)
+                if (url.isNotBlank()) {
+                    // For remote URLs, we'll get the URI and metadata during or after download
+                    val uri = Uri.parse(url)
+                    intent.setDataAndType(uri, mimeType)
+                    loadedMedia.intent = intent
+                    if (extras != null) loadedMedia.bundle = extras
+                    attemptDownloadFile(context, intent, loadedMedia, url, filename)
                 } else {
                     val file = File(path)
-                    FileProvider.getUriForFile(context, context.applicationContext.packageName + Const.FILE_PROVIDER_AUTHORITY, file)
-                }
-                if (uri != null) {
+                    val uri = FileProvider.getUriForFile(context, context.applicationContext.packageName + Const.FILE_PROVIDER_AUTHORITY, file)
                     intent.setDataAndType(uri, mimeType)
                     loadedMedia.intent = intent
                     if (extras != null) loadedMedia.bundle = extras
                     Log.d(Const.OPEN_MEDIA_ASYNC_TASK_LOADER_LOG, "Intent can be handled: " + isIntentHandledByActivity(intent))
                     attemptDownloadFile(context, intent, loadedMedia, url, filename)
-                } else {
-                    loadedMedia.errorMessage = R.string.noDataConnection
                 }
             }
         } catch (e: MalformedURLException) {
@@ -188,67 +192,51 @@ class OpenMediaAsyncTaskLoader(context: Context, args: Bundle?) : AsyncTaskLoade
     private val isHtmlFile: Boolean
         get() = filename?.endsWith(".htm", true) == true || filename?.endsWith(".html", true) == true
 
-    /**
-     * @return Uri if there's a connection, returns null otherwise
-     */
-    @Throws(IOException::class)
-    private fun attemptConnection(url: String): Uri? {
-        var uri: Uri? = null
-        val hc = URL(url).openConnection() as HttpURLConnection
-        val connection = redirectURL(hc)
-        val connectedUrl = connection.url.toString()
-        // When only the url is specified in the bundle arguments, mimeType and filename are null or empty.
-        if (!mimeType.isValid()) {
-            mimeType = connection.contentType // Gets content type from headers
-            if (mimeType == null) {
-                // Gets content type from url query param
-                mimeType = Uri.parse(url).getQueryParameter("content_type")
-            }
-            if (mimeType == null) throw IOException()
-        }
-        Log.d(Const.OPEN_MEDIA_ASYNC_TASK_LOADER_LOG, "mimeType: $mimeType")
-        if (!filename.isValid()) {
-            // parse filename from Content-Disposition header which is a response field that is normally used to set the file name
-            val headerField = connection.getHeaderField("Content-Disposition")
-            if (headerField != null) {
-                filename = parseFilename(headerField)
-                filename = makeFilenameUnique(filename, url)
-            } else {
-                filename = "" + url.hashCode()
-            }
-        }
-        if (connectedUrl.isValid()) {
-            uri = Uri.parse(connectedUrl)
-            if ("binary/octet-stream".equals(mimeType, true) || "*/*".equals(mimeType, true)) {
-                val guessedMimeType = URLConnection.guessContentTypeFromName(uri.path)
-                Log.d(Const.OPEN_MEDIA_ASYNC_TASK_LOADER_LOG, "guess mimeType: $guessedMimeType")
-                if (guessedMimeType.isValid()) {
-                    mimeType = guessedMimeType
-                }
-            }
-        }
-        connection.disconnect()
-        return uri
-    }
-
-    private fun downloadFile(context: Context, url: String, filename: String?): File {
+    private fun downloadFile(context: Context, url: String, filenameParam: String?): File {
         // They have to download the content first... gross.
         // Download it if the file doesn't exist in the external cache
         Log.d(Const.OPEN_MEDIA_ASYNC_TASK_LOADER_LOG, "downloadFile URL: $url")
-        val attachmentFile = if (filename?.endsWith(".pdf").orDefault()) {
-            File(File(context.filesDir, "pdfs-${ApiPrefs.user?.id}"), filename)
+
+        // If we don't have a filename yet, we need to download to get it from headers
+        // We'll use a temporary approach first
+        val needsFilenameFromHeaders = !filenameParam.isValid()
+
+        if (needsFilenameFromHeaders) {
+            // Download and get filename from headers
+            val result = downloadWithHeaders(context, url, null)
+            // Update instance variables with values from headers
+            if (!mimeType.isValid() && result.mimeType != null) {
+                mimeType = result.mimeType
+            }
+            if (!filename.isValid() && result.filename != null) {
+                filename = result.filename
+            }
+            return result.file
         } else {
-            File(getAttachmentsDirectory(context), filename)
-        }
-        Log.d(Const.OPEN_MEDIA_ASYNC_TASK_LOADER_LOG, "File: $attachmentFile")
-        if (!attachmentFile.exists()) {
-            // Download the content from the url
-            if (writeAttachmentsDirectoryFromURL(url, attachmentFile)) {
-                Log.d(Const.OPEN_MEDIA_ASYNC_TASK_LOADER_LOG, "file not cached")
+            // We have a filename, check if file exists
+            val attachmentFile = if (filenameParam?.endsWith(".pdf").orDefault()) {
+                File(File(context.filesDir, "pdfs-${ApiPrefs.user?.id}"), filenameParam)
+            } else {
+                File(getAttachmentsDirectory(context), filenameParam)
+            }
+            Log.d(Const.OPEN_MEDIA_ASYNC_TASK_LOADER_LOG, "File: $attachmentFile")
+
+            if (!attachmentFile.exists()) {
+                // Download the file and get headers in the same request
+                val result = downloadWithHeaders(context, url, attachmentFile)
+                // Update mimeType if we didn't have it
+                if (!mimeType.isValid() && result.mimeType != null) {
+                    mimeType = result.mimeType
+                }
+                return result.file
+            } else {
+                // File exists, ensure we have mimeType
+                if (!mimeType.isValid()) {
+                    mimeType = guessMimeTypeFromFilename(attachmentFile.name)
+                }
                 return attachmentFile
             }
         }
-        return attachmentFile
     }
 
     private fun isIntentHandledByActivity(intent: Intent): Boolean {
@@ -286,7 +274,7 @@ class OpenMediaAsyncTaskLoader(context: Context, args: Bundle?) : AsyncTaskLoade
 
     @Throws(IOException::class)
     @Suppress("BooleanLiteralArgument")
-    private fun writeAttachmentsDirectoryFromURL(url: String, toWriteTo: File): Boolean {
+    private fun downloadWithHeaders(context: Context, url: String, targetFile: File?): DownloadResult {
         val client = okHttpClient.newBuilder().cache(null).build()
         val params = RestParams(null, null, "/api/v1/", false, true, false, false, null)
         val requestBuilder = Request.Builder().url(url).tag(params)
@@ -294,24 +282,101 @@ class OpenMediaAsyncTaskLoader(context: Context, args: Bundle?) : AsyncTaskLoade
         if (cookie.isValid()) requestBuilder.addHeader("Cookie", cookie)
         val request = requestBuilder.build()
         val response = client.newCall(request).execute()
-        if (!response.isSuccessful) {
-            response.body?.close()
-            throw IOException("Unable to download. Error code ${response.code}")
+
+        return response.use { resp ->
+            if (!resp.isSuccessful) {
+                throw IOException("Unable to download. Error code ${resp.code}")
+            }
+
+            // Extract headers from response (headers are available before reading the body)
+            var responseMimeType = resp.header("Content-Type")
+            var responseFilename: String? = null
+
+            // Parse filename from Content-Disposition header
+            val contentDisposition = resp.header("Content-Disposition")
+            if (contentDisposition != null) {
+                responseFilename = parseFilename(contentDisposition)
+            }
+
+            // If we still don't have a filename, generate one from URL
+            if (responseFilename == null) {
+                responseFilename = url.hashCode().toString()
+            }
+
+            // Make filename unique if we have the necessary info
+            responseFilename = makeFilenameUnique(responseFilename, url, fileId)
+
+            // Determine the actual file to write to
+            val toWriteTo = targetFile ?: run {
+                if (responseFilename.endsWith(".pdf", ignoreCase = true)) {
+                    File(File(context.filesDir, "pdfs-${ApiPrefs.user?.id}"), responseFilename)
+                } else {
+                    File(getAttachmentsDirectory(context), responseFilename)
+                }
+            }
+
+            // Check if file already exists in cache
+            if (toWriteTo.exists() && toWriteTo.length() > 0) {
+                Log.d(Const.OPEN_MEDIA_ASYNC_TASK_LOADER_LOG, "File found in cache, skipping download: $toWriteTo")
+
+                // If mimeType is generic, try to guess from filename
+                if (responseMimeType == "binary/octet-stream" || responseMimeType == "*/*") {
+                    val guessedMimeType = guessMimeTypeFromFilename(responseFilename)
+                    if (guessedMimeType != null) {
+                        responseMimeType = guessedMimeType
+                    }
+                }
+
+                // Response will be closed automatically by use() when we return
+                return@use DownloadResult(
+                    file = toWriteTo,
+                    mimeType = responseMimeType,
+                    filename = responseFilename
+                )
+            }
+
+            // File not in cache, proceed with download
+            Log.d(Const.OPEN_MEDIA_ASYNC_TASK_LOADER_LOG, "Downloading file with mimeType: $responseMimeType, filename: $responseFilename")
+
+            toWriteTo.parentFile?.mkdirs()
+
+            resp.body!!.use { body ->
+                val sink = toWriteTo.sink().buffer()
+                sink.use { s ->
+                    body.source().use { source ->
+                        s.writeAll(source)
+                    }
+                }
+            }
+
+            Log.d(Const.OPEN_MEDIA_ASYNC_TASK_LOADER_LOG, "Download completed: $toWriteTo")
+
+            // If mimeType is generic, try to guess from filename
+            if (responseMimeType == "binary/octet-stream" || responseMimeType == "*/*") {
+                val guessedMimeType = guessMimeTypeFromFilename(responseFilename)
+                if (guessedMimeType != null) {
+                    responseMimeType = guessedMimeType
+                }
+            }
+
+            DownloadResult(
+                file = toWriteTo,
+                mimeType = responseMimeType,
+                filename = responseFilename
+            )
         }
-        toWriteTo.parentFile.mkdirs()
-        val sink = toWriteTo.sink().buffer()
-        val source: Source = response.body!!.source()
-        sink.writeAll(source)
-        sink.flush()
-        sink.close()
-        source.close()
-        return true
+    }
+
+    private fun guessMimeTypeFromFilename(filename: String): String? {
+        val guessedMimeType = URLConnection.guessContentTypeFromName(filename)
+        Log.d(Const.OPEN_MEDIA_ASYNC_TASK_LOADER_LOG, "Guessed mimeType: $guessedMimeType for filename: $filename")
+        return if (guessedMimeType.isValid()) guessedMimeType else null
     }
 
     companion object {
         fun parseFilename(headerField: String?): String? {
             var filename = headerField
-            val matcher = Pattern.compile("filename=\"(.*)\"").matcher(headerField)
+            val matcher = Pattern.compile("filename=\"(.*)\"").matcher(headerField ?: "")
             if (matcher.find()) {
                 filename = matcher.group(1)
             }
@@ -319,7 +384,7 @@ class OpenMediaAsyncTaskLoader(context: Context, args: Bundle?) : AsyncTaskLoade
         }
 
         fun makeFilenameUnique(filename: String?, url: String, fileId: String? = null): String {
-            val matcher = Pattern.compile("(.*)\\.(.*)").matcher(filename)
+            val matcher = Pattern.compile("(.*)\\.(.*)").matcher(filename ?: "")
             return if (matcher.find()) {
                 val actualFilename = matcher.group(1)
                 val fileType = matcher.group(2)

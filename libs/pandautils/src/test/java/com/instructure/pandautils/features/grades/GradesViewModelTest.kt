@@ -42,6 +42,7 @@ import com.instructure.pandautils.features.grades.gradepreferences.GradePreferen
 import com.instructure.pandautils.features.grades.gradepreferences.SortBy
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.DisplayGrade
+import com.instructure.pandautils.utils.orDefault
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -77,9 +78,10 @@ class GradesViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val context = mockk<Context>(relaxed = true)
-    private val gradesBehaviour = mockk<GradesBehaviour>(relaxed = true)
     private val gradesRepository = mockk<GradesRepository>(relaxed = true)
     private val gradeFormatter = mockk<GradeFormatter>(relaxed = true)
+    private val gradeCalculator = mockk<GradeCalculator>(relaxed = true)
+    private val gradesViewModelBehavior = mockk<GradesViewModelBehavior>(relaxed = true)
     private val savedStateHandle = mockk<SavedStateHandle>(relaxed = true)
 
     private lateinit var viewModel: GradesViewModel
@@ -90,7 +92,6 @@ class GradesViewModelTest {
         Dispatchers.setMain(testDispatcher)
 
         every { savedStateHandle.get<Long>(COURSE_ID_KEY) } returns 1
-        every { gradesBehaviour.canvasContextColor } returns 1
         coEvery { gradesRepository.getCourseGrade(any(), any(), any(), any()) } returns CourseGrade()
         every { gradesRepository.getSortBy() } returns null
 
@@ -143,9 +144,7 @@ class GradesViewModelTest {
 
         val expected = GradesUiState(
             isLoading = false,
-            canvasContextColor = 1,
             gradePreferencesUiState = GradePreferencesUiState(
-                canvasContextColor = 1,
                 courseName = "Course 1",
                 gradingPeriods = gradingPeriods,
                 defaultGradingPeriod = gradingPeriods.first(),
@@ -163,7 +162,10 @@ class GradesViewModelTest {
                             name = "Assignment 1",
                             dueDate = "No due date",
                             submissionStateLabel = SubmissionStateLabel.NotSubmitted,
-                            displayGrade = DisplayGrade("")
+                            displayGrade = DisplayGrade(""),
+                            score = null,
+                            maxScore = 0.0,
+                            whatIfScore = null
                         )
                     )
                 )
@@ -182,10 +184,7 @@ class GradesViewModelTest {
 
         val expected = GradesUiState(
             isLoading = false,
-            canvasContextColor = 1,
-            gradePreferencesUiState = GradePreferencesUiState(
-                canvasContextColor = 1
-            ),
+            gradePreferencesUiState = GradePreferencesUiState(),
             isError = true
         )
 
@@ -203,9 +202,7 @@ class GradesViewModelTest {
 
         val expected = GradesUiState(
             isLoading = false,
-            canvasContextColor = 1,
             gradePreferencesUiState = GradePreferencesUiState(
-                canvasContextColor = 1,
                 courseName = "Course 1",
                 gradingPeriods = emptyList()
             ),
@@ -366,9 +363,7 @@ class GradesViewModelTest {
 
         val expected = GradesUiState(
             isLoading = false,
-            canvasContextColor = 1,
             gradePreferencesUiState = GradePreferencesUiState(
-                canvasContextColor = 1,
                 courseName = "Course 1"
             ),
             items = listOf(
@@ -383,7 +378,10 @@ class GradesViewModelTest {
                             name = "Assignment 4",
                             dueDate = getFormattedDate(today.minusDays(1)),
                             submissionStateLabel = SubmissionStateLabel.Submitted,
-                            displayGrade = DisplayGrade("")
+                            displayGrade = DisplayGrade(""),
+                            score = 0.0,
+                            maxScore = 0.0,
+                            whatIfScore = null
                         )
                     )
                 ),
@@ -398,7 +396,10 @@ class GradesViewModelTest {
                             name = "Assignment 2",
                             dueDate = getFormattedDate(today.plusDays(1)),
                             submissionStateLabel = SubmissionStateLabel.NotSubmitted,
-                            displayGrade = DisplayGrade("")
+                            displayGrade = DisplayGrade(""),
+                            score = null,
+                            maxScore = 0.0,
+                            whatIfScore = null
                         )
                     )
                 ),
@@ -413,7 +414,10 @@ class GradesViewModelTest {
                             name = "Assignment 1",
                             dueDate = "No due date",
                             submissionStateLabel = SubmissionStateLabel.NotSubmitted,
-                            displayGrade = DisplayGrade("")
+                            displayGrade = DisplayGrade(""),
+                            score = null,
+                            maxScore = 0.0,
+                            whatIfScore = null
                         )
                     )
                 ),
@@ -428,7 +432,10 @@ class GradesViewModelTest {
                             name = "Assignment 3",
                             dueDate = getFormattedDate(today.minusDays(1)),
                             submissionStateLabel = SubmissionStateLabel.Graded,
-                            displayGrade = DisplayGrade("A")
+                            displayGrade = DisplayGrade("A"),
+                            score = 0.0,
+                            maxScore = 0.0,
+                            whatIfScore = null
                         ),
                         AssignmentUiState(
                             id = 5,
@@ -440,7 +447,10 @@ class GradesViewModelTest {
                                 R.color.textInfo,
                                 "Custom Status 1"
                             ),
-                            displayGrade = DisplayGrade("")
+                            displayGrade = DisplayGrade(""),
+                            score = 0.0,
+                            maxScore = 0.0,
+                            whatIfScore = null
                         ),
                         AssignmentUiState(
                             id = 6,
@@ -449,6 +459,9 @@ class GradesViewModelTest {
                             dueDate = "No due date",
                             submissionStateLabel = SubmissionStateLabel.Graded,
                             displayGrade = DisplayGrade("A"),
+                            score = 0.0,
+                            maxScore = 15.0,
+                            whatIfScore = null,
                             checkpoints = listOf(
                                 DiscussionCheckpointUiState(
                                     name = "Reply to topic",
@@ -617,9 +630,7 @@ class GradesViewModelTest {
 
         val expected = GradesUiState(
             isLoading = false,
-            canvasContextColor = 1,
             gradePreferencesUiState = GradePreferencesUiState(
-                canvasContextColor = 1,
                 courseName = "Course 1",
                 sortBy = SortBy.GROUP
             ),
@@ -635,7 +646,10 @@ class GradesViewModelTest {
                             name = "Assignment 1",
                             dueDate = "No due date",
                             submissionStateLabel = SubmissionStateLabel.NotSubmitted,
-                            displayGrade = DisplayGrade("")
+                            displayGrade = DisplayGrade(""),
+                            score = null,
+                            maxScore = 0.0,
+                            whatIfScore = null
                         ),
                         AssignmentUiState(
                             id = 2,
@@ -643,7 +657,10 @@ class GradesViewModelTest {
                             name = "Assignment 2",
                             dueDate = "No due date",
                             submissionStateLabel = SubmissionStateLabel.NotSubmitted,
-                            displayGrade = DisplayGrade("")
+                            displayGrade = DisplayGrade(""),
+                            score = null,
+                            maxScore = 0.0,
+                            whatIfScore = null
                         )
 
                     )
@@ -659,7 +676,10 @@ class GradesViewModelTest {
                             name = "Assignment 3",
                             dueDate = "No due date",
                             submissionStateLabel = SubmissionStateLabel.Graded,
-                            displayGrade = DisplayGrade("A")
+                            displayGrade = DisplayGrade("A"),
+                            score = 0.0,
+                            maxScore = 0.0,
+                            whatIfScore = null
                         ),
                         AssignmentUiState(
                             id = 4,
@@ -667,7 +687,10 @@ class GradesViewModelTest {
                             name = "Assignment 4",
                             dueDate = "No due date",
                             submissionStateLabel = SubmissionStateLabel.Submitted,
-                            displayGrade = DisplayGrade("")
+                            displayGrade = DisplayGrade(""),
+                            score = 0.0,
+                            maxScore = 0.0,
+                            whatIfScore = null
                         ),
                         AssignmentUiState(
                             id = 5,
@@ -679,7 +702,10 @@ class GradesViewModelTest {
                                 R.color.textInfo,
                                 "Custom Status 1"
                             ),
-                            displayGrade = DisplayGrade("")
+                            displayGrade = DisplayGrade(""),
+                            score = 0.0,
+                            maxScore = 0.0,
+                            whatIfScore = null
                         ),
                         AssignmentUiState(
                             id = 6,
@@ -688,6 +714,9 @@ class GradesViewModelTest {
                             dueDate = "No due date",
                             submissionStateLabel = SubmissionStateLabel.Graded,
                             displayGrade = DisplayGrade("A"),
+                            score = 0.0,
+                            maxScore = 15.0,
+                            whatIfScore = null,
                             checkpoints = listOf(
                                 DiscussionCheckpointUiState(
                                     name = "Reply to topic",
@@ -727,9 +756,7 @@ class GradesViewModelTest {
 
         val expected = GradesUiState(
             isLoading = false,
-            canvasContextColor = 1,
             gradePreferencesUiState = GradePreferencesUiState(
-                canvasContextColor = 1,
                 courseName = "Course 1",
                 gradingPeriods = emptyList()
             ),
@@ -752,9 +779,7 @@ class GradesViewModelTest {
 
         val expected = GradesUiState(
             isLoading = false,
-            canvasContextColor = 1,
             gradePreferencesUiState = GradePreferencesUiState(
-                canvasContextColor = 1,
                 courseName = "Course 1",
                 gradingPeriods = emptyList()
             ),
@@ -804,10 +829,8 @@ class GradesViewModelTest {
 
         val expected = GradesUiState(
             isLoading = false,
-            canvasContextColor = 1,
             gradePreferencesUiState = GradePreferencesUiState(
-                courseName = "Course 1",
-                canvasContextColor = 1
+                courseName = "Course 1"
             ),
             items = listOf(
                 AssignmentGroupUiState(
@@ -821,7 +844,10 @@ class GradesViewModelTest {
                             name = "Assignment 1",
                             dueDate = "No due date",
                             submissionStateLabel = SubmissionStateLabel.NotSubmitted,
-                            displayGrade = DisplayGrade("")
+                            displayGrade = DisplayGrade(""),
+                            score = null,
+                            maxScore = 0.0,
+                            whatIfScore = null
                         )
                     )
                 )
@@ -839,10 +865,8 @@ class GradesViewModelTest {
 
         val show = GradesUiState(
             isLoading = false,
-            canvasContextColor = 1,
             gradePreferencesUiState = GradePreferencesUiState(
-                show = true,
-                canvasContextColor = 1
+                show = true
             )
         )
 
@@ -865,10 +889,7 @@ class GradesViewModelTest {
 
         val expected = GradesUiState(
             isLoading = false,
-            canvasContextColor = 1,
-            gradePreferencesUiState = GradePreferencesUiState(
-                canvasContextColor = 1
-            ),
+            gradePreferencesUiState = GradePreferencesUiState(),
             onlyGradedAssignmentsSwitchEnabled = false
         )
 
@@ -917,9 +938,7 @@ class GradesViewModelTest {
 
         val loaded = GradesUiState(
             isLoading = false,
-            canvasContextColor = 1,
             gradePreferencesUiState = GradePreferencesUiState(
-                canvasContextColor = 1,
                 courseName = "Course 1"
             ),
             items = listOf(
@@ -934,7 +953,10 @@ class GradesViewModelTest {
                             name = "Assignment 1",
                             dueDate = "No due date",
                             submissionStateLabel = SubmissionStateLabel.NotSubmitted,
-                            displayGrade = DisplayGrade("")
+                            displayGrade = DisplayGrade(""),
+                            score = null,
+                            maxScore = 0.0,
+                            whatIfScore = null
                         )
                     )
                 )
@@ -985,9 +1007,7 @@ class GradesViewModelTest {
 
         val expected = GradesUiState(
             isLoading = false,
-            canvasContextColor = 1,
             gradePreferencesUiState = GradePreferencesUiState(
-                canvasContextColor = 1,
                 courseName = "Course 1"
             ),
             items = listOf(
@@ -1002,7 +1022,10 @@ class GradesViewModelTest {
                             name = "Assignment 1",
                             dueDate = "No due date",
                             submissionStateLabel = SubmissionStateLabel.NotSubmitted,
-                            displayGrade = DisplayGrade("")
+                            displayGrade = DisplayGrade(""),
+                            score = null,
+                            maxScore = 0.0,
+                            whatIfScore = null
                         )
                     )
                 )
@@ -1075,8 +1098,268 @@ class GradesViewModelTest {
         Assert.assertTrue(viewModel.uiState.value.items.first().assignments.first().checkpointsExpanded)
     }
 
+    @Test
+    fun `Show what-if scores switch checked`() {
+        createViewModel()
+
+        viewModel.handleAction(GradesAction.ShowWhatIfScoreSwitchCheckedChange(true))
+
+        Assert.assertTrue(viewModel.uiState.value.showWhatIfScore)
+    }
+
+    @Test
+    fun `Hide what-if scores switch unchecked`() {
+        createViewModel()
+
+        viewModel.handleAction(GradesAction.ShowWhatIfScoreSwitchCheckedChange(true))
+        viewModel.handleAction(GradesAction.ShowWhatIfScoreSwitchCheckedChange(false))
+
+        Assert.assertFalse(viewModel.uiState.value.showWhatIfScore)
+    }
+
+    @Test
+    fun `Toggle what-if switch with existing scores calls calculator`() {
+        val assignmentGroups = listOf(
+            AssignmentGroup(
+                id = 1,
+                name = "Group 1",
+                assignments = listOf(
+                    Assignment(
+                        id = 1,
+                        name = "Assignment 1",
+                        pointsPossible = 10.0,
+                        submissionTypesRaw = listOf(
+                            SubmissionType.online_text_entry.rawValue
+                        ),
+                        submission = Submission(
+                            score = 5.0
+                        )
+                    )
+                )
+            )
+        )
+
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns listOf()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns assignmentGroups
+        every { gradeCalculator.calculateGrade(any(), any(), any(), any()) } returns 85.0
+
+        createViewModel()
+
+        viewModel.handleAction(GradesAction.UpdateWhatIfScore(1, 9.0))
+
+        viewModel.handleAction(GradesAction.ShowWhatIfScoreSwitchCheckedChange(true))
+
+        verify {
+            gradeCalculator.calculateGrade(
+                groups = assignmentGroups,
+                whatIfScores = mapOf(1L to 9.0),
+                applyGroupWeights = false,
+                onlyGraded = true
+            )
+        }
+    }
+
+    @Test
+    fun `Update what-if score for assignment`() {
+        val assignmentGroups = listOf(
+            AssignmentGroup(
+                id = 1,
+                name = "Group 1",
+                assignments = listOf(
+                    Assignment(
+                        id = 1,
+                        name = "Assignment 1",
+                        pointsPossible = 10.0,
+                        submissionTypesRaw = listOf(
+                            SubmissionType.online_text_entry.rawValue
+                        ),
+                        submission = Submission(
+                            score = 5.0
+                        )
+                    )
+                )
+            )
+        )
+
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns listOf()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns assignmentGroups
+        every { gradeCalculator.calculateGrade(any(), any(), any(), any()) } returns 80.0
+
+        createViewModel()
+
+        viewModel.handleAction(GradesAction.ShowWhatIfScoreSwitchCheckedChange(true))
+
+        viewModel.handleAction(GradesAction.UpdateWhatIfScore(1, 8.0))
+
+        val assignment = viewModel.uiState.value.items.first().assignments.first()
+        Assert.assertEquals(8.0, assignment.whatIfScore.orDefault(), 0.01)
+
+        verify {
+            gradeCalculator.calculateGrade(
+                groups = assignmentGroups,
+                whatIfScores = mapOf(1L to 8.0),
+                applyGroupWeights = false,
+                onlyGraded = true
+            )
+        }
+    }
+
+    @Test
+    fun `Show what-if score dialog for assignment`() {
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns listOf()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns listOf(
+            AssignmentGroup(
+                id = 1,
+                name = "Group 1",
+                assignments = listOf(
+                    Assignment(
+                        id = 1,
+                        name = "Assignment 1",
+                        pointsPossible = 10.0,
+                        submissionTypesRaw = listOf(
+                            SubmissionType.online_text_entry.rawValue
+                        ),
+                        submission = Submission(
+                            score = 5.0
+                        )
+                    )
+                )
+            )
+        )
+
+        createViewModel()
+
+        viewModel.handleAction(GradesAction.ShowWhatIfScoreDialog(1L))
+
+        Assert.assertNotNull(viewModel.uiState.value.whatIfScoreDialogData)
+        Assert.assertEquals(1L, viewModel.uiState.value.whatIfScoreDialogData?.assignmentId)
+    }
+
+    @Test
+    fun `Clear what-if score for assignment`() {
+        val assignmentGroups = listOf(
+            AssignmentGroup(
+                id = 1,
+                name = "Group 1",
+                assignments = listOf(
+                    Assignment(
+                        id = 1,
+                        name = "Assignment 1",
+                        pointsPossible = 10.0,
+                        submissionTypesRaw = listOf(
+                            SubmissionType.online_text_entry.rawValue
+                        ),
+                        submission = Submission(
+                            score = 5.0
+                        )
+                    )
+                )
+            )
+        )
+
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns listOf()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns assignmentGroups
+        every { gradeCalculator.calculateGrade(any(), any(), any(), any()) } returns 80.0
+        coEvery { gradeFormatter.getGradeString(any(), any(), any()) } returns "85% B"
+
+        createViewModel()
+
+        viewModel.handleAction(GradesAction.ShowWhatIfScoreSwitchCheckedChange(true))
+
+        viewModel.handleAction(GradesAction.UpdateWhatIfScore(1, 8.0))
+
+        viewModel.handleAction(GradesAction.UpdateWhatIfScore(1, null))
+
+        val assignment = viewModel.uiState.value.items.first().assignments.first()
+        Assert.assertNull(assignment.whatIfScore)
+
+        verify { gradeFormatter.getGradeString(any(), any(), any()) }
+    }
+
+    @Test
+    fun `What-if scores preserved when sorting changes`() {
+        val today = LocalDateTime.now()
+        val assignmentGroups = listOf(
+            AssignmentGroup(
+                id = 1,
+                name = "Group 1",
+                assignments = listOf(
+                    Assignment(
+                        id = 1,
+                        name = "Assignment 1",
+                        pointsPossible = 10.0,
+                        dueAt = today.plusDays(1).toApiString(),
+                        submissionTypesRaw = listOf(
+                            SubmissionType.online_text_entry.rawValue
+                        ),
+                        submission = Submission(
+                            score = 5.0
+                        )
+                    ),
+                    Assignment(
+                        id = 2,
+                        name = "Assignment 2",
+                        pointsPossible = 20.0,
+                        dueAt = today.plusDays(2).toApiString(),
+                        submissionTypesRaw = listOf(
+                            SubmissionType.online_text_entry.rawValue
+                        ),
+                        submission = Submission(
+                            score = 15.0
+                        )
+                    )
+                )
+            )
+        )
+
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns listOf()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns assignmentGroups
+        every { gradeCalculator.calculateGrade(any(), any(), any(), any()) } returns 85.0
+
+        createViewModel()
+
+        viewModel.handleAction(GradesAction.ShowWhatIfScoreSwitchCheckedChange(true))
+        viewModel.handleAction(GradesAction.UpdateWhatIfScore(1, 9.0))
+        viewModel.handleAction(GradesAction.UpdateWhatIfScore(2, 18.0))
+
+        val assignmentBefore = viewModel.uiState.value.items.flatMap { it.assignments }.find { it.id == 1L }
+        Assert.assertEquals(9.0, assignmentBefore?.whatIfScore.orDefault(), 0.01)
+
+        viewModel.handleAction(GradesAction.GradePreferencesUpdated(null, SortBy.GROUP))
+
+        val assignment1After = viewModel.uiState.value.items.flatMap { it.assignments }.find { it.id == 1L }
+        val assignment2After = viewModel.uiState.value.items.flatMap { it.assignments }.find { it.id == 2L }
+        Assert.assertEquals(9.0, assignment1After?.whatIfScore.orDefault(), 0.01)
+        Assert.assertEquals(18.0, assignment2After?.whatIfScore.orDefault(), 0.01)
+
+        verify {
+            gradeCalculator.calculateGrade(
+                groups = assignmentGroups,
+                whatIfScores = mapOf(1L to 9.0, 2L to 18.0),
+                applyGroupWeights = false,
+                onlyGraded = true
+            )
+        }
+    }
+
     private fun createViewModel() {
-        viewModel = GradesViewModel(context, gradesBehaviour, gradesRepository, gradeFormatter, savedStateHandle)
+        viewModel = GradesViewModel(
+            context,
+            gradesRepository,
+            gradeFormatter, gradeCalculator,
+            gradesViewModelBehavior,
+            savedStateHandle
+        )
     }
 
     private fun getFormattedDate(localDateTime: LocalDateTime): String {
