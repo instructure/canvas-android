@@ -75,6 +75,8 @@ import com.instructure.pandautils.features.dashboard.widget.courses.model.GradeD
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getFragmentActivityOrNull
 
+internal val COURSE_CARD_HEIGHT = 76.dp
+
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun CourseCard(
@@ -114,7 +116,7 @@ fun CourseCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(76.dp)
+                .height(COURSE_CARD_HEIGHT)
                 .clickable(enabled = courseCard.isClickable) { activity?.let { onCourseClick(it, courseCard.id) } },
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -356,7 +358,7 @@ fun CourseCardShimmer(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(76.dp)
+                .height(COURSE_CARD_HEIGHT)
                 .padding(start = 2.dp, top = 2.dp, bottom = 2.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {

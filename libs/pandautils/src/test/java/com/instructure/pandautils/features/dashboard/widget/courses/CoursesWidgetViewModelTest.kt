@@ -26,7 +26,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.Group
-import com.instructure.pandautils.features.dashboard.widget.courses.model.GradeDisplay
+import com.instructure.pandautils.data.repository.user.UserRepository
 import com.instructure.pandautils.domain.usecase.announcements.LoadCourseAnnouncementsUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadFavoriteCoursesParams
@@ -35,7 +35,7 @@ import com.instructure.pandautils.domain.usecase.courses.LoadGroupsParams
 import com.instructure.pandautils.domain.usecase.courses.LoadGroupsUseCase
 import com.instructure.pandautils.features.dashboard.customize.WidgetSettingItem
 import com.instructure.pandautils.features.dashboard.widget.SettingType
-import com.instructure.pandautils.features.dashboard.widget.courses.CoursesConfig
+import com.instructure.pandautils.features.dashboard.widget.courses.model.GradeDisplay
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetConfigUseCase
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
@@ -85,6 +85,7 @@ class CoursesWidgetViewModelTest {
     private val crashlytics: FirebaseCrashlytics = mockk(relaxed = true)
     private val localBroadcastManager: LocalBroadcastManager = mockk()
     private val observeWidgetConfigUseCase: ObserveWidgetConfigUseCase = mockk()
+    private val userRepository: UserRepository = mockk(relaxed = true)
 
     private lateinit var viewModel: CoursesWidgetViewModel
 
@@ -776,6 +777,110 @@ class CoursesWidgetViewModelTest {
         verify { crashlytics.recordException(exception) }
     }
 
+    @Test
+    fun `onCourseMoved does nothing when fromIndex equals toIndex`() {
+        setupDefaultMocks()
+        val courses = listOf(
+            Course(id = 1, name = "Course 1", isFavorite = true),
+            Course(id = 2, name = "Course 2", isFavorite = true),
+            Course(id = 3, name = "Course 3", isFavorite = true)
+        )
+        coEvery { loadFavoriteCoursesUseCase(any()) } returns courses
+
+        viewModel = createViewModel()
+        val initialState = viewModel.uiState.value
+
+        viewModel.uiState.value.onCourseMoved(1, 1)
+
+        val finalState = viewModel.uiState.value
+        assertEquals(initialState.courses, finalState.courses)
+        coVerify(exactly = 0) { userRepository.updateDashboardPositions(any()) }
+    }
+
+    @Test
+    fun `onCourseMoved updates UI state when moving course forward`() {
+        setupDefaultMocks()
+        val courses = listOf(
+            Course(id = 1, name = "Course 1", isFavorite = true),
+            Course(id = 2, name = "Course 2", isFavorite = true),
+            Course(id = 3, name = "Course 3", isFavorite = true)
+        )
+        coEvery { loadFavoriteCoursesUseCase(any()) } returns courses
+
+        viewModel = createViewModel()
+
+        viewModel.uiState.value.onCourseMoved(0, 2)
+
+        val state = viewModel.uiState.value
+        assertEquals(2L, state.courses[0].id)
+        assertEquals(3L, state.courses[1].id)
+        assertEquals(1L, state.courses[2].id)
+    }
+
+    @Test
+    fun `onCourseMoved updates UI state when moving course backward`() {
+        setupDefaultMocks()
+        val courses = listOf(
+            Course(id = 1, name = "Course 1", isFavorite = true),
+            Course(id = 2, name = "Course 2", isFavorite = true),
+            Course(id = 3, name = "Course 3", isFavorite = true)
+        )
+        coEvery { loadFavoriteCoursesUseCase(any()) } returns courses
+
+        viewModel = createViewModel()
+
+        viewModel.uiState.value.onCourseMoved(2, 0)
+
+        val state = viewModel.uiState.value
+        assertEquals(3L, state.courses[0].id)
+        assertEquals(1L, state.courses[1].id)
+        assertEquals(2L, state.courses[2].id)
+    }
+
+    @Test
+    fun `onCourseMoved calls updateDashboardPositions with correct positions`() {
+        setupDefaultMocks()
+        val courses = listOf(
+            Course(id = 1, name = "Course 1", isFavorite = true),
+            Course(id = 2, name = "Course 2", isFavorite = true),
+            Course(id = 3, name = "Course 3", isFavorite = true)
+        )
+        coEvery { loadFavoriteCoursesUseCase(any()) } returns courses
+        coEvery { userRepository.updateDashboardPositions(any()) } returns mockk()
+
+        viewModel = createViewModel()
+
+        viewModel.uiState.value.onCourseMoved(0, 2)
+
+        coVerify {
+            userRepository.updateDashboardPositions(
+                match { positions ->
+                    positions.positions["course_2"] == 0 &&
+                    positions.positions["course_3"] == 1 &&
+                    positions.positions["course_1"] == 2
+                }
+            )
+        }
+    }
+
+    @Test
+    fun `onCourseMoved records exception when updateDashboardPositions fails`() {
+        setupDefaultMocks()
+        val courses = listOf(
+            Course(id = 1, name = "Course 1", isFavorite = true),
+            Course(id = 2, name = "Course 2", isFavorite = true)
+        )
+        val exception = Exception("Failed to update positions")
+        coEvery { loadFavoriteCoursesUseCase(any()) } returns courses
+        coEvery { userRepository.updateDashboardPositions(any()) } throws exception
+
+        viewModel = createViewModel()
+
+        viewModel.uiState.value.onCourseMoved(0, 1)
+
+        verify { crashlytics.recordException(exception) }
+    }
+
     private fun createViewModel(): CoursesWidgetViewModel {
         return CoursesWidgetViewModel(
             loadFavoriteCoursesUseCase = loadFavoriteCoursesUseCase,
@@ -789,7 +894,8 @@ class CoursesWidgetViewModelTest {
             featureFlagProvider = featureFlagProvider,
             crashlytics = crashlytics,
             localBroadcastManager = localBroadcastManager,
-            observeWidgetConfigUseCase = observeWidgetConfigUseCase
+            observeWidgetConfigUseCase = observeWidgetConfigUseCase,
+            userRepository = userRepository
         )
     }
 }

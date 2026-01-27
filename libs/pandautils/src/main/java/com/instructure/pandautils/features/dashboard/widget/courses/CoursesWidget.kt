@@ -30,6 +30,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -50,6 +51,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.times
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ContextKeeper
@@ -103,23 +105,29 @@ fun CoursesWidgetContent(
                     isExpanded = uiState.isCoursesExpanded,
                     onToggleExpanded = uiState.onToggleCoursesExpanded
                 ) {
-                    val lazyGridState = rememberReorderableLazyGridState()
-                    val reorderableLazyGridState = rememberReorderableLazyGridState(lazyGridState) { from, to ->
-                        uiState.onCourseMoved(from.index, to.index)
-                    }
+                    val lazyGridState = rememberLazyGridState()
+                    val reorderableLazyGridState = rememberReorderableLazyGridState(
+                        lazyGridState = lazyGridState,
+                        onMove = { from, to ->
+                            uiState.onCourseMoved(from.index, to.index)
+                        }
+                    )
+
+                    val rows = (uiState.courses.size + columns - 1) / columns
+                    val gridHeight = rows * COURSE_CARD_HEIGHT + (rows - 1) * 12.dp
 
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(columns),
                         state = lazyGridState,
                         modifier = Modifier
                             .padding(horizontal = 16.dp)
-                            .wrapContentHeight(),
+                            .height(gridHeight),
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp),
                         userScrollEnabled = false
                     ) {
                         items(uiState.courses, key = { it.id }) { course ->
-                            ReorderableItem(reorderableLazyGridState, key = course.id) {
+                            ReorderableItem(reorderableLazyGridState, key = course.id) { isDragging ->
                                 CourseCard(
                                     courseCard = course,
                                     showGrade = uiState.showGrades,

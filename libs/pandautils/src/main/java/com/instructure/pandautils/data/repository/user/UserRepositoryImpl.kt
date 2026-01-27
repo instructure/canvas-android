@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.data.repository.user
 
+import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Account
@@ -40,6 +41,10 @@ class UserRepositoryImpl(
 
     override suspend fun updateDashboardPositions(positions: DashboardPositions): DataResult<DashboardPositions> {
         val params = RestParams(isForceReadFromNetwork = true)
-        return userApi.updateDashboardPositions(positions, params)
+        val result = userApi.updateDashboardPositions(positions, params)
+        if (result is DataResult.Success) {
+            CanvasRestAdapter.clearCacheUrls("dashboard/dashboard_cards")
+        }
+        return result
     }
 }
