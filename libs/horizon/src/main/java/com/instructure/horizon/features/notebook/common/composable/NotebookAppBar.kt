@@ -17,6 +17,7 @@
 package com.instructure.horizon.features.notebook.common.composable
 
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -42,6 +43,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
+import com.instructure.horizon.util.zeroScreenInsets
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -111,6 +113,7 @@ fun NotebookAppBar(
             titleContentColor = HorizonColors.Text.title(),
             navigationIconContentColor = HorizonColors.Icon.default()
         ),
+        windowInsets = WindowInsets.zeroScreenInsets,
         modifier = modifier
     )
 }

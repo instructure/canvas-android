@@ -18,15 +18,12 @@ package com.instructure.horizon.features.account
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.add
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -50,8 +47,9 @@ import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.HorizonDivider
+import com.instructure.horizon.horizonui.organisms.scaffolds.EdgeToEdgeScaffold
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
-import com.instructure.horizon.util.HorizonEdgeToEdgeSystemBars
+import com.instructure.horizon.util.plus
 import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.getActivityOrNull
 
@@ -79,18 +77,29 @@ fun AccountScreen(
     }
 
     LoadingStateWrapper(state.screenState) {
-        HorizonEdgeToEdgeSystemBars(
+        EdgeToEdgeScaffold (
             statusBarColor = HorizonColors.Surface.pagePrimary(),
-        ) {
-            AccountContentScreen(state, navController, state.performLogout, state.switchExperience)
+        ) { contentPadding ->
+            AccountContentScreen(
+                state,
+                contentPadding,
+                navController,
+                state.performLogout,
+                state.switchExperience)
         }
     }
 }
 
 @Composable
-private fun AccountContentScreen(state: AccountUiState, navController: NavController, onLogout: () -> Unit, switchExperience: () -> Unit) {
+private fun AccountContentScreen(
+    state: AccountUiState,
+    contentPadding: PaddingValues,
+    navController: NavController,
+    onLogout: () -> Unit,
+    switchExperience: () -> Unit
+) {
     LazyColumn(
-        contentPadding = WindowInsets.safeDrawing.add(WindowInsets(24.dp, 24.dp, 24.dp, 24.dp)).asPaddingValues()
+        contentPadding = PaddingValues(24.dp, 24.dp, 24.dp, 24.dp) + contentPadding
     ) {
         item {
             Column {

@@ -34,7 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
-import com.instructure.horizon.util.bottomNavigationScreenInsets
+import com.instructure.horizon.util.topHorizontalWindowInsets
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebView
 import com.instructure.pandautils.compose.composables.ComposeEmbeddedWebViewCallbacks
 import com.instructure.pandautils.utils.ThemePrefs
@@ -58,7 +58,7 @@ fun SkillspaceScreen(state: SkillspaceUiState) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .windowInsetsPadding(WindowInsets.bottomNavigationScreenInsets)
+            .windowInsetsPadding(WindowInsets.topHorizontalWindowInsets)
     ) {
         LoadingStateWrapper(state.loadingState) {
             state.webviewUrl?.let {

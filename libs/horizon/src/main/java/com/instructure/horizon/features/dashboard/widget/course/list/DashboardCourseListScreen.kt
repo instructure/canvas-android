@@ -66,10 +66,10 @@ import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
 import com.instructure.horizon.horizonui.molecules.ProgressBarSmall
 import com.instructure.horizon.horizonui.molecules.ProgressBarStyle
-import com.instructure.horizon.horizonui.organisms.CollapsableScaffold
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelect
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectInputSize
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectState
+import com.instructure.horizon.horizonui.organisms.scaffolds.CollapsableScaffold
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import kotlin.math.roundToInt
 
@@ -79,14 +79,15 @@ fun DashboardCourseListScreen(
     state: DashboardCourseListUiState,
     homeNavController: NavHostController,
 ) {
-    LoadingStateWrapper(state.loadingState) {
-        CollapsableScaffold(
-            containerColor = HorizonColors.Surface.pagePrimary(),
-            topBar = { DashboardCourseListTopBar(homeNavController) },
-        ) {
+    CollapsableScaffold(
+        containerColor = HorizonColors.Surface.pagePrimary(),
+        statusBarColor = HorizonColors.Surface.pagePrimary(),
+        topBar = { DashboardCourseListTopBar(homeNavController) },
+    ) { contentPadding ->
+        LoadingStateWrapper(state.loadingState, modifier = Modifier.padding(contentPadding)) {
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
-                contentPadding = PaddingValues(top = 8.dp, bottom = 24.dp),
+                contentPadding = PaddingValues(top = 8.dp, bottom = 24.dp)
             ) {
                 stickyHeader {
                     DashboardCourseListHeader(state)
@@ -119,10 +120,10 @@ fun DashboardCourseListScreen(
 }
 
 @Composable
-private fun DashboardCourseListHeader(state: DashboardCourseListUiState) {
+private fun DashboardCourseListHeader(state: DashboardCourseListUiState, modifier: Modifier = Modifier) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .background(HorizonColors.Surface.pagePrimary())
             .padding(16.dp)

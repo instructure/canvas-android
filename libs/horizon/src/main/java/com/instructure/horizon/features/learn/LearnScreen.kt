@@ -25,7 +25,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -34,7 +33,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
@@ -62,7 +60,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -81,10 +78,9 @@ import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.HorizonDivider
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.organisms.inputs.common.InputDropDownPopup
+import com.instructure.horizon.horizonui.organisms.scaffolds.EdgeToEdgeScaffold
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
-import com.instructure.horizon.util.HorizonEdgeToEdgeSystemBars
-import com.instructure.horizon.util.bottomNavigationScreenInsets
 import com.instructure.pandautils.compose.modifiers.conditional
 import kotlinx.coroutines.delay
 
@@ -101,31 +97,28 @@ fun LearnScreen(state: LearnUiState, mainNavController: NavHostController) {
         }
     }
 
-    HorizonEdgeToEdgeSystemBars(null, null) {
-        Scaffold(
-            contentWindowInsets = WindowInsets.bottomNavigationScreenInsets,
-            containerColor = HorizonColors.Surface.pagePrimary(),
-            snackbarHost = { SnackbarHost(snackbarHostState) }
-        ) { padding ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                when {
-                    state.screenState.isError -> ErrorContent(
-                        state.screenState,
-                        state.screenState.errorMessage.orEmpty()
-                    )
+    EdgeToEdgeScaffold(
+        containerColor = HorizonColors.Surface.pagePrimary(),
+        snackbarHost = { SnackbarHost(snackbarHostState) }
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            when {
+                state.screenState.isError -> ErrorContent(
+                    state.screenState,
+                    state.screenState.errorMessage.orEmpty()
+                )
 
-                    state.screenState.isLoading -> LoadingContent()
-                    else -> if (state.learningItems.isEmpty()) {
-                        LearnScreenEmptyContent(state)
-                    } else {
-                        LearnScreenWrapper(state, mainNavController, Modifier.fillMaxSize())
-                    }
+                state.screenState.isLoading -> LoadingContent()
+                else -> if (state.learningItems.isEmpty()) {
+                    LearnScreenEmptyContent(state)
+                } else {
+                    LearnScreenWrapper(state, mainNavController, Modifier.fillMaxSize())
                 }
             }
         }

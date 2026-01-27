@@ -20,10 +20,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -33,7 +32,6 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
@@ -84,9 +82,7 @@ import com.instructure.horizon.horizonui.organisms.inputs.multiselectsearch.Mult
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelect
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectInputSize
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectState
-import com.instructure.horizon.util.HorizonEdgeToEdgeSystemBars
-import com.instructure.horizon.util.fullScreenInsets
-import com.instructure.horizon.util.zeroScreenInsets
+import com.instructure.horizon.horizonui.organisms.scaffolds.EdgeToEdgeScaffold
 import com.instructure.pandautils.utils.localisedFormat
 import java.util.Date
 
@@ -105,21 +101,17 @@ fun HorizonInboxListScreen(
         }
     }
 
-    HorizonEdgeToEdgeSystemBars(
+    EdgeToEdgeScaffold(
         statusBarColor = HorizonColors.Surface.pagePrimary(),
         navigationBarColor = HorizonColors.Surface.cardPrimary(),
-    ) {
-        Scaffold(
-            contentWindowInsets = WindowInsets.zeroScreenInsets,
-            snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-            containerColor = HorizonColors.Surface.pagePrimary(),
-        ) { padding ->
-            InboxStateWrapper(
-                state,
-                navController,
-                Modifier.padding(padding)
-            )
-        }
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        containerColor = HorizonColors.Surface.pagePrimary(),
+    ) { contentPadding ->
+        InboxStateWrapper(
+            state,
+            navController,
+            contentPadding
+        )
     }
 }
 
@@ -128,6 +120,7 @@ fun HorizonInboxListScreen(
 private fun InboxStateWrapper(
     state: HorizonInboxListUiState,
     navController: NavHostController,
+    contentPadding: PaddingValues,
     modifier: Modifier = Modifier
 ) {
     val pullToRefreshState = rememberPullToRefreshState()
@@ -140,7 +133,8 @@ private fun InboxStateWrapper(
         indicator = {
             Indicator(
                 modifier = Modifier
-                    .align(Alignment.TopCenter),
+                    .align(Alignment.TopCenter)
+                    .padding(contentPadding),
                 isRefreshing = state.loadingState.isRefreshing,
                 containerColor = HorizonColors.Surface.pageSecondary(),
                 color = HorizonColors.Surface.institution(),
@@ -149,7 +143,7 @@ private fun InboxStateWrapper(
         },
         content = {
             LazyColumn(
-                contentPadding = WindowInsets.fullScreenInsets.asPaddingValues()
+                contentPadding = contentPadding
             ) {
                 inboxHeader(state, navController)
 

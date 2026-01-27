@@ -19,9 +19,12 @@ package com.instructure.horizon.features.home
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
@@ -36,6 +39,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -79,6 +83,7 @@ private val bottomNavItems = listOf(
     )
 )
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun HomeScreen(parentNavController: NavHostController, viewModel: HomeViewModel) {
     val uiState by viewModel.uiState.collectAsState()
@@ -91,9 +96,25 @@ fun HomeScreen(parentNavController: NavHostController, viewModel: HomeViewModel)
         val theme = uiState.theme
         if (theme != null && activity != null && !ThemePrefs.isThemeApplied) ThemePrefs.applyCanvasTheme(theme, activity)
     }
+
+    val isImeVisible = WindowInsets.isImeVisible
+    val layoutDirection = LocalLayoutDirection.current
+
     Scaffold(
         contentWindowInsets = WindowInsets.zeroScreenInsets,
         content = { padding ->
+            // TODO: When #3483 PR has been merged back to master, we need to revise the scaffold + ime padding handling
+            val adjustedPadding = if (isImeVisible) {
+                PaddingValues(
+                    start = padding.calculateLeftPadding(layoutDirection),
+                    top = padding.calculateTopPadding(),
+                    end = padding.calculateRightPadding(layoutDirection),
+                    bottom = 0.dp
+                )
+            } else {
+                padding
+            }
+
             if (uiState.initialDataLoading) {
                 val spinnerColor =
                     if (ThemePrefs.isThemeApplied) HorizonColors.Surface.institution() else HorizonColors.Surface.inverseSecondary()
@@ -102,7 +123,7 @@ fun HomeScreen(parentNavController: NavHostController, viewModel: HomeViewModel)
                 if (uiState.showAiAssist) {
                     AiAssistantScreen(parentNavController, { uiState.updateShowAiAssist(false) })
                 }
-                HomeNavigation(navController, parentNavController, Modifier.padding(padding))
+                HomeNavigation(navController, parentNavController, Modifier.padding(adjustedPadding))
             }
         },
         containerColor = HorizonColors.Surface.pagePrimary(),
