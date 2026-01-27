@@ -103,7 +103,10 @@ fun HorizonInboxDetailsScreen(
 ) {
     EdgeToEdgeScaffold(
         statusBarColor = null,
-        navigationBarColor = null,
+        navigationBarColor = if (state.replyState == null)
+            HorizonColors.Surface.cardPrimary()
+        else
+            HorizonColors.Surface.pagePrimary(),
         containerColor = HorizonColors.Surface.pagePrimary(),
         topBar = {
             HorizonInboxDetailsHeader(
