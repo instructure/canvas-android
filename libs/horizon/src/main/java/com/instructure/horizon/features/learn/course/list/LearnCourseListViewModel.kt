@@ -45,7 +45,7 @@ class LearnCourseListViewModel @Inject constructor(
     ))
     val state = _uiState.asStateFlow()
 
-    private val pageCount = 2
+    private val pageCount = 10
     private var allCourses: List<LearnCourseState> = emptyList()
 
     init {
