@@ -69,8 +69,7 @@ import kotlin.math.min
 
 @Composable
 fun DashboardCourseSection(
-    mainNavController: NavHostController,
-    homeNavController: NavHostController,
+    navController: NavHostController,
     shouldRefresh: Boolean,
     refreshState: MutableStateFlow<List<Boolean>>,
     modifier: Modifier = Modifier,
@@ -87,21 +86,20 @@ fun DashboardCourseSection(
         }
     }
 
-    DashboardCourseSection(state, mainNavController, homeNavController, modifier)
+    DashboardCourseSection(state, navController, modifier)
 }
 
 @Composable
 fun DashboardCourseSection(
     state: DashboardCourseUiState,
-    mainNavController: NavHostController,
-    homeNavController: NavHostController,
+    navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
     when(state.state) {
         DashboardItemState.LOADING -> {
             DashboardCourseCardContent(
                 DashboardCourseCardState.Loading,
-                { handleClickAction(it, mainNavController, homeNavController) },
+                { handleClickAction(it, navController) },
                 true,
                 modifier = modifier.padding(horizontal = 24.dp)
             )
@@ -110,7 +108,7 @@ fun DashboardCourseSection(
             DashboardCourseCardError({state.onRefresh {} }, modifier.padding(horizontal = 24.dp))
         }
         DashboardItemState.SUCCESS -> {
-            DashboardCourseSectionContent(state, mainNavController, homeNavController, modifier)
+            DashboardCourseSectionContent(state, navController, modifier)
         }
     }
 }
@@ -118,8 +116,7 @@ fun DashboardCourseSection(
 @Composable
 private fun DashboardCourseSectionContent(
     state: DashboardCourseUiState,
-    mainNavController: NavHostController,
-    homeNavController: NavHostController,
+    navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
     // Display 4 cards at most
@@ -132,8 +129,7 @@ private fun DashboardCourseSectionContent(
         if (state.programs.items.isNotEmpty()) {
             DashboardPaginatedWidgetCard(
                 state.programs,
-                mainNavController,
-                homeNavController,
+                navController,
             )
         }
 
@@ -150,8 +146,7 @@ private fun DashboardCourseSectionContent(
                     in 0..2 -> {
                         DashboardCourseItem(
                             state.courses[index],
-                            mainNavController,
-                            homeNavController,
+                            navController,
                             modifier.padding(bottom = 12.dp)
                                 .onGloballyPositioned { coordinates ->
                                     val cardHeight = coordinates.size.height
@@ -169,7 +164,7 @@ private fun DashboardCourseSectionContent(
                                 .padding(bottom = 12.dp)
                                 .height(maxCardHeight.toDp.dp)
                         ) {
-                            homeNavController.navigate(HomeNavigationRoute.CourseList.route)
+                            navController.navigate(HomeNavigationRoute.CourseList.route)
                         }
                     }
                 }
@@ -178,7 +173,7 @@ private fun DashboardCourseSectionContent(
             Button(
                 stringResource(R.string.dashboardSeeAllCoursesLabel),
                 onClick = {
-                    homeNavController.navigate(HomeNavigationRoute.CourseList.route)
+                    navController.navigate(HomeNavigationRoute.CourseList.route)
                 },
                 width = ButtonWidth.FILL,
                 color = ButtonColor.WhiteWithOutline,
@@ -207,8 +202,7 @@ private fun DashboardCourseSectionContent(
 @Composable
 private fun DashboardCourseItem(
     cardState: DashboardCourseCardState,
-    mainNavController: NavHostController,
-    homeNavController: NavHostController,
+    navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -217,7 +211,7 @@ private fun DashboardCourseItem(
     ){
         DashboardCourseCardContent(
             cardState,
-            { handleClickAction(it, mainNavController, homeNavController) },
+            { handleClickAction(it, navController) },
             false
         )
     }
@@ -225,16 +219,15 @@ private fun DashboardCourseItem(
 
 private fun handleClickAction(
     action: CardClickAction?,
-    mainNavController: NavHostController,
-    homeNavController: NavHostController
+    navController: NavHostController,
 ) {
     when(action) {
         is CardClickAction.Action -> {
             action.onClick()
         }
         is CardClickAction.NavigateToCourse -> {
-            homeNavController.navigate(HomeNavigationRoute.Learn.withCourse(action.courseId)) {
-                popUpTo(homeNavController.graph.findStartDestination().id) {
+            navController.navigate(HomeNavigationRoute.Learn.route) {
+                popUpTo(navController.graph.findStartDestination().id) {
                     saveState = true
                 }
                 launchSingleTop = true
@@ -242,7 +235,7 @@ private fun handleClickAction(
             }
         }
         is CardClickAction.NavigateToModuleItem -> {
-            mainNavController.navigate(
+            navController.navigate(
                 MainNavigationRoute.ModuleItemSequence(
                     action.courseId,
                     action.moduleItemId
@@ -250,8 +243,8 @@ private fun handleClickAction(
             )
         }
         is CardClickAction.NavigateToProgram -> {
-            homeNavController.navigate(HomeNavigationRoute.Learn.withProgram(action.programId)) {
-                popUpTo(homeNavController.graph.findStartDestination().id) {
+            navController.navigate(HomeNavigationRoute.Learn.route) {
+                popUpTo(navController.graph.findStartDestination().id) {
                     saveState = true
                 }
                 launchSingleTop = true

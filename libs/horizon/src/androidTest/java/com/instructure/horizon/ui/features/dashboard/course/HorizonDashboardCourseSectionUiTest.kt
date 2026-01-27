@@ -99,9 +99,8 @@ class HorizonDashboardCourseSectionUiTest {
             )
         )
         composeTestRule.setContent {
-            val mainNavController = rememberNavController()
-            val homeNavController = rememberNavController()
-            DashboardCourseSection(state, mainNavController,homeNavController)
+            val navController = rememberNavController()
+            DashboardCourseSection(state, navController)
         }
 
         composeTestRule.onNodeWithText("Program 1").assertExists()

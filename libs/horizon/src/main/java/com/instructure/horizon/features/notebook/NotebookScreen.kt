@@ -88,13 +88,13 @@ import com.instructure.pandautils.utils.localisedFormat
 
 @Composable
 fun NotebookScreen(
-    mainNavController: NavHostController,
+    navController: NavHostController,
     viewModel: NotebookViewModel,
 ) {
     val state by viewModel.uiState.collectAsState()
 
     NotebookScreen(
-        navController = mainNavController,
+        navController = navController,
         state = state
     )
 }

@@ -56,7 +56,7 @@ internal fun List<Program>.mapToDashboardCourseCardState(context: Context): List
                 R.string.dashboardCourseCardProgramDetailsMessage,
                 program.name
             ),
-            route = DashboardPaginatedWidgetCardButtonRoute.HomeRoute(HomeNavigationRoute.Learn.withProgram(program.id)),
+            route = DashboardPaginatedWidgetCardButtonRoute.HomeRoute(HomeNavigationRoute.Learn.route),
         )
     }
 }

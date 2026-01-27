@@ -77,12 +77,12 @@ import kotlin.math.roundToInt
 @Composable
 fun DashboardCourseListScreen(
     state: DashboardCourseListUiState,
-    homeNavController: NavHostController,
+    navController: NavHostController,
 ) {
     LoadingStateWrapper(state.loadingState) {
         CollapsableScaffold(
             containerColor = HorizonColors.Surface.pagePrimary(),
-            topBar = { DashboardCourseListTopBar(homeNavController) },
+            topBar = { DashboardCourseListTopBar(navController) },
         ) {
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -98,7 +98,7 @@ fun DashboardCourseListScreen(
                 } else {
                     val visibleCourses = state.courses.take(state.visibleCourseCount)
                     items(visibleCourses) {
-                        CourseItemCard(it, homeNavController)
+                        CourseItemCard(it, navController)
                     }
 
                     if (state.courses.size > state.visibleCourseCount) {
@@ -158,12 +158,12 @@ private fun DashboardCourseListHeader(state: DashboardCourseListUiState) {
 @Composable
 private fun CourseItemCard(
     courseState: DashboardCourseListCourseState,
-    homeNavController: NavHostController
+    navController: NavHostController
 ) {
     DashboardCard(
         modifier = Modifier.padding(horizontal = 16.dp),
         onClick = {
-            homeNavController.navigate(HomeNavigationRoute.Learn.withCourse(courseState.courseId))
+            navController.navigate(HomeNavigationRoute.Learn.route)
         }
     ) {
         Column(
@@ -171,7 +171,7 @@ private fun CourseItemCard(
         ) {
             if (courseState.parentPrograms.isNotEmpty()) {
                 ProgramsText(courseState.parentPrograms) {
-                    homeNavController.navigate(HomeNavigationRoute.Learn.withProgram(it))
+                    navController.navigate(HomeNavigationRoute.Learn.route)
                 }
                 HorizonSpace(SpaceSize.SPACE_16)
             }
@@ -191,7 +191,7 @@ private fun CourseItemCard(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun DashboardCourseListTopBar(homeNavController: NavHostController) {
+private fun DashboardCourseListTopBar(navController: NavHostController) {
     CenterAlignedTopAppBar(
        colors = TopAppBarDefaults.topAppBarColors(
             containerColor = HorizonColors.Surface.pagePrimary(),
@@ -212,7 +212,7 @@ private fun DashboardCourseListTopBar(homeNavController: NavHostController) {
                 color = IconButtonColor.Inverse,
                 size = IconButtonSize.SMALL,
                 elevation = HorizonElevation.level4,
-                onClick = { homeNavController.popBackStack() },
+                onClick = { navController.popBackStack() },
                 modifier = Modifier.padding(horizontal = 24.dp)
             )
         },

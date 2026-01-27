@@ -15,8 +15,11 @@
  */
 package com.instructure.horizon.features.dashboard
 
+import com.instructure.canvasapi2.models.CanvasTheme
+
 data class DashboardUiState(
     val logoUrl: String = "",
+    val theme: CanvasTheme? = null,
     val externalShouldRefresh: Boolean = false,
     val updateExternalShouldRefresh: (Boolean) -> Unit = {},
     val unreadCountState: DashboardUnreadState = DashboardUnreadState(),

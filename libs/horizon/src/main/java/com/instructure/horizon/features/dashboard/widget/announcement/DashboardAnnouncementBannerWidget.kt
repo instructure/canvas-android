@@ -36,8 +36,7 @@ import kotlinx.coroutines.flow.update
 
 @Composable
 fun DashboardAnnouncementBannerWidget(
-    mainNavController: NavHostController,
-    homeNavController: NavHostController,
+    navController: NavHostController,
     shouldRefresh: Boolean,
     refreshState: MutableStateFlow<List<Boolean>>,
     modifier: Modifier = Modifier,
@@ -55,23 +54,21 @@ fun DashboardAnnouncementBannerWidget(
     }
 
     if (state.state != DashboardItemState.SUCCESS || state.cardState.items.isNotEmpty()) {
-        DashboardAnnouncementBannerSection(state, mainNavController, homeNavController, modifier)
+        DashboardAnnouncementBannerSection(state, navController, modifier)
     }
 }
 
 @Composable
 fun DashboardAnnouncementBannerSection(
     state: DashboardAnnouncementBannerUiState,
-    mainNavController: NavHostController,
-    homeNavController: NavHostController,
+    navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
     when (state.state) {
         DashboardItemState.LOADING -> {
             DashboardPaginatedWidgetCard(
                 DashboardPaginatedWidgetCardState.Loading,
-                mainNavController,
-                homeNavController,
+                navController,
                 modifier
             )
         }
@@ -89,8 +86,7 @@ fun DashboardAnnouncementBannerSection(
         DashboardItemState.SUCCESS -> {
             DashboardPaginatedWidgetCard(
                 state.cardState,
-                mainNavController,
-                homeNavController,
+                navController,
                 modifier
             )
         }
