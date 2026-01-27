@@ -17,6 +17,7 @@ package com.instructure.horizon.horizonui.organisms.scaffolds
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.union
 import androidx.compose.material3.FabPosition
@@ -59,7 +60,7 @@ fun EdgeToEdgeScaffold(
             floatingActionButtonPosition = floatingActionButtonPosition,
             containerColor = containerColor,
             contentColor = contentColor,
-            contentWindowInsets = statusBarWindowInsets.union(navigationBarWindowInsets).union(WindowInsets.ime),
+            contentWindowInsets = statusBarWindowInsets.add(navigationBarWindowInsets).union(WindowInsets.ime),
             content = content
         )
     }
