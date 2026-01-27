@@ -23,11 +23,7 @@ import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidge
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import io.mockk.verify
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.runTest
 import org.junit.After
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
@@ -45,20 +41,6 @@ class TeacherCoursesWidgetBehaviorTest {
     @After
     fun teardown() {
         unmockkAll()
-    }
-
-    @Test
-    fun `observeGradeVisibility always returns false for teacher`() = runTest {
-        val result = behavior.observeGradeVisibility().first()
-
-        assertFalse(result)
-    }
-
-    @Test
-    fun `observeColorOverlay always returns true for teacher`() = runTest {
-        val result = behavior.observeColorOverlay().first()
-
-        assertTrue(result)
     }
 
     @Test
