@@ -26,8 +26,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DashboardPositions
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
+import com.instructure.pandautils.data.repository.user.UserRepository
 import com.instructure.pandautils.domain.usecase.announcements.LoadCourseAnnouncementsUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCaseParams
@@ -69,7 +71,8 @@ class CoursesWidgetViewModel @Inject constructor(
     private val featureFlagProvider: FeatureFlagProvider,
     private val crashlytics: FirebaseCrashlytics,
     private val localBroadcastManager: LocalBroadcastManager,
-    private val observeWidgetConfigUseCase: ObserveWidgetConfigUseCase
+    private val observeWidgetConfigUseCase: ObserveWidgetConfigUseCase,
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
     private var courses: List<Course> = emptyList()
@@ -85,7 +88,8 @@ class CoursesWidgetViewModel @Inject constructor(
             onCustomizeCourse = ::onCustomizeCourse,
             onAllCourses = ::onAllCourses,
             onAnnouncementClick = ::onAnnouncementClick,
-            onGroupMessageClick = ::onGroupMessageClick
+            onGroupMessageClick = ::onGroupMessageClick,
+            onCourseMoved = ::onCourseMoved
         )
     )
     val uiState: StateFlow<CoursesWidgetUiState> = _uiState.asStateFlow()
@@ -145,6 +149,34 @@ class CoursesWidgetViewModel @Inject constructor(
     private fun onGroupMessageClick(activity: FragmentActivity, groupId: Long) {
         val group = groups.find { it.id == groupId } ?: return
         coursesWidgetBehavior.onGroupMessageClick(activity, group)
+    }
+
+    private fun onCourseMoved(fromIndex: Int, toIndex: Int) {
+        if (fromIndex == toIndex) return
+
+        val currentCourses = _uiState.value.courses.toMutableList()
+        val movedCourse = currentCourses.removeAt(fromIndex)
+        currentCourses.add(toIndex, movedCourse)
+
+        _uiState.update { it.copy(courses = currentCourses) }
+
+        courses = courses.toMutableList().apply {
+            val course = removeAt(fromIndex)
+            add(toIndex, course)
+        }
+
+        viewModelScope.launch {
+            try {
+                val positions = courses.mapIndexed { index, course ->
+                    course.contextId to index
+                }.toMap()
+                val dashboardPositions = DashboardPositions(positions)
+
+                userRepository.updateDashboardPositions(dashboardPositions)
+            } catch (e: Exception) {
+                crashlytics.recordException(e)
+            }
+        }
     }
 
     fun refresh() {

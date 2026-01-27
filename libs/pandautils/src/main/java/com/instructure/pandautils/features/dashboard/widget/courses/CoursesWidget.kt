@@ -26,6 +26,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -56,6 +60,8 @@ import com.instructure.pandautils.features.dashboard.widget.courses.model.GroupC
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.getFragmentActivityOrNull
 import kotlinx.coroutines.flow.SharedFlow
+import sh.calvin.reorderable.ReorderableItem
+import sh.calvin.reorderable.rememberReorderableLazyGridState
 
 @Composable
 fun CoursesWidget(
@@ -97,23 +103,35 @@ fun CoursesWidgetContent(
                     isExpanded = uiState.isCoursesExpanded,
                     onToggleExpanded = uiState.onToggleCoursesExpanded
                 ) {
-                    NonLazyGrid(
-                        columns = columns,
-                        itemCount = uiState.courses.size,
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        horizontalSpacing = 12.dp,
-                        verticalSpacing = 12.dp
-                    ) { index ->
-                        val course = uiState.courses[index]
-                        CourseCard(
-                            courseCard = course,
-                            showGrade = uiState.showGrades,
-                            showColorOverlay = uiState.showColorOverlay,
-                            onCourseClick = uiState.onCourseClick,
-                            onManageOfflineContent = uiState.onManageOfflineContent,
-                            onCustomizeCourse = uiState.onCustomizeCourse,
-                            onAnnouncementClick = uiState.onAnnouncementClick
-                        )
+                    val lazyGridState = rememberReorderableLazyGridState()
+                    val reorderableLazyGridState = rememberReorderableLazyGridState(lazyGridState) { from, to ->
+                        uiState.onCourseMoved(from.index, to.index)
+                    }
+
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(columns),
+                        state = lazyGridState,
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .wrapContentHeight(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                        userScrollEnabled = false
+                    ) {
+                        items(uiState.courses, key = { it.id }) { course ->
+                            ReorderableItem(reorderableLazyGridState, key = course.id) {
+                                CourseCard(
+                                    courseCard = course,
+                                    showGrade = uiState.showGrades,
+                                    showColorOverlay = uiState.showColorOverlay,
+                                    onCourseClick = uiState.onCourseClick,
+                                    onManageOfflineContent = uiState.onManageOfflineContent,
+                                    onCustomizeCourse = uiState.onCustomizeCourse,
+                                    onAnnouncementClick = uiState.onAnnouncementClick,
+                                    modifier = Modifier.longPressDraggableHandle()
+                                )
+                            }
+                        }
                     }
                 }
             }

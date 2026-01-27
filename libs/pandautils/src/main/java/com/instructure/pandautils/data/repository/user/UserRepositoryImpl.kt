@@ -20,6 +20,7 @@ import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Account
 import com.instructure.canvasapi2.models.ColorChangeResponse
+import com.instructure.canvasapi2.models.DashboardPositions
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.utils.ColorUtils.toApiHexString
 
@@ -35,5 +36,10 @@ class UserRepositoryImpl(
     override suspend fun setCourseColor(contextId: String, color: Int): DataResult<ColorChangeResponse> {
         val params = RestParams(isForceReadFromNetwork = true)
         return userApi.setColor(contextId, color.toApiHexString(), params)
+    }
+
+    override suspend fun updateDashboardPositions(positions: DashboardPositions): DataResult<DashboardPositions> {
+        val params = RestParams(isForceReadFromNetwork = true)
+        return userApi.updateDashboardPositions(positions, params)
     }
 }
