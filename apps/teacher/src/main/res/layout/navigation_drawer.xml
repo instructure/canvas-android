@@ -209,6 +209,7 @@
             </LinearLayout>
 
             <View
+                android:id="@+id/navigationMenuItemsDivider"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="20dp"
@@ -216,6 +217,7 @@
                 android:background="@color/backgroundMedium" />
 
             <TextView
+                android:id="@+id/optionsMenuTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingStart="20dp"
@@ -257,6 +259,7 @@
             </LinearLayout>
 
             <View
+                android:id="@+id/optionsMenuItemsDivider"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="20dp"

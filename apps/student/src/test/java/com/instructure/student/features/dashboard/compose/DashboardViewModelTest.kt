@@ -20,6 +20,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.MutableLiveData
 import com.instructure.pandautils.compose.SnackbarMessage
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.usecase.EnsureDefaultWidgetsUseCase
@@ -231,6 +232,94 @@ class DashboardViewModelTest {
         assertEquals(actionLabel, messages[0].actionLabel)
         messages[0].action?.invoke()
         assertTrue(actionInvoked)
+
+        job.cancel()
+    }
+
+    @Test
+    fun testObserveNetworkStateEmitsRefreshSignalOnNetworkChange() = runTest {
+        val networkStateLiveData = MutableLiveData<Boolean>()
+        every { networkStateProvider.isOnlineLiveData } returns networkStateLiveData
+
+        // Create new ViewModel to start observing
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        val refreshSignals = mutableListOf<Unit>()
+        val job = launch(testDispatcher) {
+            viewModel.refreshSignal.collect {
+                refreshSignals.add(Unit)
+            }
+        }
+
+        // Simulate network state change from online to offline
+        networkStateLiveData.postValue(false)
+        advanceUntilIdle()
+
+        // Simulate network state change from offline to online
+        networkStateLiveData.postValue(true)
+        advanceUntilIdle()
+
+        // Should have received 2 refresh signals (one for each network state change)
+        assertEquals(2, refreshSignals.size)
+
+        job.cancel()
+    }
+
+    @Test
+    fun testObserveNetworkStateEmitsRefreshSignalWhenGoingOnline() = runTest {
+        val networkStateLiveData = MutableLiveData(false)
+        every { networkStateProvider.isOnlineLiveData } returns networkStateLiveData
+
+        // Create new ViewModel to start observing
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        val refreshSignals = mutableListOf<Unit>()
+        val job = launch(testDispatcher) {
+            viewModel.refreshSignal.collect {
+                refreshSignals.add(Unit)
+            }
+        }
+
+        // Initially offline, no signals yet
+        assertEquals(0, refreshSignals.size)
+
+        // Simulate going online
+        networkStateLiveData.postValue(true)
+        advanceUntilIdle()
+
+        // Should have received 1 refresh signal
+        assertEquals(1, refreshSignals.size)
+
+        job.cancel()
+    }
+
+    @Test
+    fun testObserveNetworkStateEmitsRefreshSignalWhenGoingOffline() = runTest {
+        val networkStateLiveData = MutableLiveData(true)
+        every { networkStateProvider.isOnlineLiveData } returns networkStateLiveData
+
+        // Create new ViewModel to start observing
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        val refreshSignals = mutableListOf<Unit>()
+        val job = launch(testDispatcher) {
+            viewModel.refreshSignal.collect {
+                refreshSignals.add(Unit)
+            }
+        }
+
+        // Initially online, no signals yet
+        assertEquals(0, refreshSignals.size)
+
+        // Simulate going offline
+        networkStateLiveData.postValue(false)
+        advanceUntilIdle()
+
+        // Should have received 1 refresh signal
+        assertEquals(1, refreshSignals.size)
 
         job.cancel()
     }

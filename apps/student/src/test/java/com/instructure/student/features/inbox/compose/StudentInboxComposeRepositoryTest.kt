@@ -8,6 +8,7 @@ import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.RecipientAPI
 import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.canvasapi2.managers.InboxSignatureSettings
+import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
@@ -21,6 +22,8 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import junit.framework.Assert.assertEquals
+import junit.framework.Assert.assertFalse
+import junit.framework.Assert.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.resetMain
@@ -224,5 +227,71 @@ class StudentInboxComposeRepositoryTest {
         val result = inboxComposeRepository.getInboxSignature()
 
         assertEquals("", result)
+    }
+
+    @Test
+    fun `canSendToAll returns true for course context with permission`() = runTest {
+        val course = Course(id = 1)
+        val permission = CanvasContextPermission(send_messages_all = true)
+
+        coEvery { courseAPI.getCoursePermissions(any(), any(), any()) } returns DataResult.Success(permission)
+
+        val result = inboxComposeRepository.canSendToAll(course).dataOrThrow
+
+        assertTrue(result)
+    }
+
+    @Test
+    fun `canSendToAll returns false for course context without permission`() = runTest {
+        val course = Course(id = 1)
+        val permission = CanvasContextPermission(send_messages_all = false)
+
+        coEvery { courseAPI.getCoursePermissions(any(), any(), any()) } returns DataResult.Success(permission)
+
+        val result = inboxComposeRepository.canSendToAll(course).dataOrThrow
+
+        assertFalse(result)
+    }
+
+    @Test
+    fun `canSendToAll returns true for group context with permission`() = runTest {
+        val group = Group(id = 1)
+        val permission = CanvasContextPermission(send_messages_all = true)
+
+        coEvery { groupApi.getGroupPermissions(any(), any(), any()) } returns DataResult.Success(permission)
+
+        val result = inboxComposeRepository.canSendToAll(group).dataOrThrow
+
+        assertTrue(result)
+    }
+
+    @Test
+    fun `canSendToAll returns false for group context without permission`() = runTest {
+        val group = Group(id = 1)
+        val permission = CanvasContextPermission(send_messages_all = false)
+
+        coEvery { groupApi.getGroupPermissions(any(), any(), any()) } returns DataResult.Success(permission)
+
+        val result = inboxComposeRepository.canSendToAll(group).dataOrThrow
+
+        assertFalse(result)
+    }
+
+    @Test(expected = IllegalStateException::class)
+    fun `canSendToAll fails for course context when API fails`() = runTest {
+        val course = Course(id = 1)
+
+        coEvery { courseAPI.getCoursePermissions(any(), any(), any()) } returns DataResult.Fail()
+
+        inboxComposeRepository.canSendToAll(course).dataOrThrow
+    }
+
+    @Test(expected = IllegalStateException::class)
+    fun `canSendToAll fails for group context when API fails`() = runTest {
+        val group = Group(id = 1)
+
+        coEvery { groupApi.getGroupPermissions(any(), any(), any()) } returns DataResult.Fail()
+
+        inboxComposeRepository.canSendToAll(group).dataOrThrow
     }
 }

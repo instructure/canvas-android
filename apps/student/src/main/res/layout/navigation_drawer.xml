@@ -242,7 +242,6 @@
             <LinearLayout
                 android:id="@+id/navigationDrawerSettings"
                 style="@style/NavigationDrawerItem"
-                android:layout_marginBottom="20dp"
                 android:contentDescription="@string/settings"
                 tools:ignore="UseCompoundDrawables">
 
@@ -258,6 +257,11 @@
                     android:textColor="@color/textDarkest"/>
 
             </LinearLayout>
+
+            <Space
+                android:id="@+id/navigationDrawerSettingsSpacer"
+                android:layout_width="match_parent"
+                android:layout_height="20dp" />
 
             <View
                 android:id="@+id/navigationMenuItemsDivider"

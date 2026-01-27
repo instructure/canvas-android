@@ -12,6 +12,7 @@ import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdat
 import com.instructure.pandautils.features.calendartodo.details.ToDoFragment
 import com.instructure.pandautils.features.dashboard.customize.CustomizeDashboardFragment
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
+import com.instructure.pandautils.features.dashboard.widget.courses.customize.CustomizeCourseFragment
 import com.instructure.pandautils.features.discussion.create.CreateDiscussionWebViewFragment
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
@@ -189,6 +190,7 @@ object RouteResolver {
             cls.isA<SmartSearchFragment>() -> SmartSearchFragment.newInstance(route)
             cls.isA<InboxSignatureFragment>() -> InboxSignatureFragment()
             cls.isA<CustomizeDashboardFragment>() -> CustomizeDashboardFragment.newInstance(route)
+            cls.isA<CustomizeCourseFragment>() -> CustomizeCourseFragment.newInstance(route)
             cls.isA<InternalWebviewFragment>() -> InternalWebviewFragment.newInstance(route) // Keep this at the end
             else -> null
         }

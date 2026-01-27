@@ -11,6 +11,7 @@ import com.instructure.canvasapi2.apis.CanvaDocsAPI
 import com.instructure.canvasapi2.apis.CommunicationChannelsAPI
 import com.instructure.canvasapi2.apis.ConferencesApi
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.CourseNicknameAPI
 import com.instructure.canvasapi2.apis.DiscussionAPI
 import com.instructure.canvasapi2.apis.DomainServicesAuthenticationAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
@@ -235,6 +236,11 @@ class ApiModule {
     @Provides
     fun provideCourseApi(): CourseAPI.CoursesInterface {
         return RestBuilder().build(CourseAPI.CoursesInterface::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideCourseNicknameApi(): CourseNicknameAPI.NicknameInterface {
+        return RestBuilder().build(CourseNicknameAPI.NicknameInterface::class.java, RestParams())
     }
 
     @Provides

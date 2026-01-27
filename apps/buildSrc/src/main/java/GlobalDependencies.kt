@@ -46,6 +46,7 @@ object Versions {
     const val JAVA_JWT = "4.5.0"
     const val GLANCE = "1.1.1"
     const val LIVEDATA = "1.9.0"
+    const val REORDERABLE = "2.4.0"
 }
 
 object Libs {
@@ -195,6 +196,7 @@ object Libs {
     const val COMPOSE_MATERIAL3_WINDOW_SIZE = "androidx.compose.material3:material3-window-size-class"
     const val COMPOSE_NAVIGATION_HILT = "androidx.hilt:hilt-navigation-compose:1.3.0"
     const val COMPOSE_FRAGMENT = "androidx.fragment:fragment-compose:1.8.9"
+    const val COMPOSE_REORDERABLE = "sh.calvin.reorderable:reorderable:${Versions.REORDERABLE}"
 
     // Glance
     const val GLANCE = "androidx.glance:glance:${Versions.GLANCE}"

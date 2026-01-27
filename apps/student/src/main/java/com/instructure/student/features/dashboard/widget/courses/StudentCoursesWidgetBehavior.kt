@@ -18,25 +18,15 @@ package com.instructure.student.features.dashboard.widget.courses
 
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
 import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidgetBehavior
 import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidgetRouter
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class StudentCoursesWidgetBehavior @Inject constructor(
-    private val observeGradeVisibilityUseCase: ObserveGradeVisibilityUseCase,
-    private val observeColorOverlayUseCase: ObserveColorOverlayUseCase,
     private val router: CoursesWidgetRouter
 ) : CoursesWidgetBehavior {
-
-    override fun observeGradeVisibility(): Flow<Boolean> {
-        return observeGradeVisibilityUseCase(Unit)
-    }
-
-    override fun observeColorOverlay(): Flow<Boolean> {
-        return observeColorOverlayUseCase(Unit)
-    }
 
     override fun onCourseClick(activity: FragmentActivity, course: Course) {
         router.routeToCourse(activity, course)
@@ -56,5 +46,16 @@ class StudentCoursesWidgetBehavior @Inject constructor(
 
     override fun onAllCoursesClicked(activity: FragmentActivity) {
         router.routeToAllCourses(activity)
+    }
+
+    override fun onAnnouncementClick(activity: FragmentActivity, course: Course, announcements: List<DiscussionTopicHeader>) {
+        when (announcements.size) {
+            1 -> router.routeToAnnouncement(activity, course, announcements.first())
+            else -> router.routeToAnnouncementList(activity, course)
+        }
+    }
+
+    override fun onGroupMessageClick(activity: FragmentActivity, group: Group) {
+        router.routeToGroupMessage(activity, group)
     }
 }

@@ -182,6 +182,7 @@ class CustomizeDashboardViewModel @Inject constructor(
     private fun getDisplayName(widgetId: String): String {
         return when (widgetId) {
             WidgetMetadata.WIDGET_ID_WELCOME -> resources.getString(R.string.widget_hello, apiPrefs.user?.shortName)
+            WidgetMetadata.WIDGET_ID_COURSES -> resources.getString(R.string.courses_and_groups)
             else -> widgetId
         }
     }

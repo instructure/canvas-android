@@ -76,9 +76,11 @@ fun ColorPicker(
     colors: List<ThemedColor>,
     onColorSelected: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    titleModifier: Modifier = Modifier
+    titleModifier: Modifier = Modifier,
+    isCollapsible: Boolean = true,
+    expandedBackgroundColor: Color? = null
 ) {
-    var isExpanded by rememberSaveable { mutableStateOf(false) }
+    var isExpanded by rememberSaveable { mutableStateOf(!isCollapsible) }
     val rotationAnimation by animateFloatAsState(
         targetValue = if (isExpanded) 180F else 0F,
         animationSpec = tween(durationMillis = 200, easing = FastOutLinearInEasing),
@@ -107,7 +109,7 @@ fun ColorPicker(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { isExpanded = !isExpanded }
+                .then(if (isCollapsible) Modifier.clickable { isExpanded = !isExpanded } else Modifier)
                 .padding(vertical = 12.dp)
                 .then(titleModifier),
             verticalAlignment = Alignment.CenterVertically
@@ -121,26 +123,28 @@ fun ColorPicker(
                 modifier = Modifier.weight(1f)
             )
 
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            if (isCollapsible) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
 
-                Box(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .clip(CircleShape)
-                        .background(Color(displaySelectedColor))
-                )
+                    Box(
+                        modifier = Modifier
+                            .size(24.dp)
+                            .clip(CircleShape)
+                            .background(Color(displaySelectedColor))
+                    )
 
-                Icon(
-                    painter = painterResource(R.drawable.ic_chevron_down_small),
-                    contentDescription = null,
-                    tint = colorResource(R.color.textDark),
-                    modifier = Modifier
-                        .size(24.dp)
-                        .rotate(rotationAnimation)
-                )
+                    Icon(
+                        painter = painterResource(R.drawable.ic_chevron_down_small),
+                        contentDescription = null,
+                        tint = colorResource(R.color.textDark),
+                        modifier = Modifier
+                            .size(24.dp)
+                            .rotate(rotationAnimation)
+                    )
+                }
             }
         }
 
@@ -148,9 +152,9 @@ fun ColorPicker(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(colorResource(R.color.backgroundLight))
+                    .background(expandedBackgroundColor ?: colorResource(R.color.backgroundLight))
             ) {
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(if (isCollapsible) 16.dp else 0.dp))
 
                 FlowRow(
                     modifier = Modifier
@@ -166,13 +170,15 @@ fun ColorPicker(
                             isSelected = (themedColor.light and 0xFFFFFF) == (selectedColor and 0xFFFFFF),
                             onClick = {
                                 onColorSelected(themedColor.light)
-                                isExpanded = false
+                                if (isCollapsible) {
+                                    isExpanded = false
+                                }
                             }
                         )
                     }
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(if (isCollapsible) 16.dp else 8.dp))
             }
         }
     }

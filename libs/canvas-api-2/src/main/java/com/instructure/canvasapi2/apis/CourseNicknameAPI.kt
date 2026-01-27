@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CourseNickname
+import com.instructure.canvasapi2.utils.DataResult
 
 import retrofit2.Call
 import retrofit2.http.DELETE
@@ -28,10 +29,11 @@ import retrofit2.http.GET
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.Tag
 
 object CourseNicknameAPI {
 
-    internal interface NicknameInterface {
+    interface NicknameInterface {
 
         @get:GET("users/self/course_nicknames/")
         val allNicknames: Call<List<CourseNickname>>
@@ -42,8 +44,18 @@ object CourseNicknameAPI {
         @PUT("users/self/course_nicknames/{course_id}")
         fun setNickname(@Path("course_id") courseId: Long, @Query("nickname") nickname: String): Call<CourseNickname>
 
+        @PUT("users/self/course_nicknames/{course_id}")
+        suspend fun setNickname(
+            @Path("course_id") courseId: Long,
+            @Query("nickname") nickname: String,
+            @Tag restParams: RestParams
+        ): DataResult<CourseNickname>
+
         @DELETE("users/self/course_nicknames/{course_id}")
         fun deleteNickname(@Path("course_id") courseId: Long): Call<CourseNickname>
+
+        @DELETE("users/self/course_nicknames/{course_id}")
+        suspend fun deleteNickname(@Path("course_id") courseId: Long, @Tag restParams: RestParams): DataResult<CourseNickname>
 
         @DELETE("users/self/course_nicknames/")
         fun deleteAllNicknames(): Call<CourseNickname>

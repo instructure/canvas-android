@@ -16,13 +16,19 @@
  */
 package com.instructure.pandautils.data.repository.user
 
+import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.models.Account
+import com.instructure.canvasapi2.models.ColorChangeResponse
+import com.instructure.canvasapi2.models.DashboardPositions
 import com.instructure.canvasapi2.utils.DataResult
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkObject
 import io.mockk.unmockkAll
+import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -130,5 +136,113 @@ class UserRepositoryTest {
 
         assertEquals("First Call", (result1 as DataResult.Success).data.name)
         assertEquals("Second Call", (result2 as DataResult.Success).data.name)
+    }
+
+    @Test
+    fun `setCourseColor returns success`() = runTest {
+        val contextId = "course_123"
+        val color = 0xFF2573DF.toInt()
+        val colorResponse = ColorChangeResponse(hexCode = "#2573DF")
+        val expected = DataResult.Success(colorResponse)
+        coEvery {
+            userApi.setColor(contextId, any(), any())
+        } returns expected
+
+        val result = repository.setCourseColor(contextId, color)
+
+        assertEquals(expected, result)
+        coVerify {
+            userApi.setColor(contextId, any(), match { it.isForceReadFromNetwork })
+        }
+    }
+
+    @Test
+    fun `setCourseColor returns failure`() = runTest {
+        val contextId = "course_123"
+        val color = 0xFF2573DF.toInt()
+        val expected = DataResult.Fail()
+        coEvery {
+            userApi.setColor(contextId, any(), any())
+        } returns expected
+
+        val result = repository.setCourseColor(contextId, color)
+
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun `setCourseColor handles different color formats`() = runTest {
+        val contextId = "course_123"
+        val color = 0xFFE71F63.toInt()
+        val colorResponse = ColorChangeResponse(hexCode = "#E71F63")
+        val expected = DataResult.Success(colorResponse)
+        coEvery {
+            userApi.setColor(contextId, any(), any())
+        } returns expected
+
+        val result = repository.setCourseColor(contextId, color)
+
+        assertEquals(expected, result)
+        assertEquals("#E71F63", (result as DataResult.Success).data.hexCode)
+    }
+
+    @Test
+    fun `updateDashboardPositions returns success and clears cache`() = runTest {
+        mockkObject(CanvasRestAdapter)
+        every { CanvasRestAdapter.clearCacheUrls(any()) } returns Unit
+
+        val positions = DashboardPositions(mapOf("course_1" to 0, "course_2" to 1))
+        val expected = DataResult.Success(positions)
+        coEvery {
+            userApi.updateDashboardPositions(any(), any())
+        } returns expected
+
+        val result = repository.updateDashboardPositions(positions)
+
+        assertEquals(expected, result)
+        coVerify {
+            userApi.updateDashboardPositions(positions, match { it.isForceReadFromNetwork })
+        }
+        verify {
+            CanvasRestAdapter.clearCacheUrls("dashboard/dashboard_cards")
+        }
+    }
+
+    @Test
+    fun `updateDashboardPositions returns failure and does not clear cache`() = runTest {
+        mockkObject(CanvasRestAdapter)
+        every { CanvasRestAdapter.clearCacheUrls(any()) } returns Unit
+
+        val positions = DashboardPositions(mapOf("course_1" to 0, "course_2" to 1))
+        val expected = DataResult.Fail()
+        coEvery {
+            userApi.updateDashboardPositions(any(), any())
+        } returns expected
+
+        val result = repository.updateDashboardPositions(positions)
+
+        assertEquals(expected, result)
+        verify(exactly = 0) {
+            CanvasRestAdapter.clearCacheUrls(any())
+        }
+    }
+
+    @Test
+    fun `updateDashboardPositions handles empty positions map`() = runTest {
+        mockkObject(CanvasRestAdapter)
+        every { CanvasRestAdapter.clearCacheUrls(any()) } returns Unit
+
+        val positions = DashboardPositions(emptyMap())
+        val expected = DataResult.Success(positions)
+        coEvery {
+            userApi.updateDashboardPositions(any(), any())
+        } returns expected
+
+        val result = repository.updateDashboardPositions(positions)
+
+        assertEquals(expected, result)
+        verify {
+            CanvasRestAdapter.clearCacheUrls("dashboard/dashboard_cards")
+        }
     }
 }
