@@ -55,9 +55,15 @@ class HorizonGetCoursesManagerImpl(private val apolloClient: ApolloClient): Hori
         val courseId = course?.id?.toLong()
         val courseName = course?.name
         val courseSyllabus = course?.syllabus_body
+        val imageUrl = course?.image_download_url
 
         return if (courseId != null && courseName != null) {
-            CourseWithProgress(courseId, courseName, courseSyllabus, progress)
+            CourseWithProgress(
+                courseId,
+                courseName,
+                imageUrl,
+                courseSyllabus,
+                progress)
         } else {
             null
         }
@@ -113,7 +119,8 @@ class HorizonGetCoursesManagerImpl(private val apolloClient: ApolloClient): Hori
 data class CourseWithProgress(
     val courseId: Long,
     val courseName: String,
-    val courseSyllabus: String? = null,
+    val courseImageUrl: String?,
+    val courseSyllabus: String?,
     val progress: Double,
 )
 

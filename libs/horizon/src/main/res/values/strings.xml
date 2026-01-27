@@ -501,4 +501,13 @@
     <string name="igniteAIEnterAPromptLabel">Enter a prompt</string>
     <string name="a11y_igniteAiLoadingContentDescription">Loading response</string>
     <string name="a11y_aiAssistFlashcardClickActionLabel">Flip the card</string>
+    <string name="learnCourseListFailedToLoadCoursesMessage">Failed to load courses</string>
+    <string name="learnCourseListFilterAll">All</string>
+    <string name="learnCourseListFilterNotStarted">Not started</string>
+    <string name="learnCourseListFilterInProgress">In progress</string>
+    <string name="learnCourseListFilterCompleted">Completed</string>
+    <string name="learnCourseListStartLearningLabel">Start learning</string>
+    <string name="learnCourseListResumeLearningLabel">Resume learning</string>
+    <string name="learnCourseListViewCourseLabel">View course</string>
+    <string name="learnCourseListShowMoreLabel">Show more</string>
 </resources>
