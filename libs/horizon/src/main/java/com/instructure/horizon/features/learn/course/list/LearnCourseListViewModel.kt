@@ -158,8 +158,8 @@ class LearnCourseListViewModel @Inject constructor(
 
     private fun List<LearnCourseState>.applyFilters(): List<LearnCourseState> {
         return this.filter {
-            it.progress.getProgressOption() == _uiState.value.selectedFilterValue
-                    || _uiState.value.selectedFilterValue == LearnCourseFilterOption.All
+            (it.progress.getProgressOption() == _uiState.value.selectedFilterValue
+                    || _uiState.value.selectedFilterValue == LearnCourseFilterOption.All)
                     && it.courseName.contains(_uiState.value.searchQuery.text.trim(), ignoreCase = true)
 
         }
