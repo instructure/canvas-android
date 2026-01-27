@@ -25,8 +25,12 @@ import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.pandautils.data.repository.accountnotification.AccountNotificationRepository
 import com.instructure.pandautils.data.repository.accountnotification.AccountNotificationRepositoryImpl
+import com.instructure.pandautils.data.repository.announcement.AnnouncementRepository
+import com.instructure.pandautils.data.repository.announcement.AnnouncementRepositoryImpl
 import com.instructure.pandautils.data.repository.course.CourseRepository
 import com.instructure.pandautils.data.repository.course.CourseRepositoryImpl
+import com.instructure.pandautils.data.repository.coursenickname.CourseNicknameRepository
+import com.instructure.pandautils.data.repository.coursenickname.CourseNicknameRepositoryImpl
 import com.instructure.pandautils.data.repository.enrollment.EnrollmentRepository
 import com.instructure.pandautils.data.repository.enrollment.EnrollmentRepositoryImpl
 import com.instructure.pandautils.data.repository.group.GroupRepository
@@ -54,10 +58,9 @@ class RepositoryModule {
     @Provides
     @Singleton
     fun provideCourseRepository(
-        courseApi: CourseAPI.CoursesInterface,
-        announcementApi: AnnouncementAPI.AnnouncementInterface
+        courseApi: CourseAPI.CoursesInterface
     ): CourseRepository {
-        return CourseRepositoryImpl(courseApi, announcementApi)
+        return CourseRepositoryImpl(courseApi)
     }
 
     @Provides
@@ -71,10 +74,25 @@ class RepositoryModule {
     @Provides
     @Singleton
     fun provideUserRepository(
-        userApi: UserAPI.UsersInterface,
-        courseNicknameApi: CourseNicknameAPI.NicknameInterface
+        userApi: UserAPI.UsersInterface
     ): UserRepository {
-        return UserRepositoryImpl(userApi, courseNicknameApi)
+        return UserRepositoryImpl(userApi)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAnnouncementRepository(
+        announcementApi: AnnouncementAPI.AnnouncementInterface
+    ): AnnouncementRepository {
+        return AnnouncementRepositoryImpl(announcementApi)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCourseNicknameRepository(
+        courseNicknameApi: CourseNicknameAPI.NicknameInterface
+    ): CourseNicknameRepository {
+        return CourseNicknameRepositoryImpl(courseNicknameApi)
     }
 
     @Provides

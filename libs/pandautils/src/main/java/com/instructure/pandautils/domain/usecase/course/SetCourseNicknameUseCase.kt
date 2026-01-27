@@ -15,12 +15,12 @@
  */
 package com.instructure.pandautils.domain.usecase.course
 
-import com.instructure.pandautils.data.repository.user.UserRepository
+import com.instructure.pandautils.data.repository.coursenickname.CourseNicknameRepository
 import com.instructure.pandautils.domain.usecase.BaseUseCase
 import javax.inject.Inject
 
 class SetCourseNicknameUseCase @Inject constructor(
-    private val userRepository: UserRepository
+    private val courseNicknameRepository: CourseNicknameRepository
 ) : BaseUseCase<SetCourseNicknameUseCase.Params, Unit>() {
 
     data class Params(
@@ -30,9 +30,9 @@ class SetCourseNicknameUseCase @Inject constructor(
 
     override suspend fun execute(params: Params) {
         if (params.nickname.isEmpty()) {
-            userRepository.deleteCourseNickname(params.courseId).dataOrThrow
+            courseNicknameRepository.deleteCourseNickname(params.courseId).dataOrThrow
         } else {
-            userRepository.setCourseNickname(
+            courseNicknameRepository.setCourseNickname(
                 courseId = params.courseId,
                 nickname = params.nickname
             ).dataOrThrow

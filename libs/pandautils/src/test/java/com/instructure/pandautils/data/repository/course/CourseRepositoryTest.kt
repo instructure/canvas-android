@@ -16,11 +16,9 @@
  */
 package com.instructure.pandautils.data.repository.course
 
-import com.instructure.canvasapi2.apis.AnnouncementAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DashboardCard
-import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.DataResult
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -35,12 +33,11 @@ import org.junit.Test
 class CourseRepositoryTest {
 
     private val courseApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
-    private val announcementApi: AnnouncementAPI.AnnouncementInterface = mockk(relaxed = true)
     private lateinit var repository: CourseRepository
 
     @Before
     fun setup() {
-        repository = CourseRepositoryImpl(courseApi, announcementApi)
+        repository = CourseRepositoryImpl(courseApi)
     }
 
     @After
@@ -260,140 +257,6 @@ class CourseRepositoryTest {
         } returns expected
 
         val result = repository.getDashboardCards(forceRefresh = false)
-
-        assertEquals(expected, result)
-    }
-
-    @Test
-    fun `getCourseAnnouncement returns success with announcement`() = runTest {
-        val announcement = DiscussionTopicHeader(id = 123L, title = "Test Announcement")
-        val expected = DataResult.Success(announcement)
-        coEvery {
-            announcementApi.getCourseAnnouncement(any(), any(), any())
-        } returns expected
-
-        val result = repository.getCourseAnnouncement(
-            courseId = 100L,
-            announcementId = 123L,
-            forceRefresh = false
-        )
-
-        assertEquals(expected, result)
-        coVerify {
-            announcementApi.getCourseAnnouncement(
-                100L,
-                123L,
-                match { !it.isForceReadFromNetwork }
-            )
-        }
-    }
-
-    @Test
-    fun `getCourseAnnouncement with forceRefresh passes correct params`() = runTest {
-        val announcement = DiscussionTopicHeader(id = 456L, title = "Another Announcement")
-        val expected = DataResult.Success(announcement)
-        coEvery {
-            announcementApi.getCourseAnnouncement(any(), any(), any())
-        } returns expected
-
-        val result = repository.getCourseAnnouncement(
-            courseId = 200L,
-            announcementId = 456L,
-            forceRefresh = true
-        )
-
-        assertEquals(expected, result)
-        coVerify {
-            announcementApi.getCourseAnnouncement(
-                200L,
-                456L,
-                match { it.isForceReadFromNetwork }
-            )
-        }
-    }
-
-    @Test
-    fun `getCourseAnnouncement returns failure`() = runTest {
-        val expected = DataResult.Fail()
-        coEvery {
-            announcementApi.getCourseAnnouncement(any(), any(), any())
-        } returns expected
-
-        val result = repository.getCourseAnnouncement(
-            courseId = 100L,
-            announcementId = 123L,
-            forceRefresh = false
-        )
-
-        assertEquals(expected, result)
-    }
-
-    @Test
-    fun `getCourseAnnouncements returns success with announcements list`() = runTest {
-        val announcements = listOf(
-            DiscussionTopicHeader(id = 1L, title = "Announcement 1"),
-            DiscussionTopicHeader(id = 2L, title = "Announcement 2")
-        )
-        val expected = DataResult.Success(announcements)
-        coEvery {
-            announcementApi.getFirstPageAnnouncementsList(any(), any(), any())
-        } returns expected
-        coEvery {
-            announcementApi.getNextPageAnnouncementsList(any(), any())
-        } returns DataResult.Success(emptyList())
-
-        val result = repository.getCourseAnnouncements(
-            courseId = 100L,
-            forceRefresh = false
-        )
-
-        assertEquals(expected, result)
-        coVerify {
-            announcementApi.getFirstPageAnnouncementsList(
-                "courses",
-                100L,
-                match { !it.isForceReadFromNetwork && it.usePerPageQueryParam }
-            )
-        }
-    }
-
-    @Test
-    fun `getCourseAnnouncements with forceRefresh passes correct params`() = runTest {
-        val announcements = listOf(DiscussionTopicHeader(id = 1L, title = "Announcement 1"))
-        val expected = DataResult.Success(announcements)
-        coEvery {
-            announcementApi.getFirstPageAnnouncementsList(any(), any(), any())
-        } returns expected
-        coEvery {
-            announcementApi.getNextPageAnnouncementsList(any(), any())
-        } returns DataResult.Success(emptyList())
-
-        val result = repository.getCourseAnnouncements(
-            courseId = 200L,
-            forceRefresh = true
-        )
-
-        assertEquals(expected, result)
-        coVerify {
-            announcementApi.getFirstPageAnnouncementsList(
-                "courses",
-                200L,
-                match { it.isForceReadFromNetwork && it.usePerPageQueryParam }
-            )
-        }
-    }
-
-    @Test
-    fun `getCourseAnnouncements returns failure`() = runTest {
-        val expected = DataResult.Fail()
-        coEvery {
-            announcementApi.getFirstPageAnnouncementsList(any(), any(), any())
-        } returns expected
-
-        val result = repository.getCourseAnnouncements(
-            courseId = 100L,
-            forceRefresh = false
-        )
 
         assertEquals(expected, result)
     }

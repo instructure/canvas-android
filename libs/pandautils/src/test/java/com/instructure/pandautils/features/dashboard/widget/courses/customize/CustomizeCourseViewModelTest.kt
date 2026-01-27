@@ -23,9 +23,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
-import com.instructure.pandautils.domain.usecase.course.SetCourseColorParams
 import com.instructure.pandautils.domain.usecase.course.SetCourseColorUseCase
-import com.instructure.pandautils.domain.usecase.course.SetCourseNicknameParams
 import com.instructure.pandautils.domain.usecase.course.SetCourseNicknameUseCase
 import com.instructure.pandautils.features.dashboard.customize.WidgetSettingItem
 import com.instructure.pandautils.features.dashboard.widget.SettingType
@@ -187,7 +185,7 @@ class CustomizeCourseViewModelTest {
         advanceUntilIdle()
 
         coVerify {
-            setCourseNicknameUseCase(SetCourseNicknameParams(testCourse.id, "New Nickname"))
+            setCourseNicknameUseCase(SetCourseNicknameUseCase.Params(testCourse.id, "New Nickname"))
         }
     }
 
@@ -213,7 +211,7 @@ class CustomizeCourseViewModelTest {
         advanceUntilIdle()
 
         coVerify {
-            setCourseColorUseCase(SetCourseColorParams(testCourse.contextId, newColor))
+            setCourseColorUseCase(SetCourseColorUseCase.Params(testCourse.contextId, newColor))
         }
     }
 

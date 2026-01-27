@@ -2,7 +2,6 @@ package com.instructure.pandautils.data.repository.course
 
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DashboardCard
-import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.DataResult
 
 interface CourseRepository {
@@ -10,6 +9,4 @@ interface CourseRepository {
     suspend fun getCourses(forceRefresh: Boolean): DataResult<List<Course>>
     suspend fun getFavoriteCourses(forceRefresh: Boolean): DataResult<List<Course>>
     suspend fun getDashboardCards(forceRefresh: Boolean): DataResult<List<DashboardCard>>
-    suspend fun getCourseAnnouncement(courseId: Long, announcementId: Long, forceRefresh: Boolean): DataResult<DiscussionTopicHeader>
-    suspend fun getCourseAnnouncements(courseId: Long, forceRefresh: Boolean): DataResult<List<DiscussionTopicHeader>>
 }

@@ -47,6 +47,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
@@ -272,6 +273,7 @@ private fun NicknameCard(
                     color = colorResource(R.color.textDarkest),
                     textAlign = TextAlign.End
                 ),
+                cursorBrush = SolidColor(colorResource(R.color.textDarkest)),
                 decorationBox = { innerTextField ->
                     Box(
                         contentAlignment = Alignment.CenterEnd

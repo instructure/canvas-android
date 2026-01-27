@@ -17,7 +17,7 @@ package com.instructure.pandautils.domain.usecase.course
 
 import com.instructure.canvasapi2.models.CourseNickname
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.pandautils.data.repository.user.UserRepository
+import com.instructure.pandautils.data.repository.coursenickname.CourseNicknameRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -28,8 +28,8 @@ import org.junit.Test
 
 class SetCourseNicknameUseCaseTest {
 
-    private val userRepository: UserRepository = mockk(relaxed = true)
-    private val useCase = SetCourseNicknameUseCase(userRepository)
+    private val courseNicknameRepository: CourseNicknameRepository = mockk(relaxed = true)
+    private val useCase = SetCourseNicknameUseCase(courseNicknameRepository)
 
     @After
     fun tearDown() {
@@ -40,37 +40,37 @@ class SetCourseNicknameUseCaseTest {
     fun `execute with non-empty nickname calls setCourseNickname`() = runTest {
         val courseId = 1L
         val nickname = "My Course"
-        val params = SetCourseNicknameParams(courseId, nickname)
+        val params = SetCourseNicknameUseCase.Params(courseId, nickname)
 
-        coEvery { userRepository.setCourseNickname(courseId, nickname) } returns DataResult.Success(CourseNickname())
+        coEvery { courseNicknameRepository.setCourseNickname(courseId, nickname) } returns DataResult.Success(CourseNickname())
 
         useCase(params)
 
-        coVerify(exactly = 1) { userRepository.setCourseNickname(courseId, nickname) }
-        coVerify(exactly = 0) { userRepository.deleteCourseNickname(any()) }
+        coVerify(exactly = 1) { courseNicknameRepository.setCourseNickname(courseId, nickname) }
+        coVerify(exactly = 0) { courseNicknameRepository.deleteCourseNickname(any()) }
     }
 
     @Test
     fun `execute with empty nickname calls deleteCourseNickname`() = runTest {
         val courseId = 1L
         val nickname = ""
-        val params = SetCourseNicknameParams(courseId, nickname)
+        val params = SetCourseNicknameUseCase.Params(courseId, nickname)
 
-        coEvery { userRepository.deleteCourseNickname(courseId) } returns DataResult.Success(CourseNickname())
+        coEvery { courseNicknameRepository.deleteCourseNickname(courseId) } returns DataResult.Success(CourseNickname())
 
         useCase(params)
 
-        coVerify(exactly = 1) { userRepository.deleteCourseNickname(courseId) }
-        coVerify(exactly = 0) { userRepository.setCourseNickname(any(), any()) }
+        coVerify(exactly = 1) { courseNicknameRepository.deleteCourseNickname(courseId) }
+        coVerify(exactly = 0) { courseNicknameRepository.setCourseNickname(any(), any()) }
     }
 
     @Test(expected = IllegalStateException::class)
     fun `execute throws exception when setCourseNickname fails`() = runTest {
         val courseId = 1L
         val nickname = "My Course"
-        val params = SetCourseNicknameParams(courseId, nickname)
+        val params = SetCourseNicknameUseCase.Params(courseId, nickname)
 
-        coEvery { userRepository.setCourseNickname(courseId, nickname) } returns DataResult.Fail()
+        coEvery { courseNicknameRepository.setCourseNickname(courseId, nickname) } returns DataResult.Fail()
 
         useCase(params)
     }
@@ -79,9 +79,9 @@ class SetCourseNicknameUseCaseTest {
     fun `execute throws exception when deleteCourseNickname fails`() = runTest {
         val courseId = 1L
         val nickname = ""
-        val params = SetCourseNicknameParams(courseId, nickname)
+        val params = SetCourseNicknameUseCase.Params(courseId, nickname)
 
-        coEvery { userRepository.deleteCourseNickname(courseId) } returns DataResult.Fail()
+        coEvery { courseNicknameRepository.deleteCourseNickname(courseId) } returns DataResult.Fail()
 
         useCase(params)
     }

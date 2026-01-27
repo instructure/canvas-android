@@ -28,7 +28,6 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
-import com.instructure.pandautils.domain.usecase.announcements.LoadCourseAnnouncementsParams
 import com.instructure.pandautils.domain.usecase.announcements.LoadCourseAnnouncementsUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCaseParams
@@ -182,7 +181,7 @@ class CoursesWidgetViewModel @Inject constructor(
 
                 val announcementsMap = courses.associate { course ->
                     course.id to try {
-                        loadCourseAnnouncementsUseCase(LoadCourseAnnouncementsParams(course.id, forceRefresh))
+                        loadCourseAnnouncementsUseCase(LoadCourseAnnouncementsUseCase.Params(course.id, forceRefresh))
                     } catch (e: Exception) {
                         crashlytics.recordException(e)
                         emptyList()
@@ -335,7 +334,7 @@ class CoursesWidgetViewModel @Inject constructor(
             try {
                 val updatedCourse = loadCourseUseCase(LoadCourseUseCaseParams(courseId, forceNetwork = true))
                 val announcements = try {
-                    loadCourseAnnouncementsUseCase(LoadCourseAnnouncementsParams(courseId, forceNetwork = true))
+                    loadCourseAnnouncementsUseCase(LoadCourseAnnouncementsUseCase.Params(courseId, forceNetwork = true))
                 } catch (e: Exception) {
                     crashlytics.recordException(e)
                     emptyList()

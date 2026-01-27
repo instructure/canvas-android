@@ -16,11 +16,9 @@
  */
 package com.instructure.pandautils.data.repository.user
 
-import com.instructure.canvasapi2.apis.CourseNicknameAPI
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.models.Account
 import com.instructure.canvasapi2.models.ColorChangeResponse
-import com.instructure.canvasapi2.models.CourseNickname
 import com.instructure.canvasapi2.utils.DataResult
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -35,12 +33,11 @@ import org.junit.Test
 class UserRepositoryTest {
 
     private val userApi: UserAPI.UsersInterface = mockk(relaxed = true)
-    private val courseNicknameApi: CourseNicknameAPI.NicknameInterface = mockk(relaxed = true)
     private lateinit var repository: UserRepository
 
     @Before
     fun setup() {
-        repository = UserRepositoryImpl(userApi, courseNicknameApi)
+        repository = UserRepositoryImpl(userApi)
     }
 
     @After
@@ -134,84 +131,6 @@ class UserRepositoryTest {
 
         assertEquals("First Call", (result1 as DataResult.Success).data.name)
         assertEquals("Second Call", (result2 as DataResult.Success).data.name)
-    }
-
-    @Test
-    fun `setCourseNickname returns success`() = runTest {
-        val courseId = 123L
-        val nickname = "My Favorite Course"
-        val courseNickname = CourseNickname(id = courseId, nickname = nickname, name = "Course Name")
-        val expected = DataResult.Success(courseNickname)
-        coEvery {
-            courseNicknameApi.setNickname(courseId, nickname, any())
-        } returns expected
-
-        val result = repository.setCourseNickname(courseId, nickname)
-
-        assertEquals(expected, result)
-        coVerify {
-            courseNicknameApi.setNickname(courseId, nickname, match { it.isForceReadFromNetwork })
-        }
-    }
-
-    @Test
-    fun `setCourseNickname returns failure`() = runTest {
-        val courseId = 123L
-        val nickname = "My Favorite Course"
-        val expected = DataResult.Fail()
-        coEvery {
-            courseNicknameApi.setNickname(courseId, nickname, any())
-        } returns expected
-
-        val result = repository.setCourseNickname(courseId, nickname)
-
-        assertEquals(expected, result)
-    }
-
-    @Test
-    fun `setCourseNickname handles empty nickname`() = runTest {
-        val courseId = 123L
-        val nickname = ""
-        val courseNickname = CourseNickname(id = courseId, nickname = nickname, name = "Course Name")
-        val expected = DataResult.Success(courseNickname)
-        coEvery {
-            courseNicknameApi.setNickname(courseId, nickname, any())
-        } returns expected
-
-        val result = repository.setCourseNickname(courseId, nickname)
-
-        assertEquals(expected, result)
-        assertEquals("", (result as DataResult.Success).data.nickname)
-    }
-
-    @Test
-    fun `deleteCourseNickname returns success`() = runTest {
-        val courseId = 123L
-        val courseNickname = CourseNickname(id = courseId, nickname = "", name = "Course Name")
-        val expected = DataResult.Success(courseNickname)
-        coEvery {
-            courseNicknameApi.deleteNickname(courseId, any())
-        } returns expected
-
-        val result = repository.deleteCourseNickname(courseId)
-
-        assertEquals(expected, result)
-        coVerify {
-            courseNicknameApi.deleteNickname(courseId, match { it.isForceReadFromNetwork })
-        }
-    }
-
-    @Test
-    fun `deleteCourseNickname returns failure`() = runTest {
-        val courseId = 123L
-        val expected = DataResult.Fail()
-        coEvery {
-            courseNicknameApi.deleteNickname(courseId, any())
-        } returns expected
-
-        val result = repository.deleteCourseNickname(courseId)
-
-        assertEquals(expected, result)
     }
 
     @Test

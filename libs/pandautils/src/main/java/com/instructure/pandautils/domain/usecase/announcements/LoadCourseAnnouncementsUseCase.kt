@@ -17,18 +17,18 @@
 package com.instructure.pandautils.domain.usecase.announcements
 
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
-import com.instructure.pandautils.data.repository.course.CourseRepository
+import com.instructure.pandautils.data.repository.announcement.AnnouncementRepository
 import com.instructure.pandautils.domain.usecase.BaseUseCase
 import javax.inject.Inject
 
 class LoadCourseAnnouncementsUseCase @Inject constructor(
-    private val courseRepository: CourseRepository
+    private val announcementRepository: AnnouncementRepository
 ) : BaseUseCase<LoadCourseAnnouncementsUseCase.Params, List<DiscussionTopicHeader>>() {
 
     data class Params(val courseId: Long, val forceNetwork: Boolean = false)
 
     override suspend fun execute(params: Params): List<DiscussionTopicHeader> {
-        val announcements = courseRepository.getCourseAnnouncements(
+        val announcements = announcementRepository.getCourseAnnouncements(
             courseId = params.courseId,
             forceRefresh = params.forceNetwork
         ).dataOrThrow

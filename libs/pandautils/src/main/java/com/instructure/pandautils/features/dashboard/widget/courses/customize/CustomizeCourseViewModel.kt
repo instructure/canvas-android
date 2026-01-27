@@ -24,9 +24,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.R
-import com.instructure.pandautils.domain.usecase.course.SetCourseColorParams
 import com.instructure.pandautils.domain.usecase.course.SetCourseColorUseCase
-import com.instructure.pandautils.domain.usecase.course.SetCourseNicknameParams
 import com.instructure.pandautils.domain.usecase.course.SetCourseNicknameUseCase
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.courses.CoursesConfig
@@ -126,12 +124,12 @@ class CustomizeCourseViewModel @Inject constructor(
             try {
                 if (_uiState.value.nickname != originalNickname) {
                     setCourseNicknameUseCase(
-                        SetCourseNicknameParams(course.id, _uiState.value.nickname)
+                        SetCourseNicknameUseCase.Params(course.id, _uiState.value.nickname)
                     )
                 }
 
                 setCourseColorUseCase(
-                    SetCourseColorParams(course.contextId, _uiState.value.selectedColor)
+                    SetCourseColorUseCase.Params(course.contextId, _uiState.value.selectedColor)
                 )
 
                 colorKeeper.addToCache(course.contextId, _uiState.value.selectedColor)

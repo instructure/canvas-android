@@ -18,7 +18,7 @@ package com.instructure.pandautils.domain.usecase.announcements
 
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.pandautils.data.repository.course.CourseRepository
+import com.instructure.pandautils.data.repository.announcement.AnnouncementRepository
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.unmockkAll
@@ -30,8 +30,8 @@ import org.junit.Test
 
 class LoadCourseAnnouncementsUseCaseTest {
 
-    private val courseRepository: CourseRepository = mockk(relaxed = true)
-    private val useCase = LoadCourseAnnouncementsUseCase(courseRepository)
+    private val announcementRepository: AnnouncementRepository = mockk(relaxed = true)
+    private val useCase = LoadCourseAnnouncementsUseCase(announcementRepository)
 
     @After
     fun tearDown() {
@@ -50,7 +50,7 @@ class LoadCourseAnnouncementsUseCaseTest {
         )
 
         coEvery {
-            courseRepository.getCourseAnnouncements(courseId, any())
+            announcementRepository.getCourseAnnouncements(courseId, any())
         } returns DataResult.Success(announcements)
 
         val result = useCase(params)
@@ -72,7 +72,7 @@ class LoadCourseAnnouncementsUseCaseTest {
         )
 
         coEvery {
-            courseRepository.getCourseAnnouncements(courseId, any())
+            announcementRepository.getCourseAnnouncements(courseId, any())
         } returns DataResult.Success(announcements)
 
         val result = useCase(params)
@@ -95,7 +95,7 @@ class LoadCourseAnnouncementsUseCaseTest {
         )
 
         coEvery {
-            courseRepository.getCourseAnnouncements(courseId, any())
+            announcementRepository.getCourseAnnouncements(courseId, any())
         } returns DataResult.Success(announcements)
 
         val result = useCase(params)
@@ -115,7 +115,7 @@ class LoadCourseAnnouncementsUseCaseTest {
         )
 
         coEvery {
-            courseRepository.getCourseAnnouncements(courseId, any())
+            announcementRepository.getCourseAnnouncements(courseId, any())
         } returns DataResult.Success(announcements)
 
         val result = useCase(params)
@@ -129,7 +129,7 @@ class LoadCourseAnnouncementsUseCaseTest {
         val params = LoadCourseAnnouncementsUseCase.Params(courseId)
 
         coEvery {
-            courseRepository.getCourseAnnouncements(courseId, any())
+            announcementRepository.getCourseAnnouncements(courseId, any())
         } returns DataResult.Success(emptyList())
 
         val result = useCase(params)
@@ -143,7 +143,7 @@ class LoadCourseAnnouncementsUseCaseTest {
         val params = LoadCourseAnnouncementsUseCase.Params(courseId)
 
         coEvery {
-            courseRepository.getCourseAnnouncements(courseId, any())
+            announcementRepository.getCourseAnnouncements(courseId, any())
         } returns DataResult.Fail()
 
         useCase(params)

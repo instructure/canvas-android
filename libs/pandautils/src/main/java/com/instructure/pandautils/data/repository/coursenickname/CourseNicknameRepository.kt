@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 - present Instructure, Inc.
+ * Copyright (C) 2026 - present Instructure, Inc.
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -14,13 +14,12 @@
  *     limitations under the License.
  *
  */
-package com.instructure.pandautils.data.repository.user
+package com.instructure.pandautils.data.repository.coursenickname
 
-import com.instructure.canvasapi2.models.Account
-import com.instructure.canvasapi2.models.ColorChangeResponse
+import com.instructure.canvasapi2.models.CourseNickname
 import com.instructure.canvasapi2.utils.DataResult
 
-interface UserRepository {
-    suspend fun getAccount(forceRefresh: Boolean): DataResult<Account>
-    suspend fun setCourseColor(contextId: String, color: Int): DataResult<ColorChangeResponse>
+interface CourseNicknameRepository {
+    suspend fun setCourseNickname(courseId: Long, nickname: String): DataResult<CourseNickname>
+    suspend fun deleteCourseNickname(courseId: Long): DataResult<CourseNickname>
 }

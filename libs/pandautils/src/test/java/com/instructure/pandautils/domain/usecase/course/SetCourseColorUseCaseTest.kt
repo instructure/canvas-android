@@ -40,7 +40,7 @@ class SetCourseColorUseCaseTest {
     fun `execute calls setCourseColor with correct parameters`() = runTest {
         val contextId = "course_123"
         val color = 0xFF00FF00.toInt()
-        val params = SetCourseColorParams(contextId, color)
+        val params = SetCourseColorUseCase.Params(contextId, color)
 
         coEvery { userRepository.setCourseColor(contextId, color) } returns DataResult.Success(ColorChangeResponse(hexCode = "#00FF00"))
 
@@ -53,7 +53,7 @@ class SetCourseColorUseCaseTest {
     fun `execute throws exception when setCourseColor fails`() = runTest {
         val contextId = "course_123"
         val color = 0xFF00FF00.toInt()
-        val params = SetCourseColorParams(contextId, color)
+        val params = SetCourseColorUseCase.Params(contextId, color)
 
         coEvery { userRepository.setCourseColor(contextId, color) } returns DataResult.Fail()
 
@@ -64,7 +64,7 @@ class SetCourseColorUseCaseTest {
     fun `execute handles different color values`() = runTest {
         val contextId = "course_456"
         val color = 0xFFFF0000.toInt()
-        val params = SetCourseColorParams(contextId, color)
+        val params = SetCourseColorUseCase.Params(contextId, color)
 
         coEvery { userRepository.setCourseColor(contextId, color) } returns DataResult.Success(ColorChangeResponse(hexCode = "#FF0000"))
 
@@ -77,7 +77,7 @@ class SetCourseColorUseCaseTest {
     fun `execute handles different context IDs`() = runTest {
         val contextId = "course_789"
         val color = 0xFF0000FF.toInt()
-        val params = SetCourseColorParams(contextId, color)
+        val params = SetCourseColorUseCase.Params(contextId, color)
 
         coEvery { userRepository.setCourseColor(contextId, color) } returns DataResult.Success(ColorChangeResponse(hexCode = "#0000FF"))
 
