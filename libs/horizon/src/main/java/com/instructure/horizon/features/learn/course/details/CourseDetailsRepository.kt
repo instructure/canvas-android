@@ -17,12 +17,21 @@ package com.instructure.horizon.features.learn.course.details
 
 import com.instructure.canvasapi2.apis.ExternalToolAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
+import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.utils.ApiPrefs
 import javax.inject.Inject
 
 class CourseDetailsRepository @Inject constructor(
-    private val externalToolApi: ExternalToolAPI.ExternalToolInterface
+    private val getCoursesManager: HorizonGetCoursesManager,
+    private val externalToolApi: ExternalToolAPI.ExternalToolInterface,
+    private val apiPrefs: ApiPrefs
 ) {
+    suspend fun getCourse(courseId: Long, forceNetwork: Boolean): CourseWithProgress {
+        return getCoursesManager.getCourseWithProgressById(courseId, apiPrefs.user?.id ?: -1L, forceNetwork).dataOrThrow
+    }
+
     suspend fun hasExternalTools(courseId: Long, forceNetwork: Boolean): Boolean {
         return externalToolApi.getExternalToolsForCourses(
             listOf(CanvasContext.emptyCourseContext(courseId).contextId),

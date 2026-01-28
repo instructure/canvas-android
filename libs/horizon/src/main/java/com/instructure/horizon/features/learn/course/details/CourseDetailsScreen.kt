@@ -65,7 +65,7 @@ fun CourseDetailsScreen(
     ) { padding ->
         Column(modifier = Modifier.padding(padding)) {
             ProgressBar(
-                progress = state.selectedCourse?.progress ?: 0.0,
+                progress = state.courseProgress,
                 modifier = Modifier
                     .padding(start = 24.dp, end = 24.dp, top = 8.dp, bottom = 16.dp)
             )
@@ -102,31 +102,31 @@ fun CourseDetailsScreen(
                 ) {
                     when (index) {
                         0 -> CourseOverviewScreen(
-                            state.selectedCourse?.courseSyllabus,
+                            state.courseSyllabus,
                             Modifier
                                 .clip(RoundedCornerShape(cornerAnimation))
                         )
 
                         1 -> CourseProgressScreen(
-                            state.selectedCourse?.courseId ?: -1,
+                            state.courseId,
                             navController,
                             Modifier.clip(RoundedCornerShape(cornerAnimation))
                         )
 
                         2 -> CourseScoreScreen(
-                            state.selectedCourse?.courseId ?: -1,
+                            state.courseId,
                             navController,
                             Modifier.clip(RoundedCornerShape(cornerAnimation))
                         )
 
                         3 -> CourseNotesScreen(
-                            state.selectedCourse?.courseId ?: -1,
+                            state.courseId,
                             navController,
                             Modifier.clip(RoundedCornerShape(cornerAnimation))
                         )
 
                         4 -> CourseToolsScreen(
-                            state.selectedCourse?.courseId ?: -1,
+                            state.courseId,
                             Modifier.clip(RoundedCornerShape(cornerAnimation))
                         )
                     }

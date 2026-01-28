@@ -18,6 +18,7 @@ package com.instructure.canvasapi2.managers.graphql.horizon
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
 import com.instructure.canvasapi2.GetCoursesQuery
+import com.instructure.canvasapi2.HorizonGetCourseByIdQuery
 import com.instructure.canvasapi2.HorizonGetProgramCourseByIdQuery
 import com.instructure.canvasapi2.QLClientConfig
 import com.instructure.canvasapi2.enqueueQuery
@@ -28,6 +29,8 @@ import java.util.Date
 
 interface HorizonGetCoursesManager {
     suspend fun getCoursesWithProgress(userId: Long, forceNetwork: Boolean = false): DataResult<List<CourseWithProgress>>
+
+    suspend fun getCourseWithProgressById(courseId: Long, userId: Long, forceNetwork: Boolean = false): DataResult<CourseWithProgress>
 
     suspend fun getEnrollments(userId: Long, forceNetwork: Boolean = false): DataResult<List<GetCoursesQuery.Enrollment>>
 
@@ -45,6 +48,24 @@ class HorizonGetCoursesManagerImpl(private val apolloClient: ApolloClient): Hori
                 ?.filter { it.state == EnrollmentWorkflowState.active }
                 ?.mapNotNull { mapCourse(it.course) } ?: emptyList()
             return DataResult.Success(coursesList)
+        } catch (e: Exception) {
+            DataResult.Fail(Failure.Exception(e))
+        }
+    }
+
+    override suspend fun getCourseWithProgressById(courseId: Long, userId: Long, forceNetwork: Boolean): DataResult<CourseWithProgress> {
+        return try {
+            val query = HorizonGetCourseByIdQuery(courseId.toString(), userId.toString())
+            val result = apolloClient.enqueueQuery(query, forceNetwork).dataAssertNoErrors
+
+            val progress = result.legacyNode?.onCourse?.usersConnection?.nodes?.firstOrNull()?.courseProgression?.requirements?.completionPercentage ?: 0.0
+            val courseId = result.legacyNode?.onCourse?.id?.toLongOrNull() ?: -1L
+            val courseName = result.legacyNode?.onCourse?.name ?: ""
+            val courseSyllabus = result.legacyNode?.onCourse?.syllabus_body ?: ""
+            val imageUrl = result.legacyNode?.onCourse?.image_download_url ?: ""
+            val course = CourseWithProgress(courseId, courseName, imageUrl, courseSyllabus, progress)
+
+            return DataResult.Success(course)
         } catch (e: Exception) {
             DataResult.Fail(Failure.Exception(e))
         }

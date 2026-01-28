@@ -49,7 +49,8 @@ class NotebookViewModel @Inject constructor(
     private var loadJob: Job? = null
 
     private var courseId: Long? =
-        savedStateHandle.get<String>(NotebookRoute.Notebook.COURSE_ID)?.toLongOrNull()
+        savedStateHandle.get<Long>(NotebookRoute.Notebook.COURSE_ID)
+            ?: savedStateHandle.get<String>(NotebookRoute.Notebook.COURSE_ID)?.toLongOrNull()
     private var objectTypeAndId: Pair<String, String>? = getObjectTypeAndId(savedStateHandle)
     private var showTopBar: Boolean =
         savedStateHandle.get<Boolean>(NotebookRoute.Notebook.SHOW_TOP_BAR) ?: false
