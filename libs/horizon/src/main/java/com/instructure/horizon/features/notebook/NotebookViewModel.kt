@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.features.notebook.common.model.Note
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.horizon.features.notebook.common.model.mapToNotes
@@ -49,8 +50,8 @@ class NotebookViewModel @Inject constructor(
     private var loadJob: Job? = null
 
     private var courseId: Long? =
-        savedStateHandle.get<Long>(NotebookRoute.Notebook.COURSE_ID)
-            ?: savedStateHandle.get<String>(NotebookRoute.Notebook.COURSE_ID)?.toLongOrNull()
+        (savedStateHandle.get<Any>(NotebookRoute.Notebook.COURSE_ID)
+            ?: savedStateHandle.get<Any>(LearnRoute.LearnCourseDetailsScreen.courseIdAttr))?.toString()?.toLongOrNull()
     private var objectTypeAndId: Pair<String, String>? = getObjectTypeAndId(savedStateHandle)
     private var showTopBar: Boolean =
         savedStateHandle.get<Boolean>(NotebookRoute.Notebook.SHOW_TOP_BAR) ?: false
