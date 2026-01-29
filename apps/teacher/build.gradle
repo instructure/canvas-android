@@ -55,7 +55,7 @@ android {
     defaultConfig {
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 87
+        versionCode = 88
         versionName = '2.4.0'
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner 'com.instructure.teacher.espresso.TeacherHiltTestRunner'
