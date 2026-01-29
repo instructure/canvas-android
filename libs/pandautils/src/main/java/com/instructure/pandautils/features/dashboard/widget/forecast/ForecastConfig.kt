@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.features.dashboard.widget.welcome
+package com.instructure.pandautils.features.dashboard.widget.forecast
 
 import com.google.gson.Gson
 import com.instructure.pandautils.features.dashboard.widget.SettingDefinition
@@ -22,18 +22,13 @@ import com.instructure.pandautils.features.dashboard.widget.SettingType
 import com.instructure.pandautils.features.dashboard.widget.WidgetConfig
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 
-data class WelcomeConfig(
-    override val widgetId: String = WidgetMetadata.WIDGET_ID_WELCOME,
-    val showGreeting: Boolean = true,
-    val backgroundColor: Int = 0x2573DF
+data class ForecastConfig(
+    override val widgetId: String = WidgetMetadata.WIDGET_ID_FORECAST,
+    val backgroundColor: Int = 0xFF2573DF.toInt()
 ) : WidgetConfig {
     override fun toJson(): String = Gson().toJson(this)
 
     override fun getSettingDefinitions() = listOf(
-        SettingDefinition(
-            key = "showGreeting",
-            type = SettingType.BOOLEAN
-        ),
         SettingDefinition(
             key = "backgroundColor",
             type = SettingType.COLOR
@@ -41,8 +36,8 @@ data class WelcomeConfig(
     )
 
     companion object {
-        fun fromJson(jsonString: String): WelcomeConfig {
-            return Gson().fromJson(jsonString, WelcomeConfig::class.java)
+        fun fromJson(jsonString: String): ForecastConfig {
+            return Gson().fromJson(jsonString, ForecastConfig::class.java)
         }
     }
 }

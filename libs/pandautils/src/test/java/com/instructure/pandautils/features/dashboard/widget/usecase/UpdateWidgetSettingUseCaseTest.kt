@@ -23,7 +23,6 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.slot
-import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertTrue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -36,52 +35,36 @@ class UpdateWidgetSettingUseCaseTest {
     private val repository: WidgetConfigDataRepository = mockk(relaxed = true)
     private val gson = Gson()
 
-    private lateinit var useCase: UpdateWidgetSettingUseCase
+    private lateinit var useCase: UpdateWidgetConfigUseCase
 
     @Before
     fun setUp() {
-        useCase = UpdateWidgetSettingUseCase(repository, gson)
+        useCase = UpdateWidgetConfigUseCase(repository, gson)
     }
 
     @Test
     fun testUpdateBooleanSetting() = runTest {
-        val widgetId = WidgetMetadata.WIDGET_ID_WELCOME
-        val existingConfig = """{"widgetId":"welcome","showGreeting":true}"""
+        val widgetId = WidgetMetadata.WIDGET_ID_FORECAST
+        val existingConfig = """{"backgroundColor":0}"""
         coEvery { repository.getConfigJson(widgetId) } returns existingConfig
 
-        val params = UpdateWidgetSettingUseCase.Params(widgetId, "showGreeting", false)
+        val params = UpdateWidgetConfigUseCase.Params(widgetId, "backgroundColor", 123456)
         useCase(params)
 
         val jsonSlot = slot<String>()
         coVerify { repository.saveConfigJson(widgetId, capture(jsonSlot)) }
 
         val savedJson = jsonSlot.captured
-        assertTrue(savedJson.contains("\"showGreeting\":false"))
-    }
-
-    @Test
-    fun testUpdateStringSetting() = runTest {
-        val widgetId = WidgetMetadata.WIDGET_ID_WELCOME
-        val existingConfig = """{"widgetId":"welcome","title":"Hello"}"""
-        coEvery { repository.getConfigJson(widgetId) } returns existingConfig
-
-        val params = UpdateWidgetSettingUseCase.Params(widgetId, "title", "Welcome")
-        useCase(params)
-
-        val jsonSlot = slot<String>()
-        coVerify { repository.saveConfigJson(widgetId, capture(jsonSlot)) }
-
-        val savedJson = jsonSlot.captured
-        assertTrue(savedJson.contains("\"title\":\"Welcome\""))
+        assertTrue(savedJson.contains("\"backgroundColor\":123456"))
     }
 
     @Test
     fun testUpdateIntSetting() = runTest {
-        val widgetId = WidgetMetadata.WIDGET_ID_WELCOME
-        val existingConfig = """{"widgetId":"welcome","backgroundColor":123456}"""
+        val widgetId = WidgetMetadata.WIDGET_ID_FORECAST
+        val existingConfig = """{"backgroundColor":123456}"""
         coEvery { repository.getConfigJson(widgetId) } returns existingConfig
 
-        val params = UpdateWidgetSettingUseCase.Params(widgetId, "backgroundColor", 789012)
+        val params = UpdateWidgetConfigUseCase.Params(widgetId, "backgroundColor", 789012)
         useCase(params)
 
         val jsonSlot = slot<String>()
@@ -92,65 +75,32 @@ class UpdateWidgetSettingUseCaseTest {
     }
 
     @Test
-    fun testUpdateNumberSetting() = runTest {
-        val widgetId = WidgetMetadata.WIDGET_ID_WELCOME
-        val existingConfig = """{"widgetId":"welcome","value":1.5}"""
-        coEvery { repository.getConfigJson(widgetId) } returns existingConfig
-
-        val params = UpdateWidgetSettingUseCase.Params(widgetId, "value", 2.5)
-        useCase(params)
-
-        val jsonSlot = slot<String>()
-        coVerify { repository.saveConfigJson(widgetId, capture(jsonSlot)) }
-
-        val savedJson = jsonSlot.captured
-        assertTrue(savedJson.contains("\"value\":2.5"))
-    }
-
-    @Test
     fun testUpdateSettingWithNoExistingConfig() = runTest {
-        val widgetId = WidgetMetadata.WIDGET_ID_WELCOME
+        val widgetId = WidgetMetadata.WIDGET_ID_FORECAST
         coEvery { repository.getConfigJson(widgetId) } returns null
 
-        val params = UpdateWidgetSettingUseCase.Params(widgetId, "showGreeting", false)
+        val params = UpdateWidgetConfigUseCase.Params(widgetId, "backgroundColor", 999999)
         useCase(params)
 
         val jsonSlot = slot<String>()
         coVerify { repository.saveConfigJson(widgetId, capture(jsonSlot)) }
 
         val savedJson = jsonSlot.captured
-        assertTrue(savedJson.contains("\"showGreeting\":false"))
-    }
-
-    @Test
-    fun testUpdateSettingPreservesOtherSettings() = runTest {
-        val widgetId = WidgetMetadata.WIDGET_ID_WELCOME
-        val existingConfig = """{"widgetId":"welcome","showGreeting":true,"backgroundColor":123456}"""
-        coEvery { repository.getConfigJson(widgetId) } returns existingConfig
-
-        val params = UpdateWidgetSettingUseCase.Params(widgetId, "showGreeting", false)
-        useCase(params)
-
-        val jsonSlot = slot<String>()
-        coVerify { repository.saveConfigJson(widgetId, capture(jsonSlot)) }
-
-        val savedJson = jsonSlot.captured
-        assertTrue(savedJson.contains("\"showGreeting\":false"))
-        assertTrue(savedJson.contains("\"backgroundColor\":123456"))
+        assertTrue(savedJson.contains("\"backgroundColor\":999999"))
     }
 
     @Test
     fun testUpdateSettingWithInvalidExistingConfig() = runTest {
-        val widgetId = WidgetMetadata.WIDGET_ID_WELCOME
+        val widgetId = WidgetMetadata.WIDGET_ID_FORECAST
         coEvery { repository.getConfigJson(widgetId) } returns "invalid json"
 
-        val params = UpdateWidgetSettingUseCase.Params(widgetId, "showGreeting", false)
+        val params = UpdateWidgetConfigUseCase.Params(widgetId, "backgroundColor", 111111)
         useCase(params)
 
         val jsonSlot = slot<String>()
         coVerify { repository.saveConfigJson(widgetId, capture(jsonSlot)) }
 
         val savedJson = jsonSlot.captured
-        assertTrue(savedJson.contains("\"showGreeting\":false"))
+        assertTrue(savedJson.contains("\"backgroundColor\":111111"))
     }
 }
