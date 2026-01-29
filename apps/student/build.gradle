@@ -38,7 +38,7 @@ android {
         applicationId "com.instructure.candroid"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 286
+        versionCode = 287
         versionName = '8.5.0'
 
         vectorDrawables.useSupportLibrary = true
