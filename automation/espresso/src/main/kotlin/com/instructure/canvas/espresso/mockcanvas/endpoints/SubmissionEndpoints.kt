@@ -17,6 +17,7 @@ package com.instructure.canvas.espresso.mockcanvas.endpoints
 
 import android.util.Log
 import com.instructure.canvas.espresso.mockcanvas.Endpoint
+import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvas.espresso.mockcanvas.addSubmissionForAssignment
 import com.instructure.canvas.espresso.mockcanvas.utils.Segment
 import com.instructure.canvas.espresso.mockcanvas.utils.UserId
@@ -29,8 +30,8 @@ import com.instructure.canvasapi2.models.FileUploadParams
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.canvasapi2.type.SubmissionType
+import com.instructure.pandautils.utils.orDefault
 import java.util.Calendar
-import kotlin.random.Random
 
 /**
  * Submission index for a specific course/assignment
@@ -70,6 +71,7 @@ object SubmissionIndexEndpoint : Endpoint(
                         size = file.size
                 )
             }
+            val attemptCount = MockCanvas.data.submissions[assignment.id]?.size.orDefault() + 1L
             val submission = data.addSubmissionForAssignment(
                     assignmentId = pathVars.assignmentId,
                     userId = request.user!!.id,
@@ -77,7 +79,7 @@ object SubmissionIndexEndpoint : Endpoint(
                     body = submissionBody,
                     url = submissionUrl,
                     attachment = attachment,
-                    attempt = Random.nextLong()
+                    attempt = attemptCount
             )
 
             assignment.submission = submission

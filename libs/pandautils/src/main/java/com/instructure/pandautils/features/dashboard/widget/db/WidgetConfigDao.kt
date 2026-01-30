@@ -31,6 +31,9 @@ interface WidgetConfigDao {
     @Query("SELECT * FROM widget_config WHERE widgetId = :widgetId")
     fun observeConfig(widgetId: String): Flow<WidgetConfigEntity?>
 
+    @Query("SELECT * FROM widget_config WHERE widgetId = :widgetId")
+    suspend fun getConfig(widgetId: String): WidgetConfigEntity?
+
     @Delete
     suspend fun deleteConfig(config: WidgetConfigEntity)
 }

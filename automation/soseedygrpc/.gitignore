@@ -1,5 +1,0 @@
-/build
-.idea
-src/main/resources
-*.jar
-out

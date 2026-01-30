@@ -266,6 +266,7 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
 
         // Filter planner items - exclude announcements, assessment requests, completed items
         val todoCount = plannerItems.dataOrNull
+            ?.distinctBy { it.id }
             ?.filter { it.plannableType != PlannableType.ANNOUNCEMENT && it.plannableType != PlannableType.ASSESSMENT_REQUEST && !it.isComplete() }
             ?.filterByToDoFilters(todoFilters, filteredCourses)
             ?.count() ?: 0

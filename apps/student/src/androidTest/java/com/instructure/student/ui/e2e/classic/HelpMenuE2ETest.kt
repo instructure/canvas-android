@@ -21,6 +21,7 @@ import androidx.test.espresso.intent.Intents
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
+import com.instructure.canvas.espresso.StringConstants.HelpMenu
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
@@ -75,9 +76,9 @@ class HelpMenuE2ETest : StudentTest() {
         Intents.init()
 
         try {
-            helpPage.assertHelpMenuURL("Search the Canvas Guides", "https://community.canvaslms.com/t5/Canvas/ct-p/canvas")
-            helpPage.assertHelpMenuURL("Submit a Feature Idea", "https://community.canvaslms.com/t5/Idea-Conversations/idb-p/ideas")
-            helpPage.assertHelpMenuURL("Share Your Love for the App", "https://community.canvaslms.com/t5/Canvas/ct-p/canvas")
+            helpPage.assertHelpMenuURL(HelpMenu.SEARCH_GUIDES_TITLE, "https://community.instructure.com/en/all-guides")
+            helpPage.assertHelpMenuURL(HelpMenu.SUBMIT_FEATURE_TITLE, "https://community.canvaslms.com/t5/Idea-Conversations/idb-p/ideas")
+            helpPage.assertHelpMenuURL(HelpMenu.SHARE_LOVE_TITLE, "market://details?id=com.instructure.candroid")
         }
         finally {
             Intents.release()

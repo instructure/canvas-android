@@ -17,7 +17,6 @@ package com.instructure.pandautils.features.dashboard.widget.institutionalannoun
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,9 +29,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -45,6 +44,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -58,7 +58,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
-import androidx.compose.ui.graphics.Color
 import com.instructure.canvasapi2.models.AccountNotification
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
@@ -171,19 +170,20 @@ private fun AnnouncementCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val cardShape = RoundedCornerShape(16.dp)
     Card(
         modifier = modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick),
-        shape = RoundedCornerShape(16.dp),
+            .fillMaxWidth(),
+        shape = cardShape,
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(
-            containerColor = colorResource(R.color.backgroundLightestElevated)
+            containerColor = colorResource(R.color.backgroundLightest)
         )
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .clickable(onClick = onClick)
                 .padding(16.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalAlignment = Alignment.Top
@@ -222,7 +222,7 @@ private fun AnnouncementCard(
                         .size(16.dp)
                         .align(Alignment.TopStart)
                         .offset(x = (-8).dp, y = (-8).dp)
-                        .background(colorResource(R.color.backgroundLightestElevated), CircleShape)
+                        .background(colorResource(R.color.backgroundLightest), CircleShape)
                 ) {
                     Icon(
                         painter = painterResource(id = getIconResource(announcement.icon)),
@@ -270,7 +270,7 @@ private fun AnnouncementCard(
                     text = announcement.subject,
                     fontSize = 16.sp,
                     lineHeight = 22.sp,
-                    fontWeight = FontWeight.SemiBold,
+                    fontWeight = FontWeight.Medium,
                     overflow = TextOverflow.Ellipsis,
                     color = colorResource(R.color.textDarkest),
                     maxLines = 2
@@ -306,7 +306,7 @@ private fun formatDateTime(date: Date): String {
 @Preview(showBackground = true)
 @Preview(
     showBackground = true,
-    backgroundColor = 0xFF0F1316,
+    backgroundColor = 0x1F2124,
     uiMode = android.content.res.Configuration.UI_MODE_NIGHT_YES
 )
 @Composable
