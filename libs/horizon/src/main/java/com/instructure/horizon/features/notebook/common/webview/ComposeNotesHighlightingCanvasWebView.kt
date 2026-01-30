@@ -26,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -45,6 +46,7 @@ import com.instructure.horizon.features.notebook.common.model.Note
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.horizon.features.notebook.common.webview.JSTextSelectionInterface.Companion.addTextSelectionInterface
 import com.instructure.horizon.features.notebook.common.webview.JSTextSelectionInterface.Companion.evaluateTextSelectionInterface
+import com.instructure.horizon.features.notebook.common.webview.JSTextSelectionInterface.Companion.getNoteYPosition
 import com.instructure.horizon.features.notebook.common.webview.JSTextSelectionInterface.Companion.highlightNotes
 import com.instructure.pandautils.compose.composables.ComposeEmbeddedWebViewCallbacks
 import com.instructure.pandautils.compose.composables.ComposeWebViewCallbacks
@@ -52,6 +54,8 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.JsExternalToolInterface
 import com.instructure.pandautils.utils.JsGoogleDocsInterface
+import com.instructure.pandautils.utils.orDefault
+import com.instructure.pandautils.utils.toPx
 import com.instructure.pandautils.views.CanvasWebView
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -65,11 +69,13 @@ fun ComposeNotesHighlightingCanvasWebView(
     contentType: String = "text/html",
     useInAppFormatting: Boolean = true,
     title: String? = null,
+    baseUrl: String? = null,
     onLtiButtonPressed: ((ltiUrl: String) -> Unit)? = null,
     applyOnWebView: (CanvasWebView.() -> Unit)? = null,
     webViewCallbacks: ComposeWebViewCallbacks = ComposeWebViewCallbacks(),
     embeddedWebViewCallbacks: ComposeEmbeddedWebViewCallbacks? = null,
-    scrollState: ScrollState? = null
+    scrollState: ScrollState? = null,
+    scrollToNoteId: String? = null
 ) {
     var pageHeight by remember { mutableIntStateOf(0) }
     var scrollValue by rememberSaveable { mutableIntStateOf(0) }
@@ -78,6 +84,7 @@ fun ComposeNotesHighlightingCanvasWebView(
     val webViewState = rememberSaveable { bundleOf() }
     val selectionLocation: MutableStateFlow<SelectionLocation> by remember { mutableStateOf(MutableStateFlow(SelectionLocation(0f, 0f, 0f, 0f))) }
     val lifecycleOwner = LocalLifecycleOwner.current
+    val composeScope = rememberCoroutineScope()
     val context = LocalContext.current
     val clipboardManager: ClipboardManager = LocalClipboardManager.current
 
@@ -91,12 +98,30 @@ fun ComposeNotesHighlightingCanvasWebView(
     var selectedTextStart by remember { mutableIntStateOf(0) }
     var selectedTextEnd by remember { mutableIntStateOf(0) }
 
+    var isScrolled by rememberSaveable { mutableStateOf(false) }
+    var isPageLoaded by remember { mutableStateOf(false) }
+    var webViewInstance by remember { mutableStateOf<NotesHighlightingCanvasWebViewWrapper?>(null) }
+
     LaunchedEffect(scrollState?.maxValue) {
         val maxValue = scrollState?.maxValue ?: 0
 
         if (maxValue > 0 && maxValue < Int.MAX_VALUE) {
             previousScrollMaxValue = scrollMaxValue
             scrollMaxValue = maxValue
+        }
+    }
+
+    LaunchedEffect(scrollToNoteId, isPageLoaded, pageHeight) {
+        if (scrollToNoteId != null && isPageLoaded && scrollState != null && webViewInstance != null && !isScrolled && pageHeight > 0) {
+            isScrolled = true
+            webViewInstance?.webView?.getNoteYPosition(scrollToNoteId) { yPosition ->
+                if (yPosition != null && !scrollState.isScrollInProgress.orDefault(true)) {
+                    composeScope.launch {
+                        val targetScroll = (yPosition.toInt().toPx).coerceIn(0, scrollState.maxValue)
+                        scrollState.animateScrollTo(targetScroll)
+                    }
+                }
+            }
         }
     }
 
@@ -107,7 +132,7 @@ fun ComposeNotesHighlightingCanvasWebView(
         AndroidView(
             factory = {
                 scrollValue = scrollState?.value ?: 0
-                NotesHighlightingCanvasWebViewWrapper(
+                val wrapper = NotesHighlightingCanvasWebViewWrapper(
                     it,
                     callback = AddNoteActionModeCallback(
                         lifecycleOwner,
@@ -160,7 +185,9 @@ fun ComposeNotesHighlightingCanvasWebView(
                             webViewCallbacks.onPageFinished(webView, url)
 
                             webView.evaluateTextSelectionInterface()
-                            webView.highlightNotes(notesStateValue.value)
+                            webView.highlightNotes(notesStateValue.value) {
+                                isPageLoaded = true
+                            }
                         }
 
                         override fun onPageStartedCallback(webView: WebView, url: String) = webViewCallbacks.onPageStarted(webView, url)
@@ -184,11 +211,13 @@ fun ComposeNotesHighlightingCanvasWebView(
 
                     applyOnWebView?.let { applyOnWebView -> webView.applyOnWebView() }
                 }
+                webViewInstance = wrapper
+                wrapper
             },
             update = {
                 if (webViewState.isEmpty) {
                     if (useInAppFormatting) {
-                        it.loadHtml(content, title)
+                        it.loadHtml(content, title, baseUrl)
                     } else {
                         it.loadDataWithBaseUrl(CanvasWebView.getReferrer(true), content, contentType, "UTF-8", null)
                     }
@@ -201,7 +230,7 @@ fun ComposeNotesHighlightingCanvasWebView(
                         it.webView.addJavascriptInterface(JsGoogleDocsInterface(it.context), Const.GOOGLE_DOCS)
                     }
                 } else {
-                    it.loadHtml(content, title)
+                    it.loadHtml(content, title, baseUrl)
                 }
 
                 it.webView.addTextSelectionInterface(
@@ -246,7 +275,9 @@ fun ComposeNotesHighlightingCanvasWebView(
                     if (coordinates.size.height > 0 && coordinates.size.height != previousHeight) {
                         lifecycleOwner.lifecycleScope.launch {
                             val scrollRatio = scrollValue.toFloat() / previousScrollMaxValue.toFloat()
-                            scrollState?.scrollTo((scrollRatio * (scrollState.maxValue)).toInt())
+                            if (scrollRatio > 0 && !scrollState?.isScrollInProgress.orDefault(true)) {
+                                scrollState?.scrollTo((scrollRatio * (scrollState.maxValue)).toInt())
+                            }
                         }
                     }
                     previousHeight = coordinates.size.height

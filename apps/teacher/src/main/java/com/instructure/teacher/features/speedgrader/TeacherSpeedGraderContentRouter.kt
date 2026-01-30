@@ -51,11 +51,11 @@ import com.instructure.teacher.fragments.ViewUnsupportedFileFragment
 
 class TeacherSpeedGraderContentRouter(private val resources: Resources) : SpeedGraderContentRouter {
 
-    override fun getRouteForContent(content: GradeableContent): SpeedGraderContentRoute {
+    override fun getRouteForContent(content: GradeableContent, baseUrl: String?): SpeedGraderContentRoute {
         return when (content) {
             is TextContent -> SpeedGraderContentRoute(
                 SpeedGraderTextSubmissionFragment::class.java,
-                SpeedGraderTextSubmissionFragment.createBundle(content.text)
+                SpeedGraderTextSubmissionFragment.createBundle(content.text, baseUrl)
             )
 
             is NoSubmissionContent -> SpeedGraderContentRoute(

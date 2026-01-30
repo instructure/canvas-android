@@ -134,7 +134,7 @@ class HorizonInboxDetailsViewModel @Inject constructor(
                                 attachment.toAttachmentUiState()
                             }
                         )
-                    },
+                    }.reversed(),
                     replyState = getReplyState(),
                     bottomLayout = true
                 )
@@ -382,7 +382,7 @@ class HorizonInboxDetailsViewModel @Inject constructor(
 
             _uiState.update {
                 it.copy(
-                    items = conversation.messages.map { message ->
+                    items = it.items + conversation.messages.map { message ->
                         HorizonInboxDetailsItem(
                             author = conversation.participants.firstOrNull { it.id == message.authorId }?.name.orEmpty(),
                             date = message.createdAt.toDate() ?: Date(),
@@ -392,7 +392,7 @@ class HorizonInboxDetailsViewModel @Inject constructor(
                                 attachment.toAttachmentUiState()
                             }
                         )
-                    } + it.items,
+                    },
                     replyState = it.replyState?.copy(
                         replyTextValue = TextFieldValue(""),
                         isLoading = false,

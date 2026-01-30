@@ -298,6 +298,7 @@ class NotoriousUploadWorker @AssistedInject constructor(
             val workRequest = OneTimeWorkRequest.Builder(NotoriousUploadWorker::class.java)
                 .setInputData(data)
                 .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
+                .addTag("NotoriousUploadWorker")
                 .build()
 
             WorkManager.getInstance(context).enqueue(workRequest)

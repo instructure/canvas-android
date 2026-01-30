@@ -67,7 +67,8 @@ sealed class MainNavigationRoute(val route: String) {
         val courseId: Long,
         val moduleItemId: Long? = null,
         val moduleItemAssetType: String? = null,
-        val moduleItemAssetId: String? = null
+        val moduleItemAssetId: String? = null,
+        val scrollToNoteId: String? = null
     ) :
         MainNavigationRoute("module_item_sequence")
 

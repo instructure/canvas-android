@@ -33,6 +33,7 @@ class FullscreenInternalWebViewFragment : InternalWebViewFragment() {
             url = args.getString(URL)!!
             title = args.getString(TITLE)!!
             darkToolbar = args.getBoolean(DARK_TOOLBAR)
+            enableAlgorithmicDarkening = args.getBoolean(ENABLE_ALGORITHMIC_DARKENING)
         }
     }
 }

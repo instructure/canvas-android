@@ -52,6 +52,7 @@ import androidx.viewpager.widget.ViewPager
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.espresso.swipeUp
+import instructure.rceditor.RCETextEditor
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
 import org.hamcrest.Matchers.allOf
@@ -381,4 +382,21 @@ fun waitForViewToDisappear(viewMatcher: Matcher<View>, timeoutInSeconds: Long) {
 
 fun toString(view: View): String {
     return HumanReadables.getViewHierarchyErrorMessage(view, null, "", null)
+}
+
+class TypeInRCETextEditor(val text: String) : ViewAction {
+    override fun getDescription(): String {
+        return "Enters text into an RCETextEditor"
+    }
+
+    override fun getConstraints(): Matcher<View> {
+        return ViewMatchers.isAssignableFrom(RCETextEditor::class.java)
+    }
+
+    override fun perform(uiController: UiController?, view: View?) {
+        when(view) {
+            is RCETextEditor -> view.applyHtml(text)
+        }
+    }
+
 }

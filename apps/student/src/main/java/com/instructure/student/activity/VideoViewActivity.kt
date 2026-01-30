@@ -21,6 +21,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.widget.ImageButton
 import androidx.annotation.OptIn
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
@@ -50,6 +51,8 @@ import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.setGone
+import com.instructure.student.R
 import com.instructure.student.databinding.ActivityVideoViewBinding
 import com.instructure.student.util.Const
 
@@ -72,6 +75,7 @@ class VideoViewActivity : BaseCanvasActivity() {
         mainHandler = Handler()
         val videoTrackSelectionFactory: ExoTrackSelection.Factory = AdaptiveTrackSelection.Factory()
         trackSelector = DefaultTrackSelector(applicationContext, videoTrackSelectionFactory)
+        binding.playerView.findViewById<ImageButton>(R.id.fullscreenButton).setGone()
         fetchMediaUri(Uri.parse(intent?.extras?.getString(Const.URL)))
         ViewStyler.setStatusBarDark(this, ThemePrefs.primaryColor)
     }

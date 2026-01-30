@@ -138,6 +138,7 @@ class EditFileFolderFragment : BasePresenterFragment<
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
+        updateFileFolder = currentFileOrFolder.parcelCopy()
     }
 
     override fun onReadySetGo(presenter: EditFileFolderPresenter) {
@@ -481,7 +482,6 @@ class EditFileFolderFragment : BasePresenterFragment<
 
         fun newInstance(bundle: Bundle) = EditFileFolderFragment().apply {
             arguments = bundle
-            updateFileFolder = currentFileOrFolder.parcelCopy()
         }
     }
 }

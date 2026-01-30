@@ -40,7 +40,8 @@ data class AssignmentDetailsViewData(
     val discussionHeaderViewData: DiscussionHeaderViewData? = null,
     val quizDetails: QuizViewViewData? = null,
     val attemptsViewData: AttemptsViewData? = null,
-    @Bindable var hasDraft: Boolean = false
+    @Bindable var hasDraft: Boolean = false,
+    val baseUrl: String? = null
 ) : BaseObservable() {
     val firstAttemptOrNull = attempts.firstOrNull()
     val noDescriptionVisible = description.isEmpty() && !fullLocked

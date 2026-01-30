@@ -17,6 +17,7 @@
 package com.instructure.canvasapi2
 
 import com.apollographql.apollo.cache.http.HttpFetchPolicy
+import com.instructure.canvasapi2.models.DomainService
 import okhttp3.OkHttpClient
 import javax.inject.Inject
 
@@ -34,31 +35,10 @@ abstract class DomainServicesGraphQLClientConfig(
     }
 }
 
-class PineGraphQLClientConfig @Inject constructor(
-    adapter: PineAdapter
-): DomainServicesGraphQLClientConfig(
-    url = BuildConfig.PINE_BASE_URL + "/graphql",
-    httpClient = adapter.buildOHttpClient()
-)
-
-class CedarGraphQLClientConfig @Inject constructor(
-    adapter: CedarAdapter
-): DomainServicesGraphQLClientConfig(
-    url = BuildConfig.CEDAR_BASE_URL + "/graphql",
-    httpClient = adapter.buildOHttpClient()
-)
-
-class RedwoodGraphQLClientConfig @Inject constructor(
-    adapter: RedwoodAdapter
-): DomainServicesGraphQLClientConfig(
-    url = BuildConfig.REDWOOD_BASE_URL + "/graphql",
-    httpClient = adapter.buildOHttpClient()
-)
-
 class JourneyGraphQLClientConfig @Inject constructor(
     adapter: JourneyAdapter
 ): DomainServicesGraphQLClientConfig(
-    url = BuildConfig.JOURNEY_BASE_URL + "/graphql",
+    url = DomainService.JOURNEY.getBaseUrl() + "/graphql",
     httpClient = adapter.buildOHttpClient(),
     fetchPolicy = HttpFetchPolicy.CacheFirst
 )
