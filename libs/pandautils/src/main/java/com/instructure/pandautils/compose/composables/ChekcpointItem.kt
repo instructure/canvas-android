@@ -51,8 +51,11 @@ import com.instructure.pandautils.utils.DisplayGrade
 fun CheckpointItem(
     discussionCheckpointUiState: DiscussionCheckpointUiState,
     contextColor: Color,
-    showGrade: Boolean = true
+    showGrade: Boolean = true,
+    colorOverride: Int? = null
 ) {
+    val textColor = colorOverride?.let { colorResource(id = it) } ?: contextColor
+
     Column(
         modifier = Modifier
             .padding(top = 8.dp)
@@ -60,14 +63,22 @@ fun CheckpointItem(
     ) {
         Text(
             text = discussionCheckpointUiState.name,
-            color = colorResource(id = R.color.textDarkest),
+            color = if (colorOverride != null) {
+                colorResource(id = colorOverride)
+            } else {
+                colorResource(id = R.color.textDarkest)
+            },
             fontSize = 16.sp,
             modifier = Modifier.testTag("checkpointName")
         )
         FlowRow {
             Text(
                 text = discussionCheckpointUiState.dueDate,
-                color = colorResource(id = R.color.textDark),
+                color = if (colorOverride != null) {
+                    colorResource(id = colorOverride)
+                } else {
+                    colorResource(id = R.color.textDark)
+                },
                 fontSize = 14.sp,
                 modifier = Modifier.testTag("checkpointDueDate_${discussionCheckpointUiState.name}")
             )
@@ -78,11 +89,21 @@ fun CheckpointItem(
                         .height(16.dp)
                         .width(1.dp)
                         .clip(RoundedCornerShape(1.dp))
-                        .background(colorResource(id = R.color.borderMedium))
+                        .background(
+                            color = if (colorOverride != null) {
+                                colorResource(id = colorOverride)
+                            } else {
+                                colorResource(id = R.color.borderMedium)
+                            }
+                        )
                         .align(Alignment.CenterVertically)
                 )
                 Spacer(modifier = Modifier.width(4.dp))
-                SubmissionState(discussionCheckpointUiState.submissionStateLabel, "checkpointSubmissionStateLabel")
+                SubmissionState(
+                    submissionStateLabel = discussionCheckpointUiState.submissionStateLabel,
+                    testTag = "checkpointSubmissionStateLabel",
+                    colorOverride = colorOverride
+                )
             }
         }
         if (showGrade) {
@@ -90,7 +111,7 @@ fun CheckpointItem(
             if (gradeText.isNotEmpty()) {
                 Text(
                     text = gradeText,
-                    color = contextColor,
+                    color = textColor,
                     fontSize = 16.sp,
                     modifier = Modifier
                         .semantics {
@@ -106,7 +127,7 @@ fun CheckpointItem(
                     discussionCheckpointUiState.pointsPossible,
                     discussionCheckpointUiState.pointsPossible
                 ),
-                color = contextColor,
+                color = textColor,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
             )

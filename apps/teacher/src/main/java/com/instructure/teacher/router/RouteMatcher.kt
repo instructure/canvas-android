@@ -31,6 +31,7 @@ import com.instructure.canvasapi2.managers.FileFolderManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.FileFolder
+import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
@@ -255,6 +256,17 @@ object RouteMatcher : BaseRouteMatcher() {
 
         // To Do
         routes.add(Route("/todos/:${ToDoFragment.PLANNABLE_ID}", ToDoFragment::class.java))
+
+        // Studio Media Immersive View
+        routes.add(
+            Route(
+                "/media_attachments/:${RouterParams.ATTACHMENT_ID}/immersive_view",
+                FullscreenInternalWebViewFragment::class.java
+            )
+        )
+
+        //LTI
+        routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/external_tools/:${RouterParams.EXTERNAL_ID}"), RouteContext.LTI))
     }
 
     private fun initClassMap() {
@@ -317,6 +329,8 @@ object RouteMatcher : BaseRouteMatcher() {
     }
 
     fun route(activity: FragmentActivity, route: Route?) {
+        val uri = route?.uri
+        Logger.i("RouteMatcher:route() - uri: $uri, routeContext: ${route?.routeContext}, primaryClass: ${route?.primaryClass}")
         if (route == null || route.routeContext === RouteContext.DO_NOT_ROUTE) {
             if (route?.uri != null) {
                 //No route, no problem
@@ -343,7 +357,48 @@ object RouteMatcher : BaseRouteMatcher() {
             handleMediaRoute(activity, route)
         } else if (route.routeContext === RouteContext.SPEED_GRADER) {
             handleSpeedGraderRoute(activity, route)
+        } else if (uri?.toString()?.contains("external_tools/retrieve") == true
+            && uri.toString().contains("custom_arc_launch_type")
+            && uri.toString().contains("immersive_view")
+        ) {
+            handleStudioImmersiveViewRoute(route, activity)
+        } else if (route.primaryClass == FullscreenInternalWebViewFragment::class.java && route.uri?.toString()
+                ?.contains("media_attachments") == true
+        ) {
+            handleStudioImmersiveViewRoute(route, activity)
+        } else if (route.routeContext === RouteContext.LTI) {
+            handleLtiRoute(activity, route)
         } else if (activity.resources.getBoolean(R.bool.isDeviceTablet)) {
+            handleTabletRoute(activity, route)
+        } else {
+            handleFullscreenRoute(activity, route)
+        }
+    }
+
+    private fun handleStudioImmersiveViewRoute(route: Route, activity: FragmentActivity) {
+        // Handle Studio embed immersive view - pass the full URL and title to InternalWebviewFragment
+        val uri = route.uri
+        var urlString = uri.toString()
+
+        // Convert media_attachments_iframe to media_attachments (for iframe button)
+        urlString = urlString.replace("media_attachments_iframe", "media_attachments")
+
+        // Ensure embedded=true parameter is always present
+        if (!urlString.contains("embedded=true")) {
+            val separator = if (urlString.contains("?")) "&" else "?"
+            urlString = "$urlString${separator}embedded=true"
+        }
+
+        route.primaryClass = FullscreenInternalWebViewFragment::class.java
+        route.routeContext = RouteContext.INTERNAL
+        route.arguments.putString(InternalWebViewFragment.URL, urlString)
+        route.arguments.putBoolean(InternalWebViewFragment.ENABLE_ALGORITHMIC_DARKENING, true)
+
+        // Extract title from URL query parameter if present, otherwise use fallback
+        val title = uri?.getQueryParameter("title") ?: activity.getString(R.string.immersiveView)
+        route.arguments.putString(InternalWebViewFragment.TITLE, title)
+
+        if (activity.resources.getBoolean(R.bool.isDeviceTablet)) {
             handleTabletRoute(activity, route)
         } else {
             handleFullscreenRoute(activity, route)
@@ -423,6 +478,36 @@ object RouteMatcher : BaseRouteMatcher() {
             handleFullscreenRoute(context, route)
         } else {
             context.startActivity(SpeedGraderActivity.createIntent(context, route))
+        }
+    }
+
+    private fun handleLtiRoute(activity: FragmentActivity, route: Route) {
+        Logger.i("RouteMatcher:handleLtiRoute()")
+        val url = route.uri?.toString()
+        if (url.isNullOrEmpty()) {
+            return
+        }
+
+        // Don't intercept sessionless_launch URLs - they're already being handled by an existing LtiLaunchFragment
+        if (url.contains("sessionless_launch")) {
+            Logger.i("RouteMatcher:handleLtiRoute() - Skipping sessionless_launch URL")
+            return
+        }
+
+        val contextId = route.paramsHash[RouterParams.COURSE_ID]?.toLongOrNull()
+            ?: route.paramsHash[RouterParams.GROUP_ID]?.toLongOrNull()
+
+        val canvasContext: CanvasContext? = when (route.getContextType()) {
+            CanvasContext.Type.COURSE -> contextId?.let { Course(id = it) }
+            CanvasContext.Type.GROUP -> contextId?.let { Group(id = it) }
+            else -> null
+        }
+
+        if (canvasContext != null) {
+            val ltiRoute = LtiLaunchFragment.makeRoute(canvasContext, url, sessionLessLaunch = true)
+            route(activity, ltiRoute)
+        } else {
+            handleWebViewUrl(activity, url)
         }
     }
 

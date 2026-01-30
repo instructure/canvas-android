@@ -20,6 +20,7 @@ import android.graphics.Color
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.IdRes
+import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.NoMatchingViewException
@@ -29,11 +30,13 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.assertThat
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import instructure.rceditor.RCETextEditor
 import junit.framework.AssertionFailedError
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 
 class RecyclerViewItemCountAssertion(private val expectedCount: Int) : ViewAssertion {
     override fun check(view: View, noViewFoundException: NoMatchingViewException?) {
@@ -127,4 +130,49 @@ class ViewAlphaAssertion(private val expectedAlpha: Float): ViewAssertion {
         noViewFoundException?.let { throw it }
         assertThat("View alpha should be $expectedAlpha", view.alpha, `is`(expectedAlpha))
     }
+}
+
+class RCETextEditorContentAssertion(private val expectedText: String) : ViewAssertion {
+    override fun check(view: View, noViewFoundException: NoMatchingViewException?) {
+        noViewFoundException?.let { throw it }
+        val rceEditor = (view as? RCETextEditor)
+            ?: throw ClassCastException("View of type ${view.javaClass.simpleName} must be an RCETextEditor")
+        val actualContent = rceEditor.accessibilityContentDescription
+        assertTrue(
+            "Expected RCE content to contain '$expectedText', but was '$actualContent'",
+            actualContent.contains(expectedText)
+        )
+    }
+}
+
+class RCETextEditorHtmlAssertion(private val expectedHtml: String) : ViewAssertion {
+    override fun check(view: View, noViewFoundException: NoMatchingViewException?) {
+        noViewFoundException?.let { throw it }
+        val rceEditor = (view as? RCETextEditor)
+            ?: throw ClassCastException("View of type ${view.javaClass.simpleName} must be an RCETextEditor")
+        val actualHtml = rceEditor.getHtml() ?: ""
+        assertTrue(
+            "Expected RCE HTML to contain '$expectedHtml', but was '$actualHtml'",
+            actualHtml.contains(expectedHtml)
+        )
+    }
+}
+
+fun SemanticsNodeInteraction.assertDoesNotExistWithTimeout(
+    timeoutInSeconds: Long,
+    pollIntervalInSeconds: Long = 1L
+): SemanticsNodeInteraction {
+    var elapsedTime = 0L
+
+    while (elapsedTime < timeoutInSeconds * 1000) {
+        try {
+            assertDoesNotExist()
+            return this
+        } catch (e: AssertionError) {
+            Thread.sleep(pollIntervalInSeconds * 1000)
+            elapsedTime += (pollIntervalInSeconds * 1000)
+        }
+    }
+
+    throw AssertionError("Compose node still exists after $timeoutInSeconds seconds.")
 }

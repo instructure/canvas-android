@@ -177,7 +177,9 @@ class LtiLaunchFragment : BaseCanvasFragment(), NavigationCallbacks {
             }
 
             private fun canRouteInternally(url: String) =
-                webViewRouter.canRouteInternally(url) && ltiUrl?.substringBefore("?") != url.substringBefore("?")
+                webViewRouter.canRouteInternally(url)
+                    && ltiUrl?.substringBefore("?") != url.substringBefore("?")
+                    && !url.contains("sessionless_launch")
 
             override fun routeInternallyCallback(url: String) {
                 // Handle return button in external tools. Links to course homepage should close the tool.

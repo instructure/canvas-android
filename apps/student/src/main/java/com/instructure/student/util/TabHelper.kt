@@ -30,7 +30,7 @@ import com.instructure.student.R
 import com.instructure.student.activity.NothingToSeeHereFragment
 import com.instructure.student.features.discussion.list.DiscussionListFragment
 import com.instructure.student.features.files.list.FileListFragment
-import com.instructure.student.features.grades.GradesListFragment
+import com.instructure.student.features.grades.GradesFragment
 import com.instructure.student.features.modules.list.ModuleListFragment
 import com.instructure.student.features.pages.details.PageDetailsFragment
 import com.instructure.student.features.pages.list.PageListFragment
@@ -110,7 +110,7 @@ object TabHelper {
             Tab.CONFERENCES_ID -> ConferenceListRepositoryFragment.makeRoute(canvasContext)
             Tab.COLLABORATIONS_ID -> UnsupportedTabFragment.makeRoute(canvasContext, tab.tabId)
             Tab.ANNOUNCEMENTS_ID -> AnnouncementListFragment.makeRoute(canvasContext)
-            Tab.GRADES_ID -> GradesListFragment.makeRoute(canvasContext)
+            Tab.GRADES_ID -> GradesFragment.makeRoute(canvasContext)
             Tab.SETTINGS_ID -> CourseSettingsFragment.makeRoute(canvasContext)
             Tab.NOTIFICATIONS_ID -> NotificationListFragment.makeRoute(canvasContext)
             else -> when {

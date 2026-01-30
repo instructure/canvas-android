@@ -1029,6 +1029,8 @@
 
     <string name="downloading">正在下载</string>
     <string name="downloadComplete">下载完成</string>
+    <string name="fileDownloadNotificationPermissionDenied">已开始下载。启用通知以查看进度。</string>
+
     <string name="notificationChannelNameFileDownloadsName">下载通知</string>
     <string name="notificationChannelNameFileDownloadsDescription">Canvas“下载中”通知。</string>
     <string name="full_due_date_details">完整的截止日期详细信息</string>
@@ -1228,6 +1230,7 @@
     <string name="a11y_content_description_add_to_dashboard">添加到控制面板</string>
     <string name="a11y_content_description_add_all_to_dashboard">全部添加到控制面板</string>
 
+    <string name="new_mobile_dashboard">新移动设备控制面板</string>
     <!-- K5 Strings -->
     <string name="navDrawerAccount">帐户</string>
     <string name="dashboardTabHomeroom">指导教室</string>
@@ -1344,6 +1347,9 @@
         <item quantity="other">%s条未读通知</item>
     </plurals>
 
+    <plurals name="a11y_todoBadgeCount">
+        <item quantity="other">%s 个待办任务</item>
+    </plurals>
     <string name="noAnnotationSelected">未选择任何批注</string>
     <string name="emailNotifications">电子邮件通知</string>
     <string name="emailNotificationsImmediately">立即</string>
@@ -1874,6 +1880,8 @@
     <string name="gradePreferencesHeaderSortBy">排序</string>
     <string name="gradesEmptyTitle">无作业</string>
     <string name="gradesEmptyMessage">似乎尚未在该空间创建作业。</string>
+    <string name="noMatchingAssignments">没有符合条件的作业</string>
+    <string name="noMatchingAssignmentsDescription">没有找到符合搜索条件的作业。请尝试使用其他搜索词。</string>
     <string name="errorLoadingGrades">加载您学生的评分时遇到问题。请尝试重新加载页面或稍后回来检查。</string>
     <string name="errorLoadingCourse">加载您学生的课程详情时遇到问题。请尝试重新加载页面或稍后回来检查。</string>
     <string name="gradesFilterContentDescription">筛选器</string>
@@ -2043,7 +2051,8 @@
     <string name="widgetErrorTitle">糟糕！遇到错误</string>
     <string name="widgetErrorSubtitle">目前显示您的任务时遇到问题。请稍后再试或前往应用程序。</string>
     <string name="widgetToDoEmptyTitle">您的任务已全部完成！</string>
-    <string name="widgetToDoEmptySubtitle">似乎您在未来 4 周内没有任务。是否要添加一些任务？</string>
+    <string name="widgetToDoEmptySubtitle">您很空闲，没有即将要进行的任务。是否要添加一些任务？</string>
+
     <string name="widgetNotLoggedInTitle">请登录！</string>
     <string name="widgetToDoNotLoggedInSubtitle">要查看任务，请在应用程序中登录您的帐户。只需片刻！</string>
     <string name="a11y_widgetToDoOpenToDoList">打开任务列表页面</string>
@@ -2067,6 +2076,10 @@
     <plurals name="pointTotal">
         <item quantity="other">%s / %s 分</item>
     </plurals>
+    <plurals name="groupMemberCount">
+        <item quantity="other">学生</item>
+    </plurals>
+
     <string name="speedGraderLatePenaltyTitle">迟交罚分</string>
     <string name="gradingStatus_none">无</string>
     <string name="gradingStatus_late">迟交</string>
@@ -2123,4 +2136,189 @@
     <string name="scored_less_than_with_max">分数低于 / %s 分</string>
     <string name="scored_between_values">分数 %1$s - %2$s</string>
     <string name="multiple_filters">多个过滤器</string>
+    <string name="a11y_contentDescriptionToDoFilter">筛选器</string>
+    <string name="errorLoadingToDos">加载待办任务时出错。请检查连接，然后重试。</string>
+    <string name="errorUpdatingToDo">更新待办任务时出错。请检查连接，然后重试。</string>
+    <string name="noToDosForNow">暂时没有待办任务！</string>
+    <string name="noToDosForNowSubtext">现在似乎是休息放松的好时机。</string>
+    <string name="todoSwipeDone">完成</string>
+    <string name="todoSwipeUndo">后退</string>
+    <string name="todoMarkedAsDone">%s 已标记为完成</string>
+    <string name="todoMarkedAsNotDone">%s 已标记为未完成</string>
+    <string name="todoMarkedAsDoneSnackbarUndo">后退</string>
+    <string name="todoActionOffline">无法离线执行此操作</string>
+
+    <!-- To Do List Filter Screen -->
+    <string name="todoFilterPreferences">待办任务首选项</string>
+    <string name="todoFilterVisibleItems">可见任务</string>
+    <string name="todoFilterShowPersonalToDos">显示个人待办任务</string>
+    <string name="todoFilterShowCalendarEvents">显示日历事件</string>
+    <string name="todoFilterShowCompleted">显示已完成</string>
+    <string name="todoFilterFavoriteCoursesOnly">仅限收藏的课程</string>
+    <string name="todoFilterShowTasksFrom">显示从以下时间开始的任务：</string>
+    <string name="todoFilterShowTasksUntil">显示截止到以下时间的任务：</string>
+    <string name="todoFilterToday">今天</string>
+    <string name="todoFilterThisWeek">本周</string>
+    <string name="todoFilterLastWeek">上周</string>
+    <string name="todoFilterTwoWeeks">2 周前</string>
+    <string name="todoFilterThreeWeeks">3 周前</string>
+    <string name="todoFilterFourWeeks">4 周前</string>
+    <string name="todoFilterNextWeek">下个星期</string>
+    <string name="todoFilterInTwoWeeks">2 周后</string>
+    <string name="todoFilterInThreeWeeks">3 周后</string>
+    <string name="todoFilterInFourWeeks">4 周后</string>
+    <string name="todoFilterFromDate">从 %s</string>
+    <string name="todoFilterUntilDate">到 %s</string>
+    <string name="a11y_buttonSelectionSelected">已选择</string>
+    <string name="a11y_buttonSelectionNotSelected">未选择</string>
+    <!-- Course Invitations -->
+    <string name="courseInvitationsTitle">课程邀请 (%d)</string>
+    <string name="courseInvitationAccepted">已接受%s邀请</string>
+    <string name="courseInvitationDeclined">已拒绝%s邀请</string>
+    <string name="courseInvitationDeclineConfirmTitle">拒绝邀请</string>
+    <string name="courseInvitationDeclineConfirmMessage">是否确实要拒绝%s邀请？</string>
+
+    <!-- Welcome Widget -->
+    <!-- Greetings with name (%s is the student's first name) -->
+    <string name="welcomeGreetingMorningWithName">早上好，%s！</string>
+    <string name="welcomeGreetingAfternoonWithName">下午好，%s！</string>
+    <string name="welcomeGreetingEveningWithName">晚上好，%s！</string>
+    <string name="welcomeGreetingNightWithName">晚安，%s！</string>
+
+    <!-- Greetings without name (fallback when user has no first name) -->
+    <string name="welcomeGreetingMorning">早上好！</string>
+    <string name="welcomeGreetingAfternoon">下午好！</string>
+    <string name="welcomeGreetingEvening">晚上好！</string>
+    <string name="welcomeGreetingNight">晚安！</string>
+
+    <!-- Welcome Widget Motivational Messages -->
+    <string-array name="welcomeMessagesGeneric">
+        <item>你可以做到。</item>
+        <item>加油，你比你想象的更加优秀。</item>
+        <item>踏踏实实，一步一个脚印。</item>
+        <item>坚持就是胜利。</item>
+        <item>你比你想象的更加强大。</item>
+        <item>不管多么困难，也要咬牙坚持。</item>
+        <item>相信自己，再大的困难，你都经历过了。</item>
+        <item>不求完美，只求进步。你做的很好。</item>
+        <item>坚持下去，你并非孤身一人。</item>
+        <item>你正在不断学习、成长，悄然蜕变。</item>
+        <item>只要朝着正确的目标前进，挫折失败都不足为惧。</item>
+        <item>克服困难，勇往直前。</item>
+        <item>积硅步而至千里。</item>
+        <item>克服困难，勇往直前。</item>
+        <item>偶尔也可以停下来歇息。休息也是学习的一部分。</item>
+        <item>付诸行动，就是顺利。</item>
+        <item>追求进步&gt;力争完美。</item>
+        <item>坚持下去，比你以为的更重要。</item>
+        <item>你的技能在不断进步，只是有时缓慢一些。</item>
+        <item>你已经做得很好了，别把自己逼得太紧。</item>
+        <item>你的节奏把握得很好。</item>
+        <item>不是所有的问题都需要今天解决。</item>
+        <item>你属于这里。</item>
+        <item>你的每一次努力都不会白费。</item>
+        <item>不管失败多少次，都可以从头再来。</item>
+        <item>现在的沉重，会变成日后的轻盈。</item>
+        <item>只要坚持，就不是问题。</item>
+        <item>愚公可以移山。</item>
+        <item>休息也是进步的一部分。</item>
+        <item>你比你想象的做得更好。</item>
+        <item>脚步再慢，也是在前进。</item>
+        <item>罗马非一朝一夕建成。</item>
+        <item>路一步一步走，难题一个一个解决。</item>
+        <item>不需要完美，也能做出成绩。</item>
+        <item>学习之路总是磕磕绊绊，这本是常态。</item>
+        <item>每一次尝试都是成长，哪怕你并未察觉。</item>
+        <item>再大的困难你都克服了，这一次也不例外。</item>
+        <item>你的每一分努力皆有回响，纵使无人看到。</item>
+        <item>慢慢来，也无妨。</item>
+        <item>即便在安静的日子里，你也在悄然进步。</item>
+        <item>前路也许未必明朗，但只要前行，就能找到出口。</item>
+        <item>你比你想象的更加优秀。</item>
+        <item>梦想要远大，脚步要踏实。</item>
+        <item>未来的你会感谢今天的坚持。</item>
+        <item>过程再曲折，也是在前进。</item>
+        <item>你并没有落后，只是在自己的道路上前行。</item>
+        <item>边行边悟，也是成长。</item>
+        <item>有些成长在悄然发生。</item>
+        <item>今天的努力是对明天的投资。</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesMorning">
+        <item>早上好！你能行的 — 一门课、一步路，从容进步。</item>
+        <item>还没有做好心理准备？没关系。就从此刻开始吧。</item>
+        <item>咖啡可以强行提神，但是适度放松才能赋予更大的动力。</item>
+        <item>技术设备罢工了？那就忙里得闲，别为此烦忧。</item>
+        <item>今日不必尽善尽美，只需尽力而为。</item>
+        <item>早上好 — 今天又有新的学习和成长机会。</item>
+        <item>今晨每一小步，都让你离梦想更近。</item>
+        <item>放轻松 — 有些问题不必今天就解决。</item>
+        <item>科技虽难掌握，但你并非独行。</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesAfternoon">
+        <item>行至半途 — 你的付出已超乎你想象。</item>
+        <item>遇到难关？人人都会碰壁，但别就此停止攀登。</item>
+        <item>工作、学业、前程&#8230;&#8230;没有人能事事完美。</item>
+        <item>大脑疲惫了？休息片刻，头脑更清明。</item>
+        <item>寻求帮助。说实话，没有人能孤军作战。</item>
+        <item>你已经走了这么远，这本身就是一个了不起的成就。</item>
+        <item>需要暂时休息？补充能量也是学习的一部分。</item>
+        <item>前路未明也无妨，十年磨砺成一剑。</item>
+        <item>倘若困顿，不妨求助 — 你的背后始终有人支持。</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesEvening">
+        <item>又度过一天 — 这本身就是一场胜利。</item>
+        <item>心里空落落的？给别人发句简单的“在吗”，也许就能得到回响。</item>
+        <item>就算今天诸事不顺，好在你仍然坚持过来了。这才是最重要的。</item>
+        <item>记住：没有任何分数，能丈量你的价值。</item>
+        <item>放轻松，笑一笑，或是坦然地刷刷手机 — 你值得偷闲片刻。</item>
+        <item>祝贺自己又坚持了一天 — 进步悄无声息，但却充满意义。</item>
+        <item>想念朋友或导师？人与人之间的联结，常常发生在微小时刻。</item>
+        <item>夜晚宜自省 — 赞赏一天的收获，而不要纠结于未完成的遗憾。</item>
+        <item>努力比完美更重要。</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesNight">
+        <item>还在埋头苦干？这份勤勉令人敬佩 — 但也别忘了，人还需要睡眠。</item>
+        <item>明天的你会感谢今晚的好眠。</item>
+        <item>焦虑总在深夜喧嚣 — 别信那些嘈杂之声。</item>
+        <item>你并没有落后，只是在自己的道路上前行。</item>
+        <item>关上笔记本电脑 — 你的大脑也需要睡个好觉。</item>
+        <item>好好休息 — 明天又有新的机遇等着你。</item>
+        <item>学习是一场马拉松，而非短跑。今夜善待自己。</item>
+        <item>若忧虑过重，请记得不要独扛。</item>
+        <item>一天将尽，切记：尝试本身，已是收获。</item>
+    </string-array>
+
+    <!-- Accessibility -->
+    <string name="welcomeWidgetContentDescription">欢迎消息：%1$s。%2$s</string>
+
+    <!-- Institutional Announcements -->
+    <string name="institutionalAnnouncementsTitle">公告 (%d)</string>
+    <!-- Widget Display Names -->
+    <string name="widget_hello">您好，%s</string>
+
+    <!-- Customize Dashboard -->
+    <string name="customize_dashboard">自定义控制面板</string>
+    <string name="dashboard_widgets">小工具</string>
+    <string name="move_up">向上移动</string>
+    <string name="move_down">向下移动</string>
+    <string name="no_widgets">无小工具可用</string>
+    <string name="changing_dashboard_layout">更改控制面板布局</string>
+    <string name="changing_dashboard_layout_message">要更改控制面板布局，必须重启应用程序</string>
+    <string name="restart_now">立即重启</string>
+    <string name="switched_back">是否换回旧版？</string>
+    <string name="switched_back_message">感谢您尝试新的控制面板！请告诉我们您换回旧版的原因。</string>
+    <string name="what_could_we_improve">请为我们提供改进建议。</string>
+    <string name="skip">略过</string>
+    <string name="widget_setting_show_greeting">显示欢迎</string>
+    <string name="background_color">背景色</string>
+    <string name="offline_content_available">可用的离线内容</string>
+    <string name="a11y_contentDescription_moreOptions">更多选项</string>
+    <string name="customizeCourse">自定义课程</string>
+    <string name="favoriteCoursesAndGroups">收藏的课程和小组</string>
+    <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
+    <string name="ltiToolsOffline">外部工具无法离线使用。</string>
 </resources>

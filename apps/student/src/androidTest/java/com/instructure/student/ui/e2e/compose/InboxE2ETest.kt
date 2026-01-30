@@ -14,12 +14,19 @@
  *     limitations under the License.
  *
  */
+
 package com.instructure.student.ui.e2e.compose
 
+import android.os.Environment
 import android.os.SystemClock.sleep
 import android.util.Log
+import androidx.media3.ui.R
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiSelector
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
@@ -29,12 +36,14 @@ import com.instructure.canvas.espresso.annotations.ReleaseExclude
 import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.api.ConversationsApi
 import com.instructure.dataseeding.api.GroupsApi
+import com.instructure.espresso.getVideoPosition
 import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.extensions.seedData
 import com.instructure.student.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
+import java.io.File
 
 @HiltAndroidTest
 class InboxE2ETest: StudentComposeTest() {
@@ -533,8 +542,9 @@ class InboxE2ETest: StudentComposeTest() {
     fun testHelpMenuAskYourInstructorMessage() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
-        val data = seedData(students = 2, teachers = 1, courses = 1)
+        val data = seedData(students = 2, teachers = 2, courses = 1)
         val teacher = data.teachersList[0]
+        val teacher2 = data.teachersList[1]
         val course = data.coursesList[0]
         val student = data.studentsList[0]
 
@@ -549,7 +559,8 @@ class InboxE2ETest: StudentComposeTest() {
         helpPage.assertHelpMenuDisplayed()
 
         val questionText = "Can you see message this Instructor?"
-        val recipientList = student.shortName + ", " + teacher.shortName
+        val recipientListWithFirstTeacher = student.shortName + ", " + teacher.shortName
+        val recipientListWithSecondTeacher = student.shortName + ", " + teacher2.shortName
         Log.d(STEP_TAG, "Send the '$questionText' question to the instructor ('${teacher.shortName}') from the student ('${student.shortName}').")
         helpPage.sendQuestionToInstructor(course, questionText)
 
@@ -561,10 +572,11 @@ class InboxE2ETest: StudentComposeTest() {
         inboxPage.filterInbox("Sent")
 
         Log.d(ASSERTION_TAG, "Assert that the conversations is displayed there with the proper recipients.")
-        inboxPage.assertConversationWithRecipientsDisplayed(recipientList)
+        inboxPage.assertConversationWithRecipientsDisplayed(recipientListWithFirstTeacher)
+        inboxPage.assertConversationWithRecipientsDisplayed(recipientListWithSecondTeacher)
 
         Log.d(STEP_TAG, "Open the conversation.")
-        inboxPage.openConversationWithRecipients(recipientList)
+        inboxPage.openConversationWithRecipients(recipientListWithFirstTeacher)
 
         Log.d(ASSERTION_TAG, "Assert that the message body is equal to which the student asked in the 'Ask Your Instructor' dialog: '$questionText'.")
         inboxDetailsPage.assertMessageDisplayed(questionText)
@@ -582,17 +594,424 @@ class InboxE2ETest: StudentComposeTest() {
         Log.d(STEP_TAG, "Open Inbox Page.")
         dashboardPage.clickInboxTab()
 
-        Log.d(ASSERTION_TAG, "Assert that the asked question is displayed in the teacher's inbox with the proper recipients ('$recipientList'), subject and message ('$questionText').")
-        inboxPage.assertConversationWithRecipientsDisplayed(recipientList)
+        Log.d(ASSERTION_TAG, "Assert that the asked question is displayed in the teacher's inbox with the proper recipients ('$recipientListWithFirstTeacher'), subject and message ('$questionText').")
+        inboxPage.assertConversationWithRecipientsDisplayed(recipientListWithFirstTeacher)
+        inboxPage.assertConversationNotDisplayed(recipientListWithSecondTeacher)
         inboxPage.assertConversationSubject("(No Subject)")
         inboxPage.assertConversationDisplayed(questionText)
 
         Log.d(STEP_TAG, "Open the conversation.")
-        inboxPage.openConversationWithRecipients(recipientList)
+        inboxPage.openConversationWithRecipients(recipientListWithFirstTeacher)
 
         Log.d(ASSERTION_TAG, "Assert that there is no subject of the conversation and the message body is equal to which the student typed in the 'Ask Your Instructor' dialog: '$questionText'.")
         inboxDetailsPage.assertMessageDisplayed(questionText)
         inboxDetailsPage.assertConversationSubject("")
+
+        Log.d(STEP_TAG, "Navigate back to Inbox Page.")
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG, "Log out with '${teacher.name}' teacher.")
+        leftSideNavigationDrawerPage.logout()
+
+        Log.d(STEP_TAG, "Login with user: '${teacher2.name}', login id: '${teacher2.loginId}'.")
+        tokenLogin(teacher2)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Open Inbox Page.")
+        dashboardPage.clickInboxTab()
+
+        Log.d(ASSERTION_TAG, "Assert that the asked question is displayed in the teacher's inbox with the proper recipients ('$recipientListWithSecondTeacher'), subject and message ('$questionText').")
+        inboxPage.assertConversationWithRecipientsDisplayed(recipientListWithSecondTeacher)
+        inboxPage.assertConversationNotDisplayed(recipientListWithFirstTeacher)
+        inboxPage.assertConversationSubject("(No Subject)")
+        inboxPage.assertConversationDisplayed(questionText)
+
+        Log.d(STEP_TAG, "Open the conversation.")
+        inboxPage.openConversationWithRecipients(recipientListWithSecondTeacher)
+
+        Log.d(ASSERTION_TAG, "Assert that there is no subject of the conversation and the message body is equal to which the student typed in the 'Ask Your Instructor' dialog: '$questionText'.")
+        inboxDetailsPage.assertMessageDisplayed(questionText)
+        inboxDetailsPage.assertConversationSubject("")
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.E2E)
+    fun testInboxMessageReplyWithVideoAttachmentE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+        val student = data.studentsList[0]
+
+        Log.d(PREPARATION_TAG, "Copy mp4 file to Downloads folder for attachment.")
+        val videoFileName = "test_video.mp4"
+        setupFileOnDevice(videoFileName)
+        File(InstrumentationRegistry.getInstrumentation().targetContext.cacheDir, "file_upload").deleteRecursively()
+
+        val conversationSubject = "Need Help with Assignment"
+        val conversationBody = "Can you please send me a demo video?"
+        Log.d(PREPARATION_TAG, "Create a conversation from '${teacher.name}' to '${student.name}'.")
+        val seededConversation = ConversationsApi.createConversationForCourse(token = teacher.token, courseId = course.id, recipients = listOf(student.id.toString()), subject = conversationSubject, body = conversationBody)[0]
+
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
+        tokenLogin(student)
+        dashboardPage.waitForRender()
+
+        Log.d(ASSERTION_TAG, "Assert that the '${course.name}' course is displayed on the Dashboard Page.")
+        dashboardPage.assertDisplaysCourse(course)
+
+        Log.d(STEP_TAG, "Open Inbox Page.")
+        dashboardPage.clickInboxTab()
+
+        Log.d(ASSERTION_TAG, "Assert that the conversation is displayed.")
+        inboxPage.assertConversationDisplayed(seededConversation.subject)
+
+        Log.d(STEP_TAG, "Open the conversation.")
+        inboxPage.openConversation(seededConversation.subject)
+
+        Log.d(ASSERTION_TAG, "Assert that the '${conversationSubject}' and '${conversationBody}' are displayed.")
+        inboxDetailsPage.assertConversationSubject(conversationSubject)
+        inboxDetailsPage.assertMessageDisplayed(conversationBody)
+
+        Log.d(STEP_TAG, "Click Reply button to respond to the conversation.")
+        inboxDetailsPage.pressOverflowMenuItemForConversation("Reply")
+
+        val replyMessage = "Sure! Here is the demo video."
+        Log.d(STEP_TAG, "Type reply message: '$replyMessage'")
+        inboxComposePage.typeBody(replyMessage)
+
+        Log.d(ASSERTION_TAG, "Assert that send button is enabled after typing message.")
+        inboxComposePage.assertIfSendButtonState(true)
+
+        Log.d(STEP_TAG, "Click attachment button to open file picker dialog.")
+        inboxComposePage.clickAttachmentButton()
+
+        Log.d(PREPARATION_TAG, "Simulate file picker intent (again).")
+        Intents.init()
+        try {
+            stubFilePickerIntent(videoFileName)
+            fileChooserPage.chooseDevice()
+        }
+        finally {
+            Intents.release()
+        }
+
+        Log.d(STEP_TAG, "Click OKAY button to confirm file selection.")
+        fileChooserPage.clickOkay()
+
+        Log.d(ASSERTION_TAG, "Assert that the video file is displayed as attached in the screen.")
+        inboxComposePage.assertAttachmentDisplayed(videoFileName)
+
+        Log.d(STEP_TAG, "Send the reply message with attachment.")
+        sleep(2000) //Wait for attachment to finish uploading
+        inboxComposePage.pressSendButton()
+
+        Log.d(ASSERTION_TAG, "Assert that the reply message is displayed in the conversation.")
+        inboxDetailsPage.assertMessageDisplayed(replyMessage)
+
+        Log.d(ASSERTION_TAG, "Assert that the attachment is displayed in the message.")
+        inboxDetailsPage.assertAttachmentDisplayed(videoFileName)
+
+        Log.d(ASSERTION_TAG, "Assert that the original message is still displayed.")
+        inboxDetailsPage.assertMessageDisplayed(conversationBody)
+
+        Log.d(STEP_TAG, "Click on the attachment to verify it can be opened.")
+        inboxDetailsPage.clickAttachment(videoFileName)
+
+        Log.d(ASSERTION_TAG, "Wait for video to load and assert that the media play button is visible.")
+        inboxDetailsPage.assertPlayButtonDisplayed()
+
+        Log.d(STEP_TAG, "Click the play button to start the video and on the screen to show media controls.")
+        inboxDetailsPage.clickPlayButton()
+        inboxDetailsPage.clickScreenCenterToShowControls(device)
+
+        Log.d(ASSERTION_TAG, "Assert that the play/pause button is visible in the media controls.")
+        inboxDetailsPage.assertPlayPauseButtonDisplayed()
+
+        Log.d(STEP_TAG, "Click play/pause button to pause the video.")
+        inboxDetailsPage.clickPlayPauseButton()
+
+        Log.d(STEP_TAG, "Get the current video position.")
+        val firstPositionText = getVideoPosition(R.id.exo_position)
+        Log.d(ASSERTION_TAG, "First position: $firstPositionText")
+
+        Log.d(STEP_TAG, "Click play/pause button to resume video playback, wait for video to play for 2 seconds then click play/pause button to pause again.")
+        inboxDetailsPage.clickPlayPauseButton()
+        sleep(2000)
+        inboxDetailsPage.clickPlayPauseButton()
+
+        Log.d(STEP_TAG, "Get the video position again.")
+        val secondPositionText = getVideoPosition(R.id.exo_position)
+        Log.d(ASSERTION_TAG, "Second position: $secondPositionText")
+
+        Log.d(ASSERTION_TAG, "Assert that the video position has changed, confirming video is playing.")
+        assert(firstPositionText != secondPositionText) {
+            "Video position did not change. First: $firstPositionText, Second: $secondPositionText"
+        }
+
+        Log.d(STEP_TAG, "Navigate back to conversation details and assert that the '${conversationSubject}' is displayed.")
+        Espresso.pressBack()
+        inboxDetailsPage.assertConversationSubject(conversationSubject)
+
+        Log.d(STEP_TAG, "Navigate back to inbox.")
+        Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that the conversation is still displayed in inbox.")
+        inboxPage.assertConversationDisplayed(seededConversation.subject)
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.E2E)
+    fun testInboxMessageForwardWithPdfAttachmentE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 2, teachers = 1, courses = 1)
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+        val student1 = data.studentsList[0]
+        val student2 = data.studentsList[1]
+
+        Log.d(PREPARATION_TAG, "Copy PDF file to device Downloads folder for attachment.")
+        val pdfFileName = "samplepdf.pdf"
+        val context = InstrumentationRegistry.getInstrumentation().context
+        val inputStream = context.assets.open(pdfFileName)
+        val downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+        val pdfFile = File(downloadsDir, pdfFileName)
+
+        Log.d(PREPARATION_TAG, "Writing file to: ${pdfFile.absolutePath}")
+        pdfFile.outputStream().use { inputStream.copyTo(it) }
+        inputStream.close()
+
+        val conversationSubject = "Project Documentation"
+        val conversationBody = "Please review the attached document and share it with the team."
+        Log.d(PREPARATION_TAG, "Create a conversation from '${teacher.name}' to '${student1.name}'.")
+        val seededConversation = ConversationsApi.createConversationForCourse(token = teacher.token, courseId = course.id, recipients = listOf(student1.id.toString()), subject = conversationSubject, body = conversationBody)[0]
+
+        Log.d(STEP_TAG, "Login with user: '${student1.name}', login id: '${student1.loginId}'.")
+        tokenLogin(student1)
+        dashboardPage.waitForRender()
+
+        Log.d(ASSERTION_TAG, "Assert that the '${course.name}' course is displayed on the Dashboard Page.")
+        dashboardPage.assertDisplaysCourse(course)
+
+        Log.d(STEP_TAG, "Open Inbox Page.")
+        dashboardPage.clickInboxTab()
+
+        Log.d(ASSERTION_TAG, "Assert that the conversation is displayed.")
+        inboxPage.assertConversationDisplayed(seededConversation.subject)
+
+        Log.d(STEP_TAG, "Open the conversation.")
+        inboxPage.openConversation(seededConversation.subject)
+
+        Log.d(ASSERTION_TAG, "Assert that the '${conversationSubject}' and '${conversationBody}' are displayed.")
+        inboxDetailsPage.assertConversationSubject(conversationSubject)
+        inboxDetailsPage.assertMessageDisplayed(conversationBody)
+
+        Log.d(STEP_TAG, "Click Forward button to forward the conversation to ${student2.name}")
+        inboxDetailsPage.pressOverflowMenuItemForConversation("Forward")
+
+        val forwardMessage = "please check this document."
+        Log.d(STEP_TAG, "Type forward message: '$forwardMessage'")
+        inboxComposePage.typeBody(forwardMessage)
+
+        Log.d(STEP_TAG, "Select recipient for forwarded message.")
+        inboxComposePage.pressAddRecipient()
+        recipientPickerPage.pressLabel("Students")
+        recipientPickerPage.pressLabel(student2.shortName)
+        recipientPickerPage.pressDone()
+
+        Log.d(ASSERTION_TAG, "Assert that send button is enabled after selecting recipient.")
+        inboxComposePage.assertIfSendButtonState(true)
+
+        Log.d(STEP_TAG, "Click attachment button to open file picker dialog.")
+        inboxComposePage.clickAttachmentButton()
+
+        Log.d(STEP_TAG, "Click on 'Device' option in file picker dialog.")
+        fileChooserPage.chooseDevice()
+
+        Log.d(STEP_TAG, "Select the PDF file from Android file picker using UIAutomator.")
+        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+
+        val pdfFileObject = device.findObject(UiSelector().textContains(pdfFileName))
+        if (pdfFileObject.exists()) {
+            Log.d(STEP_TAG, "Found PDF file with exact name, clicking...")
+            pdfFileObject.click()
+        } else {
+            Log.d(STEP_TAG, "PDF file not immediately visible, trying to navigate to Downloads...")
+            val showRootsButton = device.findObject(UiSelector().descriptionContains("Show roots"))
+            if (showRootsButton.exists()) {
+                showRootsButton.click()
+            }
+
+            val downloadsItem = device.findObject(UiSelector().textContains("Downloads"))
+            if (downloadsItem.exists()) {
+                downloadsItem.click()
+            }
+
+            val pdfFileObject2 = device.findObject(UiSelector().textContains(pdfFileName))
+            if (pdfFileObject2.exists()) {
+                pdfFileObject2.click()
+            }
+        }
+
+        Log.d(STEP_TAG, "Click OKAY button to confirm file selection.")
+        fileChooserPage.clickOkay()
+
+        Log.d(ASSERTION_TAG, "Assert that the PDF file is displayed as attached in the screen.")
+        inboxComposePage.assertAttachmentDisplayed(pdfFileName)
+
+        Log.d(STEP_TAG, "Send the forwarded message with attachment.")
+        sleep(2000) //Wait for attachment to finish uploading
+        inboxComposePage.pressSendButton()
+
+        Log.d(ASSERTION_TAG, "Assert that the forward message is displayed in the conversation.")
+        inboxDetailsPage.assertMessageDisplayed(forwardMessage)
+
+        Log.d(ASSERTION_TAG, "Assert that the PDF attachment is displayed in the message.")
+        inboxDetailsPage.assertAttachmentDisplayed(pdfFileName)
+
+        Log.d(ASSERTION_TAG, "Assert that the original message is still displayed.")
+        inboxDetailsPage.assertMessageDisplayed(conversationBody)
+
+        Log.d(STEP_TAG, "Click on the PDF attachment to verify it can be opened.")
+        inboxDetailsPage.clickAttachment(pdfFileName)
+
+        Log.d(ASSERTION_TAG, "Assert that PSPDFKit toolbar is displayed, confirming PDF loaded successfully.")
+        inboxDetailsPage.assertPdfViewerToolbarDisplayed()
+
+        Log.d(STEP_TAG, "Navigate back to conversation details and assert that the '${conversationSubject}' is displayed.")
+        Espresso.pressBack()
+        inboxDetailsPage.assertConversationSubject(conversationSubject)
+
+        Log.d(STEP_TAG, "Navigate back to Inbox conversation list page.")
+        Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that the conversation is still displayed in inbox.")
+        inboxPage.assertConversationDisplayed(conversationSubject)
+
+        Log.d(STEP_TAG, "Log out with '${student1.name}' student.")
+        leftSideNavigationDrawerPage.logout()
+
+        Log.d(STEP_TAG, "Login with user: '${student2.name}', login id: '${student2.loginId}'.")
+        tokenLogin(student2)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Open Inbox Page.")
+        dashboardPage.clickInboxTab()
+
+        Log.d(ASSERTION_TAG, "Assert that the forwarded conversation is displayed in ${student2.name}'s inbox.")
+        inboxPage.assertConversationDisplayed(conversationSubject)
+
+        Log.d(STEP_TAG, "Open the forwarded conversation.")
+        inboxPage.openConversation(conversationSubject)
+
+        Log.d(ASSERTION_TAG, "Assert that the '${conversationSubject}' and '${conversationBody}' are displayed.")
+        inboxDetailsPage.assertConversationSubject(conversationSubject)
+        inboxDetailsPage.assertMessageDisplayed(conversationBody)
+
+        Log.d(ASSERTION_TAG, "Assert that the forwarded message from ${student1.name} is displayed.")
+        inboxDetailsPage.assertMessageDisplayed(forwardMessage)
+
+        Log.d(ASSERTION_TAG, "Assert that the PDF attachment is displayed to ${student2.name}.")
+        inboxDetailsPage.assertAttachmentDisplayed(pdfFileName)
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.E2E)
+    fun testInboxMessageForwardE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 2, teachers = 1, courses = 1)
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+        val student1 = data.studentsList[0]
+        val student2 = data.studentsList[1]
+
+        val conversationSubject = "Important Announcement"
+        val conversationBody = "Please review the course syllabus and share with your classmates."
+        Log.d(PREPARATION_TAG, "Create a conversation from '${teacher.name}' to '${student1.name}'.")
+        val seededConversation = ConversationsApi.createConversationForCourse(token = teacher.token, courseId = course.id, recipients = listOf(student1.id.toString()), subject = conversationSubject, body = conversationBody)[0]
+
+        Log.d(STEP_TAG, "Login with user: '${student1.name}', login id: '${student1.loginId}'.")
+        tokenLogin(student1)
+        dashboardPage.waitForRender()
+
+        Log.d(ASSERTION_TAG, "Assert that the '${course.name}' course is displayed on the Dashboard Page.")
+        dashboardPage.assertDisplaysCourse(course)
+
+        Log.d(STEP_TAG, "Open Inbox Page.")
+        dashboardPage.clickInboxTab()
+
+        Log.d(ASSERTION_TAG, "Assert that the conversation is displayed.")
+        inboxPage.assertConversationDisplayed(seededConversation.subject)
+
+        Log.d(STEP_TAG, "Open the conversation.")
+        inboxPage.openConversation(seededConversation.subject)
+
+        Log.d(ASSERTION_TAG, "Assert that the '${conversationSubject}' and '${conversationBody}' are displayed.")
+        inboxDetailsPage.assertConversationSubject(conversationSubject)
+        inboxDetailsPage.assertMessageDisplayed(conversationBody)
+
+        Log.d(STEP_TAG, "Click Forward button to forward the conversation to ${student2.name}.")
+        inboxDetailsPage.pressOverflowMenuItemForConversation("Forward")
+
+        val forwardMessage = "Hey, check this out."
+        Log.d(STEP_TAG, "Type forward message: '$forwardMessage'")
+        inboxComposePage.typeBody(forwardMessage)
+
+        Log.d(STEP_TAG, "Select recipient for forwarded message.")
+        inboxComposePage.pressAddRecipient()
+        recipientPickerPage.pressLabel("Students")
+        recipientPickerPage.pressLabel(student2.shortName)
+        recipientPickerPage.pressDone()
+
+        Log.d(ASSERTION_TAG, "Assert that send button is enabled after selecting recipient.")
+        inboxComposePage.assertIfSendButtonState(true)
+
+        Log.d(STEP_TAG, "Send the forwarded message.")
+        inboxComposePage.pressSendButton()
+
+        Log.d(ASSERTION_TAG, "Assert that the forward message is displayed in the conversation.")
+        inboxDetailsPage.assertMessageDisplayed(forwardMessage)
+
+        Log.d(ASSERTION_TAG, "Assert that the original message is still displayed.")
+        inboxDetailsPage.assertMessageDisplayed(conversationBody)
+
+        Log.d(STEP_TAG, "Navigate back to Inbox conversation list page.")
+        Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that the conversation is still displayed in inbox.")
+        inboxPage.assertConversationDisplayed(conversationSubject)
+
+        Log.d(STEP_TAG, "Log out with '${student1.name}' student.")
+        leftSideNavigationDrawerPage.logout()
+
+        Log.d(STEP_TAG, "Login with user: '${student2.name}', login id: '${student2.loginId}'.")
+        tokenLogin(student2)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Open Inbox Page.")
+        dashboardPage.clickInboxTab()
+
+        Log.d(ASSERTION_TAG, "Assert that the forwarded conversation is displayed in ${student2.name}'s inbox.")
+        inboxPage.assertConversationDisplayed(conversationSubject)
+
+        Log.d(STEP_TAG, "Open the forwarded conversation.")
+        inboxPage.openConversation(conversationSubject)
+
+        Log.d(ASSERTION_TAG, "Assert that the '${conversationSubject}' and '${conversationBody}' are displayed.")
+        inboxDetailsPage.assertConversationSubject(conversationSubject)
+        inboxDetailsPage.assertMessageDisplayed(conversationBody)
+
+        Log.d(ASSERTION_TAG, "Assert that the forwarded message from ${student1.name} is displayed.")
+        inboxDetailsPage.assertMessageDisplayed(forwardMessage)
+
+        Log.d(ASSERTION_TAG, "Assert that the original message is also displayed.")
+        inboxDetailsPage.assertMessageDisplayed(conversationBody)
     }
 
 }

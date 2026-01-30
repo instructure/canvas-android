@@ -62,7 +62,7 @@ fun DashboardTimeSpentCardContent(
     modifier: Modifier = Modifier,
 ) {
     DashboardWidgetCard(
-        stringResource(R.string.dashboardTimeSpentTitle),
+        stringResource(R.string.dashboardTimeLearningTitle),
         R.drawable.schedule,
         HorizonColors.PrimitivesHoney.honey12(),
         modifier,

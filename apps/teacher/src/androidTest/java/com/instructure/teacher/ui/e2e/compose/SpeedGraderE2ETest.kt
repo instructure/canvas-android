@@ -24,6 +24,7 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
+import com.instructure.canvas.espresso.annotations.ReleaseExclude
 import com.instructure.canvas.espresso.pressBackButton
 import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.api.SubmissionsApi
@@ -31,6 +32,7 @@ import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
+import com.instructure.espresso.page.getStringFromResource
 import com.instructure.espresso.retry
 import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.teacher.R
@@ -50,6 +52,7 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
+    @ReleaseExclude
     @OptIn(ExperimentalTestApi::class)
     @E2E
     @Test
@@ -189,8 +192,8 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
         assignmentSubmissionListPage.assertSubmissionFilterOption("Needs Grading")
         assignmentSubmissionListPage.assertSubmissionFilterOption("Submitted")
         assignmentSubmissionListPage.assertSubmissionFilterOption("Graded")
-        assignmentSubmissionListPage.assertPreciseFilterOption("Scored Less than")
-        assignmentSubmissionListPage.assertPreciseFilterOption("Scored More than")
+        assignmentSubmissionListPage.assertPreciseFilterOption(getStringFromResource(R.string.scored_less_than))
+        assignmentSubmissionListPage.assertPreciseFilterOption(getStringFromResource(R.string.scored_more_than))
 
         Log.d(STEP_TAG, "Select 'Not Graded' and click on 'OK'.")
         assignmentSubmissionListPage.clickFilterUngraded()

@@ -1045,6 +1045,8 @@
 
     <string name="downloading">Baixando</string>
     <string name="downloadComplete">Download concluído</string>
+    <string name="fileDownloadNotificationPermissionDenied">Download iniciado. Ative as notificações para acompanhar o progresso.</string>
+
     <string name="notificationChannelNameFileDownloadsName">Baixar notificações</string>
     <string name="notificationChannelNameFileDownloadsDescription">Notificações do Canvas para downloads em curso.</string>
     <string name="full_due_date_details">Detalhes completos do prazo de entrega</string>
@@ -1249,6 +1251,7 @@
     <string name="a11y_content_description_add_to_dashboard">Adicionar ao painel</string>
     <string name="a11y_content_description_add_all_to_dashboard">Adicionar todos ao painel</string>
 
+    <string name="new_mobile_dashboard">Novo painel móvel</string>
     <!-- K5 Strings -->
     <string name="navDrawerAccount">Conta</string>
     <string name="dashboardTabHomeroom">Sala de aula</string>
@@ -1367,6 +1370,10 @@
         <item quantity="other">%s notificações não lidas</item>
     </plurals>
 
+    <plurals name="a11y_todoBadgeCount">
+        <item quantity="one">%s item na lista de tarefas</item>
+        <item quantity="other">%s itens na lista de tarefas</item>
+    </plurals>
     <string name="noAnnotationSelected">Nenhuma anotação selecionada</string>
     <string name="emailNotifications">Notificações de e-mail</string>
     <string name="emailNotificationsImmediately">Imediatamente</string>
@@ -1907,6 +1914,8 @@
     <string name="gradePreferencesHeaderSortBy">Ordenar por</string>
     <string name="gradesEmptyTitle">Sem tarefas</string>
     <string name="gradesEmptyMessage">Parece que as tarefas ainda não foram criadas nesse espaço.</string>
+    <string name="noMatchingAssignments">Nenhuma atribuição correspondente</string>
+    <string name="noMatchingAssignmentsDescription">Nenhuma tarefa corresponde à sua pesquisa. Tente usar um termo de pesquisa diferente.</string>
     <string name="errorLoadingGrades">Estamos tendo problemas para carregar as notas de seu aluno. Tente recarregar a página ou volte mais tarde.</string>
     <string name="errorLoadingCourse">Estamos com problemas para carregar os detalhes do curso de seu aluno. Tente recarregar a página ou volte mais tarde.</string>
     <string name="gradesFilterContentDescription">Filtrar</string>
@@ -2078,7 +2087,8 @@
     <string name="widgetErrorTitle">Ops! Algo deu errado</string>
     <string name="widgetErrorSubtitle">Estamos tendo problemas para mostrar suas tarefas no momento. Tente novamente em breve ou acesse o aplicativo.</string>
     <string name="widgetToDoEmptyTitle">Por enquanto, está tudo pronto!</string>
-    <string name="widgetToDoEmptySubtitle">Parece que você está livre nas próximas quatro semanas. Deseja adicionar algumas tarefas?</string>
+    <string name="widgetToDoEmptySubtitle">Parece que você está livre, não tem tarefas pendentes. Deseja adicionar algumas tarefas?</string>
+
     <string name="widgetNotLoggedInTitle">Vamos fazer seu login!</string>
     <string name="widgetToDoNotLoggedInSubtitle">Para ver suas tarefas, faça login em sua conta no aplicativo. É só um segundo!</string>
     <string name="a11y_widgetToDoOpenToDoList">Abrir a tela da lista de tarefas</string>
@@ -2103,6 +2113,11 @@
         <item quantity="one">%s / %s pt</item>
         <item quantity="other">%s / %s pts</item>
     </plurals>
+    <plurals name="groupMemberCount">
+        <item quantity="one">Aluno</item>
+        <item quantity="other">Alunos</item>
+    </plurals>
+
     <string name="speedGraderLatePenaltyTitle">Penalidade por atraso</string>
     <string name="gradingStatus_none">Nenhum</string>
     <string name="gradingStatus_late">Atrasado</string>
@@ -2159,4 +2174,189 @@
     <string name="scored_less_than_with_max">Pontuação inferior a / %s pontos</string>
     <string name="scored_between_values">Pontuado %1$s - %2$s</string>
     <string name="multiple_filters">Filtros múltiplos</string>
+    <string name="a11y_contentDescriptionToDoFilter">Filtrar</string>
+    <string name="errorLoadingToDos">Ocorreu um erro ao carregar seus itens da lista de tarefas. Verifique a sua conexão e tente novamente.</string>
+    <string name="errorUpdatingToDo">Ocorreu um erro ao atualizar o item da lista de tarefas. Verifique a sua conexão e tente novamente.</string>
+    <string name="noToDosForNow">Sem tarefas a fazer por agora!</string>
+    <string name="noToDosForNowSubtext">Parece ser um ótimo momento para descansar, relaxar e recarregar as baterias.</string>
+    <string name="todoSwipeDone">Feito</string>
+    <string name="todoSwipeUndo">Desfazer</string>
+    <string name="todoMarkedAsDone">%s marcado como pronto</string>
+    <string name="todoMarkedAsNotDone">%s marcado como não pronto</string>
+    <string name="todoMarkedAsDoneSnackbarUndo">Desfazer</string>
+    <string name="todoActionOffline">Esta ação não pode ser realizada offline.</string>
+
+    <!-- To Do List Filter Screen -->
+    <string name="todoFilterPreferences">Preferências da lista de tarefas</string>
+    <string name="todoFilterVisibleItems">Itens visíveis</string>
+    <string name="todoFilterShowPersonalToDos">Mostrar lista de tarefas pessoais</string>
+    <string name="todoFilterShowCalendarEvents">Mostrar eventos do calendário</string>
+    <string name="todoFilterShowCompleted">Mostrar concluídos</string>
+    <string name="todoFilterFavoriteCoursesOnly">Somente cursos favoritos</string>
+    <string name="todoFilterShowTasksFrom">Mostrar tarefas de</string>
+    <string name="todoFilterShowTasksUntil">Mostrar tarefas até</string>
+    <string name="todoFilterToday">Hoje</string>
+    <string name="todoFilterThisWeek">Essa semana</string>
+    <string name="todoFilterLastWeek">Semana passada</string>
+    <string name="todoFilterTwoWeeks">2 semanas atrás</string>
+    <string name="todoFilterThreeWeeks">3 semanas atrás</string>
+    <string name="todoFilterFourWeeks">4 semanas atrás</string>
+    <string name="todoFilterNextWeek">Próxima Semana</string>
+    <string name="todoFilterInTwoWeeks">Em 2 semanas</string>
+    <string name="todoFilterInThreeWeeks">Em 3 semanas</string>
+    <string name="todoFilterInFourWeeks">Em 4 semanas</string>
+    <string name="todoFilterFromDate">De %s</string>
+    <string name="todoFilterUntilDate">Até %s</string>
+    <string name="a11y_buttonSelectionSelected">selecionado</string>
+    <string name="a11y_buttonSelectionNotSelected">não selecionado</string>
+    <!-- Course Invitations -->
+    <string name="courseInvitationsTitle">Convites para cursos (%d)</string>
+    <string name="courseInvitationAccepted">Convite para %s aceito</string>
+    <string name="courseInvitationDeclined">Convite para %s recusado</string>
+    <string name="courseInvitationDeclineConfirmTitle">Recusar convite</string>
+    <string name="courseInvitationDeclineConfirmMessage">Tem certeza de que deseja recusar o convite para %s?</string>
+
+    <!-- Welcome Widget -->
+    <!-- Greetings with name (%s is the student's first name) -->
+    <string name="welcomeGreetingMorningWithName">Bom dia, %s!</string>
+    <string name="welcomeGreetingAfternoonWithName">Boa tarde, %s!</string>
+    <string name="welcomeGreetingEveningWithName">Boa noite, %s!</string>
+    <string name="welcomeGreetingNightWithName">Boa noite, %s!</string>
+
+    <!-- Greetings without name (fallback when user has no first name) -->
+    <string name="welcomeGreetingMorning">Bom dia!</string>
+    <string name="welcomeGreetingAfternoon">Boa tarde!</string>
+    <string name="welcomeGreetingEvening">Boa noite!</string>
+    <string name="welcomeGreetingNight">Boa noite!</string>
+
+    <!-- Welcome Widget Motivational Messages -->
+    <string-array name="welcomeMessagesGeneric">
+        <item>Você consegue.</item>
+        <item>Continue — você é mais forte do que parece agora.</item>
+        <item>Um passo de cada vez ainda é progresso.</item>
+        <item>Não desista — seu futuro eu vai agradecer.</item>
+        <item>Você é capaz de mais do que imagina.</item>
+        <item>Mesmo em dias difíceis, você está avançando.</item>
+        <item>Confie em si mesmo — você já fez coisas difíceis antes.</item>
+        <item>Progresso, não perfeição. Você está indo muito bem.</item>
+        <item>Aguente firme — você não está sozinho nisso.</item>
+        <item>Você está aprendendo, crescendo e indo melhor do que imagina.</item>
+        <item>Tudo bem tropeçar — você ainda está no caminho certo.</item>
+        <item>Continue se esforçando — você está mais perto do que imagina.</item>
+        <item>Pequenas vitórias também contam.</item>
+        <item>Continue — você está mais perto do que imagina.</item>
+        <item>Tudo bem fazer uma pausa. As pausas fazem parte do aprendizado.</item>
+        <item>Tentar já é uma vitória.</item>
+        <item>Progresso &gt; perfeição.</item>
+        <item>Aparecer é mais importante do que você imagina.</item>
+        <item>Você está desenvolvendo habilidades, mesmo nos dias mais lentos.</item>
+        <item>Não se esqueça de respirar — você está indo muito bem.</item>
+        <item>Seu ritmo é o ritmo certo.</item>
+        <item>Nem tudo precisa ser resolvido hoje.</item>
+        <item>Você pertence a este lugar.</item>
+        <item>Cada esforço que você faz faz diferença.</item>
+        <item>Tudo bem recomeçar — quantas vezes forem necessárias.</item>
+        <item>O que parece difícil agora será mais fácil depois.</item>
+        <item>Continue aparecendo — é isso que importa.</item>
+        <item>Pequenos passos movem grandes montanhas.</item>
+        <item>Descansar também faz parte do progresso.</item>
+        <item>Você está indo melhor do que imagina.</item>
+        <item>Mesmo um progresso lento ainda é progresso.</item>
+        <item>O futuro não se constrói em um dia — mas você está no caminho certo.</item>
+        <item>Uma tarefa, um momento, um passo de cada vez.</item>
+        <item>Você não precisa ser perfeito para causar impacto.</item>
+        <item>Aprender é complicado — e isso é normal.</item>
+        <item>Cada tentativa é um crescimento, mesmo que não pareça.</item>
+        <item>Você já fez coisas difíceis antes — você também pode fazer isso.</item>
+        <item>Seu esforço é importante, mesmo que ninguém veja.</item>
+        <item>Tudo bem ir devagar.</item>
+        <item>Você está avançando, mesmo nos dias tranquilos.</item>
+        <item>O caminho não precisa estar claro ainda — continue caminhando.</item>
+        <item>Você é mais forte do que parece agora.</item>
+        <item>Grandes objetivos são construídos a partir de pequenos passos.</item>
+        <item>Continue — seu futuro vai agradecer.</item>
+        <item>Mesmo um progresso confuso ainda é progresso.</item>
+        <item>Você não está atrasado — você está no seu caminho.</item>
+        <item>Tudo bem aprender à medida que avança.</item>
+        <item>Você está crescendo de maneiras que talvez ainda não perceba.</item>
+        <item>Seu esforço hoje é um investimento no amanhã.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesMorning">
+        <item>Bom dia! Você consegue — uma aula, um passo de cada vez.</item>
+        <item>Não se sente pronto? Isso é normal. Apenas comece onde você está.</item>
+        <item>Café ajuda, mas ser gentil consigo mesmo funciona melhor.</item>
+        <item>A tecnologia está dando problema? Acontece com todos nós — não se estresse.</item>
+        <item>Hoje não precisa ser perfeito, apenas possível.</item>
+        <item>Bom dia — hoje é uma nova chance de aprender e crescer.</item>
+        <item>Mesmo pequenos passos nesta manhã o aproximam de seus objetivos.</item>
+        <item>Respire fundo — você não precisa ter tudo planejado ainda.</item>
+        <item>A tecnologia pode ser complicada, mas você não está sozinho no aprendizado.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesAfternoon">
+        <item>Você já está na metade do caminho — já fez mais do que imagina.</item>
+        <item>Está se sentindo preso? Todo mundo esbarra em obstáculos, só não pare de tentar.</item>
+        <item>Trabalho, notas, futuro... ninguém tem tudo planejado ainda.</item>
+        <item>Cérebro cansado? Uma pausa rápida = melhor concentração depois.</item>
+        <item>Peça ajuda. Sério, ninguém está fazendo isso sozinho.</item>
+        <item>Você já chegou até aqui hoje — isso é algo para se orgulhar.</item>
+        <item>Precisa de uma pausa? Recarregar as energias também faz parte do aprendizado.</item>
+        <item>Tudo bem se o caminho parecer incerto — as habilidades são construídas passo a passo.</item>
+        <item>Procure ajuda se estiver preso — o apoio está sempre mais perto do que parece.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesEvening">
+        <item>Você chegou ao fim do dia — isso já é uma vitória.</item>
+        <item>Está sentindo falta de alguém? Mande um “oi” rápido para alguém — isso ajuda.</item>
+        <item>Mesmo que hoje tenha sido um dia complicado, você apareceu. Isso é importante.</item>
+        <item>Lembre-se: nenhuma nota mede o seu valor.</item>
+        <item>Relaxe, ria ou navegue sem culpa — você merece.</item>
+        <item>Parabéns por ter passado o dia — o progresso conta, mesmo quando é silencioso.</item>
+        <item>Está sentindo falta de amigos ou mentores? A conexão também pode acontecer em pequenos momentos.</item>
+        <item>As noites são para reflexão — observe o que você aprendeu hoje, não apenas o que ainda precisa fazer.</item>
+        <item>Seu esforço é mais importante do que a perfeição.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesNight">
+        <item>Ainda está trabalhando duro? Respeito — mas não se esqueça de que o sono existe.</item>
+        <item>Amanhã você vai agradecer a si mesmo por ter descansado esta noite.</item>
+        <item>A ansiedade fica mais forte à noite — não acredite em todo esse barulho.</item>
+        <item>Você não está atrasado, apenas no seu caminho.</item>
+        <item>Feche o laptop — seu cérebro também precisa sonhar.</item>
+        <item>Tudo bem descansar — amanhã traz novas oportunidades.</item>
+        <item>Aprender é uma maratona, não uma corrida de velocidade. Seja gentil consigo mesmo esta noite.</item>
+        <item>Se as preocupações parecerem pesadas, lembre-se de que você não precisa carregá-las sozinho.</item>
+        <item>Termine o dia sabendo que tentar já é uma conquista.</item>
+    </string-array>
+
+    <!-- Accessibility -->
+    <string name="welcomeWidgetContentDescription">Mensagem de boas-vindas: %1$s. %2$s</string>
+
+    <!-- Institutional Announcements -->
+    <string name="institutionalAnnouncementsTitle">Anúncios (%d)</string>
+    <!-- Widget Display Names -->
+    <string name="widget_hello">Olá, %s</string>
+
+    <!-- Customize Dashboard -->
+    <string name="customize_dashboard">Personalizar painel</string>
+    <string name="dashboard_widgets">Widgets</string>
+    <string name="move_up">Subir</string>
+    <string name="move_down">Descer</string>
+    <string name="no_widgets">Não há widgets disponíveis</string>
+    <string name="changing_dashboard_layout">Alterando o layout do painel</string>
+    <string name="changing_dashboard_layout_message">Para alterar o layout do painel, é necessário reiniciar o aplicativo.</string>
+    <string name="restart_now">Reiniciar agora</string>
+    <string name="switched_back">Mudou de ideia?</string>
+    <string name="switched_back_message">Obrigado por experimentar o novo painel! Você poderia nos dizer por que voltou atrás?</string>
+    <string name="what_could_we_improve">O que poderíamos melhorar?</string>
+    <string name="skip">Pular</string>
+    <string name="widget_setting_show_greeting">Mostrar saudação</string>
+    <string name="background_color">Cor de fundo</string>
+    <string name="offline_content_available">Conteúdo offline disponível</string>
+    <string name="a11y_contentDescription_moreOptions">Mais opções</string>
+    <string name="customizeCourse">Personalizar curso</string>
+    <string name="favoriteCoursesAndGroups">Cursos e grupos favoritos</string>
+    <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
+    <string name="ltiToolsOffline">As ferramentas externas não estão disponíveis offline.</string>
 </resources>

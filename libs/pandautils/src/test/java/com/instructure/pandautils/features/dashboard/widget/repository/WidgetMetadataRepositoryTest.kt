@@ -49,8 +49,8 @@ class WidgetMetadataRepositoryTest {
     @Test
     fun `observeAllMetadata returns mapped metadata from dao`() = runTest {
         val entities = listOf(
-            WidgetMetadataEntity("widget1", 0, true),
-            WidgetMetadataEntity("widget2", 1, false)
+            WidgetMetadataEntity("widget1", 0, true, true, false),
+            WidgetMetadataEntity("widget2", 1, false, false, true)
         )
         coEvery { dao.observeAllMetadata() } returns flowOf(entities)
 
@@ -60,9 +60,13 @@ class WidgetMetadataRepositoryTest {
         assertEquals("widget1", result[0].id)
         assertEquals(0, result[0].position)
         assertEquals(true, result[0].isVisible)
+        assertEquals(true, result[0].isEditable)
+        assertEquals(false, result[0].isFullWidth)
         assertEquals("widget2", result[1].id)
         assertEquals(1, result[1].position)
         assertEquals(false, result[1].isVisible)
+        assertEquals(false, result[1].isEditable)
+        assertEquals(true, result[1].isFullWidth)
     }
 
     @Test
@@ -76,13 +80,13 @@ class WidgetMetadataRepositoryTest {
 
     @Test
     fun `saveMetadata calls dao with mapped entity`() = runTest {
-        val metadata = WidgetMetadata("widget1", 0, true)
+        val metadata = WidgetMetadata("widget1", 0, true, true, false)
 
         repository.saveMetadata(metadata)
 
         coVerify {
             dao.upsertMetadata(
-                WidgetMetadataEntity("widget1", 0, true)
+                WidgetMetadataEntity("widget1", 0, true, true, false)
             )
         }
     }
@@ -103,7 +107,7 @@ class WidgetMetadataRepositoryTest {
 
     @Test
     fun `saveMetadata preserves all metadata properties`() = runTest {
-        val metadata = WidgetMetadata("test-widget", 3, false)
+        val metadata = WidgetMetadata("test-widget", 3, false, false, true)
 
         repository.saveMetadata(metadata)
 
@@ -112,9 +116,18 @@ class WidgetMetadataRepositoryTest {
                 match {
                     it.widgetId == "test-widget" &&
                     it.position == 3 &&
-                    it.isVisible == false
+                    it.isVisible == false &&
+                    it.isEditable == false &&
+                    it.isFullWidth == true
                 }
             )
         }
+    }
+
+    @Test
+    fun `swapPositions calls dao with correct parameters`() = runTest {
+        repository.swapPositions("widget1", "widget2")
+
+        coVerify { dao.swapPositions("widget1", "widget2") }
     }
 }
