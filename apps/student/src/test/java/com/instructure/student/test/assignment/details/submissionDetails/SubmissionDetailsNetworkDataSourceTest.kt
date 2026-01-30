@@ -27,11 +27,8 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkObject
-import io.mockk.unmockkObject
 import junit.framework.TestCase
 import kotlinx.coroutines.test.runTest
-import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -44,18 +41,13 @@ class SubmissionDetailsNetworkDataSourceTest {
     private val quizApi: QuizAPI.QuizInterface = mockk(relaxed = true)
     private val featuresApi: FeaturesAPI.FeaturesInterface = mockk(relaxed = true)
     private val courseApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
+    private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private lateinit var networkDataSource: SubmissionDetailsNetworkDataSource
 
     @Before
     fun setup() {
-        mockkObject(ApiPrefs)
-        every { ApiPrefs.overrideDomains } returns mutableMapOf()
-        networkDataSource = SubmissionDetailsNetworkDataSource(enrollmentApi, submissionApi, assignmentApi, quizApi, featuresApi, courseApi)
-    }
-
-    @After
-    fun teardown() {
-        unmockkObject(ApiPrefs)
+        every { apiPrefs.overrideDomains } returns mutableMapOf()
+        networkDataSource = SubmissionDetailsNetworkDataSource(enrollmentApi, submissionApi, assignmentApi, quizApi, featuresApi, courseApi, apiPrefs)
     }
 
     @Test
