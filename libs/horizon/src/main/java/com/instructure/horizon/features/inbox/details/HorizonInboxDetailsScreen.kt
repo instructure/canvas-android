@@ -27,8 +27,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -39,7 +37,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -85,11 +82,9 @@ import com.instructure.horizon.horizonui.organisms.Modal
 import com.instructure.horizon.horizonui.organisms.ModalDialogState
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextArea
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextAreaState
+import com.instructure.horizon.horizonui.organisms.scaffolds.EdgeToEdgeScaffold
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
-import com.instructure.horizon.util.HorizonEdgeToEdgeSystemBars
-import com.instructure.horizon.util.topBarScreenInsets
-import com.instructure.horizon.util.zeroScreenInsets
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebViewWrapper
 import com.instructure.pandautils.compose.composables.ComposeEmbeddedWebViewCallbacks
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState
@@ -106,61 +101,60 @@ fun HorizonInboxDetailsScreen(
     state: HorizonInboxDetailsUiState,
     navController: NavHostController
 ) {
-    HorizonEdgeToEdgeSystemBars(null, null) {
-        Scaffold(
-            contentWindowInsets = WindowInsets.zeroScreenInsets,
-            containerColor = HorizonColors.Surface.pagePrimary(),
-            topBar = {
-                HorizonInboxDetailsHeader(
-                    state.title,
-                    state.titleIcon,
-                    state,
-                    navController
+    EdgeToEdgeScaffold(
+        statusBarColor = null,
+        navigationBarColor = if (state.replyState == null)
+            HorizonColors.Surface.cardPrimary()
+        else
+            HorizonColors.Surface.pagePrimary(),
+        containerColor = HorizonColors.Surface.pagePrimary(),
+        topBar = {
+            HorizonInboxDetailsHeader(
+                state.title,
+                state.titleIcon,
+                state,
+                navController
+            )
+        },
+    ) { innerPadding ->
+        LoadingStateWrapper(
+            state.loadingState,
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            BackHandler { onExit(state, navController) }
+
+            state.replyState?.let { replyState ->
+                val viewModel: HorizonInboxAttachmentPickerViewModel = hiltViewModel()
+                val pickerState by viewModel.uiState.collectAsState()
+                HorizonInboxAttachmentPicker(
+                    showBottomSheet = replyState.showAttachmentPicker,
+                    onDismissBottomSheet = { replyState.onShowAttachmentPickerChanged(false) },
+                    state = pickerState,
+                    onFilesChanged = replyState.onAttachmentsChanged
                 )
-            },
-        ) { innerPadding ->
-            LoadingStateWrapper(
-                state.loadingState,
-            ) {
-                BackHandler { onExit(state, navController) }
 
-                state.replyState?.let { replyState ->
-                    val viewModel: HorizonInboxAttachmentPickerViewModel = hiltViewModel()
-                    val pickerState by viewModel.uiState.collectAsState()
-                    HorizonInboxAttachmentPicker(
-                        showBottomSheet = replyState.showAttachmentPicker,
-                        onDismissBottomSheet = { replyState.onShowAttachmentPickerChanged(false) },
-                        state = pickerState,
-                        onFilesChanged = replyState.onAttachmentsChanged
-                    )
-
-                    if (replyState.showExitConfirmationDialog) {
-                        Modal(
-                            dialogState = ModalDialogState(
-                                title = stringResource(R.string.exitConfirmationTitle),
-                                message = stringResource(R.string.exitConfirmationMessage),
-                                primaryButtonTitle = stringResource(R.string.exitConfirmationExitButtonLabel),
-                                secondaryButtonTitle = stringResource(R.string.exitConfirmationCancelButtonLabel),
-                                primaryButtonClick = {
-                                    replyState.updateShowExitConfirmationDialog(false)
-                                    navController.popBackStack()
-                                },
-                                secondaryButtonClick = {
-                                    replyState.updateShowExitConfirmationDialog(
-                                        false
-                                    )
-                                }
-                            )
+                if (replyState.showExitConfirmationDialog) {
+                    Modal(
+                        dialogState = ModalDialogState(
+                            title = stringResource(R.string.exitConfirmationTitle),
+                            message = stringResource(R.string.exitConfirmationMessage),
+                            primaryButtonTitle = stringResource(R.string.exitConfirmationExitButtonLabel),
+                            secondaryButtonTitle = stringResource(R.string.exitConfirmationCancelButtonLabel),
+                            primaryButtonClick = {
+                                replyState.updateShowExitConfirmationDialog(false)
+                                navController.popBackStack()
+                            },
+                            secondaryButtonClick = {
+                                replyState.updateShowExitConfirmationDialog(
+                                    false
+                                )
+                            }
                         )
-                    }
+                    )
                 }
-
-                HorizonInboxDetailsContent(
-                    state,
-                    Modifier
-                        .padding(innerPadding)
-                )
             }
+
+            HorizonInboxDetailsContent(state)
         }
     }
 }
@@ -224,7 +218,6 @@ private fun HorizonInboxDetailsContent(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(WindowInsets.topBarScreenInsets.asPaddingValues())
             .clip(HorizonCornerRadius.level4Top)
             .background(HorizonColors.Surface.pageSecondary())
     ) {

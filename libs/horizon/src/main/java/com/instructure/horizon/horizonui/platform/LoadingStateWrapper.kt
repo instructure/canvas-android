@@ -45,6 +45,7 @@ import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.molecules.Spinner
+import com.instructure.horizon.util.zeroScreenInsets
 
 data class LoadingState(
     val isLoading: Boolean = false,
@@ -65,6 +66,7 @@ fun LoadingStateWrapper(
     containerColor: Color = HorizonColors.Surface.pagePrimary(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     spinnerColor: Color = HorizonColors.Surface.institution(),
+    contentWindowInsets: WindowInsets = WindowInsets.zeroScreenInsets,
     content: @Composable BoxScope.() -> Unit,
 ) {
     val state = rememberPullToRefreshState()
@@ -79,7 +81,7 @@ fun LoadingStateWrapper(
     }
 
     Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
+        contentWindowInsets = contentWindowInsets,
         containerColor = containerColor,
         snackbarHost = { SnackbarHost(snackbarHostState) },
         modifier = modifier
