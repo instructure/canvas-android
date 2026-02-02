@@ -36,7 +36,7 @@ import com.instructure.espresso.swipeUp
 import com.instructure.pandautils.binding.BindableViewHolder
 import com.instructure.student.R
 
-class GradesPage : BasePage(R.id.gradesPage) {
+class ElementaryGradesPage : BasePage(R.id.gradesPage) {
 
     private val swipeRefreshLayout by OnViewWithId(R.id.gradesRefreshLayout)
     private val gradesRecyclerView by OnViewWithId(R.id.gradesRecyclerView)
