@@ -23,6 +23,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -128,9 +129,8 @@ fun AlertsScreen(
                                 uiState = uiState,
                                 actionHandler = actionHandler,
                                 lazyListState = lazyListState,
-                                modifier = Modifier
-                                    .padding(padding)
-                                    .fillMaxSize()
+                                scaffoldPadding = padding,
+                                modifier = Modifier.fillMaxSize()
                             )
                         }
                     }
@@ -155,11 +155,13 @@ fun AlertsListContent(
     uiState: AlertsUiState,
     actionHandler: (AlertsAction) -> Unit,
     lazyListState: LazyListState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    scaffoldPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     LazyColumn(
         state = lazyListState,
-        modifier = modifier.testTag("alertsList")
+        modifier = modifier.testTag("alertsList"),
+        contentPadding = scaffoldPadding
     ) {
         items(uiState.alerts, key = { it.alertId }) { alert ->
             AlertsListItem(
