@@ -33,11 +33,14 @@ import com.instructure.pandautils.domain.usecase.courses.LoadFavoriteCoursesPara
 import com.instructure.pandautils.domain.usecase.courses.LoadFavoriteCoursesUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadGroupsParams
 import com.instructure.pandautils.domain.usecase.courses.LoadGroupsUseCase
+import com.instructure.pandautils.domain.usecase.offline.ObserveOfflineSyncUpdatesUseCase
 import com.instructure.pandautils.features.dashboard.customize.WidgetSettingItem
 import com.instructure.pandautils.features.dashboard.widget.SettingType
 import com.instructure.pandautils.features.dashboard.widget.courses.model.GradeDisplay
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetConfigUseCase
+import com.instructure.pandautils.room.offline.daos.CourseDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
+import com.instructure.pandautils.room.offline.entities.CourseEntity
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
@@ -55,6 +58,7 @@ import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
@@ -80,11 +84,13 @@ class CoursesWidgetViewModelTest {
     private val sectionExpandedStateDataStore: SectionExpandedStateDataStore = mockk(relaxed = true)
     private val coursesWidgetBehavior: CoursesWidgetBehavior = mockk(relaxed = true)
     private val courseSyncSettingsDao: CourseSyncSettingsDao = mockk()
+    private val courseDao: CourseDao = mockk()
     private val networkStateProvider: NetworkStateProvider = mockk()
     private val featureFlagProvider: FeatureFlagProvider = mockk()
     private val crashlytics: FirebaseCrashlytics = mockk(relaxed = true)
     private val localBroadcastManager: LocalBroadcastManager = mockk()
     private val observeWidgetConfigUseCase: ObserveWidgetConfigUseCase = mockk()
+    private val observeOfflineSyncUpdatesUseCase: ObserveOfflineSyncUpdatesUseCase = mockk()
     private val userRepository: UserRepository = mockk(relaxed = true)
 
     private lateinit var viewModel: CoursesWidgetViewModel
@@ -119,6 +125,9 @@ class CoursesWidgetViewModelTest {
         every { networkStateProvider.isOnline() } returns true
         every { localBroadcastManager.registerReceiver(any(), any()) } returns Unit
         every { localBroadcastManager.unregisterReceiver(any()) } returns Unit
+        coEvery { courseSyncSettingsDao.findAll() } returns emptyList()
+        coEvery { courseDao.findByIds(any()) } returns emptyList()
+        every { observeOfflineSyncUpdatesUseCase(Unit) } returns flowOf()
     }
 
     @Test
@@ -358,6 +367,9 @@ class CoursesWidgetViewModelTest {
 
         val courses = listOf(Course(id = 1, name = "Course", isFavorite = true))
         coEvery { loadFavoriteCoursesUseCase(any()) } returns courses
+        coEvery { courseDao.findByIds(setOf(1)) } returns listOf(
+            CourseEntity(Course(id = 1, name = "Course"))
+        )
 
         viewModel = createViewModel()
 
@@ -881,6 +893,126 @@ class CoursesWidgetViewModelTest {
         verify { crashlytics.recordException(exception) }
     }
 
+    @Test
+    fun `getSyncedCourseIds validates courses exist in courseDao`() {
+        setupDefaultMocks()
+        val syncSettings = listOf(
+            CourseSyncSettingsEntity(courseId = 1, courseName = "Course 1", fullContentSync = true),
+            CourseSyncSettingsEntity(courseId = 2, courseName = "Course 2", fullContentSync = true),
+            CourseSyncSettingsEntity(courseId = 3, courseName = "Course 3", fullContentSync = true)
+        )
+        val syncedCourses = listOf(
+            CourseEntity(Course(id = 1, name = "Course 1")),
+            CourseEntity(Course(id = 2, name = "Course 2"))
+            // Course 3 is not in courseDao (not synced yet)
+        )
+        coEvery { featureFlagProvider.offlineEnabled() } returns true
+        coEvery { courseSyncSettingsDao.findAll() } returns syncSettings
+        coEvery { courseDao.findByIds(setOf(1, 2, 3)) } returns syncedCourses
+        coEvery { loadFavoriteCoursesUseCase(any()) } returns listOf(
+            Course(id = 1, name = "Course 1"),
+            Course(id = 2, name = "Course 2"),
+            Course(id = 3, name = "Course 3")
+        )
+
+        viewModel = createViewModel()
+
+        val state = viewModel.uiState.value
+        // Only courses 1 and 2 should be marked as synced (validated by courseDao)
+        assertEquals(true, state.courses[0].isSynced)
+        assertEquals(true, state.courses[1].isSynced)
+        assertEquals(false, state.courses[2].isSynced)
+    }
+
+    @Test
+    fun `observeOfflineSyncUpdates updates synced states when sync completes`() {
+        setupDefaultMocks()
+        val courses = listOf(
+            Course(id = 1, name = "Course 1"),
+            Course(id = 2, name = "Course 2")
+        )
+        val syncUpdateFlow = kotlinx.coroutines.flow.MutableSharedFlow<Unit>()
+
+        coEvery { featureFlagProvider.offlineEnabled() } returns true
+        coEvery { loadFavoriteCoursesUseCase(any()) } returns courses
+        every { observeOfflineSyncUpdatesUseCase(Unit) } returns syncUpdateFlow
+        coEvery { courseSyncSettingsDao.findAll() } returns listOf(
+            CourseSyncSettingsEntity(courseId = 1, courseName = "Course 1", fullContentSync = true)
+        )
+        coEvery { courseDao.findByIds(setOf(1)) } returns listOf(
+            CourseEntity(Course(id = 1, name = "Course 1"))
+        )
+
+        viewModel = createViewModel()
+
+        // Initially course 1 should be synced, course 2 not synced
+        assertEquals(true, viewModel.uiState.value.courses[0].isSynced)
+        assertEquals(false, viewModel.uiState.value.courses[1].isSynced)
+
+        // Simulate sync completion for course 2
+        coEvery { courseSyncSettingsDao.findAll() } returns listOf(
+            CourseSyncSettingsEntity(courseId = 1, courseName = "Course 1", fullContentSync = true),
+            CourseSyncSettingsEntity(courseId = 2, courseName = "Course 2", fullContentSync = true)
+        )
+        coEvery { courseDao.findByIds(setOf(1, 2)) } returns listOf(
+            CourseEntity(Course(id = 1, name = "Course 1")),
+            CourseEntity(Course(id = 2, name = "Course 2"))
+        )
+
+        runBlocking { syncUpdateFlow.emit(Unit) }
+
+        // Both courses should now be synced
+        assertEquals(true, viewModel.uiState.value.courses[0].isSynced)
+        assertEquals(true, viewModel.uiState.value.courses[1].isSynced)
+    }
+
+    @Test
+    fun `updateSyncedStates updates isClickable based on online status and sync state`() {
+        setupDefaultMocks()
+        val courses = listOf(
+            Course(id = 1, name = "Course 1"),
+            Course(id = 2, name = "Course 2")
+        )
+        val syncUpdateFlow = kotlinx.coroutines.flow.MutableSharedFlow<Unit>()
+
+        coEvery { featureFlagProvider.offlineEnabled() } returns true
+        coEvery { loadFavoriteCoursesUseCase(any()) } returns courses
+        every { observeOfflineSyncUpdatesUseCase(Unit) } returns syncUpdateFlow
+        every { networkStateProvider.isOnline() } returns false
+        coEvery { courseSyncSettingsDao.findAll() } returns listOf(
+            CourseSyncSettingsEntity(courseId = 1, courseName = "Course 1", fullContentSync = true)
+        )
+        coEvery { courseDao.findByIds(setOf(1)) } returns listOf(
+            CourseEntity(Course(id = 1, name = "Course 1"))
+        )
+
+        viewModel = createViewModel()
+
+        // Offline: only synced course should be clickable
+        assertEquals(true, viewModel.uiState.value.courses[0].isClickable)
+        assertEquals(false, viewModel.uiState.value.courses[1].isClickable)
+
+        // Go online
+        every { networkStateProvider.isOnline() } returns true
+        runBlocking { syncUpdateFlow.emit(Unit) }
+
+        // Online: all courses should be clickable
+        assertEquals(true, viewModel.uiState.value.courses[0].isClickable)
+        assertEquals(true, viewModel.uiState.value.courses[1].isClickable)
+    }
+
+    @Test
+    fun `offline sync updates are not observed when offline is disabled`() {
+        setupDefaultMocks()
+        coEvery { featureFlagProvider.offlineEnabled() } returns false
+        every { observeOfflineSyncUpdatesUseCase(Unit) } returns flowOf()
+
+        viewModel = createViewModel()
+
+        // Verify the use case still gets called but returns empty flow
+        verify { observeOfflineSyncUpdatesUseCase(Unit) }
+    }
+
     private fun createViewModel(): CoursesWidgetViewModel {
         return CoursesWidgetViewModel(
             loadFavoriteCoursesUseCase = loadFavoriteCoursesUseCase,
@@ -890,11 +1022,13 @@ class CoursesWidgetViewModelTest {
             sectionExpandedStateDataStore = sectionExpandedStateDataStore,
             coursesWidgetBehavior = coursesWidgetBehavior,
             courseSyncSettingsDao = courseSyncSettingsDao,
+            courseDao = courseDao,
             networkStateProvider = networkStateProvider,
             featureFlagProvider = featureFlagProvider,
             crashlytics = crashlytics,
             localBroadcastManager = localBroadcastManager,
             observeWidgetConfigUseCase = observeWidgetConfigUseCase,
+            observeOfflineSyncUpdatesUseCase = observeOfflineSyncUpdatesUseCase,
             userRepository = userRepository
         )
     }

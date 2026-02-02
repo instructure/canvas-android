@@ -37,11 +37,13 @@ import com.instructure.pandautils.domain.usecase.courses.LoadFavoriteCoursesPara
 import com.instructure.pandautils.domain.usecase.courses.LoadFavoriteCoursesUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadGroupsParams
 import com.instructure.pandautils.domain.usecase.courses.LoadGroupsUseCase
+import com.instructure.pandautils.domain.usecase.offline.ObserveOfflineSyncUpdatesUseCase
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.courses.model.CourseCardItem
 import com.instructure.pandautils.features.dashboard.widget.courses.model.GradeDisplay
 import com.instructure.pandautils.features.dashboard.widget.courses.model.GroupCardItem
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetConfigUseCase
+import com.instructure.pandautils.room.offline.daos.CourseDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -53,7 +55,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -67,11 +71,13 @@ class CoursesWidgetViewModel @Inject constructor(
     private val sectionExpandedStateDataStore: SectionExpandedStateDataStore,
     private val coursesWidgetBehavior: CoursesWidgetBehavior,
     private val courseSyncSettingsDao: CourseSyncSettingsDao,
+    private val courseDao: CourseDao,
     private val networkStateProvider: NetworkStateProvider,
     private val featureFlagProvider: FeatureFlagProvider,
     private val crashlytics: FirebaseCrashlytics,
     private val localBroadcastManager: LocalBroadcastManager,
     private val observeWidgetConfigUseCase: ObserveWidgetConfigUseCase,
+    private val observeOfflineSyncUpdatesUseCase: ObserveOfflineSyncUpdatesUseCase,
     private val userRepository: UserRepository
 ) : ViewModel() {
 
@@ -112,6 +118,7 @@ class CoursesWidgetViewModel @Inject constructor(
         observeExpandedStates()
         observeGradeVisibility()
         observeColorOverlay()
+        observeOfflineSyncUpdates()
         localBroadcastManager.registerReceiver(somethingChangedReceiver, IntentFilter(Const.COURSE_THING_CHANGED))
     }
 
@@ -291,10 +298,13 @@ class CoursesWidgetViewModel @Inject constructor(
         if (!featureFlagProvider.offlineEnabled()) return emptySet()
 
         val courseSyncSettings = courseSyncSettingsDao.findAll()
-        return courseSyncSettings
+        val syncedCourseIds = courseSyncSettings
             .filter { it.anySyncEnabled }
             .map { it.courseId }
             .toSet()
+
+        val syncedCourses = courseDao.findByIds(syncedCourseIds)
+        return syncedCourses.map { it.id }.toSet()
     }
 
     private fun mapGrade(course: Course): GradeDisplay {
@@ -355,6 +365,27 @@ class CoursesWidgetViewModel @Inject constructor(
                     _uiState.update { it.copy(showColorOverlay = showColorOverlay) }
                 }
         }
+    }
+
+    private fun observeOfflineSyncUpdates() {
+        observeOfflineSyncUpdatesUseCase(Unit)
+            .onEach {
+                updateSyncedStates()
+            }
+            .catch { error ->
+                crashlytics.recordException(error)
+            }
+            .launchIn(viewModelScope)
+    }
+
+    private suspend fun updateSyncedStates() {
+        val syncedIds = getSyncedCourseIds()
+        val isOnline = networkStateProvider.isOnline()
+        val updatedCourses = _uiState.value.courses.map { courseCard ->
+            val isSynced = syncedIds.contains(courseCard.id)
+            courseCard.copy(isSynced = isSynced, isClickable = isOnline || isSynced)
+        }
+        _uiState.update { it.copy(courses = updatedCourses) }
     }
 
     private fun onAllCourses(activity: FragmentActivity) {

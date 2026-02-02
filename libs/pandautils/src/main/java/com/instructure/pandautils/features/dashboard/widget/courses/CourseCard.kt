@@ -247,7 +247,14 @@ fun CourseCard(
                     modifier = Modifier
                         .clip(CircleShape)
                         .size(48.dp)
-                        .clickable { activity?.let { onAnnouncementClick?.invoke(it, courseCard.id) } },
+                        .clickable(enabled = courseCard.isClickable) {
+                            activity?.let {
+                                onAnnouncementClick?.invoke(
+                                    it,
+                                    courseCard.id
+                                )
+                            }
+                        },
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(

@@ -39,6 +39,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -49,6 +50,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -173,7 +175,7 @@ fun CustomizeCourseScreenContent(
             navIconRes = R.drawable.ic_close_lined,
             navIconContentDescription = stringResource(R.string.close),
             navigationActionClick = onNavigateBack,
-            backgroundColor = if (uiState.showColorOverlay) Color.Transparent else Color.Black.copy(alpha = 0.5f),
+            backgroundColor = Color.Transparent,
             contentColor = colorResource(R.color.textLightest),
             actions = {
                 TextButton(
@@ -201,6 +203,8 @@ private fun CourseHeader(
     color: Int,
     showColorOverlay: Boolean
 ) {
+    val configuration = LocalConfiguration.current
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -214,14 +218,16 @@ private fun CourseHeader(
         )
 
         if (imageUrl != null) {
-            GlideImage(
-                model = imageUrl,
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .alpha(if (showColorOverlay) 0.4f else 1f),
-                contentScale = ContentScale.Crop
-            )
+            key(configuration) {
+                GlideImage(
+                    model = imageUrl,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .alpha(if (showColorOverlay) 0.4f else 1f),
+                    contentScale = ContentScale.Crop
+                )
+            }
         }
     }
 }
