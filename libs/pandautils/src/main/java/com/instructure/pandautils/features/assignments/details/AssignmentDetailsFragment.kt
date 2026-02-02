@@ -168,8 +168,6 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
             )
         }
 
-        binding?.submitButton?.applyBottomSystemBarMargin()
-
         binding?.checkpointGradesComposeView?.setContent {
             val checkpoints = viewModel.discussionCheckpoints.collectAsState()
             DiscussionCheckpointLayout(checkpoints.value)
@@ -200,6 +198,7 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
                 ) { options ->
                     assignmentDetailsRouter.navigateToSendMessage(requireActivity(), options)
                 }
+                binding?.submitButton?.applyBottomSystemBarMargin()
             }
         }
     }
