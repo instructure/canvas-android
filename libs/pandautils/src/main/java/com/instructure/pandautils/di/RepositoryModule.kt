@@ -18,6 +18,7 @@ package com.instructure.pandautils.di
 
 import com.instructure.canvasapi2.apis.AccountNotificationAPI
 import com.instructure.canvasapi2.apis.AssignmentAPI
+import com.instructure.canvasapi2.apis.ConferencesApi
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.apis.GroupAPI
@@ -28,6 +29,8 @@ import com.instructure.pandautils.data.repository.accountnotification.AccountNot
 import com.instructure.pandautils.data.repository.accountnotification.AccountNotificationRepositoryImpl
 import com.instructure.pandautils.data.repository.assignment.AssignmentRepository
 import com.instructure.pandautils.data.repository.assignment.AssignmentRepositoryImpl
+import com.instructure.pandautils.data.repository.conference.ConferenceRepository
+import com.instructure.pandautils.data.repository.conference.ConferenceRepositoryImpl
 import com.instructure.pandautils.data.repository.course.CourseRepository
 import com.instructure.pandautils.data.repository.course.CourseRepositoryImpl
 import com.instructure.pandautils.data.repository.enrollment.EnrollmentRepository
@@ -113,5 +116,13 @@ class RepositoryModule {
         recentGradedSubmissionsManager: RecentGradedSubmissionsManager
     ): SubmissionRepository {
         return SubmissionRepositoryImpl(recentGradedSubmissionsManager)
+    }
+
+    @Provides
+    @Singleton
+    fun provideConferenceRepository(
+        conferencesApi: ConferencesApi.ConferencesInterface
+    ): ConferenceRepository {
+        return ConferenceRepositoryImpl(conferencesApi)
     }
 }
