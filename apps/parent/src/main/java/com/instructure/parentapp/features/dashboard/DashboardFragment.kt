@@ -29,6 +29,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.GravityCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout.SimpleDrawerListener
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -60,7 +62,6 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.animateCircularBackgroundColorChange
 import com.instructure.pandautils.utils.announceAccessibilityText
-import com.instructure.pandautils.utils.applySystemBarInsets
 import com.instructure.pandautils.utils.applyTheme
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.collectDistinctUntilChanged
@@ -290,7 +291,18 @@ class DashboardFragment : BaseCanvasFragment(), NavigationCallbacks {
 
     private fun setupNavigationDrawer() {
         val navView = binding.navView
-        navView.applySystemBarInsets()
+        ViewCompat.setOnApplyWindowInsetsListener(navView) { view, windowInsets ->
+            val insets = windowInsets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+            view.setPadding(
+                insets.left,
+                insets.top,
+                insets.right,
+                insets.bottom
+            )
+            windowInsets
+        }
 
         headerLayoutBinding = NavigationDrawerHeaderLayoutBinding.bind(navView.getHeaderView(0))
 

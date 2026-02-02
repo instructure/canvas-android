@@ -46,6 +46,7 @@ import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.EdgeToEdgeHelper
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.WebViewAuthenticator
 import com.instructure.pandautils.utils.toast
@@ -85,6 +86,7 @@ class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated, Masqueradin
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        EdgeToEdgeHelper.enableEdgeToEdge(this)
         setContentView(binding.root)
         setupWindowInsets()
         setupTheme()
