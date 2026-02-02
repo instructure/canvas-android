@@ -20,6 +20,7 @@ import android.content.res.Resources
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.SavedStateHandle
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
@@ -70,6 +71,8 @@ class CustomizeCourseViewModelTest {
     private val localBroadcastManager: LocalBroadcastManager = mockk(relaxed = true)
     private val observeWidgetConfigUseCase: ObserveWidgetConfigUseCase = mockk(relaxed = true)
 
+    private val crashlytics: FirebaseCrashlytics = mockk(relaxed = true)
+
     private lateinit var viewModel: CustomizeCourseViewModel
 
     private val testCourse = Course(
@@ -106,7 +109,8 @@ class CustomizeCourseViewModelTest {
             resources = resources,
             colorKeeper = colorKeeper,
             localBroadcastManager = localBroadcastManager,
-            observeWidgetConfigUseCase = observeWidgetConfigUseCase
+            observeWidgetConfigUseCase = observeWidgetConfigUseCase,
+            crashlytics = crashlytics
         )
     }
 
@@ -149,7 +153,8 @@ class CustomizeCourseViewModelTest {
             resources = resources,
             colorKeeper = colorKeeper,
             localBroadcastManager = localBroadcastManager,
-            observeWidgetConfigUseCase = observeWidgetConfigUseCase
+            observeWidgetConfigUseCase = observeWidgetConfigUseCase,
+            crashlytics = crashlytics
         )
 
         advanceUntilIdle()
@@ -315,7 +320,8 @@ class CustomizeCourseViewModelTest {
             resources = resources,
             colorKeeper = colorKeeper,
             localBroadcastManager = localBroadcastManager,
-            observeWidgetConfigUseCase = observeWidgetConfigUseCase
+            observeWidgetConfigUseCase = observeWidgetConfigUseCase,
+            crashlytics = crashlytics
         )
 
         assertEquals("", viewModel.uiState.value.nickname)

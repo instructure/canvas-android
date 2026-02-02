@@ -28,8 +28,8 @@ import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetConfigUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetMetadataUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.SwapWidgetPositionsUseCase
-import com.instructure.pandautils.features.dashboard.widget.usecase.UpdateWidgetVisibilityUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.UpdateWidgetConfigUseCase
+import com.instructure.pandautils.features.dashboard.widget.usecase.UpdateWidgetVisibilityUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

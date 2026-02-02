@@ -26,19 +26,23 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.withArgs
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class CustomizeCourseFragment : Fragment() {
 
+    private val course by ParcelableArg<Course>()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        ViewStyler.setStatusBarLight(requireActivity())
+        ViewStyler.setStatusBarDark(requireActivity(), course.color)
         return ComposeView(requireContext()).apply {
             setContent {
                 CanvasTheme {

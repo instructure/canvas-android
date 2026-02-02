@@ -17,8 +17,8 @@
 package com.instructure.pandautils.di
 
 import com.instructure.canvasapi2.apis.AccountNotificationAPI
-import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.AnnouncementAPI
+import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.CourseNicknameAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
@@ -28,10 +28,10 @@ import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.managers.graphql.RecentGradedSubmissionsManager
 import com.instructure.pandautils.data.repository.accountnotification.AccountNotificationRepository
 import com.instructure.pandautils.data.repository.accountnotification.AccountNotificationRepositoryImpl
-import com.instructure.pandautils.data.repository.assignment.AssignmentRepository
-import com.instructure.pandautils.data.repository.assignment.AssignmentRepositoryImpl
 import com.instructure.pandautils.data.repository.announcement.AnnouncementRepository
 import com.instructure.pandautils.data.repository.announcement.AnnouncementRepositoryImpl
+import com.instructure.pandautils.data.repository.assignment.AssignmentRepository
+import com.instructure.pandautils.data.repository.assignment.AssignmentRepositoryImpl
 import com.instructure.pandautils.data.repository.course.CourseRepository
 import com.instructure.pandautils.data.repository.course.CourseRepositoryImpl
 import com.instructure.pandautils.data.repository.coursenickname.CourseNicknameRepository

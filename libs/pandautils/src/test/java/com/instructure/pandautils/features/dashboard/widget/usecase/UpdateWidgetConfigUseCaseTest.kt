@@ -31,7 +31,7 @@ import org.junit.Before
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
-class UpdateWidgetSettingUseCaseTest {
+class UpdateWidgetConfigUseCaseTest {
 
     private val repository: WidgetConfigDataRepository = mockk(relaxed = true)
     private val gson = Gson()
@@ -111,7 +111,7 @@ class UpdateWidgetSettingUseCaseTest {
         val existingConfig = """{"widgetId":"courses","showGrades":false,"showColorOverlay":true}"""
         coEvery { repository.getConfigJson(widgetId) } returns existingConfig
 
-        val params = UpdateWidgetSettingUseCase.Params(widgetId, CoursesConfig.KEY_SHOW_GRADES, true)
+        val params = UpdateWidgetConfigUseCase.Params(widgetId, CoursesConfig.KEY_SHOW_GRADES, true)
         useCase(params)
 
         val jsonSlot = slot<String>()
@@ -128,7 +128,7 @@ class UpdateWidgetSettingUseCaseTest {
         val existingConfig = """{"widgetId":"courses","showGrades":true,"showColorOverlay":false}"""
         coEvery { repository.getConfigJson(widgetId) } returns existingConfig
 
-        val params = UpdateWidgetSettingUseCase.Params(widgetId, CoursesConfig.KEY_SHOW_COLOR_OVERLAY, true)
+        val params = UpdateWidgetConfigUseCase.Params(widgetId, CoursesConfig.KEY_SHOW_COLOR_OVERLAY, true)
         useCase(params)
 
         val jsonSlot = slot<String>()
@@ -144,7 +144,7 @@ class UpdateWidgetSettingUseCaseTest {
         val widgetId = WidgetMetadata.WIDGET_ID_COURSES
         coEvery { repository.getConfigJson(widgetId) } returns null
 
-        val params = UpdateWidgetSettingUseCase.Params(widgetId, CoursesConfig.KEY_SHOW_GRADES, true)
+        val params = UpdateWidgetConfigUseCase.Params(widgetId, CoursesConfig.KEY_SHOW_GRADES, true)
         useCase(params)
 
         val jsonSlot = slot<String>()
@@ -159,7 +159,7 @@ class UpdateWidgetSettingUseCaseTest {
         val widgetId = WidgetMetadata.WIDGET_ID_COURSES
         coEvery { repository.getConfigJson(widgetId) } returns "invalid json"
 
-        val params = UpdateWidgetSettingUseCase.Params(widgetId, CoursesConfig.KEY_SHOW_COLOR_OVERLAY, false)
+        val params = UpdateWidgetConfigUseCase.Params(widgetId, CoursesConfig.KEY_SHOW_COLOR_OVERLAY, false)
         useCase(params)
 
         val jsonSlot = slot<String>()

@@ -22,11 +22,9 @@ import com.instructure.pandautils.domain.usecase.BaseFlowUseCase
 import com.instructure.pandautils.features.dashboard.customize.WidgetSettingItem
 import com.instructure.pandautils.features.dashboard.widget.SettingType
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
+import com.instructure.pandautils.features.dashboard.widget.courses.CoursesConfig
 import com.instructure.pandautils.features.dashboard.widget.forecast.ForecastConfig
 import com.instructure.pandautils.features.dashboard.widget.repository.WidgetConfigDataRepository
-import com.instructure.pandautils.features.dashboard.widget.welcome.WelcomeConfig
-import com.instructure.pandautils.features.dashboard.widget.courses.CoursesConfig
-import com.instructure.pandautils.domain.usecase.BaseFlowUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

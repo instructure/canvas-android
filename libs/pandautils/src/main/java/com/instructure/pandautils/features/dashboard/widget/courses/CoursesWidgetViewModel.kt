@@ -376,7 +376,8 @@ class CoursesWidgetViewModel @Inject constructor(
                     if (course.id == courseId) updatedCourse else course
                 }
 
-                val announcementsMap = mapOf(courseId to announcements)
+                val existingAnnouncementsMap = _uiState.value.courses.associate { it.id to it.announcements }
+                val announcementsMap = existingAnnouncementsMap + (courseId to announcements)
                 val courseCards = mapCoursesToCardItems(courses, announcementsMap)
                 _uiState.update { it.copy(courses = courseCards) }
             } catch (e: Exception) {

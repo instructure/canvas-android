@@ -22,6 +22,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.R
 import com.instructure.pandautils.domain.usecase.course.SetCourseColorUseCase
@@ -49,7 +50,8 @@ class CustomizeCourseViewModel @Inject constructor(
     private val resources: Resources,
     private val colorKeeper: ColorKeeper,
     private val localBroadcastManager: LocalBroadcastManager,
-    private val observeWidgetConfigUseCase: ObserveWidgetConfigUseCase
+    private val observeWidgetConfigUseCase: ObserveWidgetConfigUseCase,
+    private val crashlytics: FirebaseCrashlytics
 ) : ViewModel() {
 
     private val course: Course = savedStateHandle.get<Course>(Const.COURSE) ?: throw IllegalArgumentException("Course can not be null")
@@ -145,7 +147,8 @@ class CustomizeCourseViewModel @Inject constructor(
                         shouldNavigateBack = true
                     )
                 }
-            } catch (_: Exception) {
+            } catch (e: Exception) {
+                crashlytics.recordException(e)
                 _uiState.update {
                     it.copy(
                         isLoading = false,
