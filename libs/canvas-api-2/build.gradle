@@ -22,12 +22,8 @@ apply plugin: 'kotlin-parcelize'
 apply plugin: 'com.google.devtools.ksp'
 apply plugin: 'dagger.hilt.android.plugin'
 
-def redwoodDebugBaseUrl = "https://redwood-api-dev.us-east-1.core.inseng.io"
-def redwoodReleaseBaseUrl = "https://redwood-api.us-east-1.core.inseng.io"
-
-def journeyDebugBaseUrl = "https://journey-server-dev.journey.nonprod.inseng.io"
-def journeyReleaseBaseUrl = "https://journey-server-prod.us-east-1.temp.prod.inseng.io"
-
+def journeyDebugBaseUrl = "https://journey-server-edge.us-east-1.core.inseng.io"
+def journeyReleaseBaseUrl = "https://journey-server-prod.{region}.core.inseng.io"
 
 static String isTesting() {
     if ( System.getenv("IS_TESTING") == "true" ) {
@@ -56,11 +52,9 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField "String", "REDWOOD_BASE_URL", "\"$redwoodDebugBaseUrl\""
             buildConfigField "String", "JOURNEY_BASE_URL", "\"$journeyDebugBaseUrl\""
         }
         release {
-            buildConfigField "String", "REDWOOD_BASE_URL", "\"$redwoodReleaseBaseUrl\""
             buildConfigField "String", "JOURNEY_BASE_URL", "\"$journeyReleaseBaseUrl\""
 
             minifyEnabled false
@@ -103,6 +97,7 @@ apollo {
 
         generateSourcesDuringGradleSync.set(true)
     }
+    // We need to include Redwood’s schema to use Journey’s type-safe proxy interface.
     service("redwood") {
         setSourceFolder("com/instructure/redwood")
         packageName.set("com.instructure.redwood")

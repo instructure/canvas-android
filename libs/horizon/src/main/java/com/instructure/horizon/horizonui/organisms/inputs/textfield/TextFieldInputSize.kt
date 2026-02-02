@@ -24,5 +24,5 @@ sealed class TextFieldInputSize(
     val horizontalPadding: Dp
 ) {
     data object Small: TextFieldInputSize(3.dp, 12.dp)
-    data object Medium: TextFieldInputSize(8.dp, 12.dp)
+    data object Medium: TextFieldInputSize(11.dp, 12.dp)
 }

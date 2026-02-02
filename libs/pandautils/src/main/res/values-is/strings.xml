@@ -487,6 +487,7 @@
     <string name="a11y_markAsDoneWithName">%s Merkja sem lokið</string>
     <string name="a11y_markAsNotDoneWithName">%s Merkja sem ólokið</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="a11y_expand_collapse">Stækka eða minnka hluta</string>
     <string name="inboxSignatureError">Mistókst að hlaða undirskrift innhólfs</string>
     <string name="inboxSignatureSettingsUpdated">Innhólfsstillingar vistaðar!</string>
     <string name="inboxSignatureSettingsError">Mistókst að vista innhólfsstillingar</string>

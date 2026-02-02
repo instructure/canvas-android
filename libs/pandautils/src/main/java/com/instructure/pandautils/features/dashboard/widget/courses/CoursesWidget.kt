@@ -114,7 +114,7 @@ fun CoursesWidgetContent(
                     )
 
                     val rows = (uiState.courses.size + columns - 1) / columns
-                    val gridHeight = rows * COURSE_CARD_HEIGHT + (rows - 1) * 12.dp
+                    val gridHeight = rows * COURSE_CARD_HEIGHT + (rows - 1) * 6.dp
 
                     LazyVerticalGrid(
                         columns = GridCells.Fixed(columns),
@@ -122,8 +122,8 @@ fun CoursesWidgetContent(
                         modifier = Modifier
                             .padding(horizontal = 16.dp)
                             .height(gridHeight),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp),
                         userScrollEnabled = false
                     ) {
                         items(uiState.courses, key = { it.id }) { course ->
@@ -156,8 +156,8 @@ fun CoursesWidgetContent(
                         columns = columns,
                         itemCount = uiState.groups.size,
                         modifier = Modifier.padding(horizontal = 16.dp),
-                        horizontalSpacing = 12.dp,
-                        verticalSpacing = 12.dp
+                        horizontalSpacing = 6.dp,
+                        verticalSpacing = 6.dp
                     ) { index ->
                         val group = uiState.groups[index]
                         GroupCard(
@@ -252,8 +252,8 @@ private fun CoursesWidgetLoadingState(columns: Int = 1) {
         columns = columns,
         itemCount = 3,
         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-        horizontalSpacing = 12.dp,
-        verticalSpacing = 12.dp
+        horizontalSpacing = 6.dp,
+        verticalSpacing = 6.dp
     ) {
         CourseCardShimmer()
     }

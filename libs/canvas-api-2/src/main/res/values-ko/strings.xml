@@ -1,0 +1,87 @@
+﻿<?xml version='1.0' encoding='UTF-8'?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <!--Modules-->
+    <string name="mustComplete">먼저 완료 필요:</string>
+    <string name="unlockedAt">잠금 해제:</string>
+    <string name="goToModules">모듈로 이동</string>
+
+    <!--Events-->
+    <string name="Starts">시작</string>
+    <string name="Ends">종료</string>
+    <string name="allDayEvent">하루 종일 이벤트</string>
+    <string name="at">시간</string>
+    <string name="to">대상/까지</string>
+
+    <!--StreamItems-->
+    <string name="Message">메시지</string>
+    <string name="Loading">로드&#8230;</string>
+    <string name="Deleted">삭제됨</string>
+
+    <!-- Assignment Module -->
+    <string name="canvasAPI_online">온라인</string>
+    <string name="canvasAPI_onPaper">종이에</string>
+    <string name="canvasAPI_discussion">토론</string>
+    <string name="canvasAPI_quiz">퀴즈</string>
+    <string name="canvasAPI_externalTool">외부 도구</string>
+    <string name="canvasAPI_none">제출 없음</string>
+
+    <string name="canvasAPI_passFail">통과 실패</string>
+    <string name="canvasAPI_percent">백분율</string>
+    <string name="canvasAPI_letterGrade">평점</string>
+    <string name="canvasAPI_points">점</string>
+    <string name="canvasAPI_gpaScale">GPA 점수</string>
+    <string name="canvasAPI_notGraded">채점되지 않음</string>
+
+    <string name="canvasAPI_onlineQuiz">퀴즈</string>
+    <string name="canvasAPI_discussionTopic">토론 주제</string>
+    <string name="canvasAPI_onlineUpload">파일 업로드</string>
+    <string name="canvasAPI_onlineTextEntry">텍스트 입력</string>
+    <string name="canvasAPI_onlineURL">웹 사이트 URL</string>
+    <string name="canvasAPI_mediaRecording">미디어 녹화/녹음</string>
+    <string name="canvasAPI_attendance">출석</string>
+    <string name="canvasAPI_studentAnnotation">학생 메모</string>
+    <string name="quiz_scoring_policy_highest">최고</string>
+    <string name="quiz_scoring_policy_average">평균</string>
+    <string name="quiz_scoring_policy_latest">최신</string>
+    <string name="no">아니요</string>
+    <string name="always">항상</string>
+    <string name="graded_quiz">채점된 퀴즈</string>
+    <string name="practice_quiz">연습 퀴즈</string>
+    <string name="graded_survey">채점된 설문 조사</string>
+    <string name="ungraded_survey">채점되지 않은 설문 조사</string>
+    <string name="andMore">\u0020 및 %d개 더</string>
+
+    <!-- Enrollment Types -->
+    <string name="enrollmentTypeStudent">학생</string>
+    <string name="enrollmentTypeTeacher">교사</string>
+    <string name="enrollmentTypeObserver">보호자</string>
+    <string name="enrollmentTypeTeachingAssistant">조교</string>
+    <string name="enrollmentTypeDesigner">디자이너</string>
+    <string name="enrollmentTypeUnknown">알 수 없음</string>
+
+    <!-- Enrollment Types Plural -->
+    <string name="enrollmentTypeStudents">학생</string>
+    <string name="enrollmentTypeTeachers">교사</string>
+    <string name="enrollmentTypeObservers">보호자</string>
+    <string name="enrollmentTypeTeachingAssistants">조교</string>
+    <string name="enrollmentTypeDesigners">디자이너</string>
+
+</resources>

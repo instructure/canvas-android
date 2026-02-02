@@ -402,12 +402,6 @@ private fun getAvailableColors(): List<ThemedColor> {
     val themedColors = lightColors.map { ColorKeeper.createThemedColor(it) }.toMutableList().apply {
         add(
             ThemedColor(
-                context.getColor(R.color.backgroundLightest),
-                context.getColor(R.color.backgroundLightest)
-            )
-        )
-        add(
-            ThemedColor(
                 context.getColor(R.color.backgroundDarkest),
                 context.getColor(R.color.backgroundDarkest)
             )
