@@ -24,6 +24,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.interfaces.NavigationCallbacks
+import com.instructure.pandautils.utils.EdgeToEdgeHelper
 import com.instructure.parentapp.R
 import com.instructure.parentapp.databinding.ActivityCreateAccountBinding
 import com.instructure.parentapp.util.navigation.Navigation
@@ -42,6 +43,7 @@ class CreateAccountActivity : BaseCanvasActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        EdgeToEdgeHelper.enableEdgeToEdge(this)
         setContentView(binding.root)
         setupWindowInsets()
         setupNavigation()

@@ -254,7 +254,6 @@ fun GradesScreen(
             )
             Box(
                 modifier = Modifier
-                    .padding(padding)
                     .pullRefresh(pullRefreshState)
             ) {
                 when {
@@ -282,7 +281,8 @@ fun GradesScreen(
                             contextColor = canvasContextColor,
                             actionHandler = actionHandler,
                             canvasContextColor = canvasContextColor,
-                            showActionsOnCard = appBarUiState == null
+                            showActionsOnCard = appBarUiState == null,
+                            scaffoldPadding = padding
                         )
                     }
                 }
@@ -334,7 +334,8 @@ private fun GradesScreenContent(
     contextColor: Int,
     actionHandler: (GradesAction) -> Unit,
     showActionsOnCard: Boolean,
-    canvasContextColor: Int
+    canvasContextColor: Int,
+    scaffoldPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     val lazyListState = rememberLazyListState()
 
@@ -360,7 +361,7 @@ private fun GradesScreenContent(
         LazyColumn(
             state = lazyListState,
             modifier = Modifier.testTag("gradesList"),
-            contentPadding = PaddingValues(bottom = 64.dp)
+            contentPadding = scaffoldPadding
         ) {
             item {
                 if (!isPortrait) {
