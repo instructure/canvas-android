@@ -88,6 +88,7 @@ import com.instructure.loginapi.login.util.SavedLoginInfo
 import com.instructure.loginapi.login.viewmodel.LoginViewModel
 import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.utils.EdgeToEdgeHelper
 import com.instructure.pandautils.utils.Utils
 import com.instructure.pandautils.utils.ViewStyler.themeStatusBar
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
@@ -137,6 +138,7 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        EdgeToEdgeHelper.enableEdgeToEdge(this)
         setContentView(binding.root)
         setupWindowInsets()
         canvasLogin = intent!!.extras!!.getInt(Const.CANVAS_LOGIN, 0)
@@ -175,7 +177,7 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
                 insets.left,
                 0,
                 insets.right,
-                0
+                insets.bottom
             )
             windowInsets
         }
