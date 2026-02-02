@@ -23,14 +23,20 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
+import com.instructure.horizon.horizonui.foundation.HorizonSpace
+import com.instructure.horizon.horizonui.foundation.HorizonTypography
+import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebViewWrapper
 import com.instructure.pandautils.compose.composables.ComposeEmbeddedWebViewCallbacks
 import com.instructure.pandautils.utils.ThemePrefs
@@ -40,6 +46,7 @@ import com.instructure.pandautils.utils.launchCustomTab
 @Composable
 fun CourseOverviewScreen(
     summaryText: String?,
+    parentProgramNames: List<String>,
     modifier: Modifier = Modifier,
 ) {
     val activity = LocalContext.current.getActivityOrNull()
@@ -56,6 +63,18 @@ fun CourseOverviewScreen(
                 .verticalScroll(rememberScrollState())
                 .padding(24.dp - 8.dp) // Adjust padding to handle WebView's default padding
         ) {
+            if (parentProgramNames.isNotEmpty()) {
+                Text(
+                    text = stringResource(
+                        R.string.learnCourseOverviewPartOfProgramsLabel,
+                        parentProgramNames.joinToString()
+                    ),
+                    style = HorizonTypography.p1,
+                    color = HorizonColors.Text.body(),
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+                HorizonSpace(SpaceSize.SPACE_12)
+            }
             ComposeCanvasWebViewWrapper(
                 content = summaryText ?: "",
                 applyOnWebView = {

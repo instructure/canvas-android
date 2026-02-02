@@ -45,7 +45,7 @@ sealed class LearnRoute {
             const val programIdAttr = "programId"
             const val baseUrl = "programs"
             const val route = "$baseUrl/{$programIdAttr}"
-            fun route(courseId: Long) = "$baseUrl/$courseId"
+            fun route(programId: String) = "$baseUrl/$programId"
         }
     }
 }

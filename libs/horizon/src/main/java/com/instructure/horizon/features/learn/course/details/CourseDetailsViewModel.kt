@@ -54,6 +54,7 @@ class CourseDetailsViewModel @Inject constructor(
 
     suspend fun fetchData(forceRefresh: Boolean = false) {
         val course = repository.getCourse(courseId, forceRefresh)
+        val programs = repository.getProgramsForCourse(courseId, forceRefresh)
         val hasTools = repository.hasExternalTools(courseId, forceRefresh)
         val availableTabs = if (hasTools)
             CourseDetailsTab.entries
@@ -66,7 +67,8 @@ class CourseDetailsViewModel @Inject constructor(
                 courseProgress = course.progress,
                 courseId = course.courseId,
                 courseSyllabus = course.courseSyllabus.orEmpty(),
-                availableTabs = availableTabs
+                availableTabs = availableTabs,
+                parentPrograms = programs
             )
         }
     }

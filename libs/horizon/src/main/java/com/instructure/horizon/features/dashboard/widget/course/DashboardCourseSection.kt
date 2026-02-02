@@ -51,6 +51,7 @@ import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCo
 import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCourseCardState
 import com.instructure.horizon.features.dashboard.widget.course.card.DashboardMoreCourseCard
 import com.instructure.horizon.features.home.HomeNavigationRoute
+import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
@@ -226,7 +227,7 @@ private fun handleClickAction(
             action.onClick()
         }
         is CardClickAction.NavigateToCourse -> {
-            navController.navigate(HomeNavigationRoute.Learn.route) {
+            navController.navigate(LearnRoute.LearnCourseDetailsScreen.route(action.courseId)) {
                 popUpTo(navController.graph.findStartDestination().id) {
                     saveState = true
                 }
@@ -243,7 +244,7 @@ private fun handleClickAction(
             )
         }
         is CardClickAction.NavigateToProgram -> {
-            navController.navigate(HomeNavigationRoute.Learn.route) {
+            navController.navigate(LearnRoute.LearnProgramDetailsScreen.route(action.programId)) {
                 popUpTo(navController.graph.findStartDestination().id) {
                     saveState = true
                 }

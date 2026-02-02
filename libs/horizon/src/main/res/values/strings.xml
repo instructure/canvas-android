@@ -510,4 +510,6 @@
     <string name="learnCourseListResumeLearningLabel">Resume learning</string>
     <string name="learnCourseListViewCourseLabel">View course</string>
     <string name="learnCourseListShowMoreLabel">Show more</string>
+    <string name="learnCourseListSearchBarPlaceholder">Search courses</string>
+    <string name="learnCourseOverviewPartOfProgramsLabel">Part of %1$s</string>
 </resources>

@@ -138,6 +138,7 @@ fun CourseDetailsScreen(
                             when (index) {
                                 0 -> CourseOverviewScreen(
                                     state.courseSyllabus,
+                                    state.parentPrograms.map { it.name },
                                     Modifier
                                         .clip(RoundedCornerShape(cornerAnimation))
                                 )

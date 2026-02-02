@@ -53,6 +53,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.instructure.horizon.R
+import com.instructure.horizon.features.learn.common.LearnSearchBar
 import com.instructure.horizon.features.learn.course.list.LearnCourseFilterOption.Companion.getProgressOption
 import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.horizonui.animation.shimmerEffect
@@ -72,9 +73,6 @@ import com.instructure.horizon.horizonui.molecules.DropdownItem
 import com.instructure.horizon.horizonui.molecules.ProgressBarSmall
 import com.instructure.horizon.horizonui.molecules.ProgressBarStyle
 import com.instructure.horizon.horizonui.organisms.CollapsableHeaderScreen
-import com.instructure.horizon.horizonui.organisms.inputs.textfield.TextField
-import com.instructure.horizon.horizonui.organisms.inputs.textfield.TextFieldInputSize
-import com.instructure.horizon.horizonui.organisms.inputs.textfield.TextFieldState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import kotlin.math.roundToInt
 
@@ -95,14 +93,11 @@ fun LearnCourseListScreen(
 
 @Composable
 private fun Searchbar(state: LearnCourseListUiState) {
-    TextField(
-        TextFieldState(
-            value = state.searchQuery,
-            onValueChange = state.updateSearchQuery,
-            size = TextFieldInputSize.Medium,
-            placeHolderText = "Search courses",
-        ),
-        modifier = Modifier.padding(start = 24.dp, top = 24.dp, end = 24.dp, bottom = 8.dp)
+    LearnSearchBar(
+        value = state.searchQuery,
+        onValueChange = { state.updateSearchQuery(it) },
+        placeholder = stringResource(R.string.learnCourseListSearchBarPlaceholder),
+        modifier = Modifier.padding(24.dp)
     )
 }
 
