@@ -45,18 +45,21 @@ class DashboardCourseListViewModelTest {
         CourseWithProgress(
             courseId = 1L,
             courseName = "Course 1",
+            courseImageUrl = null,
             courseSyllabus = "",
             progress = 0.0
         ),
         CourseWithProgress(
             courseId = 2L,
             courseName = "Course 2",
+            courseImageUrl = null,
             courseSyllabus = "",
             progress = 50.0
         ),
         CourseWithProgress(
             courseId = 3L,
             courseName = "Course 3",
+            courseImageUrl = null,
             courseSyllabus = "",
             progress = 100.0
         )
@@ -102,6 +105,7 @@ class DashboardCourseListViewModelTest {
             CourseWithProgress(
                 courseId = index.toLong(),
                 courseName = "Course $index",
+                courseImageUrl = null,
                 courseSyllabus = "",
                 progress = (index * 10).toDouble() % 100
             )

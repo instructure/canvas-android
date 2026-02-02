@@ -41,6 +41,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -110,7 +111,8 @@ private fun LearnCourseListContent(
     LoadingStateWrapper(state.loadingState) {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = PaddingValues(bottom = 24.dp)
+            contentPadding = PaddingValues(bottom = 24.dp),
+            modifier = Modifier.testTag("CollapsableBody")
         ) {
             stickyHeader {
                 LearnCourseListFilter(state)

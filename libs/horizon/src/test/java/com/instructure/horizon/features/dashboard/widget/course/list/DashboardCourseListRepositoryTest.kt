@@ -48,18 +48,21 @@ class DashboardCourseListRepositoryTest {
         CourseWithProgress(
             courseId = 1L,
             courseName = "Course 1",
+            courseImageUrl = null,
             courseSyllabus = "Syllabus 1",
             progress = 50.0
         ),
         CourseWithProgress(
             courseId = 2L,
             courseName = "Course 2",
+            courseImageUrl = null,
             courseSyllabus = "Syllabus 2",
             progress = 75.0
         ),
         CourseWithProgress(
             courseId = 3L,
             courseName = "Course 3",
+            courseImageUrl = null,
             courseSyllabus = "Syllabus 3",
             progress = 100.0
         )
