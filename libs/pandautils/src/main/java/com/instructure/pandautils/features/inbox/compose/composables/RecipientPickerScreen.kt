@@ -25,10 +25,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.union
@@ -102,7 +104,7 @@ fun RecipientPickerScreen(
         CanvasTheme {
             Scaffold(
                 backgroundColor = colorResource(id = com.instructure.pandares.R.color.backgroundLightest),
-                contentWindowInsets = WindowInsets.ime.union(WindowInsets.navigationBars),
+                contentWindowInsets = WindowInsets.ime.union(WindowInsets.navigationBars.only(WindowInsetsSides.Bottom)),
                 topBar = { TopBar(title, uiState, actionHandler) },
                 content = { padding ->
                     Box(

@@ -110,7 +110,9 @@ open class InternalWebViewFragment : BaseFragment() {
 
         toolbar?.applyTopSystemBarInsets()
 
-        binding.canvasWebViewContainer.applyBottomSystemBarInsets()
+        if (!isInModulesPager) {
+            binding.canvasWebViewContainer.applyBottomSystemBarInsets()
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) = with(binding) {

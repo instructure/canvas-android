@@ -36,7 +36,7 @@ import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.addSearch
-import com.instructure.pandautils.utils.applyBottomAndRightSystemBarPadding
+import com.instructure.pandautils.utils.applyBottomSystemBarMargin
 import com.instructure.pandautils.utils.applyBottomSystemBarInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.closeSearch
@@ -194,7 +194,8 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
     }
 
     private fun setupViews() = with(binding) {
-        swipeRefreshLayout.applyBottomSystemBarInsets()
+        pageRecyclerView.applyBottomSystemBarInsets()
+        pageRecyclerView.clipToPadding = false
 
         createNewPage.setGone()
         createNewPage.backgroundTintList = ViewStyler.makeColorStateListForButton()
@@ -203,7 +204,7 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
             val args = CreateOrEditPageDetailsFragment.newInstanceCreate(canvasContext).nonNullArgs
             RouteMatcher.route(requireActivity(), Route(CreateOrEditPageDetailsFragment::class.java, null, args))
         }
-        createNewPage.applyBottomAndRightSystemBarPadding()
+        createNewPage.applyBottomSystemBarMargin()
     }
 
     @Suppress("unused")

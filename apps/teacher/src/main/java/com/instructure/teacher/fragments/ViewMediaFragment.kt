@@ -268,9 +268,9 @@ class ViewMediaFragment : BaseCanvasFragment(), ShareableFile {
             thumbnailUrl: String?,
             contentType: String,
             displayName: String?,
-            isInModulesPager: Boolean = false,
             toolbarColor: Int = 0,
-            editableFile: EditableFile? = null
+            editableFile: EditableFile? = null,
+            isInModulesPager: Boolean = false
         ) = ViewMediaFragment().apply {
             this.uri = uri
             this.thumbnailUrl = thumbnailUrl
