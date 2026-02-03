@@ -35,6 +35,7 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.features.learn.course.list.LearnCourseListScreen
 import com.instructure.horizon.features.learn.course.list.LearnCourseListViewModel
 import com.instructure.horizon.features.learn.program.list.LearnProgramListScreen
+import com.instructure.horizon.features.learn.program.list.LearnProgramListViewModel
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.organisms.CollapsableScaffold
 import com.instructure.horizon.horizonui.organisms.tabrow.TabRow
@@ -64,7 +65,9 @@ fun LearnScreen(
                 LearnCourseListScreen(state, navController)
             }
             LearnTab.PROGRAMS -> {
-                LearnProgramListScreen()
+                val viewModel = hiltViewModel<LearnProgramListViewModel>()
+                val state by viewModel.uiState.collectAsState()
+                LearnProgramListScreen(state, navController)
             }
         }
     }

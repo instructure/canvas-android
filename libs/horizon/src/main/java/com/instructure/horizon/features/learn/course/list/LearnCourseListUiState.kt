@@ -30,7 +30,7 @@ enum class LearnCourseFilterOption(@StringRes val labelRes: Int) {
     Completed(R.string.learnCourseListFilterCompleted);
 
     companion object {
-        fun Double.getProgressOption(): LearnCourseFilterOption {
+        internal fun Double.getProgressOption(): LearnCourseFilterOption {
             return when (this) {
                 0.0 -> NotStarted
                 in 0.0..<100.0 -> InProgress
