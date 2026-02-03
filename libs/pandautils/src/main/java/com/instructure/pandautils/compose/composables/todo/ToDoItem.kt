@@ -281,9 +281,12 @@ private fun ToDoItemContent(
             .fillMaxWidth()
             .background(colorResource(id = R.color.backgroundLightest))
             .clickable(enabled = item.isClickable, onClick = onClick)
-            .padding(start = 12.dp, end = 16.dp, top = 8.dp, bottom = 8.dp),
+            .padding(top = 8.dp, bottom = 8.dp),
         verticalAlignment = Alignment.Top
     ) {
+        val padding = if (dateBadge == null) 16.dp else 12.dp
+        Spacer(modifier = Modifier.width(padding))
+
         dateBadge?.let { it() }
 
         Row(
@@ -362,6 +365,7 @@ private fun ToDoItemContent(
                 modifier = Modifier.testTag("todoCheckbox_${item.id}")
             )
         }
+        Spacer(modifier = Modifier.width(16.dp))
     }
 }
 

@@ -17,6 +17,8 @@
 package com.instructure.pandautils.features.dashboard.widget.todo
 
 import android.content.res.Configuration
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -271,20 +273,28 @@ private fun TodoItemsContainer(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .animateContentSize(
+                animationSpec = tween(durationMillis = 300)
+            ),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         when {
             todosLoading -> {
-                TodoItemsLoading()
+                Box(modifier = Modifier.padding(16.dp)) {
+                    TodoItemsLoading()
+                }
             }
 
             todosError -> {
-                TodoItemsError()
+                Box(modifier = Modifier.padding(16.dp)) {
+                    TodoItemsError()
+                }
             }
 
             todos.isEmpty() -> {
-                TodoItemsEmpty()
+                Box(modifier = Modifier.padding(16.dp)) {
+                    TodoItemsEmpty()
+                }
             }
 
             else -> {
@@ -336,7 +346,11 @@ private fun TodoItemsList(todos: List<ToDoItemUiState>, modifier: Modifier = Mod
                 onClick = {},
             )
             if (todo != todos.last()) {
-                CanvasDivider(modifier = Modifier.fillMaxWidth())
+                CanvasDivider(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                )
             }
         }
     }
