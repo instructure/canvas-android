@@ -51,7 +51,6 @@ import com.instructure.pandautils.compose.composables.SearchBar
 import com.instructure.pandautils.features.smartsearch.SmartSearchFragment
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.ParcelableArg
-import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.a11yManager
 import com.instructure.pandautils.utils.applyBottomSystemBarInsets
@@ -181,7 +180,6 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
 
         noOverlayToolbar.applyTopSystemBarInsets()
         overlayToolbar.applyTopSystemBarInsets()
-        appBarLayout.applyTopSystemBarInsets()
 
         // Hide image placeholder if color overlay is disabled and there is no valid image
         val hasImage = (canvasContext as? Course)?.imageUrl?.isValid() == true
