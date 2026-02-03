@@ -17,9 +17,7 @@
 package com.instructure.pandautils.features.dashboard.widget.todo
 
 import androidx.fragment.app.FragmentActivity
-import com.instructure.canvasapi2.models.ToDo
 
 interface TodoWidgetBehavior {
-    fun onTodoClick(activity: FragmentActivity, todo: ToDo)
-    fun onViewAllTodosClicked(activity: FragmentActivity)
+    fun onTodoClick(activity: FragmentActivity, htmlUrl: String)
 }

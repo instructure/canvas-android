@@ -21,7 +21,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.PlannerItem
-import com.instructure.canvasapi2.models.ToDo
 import com.instructure.canvasapi2.utils.toApiStringSafe
 import com.instructure.pandautils.compose.composables.calendar.CalendarStateMapper
 import com.instructure.pandautils.compose.composables.todo.ToDoItemUiState
@@ -30,7 +29,6 @@ import com.instructure.pandautils.domain.usecase.courses.LoadAvailableCoursesPar
 import com.instructure.pandautils.domain.usecase.courses.LoadAvailableCoursesUseCase
 import com.instructure.pandautils.domain.usecase.planner.LoadPlannerItemsUseCase
 import com.instructure.pandautils.utils.isComplete
-import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
@@ -59,7 +57,6 @@ class TodoWidgetViewModel @Inject constructor(
     clock: Clock
 ) : ViewModel() {
 
-    private var todos: List<ToDo> = emptyList()
     private var selectedDay = LocalDate.now(clock)
     private var showCompleted = false
     private var courseMap = mapOf<Long, Course>()
@@ -90,9 +87,8 @@ class TodoWidgetViewModel @Inject constructor(
         loadVisibleWeeks()
     }
 
-    private fun onTodoClick(activity: FragmentActivity, todoId: Long) {
-        val todo = todos.find { it.id == todoId } ?: return
-        todoWidgetBehavior.onTodoClick(activity, todo)
+    private fun onTodoClick(activity: FragmentActivity, htmlUrl: String) {
+        todoWidgetBehavior.onTodoClick(activity, htmlUrl)
     }
 
     private fun toggleShowCompleted() {

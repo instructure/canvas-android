@@ -58,6 +58,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.fragment.app.FragmentActivity
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ContextKeeper
@@ -70,6 +71,7 @@ import com.instructure.pandautils.compose.composables.todo.ToDoItem
 import com.instructure.pandautils.compose.composables.todo.ToDoItemType
 import com.instructure.pandautils.compose.composables.todo.ToDoItemUiState
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.getFragmentActivityOrNull
 import com.jakewharton.threetenabp.AndroidThreeTen
 import kotlinx.coroutines.flow.SharedFlow
 import org.threeten.bp.Clock
@@ -200,7 +202,8 @@ fun TodoWidgetContent(
                     TodoItemsContainer(
                         todosLoading = uiState.todosLoading,
                         todosError = uiState.todosError,
-                        todos = uiState.todos
+                        todos = uiState.todos,
+                        onTodoClick = uiState.onTodoClick
                     )
                 }
             }
@@ -268,6 +271,7 @@ private fun TodoItemsContainer(
     todosLoading: Boolean,
     todosError: Boolean,
     todos: List<ToDoItemUiState>,
+    onTodoClick: (FragmentActivity, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -298,7 +302,10 @@ private fun TodoItemsContainer(
             }
 
             else -> {
-                TodoItemsList(todos = todos)
+                TodoItemsList(
+                    todos = todos,
+                    onTodoClick = onTodoClick
+                )
             }
         }
     }
@@ -335,7 +342,13 @@ private fun TodoItemsEmpty() {
 }
 
 @Composable
-private fun TodoItemsList(todos: List<ToDoItemUiState>, modifier: Modifier = Modifier) {
+private fun TodoItemsList(
+    todos: List<ToDoItemUiState>,
+    onTodoClick: (FragmentActivity, String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val activity = LocalContext.current.getFragmentActivityOrNull()
+
     Column(
         modifier = modifier.fillMaxWidth()
     ) {
@@ -343,7 +356,13 @@ private fun TodoItemsList(todos: List<ToDoItemUiState>, modifier: Modifier = Mod
             ToDoItem(
                 item = todo,
                 onCheckedChange = {},
-                onClick = {},
+                onClick = {
+                    activity?.let { fragmentActivity ->
+                        todo.htmlUrl?.let { htmlUrl ->
+                            onTodoClick(fragmentActivity, htmlUrl)
+                        }
+                    }
+                },
             )
             if (todo != todos.last()) {
                 CanvasDivider(

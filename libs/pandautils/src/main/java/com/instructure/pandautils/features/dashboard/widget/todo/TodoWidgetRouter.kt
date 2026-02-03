@@ -17,9 +17,7 @@
 package com.instructure.pandautils.features.dashboard.widget.todo
 
 import androidx.fragment.app.FragmentActivity
-import com.instructure.canvasapi2.models.ToDo
 
 interface TodoWidgetRouter {
-    fun routeToTodo(activity: FragmentActivity, todo: ToDo)
-    fun routeToAllTodos(activity: FragmentActivity)
+    fun routeToTodo(activity: FragmentActivity, htmlUrl: String)
 }

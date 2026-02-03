@@ -17,17 +17,13 @@
 package com.instructure.student.features.dashboard.widget.todo
 
 import androidx.fragment.app.FragmentActivity
-import com.instructure.canvasapi2.models.ToDo
 import com.instructure.pandautils.features.dashboard.widget.todo.TodoWidgetRouter
+import com.instructure.student.router.RouteMatcher
 import javax.inject.Inject
 
 class StudentTodoWidgetRouter @Inject constructor() : TodoWidgetRouter {
 
-    override fun routeToTodo(activity: FragmentActivity, todo: ToDo) {
-        // TODO: Implement navigation to todo details
-    }
-
-    override fun routeToAllTodos(activity: FragmentActivity) {
-        // TODO: Implement navigation to all todos screen
+    override fun routeToTodo(activity: FragmentActivity, htmlUrl: String) {
+        RouteMatcher.routeUrl(activity, htmlUrl)
     }
 }

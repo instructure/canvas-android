@@ -30,7 +30,7 @@ data class TodoWidgetUiState(
     val showCompleted: Boolean = false,
     val monthTitle: String = "",
     val scrollToPageOffset: Int = 0,
-    val onTodoClick: (FragmentActivity, Long) -> Unit = { _, _ -> },
+    val onTodoClick: (FragmentActivity, String) -> Unit = { _, _ -> },
     val onDaySelected: (LocalDate) -> Unit = {},
     val onPageChanged: (Int) -> Unit = {},
     val onNavigateWeek: (Int) -> Unit = {},

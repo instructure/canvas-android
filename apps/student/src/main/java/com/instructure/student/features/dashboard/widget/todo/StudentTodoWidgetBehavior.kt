@@ -17,7 +17,6 @@
 package com.instructure.student.features.dashboard.widget.todo
 
 import androidx.fragment.app.FragmentActivity
-import com.instructure.canvasapi2.models.ToDo
 import com.instructure.pandautils.features.dashboard.widget.todo.TodoWidgetBehavior
 import com.instructure.pandautils.features.dashboard.widget.todo.TodoWidgetRouter
 import javax.inject.Inject
@@ -26,11 +25,7 @@ class StudentTodoWidgetBehavior @Inject constructor(
     private val router: TodoWidgetRouter
 ) : TodoWidgetBehavior {
 
-    override fun onTodoClick(activity: FragmentActivity, todo: ToDo) {
-        router.routeToTodo(activity, todo)
-    }
-
-    override fun onViewAllTodosClicked(activity: FragmentActivity) {
-        router.routeToAllTodos(activity)
+    override fun onTodoClick(activity: FragmentActivity, htmlUrl: String) {
+        router.routeToTodo(activity, htmlUrl)
     }
 }
