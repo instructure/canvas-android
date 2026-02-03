@@ -16,6 +16,7 @@
 package com.instructure.horizon.features.learn.program.details
 
 import android.content.Context
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithModuleItemDurations
@@ -26,6 +27,7 @@ import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardEvent
 import com.instructure.horizon.features.dashboard.DashboardEventHandler
+import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.features.learn.program.details.components.CourseCardChipState
 import com.instructure.horizon.features.learn.program.details.components.CourseCardStatus
 import com.instructure.horizon.features.learn.program.details.components.ProgramCourseCardState
@@ -52,8 +54,11 @@ import kotlin.time.Duration
 class ProgramDetailsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val repository: ProgramDetailsRepository,
-    private val dashboardEventHandler: DashboardEventHandler
+    private val dashboardEventHandler: DashboardEventHandler,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    private val programId = savedStateHandle.get<String>(LearnRoute.LearnProgramDetailsScreen.programIdAttr) ?: ""
 
     private val _uiState = MutableStateFlow(
         ProgramDetailsUiState(
@@ -61,15 +66,27 @@ class ProgramDetailsViewModel @Inject constructor(
                 onRefresh = ::refreshProgram,
                 onSnackbarDismiss = ::dismissSnackbar
             ),
-            onNavigateToCourse = ::onNavigateToCourse
         )
     )
     val state = _uiState.asStateFlow()
 
-    private var currentProgramId: String? = null
+    init {
+        loadData()
+    }
 
-    fun loadProgramDetails(program: Program, courses: List<CourseWithModuleItemDurations>) {
-        currentProgramId = program.id
+    private fun loadData() {
+        viewModelScope.tryLaunch {
+            _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = true)) }
+            fetchData()
+            _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = false, isError = false)) }
+        } catch {
+            _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = false, isError = true)) }
+        }
+    }
+
+    private suspend fun fetchData(forceRefresh: Boolean = false) {
+        val program = repository.getProgramDetails(programId, forceRefresh)
+        val courses = repository.getCoursesById(program.sortedRequirements.map { it.courseId }, forceRefresh)
         updateUiState(program, courses)
     }
 
@@ -82,7 +99,6 @@ class ProgramDetailsViewModel @Inject constructor(
             }
         _uiState.update {
             it.copy(
-                loadingState = it.loadingState.copy(isLoading = false, isRefreshing = false),
                 programName = program.name,
                 showProgressBar = shouldShowProgressBar(program),
                 progressBarUiState = ProgressBarUiState(
@@ -93,14 +109,6 @@ class ProgramDetailsViewModel @Inject constructor(
                 tags = createProgramTags(program, courses),
                 programProgressState = createProgramProgressState(program, courses)
             )
-        }
-    }
-
-    private suspend fun loadData(forceNetwork: Boolean = false) {
-        currentProgramId?.let { programId ->
-            val programDetails = repository.getProgramDetails(programId, forceNetwork = forceNetwork)
-            val courses = repository.getCoursesById(programDetails.sortedRequirements.map { it.courseId }, forceNetwork = forceNetwork)
-            updateUiState(programDetails, courses)
         }
     }
 
@@ -163,11 +171,6 @@ class ProgramDetailsViewModel @Inject constructor(
                 )
             } else null
 
-            val courseClickable = requirement.enrollmentStatus == ProgramProgressCourseEnrollmentStatus.ENROLLED
-            val courseClicked = {
-                _uiState.update { it.copy(navigateToCourseId = requirement.courseId) }
-            }
-
             ProgramProgressItemState(
                 courseCard = ProgramCourseCardState(
                     id = requirement.courseId,
@@ -176,10 +179,10 @@ class ProgramDetailsViewModel @Inject constructor(
                     courseProgress = requirement.progress,
                     chips = chips,
                     dashedBorder = program.variant == ProgramVariantType.NON_LINEAR && !requirement.required && courseCardStatus != CourseCardStatus.Completed,
-                    courseClicked = if (courseClickable) courseClicked else null,
                     onEnrollClicked = {
                         enrollCourse(requirement.courseId, requirement.progressId)
-                    }
+                    },
+                    enabled = requirement.enrollmentStatus == ProgramProgressCourseEnrollmentStatus.ENROLLED
                 ),
                 sequentialProperties = sequentialProperties
             )
@@ -318,11 +321,16 @@ class ProgramDetailsViewModel @Inject constructor(
     }
 
     private fun refreshProgram() {
-        _uiState.update {
-            it.copy(loadingState = it.loadingState.copy(isRefreshing = true))
-        }
         viewModelScope.tryLaunch {
-            loadData(true)
+            _uiState.update {
+                it.copy(loadingState = it.loadingState.copy(isRefreshing = true))
+            }
+
+            fetchData(true)
+
+            _uiState.update {
+                it.copy(loadingState = it.loadingState.copy(isRefreshing = false, isError = false))
+            }
         } catch {
             _uiState.update {
                 it.copy(
@@ -341,12 +349,6 @@ class ProgramDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun onNavigateToCourse() {
-        _uiState.update {
-            it.copy(navigateToCourseId = null)
-        }
-    }
-
     private fun enrollCourse(courseId: Long, progressId: String) {
         updateCourseEnrollLoadingState(courseId, true)
         viewModelScope.launch {
@@ -362,22 +364,9 @@ class ProgramDetailsViewModel @Inject constructor(
                 }
                 return@launch
             }
-            try {
-                viewModelScope.launch {
-                    dashboardEventHandler.postEvent(DashboardEvent.ProgressRefresh)
-                }
-                loadData(forceNetwork = true)
-            } catch (e: Exception) {
-                updateCourseEnrollLoadingState(courseId, false)
-                _uiState.update {
-                    it.copy(
-                        loadingState = it.loadingState.copy(
-                            isRefreshing = false,
-                            snackbarMessage = context.getString(R.string.programDetails_failedToRefresh)
-                        )
-                    )
-                }
-            }
+
+            dashboardEventHandler.postEvent(DashboardEvent.ProgressRefresh)
+            refreshProgram()
         }
     }
 

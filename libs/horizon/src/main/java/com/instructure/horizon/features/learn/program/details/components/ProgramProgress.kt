@@ -21,6 +21,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
@@ -35,6 +37,7 @@ data class ProgramProgressState(
 @Composable
 fun ProgramProgress(
     state: ProgramProgressState,
+    navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
     Column {
@@ -45,6 +48,7 @@ fun ProgramProgress(
         state.courses.forEach { course ->
             ProgramProgressItem(
                 state = course,
+                navController = navController,
                 modifier = modifier
             )
         }
@@ -112,7 +116,8 @@ private fun ProgramProgressSequentialPreview() {
                     )
                 )
             )
-        )
+        ),
+        navController = rememberNavController()
     )
 }
 
@@ -159,6 +164,7 @@ private fun ProgramProgressNonSequentialPreview() {
                 )
             ),
             headerString = "Completed 2 of 3 courses"
-        )
+        ),
+        navController = rememberNavController()
     )
 }

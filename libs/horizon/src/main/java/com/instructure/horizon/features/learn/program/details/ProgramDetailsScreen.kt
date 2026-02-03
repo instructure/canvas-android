@@ -85,7 +85,7 @@ fun ProgramDetailsScreen(uiState: ProgramDetailsUiState, navController: NavHostC
                 }
             }
             HorizonSpace(SpaceSize.SPACE_24)
-            ProgramProgress(state = uiState.programProgressState)
+            ProgramProgress(uiState.programProgressState, navController)
         }
     }
 }
