@@ -178,8 +178,7 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
         appBarLayout.setBackgroundColor(canvasContext.color)
         updateToolbarVisibility()
 
-        noOverlayToolbar.applyTopSystemBarInsets()
-        overlayToolbar.applyTopSystemBarInsets()
+        courseBrowserPage.applyTopSystemBarInsets()
 
         // Hide image placeholder if color overlay is disabled and there is no valid image
         val hasImage = (canvasContext as? Course)?.imageUrl?.isValid() == true
