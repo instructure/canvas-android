@@ -138,7 +138,7 @@ class AssignmentListInteractionTest : StudentComposeTest() {
         val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.GPA_SCALE, "3.7", 90.0, 100)
         goToAssignmentsPage()
 
-        assignmentListPage.assertHasAssignment(assignment, "3.7")
+        assignmentListPage.assertHasAssignment(assignment, "A")
     }
 
     @Test

@@ -22,6 +22,7 @@ import com.instructure.pandautils.domain.usecase.BaseUseCase
 import com.instructure.pandautils.features.dashboard.widget.WidgetConfig
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.forecast.ForecastConfig
+import com.instructure.pandautils.features.dashboard.widget.courses.CoursesConfig
 import com.instructure.pandautils.features.dashboard.widget.repository.WidgetConfigDataRepository
 import javax.inject.Inject
 
@@ -57,6 +58,7 @@ class UpdateWidgetConfigUseCase @Inject constructor(
     private fun getDefaultConfig(widgetId: String): WidgetConfig? {
         return when (widgetId) {
             WidgetMetadata.WIDGET_ID_FORECAST -> ForecastConfig()
+            WidgetMetadata.WIDGET_ID_COURSES -> CoursesConfig()
             else -> null
         }
     }
@@ -65,6 +67,11 @@ class UpdateWidgetConfigUseCase @Inject constructor(
         return when (widgetId) {
             WidgetMetadata.WIDGET_ID_FORECAST -> try {
                 gson.fromJson(json, ForecastConfig::class.java)
+            } catch (e: Exception) {
+                null
+            }
+            WidgetMetadata.WIDGET_ID_COURSES -> try {
+                gson.fromJson(json, CoursesConfig::class.java)
             } catch (e: Exception) {
                 null
             }

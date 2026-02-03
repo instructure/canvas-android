@@ -18,6 +18,7 @@ package com.instructure.pandautils.features.dashboard.widget.usecase
 
 import com.google.gson.Gson
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
+import com.instructure.pandautils.features.dashboard.widget.courses.CoursesConfig
 import com.instructure.pandautils.features.dashboard.widget.repository.WidgetConfigDataRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -30,7 +31,7 @@ import org.junit.Before
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
-class UpdateWidgetSettingUseCaseTest {
+class UpdateWidgetConfigUseCaseTest {
 
     private val repository: WidgetConfigDataRepository = mockk(relaxed = true)
     private val gson = Gson()
@@ -102,5 +103,69 @@ class UpdateWidgetSettingUseCaseTest {
 
         val savedJson = jsonSlot.captured
         assertTrue(savedJson.contains("\"backgroundColor\":111111"))
+    }
+
+    @Test
+    fun testUpdateCoursesConfigShowGradesSetting() = runTest {
+        val widgetId = WidgetMetadata.WIDGET_ID_COURSES
+        val existingConfig = """{"widgetId":"courses","showGrades":false,"showColorOverlay":true}"""
+        coEvery { repository.getConfigJson(widgetId) } returns existingConfig
+
+        val params = UpdateWidgetConfigUseCase.Params(widgetId, CoursesConfig.KEY_SHOW_GRADES, true)
+        useCase(params)
+
+        val jsonSlot = slot<String>()
+        coVerify { repository.saveConfigJson(widgetId, capture(jsonSlot)) }
+
+        val savedJson = jsonSlot.captured
+        assertTrue(savedJson.contains("\"showGrades\":true"))
+        assertTrue(savedJson.contains("\"showColorOverlay\":true"))
+    }
+
+    @Test
+    fun testUpdateCoursesConfigShowColorOverlaySetting() = runTest {
+        val widgetId = WidgetMetadata.WIDGET_ID_COURSES
+        val existingConfig = """{"widgetId":"courses","showGrades":true,"showColorOverlay":false}"""
+        coEvery { repository.getConfigJson(widgetId) } returns existingConfig
+
+        val params = UpdateWidgetConfigUseCase.Params(widgetId, CoursesConfig.KEY_SHOW_COLOR_OVERLAY, true)
+        useCase(params)
+
+        val jsonSlot = slot<String>()
+        coVerify { repository.saveConfigJson(widgetId, capture(jsonSlot)) }
+
+        val savedJson = jsonSlot.captured
+        assertTrue(savedJson.contains("\"showColorOverlay\":true"))
+        assertTrue(savedJson.contains("\"showGrades\":true"))
+    }
+
+    @Test
+    fun testUpdateCoursesConfigWithNoExistingConfig() = runTest {
+        val widgetId = WidgetMetadata.WIDGET_ID_COURSES
+        coEvery { repository.getConfigJson(widgetId) } returns null
+
+        val params = UpdateWidgetConfigUseCase.Params(widgetId, CoursesConfig.KEY_SHOW_GRADES, true)
+        useCase(params)
+
+        val jsonSlot = slot<String>()
+        coVerify { repository.saveConfigJson(widgetId, capture(jsonSlot)) }
+
+        val savedJson = jsonSlot.captured
+        assertTrue(savedJson.contains("\"showGrades\":true"))
+    }
+
+    @Test
+    fun testUpdateCoursesConfigWithInvalidExistingConfig() = runTest {
+        val widgetId = WidgetMetadata.WIDGET_ID_COURSES
+        coEvery { repository.getConfigJson(widgetId) } returns "invalid json"
+
+        val params = UpdateWidgetConfigUseCase.Params(widgetId, CoursesConfig.KEY_SHOW_COLOR_OVERLAY, false)
+        useCase(params)
+
+        val jsonSlot = slot<String>()
+        coVerify { repository.saveConfigJson(widgetId, capture(jsonSlot)) }
+
+        val savedJson = jsonSlot.captured
+        assertTrue(savedJson.contains("\"showColorOverlay\":false"))
     }
 }

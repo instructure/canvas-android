@@ -474,6 +474,7 @@
     <string name="group">Group</string>
     <string name="groups">Groups</string>
     <string name="groupMembers">Group Members</string>
+    <string name="messageGroup">Message group</string>
 
     <string name="loading">Loading&#8230;</string>
     <string name="select_item_to_display">Select from the list</string>
@@ -2381,6 +2382,7 @@
 
     <!-- Widget Display Names -->
     <string name="widget_hello">Hello, %s</string>
+    <string name="courses_and_groups">Courses &amp; Groups</string>
 
     <!-- Customize Dashboard -->
     <string name="customize_dashboard">Customize Dashboard</string>
@@ -2397,6 +2399,8 @@
     <string name="skip">Skip</string>
     <string name="widget_setting_show_greeting">Show greeting</string>
     <string name="background_color">Background color</string>
+    <string name="widget_setting_show_grades">Course Grades</string>
+    <string name="widget_setting_show_color_overlay">Course Color Overlay</string>
     <string name="offline_content_available">Offline content available</string>
     <string name="a11y_contentDescription_moreOptions">More options</string>
     <string name="customizeCourse">Customize Course</string>
@@ -2404,4 +2408,8 @@
     <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
     <string name="ltiToolsOffline">External Tools are not available offline.</string>
     <string name="widget_weekly_summary">Weekly Summary</string>
+
+    <string name="dashboardCourseNickname">Nickname</string>
+    <string name="dashboardCourseNicknameHint">Write course nickname here</string>
+    <string name="dashboardCourseColor">Course Color</string>
 </resources>
