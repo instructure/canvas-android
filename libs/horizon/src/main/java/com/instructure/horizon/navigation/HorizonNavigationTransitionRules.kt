@@ -98,13 +98,18 @@ val animationRules = listOf(
 
     //Learn
     NavigationTransitionAnimationRule(
-        from = null,
+        from = LearnRoute.LearnScreen.route,
         to = LearnRoute.LearnCourseDetailsScreen.route,
         style = NavigationTransitionAnimation.SLIDE
     ),
     NavigationTransitionAnimationRule(
-        from = null,
+        from = LearnRoute.LearnScreen.route,
         to = LearnRoute.LearnProgramDetailsScreen.route,
+        style = NavigationTransitionAnimation.SLIDE
+    ),
+    NavigationTransitionAnimationRule(
+        from = LearnRoute.LearnProgramDetailsScreen.route,
+        to = LearnRoute.LearnCourseDetailsScreen.route,
         style = NavigationTransitionAnimation.SLIDE
     ),
 )
