@@ -45,6 +45,7 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.MenuItemCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
@@ -334,6 +335,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             val visible = isBottomNavFragment(it) || supportFragmentManager.backStackEntryCount <= 1
             binding.bottomBar.setVisible(visible)
             binding.bottomBarDivider.setVisible(visible)
+            // Request insets reapplication when bottom bar visibility changes
+            ViewCompat.requestApplyInsets(binding.bottomBar)
         }
     }
 
@@ -464,7 +467,25 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 rightPadding,
                 0
             )
-            insets
+
+            // Consume bottom insets only when offline indicator is visible
+            // When offline, the offline indicator and bottom bar handle bottom insets at the activity level
+            // When online, fragments need bottom insets to clear Android nav buttons
+            if (offlineIndicator.root.visibility == View.VISIBLE) {
+                WindowInsetsCompat.Builder(insets)
+                    .setInsets(
+                        WindowInsetsCompat.Type.navigationBars(),
+                        androidx.core.graphics.Insets.of(
+                            navigationBars.left,
+                            navigationBars.top,
+                            navigationBars.right,
+                            0 // Consume bottom insets when offline
+                        )
+                    )
+                    .build()
+            } else {
+                insets // Pass through bottom insets when online
+            }
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(bottomBar) { view, insets ->
@@ -475,6 +496,14 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 view.paddingRight,
                 navigationBars.bottom
             )
+
+            // Update offline indicator margin based on bottom bar visibility
+            // When bottom bar is visible, no margin needed (bottom bar handles insets)
+            // When bottom bar is not visible, apply margin to clear Android nav buttons
+            val layoutParams = offlineIndicator.root.layoutParams as? ViewGroup.MarginLayoutParams
+            layoutParams?.bottomMargin = if (bottomBar.isVisible) 0 else navigationBars.bottom
+            offlineIndicator.root.layoutParams = layoutParams
+
             insets
         }
 
@@ -490,6 +519,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             )
             windowInsets
         }
+
+        ViewCompat.requestApplyInsets(bottomBar)
     }
 
     private fun updateStatusBarAppearanceForDrawer() {
@@ -553,6 +584,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             val visible = isBottomNavFragment(it) || supportFragmentManager.backStackEntryCount <= 1
             binding.bottomBar.setVisible(visible)
             binding.bottomBarDivider.setVisible(visible)
+            ViewCompat.requestApplyInsets(binding.bottomBar)
         }
     }
 
@@ -878,6 +910,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             findItem(R.id.bottomNavigationNotifications).isEnabled = !isOffline
             findItem(R.id.bottomNavigationInbox).isEnabled = !isOffline
         }
+
+        ViewCompat.requestApplyInsets(binding.fullscreen)
     }
 
     override fun onStartMasquerading(domain: String, userId: Long) {
