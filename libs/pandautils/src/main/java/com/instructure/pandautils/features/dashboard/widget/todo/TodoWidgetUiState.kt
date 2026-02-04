@@ -44,6 +44,7 @@ data class TodoWidgetUiState(
     val onPageChanged: (Int) -> Unit = {},
     val onNavigateWeek: (Int) -> Unit = {},
     val onToggleShowCompleted: () -> Unit = {},
+    val onRefresh: () -> Unit = {},
     val onSnackbarDismissed: () -> Unit = {},
     val onUndoMarkAsDoneUndone: () -> Unit = {},
     val onMarkedAsDoneSnackbarDismissed: () -> Unit = {}

@@ -80,7 +80,6 @@ class TodoWidgetViewModel @Inject constructor(
     private val eventsByDay = mutableMapOf<LocalDate, MutableList<PlannerItem>>()
     private val loadingDays = mutableSetOf<LocalDate>()
     private val errorDays = mutableSetOf<LocalDate>()
-    private val refreshingDays = mutableSetOf<LocalDate>()
     private val loadedWeeks = mutableSetOf<LocalDate>()
 
     private val checkboxRemovedItems = mutableSetOf<String>()
@@ -98,6 +97,7 @@ class TodoWidgetViewModel @Inject constructor(
             onPageChanged = ::onPageChanged,
             onNavigateWeek = ::onNavigateWeek,
             onToggleShowCompleted = ::toggleShowCompleted,
+            onRefresh = ::refresh,
             onSnackbarDismissed = ::clearSnackbarMessage,
             onUndoMarkAsDoneUndone = ::handleUndoMarkAsDoneUndone,
             onMarkedAsDoneSnackbarDismissed = ::clearMarkedAsDoneItem
@@ -213,6 +213,11 @@ class TodoWidgetViewModel @Inject constructor(
                 val weekField = WeekFields.of(Locale.getDefault())
                 val currentWeekStart = selectedDay.with(weekField.dayOfWeek(), 1)
 
+                if (refresh) {
+                    eventsByDay.clear()
+                    loadedWeeks.clear()
+                }
+
                 val loadedStates = listOf(
                     async { loadEventsForWeek(currentWeekStart.minusWeeks(1), refresh) },
                     async { loadEventsForWeek(currentWeekStart, refresh) },
@@ -223,7 +228,6 @@ class TodoWidgetViewModel @Inject constructor(
                     _uiState.update { createNewUiState() }
                 }
             } catch (e: Exception) {
-                // Handle error - courses might not be available but continue with planner items
                 e.printStackTrace()
             }
         }
@@ -243,11 +247,7 @@ class TodoWidgetViewModel @Inject constructor(
             weekEnd.atTime(23, 59, 59)
         )
 
-        if (refresh) {
-            refreshingDays.addAll(daysInWeek)
-        } else {
-            loadingDays.addAll(daysInWeek)
-        }
+        loadingDays.addAll(daysInWeek)
         errorDays.removeAll(daysInWeek)
         _uiState.update { createNewUiState() }
 
@@ -258,26 +258,14 @@ class TodoWidgetViewModel @Inject constructor(
                 forceNetwork = refresh
             )
 
-            if (refresh) {
-                refreshingDays.removeAll(daysInWeek)
-            } else {
-                loadingDays.removeAll(daysInWeek)
-            }
-
-            if (refresh) {
-                eventsByDay.clear()
-                loadedWeeks.clear()
-                loadedWeeks.add(weekStart)
-            }
+            loadingDays.removeAll(daysInWeek)
 
             loadedWeeks.add(weekStart)
             storeResults(result)
             _uiState.update { createNewUiState() }
             true
         } catch (e: Exception) {
-            if (refresh) {
-                refreshingDays.removeAll(daysInWeek)
-            } else {
+            if (!refresh) {
                 loadedWeeks.remove(weekStart)
                 loadingDays.removeAll(daysInWeek)
                 errorDays.addAll(daysInWeek)
@@ -526,6 +514,7 @@ class TodoWidgetViewModel @Inject constructor(
     }
 
     fun refresh() {
+        _uiState.update { _uiState.value.copy(todosLoading = true) }
         loadVisibleWeeks(refresh = true)
     }
 }

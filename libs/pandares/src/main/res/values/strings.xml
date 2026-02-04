@@ -2407,4 +2407,10 @@
     <string name="widget_toDo">Daily To-do</string>
     <string name="dailyToDoWidgetTitle">Daily To-do</string>
     <string name="todoWidget_showCompleted">Show Completed</string>
+    <string name="todoWidget_emptyTitle">You\'re all done for now!</string>
+    <string name="todoWidget_emptyMessage">Looks like you\'re free for this day.\nDo you want to add some To-dos?</string>
+    <string name="todoWidget_addTodo">Add To-do</string>
+    <string name="todoWidget_errorTitle">Oops, Something went wrong</string>
+    <string name="todoWidget_errorMessage">We weren\'t able to load your To-dos.\nTry again, or come back later.</string>
+    <string name="todoWidget_refresh">Refresh</string>
 </resources>
