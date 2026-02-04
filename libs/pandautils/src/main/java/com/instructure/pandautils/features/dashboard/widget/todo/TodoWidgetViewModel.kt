@@ -398,11 +398,8 @@ class TodoWidgetViewModel @Inject constructor(
         }
     }
 
-    private fun handleUndoMarkAsDoneUndone() {
+    private fun handleUndoMarkAsDoneUndone(itemId: String, markedAsDone: Boolean) {
         viewModelScope.launch {
-            val markedAsDoneItem = _uiState.value.confirmationSnackbarData ?: return@launch
-            val itemId = markedAsDoneItem.itemId
-
             // Clear the snackbar immediately and restore item to list
             _uiState.update {
                 it.copy(
@@ -411,7 +408,7 @@ class TodoWidgetViewModel @Inject constructor(
                 )
             }
 
-            updateItemCompleteState(itemId, !markedAsDoneItem.markedAsDone)
+            updateItemCompleteState(itemId, !markedAsDone)
         }
     }
 

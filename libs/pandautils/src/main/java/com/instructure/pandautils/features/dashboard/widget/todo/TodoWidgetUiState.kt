@@ -46,6 +46,6 @@ data class TodoWidgetUiState(
     val onToggleShowCompleted: () -> Unit = {},
     val onRefresh: () -> Unit = {},
     val onSnackbarDismissed: () -> Unit = {},
-    val onUndoMarkAsDoneUndone: () -> Unit = {},
+    val onUndoMarkAsDoneUndone: (String, Boolean) -> Unit = { _, _ -> },
     val onMarkedAsDoneSnackbarDismissed: () -> Unit = {}
 )

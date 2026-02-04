@@ -88,14 +88,38 @@ import java.util.Locale
 @Composable
 fun TodoWidget(
     refreshSignal: SharedFlow<Unit>,
+    onShowSnackbar: (String, String?, (() -> Unit)?) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val viewModel: TodoWidgetViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
 
     LaunchedEffect(refreshSignal) {
         refreshSignal.collect {
             viewModel.refresh()
+        }
+    }
+
+    LaunchedEffect(uiState.snackbarMessage) {
+        uiState.snackbarMessage?.let { message ->
+            onShowSnackbar(message, null, null)
+            uiState.onSnackbarDismissed()
+        }
+    }
+
+    LaunchedEffect(uiState.confirmationSnackbarData) {
+        uiState.confirmationSnackbarData?.let { snackbarData ->
+            val messageRes = if (snackbarData.markedAsDone) {
+                R.string.todoMarkedAsDone
+            } else {
+                R.string.todoMarkedAsNotDone
+            }
+            val message = context.getString(messageRes, snackbarData.title)
+            onShowSnackbar(message, context.getString(R.string.todoMarkedAsDoneSnackbarUndo), {
+                uiState.onUndoMarkAsDoneUndone(snackbarData.itemId, snackbarData.markedAsDone)
+            })
+            uiState.onMarkedAsDoneSnackbarDismissed()
         }
     }
 
