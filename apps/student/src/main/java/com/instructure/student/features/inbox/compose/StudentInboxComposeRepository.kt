@@ -22,6 +22,8 @@ import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.RecipientAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.InboxSettingsManager
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.DataResult
@@ -65,4 +67,24 @@ class StudentInboxComposeRepository(
         return settings != null && settings.enableInboxSignatureBlock && !settings.disableInboxSignatureBlockForStudents
     }
 
+    override suspend fun canSendToAll(context: CanvasContext): DataResult<Boolean> {
+        val restParams = RestParams()
+        val permissionResponse = when (context.type) {
+            CanvasContext.Type.COURSE -> courseAPI.getCoursePermissions(
+                context.id,
+                listOf(CanvasContextPermission.SEND_MESSAGES_ALL),
+                restParams
+            )
+            CanvasContext.Type.GROUP -> groupApi.getGroupPermissions(
+                context.id,
+                listOf(CanvasContextPermission.SEND_MESSAGES_ALL),
+                restParams
+            )
+            else -> return DataResult.Fail()
+        }
+
+        return permissionResponse.map {
+            it.send_messages_all
+        }
+    }
 }
