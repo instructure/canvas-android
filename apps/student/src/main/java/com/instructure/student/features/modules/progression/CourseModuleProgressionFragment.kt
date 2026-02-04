@@ -160,6 +160,22 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
             view.layoutParams = layoutParams
             insets
         }
+
+        // Consume bottom insets for fragment container to prevent child fragments from applying them again
+        ViewCompat.setOnApplyWindowInsetsListener(binding.fragmentContainer) { view, insets ->
+            WindowInsetsCompat.Builder(insets)
+                .setInsets(
+                    WindowInsetsCompat.Type.systemBars(),
+                    androidx.core.graphics.Insets.of(
+                        insets.getInsets(WindowInsetsCompat.Type.systemBars()).left,
+                        insets.getInsets(WindowInsetsCompat.Type.systemBars()).top,
+                        insets.getInsets(WindowInsetsCompat.Type.systemBars()).right,
+                        0 // Set bottom to 0 to consume bottom insets
+                    )
+                )
+                .build()
+        }
+
         ViewCompat.requestApplyInsets(binding.bottomBarModule)
     }
 
