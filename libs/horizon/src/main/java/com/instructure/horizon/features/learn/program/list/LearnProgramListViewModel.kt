@@ -27,6 +27,8 @@ import com.instructure.horizon.R
 import com.instructure.horizon.features.learn.program.list.LearnProgramFilterOption.Companion.getProgressOption
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.pandautils.utils.formatMonthDayYear
+import com.instructure.pandautils.utils.sum
+import com.instructure.pandautils.utils.toFormattedString
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -85,13 +87,16 @@ class LearnProgramListViewModel @Inject constructor(
     private suspend fun fetchData(forceRefresh: Boolean = false) {
         val programs = repository.getPrograms(forceRefresh)
         val programStates = programs.map { program ->
+            val requiredCourseIds = program.sortedRequirements.filter { it.required }.map { it.courseId }.toSet()
+
             val programDuration = repository.getCoursesById(
                 program.sortedRequirements.map { it.courseId },
                 forceRefresh
             )
+                .filter { requiredCourseIds.contains(it.courseId) }
                 .flatMap { it.moduleItemsDuration }
                 .map { Duration.parse(it) }
-                .fold(Duration.ZERO) { acc, d -> acc + d }
+                .sum()
 
             LearnProgramState(
                 programName = program.name,
@@ -112,7 +117,7 @@ class LearnProgramListViewModel @Inject constructor(
                     if (programDuration.isPositive()) {
                         add(
                             LearnProgramChipState(
-                                label = programDuration.toString(),
+                                label = programDuration.toFormattedString(resources),
                                 iconRes = null
                             )
                         )

@@ -19,14 +19,18 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -40,52 +44,104 @@ import com.instructure.horizon.features.learn.program.details.components.Program
 import com.instructure.horizon.features.learn.program.details.components.ProgramProgressItemState
 import com.instructure.horizon.features.learn.program.details.components.ProgramProgressItemStatus
 import com.instructure.horizon.features.learn.program.details.components.ProgramProgressState
-import com.instructure.horizon.features.learn.program.details.components.ProgramsProgressBar
 import com.instructure.horizon.features.learn.program.details.components.SequentialProgramProgressProperties
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
-import com.instructure.horizon.horizonui.molecules.ProgressBarStyle
+import com.instructure.horizon.horizonui.molecules.IconButton
+import com.instructure.horizon.horizonui.molecules.IconButtonColor
+import com.instructure.horizon.horizonui.molecules.IconButtonSize
+import com.instructure.horizon.horizonui.molecules.ProgressBarSmallInline
 import com.instructure.horizon.horizonui.molecules.StatusChip
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.molecules.StatusChipState
+import com.instructure.horizon.horizonui.organisms.CollapsableHeaderScreen
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ProgramDetailsScreen(uiState: ProgramDetailsUiState, navController: NavHostController, modifier: Modifier = Modifier) {
-
-    LoadingStateWrapper(loadingState = uiState.loadingState) {
-        Column(
-            modifier = modifier
-                .padding(horizontal = 24.dp)
-                .verticalScroll(rememberScrollState())
-        ) {
-            HorizonSpace(SpaceSize.SPACE_24)
-            if (uiState.showProgressBar) {
-                ProgramsProgressBar(
-                    uiState.progressBarUiState,
-                    progressBarStyle = ProgressBarStyle.WhiteBackground(overrideProgressColor = HorizonColors.Surface.institution())
-                )
+    LoadingStateWrapper(loadingState = uiState.loadingState, modifier) {
+        CollapsableHeaderScreen(
+            headerContent = {
+                ProgramDetailsHeader(uiState, navController)
+            },
+            bodyContent = {
+                ProgramDetailsContent(uiState, navController)
             }
-            HorizonSpace(SpaceSize.SPACE_8)
-            Text(text = uiState.description, style = HorizonTypography.p1)
-            HorizonSpace(SpaceSize.SPACE_16)
-            FlowRow(verticalArrangement = Arrangement.spacedBy(8.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                uiState.tags.forEach { tag ->
-                    StatusChip(
-                        StatusChipState(
-                            label = tag.name,
-                            color = StatusChipColor.White,
-                            fill = true,
-                            iconRes = tag.iconRes
-                        )
-                    )
+        )
+    }
+}
+
+@Composable
+private fun ProgramDetailsHeader(uiState: ProgramDetailsUiState, navController: NavHostController) {
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp, vertical = 8.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            IconButton(
+                iconRes = R.drawable.arrow_back,
+                contentDescription = stringResource(R.string.a11yNavigateBack),
+                color = IconButtonColor.Ghost,
+                size = IconButtonSize.SMALL,
+                onClick = { navController.popBackStack() },
+                modifier = Modifier.padding(end = 16.dp)
+            )
+            Text(
+                text = uiState.programName,
+                style = HorizonTypography.h3,
+                color = HorizonColors.Text.title()
+            )
+        }
+        HorizonSpace(SpaceSize.SPACE_16)
+        if (uiState.showProgressBar) {
+            ProgressBarSmallInline(uiState.progressBarUiState.progress)
+        }
+    }
+}
+
+@Composable
+private fun ProgramDetailsContent(uiState: ProgramDetailsUiState, navController: NavHostController) {
+    LazyColumn(
+        contentPadding = PaddingValues(horizontal = 24.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        if (uiState.description.isNotEmpty()) {
+            item {
+                Column {
+                    Text(text = uiState.description, style = HorizonTypography.p1)
                 }
             }
-            HorizonSpace(SpaceSize.SPACE_24)
-            ProgramProgress(uiState.programProgressState, navController)
+        }
+        if (uiState.tags.isNotEmpty()) {
+            item {
+                FlowRow(
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    uiState.tags.forEach { tag ->
+                        StatusChip(
+                            StatusChipState(
+                                label = tag.name,
+                                color = StatusChipColor.White,
+                                fill = true,
+                                iconRes = tag.iconRes
+                            )
+                        )
+                    }
+                }
+            }
+        }
+        item {
+            Column {
+                HorizonSpace(SpaceSize.SPACE_8)
+                ProgramProgress(uiState.programProgressState, navController)
+            }
         }
     }
 }

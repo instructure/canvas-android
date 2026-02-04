@@ -16,6 +16,7 @@
 package com.instructure.horizon.features.learn.program.details
 
 import android.content.Context
+import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -41,6 +42,8 @@ import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus
 import com.instructure.journey.type.ProgramVariantType
 import com.instructure.pandautils.utils.formatMonthDayYear
 import com.instructure.pandautils.utils.orDefault
+import com.instructure.pandautils.utils.sum
+import com.instructure.pandautils.utils.toFormattedString
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -53,6 +56,7 @@ import kotlin.time.Duration
 @HiltViewModel
 class ProgramDetailsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
+    private val resources: Resources,
     private val repository: ProgramDetailsRepository,
     private val dashboardEventHandler: DashboardEventHandler,
     savedStateHandle: SavedStateHandle
@@ -128,9 +132,12 @@ class ProgramDetailsViewModel @Inject constructor(
         }
 
         val requiredCourseIds = program.sortedRequirements.filter { it.required }.map { it.courseId }.toSet()
-        val moduleItemDurations = courses.filter { requiredCourseIds.contains(it.courseId) }.flatMap { it.moduleItemsDuration }
+        val moduleItemDurations = courses
+            .filter { requiredCourseIds.contains(it.courseId) }
+            .flatMap { it.moduleItemsDuration }
+            .map { Duration.parse(it) }
         if (moduleItemDurations.isNotEmpty()) {
-            val durationString = getDurationStringFromDurations(moduleItemDurations)
+            val durationString = moduleItemDurations.sum().toFormattedString(resources)
             if (durationString.isNotEmpty()) {
                 tags.add(ProgramDetailTag(durationString))
             }
@@ -241,7 +248,7 @@ class ProgramDetailsViewModel @Inject constructor(
         }
 
         if (course.moduleItemsDuration.isNotEmpty() && courseCardStatus != CourseCardStatus.Completed) {
-            val durationString = getDurationStringFromDurations(course.moduleItemsDuration)
+            val durationString = course.moduleItemsDuration.map { Duration.parse(it) }.sum().toFormattedString(resources)
             if (durationString.isNotEmpty()) {
                 chips.add(CourseCardChipState(durationString))
             }
@@ -296,28 +303,6 @@ class ProgramDetailsViewModel @Inject constructor(
             val totalProgress = orderedProgresses.take(courseCompletionCount).sum()
             return (totalProgress / (courseCompletionCount * 100)) * 100
         }
-    }
-
-    private fun getDurationStringFromDurations(durations: List<String>): String {
-        val totalMinutes = durations.mapNotNull { duration ->
-            try {
-                val dur = Duration.parse(duration)
-                val hours = dur.inWholeHours.toInt()
-                val minutes = (dur.inWholeMinutes % 60).toInt()
-                hours * 60 + minutes
-            } catch (e: Exception) {
-                null
-            }
-        }.sum()
-
-        val hours = totalMinutes / 60
-        val minutes = totalMinutes % 60
-
-        val parts = mutableListOf<String>()
-        if (hours > 0) parts.add(context.resources.getQuantityString(R.plurals.durationHours, hours, hours))
-        if (minutes > 0) parts.add(context.resources.getQuantityString(R.plurals.durationMins, minutes, minutes))
-
-        return if (parts.isEmpty()) "" else parts.joinToString(" ")
     }
 
     private fun refreshProgram() {
