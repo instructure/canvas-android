@@ -70,7 +70,6 @@ import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.addListener
 import com.instructure.pandautils.utils.applyBottomAndRightSystemBarMargin
 import com.instructure.pandautils.utils.applyBottomAndRightSystemBarPadding
-import com.instructure.pandautils.utils.applyBottomSystemBarInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.isTablet
@@ -348,7 +347,6 @@ class InboxFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInterac
         ViewStyler.themeToolbarColored(requireActivity(), binding.editToolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         binding.toolbarWrapper.setBackgroundColor(ThemePrefs.primaryColor)
         ViewStyler.themeFAB(binding.addMessage)
-        binding.swipeRefreshLayout.applyBottomSystemBarInsets()
         // Parent app doesn't have bottom navigation on inbox screen, so use margin for positioning
         // Teacher/Student apps have bottom navigation that handles bottom insets, so use padding
         if (requireContext().packageName == AppType.PARENT.packageName) {
