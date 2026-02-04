@@ -18,10 +18,14 @@
 package com.instructure.horizon.features.learn
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -45,6 +49,18 @@ fun LearnScreen(
     state: LearnUiState,
     navController: NavHostController,
 ) {
+    val pagerState = rememberPagerState(pageCount = { state.tabs.size })
+    LaunchedEffect(pagerState.currentPage) {
+        snapshotFlow { pagerState.currentPage }.collect {
+            state.updateSelectedTabIndex(it)
+        }
+    }
+
+    LaunchedEffect(state.selectedTab) {
+        val pageIndex = LearnTab.entries.indexOf(state.selectedTab)
+        pagerState.animateScrollToPage(pageIndex)
+    }
+
     CollapsableScaffold(
         containerColor = HorizonColors.Surface.pagePrimary(),
         topBar = {
@@ -58,16 +74,18 @@ fun LearnScreen(
             )
         }
     ) {
-        when(state.selectedTab) {
-            LearnTab.COURSES -> {
-                val viewModel = hiltViewModel<LearnCourseListViewModel>()
-                val state by viewModel.state.collectAsState()
-                LearnCourseListScreen(state, navController)
-            }
-            LearnTab.PROGRAMS -> {
-                val viewModel = hiltViewModel<LearnProgramListViewModel>()
-                val state by viewModel.uiState.collectAsState()
-                LearnProgramListScreen(state, navController)
+        HorizontalPager(pagerState) { pageIndex ->
+            when(LearnTab.entries[pageIndex]) {
+                LearnTab.COURSES -> {
+                    val viewModel = hiltViewModel<LearnCourseListViewModel>()
+                    val state by viewModel.state.collectAsState()
+                    LearnCourseListScreen(state, navController)
+                }
+                LearnTab.PROGRAMS -> {
+                    val viewModel = hiltViewModel<LearnProgramListViewModel>()
+                    val state by viewModel.uiState.collectAsState()
+                    LearnProgramListScreen(state, navController)
+                }
             }
         }
     }
