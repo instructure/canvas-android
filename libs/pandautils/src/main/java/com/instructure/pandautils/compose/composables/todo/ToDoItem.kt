@@ -148,7 +148,7 @@ fun ToDoItem(
             .onGloballyPositioned { coordinates ->
                 itemWidth = coordinates.size.width.toFloat()
             }
-            .pointerInput(Unit) {
+            .pointerInput(item.id) {
                 detectHorizontalDragGestures(
                     onDragStart = {
                         // Gesture start haptic feedback when user begins dragging

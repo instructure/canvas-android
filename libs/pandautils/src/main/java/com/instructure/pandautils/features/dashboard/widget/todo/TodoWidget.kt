@@ -41,6 +41,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -203,7 +204,8 @@ fun TodoWidgetContent(
                         todosLoading = uiState.todosLoading,
                         todosError = uiState.todosError,
                         todos = uiState.todos,
-                        onTodoClick = uiState.onTodoClick
+                        onTodoClick = uiState.onTodoClick,
+                        removingItemIds = uiState.removingItemIds
                     )
                 }
             }
@@ -272,6 +274,7 @@ private fun TodoItemsContainer(
     todosError: Boolean,
     todos: List<ToDoItemUiState>,
     onTodoClick: (FragmentActivity, String) -> Unit,
+    removingItemIds: Set<String>,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -303,7 +306,7 @@ private fun TodoItemsContainer(
 
             else -> {
                 TodoItemsList(
-                    todos = todos,
+                    todos = todos.filter { it.id !in removingItemIds },
                     onTodoClick = onTodoClick
                 )
             }
@@ -353,23 +356,27 @@ private fun TodoItemsList(
         modifier = modifier.fillMaxWidth()
     ) {
         todos.forEach { todo ->
-            ToDoItem(
-                item = todo,
-                onCheckedChange = {},
-                onClick = {
-                    activity?.let { fragmentActivity ->
-                        todo.htmlUrl?.let { htmlUrl ->
-                            onTodoClick(fragmentActivity, htmlUrl)
+            key(todo.id) {
+                ToDoItem(
+                    item = todo,
+                    onCheckedChange = {
+                        todo.onCheckboxToggle(!todo.isChecked)
+                    },
+                    onClick = {
+                        activity?.let { fragmentActivity ->
+                            todo.htmlUrl?.let { htmlUrl ->
+                                onTodoClick(fragmentActivity, htmlUrl)
+                            }
                         }
                     }
-                },
-            )
-            if (todo != todos.last()) {
-                CanvasDivider(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
                 )
+                if (todo != todos.last()) {
+                    CanvasDivider(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                    )
+                }
             }
         }
     }

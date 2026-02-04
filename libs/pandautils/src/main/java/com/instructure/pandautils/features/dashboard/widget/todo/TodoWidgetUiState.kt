@@ -21,6 +21,12 @@ import com.instructure.pandautils.compose.composables.calendar.CalendarBodyUiSta
 import com.instructure.pandautils.compose.composables.todo.ToDoItemUiState
 import org.threeten.bp.LocalDate
 
+data class ConfirmationSnackbarData(
+    val itemId: String,
+    val title: String,
+    val markedAsDone: Boolean
+)
+
 data class TodoWidgetUiState(
     val todosLoading: Boolean = false,
     val todosError: Boolean = false,
@@ -30,9 +36,15 @@ data class TodoWidgetUiState(
     val showCompleted: Boolean = false,
     val monthTitle: String = "",
     val scrollToPageOffset: Int = 0,
+    val removingItemIds: Set<String> = emptySet(),
+    val snackbarMessage: String? = null,
+    val confirmationSnackbarData: ConfirmationSnackbarData? = null,
     val onTodoClick: (FragmentActivity, String) -> Unit = { _, _ -> },
     val onDaySelected: (LocalDate) -> Unit = {},
     val onPageChanged: (Int) -> Unit = {},
     val onNavigateWeek: (Int) -> Unit = {},
-    val onToggleShowCompleted: () -> Unit = {}
+    val onToggleShowCompleted: () -> Unit = {},
+    val onSnackbarDismissed: () -> Unit = {},
+    val onUndoMarkAsDoneUndone: () -> Unit = {},
+    val onMarkedAsDoneSnackbarDismissed: () -> Unit = {}
 )
