@@ -693,7 +693,7 @@ class InboxE2ETest: ParentComposeTest() {
         Log.d(STEP_TAG, "Click OKAY button to confirm file selection.")
         fileChooserPage.clickOkay()
 
-        Log.d(ASSERTION_TAG, "Assert that the PDF file is displayed as attached in the screen.")
+        Log.d(ASSERTION_TAG, "Assert that the video file is displayed as attached in the screen.")
         inboxComposeMessagePage.assertAttachmentDisplayed(videoFileName)
 
         Log.d(STEP_TAG, "Send the reply message with attachment.")
@@ -709,7 +709,7 @@ class InboxE2ETest: ParentComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the original message is still displayed.")
         inboxDetailsPage.assertMessageDisplayed(conversationBody)
 
-        Log.d(STEP_TAG, "Click on the PDF attachment to download it.")
+        Log.d(STEP_TAG, "Click on the video attachment to download it.")
         inboxDetailsPage.clickAttachment(videoFileName)
 
         Log.d(STEP_TAG, "Wait for download to complete.")
