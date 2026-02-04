@@ -24,6 +24,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import com.google.android.material.snackbar.Snackbar
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.utils.ViewStyler
@@ -50,6 +53,14 @@ class ConferenceDetailsView(val canvasContext: CanvasContext, inflater: LayoutIn
     init {
         binding.toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
         binding.toolbar.subtitle = canvasContext.name
+
+        // Apply top system bar insets for edge-to-edge support
+        ViewCompat.setOnApplyWindowInsetsListener(binding.toolbar) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.updatePadding(top = systemBars.top)
+            insets
+        }
+        ViewCompat.requestApplyInsets(binding.toolbar)
     }
 
     override fun applyTheme() {
