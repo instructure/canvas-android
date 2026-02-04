@@ -23,6 +23,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,6 +33,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -56,6 +59,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -66,7 +70,7 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.CanvasDivider
 import com.instructure.pandautils.compose.composables.CanvasSwitch
-import com.instructure.pandautils.compose.composables.Loading
+import com.instructure.pandautils.compose.composables.ShimmerBox
 import com.instructure.pandautils.compose.composables.calendar.CalendarStateMapper
 import com.instructure.pandautils.compose.composables.todo.ToDoItem
 import com.instructure.pandautils.compose.composables.todo.ToDoItemType
@@ -205,7 +209,8 @@ fun TodoWidgetContent(
                         todosError = uiState.todosError,
                         todos = uiState.todos,
                         onTodoClick = uiState.onTodoClick,
-                        removingItemIds = uiState.removingItemIds
+                        removingItemIds = uiState.removingItemIds,
+                        onRefresh = uiState.onRefresh
                     )
                 }
             }
@@ -275,6 +280,7 @@ private fun TodoItemsContainer(
     todos: List<ToDoItemUiState>,
     onTodoClick: (FragmentActivity, String) -> Unit,
     removingItemIds: Set<String>,
+    onRefresh: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -294,7 +300,7 @@ private fun TodoItemsContainer(
 
             todosError -> {
                 Box(modifier = Modifier.padding(16.dp)) {
-                    TodoItemsError()
+                    TodoItemsError(onRefresh = onRefresh)
                 }
             }
 
@@ -316,31 +322,160 @@ private fun TodoItemsContainer(
 
 @Composable
 private fun TodoItemsLoading() {
-    Loading(modifier = Modifier.height(100.dp))
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(0.dp)
+    ) {
+        repeat(3) { index ->
+            ShimmerBox(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(72.dp)
+                    .padding(horizontal = 16.dp)
+                    .padding(vertical = 8.dp),
+                shape = RoundedCornerShape(4.dp)
+            )
+            if (index < 2) {
+                CanvasDivider(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                )
+            }
+        }
+    }
 }
 
 @Composable
-private fun TodoItemsError() {
-    Text(
-        text = stringResource(R.string.errorOccurred),
-        fontSize = 14.sp,
-        color = colorResource(R.color.textDark)
-    )
-}
-
-@Composable
-private fun TodoItemsEmpty() {
+private fun TodoItemsError(
+    onRefresh: () -> Unit = {}
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier.padding(vertical = 24.dp)
     ) {
-        // TODO: Add panda image and "Add To-do" button in future
-        Text(
-            text = stringResource(R.string.nothingUnreadSubtext),
-            fontSize = 14.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = colorResource(R.color.textDarkest)
+        Icon(
+            painter = painterResource(R.drawable.ic_panda_notsupported),
+            contentDescription = null,
+            tint = Color.Unspecified,
+            modifier = Modifier.size(width = 102.dp, height = 104.dp)
         )
+
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Text(
+                text = stringResource(R.string.todoWidget_errorTitle),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium,
+                color = colorResource(R.color.textDarkest),
+                textAlign = TextAlign.Center
+            )
+
+            Text(
+                text = stringResource(R.string.todoWidget_errorMessage),
+                fontSize = 14.sp,
+                color = colorResource(R.color.textDark),
+                textAlign = TextAlign.Center
+            )
+        }
+
+        Button(
+            onClick = onRefresh,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(ThemePrefs.buttonColor)
+            ),
+            shape = RoundedCornerShape(100.dp),
+            modifier = Modifier.height(30.dp),
+            contentPadding = PaddingValues(
+                start = 12.dp,
+                top = 0.dp,
+                end = 8.dp,
+                bottom = 0.dp
+            )
+        ) {
+            Text(
+                text = stringResource(R.string.todoWidget_refresh),
+                color = Color(ThemePrefs.buttonTextColor),
+                fontSize = 14.sp,
+                modifier = Modifier.align(Alignment.CenterVertically)
+            )
+            Spacer(modifier = Modifier.size(6.dp))
+            Icon(
+                painter = painterResource(R.drawable.ic_refresh_lined),
+                contentDescription = null,
+                tint = Color(ThemePrefs.buttonTextColor),
+                modifier = Modifier
+                    .size(16.dp)
+                    .align(Alignment.CenterVertically)
+            )
+        }
+    }
+}
+
+@Composable
+private fun TodoItemsEmpty(
+    onAddTodoClick: () -> Unit = {}
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier.padding(vertical = 24.dp)
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.ic_no_events),
+            contentDescription = null,
+            tint = Color.Unspecified,
+            modifier = Modifier.size(width = 160.dp, height = 106.dp)
+        )
+
+        Text(
+            text = stringResource(R.string.todoWidget_emptyTitle),
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Medium,
+            color = colorResource(R.color.textDarkest),
+            textAlign = TextAlign.Center
+        )
+
+        Text(
+            text = stringResource(R.string.todoWidget_emptyMessage),
+            fontSize = 14.sp,
+            color = colorResource(R.color.textDark),
+            textAlign = TextAlign.Center
+        )
+
+        Button(
+            onClick = onAddTodoClick,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(ThemePrefs.buttonColor)
+            ),
+            shape = RoundedCornerShape(24.dp),
+            modifier = Modifier.height(30.dp),
+            contentPadding = PaddingValues(
+                start = 8.dp,
+                0.dp,
+                end = 12.dp,
+                bottom = 0.dp,
+            )
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_add_lined),
+                contentDescription = null,
+                tint = Color(ThemePrefs.buttonTextColor),
+                modifier = Modifier
+                    .size(16.dp)
+                    .align(Alignment.CenterVertically)
+            )
+            Spacer(modifier = Modifier.size(4.dp))
+            Text(
+                text = stringResource(R.string.todoWidget_addTodo),
+                color = Color(ThemePrefs.buttonTextColor),
+                fontSize = 14.sp,
+                modifier = Modifier.align(Alignment.CenterVertically)
+            )
+        }
     }
 }
 
@@ -457,6 +592,73 @@ private fun TodoWidgetEmptyPreview() {
     TodoWidgetContent(
         uiState = TodoWidgetUiState(
             todosLoading = false,
+            calendarBodyUiState = calendarStateMapper.createBodyUiState(
+                expanded = false,
+                selectedDay = LocalDate.now(),
+                jumpToToday = false,
+                scrollToPageOffset = 0,
+                eventIndicators = emptyMap()
+            ),
+            monthTitle = LocalDate.now().month.getDisplayName(
+                TextStyle.FULL,
+                Locale.getDefault()
+            ),
+            todos = emptyList()
+        )
+    )
+}
+
+@Preview(showBackground = true)
+@Preview(
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    backgroundColor = 0x1F2124
+)
+@Composable
+private fun TodoWidgetLoadingPreview() {
+    val context = LocalContext.current
+    ContextKeeper.appContext = context
+    AndroidThreeTen.init(context)
+
+    val calendarStateMapper = CalendarStateMapper(Clock.systemDefaultZone())
+
+    TodoWidgetContent(
+        uiState = TodoWidgetUiState(
+            todosLoading = true,
+            calendarBodyUiState = calendarStateMapper.createBodyUiState(
+                expanded = false,
+                selectedDay = LocalDate.now(),
+                jumpToToday = false,
+                scrollToPageOffset = 0,
+                eventIndicators = emptyMap()
+            ),
+            monthTitle = LocalDate.now().month.getDisplayName(
+                TextStyle.FULL,
+                Locale.getDefault()
+            ),
+            todos = emptyList()
+        )
+    )
+}
+
+@Preview(showBackground = true)
+@Preview(
+    showBackground = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES,
+    backgroundColor = 0x1F2124
+)
+@Composable
+private fun TodoWidgetErrorPreview() {
+    val context = LocalContext.current
+    ContextKeeper.appContext = context
+    AndroidThreeTen.init(context)
+
+    val calendarStateMapper = CalendarStateMapper(Clock.systemDefaultZone())
+
+    TodoWidgetContent(
+        uiState = TodoWidgetUiState(
+            todosLoading = false,
+            todosError = true,
             calendarBodyUiState = calendarStateMapper.createBodyUiState(
                 expanded = false,
                 selectedDay = LocalDate.now(),
