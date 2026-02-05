@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.teacher.ui.pages.classic
+package com.instructure.canvas.espresso.common.pages
 
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
@@ -37,7 +37,7 @@ import com.instructure.espresso.page.withParent
 import com.instructure.espresso.page.withText
 import com.instructure.espresso.scrollTo
 import com.instructure.espresso.triggerWorkManagerJobs
-import com.instructure.teacher.R
+import com.instructure.pandautils.R
 
 class FileChooserPage : BasePage() {
     private val cameraButton by OnViewWithId(R.id.fromCamera)
@@ -67,6 +67,11 @@ class FileChooserPage : BasePage() {
         deviceButton.scrollTo().click()
     }
 
+    fun clickOkay() {
+        onView(withText(R.string.okay)).click()
+        triggerWorkManagerJobs("FileUploadWorker")
+    }
+
     fun clickUpload() {
         onView(withText(R.string.upload)).click()
     }
@@ -77,11 +82,6 @@ class FileChooserPage : BasePage() {
 
     fun clickCancel() {
         onView(withText(R.string.cancel)).click()
-    }
-
-    fun clickOkay() {
-        onView(withText(R.string.okay)).click()
-        triggerWorkManagerJobs("FileUploadWorker")
     }
 
     fun removeFile(filename: String) {
@@ -106,5 +106,4 @@ class FileChooserPage : BasePage() {
     fun assertFileNotDisplayed(filename: String) {
         onView(withId(R.id.fileName) + withText(filename)).check(doesNotExist())
     }
-
 }

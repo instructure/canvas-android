@@ -34,6 +34,7 @@ import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.canvas.espresso.common.pages.AboutPage
 import com.instructure.canvas.espresso.common.pages.CanvasNetworkSignInPage
 import com.instructure.canvas.espresso.common.pages.EmailNotificationsPage
+import com.instructure.canvas.espresso.common.pages.FileChooserPage
 import com.instructure.canvas.espresso.common.pages.InboxPage
 import com.instructure.canvas.espresso.common.pages.LegalPage
 import com.instructure.canvas.espresso.common.pages.LoginFindSchoolPage
@@ -65,7 +66,6 @@ import com.instructure.teacher.ui.pages.classic.EditPageDetailsPage
 import com.instructure.teacher.ui.pages.classic.EditProfileSettingsPage
 import com.instructure.teacher.ui.pages.classic.EditQuizDetailsPage
 import com.instructure.teacher.ui.pages.classic.EditSyllabusPage
-import com.instructure.teacher.ui.pages.classic.FileChooserPage
 import com.instructure.teacher.ui.pages.classic.FileListPage
 import com.instructure.teacher.ui.pages.classic.HelpPage
 import com.instructure.teacher.ui.pages.classic.LeftSideNavigationDrawerPage

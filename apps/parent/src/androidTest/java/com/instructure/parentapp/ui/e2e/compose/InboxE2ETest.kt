@@ -700,13 +700,9 @@ class InboxE2ETest: ParentComposeTest() {
         sleep(2000) //Wait for attachment to finish uploading
         inboxComposeMessagePage.pressSendButton()
 
-        Log.d(ASSERTION_TAG, "Assert that the reply message is displayed in the conversation.")
+        Log.d(ASSERTION_TAG, "Assert that the reply message, attachment, and original message are displayed in the conversation.")
         inboxDetailsPage.assertMessageDisplayed(replyMessage)
-
-        Log.d(ASSERTION_TAG, "Assert that the attachment is displayed in the message.")
         inboxDetailsPage.assertAttachmentDisplayed(videoFileName)
-
-        Log.d(ASSERTION_TAG, "Assert that the original message is still displayed.")
         inboxDetailsPage.assertMessageDisplayed(conversationBody)
 
         Log.d(STEP_TAG, "Click on the video attachment to download it.")

@@ -810,13 +810,9 @@ class InboxE2ETest : TeacherComposeTest() {
         sleep(2000) //Wait for attachment to finish uploading
         inboxComposePage.pressSendButton()
 
-        Log.d(ASSERTION_TAG, "Assert that the reply message is displayed in the conversation.")
+        Log.d(ASSERTION_TAG, "Assert that the reply message, attachment, and original message are displayed in the conversation.")
         inboxDetailsPage.assertMessageDisplayed(replyMessage)
-
-        Log.d(ASSERTION_TAG, "Assert that the attachment is displayed in the message.")
         inboxDetailsPage.assertAttachmentDisplayed(videoFileName)
-
-        Log.d(ASSERTION_TAG, "Assert that the original message is still displayed.")
         inboxDetailsPage.assertMessageDisplayed(conversationBody)
 
         Log.d(STEP_TAG, "Click on the attachment to verify it can be opened.")
@@ -837,7 +833,6 @@ class InboxE2ETest : TeacherComposeTest() {
 
         Log.d(STEP_TAG, "Get the current video position.")
         val firstPositionText = getVideoPosition(R.id.exo_position)
-        Log.d(ASSERTION_TAG, "First position: $firstPositionText")
 
         Log.d(STEP_TAG, "Click play/pause button to resume video playback, wait for video to play for 2 seconds then click play/pause button to pause again.")
         inboxDetailsPage.clickPlayPauseButton()
@@ -846,15 +841,16 @@ class InboxE2ETest : TeacherComposeTest() {
 
         Log.d(STEP_TAG, "Get the video position again.")
         val secondPositionText = getVideoPosition(R.id.exo_position)
-        Log.d(ASSERTION_TAG, "Second position: $secondPositionText")
 
         Log.d(ASSERTION_TAG, "Assert that the video position has changed, confirming video is playing.")
         assert(firstPositionText != secondPositionText) {
             "Video position did not change. First: $firstPositionText, Second: $secondPositionText"
         }
 
-        Log.d(STEP_TAG, "Navigate back to conversation details and assert that the '${conversationSubject}' is displayed.")
+        Log.d(STEP_TAG, "Navigate back to the conversation details.")
         Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that the '${conversationSubject}' is displayed.")
         inboxDetailsPage.assertConversationSubject(conversationSubject)
 
         Log.d(STEP_TAG, "Navigate back to inbox.")

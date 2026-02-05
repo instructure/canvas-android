@@ -10,14 +10,17 @@ import androidx.compose.ui.test.performClick
 class RecipientPickerPage(private val composeTestRule: ComposeTestRule) {
     fun pressLabel(label: String) {
         composeTestRule.onNodeWithText(label, useUnmergedTree = true).performClick()
+        composeTestRule.waitForIdle()
     }
 
     fun pressDone() {
         composeTestRule.onNodeWithText("Done").performClick()
+        composeTestRule.waitForIdle()
     }
 
     fun pressBack() {
         composeTestRule.onNodeWithTag("navigationButton").performClick()
+        composeTestRule.waitForIdle()
     }
 
     fun assertRecipientDisplayed(recipientName: String) {

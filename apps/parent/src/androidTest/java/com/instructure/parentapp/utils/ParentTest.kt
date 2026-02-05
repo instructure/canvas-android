@@ -28,6 +28,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.canvas.espresso.common.pages.AboutPage
 import com.instructure.canvas.espresso.common.pages.CanvasNetworkSignInPage
+import com.instructure.canvas.espresso.common.pages.FileChooserPage
 import com.instructure.canvas.espresso.common.pages.InboxPage
 import com.instructure.canvas.espresso.common.pages.LegalPage
 import com.instructure.canvas.espresso.common.pages.LoginFindSchoolPage
@@ -38,7 +39,6 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.parentapp.BuildConfig
 import com.instructure.parentapp.features.login.LoginActivity
 import com.instructure.parentapp.ui.pages.classic.DashboardPage
-import com.instructure.parentapp.ui.pages.classic.FileChooserPage
 import com.instructure.parentapp.ui.pages.classic.FrontPagePage
 import com.instructure.parentapp.ui.pages.classic.HelpPage
 import com.instructure.parentapp.ui.pages.classic.LeftSideNavigationDrawerPage
