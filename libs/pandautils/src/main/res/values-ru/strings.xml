@@ -501,6 +501,7 @@
     <string name="a11y_markAsDoneWithName">%s Отметить как выполненное</string>
     <string name="a11y_markAsNotDoneWithName">%s Отметить как невыполненное</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="a11y_expand_collapse">Развернуть или свернуть раздел</string>
     <string name="inboxSignatureError">Не удалось загрузить подпись Inbox</string>
     <string name="inboxSignatureSettingsUpdated">Настройки Inbox сохранены!</string>
     <string name="inboxSignatureSettingsError">Не удалось сохранить настройки Inbox</string>

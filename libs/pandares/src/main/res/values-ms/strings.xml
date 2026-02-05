@@ -1045,6 +1045,8 @@
 
     <string name="downloading">Memuat turun</string>
     <string name="downloadComplete">Muat turun lengkap</string>
+    <string name="fileDownloadNotificationPermissionDenied">Muat turun bermula. Dayakan pemberitahuan untuk melihat kemajuan.</string>
+
     <string name="notificationChannelNameFileDownloadsName">Pemberitahuan muat turun</string>
     <string name="notificationChannelNameFileDownloadsDescription">Pemberitahuan Canvas untuk muat turun yang sedang berjalan.</string>
     <string name="full_due_date_details">Butiran tarikh siap yang penuh</string>
@@ -1249,6 +1251,7 @@
     <string name="a11y_content_description_add_to_dashboard">Tambah pada papan pemuka</string>
     <string name="a11y_content_description_add_all_to_dashboard">Tambah semua pada papan pemuka</string>
 
+    <string name="new_mobile_dashboard">Papan Pemuka Mudah Alih Baharu</string>
     <!-- K5 Strings -->
     <string name="navDrawerAccount">Akaun</string>
     <string name="dashboardTabHomeroom">Kelas Umum</string>
@@ -1372,6 +1375,10 @@
     <plurals name="a11y_notificationsUnreadCount">
         <item quantity="one">%s pemberitahuan belum dibaca</item>
         <item quantity="other">%s pemberitahuan belum dibaca</item>
+    </plurals>
+    <plurals name="a11y_todoBadgeCount">
+        <item quantity="one">%s item untuk dilakukan</item>
+        <item quantity="other">%s item untuk dilakukan</item>
     </plurals>
     <string name="noAnnotationSelected">Tiada anotasi dipilih</string>
     <string name="emailNotifications">Pemberitahuan E-mel</string>
@@ -1913,6 +1920,8 @@
     <string name="gradePreferencesHeaderSortBy">Isih Mengikut</string>
     <string name="gradesEmptyTitle">Tiada Tugasan</string>
     <string name="gradesEmptyMessage">Nampaknya tugasan belum lagi dicipta dalam ruang ini.</string>
+    <string name="noMatchingAssignments">Tiada Tugasan Sepadan</string>
+    <string name="noMatchingAssignmentsDescription">Tiada tugasan sepadan dengan carian anda. Cuba istilah carian yang lain.</string>
     <string name="errorLoadingGrades">Kami menghadapi masalah memuatkan gred pelajar anda. Sila cuba memuatkan semula halaman atau semak semula kemudian.</string>
     <string name="errorLoadingCourse">Kami menghadapi masalah memuatkan butiran kursus pelajar anda. Sila cuba memuatkan semula halaman atau semak semula kemudian.</string>
     <string name="gradesFilterContentDescription">Tapis</string>
@@ -2084,7 +2093,8 @@
     <string name="widgetErrorTitle">Op! Sesuatu Tidak Kena</string>
     <string name="widgetErrorSubtitle">Kami menghadapi masalah untuk menunjukkan tugas anda sekarang. Sila cuba semula sebentar lagi atau terus menuju ke aplikasi.</string>
     <string name="widgetToDoEmptyTitle">Anda sudah selesai buat masa ini!</string>
-    <string name="widgetToDoEmptySubtitle">Nampaknya anda lapang untuk 4 minggu berikutnya. Adakah anda ingin menambah perkara untuk dilakukan?</string>
+    <string name="widgetToDoEmptySubtitle">Nampaknya anda lapang, tiada tugas dalam masa terdekat untuk anda. Adakah anda mahu menambah beberapa item untuk dilakukan?</string>
+
     <string name="widgetNotLoggedInTitle">Jom Log Masuk!</string>
     <string name="widgetToDoNotLoggedInSubtitle">Untuk melihat perkara untuk dilakukan, sila log masuk ke akaun anda dalam aplikasi. Hanya beberapa saat sahaja!</string>
     <string name="a11y_widgetToDoOpenToDoList">Buka skrin senarai untuk dilakukan</string>
@@ -2109,6 +2119,11 @@
         <item quantity="one">%s / %s mata</item>
         <item quantity="other">%s / %s mata</item>
     </plurals>
+    <plurals name="groupMemberCount">
+        <item quantity="one">Pelajar</item>
+        <item quantity="other">Pelajar</item>
+    </plurals>
+
     <string name="speedGraderLatePenaltyTitle">Denda Lewat</string>
     <string name="gradingStatus_none">Tiada</string>
     <string name="gradingStatus_late">Lewat</string>
@@ -2165,4 +2180,189 @@
     <string name="scored_less_than_with_max">Mendapat skor kurang daripada / %s mata</string>
     <string name="scored_between_values">Mendapat skor %1$s - %2$s</string>
     <string name="multiple_filters">Berbilang penapis</string>
+    <string name="a11y_contentDescriptionToDoFilter">Tapis</string>
+    <string name="errorLoadingToDos">Terdapat ralat memuatkan item untuk dilakukan anda. Sila semak sambungan anda dan cuba semula.</string>
+    <string name="errorUpdatingToDo">Terdapat ralat mengemas kini item untuk dilakukan anda. Sila semak sambungan anda dan cuba semula.</string>
+    <string name="noToDosForNow">Tiada Untuk Dilakukan sekarang!</string>
+    <string name="noToDosForNowSubtext">Nampaknya ini masa yang tepat untuk berehat, bersantai dan kembali segar.</string>
+    <string name="todoSwipeDone">Siap</string>
+    <string name="todoSwipeUndo">Buat asal</string>
+    <string name="todoMarkedAsDone">%s ditandakan sebagai siap</string>
+    <string name="todoMarkedAsNotDone">%s ditandakan sebagai tidak siap</string>
+    <string name="todoMarkedAsDoneSnackbarUndo">Buat asal</string>
+    <string name="todoActionOffline">Tindakan ini tidak boleh dilaksanakan luar talian</string>
+
+    <!-- To Do List Filter Screen -->
+    <string name="todoFilterPreferences">Keutamaan senarai Untuk Dilakukan</string>
+    <string name="todoFilterVisibleItems">Item Boleh Lihat</string>
+    <string name="todoFilterShowPersonalToDos">Tunjukkan Untuk Dilakukan Peribadi</string>
+    <string name="todoFilterShowCalendarEvents">Tunjukkan Acara Kalendar</string>
+    <string name="todoFilterShowCompleted">Tunjukkan Selesai</string>
+    <string name="todoFilterFavoriteCoursesOnly">Kursus Kegemaran Sahaja</string>
+    <string name="todoFilterShowTasksFrom">Tunjuk tugas dari</string>
+    <string name="todoFilterShowTasksUntil">Tunjuk tugas sehingga</string>
+    <string name="todoFilterToday">Hari Ini</string>
+    <string name="todoFilterThisWeek">Minggu Ini</string>
+    <string name="todoFilterLastWeek">Minggu Lepas</string>
+    <string name="todoFilterTwoWeeks">2 Minggu Lepas</string>
+    <string name="todoFilterThreeWeeks">3 Minggu Lepas</string>
+    <string name="todoFilterFourWeeks">4 Minggu Lepas</string>
+    <string name="todoFilterNextWeek">Minggu Seterusnya</string>
+    <string name="todoFilterInTwoWeeks">Dalam 2 Minggu</string>
+    <string name="todoFilterInThreeWeeks">Dalam 3 Minggu</string>
+    <string name="todoFilterInFourWeeks">Dalam 4 Minggu</string>
+    <string name="todoFilterFromDate">Dari %s</string>
+    <string name="todoFilterUntilDate">Hingga %s</string>
+    <string name="a11y_buttonSelectionSelected">dipilih</string>
+    <string name="a11y_buttonSelectionNotSelected">tidak dipilih</string>
+    <!-- Course Invitations -->
+    <string name="courseInvitationsTitle">Jemputan Kursus (%d)</string>
+    <string name="courseInvitationAccepted">Jemputan ke %s diterima</string>
+    <string name="courseInvitationDeclined">Jemputan ke %s ditolak</string>
+    <string name="courseInvitationDeclineConfirmTitle">Tolak Jemputan</string>
+    <string name="courseInvitationDeclineConfirmMessage">Adakah anda pasti anda ingin menolak jemputan ke %s?</string>
+
+    <!-- Welcome Widget -->
+    <!-- Greetings with name (%s is the student's first name) -->
+    <string name="welcomeGreetingMorningWithName">Selamat pagi, %s!</string>
+    <string name="welcomeGreetingAfternoonWithName">Selamat petang, %s!</string>
+    <string name="welcomeGreetingEveningWithName">Selamat petang, %s!</string>
+    <string name="welcomeGreetingNightWithName">Selamat malam, %s!</string>
+
+    <!-- Greetings without name (fallback when user has no first name) -->
+    <string name="welcomeGreetingMorning">Selamat pagi!</string>
+    <string name="welcomeGreetingAfternoon">Selamat petang!</string>
+    <string name="welcomeGreetingEvening">Selamat petang!</string>
+    <string name="welcomeGreetingNight">Selamat malam!</string>
+
+    <!-- Welcome Widget Motivational Messages -->
+    <string-array name="welcomeMessagesGeneric">
+        <item>Anda boleh.</item>
+        <item>Teruskan — anda lebih kuat daripada yang anda sangka.</item>
+        <item>Satu langkah setiap kali tetap satu kemajuan.</item>
+        <item>Jangan putus asa — masa depan akan berterima kasih kepada anda.</item>
+        <item>Keupayaan anda lebih daripada yang anda fikirkan.</item>
+        <item>Walaupun pada hari yang sukar, anda tetap maju ke hadapan.</item>
+        <item>Percayalah kepada diri anda — anda telah melakukan banyak perkara sukar sebelum ini.</item>
+        <item>Kemajuan lebih utama, bukan kesempurnaan. Anda hebat.</item>
+        <item>Bertahanlah — anda tidak sendirian dalam hal ini.</item>
+        <item>Anda belajar, berkembang dan melakukan lebih baik daripada yang anda sangka.</item>
+        <item>Tersandung itu biasa — anda masih berada di jalan yang betul.</item>
+        <item>Teruskan berusaha — anda lebih hampir dengan kejayaan daripada sangkaan anda.</item>
+        <item>Kemenangan kecil juga bermakna.</item>
+        <item>Teruskan — anda lebih hampir daripada sangkaan anda.</item>
+        <item>OK sahaja untuk berhenti sekejap. Berehat sebentar adalah sebahagian daripada pembelajaran.</item>
+        <item>Berani mencuba sudah satu kemenangan.</item>
+        <item>Kemajuan &gt; kesempurnaan.</item>
+        <item>Berada di sini lebih bermakna daripada sangkaan anda.</item>
+        <item>Anda sedang membina kemahiran, walaupun ada harinya perlahan.</item>
+        <item>Jangan lupa menarik nafas — anda melakukannya dengan baik.</item>
+        <item>Rentak anda sudah betul.</item>
+        <item>Bukan semua perkara perlu ditemui jawapannya hari ini.</item>
+        <item>Di sinilah tempat anda.</item>
+        <item>Setiap usaha anda adalah bernilai.</item>
+        <item>Bermula semula tidak salah — sebanyak mana pun yang anda perlukan.</item>
+        <item>Perkara yang dirasakan sukar hari ini akan lebih mudah kemudian.</item>
+        <item>Teruskan berada di sini — itulah yang penting.</item>
+        <item>Langkah-langkah kecil boleh mengalih gunung.</item>
+        <item>Rehat juga adalah sebahagian daripada berkembang.</item>
+        <item>Anda melakukannya lebih baik daripada yang anda sangka.</item>
+        <item>Kemajuan yang perlahan tetap satu kemajuan.</item>
+        <item>Masa depan tidak dibina dalam masa sehari — anda sedang menghala ke sana.</item>
+        <item>Satu tugasan, satu detik, satu langkah pada satu masa.</item>
+        <item>Anda tidak perlu menjadi sempurna untuk memberikan impak.</item>
+        <item>Pembelajaran satu cabaran — itu perkara biasa.</item>
+        <item>Setiap percubaan adalah perkembangan, walaupun kita tidak berasa demikian.</item>
+        <item>Anda pernah melakukan perkara sukar sebelum ini — anda boleh melakukan perkara ini juga.</item>
+        <item>Usaha anda bernilai, walaupun tiada yang nampak.</item>
+        <item>Buat dengan perlahan-lahan juga boleh.</item>
+        <item>Anda bergerak ke hadapan, walaupun pada hari yang diam.</item>
+        <item>Laluan tidak semestinya sudah jelas sekarang — teruskan melangkah.</item>
+        <item>Anda lebih kuat daripada yang anda rasai sekarang.</item>
+        <item>Matlamat besar dibina daripada langkah-langkah kecil.</item>
+        <item>Teruskan — diri anda pada masa depan akan berterima kasih.</item>
+        <item>Kemajuan yang tidak lancar pun masih satu kemajuan.</item>
+        <item>Anda tidak ketinggalan — anda berada tepat di laluan anda.</item>
+        <item>Belajar dalam kesibukan juga boleh.</item>
+        <item>Anda sedang berkembang dalam cara yang belum anda lihat sekarang.</item>
+        <item>Usaha anda hari ini ialah pelaburan hari esok.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesMorning">
+        <item>Pagi! Anda boleh menghadapinya — satu kelas, satu langkah pada satu-satu masa.</item>
+        <item>Berasa tidak bersedia? Itu perkara biasa. Hanya mulakan di mana anda berada.</item>
+        <item>Kopi dapat membantu, tetapi menghargai diri anda sendiri lebih berkesan.</item>
+        <item>Isu teknologi? Berlaku kepada kita semua — tidak perlu tertekan.</item>
+        <item>Hari ini tidak perlu menjadi sempurna, cukuplah dengan potensi yang ada.</item>
+        <item>Selamat pagi — hari ini ialah peluang baharu untuk belajar dan berkembang.</item>
+        <item>Langkah-langkah kecil pagi ini mendekatkan anda kepada sasaran anda.</item>
+        <item>Tarik nafas — anda tidak perlu mendapatkan semua jawapan hari ini.</item>
+        <item>Teknologi boleh menimbulkan cabaran, tetapi anda tidak berseorangan.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesAfternoon">
+        <item>Sudah separuh perjalanan — anda sudah membuat lebih daripada yang anda sangka.</item>
+        <item>Berasa tersekat? Semua orang berdepan bongkah cabaran, jangan berhenti mendaki.</item>
+        <item>Kerja, gred, masa depan... tiada sesiapa yang sudah tahu kesudahannya.</item>
+        <item>Fikiran penat? Berehat sebentar = fokus yang lebih baik kemudian.</item>
+        <item>Minta bantuan. Sungguh, tiada orang yang melaluinya bersendirian.</item>
+        <item>Anda sudah buat sejauh ini hari ini — ini sesuatu yang patut dibanggakan.</item>
+        <item>Perlukan rehat? Menyegarkan diri sebahagian daripada belajar juga.</item>
+        <item>Sekiranya berasa laluan tidak pasti, semuanya baik-baik saja — kemahiran terbina langkah demi langkah.</item>
+        <item>Minta bantuan jika anda tersekat — sokongan selalunya lebih hampir daripada yang kita rasakan.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesEvening">
+        <item>Anda berjaya melepasi hari ini — ini sudah satu kemenangan.</item>
+        <item>Tiada rakan seperjuangan? Kirimkan "hai” kepada seseorang — ini mngkin membantu.</item>
+        <item>Walaupun hari ini berasa tidak lancar, anda tetap berada di sini. Itu amat bermakna.</item>
+        <item>Ingat: bukan gred yang mengukur nilai diri anda.</item>
+        <item>Bersantai, ketawa dan tatal saja tanpa rasa bersalah — anda telah berusaha.</item>
+        <item>Tahniah kerana berjaya melepasi hari ini — kemajuan adalah penting, walaupun dalam diam-diam.</item>
+        <item>Tiada kawan atau mentor? Jaringan juga boleh terbentuk dalam masa jeda.</item>
+        <item>Petang adalah untuk merenung fikir — perhatikan apa yang telah anda pelajari hari ini, bukan sahaja apa yang masih perlu dibuat</item>
+        <item>Usaha anda lebih penting daripada kesempurnaan.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesNight">
+        <item>Masih tidak selesai? Hebat sekali — tetapi jangan lupa tidur itu wujud.</item>
+        <item>Esok anda akan bersyukur kerana berehat secukupnya malam ini.</item>
+        <item>Keresahan lebih nyata pada waktu malam — jangan termakan dengan semua hasutannya.</item>
+        <item>Anda tidak ketinggalan, anda hanya berada di laluan anda.</item>
+        <item>Tutup komputer riba — otak anda juga ingin bermimpi.</item>
+        <item>Berehat itu OK — esok menanti dengan peluang baharu.</item>
+        <item>Belajar ialah sebuah maraton, bukan larian pecut. Hargailah diri anda malam ini.</item>
+        <item>Sekiranya berasa amat risau, ingatlah anda tidak perlu memikulnya sendirian.</item>
+        <item>Tamatkanlah hari dengan kepercayaan bahawa mencuba sudah pun satu pencapaian.</item>
+    </string-array>
+
+    <!-- Accessibility -->
+    <string name="welcomeWidgetContentDescription">Pesan selamat datang: %1$s. %2$s</string>
+
+    <!-- Institutional Announcements -->
+    <string name="institutionalAnnouncementsTitle">Pengumuman (%d)</string>
+    <!-- Widget Display Names -->
+    <string name="widget_hello">Helo, %s</string>
+
+    <!-- Customize Dashboard -->
+    <string name="customize_dashboard">Sesuaikan Papan Pemuka</string>
+    <string name="dashboard_widgets">Widget</string>
+    <string name="move_up">Alih naik</string>
+    <string name="move_down">Alih ke bawah</string>
+    <string name="no_widgets">Tiada widget tersedia</string>
+    <string name="changing_dashboard_layout">Menukar tataletak papan pemuka</string>
+    <string name="changing_dashboard_layout_message">Untuk menukar tataletak papan pemuka anda perlu memulakan semula aplikasi</string>
+    <string name="restart_now">Mulakan semula sekarang</string>
+    <string name="switched_back">Menukar kembali?</string>
+    <string name="switched_back_message">Terima kasih kerana mencuba papan pemuka baharu! Bolehkah anda memberitahu kami kenapa anda menukarnya kembali?</string>
+    <string name="what_could_we_improve">Apakah yang boleh kami tambah baik?</string>
+    <string name="skip">Langkau</string>
+    <string name="widget_setting_show_greeting">Tunjuk sapaan</string>
+    <string name="background_color">Warna latar belakang</string>
+    <string name="offline_content_available">Kandungan luar talian tersedia</string>
+    <string name="a11y_contentDescription_moreOptions">Lebih banyak pilihan</string>
+    <string name="customizeCourse">Sesuaikan Kursus</string>
+    <string name="favoriteCoursesAndGroups">Kursus dan Kumpulan Kegemaran</string>
+    <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
+    <string name="ltiToolsOffline">Alat Luaran tidak tersedia di luar talian.</string>
 </resources>

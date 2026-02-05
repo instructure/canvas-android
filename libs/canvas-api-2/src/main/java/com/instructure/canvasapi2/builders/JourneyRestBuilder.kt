@@ -16,9 +16,9 @@
  */
 package com.instructure.canvasapi2.builders
 
-import com.instructure.canvasapi2.BuildConfig
 import com.instructure.canvasapi2.JourneyAdapter
 import com.instructure.canvasapi2.calladapter.DataResultCallAdapterFactory
+import com.instructure.canvasapi2.models.DomainService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
@@ -28,7 +28,7 @@ class JourneyRestBuilder @Inject constructor(
 ) {
     fun <T> build(clazz: Class<T>): T {
         return Retrofit.Builder()
-            .baseUrl(BuildConfig.JOURNEY_BASE_URL + "/api/v1/")
+            .baseUrl(DomainService.JOURNEY.getBaseUrl() + "/api/v1/")
             .client(journeyAdapter.buildOHttpClient())
             .addCallAdapterFactory(DataResultCallAdapterFactory())
             .addConverterFactory(GsonConverterFactory.create())

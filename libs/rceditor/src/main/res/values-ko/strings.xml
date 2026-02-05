@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2017 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
+
+<resources>
+
+    <string name="rce_contentDescription_undo">실행 취소</string>
+    <string name="rce_contentDescription_redo">다시 실행</string>
+    <string name="rce_contentDescription_bold">형식 굵게</string>
+    <string name="rce_contentDescription_italic">형식 기울임꼴</string>
+    <string name="rce_contentDescription_strikethrough">취소선</string>
+    <string name="rce_contentDescription_underline">밑줄</string>
+    <string name="rce_contentDescription_format_text_color">형식 텍스트 색</string>
+    <string name="rce_contentDescription_border_color">형식 텍스트 경계 색</string>
+    <string name="rce_contentDescription_indent_increase">들여쓰기 늘리기</string>
+    <string name="rce_contentDescription_indent_decrease">들여쓰기 줄이기</string>
+    <string name="rce_contentDescription_align_left">왼쪽으로 정렬</string>
+    <string name="rce_contentDescription_align_right">오른쪽으로 정렬</string>
+    <string name="rce_contentDescription_align_center">중앙에 정렬</string>
+    <string name="rce_contentDescription_insert_bullets">글머리 목록 삽입</string>
+    <string name="rce_contentDescription_insert_numbers">숫자 목록 삽입</string>
+    <string name="rce_contentDescription_insert_photo">사진 삽입</string>
+    <string name="rce_contentDescription_upload_photo">장치에서 사진 업로드</string>
+    <string name="rce_contentDescription_insert_link">링크 삽입</string>
+    <string name="rce_contentDescription_block_quote">블록 인용</string>
+
+    <string name="rce_contentDescription_color_none">색 없음</string>
+    <string name="rce_contentDescription_color_white">색 흰색</string>
+    <string name="rce_contentDescription_color_black">색 검은색</string>
+    <string name="rce_contentDescription_color_blue">색 파란색</string>
+    <string name="rce_contentDescription_color_red">색 빨간색</string>
+    <string name="rce_contentDescription_color_green">색 녹색</string>
+    <string name="rce_contentDescription_color_gray">색 회색</string>
+    <string name="rce_contentDescription_color_magenta">색 자홍색</string>
+    <string name="rce_contentDescription_color_cyan">색 녹청색</string>
+    <string name="rce_contentDescription_color_orange">색 오렌지색</string>
+    <string name="rce_contentDescription_color_yellow">색 노란색</string>
+    <string name="rce_contentDescription_color_purple">색 보라색</string>
+
+    <string name="rce_editTextUrlHint">링크</string>
+    <string name="rce_editTextALTHint">텍스트</string>
+    <string name="rce_dialogDone">완료</string>
+    <string name="rce_dialogCancel">취소</string>
+    <string name="rce_insertLink">링크 삽입</string>
+    <string name="rce_insertImage">이미지 삽입</string>
+    <string name="rce_uploadImage">이미지 업로드</string>
+
+    <string name="rce_done">완료</string>
+    <string name="rce_cancel">취소</string>
+    <string name="rce_exit">나가기</string>
+    <string name="rce_dialog_exit_title">과제 편집에서 나가시겠습니까?</string>
+    <string name="rce_dialog_exit_message">정말로 나가시겠습니까? 저장하지 않은 데이터를 잃게 됩니다.</string>
+    <string name="rce_empty_message">메시지</string>
+    <string name="rce_empty_description">설명 추가</string>
+    <string name="rce_scrollInstructions">스크롤하여 모든 편집 도구를 확인</string>
+
+    <string name="rce_emptyUrlError">URL은 비어 있을 수 없음</string>
+    <string name="rce_httpNotAllowed">HTTPS URL만 허용</string>
+    <string name="rce_dialogAltText">화면 읽기 프로그램을 위한 대체 텍스트 추가</string>
+</resources>

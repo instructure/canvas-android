@@ -316,12 +316,22 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
         onView(withText(R.string.done)).click()
     }
 
+    fun clickDraftSubmission() {
+        onView(withId(R.id.draftTitle) + withText(R.string.submissionDraftAvailableTitle)).click()
+    }
+
     fun clickSubmissionAndRubric() {
         onView(allOf(withId(R.id.submissionAndRubricLabel), withText(R.string.submissionAndRubric))).click()
     }
 
     fun clickComposeMessageFAB() {
         onView(withContentDescription("Send a message about this assignment")).click()
+    }
+
+    fun assertDraftAvailableInformation() {
+        onView(withId(R.id.draftTitle) + withText(R.string.submissionDraftAvailableTitle)).assertDisplayed()
+        onView(withId(R.id.draftSubtitle) + withText(R.string.submissionDraftAvailableSubtitle)).assertDisplayed()
+        onView(withId(R.id.draftDivider)).assertDisplayed()
     }
 
     //OfflineMethod

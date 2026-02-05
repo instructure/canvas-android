@@ -76,7 +76,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SUBMISSIONS, TestCategory.E2E)
-    fun commentsBelongToSubmissionAttempts() {
+    fun testCommentsBelongToSubmissionAttempts() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(teachers = 1, courses = 1, students = 1)
@@ -1006,6 +1006,78 @@ class AssignmentsE2ETest: StudentComposeTest() {
 
     @E2E
     @Test
+    @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
+    fun testDraftAssignmentE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(teachers = 1, courses = 1, students = 1)
+        val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+
+        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course.")
+        val pointsTextAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
+
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
+        tokenLogin(student)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Select course: '${course.name}'.")
+        dashboardPage.selectCourse(course)
+
+        Log.d(STEP_TAG, "Navigate to course Assignments Page.")
+        courseBrowserPage.selectAssignments()
+
+        Log.d(ASSERTION_TAG, "Assert that our assignments are present," +
+                "along with any grade/date info.")
+        assignmentListPage.assertHasAssignment(pointsTextAssignment)
+
+        Log.d(STEP_TAG, "Click on assignment '${pointsTextAssignment.name}'.")
+        assignmentListPage.clickAssignment(pointsTextAssignment)
+
+        Log.d(ASSERTION_TAG, "Assert that 'Submission & Rubric' label is displayed and navigate to Submission Details Page.")
+        assignmentDetailsPage.assertSubmissionAndRubricLabel()
+
+        Log.d(STEP_TAG, "Click on the 'Submit Assignment' button.")
+        assignmentDetailsPage.clickSubmit()
+
+        Log.d(STEP_TAG," Type some text into the submission text input and click on the back button to trigger the 'Save Draft' dialog, then click on the 'Don't Save' button on the 'Save Draft' pop-up dialog to not save the draft submission.")
+        val draftText = "Draft submission text"
+        textSubmissionUploadPage.typeText(draftText)
+        textSubmissionUploadPage.clickToolbarBackButton()
+        textSubmissionUploadPage.clickDontSaveDraft()
+
+        Log.d(ASSERTION_TAG, "Assert that 'Submission & Rubric' label is displayed and navigate to Submission Details Page.")
+        assignmentDetailsPage.assertSubmissionAndRubricLabel()
+
+        Log.d(STEP_TAG, "Click on the 'Submit Assignment' button.")
+        assignmentDetailsPage.clickSubmit()
+
+        Log.d(STEP_TAG," Type some text into the submission text input and click on the back button to trigger the 'Save Draft' dialog, then click on the 'Save' button on the 'Save Draft' pop-up dialog to make a draft submission.")
+        textSubmissionUploadPage.typeText(draftText)
+        textSubmissionUploadPage.clickToolbarBackButton()
+        textSubmissionUploadPage.clickSaveDraft()
+
+        Log.d(ASSERTION_TAG, "Assert that the Draft submission info (title, subtitle) are displayed on the Assignment Details Page since we saved a draft.")
+        assignmentDetailsPage.assertDraftAvailableInformation()
+
+        Log.d(STEP_TAG, "Click on the 'Draft Available' link to open the saved draft assignment.")
+        assignmentDetailsPage.clickDraftSubmission()
+
+        Log.d(ASSERTION_TAG, "Assert that the previously saved text ($draftText) is displayed in the text submission input.")
+        textSubmissionUploadPage.assertTextSubmissionDisplayed(draftText)
+
+        Log.d(STEP_TAG, "Click on the 'Submit' button to submit the draft assignment.")
+        textSubmissionUploadPage.clickOnSubmitButton()
+        triggerWorkManagerJobs("SubmissionWorker")
+
+        Log.d(ASSERTION_TAG, "Assert that the assignment's status is submitted and the 'Successfully submitted!' label is displayed.")
+        assignmentDetailsPage.assertStatusSubmitted()
+        assignmentDetailsPage.assertAssignmentSubmitted()
+    }
+
+    @E2E
+    @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
     fun testShowOnlyLetterGradeOnDashboardAndAssignmentListPageE2E() {
         Log.d(PREPARATION_TAG, "Seeding data.")
@@ -1210,7 +1282,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         dashboardPage.assertCourseGrade(course.name, "49.47%")
     }
 
-    @Stub("Grades screen has been redesigned, needs to be fixed in ticket MBL-19258")
+    @Stub("Grades screen has been redesigned, needs to be fixed in ticket MBL-19640")
     @E2E
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.GRADES, TestCategory.E2E)
