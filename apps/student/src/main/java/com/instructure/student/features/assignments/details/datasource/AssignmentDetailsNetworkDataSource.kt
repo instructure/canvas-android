@@ -28,6 +28,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Quiz
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
 
@@ -36,7 +37,8 @@ class AssignmentDetailsNetworkDataSource(
     private val assignmentInterface: AssignmentAPI.AssignmentInterface,
     private val quizInterface: QuizAPI.QuizInterface,
     private val submissionInterface: SubmissionAPI.SubmissionInterface,
-    private val customGradeStatusesManager: CustomGradeStatusesManager
+    private val customGradeStatusesManager: CustomGradeStatusesManager,
+    private val apiPrefs: ApiPrefs
 ) : AssignmentDetailsDataSource {
 
     override suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): Course {
@@ -63,9 +65,19 @@ class AssignmentDetailsNetworkDataSource(
         return quizInterface.getQuiz(courseId, quizId, params).dataOrThrow
     }
 
-    override suspend fun getExternalToolLaunchUrl(courseId: Long, externalToolId: Long, assignmentId: Long, forceNetwork: Boolean): LTITool? {
-        val params = RestParams(isForceReadFromNetwork = forceNetwork)
-        return assignmentInterface.getExternalToolLaunchUrl(courseId, externalToolId, assignmentId, restParams = params).dataOrNull
+    override suspend fun getExternalToolLaunchUrl(
+        courseId: Long,
+        externalToolId: Long,
+        assignmentId: Long,
+        forceNetwork: Boolean
+    ): LTITool? {
+        val params = RestParams(isForceReadFromNetwork = forceNetwork, domain = apiPrefs.overrideDomains[courseId])
+        return assignmentInterface.getExternalToolLaunchUrl(
+            courseId,
+            externalToolId,
+            assignmentId,
+            restParams = params
+        ).dataOrNull
     }
 
     override suspend fun getLtiFromAuthenticationUrl(url: String, forceNetwork: Boolean): LTITool {

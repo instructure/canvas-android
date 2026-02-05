@@ -1045,6 +1045,8 @@
 
     <string name="downloading">डाउनलोड किया जा रहा है</string>
     <string name="downloadComplete">डाउनलोड पूरा हुआ</string>
+    <string name="fileDownloadNotificationPermissionDenied">डाउनलोड शुरू हुआ। प्रगति देखने के लिए सूचनाएं चालू करें।</string>
+
     <string name="notificationChannelNameFileDownloadsName">सूचनाएं डाउनलोड करें</string>
     <string name="notificationChannelNameFileDownloadsDescription">जारी डाउनलोड्स के लिए Canvas सूचनाएं।</string>
     <string name="full_due_date_details">नियत तिथि का पूरा ब्यौरा</string>
@@ -1247,6 +1249,7 @@
     <string name="a11y_content_description_add_to_dashboard">डैशबोर्ड में जोड़ें</string>
     <string name="a11y_content_description_add_all_to_dashboard">सभी को डैशबोर्ड में जोड़ें</string>
 
+    <string name="new_mobile_dashboard">नया मोबाइल डैशबोर्ड</string>
     <!-- K5 Strings -->
     <string name="navDrawerAccount">खाता</string>
     <string name="dashboardTabHomeroom">होमरूम</string>
@@ -1372,6 +1375,10 @@
         <item quantity="other">%s अपठित सूचनाएं</item>
     </plurals>
 
+    <plurals name="a11y_todoBadgeCount">
+        <item quantity="one">करने के लिए %s आइटम</item>
+        <item quantity="other">करने के लिए %s आइटमें</item>
+    </plurals>
     <string name="noAnnotationSelected">कोई एनोटेशन चयनित नहीं</string>
 
     <string name="emailNotifications">ईमेल सूचनाएं</string>
@@ -1915,6 +1922,8 @@
     <string name="gradePreferencesHeaderSortBy">इस के आधार पर क्रमबद्ध करें</string>
     <string name="gradesEmptyTitle">कोई असाइनमेंट नहीं</string>
     <string name="gradesEmptyMessage">लगता है की इस खाली स्थान में अभी तक कोई असाइनमेंट नहीं बनाई गई है।</string>
+    <string name="noMatchingAssignments">कोई मेल खाता असाइनमेंट नहीं</string>
+    <string name="noMatchingAssignmentsDescription">कोई भी असाइनमेंट आपकी खोज से मेल नहीं खाता। कोई दूसरा खोज शब्द आज़माएं।</string>
     <string name="errorLoadingGrades">हमें आपके छात्र के ग्रेड लोड करने में समस्या हो रही है। कृपया पेज को पुनः लोड करने का प्रयास करें या बाद में जांच करें।</string>
     <string name="errorLoadingCourse">हमें आपके छात्र का पाठ्यक्रम विवरण लोड करने में समस्या हो रही है। कृपया पेज को पुनः लोड करने का प्रयास करें या बाद में जांच करें।</string>
     <string name="gradesFilterContentDescription">फ़िल्टर</string>
@@ -2086,7 +2095,8 @@
     <string name="widgetErrorTitle">ओह! कुछ गड़बड़ हुई</string>
     <string name="widgetErrorSubtitle">हमें अभी आपके कार्य दिखाने में समस्या हो रही है। कृपया थोड़ी देर में फिर से कोशिश करें या ऐप पर जाएं।</string>
     <string name="widgetToDoEmptyTitle">अब आपका काम पूरा हो गया!</string>
-    <string name="widgetToDoEmptySubtitle">ऐसा लगता है कि आप अगले 4 सप्ताह के लिए खाली हैं। क्या आप करने के लिए कुछ कार्य जोड़ना चाहते हैं?</string>
+    <string name="widgetToDoEmptySubtitle">ऐसा लगता है कि आप खाली हैं, आपके पास कोई आगामी कार्य नहीं है। क्या आप करने के लिए कुछ कार्य जोड़ना चाहते हैं?</string>
+
     <string name="widgetNotLoggedInTitle">आइए, आपको लॉग इन करते हैं!</string>
     <string name="widgetToDoNotLoggedInSubtitle">अपने कार्य देखने के लिए कृपया ऐप में अपने खाते में लॉग इन करें। इसमें बस एक सेकंड का समय लगेगा!</string>
     <string name="a11y_widgetToDoOpenToDoList">करने के लिए सूची स्क्रीन खोलें</string>
@@ -2111,6 +2121,11 @@
         <item quantity="one">%s / %s पॉइंट</item>
         <item quantity="other">%s / %s पॉइंट्स</item>
     </plurals>
+    <plurals name="groupMemberCount">
+        <item quantity="one">छात्र</item>
+        <item quantity="other">छात्र</item>
+    </plurals>
+
     <string name="speedGraderLatePenaltyTitle">विलंब दंड:</string>
     <string name="gradingStatus_none">कोई नहीं</string>
     <string name="gradingStatus_late">विलंब</string>
@@ -2167,4 +2182,189 @@
     <string name="scored_less_than_with_max">/ %s पॉइंट्स से कम अंक पाए</string>
     <string name="scored_between_values">%1$s - %2$s अंक पाए</string>
     <string name="multiple_filters">एकाधिक फ़िल्टर</string>
+    <string name="a11y_contentDescriptionToDoFilter">फ़िल्टर</string>
+    <string name="errorLoadingToDos">आपके \'करने के लिए\' आइटम लोड करते समय एक त्रुटि आई। कृपया अपने कनेक्शन की जांच करें और फिर से कोशिश करें।</string>
+    <string name="errorUpdatingToDo">\'करने के लिए\' आइटम अपडेट करते समय एक त्रुटि आई। कृपया अपने कनेक्शन की जांच करें और फिर से कोशिश करें।</string>
+    <string name="noToDosForNow">अभी के लिए कुछ \'करने के लिए\' नहीं है!</string>
+    <string name="noToDosForNowSubtext">यह आराम करने, विश्राम करने और ऊर्जा प्राप्त करने का एक बढ़िया समय लग रहा है।</string>
+    <string name="todoSwipeDone">हो गया</string>
+    <string name="todoSwipeUndo">पूर्ववत करें</string>
+    <string name="todoMarkedAsDone">%s को हो गया के रूप में चिह्नित किया गया</string>
+    <string name="todoMarkedAsNotDone">%s को हो गया के रूप में चिह्नित किया गया</string>
+    <string name="todoMarkedAsDoneSnackbarUndo">पूर्ववत करें</string>
+    <string name="todoActionOffline">यह कार्रवाई ऑफ़लाइन नहीं की जा सकती</string>
+
+    <!-- To Do List Filter Screen -->
+    <string name="todoFilterPreferences">\'करने के लिए\' सूची प्राथमिकताएं</string>
+    <string name="todoFilterVisibleItems">दृश्यमान आइटमें</string>
+    <string name="todoFilterShowPersonalToDos">व्यक्तिगत \'करने के लिए\' दिखाएं</string>
+    <string name="todoFilterShowCalendarEvents">कैलेंडर घटनाएं दिखाएं</string>
+    <string name="todoFilterShowCompleted">पूरे हुए दिखाएं</string>
+    <string name="todoFilterFavoriteCoursesOnly">केवल पसंदीदा पाठ्यक्रम</string>
+    <string name="todoFilterShowTasksFrom">इस समय से शुरू होते टास्क दिखाएं</string>
+    <string name="todoFilterShowTasksUntil">इस समय तक खत्म होते टास्क दिखाएं</string>
+    <string name="todoFilterToday">आज</string>
+    <string name="todoFilterThisWeek">इस सप्ताह</string>
+    <string name="todoFilterLastWeek">पिछले सप्ताह</string>
+    <string name="todoFilterTwoWeeks">2 सप्ताह पहले</string>
+    <string name="todoFilterThreeWeeks">3 सप्ताह पहले</string>
+    <string name="todoFilterFourWeeks">4 सप्ताह पहले</string>
+    <string name="todoFilterNextWeek">अगला सप्ताह</string>
+    <string name="todoFilterInTwoWeeks">2 सप्ताह में</string>
+    <string name="todoFilterInThreeWeeks">3 सप्ताह में</string>
+    <string name="todoFilterInFourWeeks">4 सप्ताह में</string>
+    <string name="todoFilterFromDate">%s की ओर से</string>
+    <string name="todoFilterUntilDate">%s तक</string>
+    <string name="a11y_buttonSelectionSelected">चुना गया</string>
+    <string name="a11y_buttonSelectionNotSelected">चुना नहीं गया</string>
+    <!-- Course Invitations -->
+    <string name="courseInvitationsTitle">पाठ्यक्रम आमंत्रण (%d)</string>
+    <string name="courseInvitationAccepted">%s का आमंत्रण स्वीकार कर लिया गया</string>
+    <string name="courseInvitationDeclined">%s का आमंत्रण अस्वीकार कर दिया गया</string>
+    <string name="courseInvitationDeclineConfirmTitle">आमंत्रण अस्वीकार करें</string>
+    <string name="courseInvitationDeclineConfirmMessage">क्या आप वाकई %s का आमंत्रण अस्वीकार करना चाहते हैं?</string>
+
+    <!-- Welcome Widget -->
+    <!-- Greetings with name (%s is the student's first name) -->
+    <string name="welcomeGreetingMorningWithName">शुभ प्रभात, %s!</string>
+    <string name="welcomeGreetingAfternoonWithName">शुभ अपराह्न, %s!</string>
+    <string name="welcomeGreetingEveningWithName">शुभ संध्या, %s!</string>
+    <string name="welcomeGreetingNightWithName">शुभ रात्रि, %s!</string>
+
+    <!-- Greetings without name (fallback when user has no first name) -->
+    <string name="welcomeGreetingMorning">शुभ प्रभात!</string>
+    <string name="welcomeGreetingAfternoon">शुभ अपराह्न!</string>
+    <string name="welcomeGreetingEvening">शुभ संध्या!</string>
+    <string name="welcomeGreetingNight">शुभ रात्रि!</string>
+
+    <!-- Welcome Widget Motivational Messages -->
+    <string-array name="welcomeMessagesGeneric">
+        <item>आप यह कर सकते हैं।</item>
+        <item>हार मत मानो — आप अभी जैसा महसूस कर रहे हैं, उससे कहीं ज़्यादा मज़बूत हैं।</item>
+        <item>एक समय में एक कदम भी प्रगति ही है।</item>
+        <item>हिम्मत मत हारो — आगे चलकर आप खुद को इसका श्रेय देंगे।</item>
+        <item>आपकी क्षमता आपकी सोच से भी अधिक है।</item>
+        <item>कठिन दिनों में भी, आप आगे बढ़ रहे हैं।</item>
+        <item>खुद पर भरोसा रखें — आपने पहले भी मुश्किल काम किए हैं।</item>
+        <item>पूर्णता नहीं, केवल प्रगति पर ध्यान दें। आप बहुत बढ़िया कर रहे हैं।</item>
+        <item>डटे रहो — आप इसमें अकेले नहीं हैं।</item>
+        <item>आप सीख रहे हैं, आगे बढ़ रहे हैं, और जितना आप सोचते हैं, उससे बेहतर कर रहे हैं।</item>
+        <item>ठोकर खाना ठीक है — आप अभी भी सही रास्ते पर हैं।</item>
+        <item>प्रयास जारी रखें — आप जितना सोचते हैं, उससे कहीं ज़्यादा करीब हैं।</item>
+        <item>छोटी जीत भी मायने रखती हैं।</item>
+        <item>आगे बढ़ते रहें — आप जितना सोचते हैं, उससे कहीं ज़्यादा करीब हैं।</item>
+        <item>थोड़ा रुक जाना ठीक है। आराम करना सीखने की प्रक्रिया का एक भाग है।</item>
+        <item>प्रयास करना अपने आप में ही एक जीत है।</item>
+        <item>पूर्णता &gt; केवल प्रगति पर ध्यान दें।</item>
+        <item>आपकी उपस्थिति का महत्व बहुत अधिक है।</item>
+        <item>चाहे काम धीमी गति से हो, फिर भी आप कुछ नया सीख रहे हैं।</item>
+        <item>आराम से रहें — सब ठीक चल रहा है।</item>
+        <item>जिस गति से आप चल रहे हैं, वही सही गति है।</item>
+        <item>हर चीज़ का पता आज ही लगाने की ज़रूरत नहीं है।</item>
+        <item>आपकी जगह यहीं है।</item>
+        <item>आप जो भी मेहनत करते हैं, वह बेकार नहीं जाती।</item>
+        <item>फिर से शुरुआत करना सही है — आप जितनी बार चाहें, उतनी बार कर सकते हैं।</item>
+        <item>जो अभी मुश्किल लग रहा है, वह बाद में आसान लगेगा।</item>
+        <item>कोशिश करते रहें — यही सबसे ज़्यादा महत्वपूर्ण है।</item>
+        <item>थोड़ी-थोड़ी मेहनत से भी बड़ी सफलता मिलती है।</item>
+        <item>आराम भी प्रगति का हिस्सा है।</item>
+        <item>आप जितना जानते हैं, उससे कहीं ज़्यादा बढ़िया कर रहे हैं।</item>
+        <item>कम गति से बढ़ना भी सफलता की ओर ही जाना है।</item>
+        <item>भविष्य का निर्माण एक ही दिन में नहीं होता — पर आप उस राह पर चल पड़े हैं।</item>
+        <item>एक असाइनमेंट, एक पल, एक समय में एक कदम।</item>
+        <item>ज़रूरी नहीं कि आप एकदम सही हों, फिर भी आप बदलाव ला सकते हैं।</item>
+        <item>सीखने में गड़बड़ी होना स्वाभाविक है — और इसमें कोई बुराई नहीं है।</item>
+        <item>आपका हर प्रयास आपको आगे बढ़ाता है, भले ही आपको अभी इसका एहसास न हो।</item>
+        <item>आपने पहले भी मुश्किल काम किए हैं — आप इसे भी कर सकते हैं।</item>
+        <item>आपका प्रयास मायने रखता है, भले ही कोई इसे न देखे।</item>
+        <item>चीज़ों को धीरे-धीरे करना ठीक है।</item>
+        <item>भले ही काम की गति धीमी हो, आप प्रगति कर रहे हैं।</item>
+        <item>आगे की राह भले ही स्पष्ट न हो — आप चलते रहें।</item>
+        <item>आप अभी जैसा महसूस कर रहे हैं, उससे कहीं ज़्यादा मज़बूत हैं।</item>
+        <item>बड़े काम छोटे-छोटे प्रयासों से पूरे होते हैं।</item>
+        <item>कोशिश जारी रखो — आगे चलकर आपको खुद पर गर्व होगा।</item>
+        <item>भले ही प्रगति में उलझन हो, फिर भी यह आगे बढ़ना ही है।</item>
+        <item>आप किसी से पीछे नहीं हैं — आप अपनी राह पर चल रहे हैं।</item>
+        <item>आगे बढ़ते हुए सीखना ठीक है।</item>
+        <item>आप ऐसे तरीके से आगे बढ़ रहे हैं, जिसका एहसास शायद आपको अभी न हो।</item>
+        <item>आप जो प्रयास आज कर रहे हैं, वह कल आपको फल देगा।</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesMorning">
+        <item>शुभ प्रभात! आप में यह करने की क्षमता है — एक-एक करके क्लास पूरी करें, धीरे-धीरे आगे बढ़ें।</item>
+        <item>क्या आप अभी तैयार नहीं हैं? यह सामान्य बात है। जहां भी आप अभी हैं, वहीं से शुरुआत करें।</item>
+        <item>कॉफ़ी से तो मदद मिलती है, लेकिन खुद के साथ नरमी बरतना बेहतर है।</item>
+        <item>क्या तकनीक काम नहीं कर रही है? यह हम सभी के साथ होता है — तनाव न लें।</item>
+        <item>आज का दिन परफ़ेक्ट होने की ज़रूरत नहीं है, बस संभव होना चाहिए।</item>
+        <item>सुप्रभात — आज सीखने और आगे बढ़ने का एक नया अवसर है।</item>
+        <item>इस सुबह किए गए छोटे-छोटे प्रयास भी आपको अपने लक्ष्य की ओर बढ़ा रहे हैं।</item>
+        <item>एक गहरी साँस लें — अभी सब कुछ सुलझाना ज़रूरी नहीं है।</item>
+        <item>टेक्नोलॉजी कभी-कभी मुश्किल होती है, पर इसे सीखने में आप अकेले नहीं हैं।</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesAfternoon">
+        <item>आप आधे रास्ते पर हैं — आप जितना सोचते हैं, उससे कहीं बेहतर प्रदर्शन किया है।</item>
+        <item>क्या आप अटक गए हैं? बाधाएं तो सबको मिलती हैं, आपको बस आगे बढ़ना नहीं छोड़ना है।</item>
+        <item>नौकरियां, नंबर, भविष्य... अभी तक किसी ने भी इन सबके बारे में पूरी तरह नहीं जाना है।</item>
+        <item>थकान महसूस हो रही है? थोड़ा आराम करने से बाद में काम में ज़्यादा मन लगता है।</item>
+        <item>मदद मांगें। सच कहूं तो, कोई भी यह अकेले नहीं कर रहा है।</item>
+        <item>आज आपने जो कुछ भी हासिल किया है, उस पर आपको गर्व होना चाहिए।</item>
+        <item>आराम करना है? खुद को रीचार्ज करना भी सीखने का हिस्सा है।</item>
+        <item>यदि रास्ता साफ़ न लगे तो ठीक है — आपकी क्षमताएं धीरे-धीरे विकसित हो रही हैं।</item>
+        <item>अगर आप फंस गए हैं, तो मदद के लिए आवाज़ लगाएं — समर्थन हमेशा आपकी पहुंच में है।</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesEvening">
+        <item>पूरा दिन गुजार लिया — यह अपने आप में एक जीत है।</item>
+        <item>लोगों की याद आ रही है? किसी को जल्दी से "हैलो" बोल दें — इससे मन हल्का होता है।</item>
+        <item>भले ही आज का दिन उथल-पुथल भरा रहा हो, लेकिन आपने हिम्मत नहीं हारी। यह मायने रखता है।</item>
+        <item>याद रखें: आपके नंबर आपकी योग्यता का पैमाना नहीं हैं।</item>
+        <item>बिना किसी चिंता के आराम करें, हंसें या फ़ोन इस्तेमाल करें — आपने इसके लिए मेहनत की है।</item>
+        <item>आपने आज का दिन पूरा कर लिया, बहुत अच्छा — आप आगे बढ़ रहे हैं, भले ही यह सबको दिखाई न दे।</item>
+        <item>क्या आपको अपने मित्रों या मार्गदर्शकों की याद आ रही है? हम छोटे-छोटे लम्हों में भी जुड़ाव महसूस कर सकते हैं।</item>
+        <item>शाम का समय सोचने-समझने का होता है — इस पर ध्यान दें कि आज आपने क्या सीखा, न कि उन कामों पर जो बाकी रह गए हैं।</item>
+        <item>पूरी तरह से सही होने के बजाय, प्रयास करना ज़्यादा मायने रखता है।</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesNight">
+        <item>क्या अभी भी काम में लगे हुए हैं? आपकी मेहनत को सलाम — पर नींद भी ज़रूरी है।</item>
+        <item>आज रात आराम करेंगे, तो कल सुबह आप खुद को इसके लिए शुक्रिया कहेंगे।</item>
+        <item>रात को घबराहट बढ़ जाती है — इसकी हर बात सच नहीं होती।</item>
+        <item>आप किसी से पीछे नहीं हैं, आप अपनी राह पर चल रहे हैं।</item>
+        <item>लैपटॉप बंद कर दें — आपके दिमाग को भी आराम की ज़रूरत है।</item>
+        <item>थोड़ा आराम कर लें — कल का दिन नई संभावनाएं लेकर आएगा।</item>
+        <item>सीखने की प्रक्रिया एक लंबी मैराथन की तरह है, इसे तेज़ दौड़ की तरह न देखें। आज रात खुद के साथ नरमी बरतें।</item>
+        <item>जब चिंताएँ आपको बोझिल करें, तो याद रखें कि इस बोझ को अकेले उठाना ज़रूरी नहीं है।</item>
+        <item>यह जानकर सोएं कि आपने जो प्रयास किया, वही आपकी आज की सफलता है।</item>
+    </string-array>
+
+    <!-- Accessibility -->
+    <string name="welcomeWidgetContentDescription">स्वागत संदेश: %1$s. %2$s</string>
+
+    <!-- Institutional Announcements -->
+    <string name="institutionalAnnouncementsTitle">घोषणाएं (%d)</string>
+    <!-- Widget Display Names -->
+    <string name="widget_hello">नमस्कार, %s</string>
+
+    <!-- Customize Dashboard -->
+    <string name="customize_dashboard">डैशबोर्ड कस्टमाइज़ करें</string>
+    <string name="dashboard_widgets">विजेट</string>
+    <string name="move_up">ऊपर स्थानांतरित करें</string>
+    <string name="move_down">नीचे स्थानांतरित करें</string>
+    <string name="no_widgets">कोई विजेट उपलब्ध नहीं है</string>
+    <string name="changing_dashboard_layout">डैशबोर्ड लेआउट बदलना</string>
+    <string name="changing_dashboard_layout_message">डैशबोर्ड लेआउट बदलने के लिए आपको ऐप्लिकेशन को रीस्टार्ट करना होगा</string>
+    <string name="restart_now">अभी रीस्टार्ट करें</string>
+    <string name="switched_back">वापस स्विच किया?</string>
+    <string name="switched_back_message">नया डैशबोर्ड आज़माने के लिए शुक्रिया! क्या आप बता सकते हैं कि आपने वापस स्विच क्यों किया?</string>
+    <string name="what_could_we_improve">हम क्या सुधार कर सकते हैं?</string>
+    <string name="skip">छोड़ें</string>
+    <string name="widget_setting_show_greeting">अभिवादन दिखाएं</string>
+    <string name="background_color">पृष्ठभूमि रंग</string>
+    <string name="offline_content_available">ऑफ़लाइन सामग्री उपलब्ध है</string>
+    <string name="a11y_contentDescription_moreOptions">अधिक विकल्प</string>
+    <string name="customizeCourse">पाठ्यक्रम कास्टमाइज़ करें</string>
+    <string name="favoriteCoursesAndGroups">पसंदीदा पाठ्यक्रम और ग्रुप्स</string>
+    <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
+    <string name="ltiToolsOffline">बाहरी उपकरण ऑफ़लाइन उपलब्ध नहीं हैं।</string>
 </resources>

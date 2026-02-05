@@ -24,7 +24,6 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.OfflineE2E
-import com.instructure.canvas.espresso.annotations.Stub
 import com.instructure.canvas.espresso.checkToastText
 import com.instructure.canvas.espresso.pressBackButton
 import com.instructure.canvas.espresso.refresh
@@ -47,7 +46,6 @@ class OfflineDiscussionsE2ETest : StudentTest() {
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
-    @Stub // TODO: Investigate flaky test
     @OfflineE2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.E2E, SecondaryFeatureCategory.OFFLINE_MODE)

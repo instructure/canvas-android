@@ -48,6 +48,8 @@ class TeacherDashboardRouter(private val activity: FragmentActivity) : Dashboard
 
     override fun routeToSyncProgress() = Unit
 
+    override fun routeToManageOfflineContent() = Unit
+
     override fun routeToCustomizeDashboard() {
         RouteMatcher.route(activity, CustomizeDashboardFragment.makeRoute(), )
     }

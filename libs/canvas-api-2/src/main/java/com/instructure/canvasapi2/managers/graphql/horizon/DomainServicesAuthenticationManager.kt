@@ -7,7 +7,6 @@ import com.instructure.canvasapi2.models.DomainService
 import com.instructure.canvasapi2.models.DomainServicesWorkflow
 import com.instructure.canvasapi2.utils.DomainServicesApiPref
 import com.instructure.canvasapi2.utils.JourneyApiPref
-import com.instructure.canvasapi2.utils.RedwoodApiPref
 import java.util.Date
 import javax.inject.Inject
 import kotlin.io.encoding.Base64
@@ -52,15 +51,6 @@ abstract class DomainServicesAuthenticationManager(
         return false
     }
 }
-
-class RedwoodAuthenticationManager @Inject constructor(
-    domainServicesAuthenticationAPI: DomainServicesAuthenticationAPI,
-    redwoodApiPref: RedwoodApiPref
-) : DomainServicesAuthenticationManager(
-    domainServicesAuthenticationAPI,
-    redwoodApiPref,
-    DomainService.REDWOOD
-)
 
 class JourneyAuthenticationManager @Inject constructor(
     domainServicesAuthenticationAPI: DomainServicesAuthenticationAPI,

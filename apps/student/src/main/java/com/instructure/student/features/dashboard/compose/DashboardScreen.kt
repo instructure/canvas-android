@@ -23,10 +23,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
-import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
@@ -62,12 +60,14 @@ import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.OverflowMenu
+import com.instructure.pandautils.compose.composables.rememberWithRequireNetwork
 import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.courseinvitation.CourseInvitationsWidget
 import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidget
 import com.instructure.pandautils.features.dashboard.widget.institutionalannouncements.InstitutionalAnnouncementsWidget
 import com.instructure.pandautils.features.dashboard.widget.welcome.WelcomeWidget
+import com.instructure.pandautils.features.dashboard.widget.forecast.ForecastWidget
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.student.R
 import com.instructure.student.activity.NavigationActivity
@@ -120,6 +120,10 @@ fun DashboardScreenContent(
 
     var showMenu by remember { mutableStateOf(false) }
 
+    val manageOfflineContentClick = rememberWithRequireNetwork {
+        router.routeToManageOfflineContent()
+    }
+
     Scaffold(
         modifier = Modifier.background(colorResource(R.color.backgroundLight)),
         topBar = {
@@ -138,6 +142,7 @@ fun DashboardScreenContent(
                     ) {
                         DropdownMenuItem(onClick = {
                             showMenu = !showMenu
+                            manageOfflineContentClick()
                         }) {
                             Text(
                                 stringResource(R.string.course_menu_manage_offline_content),
@@ -198,7 +203,7 @@ fun DashboardScreenContent(
                 }
 
                 else -> {
-                    WidgetGrid(
+                    WidgetList(
                         widgets = uiState.widgets,
                         refreshSignal = refreshSignal,
                         onShowSnackbar = onShowSnackbar,
@@ -221,7 +226,7 @@ fun DashboardScreenContent(
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
-private fun WidgetGrid(
+private fun WidgetList(
     widgets: List<WidgetMetadata>,
     refreshSignal: SharedFlow<Unit>,
     onShowSnackbar: (String, String?, (() -> Unit)?) -> Unit,
@@ -238,22 +243,14 @@ private fun WidgetGrid(
         else -> 1
     }
 
-    LazyVerticalStaggeredGrid(
-        columns = StaggeredGridCells.Fixed(columns),
+    LazyColumn(
         modifier = modifier,
         contentPadding = PaddingValues(vertical = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        verticalItemSpacing = 16.dp
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         items(
             items = widgets,
-            span = { metadata ->
-                if (metadata.isFullWidth) {
-                    StaggeredGridItemSpan.FullLine
-                } else {
-                    StaggeredGridItemSpan.SingleLane
-                }
-            }
+            key = { it.id }
         ) { metadata ->
             GetWidgetComposable(metadata.id, refreshSignal, columns, onShowSnackbar, router)
         }
@@ -283,6 +280,7 @@ private fun GetWidgetComposable(
             onAnnouncementClick = router::routeToGlobalAnnouncement
         )
 
+        WidgetMetadata.WIDGET_ID_FORECAST -> ForecastWidget(refreshSignal = refreshSignal)
         else -> {}
     }
 }

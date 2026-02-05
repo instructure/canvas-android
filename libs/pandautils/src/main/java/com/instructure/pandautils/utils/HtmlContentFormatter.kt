@@ -66,7 +66,7 @@ class HtmlContentFormatter(
                             if (studioEmbedImprovementsEnabled) {
                                 val videoTitle = extractVideoTitle(iframe)
                                 val immersiveUrl = convertStudioEmbedToImmersiveView(srcUrl, videoTitle)
-                                val newIframe = iframeWithStudioButton(immersiveUrl, iframe, context)
+                                val newIframe = iframeWithStudioEmbed(immersiveUrl, iframe)
                                 newHTML = newHTML.replace(iframe, newIframe)
                             }
                         } else if (hasStudioMediaUrl(srcUrl)) {
@@ -78,7 +78,7 @@ class HtmlContentFormatter(
                             if (studioEmbedImprovementsEnabled) {
                                 val videoTitle = extractVideoTitle(iframe)
                                 val immersiveUrl = convertToImmersiveViewUrl(srcUrl, videoTitle)
-                                val newIframe = iframeWithStudioButton(immersiveUrl, iframe, context)
+                                val newIframe = iframeWithStudioEmbed(immersiveUrl, iframe)
                                 newHTML = newHTML.replace(iframe, newIframe)
                             }
                         } else if (hasExternalTools(srcUrl)) {
@@ -172,11 +172,10 @@ class HtmlContentFormatter(
         }
     }
 
-    private fun iframeWithStudioButton(immersiveUrl: String, iframe: String, context: Context): String {
-        val buttonText = context.getString(R.string.openInDetailView)
+    private fun iframeWithStudioEmbed(immersiveUrl: String, iframe: String): String {
         val escapedUrl = immersiveUrl.replace("&", "&amp;")
 
-        val htmlButton = "</br><p><div class=\"lti_button\" onClick=\"location.href='$escapedUrl'\">$buttonText</div></p>"
+        val htmlButton = "</br><p><div class=\"studio_embed\" onClick=\"location.href='$escapedUrl'\"></div></p>"
         return iframe + htmlButton
     }
 
@@ -235,11 +234,14 @@ class HtmlContentFormatter(
             decodedLtiUrl = decodedLtiUrl
                 .replace("custom_arc_launch_type=thumbnail_embed", "custom_arc_launch_type=immersive_view")
                 .replace("custom_arc_launch_type=learn_embed", "custom_arc_launch_type=immersive_view")
+                .replace("custom_arc_launch_type=collaboration_embed", "custom_arc_launch_type=immersive_view")
+                .replace("custom_arc_launch_type=quiz_embed", "custom_arc_launch_type=immersive_view")
 
             // Add source view type based on original embed type
             val sourceViewType = when {
                 encodedLtiUrl.contains("thumbnail_embed") -> "thumbnail_embed"
                 encodedLtiUrl.contains("learn_embed") -> "learn_embed"
+                encodedLtiUrl.contains("quiz_embed") -> "quiz_embed"
                 else -> "collaboration_embed"
             }
 
@@ -291,7 +293,9 @@ class HtmlContentFormatter(
             // The launch type parameters are URL-encoded within the nested url parameter
             val normalizedText = text?.replace("&amp;", "&") ?: ""
             return (normalizedText.contains("custom_arc_launch_type%3Dthumbnail_embed") ||
-                    normalizedText.contains("custom_arc_launch_type%3Dlearn_embed"))
+                    normalizedText.contains("custom_arc_launch_type%3Dlearn_embed") ||
+                    normalizedText.contains("custom_arc_launch_type%3Dcollaboration_embed") ||
+                    normalizedText.contains("custom_arc_launch_type%3Dquiz_embed"))
         }
     }
 }

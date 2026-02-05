@@ -1,0 +1,877 @@
+﻿<!--
+  ~ Copyright (C) 2017 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+
+    <string name="settings_name">설정</string>
+    <string name="tab_week">주</string>
+    <string name="tab_inbox">수신함</string>
+    <string name="tab_details">세부 정보</string>
+    <string name="tab_questions">문제</string>
+    <string name="tab_submissions">제출</string>
+    <string name="tab_assignments">과제</string>
+    <string name="tab_profile">프로필</string>
+    <string name="tab_people">사용자</string>
+    <string name="tab_quizzes">퀴즈</string>
+    <string name="tab_discussions">토론</string>
+    <string name="tab_announcements">공지</string>
+    <string name="tab_attendance">출석</string>
+    <string name="tab_pages">페이지</string>
+    <string name="tab_todo">할 일</string>
+    <string name="content_description_school_logo">학교 로고</string>
+    <string name="search_guides">Canvas 가이드 검색</string>
+    <string name="canvas_guides">Canvas 가이드</string>
+    <string name="search_guides_icon">Canvas 가이드용 아이콘</string>
+    <string name="search_guides_details">자주 묻는 질문에 대한 답변</string>
+    <string name="report_problem">문제 신고</string>
+    <string name="report_problem_icon"> 문제 신고에 대한 아이콘</string>
+    <string name="report_problem_details">앱이 정상적으로 작동하지 않는 경우 알려주세요</string>
+    <string name="request_feature">기능 요청</string>
+    <string name="request_feature_icon">기능 요청에 대한 아이콘</string>
+    <string name="request_feature_details">앱을 개선하는 아이디어를 알려주세요</string>
+    <string name="share_your_love">앱에 대해 좋아하는 점을 공유</string>
+    <string name="share_your_love_details">앱에서 가장 좋아하는 부분을 알려주기</string>
+    <string name="masquerade">가장</string>
+    <string name="issue_with_teacher_app">Teacher 앱[Android]에 문제</string>
+    <string name="no_items_to_display_short">항목 없음</string>
+    <string name="rate_the_app">앱 평가</string>
+    <string name="rate_the_app_icon">앱 평가 아이콘</string>
+    <string name="teacher_log_out">로그아웃</string>
+    <string name="teacher_switch_user">사용자 전환</string>
+    <string name="under_construction">준비 중</string>
+    <string name="toolbar_event">이벤트</string>
+    <string name="location">위치</string>
+    <string name="event_date">이벤트 날짜</string>
+    <string name="course">과목</string>
+    <string name="profile">프로필</string>
+    <string name="share">공유</string>
+    <string name="share_with">공유 대상&#8230;</string>
+
+    <!-- Navigation Drawer -->
+    <string name="navigation_drawer_open">탐색 서랍 열기</string>
+    <string name="navigation_drawer_close">탐색 서랍 닫기</string>
+
+    <!-- Compose Message -->
+    <string name="no_subject">(과목 없음)</string>
+    <string name="compose_message">메시지 작성</string>
+    <string name="newMessage">새 메시지</string>
+    <string name="courses">과목</string>
+    <string name="compose_message_no_ellipsis">메시지 작성</string>
+    <string name="send">보내기</string>
+    <string name="attachment">첨부</string>
+    <string name="attachments">첨부 파일</string>
+    <string name="not_available_offline">오프라인 중에는 기능을 사용할 수 없음</string>
+    <string name="empty_message">메시지는 비어 있을 수 없습니다.</string>
+    <string name="message_has_no_recipients">현재 이 메시지에는 수신자가 없습니다.</string>
+    <string name="course_spinner_title">과목:</string>
+    <string name="reply_to_message">회신</string>
+    <string name="forward_message">메시지 전달</string>
+    <string name="label_to">대상/까지</string>
+    <string name="label_course">과목</string>
+    <string name="label_subject">주제/과목</string>
+
+    <string name="common_send">보내기</string>
+    <string name="common_edit">편집</string>
+
+    <!-- Feature Request -->
+    <string name="feature_subject">Teacher 앱[Android]에 대한 아이디어</string>
+    <string name="understand_request">다음 정보는 아이디어를 이해하는 데 도움이 됩니다:</string>
+    <string name="send_mail">이메일 보내기&#8230;</string>
+
+    <string name="color_1">빨강</string>
+    <string name="color_2">진한 핑크</string>
+    <string name="color_3">라벤더</string>
+    <string name="color_4">바이올렛</string>
+    <string name="color_5">보라색</string>
+    <string name="color_6">슬레이트</string>
+    <string name="color_7">파랑</string>
+    <string name="color_8">녹청</string>
+    <string name="color_9">녹색</string>
+    <string name="color_10">밝은 황록색</string>
+    <string name="color_11">노란색</string>
+    <string name="color_12">황금색</string>
+    <string name="color_13">오렌지색</string>
+    <string name="color_14">핑크색</string>
+    <string name="color_15">회색</string>
+
+    <string name="attachment_icon">첨부 아이콘</string>
+    <string name="star_icon">별 아이콘</string>
+    <string name="monologue">독백</string>
+
+    <string name="create_announcement_topic_title_hint">주제 제목</string>
+    <string name="post_date">게시 날짜</string>
+    <string name="announcement">공지</string>
+    <string name="create_announcement_title">새 공지</string>
+    <string name="create_announcement_no_description">설명은 필수입니다</string>
+    <string name="announcementDetails">공지 세부 정보</string>
+
+    <string name="no_title">제목 없음</string>
+    <string name="announcement_create_success">공지를 만들었습니다!</string>
+    <string name="announcement_create_fail">공지를 만들 수 없습니다. 연결을 확인하고 다시 시도하세요.</string>
+    <string name="create_announcement_delay_posting">게시 지연</string>
+
+    <string name="discussion">토론</string>
+
+    <string name="sunday">일요일</string>
+    <string name="monday">월요일</string>
+    <string name="tuesday">화요일</string>
+    <string name="wednesday">수요일</string>
+    <string name="thursday">목요일</string>
+    <string name="friday">금요일</string>
+    <string name="saturday">토요일</string>
+
+    <string name="add_attachment">첨부 파일 추가</string>
+    <string name="content_description_files">파일 아이콘</string>
+    <string name="next">다음</string>
+    <string name="upload_to_cnavas">Canvas에 업로드</string>
+    <string name="upload_my_files">내 파일</string>
+    <string name="upload_course_files">과목 파일</string>
+    <string name="upload_to">업로드 위치</string>
+    <string name="message_attachments">메시지 첨부 파일</string>
+    <string name="with">포함/및</string>
+    <string name="discussion_attachment">파일 첨부</string>
+    <string name="select_files_or_photos">파일 또는 사진 선택</string>
+    <string name="uploading_files">파일 업로드&#8230;</string>
+    <string name="no_attachment">(첨부 없음)</string>
+    <string name="creating_announcement">공지 만들기&#8230;</string>
+
+    <string name="copy_email">이메일 주소 복사</string>
+    <string name="all_grading_periods">모든 성적 평가 기간</string>
+    <string name="no_submissions">제출 없음</string>
+    <string name="all_submissions_graded">모든 제출 채점됨</string>
+    <string name="icon">아이콘</string>
+    <plurals name="grading_status_assignment">
+        <item quantity="other">%d개 제출이 채점 필요</item>
+    </plurals>
+
+    <plurals name="assignees_without_grades">
+        <item quantity="other">%d명 할당 대상자에게 성적이 없습니다.</item>
+    </plurals>
+
+    <string name="inbox_empty_title">메시지 없음</string>
+    <string name="inbox_empty_starred_title">별표 표시된 메시지 없음</string>
+    <string name="inbox_empty_message">\"+\"를 팁하여 새 대화를 만듭니다.</string>
+    <string name="inbox_empty_starred_message">메시지에서 별표를 탭하여 메시지에 별표를 표시합니다.</string>
+
+    <string name="reply">회신</string>
+    <string name="replyAll">모두에게 회신</string>
+    <string name="forward">전달</string>
+    <string name="star">별표 표시</string>
+    <string name="archive">보관</string>
+    <string name="delete">삭제</string>
+    <string name="message">메시지</string>
+    <string name="unarchive">보관 해제</string>
+    <string name="message_options">메시지 옵션</string>
+    <string name="markAsUnread">읽지 않음으로 표시</string>
+    <string name="message_delete_warning">이 메시지의 복사본을 삭제하시겠습니까? 이 작업은 실행을 취소할 수 없습니다.</string>
+    <string name="conversation_delete_warning">이 대화의 복사본을 삭제하시겠습니까? 이 작업은 실행을 취소할 수 없습니다.</string>
+    <string name="error_conversation_generic">이 작업을 수행할 수 없습니다. 연결을 확인하고 다시 시도하세요.</string>
+    <string name="message_archived">메시지가 보관됨</string>
+    <string name="message_unarchived">메시지 보관 해제됨</string>
+    <string name="message_deleted">메시지 삭제됨</string>
+    <string name="select_recipients">수신자 선택</string>
+    <string name="entire_group_selected">전체 그룹 선택됨</string>
+    <string name="no_users_in_group">그룹에 사용자 없음</string>
+
+    <string name="published">게시됨</string>
+    <string name="not_published">게시되지 않음</string>
+    <string name="published_content_description">게시되지 않음 체크마크</string>
+    <string name="points_with_value">점</string>
+    <string name="point_with_value">점</string>
+    <string name="no_due_date">기한 날짜 없음</string>
+    <string name="due_date">기한 날짜</string>
+
+    <string name="view_replies">응답 보기</string>
+    <string name="view_discussion">토론 보기</string>
+
+    <string name="edit">편집</string>
+    <string name="save">저장</string>
+    <string name="successfully_updated_assignment">과제를 업데이트했습니다.</string>
+    <string name="successfully_updated_quiz">퀴즈를 업데이트했습니다.</string>
+    <string name="failure_updating_assignment">과제를 업데이트 문제가 발생했습니다. 다시 시도하세요.</string>
+    <string name="failure_deleting_assignment">과제를 삭제하는 데 문제가 발생했습니다. 다시 시도하세요.</string>
+    <string name="cant_unpublish">학생 제출이 있으면 게시를 취소할 수 없습니다.</string>
+    <string name="messages">메시지</string>
+    <plurals name="reply_message_plus_label">
+        <item quantity="other">+ %d개 메시지</item>
+    </plurals>
+    <plurals name="submissionNeedsGrading">
+        <item quantity="other">%d개 제출이 채점 필요</item>
+    </plurals>
+
+    <string name="delete_assignment_message">이 과제를 삭제하시겠습니까?</string>
+
+    <string name="max_count">99+</string>
+    <string name="message_student">학생에게 메시지 보내기</string>
+
+    <string name="message_these_students">학생에게 메시지 보내기</string>
+    <string name="submission_status_missing">누락됨</string>
+    <string name="submission_status_late">늦게 제출</string>
+    <string name="submission_status_submitted">제출됨</string>
+    <string name="submission_status_not_submitted">아직 제출되지 않음</string>
+    <string name="submission_status_excused">인정됨</string>
+    <string name="last_login_format">마지막 로그인: %s</string>
+
+    <string name="turnOnAnonymousGrading">익명 채점 활성화됨</string>
+    <string name="turnOffAnonymousGrading">익명 채점 비활성화됨</string>
+    <string name="anonymousGradingLabel">익명 채점</string>
+    <string name="anonymousStudentLabel">학생</string>
+
+    <!-- TODO -->
+    <string name="coming_soon">기능 제공 예정</string>
+
+    <string-array name="submission_filters">
+        <item>모든 제출</item>
+        <item>늦게 제출</item>
+        <item>제출 누락</item>
+        <item>성적 높음</item>
+        <item>성적 낮음</item>
+    </string-array>
+
+    <string-array name="people_filters">
+        <item>이름으로</item>
+        <item>성적 높은 순</item>
+        <item>성적 낮은 순</item>
+    </string-array>
+
+    <string name="content_description_course_tab">과목 탭</string>
+    <string name="content_description_inbox_tab">수신함 탭</string>
+    <string name="content_description_profile_tab">프로필 탭</string>
+    <string name="close">닫기</string>
+    <string name="no_course_selected">과목을 선택하세요</string>
+    <string name="discussion_reply_to_entry">토론 응답</string>
+    <string name="announcement_reply_to_entry">공지 답변</string>
+    <string name="error_text_missing">텍스트를 추가하여 메시지 보내기</string>
+    <string name="error_sending_message">이 메시지를 보낼 수 없습니다. 탭하여 다시 시도하세요.</string>
+    <string name="message_sent_successfully">메시지를 보냈습니다.</string>
+    <string name="error_occurred">예상치 못한 오류가 발생했습니다.</string>
+    <string name="no_assignments_with_file_upload">이 과목에는 파일 업로드를 허용하는 과제가 없습니다.</string>
+    <string name="extension_not_allowed">선택한 파일 유형은 허용되지 않습니다.</string>
+    <string name="allowed_extensions">허용된 확장자:&#160;</string>
+    <string name="files_uploaded_successfully">제출을 업로드했습니다.</string>
+    <string name="error_uploading_file">파일을 업로드하는 데 오류가 발생했습니다. 다시 시도하세요.</string>
+    <string name="uploading_file">파일 업로드&#8230;</string>
+    <string name="no_apps">장치에는 이 파일을 처리할 수 있는 애플리케이션이 설치되지 않았습니다.</string>
+    <string name="turn_in">제출</string>
+    <string name="error_getting_photo">사진을 가져오는 데 오류가 있었습니다. 다시 시도하세요.</string>
+    <string name="loading_files_indeterminate">파일 로드 중&#8230;</string>
+    <string name="no_files_uploaded">파일을 선택하지 않았습니다.</string>
+    <string name="file_upload_not_supported">선택한 과제에 파일을 업로드할 수 없습니다.</string>
+    <string name="one_or_more_extension_not_allowed">한 개 이상의 파일에 허용되지 않는 파일 연장자가 있습니다</string>
+
+    <string name="inbox_all">수신함</string>
+    <string name="inbox_unread">읽지 않음</string>
+    <string name="inbox_starred">별표 표시됨</string>
+    <string name="inbox_sent">보냄</string>
+    <string name="inbox_archived">보관됨</string>
+    <string name="inbox_all_messages">전체</string>
+    <string name="uploading_file_num" formatted="false">업로드 %d/%d</string>
+    <string name="page_not_found">페이지를 찾을 수 없습니다.</string>
+    <string name="no_connection">연결 없음</string>
+    <string name="unauthorized_access">액세스하는 것이 허용되지 않습니다. 권한이 없거나 아직 액세스가 없음(예를 들어 과목이 아직 시작되지 않음)</string>
+    <string name="server_error">서버 오류가 발생했습니다.</string>
+    <string name="error_loading_files">파일을 로드하는 데 오류가 발생했습니다. 인터넷 연결을 확인하고 다시 시도하세요.</string>
+    <string name="files_submitted_successfully">제출을 제출했습니다.</string>
+    <string name="no_data_connection">데이터 연결을 확인하고 다시 시도하세요.</string>
+    <string name="teacher_logout_warning">로그아웃하시겠습니까?</string>
+    <string name="teacher_yes">예</string>
+    <string name="teacher_no">아니요</string>
+    <string name="teacher_sending">보내기&#8230;</string>
+    <string name="teacher_cancel">취소</string>
+    <string name="teacher_okay">확인</string>
+    <string name="teacher_upload">업로드</string>
+    <string name="settings">설정</string>
+    <string name="edit_courses">과목 편집</string>
+    <string name="start_annotating">메모 시작</string>
+    <string name="empty_speedgrader_content">비어 있는 Speedgrader 보기, 디자인 필요</string>
+
+    <!--Course Settings-->
+    <string name="course_settings">과목 설정</string>
+    <string name="course_name">과목 이름</string>
+    <string name="set_home_to">\'홈\'을 다음으로 설정...</string>
+    <string name="course_activity_stream">과목 활동 스트림</string>
+    <string name="pages_front_page">페이지 시작 페이지</string>
+    <string name="frontPage">시작 페이지</string>
+    <string name="course_modules">과목 모듈</string>
+    <string name="assignments_list">과제 목록</string>
+    <string name="syllabus">강의 계획안</string>
+    <!--End Course Settings-->
+    <!-- Assignment Details -->
+    <string name="multiple_due_dates">여러 기한 날짜</string>
+    <string name="everyone">모두</string>
+    <string name="everyone_else">나머지 모두</string>
+    <string name="unknown_student">알 수 없는 학생</string>
+    <string name="closed">종료됨</string>
+    <string name="no_date_filler">--</string>
+    <string name="due_date_at_time" formatted="false">%1s %2s에 기한</string>
+    <string name="last_post" formatted="false">마지막 게시 %s</string>
+    <string name="submission_types">제출 유형</string>
+    <string name="full_due_date_details">전체 기한 날짜 세부 정보</string>
+    <string name="availability_label">사용 가능:</string>
+    <string name="available_to_label">사용 가능 시작:</string>
+    <string name="available_from_label">사용 가능 시작:</string>
+    <string name="due_for_label">대상:</string>
+    <string name="due_label">기한:</string>
+    <string name="details_available_to_label">사용 가능 기한</string>
+    <string name="details_available_from_label">사용 가능 시작</string>
+    <string name="details_due_for_label">대상</string>
+    <string name="due_date_header_label">기한</string>
+    <string name="assignment_details">과제 세부 정보</string>
+    <string name="no_content">콘텐츠 없음</string>
+    <string name="submissions">제출</string>
+    <string name="no_assignment_description_filler">지시 사항을 추가하여 이 과제에 관해 학생을 돕습니다.</string>
+    <string name="no_quiz_description_filler">지시 사항을 추가하여 이 퀴드에 관해 학생을 돕습니다.</string>
+    <string name="page_title_due_dates">기한 날짜</string>
+    <string name="edit_assignment">과제 편집</string>
+    <string name="edit_quiz">퀴즈 편집</string>
+    <string name="title">제목</string>
+    <string name="description">설명</string>
+    <string name="grade_total">성적 합계</string>
+    <string name="grade">성적</string>
+    <string name="enter_grade">성적을 입력</string>
+    <string name="override">덮어쓰기</string>
+    <string name="calculated_by_rubric">루브릭으로 계산됨</string>
+    <string name="customize_grade">성적 사용자 지정</string>
+    <string name="out_of_points">%1$s에서</string>
+    <string name="gpa">GPA</string>
+    <string name="letter_grade">평점</string>
+    <string name="excuse_student">학생 인정</string>
+    <string name="excuseGroup">그룹 인정</string>
+    <string name="complete_grade">완료</string>
+    <string name="incomplete_grade">완료되지 않음</string>
+    <string name="not_graded">채점되지 않음</string>
+    <string name="excused">인정됨</string>
+    <string formatted="false" name="grade_value_format">%s %s</string>
+    <string name="grade_value_format_talk_back">%1$s/%2$s</string>
+    <string name="publish">게시</string>
+    <string name="error_saving_assignment">과제를 저장하려고 시도하는 데 오류가 발생했습니다. 다시 시도하세요.</string>
+    <string name="error_saving_quiz">퀴즈를 저장하려고 시도하는 데 오류가 발생했습니다. 다시 시도하세요.</string>
+    <string name="assignment_name_must_be_set">과제 이름을 설정해야 합니다.</string>
+    <string name="announcement_name_must_be_set">공지 제목을 설정해야 합니다.</string>
+    <string name="quiz_title_must_be_set">퀴즈 제목을 설정해야 합니다.</string>
+    <string name="assignment_points_must_be_set">과제 점수를 설정해야 합니다.</string>
+    <string name="assignment_points_must_be_a_number">가능한 점수는 숫자이어야 합니다</string>
+    <string name="quiz_points_must_be_set">퀴즈 점수를 설정해야 합니다.</string>
+    <string name="assignee_type_course_sections">과목 분반</string>
+    <string name="assignee_type_groups">그룹</string>
+    <string name="assignee_type_students">학생</string>
+    <string name="page_title_add_assignees">할당 대상 추가</string>
+    <string name="assign_to">할당 대상</string>
+    <string name="available_from">사용 가능 시작</string>
+    <string name="available_to">사용 가능 마감</string>
+    <string name="unlock_after_due_date_error">잠금 해제 날짜는 기한 이후일 수 없음</string>
+    <string name="lock_before_due_date_error">잠금 날짜는 기한 날짜 이전일 수 없음</string>
+    <string name="lock_after_unlock_error">잠금 날짜는 잠금 해제 날짜 이전일 수 없음</string>
+    <string name="assignee_blank_error">할당 대상자는 비어 있을 수 없음</string>
+    <string name="remove">제거</string>
+    <string name="add_due_date">기한 날짜 추가</string>
+    <string name="full_submission_details">전체 제출 세부 정보</string>
+    <string name="graded">채점됨</string>
+    <string name="needsGrading">성적 평가 필요</string>
+    <string name="not_submitted">제출되지 않음</string>
+    <string name="a11y_viewSubmissionAction">제출 세부 정보 보기</string>
+    <string name="content_description_submission_donut_graded" formatted="false">채점됨, %s/%s</string>
+    <string name="content_description_submission_donut_needs_grading" formatted="false">성적 평가 필요, %s/%s</string>
+    <string name="content_description_submission_donut_unsubmitted" formatted="false">제출되지 않음, %s/%s</string>
+    <string name="display_grade_as">점수 표시 방식&#8230;</string>
+    <string name="percentage">백분율</string>
+    <string name="complete_incomplete">완료/미완료</string>
+    <string name="points">점</string>
+    <string name="gpa_scale">GPA 점수</string>
+
+    <string-array name="display_grade_as_types" translatable="false">
+        <item>@string/percentage</item>
+        <item>@string/complete_incomplete</item>
+        <item>@string/points</item>
+        <item>@string/letter_grade</item>
+        <item>@string/gpa_scale</item>
+        <item>@string/not_graded</item>
+    </string-array>
+
+    <string-array name="display_grade_as_types_discussion" translatable="false">
+        <item>@string/percentage</item>
+        <item>@string/complete_incomplete</item>
+        <item>@string/points</item>
+        <item>@string/letter_grade</item>
+        <item>@string/gpa_scale</item>
+    </string-array>
+
+  <string name="not_a_teacher">교사가 아니세요?</string>
+    <string name="not_a_teacher_tap_to_visit_play_store">저희의 다른 앱이 더 적합할 수 있습니다. 하나를 탭하여 Play Store를 방문합니다.</string>
+
+    <string name="sg_tab_grade">성적</string>
+    <string name="sg_tab_comments">의견/댓글</string>
+    <string name="sg_tab_files">파일</string>
+    <string name="sg_tab_files_w_counter">파일(%d)</string>
+    <string name="filter_submissions">제출 필터링</string>
+    <string name="all_submissions">모든 제출</string>
+    <string name="submitted_late">늦게 제출됨</string>
+    <string name="havent_submitted_yet">아직 제출되지 않음</string>
+    <string name="havent_been_graded">채점되지 않음</string>
+    <string name="scored_less_than">미만 점수 획득&#8230;</string>
+    <string name="scored_more_than">초과 점수 획득&#8230;</string>
+    <string name="scored_less_than_value">%s 미만 점수 획득</string>
+    <string name="scored_more_than_value">%s 초과 점수 획득</string>
+    <string name="add_comment">의견/댓글 추가</string>
+    <string name="editComment">의견/댓글 편집</string>
+    <string name="deleteComment">의견/댓글 삭제</string>
+    <string name="deleteAnnotation">메모 삭제</string>
+    <string name="deleteCommentConfirmation">이 의견/댓글을 삭제하시겠습니까?</string>
+    <string name="rubric_view_long_description">긴 설명 보기</string>
+    <string name="rubric">루브릭</string>
+    <string name="enter_custom_value">사용자 지정 값 입력</string>
+    <string name="success_saving_rubric_assessment">루브릭 평가 저장됨</string>
+    <string name="error_saving_rubric_assessment">루브릭 평가를 저장하는 동안 오류가 발생했습니다. 다시 시도하세요.</string>
+    <string name="rubric_assessment_score_out_of_total">%1$s/%2$s</string>
+    <string name="criterion_rating_customize_score">점수 사용자 지정</string>
+    <string name="edit_criterion_comment">조건 의견 편집</string>
+    <string name="sendMessageToHint">%s 님에게 메시지</string>
+    <string name="save_comment">댓글 저장</string>
+    <string name="cancel_editing_comment">댓글 편집 취소</string>
+    <string name="skip">건너뛰기</string>
+    <string name="collapseGradePanel">성적 패널 접기</string>
+    <string name="expandGradePanel">성적 패널 펼치기</string>
+
+    <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
+    <string name="rating_button_content_description_custom">사용자 지정 점수 %1$s</string>
+
+    <!-- Content description for criterion rating button, including score and description. e.g. "100, meets all expectations" -->
+    <string name="rating_button_content_description">"%1$s, %2$s</string>
+
+    <plurals name="submission_points_possible">
+        <item quantity="other">%s점에서</item>
+    </plurals>
+
+    <string name="tab_courses">과목</string>
+    <string name="course_options">과목 옵션</string>
+    <string name="edit_favorite_courses">즐겨 찾는 과목 편집</string>
+    <string name="feedback_form">피드백 양식</string>
+    <string name="see_all">모두 보기</string>
+    <string name="all_courses">모든 과목</string>
+    <string name="welcome">환영합니다.</string>
+    <string name="empty_course_list_message">몇 개 즐겨 찾는 과목을 추가하여 여기를 자신의 홈으로 만드세요.</string>
+    <string name="add_courses">과목 추가</string>
+    <string name="unable_to_add_course_to_favorites">지금은 이 과목을 과목 메뉴에 추가할 수 없습니다.</string>
+    <string name="grading_periods_filter">성적 평가 기간 필터링</string>
+    <string name="assignments">과제</string>
+    <string name="clear_filter">필터링 지우기</string>
+    <string name="due">%1$s 기한</string>
+    <string name="updated">%1$s 업데이트됨</string>
+
+    <plurals name="needsGradingCount">
+        <item quantity="other">%s개 채점 필요</item>
+    </plurals>
+    <plurals name="needsGradingNoQuantity">
+        <item quantity="other">성적 평가 필요</item>
+    </plurals>
+    <string name="at">시간</string>
+    <plurals name="quantityPointsAbbreviated">
+        <item quantity="other">%s점</item>
+    </plurals>
+    <plurals name="quantityPointsFull">
+        <item quantity="other">%s점</item>
+    </plurals>
+    <plurals name="people_count">
+        <item quantity="other">%d명</item>
+    </plurals>
+    <plurals name="group_count">
+        <item quantity="other">%d개 그룹</item>
+    </plurals>
+    <string name="cmp_closed">종료됨</string>
+    <string name="favorited_content_description" formatted="false">%s %s</string>
+    <string name="content_description_favorite">즐겨찾기</string>
+    <string name="content_description_not_favorite">즐겨찾기 아님</string>
+    <string name="edit_nickname">별칭 편집</string>
+    <string name="edit_course_color">과목 색 편집</string>
+    <string name="edit_course_nickname">과목 별칭 편집</string>
+
+    <string name="colorPickerDialogTitle">과목 색</string>
+    <string name="colorPickerDialogMessage">이것은 개인 색상 설정입니다. 자신만 과목에 대해 이 색을 볼 수 있습니다.</string>
+    <string name="colorPickerError">지금은 과목 색을 설정할 수 없습니다.</string>
+
+                                                                <string name="launch_link_in_external_browser">외부 브라우저에서 링크를 시작</string>
+    <string name="contentDescriptionSelectedFile">선택된 파일</string>
+    <string name="contentDescriptionFileIcon">파일 아이콘</string>
+    <string name="contentDescriptionExpandPage">페이지 펼치기</string>
+    <string name="contentDescriptionCollapsePage">페이지 접기</string>
+    <string name="noInternetConnectionTitle">인터넷에 연결되지 않음</string>
+    <string name="noInternetConnectionMessage">이 작업은 인터넷에 연결이 필요합니다.</string>
+
+    <string name="emptyDetailsMessage">목록에 아이템을 탭하여 세부 정보를 보기</string>
+
+    <string name="assignmentQuizzes">과제 퀴즈</string>
+    <string name="practiceQuizzes">연습 퀴즈</string>
+    <string name="gradedSurveys">채점된 설문 조사</string>
+    <string name="surveys">설문 조사</string>
+    <string name="editQuiz">퀴즈 세부 정보 편집</string>
+    <string name="requireAccessCode">액세스 코드 필요</string>
+    <string name="accessCode">액세스 코드</string>
+    <string name="mustHaveAccessCode">액세스 코드를 입력하거나 액세스 코드를 필요로 하지 않습니다.</string>
+    <string name="errorSavingQuiz">퀴즈를 저장하려고 시도하는 데 오류가 발생했습니다. 다시 시도하세요.</string>
+    <string name="successfullyUpdatedQuiz">퀴즈를 업데이트했습니다.</string>
+    <string name="quizType">퀴즈 유형</string>
+
+    <string name="practiceQuiz">연습 퀴즈</string>
+    <string name="gradedQuiz">채점된 퀴즈</string>
+    <string name="gradedSurvey">채점된 설문 조사</string>
+    <string name="ungradedSurvey">채점되지 않은 설문 조사</string>
+
+    <string-array name="quizTypes" translatable="false">
+        <item>@string/practiceQuiz</item>
+        <item>@string/gradedQuiz</item>
+        <item>@string/gradedSurvey</item>
+        <item>@string/ungradedSurvey</item>
+    </string-array>
+    <string name="quizStatusUntaken">수행하지 않음</string>
+
+    <string name="quizStatusComplete">완료</string>
+    <string name="quizStatusPendingReview">검토 보류 중</string>
+    <string name="quizStatusInProgress">진행 중</string>
+    <string name="quizStatusNotStarted">시작되지 않음</string>
+
+
+    <string name="quiz_settings_label_quiz_type">퀴즈 유형:</string>
+    <string name="quiz_settings_label_assignment_group">과제 그룹:</string>
+    <string name="quiz_settings_label_shuffle_answers">응답 섞기:</string>
+    <string name="quiz_settings_label_multiple_attempts">여러 시도:</string>
+    <string name="quiz_settings_label_time_limit">시간 제한:</string>
+    <string name="quiz_settings_label_score_to_keep">유지할 점수:</string>
+    <string name="quiz_settings_label_attempts">시도:</string>
+    <string name="quiz_settings_label_view_responses">응답 보기:</string>
+    <string name="quiz_settings_label_show_correct_answers">정답 표시:</string>
+    <string name="quiz_settings_label_one_question_at_a_time">한 번에 한 문제:</string>
+    <string name="quiz_settings_label_ip_filter">IP 필터링:</string>
+    <string name="quiz_settings_label_points">점수:</string>
+    <string name="quiz_settings_label_access_code">액세스 코드:</string>
+    <string name="quiz_settings_label_anonymous_submissions">익명 제출:</string>
+    <string name="quiz_settings_label_lock_questions_after_answering">응답 후에 문제 잠금:</string>
+
+    <string name="quizPreview">퀴즈 미리 보기</string>
+    <string name="preview_quiz">퀴즈 미리 보기</string>
+    <string name="quiz_details">퀴즈 세부 정보</string>
+    <string name="submission_versions">제출 버전</string>
+    <string name="speedgrader_student_no_submissions">이 학생은 이 과제에 대한 제출이 없습니다.</string>
+    <string name="speedgrader_group_no_submissions">이 그룹은 이 과제에 대한 제출이 없습니다.</string>
+    <string name="speedgrader_unsupported_type">지원되지 않은 제출 유형</string>
+    <string name="unlimited">무제한</string>
+    <string name="practice_quiz">연습 퀴즈</string>
+    <string name="graded_quiz">채점된 퀴즈</string>
+    <string name="graded_survey">채점된 설문 조사</string>
+    <string name="ungraded_survey">채점되지 않은 설문 조사</string>
+    <string name="no_time_limit">시간 제한 없음</string>
+    <string name="immediately">즉시</string>
+    <string name="quiz_details_no_points_assigned">할당된 점수 없음</string>
+
+    <string name="quiz_details_from_to">%1$s부터 %2$s까지</string>
+    <string name="quiz_details_after">%1$s 이후</string>
+    <string name="quiz_details_until">%1$s까지</string>
+    <string name="filterPointsMustBeSet">값을 입력합니다.</string>
+
+    <plurals name="quantityQuestions">
+        <item quantity="other">%d개 문제</item>
+    </plurals>
+
+    <string name="discussion_details">토론 세부 정보</string>
+    <string name="discussions_pinned">고정됨</string>
+    <string name="discussions_unpinned">토론</string>
+    <string name="discussions_close">댓글 추가할 수 없음</string>
+    <string name="discussions_closed">댓글 추가할 수 없음</string>
+    <string name="discussions_open">댓글 추가할 수 있음</string>
+    <string name="discussions_pin">고정</string>
+    <string name="discussions_unpin">고정 해제</string>
+    <string name="contentDescriptionDiscussionsOverflow">더 많은 옵션</string>
+    <string name="discussions_options">옵션</string>
+    <string name="discussions_replies" formatted="false">%s개 답변</string>
+    <string name="discussions_unread" formatted="false">%s개 읽지 않음</string>
+    <string name="discussions_unread_replies_blank" formatted="false">%s %s %s</string>
+    <string name="discussions_delete_warning">이 답변을 삭제하시겠습니까?</string>
+    <string name="discussions_replies_title">회신</string>
+    <string name="discussions_reply">회신</string>
+    <string name="discussions_edit">편집</string>
+    <string name="discussions_forbidden">답변은 하나 이상의 답변을 게시한 사용자에게만 표시됩니다.</string>
+    <string name="discussions_delete">토론 삭제</string>
+    <string name="discussions_delete_title">토론을 삭제하시겠습니까?</string>
+    <string name="discussions_delete_message">전체 토론 및 스레드가 삭제됩니다.</string>
+
+    <string name="dataUsageWarningTitle">데이터 사용 경고</string>
+    <string name="dataUsageWarningMessage">이 작업은 많은 양의 데이터를 사용하여 잠재적으로 사용량 초과 청구가 발생할 수 있습니다. 계속하시겠습니까?</string>
+    <string name="doNotShowMessageAgain">이 메시지를 다시 표시하지 않음</string>
+    <string name="playMedia">미디어 재생</string>
+    <string name="submissionIsMediaFile">이 제출은 미디어 파일입니다</string>
+    <string name="tryAgain">다시 시도</string>
+    <string name="couldNotPlayFormat">이 미디어 형식은 지원되지 않습니다</string>
+    <string name="openWithAnotherApp">다른 프로그램으로 열기...</string>
+
+    <string name="speedgraderCommentAddedSubmission">과제를 제출했습니다. 탭하여 봅니다.</string>
+    <string name="speedgraderCommentSubmittedFiles">제출된 파일:</string>
+    <string name="no_submission_comments">제출 의견이 없습니다</string>
+    <string name="mediaUploadAudio">미디어 업로드 - 오디오</string>
+    <string name="mediaUploadVideo">미디어 업로드 - 동영상</string>
+    <string name="speedgraderCommentQuizAttempt">시도 %d</string>
+    <string name="speedGraderTextSubmission">텍스트 제출</string>
+    <string name="speedGraderExternalToolSubmission">외부 도구 제출</string>
+    <string name="speedGraderDiscussionSubmission">토론 제출</string>
+    <string name="speedGraderQuizSubmission">퀴즈 제출</string>
+    <string name="speedGraderMediaFile">미디어 파일</string>
+    <string name="submissionTypeAudio">오디오</string>
+    <string name="submissionTypeVideo">동영상</string>
+    <string name="speedGraderUrlSubmission">URL 제출</string>
+
+    <string name="unsupportedFileMessage">이 파일은 표시할 수 없습니다. 아래 버튼을 사용하여 장치의 다른 앱으로 파일을 엽니다.</string>
+    <string name="speedGraderNoneMessage">이 과제는 제출을 허용하지 않습니다.</string>
+    <string name="speedGraderOnPaperMessage">이 과제는 종이 과제 제출만 허용합니다.</string>
+    <string name="speedGraderUrlSubmissionDisclaimer">이 제출은 외부 페이지를 가리키는 URL입니다. 이 페이지는 처음 제출 이후에 변경되었을 수 있습니다.</string>
+    <string name="speedGraderOpenUrl">URL 열기</string>
+    <string name="annotationError">메모 오류</string>
+    <string name="annotationDialogMessage">다른 출처에서 메모가 삭제되었습니다.</string>
+
+    <string name="selectCourse">과목 선택</string>
+
+    <string name="sendIndividualMessage">각 수신자에게 개별 메시지를 보내기</string>
+
+    <string name="filterInbox">수신함 필터링</string>
+    <string name="selectCanvasContext">과목 또는 그룹을 선택</string>
+
+    <string name="contentDescription_back">뒤로 가기</string>
+
+    <string name="discussion_update_success">토론을 편집했습니다.</string>
+    <string name="discussion_update_empty">토론 메시지는 비어 있을 수 없습니다.</string>
+    <string name="discussion_update_failure">지금은 토론을 편집할 수 없었습니다.</string>
+    <string name="discussion_sent_success">토론에 답변했습니다.</string>
+    <string name="discussion_sent_empty">토론 답변은 비어 있을 수 없습니다.</string>
+    <string name="discussion_sent_failure">지금은 토론 답변을 보낼 수 없었습니다.</string>
+    <string name="discussion_first_to_respond">응답을 추가하여 처음으로 반응하세요.</string>
+    <string name="addMorePeopleToMessage">다른 수신자를 추가합니다. 자신에게 보내는 메시지만 보낼 수 없습니다.</string>
+    <string name="tutorialSwipeMessage">왼쪽 또는 오른쪽으로 살짝 밀어서 다른 학생을 봅니다.</string>
+    <string name="tutorialRubricMessage">번호를 길게 눌러서 설명을 봅니다.</string>
+
+    <string name="viewQuizSubmission">제출 보기</string>
+    <string name="gradeQuizSubmission">제출 채점</string>
+    <string name="comment">의견/댓글</string>
+    <string name="messageStudentsWho">다음 학생에게 메시지 보내기&#8230;</string>
+
+    <string name="on">활성</string>
+
+    <string name="createDiscussion">새 토론</string>
+    <string name="options">옵션</string>
+    <string name="subscribe">구독</string>
+    <string name="allowThreadedReplies">스레드 답변을 허용</string>
+    <string name="usersMustPost">사용자는 응답을 보려면 게시해야 합니다</string>
+    <string name="allowUserComments">사용자의 댓글을 허용</string>
+    <string name="discussionTitleMustBeSet">토론 제목을 설정해야 합니다.</string>
+    <string name="discussionSuccessfullyCreated">토론을 만들었습니다.</string>
+    <string name="errorCreatingDiscussion">이 토론을 만들려고 시도하는 데 오류가 발생했습니다. 다시 시도하세요.</string>
+    <string name="editDiscussion">토론 편집</string>
+    <string name="discussionSuccessfullyUpdated">토론이 업데이트되었습니다.</string>
+    <string name="input_text">입력 텍스트</string>
+    <string name="announcementSuccessfullyCreated">공지를 만들었습니다.</string>
+    <string name="errorSavingAnnouncement">이 공지를 저장하려고 시도하는 데 오류가 발생했습니다. 다시 시도하세요.</string>
+    <string name="editAnnouncementTitle">공지 편집</string>
+    <string name="announcementSuccessfullyUpdated">공지가 업데이트되었습니다．</string>
+    <string name="announcementDeleted">공지가 삭제되었습니다.</string>
+    <string name="postAt">게시 시간</string>
+    <string name="errorDeletingAnnouncement">이 공지를 삭제하려고 시도하는 데 오류가 발생했습니다. 다시 시도하세요.</string>
+    <string name="deleteAnnouncementDialogTitle">공지를 삭제하시겠습니까?</string>
+    <string name="deleteAnnouncementDialogMessage">이 공지를 삭제하시겠습니까?</string>
+    <string name="deleteAnnouncement">공지 삭제</string>
+    <string name="annotationErrorOccurred">메모를 로드하는 동안 예상치 못한 오류가 발생했습니다.</string>
+
+    <string name="account">계정</string>
+    <string name="changeUser">사용자 변경</string>
+    <string name="general">일반</string>
+    <string name="sendFeedback">피드백 보내기</string>
+    <string name="privacyPolicy">개인 정보 보호 정책</string>
+    <string name="EULA">최종 사용자 라이선스 계약</string>
+    <string name="termsOfUse">이용 약관</string>
+    <string name="searchGuides">Canvas 가이드 검색</string>
+    <string name="searchGuidesDetails">일반적인 질문에 대한 답변 찾기</string>
+    <string name="reportProblem">문제 신고</string>
+    <string name="reportProblemDetails">앱이 정상적으로 작동하지 않는 경우 알려주세요</string>
+    <string name="requestFeature">기능 요청</string>
+    <string name="requestFeatureDetails">앱을 개선할 아이디어가 있으세요?</string>
+    <string name="shareYourLove">앱에 대해 좋아하는 점을 공유</string>
+    <string name="shareYourLoveDetails">앱에서 가장 좋아하는 부분을 알려주기</string>
+    <string name="canvasGuides">Canvas 가이드</string>
+    <string name="featureSubject">Canvas Teacher[Android]에 대한 아이디어</string>
+    <string name="understandRequest">다음 정보는 아이디어를 이해하는 데 도움이 됩니다:</string>
+    <string name="sendMail">이메일 보내기&#8230;</string>
+    <string name="editProfile">프로필 편집</string>
+    <string name="name">이름</string>
+    <string name="bio">자기 소개</string>
+    <string name="profileEditSuccess">프로필이 업데이트됨</string>
+    <string name="profileEditFailure">프로필을 업데이트할 수 없음</string>
+    <string name="takePhoto">사진 찍기</string>
+    <string name="choosePhotoFromGallery">갤러리에서 사진 선택</string>
+    <string name="fileNotFound">파일을 찾을 수 없습니다.</string>
+    <string name="version" formatted="false">버전 %s</string>
+    <string name="fullVersion">버전 %s (%d)</string>
+    <string name="tap_to_view_submissions_list">탭하여 제출 목록을 봅니다.</string>
+    <string name="assignmentDescriptionContentDescription">과제 설명</string>
+    <string name="quizDescriptionContentDescription">퀴즈 설명</string>
+    <string name="removeDueDate">기한 날짜 제거</string>
+    <string name="removeDueDateMessage">이렇게 하면 기한 날짜 및 모든 연결된 할당 대상자가 제거됩니다.</string>
+    <string name="email">이메일</string>
+    <string name="fullscreen">전체 화면</string>
+    <string name="addNew">새로 추가</string>
+    <string name="sendMessage">메시지 보내기</string>
+    <string name="addMessage">메시지 추가</string>
+    <string name="messageThisStudent">이 학생에게 메시지 보내기</string>
+    <string name="scrollInstructions">스크롤하여 모든 세부 사항 보기</string>
+    <string name="dueTime">기한 시간</string>
+    <string name="available_from_date">사용 가능 시작 날짜</string>
+    <string name="available_from_time">사용 가능 시작 시간</string>
+    <string name="available_to_date">사용 가능 마감 날짜</string>
+    <string name="available_to_time">사용 가능 마감 시간</string>
+    <string name="addDescription">설명 추가</string>
+    <string name="post_time">게시 시간</string>
+    <string name="allPeople">모든 사용자</string>
+    <string name="loading">로드</string>
+    <string name="saving">저장</string>
+    <string name="sendingSimple">보내는 중</string>
+    <string name="uploading">업로드</string>
+    <string name="retry">다시 시도</string>
+    <string name="error_loading_submission">이 제출을 로드하는 데 문제가 있었습니다.</string>
+    <string name="search">검색</string>
+    <string name="filterPeople">사용자 필터링</string>
+    <string name="loadMore">더 로드</string>
+    <string name="latestStudentActivityAtFormatted">%1$s %2$s에 마지막 활동입니다.</string>
+    <string name="errorLoadingStudentContextCard">이 사용자에 대한 세부 정보를 로드할 수 없습니다.</string>
+    <string name="enrollmentTypeStudent">학생</string>
+    <string name="enrollmentTypeTeacher">교사</string>
+    <string name="enrollmentTypeObserver">보호자</string>
+    <string name="enrollmentTypeTeachingAssistant">조교</string>
+    <string name="enrollmentTypeDesigner">디자이너</string>
+    <string name="enrollmentTypeUnknown">알 수 없음</string>
+    <string name="unableToLoadAttendance">지금은 출석을 로드할 수 없습니다.</string>
+    <string name="markRemainingAsPresent">나머지를 출석으로 표시</string>
+    <string name="markAllAsPresent">모두 출석으로 표시</string>
+    <string name="calendar">캘린더</string>
+    <string name="filterSections">분반 필터링</string>
+    <string name="addVideoComment">동영상 댓글 추가</string>
+    <string name="addAudioComment">오디오 댓글 추가</string>
+    <string name="recordingTimerDefault">00:00:00</string>
+    <string name="recordingTimerContentDescription">%1$d시간 %2$d분 %3$d초</string>
+    <string name="recordingTimerSpeechDivider">%1$s/%2$s</string>
+    <string name="replay">재생</string>
+    <string name="stop">중지</string>
+    <string name="startRecordingAudio">오디오 녹음 시작</string>
+    <string name="stopRecordingAudio">오디오 녹음 중지</string>
+    <string name="startRecordingVideo">동영상 녹화 시작</string>
+    <string name="stopRecordingVideo">동영상 녹화 중지</string>
+    <string name="closeRecordingView">녹화 보기 닫기</string>
+    <string name="deleteRecording">녹화 삭제</string>
+    <string name="videoCommentReplay">동영상 댓글 재생</string>
+    <string name="addMediaComment">미디어 댓글 추가</string>
+    <string name="copyrightHolder">저작권 보유자</string>
+    <string name="access">액세스</string>
+    <string name="usageRights">사용 권리</string>
+    <string name="deleteFile">파일 삭제</string>
+    <string name="holdCopyright">저작권을 보유합니다</string>
+    <string name="havePermission">파일을 사용할 권리가 있습니다</string>
+    <string name="publicDomain">공개 도메인 파일</string>
+    <string name="fairUse">공정한 사용 예외</string>
+    <string name="creativeCommons">Creative Commons 파일</string>
+    <string name="editFile">파일 편집</string>
+    <string name="deleteFolder">폴더 삭제</string>
+    <string name="editFolder">폴더 편집</string>
+    <string name="deleteFileMessage">이 파일을 삭제하시겠습니까?</string>
+    <string name="deleteFolderMessage">이 폴더를 삭제하시겠습니까? 이 폴더의 콘텐츠도 삭제됩니다.</string>
+    <string name="newFolder">새 폴더</string>
+    <string name="createAFolder">폴더 만들기</string>
+    <string name="createFolder">폴더 만들기</string>
+    <string name="createAFile">파일 만들기</string>
+    <string name="createFileFolderFabContentDesc">파일 만들기 및 폴더 만들기 버튼을 표시</string>
+    <string name="hideCreateFileFolderFabContentDesc">파일 만들기 및 폴더 만들기 버튼을 숨기기</string>
+    <string name="unpublish">게시 취소</string>
+    <string name="restrictedAccess">제한된 액세스</string>
+    <string name="restricted">제한됨</string>
+    <string name="hidden">숨겨짐, 내부의 파일은 링크로 사용 가능합니다.</string>
+    <string name="studentsWithLink">링크가 있는 학생에게만 사용 가능합니다. 학생 파일에서 사용할 수 없습니다.</string>
+    <string name="scheduleAvailability">학생 사용 가능성 예약</string>
+    <string name="folderCreationError">폴더 만들기 중에 오류가 발생했습니다.</string>
+
+    <string name="setAsFrontPage">시작 페이지로 설정</string>
+    <string name="canEdit">편집 가능</string>
+    <string name="pageDetails">페이지 세부 정보</string>
+    <string name="pageSuccessfullyUpdated">페이지가 업데이트되었습니다.</string>
+    <string name="pageSuccessfullyCreated">페이지를 만들었습니다.</string>
+    <string name="editPageTitle">페이지 편집</string>
+    <string name="createPageTitle">페이지 만들기</string>
+    <string name="pageTitleMustBeSet">페이지 제목을 설정해야 합니다.</string>
+    <string name="pageDeleteTitle">페이지를 삭제하시겠습니까?</string>
+    <string name="pageDelete">페이지 삭제</string>
+    <string name="pageDeleteMessage">페이지가 삭제됩니다. 이 작업은 실행을 취소할 수 없습니다.</string>
+    <string name="errorSavingPage">이 페이지를 저장하려고 시도하는 데 오류가 발생했습니다. 다시 시도하세요.</string>
+    <string name="frontPageUnpublishedError">페이지는 시작 페이지이며 게시 취소될 수 없습니다.</string>
+
+    <string name="onlyTeachers">교사만</string>
+    <string name="teachersAndStudents">교사 및 학생</string>
+    <string name="anyone">모든 사용자</string>
+    <string name="groupMembers">구성원만</string>
+    <string name="license">라이선스</string>
+    <string name="availableFromAfterTo">사용 가능성 종료 날짜는 시작 날짜 이후여야 합니다</string>
+    <string name="errorDeletingFile">이 파일을 삭제하는 데 오류가 발생했습니다</string>
+    <string name="errorDeletingFolder">이 폴더를 삭제하는 데 오류가 발생했습니다</string>
+    <string name="errorUpdatingFile">이 파일을 업데이트하는 데 오류가 발생했습니다</string>
+    <string name="errorUpdatingFolder">이 폴더를 업데이트하는 데 오류가 발생했습니다</string>
+    <string name="errorEmptyTitle">제목은 비어 있을 수 없습니다</string>
+
+    <string name="toDoEmpty">더 할 일이 없습니다.\n 즐거운 하루 보내세요.</string>
+    <string name="toDoNoSubmissions">이 과제에 대해 채점할 제출이 없습니다.</string>
+    <string name="errorToDoRouteFailed">이 할 일 항목을 보려고 시도하는 데 오류가 발생했습니다.</string>
+    <string name="errorIsDesigner">디자이너 등록은 볼 수 없습니다.</string>
+
+    <string name="sections">분반</string>
+    <string name="filterBy">필터링 기준&#8230;</string>
+    <string name="contentDescriptionFilterSection" formatted="false">%s에 대해</string>
+    <string name="filterBySection">분반으로 필터링</string>
+    <string name="filterSubmissionsLowercase">제출 필터링</string>
+    <string name="latePenalty">늦게 제출 벌점</string>
+    <string name="finalGrade">최종 성적</string>
+    <string name="moderatedGradingUnsupported">조정된 성적 평가는 현재 모바일 SpeedGrader에서 지원되지 않습니다.</string>
+    <plurals name="latePolicyPenalty">
+        <item quantity="other">-%s점</item>
+    </plurals>
+    <plurals name="latePolicyPenaltyFull">
+        <item quantity="other">-%s점</item>
+    </plurals>
+    <string name="profileSettings">프로필 설정</string>
+    <string name="downloadingFile">파일 다운로드&#8230;</string>
+    <string name="fileDownloadedSuccessfully">파일을 다운로드했습니다.</string>
+    <string name="tapToView">탭하여 보기</string>
+    <string name="errorDownloadingFile">파일을 다운로드하는 데 오류가 발생했습니다. 다시 시도하세요.</string>
+
+    <string name="postTo">게시 대상</string>
+    <string name="allSections">모든 분반</string>
+
+    <string name="gauge">Gauge</string>
+    <string name="ltiLaunchFailure">지금은 이 LTI 도구를 로드할 수 없습니다.</string>
+    <string name="downloading">다운로드 중...</string>
+
+    <!-- Edit Syllabus -->
+    <string name="syllabusSuccessfullyUpdated">강의 계획안을 업데이트했습니다.</string>
+    <string name="errorSavingSyllabus">강의 계획안을 저장하려고 하는 동안 오류가 발생했습니다. 다시 시도하세요.</string>
+    <string name="editSyllabusTitle">강의 계획안 편집</string>
+    <string name="editSyllabusContent">콘텐츠</string>
+    <string name="editSyllabusDetails">세부 정보</string>
+    <string name="editSyllabusShowCourseSummary">과목 요약 표시</string>
+    <string name="editSyllabusContentAccessibilityLabel">강의 계획안 콘텐츠</string>
+    <string name="no_grade">성적 없음</string>
+    <string name="excuse">인정</string>
+    <string name="speed_grader_overgraded_by">%s에 의해 과도하게 평가됨</string>
+    <string name="error_unpublishable_module_item">학생 제출이 있는 경우 %s의 게시를 취소할 수 없음</string>
+
+</resources>
