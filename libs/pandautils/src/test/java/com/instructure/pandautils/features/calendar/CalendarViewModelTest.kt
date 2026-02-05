@@ -728,8 +728,28 @@ class CalendarViewModelTest {
 
     @Test
     fun `Open assignment when assignment is selected`() = runTest {
+        val plannerItem = createPlannerItem(1, 100, PlannableType.ASSIGNMENT, createDate(2023, 4, 20, 12))
         coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns listOf(
-            createPlannerItem(1, 1, PlannableType.ASSIGNMENT, createDate(2023, 4, 20, 12)),
+            plannerItem.copy(plannable = plannerItem.plannable.copy(assignmentId = 50))
+        )
+        initViewModel()
+
+        viewModel.handleAction(CalendarAction.EventSelected(100))
+
+        val events = mutableListOf<CalendarViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        val expectedAction = CalendarViewModelAction.OpenAssignment(Course(1), 50)
+        assertEquals(expectedAction, events.last())
+    }
+
+    @Test
+    fun `Open assignment using plannable id when assignmentId is null`() = runTest {
+        val plannerItem = createPlannerItem(1, 1, PlannableType.ASSIGNMENT, createDate(2023, 4, 20, 12))
+        coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns listOf(
+            plannerItem.copy(plannable = plannerItem.plannable.copy(assignmentId = null))
         )
         initViewModel()
 
