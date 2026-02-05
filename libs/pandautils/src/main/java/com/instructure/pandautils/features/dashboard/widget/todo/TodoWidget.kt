@@ -300,7 +300,7 @@ private fun CalendarNavigationButton(
                 painter = painterResource(iconRes),
                 contentDescription = contentDescription,
                 tint = Color(ThemePrefs.buttonTextColor),
-                modifier = Modifier.size(12.dp)
+                modifier = Modifier.size(16.dp)
             )
         }
     }
