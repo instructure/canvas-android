@@ -32,6 +32,8 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.composables.todo.ToDoItemType
+import com.instructure.pandautils.compose.composables.todo.ToDoStateMapper
 import com.instructure.pandautils.features.calendar.CalendarSharedEvents
 import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.features.todolist.filter.DateRangeSelection
@@ -77,6 +79,7 @@ class ToDoListViewModelTest {
     private val analytics: Analytics = mockk(relaxed = true)
     private val toDoListViewModelBehavior: ToDoListViewModelBehavior = mockk(relaxed = true)
     private val calendarSharedEvents: CalendarSharedEvents = mockk(relaxed = true)
+    private val toDoStateMapper: ToDoStateMapper = mockk(relaxed = true)
 
     private val testUser = User(id = 123L, name = "Test User")
     private val testDomain = "test.instructure.com"
@@ -1690,7 +1693,18 @@ class ToDoListViewModelTest {
 
     // Helper functions
     private fun getViewModel(): ToDoListViewModel {
-        return ToDoListViewModel(context, repository, networkStateProvider, firebaseCrashlytics, toDoFilterDao, apiPrefs, analytics, toDoListViewModelBehavior, calendarSharedEvents)
+        return ToDoListViewModel(
+            context,
+            repository,
+            networkStateProvider,
+            firebaseCrashlytics,
+            toDoFilterDao,
+            apiPrefs,
+            analytics,
+            toDoListViewModelBehavior,
+            calendarSharedEvents,
+            toDoStateMapper
+        )
     }
 
     private fun createPlannerItem(

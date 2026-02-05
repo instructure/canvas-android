@@ -2421,4 +2421,5 @@
     <string name="todoWidget_errorTitle">Oops, Something went wrong</string>
     <string name="todoWidget_errorMessage">We weren\'t able to load your To-dos.\nTry again, or come back later.</string>
     <string name="todoWidget_refresh">Refresh</string>
+    <string name="widgetSettings_widgetsColor">Widgets color</string>
 </resources>

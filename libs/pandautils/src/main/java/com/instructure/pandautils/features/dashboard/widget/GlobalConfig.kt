@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 - present Instructure, Inc.
+ * Copyright (C) 2026 - present Instructure, Inc.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,16 +14,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.features.dashboard.widget.forecast
+package com.instructure.pandautils.features.dashboard.widget
 
 import com.google.gson.Gson
-import com.instructure.pandautils.features.dashboard.widget.SettingDefinition
-import com.instructure.pandautils.features.dashboard.widget.SettingType
-import com.instructure.pandautils.features.dashboard.widget.WidgetConfig
-import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 
-data class ForecastConfig(
-    override val widgetId: String = WidgetMetadata.WIDGET_ID_FORECAST,
+data class GlobalConfig(
+    override val widgetId: String = WidgetMetadata.WIDGET_ID_GLOBAL,
     val backgroundColor: Int = 0xFF2573DF.toInt()
 ) : WidgetConfig {
     override fun toJson(): String = Gson().toJson(this)
@@ -36,8 +32,8 @@ data class ForecastConfig(
     )
 
     companion object {
-        fun fromJson(jsonString: String): ForecastConfig {
-            return Gson().fromJson(jsonString, ForecastConfig::class.java)
+        fun fromJson(jsonString: String): GlobalConfig {
+            return Gson().fromJson(jsonString, GlobalConfig::class.java)
         }
     }
 }

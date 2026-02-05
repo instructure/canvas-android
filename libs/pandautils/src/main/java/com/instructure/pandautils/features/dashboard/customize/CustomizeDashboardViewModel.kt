@@ -80,6 +80,11 @@ class CustomizeDashboardViewModel @Inject constructor(
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     private fun loadWidgets() {
         viewModelScope.launch {
+            observeWidgetConfigUseCase(WidgetMetadata.WIDGET_ID_GLOBAL).collect { settingItems ->
+                _uiState.update { it.copy(globalSettings = settingItems) }
+            }
+        }
+        viewModelScope.launch {
             observeWidgetMetadataUseCase(Unit)
                 .map { metadata ->
                     metadata
