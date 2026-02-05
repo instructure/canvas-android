@@ -20,6 +20,7 @@ import android.content.Context
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.PlannerItem
@@ -37,6 +38,8 @@ import com.instructure.pandautils.domain.usecase.planner.UpdatePlannerOverridePa
 import com.instructure.pandautils.domain.usecase.planner.UpdatePlannerOverrideUseCase
 import com.instructure.pandautils.features.calendar.CalendarSharedEvents
 import com.instructure.pandautils.features.calendar.SharedCalendarAction
+import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveGlobalConfigUseCase
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.isComplete
 import com.instructure.pandautils.utils.orDefault
@@ -50,6 +53,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.threeten.bp.Clock
@@ -73,6 +77,8 @@ class TodoWidgetViewModel @Inject constructor(
     private val createPlannerOverrideUseCase: CreatePlannerOverrideUseCase,
     private val networkStateProvider: NetworkStateProvider,
     private val calendarSharedEvents: CalendarSharedEvents,
+    private val observeGlobalConfigUseCase: ObserveGlobalConfigUseCase,
+    private val crashlytics: FirebaseCrashlytics,
     clock: Clock
 ) : ViewModel() {
 
@@ -112,6 +118,7 @@ class TodoWidgetViewModel @Inject constructor(
     val uiState: StateFlow<TodoWidgetUiState> = _uiState.asStateFlow()
 
     init {
+        observeConfig()
         observeCalendarSharedEvents()
         loadVisibleWeeks()
     }
@@ -547,6 +554,17 @@ class TodoWidgetViewModel @Inject constructor(
                     else -> {} // Ignore other calendar actions
                 }
             }
+        }
+    }
+
+    private fun observeConfig() {
+        viewModelScope.launch {
+            observeGlobalConfigUseCase(Unit)
+                .catch { crashlytics.recordException(it) }
+                .collect { config ->
+                    val themedColor = ColorKeeper.createThemedColor(config.backgroundColor)
+                    _uiState.update { it.copy(color = themedColor) }
+                }
         }
     }
 }

@@ -71,12 +71,14 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.CanvasDivider
 import com.instructure.pandautils.compose.composables.CanvasSwitch
 import com.instructure.pandautils.compose.composables.ShimmerBox
+import com.instructure.pandautils.compose.composables.calendar.CalendarColors
 import com.instructure.pandautils.compose.composables.calendar.CalendarStateMapper
 import com.instructure.pandautils.compose.composables.todo.ToDoItem
 import com.instructure.pandautils.compose.composables.todo.ToDoItemType
 import com.instructure.pandautils.compose.composables.todo.ToDoItemUiState
 import com.instructure.pandautils.features.todolist.OnToDoCountChanged
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.getFragmentActivityOrNull
 import com.jakewharton.threetenabp.AndroidThreeTen
@@ -196,12 +198,13 @@ fun TodoWidgetContent(
                             Text(
                                 text = stringResource(R.string.todoWidget_showCompleted),
                                 fontSize = 14.sp,
-                                color = Color(ThemePrefs.textButtonColor)
+                                color = Color(uiState.color.color())
                             )
 
                             CanvasSwitch(
                                 checked = uiState.showCompleted,
-                                onCheckedChange = { uiState.onToggleShowCompleted() }
+                                onCheckedChange = { uiState.onToggleShowCompleted() },
+                                color = Color(uiState.color.color())
                             )
                         }
                     }
@@ -216,6 +219,11 @@ fun TodoWidgetContent(
                             onDaySelected = uiState.onDaySelected,
                             onPageChanged = uiState.onPageChanged,
                             scrollToPageOffset = uiState.scrollToPageOffset,
+                            calendarColors = CalendarColors(
+                                selectedDayIndicatorColor = Color(uiState.color.color()),
+                                selectedDayTextColor = colorResource(R.color.textLightest),
+                                todayTextColor = Color(uiState.color.color())
+                            ),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .onGloballyPositioned { coordinates ->
@@ -243,7 +251,8 @@ fun TodoWidgetContent(
                         onTodoClick = uiState.onTodoClick,
                         removingItemIds = uiState.removingItemIds,
                         onRefresh = uiState.onRefresh,
-                        onAddTodoClick = uiState.onAddTodoClick
+                        onAddTodoClick = uiState.onAddTodoClick,
+                        buttonColor = Color(uiState.color.color())
                     )
                 }
             }
@@ -255,6 +264,8 @@ fun TodoWidgetContent(
                         iconRes = R.drawable.ic_chevron_left,
                         contentDescription = stringResource(R.string.a11y_calendarPreviousWeek),
                         onClick = { uiState.onNavigateWeek(-1) },
+                        buttonColor = Color(uiState.color.color()),
+                        iconColor = colorResource(R.color.textLightest),
                         modifier = Modifier
                             .align(Alignment.TopStart)
                             .offset(x = 8.dp, y = calendarCenterY - 12.dp)
@@ -264,6 +275,8 @@ fun TodoWidgetContent(
                         iconRes = R.drawable.ic_chevron_right,
                         contentDescription = stringResource(R.string.a11y_calendarNextWeek),
                         onClick = { uiState.onNavigateWeek(1) },
+                        buttonColor = Color(uiState.color.color()),
+                        iconColor = colorResource(R.color.textLightest),
                         modifier = Modifier
                             .align(Alignment.TopEnd)
                             .offset(x = (-8).dp, y = calendarCenterY - 12.dp)
@@ -279,13 +292,15 @@ private fun CalendarNavigationButton(
     iconRes: Int,
     contentDescription: String,
     onClick: () -> Unit,
+    buttonColor: Color,
+    iconColor: Color,
     modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier
             .size(24.dp)
             .background(
-                color = Color(ThemePrefs.buttonColor),
+                color = buttonColor,
                 shape = CircleShape
             ),
         contentAlignment = Alignment.Center
@@ -299,7 +314,7 @@ private fun CalendarNavigationButton(
             Icon(
                 painter = painterResource(iconRes),
                 contentDescription = contentDescription,
-                tint = Color(ThemePrefs.buttonTextColor),
+                tint = iconColor,
                 modifier = Modifier.size(16.dp)
             )
         }
@@ -315,6 +330,7 @@ private fun TodoItemsContainer(
     removingItemIds: Set<String>,
     onRefresh: () -> Unit,
     onAddTodoClick: (FragmentActivity) -> Unit,
+    buttonColor: Color,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -334,14 +350,18 @@ private fun TodoItemsContainer(
 
             todosError -> {
                 Box(modifier = Modifier.padding(16.dp)) {
-                    TodoItemsError(onRefresh = onRefresh)
+                    TodoItemsError(
+                        onRefresh = onRefresh,
+                        buttonColor = buttonColor
+                    )
                 }
             }
 
             todos.isEmpty() -> {
                 Box(modifier = Modifier.padding(16.dp)) {
                     TodoItemsEmpty(
-                        onAddTodoClick = onAddTodoClick
+                        onAddTodoClick = onAddTodoClick,
+                        buttonColor = buttonColor
                     )
                 }
             }
@@ -349,7 +369,8 @@ private fun TodoItemsContainer(
             else -> {
                 TodoItemsList(
                     todos = todos.filter { it.id !in removingItemIds },
-                    onTodoClick = onTodoClick
+                    onTodoClick = onTodoClick,
+                    checkboxColor = buttonColor
                 )
             }
         }
@@ -384,7 +405,8 @@ private fun TodoItemsLoading() {
 
 @Composable
 private fun TodoItemsError(
-    onRefresh: () -> Unit = {}
+    onRefresh: () -> Unit = {},
+    buttonColor: Color
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -421,7 +443,7 @@ private fun TodoItemsError(
         Button(
             onClick = onRefresh,
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(ThemePrefs.buttonColor)
+                containerColor = buttonColor
             ),
             shape = RoundedCornerShape(100.dp),
             modifier = Modifier.height(30.dp),
@@ -434,7 +456,7 @@ private fun TodoItemsError(
         ) {
             Text(
                 text = stringResource(R.string.todoWidget_refresh),
-                color = Color(ThemePrefs.buttonTextColor),
+                color = colorResource(R.color.textLightest),
                 fontSize = 14.sp,
                 modifier = Modifier.align(Alignment.CenterVertically)
             )
@@ -442,7 +464,7 @@ private fun TodoItemsError(
             Icon(
                 painter = painterResource(R.drawable.ic_refresh_lined),
                 contentDescription = null,
-                tint = Color(ThemePrefs.buttonTextColor),
+                tint = colorResource(R.color.textLightest),
                 modifier = Modifier
                     .size(16.dp)
                     .align(Alignment.CenterVertically)
@@ -453,7 +475,8 @@ private fun TodoItemsError(
 
 @Composable
 private fun TodoItemsEmpty(
-    onAddTodoClick: (FragmentActivity) -> Unit = {}
+    onAddTodoClick: (FragmentActivity) -> Unit = {},
+    buttonColor: Color
 ) {
     val activity = LocalContext.current.getFragmentActivityOrNull()
 
@@ -487,7 +510,7 @@ private fun TodoItemsEmpty(
         Button(
             onClick = { activity?.let { onAddTodoClick(it) } },
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(ThemePrefs.buttonColor)
+                containerColor = buttonColor
             ),
             shape = RoundedCornerShape(24.dp),
             modifier = Modifier.height(30.dp),
@@ -501,7 +524,7 @@ private fun TodoItemsEmpty(
             Icon(
                 painter = painterResource(R.drawable.ic_add_lined),
                 contentDescription = null,
-                tint = Color(ThemePrefs.buttonTextColor),
+                tint = colorResource(R.color.textLightest),
                 modifier = Modifier
                     .size(16.dp)
                     .align(Alignment.CenterVertically)
@@ -509,7 +532,7 @@ private fun TodoItemsEmpty(
             Spacer(modifier = Modifier.size(4.dp))
             Text(
                 text = stringResource(R.string.todoWidget_addTodo),
-                color = Color(ThemePrefs.buttonTextColor),
+                color = colorResource(R.color.textLightest),
                 fontSize = 14.sp,
                 modifier = Modifier.align(Alignment.CenterVertically)
             )
@@ -521,6 +544,7 @@ private fun TodoItemsEmpty(
 private fun TodoItemsList(
     todos: List<ToDoItemUiState>,
     onTodoClick: (FragmentActivity, String) -> Unit,
+    checkboxColor: Color,
     modifier: Modifier = Modifier
 ) {
     val activity = LocalContext.current.getFragmentActivityOrNull()
@@ -541,7 +565,8 @@ private fun TodoItemsList(
                                 onTodoClick(fragmentActivity, htmlUrl)
                             }
                         }
-                    }
+                    },
+                    checkboxColor = checkboxColor
                 )
                 if (todo != todos.last()) {
                     CanvasDivider(

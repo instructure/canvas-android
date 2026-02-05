@@ -85,7 +85,8 @@ fun ToDoItem(
     onCheckedChange: () -> Unit,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    dateBadge: @Composable (() -> Unit)? = null
+    dateBadge: @Composable (() -> Unit)? = null,
+    checkboxColor: Color = Color(ThemePrefs.brandColor)
 ) {
     val coroutineScope = rememberCoroutineScope()
     val animatedOffsetX = remember { Animatable(0f) }
@@ -177,7 +178,8 @@ fun ToDoItem(
             onCheckedChange = onCheckedChange,
             onClick = onClick,
             modifier = Modifier.offset { IntOffset(animatedOffsetX.value.roundToInt(), 0) },
-            dateBadge = dateBadge
+            dateBadge = dateBadge,
+            checkboxColor = checkboxColor
         )
     }
 }
@@ -272,7 +274,8 @@ private fun ToDoItemContent(
     onCheckedChange: () -> Unit,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    dateBadge: @Composable (() -> Unit)? = null
+    dateBadge: @Composable (() -> Unit)? = null,
+    checkboxColor: Color = Color(ThemePrefs.brandColor)
 ) {
     val view = LocalView.current
 
@@ -359,8 +362,9 @@ private fun ToDoItemContent(
                     onCheckedChange()
                 },
                 colors = CheckboxDefaults.colors(
-                    checkedColor = Color(ThemePrefs.brandColor),
-                    uncheckedColor = colorResource(id = R.color.textDark)
+                    checkedColor = checkboxColor,
+                    uncheckedColor = checkboxColor,
+                    checkmarkColor = colorResource(R.color.textLightest)
                 ),
                 modifier = Modifier.testTag("todoCheckbox_${item.id}")
             )

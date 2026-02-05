@@ -68,6 +68,12 @@ import org.threeten.bp.format.TextStyle
 import org.threeten.bp.temporal.WeekFields
 import java.util.Locale
 
+data class CalendarColors(
+    val selectedDayIndicatorColor: Color = Color(ThemePrefs.buttonColor),
+    val selectedDayTextColor: Color = Color(ThemePrefs.buttonTextColor),
+    val todayTextColor: Color = Color(ThemePrefs.textButtonColor)
+)
+
 private const val DEFAULT_CALENDAR_ROW_HEIGHT = 46
 
 @Composable
@@ -78,7 +84,8 @@ fun CalendarBody(
     scaleRatio: Float,
     modifier: Modifier = Modifier,
     todayFocusRequester: FocusRequester? = null,
-    calendarRowHeightInDp: Int = DEFAULT_CALENDAR_ROW_HEIGHT
+    calendarRowHeightInDp: Int = DEFAULT_CALENDAR_ROW_HEIGHT,
+    calendarColors: CalendarColors = CalendarColors()
 ) {
     Column(
         modifier
@@ -96,7 +103,8 @@ fun CalendarBody(
             selectedDayChanged,
             scaleRatio,
             todayFocusRequester = todayFocusRequester,
-            calendarRowHeightInDp = calendarRowHeightInDp
+            calendarRowHeightInDp = calendarRowHeightInDp,
+            calendarColors = calendarColors
         )
     }
 }
@@ -135,7 +143,8 @@ private fun CalendarPage(
     scaleRatio: Float,
     modifier: Modifier = Modifier,
     todayFocusRequester: FocusRequester? = null,
-    calendarRowHeightInDp: Int = DEFAULT_CALENDAR_ROW_HEIGHT
+    calendarRowHeightInDp: Int = DEFAULT_CALENDAR_ROW_HEIGHT,
+    calendarColors: CalendarColors = CalendarColors()
 ) {
     Column(modifier = modifier) {
         calendarRows.forEachIndexed { index, it ->
@@ -143,7 +152,12 @@ private fun CalendarPage(
             // to be able to see the neighbouring pages
             val scale = if (it.days.any { day -> day.date == selectedDay } || calendarRows.size == 1) 1.0f else scaleRatio
             DaysOfWeekRow(
-                days = it.days, selectedDay, selectedDayChanged, todayFocusRequester = todayFocusRequester, modifier = Modifier
+                days = it.days,
+                selectedDay,
+                selectedDayChanged,
+                todayFocusRequester = todayFocusRequester,
+                calendarColors = calendarColors,
+                modifier = Modifier
                     .height(calendarRowHeightInDp.dp * scale)
                     .fillMaxWidth()
                     .padding(start = 16.dp, end = 16.dp, bottom = 4.dp)
@@ -161,15 +175,16 @@ private fun DaysOfWeekRow(
     selectedDay: LocalDate,
     selectedDayChanged: (LocalDate) -> Unit,
     modifier: Modifier = Modifier,
-    todayFocusRequester: FocusRequester? = null
+    todayFocusRequester: FocusRequester? = null,
+    calendarColors: CalendarColors = CalendarColors()
 ) {
     Row(
         modifier = modifier, horizontalArrangement = Arrangement.SpaceBetween
     ) {
         days.forEach { dayState ->
             val textColor = when {
-                dayState.date == selectedDay -> Color(ThemePrefs.buttonTextColor)
-                dayState.today -> Color(ThemePrefs.textButtonColor)
+                dayState.date == selectedDay -> calendarColors.selectedDayTextColor
+                dayState.today -> calendarColors.todayTextColor
                 dayState.enabled -> colorResource(id = R.color.textDarkest)
                 else -> colorResource(id = R.color.textDark)
             }
@@ -209,7 +224,7 @@ private fun DaysOfWeekRow(
                 if (dayState.date == selectedDay) {
                     dayModifier = dayModifier
                         .background(
-                            color = Color(ThemePrefs.buttonColor),
+                            color = calendarColors.selectedDayIndicatorColor,
                             shape = RoundedCornerShape(500.dp),
                         )
                 }
@@ -231,9 +246,12 @@ private fun DaysOfWeekRow(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     repeat(dayState.indicatorCount) {
-                        EventIndicator(modifier = Modifier.clearAndSetSemantics {
-                            testTag = "eventIndicator$it"
-                        })
+                        EventIndicator(
+                            color = calendarColors.selectedDayIndicatorColor,
+                            modifier = Modifier.clearAndSetSemantics {
+                                testTag = "eventIndicator$it"
+                            }
+                        )
                     }
                 }
             }
@@ -242,14 +260,17 @@ private fun DaysOfWeekRow(
 }
 
 @Composable
-private fun EventIndicator(modifier: Modifier = Modifier) {
+private fun EventIndicator(
+    color: Color = Color(ThemePrefs.buttonColor),
+    modifier: Modifier = Modifier
+) {
     Box(
         modifier
             .padding(horizontal = 3.dp)
             .graphicsLayer()
             .clip(CircleShape)
             .size(4.dp)
-            .background(Color(ThemePrefs.buttonColor))
+            .background(color)
     )
 }
 

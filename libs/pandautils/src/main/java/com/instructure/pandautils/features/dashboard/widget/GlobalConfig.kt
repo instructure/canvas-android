@@ -20,7 +20,7 @@ import com.google.gson.Gson
 
 data class GlobalConfig(
     override val widgetId: String = WidgetMetadata.WIDGET_ID_GLOBAL,
-    val backgroundColor: Int = 0xFF2573DF.toInt()
+    val backgroundColor: Int = DEFAULT_COLOR
 ) : WidgetConfig {
     override fun toJson(): String = Gson().toJson(this)
 
@@ -35,5 +35,7 @@ data class GlobalConfig(
         fun fromJson(jsonString: String): GlobalConfig {
             return Gson().fromJson(jsonString, GlobalConfig::class.java)
         }
+
+        const val DEFAULT_COLOR = 0xFF2573DF.toInt()
     }
 }

@@ -29,6 +29,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import com.instructure.pandautils.compose.composables.calendar.CalendarBody
 import com.instructure.pandautils.compose.composables.calendar.CalendarBodyUiState
+import com.instructure.pandautils.compose.composables.calendar.CalendarColors
 import org.threeten.bp.LocalDate
 
 private const val PAGE_COUNT = 1000
@@ -41,7 +42,8 @@ fun WeekCalendarView(
     onDaySelected: (LocalDate) -> Unit,
     onPageChanged: (Int) -> Unit,
     scrollToPageOffset: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    calendarColors: CalendarColors
 ) {
     var centerIndex by remember { mutableIntStateOf(PAGE_COUNT / 2) }
     val pagerState = rememberPagerState(
@@ -86,6 +88,7 @@ fun WeekCalendarView(
                     selectedDay = selectedDay,
                     selectedDayChanged = onDaySelected,
                     scaleRatio = 0f,
+                    calendarColors = calendarColors,
                     modifier = Modifier
                 )
             }

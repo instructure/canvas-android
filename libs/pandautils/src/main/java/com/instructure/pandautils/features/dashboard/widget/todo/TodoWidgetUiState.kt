@@ -19,6 +19,8 @@ package com.instructure.pandautils.features.dashboard.widget.todo
 import androidx.fragment.app.FragmentActivity
 import com.instructure.pandautils.compose.composables.calendar.CalendarBodyUiState
 import com.instructure.pandautils.compose.composables.todo.ToDoItemUiState
+import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
+import com.instructure.pandautils.utils.ThemedColor
 import org.threeten.bp.LocalDate
 
 data class ConfirmationSnackbarData(
@@ -50,5 +52,6 @@ data class TodoWidgetUiState(
     val onUndoMarkAsDoneUndone: (String, Boolean) -> Unit = { _, _ -> },
     val onMarkedAsDoneSnackbarDismissed: () -> Unit = {},
     val updateToDoCount: Boolean = false,
-    val onToDoCountUpdated: () -> Unit = {}
+    val onToDoCountUpdated: () -> Unit = {},
+    val color: ThemedColor = ThemedColor(GlobalConfig.DEFAULT_COLOR),
 )

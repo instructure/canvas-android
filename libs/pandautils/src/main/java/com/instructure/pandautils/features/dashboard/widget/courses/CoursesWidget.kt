@@ -44,6 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -58,7 +59,6 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.dashboard.widget.courses.model.CourseCardItem
 import com.instructure.pandautils.features.dashboard.widget.courses.model.GradeDisplay
 import com.instructure.pandautils.features.dashboard.widget.courses.model.GroupCardItem
-import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.getFragmentActivityOrNull
 import kotlinx.coroutines.flow.SharedFlow
 import sh.calvin.reorderable.ReorderableItem
@@ -187,8 +187,8 @@ fun CoursesWidgetContent(
                     ),
                     shape = RoundedCornerShape(100.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(ThemePrefs.buttonColor),
-                        contentColor = Color(ThemePrefs.buttonTextColor)
+                        containerColor = Color(uiState.color.color()),
+                        contentColor = colorResource(R.color.textLightest)
                     )
                 ) {
                     Row(
