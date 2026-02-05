@@ -2260,6 +2260,9 @@
     <string name="courseInvitationDeclineConfirmTitle">Decline Invitation</string>
     <string name="courseInvitationDeclineConfirmMessage">Are you sure you want to decline the invitation to %s?</string>
 
+    <!-- Progress Widget -->
+    <string name="progressWidgetTitle">Progress</string>
+
     <!-- Welcome Widget -->
     <!-- Greetings with name (%s is the student's first name) -->
     <string name="welcomeGreetingMorningWithName">Good morning, %s!</string>

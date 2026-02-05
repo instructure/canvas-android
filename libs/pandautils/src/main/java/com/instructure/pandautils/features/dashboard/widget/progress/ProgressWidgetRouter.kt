@@ -14,20 +14,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.features.dashboard.widget
+package com.instructure.pandautils.features.dashboard.widget.progress
 
-data class WidgetMetadata(
-    val id: String,
-    val position: Int,
-    val isVisible: Boolean,
-    val isEditable: Boolean = true
-) {
-    companion object {
-        const val WIDGET_ID_PROGRESS = "progress"
-        const val WIDGET_ID_COURSE_INVITATIONS = "course_invitations"
-        const val WIDGET_ID_INSTITUTIONAL_ANNOUNCEMENTS = "institutional_announcements"
-        const val WIDGET_ID_WELCOME = "welcome"
-        const val WIDGET_ID_COURSES = "courses"
-        const val WIDGET_ID_FORECAST = "forecast"
-    }
+import androidx.fragment.app.FragmentActivity
+import com.instructure.canvasapi2.models.CanvasContext
+import java.util.UUID
+
+interface ProgressWidgetRouter {
+    fun openProgressDialog(activity: FragmentActivity, workerId: UUID)
+    fun navigateToSubmissionDetails(activity: FragmentActivity, canvasContext: CanvasContext, assignmentId: Long, attemptId: Long)
+    fun navigateToMyFiles(activity: FragmentActivity, canvasContext: CanvasContext, folderId: Long)
+    fun openSyncProgress(activity: FragmentActivity)
 }

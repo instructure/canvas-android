@@ -14,20 +14,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.features.dashboard.widget
+package com.instructure.teacher.di.feature
 
-data class WidgetMetadata(
-    val id: String,
-    val position: Int,
-    val isVisible: Boolean,
-    val isEditable: Boolean = true
-) {
-    companion object {
-        const val WIDGET_ID_PROGRESS = "progress"
-        const val WIDGET_ID_COURSE_INVITATIONS = "course_invitations"
-        const val WIDGET_ID_INSTITUTIONAL_ANNOUNCEMENTS = "institutional_announcements"
-        const val WIDGET_ID_WELCOME = "welcome"
-        const val WIDGET_ID_COURSES = "courses"
-        const val WIDGET_ID_FORECAST = "forecast"
+import com.instructure.pandautils.features.dashboard.widget.progress.ProgressWidgetRouter
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
+
+@Module
+@InstallIn(ViewModelComponent::class)
+class ProgressWidgetModule {
+
+    @Provides
+    fun provideProgressWidgetRouter(): ProgressWidgetRouter {
+        throw NotImplementedError()
     }
 }
