@@ -26,6 +26,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -46,7 +50,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.times
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.dashboard.widget.courses.model.CourseCardItem
@@ -55,6 +61,8 @@ import com.instructure.pandautils.features.dashboard.widget.courses.model.GroupC
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.getFragmentActivityOrNull
 import kotlinx.coroutines.flow.SharedFlow
+import sh.calvin.reorderable.ReorderableItem
+import sh.calvin.reorderable.rememberReorderableLazyGridState
 
 @Composable
 fun CoursesWidget(
@@ -96,22 +104,41 @@ fun CoursesWidgetContent(
                     isExpanded = uiState.isCoursesExpanded,
                     onToggleExpanded = uiState.onToggleCoursesExpanded
                 ) {
-                    NonLazyGrid(
-                        columns = columns,
-                        itemCount = uiState.courses.size,
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        horizontalSpacing = 6.dp,
-                        verticalSpacing = 6.dp
-                    ) { index ->
-                        val course = uiState.courses[index]
-                        CourseCard(
-                            courseCard = course,
-                            showGrade = uiState.showGrades,
-                            showColorOverlay = uiState.showColorOverlay,
-                            onCourseClick = uiState.onCourseClick,
-                            onManageOfflineContent = uiState.onManageOfflineContent,
-                            onCustomizeCourse = uiState.onCustomizeCourse
-                        )
+                    val lazyGridState = rememberLazyGridState()
+                    val reorderableLazyGridState = rememberReorderableLazyGridState(
+                        lazyGridState = lazyGridState,
+                        onMove = { from, to ->
+                            uiState.onCourseMoved(from.index, to.index)
+                        }
+                    )
+
+                    val rows = (uiState.courses.size + columns - 1) / columns
+                    val gridHeight = rows * COURSE_CARD_HEIGHT + (rows - 1) * 6.dp
+
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(columns),
+                        state = lazyGridState,
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .height(gridHeight),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp),
+                        userScrollEnabled = false
+                    ) {
+                        items(uiState.courses, key = { it.id }) { course ->
+                            ReorderableItem(reorderableLazyGridState, key = course.id) { isDragging ->
+                                CourseCard(
+                                    courseCard = course,
+                                    showGrade = uiState.showGrades,
+                                    showColorOverlay = uiState.showColorOverlay,
+                                    onCourseClick = uiState.onCourseClick,
+                                    onManageOfflineContent = uiState.onManageOfflineContent,
+                                    onCustomizeCourse = uiState.onCustomizeCourse,
+                                    onAnnouncementClick = uiState.onAnnouncementClick,
+                                    modifier = Modifier.longPressDraggableHandle()
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -134,7 +161,8 @@ fun CoursesWidgetContent(
                         val group = uiState.groups[index]
                         GroupCard(
                             groupCard = group,
-                            onGroupClick = uiState.onGroupClick
+                            onGroupClick = uiState.onGroupClick,
+                            onMessageClick = uiState.onGroupMessageClick
                         )
                     }
                 }
@@ -249,9 +277,12 @@ private fun CoursesWidgetContentPreview() {
                     courseCode = "CS 101",
                     imageUrl = null,
                     grade = GradeDisplay.Percentage("85%"),
-                    announcementCount = 2,
+                    announcements = listOf(
+                        DiscussionTopicHeader(id = 1L, title = "Announcement")
+                    ),
                     isSynced = true,
-                    isClickable = true
+                    isClickable = true,
+                    color = android.graphics.Color.RED
                 ),
                 CourseCardItem(
                     id = 2,
@@ -259,9 +290,10 @@ private fun CoursesWidgetContentPreview() {
                     courseCode = "MATH 201",
                     imageUrl = null,
                     grade = GradeDisplay.Letter("A-"),
-                    announcementCount = 0,
+                    announcements = emptyList(),
                     isSynced = false,
-                    isClickable = true
+                    isClickable = true,
+                    color = android.graphics.Color.RED
                 )
             ),
             groups = listOf(
@@ -300,9 +332,12 @@ private fun CoursesWidgetTabletContentPreview() {
                     courseCode = "CS 101",
                     imageUrl = null,
                     grade = GradeDisplay.Percentage("85%"),
-                    announcementCount = 2,
+                    announcements = listOf(
+                        DiscussionTopicHeader(id = 1L, title = "Announcement")
+                    ),
                     isSynced = true,
-                    isClickable = true
+                    isClickable = true,
+                    color = android.graphics.Color.RED
                 ),
                 CourseCardItem(
                     id = 2,
@@ -310,9 +345,10 @@ private fun CoursesWidgetTabletContentPreview() {
                     courseCode = "MATH 201",
                     imageUrl = null,
                     grade = GradeDisplay.Letter("A-"),
-                    announcementCount = 0,
+                    announcements = emptyList(),
                     isSynced = false,
-                    isClickable = true
+                    isClickable = true,
+                    color = android.graphics.Color.RED
                 )
             ),
             groups = listOf(

@@ -22,6 +22,7 @@ import com.instructure.pandautils.domain.usecase.BaseFlowUseCase
 import com.instructure.pandautils.features.dashboard.customize.WidgetSettingItem
 import com.instructure.pandautils.features.dashboard.widget.SettingType
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
+import com.instructure.pandautils.features.dashboard.widget.courses.CoursesConfig
 import com.instructure.pandautils.features.dashboard.widget.forecast.ForecastConfig
 import com.instructure.pandautils.features.dashboard.widget.repository.WidgetConfigDataRepository
 import kotlinx.coroutines.flow.Flow
@@ -43,6 +44,7 @@ class ObserveWidgetConfigUseCase @Inject constructor(
     private fun getDefaultConfig(widgetId: String): com.instructure.pandautils.features.dashboard.widget.WidgetConfig? {
         return when (widgetId) {
             WidgetMetadata.WIDGET_ID_FORECAST -> ForecastConfig()
+            WidgetMetadata.WIDGET_ID_COURSES -> CoursesConfig()
             else -> null
         }
     }
@@ -51,6 +53,11 @@ class ObserveWidgetConfigUseCase @Inject constructor(
         return when (widgetId) {
             WidgetMetadata.WIDGET_ID_FORECAST -> try {
                 gson.fromJson(json, ForecastConfig::class.java)
+            } catch (e: Exception) {
+                null
+            }
+            WidgetMetadata.WIDGET_ID_COURSES -> try {
+                gson.fromJson(json, CoursesConfig::class.java)
             } catch (e: Exception) {
                 null
             }

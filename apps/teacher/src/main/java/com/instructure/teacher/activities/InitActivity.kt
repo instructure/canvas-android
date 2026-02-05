@@ -54,6 +54,8 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.MasqueradeHelper
 import com.instructure.canvasapi2.utils.Pronouns
+import com.instructure.canvasapi2.utils.RemoteConfigParam
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.canvasapi2.utils.pageview.PandataInfo
 import com.instructure.canvasapi2.utils.pageview.PandataManager
 import com.instructure.canvasapi2.utils.weave.awaitApi
@@ -461,8 +463,17 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
             }
         })
 
-        // Set up Color Overlay setting
-        setUpColorOverlaySwitch()
+        // Hide these settings when dashboard redesign is enabled (they're now in customize dashboard)
+        val isDashboardRedesignEnabled = RemoteConfigUtils.getBoolean(RemoteConfigParam.DASHBOARD_REDESIGN)
+        if (isDashboardRedesignEnabled) {
+            navigationDrawerBinding.navigationMenuItemsDivider.setGone()
+            navigationDrawerBinding.optionsMenuTitle.setGone()
+            navigationDrawerBinding.navigationDrawerItemColorOverlay.setGone()
+            navigationDrawerBinding.optionsMenuItemsDivider.setGone()
+        } else {
+            // Set up Color Overlay setting
+            setUpColorOverlaySwitch()
+        }
 
         // App version
         navigationDrawerVersion.text = getString(R.string.version, BuildConfig.VERSION_NAME)
