@@ -25,8 +25,6 @@ import androidx.navigation.compose.navigation
 import com.instructure.horizon.features.account.navigation.accountNavigation
 import com.instructure.horizon.features.dashboard.DashboardScreen
 import com.instructure.horizon.features.dashboard.DashboardViewModel
-import com.instructure.horizon.features.dashboard.widget.course.list.DashboardCourseListScreen
-import com.instructure.horizon.features.dashboard.widget.course.list.DashboardCourseListViewModel
 import com.instructure.horizon.features.learn.navigation.learnNavigation
 import com.instructure.horizon.features.skillspace.SkillspaceScreen
 import com.instructure.horizon.features.skillspace.SkillspaceViewModel
@@ -44,7 +42,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed class HomeNavigationRoute(val route: String) {
     data object Dashboard : HomeNavigationRoute("dashboard")
-    data object CourseList: HomeNavigationRoute("courses")
     data object Learn : HomeNavigationRoute("learn")
     data object Skillspace : HomeNavigationRoute("skillspace")
     data object Account : HomeNavigationRoute("account")
@@ -71,11 +68,6 @@ fun NavGraphBuilder.horizonHomeNavigation(
             val viewModel = hiltViewModel<SkillspaceViewModel>()
             val uiState by viewModel.uiState.collectAsState()
             SkillspaceScreen(uiState)
-        }
-        composable(HomeNavigationRoute.CourseList.route) {
-            val viewModel = hiltViewModel<DashboardCourseListViewModel>()
-            val uiState by viewModel.uiState.collectAsState()
-            DashboardCourseListScreen(uiState, navController)
         }
         accountNavigation(navController)
 

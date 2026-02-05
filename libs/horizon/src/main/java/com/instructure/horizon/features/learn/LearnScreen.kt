@@ -49,7 +49,10 @@ fun LearnScreen(
     state: LearnUiState,
     navController: NavHostController,
 ) {
-    val pagerState = rememberPagerState(pageCount = { state.tabs.size })
+    val pagerState = rememberPagerState(
+        initialPage = LearnTab.entries.indexOf(state.selectedTab),
+        pageCount = { state.tabs.size }
+    )
     LaunchedEffect(pagerState.currentPage) {
         snapshotFlow { pagerState.currentPage }.collect {
             state.updateSelectedTabIndex(it)
