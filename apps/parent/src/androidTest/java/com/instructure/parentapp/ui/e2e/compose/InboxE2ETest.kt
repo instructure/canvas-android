@@ -715,15 +715,17 @@ class InboxE2ETest: ParentComposeTest() {
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
         device.openNotification()
 
-        Log.d(STEP_TAG, "Find download notification.")
-        val downloadNotification = device.findObject(UiSelector().textContains(videoFileName).className("android.widget.TextView"))
+        retryWithIncreasingDelay(times = 10, maxDelay = 3000) {
+            Log.d(STEP_TAG, "Find download notification.")
+            val downloadNotification = device.findObject(UiSelector().textContains(videoFileName).className("android.widget.TextView"))
 
-        Log.d(ASSERTION_TAG, "Assert that 'Download complete' text is displayed in notification.")
-        val downloadCompleteText = device.findObject(UiSelector().textContains("Download complete"))
-        assert(downloadCompleteText.exists()) { "Download complete text not found in notification" }
+            Log.d(ASSERTION_TAG, "Assert that 'Download complete' text is displayed in notification.")
+            val downloadCompleteText = device.findObject(UiSelector().textContains("Download complete"))
+            assert(downloadCompleteText.exists()) { "Download complete text not found in notification" }
 
-        Log.d(ASSERTION_TAG, "Assert that file name '$videoFileName' is displayed in notification.")
-        assert(downloadNotification.exists()) { "File name '$videoFileName' not found in notification" }
+            Log.d(ASSERTION_TAG, "Assert that file name '$videoFileName' is displayed in notification.")
+            assert(downloadNotification.exists()) { "File name '$videoFileName' not found in notification" }
+        }
 
         Log.d(STEP_TAG, "Close notification shade.")
         device.pressBack()
