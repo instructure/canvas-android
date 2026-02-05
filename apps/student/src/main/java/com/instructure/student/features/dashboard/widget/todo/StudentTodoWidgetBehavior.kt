@@ -16,16 +16,31 @@
 
 package com.instructure.student.features.dashboard.widget.todo
 
+import android.appwidget.AppWidgetManager
+import android.content.Context
 import androidx.fragment.app.FragmentActivity
 import com.instructure.pandautils.features.dashboard.widget.todo.TodoWidgetBehavior
 import com.instructure.pandautils.features.dashboard.widget.todo.TodoWidgetRouter
+import com.instructure.student.widget.WidgetUpdater
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 class StudentTodoWidgetBehavior @Inject constructor(
-    private val router: TodoWidgetRouter
+    private val router: TodoWidgetRouter,
+    @ApplicationContext private val context: Context,
+    private val widgetUpdater: WidgetUpdater,
+    private val appWidgetManager: AppWidgetManager
 ) : TodoWidgetBehavior {
 
     override fun onTodoClick(activity: FragmentActivity, htmlUrl: String) {
         router.routeToTodo(activity, htmlUrl)
+    }
+
+    override fun onAddTodoClick(activity: FragmentActivity, initialDateString: String?) {
+        router.routeToCreateTodo(activity, initialDateString)
+    }
+
+    override fun updateWidget(forceRefresh: Boolean) {
+        context.sendBroadcast(widgetUpdater.getTodoWidgetUpdateIntent(appWidgetManager, forceRefresh = forceRefresh))
     }
 }

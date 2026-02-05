@@ -17,6 +17,7 @@
 package com.instructure.student.features.dashboard.widget.todo
 
 import androidx.fragment.app.FragmentActivity
+import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoFragment
 import com.instructure.pandautils.features.dashboard.widget.todo.TodoWidgetRouter
 import com.instructure.student.router.RouteMatcher
 import javax.inject.Inject
@@ -25,5 +26,10 @@ class StudentTodoWidgetRouter @Inject constructor() : TodoWidgetRouter {
 
     override fun routeToTodo(activity: FragmentActivity, htmlUrl: String) {
         RouteMatcher.routeUrl(activity, htmlUrl)
+    }
+
+    override fun routeToCreateTodo(activity: FragmentActivity, initialDateString: String?) {
+        val route = CreateUpdateToDoFragment.makeRoute(initialDateString)
+        RouteMatcher.route(activity, route)
     }
 }

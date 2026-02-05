@@ -20,4 +20,6 @@ import androidx.fragment.app.FragmentActivity
 
 interface TodoWidgetBehavior {
     fun onTodoClick(activity: FragmentActivity, htmlUrl: String)
+    fun onAddTodoClick(activity: FragmentActivity, initialDateString: String?)
+    fun updateWidget(forceRefresh: Boolean = true)
 }

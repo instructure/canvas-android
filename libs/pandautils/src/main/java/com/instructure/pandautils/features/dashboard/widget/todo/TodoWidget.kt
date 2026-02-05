@@ -75,7 +75,9 @@ import com.instructure.pandautils.compose.composables.calendar.CalendarStateMapp
 import com.instructure.pandautils.compose.composables.todo.ToDoItem
 import com.instructure.pandautils.compose.composables.todo.ToDoItemType
 import com.instructure.pandautils.compose.composables.todo.ToDoItemUiState
+import com.instructure.pandautils.features.todolist.OnToDoCountChanged
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.getFragmentActivityOrNull
 import com.jakewharton.threetenabp.AndroidThreeTen
 import kotlinx.coroutines.flow.SharedFlow
@@ -94,6 +96,12 @@ fun TodoWidget(
     val viewModel: TodoWidgetViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
+
+    LaunchedEffect(uiState.updateToDoCount) {
+        val activity = context.getActivityOrNull() as? OnToDoCountChanged
+        activity?.refreshToDoCount()
+        uiState.onToDoCountUpdated()
+    }
 
     LaunchedEffect(refreshSignal) {
         refreshSignal.collect {
@@ -234,7 +242,8 @@ fun TodoWidgetContent(
                         todos = uiState.todos,
                         onTodoClick = uiState.onTodoClick,
                         removingItemIds = uiState.removingItemIds,
-                        onRefresh = uiState.onRefresh
+                        onRefresh = uiState.onRefresh,
+                        onAddTodoClick = uiState.onAddTodoClick
                     )
                 }
             }
@@ -305,6 +314,7 @@ private fun TodoItemsContainer(
     onTodoClick: (FragmentActivity, String) -> Unit,
     removingItemIds: Set<String>,
     onRefresh: () -> Unit,
+    onAddTodoClick: (FragmentActivity) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -330,7 +340,9 @@ private fun TodoItemsContainer(
 
             todos.isEmpty() -> {
                 Box(modifier = Modifier.padding(16.dp)) {
-                    TodoItemsEmpty()
+                    TodoItemsEmpty(
+                        onAddTodoClick = onAddTodoClick
+                    )
                 }
             }
 
@@ -441,8 +453,10 @@ private fun TodoItemsError(
 
 @Composable
 private fun TodoItemsEmpty(
-    onAddTodoClick: () -> Unit = {}
+    onAddTodoClick: (FragmentActivity) -> Unit = {}
 ) {
+    val activity = LocalContext.current.getFragmentActivityOrNull()
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -471,7 +485,7 @@ private fun TodoItemsEmpty(
         )
 
         Button(
-            onClick = onAddTodoClick,
+            onClick = { activity?.let { onAddTodoClick(it) } },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(ThemePrefs.buttonColor)
             ),

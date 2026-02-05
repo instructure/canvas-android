@@ -40,6 +40,7 @@ data class TodoWidgetUiState(
     val snackbarMessage: String? = null,
     val confirmationSnackbarData: ConfirmationSnackbarData? = null,
     val onTodoClick: (FragmentActivity, String) -> Unit = { _, _ -> },
+    val onAddTodoClick: (FragmentActivity) -> Unit = {},
     val onDaySelected: (LocalDate) -> Unit = {},
     val onPageChanged: (Int) -> Unit = {},
     val onNavigateWeek: (Int) -> Unit = {},
@@ -47,5 +48,7 @@ data class TodoWidgetUiState(
     val onRefresh: () -> Unit = {},
     val onSnackbarDismissed: () -> Unit = {},
     val onUndoMarkAsDoneUndone: (String, Boolean) -> Unit = { _, _ -> },
-    val onMarkedAsDoneSnackbarDismissed: () -> Unit = {}
+    val onMarkedAsDoneSnackbarDismissed: () -> Unit = {},
+    val updateToDoCount: Boolean = false,
+    val onToDoCountUpdated: () -> Unit = {}
 )

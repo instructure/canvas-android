@@ -20,4 +20,5 @@ import androidx.fragment.app.FragmentActivity
 
 interface TodoWidgetRouter {
     fun routeToTodo(activity: FragmentActivity, htmlUrl: String)
+    fun routeToCreateTodo(activity: FragmentActivity, initialDateString: String?)
 }

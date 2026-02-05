@@ -20,6 +20,7 @@ import android.content.Context
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.toApiStringSafe
@@ -34,6 +35,8 @@ import com.instructure.pandautils.domain.usecase.planner.CreatePlannerOverrideUs
 import com.instructure.pandautils.domain.usecase.planner.LoadPlannerItemsUseCase
 import com.instructure.pandautils.domain.usecase.planner.UpdatePlannerOverrideParams
 import com.instructure.pandautils.domain.usecase.planner.UpdatePlannerOverrideUseCase
+import com.instructure.pandautils.features.calendar.CalendarSharedEvents
+import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.isComplete
 import com.instructure.pandautils.utils.orDefault
@@ -69,6 +72,7 @@ class TodoWidgetViewModel @Inject constructor(
     private val updatePlannerOverrideUseCase: UpdatePlannerOverrideUseCase,
     private val createPlannerOverrideUseCase: CreatePlannerOverrideUseCase,
     private val networkStateProvider: NetworkStateProvider,
+    private val calendarSharedEvents: CalendarSharedEvents,
     clock: Clock
 ) : ViewModel() {
 
@@ -93,6 +97,7 @@ class TodoWidgetViewModel @Inject constructor(
             showCompleted = showCompleted,
             scrollToPageOffset = 0,
             onTodoClick = ::onTodoClick,
+            onAddTodoClick = ::onAddTodoClick,
             onDaySelected = ::onDaySelected,
             onPageChanged = ::onPageChanged,
             onNavigateWeek = ::onNavigateWeek,
@@ -100,17 +105,24 @@ class TodoWidgetViewModel @Inject constructor(
             onRefresh = ::refresh,
             onSnackbarDismissed = ::clearSnackbarMessage,
             onUndoMarkAsDoneUndone = ::handleUndoMarkAsDoneUndone,
-            onMarkedAsDoneSnackbarDismissed = ::clearMarkedAsDoneItem
+            onMarkedAsDoneSnackbarDismissed = ::clearMarkedAsDoneItem,
+            onToDoCountUpdated = ::onToDoCountUpdated
         )
     )
     val uiState: StateFlow<TodoWidgetUiState> = _uiState.asStateFlow()
 
     init {
+        observeCalendarSharedEvents()
         loadVisibleWeeks()
     }
 
     private fun onTodoClick(activity: FragmentActivity, htmlUrl: String) {
         todoWidgetBehavior.onTodoClick(activity, htmlUrl)
+    }
+
+    private fun onAddTodoClick(activity: FragmentActivity) {
+        val dateString = selectedDay.atTime(12, 0).toApiStringSafe()
+        todoWidgetBehavior.onAddTodoClick(activity, dateString)
     }
 
     private fun toggleShowCompleted() {
@@ -451,6 +463,10 @@ class TodoWidgetViewModel @Inject constructor(
                 }
             }
 
+            // Invalidate planner cache
+            CanvasRestAdapter.clearCacheUrls("planner")
+            todoWidgetBehavior.updateWidget(true)
+            _uiState.update { _uiState.value.copy(updateToDoCount = true) }
             true
         } catch (e: Exception) {
             e.printStackTrace()
@@ -487,6 +503,12 @@ class TodoWidgetViewModel @Inject constructor(
         }
     }
 
+    private fun onToDoCountUpdated() {
+        _uiState.update {
+            it.copy(updateToDoCount = false)
+        }
+    }
+
     private fun startCheckboxDebounceTimer() {
         // Cancel existing timer
         checkboxDebounceJob?.cancel()
@@ -513,5 +535,18 @@ class TodoWidgetViewModel @Inject constructor(
     fun refresh() {
         _uiState.update { _uiState.value.copy(todosLoading = true) }
         loadVisibleWeeks(refresh = true)
+    }
+
+    private fun observeCalendarSharedEvents() {
+        viewModelScope.launch {
+            calendarSharedEvents.events.collect { action ->
+                when (action) {
+                    is SharedCalendarAction.RefreshToDoList -> {
+                        refresh()
+                    }
+                    else -> {} // Ignore other calendar actions
+                }
+            }
+        }
     }
 }
