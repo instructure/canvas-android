@@ -28,8 +28,8 @@ import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetConfigUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetMetadataUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.SwapWidgetPositionsUseCase
+import com.instructure.pandautils.features.dashboard.widget.usecase.UpdateWidgetConfigUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.UpdateWidgetVisibilityUseCase
-import com.instructure.pandautils.features.dashboard.widget.usecase.UpdateWidgetSettingUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -49,7 +49,7 @@ class CustomizeDashboardViewModel @Inject constructor(
     private val swapWidgetPositionsUseCase: SwapWidgetPositionsUseCase,
     private val updateWidgetVisibilityUseCase: UpdateWidgetVisibilityUseCase,
     private val observeWidgetConfigUseCase: ObserveWidgetConfigUseCase,
-    private val updateWidgetSettingUseCase: UpdateWidgetSettingUseCase,
+    private val updateWidgetConfigUseCase: UpdateWidgetConfigUseCase,
     private val resources: Resources,
     private val apiPrefs: ApiPrefs,
     private val remoteConfigUtils: RemoteConfigUtils,
@@ -182,14 +182,16 @@ class CustomizeDashboardViewModel @Inject constructor(
     private fun getDisplayName(widgetId: String): String {
         return when (widgetId) {
             WidgetMetadata.WIDGET_ID_WELCOME -> resources.getString(R.string.widget_hello, apiPrefs.user?.shortName)
+            WidgetMetadata.WIDGET_ID_FORECAST -> resources.getString(R.string.widget_weekly_summary)
+            WidgetMetadata.WIDGET_ID_COURSES -> resources.getString(R.string.courses_and_groups)
             else -> widgetId
         }
     }
 
     private fun updateSetting(widgetId: String, key: String, value: Any) {
         viewModelScope.launch {
-            updateWidgetSettingUseCase(
-                UpdateWidgetSettingUseCase.Params(
+            updateWidgetConfigUseCase(
+                UpdateWidgetConfigUseCase.Params(
                     widgetId = widgetId,
                     key = key,
                     value = value

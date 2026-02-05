@@ -35,6 +35,8 @@ import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionContentManagerImpl
 import com.instructure.canvasapi2.managers.graphql.SubmissionDetailsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionDetailsManagerImpl
+import com.instructure.canvasapi2.managers.graphql.RecentGradedSubmissionsManager
+import com.instructure.canvasapi2.managers.graphql.RecentGradedSubmissionsManagerImpl
 import com.instructure.canvasapi2.managers.graphql.SubmissionGradeManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionGradeManagerImpl
 import dagger.Module
@@ -98,5 +100,10 @@ class GraphQlApiModule {
     @Provides
     fun providePostPolicyManager(@DefaultApolloClient apolloClient: ApolloClient): PostPolicyManager {
         return PostPolicyManagerImpl(apolloClient)
+    }
+
+    @Provides
+    fun provideRecentGradedSubmissionsManager(@DefaultApolloClient apolloClient: ApolloClient): RecentGradedSubmissionsManager {
+        return RecentGradedSubmissionsManagerImpl(apolloClient)
     }
 }

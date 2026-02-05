@@ -588,7 +588,7 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
         goToAssignmentList()
         assignmentListPage.clickAssignment(assignment)
 
-        assignmentDetailsPage.assertGradeDisplayed("3.7")
+        assignmentDetailsPage.assertGradeDisplayed("A")
         assignmentDetailsPage.assertOutOfTextNotDisplayed()
         assignmentDetailsPage.assertScoreNotDisplayed()
     }

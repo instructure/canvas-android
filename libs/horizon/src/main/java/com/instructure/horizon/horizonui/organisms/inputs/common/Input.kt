@@ -19,6 +19,10 @@ package com.instructure.horizon.horizonui.organisms.inputs.common
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
+import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 
@@ -31,13 +35,23 @@ fun Input(
     required: InputLabelRequired = InputLabelRequired.Regular,
     content: @Composable () -> Unit
 ) {
-    Column(modifier = modifier) {
+    val context = LocalContext.current
+    Column(
+        modifier = modifier.semantics(true) {
+            if (errorText != null) {
+                stateDescription = context.getString(
+                    R.string.a11y_inputErrorMessage,
+                    errorText
+                )
+            }
+        }
+    ) {
         if (label != null) {
             InputLabel(
                 state = InputLabelState(
                     text = label,
                     required = required,
-                    isError = errorText == null,
+                    isError = errorText != null,
                 ),
             )
 

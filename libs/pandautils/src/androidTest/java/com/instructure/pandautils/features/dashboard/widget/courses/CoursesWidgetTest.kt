@@ -28,6 +28,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.pandautils.features.dashboard.widget.courses.model.CourseCardItem
 import com.instructure.pandautils.features.dashboard.widget.courses.model.GradeDisplay
 import com.instructure.pandautils.features.dashboard.widget.courses.model.GroupCardItem
@@ -88,9 +89,10 @@ class CoursesWidgetTest {
                 courseCode = "CS 101",
                 imageUrl = null,
                 grade = GradeDisplay.Hidden,
-                announcementCount = 0,
+                announcements = emptyList(),
                 isSynced = false,
-                isClickable = true
+                isClickable = true,
+                color = android.graphics.Color.RED
             )
         )
 
@@ -122,9 +124,10 @@ class CoursesWidgetTest {
                 courseCode = "CS 101",
                 imageUrl = null,
                 grade = GradeDisplay.Hidden,
-                announcementCount = 0,
+                announcements = emptyList(),
                 isSynced = false,
-                isClickable = true
+                isClickable = true,
+                color = android.graphics.Color.RED
             ),
             CourseCardItem(
                 id = 2,
@@ -132,9 +135,10 @@ class CoursesWidgetTest {
                 courseCode = "MATH 201",
                 imageUrl = null,
                 grade = GradeDisplay.Hidden,
-                announcementCount = 0,
+                announcements = emptyList(),
                 isSynced = false,
-                isClickable = true
+                isClickable = true,
+                color = android.graphics.Color.RED
             )
         )
 
@@ -197,9 +201,10 @@ class CoursesWidgetTest {
                 courseCode = "CS 101",
                 imageUrl = null,
                 grade = GradeDisplay.Hidden,
-                announcementCount = 0,
+                announcements = emptyList(),
                 isSynced = false,
-                isClickable = true
+                isClickable = true,
+                color = android.graphics.Color.RED
             )
         )
 
@@ -246,9 +251,10 @@ class CoursesWidgetTest {
                 courseCode = "CS 101",
                 imageUrl = null,
                 grade = GradeDisplay.Percentage("85%"),
-                announcementCount = 0,
+                announcements = emptyList(),
                 isSynced = false,
-                isClickable = true
+                isClickable = true,
+                color = android.graphics.Color.RED
             )
         )
 
@@ -280,9 +286,10 @@ class CoursesWidgetTest {
                 courseCode = "CS 101",
                 imageUrl = null,
                 grade = GradeDisplay.Letter("A-"),
-                announcementCount = 0,
+                announcements = emptyList(),
                 isSynced = false,
-                isClickable = true
+                isClickable = true,
+                color = android.graphics.Color.RED
             )
         )
 
@@ -314,9 +321,10 @@ class CoursesWidgetTest {
                 courseCode = "CS 101",
                 imageUrl = null,
                 grade = GradeDisplay.Percentage("85%"),
-                announcementCount = 0,
+                announcements = emptyList(),
                 isSynced = false,
-                isClickable = true
+                isClickable = true,
+                color = android.graphics.Color.RED
             )
         )
 
@@ -350,9 +358,10 @@ class CoursesWidgetTest {
                 courseCode = "CS 101",
                 imageUrl = null,
                 grade = GradeDisplay.Hidden,
-                announcementCount = 0,
+                announcements = emptyList(),
                 isSynced = false,
-                isClickable = true
+                isClickable = true,
+                color = android.graphics.Color.RED
             )
         )
 
@@ -420,9 +429,10 @@ class CoursesWidgetTest {
                 courseCode = "CS 101",
                 imageUrl = null,
                 grade = GradeDisplay.Hidden,
-                announcementCount = 0,
+                announcements = emptyList(),
                 isSynced = true,
-                isClickable = true
+                isClickable = true,
+                color = android.graphics.Color.RED
             )
         )
 
@@ -453,9 +463,13 @@ class CoursesWidgetTest {
                 courseCode = "CS 101",
                 imageUrl = null,
                 grade = GradeDisplay.Hidden,
-                announcementCount = 2,
+                announcements = listOf(
+                    DiscussionTopicHeader(id = 1L, title = "Announcement 1"),
+                    DiscussionTopicHeader(id = 2L, title = "Announcement 2")
+                ),
                 isSynced = false,
-                isClickable = true
+                isClickable = true,
+                color = android.graphics.Color.RED
             )
         )
 
@@ -488,9 +502,10 @@ class CoursesWidgetTest {
                 courseCode = "CS 101",
                 imageUrl = null,
                 grade = GradeDisplay.Hidden,
-                announcementCount = 0,
+                announcements = emptyList(),
                 isSynced = false,
-                isClickable = true
+                isClickable = true,
+                color = android.graphics.Color.RED
             )
         )
 
@@ -528,9 +543,10 @@ class CoursesWidgetTest {
                 courseCode = "CS 101",
                 imageUrl = null,
                 grade = GradeDisplay.Hidden,
-                announcementCount = 0,
+                announcements = emptyList(),
                 isSynced = false,
-                isClickable = true
+                isClickable = true,
+                color = android.graphics.Color.RED
             )
         )
 
@@ -638,9 +654,10 @@ class CoursesWidgetTest {
                 courseCode = "CS 101",
                 imageUrl = null,
                 grade = GradeDisplay.Hidden,
-                announcementCount = 0,
+                announcements = emptyList(),
                 isSynced = false,
-                isClickable = true
+                isClickable = true,
+                color = android.graphics.Color.RED
             ),
             CourseCardItem(
                 id = 2,
@@ -648,9 +665,10 @@ class CoursesWidgetTest {
                 courseCode = "CS 102",
                 imageUrl = null,
                 grade = GradeDisplay.Hidden,
-                announcementCount = 0,
+                announcements = emptyList(),
                 isSynced = false,
-                isClickable = true
+                isClickable = true,
+                color = android.graphics.Color.RED
             ),
             CourseCardItem(
                 id = 3,
@@ -658,9 +676,10 @@ class CoursesWidgetTest {
                 courseCode = "CS 103",
                 imageUrl = null,
                 grade = GradeDisplay.Hidden,
-                announcementCount = 0,
+                announcements = emptyList(),
                 isSynced = false,
-                isClickable = true
+                isClickable = true,
+                color = android.graphics.Color.RED
             )
         )
 

@@ -29,6 +29,7 @@ import com.instructure.canvas.espresso.mockcanvas.fakes.FakeCustomGradeStatusesM
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeDifferentiationTagsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeInboxSettingsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakePostPolicyManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeRecentGradedSubmissionsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeStudentContextManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionCommentsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionContentManager
@@ -46,6 +47,7 @@ import com.instructure.canvasapi2.managers.SubmissionRubricManager
 import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.managers.graphql.DifferentiationTagsManager
+import com.instructure.canvasapi2.managers.graphql.RecentGradedSubmissionsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionCommentsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionDetailsManager
@@ -124,6 +126,10 @@ class SpeedGraderGradeInteractionTest : TeacherComposeTest() {
     @BindValue
     @JvmField
     val differentiationTagsManager: DifferentiationTagsManager = FakeDifferentiationTagsManager()
+
+    @BindValue
+    @JvmField
+    val recentGradedSubmissionsManager: RecentGradedSubmissionsManager = FakeRecentGradedSubmissionsManager()
 
     @Test
     fun correctViewsForPointGradedWithoutRubric() {

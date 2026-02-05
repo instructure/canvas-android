@@ -44,4 +44,8 @@ data class GradingRule(
     val dropHighest: Int = 0,
     @SerializedName("never_drop")
     val neverDrop: List<Long> = ArrayList()
-) : Parcelable
+) : Parcelable {
+    fun hasValidRule() : Boolean {
+        return dropLowest != 0 || dropHighest != 0 || neverDrop.isNotEmpty()
+    }
+}

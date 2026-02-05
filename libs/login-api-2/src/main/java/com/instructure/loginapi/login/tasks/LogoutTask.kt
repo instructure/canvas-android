@@ -29,7 +29,6 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.JourneyApiPref
 import com.instructure.canvasapi2.utils.MasqueradeHelper
-import com.instructure.canvasapi2.utils.RedwoodApiPref
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.loginapi.login.util.PreviousUsersUtils
 import com.instructure.pandautils.models.PushNotification
@@ -122,7 +121,6 @@ abstract class LogoutTask(
                 ApiPrefs.clearAllData()
                 FilePrefs.clearPrefs()
                 ThemePrefs.safeClearPrefs()
-                RedwoodApiPref.clearPrefs()
                 JourneyApiPref.clearPrefs()
 
                 // Cookies are cleared in BaseLoginSignInActivity
