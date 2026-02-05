@@ -532,7 +532,10 @@ class CalendarViewModel @Inject constructor(
         viewModelScope.launch {
             val event = when (plannerItem.plannableType) {
                 PlannableType.ASSIGNMENT -> {
-                    CalendarViewModelAction.OpenAssignment(plannerItem.canvasContext, plannerItem.plannable.id)
+                    CalendarViewModelAction.OpenAssignment(
+                        plannerItem.canvasContext,
+                        plannerItem.plannable.assignmentId ?: plannerItem.plannable.id
+                    )
                 }
 
                 PlannableType.SUB_ASSIGNMENT -> {
