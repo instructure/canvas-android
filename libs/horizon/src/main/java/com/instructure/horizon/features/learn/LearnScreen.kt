@@ -17,16 +17,23 @@
 
 package com.instructure.horizon.features.learn
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.features.learn.course.list.LearnCourseListScreen
+import com.instructure.horizon.features.learn.course.list.LearnCourseListViewModel
 import com.instructure.horizon.features.learn.program.list.LearnProgramListScreen
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.organisms.CollapsableScaffold
@@ -45,13 +52,16 @@ fun LearnScreen(
                 selectedIndex = state.tabs.indexOf(state.selectedTab),
                 onTabSelected = { state.updateSelectedTabIndex(it) },
                 tabAlignment = Alignment.Start,
-                tabItemToLabel = { stringResource(it.labelRes) }
+                tabItemToLabel = { stringResource(it.labelRes) },
+                modifier = Modifier.padding(horizontal = 24.dp)
             )
         }
     ) {
         when(state.selectedTab) {
             LearnTab.COURSES -> {
-                LearnCourseListScreen()
+                val viewModel = hiltViewModel<LearnCourseListViewModel>()
+                val state by viewModel.state.collectAsState()
+                LearnCourseListScreen(state, navController)
             }
             LearnTab.PROGRAMS -> {
                 LearnProgramListScreen()

@@ -17,11 +17,17 @@
 package com.instructure.horizon.features.learn.course.details
 
 import androidx.annotation.StringRes
-import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
 import com.instructure.horizon.R
+import com.instructure.horizon.horizonui.platform.LoadingState
 
 data class CourseDetailsUiState(
-    val selectedCourse: CourseWithProgress? = null,
+    val loadingState: LoadingState = LoadingState(),
+    val courseName: String = "",
+    val courseProgress: Double = 0.0,
+    val courseId: Long = -1L,
+    val courseSyllabus: String = "",
+    val parentPrograms: List<Program> = emptyList(),
     val availableTabs: List<CourseDetailsTab> = CourseDetailsTab.entries,
 )
 
