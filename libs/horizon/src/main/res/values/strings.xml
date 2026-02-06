@@ -519,7 +519,7 @@
     <string name="a11y_igniteAiLoadingContentDescription">Loading response</string>
     <string name="a11y_aiAssistFlashcardClickActionLabel">Flip the card</string>
     <string name="learnCourseListFailedToLoadCoursesMessage">Failed to load courses</string>
-    <string name="learnCourseListFilterAll">All</string>
+    <string name="learnCourseListFilterAll">All courses</string>
     <string name="learnCourseListFilterNotStarted">Not started</string>
     <string name="learnCourseListFilterInProgress">In progress</string>
     <string name="learnCourseListFilterCompleted">Completed</string>
