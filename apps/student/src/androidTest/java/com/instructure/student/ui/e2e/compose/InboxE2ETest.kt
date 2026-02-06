@@ -51,10 +51,10 @@ class InboxE2ETest: StudentComposeTest() {
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
+    @ReleaseExclude
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.E2E)
-    @ReleaseExclude
     fun testInboxSelectedButtonActionsE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
