@@ -24,7 +24,6 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
-import com.instructure.canvas.espresso.annotations.ReleaseExclude
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.GradingPeriodsApi
 import com.instructure.dataseeding.api.SubmissionsApi
@@ -49,7 +48,6 @@ class GradesElementaryE2ETest : StudentTest() {
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
-    @ReleaseExclude
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.E2E, SecondaryFeatureCategory.K5_GRADES)
