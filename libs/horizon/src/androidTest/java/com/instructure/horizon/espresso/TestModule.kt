@@ -26,8 +26,10 @@ import com.instructure.pandautils.features.calendartodo.details.ToDoViewModelBeh
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardRepository
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardRouter
 import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
-import com.instructure.pandautils.features.dashboard.widget.forecast.ForecastWidgetRouter
 import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidgetBehavior
+import com.instructure.pandautils.features.dashboard.widget.forecast.ForecastWidgetRouter
+import com.instructure.pandautils.features.dashboard.widget.todo.TodoWidgetBehavior
+import com.instructure.pandautils.features.dashboard.widget.todo.TodoWidgetRouter
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragmentBehavior
 import com.instructure.pandautils.features.discussion.router.DiscussionRouteHelperRepository
 import com.instructure.pandautils.features.discussion.router.DiscussionRouter
@@ -370,6 +372,16 @@ object HorizonTestModule {
 
     @Provides
     fun provideForecastWidgetRouter(): ForecastWidgetRouter {
+        throw NotImplementedError("This is a test module. Implementation not required.")
+    }
+
+    @Provides
+    fun provideTodoWidgetRouter(): TodoWidgetRouter {
+        throw NotImplementedError("This is a test module. Implementation not required.")
+    }
+
+    @Provides
+    fun provideTodoWidgetBehavior(): TodoWidgetBehavior {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 }
