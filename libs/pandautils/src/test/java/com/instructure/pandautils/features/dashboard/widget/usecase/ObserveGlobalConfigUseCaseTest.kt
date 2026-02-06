@@ -1,33 +1,16 @@
-/*
- * Copyright (C) 2025 - present Instructure, Inc.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, version 3 of the License.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-package com.instructure.pandautils.features.dashboard.widget.forecast
+package com.instructure.pandautils.features.dashboard.widget.usecase
 
 import com.google.gson.Gson
 import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.repository.WidgetConfigDataRepository
-import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveGlobalConfigUseCase
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 
@@ -45,46 +28,46 @@ class ObserveGlobalConfigUseCaseTest {
 
     @Test
     fun `execute returns default config when json is null`() = runTest {
-        coEvery { repository.observeConfigJson(WidgetMetadata.WIDGET_ID_GLOBAL) } returns flowOf(null)
+        coEvery { repository.observeConfigJson(WidgetMetadata.Companion.WIDGET_ID_GLOBAL) } returns flowOf(null)
 
         val result = useCase(Unit).first()
 
-        assertEquals(WidgetMetadata.WIDGET_ID_GLOBAL, result.widgetId)
-        assertEquals(0xFF2573DF.toInt(), result.backgroundColor)
+        Assert.assertEquals(WidgetMetadata.Companion.WIDGET_ID_GLOBAL, result.widgetId)
+        Assert.assertEquals(0xFF2573DF.toInt(), result.backgroundColor)
     }
 
     @Test
     fun `execute returns parsed config when json is valid`() = runTest {
         val customColor = 0xFF00FF00.toInt()
         val configJson = """{"widgetId":"global","backgroundColor":$customColor}"""
-        coEvery { repository.observeConfigJson(WidgetMetadata.WIDGET_ID_GLOBAL) } returns flowOf(configJson)
+        coEvery { repository.observeConfigJson(WidgetMetadata.Companion.WIDGET_ID_GLOBAL) } returns flowOf(configJson)
 
         val result = useCase(Unit).first()
 
-        assertEquals(WidgetMetadata.WIDGET_ID_GLOBAL, result.widgetId)
-        assertEquals(customColor, result.backgroundColor)
+        Assert.assertEquals(WidgetMetadata.Companion.WIDGET_ID_GLOBAL, result.widgetId)
+        Assert.assertEquals(customColor, result.backgroundColor)
     }
 
     @Test
     fun `execute returns default config when json is invalid`() = runTest {
         val invalidJson = "invalid json"
-        coEvery { repository.observeConfigJson(WidgetMetadata.WIDGET_ID_GLOBAL) } returns flowOf(invalidJson)
+        coEvery { repository.observeConfigJson(WidgetMetadata.Companion.WIDGET_ID_GLOBAL) } returns flowOf(invalidJson)
 
         val result = useCase(Unit).first()
 
-        assertEquals(WidgetMetadata.WIDGET_ID_GLOBAL, result.widgetId)
-        assertEquals(0xFF2573DF.toInt(), result.backgroundColor)
+        Assert.assertEquals(WidgetMetadata.Companion.WIDGET_ID_GLOBAL, result.widgetId)
+        Assert.assertEquals(0xFF2573DF.toInt(), result.backgroundColor)
     }
 
     @Test
     fun `execute returns default config when json parsing throws exception`() = runTest {
         val malformedJson = """{"widgetId":"global","backgroundColor":"not a number"}"""
-        coEvery { repository.observeConfigJson(WidgetMetadata.WIDGET_ID_GLOBAL) } returns flowOf(malformedJson)
+        coEvery { repository.observeConfigJson(WidgetMetadata.Companion.WIDGET_ID_GLOBAL) } returns flowOf(malformedJson)
 
         val result = useCase(Unit).first()
 
-        assertEquals(WidgetMetadata.WIDGET_ID_GLOBAL, result.widgetId)
-        assertEquals(0xFF2573DF.toInt(), result.backgroundColor)
+        Assert.assertEquals(WidgetMetadata.Companion.WIDGET_ID_GLOBAL, result.widgetId)
+        Assert.assertEquals(0xFF2573DF.toInt(), result.backgroundColor)
     }
 
     @Test
@@ -94,23 +77,23 @@ class ObserveGlobalConfigUseCaseTest {
         val configJson1 = """{"widgetId":"global","backgroundColor":$color1}"""
         val configJson2 = """{"widgetId":"global","backgroundColor":$color2}"""
 
-        coEvery { repository.observeConfigJson(WidgetMetadata.WIDGET_ID_GLOBAL) } returns flowOf(configJson1, configJson2)
+        coEvery { repository.observeConfigJson(WidgetMetadata.Companion.WIDGET_ID_GLOBAL) } returns flowOf(configJson1, configJson2)
 
         val results = mutableListOf<GlobalConfig>()
         useCase(Unit).collect { results.add(it) }
 
-        assertEquals(2, results.size)
-        assertEquals(color1, results[0].backgroundColor)
-        assertEquals(color2, results[1].backgroundColor)
+        Assert.assertEquals(2, results.size)
+        Assert.assertEquals(color1, results[0].backgroundColor)
+        Assert.assertEquals(color2, results[1].backgroundColor)
     }
 
     @Test
     fun `execute returns default config with correct widget id`() = runTest {
-        coEvery { repository.observeConfigJson(WidgetMetadata.WIDGET_ID_GLOBAL) } returns flowOf(null)
+        coEvery { repository.observeConfigJson(WidgetMetadata.Companion.WIDGET_ID_GLOBAL) } returns flowOf(null)
 
         val result = useCase(Unit).first()
 
-        assertEquals(WidgetMetadata.WIDGET_ID_GLOBAL, result.widgetId)
+        Assert.assertEquals(WidgetMetadata.Companion.WIDGET_ID_GLOBAL, result.widgetId)
     }
 
     @Test
@@ -118,14 +101,14 @@ class ObserveGlobalConfigUseCaseTest {
         val customColor = 0xFF123456.toInt()
         val configJson = """{"widgetId":"global","backgroundColor":$customColor}"""
 
-        coEvery { repository.observeConfigJson(WidgetMetadata.WIDGET_ID_GLOBAL) } returns flowOf(null, configJson)
+        coEvery { repository.observeConfigJson(WidgetMetadata.Companion.WIDGET_ID_GLOBAL) } returns flowOf(null, configJson)
 
         val results = mutableListOf<GlobalConfig>()
         useCase(Unit).collect { results.add(it) }
 
-        assertEquals(2, results.size)
-        assertEquals(0xFF2573DF.toInt(), results[0].backgroundColor)
-        assertEquals(customColor, results[1].backgroundColor)
+        Assert.assertEquals(2, results.size)
+        Assert.assertEquals(0xFF2573DF.toInt(), results[0].backgroundColor)
+        Assert.assertEquals(customColor, results[1].backgroundColor)
     }
 
     @Test
@@ -133,13 +116,13 @@ class ObserveGlobalConfigUseCaseTest {
         val customColor = 0xFF123456.toInt()
         val configJson = """{"widgetId":"global","backgroundColor":$customColor}"""
 
-        coEvery { repository.observeConfigJson(WidgetMetadata.WIDGET_ID_GLOBAL) } returns flowOf(configJson, null)
+        coEvery { repository.observeConfigJson(WidgetMetadata.Companion.WIDGET_ID_GLOBAL) } returns flowOf(configJson, null)
 
         val results = mutableListOf<GlobalConfig>()
         useCase(Unit).collect { results.add(it) }
 
-        assertEquals(2, results.size)
-        assertEquals(customColor, results[0].backgroundColor)
-        assertEquals(0xFF2573DF.toInt(), results[1].backgroundColor)
+        Assert.assertEquals(2, results.size)
+        Assert.assertEquals(customColor, results[0].backgroundColor)
+        Assert.assertEquals(0xFF2573DF.toInt(), results[1].backgroundColor)
     }
 }

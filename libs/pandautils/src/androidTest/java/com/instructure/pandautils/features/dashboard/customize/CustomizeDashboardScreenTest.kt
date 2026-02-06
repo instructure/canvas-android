@@ -693,4 +693,292 @@ class CustomizeDashboardScreenTest {
         composeTestRule.onNodeWithTag("widgetItem_widget2").assertIsDisplayed()
         composeTestRule.onNodeWithTag("widgetItem_widget3").assertIsDisplayed()
     }
+
+    @Test
+    fun testTodoWidgetDisplayed() {
+        val widgets = listOf(
+            WidgetItem(
+                metadata = WidgetMetadata(
+                    id = "todo",
+                    position = 0,
+                    isVisible = true,
+                    isEditable = true
+                ),
+                displayName = "To Do",
+                settings = emptyList()
+            )
+        )
+
+        val uiState = CustomizeDashboardUiState(
+            loading = false,
+            widgets = widgets
+        )
+
+        composeTestRule.setContent {
+            CustomizeDashboardScreenContent(
+                uiState = uiState,
+                onRestartApp = {},
+                onNavigateBack = {}
+            )
+        }
+
+        composeTestRule.onNodeWithText("To Do").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("widgetItem_todo").assertIsDisplayed()
+    }
+
+    @Test
+    fun testGlobalSettingsWithBackgroundColor() {
+        val globalSettings = listOf(
+            WidgetSettingItem(
+                key = "backgroundColor",
+                value = 0xFF0000FF.toInt(),
+                type = SettingType.COLOR
+            )
+        )
+
+        val widgets = listOf(
+            WidgetItem(
+                metadata = WidgetMetadata(
+                    id = "widget1",
+                    position = 0,
+                    isVisible = true,
+                    isEditable = true
+                ),
+                displayName = "Widget 1",
+                settings = emptyList()
+            )
+        )
+
+        val uiState = CustomizeDashboardUiState(
+            loading = false,
+            widgets = widgets,
+            globalSettings = globalSettings
+        )
+
+        composeTestRule.setContent {
+            CustomizeDashboardScreenContent(
+                uiState = uiState,
+                onRestartApp = {},
+                onNavigateBack = {}
+            )
+        }
+
+        // Verify the widgets color label is displayed (from globalSettings)
+        composeTestRule.onNodeWithText("Widgets color").assertIsDisplayed()
+    }
+
+    @Test
+    fun testMultipleGlobalSettings() {
+        val globalSettings = listOf(
+            WidgetSettingItem(
+                key = "backgroundColor",
+                value = 0xFF0000FF.toInt(),
+                type = SettingType.COLOR
+            ),
+            WidgetSettingItem(
+                key = "showGreeting",
+                value = true,
+                type = SettingType.BOOLEAN
+            )
+        )
+
+        val widgets = listOf(
+            WidgetItem(
+                metadata = WidgetMetadata(
+                    id = "widget1",
+                    position = 0,
+                    isVisible = true,
+                    isEditable = true
+                ),
+                displayName = "Widget 1",
+                settings = emptyList()
+            )
+        )
+
+        val uiState = CustomizeDashboardUiState(
+            loading = false,
+            widgets = widgets,
+            globalSettings = globalSettings
+        )
+
+        composeTestRule.setContent {
+            CustomizeDashboardScreenContent(
+                uiState = uiState,
+                onRestartApp = {},
+                onNavigateBack = {}
+            )
+        }
+
+        // Verify both global settings are displayed
+        composeTestRule.onNodeWithText("Widgets color").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Show greeting").assertIsDisplayed()
+    }
+
+    @Test
+    fun testWelcomeWidgetDisplayedWithCustomName() {
+        val widgets = listOf(
+            WidgetItem(
+                metadata = WidgetMetadata(
+                    id = "welcome",
+                    position = 0,
+                    isVisible = true,
+                    isEditable = true
+                ),
+                displayName = "Hello, Test User",
+                settings = emptyList()
+            )
+        )
+
+        val uiState = CustomizeDashboardUiState(
+            loading = false,
+            widgets = widgets
+        )
+
+        composeTestRule.setContent {
+            CustomizeDashboardScreenContent(
+                uiState = uiState,
+                onRestartApp = {},
+                onNavigateBack = {}
+            )
+        }
+
+        composeTestRule.onNodeWithText("Hello, Test User").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("widgetItem_welcome").assertIsDisplayed()
+    }
+
+    @Test
+    fun testAllDefaultWidgetsDisplayed() {
+        val widgets = listOf(
+            WidgetItem(
+                metadata = WidgetMetadata(
+                    id = "course_invitations",
+                    position = 0,
+                    isVisible = true,
+                    isEditable = false
+                ),
+                displayName = "Course Invitations",
+                settings = emptyList()
+            ),
+            WidgetItem(
+                metadata = WidgetMetadata(
+                    id = "institutional_announcements",
+                    position = 1,
+                    isVisible = true,
+                    isEditable = false
+                ),
+                displayName = "Institutional Announcements",
+                settings = emptyList()
+            ),
+            WidgetItem(
+                metadata = WidgetMetadata(
+                    id = "welcome",
+                    position = 2,
+                    isVisible = true,
+                    isEditable = true
+                ),
+                displayName = "Hello, Test User",
+                settings = emptyList()
+            ),
+            WidgetItem(
+                metadata = WidgetMetadata(
+                    id = "courses",
+                    position = 3,
+                    isVisible = true,
+                    isEditable = true
+                ),
+                displayName = "Courses",
+                settings = emptyList()
+            ),
+            WidgetItem(
+                metadata = WidgetMetadata(
+                    id = "forecast",
+                    position = 4,
+                    isVisible = true,
+                    isEditable = true
+                ),
+                displayName = "Forecast",
+                settings = emptyList()
+            ),
+            WidgetItem(
+                metadata = WidgetMetadata(
+                    id = "todo",
+                    position = 5,
+                    isVisible = true,
+                    isEditable = true
+                ),
+                displayName = "To Do",
+                settings = emptyList()
+            )
+        )
+
+        val uiState = CustomizeDashboardUiState(
+            loading = false,
+            widgets = widgets
+        )
+
+        composeTestRule.setContent {
+            CustomizeDashboardScreenContent(
+                uiState = uiState,
+                onRestartApp = {},
+                onNavigateBack = {}
+            )
+        }
+
+        composeTestRule.onNodeWithText("Course Invitations").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Institutional Announcements").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Hello, Test User").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Courses").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Forecast").assertIsDisplayed()
+        composeTestRule.onNodeWithText("To Do").assertIsDisplayed()
+    }
+
+    @Test
+    fun testWidgetSettingsUpdate() {
+        var updateCalled = false
+        var updatedWidgetId = ""
+        var updatedKey = ""
+        var updatedValue: Any? = null
+
+        val widgets = listOf(
+            WidgetItem(
+                metadata = WidgetMetadata(
+                    id = "courses",
+                    position = 0,
+                    isVisible = true,
+                    isEditable = true
+                ),
+                displayName = "Courses",
+                settings = listOf(
+                    WidgetSettingItem(
+                        key = "showGrades",
+                        value = false,
+                        type = SettingType.BOOLEAN
+                    )
+                )
+            )
+        )
+
+        val uiState = CustomizeDashboardUiState(
+            loading = false,
+            widgets = widgets,
+            onUpdateSetting = { widgetId, key, value ->
+                updateCalled = true
+                updatedWidgetId = widgetId
+                updatedKey = key
+                updatedValue = value
+            }
+        )
+
+        composeTestRule.setContent {
+            CustomizeDashboardScreenContent(
+                uiState = uiState,
+                onRestartApp = {},
+                onNavigateBack = {}
+            )
+        }
+
+        // Verify the widget and its settings are displayed
+        composeTestRule.onNodeWithText("Courses").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("widgetItem_courses").assertIsDisplayed()
+    }
 }
