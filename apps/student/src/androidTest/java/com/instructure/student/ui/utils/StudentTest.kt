@@ -34,6 +34,7 @@ import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.canvas.espresso.common.pages.AboutPage
 import com.instructure.canvas.espresso.common.pages.CanvasNetworkSignInPage
 import com.instructure.canvas.espresso.common.pages.EmailNotificationsPage
+import com.instructure.canvas.espresso.common.pages.FileChooserPage
 import com.instructure.canvas.espresso.common.pages.InboxPage
 import com.instructure.canvas.espresso.common.pages.LegalPage
 import com.instructure.canvas.espresso.common.pages.LoginFindSchoolPage
@@ -59,7 +60,6 @@ import com.instructure.student.ui.pages.classic.CourseGradesPage
 import com.instructure.student.ui.pages.classic.DashboardPage
 import com.instructure.student.ui.pages.classic.DiscussionDetailsPage
 import com.instructure.student.ui.pages.classic.DiscussionListPage
-import com.instructure.student.ui.pages.classic.FileChooserPage
 import com.instructure.student.ui.pages.classic.FileListPage
 import com.instructure.student.ui.pages.classic.GoToQuizPage
 import com.instructure.student.ui.pages.classic.GradesPage
