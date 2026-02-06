@@ -27,7 +27,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -47,6 +49,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.foundation.horizonBorderShadow
 import com.instructure.horizon.horizonui.foundation.horizonShadow
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
@@ -60,6 +63,7 @@ import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.molecules.StatusChipState
 import com.instructure.horizon.horizonui.organisms.CollapsableHeaderScreen
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
+import com.instructure.pandautils.compose.modifiers.conditional
 
 @Composable
 fun LearnProgramListScreen(
@@ -93,13 +97,15 @@ private fun LearnProgramListContent(
     navController: NavHostController
 ) {
     LoadingStateWrapper(state.loadingState) {
+        val scrollState = rememberLazyListState()
         LazyColumn(
+            state = scrollState,
             verticalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding = PaddingValues(bottom = 24.dp),
             modifier = Modifier.testTag("CollapsableBody")
         ) {
             stickyHeader {
-                LearnProgramListFilter(state)
+                LearnProgramListFilter(state, scrollState)
             }
 
             if (state.filteredPrograms.isEmpty()) {
@@ -181,12 +187,15 @@ private fun LearnProgramCard(
 }
 
 @Composable
-private fun LearnProgramListFilter(state: LearnProgramListUiState) {
+private fun LearnProgramListFilter(state: LearnProgramListUiState, scrollState: LazyListState) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
             .fillMaxWidth()
+            .conditional(scrollState.canScrollBackward) {
+                horizonBorderShadow(HorizonColors.LineAndBorder.lineStroke(), bottom = 1.dp)
+            }
             .background(HorizonColors.Surface.pagePrimary())
             .padding(horizontal = 24.dp, vertical = 16.dp)
     ) {
