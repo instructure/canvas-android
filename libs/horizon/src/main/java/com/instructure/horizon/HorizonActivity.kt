@@ -102,6 +102,17 @@ class HorizonActivity : BaseCanvasActivity() {
             hasUnreadPushNotification(intent.extras)
         ) {
             handlePushNotification(hasUnreadPushNotification(intent.extras))
+        } else {
+            intent.data?.let { uri ->
+                val request = NavDeepLinkRequest.Builder
+                    .fromUri(uri)
+                    .build()
+
+                navController.navigate(
+                    request,
+                    navOptions = NavOptions.Builder().setLaunchSingleTop(true).build()
+                )
+            }
         }
     }
 

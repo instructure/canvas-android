@@ -131,7 +131,7 @@ import com.instructure.pandautils.utils.orDefault
 import kotlin.math.abs
 
 @Composable
-fun ModuleItemSequenceScreen(mainNavController: NavHostController, uiState: ModuleItemSequenceUiState) {
+fun ModuleItemSequenceScreen(navController: NavHostController, uiState: ModuleItemSequenceUiState) {
     if (uiState.progressScreenState.visible) ProgressScreen(uiState.progressScreenState, uiState.loadingState)
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -150,7 +150,7 @@ fun ModuleItemSequenceScreen(mainNavController: NavHostController, uiState: Modu
                 onAssignmentToolsClick = uiState.onAssignmentToolsClick,
                 onAiAssistClick = { uiState.updateShowAiAssist(true) },
                 onNotebookClick = {
-                    mainNavController.navigate(
+                    navController.navigate(
                         NotebookRoute.Notebook.route(
                             uiState.courseId.toString(),
                             uiState.objectTypeAndId.first,
@@ -170,16 +170,17 @@ fun ModuleItemSequenceScreen(mainNavController: NavHostController, uiState: Modu
         Box(modifier = Modifier.padding(contentPadding)) {
             if (uiState.showAiAssist) {
                 AiAssistantScreen(
-                    mainNavController = mainNavController,
+                    mainNavController = navController,
                     onDismiss = { uiState.updateShowAiAssist(false) },
                 )
             }
             ModuleItemSequenceContent(
                 uiState = uiState,
-                mainNavController = mainNavController,
+                navController = navController,
                 onBackPressed = {
-                    mainNavController.popBackStack()
-                })
+                    navController.popBackStack()
+                }
+            )
             val markAsDoneState = uiState.currentItem?.markAsDoneUiState
             if (markAsDoneState != null && !uiState.currentItem.isLoading) {
                 MarkAsDoneButton(markAsDoneState)
@@ -234,10 +235,11 @@ private fun BoxScope.MarkAsDoneButton(markAsDoneState: MarkAsDoneUiState, modifi
 @Composable
 private fun ModuleItemSequenceContent(
     uiState: ModuleItemSequenceUiState,
-    mainNavController: NavHostController,
+    navController: NavHostController,
     onBackPressed: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val parentNavController = navController
     val scrollConnectionSaver = Saver<MutableState<CollapsingAppBarNestedScrollConnection>, Pair<Int, Int>>(
         save = { it.value.appBarMaxHeight to it.value.appBarOffset },
         restore = { (mutableStateOf(CollapsingAppBarNestedScrollConnection(it.first).apply { appBarOffset = it.second })) }
@@ -309,7 +311,7 @@ private fun ModuleItemSequenceContent(
                         moduleItemUiState,
                         scrollState = contentScrollState,
                         moduleHeaderHeight = moduleHeaderHeight,
-                        mainNavController,
+                        parentNavController,
                         uiState.showAssignmentToolsForId,
                         uiState.assignmentToolsOpened,
                         updateAiContext = uiState.updateAiAssistContext,
@@ -423,7 +425,7 @@ private fun ModuleItemContentScreen(
     moduleItemUiState: ModuleItemUiState,
     scrollState: ScrollState,
     moduleHeaderHeight: Dp,
-    mainNavController: NavHostController,
+    parentNavController: NavHostController,
     assignmentToolsForId: Long?,
     assignmentToolsOpened: () -> Unit,
     updateAiContext: (AiAssistContextSource, String) -> Unit,
@@ -487,7 +489,7 @@ private fun ModuleItemContentScreen(
                     uiState = uiState,
                     scrollState = scrollState,
                     updateAiContext = { source, content -> updateAiContext(source, content) },
-                    mainNavController = mainNavController,
+                    navController = parentNavController,
                     scrollToNoteId = scrollToNoteId
                 )
             }
@@ -654,7 +656,7 @@ private class CollapsingAppBarNestedScrollConnection(
 private fun ModuleItemSequenceScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
     ModuleItemSequenceScreen(
-        mainNavController = rememberNavController(),
+        navController = rememberNavController(),
         uiState = ModuleItemSequenceUiState(
             courseId = 1L,
             items = listOf(

@@ -31,7 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonWidth
@@ -45,7 +45,7 @@ import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 @Composable
 fun AccountAdvancedScreen(
     state: AccountAdvancedUiState,
-    navController: NavController
+    navController: NavHostController
 ) {
     HorizonScaffold(
         title = stringResource(R.string.accountAdvancedTitle),

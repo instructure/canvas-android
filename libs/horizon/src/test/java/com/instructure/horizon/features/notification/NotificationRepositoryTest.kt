@@ -53,12 +53,14 @@ class NotificationRepositoryTest {
         val validCourse = CourseWithProgress(
             courseId = 1L,
             courseName = "Course 1",
+            courseImageUrl = null,
             courseSyllabus = "",
             progress = 5.0
         )
         val notValidCourse = CourseWithProgress(
             courseId = 2L,
             courseName = "Course 2",
+            courseImageUrl = null,
             courseSyllabus = "",
             progress = 0.0
         )

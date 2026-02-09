@@ -42,6 +42,7 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
@@ -58,7 +59,7 @@ import com.instructure.pandautils.utils.getActivityOrNull
 @Composable
 fun AccountScreen(
     state: AccountUiState,
-    navController: NavController,
+    navController: NavHostController,
 ) {
 
     val renameFlow = remember { navController.currentBackStackEntry?.savedStateHandle?.getStateFlow<String?>(AccountViewModel.CHANGE_USER_NAME, null) }
