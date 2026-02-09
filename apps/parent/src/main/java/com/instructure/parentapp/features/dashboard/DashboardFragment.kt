@@ -295,12 +295,26 @@ class DashboardFragment : BaseCanvasFragment(), NavigationCallbacks {
             val insets = windowInsets.getInsets(
                 WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
             )
-            view.setPadding(
-                insets.left,
-                insets.top,
-                insets.right,
-                insets.bottom
-            )
+            val isLandscape = resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
+
+            if (isLandscape) {
+                // In landscape, navigation buttons are on the sides - remove left/right padding
+                view.setPadding(
+                    0,  // Remove left padding in landscape
+                    insets.top,
+                    0,  // Remove right padding in landscape
+                    0
+                )
+            } else {
+                // In portrait, apply normal insets
+                view.setPadding(
+                    insets.left,
+                    insets.top,
+                    insets.right,
+                    insets.bottom
+                )
+            }
+
             windowInsets
         }
 
