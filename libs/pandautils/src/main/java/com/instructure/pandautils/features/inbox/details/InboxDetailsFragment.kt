@@ -91,7 +91,16 @@ class InboxDetailsFragment : BaseCanvasFragment(), FragmentInteractions {
 
     override fun title(): String = getString(R.string.message)
 
-    override fun applyTheme() {}
+    override fun applyTheme() {
+        // Always use light/white status bar icons for better visibility
+        WindowInsetsHelper.setSystemBarsAppearance(requireActivity().window, false)
+    }
+
+    override fun onConfigurationChanged(newConfig: android.content.res.Configuration) {
+        super.onConfigurationChanged(newConfig)
+        // Reapply status bar appearance when orientation changes
+        applyTheme()
+    }
 
     override fun getFragment(): Fragment {
         return this
