@@ -55,6 +55,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -77,8 +78,6 @@ import com.instructure.pandautils.compose.composables.todo.ToDoItem
 import com.instructure.pandautils.compose.composables.todo.ToDoItemType
 import com.instructure.pandautils.compose.composables.todo.ToDoItemUiState
 import com.instructure.pandautils.features.todolist.OnToDoCountChanged
-import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.getFragmentActivityOrNull
 import com.jakewharton.threetenabp.AndroidThreeTen
@@ -204,7 +203,8 @@ fun TodoWidgetContent(
                             CanvasSwitch(
                                 checked = uiState.showCompleted,
                                 onCheckedChange = { uiState.onToggleShowCompleted() },
-                                color = Color(uiState.color.color())
+                                color = Color(uiState.color.color()),
+                                modifier = Modifier.testTag("ShowCompletedSwitch")
                             )
                         }
                     }
