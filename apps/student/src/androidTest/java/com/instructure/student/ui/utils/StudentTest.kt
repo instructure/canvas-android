@@ -60,7 +60,6 @@ import com.instructure.student.ui.pages.classic.DashboardPage
 import com.instructure.student.ui.pages.classic.DiscussionDetailsPage
 import com.instructure.student.ui.pages.classic.DiscussionListPage
 import com.instructure.student.ui.pages.classic.ElementaryGradesPage
-import com.instructure.student.ui.pages.classic.FileChooserPage
 import com.instructure.student.ui.pages.classic.FileListPage
 import com.instructure.student.ui.pages.classic.GoToQuizPage
 import com.instructure.student.ui.pages.classic.GroupBrowserPage
