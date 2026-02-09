@@ -131,8 +131,8 @@ class DashboardTimeSpentRepositoryTest {
     fun `getCourses returns courses successfully`() = runTest {
         val userId = 1L
         val courses = listOf(
-            CourseWithProgress(courseId = 1L, courseName = "Course 1", progress = 0.5),
-            CourseWithProgress(courseId = 2L, courseName = "Course 2", progress = 0.8)
+            CourseWithProgress(courseId = 1L, courseName = "Course 1", courseImageUrl = null, courseSyllabus = null, progress = 0.5),
+            CourseWithProgress(courseId = 2L, courseName = "Course 2", courseImageUrl = null, courseSyllabus = null, progress = 0.8)
         )
         val dataResult = DataResult.Success(courses)
 
@@ -148,7 +148,7 @@ class DashboardTimeSpentRepositoryTest {
     fun `getCourses with forceNetwork true uses network`() = runTest {
         val userId = 1L
         val courses = listOf(
-            CourseWithProgress(courseId = 3L, courseName = "Course 3", progress = 0.9)
+            CourseWithProgress(courseId = 3L, courseName = "Course 3", courseImageUrl = null, courseSyllabus = null, progress = 0.9)
         )
         val dataResult = DataResult.Success(courses)
 
