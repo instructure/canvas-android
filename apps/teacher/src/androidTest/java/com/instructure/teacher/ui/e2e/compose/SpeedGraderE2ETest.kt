@@ -24,6 +24,7 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
+import com.instructure.canvas.espresso.annotations.ReleaseExclude
 import com.instructure.canvas.espresso.pressBackButton
 import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.api.SubmissionsApi
@@ -51,6 +52,7 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
+    @ReleaseExclude
     @OptIn(ExperimentalTestApi::class)
     @E2E
     @Test

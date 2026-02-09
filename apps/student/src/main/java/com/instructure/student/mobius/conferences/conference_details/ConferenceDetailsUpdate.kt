@@ -58,7 +58,9 @@ class ConferenceDetailsUpdate : UpdateInit<ConferenceDetailsModel, ConferenceDet
             }
             is ConferenceDetailsEvent.RecordingClicked -> {
                 val recording = model.conference.recordings.first { it.recordingId == event.recordingId }
-                val url = recording.playbackUrl ?: recording.playbackFormats.firstOrNull()?.url.orEmpty()
+                val url = recording.playbackUrl
+                    ?: recording.playbackFormats.find { it.type == "presentation" }?.url
+                    ?: recording.playbackFormats.firstOrNull()?.url.orEmpty()
                 val newModel = model.copy(
                     launchingRecordings = model.launchingRecordings.plus(recording.recordingId to true)
                 )

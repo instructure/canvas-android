@@ -14,12 +14,19 @@
  *     limitations under the License.
  *
  */
+
 package com.instructure.teacher.ui.utils
 
 import android.app.Activity
+import android.app.Instrumentation
+import android.content.Intent
+import android.net.Uri
 import android.view.View
+import androidx.core.content.FileProvider
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
@@ -27,6 +34,7 @@ import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.canvas.espresso.common.pages.AboutPage
 import com.instructure.canvas.espresso.common.pages.CanvasNetworkSignInPage
 import com.instructure.canvas.espresso.common.pages.EmailNotificationsPage
+import com.instructure.canvas.espresso.common.pages.FileChooserPage
 import com.instructure.canvas.espresso.common.pages.InboxPage
 import com.instructure.canvas.espresso.common.pages.LegalPage
 import com.instructure.canvas.espresso.common.pages.LoginFindSchoolPage
@@ -36,6 +44,7 @@ import com.instructure.canvas.espresso.common.pages.WrongDomainPage
 import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.Searchable
+import com.instructure.pandautils.utils.Const
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.LoginActivity
@@ -57,7 +66,6 @@ import com.instructure.teacher.ui.pages.classic.EditPageDetailsPage
 import com.instructure.teacher.ui.pages.classic.EditProfileSettingsPage
 import com.instructure.teacher.ui.pages.classic.EditQuizDetailsPage
 import com.instructure.teacher.ui.pages.classic.EditSyllabusPage
-import com.instructure.teacher.ui.pages.classic.FileChooserPage
 import com.instructure.teacher.ui.pages.classic.FileListPage
 import com.instructure.teacher.ui.pages.classic.HelpPage
 import com.instructure.teacher.ui.pages.classic.LeftSideNavigationDrawerPage
@@ -82,6 +90,8 @@ import com.instructure.teacher.ui.pages.classic.UpdateFilePermissionsPage
 import com.instructure.teacher.ui.pages.classic.WebViewLoginPage
 import instructure.rceditor.RCETextEditor
 import org.hamcrest.Matcher
+import org.hamcrest.core.AllOf
+import java.io.File
 
 abstract class TeacherTest : CanvasTest() {
 
@@ -145,6 +155,41 @@ abstract class TeacherTest : CanvasTest() {
     val fileListPage = FileListPage(Searchable(R.id.search, R.id.queryInput, R.id.clearButton, R.id.backButton))
     val updateFilePermissionsPage = UpdateFilePermissionsPage()
     val fileChooserPage = FileChooserPage()
+
+    fun setupFileOnDevice(fileName: String): Uri {
+        File(InstrumentationRegistry.getInstrumentation().targetContext.cacheDir, "file_upload").deleteRecursively()
+        copyAssetFileToExternalCache(activityRule.activity, fileName)
+
+        val dir = activityRule.activity.externalCacheDir
+        val file = File(dir?.path, fileName)
+
+        val instrumentationContext = InstrumentationRegistry.getInstrumentation().context
+        return FileProvider.getUriForFile(
+            instrumentationContext,
+            "com.instructure.teacher" + Const.FILE_PROVIDER_AUTHORITY,
+            file
+        )
+    }
+
+    fun stubFilePickerIntent(fileName: String) {
+        val resultData = Intent()
+        val dir = activityRule.activity.externalCacheDir
+        val file = File(dir?.path, fileName)
+        val newFileUri = FileProvider.getUriForFile(
+            activityRule.activity,
+            "com.instructure.teacher" + Const.FILE_PROVIDER_AUTHORITY,
+            file
+        )
+        resultData.data = newFileUri
+        resultData.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+
+        Intents.intending(
+            AllOf.allOf(
+                IntentMatchers.hasAction(Intent.ACTION_GET_CONTENT),
+                IntentMatchers.hasType("*/*"),
+            )
+        ).respondWith(Instrumentation.ActivityResult(Activity.RESULT_OK, resultData))
+    }
 }
 
 /*
