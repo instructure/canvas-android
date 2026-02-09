@@ -50,6 +50,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -58,7 +59,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.FragmentActivity
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
@@ -114,7 +114,7 @@ fun ConferencesWidgetContent(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
                 .padding(bottom = 12.dp),
-            text = stringResource(R.string.conferencesWidgetTitle, uiState.conferences.size),
+            text = pluralStringResource(R.plurals.conferencesWidgetTitle, uiState.conferences.size, uiState.conferences.size),
             fontSize = 14.sp,
             lineHeight = 19.sp,
             fontWeight = FontWeight.Normal,

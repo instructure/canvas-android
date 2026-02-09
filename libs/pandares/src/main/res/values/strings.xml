@@ -1227,7 +1227,10 @@
     <string name="conferenceInProgress">Conference in progress</string>
 
     <!-- Conferences Widget -->
-    <string name="conferencesWidgetTitle">%d Live Conference(s)</string>
+    <plurals name="conferencesWidgetTitle">
+        <item quantity="one">%d Live Conference</item>
+        <item quantity="other">%d Live Conferences</item>
+    </plurals>
     <string name="conferencesWidgetConferenceInProgress">Conference in progress</string>
     <string name="conferencesWidgetDismissed">Conference dismissed</string>
 

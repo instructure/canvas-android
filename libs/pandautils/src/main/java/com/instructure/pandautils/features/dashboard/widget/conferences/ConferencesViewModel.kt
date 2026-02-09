@@ -99,6 +99,7 @@ class ConferencesViewModel @Inject constructor(
 
             conferencesWidgetRouter.launchConference(activity, conference.canvasContext, url)
 
+            // This delay is needed so the loading state does not immediately reset and cause a flicker in the UI. The conference join process may take a moment, and this provides a smoother user experience.
             delay(3000)
             _uiState.update { it.copy(joiningConferenceId = null) }
         }
