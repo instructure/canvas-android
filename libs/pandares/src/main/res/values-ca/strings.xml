@@ -1045,6 +1045,8 @@
 
     <string name="downloading">S\'està baixant</string>
     <string name="downloadComplete">S’ha completat la baixada</string>
+    <string name="fileDownloadNotificationPermissionDenied">S’ha iniciat la baixada. Activeu les notificacions per veure’n el progrés.</string>
+
     <string name="notificationChannelNameFileDownloadsName">Notificacions sobre les baixades</string>
     <string name="notificationChannelNameFileDownloadsDescription">Notificacions del Canvas sobre les baixades en curs.</string>
     <string name="full_due_date_details">Detalls complets sobre la data de lliurament</string>
@@ -1249,6 +1251,7 @@
     <string name="a11y_content_description_add_to_dashboard">Afegeix al panell de control</string>
     <string name="a11y_content_description_add_all_to_dashboard">Afegeix-ho tot al panell de control</string>
 
+    <string name="new_mobile_dashboard">Nou panell de control mòbil</string>
     <!-- K5 Strings -->
     <string name="navDrawerAccount">Usuari</string>
     <string name="dashboardTabHomeroom">Tutoria</string>
@@ -1368,6 +1371,10 @@
         <item quantity="other">%s notificacions sense llegir</item>
     </plurals>
 
+    <plurals name="a11y_todoBadgeCount">
+        <item quantity="one">%s element de Tasques pendents</item>
+        <item quantity="other">%s elements de Tasques pendents</item>
+    </plurals>
     <string name="noAnnotationSelected">No hi ha cap anotació seleccionada</string>
     <string name="emailNotifications">Notificacions per correu electrònic</string>
     <string name="emailNotificationsImmediately">Immediatament</string>
@@ -1908,6 +1915,8 @@
     <string name="gradePreferencesHeaderSortBy">Ordena per</string>
     <string name="gradesEmptyTitle">No hi ha cap activitat</string>
     <string name="gradesEmptyMessage">Sembla que en aquest espai encara no s\'ha creat cap activitat.</string>
+    <string name="noMatchingAssignments">No hi ha cap activitat que coincideixi</string>
+    <string name="noMatchingAssignmentsDescription">No hi ha cap activitat que coincideixi amb la vostra cerca. Proveu un terme de cerca diferent.</string>
     <string name="errorLoadingGrades">Tenim problemes per carregar les notes de l’estudiant. Proveu de tornar a carregar la pàgina ara mateix o reviseu-la més endavant.</string>
     <string name="errorLoadingCourse">Tenim problemes per carregar la informació de l\'assignatura de l’estudiant. Proveu de tornar a carregar la pàgina ara mateix o reviseu-la més endavant.</string>
     <string name="gradesFilterContentDescription">Filtra</string>
@@ -2079,7 +2088,8 @@
     <string name="widgetErrorTitle">Vaja! S’ha produït un error</string>
     <string name="widgetErrorSubtitle">Estem tenint problemes per mostrar les vostres tasques en aquest moment. Torneu a provar-ho d’aquí a uns instants o aneu a l’aplicació.</string>
     <string name="widgetToDoEmptyTitle">Ja ho teniu tot fet de moment!</string>
-    <string name="widgetToDoEmptySubtitle">Sembla que esteu lliure durant les properes 4 setmanes. Voleu afegir alguna tasca pendent?</string>
+    <string name="widgetToDoEmptySubtitle">Sembla que esteu lliure i no teniu cap tasca propera. Voleu afegir alguna tasca pendent?</string>
+
     <string name="widgetNotLoggedInTitle">Anem a fer que inicieu la sessió!</string>
     <string name="widgetToDoNotLoggedInSubtitle">Per consultar les tasques pendents, inicieu la sessió al compte a l’aplicació. Només serà un segon!</string>
     <string name="a11y_widgetToDoOpenToDoList">Obriu la pantalla de la llista de tasques pendents</string>
@@ -2104,6 +2114,11 @@
         <item quantity="one">%s / %s punt</item>
         <item quantity="other">%s / %s punts</item>
     </plurals>
+    <plurals name="groupMemberCount">
+        <item quantity="one">Estudiant</item>
+        <item quantity="other">Estudiants</item>
+    </plurals>
+
     <string name="speedGraderLatePenaltyTitle">Penalització per entrega endarrerida</string>
     <string name="gradingStatus_none">Cap</string>
     <string name="gradingStatus_late">Endarrerit</string>
@@ -2160,4 +2175,189 @@
     <string name="scored_less_than_with_max">La puntuació ha estat de menys de / %s punts</string>
     <string name="scored_between_values">Puntuació de %1$s a %2$s</string>
     <string name="multiple_filters">Diversos filtres</string>
+    <string name="a11y_contentDescriptionToDoFilter">Filtra-ho</string>
+    <string name="errorLoadingToDos">S\'ha produït un error en carregar els elements de Tasques pendents. Reviseu la connexió i torneu a provar-ho.</string>
+    <string name="errorUpdatingToDo">S\'ha produït un error en actualitzar l’element de Tasques pendents. Reviseu la connexió i torneu a provar-ho.</string>
+    <string name="noToDosForNow">No hi ha cap tasca pendent per ara</string>
+    <string name="noToDosForNowSubtext">Sembla un moment perfecte per descansar, relaxar-se i carregar les piles.</string>
+    <string name="todoSwipeDone">Fet</string>
+    <string name="todoSwipeUndo">Desfés-ho</string>
+    <string name="todoMarkedAsDone">%s s’ha marcat com a fet</string>
+    <string name="todoMarkedAsNotDone">%s s’ha marcat com a no fet</string>
+    <string name="todoMarkedAsDoneSnackbarUndo">Desfés-ho</string>
+    <string name="todoActionOffline">Aquesta acció no es pot dur a terme sense connexió</string>
+
+    <!-- To Do List Filter Screen -->
+    <string name="todoFilterPreferences">Preferències de la llista de tasques pendents</string>
+    <string name="todoFilterVisibleItems">Elements visibles</string>
+    <string name="todoFilterShowPersonalToDos">Mostreu les tasques pendents personals</string>
+    <string name="todoFilterShowCalendarEvents">Mostreu els esdeveniments del calendari</string>
+    <string name="todoFilterShowCompleted">Mostreu els elements finalitzats</string>
+    <string name="todoFilterFavoriteCoursesOnly">Només les assignatures preferides</string>
+    <string name="todoFilterShowTasksFrom">Mostreu tasques des del</string>
+    <string name="todoFilterShowTasksUntil">Mostreu tasques fins al</string>
+    <string name="todoFilterToday">Avui</string>
+    <string name="todoFilterThisWeek">Aquesta setmana</string>
+    <string name="todoFilterLastWeek">La setmana passada</string>
+    <string name="todoFilterTwoWeeks">Fa 2 setmanes</string>
+    <string name="todoFilterThreeWeeks">Fa 3 setmanes</string>
+    <string name="todoFilterFourWeeks">Fa 4 setmanes</string>
+    <string name="todoFilterNextWeek">La setmana que ve</string>
+    <string name="todoFilterInTwoWeeks">D’aquí a 2 setmanes</string>
+    <string name="todoFilterInThreeWeeks">D’aquí a 3 setmanes</string>
+    <string name="todoFilterInFourWeeks">D’aquí a 4 setmanes</string>
+    <string name="todoFilterFromDate">Des del %s</string>
+    <string name="todoFilterUntilDate">Fins a %s</string>
+    <string name="a11y_buttonSelectionSelected">s’ha seleccionat</string>
+    <string name="a11y_buttonSelectionNotSelected">no s’ha seleccionat</string>
+    <!-- Course Invitations -->
+    <string name="courseInvitationsTitle">Invitacions a l’assignatura (%d)</string>
+    <string name="courseInvitationAccepted">S’ha acceptat la invitació a %s</string>
+    <string name="courseInvitationDeclined">S’ha rebutjat la invitació a %s</string>
+    <string name="courseInvitationDeclineConfirmTitle">Rebutgeu la invitació</string>
+    <string name="courseInvitationDeclineConfirmMessage">Segur que voleu rebutjar la invitació a %s?</string>
+
+    <!-- Welcome Widget -->
+    <!-- Greetings with name (%s is the student's first name) -->
+    <string name="welcomeGreetingMorningWithName">Bon dia, %s!</string>
+    <string name="welcomeGreetingAfternoonWithName">Bon dia, %s!</string>
+    <string name="welcomeGreetingEveningWithName">Bon vespre, %s!</string>
+    <string name="welcomeGreetingNightWithName">Bona nit, %s!</string>
+
+    <!-- Greetings without name (fallback when user has no first name) -->
+    <string name="welcomeGreetingMorning">Bon dia!</string>
+    <string name="welcomeGreetingAfternoon">Bon dia!</string>
+    <string name="welcomeGreetingEvening">Bon vespre!</string>
+    <string name="welcomeGreetingNight">Bona nit!</string>
+
+    <!-- Welcome Widget Motivational Messages -->
+    <string-array name="welcomeMessagesGeneric">
+        <item>Teniu això.</item>
+        <item>Seguiu així: en aquest moment, teniu més fortalesa que la que us sembla tenir.</item>
+        <item>Un pas cada vegada segueix sent un progrés.</item>
+        <item>No claudiqueu: ho agraireu en el futur.</item>
+        <item>Sou capaç de moltes més coses que les que penseu.</item>
+        <item>Fins i tot en els dies complicats, seguiu endavant.</item>
+        <item>Confieu en les vostres possibilitats: ja heu fet coses difícils en el passat.</item>
+        <item>Progrés, no perfecció. Ho feu magníficament.</item>
+        <item>No us rendiu: això no ho esteu fent en solitari.</item>
+        <item>Esteu aprenent, creixent i fent-ho millor del que us adoneu.</item>
+        <item>No passa res si ensopegueu: seguiu en el bon camí.</item>
+        <item>No deixeu d’insistir-hi: hi sou més a prop del que penseu.</item>
+        <item>Els petits triomfs també compten.</item>
+        <item>No deixeu de provar-ho: hi sou més a prop del que penseu.</item>
+        <item>No passa res si feu una pausa. Els descansos formen part de l’aprenentatge.</item>
+        <item>Provar de fer una cosa ja és un triomf.</item>
+        <item>Progrés &gt; perfecció.</item>
+        <item>Esteu manifestant més progressos que els que sabeu.</item>
+        <item>Esteu desenvolupant habilitats, fins i tot en els dies en què tot va poc a poc.</item>
+        <item>No us oblideu de respirar: ho feu bé.</item>
+        <item>El vostre ritme és el correcte.</item>
+        <item>No cal esbrinar-ho tot de cop avui mateix.</item>
+        <item>Formeu part de tot això.</item>
+        <item>Cada esforç que feu, suma.</item>
+        <item>Està bé tornar a començar, tantes vegades com calgui.</item>
+        <item>Allò que era sembla difícil, semblarà més senzill més endavant.</item>
+        <item>Seguiu manifestant progressos: això és el que compta.</item>
+        <item>Amb passos petits es mouen muntanyes.</item>
+        <item>El descans també forma part del progrés.</item>
+        <item>Esteu fent-ho millor del que us adoneu.</item>
+        <item>Fins i tot el progrés lent segueix sent progrés.</item>
+        <item>El futur no es construeix en un dia, però esteu en el camí.</item>
+        <item>Una activitat, un moment, un pas cada vegada.</item>
+        <item>No cal que feu les coses a la perfecció per produir impacte.</item>
+        <item>Aprendre és complicat, i això és normal.</item>
+        <item>Cada intent serveix per créixer, encara que no ho sembli.</item>
+        <item>En el passat, ja heu fet coses difícils i també podeu fer això.</item>
+        <item>Els vostres esforços són importants, tot i que ningú se n’adoni.</item>
+        <item>Està bé prendre’s les coses amb calma.</item>
+        <item>Esteu avançant, fins i tot els dies tranquils.</item>
+        <item>Encara no cal que el camí sigui clar; seguiu caminant.</item>
+        <item>En aquest moment, teniu més fortalesa que la que us sembla tenir.</item>
+        <item>Els grans objectius s’assoleixen a partir de petits passos.</item>
+        <item>No pareu, ho agraireu en el futur.</item>
+        <item>Fins i tot el progrés desordenat segueix sent progrés.</item>
+        <item>No us esteu quedant enrere: esteu en el camí.</item>
+        <item>Està bé aprendre a mesura que avanceu.</item>
+        <item>Creixeu d’una manera de la qual potser encara no sou conscient.</item>
+        <item>Els vostres esforços actuals són una inversió per a demà.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesMorning">
+        <item>Bon dia! Teniu això: una classe, un pas cada vegada.</item>
+        <item>Penseu que encara no esteu a punt? És normal. Comenceu en el punt en què us trobeu.</item>
+        <item>El cafè ajuda, però ser condescendent amb un mateix dona millors resultats.</item>
+        <item>No porteu bé el tema de la tecnologia? Ens passa a tots, no us estresseu.</item>
+        <item>Avui no cal que sigui un dia perfecte, només és possible que hi succeeixin coses.</item>
+        <item>Bon dia, avui és una nova oportunitat d’aprendre i créixer.</item>
+        <item>Fins i tot els passos petits d’aquest matí us aproparan als objectius.</item>
+        <item>Respireu fons, no cal que ja ho hàgiu esbrinat tot.</item>
+        <item>La tecnologia pot ser complicada, però no l’apreneu en solitari.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesAfternoon">
+        <item>Ja sou a meitat de camí: ja heu fet més del que penseu.</item>
+        <item>Sentiu que us heu estancat? Tothom topa amb parets, però no deixeu d’escalar.</item>
+        <item>Feines, notes, el futur&#8230; ningú no ho ha esbrinat tot ja.</item>
+        <item>Sentiu esgotament mental? Un descans ràpid permet centrar-se millor més endavant.</item>
+        <item>Demaneu ajuda. De veritat, ningú no fa això en solitari.</item>
+        <item>Ja heu arribat fins aquí avui i heu de sentir-ne orgull.</item>
+        <item>Necessiteu una pausa? Recarregar les piles també forma part de l’aprenentatge.</item>
+        <item>No passa res si sorgeixen dubtes al llarg del camí: les habilitats es desenvolupen pas a pas.</item>
+        <item>Demaneu ajuda si sentiu que us heu estancat: sempre tindreu suport més a prop del que penseu.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesEvening">
+        <item>Ja heu fet el dia; això és un triomf per si mateix.</item>
+        <item>Trobeu a faltar algú? Exclameu un ràpid “ei”; això ajuda.</item>
+        <item>Encara que avui hagi estat un dia desordenat, heu progressat. Això importa.</item>
+        <item>Recordeu: cap nota no mesura el que valeu.</item>
+        <item>Relaxeu-vos, rieu o feu una volta sense sentir-se culpable; us ho heu guanyat.</item>
+        <item>Heu fet un bon treball al llarg del dia; el progrés compta, fins i tot quan és moderat.</item>
+        <item>Trobeu a faltar les amistats o els mentors? Les connexions també poden arribar d’immediat.</item>
+        <item>Els vespres són per reflexionar: adoneu-vos del que heu après avui, no només d’allò que queda per fer.</item>
+        <item>Els vostres esforços importen més que la perfecció.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesNight">
+        <item>Encara treballeu dur? Respecte, però no us oblideu de dormir.</item>
+        <item>Demà agraireu haver descansat aquesta nit.</item>
+        <item>L’ansietat es manifesta més per la nit; no us creieu tot el rebombori que provoca.</item>
+        <item>No us esteu quedant enrere: esteu justament en el camí.</item>
+        <item>Tanqueu l’ordinador portàtil: el cervell també necessita somiar.</item>
+        <item>Està bé descansar: demà ens esperen noves oportunitats.</item>
+        <item>Aprendre és una marató, no un esprint. Tracteu-vos amb condescendència aquesta nit.</item>
+        <item>Si teniu moltes preocupacions, recordeu que no cal que us hi enfronteu en solitari.</item>
+        <item>Acabeu el dia amb la certesa que provar de fer alguna cosa ja és un assoliment.</item>
+    </string-array>
+
+    <!-- Accessibility -->
+    <string name="welcomeWidgetContentDescription">Missatge de benvinguda: %1$s. %2$s</string>
+
+    <!-- Institutional Announcements -->
+    <string name="institutionalAnnouncementsTitle">Anuncis (%d)</string>
+    <!-- Widget Display Names -->
+    <string name="widget_hello">Hola, %s</string>
+
+    <!-- Customize Dashboard -->
+    <string name="customize_dashboard">Personalitzeu el panell de control</string>
+    <string name="dashboard_widgets">Ginys</string>
+    <string name="move_up">Desplaça-ho cap a dalt</string>
+    <string name="move_down">Desplaça-ho cap avall</string>
+    <string name="no_widgets">No hi ha cap giny disponible</string>
+    <string name="changing_dashboard_layout">S’està canviant el disseny del panell de control</string>
+    <string name="changing_dashboard_layout_message">Per canviar el disseny del panell de control, heu de reiniciar l\'aplicació</string>
+    <string name="restart_now">Reinicia-la ara</string>
+    <string name="switched_back">Heu tornat a canviar a la versió anterior?</string>
+    <string name="switched_back_message">Gràcies per provar el nou panell de control Podríeu indicar-nos per què heu tornat a canviar a la versió anterior?</string>
+    <string name="what_could_we_improve">Què podríem millorar?</string>
+    <string name="skip">Omet-ho</string>
+    <string name="widget_setting_show_greeting">Mostreu la salutació</string>
+    <string name="background_color">Color del fons</string>
+    <string name="offline_content_available">Hi ha contingut sense connexió disponible</string>
+    <string name="a11y_contentDescription_moreOptions">Més opcions</string>
+    <string name="customizeCourse">Personalitzeu l\'assignatura</string>
+    <string name="favoriteCoursesAndGroups">Assignatures i grups preferits</string>
+    <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
+    <string name="ltiToolsOffline">Les eines externes no estan disponibles sense connexió.</string>
 </resources>

@@ -39,6 +39,8 @@ import androidx.compose.ui.test.swipeDown
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.getStringFromResource
+import com.instructure.teacher.R
 
 /**
  * Represents a page for managing assignment submissions.
@@ -193,6 +195,28 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
     }
 
     /**
+     * Select a differentiation tag filter option.
+     * @param differentiationTagText The text of the differentiation tag to select. Defaults to "Students without differentiation tags".
+     */
+    fun clickDifferentiationTagFilter(differentiationTagText: String = getStringFromResource(R.string.students_without_differentiation_tags)) {
+
+        val differentiationTagTestTag = if (differentiationTagText == getStringFromResource(R.string.students_without_differentiation_tags))
+            "includeWithoutTagsCheckBox"
+        else "differentiationTagCheckBox"
+
+        composeTestRule.onNode(
+            hasTestTag(differentiationTagTestTag) and hasAnySibling(
+                hasText(
+                    differentiationTagText
+                )
+            ),
+            useUnmergedTree = true
+        ).performScrollTo()
+            .performClick()
+        composeTestRule.waitForIdle()
+    }
+
+    /**
      * Assert that the corresponding submission filter options are displayed.
      * @param filterName
      */
@@ -203,6 +227,10 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
         ).performScrollTo().assertIsDisplayed()
     }
 
+    /**
+     * Assert that the corresponding custom status filter options are displayed.
+     * @param filterName Custom status filter name.
+     */
     fun assertCustomStatusFilterOption(filterName: String) {
         composeTestRule.onNode(
             hasTestTag("customStatusCheckBox") and hasAnySibling(hasText(filterName)),
@@ -210,6 +238,24 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
         ).performScrollTo().assertIsDisplayed()
     }
 
+    /**
+     * Assert that the corresponding differentiation tag filter options are displayed.
+     * @param differentiationTagText The text of the differentiation tag to verify. Defaults to "Students without differentiation tags".
+     */
+    fun assertDifferentiationTagFilterOption(differentiationTagText: String = getStringFromResource(R.string.students_without_differentiation_tags)) {
+        val differentiationTagTestTag = if (differentiationTagText == getStringFromResource(R.string.students_without_differentiation_tags))
+            "includeWithoutTagsCheckBox"
+        else "differentiationTagCheckBox"
+        composeTestRule.onNode(
+            hasTestTag(differentiationTagTestTag) and hasAnySibling(hasText(differentiationTagText)),
+            useUnmergedTree = true
+        ).performScrollTo().assertIsDisplayed()
+    }
+
+    /**
+     * Assert that the corresponding precise filter options are displayed.
+     * @param filterName Precise filter name.
+     */
     fun assertPreciseFilterOption(filterName: String) {
         composeTestRule.onNode(hasText(filterName), useUnmergedTree = true).performScrollTo()
             .assertIsDisplayed()
@@ -440,6 +486,17 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
     }
 
     /**
+     * Assert that a differentiation tag is displayed on a submission.
+     *
+     * @param tagName The name of the differentiation tag to verify.
+     */
+    fun assertDifferentiationTag(tagName: String) {
+        composeTestRule.onNodeWithText(tagName, useUnmergedTree = true)
+            .performScrollTo()
+            .assertIsDisplayed()
+    }
+
+    /**
      * Click on a differentiation tag filter option.
      *
      * @param tagName The name of the differentiation tag to filter by.
@@ -471,14 +528,4 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
         composeTestRule.waitForIdle()
     }
 
-    /**
-     * Assert that a differentiation tag is displayed on a submission.
-     *
-     * @param tagName The name of the differentiation tag to verify.
-     */
-    fun assertDifferentiationTag(tagName: String) {
-        composeTestRule.onNodeWithText(tagName, useUnmergedTree = true)
-            .performScrollTo()
-            .assertIsDisplayed()
-    }
 }

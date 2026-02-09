@@ -5,6 +5,7 @@ object RouterParams {
     const val EVENT_ID = "event_id"
     const val CONVERSATION_ID = "conversation_id"
     const val COURSE_ID = "course_id"
+    const val GROUP_ID = "group_id"
     const val FILE_ID = "file_id"
     const val FOLDER_NAME = "file_name"
     const val GRADE_ID = "grade_id"

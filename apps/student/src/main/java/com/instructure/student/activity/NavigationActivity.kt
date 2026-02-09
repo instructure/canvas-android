@@ -684,17 +684,27 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             }
         }
 
+        // Hide these settings when dashboard redesign is enabled (they're now in customize dashboard)
+        val isDashboardRedesignEnabled = RemoteConfigUtils.getBoolean(RemoteConfigParam.DASHBOARD_REDESIGN)
+        if (isDashboardRedesignEnabled) {
+            navigationDrawerBinding.navigationDrawerSettingsSpacer.setGone()
+            navigationDrawerBinding.navigationMenuItemsDivider.setGone()
+            navigationDrawerBinding.optionsMenuTitle.setGone()
+            navigationDrawerBinding.navigationDrawerItemShowGrades.setGone()
+            navigationDrawerBinding.navigationDrawerItemColorOverlay.setGone()
+            navigationDrawerBinding.optionsMenuItemsDivider.setGone()
+        } else {
+            //Load Show Grades
+            navigationDrawerBinding.navigationDrawerShowGradesSwitch.isChecked = StudentPrefs.showGradesOnCard
+            navigationDrawerBinding.navigationDrawerShowGradesSwitch.setOnCheckedChangeListener { _, isChecked ->
+                StudentPrefs.showGradesOnCard = isChecked
+                EventBus.getDefault().post(ShowGradesToggledEvent)
+            }
+            ViewStyler.themeSwitch(this@NavigationActivity, navigationDrawerBinding.navigationDrawerShowGradesSwitch, ThemePrefs.brandColor)
 
-        //Load Show Grades
-        navigationDrawerBinding.navigationDrawerShowGradesSwitch.isChecked = StudentPrefs.showGradesOnCard
-        navigationDrawerBinding.navigationDrawerShowGradesSwitch.setOnCheckedChangeListener { _, isChecked ->
-            StudentPrefs.showGradesOnCard = isChecked
-            EventBus.getDefault().post(ShowGradesToggledEvent)
+            // Set up Color Overlay setting
+            setUpColorOverlaySwitch()
         }
-        ViewStyler.themeSwitch(this@NavigationActivity, navigationDrawerBinding.navigationDrawerShowGradesSwitch, ThemePrefs.brandColor)
-
-        // Set up Color Overlay setting
-        setUpColorOverlaySwitch()
 
         //Load version
         try {

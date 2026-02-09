@@ -17,6 +17,7 @@
 package com.instructure.student.features.dashboard.compose
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import com.instructure.pandautils.compose.SnackbarMessage
 import com.instructure.pandautils.features.dashboard.widget.usecase.EnsureDefaultWidgetsUseCase
@@ -55,6 +56,7 @@ class DashboardViewModel @Inject constructor(
 
     init {
         loadDashboard()
+        observeNetworkState()
     }
 
     fun showSnackbar(message: String, actionLabel: String? = null, action: (() -> Unit)? = null) {
@@ -92,5 +94,14 @@ class DashboardViewModel @Inject constructor(
 
     private fun onRetry() {
         loadDashboard()
+    }
+
+    private fun observeNetworkState() {
+        viewModelScope.launch {
+            networkStateProvider.isOnlineLiveData.asFlow()
+                .collect {
+                    _refreshSignal.emit(Unit)
+                }
+        }
     }
 }
