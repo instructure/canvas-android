@@ -151,8 +151,19 @@ fun View.applyBottomAndRightSystemBarMargin() {
     ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
         val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
         val layoutParams = view.layoutParams as? android.view.ViewGroup.MarginLayoutParams
+
+        // In landscape mode, when nav bar is on the right, use original margin instead of adding system bars
+        // to avoid creating extra gap
+        val configuration = context.resources.configuration
+        val isLandscape = configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
+
         layoutParams?.bottomMargin = originalBottomMargin + systemBars.bottom
-        layoutParams?.rightMargin = originalRightMargin + systemBars.right
+        layoutParams?.rightMargin = if (isLandscape && systemBars.right > 0) {
+            // In landscape with right nav bar, don't add extra margin - the nav bar already creates space
+            originalRightMargin
+        } else {
+            originalRightMargin + systemBars.right
+        }
         view.layoutParams = layoutParams
         insets
     }
