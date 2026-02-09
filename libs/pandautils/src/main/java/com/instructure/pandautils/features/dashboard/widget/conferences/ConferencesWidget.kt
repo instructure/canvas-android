@@ -114,7 +114,7 @@ fun ConferencesWidgetContent(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
                 .padding(bottom = 12.dp),
-            text = pluralStringResource(R.plurals.conferencesWidgetTitle, uiState.conferences.size, uiState.conferences.size),
+            text = stringResource(R.string.conferencesWidgetTitle, uiState.conferences.size),
             fontSize = 14.sp,
             lineHeight = 19.sp,
             fontWeight = FontWeight.Normal,
