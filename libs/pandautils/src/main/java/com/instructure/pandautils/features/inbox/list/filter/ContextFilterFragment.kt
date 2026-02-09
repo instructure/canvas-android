@@ -37,6 +37,7 @@ import com.instructure.pandautils.databinding.FragmentContextFilterBinding
 import com.instructure.pandautils.features.inbox.list.InboxSharedViewModel
 import com.instructure.pandautils.utils.ParcelableArrayListArg
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.WindowInsetsHelper
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.setMenu
 import com.instructure.pandautils.utils.setupAsCloseButton
@@ -72,6 +73,8 @@ class ContextFilterFragment : BaseCanvasBottomSheetDialogFragment() {
                 bottomSheet.fitsSystemWindows = false
                 ViewCompat.requestApplyInsets(bottomSheet)
             }
+            // Always use light/white status bar icons regardless of theme for better visibility
+            WindowInsetsHelper.setSystemBarsAppearance(requireActivity().window, false)
         }
         return dialog
     }
