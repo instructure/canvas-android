@@ -155,6 +155,32 @@ fun ProgressBarSmall(
 }
 
 @Composable
+fun ProgressBarSmallInline(
+    progress: Double,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        ProgressBarSmall(
+            progress = progress,
+            style = ProgressBarStyle.Institution,
+            showLabels = false,
+            modifier = Modifier.weight(1f)
+        )
+
+        HorizonSpace(SpaceSize.SPACE_8)
+
+        Text(
+            text = stringResource(R.string.progressBar_percent, progress.roundToInt()),
+            style = HorizonTypography.p2,
+            color = HorizonColors.Surface.institution(),
+        )
+    }
+}
+
+@Composable
 @Preview
 private fun ProgressBarOutsidePreview() {
     ContextKeeper.appContext = LocalContext.current

@@ -39,7 +39,7 @@ class StudentAcceptableUsePolicyRouter(
 ) : AcceptableUsePolicyRouter {
 
     override fun openPolicy(content: String) {
-        val intent = InternalWebViewActivity.createIntent(activity, "http://www.canvaslms.com/policies/terms-of-use", content, activity.getString(R.string.acceptableUsePolicyTitle), false)
+        val intent = InternalWebViewActivity.createIntent(activity, null, content, activity.getString(R.string.acceptableUsePolicyTitle), false)
         activity.startActivity(intent)
     }
 

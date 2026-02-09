@@ -20,7 +20,6 @@ import android.content.Context
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.features.dashboard.DashboardItemState
-import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardButtonRoute
 import com.instructure.pandautils.utils.ThemePrefs
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -232,7 +231,7 @@ class DashboardAnnouncementBannerViewModelTest {
 
         val state = viewModel.uiState.value
         assertEquals(1, state.cardState.items.size)
-        assertEquals(DashboardPaginatedWidgetCardButtonRoute.MainRoute(announcements[0].route), state.cardState.items[0].route)
+        assertEquals(announcements[0].route, state.cardState.items[0].route)
         assertEquals("Introduction to Kotlin", state.cardState.items[0].source)
     }
 
@@ -254,7 +253,7 @@ class DashboardAnnouncementBannerViewModelTest {
 
         val state = viewModel.uiState.value
         assertEquals(1, state.cardState.items.size)
-        assertEquals(DashboardPaginatedWidgetCardButtonRoute.MainRoute(announcements[0].route), state.cardState.items[0].route)
+        assertEquals(announcements[0].route, state.cardState.items[0].route)
         assertEquals(null, state.cardState.items[0].source)
     }
 

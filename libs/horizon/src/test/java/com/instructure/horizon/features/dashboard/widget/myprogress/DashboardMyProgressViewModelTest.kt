@@ -48,11 +48,15 @@ class DashboardMyProgressViewModelTest {
             CourseWithProgress(
                 courseId = 1L,
                 courseName = "Course 1",
+                courseImageUrl = null,
+                courseSyllabus = null,
                 progress = 1.0
             ),
             CourseWithProgress(
                 courseId = 2L,
                 courseName = "Course 2",
+                courseImageUrl = null,
+                courseSyllabus = null,
                 progress = 1.0
             )
         )
