@@ -27,7 +27,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardItemState
-import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardButtonRoute
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardHeaderState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardState
@@ -97,7 +96,7 @@ class DashboardAnnouncementBannerWidgetUiTest {
             title = "Important Announcement",
             source = "Course Name",
             date = Date(),
-            route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
+            route = ""
         )
 
         val uiState = DashboardAnnouncementBannerUiState(
@@ -132,7 +131,7 @@ class DashboardAnnouncementBannerWidgetUiTest {
                 title = "First Announcement",
                 source = "Course 1",
                 date = Date(),
-                route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
+                route = ""
             ),
             DashboardPaginatedWidgetCardItemState(
                 headerState = DashboardPaginatedWidgetCardHeaderState(
@@ -143,7 +142,7 @@ class DashboardAnnouncementBannerWidgetUiTest {
                 title = "Second Announcement",
                 source = "Course 2",
                 date = Date(),
-                route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
+                route = ""
             )
         )
 
@@ -174,7 +173,7 @@ class DashboardAnnouncementBannerWidgetUiTest {
             title = "Global Announcement",
             source = null,
             date = Date(),
-            route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
+            route = ""
         )
 
         val uiState = DashboardAnnouncementBannerUiState(
@@ -204,7 +203,7 @@ class DashboardAnnouncementBannerWidgetUiTest {
             title = "Test Announcement",
             source = "Test Course",
             date = Date(),
-            route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
+            route = ""
         )
 
         val uiState = DashboardAnnouncementBannerUiState(
@@ -235,7 +234,7 @@ class DashboardAnnouncementBannerWidgetUiTest {
             title = "Dated Announcement",
             source = "Test Course",
             date = testDate,
-            route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
+            route = ""
         )
 
         val uiState = DashboardAnnouncementBannerUiState(
@@ -262,7 +261,7 @@ class DashboardAnnouncementBannerWidgetUiTest {
             title = "No Date Announcement",
             source = "Test Course",
             date = null,
-            route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
+            route = ""
         )
 
         val uiState = DashboardAnnouncementBannerUiState(
@@ -290,7 +289,7 @@ class DashboardAnnouncementBannerWidgetUiTest {
             title = longTitle,
             source = "Test Course",
             date = Date(),
-            route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
+            route = ""
         )
 
         val uiState = DashboardAnnouncementBannerUiState(

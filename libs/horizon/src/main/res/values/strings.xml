@@ -529,6 +529,19 @@
     <string name="learnCourseListShowMoreLabel">Show more</string>
     <string name="learnCourseListSearchBarPlaceholder">Search courses</string>
     <string name="learnCourseOverviewPartOfProgramsLabel">Part of %1$s</string>
+    <string name="learnCourseListEmptyMessage">No results found. Try adjusting your search terms.</string>
+    <string name="learnProgramListFilterAll">All programs</string>
+    <string name="learnProgramListFilterNotStarted">Not started</string>
+    <string name="learnProgramListFilterInProgress">In progress</string>
+    <string name="learnProgramListFilterCompleted">Completed</string>
+    <string name="learnProgramListShowMoreLabel">Show more</string>
+    <string name="learnProgramListEmptyMessage">No results found. Try adjusting your search terms.</string>
+    <string name="learnProgramListSearchBarPlaceholder">Search programs</string>
+    <string name="learnProgramListFailedToLoadMessage">Failed to load programs</string>
+    <plurals name="learnProgramListCourseCount">
+        <item quantity="one">%1$d course</item>
+        <item quantity="other">%1$d courses</item>
+    </plurals>
     <string name="a11y_inputErrorMessage">Error: %1$s</string>
     <string name="a11y_required">Required</string>
 </resources>

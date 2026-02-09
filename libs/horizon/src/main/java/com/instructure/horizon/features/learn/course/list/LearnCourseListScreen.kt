@@ -124,6 +124,12 @@ private fun LearnCourseListContent(
                 LearnCourseListFilter(state, scrollState)
             }
 
+            if (state.coursesToDisplay.isEmpty()) {
+                item {
+                    EmptyMessage()
+                }
+            }
+
             items(state.coursesToDisplay.take(state.visibleItemCount)) {
                 LearnCourseCard(it, Modifier.padding(horizontal = 24.dp)) {
                     navController.navigate(LearnRoute.LearnCourseDetailsScreen.route(it.courseId))
@@ -327,5 +333,15 @@ private fun LearnCourseCardButton(
         width = ButtonWidth.FILL,
         color = ButtonColor.WhiteWithOutline,
         onClick = onClick,
+    )
+}
+
+@Composable
+private fun EmptyMessage() {
+    Text(
+        text = stringResource(R.string.learnCourseListEmptyMessage),
+        style = HorizonTypography.p1,
+        color = HorizonColors.Text.body(),
+        modifier = Modifier.padding(horizontal = 24.dp)
     )
 }

@@ -79,15 +79,7 @@ fun DashboardPaginatedWidgetCard(
                 } else {
                     {
                         item.route?.let { route ->
-                            when (route) {
-                                is DashboardPaginatedWidgetCardButtonRoute.HomeRoute -> {
-                                    navController.navigate(route.route)
-                                }
-
-                                is DashboardPaginatedWidgetCardButtonRoute.MainRoute -> {
-                                    navController.navigate(route.route)
-                                }
-                            }
+                            navController.navigate(route)
                         }
                     }
                 }
@@ -171,7 +163,7 @@ private fun DashboardPaginatedWidgetCardAnnouncementContentPreview() {
                     title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Announcement title shown here.",
                     source = "Institution or Course Name Here",
                     date = Date(),
-                    route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
+                    route = ""
                 ),
                 DashboardPaginatedWidgetCardItemState(
                     headerState = DashboardPaginatedWidgetCardHeaderState(
@@ -182,7 +174,7 @@ private fun DashboardPaginatedWidgetCardAnnouncementContentPreview() {
                     title = "Second announcement with different content to show pagination.",
                     source = "Another Course Name",
                     date = Date(),
-                    route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
+                    route = ""
                 ),
                 DashboardPaginatedWidgetCardItemState(
                     headerState = DashboardPaginatedWidgetCardHeaderState(
@@ -192,7 +184,7 @@ private fun DashboardPaginatedWidgetCardAnnouncementContentPreview() {
                     ),
                     title = "Third global announcement without a source.",
                     date = Date(),
-                    route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
+                    route = ""
                 )
             )
         ),

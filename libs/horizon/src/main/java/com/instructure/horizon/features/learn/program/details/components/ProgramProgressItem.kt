@@ -40,6 +40,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonBorder
@@ -79,6 +81,7 @@ sealed class ProgramProgressItemStatus(val borderColor: Color) {
 @Composable
 fun ProgramProgressItem(
     state: ProgramProgressItemState,
+    navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
     var courseCardHeight by remember { mutableIntStateOf(0) }
@@ -123,7 +126,9 @@ fun ProgramProgressItem(
             HorizonSpace(SpaceSize.SPACE_8)
         }
         ProgramCourseCard(
-            state.courseCard, modifier = Modifier
+            state.courseCard,
+            navController,
+            modifier = Modifier
                 .fillMaxWidth()
                 .onGloballyPositioned {
                     courseCardHeight = it.size.height
@@ -148,6 +153,7 @@ private fun ProgramProgressItemFirstAndCompletedPreview() {
                 first = true
             )
         ),
+        rememberNavController(),
         modifier = Modifier.padding(horizontal = 24.dp)
     )
 }
@@ -169,6 +175,7 @@ private fun ProgramProgressItemOnlyItemAndInactivePreview() {
                 last = true
             )
         ),
+        rememberNavController(),
         modifier = Modifier.padding(horizontal = 24.dp)
     )
 }
@@ -190,6 +197,7 @@ private fun ProgramProgressLastAndInactivePreview() {
                 last = true
             )
         ),
+        rememberNavController(),
         modifier = Modifier.padding(horizontal = 24.dp)
     )
 }
@@ -212,6 +220,7 @@ private fun ProgramProgressPreviousCompletedAndActivePreview() {
                 previousCompleted = true
             )
         ),
+        rememberNavController(),
         modifier = Modifier.padding(horizontal = 24.dp)
     )
 }
@@ -234,6 +243,7 @@ private fun ProgramProgressPreviousAndCurrentCompletedPreview() {
                 previousCompleted = true
             )
         ),
+        rememberNavController(),
         modifier = Modifier.padding(horizontal = 24.dp)
     )
 }
@@ -263,6 +273,7 @@ private fun ProgramProgressPreviousWithInProgressCourseCardPreview() {
                 previousCompleted = true
             )
         ),
+        rememberNavController(),
         modifier = Modifier.padding(horizontal = 24.dp)
     )
 }

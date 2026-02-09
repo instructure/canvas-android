@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 - present Instructure, Inc.
+ * Copyright (C) 2026 - present Instructure, Inc.
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -14,25 +14,28 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.dashboard.widget.course.list
+package com.instructure.horizon.features.learn.program.list
 
-import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
+import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithModuleItemDurations
 import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetProgramsManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
-import com.instructure.canvasapi2.utils.ApiPrefs
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 
-class DashboardCourseListRepository @Inject constructor(
-    private val apiPrefs: ApiPrefs,
-    private val getCoursesManager: HorizonGetCoursesManager,
-    private val getProgramsManager: GetProgramsManager
+class LearnProgramListRepository @Inject constructor(
+    private val getProgramsManager: GetProgramsManager,
+    private val getCoursesManager: HorizonGetCoursesManager
 ) {
-    suspend fun getCourses(foreRefresh: Boolean): List<CourseWithProgress> {
-        return getCoursesManager.getCoursesWithProgress(apiPrefs.user?.id ?: -1, foreRefresh).dataOrThrow
+    suspend fun getPrograms(forceRefresh: Boolean): List<Program> {
+        return getProgramsManager.getPrograms(forceRefresh)
     }
 
-    suspend fun getPrograms(foreRefresh: Boolean): List<Program> {
-        return getProgramsManager.getPrograms(foreRefresh)
+    suspend fun getCoursesById(courseIds: List<Long>, forceNetwork: Boolean = false): List<CourseWithModuleItemDurations> = coroutineScope {
+        courseIds.map { id ->
+            async { getCoursesManager.getProgramCourses(id, forceNetwork).dataOrThrow }
+        }.awaitAll()
     }
 }

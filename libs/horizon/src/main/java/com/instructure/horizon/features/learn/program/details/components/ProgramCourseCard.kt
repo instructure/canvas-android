@@ -43,8 +43,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
+import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.features.learn.program.details.ProgressBarUiState
 import com.instructure.horizon.horizonui.foundation.HorizonBorder
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -68,9 +71,9 @@ data class ProgramCourseCardState(
     val courseProgress: Double? = null,
     val chips: List<CourseCardChipState> = emptyList(),
     val dashedBorder: Boolean = false,
-    val courseClicked: (() -> Unit)? = null,
     val onEnrollClicked: (() -> Unit)? = null,
     val enrollLoading: Boolean = false,
+    val enabled : Boolean = false,
 )
 
 sealed class CourseCardStatus(
@@ -102,7 +105,11 @@ data class CourseCardChipState(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun ProgramCourseCard(state: ProgramCourseCardState, modifier: Modifier = Modifier) {
+fun ProgramCourseCard(
+    state: ProgramCourseCardState,
+    navController: NavHostController,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier
             .background(color = HorizonColors.Surface.cardPrimary(), shape = HorizonCornerRadius.level2)
@@ -123,8 +130,10 @@ fun ProgramCourseCard(state: ProgramCourseCardState, modifier: Modifier = Modifi
                 border(HorizonBorder.level1(state.status.borderColor), HorizonCornerRadius.level2)
             }
             .clip(HorizonCornerRadius.level2)
-            .conditional(state.courseClicked != null) {
-                clickable { state.courseClicked?.invoke() }
+            .conditional(state.enabled) {
+                clickable {
+                    navController.navigate(LearnRoute.LearnCourseDetailsScreen.route(state.id))
+                }
             }
             .padding(16.dp)
     ) {
@@ -187,7 +196,7 @@ fun ProgramCourseCardCompletedPreview() {
             CourseCardChipState("Body Text"),
         )
     )
-    ProgramCourseCard(state, Modifier.fillMaxWidth())
+    ProgramCourseCard(state, rememberNavController(), Modifier.fillMaxWidth())
 }
 
 @Composable
@@ -205,7 +214,7 @@ fun ProgramCourseCardEnrolledPreview() {
             CourseCardChipState("XX/XX/XX – XX/XX/XX", iconRes = R.drawable.calendar_today)
         )
     )
-    ProgramCourseCard(state, Modifier.fillMaxWidth())
+    ProgramCourseCard(state, rememberNavController(), Modifier.fillMaxWidth())
 }
 
 @Composable
@@ -222,7 +231,7 @@ fun ProgramCourseCardInProgressPreview() {
             CourseCardChipState("XX/XX/XX – XX/XX/XX", iconRes = R.drawable.calendar_today)
         )
     )
-    ProgramCourseCard(state, Modifier.fillMaxWidth())
+    ProgramCourseCard(state, rememberNavController(), Modifier.fillMaxWidth())
 }
 
 @Composable
@@ -239,7 +248,7 @@ fun ProgramCourseCardActivePreview() {
             CourseCardChipState("XX/XX/XX – XX/XX/XX", iconRes = R.drawable.calendar_today)
         )
     )
-    ProgramCourseCard(state, Modifier.fillMaxWidth())
+    ProgramCourseCard(state, rememberNavController(), Modifier.fillMaxWidth())
 }
 
 @Composable
@@ -256,7 +265,7 @@ fun ProgramCourseCardInactivePreview() {
             CourseCardChipState("5 hours 2 mins"),
         )
     )
-    ProgramCourseCard(state, Modifier.fillMaxWidth())
+    ProgramCourseCard(state, rememberNavController(), Modifier.fillMaxWidth())
 }
 
 @Composable
@@ -274,5 +283,5 @@ fun ProgramCourseCardDashedPreview() {
         ),
         dashedBorder = true
     )
-    ProgramCourseCard(state, Modifier.fillMaxWidth())
+    ProgramCourseCard(state, rememberNavController(), Modifier.fillMaxWidth())
 }
