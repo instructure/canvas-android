@@ -23,6 +23,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performScrollToIndex
 import androidx.compose.ui.test.performTextInput
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.pandautils.features.dashboard.widget.SettingType
@@ -926,9 +927,16 @@ class CustomizeDashboardScreenTest {
 
         composeTestRule.onNodeWithText("Course Invitations").assertIsDisplayed()
         composeTestRule.onNodeWithText("Institutional Announcements").assertIsDisplayed()
+
+        composeTestRule.onNodeWithTag("widgetsList")
+            .performScrollToIndex(4)
         composeTestRule.onNodeWithText("Hello, Test User").assertIsDisplayed()
         composeTestRule.onNodeWithText("Courses").assertIsDisplayed()
         composeTestRule.onNodeWithText("Forecast").assertIsDisplayed()
+
+        composeTestRule.onNodeWithTag("widgetsList")
+            .performScrollToIndex(7)
+
         composeTestRule.onNodeWithText("To Do").assertIsDisplayed()
     }
 
