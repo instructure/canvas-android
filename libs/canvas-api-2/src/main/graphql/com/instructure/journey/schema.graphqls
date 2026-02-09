@@ -2,9 +2,9 @@
 directive @oneOf on INPUT_OBJECT
 
 type WidgetParamsGQL {
-  courseIds: [Float!]
-  courseId: Float
-  userId: String
+  courseIds: [ID!]
+  courseId: ID
+  userId: ID
   maxLateAssignments: Float
   maxMissingAssignments: Float
   minLowScorePercentage: Float
@@ -13,12 +13,25 @@ type WidgetParamsGQL {
   month: Float
 }
 
+type AssetLinkGQL {
+  id: ID!
+  assetId: Float!
+  assetType: String!
+  courseId: ID!
+  contentLibraryCourseId: ID!
+  detached: Boolean!
+  createdAt: DateTime!
+}
+
+# A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+scalar DateTime
+
 type ContentLibraryGQL {
   id: ID!
-  accountId: Float!
-  courseId: Float!
-  externalLinksModuleId: Float
-  externalToolsModuleId: Float
+  accountId: ID!
+  courseId: ID!
+  externalLinksModuleId: ID
+  externalToolsModuleId: ID
 }
 
 type ContentVersionGQL {
@@ -28,7 +41,7 @@ type ContentVersionGQL {
   contentExportId: String!
   title: String!
   createdAt: DateTime!
-  courseId: Float
+  courseId: ID
 }
 
 enum AssetTypeEnum {
@@ -43,21 +56,8 @@ enum AssetTypeEnum {
   file
 }
 
-# A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-scalar DateTime
-
 type ContentVersionPreviewGQL {
   url: String
-}
-
-type AssetLinkGQL {
-  id: ID!
-  assetId: Float!
-  assetType: String!
-  courseId: Float!
-  contentLibraryCourseId: Float!
-  detached: Boolean!
-  createdAt: DateTime!
 }
 
 type CrmJwtGQL {
@@ -75,14 +75,23 @@ type WidgetGroupGQL {
 
 type WidgetGQL {
   id: ID!
-  name: String!
   type: String!
   queryParams: WidgetParamsGQL!
   position: Int
-  refreshIntervalMinutes: Int
+  prismQueryId: String
   createdAt: DateTime!
   updatedAt: DateTime!
   group: WidgetGroupGQL
+}
+
+type WidgetActionGQL {
+  id: ID!
+  action: String!
+  canvasUserUuid: String!
+  courseId: String!
+  actionReason: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type WidgetDataResultGQL {
@@ -96,12 +105,11 @@ type WidgetDataResultGQL {
 # The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 scalar JSON
 
-type WidgetActionGQL {
+type WidgetGroupUserDataGQL {
   id: ID!
-  action: String!
-  canvasUserUuid: String!
-  courseId: String!
-  actionReason: String!
+  widgetGroupId: ID!
+  isPinned: Boolean!
+  lastCheckedAt: DateTime
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -250,12 +258,88 @@ type MetadataUsersGql {
   users: [MetadataUserGQL!]!
 }
 
-type KeyValuePairGQL {
-  # Metadata key
-  key: String!
+type CursorPaginationInfoGQL {
+  # Cursor for the next page
+  nextCursor: String
 
-  # Metadata value
-  value: String!
+  # Cursor for the previous page
+  previousCursor: String
+
+  # Whether there is a next page
+  hasNextPage: Boolean!
+
+  # Whether there is a previous page
+  hasPreviousPage: Boolean!
+}
+
+type LearningLibraryGQL {
+  id: String!
+
+  # Internal name of the learning library collection
+  name: String!
+
+  # Public-facing name of the collection
+  publicName: String
+  description: String
+  publishStatus: LearningLibraryPublishStatus!
+  ownerId: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+# Publish status of learning library collection
+enum LearningLibraryPublishStatus {
+  UNPUBLISHED
+  PUBLISHED
+  ARCHIVED
+  DELETED
+}
+
+type LearningLibraryCollectionsCursorResponseGQL {
+  # List of Learning Library Collections
+  collections: [LearningLibraryGQL!]!
+
+  # Cursor-based pagination information
+  pageInfo: CursorPaginationInfoGQL!
+}
+
+type LearningLibraryCollectionEnrollmentGQL {
+  # Enrollment ID
+  id: String!
+
+  # Learning library collection ID
+  collectionId: String!
+
+  # User ID of the enrollee
+  enrolleeId: String!
+
+  # Enrollment status
+  status: LearningLibraryCollectionEnrollmentStatus!
+
+  # When the user enrolled
+  enrolledAt: DateTime!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+# Enrollment status for learning library collection
+enum LearningLibraryCollectionEnrollmentStatus {
+  ACTIVE
+  INACTIVE
+}
+
+type PaginationInfoGQL {
+  # Current page number (1-indexed)
+  currentPage: Int!
+
+  # Total number of pages available
+  totalPages: Int
+
+  # Whether there is a next page
+  hasNextPage: Boolean!
+
+  # Whether there is a previous page
+  hasPreviousPage: Boolean!
 }
 
 type CanvasUserGQL {
@@ -288,6 +372,14 @@ type CanvasUserGQL {
 
   # Integration ID from Canvas
   integrationId: String
+}
+
+type KeyValuePairGQL {
+  # Metadata key
+  key: String!
+
+  # Metadata value
+  value: String!
 }
 
 type PersonGQL {
@@ -340,134 +432,12 @@ type PersonGQL {
   accountUuid: String!
 }
 
-type PaginationInfoGQL {
-  # Current page number (1-indexed)
-  currentPage: Int!
-
-  # Total number of pages available
-  totalPages: Int
-
-  # Whether there is a next page
-  hasNextPage: Boolean!
-
-  # Whether there is a previous page
-  hasPreviousPage: Boolean!
-}
-
 type PeopleResponseGQL {
   # List of people (Canvas users enriched with metadata)
   people: [PersonGQL!]!
 
   # Pagination information for the query
   pagination: PaginationInfoGQL!
-}
-
-type ProgramEnrollmentGQL {
-  id: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  enrollee: String!
-}
-
-type ProgramCourseGQL {
-  id: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  canvasCourseId: String!
-  canvasUrl: String!
-}
-
-type ProgramRequirementGQL {
-  id: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  isCompletionRequired: Boolean!
-  isPlaceholder: Boolean!
-  description: String
-
-  # Course enrollment type for this requirement
-  courseEnrollment: String!
-  dependency: ProgramCourseGQL
-  dependent: ProgramCourseGQL!
-}
-
-type ProgramProgressGQL {
-  id: String!
-  requirement: ProgramRequirementGQL!
-  enrollment: ProgramEnrollmentGQL!
-  completionPercentage: Float!
-  courseEnrollmentStatus: ProgramProgressCourseEnrollmentStatus!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-enum ProgramProgressCourseEnrollmentStatus {
-  ENROLLED
-  NOT_ENROLLED
-  BLOCKED
-}
-
-type ProgramGQL {
-  id: String!
-
-  # Internal name of the program
-  name: String!
-
-  # Public-facing name of the program
-  publicName: String
-
-  # Custom ID associated by the creator
-  customerId: String
-  description: String
-  publishStatus: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  owner: String!
-  startDate: DateTime
-  endDate: DateTime
-
-  # Program variant type (linear or non-linear)
-  variant: ProgramVariantType!
-
-  # Number of courses required for completion in non-linear programs
-  courseCompletionCount: Int
-
-  # Course enrollment type for the program
-  courseEnrollment: CourseEnrollmentType!
-  requirements: [ProgramRequirementGQL!]!
-  enrollments: [ProgramEnrollmentGQL!]!
-  progresses: [ProgramProgressGQL!]!
-  uniqueSkills: Float!
-  skills: [SkillTaxonomySkillGQL!]!
-}
-
-# Type of program variant (linear or non-linear)
-enum ProgramVariantType {
-  LINEAR
-  NON_LINEAR
-}
-
-# Type of course enrollment (self-enrollment or auto-enrollment)
-enum CourseEnrollmentType {
-  AUTO
-  SELF
-}
-
-type SkillTaxonomyAccountGQL {
-  # Unique identifier for the account
-  id: ID!
-
-  # Root account UUID for the skill taxonomy
-  rootAccountUuid: String!
-
-  # Creation date of the skill taxonomy account
-  createdAt: DateTime!
-
-  # Groups associated with the skill taxonomy account
-  groups: [SkillTaxonomyGroupGQL!]!
-
-  # Skills associated with the skill taxonomy account
-  taxonomySkills: [SkillTaxonomySkillGQL!]!
 }
 
 type SkillTaxonomyGroupGQL {
@@ -487,6 +457,23 @@ type SkillTaxonomyGroupGQL {
   account: SkillTaxonomyAccountGQL
 
   # Skills associated with the skill taxonomy group
+  taxonomySkills: [SkillTaxonomySkillGQL!]!
+}
+
+type SkillTaxonomyAccountGQL {
+  # Unique identifier for the account
+  id: ID!
+
+  # Root account UUID for the skill taxonomy
+  rootAccountUuid: String!
+
+  # Creation date of the skill taxonomy account
+  createdAt: DateTime!
+
+  # Groups associated with the skill taxonomy account
+  groups: [SkillTaxonomyGroupGQL!]!
+
+  # Skills associated with the skill taxonomy account
   taxonomySkills: [SkillTaxonomySkillGQL!]!
 }
 
@@ -546,22 +533,6 @@ type PopulatedSimilarSkillGQL {
   programs: [ProgramGQL!]!
 }
 
-type SimilarSkillGroupGQL {
-  # List of similar skills in the group
-  similarSkills: [PopulatedSimilarSkillGQL!]!
-}
-
-type ChangeTaxonomySkillsResultGQL {
-  # List of similar skill groups found in the taxonomy
-  similarSkillGroups: [SimilarSkillGroupGQL!]!
-
-  # List of skills that were successfully persisted to the taxonomy
-  persistedSkills: [SkillTaxonomySkillGQL!]!
-
-  # List of skill IDs that were deleted from the taxonomy
-  deletedSkills: [ID!]
-}
-
 type SkillTaxonomyProficiencyScaleValueGQL {
   # Unique identifier for the proficiency scale value
   id: ID!
@@ -573,23 +544,9 @@ type SkillTaxonomyProficiencyScaleValueGQL {
   value: String!
 }
 
-type SkillTaxonomyProficiencyScaleGQL {
-  # Unique identifier for the proficiency scale
-  id: ID!
-
-  # Name of the proficiency scale
-  name: String!
-
-  # Root account UUID for the proficiency scale
-  rootAccountUuid: String
-
-  # Values associated with the proficiency scale
-  values: [SkillTaxonomyProficiencyScaleValueGQL!]!
-}
-
 type SkillTaxonomyCourseGQL {
   # Unique identifier for the course
-  id: String!
+  id: ID!
 
   # Unique identifier for the course in Canvas
   courseId: String!
@@ -637,6 +594,14 @@ type SkillTaxonomySkillAlignmentGQL {
   learningObject: SkillTaxonomyLearningObjectGQL
 }
 
+type AlignmentsByProficiencyScaleValueGQL {
+  # Proficiency scale value for the skill alignment
+  proficiencyScaleValue: SkillTaxonomyProficiencyScaleValueGQL
+
+  # List of skill alignments for the proficiency scale value
+  alignments: [SkillTaxonomySkillAlignmentGQL!]!
+}
+
 type AssociateSkillsToLearningObjectsResultGQL {
   # List of alignments that were successfully persisted
   persistedAlignments: [SkillTaxonomySkillAlignmentGQL!]!
@@ -645,12 +610,20 @@ type AssociateSkillsToLearningObjectsResultGQL {
   deletedAlignments: [ID!]!
 }
 
-type AlignmentsByProficiencyScaleValueGQL {
-  # Proficiency scale value for the skill alignment
-  proficiencyScaleValue: SkillTaxonomyProficiencyScaleValueGQL
+type SimilarSkillGroupGQL {
+  # List of similar skills in the group
+  similarSkills: [PopulatedSimilarSkillGQL!]!
+}
 
-  # List of skill alignments for the proficiency scale value
-  alignments: [SkillTaxonomySkillAlignmentGQL!]!
+type ChangeTaxonomySkillsResultGQL {
+  # List of similar skill groups found in the taxonomy
+  similarSkillGroups: [SimilarSkillGroupGQL!]!
+
+  # List of skills that were successfully persisted to the taxonomy
+  persistedSkills: [SkillTaxonomySkillGQL!]!
+
+  # List of skill IDs that were deleted from the taxonomy
+  deletedSkills: [ID!]
 }
 
 type CoursesByProficiencyScaleValueGQL {
@@ -661,9 +634,125 @@ type CoursesByProficiencyScaleValueGQL {
   courses: [SkillTaxonomyCourseGQL!]!
 }
 
+type SkillTaxonomyProficiencyScaleGQL {
+  # Unique identifier for the proficiency scale
+  id: ID!
+
+  # Name of the proficiency scale
+  name: String!
+
+  # Root account UUID for the proficiency scale
+  rootAccountUuid: String
+
+  # Values associated with the proficiency scale
+  values: [SkillTaxonomyProficiencyScaleValueGQL!]!
+}
+
+type ProgramGQL {
+  id: String!
+
+  # Internal name of the program
+  name: String!
+
+  # Public-facing name of the program
+  publicName: String
+
+  # Custom ID associated by the creator
+  customerId: String
+  description: String
+  publishStatus: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  owner: String!
+  startDate: DateTime
+  endDate: DateTime
+
+  # Program variant type (linear or non-linear)
+  variant: ProgramVariantType!
+
+  # Number of courses required for completion in non-linear programs
+  courseCompletionCount: Int
+
+  # Course enrollment type for the program
+  courseEnrollment: CourseEnrollmentType!
+  requirements: [ProgramRequirementGQL!]!
+  enrollments: [ProgramEnrollmentGQL!]!
+  progresses: [ProgramProgressGQL!]!
+  uniqueSkills: Float!
+  skills: [SkillTaxonomySkillGQL!]!
+}
+
+# Type of program variant (linear or non-linear)
+enum ProgramVariantType {
+  LINEAR
+  NON_LINEAR
+}
+
+# Type of course enrollment (self-enrollment or auto-enrollment)
+enum CourseEnrollmentType {
+  AUTO
+  SELF
+}
+
+type ProgramEnrollmentGQL {
+  id: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  enrollee: String!
+}
+
+type ProgramCourseGQL {
+  id: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  canvasCourseId: String!
+  canvasUrl: String!
+  canvasCourseName: String
+  canvasCourseImageUrl: String
+  canvasMetadataUpdatedAt: DateTime
+}
+
+type ProgramRequirementGQL {
+  id: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  isCompletionRequired: Boolean!
+  isPlaceholder: Boolean!
+  description: String
+
+  # Course enrollment type for this requirement
+  courseEnrollment: String!
+  dependency: ProgramCourseGQL
+  dependent: ProgramCourseGQL!
+}
+
+type ProgramProgressGQL {
+  id: String!
+  requirement: ProgramRequirementGQL!
+  enrollment: ProgramEnrollmentGQL!
+  completionPercentage: Float!
+  courseEnrollmentStatus: ProgramProgressCourseEnrollmentStatus!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+enum ProgramProgressCourseEnrollmentStatus {
+  ENROLLED
+  NOT_ENROLLED
+  BLOCKED
+}
+
 type ForceProgressRecalcResultGQL {
   updated: [String!]!
   failed: [String!]!
+}
+
+type RedwoodResponseGQL {
+  # GraphQL response data from Redwood
+  data: JSON
+
+  # GraphQL errors from Redwood (if any)
+  errors: [JSON!]
 }
 
 type ExtractedSkillGQL {
@@ -735,23 +824,28 @@ type Query {
 
   # Check if skill extraction has run for course/module/module item
   hasSkillExtractionRun(input: SkillExtractionStatusInputGQL!): Boolean!
-  contentLibraries(accountId: Float!): [ContentLibraryGQL!]!
-  contentLibrary(courseId: Float!): ContentLibraryGQL!
+  contentLibraries(accountId: ID!): [ContentLibraryGQL!]!
+  contentLibrary(courseId: ID!): ContentLibraryGQL!
   contentVersions(
     assetId: Float
     assetType: AssetTypeEnum!
-    courseId: Float!
+    courseId: ID!
   ): [ContentVersionGQL!]!
   currentContentVersions(
     assetType: AssetTypeEnum!
-    courseId: Float!
+    courseId: ID!
   ): [ContentVersionGQL!]!
   previewContentVersion(id: ID!): ContentVersionPreviewGQL!
   assetLinks(
     assetId: Float!
     assetType: AssetTypeEnum!
-    contentLibraryCourseId: Float!
+    contentLibraryCourseId: ID!
   ): [AssetLinkGQL!]!
+  assetLinkByAssetId(
+    assetId: ID!
+    assetType: AssetTypeEnum!
+    contentLibraryId: ID!
+  ): AssetLinkGQL
 
   # All programs available for the user to administer, optionally filtered by progress state
   programs(
@@ -764,7 +858,16 @@ type Query {
 
   # All user enrolled programs
   enrolledPrograms: [ProgramGQL!]!
+
+  # Get Learning Library Collections with cursor-based pagination support
+  learningLibraryCollections(
+    input: LearningLibraryCollectionsCursorQueryInput
+  ): LearningLibraryCollectionsCursorResponseGQL!
   crmConfigJwt: CrmJwtGQL!
+  testSnowflakeQuery: JSON!
+  getSnowflakeQueryStatus(queryId: String!): String!
+  getSnowflakeQueryResults(queryId: String!): JSON!
+  readCsvFile(key: String!): JSON!
   widgetFileUrl(key: String!): String!
   widgetData(
     widgetType: String!
@@ -775,12 +878,10 @@ type Query {
   ): WidgetDataResultGQL!
   widgetsByUser(userAccountId: String!): [WidgetGQL!]!
   widgetByTypeAndUser(userAccountId: String!, type: String!): WidgetGQL
-  getAthenaQuery(queryExecutionId: String!): JSON!
-  testAthenaResult(key: String!): [JSON!]!
-  listS3Keys: [JSON!]!
   widgetGroupsByUser(userAccountId: String!): [WidgetGroupGQL!]!
   widgetGroupById(widgetGroupId: String!): WidgetGroupGQL!
   widgetActions(widgetId: String!): [WidgetActionGQL!]!
+  widgetGroupUserDataByUser(userAccountId: String!): [WidgetGroupUserDataGQL!]!
 
   # Get users (and metadata) matching the specified criteria
   users(input: UsersQueryInputGQL!): MetadataUsersGql!
@@ -794,8 +895,16 @@ type Query {
   # Get people (Canvas users enriched with metadata) from a specific account
   getPeople(input: PeopleQueryInputGQL!): PeopleResponseGQL!
 
+  # Get people (Canvas users enriched with metadata) by their Canvas UUIDs from a specific account
+  getPeopleByUuid(input: PeopleByUuidQueryInputGQL!): PeopleResponseGQL!
+
   # Retrieve all insight feed messages for the current user in a specific account.
-  insights(account: String!): [InsightMessageModel!]!
+  insights(
+    account: String!
+
+    # Data scope for insights (e.g., admin, leader, instructor, designer, ta)
+    scope: String = "admin"
+  ): [InsightMessageModel!]!
   insightActionLog(account: String!): [InsightActionModel!]!
   insightAction(action: String!): InsightActionModel
 }
@@ -832,6 +941,17 @@ enum ProgramProgressState {
   NOT_STARTED
   IN_PROGRESS
   COMPLETED
+}
+
+input LearningLibraryCollectionsCursorQueryInput {
+  # Cursor for pagination (ID of the last item from previous page)
+  cursor: String
+
+  # Number of items to return (default: 10, max: 100)
+  limit: Int = 20
+
+  # Direction to paginate (true = forward/next, false = backward/previous)
+  forward: Boolean = true
 }
 
 input TimeSpanInput {
@@ -914,6 +1034,14 @@ input PeopleQueryInputGQL {
   page: Int
 }
 
+input PeopleByUuidQueryInputGQL {
+  # The Canvas account ID (sub-account or root account)
+  accountId: ID!
+
+  # List of Canvas user UUIDs to fetch
+  uuids: [String!]!
+}
+
 type Mutation {
   createSkills(input: CreateSkillsInputGQL!): [SkillGQL!]!
   startSkillExtractionTaskForUser: Boolean!
@@ -932,53 +1060,63 @@ type Mutation {
     input: UpsertSkillTaxonomyGroupsInputGQL!
   ): [SkillTaxonomyGroupGQL!]!
   sendEvent(input: EventInputGQL!): Boolean!
-  createContentLibrary(accountId: Float!): ContentLibraryGQL!
+  createContentLibrary(accountId: ID!): ContentLibraryGQL!
   updateContentLibrary(args: ContentLibraryInputGQL!): ContentLibraryGQL!
   createContentVersion(
     assetId: Float!
     assetType: AssetTypeEnum!
     title: String!
-    courseId: Float!
+    courseId: ID!
     syncSettings: SyncSettingsInputGQL!
   ): ContentVersionGQL!
   importContentVersion(
-    courseId: Float!
+    courseId: ID!
     contentVersionId: ID!
-    moduleId: Float!
+    moduleId: ID!
     detached: Boolean!
-  ): Float!
+  ): ID!
 
   # Create a new program
-  createProgram(program: String): ProgramGQL!
+  createProgram(program: String, accountId: String): ProgramGQL!
 
   # Update program metadata
-  updateProgramMetadata(metadata: UpdateProgramMetadataGQL!): ProgramGQL!
+  updateProgramMetadata(
+    metadata: UpdateProgramMetadataGQL!
+    accountId: String
+  ): ProgramGQL!
 
   # Delete a program
-  deleteProgram(programId: String!): Boolean!
+  deleteProgram(programId: String!, accountId: String): Boolean!
 
   # Duplicate an existing program
-  duplicateProgram(programId: String!): ProgramGQL!
+  duplicateProgram(programId: String!, accountId: String): ProgramGQL!
 
   # Unenroll a Journey user from a program
-  unenrollUserFromProgram(enrollmentId: String!, canvasUUID: String!): Boolean!
+  unenrollUserFromProgram(
+    enrollmentId: String!
+    canvasUUID: String!
+    accountId: String
+  ): Boolean!
 
   # Enroll multiple Journey users to a program
   batchEnrollUserToProgram(
     programId: String!
     userIds: [String!]!
+    accountId: String
   ): [ProgramEnrollmentGQL!]!
 
   # Enroll multiple Journey users to multiple programs
   batchEnrollUsersToPrograms(
     programIds: [String!]!
     enrolleeIds: [String!]!
+    accountId: String
   ): [ProgramEnrollmentGQL!]!
 
   # Override program requirements
   updateProgramRequirements(
     programId: String!
     requirements: [UpdateProgramRequirementsRequirementGQL!]!
+    accountId: String
   ): [ProgramRequirementGQL!]!
 
   # Enroll user to program requirement
@@ -988,6 +1126,18 @@ type Mutation {
   updateSelfProgresses(
     canvasCourseFilter: CanvasCourseFilterInputGQL
   ): ForceProgressRecalcResultGQL!
+
+  # Create a new empty Learning Library Collection
+  createLearningLibraryCollection(
+    input: CreateLearningLibraryInput
+    accountId: String!
+  ): LearningLibraryGQL!
+
+  # Enroll multiple users to multiple learning library collections (creates all user-collection combinations)
+  batchEnrollUsersToCollections(
+    collectionIds: [String!]!
+    userIds: [String!]!
+  ): [LearningLibraryCollectionEnrollmentGQL!]!
   deleteWidget(id: String!, userAccountId: String!): Boolean!
   createWidget(input: CreateWidgetInput!, userAccountId: String!): WidgetGQL!
   updateWidget(
@@ -995,8 +1145,6 @@ type Mutation {
     userAccountId: String!
     input: UpdateWidgetInput!
   ): WidgetGQL!
-  testAthenaQuery: String!
-  runSnapshot: Boolean!
   createWidgetGroup(input: CreateWidgetGroupInput!): WidgetGroupGQL!
   deleteWidgetGroup(id: String!, userAccountId: String!): Boolean!
   updateWidgetGroup(
@@ -1009,14 +1157,29 @@ type Mutation {
     userAccountId: String!
     inputs: [CreateWidgetActionInput!]!
   ): [WidgetActionGQL!]!
+  setWidgetGroupUserData(
+    widgetGroupId: String!
+    userAccountId: String!
+    input: SetWidgetGroupUserDataInput!
+  ): WidgetGroupUserDataGQL!
 
   # Bulk upsert users and metadata
   bulkUpsertMetadata(input: BulkUpsertMetadataInputGQL!): MetadataUsersGql!
+
+  # Remove a leader from all users in the specified root account
+  removeLeaderFromAllUsers(input: RemoveLeaderInputGQL!): Boolean!
 
   #
   #       Answer a prompt using the Cedar AI service
   #
   answerPrompt(prompt: String!): String!
+
+  #
+  #       Execute a GraphQL query or mutation on the Redwood service.
+  #       This is a generic proxy that forwards any GraphQL operation to Redwood
+  #       while preserving user authentication via Canvas JWT.
+  #
+  executeRedwoodQuery(input: RedwoodQueryInput!): RedwoodResponseGQL!
 
   # Mark an insight feed message as read.
   markInsightAsRead(insight: String!): Boolean!
@@ -1182,10 +1345,10 @@ input EventLearningObjectInputGQL {
 }
 
 input ContentLibraryInputGQL {
-  id: String!
-  externalLinksModuleId: Float
-  externalToolsModuleId: Float
-  courseId: Float
+  id: ID!
+  externalLinksModuleId: ID
+  externalToolsModuleId: ID
+  courseId: ID
 }
 
 input SyncSettingsInputGQL {
@@ -1232,13 +1395,23 @@ input CanvasCourseFilterInputGQL {
   canvasUrl: String!
 }
 
+input CreateLearningLibraryInput {
+  # Internal name of the learning library collection
+  name: String
+
+  # Public-facing name of the collection
+  publicName: String
+
+  # Description of the collection
+  description: String
+}
+
 input CreateWidgetInput {
-  name: String!
   type: String!
   queryParams: WidgetParamsInput!
-  refreshIntervalMinutes: Float
   position: Int
   widgetGroupId: String
+  prismQueryId: String
 }
 
 input WidgetParamsInput {
@@ -1255,11 +1428,10 @@ input WidgetParamsInput {
 }
 
 input UpdateWidgetInput {
-  name: String
   type: String
   queryParams: WidgetParamsInput
-  refreshIntervalMinutes: Float
   position: Int
+  prismQueryId: String
 }
 
 input CreateWidgetGroupInput {
@@ -1272,7 +1444,7 @@ input CreateWidgetGroupInput {
 input UpdateWidgetGroupInput {
   name: String
   description: String
-  updatedWidgets: [UpdatedWidgetInGroupInput!]!
+  updatedWidgets: [UpdatedWidgetInGroupInput!]
   newWidgets: [CreateWidgetInput!]
 }
 
@@ -1286,6 +1458,11 @@ input CreateWidgetActionInput {
   canvasUserUuid: String!
   courseId: String!
   actionReason: String!
+}
+
+input SetWidgetGroupUserDataInput {
+  isPinned: Boolean
+  lastCheckedAt: DateTime
 }
 
 input BulkUpsertMetadataInputGQL {
@@ -1313,4 +1490,20 @@ input UserMetadataInputGQL {
 
   # Value for the metadata. Set to null to delete the metadata entry.
   value: String
+}
+
+input RemoveLeaderInputGQL {
+  # UUID of the leader to be removed from all users
+  userUuid: String!
+}
+
+input RedwoodQueryInput {
+  # GraphQL query or mutation string to execute on Redwood
+  query: String!
+
+  # Variables for the GraphQL operation
+  variables: JSON
+
+  # Name of the operation to execute (if query contains multiple)
+  operationName: String
 }

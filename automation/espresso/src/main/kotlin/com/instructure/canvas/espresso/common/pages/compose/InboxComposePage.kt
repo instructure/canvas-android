@@ -13,6 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package com.instructure.canvas.espresso.common.pages.compose
 
 import androidx.compose.ui.test.assert
@@ -37,6 +38,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeUp
+import androidx.test.espresso.Espresso
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Message
 
@@ -140,6 +142,7 @@ class InboxComposePage(private val composeTestRule: ComposeTestRule) {
         composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("textFieldWithHeaderTextField").performClick()
         composeTestRule.onNodeWithTag("textFieldWithHeaderTextField").performTextReplacement(body)
+        Espresso.closeSoftKeyboard()
     }
 
     fun clickOnCloseButton() {
@@ -187,5 +190,14 @@ class InboxComposePage(private val composeTestRule: ComposeTestRule) {
         while (composeTestRule.onAllNodesWithTag("removeButton", true).fetchSemanticsNodes().isNotEmpty()) {
             composeTestRule.onAllNodesWithTag("removeButton", true).onFirst().performClick()
         }
+    }
+
+    fun clickAttachmentButton() {
+        composeTestRule.onNodeWithContentDescription("Add attachment").performClick()
+        composeTestRule.waitForIdle()
+    }
+
+    fun assertAttachmentDisplayed(fileName: String) {
+        composeTestRule.onNode(hasText(fileName), useUnmergedTree = true).assertIsDisplayed()
     }
 }

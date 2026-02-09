@@ -887,9 +887,9 @@
 
     <string name="unlimited">無制限</string>
 
-    <string name="question">質問</string>
+    <string name="question">問題</string>
     <plurals name="question_count">
-        <item quantity="other">%dの質問</item>
+        <item quantity="other">%dの問題</item>
     </plurals>
 
     <plurals name="pointCount">
@@ -1029,6 +1029,8 @@
 
     <string name="downloading">読み込み中</string>
     <string name="downloadComplete">ダウンロード完了</string>
+    <string name="fileDownloadNotificationPermissionDenied">ダウンロード開始済み。進捗状況を確認するには、通知を有効にしてください。</string>
+
     <string name="notificationChannelNameFileDownloadsName">通知をダウンロードする</string>
     <string name="notificationChannelNameFileDownloadsDescription">現在ダウンロード中の Canvas 通知。</string>
     <string name="full_due_date_details">締め切り日の全詳細</string>
@@ -1161,7 +1163,7 @@
     <string name="audioRecordingError">オーディオの記録中に不測のエラーが発生しました。</string>
     <string name="videoRecordingError">映像の録画中に不測のエラーが発生しました。</string>
 
-    <string name="quizQuestionLabel">質問:</string>
+    <string name="quizQuestionLabel">問題:</string>
     <string name="timeLimitLabel">制限時間：</string>
     <string name="allowedAttemptsLabel">許可回数:</string>
     <string name="instructions">指示</string>
@@ -1228,6 +1230,7 @@
     <string name="a11y_content_description_add_to_dashboard">ダッシュボードに追加</string>
     <string name="a11y_content_description_add_all_to_dashboard">ダッシュ​​ボードにすべてを追加</string>
 
+    <string name="new_mobile_dashboard">新しいモバイルダッシュボード</string>
     <!-- K5 Strings -->
     <string name="navDrawerAccount">アカウント</string>
     <string name="dashboardTabHomeroom">ホームルーム</string>
@@ -1344,6 +1347,9 @@
         <item quantity="other">%s通の未読の通知</item>
     </plurals>
 
+    <plurals name="a11y_todoBadgeCount">
+        <item quantity="other">%sのするべきこと項目</item>
+    </plurals>
     <string name="noAnnotationSelected">注釈が選択されていません</string>
     <string name="emailNotifications">メール通知</string>
     <string name="emailNotificationsImmediately">ただちに</string>
@@ -1401,7 +1407,7 @@
     <string name="acceptableUsePolicySubmit">提出</string>
     <string name="acceptFail">許可される使用ポリシーの提出に失敗しました。</string>
     <string name="attempt">%d 試行</string>
-    <string name="quizQuestions">質問:%d</string>
+    <string name="quizQuestions">問題:%d</string>
     <string name="quizTimeLimit">時間制限:%s</string>
     <string name="allowedAttempts">試行許可回数：%s</string>
     <string name="usedAttempts">試行した回数：%d</string>
@@ -1874,6 +1880,8 @@
     <string name="gradePreferencesHeaderSortBy">並び変え</string>
     <string name="gradesEmptyTitle">課題はありません</string>
     <string name="gradesEmptyMessage">このスペースにはまだ課題が作成されていないようです。</string>
+    <string name="noMatchingAssignments">一致する課題はありません</string>
+    <string name="noMatchingAssignmentsDescription">検索条件に一致する課題はありません。別の検索語をお試しください。</string>
     <string name="errorLoadingGrades">受講者の成績を読み込む際に問題が発生しています。ページを再読み込みするか、後でもう一度お試しください。</string>
     <string name="errorLoadingCourse">受講者のコース詳細を読み込む際に問題が発生しています。ページを再読み込みするか、後でもう一度お試しください。</string>
     <string name="gradesFilterContentDescription">フィルタ</string>
@@ -2043,7 +2051,8 @@
     <string name="widgetErrorTitle">おっと！なにかが失敗しました</string>
     <string name="widgetErrorSubtitle">現在、タスクを表示できません。しばらくしてからもういちどやり直すか、アプリに移動してください。</string>
     <string name="widgetToDoEmptyTitle">これで完了です！</string>
-    <string name="widgetToDoEmptySubtitle">次の4週間は、空き時間があるようです。するべきことを追加しますか？</string>
+    <string name="widgetToDoEmptySubtitle">空き時間があるようです、直近に予定されているタスクはありません。するべきことを追加しますか？</string>
+
     <string name="widgetNotLoggedInTitle">ログインしましょう！</string>
     <string name="widgetToDoNotLoggedInSubtitle">するべきことを表示するには、アプリでアカウントにログインしてください。すぐに完了します！</string>
     <string name="a11y_widgetToDoOpenToDoList">するべきことリスト画面を開く</string>
@@ -2067,6 +2076,10 @@
     <plurals name="pointTotal">
         <item quantity="other">%s / %s 点</item>
     </plurals>
+    <plurals name="groupMemberCount">
+        <item quantity="other">受講者</item>
+    </plurals>
+
     <string name="speedGraderLatePenaltyTitle">遅延ペナルティ：</string>
     <string name="gradingStatus_none">なし</string>
     <string name="gradingStatus_late">遅延</string>
@@ -2123,4 +2136,189 @@
     <string name="scored_less_than_with_max">/ %s ポイント未満を得点</string>
     <string name="scored_between_values">%1$s - %2$sを得点</string>
     <string name="multiple_filters">複数のフィルター</string>
+    <string name="a11y_contentDescriptionToDoFilter">フィルタ</string>
+    <string name="errorLoadingToDos">するべきこと項目のロード中にエラーが発生しました。接続を確認して、もう一度お試しください。</string>
+    <string name="errorUpdatingToDo">するべきこと項目の更新中にエラーが発生しました。接続を確認して、もう一度お試しください。</string>
+    <string name="noToDosForNow">現在するべきことはありません！</string>
+    <string name="noToDosForNowSubtext">少し休んでリラックスして英気を養うのにちょうどいい時間のようです。</string>
+    <string name="todoSwipeDone">終了</string>
+    <string name="todoSwipeUndo">アンドゥーする</string>
+    <string name="todoMarkedAsDone">%sは完了とマーク</string>
+    <string name="todoMarkedAsNotDone">%s完了とマークされていない</string>
+    <string name="todoMarkedAsDoneSnackbarUndo">アンドゥーする</string>
+    <string name="todoActionOffline">この操作はオフラインでは実行できません</string>
+
+    <!-- To Do List Filter Screen -->
+    <string name="todoFilterPreferences">するべきことリスト設定</string>
+    <string name="todoFilterVisibleItems">表示項目</string>
+    <string name="todoFilterShowPersonalToDos">個人のするべきことを表示</string>
+    <string name="todoFilterShowCalendarEvents">カレンダーイベントを表示</string>
+    <string name="todoFilterShowCompleted">完了項目を表示</string>
+    <string name="todoFilterFavoriteCoursesOnly">お気に入りのコースのみ</string>
+    <string name="todoFilterShowTasksFrom">タスク開始時：</string>
+    <string name="todoFilterShowTasksUntil">タスク終了時：</string>
+    <string name="todoFilterToday">今日</string>
+    <string name="todoFilterThisWeek">今週</string>
+    <string name="todoFilterLastWeek">先週</string>
+    <string name="todoFilterTwoWeeks">2週間前</string>
+    <string name="todoFilterThreeWeeks">3週間前</string>
+    <string name="todoFilterFourWeeks">4週間前</string>
+    <string name="todoFilterNextWeek">次週</string>
+    <string name="todoFilterInTwoWeeks">2週間以内</string>
+    <string name="todoFilterInThreeWeeks">3週間以内</string>
+    <string name="todoFilterInFourWeeks">4週間以内</string>
+    <string name="todoFilterFromDate">%sから</string>
+    <string name="todoFilterUntilDate">%s まで</string>
+    <string name="a11y_buttonSelectionSelected">選択されました</string>
+    <string name="a11y_buttonSelectionNotSelected">選択されていません</string>
+    <!-- Course Invitations -->
+    <string name="courseInvitationsTitle">コース招待 (%d)</string>
+    <string name="courseInvitationAccepted">%sへの招待が受け入れられました</string>
+    <string name="courseInvitationDeclined">%sへの招待が辞退されました！</string>
+    <string name="courseInvitationDeclineConfirmTitle">招待を辞退する</string>
+    <string name="courseInvitationDeclineConfirmMessage">%sへの招待を辞退してよろしいですか？</string>
+
+    <!-- Welcome Widget -->
+    <!-- Greetings with name (%s is the student's first name) -->
+    <string name="welcomeGreetingMorningWithName">おはようございます、%sさん！</string>
+    <string name="welcomeGreetingAfternoonWithName">こんにちは、%sさん！</string>
+    <string name="welcomeGreetingEveningWithName">こんばんは、%sさん！</string>
+    <string name="welcomeGreetingNightWithName">おやすみなさい、%sさん！</string>
+
+    <!-- Greetings without name (fallback when user has no first name) -->
+    <string name="welcomeGreetingMorning">おはようございます！</string>
+    <string name="welcomeGreetingAfternoon">こんにちは！</string>
+    <string name="welcomeGreetingEvening">こんばんは！</string>
+    <string name="welcomeGreetingNight">おやすみなさい！</string>
+
+    <!-- Welcome Widget Motivational Messages -->
+    <string-array name="welcomeMessagesGeneric">
+        <item>あなたならできます。</item>
+        <item>続けてください — 今感じている以上にあなたは強いのです。</item>
+        <item>一歩ずつでも進歩は進歩です。</item>
+        <item>諦めないで — 未来の自分が感謝するでしょう。</item>
+        <item>あなたは思っている以上にできるひとなのです。</item>
+        <item>辛い日であっても、あなたは前進しています。</item>
+        <item>自分を信じて — あなたはこれまでにも困難を乗り越えてきました。</item>
+        <item>完璧ではなく、進歩を。その調子でいきましょう。</item>
+        <item>頑張れ — あなたは一人ではありません。</item>
+        <item>あなたは学び、成長し、自分で気づいている以上に上達しています。</item>
+        <item>つまずいても大丈夫 — あなたは正しい道を進んでいます。</item>
+        <item>プッシュし続けましょう — 目標は、思っているよりずっと近いです。</item>
+        <item>小さな勝利であっても大切です。</item>
+        <item>続けてください — 思っているよりずっと近づいています。</item>
+        <item>立ち止まっても大丈夫。休憩も学びの一部です。</item>
+        <item>挑戦すること自体がすでに勝利なのです。</item>
+        <item>進歩&gt;完璧。</item>
+        <item>出席すること、ページを開くこと自体が、想像以上に重要です。</item>
+        <item>進みが遅い日であっても、あなたは確実にスキルを築いています。</item>
+        <item>呼吸を忘れないで — あなたはちゃんとやっています。</item>
+        <item>自分のペースが正しいペースです。</item>
+        <item>今日中に全てを理解する必要はありません。</item>
+        <item>あなたはここに属している、ここに居るべき存在です。</item>
+        <item>積み重ねた努力は必ず実を結びます。</item>
+        <item>何度でもやり直しても大丈夫 — 必要なだけ何度でも。</item>
+        <item>今は難しく感じても、やがて楽になります。</item>
+        <item>出席すること、ページを開くことを止めない — それが大切なこと。</item>
+        <item>小さな一歩が大きな山さえ動かすのです。</item>
+        <item>休息もまた進歩の一部です。</item>
+        <item>あなたは自分で気づいている以上に上達しています。</item>
+        <item>遅い進歩であっても、それが進歩であることに変わりはありません。</item>
+        <item>未来は一日で築かれない — でもあなたは進んでいます。</item>
+        <item>一つの瞬間に一つの課題を、一歩ずつ。</item>
+        <item>完璧でなくても、影響を与えることはできるのです。</item>
+        <item>学びとはゴチャゴチャしたものです — それが普通です。</item>
+        <item>たとえそう感じなくても、全ての挑戦は成長です。</item>
+        <item>あなたはこれまでにも困難を乗り越えてきました — これもできます。</item>
+        <item>誰が見ていくても、あなたの努力には意味があります。</item>
+        <item>ゆっくり進んでも大丈夫です。</item>
+        <item>静かな日であっても、あなたは前進しています。</item>
+        <item>道筋がまだ見えなくてもよいのです — 歩き続けましょう。</item>
+        <item>今感じている以上にあなたは強いのです。</item>
+        <item>大きな目標も、築かれるのは小さな一歩からです。</item>
+        <item>続けてましょう — 未来の自分が感謝するでしょう。</item>
+        <item>ゴチャゴチャした進歩であっても、それが進歩であることに変わりはありません。</item>
+        <item>遅れてなどいません — あなたはは自分の道を歩んでいます。</item>
+        <item>学びながら進んでいけばいいのです。</item>
+        <item>まだ気づいていない方法で、だがあなたは成長しています。</item>
+        <item>今日の努力は明日への投資です。</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesMorning">
+        <item>おはよう！大丈夫、できます — 1クラスずつ、一歩ずつ進めばいいのです。</item>
+        <item>準備ができていないように感じますか？それは普通のことです。今の場所から始めましょう。</item>
+        <item>コーヒーも役に立つけれど、自分に優しくする方がもっと効果的です。</item>
+        <item>技術機器が調子悪いですか？みんなに起こることです — 気にしないで。</item>
+        <item>今日という日が完璧である必要はありません、ただ可能であればいいのです。</item>
+        <item>おはよう — 今日という日は、学び成長する新たなチャンスです。</item>
+        <item>今朝の一歩一歩が、目標へ近づく一歩となるのです。</item>
+        <item>深呼吸しましょう — いま全てを理解する必要はありません。</item>
+        <item>テクノロジーはややこしいこともありますが、あなたは一人で学んでいるのではありません。</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesAfternoon">
+        <item>もう半分まで来ました — あなたが思っている以上に、すでに多くのことを成し遂げています。</item>
+        <item>行き詰まっているように感じますか？誰もが壁にぶつかります。ただ、登るのをやめないでください。</item>
+        <item>仕事、成績、将来&#8230;もう全てを理解している人は誰もいません。</item>
+        <item>頭が疲れていますか？短い休憩＝後の集中力がアップ。</item>
+        <item>助けを求めてください。本当です、誰もこれを一人でやっているわけではありません。</item>
+        <item>今日ここまでの道のりを辿り着いて来ているのです — 誇りに思えることです。</item>
+        <item>一息つきたいですか？充電もまた学習の一部です。</item>
+        <item>道が不確かでも大丈夫 — スキル構築は一歩ずつ。</item>
+        <item>行き詰まったら声をかけてください — サポートはいつも思っているより近くにあるものです。</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesEvening">
+        <item>一日を乗り切った — それ自体が勝利です。</item>
+        <item>みんなと触れ合いたいですか？軽く「やあ」と声をかけてみましょう — 視界が開けるでしょう。</item>
+        <item>今日ゴチャゴチャしていても、それでもあなたは出席し、ページを開きました。大切なのはそれです。</item>
+        <item>忘れないで：あなたの価値は点数で測れません。</item>
+        <item>リラックスして、笑って、罪悪感なくスクロールしましょう — あなたの手柄です。</item>
+        <item>一日を乗り切りましたね — たとえ目立たなくても、進歩には意味があります。</item>
+        <item>友達やメンターと触れ合いたいですか？繋がりは小さな瞬間にも生まれるものです。</item>
+        <item>夜は振り返りの時間です — やり残した課題だけでなく、今日学んだことに目を向けましょう。</item>
+        <item>完璧さより、大切なのはあなたです。</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesNight">
+        <item>まだ頑張っていますか？尊敬しますす — でも眠ることも忘れないで。</item>
+        <item>今夜休んだ自分を、明日はきっと感謝するでしょう。</item>
+        <item>不安は夜に増幅するもの — その心配事の全てを信じないで。気のせいです。</item>
+        <item>遅れてなどいません 、 あなたはは自分の道を歩んでいるだけです。</item>
+        <item>ノートパソコンを閉じて — 脳も夢を見る必要があるのです。</item>
+        <item>休むのは構いません — 新たな機会と共に明日が待っています。</item>
+        <item>学びは短距離走ではなく、マラソンのようなものです。今夜は自分に優しくしてあげてください。</item>
+        <item>心配事が重く感じられたら、一人で背負う必要はないことを忘れないでいてください。</item>
+        <item>努力すること自体がすでに達成なのだと知りながら一日を終えましょう。</item>
+    </string-array>
+
+    <!-- Accessibility -->
+    <string name="welcomeWidgetContentDescription">ウェルカムメッセージ：%1$s。%2$s</string>
+
+    <!-- Institutional Announcements -->
+    <string name="institutionalAnnouncementsTitle">アナウンス (%d)</string>
+    <!-- Widget Display Names -->
+    <string name="widget_hello">こんにちは、%sさん</string>
+
+    <!-- Customize Dashboard -->
+    <string name="customize_dashboard">ダッシュボードカスタマイズ</string>
+    <string name="dashboard_widgets">ウィジェット</string>
+    <string name="move_up">ひとつ上へ移動</string>
+    <string name="move_down">ひとつ下へ移動</string>
+    <string name="no_widgets">利用可能なウィジェットはありません</string>
+    <string name="changing_dashboard_layout">ダッシュボードのレイアウトを変更する</string>
+    <string name="changing_dashboard_layout_message">ダッシュボードのレイアウトを変更するには、アプリケーションを再起動する必要があります。</string>
+    <string name="restart_now">今すぐ再起動する</string>
+    <string name="switched_back">元に戻しましたか？</string>
+    <string name="switched_back_message">新しいダッシュボードをお試しいただき、ありがとうございます！元に戻した理由をお聞かせいただけますか？</string>
+    <string name="what_could_we_improve">改善すべき点は何でしょうか？</string>
+    <string name="skip">スキップ</string>
+    <string name="widget_setting_show_greeting">挨拶を表示する</string>
+    <string name="background_color">背景色</string>
+    <string name="offline_content_available">オフラインコンテンツが利用可能</string>
+    <string name="a11y_contentDescription_moreOptions">その他のオプション</string>
+    <string name="customizeCourse">コースをカスタマイズ</string>
+    <string name="favoriteCoursesAndGroups">お気に入りのコースとグループ</string>
+    <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
+    <string name="ltiToolsOffline">外部のツールは、オフラインでは使用できません。</string>
 </resources>

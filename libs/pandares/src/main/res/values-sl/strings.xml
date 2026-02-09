@@ -1045,6 +1045,8 @@
 
     <string name="downloading">Prenašanje</string>
     <string name="downloadComplete">Prenos je končan</string>
+    <string name="fileDownloadNotificationPermissionDenied">Prenos se je začel. Omogočite sporočila za ogled napredka.</string>
+
     <string name="notificationChannelNameFileDownloadsName">Sporočila o prenosih</string>
     <string name="notificationChannelNameFileDownloadsDescription">Obvestila sistema Canvas za prenose v teku.</string>
     <string name="full_due_date_details">Vse podrobnosti o roku</string>
@@ -1249,6 +1251,7 @@
     <string name="a11y_content_description_add_to_dashboard">Dodaj na nadzorno ploščo</string>
     <string name="a11y_content_description_add_all_to_dashboard">Dodaj vse na nadzorno ploščo</string>
 
+    <string name="new_mobile_dashboard">Nova mobilna nadzorna plošča</string>
     <!-- K5 Strings -->
     <string name="navDrawerAccount">Račun</string>
     <string name="dashboardTabHomeroom">Matični</string>
@@ -1367,6 +1370,10 @@
         <item quantity="other">%s neprebranih obvestil</item>
     </plurals>
 
+    <plurals name="a11y_todoBadgeCount">
+        <item quantity="one">%s element seznama opravil</item>
+        <item quantity="other">%s elementov(-a/-i) seznama opravil</item>
+    </plurals>
     <string name="noAnnotationSelected">Izbrana ni nobena opomba</string>
     <string name="emailNotifications">E-poštno obveščanje</string>
     <string name="emailNotificationsImmediately">Takoj</string>
@@ -1907,6 +1914,8 @@
     <string name="gradePreferencesHeaderSortBy">Razvrsti po</string>
     <string name="gradesEmptyTitle">Ni nalog</string>
     <string name="gradesEmptyMessage">Videti je, da v tem prostoru naloge še niso bile ustvarjene.</string>
+    <string name="noMatchingAssignments">Ni ujemajočih se nalog</string>
+    <string name="noMatchingAssignmentsDescription">Vašemu iskanju ne ustreza nobena naloga. Poskusite z drugim iskalnim izrazom.</string>
     <string name="errorLoadingGrades">Imamo težave pri nalaganju ocen vašega študenta. Poskusite znova naložiti stran ali spet obiščite pozneje.</string>
     <string name="errorLoadingCourse">Imamo težave pri nalaganju podrobnosti predmeta vašega študenta. Poskusite znova naložiti stran ali spet obiščite pozneje.</string>
     <string name="gradesFilterContentDescription">Filter</string>
@@ -2078,7 +2087,8 @@
     <string name="widgetErrorTitle">Ojoj! Prišlo je do težav</string>
     <string name="widgetErrorSubtitle">Trenutno imamo težave s prikazom vaših opravil. Poskusite znova čez nekaj časa ali pa uporabite aplikacijo.</string>
     <string name="widgetToDoEmptyTitle">Zaenkrat ste končali!</string>
-    <string name="widgetToDoEmptySubtitle">Kot kaže, ste prosti naslednje 4 tedne. Ali želite dodati nekaj seznamov opravil?</string>
+    <string name="widgetToDoEmptySubtitle">Kaže, da ste prosti in nimate nobenih prihajajočih nalog. Ali želite dodati nekaj seznamov opravil?</string>
+
     <string name="widgetNotLoggedInTitle">Naj vas prijavimo!</string>
     <string name="widgetToDoNotLoggedInSubtitle">Če si želite ogledati svoja opravila, se prijavite v svoj račun v aplikaciji. Trajalo bo le sekundo!</string>
     <string name="a11y_widgetToDoOpenToDoList">Odpri zaslon s seznamom opravil</string>
@@ -2103,6 +2113,11 @@
         <item quantity="one">%s / %s točka</item>
         <item quantity="other">%s / %s točk</item>
     </plurals>
+    <plurals name="groupMemberCount">
+        <item quantity="one">Študent</item>
+        <item quantity="other">Študenti</item>
+    </plurals>
+
     <string name="speedGraderLatePenaltyTitle">Kazen za zamudo</string>
     <string name="gradingStatus_none">Brez</string>
     <string name="gradingStatus_late">Zamuda</string>
@@ -2159,4 +2174,189 @@
     <string name="scored_less_than_with_max">Dosegel rezultat, manjši od / %s točk</string>
     <string name="scored_between_values">Dosegel rezultat %1$s - %2$s</string>
     <string name="multiple_filters">Več filtrov</string>
+    <string name="a11y_contentDescriptionToDoFilter">Filter</string>
+    <string name="errorLoadingToDos">Pri nalaganju vaših opravil je prišlo do napake. Preverite svojo povezavo in poskusite znova.</string>
+    <string name="errorUpdatingToDo">Pri posodabljanju elementa seznama opravil je prišlo do napake. Preverite svojo povezavo in poskusite znova.</string>
+    <string name="noToDosForNow">Zaenkrat ni opravil!</string>
+    <string name="noToDosForNowSubtext">Videti je, da je to krasen čas za počitek, sprostitev in regeneracijo.</string>
+    <string name="todoSwipeDone">Dokončano</string>
+    <string name="todoSwipeUndo">Razveljavi</string>
+    <string name="todoMarkedAsDone">%s označeno kot dokončano</string>
+    <string name="todoMarkedAsNotDone">%s označeno kot nedokončano</string>
+    <string name="todoMarkedAsDoneSnackbarUndo">Razveljavi</string>
+    <string name="todoActionOffline">Tega dejanja ni mogoče izvesti brez povezave</string>
+
+    <!-- To Do List Filter Screen -->
+    <string name="todoFilterPreferences">Nastavitve seznama opravil</string>
+    <string name="todoFilterVisibleItems">Vidni elementi</string>
+    <string name="todoFilterShowPersonalToDos">Prikaži osebna opravila</string>
+    <string name="todoFilterShowCalendarEvents">Prikaži dogodke koledarja</string>
+    <string name="todoFilterShowCompleted">Prikaži končano</string>
+    <string name="todoFilterFavoriteCoursesOnly">Samo najljubši predmeti</string>
+    <string name="todoFilterShowTasksFrom">Prikaži opravila od</string>
+    <string name="todoFilterShowTasksUntil">Prikaži opravila do</string>
+    <string name="todoFilterToday">Danes</string>
+    <string name="todoFilterThisWeek">Ta teden</string>
+    <string name="todoFilterLastWeek">Prejšnji teden</string>
+    <string name="todoFilterTwoWeeks">Pred 2 tednoma</string>
+    <string name="todoFilterThreeWeeks">Pred 3 tedni</string>
+    <string name="todoFilterFourWeeks">Pred 4 tedni</string>
+    <string name="todoFilterNextWeek">Naslednji teden</string>
+    <string name="todoFilterInTwoWeeks">Čez 2 tedna</string>
+    <string name="todoFilterInThreeWeeks">Čez 3 tedne</string>
+    <string name="todoFilterInFourWeeks">Čez 4 tedne</string>
+    <string name="todoFilterFromDate">Od %s</string>
+    <string name="todoFilterUntilDate">Do %s</string>
+    <string name="a11y_buttonSelectionSelected">je izbranih</string>
+    <string name="a11y_buttonSelectionNotSelected">ni izbrano</string>
+    <!-- Course Invitations -->
+    <string name="courseInvitationsTitle">Vabila k predmetu (%d)</string>
+    <string name="courseInvitationAccepted">Vabilo za %s sprejeto</string>
+    <string name="courseInvitationDeclined">Vabilo za %s zavrnjeno</string>
+    <string name="courseInvitationDeclineConfirmTitle">Zavrni vabilo</string>
+    <string name="courseInvitationDeclineConfirmMessage">Ali ste prepričani, da želite zavrniti vabilo za %s?</string>
+
+    <!-- Welcome Widget -->
+    <!-- Greetings with name (%s is the student's first name) -->
+    <string name="welcomeGreetingMorningWithName">Dobro jutro, %s!</string>
+    <string name="welcomeGreetingAfternoonWithName">Dober dan, %s!</string>
+    <string name="welcomeGreetingEveningWithName">Dober večer, %s!</string>
+    <string name="welcomeGreetingNightWithName">Lahko noč, %s!</string>
+
+    <!-- Greetings without name (fallback when user has no first name) -->
+    <string name="welcomeGreetingMorning">Dobro jutro!</string>
+    <string name="welcomeGreetingAfternoon">Dober dan!</string>
+    <string name="welcomeGreetingEvening">Dober večer!</string>
+    <string name="welcomeGreetingNight">Lahko noč!</string>
+
+    <!-- Welcome Widget Motivational Messages -->
+    <string-array name="welcomeMessagesGeneric">
+        <item>Zmorete to.</item>
+        <item>Kar tako naprej – močnejši ste, kot se počutite trenutno.</item>
+        <item>Korak za korakom je še vedno napredek.</item>
+        <item>Ne obupajte – v prihodnosti si boste hvaležni.</item>
+        <item>Zmorete več, kot si mislite.</item>
+        <item>Tudi v težkih dneh se premikate naprej.</item>
+        <item>Zaupajte vase – s težavami ste se že spoprijeli.</item>
+        <item>Napredek, ne popolnost. Odlično vam gre.</item>
+        <item>Vztrajajte – niste sami v tem.</item>
+        <item>Učite se, rastete in delate bolje, kot si mislite.</item>
+        <item>Nič hudega, če se spotaknete – še vedno ste na pravi poti.</item>
+        <item>Kar tako naprej – bližje ste, kot si mislite.</item>
+        <item>Tudi majhne zmage štejejo.</item>
+        <item>Vztrajajte – bližje ste, kot si mislite.</item>
+        <item>Nič ni narobe, če se za trenutek ustavite. Odmori so del učenja.</item>
+        <item>Že poskus je zmaga.</item>
+        <item>Napredek &gt; popolnost.</item>
+        <item>Prisotnost je pomembnejša, kot si mislite.</item>
+        <item>Gradite veščine, tudi v slabših dneh.</item>
+        <item>Ne pozabite dihati – odlično vam gre.</item>
+        <item>Vaš tempo je pravi tempo.</item>
+        <item>Ni treba, da vse razrešite že danes.</item>
+        <item>Tu je vaše mesto.</item>
+        <item>Vsak trud, ki ga vložite, se obrestuje.</item>
+        <item>V redu je, da začnete znova – tolikokrat, kot potrebujete.</item>
+        <item>Kar se zdaj zdi težko, se bo kasneje zdelo lažje.</item>
+        <item>Ostanite prisotni – to je tisto, kar šteje.</item>
+        <item>Majhni koraki premikajo velike gore.</item>
+        <item>Tudi počitek je del napredka.</item>
+        <item>Bolje vam gre, kot si mislite.</item>
+        <item>Tudi počasen napredek je še vedno napredek.</item>
+        <item>Prihodnost se ne zgradi v enem dnevu – vendar ste na dobri poti.</item>
+        <item>Ena naloga, en trenutek, en korak naenkrat.</item>
+        <item>Ni treba biti popoln, da bi pustili pečat.</item>
+        <item>Učenje je kaotično – in to je normalno.</item>
+        <item>Vsak poskus je rast, tudi če se nam ne zdi tako.</item>
+        <item>Že v preteklosti ste dosegli težke stvari – tudi tole zmorete.</item>
+        <item>Vaš trud je pomemben, tudi če ga nihče ne vidi.</item>
+        <item>V redu je, če stvari jemljemo počasi.</item>
+        <item>Napredujete, tudi v mirnih dneh.</item>
+        <item>Pot še ni nujno jasna – hodite naprej.</item>
+        <item>Močnejši ste, kot se počutite trenutno.</item>
+        <item>Veliki cilji se gradijo iz majhnih korakov.</item>
+        <item>Kar tako naprej – v prihodnosti si boste hvaležni.</item>
+        <item>Tudi kaotičen napredek je še vedno napredek.</item>
+        <item>Ne zaostajate – na svoji poti ste.</item>
+        <item>V redu je, da se učite sproti.</item>
+        <item>Rastete na načine, ki jih morda še ne vidite.</item>
+        <item>Vaš današnji trud je naložba v jutri.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesMorning">
+        <item>Dobro jutro! Zmorete to – ena ura, en korak naenkrat.</item>
+        <item>Se ne počutite pripravljeni? To je povsem normalno. Preprosto začnite tam, kjer ste.</item>
+        <item>Kava pomaga, a prijaznost do sebe deluje bolje.</item>
+        <item>Vam tehnologija povzroča preglavice? To se dogaja vsem nam – ne obremenjujte se.</item>
+        <item>Ni treba, da je današnji dan popoln – dovolj je že, da je mogoč.</item>
+        <item>Dobro jutro – danes je nova priložnost za učenje in rast.</item>
+        <item>Tudi majhni koraki to jutro vas približajo vašim ciljem.</item>
+        <item>Vzemite si čas – povsem v redu je, da vsega še niste dokončno premislili.</item>
+        <item>Tehnologija je lahko zapletena, vendar niste sami pri učenju.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesAfternoon">
+        <item>Pol poti je za vami – naredili ste že več, kot mislite.</item>
+        <item>Se počutite, kot da ste obtičali? Vsi se srečujemo z ovirami, pomembno je le, da ne prenehate napredovati.</item>
+        <item>Delo, ocene, prihodnost ... nihče še ni sam vsega razrešil.</item>
+        <item>Utrujeni možgani? Kratek odmor = boljša osredotočenost kasneje.</item>
+        <item>Zaprosite za pomoč. Resnično, nihče tega ne počne sam.</item>
+        <item>Danes ste že prišli tako daleč – to je nekaj, na kar lahko ste ponosni.</item>
+        <item>Potrebujete premor? Tudi polnjenje baterij je del učenja.</item>
+        <item>Nič hudega, če se pot zdi negotova – veščine se gradijo korak za korakom.</item>
+        <item>Če ste obtičali, poiščite pomoč – podpora je vedno bližje, kot se zdi.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesEvening">
+        <item>Preživeli ste dan – to je že samo po sebi zmaga.</item>
+        <item>Pogrešate ljudi? Pošljite nekomu kratek »hej« – to pomaga.</item>
+        <item>Tudi če se je današnji dan zdel kaotičen, bili ste prisotni. To je pomembno.</item>
+        <item>Pomnite: nobena ocena ne meri vaše vrednosti.</item>
+        <item>Sprostite se, smejte se ali brez slabe vesti brskajte po spletu – zaslužili ste si.</item>
+        <item>Bravo, da ste preživeli dan – napredek je pomemben, tudi če je neopazen.</item>
+        <item>Pogrešate prijatelje ali mentorje? Povezava se lahko pojavi tudi v majhnih trenutkih.</item>
+        <item>Večeri so za razmislek – opazujte, kaj ste se danes naučili, ne le, kaj je še treba narediti.</item>
+        <item>Vaš trud je pomembnejši od popolnosti.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesNight">
+        <item>Še vedno garate? Spoštovanja vredno – vendar ne pozabite, da obstaja tudi spanec.</item>
+        <item>Jutri boste hvaležni sami sebi, da ste se nocoj spočili.</item>
+        <item>Tesnoba je ponoči glasnejša – ne verjemite vsemu, kar vam govori.</item>
+        <item>Niste v zaostanku, ste le na svoji poti.</item>
+        <item>Zaprite prenosnik – tudi vaši možgani potrebujejo sanje.</item>
+        <item>Nič ni narobe s počitkom – jutri vas čakajo nove priložnosti.</item>
+        <item>Učenje je maraton, ne sprint. Bodite nocoj prijazni do sebe.</item>
+        <item>Če vas bremenijo skrbi, pomnite, da jih ni treba nositi sami.</item>
+        <item>Zaključite dan z zavedanjem, da je že samo poskus dosežek.</item>
+    </string-array>
+
+    <!-- Accessibility -->
+    <string name="welcomeWidgetContentDescription">Pozdravno sporočilo: %1$s. %2$s</string>
+
+    <!-- Institutional Announcements -->
+    <string name="institutionalAnnouncementsTitle">Obvestila (%d)</string>
+    <!-- Widget Display Names -->
+    <string name="widget_hello">Pozdravljeni, %s</string>
+
+    <!-- Customize Dashboard -->
+    <string name="customize_dashboard">Prilagodi nadzorno ploščo</string>
+    <string name="dashboard_widgets">Pripomočki</string>
+    <string name="move_up">Premakni navzgor</string>
+    <string name="move_down">Premakni navzdol</string>
+    <string name="no_widgets">Ni na voljo nobenih pripomočkov</string>
+    <string name="changing_dashboard_layout">Sprememba postavitve nadzorne plošče</string>
+    <string name="changing_dashboard_layout_message">Če želite spremeniti postavitev nadzorne plošče, morate znova zagnati aplikacijo</string>
+    <string name="restart_now">Znova zaženi zdaj</string>
+    <string name="switched_back">Preklopljeno nazaj?</string>
+    <string name="switched_back_message">Hvala za preskus nove nadzorne plošče! Nam lahko poveste, zakaj ste preklopili nazaj?</string>
+    <string name="what_could_we_improve">Kaj bi lahko izboljšali?</string>
+    <string name="skip">Preskoči</string>
+    <string name="widget_setting_show_greeting">Pokaži pozdrav</string>
+    <string name="background_color">Barva ozadja</string>
+    <string name="offline_content_available">Na voljo vsebina brez povezave</string>
+    <string name="a11y_contentDescription_moreOptions">Dodatne možnosti</string>
+    <string name="customizeCourse">Prilagodi predmet po meri</string>
+    <string name="favoriteCoursesAndGroups">Priljubljeni predmeti in skupine</string>
+    <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
+    <string name="ltiToolsOffline">Zunanja orodja niso na voljo brez povezave.</string>
 </resources>

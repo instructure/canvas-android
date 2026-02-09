@@ -29,10 +29,12 @@ import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.ObserveeAssignment
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
 import com.instructure.student.features.assignments.details.datasource.AssignmentDetailsNetworkDataSource
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
@@ -46,13 +48,15 @@ class AssignmentDetailsNetworkDataSourceTest {
     private val quizInterface: QuizAPI.QuizInterface = mockk(relaxed = true)
     private val submissionInterface: SubmissionAPI.SubmissionInterface = mockk(relaxed = true)
     private val customGradeStatusesManager: CustomGradeStatusesManager = mockk(relaxed = true)
+    private val apiPrefs: ApiPrefs = mockk(relaxed = true)
 
     private val dataSource = AssignmentDetailsNetworkDataSource(
         coursesInterface,
         assignmentInterface,
         quizInterface,
         submissionInterface,
-        customGradeStatusesManager
+        customGradeStatusesManager,
+        apiPrefs
     )
 
     @Test
@@ -127,6 +131,7 @@ class AssignmentDetailsNetworkDataSourceTest {
     @Test
     fun `Get LTI by launch url successfully returns data`() = runTest {
         val expected = LTITool()
+        every { apiPrefs.overrideDomains[any()] } returns null
         coEvery { assignmentInterface.getExternalToolLaunchUrl(any(), any(), any(), any(), any()) } returns DataResult.Success(expected)
 
         val assignmentResult = dataSource.getExternalToolLaunchUrl(1, 1, 1, true)
@@ -136,11 +141,33 @@ class AssignmentDetailsNetworkDataSourceTest {
 
     @Test
     fun `Get LTI by launch url failure returns null`() = runTest {
+        every { apiPrefs.overrideDomains[any()] } returns null
         coEvery { assignmentInterface.getExternalToolLaunchUrl(any(), any(), any(), any(), any()) } returns DataResult.Fail()
 
         val result = dataSource.getExternalToolLaunchUrl(1, 1, 1, true)
 
         Assert.assertNull(result)
+    }
+
+    @Test
+    fun `Get LTI by launch url uses domain override for cross-shard courses`() = runTest {
+        val courseId = 123L
+        val overrideDomain = "cross-shard.instructure.com"
+        val expected = LTITool()
+        every { apiPrefs.overrideDomains[courseId] } returns overrideDomain
+        coEvery { assignmentInterface.getExternalToolLaunchUrl(any(), any(), any(), any(), any()) } returns DataResult.Success(expected)
+
+        val result = dataSource.getExternalToolLaunchUrl(courseId, 1, 1, true)
+
+        Assert.assertEquals(expected, result)
+        coVerify {
+            assignmentInterface.getExternalToolLaunchUrl(
+                courseId = courseId,
+                externalToolId = 1,
+                assignmentId = 1,
+                restParams = match { it.domain == overrideDomain }
+            )
+        }
     }
 
     @Test

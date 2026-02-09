@@ -11,9 +11,11 @@ import com.instructure.canvasapi2.apis.CanvaDocsAPI
 import com.instructure.canvasapi2.apis.CommunicationChannelsAPI
 import com.instructure.canvasapi2.apis.ConferencesApi
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.CourseNicknameAPI
 import com.instructure.canvasapi2.apis.DiscussionAPI
 import com.instructure.canvasapi2.apis.DomainServicesAuthenticationAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
+import com.instructure.canvasapi2.apis.ErrorReportAPI
 import com.instructure.canvasapi2.apis.ExperienceAPI
 import com.instructure.canvasapi2.apis.ExternalToolAPI
 import com.instructure.canvasapi2.apis.FeaturesAPI
@@ -70,7 +72,6 @@ import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.CanvasAuthenticator
 import com.instructure.canvasapi2.utils.JourneyApiPref
-import com.instructure.canvasapi2.utils.RedwoodApiPref
 import com.instructure.canvasapi2.utils.pageview.PandataApi
 import dagger.Module
 import dagger.Provides
@@ -235,6 +236,11 @@ class ApiModule {
     @Provides
     fun provideCourseApi(): CourseAPI.CoursesInterface {
         return RestBuilder().build(CourseAPI.CoursesInterface::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideCourseNicknameApi(): CourseNicknameAPI.NicknameInterface {
+        return RestBuilder().build(CourseNicknameAPI.NicknameInterface::class.java, RestParams())
     }
 
     @Provides
@@ -415,12 +421,6 @@ class ApiModule {
 
     @Provides
     @Singleton
-    fun provideRedwoodApiPrefs(): RedwoodApiPref {
-        return RedwoodApiPref
-    }
-
-    @Provides
-    @Singleton
     fun provideJourneyApiPrefs(): JourneyApiPref {
         return JourneyApiPref
     }
@@ -440,6 +440,16 @@ class ApiModule {
         journeyRestBuilder: JourneyRestBuilder,
     ): JourneyAssistAPI {
         return journeyRestBuilder.build(JourneyAssistAPI::class.java)
+    }
+
+    @Provides
+    fun provideErrorReportApi(): ErrorReportAPI.ErrorReportInterface {
+        return RestBuilder().build(ErrorReportAPI.ErrorReportInterface::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideHelpLinksInterfaceApi(): HelpLinksAPI.HelpLinksAPI {
+        return RestBuilder().build(HelpLinksAPI.HelpLinksAPI::class.java, RestParams())
     }
 }
 

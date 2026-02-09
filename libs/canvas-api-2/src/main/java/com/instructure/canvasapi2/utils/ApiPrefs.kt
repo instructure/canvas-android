@@ -58,6 +58,9 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
 
     var clientSecret by StringPref("", "client_secret")
 
+    var canvasRegion by NStringPref(null, "canvas_region")
+
+
     var perPageCount = 100
 
     var theme: CanvasTheme? by GsonPref(CanvasTheme::class.java, null)

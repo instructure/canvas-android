@@ -13,6 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package com.instructure.canvas.espresso.common.pages.compose
 
 import androidx.compose.ui.semantics.SemanticsProperties.Text
@@ -20,6 +21,7 @@ import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.filterToOne
+import androidx.compose.ui.test.hasAnyDescendant
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasTestTag
@@ -33,7 +35,15 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onParent
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.uiautomator.UiDevice
+import com.instructure.canvas.espresso.withResourceIdContaining
 import com.instructure.canvasapi2.models.Conversation
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.click
+import com.instructure.pandautils.R
+import androidx.media3.ui.R as Media3R
 
 class InboxDetailsPage(private val composeTestRule: ComposeTestRule) {
 
@@ -180,5 +190,58 @@ class InboxDetailsPage(private val composeTestRule: ComposeTestRule) {
         )
 
         overflowButton.performClick()
+    }
+
+    fun assertAttachmentDisplayed(fileName: String) {
+        composeTestRule.onNode(
+            hasTestTag("attachment").and(hasAnyDescendant(hasText(fileName))),
+            useUnmergedTree = true
+        ).performScrollTo().assertIsDisplayed()
+    }
+
+    fun clickAttachment(fileName: String) {
+        composeTestRule.onNode(
+            hasTestTag("attachment").and(hasAnyDescendant(hasText(fileName))),
+            useUnmergedTree = true
+        ).performScrollTo().performClick()
+        composeTestRule.waitForIdle()
+
+    }
+
+    // Media player methods for video playback verification
+    fun assertPlayButtonDisplayed() {
+        onView(withId(R.id.prepareMediaButton))
+            .assertDisplayed()
+    }
+
+    fun clickPlayButton() {
+        onView(withId(R.id.prepareMediaButton))
+            .click()
+    }
+
+    fun clickScreenCenterToShowControls(device: UiDevice) {
+        device.click(device.displayWidth / 2, device.displayHeight / 2)
+    }
+
+    fun assertPlayPauseButtonDisplayed() {
+        onView(withId(Media3R.id.exo_play_pause))
+            .assertDisplayed()
+    }
+
+    fun clickPlayPauseButton() {
+        onView(withId(Media3R.id.exo_play_pause))
+            .click()
+    }
+
+    // PDF viewer method for PSPDFKit toolbar verification
+    fun assertPdfViewerToolbarDisplayed() {
+        onView(withResourceIdContaining("pspdf__toolbar_main"))
+            .assertDisplayed()
+    }
+
+    // Verifies that the PSPDFKit document view is displayed
+    fun assertPdfDocumentViewDisplayed() {
+        onView(withResourceIdContaining("pdfFragmentContainer"))
+            .assertDisplayed()
     }
 }

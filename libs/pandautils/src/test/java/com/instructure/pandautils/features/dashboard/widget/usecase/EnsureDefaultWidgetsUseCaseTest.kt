@@ -73,7 +73,14 @@ class EnsureDefaultWidgetsUseCaseTest {
         coVerify {
             repository.saveMetadata(
                 match {
-                    it.id == "courses" && it.position == 3 && it.isVisible && it.isFullWidth
+                    it.id == "courses" && it.position == 3 && it.isVisible
+                }
+            )
+        }
+        coVerify {
+            repository.saveMetadata(
+                match {
+                    it.id == "forecast" && it.position == 4 && it.isVisible
                 }
             )
         }
@@ -85,7 +92,8 @@ class EnsureDefaultWidgetsUseCaseTest {
             WidgetMetadata("course_invitations", 0, true, false),
             WidgetMetadata("institutional_announcements", 1, true, false),
             WidgetMetadata("welcome", 2, true),
-            WidgetMetadata("courses", 3, true, isFullWidth = true)
+            WidgetMetadata("courses", 3, true),
+            WidgetMetadata("forecast", 4, true)
         )
         coEvery { repository.observeAllMetadata() } returns flowOf(existingMetadata)
 
@@ -121,6 +129,11 @@ class EnsureDefaultWidgetsUseCaseTest {
         coVerify(exactly = 1) {
             repository.saveMetadata(
                 match { it.id == "courses" }
+            )
+        }
+        coVerify(exactly = 1) {
+            repository.saveMetadata(
+                match { it.id == "forecast" }
             )
         }
         coVerify(exactly = 0) {

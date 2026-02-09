@@ -98,6 +98,21 @@ object ColorKeeper : PrefManager(PREFERENCE_FILE_NAME) {
         R.color.studentGreen
     )
 
+    val courseColors = listOf(
+        R.color.courseColor1light,
+        R.color.courseColor2light,
+        R.color.courseColor3light,
+        R.color.courseColor4light,
+        R.color.courseColor5light,
+        R.color.courseColor6light,
+        R.color.courseColor7light,
+        R.color.courseColor8light,
+        R.color.courseColor9light,
+        R.color.courseColor10light,
+        R.color.courseColor11light,
+        R.color.courseColor12light
+    )
+
     private fun generateUserColor(user: User): ThemedColor {
         val index = user.id.absoluteValue % userColors.size
         val color = ContextCompat.getColor(ContextKeeper.appContext, userColors[index.toInt()])

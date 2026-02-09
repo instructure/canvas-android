@@ -57,6 +57,7 @@ import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.AnalyticsParamConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ApiPrefs.accessToken
+import com.instructure.canvasapi2.utils.ApiPrefs.canvasRegion
 import com.instructure.canvasapi2.utils.ApiPrefs.clientId
 import com.instructure.canvasapi2.utils.ApiPrefs.clientSecret
 import com.instructure.canvasapi2.utils.ApiPrefs.domain
@@ -508,6 +509,7 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
                 logEvent(AnalyticsEventConstants.LOGIN_SUCCESS, bundle)
                 refreshToken = token!!.refreshToken!!
                 accessToken = token.accessToken!!
+                canvasRegion = token.canvasRegion
                 @Suppress("DEPRECATION")
                 ApiPrefs.token = "" // TODO: Remove when we're 100% using refresh tokens
 

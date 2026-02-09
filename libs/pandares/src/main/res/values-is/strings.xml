@@ -1045,6 +1045,8 @@
 
     <string name="downloading">Hleðst niður</string>
     <string name="downloadComplete">Niðurhleðslu lokið</string>
+    <string name="fileDownloadNotificationPermissionDenied">Niðurhal hefst. Virkjaðu tilkynningar til að sjá framvindu.</string>
+
     <string name="notificationChannelNameFileDownloadsName">Niðurhalstilkynningar</string>
     <string name="notificationChannelNameFileDownloadsDescription">Canvas-tilkynningar fyrir niðurhal sem er í gangi.</string>
     <string name="full_due_date_details">Upplýsingar um skiladag</string>
@@ -1249,6 +1251,7 @@
     <string name="a11y_content_description_add_to_dashboard">Bæta við stjórnborð</string>
     <string name="a11y_content_description_add_all_to_dashboard">Bæta öllu við stjórnborð</string>
 
+    <string name="new_mobile_dashboard">Nýtt farsímastjórnborð</string>
     <!-- K5 Strings -->
     <string name="navDrawerAccount">Reikningur</string>
     <string name="dashboardTabHomeroom">Námssalur</string>
@@ -1367,6 +1370,10 @@
         <item quantity="other">%s ólesnar tilkynningar</item>
     </plurals>
 
+    <plurals name="a11y_todoBadgeCount">
+        <item quantity="one">%s verkefni á verkefnalista</item>
+        <item quantity="other">%s verkefni á verkefnalista</item>
+    </plurals>
     <string name="noAnnotationSelected">Engin athugasemd valin</string>
     <string name="emailNotifications">Tilkynningar í tölvupósti</string>
     <string name="emailNotificationsImmediately">Tafarlaust</string>
@@ -1907,6 +1914,8 @@
     <string name="gradePreferencesHeaderSortBy">Raða eftir</string>
     <string name="gradesEmptyTitle">Engin verkefni</string>
     <string name="gradesEmptyMessage">Það virðast ekki vera nein verkefni búin til í þessu rými enn.</string>
+    <string name="noMatchingAssignments">Engin samsvarandi verkefni</string>
+    <string name="noMatchingAssignmentsDescription">Engin verkefni pössuðu við leit þína. Prófaðu annað leitarorð.</string>
     <string name="errorLoadingGrades">Við eigum erfitt með að hlaða inn nemendaeinkunnum þínum. Prufaðu að endurhlaða síðunni, eða kíktu aftur við síðar.</string>
     <string name="errorLoadingCourse">Við eigum erfitt með að hlaða inn námskeiðsupplýsingum þínum. Prufaðu að endurhlaða síðunni, eða kíktu aftur við síðar.</string>
     <string name="gradesFilterContentDescription">Sía</string>
@@ -2034,7 +2043,7 @@
         <item quantity="other">(%.0f punktar)</item>
     </plurals>
     <string name="noAssignments">Engin verkefni</string>
-    <string name="assignmentGroup">Verkefnahópur</string>
+    <string name="assignmentGroup">Verkefnaflokkur</string>
     <string name="assignmentType">Gerð verkefnis</string>
     <string name="dueDate">Skiladagur</string>
     <string name="needsGrading">Þarfnast einkunnagjafar</string>
@@ -2078,7 +2087,8 @@
     <string name="widgetErrorTitle">Úps! Eitthvað fór úrskeiðis</string>
     <string name="widgetErrorSubtitle">Við eigum í vandræðum með að sýna verkefnin þín núna. Reyndu aftur eftir smá stund eða farðu í appið.</string>
     <string name="widgetToDoEmptyTitle">Þetta er komið að sinni!</string>
-    <string name="widgetToDoEmptySubtitle">Það lítur út fyrir að þú sért laus næstu 4 vikurnar. Viltu bæta við nokkrum verkefnalistum?</string>
+    <string name="widgetToDoEmptySubtitle">Þú virðist vera laus, þú ert ekki með nein verkefni framundan. Viltu bæta við nokkrum verkefnalistum?</string>
+
     <string name="widgetNotLoggedInTitle">Við skulum skrá þig inn!</string>
     <string name="widgetToDoNotLoggedInSubtitle">Skráðu þig inn á reikninginn þinn í appinu til að sjá verkefnalistana þína. Það tekur stutta stund!</string>
     <string name="a11y_widgetToDoOpenToDoList">Opna skjáinn fyrir verkefnalista</string>
@@ -2103,6 +2113,11 @@
         <item quantity="one">%s / %s punktur</item>
         <item quantity="other">%s / %s punktar</item>
     </plurals>
+    <plurals name="groupMemberCount">
+        <item quantity="one">Nemandi</item>
+        <item quantity="other">Nemendur</item>
+    </plurals>
+
     <string name="speedGraderLatePenaltyTitle">Viðurlög vegna of seinna skila:</string>
     <string name="gradingStatus_none">Ekkert</string>
     <string name="gradingStatus_late">Seint</string>
@@ -2159,4 +2174,189 @@
     <string name="scored_less_than_with_max">Með minna í einkunn en / %s punkta</string>
     <string name="scored_between_values">Með einkunn %1$s - %2$s</string>
     <string name="multiple_filters">Margar síur</string>
+    <string name="a11y_contentDescriptionToDoFilter">Sía</string>
+    <string name="errorLoadingToDos">Villa við að hlaða verkefnalista þínum. Athugaðu tengingu þína og reyndu aftur.</string>
+    <string name="errorUpdatingToDo">Það var villa við að uppfæra verkefnalistann. Athugaðu tengingu þína og reyndu aftur.</string>
+    <string name="noToDosForNow">Engir verkefnalistar í bili!</string>
+    <string name="noToDosForNowSubtext">Þetta virðist vera góður tími til að hvílast, slaka á og hlaða batteríin.</string>
+    <string name="todoSwipeDone">Lokið</string>
+    <string name="todoSwipeUndo">Hætta við</string>
+    <string name="todoMarkedAsDone">%s merkt sem lokið</string>
+    <string name="todoMarkedAsNotDone">%s merkt sem ólokið</string>
+    <string name="todoMarkedAsDoneSnackbarUndo">Hætta við</string>
+    <string name="todoActionOffline">Ekki er hægt að framkvæma þessa aðgerð án nettengingar</string>
+
+    <!-- To Do List Filter Screen -->
+    <string name="todoFilterPreferences">Kjörstillingar varðandi verkefnalista</string>
+    <string name="todoFilterVisibleItems">Sýnileg atriði</string>
+    <string name="todoFilterShowPersonalToDos">Sýna persónulega verkefnalista</string>
+    <string name="todoFilterShowCalendarEvents">Sýna viðburði dagatals</string>
+    <string name="todoFilterShowCompleted">Sýna lokið</string>
+    <string name="todoFilterFavoriteCoursesOnly">Aðeins eftirlætis námskeið</string>
+    <string name="todoFilterShowTasksFrom">Sýna verkefni frá</string>
+    <string name="todoFilterShowTasksUntil">Sýna verkefni þar til</string>
+    <string name="todoFilterToday">Í dag</string>
+    <string name="todoFilterThisWeek">Þessi vika</string>
+    <string name="todoFilterLastWeek">Síðasta vika</string>
+    <string name="todoFilterTwoWeeks">Fyrir 2 vikum</string>
+    <string name="todoFilterThreeWeeks">Fyrir 3 vikum</string>
+    <string name="todoFilterFourWeeks">Fyrir 4 vikum</string>
+    <string name="todoFilterNextWeek">Næsta vika</string>
+    <string name="todoFilterInTwoWeeks">Eftir 2 vikur</string>
+    <string name="todoFilterInThreeWeeks">Eftir 3 vikur</string>
+    <string name="todoFilterInFourWeeks">Eftir 4 vikur</string>
+    <string name="todoFilterFromDate">Frá %s</string>
+    <string name="todoFilterUntilDate">Þar til %s</string>
+    <string name="a11y_buttonSelectionSelected">valið</string>
+    <string name="a11y_buttonSelectionNotSelected">ekki valið</string>
+    <!-- Course Invitations -->
+    <string name="courseInvitationsTitle">Námskeiðsboð (%d)</string>
+    <string name="courseInvitationAccepted">Boð í %s samþykkt</string>
+    <string name="courseInvitationDeclined">Boð í %s hafnað</string>
+    <string name="courseInvitationDeclineConfirmTitle">Hafna boði</string>
+    <string name="courseInvitationDeclineConfirmMessage">Ertu viss um að þú viljir hafna boðinu í %s?</string>
+
+    <!-- Welcome Widget -->
+    <!-- Greetings with name (%s is the student's first name) -->
+    <string name="welcomeGreetingMorningWithName">Góðan daginn, %s!</string>
+    <string name="welcomeGreetingAfternoonWithName">Góðan daginn, %s!</string>
+    <string name="welcomeGreetingEveningWithName">Góða kvöldið, %s!</string>
+    <string name="welcomeGreetingNightWithName">Góða nótt, %s!</string>
+
+    <!-- Greetings without name (fallback when user has no first name) -->
+    <string name="welcomeGreetingMorning">Góðan daginn!</string>
+    <string name="welcomeGreetingAfternoon">Góðan daginn!</string>
+    <string name="welcomeGreetingEvening">Góða kvöldið!</string>
+    <string name="welcomeGreetingNight">Góða nótt!</string>
+
+    <!-- Welcome Widget Motivational Messages -->
+    <string-array name="welcomeMessagesGeneric">
+        <item>Þú hefur þetta.</item>
+        <item>Haltu áfram - þú ert sterkari en þér líður núna.</item>
+        <item>Eitt skref í einu er samt framfarir.</item>
+        <item>Gefstu ekki upp - í framtíðinni munt þú þakka þér.</item>
+        <item>Þú getur meira en þú heldur.</item>
+        <item>Jafnvel á erfiðum dögum heldurðu áfram.</item>
+        <item>Treystu á þig - þú hefur gert erfiða hluti áður.</item>
+        <item>Framfarir, ekki fullkomnun. Þú stendur þig vel.</item>
+        <item>Ekki gefast upp - þú ert ekki ein(n) í þessu.</item>
+        <item>Þú ert að læra, vaxa og gera betur en þú heldur.</item>
+        <item>Það er í lagi að hrasa - þú ert samt á réttri leið.</item>
+        <item>Haltu áfram - þú ert nær en þú heldur.</item>
+        <item>Litlir sigrar telja líka með.</item>
+        <item>Haltu áfram - þú ert nær en þú heldur.</item>
+        <item>Það er í lagi að taka pásu. Pásur eru hluti af námi.</item>
+        <item>Að reyna er þegar sigur.</item>
+        <item>Framfarir &gt; fullkomnun.</item>
+        <item>Að mæta skiptir meira máli en þú heldur.</item>
+        <item>Þú ert að byggja upp færni, jafnvel á rólegum dögum.</item>
+        <item>Ekki gleyma að anda - þú ert að standa þig vel.</item>
+        <item>Hraðinn þinn er rétti hraðinn.</item>
+        <item>Þú þarft ekki að átta þig á öllu í dag.</item>
+        <item>Þú átt heima hér.</item>
+        <item>Sérhver viðleitni þín safnast saman.</item>
+        <item>Það er í lagi að byrja aftur — eins oft og þú þarft.</item>
+        <item>Það sem þér finnst erfitt núna verður auðveldara síðar.</item>
+        <item>Haltu áfram að mæta - það er það sem skiptir máli.</item>
+        <item>Lítil skref færa stór fjöll.</item>
+        <item>Hvíld er líka hluti af framförum.</item>
+        <item>Þú stendur þig betur en þú heldur.</item>
+        <item>Jafnvel hægar framfarir eru samt framfarir.</item>
+        <item>Framtíðin er ekki sköpuð á einum degi - en þú ert á réttri leið.</item>
+        <item>Eitt verkefni, eitt augnablik, eitt skref í einu.</item>
+        <item>Þú þarft ekki að vera fullkominn til að hafa áhrif.</item>
+        <item>Nám er flókið — og það er eðlilegt</item>
+        <item>Hver tilraun er vöxtur, jafnvel þótt þér líði ekki þannig.</item>
+        <item>Þú hefur gert erfiða hluti áður — þú getur líka gert þetta.</item>
+        <item>Viðleitni þín skiptir máli, jafnvel þótt enginn sjái hana.</item>
+        <item>Það er í lagi að gera hlutina hægt.</item>
+        <item>Þú færist áfram, jafnvel á rólegum dögum.</item>
+        <item>Leiðin þarf ekki að vera greið ennþá — haltu áfram að ganga.</item>
+        <item>Þú ert sterkari en þér líður núna.</item>
+        <item>Stór markmið eru byggð upp úr litlum skrefum.</item>
+        <item>Haltu áfram - í framtíðinni munt þú þakka þér.</item>
+        <item>Jafnvel flóknar framfarir eru samt framfarir.</item>
+        <item>Þú ert ekki á eftir - þú ert á réttri leið.</item>
+        <item>Það er í lagi að læra jafnóðum.</item>
+        <item>Þú ert að vaxa á vegu sem þú sérð kannski ekki ennþá.</item>
+        <item>Fyrirhöfn þín í dag er fjárfesting í morgundeginum.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesMorning">
+        <item>Daginn! Þú ert með þetta - einn bekkur, eitt skref í einu.</item>
+        <item>Finnst þér þú ekki tilbúinn/n? Það er eðlilegt. Byrjaðu bara þar sem þú ert staddur eða stödd.</item>
+        <item>Kaffi hjálpar, en góðvild við sjálfan sig virkar betur.</item>
+        <item>Tæknin að stríða þér? Gerist hjá okkur öllum - ekki stressa þig.</item>
+        <item>Dagurinn í dag þarf ekki að vera fullkominn, bara mögulegur.</item>
+        <item>Góðan daginn - í dag er nýtt tækifæri til að læra og vaxa.</item>
+        <item>Jafnvel lítil skref í morgun færa þig nær markmiðum þínum.</item>
+        <item>Dragaðu andann djúpt - þú þarft ekki að vera búin(n) að átta þig á öllu ennþá.</item>
+        <item>Tækni getur verið flókin, en þú ert ekki ein(n) um að læra hana.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesAfternoon">
+        <item>Helmingnun lokið — þú hefur þegar gert meira en þú heldur.</item>
+        <item>Finnst þér þú vera fastur/föst? Allir rekast á vegg, bara hætta ekki að klifra.</item>
+        <item>Störf, einkunnir, framtíðin... enginn hefur allt á hreinu ennþá.</item>
+        <item>Heilaþoka? Stutt hlé = betri einbeiting síðar.</item>
+        <item>Biddu um hjálp. Í alvöru, enginn gerir þetta einn.</item>
+        <item>Þú hefur þegar komist hingað til í dag — það er eitthvað til að vera stolt(ur) af.</item>
+        <item>Þarftu pásu? Endurhleðsla er líka hluti af námi.</item>
+        <item>Það er í lagi ef leiðin virðist óviss — færni byggist upp skref fyrir skref.</item>
+        <item>Hafðu samband ef þú ert fastur/föst — stuðningurinn er alltaf nær en hann virðist.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesEvening">
+        <item>Komstu í gegnum daginn — það er sigur út af fyrir sig.</item>
+        <item>Saknarðu fólks? Sendu einhverjum fljótt „hæ“ — það hjálpar.</item>
+        <item>Jafnvel þótt þetta hafi verið óreiðukennt í dag, þá mættir þú samt. Það skiptir máli.</item>
+        <item>Mundu: engin einkunn mælir gildi þitt.</item>
+        <item>Slakaðu á, hlæðu eða skrunaðu án sektarkenndar — þú hefur unnið þér það inn.</item>
+        <item>Vel gert að komast í gegnum daginn — framfarir skipta máli, jafnvel þegar það er hljótt.</item>
+        <item>Saknarðu vina eða leiðbeinenda? Tengsl geta líka komið í litlum augnablikum.</item>
+        <item>Kvöldin eru til íhugunar — taktu eftir því sem þú hefur lært í dag, ekki bara því sem eftir er að gera.</item>
+        <item>Viðleitni þín skiptir meira máli en fullkomnun.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesNight">
+        <item>Enn að vinna? Ber virðingu fyrir því — en gleymdu ekki að svefn er til.</item>
+        <item>Á morgun munt þú þakka þér fyrir að hvíla þig í kvöld.</item>
+        <item>Kvíðinn verður háværari á nóttunni — trúðu ekki öllum hávaðanum.</item>
+        <item>Þú ert ekki á eftir - þú ert akkúrat á réttri leið.</item>
+        <item>Lokaðu fartölvunni — heilinn þinn þarf líka drauma.</item>
+        <item>Það er í lagi að hvíla sig - morgundagurinn bíður með nýjum tækifærum.</item>
+        <item>Nám er maraþon, ekki sprettur. Vertu góður við sjálfan þig í kvöld.</item>
+        <item>Ef áhyggjurnar eru þungar, mundu þá að þú þarft ekki að bera þær ein/n.</item>
+        <item>Ljúktu deginum með því að vita að það að reyna er þegar afrek.</item>
+    </string-array>
+
+    <!-- Accessibility -->
+    <string name="welcomeWidgetContentDescription">Móttökuskilaboð: %1$s. %2$s</string>
+
+    <!-- Institutional Announcements -->
+    <string name="institutionalAnnouncementsTitle">Tilkynningar (%d)</string>
+    <!-- Widget Display Names -->
+    <string name="widget_hello">Halló, %s</string>
+
+    <!-- Customize Dashboard -->
+    <string name="customize_dashboard">Sérsníða stjórnborð</string>
+    <string name="dashboard_widgets">Græjur</string>
+    <string name="move_up">Færa upp</string>
+    <string name="move_down">Færa niður</string>
+    <string name="no_widgets">Engar græjur tiltækar</string>
+    <string name="changing_dashboard_layout">Breyta skipulagi stjórnborðs</string>
+    <string name="changing_dashboard_layout_message">Þú verður að endurræsa forritið til að breyta skipulagi stjórnborðs</string>
+    <string name="restart_now">Endurræsa núna</string>
+    <string name="switched_back">Skipta til baka?</string>
+    <string name="switched_back_message">Takk fyrir að prufa nýja stjórnborðið! Geturðu útskýrt af hverju þú skiptir til baka?</string>
+    <string name="what_could_we_improve">Hvað getum við gert betur?</string>
+    <string name="skip">Sleppa</string>
+    <string name="widget_setting_show_greeting">Sýna kveðju</string>
+    <string name="background_color">Bakgrunnslitur</string>
+    <string name="offline_content_available">Efni án nettengingar tiltækt</string>
+    <string name="a11y_contentDescription_moreOptions">Fleiri valkostir</string>
+    <string name="customizeCourse">Sérsníða námskeið</string>
+    <string name="favoriteCoursesAndGroups">Uppáhalds námskeið og hópar</string>
+    <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
+    <string name="ltiToolsOffline">Ytri tæki eru ekki fáanleg án nettengingar.</string>
 </resources>

@@ -17,7 +17,13 @@
 
 package com.instructure.student.di
 
-import com.instructure.canvasapi2.apis.*
+import com.instructure.canvasapi2.apis.AssignmentAPI
+import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.EnrollmentAPI
+import com.instructure.canvasapi2.apis.FeaturesAPI
+import com.instructure.canvasapi2.apis.QuizAPI
+import com.instructure.canvasapi2.apis.SubmissionAPI
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.room.offline.daos.CourseFeaturesDao
 import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
 import com.instructure.pandautils.room.offline.daos.QuizDao
@@ -45,9 +51,18 @@ class SubmissionDetailsModule {
         assignmentApi: AssignmentAPI.AssignmentInterface,
         quizApi: QuizAPI.QuizInterface,
         featuresApi: FeaturesAPI.FeaturesInterface,
-        courseApi: CourseAPI.CoursesInterface
+        courseApi: CourseAPI.CoursesInterface,
+        apiPrefs: ApiPrefs
     ): SubmissionDetailsNetworkDataSource {
-        return SubmissionDetailsNetworkDataSource(enrollmentApi, submissionApi, assignmentApi, quizApi, featuresApi, courseApi)
+        return SubmissionDetailsNetworkDataSource(
+            enrollmentApi,
+            submissionApi,
+            assignmentApi,
+            quizApi,
+            featuresApi,
+            courseApi,
+            apiPrefs
+        )
     }
 
     @Provides

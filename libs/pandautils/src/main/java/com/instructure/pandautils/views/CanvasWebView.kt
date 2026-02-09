@@ -226,6 +226,9 @@ class CanvasWebView @JvmOverloads constructor(
                 if (isInternalFileDownloadLink(url)) {
                     val fileName = parseFileNameFromContentDisposition(contentDisposition, url)
                     mediaDownloadCallback?.downloadInternalMedia(mimetype, url, fileName)
+                } else if (isInstructureMediaDrmDownload(url)) {
+                    val fileName = parseFileNameFromContentDisposition(contentDisposition, url)
+                    mediaDownloadCallback?.downloadInternalMedia(mimetype, url, fileName)
                 } else if (contentDisposition != null) {
                     val fileName = parseFileNameFromContentDisposition(contentDisposition, url)
                     canvasWebViewClientCallback?.openMediaFromWebView(mimetype, url, fileName)
@@ -425,6 +428,18 @@ class CanvasWebView @JvmOverloads constructor(
                 mediaDownloadCallback?.downloadMedia("", url, fileName)
                 view.post { stopLoading() } // Hack to stop loading the file in the WebView, since returning an empty response breaks what's being shown
             }
+
+            if (isInstructureMediaCaptionFile(url) &&
+                request.hasGesture() &&
+                request.requestHeaders.containsKey("Authorization") &&
+                mediaDownloadCallback != null
+            ) {
+                val fileName = parseFileNameFromContentDisposition(url, url)
+                mediaDownloadCallback?.downloadInternalMedia(null, url, fileName)
+                view.post { stopLoading() }
+                return WebResourceResponse(null, null, null)
+            }
+
             return super.shouldInterceptRequest(view, request)
         }
 
@@ -868,7 +883,12 @@ class CanvasWebView @JvmOverloads constructor(
      * Format: {contextUrl}external_tools/retrieve?display=borderless&url={encodedMediaUrl}&title={encodedTitle}
      */
     private fun buildStudioUrl(contextUrl: String, mediaUrl: String, title: String?): String {
-        val encodedMediaUrl = URLEncoder.encode(mediaUrl, "UTF-8")
+        val mediaUrlWithoutHeader = Uri.parse(mediaUrl)
+            .buildUpon()
+            .appendQueryParameter("custom_embed_hide_header", "true")
+            .build()
+            .toString()
+        val encodedMediaUrl = URLEncoder.encode(mediaUrlWithoutHeader, "UTF-8")
         var url = "${contextUrl}external_tools/retrieve?display=borderless&url=$encodedMediaUrl"
         if (!title.isNullOrEmpty()) {
             val encodedTitle = URLEncoder.encode(title, "UTF-8")
@@ -934,6 +954,7 @@ class CanvasWebView @JvmOverloads constructor(
             Uri.parse(url)
                 .buildUpon()
                 .appendQueryParameter("title", title)
+                .appendQueryParameter("custom_embed_hide_header", "true")
                 .build()
                 .toString()
         } else {
@@ -998,6 +1019,14 @@ class CanvasWebView @JvmOverloads constructor(
 
         private fun isCanvadocsDownload(url: String): Boolean {
             return url.contains("canvadocs") && url.contains("/download/") && url.contains("single_use_token=")
+        }
+
+        private fun isInstructureMediaDrmDownload(url: String): Boolean {
+            return url.contains("instructuremedia.com") && url.contains("/downloadables/")
+        }
+
+        private fun isInstructureMediaCaptionFile(url: String): Boolean {
+            return url.contains("instructuremedia.com") && url.contains("/api/media_management/caption_files/")
         }
 
         fun containsLTI(html: String, encoding: String?): Boolean {

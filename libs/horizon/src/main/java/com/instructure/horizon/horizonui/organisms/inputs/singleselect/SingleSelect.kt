@@ -20,6 +20,7 @@ import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -175,6 +176,8 @@ private fun SingleSelectContent(state: SingleSelectState) {
                 color = HorizonColors.Text.placeholder(),
                 modifier = Modifier.weight(1f)
             )
+        } else {
+            Spacer(modifier = Modifier.weight(1f))
         }
 
 

@@ -16,9 +16,9 @@
 
 package com.instructure.pandautils.features.dashboard.widget.courses
 
-import android.app.Activity
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
 
 interface CoursesWidgetRouter {
@@ -27,4 +27,7 @@ interface CoursesWidgetRouter {
     fun routeToManageOfflineContent(activity: FragmentActivity, course: Course)
     fun routeToCustomizeCourse(activity: FragmentActivity, course: Course)
     fun routeToAllCourses(activity: FragmentActivity)
+    fun routeToAnnouncement(activity: FragmentActivity, course: Course, announcement: DiscussionTopicHeader)
+    fun routeToAnnouncementList(activity: FragmentActivity, course: Course)
+    fun routeToGroupMessage(activity: FragmentActivity, group: Group)
 }
