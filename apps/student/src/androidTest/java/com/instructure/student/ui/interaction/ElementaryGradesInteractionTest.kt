@@ -44,10 +44,10 @@ class ElementaryGradesInteractionTest : StudentComposeTest() {
         val data = createMockData(courseCount = 3)
         goToGradesTab(data)
 
-        gradesPage.assertPageObjects()
+        elementaryGradesPage.assertPageObjects()
 
         data.courses.forEach {
-            gradesPage.assertCourseShownWithGrades(it.value.name, "B+")
+            elementaryGradesPage.assertCourseShownWithGrades(it.value.name, "B+")
         }
     }
 
@@ -57,17 +57,17 @@ class ElementaryGradesInteractionTest : StudentComposeTest() {
         val data = createMockData(courseCount = 1)
         goToGradesTab(data)
 
-        gradesPage.assertPageObjects()
+        elementaryGradesPage.assertPageObjects()
 
         data.courses.forEach {
-            gradesPage.assertCourseShownWithGrades(it.value.name, "B+")
+            elementaryGradesPage.assertCourseShownWithGrades(it.value.name, "B+")
         }
 
         val newCourse =
             data.addCourseWithEnrollment(data.students[0], Enrollment.EnrollmentType.Student, 50.0)
 
-        gradesPage.refresh()
-        gradesPage.assertCourseShownWithGrades(newCourse.name, "50%")
+        elementaryGradesPage.refresh()
+        elementaryGradesPage.assertCourseShownWithGrades(newCourse.name, "50%")
 
     }
 
@@ -79,13 +79,13 @@ class ElementaryGradesInteractionTest : StudentComposeTest() {
 
         val course = data.courses.values.first()
 
-        gradesPage.clickGradeRow(course.name)
-        gradeListPage.assertToolbarTitles(course.name)
+        elementaryGradesPage.clickGradeRow(course.name)
+        gradesPage.assertToolbarTitles(course.name)
 
         Espresso.pressBack()
-        gradesPage.assertPageObjects()
+        elementaryGradesPage.assertPageObjects()
         data.courses.forEach {
-            gradesPage.assertCourseShownWithGrades(it.value.name, "B+")
+            elementaryGradesPage.assertCourseShownWithGrades(it.value.name, "B+")
         }
     }
 
@@ -95,12 +95,12 @@ class ElementaryGradesInteractionTest : StudentComposeTest() {
         val data = createMockData(courseCount = 3, withGradingPeriods = true)
         goToGradesTab(data)
 
-        gradesPage.assertSelectedGradingPeriod(gradesPage.getStringFromResource(R.string.currentGradingPeriod))
-        gradesPage.clickGradingPeriodSelector()
+        elementaryGradesPage.assertSelectedGradingPeriod(elementaryGradesPage.getStringFromResource(R.string.currentGradingPeriod))
+        elementaryGradesPage.clickGradingPeriodSelector()
 
         val gradingPeriod = data.courseGradingPeriods.values.first().first()
-        gradesPage.selectGradingPeriod(gradingPeriod.title!!)
-        gradesPage.assertSelectedGradingPeriod(gradingPeriod.title!!)
+        elementaryGradesPage.selectGradingPeriod(gradingPeriod.title!!)
+        elementaryGradesPage.assertSelectedGradingPeriod(gradingPeriod.title!!)
     }
 
     @Test
@@ -109,8 +109,8 @@ class ElementaryGradesInteractionTest : StudentComposeTest() {
         val data = createMockData(homeroomCourseCount = 1)
         goToGradesTab(data)
 
-        gradesPage.assertEmptyViewVisible()
-        gradesPage.assertRecyclerViewNotVisible()
+        elementaryGradesPage.assertEmptyViewVisible()
+        elementaryGradesPage.assertRecyclerViewNotVisible()
     }
 
     @Test
@@ -119,19 +119,19 @@ class ElementaryGradesInteractionTest : StudentComposeTest() {
         val data = createMockData(courseCount = 1)
         goToGradesTab(data)
 
-        gradesPage.assertPageObjects()
+        elementaryGradesPage.assertPageObjects()
 
         val alphabeticallyGradedCourse = data.courses.values.first()
         var scoreGradedCourse = data.addCourseWithEnrollment(data.students[0], Enrollment.EnrollmentType.Student, 50.0)
         var bothGradedCourse = data.addCourseWithEnrollment(data.students[0], Enrollment.EnrollmentType.Student, 50.0, "C+")
         var notGradedCourse = data.addCourseWithEnrollment(data.students[0], Enrollment.EnrollmentType.Student)
 
-        gradesPage.refresh()
+        elementaryGradesPage.refresh()
 
-        gradesPage.assertCourseShownWithGrades(alphabeticallyGradedCourse.name, "B+")
-        gradesPage.assertCourseShownWithGrades(scoreGradedCourse.name, "50%")
-        gradesPage.assertCourseShownWithGrades(bothGradedCourse.name, "C+")
-        gradesPage.assertCourseShownWithGrades(notGradedCourse.name, "0%")
+        elementaryGradesPage.assertCourseShownWithGrades(alphabeticallyGradedCourse.name, "B+")
+        elementaryGradesPage.assertCourseShownWithGrades(scoreGradedCourse.name, "50%")
+        elementaryGradesPage.assertCourseShownWithGrades(bothGradedCourse.name, "C+")
+        elementaryGradesPage.assertCourseShownWithGrades(notGradedCourse.name, "0%")
     }
 
     @Test
@@ -140,7 +140,7 @@ class ElementaryGradesInteractionTest : StudentComposeTest() {
         val data = createMockData(courseCount = 1)
         goToGradesTab(data)
 
-        gradesPage.assertPageObjects()
+        elementaryGradesPage.assertPageObjects()
 
         var course = data.addCourseWithEnrollment(
             data.students[0],
@@ -150,10 +150,10 @@ class ElementaryGradesInteractionTest : StudentComposeTest() {
             restrictQuantitativeData = true
         )
 
-        gradesPage.refresh()
+        elementaryGradesPage.refresh()
 
-        gradesPage.assertCourseShownWithGrades(course.name, "C+")
-        gradesPage.assertProgressNotDisplayed(course.name)
+        elementaryGradesPage.assertCourseShownWithGrades(course.name, "C+")
+        elementaryGradesPage.assertProgressNotDisplayed(course.name)
     }
 
     @Test
@@ -162,7 +162,7 @@ class ElementaryGradesInteractionTest : StudentComposeTest() {
         val data = createMockData(courseCount = 1)
         goToGradesTab(data)
 
-        gradesPage.assertPageObjects()
+        elementaryGradesPage.assertPageObjects()
 
         var course = data.addCourseWithEnrollment(
             data.students[0],
@@ -172,9 +172,9 @@ class ElementaryGradesInteractionTest : StudentComposeTest() {
             restrictQuantitativeData = true
         )
 
-        gradesPage.refresh()
+        elementaryGradesPage.refresh()
 
-        gradesPage.assertCourseShownWithGrades(course.name, "--")
+        elementaryGradesPage.assertCourseShownWithGrades(course.name, "--")
     }
 
     private fun createMockData(
