@@ -17,6 +17,7 @@
 
 package com.instructure.pandautils.features.calendartodo.createupdate.composables
 
+import android.content.res.Configuration
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -62,6 +63,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalView
@@ -158,9 +160,17 @@ private fun CreateUpdateToDoScreen(
         }
     }
 
+    val configuration = LocalConfiguration.current
+    val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+    val contentInsets = if (isPortrait) {
+        WindowInsets.ime.union(WindowInsets.navigationBars)
+    } else {
+        WindowInsets.ime
+    }
+
     Scaffold(
         backgroundColor = colorResource(id = R.color.backgroundLightest),
-        contentWindowInsets = WindowInsets.ime.union(WindowInsets.navigationBars),
+        contentWindowInsets = contentInsets,
         topBar = {
             CreateUpdateToDoTopAppBar(
                 title = title,
