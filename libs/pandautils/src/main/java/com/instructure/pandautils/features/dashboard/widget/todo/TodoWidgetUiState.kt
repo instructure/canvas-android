@@ -46,6 +46,7 @@ data class TodoWidgetUiState(
     val onDaySelected: (LocalDate) -> Unit = {},
     val onPageChanged: (Int) -> Unit = {},
     val onNavigateWeek: (Int) -> Unit = {},
+    val onJumpToToday: () -> Unit = {},
     val onToggleShowCompleted: () -> Unit = {},
     val onRefresh: () -> Unit = {},
     val onSnackbarDismissed: () -> Unit = {},

@@ -583,6 +583,138 @@ class TodoWidgetViewModelTest {
         assertEquals(2, viewModel.uiState.value.todos.size)
     }
 
+    @Test
+    fun `jump to today when already on today does nothing`() = runTest {
+        every { toDoStateMapper.mapToUiState(any(), any(), any(), any()) } answers {
+            createToDoItemUiState(firstArg(), thirdArg(), arg(3))
+        }
+
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        val initialSelectedDay = viewModel.uiState.value.selectedDay
+        val initialScrollOffset = viewModel.uiState.value.scrollToPageOffset
+
+        // Jump to today when already on today (2025-02-15)
+        viewModel.uiState.value.onJumpToToday()
+        advanceUntilIdle()
+
+        // Should remain on the same day with no scroll offset
+        assertEquals(initialSelectedDay, viewModel.uiState.value.selectedDay)
+        assertEquals(initialScrollOffset, viewModel.uiState.value.scrollToPageOffset)
+    }
+
+    @Test
+    fun `jump to today when in current week but not on today selects today`() = runTest {
+        every { toDoStateMapper.mapToUiState(any(), any(), any(), any()) } answers {
+            createToDoItemUiState(firstArg(), thirdArg(), arg(3))
+        }
+
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        // Select a different day in the same week (2025-02-12)
+        val mondayInSameWeek = LocalDate.of(2025, 2, 12)
+        viewModel.uiState.value.onDaySelected(mondayInSameWeek)
+        advanceUntilIdle()
+
+        assertEquals(mondayInSameWeek, viewModel.uiState.value.selectedDay)
+
+        // Jump to today
+        viewModel.uiState.value.onJumpToToday()
+        advanceUntilIdle()
+
+        // Should be on today with no scroll animation
+        assertEquals(LocalDate.of(2025, 2, 15), viewModel.uiState.value.selectedDay)
+        assertEquals(0, viewModel.uiState.value.scrollToPageOffset)
+    }
+
+    @Test
+    fun `jump to today from future week animates backward`() = runTest {
+        every { toDoStateMapper.mapToUiState(any(), any(), any(), any()) } answers {
+            createToDoItemUiState(firstArg(), thirdArg(), arg(3))
+        }
+
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        // Navigate to 2 weeks in the future
+        viewModel.uiState.value.onNavigateWeek(1)
+        advanceUntilIdle()
+        viewModel.uiState.value.onPageChanged(1)
+        advanceUntilIdle()
+
+        viewModel.uiState.value.onNavigateWeek(1)
+        advanceUntilIdle()
+        viewModel.uiState.value.onPageChanged(1)
+        advanceUntilIdle()
+
+        val futureDate = viewModel.uiState.value.selectedDay
+        assertTrue(futureDate.isAfter(LocalDate.of(2025, 2, 15)))
+
+        // Jump to today
+        viewModel.uiState.value.onJumpToToday()
+        advanceUntilIdle()
+
+        // Should have negative scroll offset (backward)
+        assertEquals(-1, viewModel.uiState.value.scrollToPageOffset)
+
+        // Selected day should be positioned so next page contains today's week
+        // (today + 1 week = future week)
+        assertTrue(viewModel.uiState.value.selectedDay.isAfter(LocalDate.of(2025, 2, 15)))
+
+        // Simulate page change
+        viewModel.uiState.value.onPageChanged(-1)
+        advanceUntilIdle()
+
+        // After animation, should be on today
+        assertEquals(LocalDate.of(2025, 2, 15), viewModel.uiState.value.selectedDay)
+        assertEquals(0, viewModel.uiState.value.scrollToPageOffset)
+    }
+
+    @Test
+    fun `jump to today from past week animates forward`() = runTest {
+        every { toDoStateMapper.mapToUiState(any(), any(), any(), any()) } answers {
+            createToDoItemUiState(firstArg(), thirdArg(), arg(3))
+        }
+
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        // Navigate to 2 weeks in the past
+        viewModel.uiState.value.onNavigateWeek(-1)
+        advanceUntilIdle()
+        viewModel.uiState.value.onPageChanged(-1)
+        advanceUntilIdle()
+
+        viewModel.uiState.value.onNavigateWeek(-1)
+        advanceUntilIdle()
+        viewModel.uiState.value.onPageChanged(-1)
+        advanceUntilIdle()
+
+        val pastDate = viewModel.uiState.value.selectedDay
+        assertTrue(pastDate.isBefore(LocalDate.of(2025, 2, 15)))
+
+        // Jump to today
+        viewModel.uiState.value.onJumpToToday()
+        advanceUntilIdle()
+
+        // Should have positive scroll offset (forward)
+        assertEquals(1, viewModel.uiState.value.scrollToPageOffset)
+
+        // Selected day should be positioned so previous page contains today's week
+        // (today - 1 week = past week)
+        assertTrue(viewModel.uiState.value.selectedDay.isBefore(LocalDate.of(2025, 2, 15)))
+
+        // Simulate page change
+        viewModel.uiState.value.onPageChanged(1)
+        advanceUntilIdle()
+
+        // After animation, should be on today
+        assertEquals(LocalDate.of(2025, 2, 15), viewModel.uiState.value.selectedDay)
+        assertEquals(0, viewModel.uiState.value.scrollToPageOffset)
+    }
+
     private fun createPlannerItem(
         id: Long,
         title: String,

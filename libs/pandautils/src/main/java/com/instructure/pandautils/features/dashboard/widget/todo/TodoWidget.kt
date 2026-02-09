@@ -72,6 +72,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.CanvasDivider
 import com.instructure.pandautils.compose.composables.CanvasSwitch
 import com.instructure.pandautils.compose.composables.ShimmerBox
+import com.instructure.pandautils.compose.composables.TodayButton
 import com.instructure.pandautils.compose.composables.calendar.CalendarColors
 import com.instructure.pandautils.compose.composables.calendar.CalendarStateMapper
 import com.instructure.pandautils.compose.composables.todo.ToDoItem
@@ -150,14 +151,31 @@ fun TodoWidgetContent(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Text(
-            text = stringResource(R.string.dailyToDoWidgetTitle),
-            fontSize = 14.sp,
-            color = colorResource(R.color.textDarkest),
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
-        )
+                .height(24.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(R.string.dailyToDoWidgetTitle),
+                fontSize = 14.sp,
+                color = colorResource(R.color.textDarkest)
+            )
+
+            if (uiState.selectedDay != LocalDate.now()) {
+                TodayButton(
+                    title = stringResource(R.string.todoWidget_today),
+                    onClick = uiState.onJumpToToday,
+                    buttonColor = Color(uiState.color.color()),
+                    textColor = colorResource(R.color.textLightest)
+                )
+            } else {
+                Spacer(modifier = Modifier.height(24.dp))
+            }
+        }
 
         Box(modifier = Modifier.fillMaxWidth()) {
             Card(

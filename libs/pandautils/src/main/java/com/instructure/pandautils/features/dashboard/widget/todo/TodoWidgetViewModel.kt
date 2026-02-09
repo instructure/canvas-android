@@ -79,10 +79,11 @@ class TodoWidgetViewModel @Inject constructor(
     private val calendarSharedEvents: CalendarSharedEvents,
     private val observeGlobalConfigUseCase: ObserveGlobalConfigUseCase,
     private val crashlytics: FirebaseCrashlytics,
-    clock: Clock
+    private val clock: Clock
 ) : ViewModel() {
 
     private var selectedDay = LocalDate.now(clock)
+    private var pendingSelectedDay: LocalDate? = null
     private val plannerItemsMap = mutableMapOf<String, PlannerItem>()
     private var showCompleted = false
     private var courseMap = mapOf<Long, Course>()
@@ -107,6 +108,7 @@ class TodoWidgetViewModel @Inject constructor(
             onDaySelected = ::onDaySelected,
             onPageChanged = ::onPageChanged,
             onNavigateWeek = ::onNavigateWeek,
+            onJumpToToday = ::jumpToToday,
             onToggleShowCompleted = ::toggleShowCompleted,
             onRefresh = ::refresh,
             onSnackbarDismissed = ::clearSnackbarMessage,
@@ -146,10 +148,53 @@ class TodoWidgetViewModel @Inject constructor(
         _uiState.update { it.copy(scrollToPageOffset = offset) }
     }
 
+    private fun jumpToToday() {
+        val today = LocalDate.now(clock)
+        if (selectedDay == today) {
+            return
+        }
+
+        val weekOffset = calculateWeekOffset(selectedDay, today)
+        if (weekOffset == 0) {
+            // Today is in the current week, just select it
+            selectedDay = today
+            _uiState.update { createNewUiState() }
+        } else {
+            // Today is in a different week
+            // We need to position selectedDay so that the page we animate TO contains today's week
+            // If offset = 1 (going forward), next page should have today → current should be (today - 1 week)
+            // If offset = -1 (going backward), previous page should have today → current should be (today + 1 week)
+            val weeksToAdjust = if (weekOffset > 0) -1L else 1L
+            selectedDay = today.plusWeeks(weeksToAdjust)
+            pendingSelectedDay = today
+            _uiState.update { createNewUiState().copy(scrollToPageOffset = weekOffset) }
+        }
+    }
+
+    private fun calculateWeekOffset(currentDate: LocalDate, newDate: LocalDate): Int {
+        val weekField = WeekFields.of(Locale.getDefault())
+        val currentWeekStart = currentDate.with(weekField.dayOfWeek(), 1)
+        val currentWeekEnd = currentWeekStart.plusDays(6)
+
+        return when {
+            newDate.isBefore(currentWeekStart) -> -1
+            newDate.isAfter(currentWeekEnd) -> 1
+            else -> 0
+        }
+    }
+
     private fun onPageChanged(offset: Int) {
         if (offset != 0) {
-            selectedDay = selectedDay.plus(offset.toLong(), ChronoUnit.WEEKS)
-            _uiState.update { createNewUiState().copy(scrollToPageOffset = 0) }
+            if (pendingSelectedDay != null) {
+                // This is a page change animation triggered by jump to today
+                val dayToSelect = pendingSelectedDay!!
+                pendingSelectedDay = null
+                selectedDay = dayToSelect
+                _uiState.update { createNewUiState().copy(scrollToPageOffset = 0) }
+            } else {
+                selectedDay = selectedDay.plus(offset.toLong(), ChronoUnit.WEEKS)
+                _uiState.update { createNewUiState().copy(scrollToPageOffset = 0) }
+            }
 
             viewModelScope.launch {
                 val weekField = WeekFields.of(Locale.getDefault())
