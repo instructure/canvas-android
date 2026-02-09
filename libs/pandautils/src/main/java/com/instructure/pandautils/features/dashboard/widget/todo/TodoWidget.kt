@@ -247,9 +247,8 @@ fun TodoWidgetContent(
                     TodoItemsContainer(
                         todosLoading = uiState.todosLoading,
                         todosError = uiState.todosError,
-                        todos = uiState.todos,
+                        todos = uiState.todos.filter { it.id !in uiState.removingItemIds },
                         onTodoClick = uiState.onTodoClick,
-                        removingItemIds = uiState.removingItemIds,
                         onRefresh = uiState.onRefresh,
                         onAddTodoClick = uiState.onAddTodoClick,
                         buttonColor = Color(uiState.color.color())
@@ -327,7 +326,6 @@ private fun TodoItemsContainer(
     todosError: Boolean,
     todos: List<ToDoItemUiState>,
     onTodoClick: (FragmentActivity, String) -> Unit,
-    removingItemIds: Set<String>,
     onRefresh: () -> Unit,
     onAddTodoClick: (FragmentActivity) -> Unit,
     buttonColor: Color,
@@ -368,7 +366,7 @@ private fun TodoItemsContainer(
 
             else -> {
                 TodoItemsList(
-                    todos = todos.filter { it.id !in removingItemIds },
+                    todos = todos,
                     onTodoClick = onTodoClick,
                     checkboxColor = buttonColor
                 )

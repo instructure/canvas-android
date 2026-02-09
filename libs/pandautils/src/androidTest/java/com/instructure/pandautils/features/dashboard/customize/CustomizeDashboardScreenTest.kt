@@ -764,7 +764,7 @@ class CustomizeDashboardScreenTest {
         }
 
         // Verify the widgets color label is displayed (from globalSettings)
-        composeTestRule.onNodeWithText("Widgets color").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Dashboard Main Color").assertIsDisplayed()
     }
 
     @Test
@@ -810,7 +810,7 @@ class CustomizeDashboardScreenTest {
         }
 
         // Verify both global settings are displayed
-        composeTestRule.onNodeWithText("Widgets color").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Dashboard Main Color").assertIsDisplayed()
         composeTestRule.onNodeWithText("Show greeting").assertIsDisplayed()
     }
 

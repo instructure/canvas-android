@@ -187,6 +187,7 @@ private fun WidgetList(
                 modifier = Modifier
                     .fillMaxWidth()
             )
+            CanvasDivider()
         }
         item {
             Text(

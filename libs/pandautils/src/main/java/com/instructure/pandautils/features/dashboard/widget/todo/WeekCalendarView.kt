@@ -23,7 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
@@ -45,7 +45,7 @@ fun WeekCalendarView(
     modifier: Modifier = Modifier,
     calendarColors: CalendarColors
 ) {
-    var centerIndex by remember { mutableIntStateOf(PAGE_COUNT / 2) }
+    var centerIndex by rememberSaveable { mutableIntStateOf(PAGE_COUNT / 2) }
     val pagerState = rememberPagerState(
         initialPage = PAGE_COUNT / 2,
         initialPageOffsetFraction = 0f

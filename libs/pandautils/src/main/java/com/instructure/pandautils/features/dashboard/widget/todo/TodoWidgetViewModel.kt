@@ -205,7 +205,9 @@ class TodoWidgetViewModel @Inject constructor(
 
     private fun createEventIndicators(): Map<LocalDate, Int> {
         return eventsByDay.mapValues { (_, plannerItems) ->
-            minOf(3, plannerItems.size)
+            val itemCount = plannerItems
+                .filter { showCompleted || !it.isComplete() }.size
+            minOf(3, itemCount)
         }
     }
 
@@ -470,10 +472,19 @@ class TodoWidgetViewModel @Inject constructor(
                 }
             }
 
+            val eventIndicators = createEventIndicators()
+            val calendarBodyUiState = calendarStateMapper.createBodyUiState(
+                expanded = false,
+                selectedDay = selectedDay,
+                jumpToToday = false,
+                scrollToPageOffset = 0,
+                eventIndicators = eventIndicators
+            )
+
             // Invalidate planner cache
             CanvasRestAdapter.clearCacheUrls("planner")
             todoWidgetBehavior.updateWidget(true)
-            _uiState.update { _uiState.value.copy(updateToDoCount = true) }
+            _uiState.update { _uiState.value.copy(updateToDoCount = true, calendarBodyUiState = calendarBodyUiState) }
             true
         } catch (e: Exception) {
             e.printStackTrace()
