@@ -51,6 +51,10 @@ class EmptyView @JvmOverloads constructor(
 
     init {
         binding = EmptyViewBinding.inflate(LayoutInflater.from(context), this, true)
+        // Initialize with current orientation
+        post {
+            handleConfigChange(context.resources.getBoolean(R.bool.isDeviceTablet), context.resources.configuration.orientation)
+        }
     }
 
     override fun setLoading() = with(binding) {

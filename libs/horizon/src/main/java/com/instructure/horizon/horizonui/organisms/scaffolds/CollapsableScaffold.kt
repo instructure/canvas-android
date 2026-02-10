@@ -36,6 +36,7 @@ import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
@@ -46,6 +47,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.max
+import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.util.HorizonEdgeToEdgeSystemBars
 import com.instructure.horizon.util.minus
 import com.instructure.horizon.util.plus
@@ -104,6 +106,7 @@ private fun CollapsableHeaderScreenContent(
     Box(
         modifier = modifier
             .nestedScroll(nestedScrollConnection)
+            .clipToBounds()
     ) {
         Box(
             modifier = Modifier
@@ -138,14 +141,14 @@ private fun CollapsableHeaderScreenContent(
 @Composable
 fun CollapsableScaffold(
     modifier: Modifier = Modifier,
-    topBar: @Composable () -> Unit = {},
+    topBar: @Composable (contentPadding: PaddingValues) -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
     snackbarHost: @Composable () -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},
     floatingActionButtonPosition: FabPosition = FabPosition.End,
     containerColor: Color = MaterialTheme.colorScheme.background,
     contentColor: Color = contentColorFor(containerColor),
-    statusBarColor: Color? = null,
+    statusBarColor: Color? = HorizonColors.Surface.pagePrimary(),
     navigationBarColor: Color? = null,
     statusBarAlpha: Float = 0.8f,
     navigationBarAlpha: Float = 0.8f,
@@ -190,7 +193,7 @@ fun CollapsableScaffold(
 @Composable
 private fun CollapsableScaffoldContent(
     modifier: Modifier = Modifier,
-    topBar: @Composable () -> Unit = {},
+    topBar: @Composable (contentPadding: PaddingValues) -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
     snackbarHost: @Composable () -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},
@@ -233,7 +236,8 @@ private fun CollapsableScaffoldContent(
 
     Scaffold(
         modifier = modifier
-            .nestedScroll(nestedScrollConnection),
+            .nestedScroll(nestedScrollConnection)
+            .clipToBounds(),
         contentWindowInsets = WindowInsets.ime,
         topBar = {
             Box(
@@ -255,7 +259,7 @@ private fun CollapsableScaffoldContent(
                         }
                     }
             ) {
-                topBar()
+                topBar(statusBarWindowInsets.asPaddingValues())
             }
         },
         bottomBar = {

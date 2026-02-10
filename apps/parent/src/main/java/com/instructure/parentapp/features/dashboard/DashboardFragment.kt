@@ -18,6 +18,7 @@
 package com.instructure.parentapp.features.dashboard
 
 import android.content.res.ColorStateList
+import android.content.res.Configuration
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.Gravity
@@ -58,6 +59,7 @@ import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.features.help.HelpDialogFragment
 import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.interfaces.NavigationCallbacks
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.animateCircularBackgroundColorChange
@@ -221,6 +223,34 @@ class DashboardFragment : BaseCanvasFragment(), NavigationCallbacks {
         navController.removeOnDestinationChangedListener(onDestinationChangedListener)
     }
 
+    override fun onResume() {
+        super.onResume()
+        updateStatusBarAppearanceForDrawer()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        updateStatusBarAppearanceForDrawer()
+    }
+
+    private fun updateStatusBarAppearanceForDrawer() {
+        // Check if drawer is open and update status bar appearance accordingly (handles config changes)
+        // Post to ensure drawer state is checked after current layout pass
+        binding.drawerLayout.post {
+            if (binding.drawerLayout.isDrawerOpen(GravityCompat.START) && !ColorKeeper.darkTheme) {
+                activity?.window?.let { window ->
+                    val controller = ViewCompat.getWindowInsetsController(window.decorView)
+                    controller?.isAppearanceLightStatusBars = true
+                }
+            } else if (!ColorKeeper.darkTheme) {
+                activity?.window?.let { window ->
+                    val controller = ViewCompat.getWindowInsetsController(window.decorView)
+                    controller?.isAppearanceLightStatusBars = false
+                }
+            }
+        }
+    }
+
     private fun handleAction(action: DashboardViewModelAction) {
         when (action) {
             is DashboardViewModelAction.AddStudent -> {
@@ -363,6 +393,24 @@ class DashboardFragment : BaseCanvasFragment(), NavigationCallbacks {
             override fun onDrawerOpened(drawerView: View) {
                 closeNavigationDrawerItem.isVisible = isAccessibilityEnabled(requireContext())
                 super.onDrawerOpened(drawerView)
+                // Set status bar icons to dark only in light mode (for visibility on white drawer background)
+                if (!ColorKeeper.darkTheme) {
+                    activity?.window?.let { window ->
+                        val controller = ViewCompat.getWindowInsetsController(window.decorView)
+                        controller?.isAppearanceLightStatusBars = true
+                    }
+                }
+            }
+
+            override fun onDrawerClosed(drawerView: View) {
+                super.onDrawerClosed(drawerView)
+                // Restore status bar icons to light only in light mode (for dark toolbar)
+                if (!ColorKeeper.darkTheme) {
+                    activity?.window?.let { window ->
+                        val controller = ViewCompat.getWindowInsetsController(window.decorView)
+                        controller?.isAppearanceLightStatusBars = false
+                    }
+                }
             }
         })
     }

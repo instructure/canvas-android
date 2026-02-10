@@ -57,6 +57,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -92,10 +94,11 @@ import com.instructure.horizon.horizonui.organisms.AnimatedHorizontalPager
 import com.instructure.horizon.horizonui.organisms.scaffolds.CollapsableHeaderScreen
 import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.horizon.util.zeroScreenInsets
+import com.instructure.pandautils.compose.modifiers.conditional
 import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
-fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostController, homeNavController: NavHostController) {
+fun DashboardScreen(uiState: DashboardUiState, navController: NavHostController) {
     val snackbarHostState = remember { SnackbarHostState() }
 
     var shouldRefresh by rememberSaveable { mutableStateOf(false) }
@@ -146,11 +149,18 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
             modifier = Modifier.padding(innerPadding),
             headerContent = { paddingValues ->
                 Column(
-                    modifier = Modifier.padding(paddingValues)
+                    modifier = Modifier
+                        .padding(paddingValues)
+                        .conditional(scrollState.canScrollBackward) {
+                            shadow(
+                                elevation = HorizonElevation.level3,
+                                spotColor = Color.Transparent,
+                            )
+                        }
                 ) {
                     DashboardTopBar(
                         uiState,
-                        mainNavController,
+                        navController,
                         modifier = Modifier
                             .height(56.dp)
                             .padding(bottom = 12.dp)
@@ -185,21 +195,23 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                     ) {
                         HorizonSpace(SpaceSize.SPACE_12)
                         DashboardAnnouncementBannerWidget(
-                            mainNavController,
-                            homeNavController,
+                            navController,
                             shouldRefresh,
                             refreshStateFlow
                         )
                         DashboardCourseSection(
-                            mainNavController,
-                            homeNavController,
+                            navController,
                             shouldRefresh,
                             refreshStateFlow
                         )
                         HorizonSpace(SpaceSize.SPACE_16)
-                        NumericWidgetRow(shouldRefresh, refreshStateFlow, homeNavController)
+                        NumericWidgetRow(
+                            shouldRefresh,
+                            refreshStateFlow,
+                            navController
+                        )
                         DashboardSkillHighlightsWidget(
-                            homeNavController,
+                            navController,
                             shouldRefresh,
                             refreshStateFlow
                         )
@@ -211,9 +223,8 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
     }
 }
 
-
 @Composable
-private fun DashboardTopBar(uiState: DashboardUiState, mainNavController: NavController, modifier: Modifier = Modifier
+private fun DashboardTopBar(uiState: DashboardUiState, navController: NavController, modifier: Modifier = Modifier
 ) {
     Row(
         verticalAlignment = Alignment.Bottom,
@@ -234,7 +245,7 @@ private fun DashboardTopBar(uiState: DashboardUiState, mainNavController: NavCon
             iconRes = R.drawable.edit_note,
             contentDescription = stringResource(R.string.a11y_dashboardNotebookButtonContentDescription),
             onClick = {
-                mainNavController.navigate(MainNavigationRoute.Notebook.route)
+                navController.navigate(MainNavigationRoute.Notebook.route)
             },
             color = IconButtonColor.Inverse,
             elevation = HorizonElevation.level4,
@@ -244,7 +255,7 @@ private fun DashboardTopBar(uiState: DashboardUiState, mainNavController: NavCon
             iconRes = R.drawable.notifications,
             contentDescription = stringResource(R.string.a11y_dashboardNotificationsContentDescription),
             onClick = {
-                mainNavController.navigate(MainNavigationRoute.Notification.route)
+                navController.navigate(MainNavigationRoute.Notification.route)
             },
             elevation = HorizonElevation.level4,
             color = IconButtonColor.Inverse,
@@ -261,7 +272,7 @@ private fun DashboardTopBar(uiState: DashboardUiState, mainNavController: NavCon
         IconButton(
             iconRes = R.drawable.mail,
             contentDescription = stringResource(R.string.a11y_dashboardInboxContentDescription),
-            onClick = { mainNavController.navigate(MainNavigationRoute.Inbox.route) },
+            onClick = { navController.navigate(MainNavigationRoute.Inbox.route) },
             elevation = HorizonElevation.level4,
             color = IconButtonColor.Inverse,
             badge = if (uiState.unreadCountState.unreadConversations > 0) {
@@ -280,7 +291,7 @@ private fun DashboardTopBar(uiState: DashboardUiState, mainNavController: NavCon
 private fun NumericWidgetRow(
     shouldRefresh: Boolean,
     refreshStateFlow: MutableStateFlow<List<Boolean>>,
-    homeNavController: NavHostController,
+    navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
     BoxWithConstraints(
@@ -311,7 +322,7 @@ private fun NumericWidgetRow(
                     Modifier.width(IntrinsicSize.Max)
                 )
                 DashboardSkillOverviewWidget(
-                    homeNavController,
+                    navController,
                     shouldRefresh,
                     refreshStateFlow,
                     DashboardWidgetPageState.Empty,
@@ -352,7 +363,7 @@ private fun NumericWidgetRow(
 
                     2 -> {
                         DashboardSkillOverviewWidget(
-                            homeNavController,
+                            navController,
                             shouldRefresh,
                             refreshStateFlow,
                             DashboardWidgetPageState(index + 1, pageCount),
@@ -401,5 +412,5 @@ private fun NotificationPermissionRequest() {
 @Preview
 private fun DashboardScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
-    DashboardScreen(DashboardUiState(), mainNavController = rememberNavController(), homeNavController = rememberNavController())
+    DashboardScreen(DashboardUiState(), navController = rememberNavController())
 }

@@ -76,17 +76,18 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NotificationScreen(state: NotificationUiState, mainNavController: NavHostController) {
+fun NotificationScreen(state: NotificationUiState, navController: NavHostController) {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+
     HorizonScaffold(
         title = stringResource(R.string.notificationsTitle),
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
-        onBackPressed = { mainNavController.popBackStack() }
+        onBackPressed = { navController.popBackStack() },
     ) { modifier ->
         LoadingStateWrapper(state.screenState) {
             NotificationContent(
-                mainNavController,
+                navController,
                 state,
                 showSnackbar = { message ->
                     scope.launch { snackbarHostState.showSnackbar(message) }

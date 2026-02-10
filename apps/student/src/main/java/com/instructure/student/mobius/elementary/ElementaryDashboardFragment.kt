@@ -20,6 +20,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.tabs.TabLayout
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.interactions.router.Route
@@ -33,7 +35,6 @@ import com.instructure.pandautils.features.elementary.resources.ResourcesFragmen
 import com.instructure.pandautils.features.elementary.schedule.pager.SchedulePagerFragment
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
-import com.instructure.pandautils.utils.applyBottomSystemBarInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.makeBundle
@@ -84,7 +85,24 @@ class ElementaryDashboardFragment : ParentFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         dashboardPager.adapter = ElementaryDashboardPagerAdapter(fragments, childFragmentManager)
-        dashboardPager.applyBottomSystemBarInsets()
+
+        // Consume bottom insets so child fragments don't apply them
+        // The Canvas bottom navigation bar handles bottom spacing at the activity level
+        ViewCompat.setOnApplyWindowInsetsListener(dashboardPager) { view, insets ->
+            val navigationBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+            WindowInsetsCompat.Builder(insets)
+                .setInsets(
+                    WindowInsetsCompat.Type.navigationBars(),
+                    androidx.core.graphics.Insets.of(
+                        navigationBars.left,
+                        navigationBars.top,
+                        navigationBars.right,
+                        0 // Consume bottom insets
+                    )
+                )
+                .build()
+        }
+
         dashboardTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) = Unit
 

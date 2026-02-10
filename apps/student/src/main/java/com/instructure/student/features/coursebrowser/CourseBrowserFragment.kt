@@ -27,6 +27,9 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.appbar.AppBarLayout
@@ -57,7 +60,6 @@ import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidge
 import com.instructure.pandautils.features.smartsearch.SmartSearchFragment
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.ParcelableArg
-import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.a11yManager
 import com.instructure.pandautils.utils.applyBottomSystemBarInsets
@@ -220,11 +222,31 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
         (canvasContext as? Course)?.term?.name?.let { noOverlayToolbar.subtitle = it }
         noOverlayToolbar.setBackgroundColor(canvasContext.color)
         appBarLayout.setBackgroundColor(canvasContext.color)
-        updateToolbarVisibility()
 
+        // Apply top padding to noOverlayToolbar
         noOverlayToolbar.applyTopSystemBarInsets()
-        overlayToolbar.applyTopSystemBarInsets()
-        appBarLayout.applyTopSystemBarInsets()
+
+        // Apply top margin to AppBarLayout when color overlay is enabled
+        ViewCompat.setOnApplyWindowInsetsListener(appBarLayout) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+            // Only apply margin when overlay toolbar is visible (color overlay enabled)
+            if (overlayToolbar.isVisible) {
+                val layoutParams = view.layoutParams as? ViewGroup.MarginLayoutParams
+                layoutParams?.topMargin = systemBars.top
+                view.layoutParams = layoutParams
+            } else {
+                val layoutParams = view.layoutParams as? ViewGroup.MarginLayoutParams
+                layoutParams?.topMargin = 0
+                view.layoutParams = layoutParams
+            }
+
+            insets
+        }
+
+        ViewCompat.requestApplyInsets(appBarLayout)
+
+        updateToolbarVisibility()
 
         // Hide image placeholder if color overlay is disabled and there is no valid image
         val hasImage = (canvasContext as? Course)?.imageUrl?.isValid() == true
