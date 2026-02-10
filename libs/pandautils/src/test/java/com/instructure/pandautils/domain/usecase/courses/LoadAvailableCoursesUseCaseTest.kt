@@ -54,7 +54,7 @@ class LoadAvailableCoursesUseCaseTest {
         )
         coEvery { courseRepository.getCourses(false) } returns DataResult.Success(courses)
 
-        val params = LoadAvailableCoursesParams(forceRefresh = false)
+        val params = LoadAvailableCoursesUseCase.Params(forceRefresh = false)
         val result = useCase(params)
 
         assertEquals(2, result.size)
@@ -72,7 +72,7 @@ class LoadAvailableCoursesUseCaseTest {
         )
         coEvery { courseRepository.getCourses(false) } returns DataResult.Success(courses)
 
-        val params = LoadAvailableCoursesParams(forceRefresh = false)
+        val params = LoadAvailableCoursesUseCase.Params(forceRefresh = false)
         val result = useCase(params)
 
         assertEquals(2, result.size)
@@ -92,7 +92,7 @@ class LoadAvailableCoursesUseCaseTest {
         )
         coEvery { courseRepository.getCourses(false) } returns DataResult.Success(courses)
 
-        val params = LoadAvailableCoursesParams(forceRefresh = false)
+        val params = LoadAvailableCoursesUseCase.Params(forceRefresh = false)
         val result = useCase(params)
 
         assertEquals(2, result.size)
@@ -110,7 +110,7 @@ class LoadAvailableCoursesUseCaseTest {
         )
         coEvery { courseRepository.getCourses(false) } returns DataResult.Success(courses)
 
-        val params = LoadAvailableCoursesParams(forceRefresh = false)
+        val params = LoadAvailableCoursesUseCase.Params(forceRefresh = false)
         val result = useCase(params)
 
         assertEquals(0, result.size)
@@ -121,7 +121,7 @@ class LoadAvailableCoursesUseCaseTest {
     fun `execute returns empty list when repository returns empty list`() = runTest {
         coEvery { courseRepository.getCourses(false) } returns DataResult.Success(emptyList())
 
-        val params = LoadAvailableCoursesParams(forceRefresh = false)
+        val params = LoadAvailableCoursesUseCase.Params(forceRefresh = false)
         val result = useCase(params)
 
         assertEquals(0, result.size)
@@ -135,7 +135,7 @@ class LoadAvailableCoursesUseCaseTest {
         )
         coEvery { courseRepository.getCourses(true) } returns DataResult.Success(courses)
 
-        val params = LoadAvailableCoursesParams(forceRefresh = true)
+        val params = LoadAvailableCoursesUseCase.Params(forceRefresh = true)
         val result = useCase(params)
 
         assertEquals(1, result.size)
@@ -151,7 +151,7 @@ class LoadAvailableCoursesUseCaseTest {
         )
         coEvery { courseRepository.getCourses(false) } returns DataResult.Success(courses)
 
-        val params = LoadAvailableCoursesParams(forceRefresh = false)
+        val params = LoadAvailableCoursesUseCase.Params(forceRefresh = false)
         val result = useCase(params)
 
         assertEquals(3, result.size)

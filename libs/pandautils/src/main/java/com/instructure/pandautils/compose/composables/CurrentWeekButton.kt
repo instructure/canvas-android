@@ -108,18 +108,9 @@ fun TodayButton(
 }
 
 @Preview
-@Composable
-fun CurrentWeekButtonPreview() {
-    val context = LocalContext.current
-    ContextKeeper.appContext = context
-    AndroidThreeTen.init(context)
-
-    TodayButton(title = "Today", onClick = {})
-}
-
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, backgroundColor = 0xFF0F1316)
 @Composable
-fun CurrentWeekButtonPreviewDarkMode() {
+private fun CurrentWeekButtonPreview() {
     val context = LocalContext.current
     ContextKeeper.appContext = context
     AndroidThreeTen.init(context)

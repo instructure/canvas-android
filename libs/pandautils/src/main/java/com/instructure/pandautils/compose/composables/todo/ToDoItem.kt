@@ -229,9 +229,8 @@ private fun BoxScope.SwipeBackground(isChecked: Boolean, offsetX: Float) {
                     painter = painterResource(id = icon),
                     contentDescription = null,
                     tint = colorResource(R.color.textLightest),
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(24.dp).padding(end = 12.dp)
                 )
-                Spacer(modifier = Modifier.width(12.dp))
                 Text(
                     text = text,
                     fontSize = 16.sp,
@@ -254,9 +253,9 @@ private fun BoxScope.SwipeBackground(isChecked: Boolean, offsetX: Float) {
                     text = text,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = colorResource(R.color.textLightest)
+                    color = colorResource(R.color.textLightest),
+                    modifier = Modifier.padding(end = 12.dp)
                 )
-                Spacer(modifier = Modifier.width(12.dp))
                 Icon(
                     painter = painterResource(id = icon),
                     contentDescription = null,

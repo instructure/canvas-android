@@ -15,17 +15,14 @@
  */
 package com.instructure.pandautils.domain.usecase.planner
 
-import com.instructure.canvasapi2.apis.PlannerAPI
-import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Plannable
 import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.canvasapi2.utils.LinkHeaders
+import com.instructure.pandautils.data.repository.planner.PlannerRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import io.mockk.slot
 import io.mockk.unmockkAll
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -36,12 +33,12 @@ import java.util.Date
 
 class LoadPlannerItemsUseCaseTest {
 
-    private val plannerApi: PlannerAPI.PlannerInterface = mockk()
+    private val repository: PlannerRepository = mockk()
     private lateinit var useCase: LoadPlannerItemsUseCase
 
     @Before
     fun setup() {
-        useCase = LoadPlannerItemsUseCase(plannerApi)
+        useCase = LoadPlannerItemsUseCase(repository)
     }
 
     @After
@@ -56,12 +53,17 @@ class LoadPlannerItemsUseCaseTest {
             createPlannerItem(id = 2L, type = PlannableType.ANNOUNCEMENT),
             createPlannerItem(id = 3L, type = PlannableType.QUIZ)
         )
-        val dataResult = DataResult.Success(plannerItems, LinkHeaders())
         coEvery {
-            plannerApi.getPlannerItems(any(), any(), any(), any(), any())
-        } returns dataResult
+            repository.getPlannerItems(any(), any(), any(), any())
+        } returns DataResult.Success(plannerItems)
 
-        val result = useCase("2025-01-01", "2025-01-31", false)
+        val result = useCase(
+            LoadPlannerItemsUseCase.Params(
+                startDate = "2025-01-01",
+                endDate = "2025-01-31",
+                forceNetwork = false
+            )
+        )
 
         assertEquals(2, result.size)
         assertEquals(1L, result[0].plannable.id)
@@ -75,12 +77,17 @@ class LoadPlannerItemsUseCaseTest {
             createPlannerItem(id = 2L, type = PlannableType.ASSESSMENT_REQUEST),
             createPlannerItem(id = 3L, type = PlannableType.DISCUSSION_TOPIC)
         )
-        val dataResult = DataResult.Success(plannerItems, LinkHeaders())
         coEvery {
-            plannerApi.getPlannerItems(any(), any(), any(), any(), any())
-        } returns dataResult
+            repository.getPlannerItems(any(), any(), any(), any())
+        } returns DataResult.Success(plannerItems)
 
-        val result = useCase("2025-01-01", "2025-01-31", false)
+        val result = useCase(
+            LoadPlannerItemsUseCase.Params(
+                startDate = "2025-01-01",
+                endDate = "2025-01-31",
+                forceNetwork = false
+            )
+        )
 
         assertEquals(2, result.size)
         assertEquals(1L, result[0].plannable.id)
@@ -96,12 +103,17 @@ class LoadPlannerItemsUseCaseTest {
             createPlannerItem(id = 4L, type = PlannableType.ASSESSMENT_REQUEST),
             createPlannerItem(id = 5L, type = PlannableType.CALENDAR_EVENT)
         )
-        val dataResult = DataResult.Success(plannerItems, LinkHeaders())
         coEvery {
-            plannerApi.getPlannerItems(any(), any(), any(), any(), any())
-        } returns dataResult
+            repository.getPlannerItems(any(), any(), any(), any())
+        } returns DataResult.Success(plannerItems)
 
-        val result = useCase("2025-01-01", "2025-01-31", false)
+        val result = useCase(
+            LoadPlannerItemsUseCase.Params(
+                startDate = "2025-01-01",
+                endDate = "2025-01-31",
+                forceNetwork = false
+            )
+        )
 
         assertEquals(3, result.size)
         assertEquals(1L, result[0].plannable.id)
@@ -115,72 +127,86 @@ class LoadPlannerItemsUseCaseTest {
             createPlannerItem(id = 1L, type = PlannableType.ANNOUNCEMENT),
             createPlannerItem(id = 2L, type = PlannableType.ASSESSMENT_REQUEST)
         )
-        val dataResult = DataResult.Success(plannerItems, LinkHeaders())
         coEvery {
-            plannerApi.getPlannerItems(any(), any(), any(), any(), any())
-        } returns dataResult
+            repository.getPlannerItems(any(), any(), any(), any())
+        } returns DataResult.Success(plannerItems)
 
-        val result = useCase("2025-01-01", "2025-01-31", false)
+        val result = useCase(
+            LoadPlannerItemsUseCase.Params(
+                startDate = "2025-01-01",
+                endDate = "2025-01-31",
+                forceNetwork = false
+            )
+        )
 
         assertEquals(0, result.size)
     }
 
     @Test
-    fun `invoke returns empty list when API returns empty`() = runTest {
-        val dataResult = DataResult.Success(emptyList<PlannerItem>(), LinkHeaders())
+    fun `invoke returns empty list when repository returns empty`() = runTest {
         coEvery {
-            plannerApi.getPlannerItems(any(), any(), any(), any(), any())
-        } returns dataResult
+            repository.getPlannerItems(any(), any(), any(), any())
+        } returns DataResult.Success(emptyList())
 
-        val result = useCase("2025-01-01", "2025-01-31", false)
+        val result = useCase(
+            LoadPlannerItemsUseCase.Params(
+                startDate = "2025-01-01",
+                endDate = "2025-01-31",
+                forceNetwork = false
+            )
+        )
 
         assertEquals(0, result.size)
     }
 
     @Test
-    fun `invoke passes correct parameters to API`() = runTest {
+    fun `invoke passes correct parameters to repository`() = runTest {
         val startDate = "2025-02-01"
         val endDate = "2025-02-28"
-        val dataResult = DataResult.Success(emptyList<PlannerItem>(), LinkHeaders())
-        val restParamsSlot = slot<RestParams>()
-
         coEvery {
-            plannerApi.getPlannerItems(
-                startDate,
-                endDate,
-                emptyList(),
-                null,
-                capture(restParamsSlot)
-            )
-        } returns dataResult
+            repository.getPlannerItems(any(), any(), any(), any())
+        } returns DataResult.Success(emptyList())
 
-        useCase(startDate, endDate, false)
+        useCase(
+            LoadPlannerItemsUseCase.Params(
+                startDate = startDate,
+                endDate = endDate,
+                forceNetwork = false
+            )
+        )
 
         coVerify {
-            plannerApi.getPlannerItems(
-                startDate,
-                endDate,
-                emptyList(),
-                null,
-                any()
+            repository.getPlannerItems(
+                startDate = startDate,
+                endDate = endDate,
+                contextCodes = emptyList(),
+                forceRefresh = false
             )
         }
-        assertEquals(false, restParamsSlot.captured.isForceReadFromNetwork)
-        assertEquals(true, restParamsSlot.captured.usePerPageQueryParam)
     }
 
     @Test
     fun `invoke uses forceNetwork parameter`() = runTest {
-        val dataResult = DataResult.Success(emptyList<PlannerItem>(), LinkHeaders())
-        val restParamsSlot = slot<RestParams>()
-
         coEvery {
-            plannerApi.getPlannerItems(any(), any(), any(), any(), capture(restParamsSlot))
-        } returns dataResult
+            repository.getPlannerItems(any(), any(), any(), any())
+        } returns DataResult.Success(emptyList())
 
-        useCase("2025-01-01", "2025-01-31", true)
+        useCase(
+            LoadPlannerItemsUseCase.Params(
+                startDate = "2025-01-01",
+                endDate = "2025-01-31",
+                forceNetwork = true
+            )
+        )
 
-        assertEquals(true, restParamsSlot.captured.isForceReadFromNetwork)
+        coVerify {
+            repository.getPlannerItems(
+                startDate = "2025-01-01",
+                endDate = "2025-01-31",
+                contextCodes = emptyList(),
+                forceRefresh = true
+            )
+        }
     }
 
     @Test
@@ -193,12 +219,17 @@ class LoadPlannerItemsUseCaseTest {
             createPlannerItem(id = 5L, type = PlannableType.PLANNER_NOTE),
             createPlannerItem(id = 6L, type = PlannableType.SUB_ASSIGNMENT)
         )
-        val dataResult = DataResult.Success(plannerItems, LinkHeaders())
         coEvery {
-            plannerApi.getPlannerItems(any(), any(), any(), any(), any())
-        } returns dataResult
+            repository.getPlannerItems(any(), any(), any(), any())
+        } returns DataResult.Success(plannerItems)
 
-        val result = useCase("2025-01-01", "2025-01-31", false)
+        val result = useCase(
+            LoadPlannerItemsUseCase.Params(
+                startDate = "2025-01-01",
+                endDate = "2025-01-31",
+                forceNetwork = false
+            )
+        )
 
         assertEquals(6, result.size)
         assertEquals(PlannableType.ASSIGNMENT, result[0].plannableType)

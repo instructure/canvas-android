@@ -20,16 +20,16 @@ import com.instructure.pandautils.domain.usecase.BaseUseCase
 import com.instructure.pandautils.features.todolist.ToDoListRepository
 import javax.inject.Inject
 
-data class UpdatePlannerOverrideParams(
-    val plannerOverrideId: Long,
-    val markedComplete: Boolean
-)
-
 class UpdatePlannerOverrideUseCase @Inject constructor(
     private val repository: ToDoListRepository
-) : BaseUseCase<UpdatePlannerOverrideParams, PlannerOverride>() {
+) : BaseUseCase<UpdatePlannerOverrideUseCase.Params, PlannerOverride>() {
 
-    override suspend fun execute(params: UpdatePlannerOverrideParams): PlannerOverride {
+    data class Params(
+        val plannerOverrideId: Long,
+        val markedComplete: Boolean
+    )
+
+    override suspend fun execute(params: Params): PlannerOverride {
         return repository.updatePlannerOverride(
             plannerOverrideId = params.plannerOverrideId,
             markedComplete = params.markedComplete

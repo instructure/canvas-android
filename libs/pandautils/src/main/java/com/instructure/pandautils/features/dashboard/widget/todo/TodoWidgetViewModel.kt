@@ -29,12 +29,9 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.calendar.CalendarStateMapper
 import com.instructure.pandautils.compose.composables.todo.ToDoItemUiState
 import com.instructure.pandautils.compose.composables.todo.ToDoStateMapper
-import com.instructure.pandautils.domain.usecase.courses.LoadAvailableCoursesParams
 import com.instructure.pandautils.domain.usecase.courses.LoadAvailableCoursesUseCase
-import com.instructure.pandautils.domain.usecase.planner.CreatePlannerOverrideParams
 import com.instructure.pandautils.domain.usecase.planner.CreatePlannerOverrideUseCase
 import com.instructure.pandautils.domain.usecase.planner.LoadPlannerItemsUseCase
-import com.instructure.pandautils.domain.usecase.planner.UpdatePlannerOverrideParams
 import com.instructure.pandautils.domain.usecase.planner.UpdatePlannerOverrideUseCase
 import com.instructure.pandautils.features.calendar.CalendarSharedEvents
 import com.instructure.pandautils.features.calendar.SharedCalendarAction
@@ -185,13 +182,12 @@ class TodoWidgetViewModel @Inject constructor(
 
     private fun onPageChanged(offset: Int) {
         if (offset != 0) {
-            if (pendingSelectedDay != null) {
+            pendingSelectedDay?.let { dayToSelect ->
                 // This is a page change animation triggered by jump to today
-                val dayToSelect = pendingSelectedDay!!
                 pendingSelectedDay = null
                 selectedDay = dayToSelect
                 _uiState.update { createNewUiState().copy(scrollToPageOffset = 0) }
-            } else {
+            } ?: {
                 selectedDay = selectedDay.plus(offset.toLong(), ChronoUnit.WEEKS)
                 _uiState.update { createNewUiState().copy(scrollToPageOffset = 0) }
             }
@@ -272,7 +268,7 @@ class TodoWidgetViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 // Load courses
-                val courses = loadAvailableCoursesUseCase(LoadAvailableCoursesParams(forceRefresh = refresh))
+                val courses = loadAvailableCoursesUseCase(LoadAvailableCoursesUseCase.Params(forceRefresh = refresh))
                 courseMap = courses.associateBy { it.id }
 
                 // Load planner items for visible weeks
@@ -319,9 +315,11 @@ class TodoWidgetViewModel @Inject constructor(
 
         return try {
             val result = loadPlannerItemsUseCase(
-                startDate = weekStart.atStartOfDay().toApiStringSafe(),
-                endDate = weekEnd.atTime(23, 59, 59).toApiStringSafe(),
-                forceNetwork = refresh
+                LoadPlannerItemsUseCase.Params(
+                    startDate = weekStart.atStartOfDay().toApiStringSafe(),
+                    endDate = weekEnd.atTime(23, 59, 59).toApiStringSafe(),
+                    forceNetwork = refresh
+                )
             )
 
             loadingDays.removeAll(daysInWeek)
@@ -489,14 +487,14 @@ class TodoWidgetViewModel @Inject constructor(
             // Update or create planner override
             val plannerOverrideResult = if (plannerItem.plannerOverride?.id != null) {
                 updatePlannerOverrideUseCase(
-                    UpdatePlannerOverrideParams(
+                    UpdatePlannerOverrideUseCase.Params(
                         plannerOverrideId = plannerItem.plannerOverride?.id.orDefault(),
                         markedComplete = newIsChecked
                     )
                 )
             } else {
                 createPlannerOverrideUseCase(
-                    CreatePlannerOverrideParams(
+                    CreatePlannerOverrideUseCase.Params(
                         plannableId = plannerItem.plannable.id,
                         plannableType = plannerItem.plannableType,
                         markedComplete = newIsChecked

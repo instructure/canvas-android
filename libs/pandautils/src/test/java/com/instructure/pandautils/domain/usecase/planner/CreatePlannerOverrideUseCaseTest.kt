@@ -59,7 +59,7 @@ class CreatePlannerOverrideUseCaseTest {
             repository.createPlannerOverride(plannableId, plannableType, true)
         } returns DataResult.Success(plannerOverride)
 
-        val params = CreatePlannerOverrideParams(
+        val params = CreatePlannerOverrideUseCase.Params(
             plannableId = plannableId,
             plannableType = plannableType,
             markedComplete = true
@@ -87,7 +87,7 @@ class CreatePlannerOverrideUseCaseTest {
             repository.createPlannerOverride(plannableId, plannableType, false)
         } returns DataResult.Success(plannerOverride)
 
-        val params = CreatePlannerOverrideParams(
+        val params = CreatePlannerOverrideUseCase.Params(
             plannableId = plannableId,
             plannableType = plannableType,
             markedComplete = false
@@ -115,7 +115,7 @@ class CreatePlannerOverrideUseCaseTest {
             repository.createPlannerOverride(plannableId, plannableType, true)
         } returns DataResult.Success(plannerOverride)
 
-        val params = CreatePlannerOverrideParams(
+        val params = CreatePlannerOverrideUseCase.Params(
             plannableId = plannableId,
             plannableType = plannableType,
             markedComplete = true
@@ -141,7 +141,7 @@ class CreatePlannerOverrideUseCaseTest {
             repository.createPlannerOverride(plannableId, plannableType, false)
         } returns DataResult.Success(plannerOverride)
 
-        val params = CreatePlannerOverrideParams(
+        val params = CreatePlannerOverrideUseCase.Params(
             plannableId = plannableId,
             plannableType = plannableType,
             markedComplete = false
@@ -167,7 +167,7 @@ class CreatePlannerOverrideUseCaseTest {
             repository.createPlannerOverride(plannableId, plannableType, true)
         } returns DataResult.Success(plannerOverride)
 
-        val params = CreatePlannerOverrideParams(
+        val params = CreatePlannerOverrideUseCase.Params(
             plannableId = plannableId,
             plannableType = plannableType,
             markedComplete = true

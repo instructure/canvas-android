@@ -59,7 +59,7 @@ class UpdatePlannerOverrideUseCaseTest {
             repository.updatePlannerOverride(plannerOverrideId, true)
         } returns DataResult.Success(plannerOverride)
 
-        val params = UpdatePlannerOverrideParams(
+        val params = UpdatePlannerOverrideUseCase.Params(
             plannerOverrideId = plannerOverrideId,
             markedComplete = true
         )
@@ -83,7 +83,7 @@ class UpdatePlannerOverrideUseCaseTest {
             repository.updatePlannerOverride(plannerOverrideId, false)
         } returns DataResult.Success(plannerOverride)
 
-        val params = UpdatePlannerOverrideParams(
+        val params = UpdatePlannerOverrideUseCase.Params(
             plannerOverrideId = plannerOverrideId,
             markedComplete = false
         )
@@ -119,12 +119,12 @@ class UpdatePlannerOverrideUseCaseTest {
             repository.updatePlannerOverride(plannerOverrideId2, false)
         } returns DataResult.Success(plannerOverride2)
 
-        val params1 = UpdatePlannerOverrideParams(plannerOverrideId1, true)
+        val params1 = UpdatePlannerOverrideUseCase.Params(plannerOverrideId1, true)
         val result1 = useCase(params1)
         assertEquals(plannerOverrideId1, result1.id)
         assertTrue(result1.markedComplete)
 
-        val params2 = UpdatePlannerOverrideParams(plannerOverrideId2, false)
+        val params2 = UpdatePlannerOverrideUseCase.Params(plannerOverrideId2, false)
         val result2 = useCase(params2)
         assertEquals(plannerOverrideId2, result2.id)
         assertFalse(result2.markedComplete)
@@ -147,7 +147,7 @@ class UpdatePlannerOverrideUseCaseTest {
             repository.updatePlannerOverride(plannerOverrideId, true)
         } returns DataResult.Success(plannerOverride)
 
-        val params = UpdatePlannerOverrideParams(
+        val params = UpdatePlannerOverrideUseCase.Params(
             plannerOverrideId = plannerOverrideId,
             markedComplete = true
         )
@@ -179,12 +179,12 @@ class UpdatePlannerOverrideUseCaseTest {
         } returns DataResult.Success(incompletedOverride)
 
         // Mark as complete
-        val paramsComplete = UpdatePlannerOverrideParams(plannerOverrideId, true)
+        val paramsComplete = UpdatePlannerOverrideUseCase.Params(plannerOverrideId, true)
         val resultComplete = useCase(paramsComplete)
         assertTrue(resultComplete.markedComplete)
 
         // Mark as incomplete
-        val paramsIncomplete = UpdatePlannerOverrideParams(plannerOverrideId, false)
+        val paramsIncomplete = UpdatePlannerOverrideUseCase.Params(plannerOverrideId, false)
         val resultIncomplete = useCase(paramsIncomplete)
         assertFalse(resultIncomplete.markedComplete)
 

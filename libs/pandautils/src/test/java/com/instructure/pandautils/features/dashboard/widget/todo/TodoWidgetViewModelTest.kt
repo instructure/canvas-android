@@ -113,7 +113,7 @@ class TodoWidgetViewModelTest {
         every { calendarSharedEvents.events } returns sharedEventsFlow
         coEvery { observeGlobalConfigUseCase(Unit) } returns flowOf(GlobalConfig())
         coEvery { loadAvailableCoursesUseCase(any()) } returns emptyList()
-        coEvery { loadPlannerItemsUseCase(any(), any(), any()) } returns emptyList()
+        coEvery { loadPlannerItemsUseCase(any()) } returns emptyList()
         every { calendarStateMapper.createBodyUiState(any(), any(), any(), any(), any()) } returns CalendarBodyUiState(
             previousPage = CalendarPageUiState(emptyList(), ""),
             currentPage = CalendarPageUiState(emptyList(), ""),
@@ -161,13 +161,15 @@ class TodoWidgetViewModelTest {
         val currentWeekEnd = currentWeekStart.plusDays(6)
 
         // Catch-all first, then specific mock (last one wins in MockK)
-        coEvery { loadPlannerItemsUseCase(any(), any(), any()) } returns emptyList()
+        coEvery { loadPlannerItemsUseCase(any()) } returns emptyList()
 
         coEvery {
             loadPlannerItemsUseCase(
-                currentWeekStart.atStartOfDay().toApiStringSafe(),
-                currentWeekEnd.atTime(23, 59, 59).toApiStringSafe(),
-                any()
+                LoadPlannerItemsUseCase.Params(
+                    startDate = currentWeekStart.atStartOfDay().toApiStringSafe(),
+                    endDate = currentWeekEnd.atTime(23, 59, 59).toApiStringSafe(),
+                    forceNetwork = any()
+                )
             )
         } returns listOf(plannerItem1, plannerItem2)
 
@@ -192,13 +194,15 @@ class TodoWidgetViewModelTest {
         val currentWeekEnd = currentWeekStart.plusDays(6)
 
         // Catch-all first, then specific mock (last one wins in MockK)
-        coEvery { loadPlannerItemsUseCase(any(), any(), any()) } returns emptyList()
+        coEvery { loadPlannerItemsUseCase(any()) } returns emptyList()
 
         coEvery {
             loadPlannerItemsUseCase(
-                currentWeekStart.atStartOfDay().toApiStringSafe(),
-                currentWeekEnd.atTime(23, 59, 59).toApiStringSafe(),
-                any()
+                LoadPlannerItemsUseCase.Params(
+                    startDate = currentWeekStart.atStartOfDay().toApiStringSafe(),
+                    endDate = currentWeekEnd.atTime(23, 59, 59).toApiStringSafe(),
+                    forceNetwork = any()
+                )
             )
         } throws Exception("Network error")
 
@@ -212,7 +216,7 @@ class TodoWidgetViewModelTest {
 
     @Test
     fun `data fetching shows empty state when no items`() = runTest {
-        coEvery { loadPlannerItemsUseCase(any(), any(), any()) } returns emptyList()
+        coEvery { loadPlannerItemsUseCase(any()) } returns emptyList()
 
         viewModel = createViewModel()
         advanceUntilIdle()
@@ -300,7 +304,7 @@ class TodoWidgetViewModelTest {
 
         val newDay = viewModel.uiState.value.selectedDay
         assertEquals(initialDay.plusWeeks(1), newDay)
-        coVerify(atLeast = 1) { loadPlannerItemsUseCase(any(), any(), any()) }
+        coVerify(atLeast = 1) { loadPlannerItemsUseCase(any()) }
     }
 
     @Test
@@ -340,7 +344,7 @@ class TodoWidgetViewModelTest {
             markedComplete = true
         )
 
-        coEvery { loadPlannerItemsUseCase(any(), any(), any()) } returns listOf(plannerItem)
+        coEvery { loadPlannerItemsUseCase(any()) } returns listOf(plannerItem)
         coEvery { createPlannerOverrideUseCase(any()) } returns plannerOverride
         every { toDoStateMapper.mapToUiState(any(), any(), any(), any()) } answers {
             createToDoItemUiState(firstArg(), thirdArg(), arg(3))
@@ -361,7 +365,7 @@ class TodoWidgetViewModelTest {
     @Test
     fun `handleSwipeToDone when offline shows offline message`() = runTest {
         val plannerItem = createPlannerItem(id = 1L, title = "Test Item")
-        coEvery { loadPlannerItemsUseCase(any(), any(), any()) } returns listOf(plannerItem)
+        coEvery { loadPlannerItemsUseCase(any()) } returns listOf(plannerItem)
         every { networkStateProvider.isOnline() } returns false
         every { toDoStateMapper.mapToUiState(any(), any(), any(), any()) } answers {
             createToDoItemUiState(firstArg(), thirdArg(), arg(3))
@@ -381,7 +385,7 @@ class TodoWidgetViewModelTest {
     @Test
     fun `handleCheckboxToggle when offline shows offline message`() = runTest {
         val plannerItem = createPlannerItem(id = 1L, title = "Test Item")
-        coEvery { loadPlannerItemsUseCase(any(), any(), any()) } returns listOf(plannerItem)
+        coEvery { loadPlannerItemsUseCase(any()) } returns listOf(plannerItem)
         every { networkStateProvider.isOnline() } returns false
         every { toDoStateMapper.mapToUiState(any(), any(), any(), any()) } answers {
             createToDoItemUiState(firstArg(), thirdArg(), arg(3))
@@ -408,7 +412,7 @@ class TodoWidgetViewModelTest {
             markedComplete = true
         )
 
-        coEvery { loadPlannerItemsUseCase(any(), any(), any()) } returns listOf(plannerItem)
+        coEvery { loadPlannerItemsUseCase(any()) } returns listOf(plannerItem)
         coEvery { createPlannerOverrideUseCase(any()) } returns plannerOverride
         coEvery { updatePlannerOverrideUseCase(any()) } returns plannerOverride.copy(markedComplete = false)
         every { toDoStateMapper.mapToUiState(any(), any(), any(), any()) } answers {
@@ -439,7 +443,7 @@ class TodoWidgetViewModelTest {
             markedComplete = true
         )
 
-        coEvery { loadPlannerItemsUseCase(any(), any(), any()) } returns listOf(plannerItem)
+        coEvery { loadPlannerItemsUseCase(any()) } returns listOf(plannerItem)
         coEvery { createPlannerOverrideUseCase(any()) } returns plannerOverride
         every { toDoStateMapper.mapToUiState(any(), any(), any(), any()) } answers {
             createToDoItemUiState(firstArg(), thirdArg(), arg(3))
@@ -494,7 +498,7 @@ class TodoWidgetViewModelTest {
         viewModel.uiState.value.onRefresh()
         advanceUntilIdle()
 
-        coVerify(atLeast = 1) { loadPlannerItemsUseCase(any(), any(), forceNetwork = true) }
+        coVerify(atLeast = 1) { loadPlannerItemsUseCase(match { it.forceNetwork }) }
     }
 
     @Test
@@ -518,7 +522,7 @@ class TodoWidgetViewModelTest {
         sharedEventsFlow.emit(SharedCalendarAction.RefreshToDoList)
         advanceUntilIdle()
 
-        coVerify(atLeast = 1) { loadPlannerItemsUseCase(any(), any(), forceNetwork = true) }
+        coVerify(atLeast = 1) { loadPlannerItemsUseCase(match { it.forceNetwork }) }
     }
 
     @Test
@@ -538,26 +542,32 @@ class TodoWidgetViewModelTest {
         // Mock for the current week containing 2025-02-15
         coEvery {
             loadPlannerItemsUseCase(
-                currentWeekStart.atStartOfDay().toApiStringSafe(),
-                currentWeekEnd.atTime(23, 59, 59).toApiStringSafe(),
-                any()
+                LoadPlannerItemsUseCase.Params(
+                    startDate = currentWeekStart.atStartOfDay().toApiStringSafe(),
+                    endDate = currentWeekEnd.atTime(23, 59, 59).toApiStringSafe(),
+                    forceNetwork = any()
+                )
             )
         } returns listOf(completedItem, incompleteItem)
 
         // Mock for previous and next weeks to return empty
         coEvery {
             loadPlannerItemsUseCase(
-                previousWeekStart.atStartOfDay().toApiStringSafe(),
-                previousWeekEnd.atTime(23, 59, 59).toApiStringSafe(),
-                any()
+                LoadPlannerItemsUseCase.Params(
+                    startDate = previousWeekStart.atStartOfDay().toApiStringSafe(),
+                    endDate = previousWeekEnd.atTime(23, 59, 59).toApiStringSafe(),
+                    forceNetwork = any()
+                )
             )
         } returns emptyList()
 
         coEvery {
             loadPlannerItemsUseCase(
-                nextWeekStart.atStartOfDay().toApiStringSafe(),
-                nextWeekEnd.atTime(23, 59, 59).toApiStringSafe(),
-                any()
+                LoadPlannerItemsUseCase.Params(
+                    startDate = nextWeekStart.atStartOfDay().toApiStringSafe(),
+                    endDate = nextWeekEnd.atTime(23, 59, 59).toApiStringSafe(),
+                    forceNetwork = any()
+                )
             )
         } returns emptyList()
 

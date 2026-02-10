@@ -21,15 +21,15 @@ import com.instructure.pandautils.data.repository.course.CourseRepository
 import com.instructure.pandautils.domain.usecase.BaseUseCase
 import javax.inject.Inject
 
-data class LoadAvailableCoursesParams(
-    val forceRefresh: Boolean = false
-)
-
 class LoadAvailableCoursesUseCase @Inject constructor(
     private val courseRepository: CourseRepository
-) : BaseUseCase<LoadAvailableCoursesParams, List<Course>>() {
+) : BaseUseCase<LoadAvailableCoursesUseCase.Params, List<Course>>() {
 
-    override suspend fun execute(params: LoadAvailableCoursesParams): List<Course> {
+    data class Params(
+        val forceRefresh: Boolean = false
+    )
+
+    override suspend fun execute(params: Params): List<Course> {
         val courses = courseRepository.getCourses(params.forceRefresh).dataOrThrow
 
         // Filter courses - exclude access restricted and invited courses
