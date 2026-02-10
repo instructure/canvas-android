@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.utils.pageview.PandataInfo
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardRepository
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardRouter
 import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
+import com.instructure.pandautils.features.dashboard.widget.conferences.ConferencesWidgetRouter
 import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidgetBehavior
 import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidgetRouter
 import com.instructure.pandautils.features.dashboard.widget.forecast.ForecastWidgetRouter
@@ -144,6 +145,11 @@ class DefaultBindingsModule {
 
     @Provides
     fun provideForecastWidgetRouter(): ForecastWidgetRouter {
+        throw NotImplementedError()
+    }
+
+    @Provides
+    fun provideConferencesWidgetRouter(): ConferencesWidgetRouter {
         throw NotImplementedError()
     }
 }

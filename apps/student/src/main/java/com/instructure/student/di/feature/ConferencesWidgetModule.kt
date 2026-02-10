@@ -14,20 +14,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.pandautils.features.dashboard.widget
+package com.instructure.student.di.feature
 
-data class WidgetMetadata(
-    val id: String,
-    val position: Int,
-    val isVisible: Boolean,
-    val isEditable: Boolean = true
-) {
-    companion object {
-        const val WIDGET_ID_CONFERENCES = "conferences"
-        const val WIDGET_ID_COURSE_INVITATIONS = "course_invitations"
-        const val WIDGET_ID_INSTITUTIONAL_ANNOUNCEMENTS = "institutional_announcements"
-        const val WIDGET_ID_WELCOME = "welcome"
-        const val WIDGET_ID_COURSES = "courses"
-        const val WIDGET_ID_FORECAST = "forecast"
+import com.instructure.pandautils.features.dashboard.widget.conferences.ConferencesWidgetRouter
+import com.instructure.student.features.dashboard.widget.conferences.StudentConferencesWidgetRouter
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
+
+@Module
+@InstallIn(ViewModelComponent::class)
+class ConferencesWidgetModule {
+
+    @Provides
+    fun provideConferencesWidgetRouter(): ConferencesWidgetRouter {
+        return StudentConferencesWidgetRouter()
     }
 }
