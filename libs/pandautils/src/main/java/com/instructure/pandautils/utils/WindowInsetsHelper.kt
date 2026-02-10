@@ -130,8 +130,15 @@ fun View.applyBottomSystemBarInsetsWithHeight() {
     }
 }
 
+private val TAG_ORIGINAL_BOTTOM_MARGIN = "originalBottomMargin".hashCode()
+
 fun View.applyBottomSystemBarMargin() {
-    val originalBottomMargin = (layoutParams as? android.view.ViewGroup.MarginLayoutParams)?.bottomMargin ?: 0
+    // Only capture original margin once to prevent accumulation on multiple calls
+    val originalBottomMargin = getTag(TAG_ORIGINAL_BOTTOM_MARGIN) as? Int ?: run {
+        val margin = (layoutParams as? android.view.ViewGroup.MarginLayoutParams)?.bottomMargin ?: 0
+        setTag(TAG_ORIGINAL_BOTTOM_MARGIN, margin)
+        margin
+    }
     ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
         val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
         val layoutParams = view.layoutParams as? android.view.ViewGroup.MarginLayoutParams
@@ -145,9 +152,18 @@ fun View.applyBottomSystemBarMargin() {
     }
 }
 
+private val TAG_ORIGINAL_BOTTOM_RIGHT_MARGINS = "originalBottomRightMargins".hashCode()
+
 fun View.applyBottomAndRightSystemBarMargin() {
-    val originalBottomMargin = (layoutParams as? android.view.ViewGroup.MarginLayoutParams)?.bottomMargin ?: 0
-    val originalRightMargin = (layoutParams as? android.view.ViewGroup.MarginLayoutParams)?.rightMargin ?: 0
+    // Only capture original margins once to prevent accumulation on multiple calls
+    val originalMargins = getTag(TAG_ORIGINAL_BOTTOM_RIGHT_MARGINS) as? Pair<Int, Int> ?: run {
+        val params = layoutParams as? android.view.ViewGroup.MarginLayoutParams
+        val margins = Pair(params?.bottomMargin ?: 0, params?.rightMargin ?: 0)
+        setTag(TAG_ORIGINAL_BOTTOM_RIGHT_MARGINS, margins)
+        margins
+    }
+    val (originalBottomMargin, originalRightMargin) = originalMargins
+
     ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
         val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
         val layoutParams = view.layoutParams as? android.view.ViewGroup.MarginLayoutParams
@@ -173,9 +189,17 @@ fun View.applyBottomAndRightSystemBarMargin() {
     }
 }
 
+private val TAG_ORIGINAL_BOTTOM_RIGHT_PADDING = "originalBottomRightPadding".hashCode()
+
 fun View.applyBottomAndRightSystemBarPadding() {
-    val originalBottomPadding = paddingBottom
-    val originalRightPadding = paddingRight
+    // Only capture original padding once to prevent accumulation on multiple calls
+    val originalPadding = getTag(TAG_ORIGINAL_BOTTOM_RIGHT_PADDING) as? Pair<Int, Int> ?: run {
+        val padding = Pair(paddingBottom, paddingRight)
+        setTag(TAG_ORIGINAL_BOTTOM_RIGHT_PADDING, padding)
+        padding
+    }
+    val (originalBottomPadding, originalRightPadding) = originalPadding
+
     ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
         val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
         view.updatePadding(
