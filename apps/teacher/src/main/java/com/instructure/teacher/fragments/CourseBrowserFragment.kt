@@ -212,10 +212,9 @@ class CourseBrowserFragment : BaseSyncFragment<
 
         appBarLayout.setBackgroundColor(presenter.canvasContext.color)
 
-        // Handle top insets based on color overlay setting
-        // Apply padding instead of margin so colored background extends behind status bar
+        // Handle insets based on color overlay setting
         if (overlayToolbar.isVisible) {
-            // Color overlay enabled: apply top padding to AppBarLayout
+            // Color overlay enabled: apply padding to AppBarLayout
             ViewCompat.setOnApplyWindowInsetsListener(appBarLayout) { view, insets ->
                 val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
                 view.setPadding(view.paddingLeft, systemBars.top, view.paddingRight, view.paddingBottom)
@@ -223,13 +222,28 @@ class CourseBrowserFragment : BaseSyncFragment<
             }
             ViewCompat.requestApplyInsets(appBarLayout)
         } else {
-            // Color overlay disabled: apply top padding to noOverlayToolbar
+            // Color overlay disabled: Update toolbar height and add padding
             ViewCompat.setOnApplyWindowInsetsListener(noOverlayToolbar) { view, insets ->
                 val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+                // Update toolbar's actual height to accommodate status bar
+                val layoutParams = view.layoutParams
+                if (layoutParams != null) {
+                    val currentHeight = if (layoutParams.height > 0) layoutParams.height else view.height
+                    layoutParams.height = currentHeight + systemBars.top
+                    view.layoutParams = layoutParams
+                }
+
+                // Add padding to push content down
                 view.setPadding(view.paddingLeft, systemBars.top, view.paddingRight, view.paddingBottom)
                 insets
             }
             ViewCompat.requestApplyInsets(noOverlayToolbar)
+
+            // Make AppBarLayout extend behind status bar
+            ViewCompat.setOnApplyWindowInsetsListener(appBarLayout) { view, insets ->
+                insets // Don't add padding, just extend background
+            }
         }
 
         toolbar.setupBackButton(this@CourseBrowserFragment)
