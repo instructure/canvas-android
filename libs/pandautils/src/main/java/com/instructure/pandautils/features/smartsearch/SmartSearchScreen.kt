@@ -40,7 +40,6 @@ import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -190,8 +189,8 @@ private fun SmartSearchScreenContent(
                     modifier = Modifier
                         .testTag("results")
                         .fillMaxSize()
-                        .padding(padding)
                         .background(colorResource(R.color.backgroundLightest))
+                        .padding(padding)
                 ) {
                     item {
                         CourseHeader(uiState.canvasContext.name.orEmpty())

@@ -24,6 +24,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.models.CanvasContext
@@ -38,7 +40,6 @@ import com.instructure.pandautils.utils.NullableParcelableArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.announceAccessibilityText
-import com.instructure.pandautils.utils.applyBottomSystemBarInsetsWithHeight
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.argsWithContext
 import com.instructure.pandautils.utils.items
@@ -143,7 +144,13 @@ class OfflineContentFragment : BaseCanvasFragment(), FragmentInteractions {
             updateMenuText(data.selectedCount)
         }
 
-        binding.syncButton.applyBottomSystemBarInsetsWithHeight()
+        ViewCompat.setOnApplyWindowInsetsListener(binding.syncButton) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val layoutParams = view.layoutParams as? ViewGroup.MarginLayoutParams
+            layoutParams?.bottomMargin = systemBars.bottom
+            view.layoutParams = layoutParams
+            insets
+        }
     }
 
     override fun getFragment(): Fragment = this

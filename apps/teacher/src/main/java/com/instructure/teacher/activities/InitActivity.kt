@@ -278,6 +278,30 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
     override fun onResume() {
         super.onResume()
         webViewAuthenticator.authenticateWebViews(lifecycleScope, this)
+        updateStatusBarAppearanceForDrawer()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        updateStatusBarAppearanceForDrawer()
+    }
+
+    private fun updateStatusBarAppearanceForDrawer() {
+        // Check if drawer is open and update status bar appearance accordingly (handles config changes)
+        // Post to ensure drawer state is checked after current layout pass
+        binding.drawerLayout.post {
+            if (binding.drawerLayout.isDrawerOpen(GravityCompat.START) && !ColorKeeper.darkTheme) {
+                window?.let { window ->
+                    val controller = ViewCompat.getWindowInsetsController(window.decorView)
+                    controller?.isAppearanceLightStatusBars = true
+                }
+            } else if (!ColorKeeper.darkTheme) {
+                window?.let { window ->
+                    val controller = ViewCompat.getWindowInsetsController(window.decorView)
+                    controller?.isAppearanceLightStatusBars = false
+                }
+            }
+        }
     }
 
     private fun setupWindowInsets() = with(binding) {
@@ -509,6 +533,24 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         binding.drawerLayout.addDrawerListener(object : SimpleDrawerListener() {
             override fun onDrawerOpened(drawerView: View) {
                 setCloseDrawerVisibility()
+                // Set status bar icons to dark only in light mode (for visibility on white drawer background)
+                if (!ColorKeeper.darkTheme) {
+                    window?.let { window ->
+                        val controller = ViewCompat.getWindowInsetsController(window.decorView)
+                        controller?.isAppearanceLightStatusBars = true
+                    }
+                }
+            }
+
+            override fun onDrawerClosed(drawerView: View) {
+                super.onDrawerClosed(drawerView)
+                // Restore status bar icons to light only in light mode (for dark toolbar)
+                if (!ColorKeeper.darkTheme) {
+                    window?.let { window ->
+                        val controller = ViewCompat.getWindowInsetsController(window.decorView)
+                        controller?.isAppearanceLightStatusBars = false
+                    }
+                }
             }
         })
 
