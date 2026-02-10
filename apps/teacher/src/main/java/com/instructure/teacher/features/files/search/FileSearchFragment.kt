@@ -37,6 +37,7 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.NullableParcelableArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyDisplayCutoutInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getDrawableCompat
@@ -115,6 +116,7 @@ class FileSearchFragment : BaseSyncFragment<
     }
 
     private fun setupWindowInsets() = with(binding) {
+        root.applyDisplayCutoutInsets()
         searchHeader.applyTopSystemBarInsets()
         ViewCompat.setOnApplyWindowInsetsListener(fileSearchRecyclerView) { view, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())

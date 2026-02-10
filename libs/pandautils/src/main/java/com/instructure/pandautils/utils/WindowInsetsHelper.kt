@@ -240,3 +240,20 @@ fun View.doOnApplyWindowInsets(block: (view: View, insets: Insets) -> WindowInse
         block(view, systemBars)
     }
 }
+
+/**
+ * Applies horizontal padding to prevent content from extending behind display cutouts (e.g., camera cutout).
+ * This is useful for constraining content width in landscape mode where the cutout may be on the sides.
+ * Also helps constrain keyboard width to match the content area.
+ */
+fun View.applyDisplayCutoutInsets() {
+    ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
+        val displayCutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
+        view.updatePadding(left = displayCutout.left, right = displayCutout.right)
+        insets
+    }
+    // Request insets to be dispatched immediately if view is attached
+    if (isAttachedToWindow) {
+        ViewCompat.requestApplyInsets(this)
+    }
+}

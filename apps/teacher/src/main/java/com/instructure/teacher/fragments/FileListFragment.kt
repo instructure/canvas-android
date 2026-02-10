@@ -50,10 +50,9 @@ import com.instructure.pandautils.utils.FileUploadEvent
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.applyBottomAndRightSystemBarPadding
 import com.instructure.pandautils.utils.applyBottomSystemBarInsets
 import com.instructure.pandautils.utils.applyBottomSystemBarMargin
-import com.instructure.pandautils.utils.applySystemBarInsets
+import com.instructure.pandautils.utils.applyDisplayCutoutInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getDrawableCompat
@@ -227,6 +226,7 @@ class FileListFragment : BaseSyncFragment<
 
         setupToolbar()
         setupViews()
+        setupWindowInsets()
     }
 
     override fun createAdapter(): FileListAdapter {
@@ -350,6 +350,10 @@ class FileListFragment : BaseSyncFragment<
                 }
             }
         })
+    }
+
+    private fun setupWindowInsets() = with(binding) {
+        fileListPage.applyDisplayCutoutInsets()
     }
 
     override fun workInfoLiveDataCallback(uuid: UUID?, workInfoLiveData: LiveData<WorkInfo?>) {
