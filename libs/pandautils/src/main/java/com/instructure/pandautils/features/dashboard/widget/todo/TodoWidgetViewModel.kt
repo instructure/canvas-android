@@ -187,7 +187,7 @@ class TodoWidgetViewModel @Inject constructor(
                 pendingSelectedDay = null
                 selectedDay = dayToSelect
                 _uiState.update { createNewUiState().copy(scrollToPageOffset = 0) }
-            } ?: {
+            } ?: run {
                 selectedDay = selectedDay.plus(offset.toLong(), ChronoUnit.WEEKS)
                 _uiState.update { createNewUiState().copy(scrollToPageOffset = 0) }
             }

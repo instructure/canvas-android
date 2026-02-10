@@ -165,11 +165,10 @@ class TodoWidgetViewModelTest {
 
         coEvery {
             loadPlannerItemsUseCase(
-                LoadPlannerItemsUseCase.Params(
-                    startDate = currentWeekStart.atStartOfDay().toApiStringSafe(),
-                    endDate = currentWeekEnd.atTime(23, 59, 59).toApiStringSafe(),
-                    forceNetwork = any()
-                )
+                match {
+                    it.startDate == currentWeekStart.atStartOfDay().toApiStringSafe() &&
+                    it.endDate == currentWeekEnd.atTime(23, 59, 59).toApiStringSafe()
+                }
             )
         } returns listOf(plannerItem1, plannerItem2)
 
@@ -198,11 +197,10 @@ class TodoWidgetViewModelTest {
 
         coEvery {
             loadPlannerItemsUseCase(
-                LoadPlannerItemsUseCase.Params(
-                    startDate = currentWeekStart.atStartOfDay().toApiStringSafe(),
-                    endDate = currentWeekEnd.atTime(23, 59, 59).toApiStringSafe(),
-                    forceNetwork = any()
-                )
+                match {
+                    it.startDate == currentWeekStart.atStartOfDay().toApiStringSafe() &&
+                    it.endDate == currentWeekEnd.atTime(23, 59, 59).toApiStringSafe()
+                }
             )
         } throws Exception("Network error")
 
@@ -542,32 +540,29 @@ class TodoWidgetViewModelTest {
         // Mock for the current week containing 2025-02-15
         coEvery {
             loadPlannerItemsUseCase(
-                LoadPlannerItemsUseCase.Params(
-                    startDate = currentWeekStart.atStartOfDay().toApiStringSafe(),
-                    endDate = currentWeekEnd.atTime(23, 59, 59).toApiStringSafe(),
-                    forceNetwork = any()
-                )
+                match {
+                    it.startDate == currentWeekStart.atStartOfDay().toApiStringSafe() &&
+                    it.endDate == currentWeekEnd.atTime(23, 59, 59).toApiStringSafe()
+                }
             )
         } returns listOf(completedItem, incompleteItem)
 
         // Mock for previous and next weeks to return empty
         coEvery {
             loadPlannerItemsUseCase(
-                LoadPlannerItemsUseCase.Params(
-                    startDate = previousWeekStart.atStartOfDay().toApiStringSafe(),
-                    endDate = previousWeekEnd.atTime(23, 59, 59).toApiStringSafe(),
-                    forceNetwork = any()
-                )
+                match {
+                    it.startDate == previousWeekStart.atStartOfDay().toApiStringSafe() &&
+                    it.endDate == previousWeekEnd.atTime(23, 59, 59).toApiStringSafe()
+                }
             )
         } returns emptyList()
 
         coEvery {
             loadPlannerItemsUseCase(
-                LoadPlannerItemsUseCase.Params(
-                    startDate = nextWeekStart.atStartOfDay().toApiStringSafe(),
-                    endDate = nextWeekEnd.atTime(23, 59, 59).toApiStringSafe(),
-                    forceNetwork = any()
-                )
+                match {
+                    it.startDate == nextWeekStart.atStartOfDay().toApiStringSafe() &&
+                    it.endDate == nextWeekEnd.atTime(23, 59, 59).toApiStringSafe()
+                }
             )
         } returns emptyList()
 
