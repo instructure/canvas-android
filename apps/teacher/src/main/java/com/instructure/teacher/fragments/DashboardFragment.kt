@@ -23,6 +23,9 @@ import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.MotionEvent.ACTION_CANCEL
 import android.view.View
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.GridLayoutManager
@@ -43,6 +46,7 @@ import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.Utils
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.fadeAnimationWithAction
 import com.instructure.pandautils.utils.getDrawableCompat
 import com.instructure.pandautils.utils.requestAccessibilityFocus
@@ -160,6 +164,16 @@ class DashboardFragment : BaseSyncFragment<Course, DashboardPresenter, CoursesVi
         courseRecyclerView.setPaddingRelative(padding, paddingTop, padding, padding)
         courseRecyclerView.clipToPadding = false
 
+        // Apply bottom insets to RecyclerView
+        ViewCompat.setOnApplyWindowInsetsListener(courseRecyclerView) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.updatePadding(bottom = padding + systemBars.bottom)
+            insets
+        }
+        if (courseRecyclerView.isAttachedToWindow) {
+            ViewCompat.requestApplyInsets(courseRecyclerView)
+        }
+
         emptyCoursesView.onClickAddCourses { routeEditDashboard() }
         setupHeader()
 
@@ -182,6 +196,7 @@ class DashboardFragment : BaseSyncFragment<Course, DashboardPresenter, CoursesVi
     }
 
     private fun setupToolbar() = with(binding) {
+        toolbar.applyTopSystemBarInsets()
         toolbar.setupMenu(R.menu.courses_fragment, menuItemCallback)
 
         val dashboardLayoutMenuItem = toolbar.menu.findItem(R.id.menu_dashboard_cards)

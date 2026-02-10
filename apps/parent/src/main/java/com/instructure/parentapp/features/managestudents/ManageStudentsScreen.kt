@@ -21,6 +21,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,7 +37,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
@@ -67,6 +67,7 @@ import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
+import com.instructure.pandautils.compose.composables.CanvasScaffold
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
@@ -82,7 +83,7 @@ internal fun ManageStudentsScreen(
     modifier: Modifier = Modifier
 ) {
     CanvasTheme {
-        Scaffold(
+        CanvasScaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
             topBar = {
                 CanvasThemedAppBar(
@@ -117,9 +118,8 @@ internal fun ManageStudentsScreen(
                     StudentListContent(
                         uiState = uiState,
                         actionHandler = actionHandler,
-                        modifier = Modifier
-                            .padding(padding)
-                            .fillMaxSize()
+                        scaffoldPadding = padding,
+                        modifier = Modifier.fillMaxSize()
                     )
                 }
             },
@@ -148,7 +148,8 @@ internal fun ManageStudentsScreen(
 private fun StudentListContent(
     uiState: ManageStudentsUiState,
     actionHandler: (ManageStudentsAction) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    scaffoldPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     val pullRefreshState = rememberPullRefreshState(
         refreshing = uiState.isLoading,
@@ -177,7 +178,8 @@ private fun StudentListContent(
         modifier = modifier.pullRefresh(pullRefreshState)
     ) {
         LazyColumn(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = scaffoldPadding
         ) {
             items(uiState.studentListItems) {
                 StudentListItem(it, actionHandler)

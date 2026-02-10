@@ -33,7 +33,6 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -44,7 +43,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.NavHostController
@@ -66,8 +64,6 @@ import com.instructure.horizon.horizonui.molecules.StatusChipState
 import com.instructure.horizon.horizonui.organisms.scaffolds.HorizonScaffold
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
-import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.isPreviousDay
 import com.instructure.pandautils.utils.isSameDay
 import com.instructure.pandautils.utils.isSameWeek
@@ -81,12 +77,8 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotificationScreen(state: NotificationUiState, navController: NavHostController) {
-    val activity = LocalContext.current.getActivityOrNull()
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
-    LaunchedEffect(Unit) {
-        if (activity != null) ViewStyler.setStatusBarColor(activity, ContextCompat.getColor(activity, R.color.surface_pagePrimary))
-    }
 
     HorizonScaffold(
         title = stringResource(R.string.notificationsTitle),

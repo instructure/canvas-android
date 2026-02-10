@@ -33,6 +33,8 @@ import android.view.ViewGroup
 import android.webkit.WebView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.collectAsState
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.snackbar.Snackbar
@@ -59,6 +61,8 @@ import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.PermissionUtils
+import com.instructure.pandautils.utils.applyBottomSystemBarMargin
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.utils.needsPermissions
 import com.instructure.pandautils.utils.orDefault
@@ -127,6 +131,7 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
 
     override fun applyTheme() {
         binding?.toolbar?.apply {
+            applyTopSystemBarInsets()
             setupAsBackButton {
                 activity?.onBackPressed()
             }
@@ -194,6 +199,7 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
                 ) { options ->
                     assignmentDetailsRouter.navigateToSendMessage(requireActivity(), options)
                 }
+                binding?.submitButton?.applyBottomSystemBarMargin()
             }
         }
     }
@@ -343,6 +349,26 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
     }
 
     private fun setupDescriptionView() {
+        // Apply bottom insets to the scroll content container instead of individual views
+        // to ensure proper padding in portrait mode for all content (including quizzes)
+        binding?.scrollView?.let { scrollView ->
+            val scrollContent = scrollView.getChildAt(0)
+            scrollContent?.let {
+                ViewCompat.setOnApplyWindowInsetsListener(it) { view, windowInsets ->
+                    val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+                    val configuration = resources.configuration
+                    val isPortrait = configuration.orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT
+
+                    if (isPortrait) {
+                        view.setPadding(view.paddingLeft, view.paddingTop, view.paddingRight, insets.bottom)
+                    } else {
+                        view.setPadding(view.paddingLeft, view.paddingTop, view.paddingRight, 0)
+                    }
+                    windowInsets
+                }
+                ViewCompat.requestApplyInsets(scrollContent)
+            }
+        }
         binding?.descriptionWebViewWrapper?.webView?.addVideoClient(requireActivity())
         binding?.descriptionWebViewWrapper?.webView?.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {

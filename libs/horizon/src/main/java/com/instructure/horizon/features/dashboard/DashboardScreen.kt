@@ -30,6 +30,7 @@ import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -90,12 +91,10 @@ import com.instructure.horizon.horizonui.molecules.BadgeType
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.organisms.AnimatedHorizontalPager
-import com.instructure.horizon.horizonui.organisms.CollapsableHeaderScreen
+import com.instructure.horizon.horizonui.organisms.scaffolds.CollapsableHeaderScreen
 import com.instructure.horizon.navigation.MainNavigationRoute
+import com.instructure.horizon.util.zeroScreenInsets
 import com.instructure.pandautils.compose.modifiers.conditional
-import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.getActivityOrNull
 import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
@@ -114,14 +113,6 @@ fun DashboardScreen(uiState: DashboardUiState, navController: NavHostController)
     val refreshState by refreshStateFlow.collectAsState()
 
     NotificationPermissionRequest()
-
-    val activity = LocalContext.current.getActivityOrNull()
-    if (activity != null) ViewStyler.setStatusBarColor(activity, ContextCompat.getColor(activity, R.color.surface_pagePrimary))
-
-    LaunchedEffect(key1 = uiState.theme) {
-        val theme = uiState.theme
-        if (theme != null && activity != null && !ThemePrefs.isThemeApplied) ThemePrefs.applyCanvasTheme(theme, activity)
-    }
 
     LaunchedEffect(shouldRefresh) {
         if (shouldRefresh) {
@@ -148,52 +139,58 @@ fun DashboardScreen(uiState: DashboardUiState, navController: NavHostController)
     }
 
     Scaffold(
+        contentWindowInsets = WindowInsets.zeroScreenInsets,
         containerColor = HorizonColors.Surface.pagePrimary(),
         snackbarHost = { SnackbarHost(snackbarHostState) }
-    ) { paddingValues ->
-        val pullToRefreshState = rememberPullToRefreshState()
-        val isRefreshing = refreshState.any { it }
-        PullToRefreshBox(
-            isRefreshing = isRefreshing,
-            onRefresh = { shouldRefresh = true },
-            state = pullToRefreshState,
-            indicator = {
-                Indicator(
+    ) { innerPadding ->
+        val scrollState = rememberScrollState()
+        CollapsableHeaderScreen(
+            statusBarColor = HorizonColors.Surface.pagePrimary(),
+            modifier = Modifier.padding(innerPadding),
+            headerContent = { paddingValues ->
+                Column(
                     modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .padding(top = 56.dp),
-                    isRefreshing = isRefreshing,
-                    containerColor = HorizonColors.Surface.pageSecondary(),
-                    color = HorizonColors.Surface.institution(),
-                    state = pullToRefreshState
-                )
-            }
-        ){
-            val scrollState = rememberScrollState()
-            CollapsableHeaderScreen(
-                modifier = Modifier.padding(paddingValues),
-                headerContent = {
-                    Column(
-                        modifier = Modifier.conditional(scrollState.canScrollBackward) {
+                        .padding(paddingValues)
+                        .conditional(scrollState.canScrollBackward) {
                             shadow(
                                 elevation = HorizonElevation.level3,
                                 spotColor = Color.Transparent,
                             )
                         }
-                    ) {
-                        HomeScreenTopBar(
-                            uiState,
-                            navController,
+                ) {
+                    DashboardTopBar(
+                        uiState,
+                        navController,
+                        modifier = Modifier
+                            .height(56.dp)
+                            .padding(bottom = 12.dp)
+                    )
+                }
+            },
+            bodyContent = { contentPadding ->
+                val pullToRefreshState = rememberPullToRefreshState()
+                val isRefreshing = refreshState.any { it }
+                PullToRefreshBox(
+                    isRefreshing = isRefreshing,
+                    onRefresh = { shouldRefresh = true },
+                    state = pullToRefreshState,
+                    indicator = {
+                        Indicator(
                             modifier = Modifier
-                                .height(56.dp)
-                                .padding(bottom = 12.dp)
+                                .align(Alignment.TopCenter)
+                                .padding(contentPadding)
+                                ,//.padding(top = 56.dp),
+                            isRefreshing = isRefreshing,
+                            containerColor = HorizonColors.Surface.pageSecondary(),
+                            color = HorizonColors.Surface.institution(),
+                            state = pullToRefreshState
                         )
                     }
-                },
-                bodyContent = {
+                ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier
+                            .padding(contentPadding)
                             .verticalScroll(scrollState)
                     ) {
                         HorizonSpace(SpaceSize.SPACE_12)
@@ -221,17 +218,18 @@ fun DashboardScreen(uiState: DashboardUiState, navController: NavHostController)
                         HorizonSpace(SpaceSize.SPACE_24)
                     }
                 }
-            )
-        }
+            }
+        )
     }
 }
 
 @Composable
-private fun HomeScreenTopBar(uiState: DashboardUiState, navController: NavController, modifier: Modifier = Modifier
+private fun DashboardTopBar(uiState: DashboardUiState, navController: NavController, modifier: Modifier = Modifier
 ) {
     Row(
         verticalAlignment = Alignment.Bottom,
-        modifier = modifier.padding(horizontal = 24.dp)
+        modifier = modifier
+            .padding(horizontal = 24.dp)
     ) {
         GlideImage(
             model = uiState.logoUrl,

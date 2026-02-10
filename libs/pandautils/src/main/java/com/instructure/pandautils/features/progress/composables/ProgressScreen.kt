@@ -21,6 +21,7 @@ package com.instructure.pandautils.features.progress.composables
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -66,6 +67,7 @@ fun ProgressScreen(
         Scaffold(
             modifier = Modifier.clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp)),
             backgroundColor = colorResource(id = R.color.backgroundLightest),
+            contentWindowInsets = WindowInsets(0, 0, 0, 0),
             topBar = {
                 ProgressTopBar(
                     title = progressUiState.title,

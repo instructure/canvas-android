@@ -42,6 +42,7 @@ import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.accessibilityClassName
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.children
 import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.makeBundle
@@ -154,6 +155,7 @@ class OldToDoListFragment : ParentFragment() {
 
     override fun applyTheme() {
         setupToolbarMenu(binding.toolbar)
+        binding.toolbar.applyTopSystemBarInsets()
         ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
     }
 

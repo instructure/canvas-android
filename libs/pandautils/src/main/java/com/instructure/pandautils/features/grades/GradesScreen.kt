@@ -67,7 +67,6 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.SnackbarResult
@@ -119,6 +118,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.NoRippleInteractionSource
 import com.instructure.pandautils.compose.composables.CanvasDivider
+import com.instructure.pandautils.compose.composables.CanvasScaffold
 import com.instructure.pandautils.compose.composables.CanvasSwitch
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.CheckpointItem
@@ -162,7 +162,7 @@ fun GradesScreen(
                 }
             }
         }
-        Scaffold(
+        CanvasScaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
             snackbarHost = { SnackbarHost(hostState = snackbarHostState, modifier = Modifier.testTag("snackbarHost")) },
             topBar = {
@@ -254,7 +254,6 @@ fun GradesScreen(
             )
             Box(
                 modifier = Modifier
-                    .padding(padding)
                     .pullRefresh(pullRefreshState)
             ) {
                 when {
@@ -282,7 +281,8 @@ fun GradesScreen(
                             contextColor = canvasContextColor,
                             actionHandler = actionHandler,
                             canvasContextColor = canvasContextColor,
-                            showActionsOnCard = appBarUiState == null
+                            showActionsOnCard = appBarUiState == null,
+                            scaffoldPadding = padding
                         )
                     }
                 }
@@ -334,7 +334,8 @@ private fun GradesScreenContent(
     contextColor: Int,
     actionHandler: (GradesAction) -> Unit,
     showActionsOnCard: Boolean,
-    canvasContextColor: Int
+    canvasContextColor: Int,
+    scaffoldPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     val lazyListState = rememberLazyListState()
 
@@ -360,7 +361,7 @@ private fun GradesScreenContent(
         LazyColumn(
             state = lazyListState,
             modifier = Modifier.testTag("gradesList"),
-            contentPadding = PaddingValues(bottom = 64.dp)
+            contentPadding = scaffoldPadding
         ) {
             item {
                 if (!isPortrait) {

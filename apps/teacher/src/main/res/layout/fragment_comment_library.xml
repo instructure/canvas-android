@@ -35,6 +35,7 @@
             android:id="@+id/commentLibraryToolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minHeight="?android:attr/actionBarSize"
             android:background="@color/backgroundLightest"
             android:elevation="6dp"
             app:theme="@style/ToolBarStyle"
@@ -46,7 +47,8 @@
             layout="@layout/speed_grader_comment_input_view"
             android:id="@+id/commentInputContainer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:minHeight="56dp"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent" />
 

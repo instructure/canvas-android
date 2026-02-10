@@ -57,7 +57,7 @@ import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
 import com.instructure.horizon.horizonui.molecules.ProgressBarSmall
 import com.instructure.horizon.horizonui.molecules.ProgressBarStyle
-import com.instructure.horizon.horizonui.organisms.CollapsableHeaderScreen
+import com.instructure.horizon.horizonui.organisms.scaffolds.CollapsableHeaderScreen
 import com.instructure.horizon.horizonui.organisms.tabrow.TabRow
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.horizon.horizonui.selectable
@@ -75,10 +75,12 @@ fun CourseDetailsScreen(
 
     LoadingStateWrapper(state.loadingState){
         CollapsableHeaderScreen(
-            headerContent = {
+            statusBarColor = HorizonColors.Surface.pagePrimary(),
+            headerContent = { paddingValues ->
                 Column(
                     Modifier
                         .fillMaxWidth()
+                        .padding(paddingValues)
                         .padding(horizontal = 24.dp, vertical = 8.dp)
                 ) {
                     Row(
@@ -102,8 +104,8 @@ fun CourseDetailsScreen(
                     CourseProgress(state.courseProgress)
                 }
             },
-            bodyContent = {
-                Column {
+            bodyContent = { paddingValues ->
+                Column(Modifier.padding(paddingValues)) {
                     TabRow(
                         tabs = state.availableTabs,
                         selectedIndex = pagerState.currentPage,

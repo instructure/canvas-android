@@ -27,20 +27,29 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
+        android:layout_height="wrap_content"
+        android:minHeight="?android:attr/actionBarSize"
         android:background="@color/textDarkest"
         android:elevation="6dp"
         app:popupTheme="@style/ToolBarPopupStyle"
         app:theme="@style/ToolBarStyle"
         tools:ignore="UnusedAttribute" />
 
-    <com.instructure.pandautils.views.CanvasWebView
-        android:id="@+id/canvasWebView"
+    <FrameLayout
+        android:id="@+id/canvasWebViewContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbarStyle="outsideOverlay"
         android:layout_below="@id/toolbar"
-        android:clipToPadding="false"/>
+        android:clipToPadding="false">
+
+        <com.instructure.pandautils.views.CanvasWebView
+            android:id="@+id/canvasWebView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbarStyle="outsideOverlay"
+            android:clipToPadding="false"/>
+
+    </FrameLayout>
 
     <com.instructure.pandautils.views.CanvasLoadingView
         android:id="@+id/loading"

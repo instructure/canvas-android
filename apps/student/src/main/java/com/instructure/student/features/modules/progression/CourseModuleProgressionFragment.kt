@@ -23,6 +23,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
@@ -149,6 +151,32 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
 
         binding.prevItem.setImageDrawable(ColorKeeper.getColoredDrawable(requireActivity(), R.drawable.ic_chevron_left, canvasContext.color))
         binding.nextItem.setImageDrawable(ColorKeeper.getColoredDrawable(requireActivity(), R.drawable.ic_chevron_right, canvasContext.color))
+
+        // Apply bottom margin to bottom bar for edge-to-edge support
+        ViewCompat.setOnApplyWindowInsetsListener(binding.bottomBarModule) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val layoutParams = view.layoutParams as? ViewGroup.MarginLayoutParams
+            layoutParams?.bottomMargin = systemBars.bottom
+            view.layoutParams = layoutParams
+            insets
+        }
+
+        // Consume bottom insets for fragment container to prevent child fragments from applying them again
+        ViewCompat.setOnApplyWindowInsetsListener(binding.fragmentContainer) { view, insets ->
+            WindowInsetsCompat.Builder(insets)
+                .setInsets(
+                    WindowInsetsCompat.Type.systemBars(),
+                    androidx.core.graphics.Insets.of(
+                        insets.getInsets(WindowInsetsCompat.Type.systemBars()).left,
+                        insets.getInsets(WindowInsetsCompat.Type.systemBars()).top,
+                        insets.getInsets(WindowInsetsCompat.Type.systemBars()).right,
+                        0 // Set bottom to 0 to consume bottom insets
+                    )
+                )
+                .build()
+        }
+
+        ViewCompat.requestApplyInsets(binding.bottomBarModule)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

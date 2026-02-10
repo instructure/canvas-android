@@ -28,6 +28,7 @@ import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.tryOrNull
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.utils.BooleanArg
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.makeBundle
@@ -46,6 +47,7 @@ class FileDetailsFragment : BaseCanvasFragment() {
 
     private val viewModel: FileDetailsViewModel by viewModels()
     private val binding by viewBinding(FragmentFileDetailsBinding::bind)
+    private var isInModulesPager: Boolean by BooleanArg(key = IS_IN_MODULES_PAGER, default = false)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_file_details, container, false)
@@ -75,17 +77,17 @@ class FileDetailsFragment : BaseCanvasFragment() {
                 fileData.url,
                 toolbarColor,
                 fileData.editableFile,
-                true
+                isInModulesPager
             )
 
             is FileViewData.Media -> ViewMediaFragment.newInstance(
-                Uri.parse(fileData.url),
-                fileData.thumbnailUrl,
-                fileData.contentType,
-                fileData.displayName,
-                true,
-                toolbarColor,
-                fileData.editableFile
+                uri = Uri.parse(fileData.url),
+                thumbnailUrl = fileData.thumbnailUrl,
+                contentType = fileData.contentType,
+                displayName = fileData.displayName,
+                toolbarColor = toolbarColor,
+                editableFile = fileData.editableFile,
+                isInModulesPager = isInModulesPager
             )
 
             is FileViewData.Image -> ViewImageFragment.newInstance(
@@ -95,7 +97,7 @@ class FileDetailsFragment : BaseCanvasFragment() {
                 true,
                 toolbarColor,
                 fileData.editableFile,
-                true
+                isInModulesPager
             )
 
             is FileViewData.Html -> ViewHtmlFragment.newInstance(
@@ -104,7 +106,7 @@ class FileDetailsFragment : BaseCanvasFragment() {
                     fileData.fileName,
                     toolbarColor,
                     fileData.editableFile,
-                    true
+                    isInModulesPager
                 )
             )
 
@@ -116,14 +118,19 @@ class FileDetailsFragment : BaseCanvasFragment() {
                 R.drawable.ic_document,
                 toolbarColor,
                 fileData.editableFile,
-                true
+                isInModulesPager
             )
         }
     }
 
     companion object {
-        fun makeBundle(canvasContext: CanvasContext, fileUrl: String): Bundle {
-            return canvasContext.makeBundle { putString(Const.FILE_URL, fileUrl) }
+        private const val IS_IN_MODULES_PAGER = "isInModulesPager"
+
+        fun makeBundle(canvasContext: CanvasContext, fileUrl: String, isInModulesPager: Boolean = false): Bundle {
+            return canvasContext.makeBundle {
+                putString(Const.FILE_URL, fileUrl)
+                putBoolean(IS_IN_MODULES_PAGER, isInModulesPager)
+            }
         }
 
         fun newInstance(bundle: Bundle) = FileDetailsFragment().withArgs(bundle)

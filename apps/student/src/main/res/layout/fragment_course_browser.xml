@@ -25,7 +25,8 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/noOverlayToolbar"
         android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
+        android:layout_height="wrap_content"
+        android:minHeight="?android:attr/actionBarSize"
         app:popupTheme="@style/ToolBarPopupStyle"
         app:theme="@style/ToolBarStyle" />
 
@@ -155,6 +156,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:cacheColorHint="@android:color/transparent"
+                    android:clipToPadding="false"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 

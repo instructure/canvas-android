@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -44,6 +45,7 @@ import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.molecules.Spinner
+import com.instructure.horizon.util.zeroScreenInsets
 
 data class LoadingState(
     val isLoading: Boolean = false,
@@ -64,6 +66,7 @@ fun LoadingStateWrapper(
     containerColor: Color = HorizonColors.Surface.pagePrimary(),
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     spinnerColor: Color = HorizonColors.Surface.institution(),
+    contentWindowInsets: WindowInsets = WindowInsets.zeroScreenInsets,
     content: @Composable BoxScope.() -> Unit,
 ) {
     val state = rememberPullToRefreshState()
@@ -77,7 +80,12 @@ fun LoadingStateWrapper(
         }
     }
 
-    Scaffold(containerColor = containerColor, snackbarHost = { SnackbarHost(snackbarHostState) }, modifier = modifier) { paddingValues ->
+    Scaffold(
+        contentWindowInsets = contentWindowInsets,
+        containerColor = containerColor,
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        modifier = modifier
+    ) { paddingValues ->
         if (loadingState.isPullToRefreshEnabled) {
             PullToRefreshBox(
                 isRefreshing = loadingState.isRefreshing,

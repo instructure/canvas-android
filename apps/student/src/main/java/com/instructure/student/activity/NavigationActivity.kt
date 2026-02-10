@@ -43,6 +43,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuItemCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
@@ -103,7 +106,9 @@ import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.update.UpdateManager
 import com.instructure.pandautils.utils.ActivityResult
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.EdgeToEdgeHelper
 import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.OnActivityResults
@@ -141,8 +146,8 @@ import com.instructure.student.features.files.list.FileListFragment
 import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
 import com.instructure.student.features.navigation.NavigationRepository
 import com.instructure.student.fragment.BookmarksFragment
-import com.instructure.student.fragment.OldDashboardFragment
 import com.instructure.student.fragment.NotificationListFragment
+import com.instructure.student.fragment.OldDashboardFragment
 import com.instructure.student.fragment.OldToDoListFragment
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffectHandler
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentFragment
@@ -330,6 +335,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             val visible = isBottomNavFragment(it) || supportFragmentManager.backStackEntryCount <= 1
             binding.bottomBar.setVisible(visible)
             binding.bottomBarDivider.setVisible(visible)
+            // Request insets reapplication when bottom bar visibility changes
+            ViewCompat.requestApplyInsets(binding.bottomBar)
         }
     }
 
@@ -337,6 +344,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         super.onResume()
         applyCurrentFragmentTheme()
         webViewAuthenticator.authenticateWebViews(lifecycleScope, this)
+        updateStatusBarAppearanceForDrawer()
     }
 
     private fun checkAppUpdates() {
@@ -362,12 +370,16 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        EdgeToEdgeHelper.enableEdgeToEdge(this)
         RouteMatcher.offlineDb = offlineDatabase
         RouteMatcher.networkStateProvider = networkStateProvider
         RouteMatcher.enabledTabs = enabledCourseTabs
         navigationDrawerBinding = NavigationDrawerBinding.bind(binding.root)
         canvasLoadingBinding = LoadingCanvasViewBinding.bind(binding.root)
         setContentView(binding.root)
+
+        setupWindowInsets()
+
         val masqueradingUserId: Long = intent.getLongExtra(Const.QR_CODE_MASQUERADE_ID, 0L)
         if (masqueradingUserId != 0L) {
             MasqueradeHelper.startMasquerading(masqueradingUserId, ApiPrefs.domain, NavigationActivity::class.java)
@@ -439,6 +451,96 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         }
     }
 
+    private fun setupWindowInsets() = with(binding) {
+        ViewCompat.setOnApplyWindowInsetsListener(fullscreen) { view, insets ->
+            val navigationBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+            val displayCutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
+
+            // Apply both navigation bar and display cutout insets
+            // This ensures content is not hidden behind the navigation bar OR the hole punch camera
+            val leftPadding = maxOf(navigationBars.left, displayCutout.left)
+            val rightPadding = maxOf(navigationBars.right, displayCutout.right)
+
+            view.setPadding(
+                leftPadding,
+                0,
+                rightPadding,
+                0
+            )
+
+            // Consume bottom insets only when offline indicator is visible
+            // When offline, the offline indicator and bottom bar handle bottom insets at the activity level
+            // When online, fragments need bottom insets to clear Android nav buttons
+            if (offlineIndicator.root.visibility == View.VISIBLE) {
+                WindowInsetsCompat.Builder(insets)
+                    .setInsets(
+                        WindowInsetsCompat.Type.navigationBars(),
+                        androidx.core.graphics.Insets.of(
+                            navigationBars.left,
+                            navigationBars.top,
+                            navigationBars.right,
+                            0 // Consume bottom insets when offline
+                        )
+                    )
+                    .build()
+            } else {
+                insets // Pass through bottom insets when online
+            }
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(bottomBar) { view, insets ->
+            val navigationBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+            view.setPadding(
+                view.paddingLeft,
+                view.paddingTop,
+                view.paddingRight,
+                navigationBars.bottom
+            )
+
+            // Update offline indicator margin based on bottom bar visibility
+            // When bottom bar is visible, no margin needed (bottom bar handles insets)
+            // When bottom bar is not visible, apply margin to clear Android nav buttons
+            val layoutParams = offlineIndicator.root.layoutParams as? ViewGroup.MarginLayoutParams
+            layoutParams?.bottomMargin = if (bottomBar.isVisible) 0 else navigationBars.bottom
+            offlineIndicator.root.layoutParams = layoutParams
+
+            insets
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(navigationDrawerBinding.navigationDrawer) { view, windowInsets ->
+            val insets = windowInsets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+            view.setPadding(
+                insets.left,
+                insets.top,
+                insets.right,
+                insets.bottom
+            )
+            windowInsets
+        }
+
+        ViewCompat.requestApplyInsets(bottomBar)
+    }
+
+    private fun updateStatusBarAppearanceForDrawer() {
+        // Check if drawer is open and update status bar appearance accordingly (handles config changes)
+        // Post to ensure drawer state is checked after current layout pass
+        binding.drawerLayout.post {
+            if (binding.drawerLayout.isDrawerOpen(GravityCompat.START) && !ColorKeeper.darkTheme) {
+                window?.let { window ->
+                    val controller = ViewCompat.getWindowInsetsController(window.decorView)
+                    controller?.isAppearanceLightStatusBars = true
+                }
+            } else if (!ColorKeeper.darkTheme) {
+                window?.let { window ->
+                    val controller = ViewCompat.getWindowInsetsController(window.decorView)
+                    controller?.isAppearanceLightStatusBars = false
+                }
+            }
+        }
+    }
+
     private fun logOfflineEvents(isOnline: Boolean) {
         lifecycleScope.launch {
             if (isOnline) {
@@ -482,6 +584,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             val visible = isBottomNavFragment(it) || supportFragmentManager.backStackEntryCount <= 1
             binding.bottomBar.setVisible(visible)
             binding.bottomBarDivider.setVisible(visible)
+            ViewCompat.requestApplyInsets(binding.bottomBar)
         }
     }
 
@@ -609,6 +712,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         mDrawerToggle?.onConfigurationChanged(newConfig)
         super.onConfigurationChanged(newConfig)
         applyThemeForAllFragments()
+        updateStatusBarAppearanceForDrawer()
     }
 
     private fun applyThemeForAllFragments() {
@@ -732,6 +836,13 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 super.onDrawerOpened(drawerView)
                 invalidateOptionsMenu()
                 setCloseDrawerVisibility()
+                // Set status bar icons to dark only in light mode (for visibility on white drawer background)
+                if (!ColorKeeper.darkTheme) {
+                    window?.let { window ->
+                        val controller = ViewCompat.getWindowInsetsController(window.decorView)
+                        controller?.isAppearanceLightStatusBars = true
+                    }
+                }
             }
 
             override fun onDrawerClosed(drawerView: View) {
@@ -739,6 +850,13 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 invalidateOptionsMenu()
                 // Make the scrollview that is inside the drawer scroll to the top
                 navigationDrawerBinding.navigationDrawer.scrollTo(0, 0)
+                // Restore status bar icons to light only in light mode (for dark toolbar)
+                if (!ColorKeeper.darkTheme) {
+                    window?.let { window ->
+                        val controller = ViewCompat.getWindowInsetsController(window.decorView)
+                        controller?.isAppearanceLightStatusBars = false
+                    }
+                }
             }
         }
 
@@ -802,6 +920,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             findItem(R.id.bottomNavigationNotifications).isEnabled = !isOffline
             findItem(R.id.bottomNavigationInbox).isEnabled = !isOffline
         }
+
+        ViewCompat.requestApplyInsets(binding.fullscreen)
     }
 
     override fun onStartMasquerading(domain: String, userId: Long) {

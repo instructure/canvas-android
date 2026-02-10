@@ -21,13 +21,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
-import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.databinding.FragmentSchedulePagerBinding
 import com.instructure.pandautils.features.elementary.schedule.ScheduleFragment
 import com.instructure.pandautils.utils.isAccessibilityEnabled
@@ -56,6 +59,30 @@ class SchedulePagerFragment : BaseCanvasFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Consume bottom insets for schedulePager so child fragments don't apply them
+        // The controls section handles bottom spacing
+        ViewCompat.setOnApplyWindowInsetsListener(binding.schedulePager) { view, insets ->
+            val navigationBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+            WindowInsetsCompat.Builder(insets)
+                .setInsets(
+                    WindowInsetsCompat.Type.navigationBars(),
+                    androidx.core.graphics.Insets.of(
+                        navigationBars.left,
+                        navigationBars.top,
+                        navigationBars.right,
+                        0 // Consume bottom insets
+                    )
+                )
+                .build()
+        }
+
+        // Apply bottom system bar insets to controls (Previous/Next Week buttons)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.controls) { view, insets ->
+            val navigationBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+            view.updatePadding(bottom = navigationBars.bottom)
+            insets
+        }
 
         viewModel.data.observe(viewLifecycleOwner, { schedulePagerViewData ->
             schedulePagerViewData?.let {

@@ -61,7 +61,7 @@ import com.instructure.horizon.horizonui.molecules.ProgressBarSmallInline
 import com.instructure.horizon.horizonui.molecules.StatusChip
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.molecules.StatusChipState
-import com.instructure.horizon.horizonui.organisms.CollapsableHeaderScreen
+import com.instructure.horizon.horizonui.organisms.scaffolds.CollapsableHeaderScreen
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.pandautils.compose.modifiers.conditional
 
@@ -71,22 +71,23 @@ fun LearnProgramListScreen(
     navController: NavHostController
 ) {
     CollapsableHeaderScreen(
-        headerContent = {
-            Searchbar(state)
+        statusBarColor = null,
+        headerContent = { paddingValues ->
+            Searchbar(state, Modifier.padding(paddingValues))
         },
-        bodyContent = {
-            LearnProgramListContent(state, navController)
+        bodyContent = { paddingValues ->
+            LearnProgramListContent(state, navController, Modifier.padding(paddingValues))
         }
     )
 }
 
 @Composable
-private fun Searchbar(state: LearnProgramListUiState) {
+private fun Searchbar(state: LearnProgramListUiState, modifier: Modifier = Modifier) {
     LearnSearchBar(
         value = state.searchQuery,
         onValueChange = { state.updateSearchQuery(it) },
         placeholder = stringResource(R.string.learnProgramListSearchBarPlaceholder),
-        modifier = Modifier.padding(24.dp)
+        modifier = modifier.padding(24.dp)
     )
 }
 
@@ -94,9 +95,10 @@ private fun Searchbar(state: LearnProgramListUiState) {
 @Composable
 private fun LearnProgramListContent(
     state: LearnProgramListUiState,
-    navController: NavHostController
+    navController: NavHostController,
+    modifier: Modifier = Modifier
 ) {
-    LoadingStateWrapper(state.loadingState) {
+    LoadingStateWrapper(state.loadingState, modifier) {
         val scrollState = rememberLazyListState()
         LazyColumn(
             state = scrollState,

@@ -15,6 +15,7 @@
  */
 package com.instructure.horizon.navigation
 
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.padding
@@ -57,6 +58,7 @@ import com.instructure.horizon.navigation.MainNavigationRoute.Companion.ASSIGNME
 import com.instructure.horizon.navigation.MainNavigationRoute.Companion.COURSE_ID
 import com.instructure.horizon.navigation.MainNavigationRoute.Companion.PAGE_ID
 import com.instructure.horizon.navigation.MainNavigationRoute.Companion.QUIZ_ID
+import com.instructure.horizon.util.zeroScreenInsets
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
@@ -97,6 +99,7 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
     val bottomBarVisible = isBottomBarVisible(navController)
 
     Scaffold(
+        contentWindowInsets = WindowInsets.zeroScreenInsets,
         containerColor = HorizonColors.Surface.pagePrimary(),
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         bottomBar = { BottomNavigationBar(navController) }
@@ -177,7 +180,9 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
                             moduleItemAssetId = assignmentId?.toString()
                         )
                     ) {
-                        popUpTo(MainNavigationRoute.AssignmentDetailsDeepLink.route) { inclusive = true }
+                        popUpTo(MainNavigationRoute.AssignmentDetailsDeepLink.route) {
+                            inclusive = true
+                        }
                     }
                 }
             }
@@ -214,7 +219,9 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
                             moduleItemAssetId = quizId?.toString()
                         )
                     ) {
-                        popUpTo(MainNavigationRoute.QuizDetailsDeepLink.route) { inclusive = true }
+                        popUpTo(MainNavigationRoute.QuizDetailsDeepLink.route) {
+                            inclusive = true
+                        }
                     }
                 }
             }
@@ -249,7 +256,9 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
                             moduleItemAssetId = pageId
                         )
                     ) {
-                        popUpTo(MainNavigationRoute.PageDetailsDeepLink.route) { inclusive = true }
+                        popUpTo(MainNavigationRoute.PageDetailsDeepLink.route) {
+                            inclusive = true
+                        }
                     }
                 }
             }

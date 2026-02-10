@@ -24,7 +24,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
-import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.SnackbarResult
@@ -51,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
+import com.instructure.pandautils.compose.composables.CanvasScaffold
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
@@ -197,7 +197,7 @@ private fun CourseDetailsScreenContent(
         }
     }
 
-    Scaffold(
+    CanvasScaffold(
         backgroundColor = colorResource(id = R.color.backgroundLightest),
         snackbarHost = {
             SnackbarHost(
@@ -261,7 +261,7 @@ private fun CourseDetailsScreenContent(
                 backgroundColor = Color(uiState.studentColor),
                 onClick = {
                     actionHandler(CourseDetailsAction.SendAMessage)
-                }
+                },
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_chat),

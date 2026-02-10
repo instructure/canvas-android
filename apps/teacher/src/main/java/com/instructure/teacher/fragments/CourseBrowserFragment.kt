@@ -21,7 +21,11 @@ import android.content.Intent
 import android.net.Uri
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import com.instructure.canvasapi2.models.CanvasContext
@@ -46,6 +50,7 @@ import com.instructure.pandautils.utils.Const.MARKET_URI_PREFIX
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.a11yManager
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.isSwitchAccessEnabled
 import com.instructure.pandautils.utils.isTablet
@@ -197,12 +202,38 @@ class CourseBrowserFragment : BaseSyncFragment<
             overlayToolbar
         }
 
+        appBarLayout.setBackgroundColor(presenter.canvasContext.color)
+
+        // Handle top insets based on color overlay setting
+        if (overlayToolbar.isVisible) {
+            // Color overlay enabled: apply top margin to AppBarLayout
+            ViewCompat.setOnApplyWindowInsetsListener(appBarLayout) { view, insets ->
+                val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                val layoutParams = view.layoutParams as? ViewGroup.MarginLayoutParams
+                layoutParams?.topMargin = systemBars.top
+                view.layoutParams = layoutParams
+                insets
+            }
+            ViewCompat.requestApplyInsets(appBarLayout)
+        } else {
+            // Color overlay disabled: apply top margin to noOverlayToolbar
+            ViewCompat.setOnApplyWindowInsetsListener(noOverlayToolbar) { view, insets ->
+                val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                val layoutParams = view.layoutParams as? ViewGroup.MarginLayoutParams
+                layoutParams?.topMargin = systemBars.top
+                view.layoutParams = layoutParams
+                insets
+            }
+            ViewCompat.requestApplyInsets(noOverlayToolbar)
+        }
+
         toolbar.setupBackButton(this@CourseBrowserFragment)
         toolbar.setupMenu(R.menu.menu_course_browser, menuItemCallback)
         ViewStyler.colorToolbarIconsAndText(requireActivity(), toolbar, requireContext().getColor(R.color.textLightest))
         ViewStyler.setStatusBarDark(requireActivity(), presenter.canvasContext.color)
 
         collapsingToolbarLayout.setContentScrimColor(presenter.canvasContext.color)
+        swipeRefreshLayout.applyBottomSystemBarInsets()
 
         // Hide image placeholder if color overlay is disabled and there is no valid image
         val hasImage = (presenter.canvasContext as? Course)?.imageUrl?.isValid() == true

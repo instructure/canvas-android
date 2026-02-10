@@ -26,6 +26,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -66,13 +69,15 @@ fun ActionBottomSheet(
 ) {
     val localCoroutineScope = rememberCoroutineScope()
     ModalBottomSheet(
+        containerColor = HorizonColors.Surface.pagePrimary(),
         onDismissRequest = onDismiss,
         sheetState = sheetState,
-        modifier = modifier,
-        dragHandle = null
+        modifier = modifier.statusBarsPadding(),
+        dragHandle = null,
     ) {
         Column(
             modifier = Modifier
+                .verticalScroll(rememberScrollState())
                 .background(color = HorizonColors.Surface.pagePrimary(), shape = HorizonCornerRadius.level5)
                 .padding(start = 24.dp, top = 24.dp, end = 24.dp, bottom = 36.dp)
         ) {
@@ -100,7 +105,10 @@ fun ActionBottomSheet(
                 )
             }
             HorizonSpace(SpaceSize.SPACE_24)
-            Column(modifier = Modifier.background(color = HorizonColors.Surface.cardPrimary(), shape = HorizonCornerRadius.level3)) {
+            Column(
+                modifier = Modifier
+                    .background(color = HorizonColors.Surface.cardPrimary(), shape = HorizonCornerRadius.level3)
+            ) {
                 actions.forEachIndexed { index, bottomSheetActionState ->
                     val clipModifier = when (index) {
                         0 -> Modifier.clip(shape = HorizonCornerRadius.level3Top)

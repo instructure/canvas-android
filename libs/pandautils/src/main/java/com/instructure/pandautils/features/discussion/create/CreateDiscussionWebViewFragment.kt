@@ -44,10 +44,14 @@ import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.PermissionRequester
 import com.instructure.pandautils.utils.PermissionUtils
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.enableAlgorithmicDarkening
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.utils.setupAsCloseButton
 import com.instructure.pandautils.views.CanvasWebView
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import dagger.hilt.android.AndroidEntryPoint
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -158,6 +162,7 @@ class CreateDiscussionWebViewFragment : BaseCanvasFragment() {
     }
 
     private fun setupToolbar(title: String) = with(binding) {
+        toolbar.applyTopSystemBarInsets()
         toolbar.title = title
 
         toolbar.setupAsCloseButton(this@CreateDiscussionWebViewFragment)
