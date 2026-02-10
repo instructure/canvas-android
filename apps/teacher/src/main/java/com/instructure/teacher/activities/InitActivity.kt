@@ -311,12 +311,15 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
             val insets = windowInsets.getInsets(
                 WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
             )
-            view.setPadding(
-                insets.left,
-                view.paddingTop,
-                insets.right,
-                insets.bottom
-            )
+            val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
+            if (isLandscape) {
+                // In landscape, navigation bar is on the left side (where drawer opens from)
+                // Apply left padding only to prevent overlap with nav bar
+                view.setPadding(insets.left, insets.top, 0, 0)
+            } else {
+                view.setPadding(insets.left, insets.top, insets.right, insets.bottom)
+            }
             windowInsets
         }
     }
