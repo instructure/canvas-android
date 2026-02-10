@@ -514,6 +514,7 @@
     <string name="a11y_notebookHighlightMarkedAs">%1$s, marked as %2$s, double tap to edit note</string>
     <string name="learnCoursesTabLabel">Courses</string>
     <string name="learnProgramsTabLabel">Programs</string>
+    <string name="learnLearningLibraryTabLabel">Learning Library</string>
     <string name="reportAProblemDescriptionMessage">File a ticket for a personal response from our support team.</string>
     <string name="igniteAIEnterAPromptLabel">Enter a prompt</string>
     <string name="a11y_igniteAiLoadingContentDescription">Loading response</string>
@@ -544,4 +545,10 @@
     </plurals>
     <string name="a11y_inputErrorMessage">Error: %1$s</string>
     <string name="a11y_required">Required</string>
+    <string name="learnLearningLibraryListSearchPlaceholder">Search</string>
+    <string name="a11y_learnLearningLibraryBookmarkContentDescription">Bookmarked Learning Library items</string>
+    <string name="a11y_learnLearningLibraryCompletedContentDescription">Completed Learning Library items</string>
+    <string name="a11y_learnLearningLibraryItemCompletedContentDescription">Completed</string>
+    <string name="a11y_learnLearningLibraryItemBookmarkContentDescription">Bookmark</string>
+    <string name="a11y_learnLearningLibraryItemRemoveBookmarkContentDescription">Remove bookmark</string>
 </resources>

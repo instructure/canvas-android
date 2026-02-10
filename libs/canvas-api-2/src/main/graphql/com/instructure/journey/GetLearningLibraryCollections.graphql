@@ -1,0 +1,35 @@
+query GetLearningLibraryCollections(
+  $cursor: String
+  $limit: Int
+  $forward: Boolean
+  $search: String
+  $sortMode: CollectionSortMode
+) {
+  learningLibraryCollections(
+    input: {
+      cursor: $cursor
+      limit: $limit
+      forward: $forward
+      search: $search
+      sortMode: $sortMode
+    }
+  ) {
+    collections {
+      id
+      name
+      publicName
+      description
+      rootAccountUuid
+      accountId
+      deletedAt
+      createdAt
+      updatedAt
+    }
+    pageInfo {
+      nextCursor
+      previousCursor
+      hasNextPage
+      hasPreviousPage
+    }
+  }
+}

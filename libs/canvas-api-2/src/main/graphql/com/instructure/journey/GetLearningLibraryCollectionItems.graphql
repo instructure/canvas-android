@@ -1,0 +1,50 @@
+query GetLearningLibraryCollectionItems(
+  $cursor: String
+  $limit: Int = 10
+  $forward: Boolean = true
+  $bookmarkedOnly: Boolean = false
+  $searchTerm: String
+  $types: [CollectionItemType!]
+  $completedOnly: Boolean = false
+) {
+  learningLibraryCollectionItems(
+    input: {
+      cursor: $cursor
+      limit: $limit
+      forward: $forward
+      bookmarkedOnly: $bookmarkedOnly
+      searchTerm: $searchTerm
+      types: $types
+      completedOnly: $completedOnly
+    }
+  ) {
+    items {
+      id
+      libraryId
+      itemType
+      displayOrder
+      canvasCourse {
+        courseId
+        canvasUrl
+        courseName
+        courseImageUrl
+        moduleCount
+        moduleItemCount
+        estimatedDurationMinutes
+      }
+      programId
+      programCourseId
+      createdAt
+      updatedAt
+      isBookmarked
+      completionPercentage
+      isEnrolledInCanvas
+    }
+    pageInfo {
+      nextCursor
+      previousCursor
+      hasNextPage
+      hasPreviousPage
+    }
+  }
+}

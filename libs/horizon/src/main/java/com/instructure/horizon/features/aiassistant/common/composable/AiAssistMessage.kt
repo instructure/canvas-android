@@ -26,7 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.semantics.semantics
-import com.instructure.canvasapi2.models.journey.JourneyAssistRole
+import com.instructure.canvasapi2.models.journey.assist.JourneyAssistRole
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
 import com.instructure.horizon.features.aiassistant.common.model.toDeepLink
 

@@ -16,7 +16,7 @@
  */
 package com.instructure.horizon.features.aiassistant.common
 
-import com.instructure.canvasapi2.models.journey.JourneyAssistState
+import com.instructure.canvasapi2.models.journey.assist.JourneyAssistState
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContextSource
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage

@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.canvasapi2.models.journey
+package com.instructure.canvasapi2.models.journey.assist
 
 enum class JourneyAssistRole {
     Assistant,

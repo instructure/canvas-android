@@ -18,6 +18,8 @@ package com.instructure.canvasapi2.di.graphql
 
 import com.apollographql.apollo.ApolloClient
 import com.instructure.canvasapi2.di.JourneyApolloClient
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetLearningLibraryManager
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetLearningLibraryManagerImpl
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetProgramManagerImpl
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetProgramsManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetSkillsManager
@@ -60,6 +62,13 @@ class JourneyModule {
         @JourneyApolloClient journeyClient: ApolloClient
     ): RedwoodApiManager {
         return JourneyRedwoodManagerImpl(journeyClient)
+    }
+
+    @Provides
+    fun provideGetLearningLibraryManager(
+        @JourneyApolloClient journeyClient: ApolloClient
+    ): GetLearningLibraryManager {
+        return GetLearningLibraryManagerImpl(journeyClient)
     }
 
 }

@@ -27,8 +27,8 @@ data class LearnUiState(
 
 enum class LearnTab(@get:StringRes val labelRes: Int, val stringValue: String) {
     COURSES(R.string.learnCoursesTabLabel, "courses"),
-    PROGRAMS(R.string.learnProgramsTabLabel, "programs")
-    // TODO: LEARNING_LIBRARY("Learning Library")
+    PROGRAMS(R.string.learnProgramsTabLabel, "programs"),
+    LEARNING_LIBRARY(R.string.learnLearningLibraryTabLabel, "learning_library")
     ;
     companion object {
         fun fromStringValue(stringValue: String?): LearnTab? {

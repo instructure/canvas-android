@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 - present Instructure, Inc.
+ * Copyright (C) 2026 - present Instructure, Inc.
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -14,10 +14,16 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.canvasapi2.models.journey
+package com.instructure.canvasapi2.models.journey.learninglibrary
 
-data class JourneyAssistState(
-    val courseID: String? = null,
-    val fileID: String? = null,
-    val pageID: String? = null,
+import java.util.Date
+
+data class EnrolledLearningLibraryCollection(
+    val id: String,
+    val name: String,
+    val publicName: String?,
+    val description: String?,
+    val createdAt: Date,
+    val updatedAt: Date,
+    val items: List<LearningLibraryCollectionItem>
 )

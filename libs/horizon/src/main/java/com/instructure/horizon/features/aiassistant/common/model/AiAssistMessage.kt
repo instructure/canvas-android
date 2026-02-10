@@ -16,13 +16,13 @@
  */
 package com.instructure.horizon.features.aiassistant.common.model
 
-import com.instructure.canvasapi2.models.journey.JourneyAssistChatMessage
-import com.instructure.canvasapi2.models.journey.JourneyAssistChipOption
-import com.instructure.canvasapi2.models.journey.JourneyAssistCitation
-import com.instructure.canvasapi2.models.journey.JourneyAssistCitationType
-import com.instructure.canvasapi2.models.journey.JourneyAssistFlashCard
-import com.instructure.canvasapi2.models.journey.JourneyAssistQuizItem
-import com.instructure.canvasapi2.models.journey.JourneyAssistRole
+import com.instructure.canvasapi2.models.journey.assist.JourneyAssistChatMessage
+import com.instructure.canvasapi2.models.journey.assist.JourneyAssistChipOption
+import com.instructure.canvasapi2.models.journey.assist.JourneyAssistCitation
+import com.instructure.canvasapi2.models.journey.assist.JourneyAssistCitationType
+import com.instructure.canvasapi2.models.journey.assist.JourneyAssistFlashCard
+import com.instructure.canvasapi2.models.journey.assist.JourneyAssistQuizItem
+import com.instructure.canvasapi2.models.journey.assist.JourneyAssistRole
 import com.instructure.canvasapi2.utils.ApiPrefs
 
 data class AiAssistMessage(
