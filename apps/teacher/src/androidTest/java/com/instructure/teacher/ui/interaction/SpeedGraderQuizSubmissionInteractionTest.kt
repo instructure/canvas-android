@@ -13,21 +13,48 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package com.instructure.teacher.ui.interaction
 
-import com.instructure.canvas.espresso.annotations.Stub
 import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvas.espresso.mockcanvas.addCoursePermissions
 import com.instructure.canvas.espresso.mockcanvas.addQuestionToQuiz
 import com.instructure.canvas.espresso.mockcanvas.addQuizSubmission
 import com.instructure.canvas.espresso.mockcanvas.addQuizToCourse
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeAssignmentDetailsManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeCommentLibraryManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeCustomGradeStatusesManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeDifferentiationTagsManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeInboxSettingsManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakePostPolicyManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeRecentGradedSubmissionsManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeStudentContextManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionCommentsManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionContentManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionDetailsManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionGradeManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionRubricManager
 import com.instructure.canvas.espresso.mockcanvas.init
+import com.instructure.canvasapi2.di.GraphQlApiModule
+import com.instructure.canvasapi2.di.graphql.CustomGradeStatusModule
+import com.instructure.canvasapi2.managers.CommentLibraryManager
+import com.instructure.canvasapi2.managers.InboxSettingsManager
+import com.instructure.canvasapi2.managers.PostPolicyManager
+import com.instructure.canvasapi2.managers.StudentContextManager
+import com.instructure.canvasapi2.managers.SubmissionRubricManager
+import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
+import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.managers.graphql.DifferentiationTagsManager
+import com.instructure.canvasapi2.managers.graphql.RecentGradedSubmissionsManager
+import com.instructure.canvasapi2.managers.graphql.SubmissionCommentsManager
+import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
+import com.instructure.canvasapi2.managers.graphql.SubmissionDetailsManager
+import com.instructure.canvasapi2.managers.graphql.SubmissionGradeManager
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.models.QuizAnswer
 import com.instructure.pandautils.di.DifferentiationTagsModule
+import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.BindValue
@@ -36,35 +63,78 @@ import dagger.hilt.android.testing.UninstallModules
 import org.junit.Test
 
 @HiltAndroidTest
-@UninstallModules(DifferentiationTagsModule::class)
+@UninstallModules(
+    GraphQlApiModule::class,
+    CustomGradeStatusModule::class,
+    DifferentiationTagsModule::class)
 class SpeedGraderQuizSubmissionInteractionTest : TeacherComposeTest() {
+
+    override fun displaysPageObjects() = Unit
+
+    @BindValue
+    @JvmField
+    val commentLibraryManager: CommentLibraryManager = FakeCommentLibraryManager()
+
+    @BindValue
+    @JvmField
+    val postPolicyManager: PostPolicyManager = FakePostPolicyManager()
+
+    @BindValue
+    @JvmField
+    val inboxSettingsManager: InboxSettingsManager = FakeInboxSettingsManager()
+
+    @BindValue
+    @JvmField
+    val personContextManager: StudentContextManager = FakeStudentContextManager()
+
+    @BindValue
+    @JvmField
+    val assignmentDetailsManager: AssignmentDetailsManager = FakeAssignmentDetailsManager()
+
+    @BindValue
+    @JvmField
+    val submissionContentManager: SubmissionContentManager = FakeSubmissionContentManager()
+
+    @BindValue
+    @JvmField
+    val submissionGradeManager: SubmissionGradeManager = FakeSubmissionGradeManager()
+
+    @BindValue
+    @JvmField
+    val submissionDetailsManager: SubmissionDetailsManager = FakeSubmissionDetailsManager()
+
+    @BindValue
+    @JvmField
+    val submissionRubricManager: SubmissionRubricManager = FakeSubmissionRubricManager()
+
+    @BindValue
+    @JvmField
+    val submissionCommentsManager: SubmissionCommentsManager = FakeSubmissionCommentsManager()
+
+    @BindValue
+    @JvmField
+    val customGradeStatusesManager: CustomGradeStatusesManager = FakeCustomGradeStatusesManager()
 
     @BindValue
     @JvmField
     val differentiationTagsManager: DifferentiationTagsManager = FakeDifferentiationTagsManager()
 
-    @Stub
-    @Test
-    override fun displaysPageObjects() {
-        getToQuizSubmissionPage()
-        speedGraderQuizSubmissionPage.assertPageObjects()
-    }
+    @BindValue
+    @JvmField
+    val recentGradedSubmissionsManager: RecentGradedSubmissionsManager = FakeRecentGradedSubmissionsManager()
 
-    @Stub
     @Test
     fun displaysNoSubmission() {
         getToQuizSubmissionPage(submitQuiz = false)
-        speedGraderQuizSubmissionPage.assertShowsNoSubmissionState()
+        speedGraderQuizSubmissionPage.assertShowsNoSubmissionState(R.string.noSubmissionTeacher)
     }
 
-    @Stub
     @Test
     fun displaysPendingReviewState() {
         getToQuizSubmissionPage(addQuestion = true, state = "pending_review")
         speedGraderQuizSubmissionPage.assertShowsPendingReviewState()
     }
 
-    @Stub
     @Test
     fun displaysViewQuizState() {
         getToQuizSubmissionPage(state = "untaken")
@@ -79,7 +149,7 @@ class SpeedGraderQuizSubmissionInteractionTest : TeacherComposeTest() {
 
         data.addCoursePermissions(
                 course.id,
-                CanvasContextPermission() // Just need to have some sort of permissions object registered
+                CanvasContextPermission()
         )
 
         val quiz = data.addQuizToCourse(course = course, published = true, quizType = Quiz.TYPE_ASSIGNMENT)
@@ -113,5 +183,8 @@ class SpeedGraderQuizSubmissionInteractionTest : TeacherComposeTest() {
         quizListPage.clickQuiz(quiz)
         quizDetailsPage.openSubmissionsPage()
         assignmentSubmissionListPage.clickSubmission(student)
+        composeTestRule.waitForIdle()
+        if (isCompactDevice()) speedGraderPage.clickExpandPanelButton()
+        speedGraderPage.selectTab("Grade & Rubric")
     }
 }

@@ -14,6 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 package com.instructure.pandautils.features.speedgrader.content
 
 import androidx.compose.animation.core.Animatable
@@ -376,7 +377,8 @@ private fun Selector(
             .clickable {
                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
             }
-            .padding(8.dp),
+            .padding(8.dp)
+            .testTag("attemptSelector"),
         expanded = expanded,
         onExpandedChange = { expanded = !expanded },
     ) {

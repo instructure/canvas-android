@@ -13,12 +13,14 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package com.instructure.canvas.espresso.mockcanvas.fakes
 
 import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvasapi2.SubmissionContentQuery
 import com.instructure.canvasapi2.fragment.SubmissionFields
 import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.type.SubmissionState
 import com.instructure.canvasapi2.type.SubmissionStatusTagType
 import com.instructure.canvasapi2.type.SubmissionType
@@ -30,10 +32,26 @@ class FakeSubmissionContentManager : SubmissionContentManager {
         domain: String?
     ): SubmissionContentQuery.Data {
         val assignment = MockCanvas.data.assignments[assignmentId]
-        val submission = MockCanvas.data.submissions[assignmentId]?.get(0)
-        val student = MockCanvas.data.students[0]
+        val userRootSubmission = MockCanvas.data.submissions[assignmentId]?.firstOrNull { it.userId == userId }
+        val submissionHistory = userRootSubmission?.submissionHistory ?: emptyList()
+        val submission = submissionHistory.firstOrNull()
+        val student = MockCanvas.data.students.find { it.id == userId } ?: MockCanvas.data.students[0]
         val user = SubmissionFields.User(student.avatarUrl, student.name, student.shortName, student.sortableName)
-        val submissionTypes = listOf(SubmissionType.online_text_entry) //TODO
+        val submissionTypes = assignment?.getSubmissionTypes()?.map { type ->
+            when (type) {
+                Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> SubmissionType.online_text_entry
+                Assignment.SubmissionType.ONLINE_URL -> SubmissionType.online_url
+                Assignment.SubmissionType.ONLINE_UPLOAD -> SubmissionType.online_upload
+                Assignment.SubmissionType.MEDIA_RECORDING -> SubmissionType.media_recording
+                Assignment.SubmissionType.ONLINE_QUIZ -> SubmissionType.online_quiz
+                Assignment.SubmissionType.DISCUSSION_TOPIC -> SubmissionType.discussion_topic
+                Assignment.SubmissionType.EXTERNAL_TOOL -> SubmissionType.basic_lti_launch
+                Assignment.SubmissionType.ON_PAPER -> SubmissionType.on_paper
+                Assignment.SubmissionType.NONE -> SubmissionType.none
+                Assignment.SubmissionType.STUDENT_ANNOTATION -> SubmissionType.student_annotation
+                else -> SubmissionType.online_text_entry
+            }
+        } ?: listOf(SubmissionType.online_text_entry)
 
         val attachment = submission?.attachments?.getOrNull(0)
         val submissionAttachment = if (attachment != null) SubmissionFields.Attachment(
@@ -64,14 +82,34 @@ class FakeSubmissionContentManager : SubmissionContentManager {
         )
         val dummySubmissionFields = SubmissionFields(
             groupId = "group-1",
-            state = SubmissionState.submitted,
-            attempt = (submission?.attempt ?: 1).toInt(),
+            state = when (submission?.workflowState) {
+                "pending_review" -> SubmissionState.pending_review
+                "graded" -> SubmissionState.graded
+                "submitted" -> SubmissionState.submitted
+                null -> SubmissionState.unsubmitted
+                else -> if (submission != null) SubmissionState.submitted else SubmissionState.unsubmitted
+            },
+            attempt = (submission?.attempt ?: 0).toInt(),
             body = submission?.body,
-            url = "https://dummy.url/submission",
-            previewUrl = "https://dummy.url/preview",
-            submissionType = SubmissionType.online_text_entry,
+            url = submission?.url,
+            previewUrl = submission?.url,
+            submissionType = submission?.submissionType?.let { typeString ->
+                when (typeString) {
+                    "online_text_entry" -> SubmissionType.online_text_entry
+                    "online_url" -> SubmissionType.online_url
+                    "online_upload" -> SubmissionType.online_upload
+                    "media_recording" -> SubmissionType.media_recording
+                    "online_quiz" -> SubmissionType.online_quiz
+                    "discussion_topic" -> SubmissionType.discussion_topic
+                    "basic_lti_launch" -> SubmissionType.basic_lti_launch
+                    "on_paper" -> SubmissionType.on_paper
+                    "none" -> SubmissionType.none
+                    "student_annotation" -> SubmissionType.student_annotation
+                    else -> SubmissionType.online_text_entry
+                }
+            },
             statusTag = SubmissionStatusTagType.none,
-            status = "submitted",
+            status = if (submission != null) "submitted" else "unsubmitted",
             submissionStatus = "on_time",
             cachedDueDate = assignment?.dueDate,
             submittedAt = submission?.submittedAt,
@@ -82,13 +120,29 @@ class FakeSubmissionContentManager : SubmissionContentManager {
             customGradeStatus = null
         )
 
-        val dummyNode = SubmissionContentQuery.Node(
-            __typename = "Submission",
-            submissionFields = dummySubmissionFields
-        )
-        val dummyEdge = SubmissionContentQuery.Edge(node = dummyNode)
+        // Create edges for all submission attempts from the history
+        val edges = if (submissionHistory.isNotEmpty()) {
+            submissionHistory.mapNotNull { attemptSubmission ->
+                attemptSubmission?.let {
+                    val fields = dummySubmissionFields.copy(
+                        attempt = it.attempt.toInt(),
+                        body = it.body,
+                        url = it.url,
+                        previewUrl = it.url
+                    )
+                    val node = SubmissionContentQuery.Node(__typename = "Submission", submissionFields = fields)
+                    SubmissionContentQuery.Edge(node = node)
+                }
+            }
+        } else {
+            // When there are no submissions, still create one edge with unsubmitted state
+            // so the ViewModel can access the assignment information
+            val node = SubmissionContentQuery.Node(__typename = "Submission", submissionFields = dummySubmissionFields)
+            listOf(SubmissionContentQuery.Edge(node = node))
+        }
+
         val dummyHistoriesConnection = SubmissionContentQuery.SubmissionHistoriesConnection(
-            edges = listOf(dummyEdge),
+            edges = edges,
             pageInfo = SubmissionContentQuery.PageInfo(
                 hasNextPage = false,
                 hasPreviousPage = false,
@@ -96,9 +150,9 @@ class FakeSubmissionContentManager : SubmissionContentManager {
                 endCursor = "end-cursor"
             )
         )
-        val dummySubmission = if (submission == null) null else SubmissionContentQuery.Submission(
+        val dummySubmission = SubmissionContentQuery.Submission(
             __typename = "Submission",
-            _id = submission.id.toString(),
+            _id = submission?.id?.toString() ?: "0",
             userId = userId.toString(),
             submissionHistoriesConnection = dummyHistoriesConnection,
             submissionFields = dummySubmissionFields

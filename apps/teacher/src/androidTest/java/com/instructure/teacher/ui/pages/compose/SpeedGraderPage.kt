@@ -13,6 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package com.instructure.teacher.ui.pages.compose
 
 import androidx.annotation.StringRes
@@ -38,24 +39,19 @@ import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeUp
-import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.closeSoftKeyboard
-import androidx.test.espresso.NoMatchingViewException
-import androidx.test.espresso.assertion.ViewAssertions
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
+import androidx.test.espresso.web.sugar.Web.onWebView
+import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
+import androidx.test.espresso.web.webdriver.DriverAtoms.getText
+import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
 import com.instructure.composetest.hasTestTagThatContains
-import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.SubmissionApiModel
-import com.instructure.espresso.OnViewWithId
-import com.instructure.espresso.OnViewWithStringText
-import com.instructure.espresso.ViewPagerItemCountAssertion
-import com.instructure.espresso.WaitForViewWithId
-import com.instructure.espresso.WaitForViewWithText
 import com.instructure.espresso.assertCompletelyDisplayed
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertHasText
@@ -64,7 +60,6 @@ import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.getStringFromResource
 import com.instructure.espresso.page.onView
-import com.instructure.espresso.page.onViewWithText
 import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.page.waitForViewWithId
@@ -72,13 +67,11 @@ import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withParent
 import com.instructure.espresso.page.withText
-import com.instructure.espresso.pageToItem
 import com.instructure.espresso.scrollTo
 import com.instructure.pandautils.features.speedgrader.grade.comments.CommentIdKey
 import com.instructure.teacher.R
 import org.hamcrest.Matchers
 import org.hamcrest.Matchers.allOf
-import java.util.Locale
 
 /**
  * Represents the SpeedGrader page.
@@ -90,18 +83,7 @@ import java.util.Locale
  * of the comment library. This page extends the BasePage class.
  */
 @Suppress("unused")
-class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage() { // TODO: YET this is a 'hybrid' page because it's highly used in tests, we'll eliminate the non-compose parts step by step.
-
-    private val speedGraderActivityToolbar by OnViewWithId(R.id.speedGraderToolbar)
-    private val slidingUpPanelLayout by OnViewWithId(R.id.slidingUpPanelLayout,false)
-    private val submissionPager by OnViewWithId(R.id.submissionContentPager)
-
-    private val gradeTab by OnViewWithStringText(getStringFromResource(R.string.sg_tab_grade).uppercase(Locale.getDefault()))
-    private val commentsLabel by OnViewWithStringText(getStringFromResource(R.string.sg_tab_comments).uppercase(Locale.getDefault()))
-
-    private val submissionDropDown by WaitForViewWithId(R.id.submissionVersionsSpinner)
-    private val submissionVersionDialogTitle by WaitForViewWithText(R.string.submission_versions)
-    private val commentLibraryContainer by OnViewWithId(R.id.commentLibraryFragmentContainer)
+class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage() {
 
     /**
      * Clicks the expand panel button in the Compose UI.
@@ -165,7 +147,7 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
      * Asserts that the page has the submission drop-down.
      */
     fun assertHasSubmissionDropDown() {
-        submissionDropDown.assertDisplayed()
+        composeTestRule.onNode(hasTestTag("attemptSelector")).assertIsDisplayed()
     }
 
     /**
@@ -359,6 +341,7 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
      */
     fun clickOnMediaComment(mediaCommentText: String) {
         composeTestRule.onNode(hasText(mediaCommentText) and hasAnySibling(hasTestTag("mediaAttachmentBox")), useUnmergedTree = true).performScrollTo().performClick()
+        composeTestRule.waitForIdle()
     }
 
     /**
@@ -498,68 +481,22 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
     }
 
     /**
-     * Selects the "Files" tab with the specified file count.
-     */
-    fun selectFilesTab(fileCount: Int) {
-        val filesTab = waitForViewWithText(
-            getStringFromResource(
-                R.string.sg_tab_files_w_counter,
-                fileCount
-            ).uppercase()
-        )
-        filesTab.click()
-    }
-
-    /**
-     * Asserts that the student is being graded.
-     *
-     * @param student The student to be graded.
-     */
-    fun assertGradingStudent(student: CanvasUserApiModel) {
-        onViewWithText(student.name).assertCompletelyDisplayed()
-    }
-
-    /**
      * Asserts that the student is being graded.
      *
      * @param student The student to be graded.
      */
     fun assertGradingStudent(student: User) {
-        onViewWithText(student.name).assertCompletelyDisplayed()
-    }
-
-    /**
-     * Navigates to the submission page at the specified index.
-     *
-     * @param index The index of the submission page to navigate to.
-     */
-    fun goToSubmissionPage(index: Int) {
-        submissionPager.pageToItem(index)
+        onWebView(withId(R.id.contentWebView))
+            .withElement(findElement(Locator.TAG_NAME, "html"))
+            .check(webMatches(getText(), Matchers.containsString(student.shortName)))
     }
 
     /**
      * Clicks the back button.
      */
     fun clickBackButton() {
-        try {
-            Espresso.onView(
-                Matchers.allOf(
-                    ViewMatchers.withContentDescription(R.string.abc_action_bar_up_description),
-                    ViewMatchers.isCompletelyDisplayed(),
-                    ViewMatchers.isDescendantOfA(ViewMatchers.withId(R.id.gradingToolbar))
-                )
-            ).click()
-        } catch (e: NoMatchingViewException) {
-        }
-    }
-
-    /**
-     * Asserts the page count of the submission pager.
-     *
-     * @param count The expected page count.
-     */
-    fun assertPageCount(count: Int) {
-        submissionPager.check(ViewPagerItemCountAssertion(count))
+        composeTestRule.onNode(hasTestTag("navigationButton")).performClick()
+        composeTestRule.waitForIdle()
     }
 
     /**
@@ -615,47 +552,6 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
         waitForViewWithId(R.id.canvasWebView).assertCompletelyDisplayed()
     }
 
-    /**
-     * Asserts that the comment library is not visible.
-     */
-    fun assertCommentLibraryNotVisible() {
-        commentLibraryContainer.check(ViewAssertions.matches(ViewMatchers.hasChildCount(0)))
-    }
-
-    /**
-     *
-     * Asserts that the file with the given filename is displayed.
-     * @param fileName The name of the file.
-     */
-    fun assertFileDisplayed(fileName: String) {
-        val matcher =
-            Matchers.allOf(ViewMatchers.withId(R.id.fileNameText), ViewMatchers.withText(fileName))
-        Espresso.onView(matcher).assertDisplayed()
-    }
-
-    /**
-     * Asserts that the comment attachment with the given filename and display name is displayed.
-     * @param fileName The name of the attachment file.
-     * @param displayName The display name of the attachment.
-     */
-    fun assertCommentAttachmentDisplayedCommon(fileName: String, displayName: String) {
-        val commentMatcher = Matchers.allOf(
-            ViewMatchers.withId(R.id.commentHolder),
-            ViewMatchers.hasDescendant(
-                Matchers.allOf(
-                    ViewMatchers.withText(displayName),
-                    ViewMatchers.withId(R.id.userNameTextView)
-                )
-            ),
-            ViewMatchers.hasDescendant(
-                Matchers.allOf(
-                    ViewMatchers.withText(fileName),
-                    ViewMatchers.withId(R.id.attachmentNameTextView)
-                )
-            )
-        )
-        onView(commentMatcher).assertDisplayed()
-    }
 }
 
 /**

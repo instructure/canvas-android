@@ -13,6 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package com.instructure.canvas.espresso.mockcanvas.endpoints
 
 import android.util.Log
@@ -220,8 +221,12 @@ object SubmissionUserEndpoint : Endpoint(
                     data.submissions[pathVars.assignmentId]?.add(updatedSubmission)
                     request.successResponse(updatedSubmission)
                 } else {
-                    // We don't know why we're here
-                    throw Exception("Unhandled submission-user-put")
+                    val hasRubricParams = request.url.queryParameterNames.any { it.startsWith("rubric_assessment") }
+                    if (hasRubricParams) {
+                        request.successResponse(submission)
+                    } else {
+                        throw Exception("Unhandled submission-user-put")
+                    }
                 }
             }
             else {
