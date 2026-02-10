@@ -1227,6 +1227,11 @@
     <string name="recordings">Recordings</string>
     <string name="conferenceInProgress">Conference in progress</string>
 
+    <!-- Conferences Widget -->
+    <string name="conferencesWidgetTitle">Conferences (%d)</string>
+    <string name="conferencesWidgetConferenceInProgress">Conference in progress</string>
+    <string name="conferencesWidgetDismissed">Conference dismissed</string>
+
     <string name="a11y_criterion_content_description">Criterion rating %s</string>
     <string name="a11y_criterion_description_content_description">%s, %s</string>
     <string name="a11y_criterion_button_click_description">more information</string>

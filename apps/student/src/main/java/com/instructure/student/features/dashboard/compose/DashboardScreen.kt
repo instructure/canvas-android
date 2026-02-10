@@ -64,6 +64,7 @@ import com.instructure.pandautils.compose.composables.OverflowMenu
 import com.instructure.pandautils.compose.composables.rememberWithRequireNetwork
 import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
+import com.instructure.pandautils.features.dashboard.widget.conferences.ConferencesWidget
 import com.instructure.pandautils.features.dashboard.widget.courseinvitation.CourseInvitationsWidget
 import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidget
 import com.instructure.pandautils.features.dashboard.widget.forecast.ForecastWidget
@@ -273,6 +274,12 @@ private fun GetWidgetComposable(
     router: DashboardRouter
 ) {
     return when (widgetId) {
+        WidgetMetadata.WIDGET_ID_CONFERENCES -> ConferencesWidget(
+            refreshSignal = refreshSignal,
+            columns = columns,
+            onShowSnackbar = onShowSnackbar
+        )
+
         WidgetMetadata.WIDGET_ID_WELCOME -> WelcomeWidget(refreshSignal = refreshSignal)
         WidgetMetadata.WIDGET_ID_COURSES -> CoursesWidget(refreshSignal = refreshSignal, columns = columns)
         WidgetMetadata.WIDGET_ID_COURSE_INVITATIONS -> CourseInvitationsWidget(

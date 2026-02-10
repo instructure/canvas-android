@@ -24,6 +24,7 @@ data class WidgetMetadata(
 ) {
     companion object {
         const val WIDGET_ID_GLOBAL = "global"
+        const val WIDGET_ID_CONFERENCES = "conferences"
         const val WIDGET_ID_COURSE_INVITATIONS = "course_invitations"
         const val WIDGET_ID_INSTITUTIONAL_ANNOUNCEMENTS = "institutional_announcements"
         const val WIDGET_ID_WELCOME = "welcome"
