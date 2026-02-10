@@ -58,6 +58,8 @@ import com.instructure.pandautils.utils.ProfileUtils
 import com.instructure.pandautils.utils.RequestCodes
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyDisplayCutoutInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.setGone
@@ -69,8 +71,6 @@ import com.instructure.teacher.presenters.ProfileEditFragmentPresenter
 import com.instructure.teacher.utils.setupCloseButton
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.viewinterface.ProfileEditFragmentView
-import com.instructure.pandautils.utils.applyTopSystemBarInsets
-import com.instructure.pandautils.utils.applyBottomSystemBarInsets
 import retrofit2.Response
 import java.io.File
 
@@ -145,7 +145,7 @@ class ProfileEditFragment : BasePresenterFragment<
     }
 
     private fun setupWindowInsets() = with(binding) {
-        usersName.applyBottomSystemBarInsets()
+        editProfileSettingsPage.applyDisplayCutoutInsets()
     }
 
     override fun readyToLoadUI(user: User?) = with(binding) {

@@ -31,6 +31,8 @@ import com.instructure.pandautils.fragments.BaseFragment
 import com.instructure.pandautils.utils.ProfileUtils
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyDisplayCutoutInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.requestAccessibilityFocus
 import com.instructure.teacher.R
@@ -40,8 +42,6 @@ import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.adoptToolbarStyle
 import com.instructure.teacher.utils.setupBackButtonAsBackPressedOnly
 import com.instructure.teacher.utils.setupMenu
-import com.instructure.pandautils.utils.applyTopSystemBarInsets
-import com.instructure.pandautils.utils.applyBottomSystemBarInsets
 
 @PageView(url = "profile")
 @ScreenView(SCREEN_VIEW_PROFILE)
@@ -77,7 +77,7 @@ class ProfileFragment : BaseFragment() {
     }
 
     private fun setupWindowInsets() = with(binding) {
-        usersBio.applyBottomSystemBarInsets()
+        profileSettingsPage.applyDisplayCutoutInsets()
     }
 
     private fun setupViewableData() = with(binding) {
