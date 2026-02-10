@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -163,9 +164,9 @@ private fun CreateUpdateToDoScreen(
     val configuration = LocalConfiguration.current
     val isPortrait = configuration.orientation == Configuration.ORIENTATION_PORTRAIT
     val contentInsets = if (isPortrait) {
-        WindowInsets.ime.union(WindowInsets.navigationBars)
+        WindowInsets.ime.union(WindowInsets.navigationBars).union(WindowInsets.displayCutout)
     } else {
-        WindowInsets.ime
+        WindowInsets.ime.union(WindowInsets.displayCutout)
     }
 
     Scaffold(
