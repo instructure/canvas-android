@@ -94,7 +94,7 @@ class EnsureDefaultWidgetsUseCaseTest {
         coVerify {
             repository.saveMetadata(
                 match {
-                    it.id == "todo" && it.position == 5 && it.isVisible
+                    it.id == "todo" && it.position == 6 && it.isVisible
                 }
             )
         }
