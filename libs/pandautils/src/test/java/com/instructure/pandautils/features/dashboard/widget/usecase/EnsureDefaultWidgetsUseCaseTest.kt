@@ -91,6 +91,13 @@ class EnsureDefaultWidgetsUseCaseTest {
                 }
             )
         }
+        coVerify {
+            repository.saveMetadata(
+                match {
+                    it.id == "todo" && it.position == 6 && it.isVisible
+                }
+            )
+        }
     }
 
     @Test
@@ -101,7 +108,8 @@ class EnsureDefaultWidgetsUseCaseTest {
             WidgetMetadata("institutional_announcements", 2, true, false),
             WidgetMetadata("welcome", 3, true),
             WidgetMetadata("courses", 4, true),
-            WidgetMetadata("forecast", 5, true)
+            WidgetMetadata("forecast", 5, true),
+            WidgetMetadata("todo", 6, true)
         )
         coEvery { repository.observeAllMetadata() } returns flowOf(existingMetadata)
 
@@ -147,6 +155,11 @@ class EnsureDefaultWidgetsUseCaseTest {
         coVerify(exactly = 1) {
             repository.saveMetadata(
                 match { it.id == "forecast" }
+            )
+        }
+        coVerify(exactly = 1) {
+            repository.saveMetadata(
+                match { it.id == "todo" }
             )
         }
         coVerify(exactly = 0) {

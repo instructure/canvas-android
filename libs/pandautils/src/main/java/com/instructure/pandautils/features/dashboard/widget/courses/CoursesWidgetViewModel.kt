@@ -42,9 +42,11 @@ import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.courses.model.CourseCardItem
 import com.instructure.pandautils.features.dashboard.widget.courses.model.GradeDisplay
 import com.instructure.pandautils.features.dashboard.widget.courses.model.GroupCardItem
+import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveGlobalConfigUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetConfigUseCase
 import com.instructure.pandautils.room.offline.daos.CourseDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
@@ -78,6 +80,7 @@ class CoursesWidgetViewModel @Inject constructor(
     private val localBroadcastManager: LocalBroadcastManager,
     private val observeWidgetConfigUseCase: ObserveWidgetConfigUseCase,
     private val observeOfflineSyncUpdatesUseCase: ObserveOfflineSyncUpdatesUseCase,
+    private val observeGlobalConfigUseCase: ObserveGlobalConfigUseCase,
     private val userRepository: UserRepository
 ) : ViewModel() {
 
@@ -115,6 +118,7 @@ class CoursesWidgetViewModel @Inject constructor(
 
     init {
         loadData()
+        observeConfig()
         observeExpandedStates()
         observeGradeVisibility()
         observeColorOverlay()
@@ -414,6 +418,17 @@ class CoursesWidgetViewModel @Inject constructor(
             } catch (e: Exception) {
                 crashlytics.recordException(e)
             }
+        }
+    }
+
+    private fun observeConfig() {
+        viewModelScope.launch {
+            observeGlobalConfigUseCase(Unit)
+                .catch { crashlytics.recordException(it) }
+                .collect { config ->
+                    val themedColor = ColorKeeper.createThemedColor(config.backgroundColor)
+                    _uiState.update { it.copy(color = themedColor) }
+                }
         }
     }
 }

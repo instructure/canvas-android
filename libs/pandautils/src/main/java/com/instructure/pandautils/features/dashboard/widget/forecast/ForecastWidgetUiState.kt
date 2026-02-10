@@ -17,6 +17,7 @@
 package com.instructure.pandautils.features.dashboard.widget.forecast
 
 import androidx.fragment.app.FragmentActivity
+import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
 import com.instructure.pandautils.utils.ThemedColor
 import java.time.LocalDate
 import java.util.Date
@@ -60,7 +61,7 @@ data class ForecastWidgetUiState(
     val dueAssignments: List<AssignmentItem> = emptyList(),
     val recentGrades: List<AssignmentItem> = emptyList(),
     val selectedSection: ForecastSection? = null,
-    val backgroundColor: ThemedColor = ThemedColor(0xFF2573DF.toInt()),
+    val backgroundColor: ThemedColor = ThemedColor(GlobalConfig.DEFAULT_COLOR),
     val onNavigatePrevious: () -> Unit = {},
     val onNavigateNext: () -> Unit = {},
     val onSectionSelected: (ForecastSection) -> Unit = {},

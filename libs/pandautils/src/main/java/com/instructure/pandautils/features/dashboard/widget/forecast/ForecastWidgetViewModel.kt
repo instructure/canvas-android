@@ -40,6 +40,7 @@ import com.instructure.pandautils.domain.usecase.audit.LoadRecentGradeChangesPar
 import com.instructure.pandautils.domain.usecase.audit.LoadRecentGradeChangesUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCaseParams
+import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveGlobalConfigUseCase
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.getAssignmentIcon
 import com.instructure.pandautils.utils.getIconForPlannerItem
@@ -66,7 +67,7 @@ class ForecastWidgetViewModel @Inject constructor(
     private val loadMissingAssignmentsUseCase: LoadMissingAssignmentsUseCase,
     private val loadUpcomingAssignmentsUseCase: LoadUpcomingAssignmentsUseCase,
     private val loadRecentGradeChangesUseCase: LoadRecentGradeChangesUseCase,
-    private val observeForecastConfigUseCase: ObserveForecastConfigUseCase,
+    private val observeGlobalConfigUseCase: ObserveGlobalConfigUseCase,
     private val loadCourseUseCase: LoadCourseUseCase,
     private val loadAssignmentGroupsUseCase: LoadAssignmentGroupsUseCase,
     private val assignmentWeightCalculator: AssignmentWeightCalculator,
@@ -167,7 +168,7 @@ class ForecastWidgetViewModel @Inject constructor(
 
     private fun observeConfig() {
         viewModelScope.launch {
-            observeForecastConfigUseCase(Unit)
+            observeGlobalConfigUseCase(Unit)
                 .catch { crashlytics.recordException(it) }
                 .collect { config ->
                     val themedColor = ColorKeeper.createThemedColor(config.backgroundColor)
