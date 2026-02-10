@@ -37,6 +37,7 @@ import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
@@ -68,6 +69,7 @@ fun CollapsableHeaderScreen(
     Box(
         modifier = modifier
             .nestedScroll(nestedScrollConnection)
+            .clipToBounds()
     ) {
         Box(
             modifier = Modifier
@@ -142,7 +144,8 @@ fun CollapsableScaffold(
 
     Scaffold(
         modifier = modifier
-            .nestedScroll(nestedScrollConnection),
+            .nestedScroll(nestedScrollConnection)
+            .clipToBounds(),
         topBar = {
             Box(
                 Modifier.offset { IntOffset(0, nestedScrollConnection.topBarOffset) }

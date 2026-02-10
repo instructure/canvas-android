@@ -37,6 +37,7 @@ import com.instructure.pandautils.domain.usecase.offline.ObserveOfflineSyncUpdat
 import com.instructure.pandautils.features.dashboard.customize.WidgetSettingItem
 import com.instructure.pandautils.features.dashboard.widget.SettingType
 import com.instructure.pandautils.features.dashboard.widget.courses.model.GradeDisplay
+import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveGlobalConfigUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetConfigUseCase
 import com.instructure.pandautils.room.offline.daos.CourseDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
@@ -92,6 +93,7 @@ class CoursesWidgetViewModelTest {
     private val observeWidgetConfigUseCase: ObserveWidgetConfigUseCase = mockk()
     private val observeOfflineSyncUpdatesUseCase: ObserveOfflineSyncUpdatesUseCase = mockk()
     private val userRepository: UserRepository = mockk(relaxed = true)
+    private val observeGlobalConfigUseCase: ObserveGlobalConfigUseCase = mockk(relaxed = true)
 
     private lateinit var viewModel: CoursesWidgetViewModel
 
@@ -128,6 +130,9 @@ class CoursesWidgetViewModelTest {
         coEvery { courseSyncSettingsDao.findAll() } returns emptyList()
         coEvery { courseDao.findByIds(any()) } returns emptyList()
         every { observeOfflineSyncUpdatesUseCase(Unit) } returns flowOf()
+        every { observeGlobalConfigUseCase(Unit) } returns flowOf(
+            com.instructure.pandautils.features.dashboard.widget.GlobalConfig()
+        )
     }
 
     @Test
@@ -1013,6 +1018,51 @@ class CoursesWidgetViewModelTest {
         verify { observeOfflineSyncUpdatesUseCase(Unit) }
     }
 
+    @Test
+    fun `observeConfig updates color in ui state from global config`() {
+        setupDefaultMocks()
+        val testColor = 0xFF00FF00.toInt()
+        val themedColor = ThemedColor(testColor, testColor)
+        val globalConfig = com.instructure.pandautils.features.dashboard.widget.GlobalConfig(
+            backgroundColor = testColor
+        )
+        every { observeGlobalConfigUseCase(Unit) } returns flowOf(globalConfig)
+        every { ColorKeeper.createThemedColor(testColor) } returns themedColor
+
+        viewModel = createViewModel()
+
+        val state = viewModel.uiState.value
+        assertEquals(themedColor, state.color)
+    }
+
+    @Test
+    fun `observeConfig sets default color when global config has default value`() {
+        setupDefaultMocks()
+        val defaultColor = com.instructure.pandautils.features.dashboard.widget.GlobalConfig.DEFAULT_COLOR
+        val themedColor = ThemedColor(defaultColor, defaultColor)
+        val globalConfig = com.instructure.pandautils.features.dashboard.widget.GlobalConfig()
+        every { observeGlobalConfigUseCase(Unit) } returns flowOf(globalConfig)
+        every { ColorKeeper.createThemedColor(defaultColor) } returns themedColor
+
+        viewModel = createViewModel()
+
+        val state = viewModel.uiState.value
+        assertEquals(themedColor, state.color)
+    }
+
+    @Test
+    fun `observeConfig records exception when global config flow fails`() {
+        setupDefaultMocks()
+        val exception = Exception("Failed to load global config")
+        every { observeGlobalConfigUseCase(Unit) } returns kotlinx.coroutines.flow.flow {
+            throw exception
+        }
+
+        viewModel = createViewModel()
+
+        verify { crashlytics.recordException(exception) }
+    }
+
     private fun createViewModel(): CoursesWidgetViewModel {
         return CoursesWidgetViewModel(
             loadFavoriteCoursesUseCase = loadFavoriteCoursesUseCase,
@@ -1029,7 +1079,8 @@ class CoursesWidgetViewModelTest {
             localBroadcastManager = localBroadcastManager,
             observeWidgetConfigUseCase = observeWidgetConfigUseCase,
             observeOfflineSyncUpdatesUseCase = observeOfflineSyncUpdatesUseCase,
-            userRepository = userRepository
+            userRepository = userRepository,
+            observeGlobalConfigUseCase = observeGlobalConfigUseCase
         )
     }
 }

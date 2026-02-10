@@ -40,5 +40,6 @@ data class CustomizeDashboardUiState(
     val onMoveDown: (String) -> Unit = {},
     val onToggleVisibility: (String) -> Unit = {},
     val onToggleDashboardRedesign: (Boolean) -> Unit = {},
-    val onUpdateSetting: (widgetId: String, key: String, value: Any) -> Unit = { _, _, _ -> }
+    val onUpdateSetting: (widgetId: String, key: String, value: Any) -> Unit = { _, _, _ -> },
+    val globalSettings: List<WidgetSettingItem> = emptyList()
 )

@@ -31,6 +31,7 @@ import com.instructure.canvasapi2.managers.FileFolderManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.FileFolder
+import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
@@ -329,6 +330,7 @@ object RouteMatcher : BaseRouteMatcher() {
 
     fun route(activity: FragmentActivity, route: Route?) {
         val uri = route?.uri
+        Logger.i("RouteMatcher:route() - uri: $uri, routeContext: ${route?.routeContext}, primaryClass: ${route?.primaryClass}")
         if (route == null || route.routeContext === RouteContext.DO_NOT_ROUTE) {
             if (route?.uri != null) {
                 //No route, no problem
@@ -364,6 +366,8 @@ object RouteMatcher : BaseRouteMatcher() {
                 ?.contains("media_attachments") == true
         ) {
             handleStudioImmersiveViewRoute(route, activity)
+        } else if (route.routeContext === RouteContext.LTI) {
+            handleLtiRoute(activity, route)
         } else if (activity.resources.getBoolean(R.bool.isDeviceTablet)) {
             handleTabletRoute(activity, route)
         } else {
@@ -474,6 +478,36 @@ object RouteMatcher : BaseRouteMatcher() {
             handleFullscreenRoute(context, route)
         } else {
             context.startActivity(SpeedGraderActivity.createIntent(context, route))
+        }
+    }
+
+    private fun handleLtiRoute(activity: FragmentActivity, route: Route) {
+        Logger.i("RouteMatcher:handleLtiRoute()")
+        val url = route.uri?.toString()
+        if (url.isNullOrEmpty()) {
+            return
+        }
+
+        // Don't intercept sessionless_launch URLs - they're already being handled by an existing LtiLaunchFragment
+        if (url.contains("sessionless_launch")) {
+            Logger.i("RouteMatcher:handleLtiRoute() - Skipping sessionless_launch URL")
+            return
+        }
+
+        val contextId = route.paramsHash[RouterParams.COURSE_ID]?.toLongOrNull()
+            ?: route.paramsHash[RouterParams.GROUP_ID]?.toLongOrNull()
+
+        val canvasContext: CanvasContext? = when (route.getContextType()) {
+            CanvasContext.Type.COURSE -> contextId?.let { Course(id = it) }
+            CanvasContext.Type.GROUP -> contextId?.let { Group(id = it) }
+            else -> null
+        }
+
+        if (canvasContext != null) {
+            val ltiRoute = LtiLaunchFragment.makeRoute(canvasContext, url, sessionLessLaunch = true)
+            route(activity, ltiRoute)
+        } else {
+            handleWebViewUrl(activity, url)
         }
     }
 

@@ -24,7 +24,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardItemState
-import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardButtonRoute
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardHeaderState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardState
@@ -59,7 +58,7 @@ class HorizonDashboardCourseSectionUiTest {
                             iconRes = R.drawable.book_2
                         ),
                         title = "Program 1",
-                        route = DashboardPaginatedWidgetCardButtonRoute.HomeRoute("")
+                        route = ""
                     )
                 )
             ),
@@ -99,9 +98,8 @@ class HorizonDashboardCourseSectionUiTest {
             )
         )
         composeTestRule.setContent {
-            val mainNavController = rememberNavController()
-            val homeNavController = rememberNavController()
-            DashboardCourseSection(state, mainNavController,homeNavController)
+            val navController = rememberNavController()
+            DashboardCourseSection(state, navController)
         }
 
         composeTestRule.onNodeWithText("Program 1").assertExists()

@@ -114,6 +114,7 @@ class LeftSideNavigationDrawerPage : BasePage() {
         hamburgerButton.click()
         onViewWithId(R.id.navigationDrawerShowGradesSwitch).perform(SetSwitchCompat(showGrades))
         Espresso.pressBack()
+        sleep(1000) //wait for drawer to close
     }
 
     fun setColorOverlay(colorOverlay: Boolean) {

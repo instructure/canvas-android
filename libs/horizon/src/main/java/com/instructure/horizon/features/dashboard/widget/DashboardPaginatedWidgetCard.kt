@@ -47,8 +47,7 @@ import java.util.Date
 @Composable
 fun DashboardPaginatedWidgetCard(
     state: DashboardPaginatedWidgetCardState,
-    mainNavController: NavHostController,
-    homeNavController: NavHostController,
+    navController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
     val pagerState = rememberPagerState(pageCount = { state.items.size })
@@ -80,15 +79,7 @@ fun DashboardPaginatedWidgetCard(
                 } else {
                     {
                         item.route?.let { route ->
-                            when (route) {
-                                is DashboardPaginatedWidgetCardButtonRoute.HomeRoute -> {
-                                    homeNavController.navigate(route.route)
-                                }
-
-                                is DashboardPaginatedWidgetCardButtonRoute.MainRoute -> {
-                                    mainNavController.navigate(route.route)
-                                }
-                            }
+                            navController.navigate(route)
                         }
                     }
                 }
@@ -172,7 +163,7 @@ private fun DashboardPaginatedWidgetCardAnnouncementContentPreview() {
                     title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Announcement title shown here.",
                     source = "Institution or Course Name Here",
                     date = Date(),
-                    route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
+                    route = ""
                 ),
                 DashboardPaginatedWidgetCardItemState(
                     headerState = DashboardPaginatedWidgetCardHeaderState(
@@ -183,7 +174,7 @@ private fun DashboardPaginatedWidgetCardAnnouncementContentPreview() {
                     title = "Second announcement with different content to show pagination.",
                     source = "Another Course Name",
                     date = Date(),
-                    route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
+                    route = ""
                 ),
                 DashboardPaginatedWidgetCardItemState(
                     headerState = DashboardPaginatedWidgetCardHeaderState(
@@ -193,11 +184,10 @@ private fun DashboardPaginatedWidgetCardAnnouncementContentPreview() {
                     ),
                     title = "Third global announcement without a source.",
                     date = Date(),
-                    route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
+                    route = ""
                 )
             )
         ),
-        rememberNavController(),
         rememberNavController(),
     )
 }
@@ -208,7 +198,6 @@ private fun DashboardPaginatedWidgetCardAnnouncementLoadingPreview() {
     ContextKeeper.appContext = LocalContext.current
     DashboardPaginatedWidgetCard(
         state = DashboardPaginatedWidgetCardState.Loading,
-        rememberNavController(),
         rememberNavController(),
     )
 }

@@ -19,9 +19,9 @@ package com.instructure.pandautils.features.dashboard.widget.usecase
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.instructure.pandautils.domain.usecase.BaseUseCase
+import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
 import com.instructure.pandautils.features.dashboard.widget.WidgetConfig
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
-import com.instructure.pandautils.features.dashboard.widget.forecast.ForecastConfig
 import com.instructure.pandautils.features.dashboard.widget.courses.CoursesConfig
 import com.instructure.pandautils.features.dashboard.widget.repository.WidgetConfigDataRepository
 import javax.inject.Inject
@@ -57,7 +57,7 @@ class UpdateWidgetConfigUseCase @Inject constructor(
 
     private fun getDefaultConfig(widgetId: String): WidgetConfig? {
         return when (widgetId) {
-            WidgetMetadata.WIDGET_ID_FORECAST -> ForecastConfig()
+            WidgetMetadata.WIDGET_ID_GLOBAL -> GlobalConfig()
             WidgetMetadata.WIDGET_ID_COURSES -> CoursesConfig()
             else -> null
         }
@@ -65,8 +65,8 @@ class UpdateWidgetConfigUseCase @Inject constructor(
 
     private fun deserializeConfig(widgetId: String, json: String): WidgetConfig? {
         return when (widgetId) {
-            WidgetMetadata.WIDGET_ID_FORECAST -> try {
-                gson.fromJson(json, ForecastConfig::class.java)
+            WidgetMetadata.WIDGET_ID_GLOBAL -> try {
+                gson.fromJson(json, GlobalConfig::class.java)
             } catch (e: Exception) {
                 null
             }

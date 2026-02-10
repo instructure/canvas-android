@@ -46,7 +46,7 @@ class ObserveWidgetConfigUseCaseTest {
 
     @Test
     fun testObserveConfigWithExistingJson() = runTest {
-        val widgetId = WidgetMetadata.WIDGET_ID_FORECAST
+        val widgetId = WidgetMetadata.WIDGET_ID_GLOBAL
         val configJson = """{"backgroundColor":123456}"""
         coEvery { repository.observeConfigJson(widgetId) } returns flowOf(configJson)
 
@@ -59,7 +59,7 @@ class ObserveWidgetConfigUseCaseTest {
 
     @Test
     fun testObserveConfigWithNoExistingJson() = runTest {
-        val widgetId = WidgetMetadata.WIDGET_ID_FORECAST
+        val widgetId = WidgetMetadata.WIDGET_ID_GLOBAL
         coEvery { repository.observeConfigJson(widgetId) } returns flowOf(null)
 
         val result = useCase(widgetId).first()
@@ -71,7 +71,7 @@ class ObserveWidgetConfigUseCaseTest {
 
     @Test
     fun testObserveConfigWithInvalidJson() = runTest {
-        val widgetId = WidgetMetadata.WIDGET_ID_FORECAST
+        val widgetId = WidgetMetadata.WIDGET_ID_GLOBAL
         coEvery { repository.observeConfigJson(widgetId) } returns flowOf("invalid json")
 
         val result = useCase(widgetId).first()
@@ -101,7 +101,7 @@ class ObserveWidgetConfigUseCaseTest {
 
     @Test
     fun testObserveConfigUpdatesOnJsonChange() = runTest {
-        val widgetId = WidgetMetadata.WIDGET_ID_FORECAST
+        val widgetId = WidgetMetadata.WIDGET_ID_GLOBAL
         val configJson1 = """{"backgroundColor":123456}"""
         val configJson2 = """{"backgroundColor":789012}"""
         coEvery { repository.observeConfigJson(widgetId) } returns flowOf(configJson1, configJson2)

@@ -19,6 +19,7 @@ package com.instructure.horizon.navigation
 import com.instructure.horizon.features.account.navigation.AccountRoute
 import com.instructure.horizon.features.home.HomeNavigationRoute
 import com.instructure.horizon.features.inbox.navigation.HorizonInboxRoute
+import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.features.notebook.navigation.NotebookRoute
 import com.instructure.horizon.horizonui.animation.NavigationTransitionAnimation
 
@@ -88,6 +89,23 @@ val animationRules = listOf(
         from = null,
         to = HorizonInboxRoute.InboxCompose.route,
         style = NavigationTransitionAnimation.SCALE
+    ),
+
+    //Learn
+    NavigationTransitionAnimationRule(
+        from = LearnRoute.LearnScreen.route,
+        to = LearnRoute.LearnCourseDetailsScreen.route,
+        style = NavigationTransitionAnimation.SLIDE
+    ),
+    NavigationTransitionAnimationRule(
+        from = LearnRoute.LearnScreen.route,
+        to = LearnRoute.LearnProgramDetailsScreen.route,
+        style = NavigationTransitionAnimation.SLIDE
+    ),
+    NavigationTransitionAnimationRule(
+        from = LearnRoute.LearnProgramDetailsScreen.route,
+        to = LearnRoute.LearnCourseDetailsScreen.route,
+        style = NavigationTransitionAnimation.SLIDE
     ),
 )
 
