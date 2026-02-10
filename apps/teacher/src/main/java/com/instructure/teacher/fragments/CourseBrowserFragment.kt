@@ -21,7 +21,6 @@ import android.content.Intent
 import android.net.Uri
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -47,6 +46,7 @@ import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.Const.CANVAS_STUDENT_ID
 import com.instructure.pandautils.utils.Const.MARKET_URI_PREFIX
+import com.instructure.pandautils.utils.EdgeToEdgeHelper
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.a11yManager
@@ -167,6 +167,14 @@ class CourseBrowserFragment : BaseSyncFragment<
         binding.courseBrowserSubtitle.text = (presenter.canvasContext as? Course)?.term?.name.orEmpty()
         courseBrowserHeader.setTitleAndSubtitle(presenter.canvasContext.name.orEmpty(), (presenter.canvasContext as? Course)?.term?.name.orEmpty())
         setupToolbar()
+
+        // Force status bar to course color after all other initialization
+        requireActivity().window?.let { window ->
+            EdgeToEdgeHelper.setStatusBarColor(window, presenter.canvasContext.color)
+            val controller = ViewCompat.getWindowInsetsController(window.decorView)
+            controller?.isAppearanceLightStatusBars = false
+        }
+
         if (!presenter.isEmpty) {
             checkIfEmpty()
         }
@@ -205,23 +213,20 @@ class CourseBrowserFragment : BaseSyncFragment<
         appBarLayout.setBackgroundColor(presenter.canvasContext.color)
 
         // Handle top insets based on color overlay setting
+        // Apply padding instead of margin so colored background extends behind status bar
         if (overlayToolbar.isVisible) {
-            // Color overlay enabled: apply top margin to AppBarLayout
+            // Color overlay enabled: apply top padding to AppBarLayout
             ViewCompat.setOnApplyWindowInsetsListener(appBarLayout) { view, insets ->
                 val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-                val layoutParams = view.layoutParams as? ViewGroup.MarginLayoutParams
-                layoutParams?.topMargin = systemBars.top
-                view.layoutParams = layoutParams
+                view.setPadding(view.paddingLeft, systemBars.top, view.paddingRight, view.paddingBottom)
                 insets
             }
             ViewCompat.requestApplyInsets(appBarLayout)
         } else {
-            // Color overlay disabled: apply top margin to noOverlayToolbar
+            // Color overlay disabled: apply top padding to noOverlayToolbar
             ViewCompat.setOnApplyWindowInsetsListener(noOverlayToolbar) { view, insets ->
                 val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-                val layoutParams = view.layoutParams as? ViewGroup.MarginLayoutParams
-                layoutParams?.topMargin = systemBars.top
-                view.layoutParams = layoutParams
+                view.setPadding(view.paddingLeft, systemBars.top, view.paddingRight, view.paddingBottom)
                 insets
             }
             ViewCompat.requestApplyInsets(noOverlayToolbar)
@@ -230,7 +235,13 @@ class CourseBrowserFragment : BaseSyncFragment<
         toolbar.setupBackButton(this@CourseBrowserFragment)
         toolbar.setupMenu(R.menu.menu_course_browser, menuItemCallback)
         ViewStyler.colorToolbarIconsAndText(requireActivity(), toolbar, requireContext().getColor(R.color.textLightest))
-        ViewStyler.setStatusBarDark(requireActivity(), presenter.canvasContext.color)
+
+        // Set status bar to course color with light icons (same as collapsed state)
+        EdgeToEdgeHelper.setStatusBarColor(requireActivity().window, presenter.canvasContext.color)
+        requireActivity().window?.let { window ->
+            val controller = ViewCompat.getWindowInsetsController(window.decorView)
+            controller?.isAppearanceLightStatusBars = false // White icons on colored background
+        }
 
         collapsingToolbarLayout.setContentScrimColor(presenter.canvasContext.color)
         swipeRefreshLayout.applyBottomSystemBarInsets()
