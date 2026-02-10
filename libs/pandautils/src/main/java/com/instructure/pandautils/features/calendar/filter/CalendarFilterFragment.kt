@@ -53,7 +53,8 @@ class CalendarFilterFragment : BaseCanvasBottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        WindowInsetsHelper.setSystemBarsAppearanceAuto(requireActivity())
+        // Set status bar icons to light (white) for visibility over the dialog
+        WindowInsetsHelper.setStatusBarAppearance(requireActivity().window, isLightStatusBar = false)
         setFullScreen()
     }
 
