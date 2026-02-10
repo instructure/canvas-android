@@ -93,11 +93,8 @@ import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.organisms.AnimatedHorizontalPager
 import com.instructure.horizon.horizonui.organisms.scaffolds.CollapsableHeaderScreen
 import com.instructure.horizon.navigation.MainNavigationRoute
-import com.instructure.pandautils.compose.modifiers.conditional
-import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.horizon.util.zeroScreenInsets
+import com.instructure.pandautils.compose.modifiers.conditional
 import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
@@ -150,14 +147,16 @@ fun DashboardScreen(uiState: DashboardUiState, navController: NavHostController)
         CollapsableHeaderScreen(
             statusBarColor = HorizonColors.Surface.pagePrimary(),
             modifier = Modifier.padding(innerPadding),
-            headerContent = {
+            headerContent = { paddingValues ->
                 Column(
-                    modifier = Modifier.conditional(scrollState.canScrollBackward) {
-                        shadow(
-                            elevation = HorizonElevation.level3,
-                            spotColor = Color.Transparent,
-                        )
-                    }
+                    modifier = Modifier
+                        .padding(paddingValues)
+                        .conditional(scrollState.canScrollBackward) {
+                            shadow(
+                                elevation = HorizonElevation.level3,
+                                spotColor = Color.Transparent,
+                            )
+                        }
                 ) {
                     DashboardTopBar(
                         uiState,
