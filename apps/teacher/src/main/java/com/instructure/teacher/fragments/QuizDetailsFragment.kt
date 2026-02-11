@@ -55,6 +55,7 @@ import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.NullableParcelableArg
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyDisplayCutoutInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.isTablet
@@ -155,6 +156,9 @@ class QuizDetailsFragment : BasePresenterFragment<
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.toolbar.applyTopSystemBarInsets()
+
+        // Apply display cutout insets to root view to prevent content from extending behind camera cutout
+        binding.root.applyDisplayCutoutInsets()
 
         if (!isInModulesPager) {
             ViewCompat.setOnApplyWindowInsetsListener(binding.swipeRefreshLayout) { v, insets ->
