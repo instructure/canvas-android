@@ -31,6 +31,7 @@ import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyDisplayCutoutInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
@@ -98,6 +99,9 @@ class CourseSettingsFragment : BasePresenterFragment<
         editCourseHomepage.root.onClickWithRequireNetwork {
             presenter.editCourseHomePageClicked(course)
         }
+
+        // Apply display cutout insets to root view to prevent content from extending behind camera cutout
+        root.applyDisplayCutoutInsets()
     }
 
     private fun setupToolbar() = with(binding) {
