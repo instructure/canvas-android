@@ -37,6 +37,7 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyDisplayCutoutInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.closeSearch
 import com.instructure.pandautils.utils.color
@@ -203,6 +204,9 @@ class PeopleListFragment : BaseSyncFragment<User, PeopleListPresenter, PeopleLis
         RecyclerViewUtils.buildRecyclerView(rootView, requireContext(), adapter,
                 presenter, R.id.swipeRefreshLayout, R.id.recyclerView, R.id.emptyPandaView, getString(R.string.no_items_to_display_short))
         addSwipeToRefresh(swipeRefreshLayoutContainerBinding.swipeRefreshLayout)
+
+        // Apply display cutout insets to root view to prevent content from extending behind camera cutout
+        rootView.applyDisplayCutoutInsets()
     }
 
     override fun createAdapter(): PeopleListRecyclerAdapter {
