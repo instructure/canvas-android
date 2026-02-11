@@ -19,7 +19,9 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -92,7 +94,8 @@ fun CanvasAppBar(
                 )
             }
         },
-        modifier = modifier.testTag("toolbar"),
+        modifier = modifier.testTag("toolbar")
+            .windowInsetsPadding(WindowInsets.displayCutout),
         actions = actions,
         windowInsets = WindowInsets.statusBars
     )
@@ -135,7 +138,8 @@ fun CanvasAppBar(
                 )
             }
         },
-        modifier = modifier.testTag("toolbar"),
+        modifier = modifier.testTag("toolbar")
+            .windowInsetsPadding(WindowInsets.displayCutout),
         actions = actions,
         windowInsets = WindowInsets.statusBars
     )
