@@ -157,10 +157,9 @@ class SpeedGraderGradePage(private val composeTestRule: ComposeTestRule) : BaseP
      *
      * @param description The rubric rating description that should not be displayed.
      */
+    @OptIn(ExperimentalTestApi::class)
     fun assertRubricRatingDescriptionNotDisplayed(description: String) {
-        composeTestRule.onNode(hasTestTag("rubricRatingDescription-$description"), useUnmergedTree = true)
-            .performScrollTo()
-            .assertDoesNotExist()
+        composeTestRule.waitUntilDoesNotExist(hasTestTag("rubricRatingDescription-$description"), timeoutMillis = 5000)
     }
 
     /**
