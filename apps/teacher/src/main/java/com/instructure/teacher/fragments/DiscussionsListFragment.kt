@@ -44,6 +44,7 @@ import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.addSearch
 import com.instructure.pandautils.utils.applyBottomAndRightSystemBarMargin
 import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyDisplayCutoutInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.closeSearch
 import com.instructure.pandautils.utils.collectOneOffEvents
@@ -125,6 +126,9 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
         })
 
         setupViews()
+
+        // Apply display cutout insets to root view to prevent content from extending behind camera cutout
+        rootView.applyDisplayCutoutInsets()
 
         lifecycleScope.collectOneOffEvents(discussionSharedEvents.events.flowWithLifecycle(lifecycle)) { handleSharedAction(it) }
     }
