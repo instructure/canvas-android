@@ -36,8 +36,9 @@ import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.addSearch
-import com.instructure.pandautils.utils.applyBottomSystemBarMargin
 import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyBottomSystemBarMargin
+import com.instructure.pandautils.utils.applyDisplayCutoutInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.closeSearch
 import com.instructure.pandautils.utils.color
@@ -105,6 +106,9 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
         })
 
         setupViews()
+
+        // Apply display cutout insets to root view to prevent content from extending behind camera cutout
+        rootView.applyDisplayCutoutInsets()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
