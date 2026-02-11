@@ -54,6 +54,7 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.accessibilityClassName
 import com.instructure.pandautils.utils.applyBottomSystemBarMargin
+import com.instructure.pandautils.utils.applyDisplayCutoutInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.isTablet
@@ -168,7 +169,10 @@ class AssignmentDetailsFragment : BasePresenterFragment<
 
     override fun getPresenterFactory() = AssignmentDetailPresenterFactory(assignment, assignmentsApi)
 
-    override fun onPresenterPrepared(presenter: AssignmentDetailsPresenter) {}
+    override fun onPresenterPrepared(presenter: AssignmentDetailsPresenter) {
+        // Apply display cutout insets to root view to prevent content from extending behind camera cutout
+        binding.root.applyDisplayCutoutInsets()
+    }
 
     private fun setupToolbar() = with(binding) {
         toolbar.applyTopSystemBarInsets()
