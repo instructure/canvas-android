@@ -44,7 +44,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import kotlinx.coroutines.launch
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -157,12 +156,10 @@ fun CourseInvitationsContent(
                 pagerState = pagerState,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 12.dp, bottom = 16.dp),
+                    .padding(top = 12.dp),
                 activeColor = colorResource(R.color.backgroundDarkest),
                 inactiveColor = colorResource(R.color.backgroundDarkest).copy(alpha = 0.4f)
             )
-        } else {
-            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 

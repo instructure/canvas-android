@@ -173,7 +173,6 @@ fun CourseCard(
                         DropdownMenu(
                             expanded = showMenu,
                             onDismissRequest = { showMenu = false },
-                            modifier = Modifier.width(200.dp),
                             shape = RoundedCornerShape(8.dp),
                             containerColor = colorResource(R.color.backgroundLightest)
                         ) {

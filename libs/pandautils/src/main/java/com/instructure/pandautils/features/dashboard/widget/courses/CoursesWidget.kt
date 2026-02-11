@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -41,7 +42,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -176,37 +176,33 @@ fun CoursesWidgetContent(
             ) {
                 Button(
                     onClick = { activity?.let { uiState.onAllCourses(it) } },
-                    modifier = Modifier
-                        .height(24.dp)
-                        .padding(start = 16.dp),
+                    shape = RoundedCornerShape(24.dp),
+                    modifier = Modifier.height(30.dp),
                     contentPadding = PaddingValues(
-                        top = 0.dp,
+                        start = 12.dp,
+                        0.dp,
+                        end = 8.dp,
                         bottom = 0.dp,
-                        start = 10.dp,
-                        end = 6.dp
                     ),
-                    shape = RoundedCornerShape(100.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(uiState.color.color()),
                         contentColor = colorResource(R.color.textLightest)
                     )
                 ) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
                         Text(
                             stringResource(R.string.allCourses),
-                            fontSize = 12.sp,
-                            lineHeight = 14.sp,
-                            modifier = Modifier.padding(top = 4.dp, bottom = 6.dp)
+                            color = colorResource(R.color.textLightest),
+                            fontSize = 14.sp,
+                            modifier = Modifier.align(Alignment.CenterVertically)
                         )
                         Icon(
-                            painter = painterResource(R.drawable.ic_chevron_down_small),
+                            painter = painterResource(R.drawable.ic_chevron_right),
+                            tint = colorResource(R.color.textLightest),
                             contentDescription = null,
-                            modifier = Modifier.rotate(270f)
+                            modifier = Modifier
+                                .size(16.dp)
+                                .align(Alignment.CenterVertically)
                         )
-                    }
                 }
             }
         }

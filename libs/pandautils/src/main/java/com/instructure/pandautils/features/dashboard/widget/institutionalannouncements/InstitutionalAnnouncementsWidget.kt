@@ -25,7 +25,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -153,12 +152,10 @@ fun InstitutionalAnnouncementsContent(
                 pagerState = pagerState,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 12.dp, bottom = 16.dp),
+                    .padding(top = 12.dp),
                 activeColor = colorResource(R.color.backgroundDarkest),
                 inactiveColor = colorResource(R.color.backgroundDarkest).copy(alpha = 0.4f)
             )
-        } else {
-            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
