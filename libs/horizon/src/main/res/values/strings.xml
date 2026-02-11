@@ -551,4 +551,12 @@
     <string name="a11y_learnLearningLibraryItemCompletedContentDescription">Completed</string>
     <string name="a11y_learnLearningLibraryItemBookmarkContentDescription">Bookmark</string>
     <string name="a11y_learnLearningLibraryItemRemoveBookmarkContentDescription">Remove bookmark</string>
+    <string name="learnLearningLibraryItemEnrollLabel">Enroll</string>
+    <string name="a11y_learnLearningLibraryCollectionCollapseContentDescription">Collapse</string>
+    <string name="a11y_learnLearningLibraryCollectionExpandContentDescription">Expand</string>
+    <string name="learnLearningLibraryCollectionViewCollectionLabel">View full collection</string>
+    <plurals name="learnLearningLibraryCollectionItemCount">
+        <item quantity="one">%1$d item</item>
+        <item quantity="other">%1$d items</item>
+    </plurals>
 </resources>

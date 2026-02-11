@@ -30,6 +30,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,6 +43,10 @@ import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.foundation.horizonShadow
+import com.instructure.horizon.horizonui.molecules.Button
+import com.instructure.horizon.horizonui.molecules.ButtonColor
+import com.instructure.horizon.horizonui.molecules.ButtonHeight
+import com.instructure.horizon.horizonui.molecules.ButtonWidth
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
@@ -51,10 +56,12 @@ import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.molecules.StatusChipState
 
 data class LearnLearningLibraryCollectionItemState(
+    val id: String,
     val imageUrl: String?,
     val name: String,
     val isBookmarked: Boolean,
     val isCompleted: Boolean,
+    val canEnroll: Boolean,
     val chips: List<LearnLearningLibraryCollectionItemChipState>
 )
 
@@ -69,6 +76,7 @@ fun LearnLearningLibraryItem(
     state: LearnLearningLibraryCollectionItemState,
     onClick: (() -> Unit),
     onBookmarkClick: (() -> Unit),
+    onEnrollClick: (() -> Unit),
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier
@@ -77,7 +85,7 @@ fun LearnLearningLibraryItem(
         .clickable(onClick = { onClick() })
     ) {
         Column(Modifier.padding(24.dp)) {
-            LoadingImage(state.imageUrl)
+            LoadingImage(state.imageUrl, modifier.clip(HorizonCornerRadius.level1_5))
             HorizonSpace(SpaceSize.SPACE_16)
             Text(
                 text = state.name,
@@ -85,50 +93,17 @@ fun LearnLearningLibraryItem(
                 color = HorizonColors.Text.body(),
             )
             HorizonSpace(SpaceSize.SPACE_12)
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                FlowRow(
-                    itemVerticalAlignment = Alignment.CenterVertically,
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.weight(1f)
-                ) {
-                    state.chips.forEach { chipState ->
-                        StatusChip(
-                            StatusChipState(
-                                chipState.label,
-                                chipState.color,
-                                true,
-                                chipState.iconRes
-                            )
-                        )
-                    }
+            if (state.canEnroll) {
+                Column {
+                    LearnLearningLibraryItemChipContent(state.chips)
+                    LearnLearningLibraryItemButtonContentRow(state, onEnrollClick, onBookmarkClick)
                 }
+            } else {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(2.dp),
                 ) {
-                    if (state.isCompleted) {
-                        Icon(
-                            painter = painterResource(R.drawable.check_circle),
-                            contentDescription = stringResource(R.string.a11y_learnLearningLibraryItemCompletedContentDescription),
-                            tint = HorizonColors.Icon.default()
-                        )
-                    }
-
-                    AnimatedContent(state.isBookmarked) { isBookmarked ->
-                        IconButton(
-                            iconRes = if (isBookmarked) R.drawable.bookmark_fill else R.drawable.bookmark,
-                            contentDescription = if (isBookmarked)
-                                stringResource(R.string.a11y_learnLearningLibraryItemRemoveBookmarkContentDescription)
-                            else
-                                stringResource(R.string.a11y_learnLearningLibraryItemBookmarkContentDescription),
-                            color = IconButtonColor.WhiteGreyOutline,
-                            size = IconButtonSize.NORMAL,
-                            onClick = { onClick() }
-                        )
-                    }
+                    LearnLearningLibraryItemChipContent(state.chips, Modifier.weight(1f))
+                    LearnLearningLibraryItemButtonContentRow(state, onEnrollClick, onBookmarkClick)
                 }
             }
         }
@@ -136,13 +111,83 @@ fun LearnLearningLibraryItem(
 }
 
 @Composable
+private fun LearnLearningLibraryItemChipContent(
+    chips: List<LearnLearningLibraryCollectionItemChipState>,
+    modifier: Modifier = Modifier
+) {
+    FlowRow(
+        itemVerticalAlignment = Alignment.CenterVertically,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier
+    ) {
+        chips.forEach { chipState ->
+            StatusChip(
+                StatusChipState(
+                    chipState.label,
+                    chipState.color,
+                    true,
+                    chipState.iconRes
+                )
+            )
+        }
+    }
+}
+
+@Composable
+private fun LearnLearningLibraryItemButtonContentRow(
+    state: LearnLearningLibraryCollectionItemState,
+    onEnrollClick: () -> Unit,
+    onBookmarkClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(2.dp),
+    ) {
+        if (state.canEnroll) {
+            Button(
+                label = stringResource(R.string.learnLearningLibraryItemEnrollLabel),
+                width = ButtonWidth.FILL,
+                height = ButtonHeight.NORMAL,
+                color = ButtonColor.WhiteOutline,
+                onClick = { onEnrollClick() }
+            )
+        }
+        if (state.isCompleted) {
+            Icon(
+                painter = painterResource(R.drawable.check_circle),
+                contentDescription = stringResource(R.string.a11y_learnLearningLibraryItemCompletedContentDescription),
+                tint = HorizonColors.Icon.default()
+            )
+        }
+
+        AnimatedContent(state.isBookmarked) { isBookmarked ->
+            IconButton(
+                iconRes = if (isBookmarked) R.drawable.bookmark_fill else R.drawable.bookmark,
+                contentDescription = if (isBookmarked)
+                    stringResource(R.string.a11y_learnLearningLibraryItemRemoveBookmarkContentDescription)
+                else
+                    stringResource(R.string.a11y_learnLearningLibraryItemBookmarkContentDescription),
+                color = IconButtonColor.WhiteGreyOutline,
+                size = IconButtonSize.NORMAL,
+                onClick = { onBookmarkClick() }
+            )
+        }
+    }
+}
+
+@Composable
 @Preview
-private fun LearningLibraryItemPreview() {
+private fun LearningLibraryItemCompletedPreview() {
     val state = LearnLearningLibraryCollectionItemState(
+        id = "1",
         imageUrl = "https://example.com/image.png",
         name = "Example Course",
         isBookmarked = true,
         isCompleted = true,
+        canEnroll = false,
         chips = listOf(
             LearnLearningLibraryCollectionItemChipState(
                 label = "Required",
@@ -163,5 +208,71 @@ private fun LearningLibraryItemPreview() {
         )
     )
 
-    LearnLearningLibraryItem(state, {}, {})
+    LearnLearningLibraryItem(state, {}, {}, {})
+}
+
+@Composable
+@Preview
+private fun LearningLibraryItemEnrollPreview() {
+    val state = LearnLearningLibraryCollectionItemState(
+        id = "1",
+        imageUrl = "https://example.com/image.png",
+        name = "Example Course",
+        isBookmarked = true,
+        isCompleted = false,
+        canEnroll = true,
+        chips = listOf(
+            LearnLearningLibraryCollectionItemChipState(
+                label = "Required",
+                color = StatusChipColor.Green,
+            ),
+            LearnLearningLibraryCollectionItemChipState(
+                label = "Completed",
+                color = StatusChipColor.Green,
+            ),
+            LearnLearningLibraryCollectionItemChipState(
+                label = "Locked",
+                color = StatusChipColor.Grey,
+            ),
+            LearnLearningLibraryCollectionItemChipState(
+                label = "Locked",
+                color = StatusChipColor.Grey,
+            )
+        )
+    )
+
+    LearnLearningLibraryItem(state, {}, {}, {})
+}
+
+@Composable
+@Preview
+private fun LearningLibraryItemPreview() {
+    val state = LearnLearningLibraryCollectionItemState(
+        id = "1",
+        imageUrl = "https://example.com/image.png",
+        name = "Example Course",
+        isBookmarked = false,
+        isCompleted = false,
+        canEnroll = true,
+        chips = listOf(
+            LearnLearningLibraryCollectionItemChipState(
+                label = "Required",
+                color = StatusChipColor.Green,
+            ),
+            LearnLearningLibraryCollectionItemChipState(
+                label = "Completed",
+                color = StatusChipColor.Green,
+            ),
+            LearnLearningLibraryCollectionItemChipState(
+                label = "Locked",
+                color = StatusChipColor.Grey,
+            ),
+            LearnLearningLibraryCollectionItemChipState(
+                label = "Locked",
+                color = StatusChipColor.Grey,
+            )
+        )
+    )
+
+    LearnLearningLibraryItem(state, {}, {}, {})
 }
