@@ -17,8 +17,11 @@
 package com.instructure.pandautils.features.speedgrader
 
 import android.view.WindowManager
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Icon
@@ -105,6 +108,7 @@ fun SpeedGraderScreen(
     }
 
     CanvasScaffold(
+        backgroundColor = colorResource(id = R.color.backgroundLightest),
         snackbarHost = {
             SnackbarHost(snackbarHostState) { data ->
                 Snackbar(
@@ -148,7 +152,9 @@ fun SpeedGraderScreen(
                 )
 
                 HorizontalPager(
-                    modifier = Modifier.padding(padding),
+                    modifier = Modifier
+                        .windowInsetsPadding(WindowInsets.displayCutout)
+                        .padding(padding),
                     state = pagerState,
                     userScrollEnabled = viewPagerEnabled
                 ) { page ->
