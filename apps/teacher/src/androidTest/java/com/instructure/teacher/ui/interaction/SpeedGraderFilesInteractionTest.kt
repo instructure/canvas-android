@@ -13,9 +13,9 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package com.instructure.teacher.ui.interaction
 
-import com.instructure.canvas.espresso.annotations.Stub
 import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvas.espresso.mockcanvas.addAssignment
 import com.instructure.canvas.espresso.mockcanvas.addCoursePermissions
@@ -49,10 +49,10 @@ import com.instructure.canvasapi2.managers.graphql.SubmissionCommentsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionDetailsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionGradeManager
-import com.instructure.pandautils.di.DifferentiationTagsModule
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.CanvasContextPermission
+import com.instructure.pandautils.di.DifferentiationTagsModule
 import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.BindValue
@@ -125,9 +125,9 @@ class SpeedGraderFilesInteractionTest : TeacherComposeTest() {
     // Just good enough to mock the *representation* of a file, not to mock the file itself.
     val attachment = Attachment(
             id = 131313,
-            contentType = "text/plain",
-            filename = "sampleFile",
-            displayName = "sampleFile",
+            contentType = "video/mp4",
+            filename = "sampleVideo.mp4",
+            displayName = "sampleVideo.mp4",
             url = "http://fake.blah/somePath" // Code/Test will crash w/o a non-null url
     )
 
@@ -143,13 +143,20 @@ class SpeedGraderFilesInteractionTest : TeacherComposeTest() {
         attachment.displayName?.let { speedGraderPage.assertSelectedAttachmentItemDisplayed(it) }
     }
 
-    @Stub
     @Test
     fun selectBetweenMultipleFiles() {
-        // TODO: This will be a new test case, to be able to select between multiple files. Need to modify mock data deep for this.
+        goToSpeedGraderContentPage(multipleFiles = true)
+
+        speedGraderPage.assertSelectedAttachmentItemDisplayed("sampleVideo1.mp4")
+        speedGraderPage.clickAttachmentSelector()
+        speedGraderPage.selectAttachment("sampleVideo2.mp4")
+        speedGraderPage.assertSelectedAttachmentItemDisplayed("sampleVideo2.mp4")
+        speedGraderPage.clickAttachmentSelector()
+        speedGraderPage.selectAttachment("sampleVideo3.mp4")
+        speedGraderPage.assertSelectedAttachmentItemDisplayed("sampleVideo3.mp4")
     }
 
-    private fun goToSpeedGraderContentPage(submissionCount: Int = 0): MockCanvas {
+    private fun goToSpeedGraderContentPage(submissionCount: Int = 0, multipleFiles: Boolean = false): MockCanvas {
         val data = MockCanvas.init(teacherCount = 1, studentCount = 1, courseCount = 1, favoriteCourseCount = 1)
         val teacher = data.teachers[0]
         val course = data.courses.values.first()
@@ -157,21 +164,60 @@ class SpeedGraderFilesInteractionTest : TeacherComposeTest() {
 
         data.addCoursePermissions(
                 course.id,
-                CanvasContextPermission() // Just need to have some sort of permissions object registered
+                CanvasContextPermission()
         )
 
         val assignment = data.addAssignment(
                 courseId = course.id,
-                submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_UPLOAD)
+                submissionTypeList = listOf(Assignment.SubmissionType.MEDIA_RECORDING)
         )
 
-        repeat(submissionCount) {
+        if (multipleFiles) {
+            val attachments = listOf(
+                Attachment(
+                    id = 131313,
+                    contentType = "video/mp4",
+                    filename = "sampleVideo1.mp4",
+                    displayName = "sampleVideo1.mp4",
+                    url = "http://fake.blah/somePath1"
+                ),
+                Attachment(
+                    id = 131314,
+                    contentType = "video/mp4",
+                    filename = "sampleVideo2.mp4",
+                    displayName = "sampleVideo2.mp4",
+                    url = "http://fake.blah/somePath2"
+                ),
+                Attachment(
+                    id = 131315,
+                    contentType = "video/mp4",
+                    filename = "sampleVideo3.mp4",
+                    displayName = "sampleVideo3.mp4",
+                    url = "http://fake.blah/somePath3"
+                )
+            )
+
             data.addSubmissionForAssignment(
+                assignmentId = assignment.id,
+                userId = student.id,
+                type = Assignment.SubmissionType.MEDIA_RECORDING.apiString,
+                attachment = attachments[0]
+            )
+
+            val submission = data.submissions[assignment.id]?.firstOrNull { it.userId == student.id }
+            submission?.let {
+                it.attachments.addAll(attachments.subList(1, attachments.size))
+                it.submissionHistory.firstOrNull()?.attachments?.addAll(attachments.subList(1, attachments.size))
+            }
+        } else {
+            repeat(submissionCount) {
+                data.addSubmissionForAssignment(
                     assignmentId = assignment.id,
                     userId = student.id,
-                    type = Assignment.SubmissionType.ONLINE_UPLOAD.apiString,
+                    type = Assignment.SubmissionType.MEDIA_RECORDING.apiString,
                     attachment = attachment
-            )
+                )
+            }
         }
 
         val token = data.tokenFor(teacher)!!

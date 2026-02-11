@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.SubmissionContentQuery
 import com.instructure.canvasapi2.fragment.SubmissionFields
 import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.type.MediaType
 import com.instructure.canvasapi2.type.SubmissionState
 import com.instructure.canvasapi2.type.SubmissionStatusTagType
 import com.instructure.canvasapi2.type.SubmissionType
@@ -53,22 +54,25 @@ class FakeSubmissionContentManager : SubmissionContentManager {
             }
         } ?: listOf(SubmissionType.online_text_entry)
 
-        val attachment = submission?.attachments?.getOrNull(0)
-        val submissionAttachment = if (attachment != null) SubmissionFields.Attachment(
-            _id = attachment.id.toString(),
-            contentType = attachment.contentType,
-            mimeClass = attachment.mimeClass,
-            createdAt = attachment.createdAt,
-            displayName = attachment.displayName,
-            id = attachment.id.toString(),
-            size = attachment.size.toString(),
-            thumbnailUrl = attachment.thumbnailUrl,
-            title = attachment.filename,
-            type = attachment.type,
-            updatedAt = attachment.updatedAt,
-            url = attachment.url,
-            submissionPreviewUrl = attachment.submissionPreviewUrl
-        ) else null
+        val submissionAttachments = submission?.attachments?.map { attachment ->
+            SubmissionFields.Attachment(
+                _id = attachment.id.toString(),
+                contentType = attachment.contentType,
+                mimeClass = attachment.mimeClass,
+                createdAt = attachment.createdAt,
+                displayName = attachment.displayName,
+                id = attachment.id.toString(),
+                size = attachment.size.toString(),
+                thumbnailUrl = attachment.thumbnailUrl,
+                title = attachment.filename,
+                type = attachment.type,
+                updatedAt = attachment.updatedAt,
+                url = attachment.url,
+                submissionPreviewUrl = attachment.submissionPreviewUrl
+            )
+        }
+
+        val firstAttachment = submission?.attachments?.getOrNull(0)
 
         val fragmentAssignment = SubmissionFields.Assignment(
             submissionTypes,
@@ -80,6 +84,22 @@ class FakeSubmissionContentManager : SubmissionContentManager {
             groupSet = null,
             gradeGroupStudentsIndividually = false
         )
+
+        val mediaObject = if (submission?.submissionType == "media_recording" && firstAttachment != null) {
+            val mediaType = when {
+                firstAttachment.contentType?.startsWith("video/") == true -> MediaType.video
+                firstAttachment.contentType?.startsWith("audio/") == true -> MediaType.audio
+                else -> MediaType.video
+            }
+            SubmissionFields.MediaObject(
+                mediaType = mediaType,
+                mediaDownloadUrl = firstAttachment.url,
+                title = firstAttachment.displayName,
+                thumbnailUrl = firstAttachment.thumbnailUrl,
+                mediaSources = listOf(SubmissionFields.MediaSource(url = firstAttachment.url))
+            )
+        } else null
+
         val dummySubmissionFields = SubmissionFields(
             groupId = "group-1",
             state = when (submission?.workflowState) {
@@ -113,22 +133,58 @@ class FakeSubmissionContentManager : SubmissionContentManager {
             submissionStatus = "on_time",
             cachedDueDate = assignment?.dueDate,
             submittedAt = submission?.submittedAt,
-            attachments = if (submissionAttachment == null) null else listOf(submissionAttachment),
-            mediaObject = null,
+            attachments = submissionAttachments,
+            mediaObject = mediaObject,
             user = user,
             assignment = fragmentAssignment,
             customGradeStatus = null
         )
 
-        // Create edges for all submission attempts from the history
         val edges = if (submissionHistory.isNotEmpty()) {
             submissionHistory.mapNotNull { attemptSubmission ->
                 attemptSubmission?.let {
+                    val attemptAttachments = it.attachments?.map { attachment ->
+                        SubmissionFields.Attachment(
+                            _id = attachment.id.toString(),
+                            contentType = attachment.contentType,
+                            mimeClass = attachment.mimeClass,
+                            createdAt = attachment.createdAt,
+                            displayName = attachment.displayName,
+                            id = attachment.id.toString(),
+                            size = attachment.size.toString(),
+                            thumbnailUrl = attachment.thumbnailUrl,
+                            title = attachment.filename,
+                            type = attachment.type,
+                            updatedAt = attachment.updatedAt,
+                            url = attachment.url,
+                            submissionPreviewUrl = attachment.submissionPreviewUrl
+                        )
+                    }
+
+                    val attemptFirstAttachment = it.attachments?.getOrNull(0)
+
+                    val attemptMediaObject = if (it.submissionType == "media_recording" && attemptFirstAttachment != null) {
+                        val mediaType = when {
+                            attemptFirstAttachment.contentType?.startsWith("video/") == true -> MediaType.video
+                            attemptFirstAttachment.contentType?.startsWith("audio/") == true -> MediaType.audio
+                            else -> MediaType.video
+                        }
+                        SubmissionFields.MediaObject(
+                            mediaType = mediaType,
+                            mediaDownloadUrl = attemptFirstAttachment.url,
+                            title = attemptFirstAttachment.displayName,
+                            thumbnailUrl = attemptFirstAttachment.thumbnailUrl,
+                            mediaSources = listOf(SubmissionFields.MediaSource(url = attemptFirstAttachment.url))
+                        )
+                    } else null
+
                     val fields = dummySubmissionFields.copy(
                         attempt = it.attempt.toInt(),
                         body = it.body,
                         url = it.url,
-                        previewUrl = it.url
+                        previewUrl = it.url,
+                        attachments = attemptAttachments,
+                        mediaObject = attemptMediaObject
                     )
                     val node = SubmissionContentQuery.Node(__typename = "Submission", submissionFields = fields)
                     SubmissionContentQuery.Edge(node = node)

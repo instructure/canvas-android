@@ -128,6 +128,24 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
     }
 
     /**
+     * Clicks the attachment selector to expand the dropdown.
+     */
+    fun clickAttachmentSelector() {
+        composeTestRule.onNodeWithTag("attemptSelector").performClick()
+        composeTestRule.waitForIdle()
+    }
+
+    /**
+     * Selects an attachment from the dropdown by name.
+     *
+     * @param attachmentName The name of the attachment to select.
+     */
+    fun selectAttachment(attachmentName: String) {
+        composeTestRule.onNodeWithText(attachmentName).performClick()
+        composeTestRule.waitForIdle()
+    }
+
+    /**
      * Asserts that the SpeedGrader toolbar is displayed.
      *
      * @param title The expected title of the SpeedGrader toolbar.
