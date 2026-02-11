@@ -51,6 +51,7 @@ import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.a11yManager
 import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyDisplayCutoutInsets
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.isSwitchAccessEnabled
 import com.instructure.pandautils.utils.isTablet
@@ -148,6 +149,9 @@ class CourseBrowserFragment : BaseSyncFragment<
         )
         appBarLayout.addOnOffsetChangedListener(this@CourseBrowserFragment)
         collapsingToolbarLayout.isTitleEnabled = false
+
+        // Apply display cutout insets to root view to prevent content from extending behind camera cutout
+        rootView.applyDisplayCutoutInsets()
     }
 
     override fun onReadySetGo(presenter: CourseBrowserPresenter) {
