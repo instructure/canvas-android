@@ -34,6 +34,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyDisplayCutoutInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getDrawableCompat
@@ -93,6 +94,9 @@ class SyllabusView(
     init {
         binding.toolbar.applyTopSystemBarInsets()
         binding.swipeRefreshLayout.applyBottomSystemBarInsets()
+
+        // Apply display cutout insets to root view to prevent content from extending behind camera cutout
+        binding.root.applyDisplayCutoutInsets()
 
         binding.toolbar.setupMenu(R.menu.menu_edit_generic) { consumer?.accept(SyllabusEvent.EditClicked) }
         setEditVisibility(false)
