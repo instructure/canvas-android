@@ -19,18 +19,22 @@ package com.instructure.student.test.assignment.details.submission
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Author
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.SubmissionComment
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.room.studentdb.StudentDb
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.CommentItemState
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsModel
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsPresenter
-import com.instructure.pandautils.room.studentdb.StudentDb
 import io.mockk.mockk
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.util.*
+import java.util.Date
 
 @RunWith(AndroidJUnit4::class)
 class SubmissionCommentsPresenterTest : Assert() {
@@ -203,6 +207,45 @@ class SubmissionCommentsPresenterTest : Assert() {
         val actualState = presenter.present(model, context)
         assertEquals(3, actualState.commentStates.size)
         assertEquals("No attempt", (actualState.commentStates[1] as CommentItemState.CommentItem).message)
+    }
+
+    @Test
+    fun `Shows attempt 0 comments when attemptId is 1 and assignmentEnhancementsEnabled is true`() {
+        val comments = listOf(
+            submissionComment.copy(id = 1, comment = "Attempt 0 comment", attempt = 0),
+            submissionComment.copy(id = 2, comment = "Attempt 1 comment", attempt = 1)
+        )
+        val model = baseModel.copy(comments = comments, attemptId = 1, assignmentEnhancementsEnabled = true)
+        val actualState = presenter.present(model, context)
+        val commentItems = actualState.commentStates.filterIsInstance<CommentItemState.CommentItem>()
+        assertEquals(2, commentItems.size)
+        assertEquals(commentItems.map { it.message }, listOf("Attempt 0 comment", "Attempt 1 comment"))
+    }
+
+    @Test
+    fun `Does not show attempt 0 comments when attemptId is 2 and assignmentEnhancementsEnabled is true`() {
+        val comments = listOf(
+            submissionComment.copy(id = 1, comment = "Attempt 0 comment", attempt = 0),
+            submissionComment.copy(id = 2, comment = "Attempt 2 comment", attempt = 2)
+        )
+        val model = baseModel.copy(comments = comments, attemptId = 2, assignmentEnhancementsEnabled = true)
+        val actualState = presenter.present(model, context)
+        val commentItems = actualState.commentStates.filterIsInstance<CommentItemState.CommentItem>()
+        assertEquals(1, commentItems.size)
+        assertEquals("Attempt 2 comment", commentItems[0].message)
+    }
+
+    @Test
+    fun `Shows all comments when assignmentEnhancementsEnabled is false`() {
+        val comments = listOf(
+            submissionComment.copy(id = 1, comment = "Attempt 0 comment", attempt = 0),
+            submissionComment.copy(id = 2, comment = "Attempt 1 comment", attempt = 1),
+            submissionComment.copy(id = 3, comment = "Attempt 2 comment", attempt = 2)
+        )
+        val model = baseModel.copy(comments = comments, attemptId = 1, assignmentEnhancementsEnabled = false)
+        val actualState = presenter.present(model, context)
+        val commentItems = actualState.commentStates.filterIsInstance<CommentItemState.CommentItem>()
+        assertEquals(3, commentItems.size)
     }
 
     private fun dateFromCommentState(state: CommentItemState) : Date {
