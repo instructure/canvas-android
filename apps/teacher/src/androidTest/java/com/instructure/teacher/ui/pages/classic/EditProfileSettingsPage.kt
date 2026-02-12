@@ -18,7 +18,6 @@ package com.instructure.teacher.ui.pages.classic
 
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
-import com.instructure.canvas.espresso.getHintText
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.clearText
 import com.instructure.espresso.click
@@ -73,8 +72,7 @@ class EditProfileSettingsPage : BasePage(R.id.editProfileSettingsPage) {
      * @param expectedHint The expected hint text.
      */
     fun assertUserNameHint(expectedHint: String) {
-        val actualHint = getHintText(withId(R.id.usersName))
-        assert(actualHint == expectedHint) { "Expected hint: '$expectedHint', but got: '$actualHint'" }
+        onView(withId(R.id.usersName)).check(matches(ViewMatchers.withHint(expectedHint)))
     }
 
     /**
