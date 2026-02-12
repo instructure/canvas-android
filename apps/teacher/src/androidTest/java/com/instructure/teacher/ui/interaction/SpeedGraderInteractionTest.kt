@@ -13,7 +13,6 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-
 package com.instructure.teacher.ui.interaction
 
 import com.instructure.canvas.espresso.mockcanvas.MockCanvas
@@ -151,7 +150,7 @@ class SpeedGraderInteractionTest : TeacherComposeTest() {
 
     @Test
     fun displaysTextSubmission() {
-        goToSpeedGraderPage()
+        goToSpeedGraderPage(submissionTypeList = listOf(ONLINE_TEXT_ENTRY))
         speedGraderPage.assertDisplaysTextSubmissionView()
     }
 

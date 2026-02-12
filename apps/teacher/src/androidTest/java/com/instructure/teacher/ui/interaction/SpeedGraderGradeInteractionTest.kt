@@ -13,7 +13,6 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-
 package com.instructure.teacher.ui.interaction
 
 import android.util.Log
@@ -313,7 +312,8 @@ class SpeedGraderGradeInteractionTest : TeacherComposeTest() {
 
     @Test
     fun correctViewsForPointGradedWithRubric() {
-        val rubricCriterion = goToSpeedGraderGradePage(GradingType.points, true)
+        val data = goToSpeedGraderGradePage(GradingType.points, true)
+        val rubricCriterion = data.assignments.values.first().rubric?.first()
         requireNotNull(rubricCriterion) { "Rubric criterion should not be null" }
 
         speedGraderGradePage.assertSliderVisible()
@@ -334,7 +334,8 @@ class SpeedGraderGradeInteractionTest : TeacherComposeTest() {
 
     @Test
     fun correctViewsForPercentageGradedWithRubric() {
-        val rubricCriterion = goToSpeedGraderGradePage(GradingType.percent, true)
+        val data = goToSpeedGraderGradePage(GradingType.percent, true)
+        val rubricCriterion = data.assignments.values.first().rubric?.first()
         requireNotNull(rubricCriterion) { "Rubric criterion should not be null" }
 
         speedGraderGradePage.assertSliderVisible()
@@ -360,7 +361,7 @@ class SpeedGraderGradeInteractionTest : TeacherComposeTest() {
         score: Double = 12.0,
         grade: String = "60%",
         submission: Submission? = null
-    ): RubricCriterion? {
+    ): MockCanvas {
         val data = MockCanvas.init(teacherCount = 1, courseCount = 1, favoriteCourseCount = 1, studentCount = 1)
         val teacher = data.teachers[0]
         val student = data.students[0]
@@ -379,9 +380,8 @@ class SpeedGraderGradeInteractionTest : TeacherComposeTest() {
             dueAt = 1.days.ago.iso8601
         )
 
-        var rubricCriterion: RubricCriterion? = null
         if (hasRubric) {
-            rubricCriterion = RubricCriterion(
+            val rubricCriterion = RubricCriterion(
                 id = data.newItemId().toString(),
                 description = "Description of criterion",
                 longDescription = "0, 3, 7 or 10 points",
@@ -421,6 +421,6 @@ class SpeedGraderGradeInteractionTest : TeacherComposeTest() {
         if (isCompactDevice()) speedGraderPage.clickExpandPanelButton()
         speedGraderPage.selectTab("Grade & Rubric")
 
-        return rubricCriterion
+        return data
     }
 }

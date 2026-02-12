@@ -13,7 +13,6 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-
 package com.instructure.canvas.espresso.mockcanvas.fakes
 
 import com.instructure.canvas.espresso.mockcanvas.MockCanvas
@@ -208,7 +207,7 @@ class FakeSubmissionContentManager : SubmissionContentManager {
         )
         val dummySubmission = SubmissionContentQuery.Submission(
             __typename = "Submission",
-            _id = submission?.id?.toString() ?: "0",
+            _id = submission?.id?.toString() ?: "1",
             userId = userId.toString(),
             submissionHistoriesConnection = dummyHistoriesConnection,
             submissionFields = dummySubmissionFields
