@@ -110,12 +110,6 @@ fun AssignmentListItem(
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 when {
-                    assignment.weight != null -> {
-                        WeightChip(
-                            weight = assignment.weight,
-                            color = courseColor
-                        )
-                    }
                     assignment.grade != null -> {
                         Text(
                             text = assignment.grade,
@@ -138,6 +132,13 @@ fun AssignmentListItem(
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.fillMaxWidth()
             )
+
+            if (assignment.weight != null) {
+                WeightChip(
+                    weight = assignment.weight,
+                    color = courseColor
+                )
+        }
 
             val dateText = assignment.dueDate?.formatRelativeWithTime(context)
                 ?: assignment.gradedDate?.formatRelativeWithTime(context)

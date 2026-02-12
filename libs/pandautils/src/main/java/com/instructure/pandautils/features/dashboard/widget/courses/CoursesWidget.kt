@@ -135,7 +135,8 @@ fun CoursesWidgetContent(
                                     onManageOfflineContent = uiState.onManageOfflineContent,
                                     onCustomizeCourse = uiState.onCustomizeCourse,
                                     onAnnouncementClick = uiState.onAnnouncementClick,
-                                    modifier = Modifier.longPressDraggableHandle()
+                                    modifier = Modifier.longPressDraggableHandle(),
+                                    dashboardColor = Color(uiState.color.color())
                                 )
                             }
                         }

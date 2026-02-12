@@ -15,15 +15,28 @@
  */
 package com.instructure.pandautils.features.dashboard.widget.institutionalannouncements
 
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.pandautils.domain.models.accountnotification.InstitutionalAnnouncement
 import com.instructure.pandautils.domain.usecase.accountnotification.LoadInstitutionalAnnouncementsParams
 import com.instructure.pandautils.domain.usecase.accountnotification.LoadInstitutionalAnnouncementsUseCase
+import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
+import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveGlobalConfigUseCase
+import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.ThemedColor
+import io.mockk.Runs
 import io.mockk.coEvery
+import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.unmockkAll
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -37,16 +50,25 @@ import java.util.Date
 class InstitutionalAnnouncementsViewModelTest {
 
     private val loadInstitutionalAnnouncementsUseCase: LoadInstitutionalAnnouncementsUseCase = mockk(relaxed = true)
+    private val observeGlobalConfigUseCase: ObserveGlobalConfigUseCase = mockk(relaxed = true)
+    private val crashlytics: FirebaseCrashlytics = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
 
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
+
+        coEvery { observeGlobalConfigUseCase(Unit) } returns flowOf(GlobalConfig())
+        every { crashlytics.recordException(any()) } just Runs
+
+        mockkObject(ColorKeeper)
+        every { ColorKeeper.createThemedColor(any()) } returns ThemedColor(0, 0)
     }
 
     @After
     fun tearDown() {
         Dispatchers.resetMain()
+        unmockkAll()
     }
 
     @Test
@@ -56,7 +78,6 @@ class InstitutionalAnnouncementsViewModelTest {
                 id = 1L,
                 subject = "Test Announcement",
                 message = "Test Message",
-                institutionName = "",
                 startDate = Date(),
                 icon = "info",
                 logoUrl = ""
@@ -95,7 +116,6 @@ class InstitutionalAnnouncementsViewModelTest {
                 id = 1L,
                 subject = "Initial",
                 message = "Message",
-                institutionName = "",
                 startDate = Date(),
                 icon = "info",
                 logoUrl = ""
@@ -107,7 +127,6 @@ class InstitutionalAnnouncementsViewModelTest {
                 id = 2L,
                 subject = "Refreshed",
                 message = "Message",
-                institutionName = "",
                 startDate = Date(),
                 icon = "warning",
                 logoUrl = ""
@@ -147,7 +166,6 @@ class InstitutionalAnnouncementsViewModelTest {
                 id = 1L,
                 subject = "Announcement 1",
                 message = "Message 1",
-                institutionName = "",
                 startDate = Date(1000L),
                 icon = "info",
                 logoUrl = ""
@@ -156,7 +174,6 @@ class InstitutionalAnnouncementsViewModelTest {
                 id = 2L,
                 subject = "Announcement 2",
                 message = "Message 2",
-                institutionName = "",
                 startDate = Date(2000L),
                 icon = "warning",
                 logoUrl = ""
@@ -165,7 +182,6 @@ class InstitutionalAnnouncementsViewModelTest {
                 id = 3L,
                 subject = "Announcement 3",
                 message = "Message 3",
-                institutionName = "",
                 startDate = Date(3000L),
                 icon = "calendar",
                 logoUrl = ""
@@ -202,7 +218,6 @@ class InstitutionalAnnouncementsViewModelTest {
                 id = 1L,
                 subject = "Recovered",
                 message = "Message",
-                institutionName = "",
                 startDate = Date(),
                 icon = "info",
                 logoUrl = ""
@@ -221,7 +236,26 @@ class InstitutionalAnnouncementsViewModelTest {
         assertEquals("Recovered", viewModel.uiState.value.announcements[0].subject)
     }
 
+    @Test
+    fun `observeConfig updates color`() = runTest {
+        val testColor = 0xFF00FF00.toInt()
+        val themedColor = ThemedColor(testColor, testColor)
+        every { ColorKeeper.createThemedColor(testColor) } returns themedColor
+        coEvery { observeGlobalConfigUseCase(Unit) } returns flowOf(GlobalConfig(backgroundColor = testColor))
+        coEvery { loadInstitutionalAnnouncementsUseCase(LoadInstitutionalAnnouncementsParams(forceRefresh = true)) } returns emptyList()
+
+        val viewModel = createViewModel()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertEquals(themedColor, state.color)
+    }
+
     private fun createViewModel(): InstitutionalAnnouncementsViewModel {
-        return InstitutionalAnnouncementsViewModel(loadInstitutionalAnnouncementsUseCase)
+        return InstitutionalAnnouncementsViewModel(
+            loadInstitutionalAnnouncementsUseCase,
+            observeGlobalConfigUseCase,
+            crashlytics
+        )
     }
 }
