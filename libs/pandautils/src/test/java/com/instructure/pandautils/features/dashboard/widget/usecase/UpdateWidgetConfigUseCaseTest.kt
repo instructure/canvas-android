@@ -45,7 +45,7 @@ class UpdateWidgetConfigUseCaseTest {
 
     @Test
     fun testUpdateBooleanSetting() = runTest {
-        val widgetId = WidgetMetadata.WIDGET_ID_FORECAST
+        val widgetId = WidgetMetadata.WIDGET_ID_GLOBAL
         val existingConfig = """{"backgroundColor":0}"""
         coEvery { repository.getConfigJson(widgetId) } returns existingConfig
 
@@ -61,7 +61,7 @@ class UpdateWidgetConfigUseCaseTest {
 
     @Test
     fun testUpdateIntSetting() = runTest {
-        val widgetId = WidgetMetadata.WIDGET_ID_FORECAST
+        val widgetId = WidgetMetadata.WIDGET_ID_GLOBAL
         val existingConfig = """{"backgroundColor":123456}"""
         coEvery { repository.getConfigJson(widgetId) } returns existingConfig
 
@@ -77,7 +77,7 @@ class UpdateWidgetConfigUseCaseTest {
 
     @Test
     fun testUpdateSettingWithNoExistingConfig() = runTest {
-        val widgetId = WidgetMetadata.WIDGET_ID_FORECAST
+        val widgetId = WidgetMetadata.WIDGET_ID_GLOBAL
         coEvery { repository.getConfigJson(widgetId) } returns null
 
         val params = UpdateWidgetConfigUseCase.Params(widgetId, "backgroundColor", 999999)
@@ -92,7 +92,7 @@ class UpdateWidgetConfigUseCaseTest {
 
     @Test
     fun testUpdateSettingWithInvalidExistingConfig() = runTest {
-        val widgetId = WidgetMetadata.WIDGET_ID_FORECAST
+        val widgetId = WidgetMetadata.WIDGET_ID_GLOBAL
         coEvery { repository.getConfigJson(widgetId) } returns "invalid json"
 
         val params = UpdateWidgetConfigUseCase.Params(widgetId, "backgroundColor", 111111)

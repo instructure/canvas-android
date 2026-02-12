@@ -59,35 +59,49 @@ class EnsureDefaultWidgetsUseCaseTest {
         coVerify {
             repository.saveMetadata(
                 match {
-                    it.id == "course_invitations" && it.position == 1 && it.isVisible && !it.isEditable
+                    it.id == "conferences" && it.position == 1 && it.isVisible && !it.isEditable
                 }
             )
         }
         coVerify {
             repository.saveMetadata(
                 match {
-                    it.id == "institutional_announcements" && it.position == 2 && it.isVisible && !it.isEditable
+                    it.id == "course_invitations" && it.position == 2 && it.isVisible && !it.isEditable
                 }
             )
         }
         coVerify {
             repository.saveMetadata(
                 match {
-                    it.id == "welcome" && it.position == 3 && it.isVisible
+                    it.id == "institutional_announcements" && it.position == 3 && it.isVisible && !it.isEditable
                 }
             )
         }
         coVerify {
             repository.saveMetadata(
                 match {
-                    it.id == "courses" && it.position == 4 && it.isVisible
+                    it.id == "welcome" && it.position == 4 && it.isVisible
                 }
             )
         }
         coVerify {
             repository.saveMetadata(
                 match {
-                    it.id == "forecast" && it.position == 5 && it.isVisible
+                    it.id == "courses" && it.position == 5 && it.isVisible
+                }
+            )
+        }
+        coVerify {
+            repository.saveMetadata(
+                match {
+                    it.id == "forecast" && it.position == 6 && it.isVisible
+                }
+            )
+        }
+        coVerify {
+            repository.saveMetadata(
+                match {
+                    it.id == "todo" && it.position == 7 && it.isVisible
                 }
             )
         }
@@ -97,11 +111,13 @@ class EnsureDefaultWidgetsUseCaseTest {
     fun `execute does not create widget if it already exists`() = runTest {
         val existingMetadata = listOf(
             WidgetMetadata("progress", 0, true, false),
-            WidgetMetadata("course_invitations", 1, true, false),
-            WidgetMetadata("institutional_announcements", 2, true, false),
-            WidgetMetadata("welcome", 3, true),
-            WidgetMetadata("courses", 4, true),
-            WidgetMetadata("forecast", 5, true)
+            WidgetMetadata("conferences", 1, true, false),
+            WidgetMetadata("course_invitations", 2, true, false),
+            WidgetMetadata("institutional_announcements", 3, true, false),
+            WidgetMetadata("welcome", 4, true),
+            WidgetMetadata("courses", 5, true),
+            WidgetMetadata("forecast", 6, true),
+            WidgetMetadata("todo", 7, true)
         )
         coEvery { repository.observeAllMetadata() } returns flowOf(existingMetadata)
 
@@ -122,6 +138,11 @@ class EnsureDefaultWidgetsUseCaseTest {
         coVerify(exactly = 1) {
             repository.saveMetadata(
                 match { it.id == "progress" }
+            )
+        }
+        coVerify(exactly = 1) {
+            repository.saveMetadata(
+                match { it.id == "conferences" }
             )
         }
         coVerify(exactly = 1) {
@@ -147,6 +168,11 @@ class EnsureDefaultWidgetsUseCaseTest {
         coVerify(exactly = 1) {
             repository.saveMetadata(
                 match { it.id == "forecast" }
+            )
+        }
+        coVerify(exactly = 1) {
+            repository.saveMetadata(
+                match { it.id == "todo" }
             )
         }
         coVerify(exactly = 0) {

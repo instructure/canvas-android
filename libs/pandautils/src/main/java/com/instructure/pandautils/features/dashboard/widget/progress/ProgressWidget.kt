@@ -116,18 +116,6 @@ fun ProgressWidgetContent(
     val itemRows = allItems.chunked(columns)
 
     Column(modifier = modifier.fillMaxWidth()) {
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 12.dp),
-            text = stringResource(R.string.progressWidgetTitle),
-            fontSize = 14.sp,
-            lineHeight = 19.sp,
-            fontWeight = FontWeight.Normal,
-            color = colorResource(R.color.textDarkest)
-        )
-
         Column(
             modifier = Modifier
                 .fillMaxWidth()
