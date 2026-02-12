@@ -91,6 +91,7 @@ class ForecastWidgetViewModel @Inject constructor(
         ForecastWidgetUiState(
             onNavigatePrevious = ::navigatePrevious,
             onNavigateNext = ::navigateNext,
+            onJumpToCurrentWeek = ::jumpToCurrentWeek,
             onSectionSelected = ::toggleSection,
             onAssignmentClick = ::onAssignmentClick,
             onRetry = ::retry
@@ -100,7 +101,7 @@ class ForecastWidgetViewModel @Inject constructor(
 
     init {
         val initialWeekPeriod = calculateWeekPeriod(currentWeekOffset)
-        _uiState.update { it.copy(weekPeriod = initialWeekPeriod) }
+        _uiState.update { it.copy(weekPeriod = initialWeekPeriod, isCurrentWeek = true) }
 
         observeConfig()
         loadData(forceRefresh = false)
@@ -116,6 +117,11 @@ class ForecastWidgetViewModel @Inject constructor(
         updateWeekPeriodAndReload()
     }
 
+    private fun jumpToCurrentWeek() {
+        currentWeekOffset = 0
+        updateWeekPeriodAndReload()
+    }
+
     private fun updateWeekPeriodAndReload() {
         val weekPeriod = calculateWeekPeriod(currentWeekOffset)
 
@@ -124,6 +130,7 @@ class ForecastWidgetViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 weekPeriod = weekPeriod,
+                isCurrentWeek = currentWeekOffset == 0,
                 isLoadingItems = it.selectedSection != null,
                 isError = false
             )

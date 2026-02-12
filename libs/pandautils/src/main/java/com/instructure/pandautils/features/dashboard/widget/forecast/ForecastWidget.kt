@@ -30,6 +30,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -60,6 +61,7 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ShimmerBox
+import com.instructure.pandautils.compose.composables.TodayButton
 import kotlinx.coroutines.flow.SharedFlow
 import java.time.LocalDate
 import java.util.Date
@@ -93,15 +95,32 @@ fun ForecastWidgetContent(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Text(
-            text = stringResource(R.string.forecastWidgetTitle),
-            fontSize = 14.sp,
-            lineHeight = 19.sp,
-            color = colorResource(R.color.textDarkest),
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
-        )
+                .height(24.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(R.string.forecastWidgetTitle),
+                fontSize = 14.sp,
+                lineHeight = 19.sp,
+                color = colorResource(R.color.textDarkest)
+            )
+
+            if (!uiState.isCurrentWeek) {
+                TodayButton(
+                    title = stringResource(R.string.forecastWidget_currentWeek),
+                    onClick = uiState.onJumpToCurrentWeek,
+                    buttonColor = Color(uiState.backgroundColor.color()),
+                    textColor = colorResource(R.color.textLightest)
+                )
+            } else {
+                Spacer(modifier = Modifier.height(24.dp))
+            }
+        }
 
         Card(
             colors = CardDefaults.cardColors(containerColor = Color(uiState.backgroundColor.color())),

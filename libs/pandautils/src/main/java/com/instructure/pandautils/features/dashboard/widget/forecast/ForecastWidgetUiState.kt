@@ -57,6 +57,7 @@ data class ForecastWidgetUiState(
     val weekPeriod: WeekPeriod? = null,
     val canNavigatePrevious: Boolean = true,
     val canNavigateNext: Boolean = true,
+    val isCurrentWeek: Boolean = true,
     val missingAssignments: List<AssignmentItem> = emptyList(),
     val dueAssignments: List<AssignmentItem> = emptyList(),
     val recentGrades: List<AssignmentItem> = emptyList(),
@@ -64,6 +65,7 @@ data class ForecastWidgetUiState(
     val backgroundColor: ThemedColor = ThemedColor(GlobalConfig.DEFAULT_COLOR),
     val onNavigatePrevious: () -> Unit = {},
     val onNavigateNext: () -> Unit = {},
+    val onJumpToCurrentWeek: () -> Unit = {},
     val onSectionSelected: (ForecastSection) -> Unit = {},
     val onAssignmentClick: (FragmentActivity, Long, Long) -> Unit = { _, _, _ -> },
     val onRetry: () -> Unit = {}
