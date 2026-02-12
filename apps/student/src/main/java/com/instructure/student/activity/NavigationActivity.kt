@@ -514,7 +514,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             view.setPadding(
                 insets.left,
                 insets.top,
-                insets.right,
+                0,
                 insets.bottom
             )
             windowInsets
