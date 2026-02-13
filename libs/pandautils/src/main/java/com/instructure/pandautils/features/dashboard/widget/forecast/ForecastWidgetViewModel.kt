@@ -127,11 +127,13 @@ class ForecastWidgetViewModel @Inject constructor(
 
         weekNavigationJob?.cancel()
 
-        _uiState.update {
-            it.copy(
+        _uiState.update { uiState ->
+            uiState.copy(
                 weekPeriod = weekPeriod,
                 isCurrentWeek = currentWeekOffset == 0,
-                isLoadingItems = it.selectedSection != null,
+                isLoadingItemsForSection = ForecastSection.entries.associateWith { value ->
+                    uiState.selectedSection != null && value != ForecastSection.MISSING
+                },
                 isError = false
             )
         }
@@ -142,13 +144,13 @@ class ForecastWidgetViewModel @Inject constructor(
             try {
                 loadUpcomingAssignments(forceRefresh = true)
                 loadRecentGrades(forceRefresh = true)
-                _uiState.update { it.copy(isLoadingItems = false) }
+                _uiState.update { it.copy(isLoadingItemsForSection = ForecastSection.entries.associateWith { false }) }
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
                 // Only set error state if this job wasn't cancelled by new navigation
                 if (isActive) {
-                    _uiState.update { it.copy(isLoadingItems = false, isError = true) }
+                    _uiState.update { it.copy(isLoadingItemsForSection = ForecastSection.entries.associateWith { false }, isError = true) }
                     crashlytics.recordException(e)
                 }
             }

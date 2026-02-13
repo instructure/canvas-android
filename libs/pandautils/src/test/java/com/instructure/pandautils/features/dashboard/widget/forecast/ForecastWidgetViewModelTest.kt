@@ -285,13 +285,17 @@ class ForecastWidgetViewModelTest {
         viewModel.uiState.value.onNavigateNext()
 
         // Should show loading state immediately
-        assertTrue(viewModel.uiState.value.isLoadingItems)
+        assertTrue(viewModel.uiState.value.isLoadingItemsForSection[ForecastSection.RECENT_GRADES]!!)
+        assertTrue(viewModel.uiState.value.isLoadingItemsForSection[ForecastSection.DUE]!!)
+        assertFalse(viewModel.uiState.value.isLoadingItemsForSection[ForecastSection.MISSING]!!)
 
         advanceTimeBy(300)
         advanceUntilIdle()
 
         // After loading completes
-        assertFalse(viewModel.uiState.value.isLoadingItems)
+        assertFalse(viewModel.uiState.value.isLoadingItemsForSection[ForecastSection.RECENT_GRADES]!!)
+        assertFalse(viewModel.uiState.value.isLoadingItemsForSection[ForecastSection.DUE]!!)
+        assertFalse(viewModel.uiState.value.isLoadingItemsForSection[ForecastSection.MISSING]!!)
     }
 
     @Test

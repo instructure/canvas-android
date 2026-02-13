@@ -175,7 +175,7 @@ fun ForecastWidgetContent(
                                 animationSpec = tween(durationMillis = 300)
                             ) + fadeOut(animationSpec = tween(durationMillis = 300))
                         ) {
-                            if (uiState.isLoadingItems) {
+                            if (uiState.isLoadingItemsForSection[uiState.selectedSection] == true) {
                                 ForecastWidgetItemsLoadingState()
                             } else {
                                 AnimatedContent(
