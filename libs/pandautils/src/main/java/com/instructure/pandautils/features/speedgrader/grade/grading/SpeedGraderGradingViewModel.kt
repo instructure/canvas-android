@@ -197,6 +197,8 @@ class SpeedGraderGradingViewModel @Inject constructor(
             delay(300)
 
             try {
+                gradingEventHandler.postEvent(GradingEvent.GradeSaving(studentId))
+
                 repository.updateSubmissionGrade(
                     score = gradeValue,
                     userId = studentId,
@@ -208,10 +210,12 @@ class SpeedGraderGradingViewModel @Inject constructor(
                 AssignmentGradedEvent(assignmentId).postSticky()
 
                 gradingEventHandler.postEvent(GradingEvent.GradeChanged)
+                gradingEventHandler.postEvent(GradingEvent.GradeSaved(studentId))
             } catch (e: Exception) {
                 if (e is CancellationException) {
                     return@launch
                 }
+                gradingEventHandler.postEvent(GradingEvent.GradeSaveFailed(studentId, retryAction))
                 speedGraderErrorHolder.postError(
                     message = resources.getString(R.string.generalUnexpectedError),
                     retryAction = retryAction
@@ -238,6 +242,8 @@ class SpeedGraderGradingViewModel @Inject constructor(
     private fun onExcuse() {
         viewModelScope.launch {
             try {
+                gradingEventHandler.postEvent(GradingEvent.GradeSaving(studentId))
+
                 repository.excuseSubmission(
                     studentId,
                     assignmentId,
@@ -247,9 +253,11 @@ class SpeedGraderGradingViewModel @Inject constructor(
                 AssignmentGradedEvent(assignmentId).postSticky()
 
                 gradingEventHandler.postEvent(GradingEvent.GradeChanged)
+                gradingEventHandler.postEvent(GradingEvent.GradeSaved(studentId))
 
                 loadData(forceNetwork = true)
             } catch (e: Exception) {
+                gradingEventHandler.postEvent(GradingEvent.GradeSaveFailed(studentId) { onExcuse() })
                 _uiState.update {
                     it.copy(
                         error = true,
@@ -265,6 +273,8 @@ class SpeedGraderGradingViewModel @Inject constructor(
     private fun onStatusChange(gradeStatus: GradeStatus) {
         viewModelScope.launch {
             try {
+                gradingEventHandler.postEvent(GradingEvent.GradeSaving(studentId))
+
                 val submission = repository.updateSubmissionStatus(
                     submissionId.toLong(),
                     gradeStatus.id?.toString(),
@@ -274,6 +284,7 @@ class SpeedGraderGradingViewModel @Inject constructor(
                 AssignmentGradedEvent(assignmentId).postSticky()
 
                 gradingEventHandler.postEvent(GradingEvent.GradeChanged)
+                gradingEventHandler.postEvent(GradingEvent.GradeSaved(studentId))
 
                 _uiState.update {
                     it.copy(
@@ -290,6 +301,7 @@ class SpeedGraderGradingViewModel @Inject constructor(
                     )
                 }
             } catch (e: Exception) {
+                gradingEventHandler.postEvent(GradingEvent.GradeSaveFailed(studentId) { onStatusChange(gradeStatus) })
                 _uiState.update {
                     it.copy(
                         error = true,
@@ -307,6 +319,8 @@ class SpeedGraderGradingViewModel @Inject constructor(
         daysLateDebounceJob = viewModelScope.launch {
             delay(300)
             try {
+                gradingEventHandler.postEvent(GradingEvent.GradeSaving(studentId))
+
                 repository.updateLateSecondsOverride(
                     studentId,
                     assignmentId,
@@ -316,11 +330,14 @@ class SpeedGraderGradingViewModel @Inject constructor(
 
                 AssignmentGradedEvent(assignmentId).postSticky()
 
+                gradingEventHandler.postEvent(GradingEvent.GradeSaved(studentId))
+
                 loadData(forceNetwork = true)
             } catch (e: Exception) {
                 if (e is CancellationException) {
                     return@launch
                 }
+                gradingEventHandler.postEvent(GradingEvent.GradeSaveFailed(studentId) { onLateDaysChange(lateDays) })
                 _uiState.update {
                     it.copy(
                         error = true,

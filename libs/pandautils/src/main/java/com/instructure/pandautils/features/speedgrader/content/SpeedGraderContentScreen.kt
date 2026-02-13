@@ -16,6 +16,8 @@
  */
 package com.instructure.pandautils.features.speedgrader.content
 
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -35,6 +37,7 @@ import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
@@ -61,6 +64,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -79,6 +83,7 @@ import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.LocalCourseColor
 import com.instructure.pandautils.compose.composables.CanvasDivider
+import com.instructure.pandautils.compose.composables.SimpleAlertDialog
 import com.instructure.pandautils.compose.composables.UserAvatar
 import com.instructure.pandautils.compose.modifiers.conditional
 import com.instructure.pandautils.features.grades.SubmissionStateLabel
@@ -138,7 +143,8 @@ private fun SpeedGraderContentScreen(
                 onExpandClick = onExpandClick,
                 courseColor = LocalCourseColor.current,
                 anonymous = uiState.anonymous,
-                group = uiState.group
+                group = uiState.group,
+                saveState = uiState.saveState
             )
             CanvasDivider()
             if (uiState.attemptSelectorUiState.items.size > 1 || uiState.attachmentSelectorUiState.items.isNotEmpty()) {
@@ -203,6 +209,7 @@ private fun UserHeader(
     expanded: Boolean,
     onExpandClick: (() -> Unit)?,
     courseColor: Color,
+    saveState: SaveState = SaveState.None
 ) {
     val windowClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
     val horizontal = windowClass != WindowWidthSizeClass.COMPACT
@@ -210,7 +217,7 @@ private fun UserHeader(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
-            .requiredHeight(64.dp)
+            .requiredHeight(84.dp)
             .fillMaxWidth()
             .padding(start = 22.dp, top = 12.dp, bottom = 12.dp, end = 22.dp)
     ) {
@@ -231,35 +238,31 @@ private fun UserHeader(
                 fontSize = 16.sp
             )
             if (submissionStatus != SubmissionStateLabel.None) {
-                Row(verticalAlignment = Alignment.Bottom) {
-                    SubmissionStatus(
-                        submissionStatus = submissionStatus,
-                        modifier = Modifier
-                            .padding(top = 4.dp)
-                    )
-                    if (dueDate != null) {
-                        VerticalDivider(
-                            modifier = Modifier
-                                .padding(horizontal = 8.dp)
-                                .height(16.dp),
-                            color = colorResource(id = R.color.borderMedium),
-                        )
-                        Text(
-                            DateHelper.getDateAtTimeString(
-                                LocalContext.current,
-                                R.string.due_dateTime,
-                                dueDate
-                            ).orEmpty(),
-                            fontSize = 14.sp,
-                            color = colorResource(id = R.color.textDark),
-                        )
-                    }
-                }
+                SubmissionStatus(
+                    submissionStatus = submissionStatus,
+                    modifier = Modifier.padding(top = 4.dp)
+                )
+            }
+            if (dueDate != null) {
+                Text(
+                    DateHelper.getDateAtTimeString(
+                        LocalContext.current,
+                        R.string.due_dateTime,
+                        dueDate
+                    ).orEmpty(),
+                    fontSize = 14.sp,
+                    color = colorResource(id = R.color.textDark),
+                    modifier = Modifier.padding(top = 4.dp)
+                )
             }
         }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        SaveStateIndicator(saveState = saveState)
+
         if (horizontal) {
             var expandedState by remember { mutableStateOf(expanded) }
-            Spacer(modifier = Modifier.weight(1f))
             IconButton(
                 onClick = {
                     expandedState = !expandedState
@@ -282,6 +285,101 @@ private fun UserHeader(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun SaveStateIndicator(saveState: SaveState) {
+    var showErrorDialog by remember { mutableStateOf(false) }
+    val view = LocalView.current
+    val context = LocalContext.current
+
+    LaunchedEffect(saveState) {
+        @Suppress("DEPRECATION")
+        when (saveState) {
+            is SaveState.Saved -> {
+                view.announceForAccessibility(context.getString(R.string.speedGraderSaved))
+            }
+
+            is SaveState.Failed -> {
+                view.announceForAccessibility(context.getString(R.string.speedGraderFailed))
+            }
+
+            else -> {}
+        }
+    }
+
+    Crossfade(
+        targetState = saveState,
+        animationSpec = tween(300),
+        modifier = Modifier.animateContentSize(),
+        label = "saveStateAnimation"
+    ) { state ->
+        when (state) {
+            is SaveState.Saving -> {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.speedGraderSaving),
+                        color = colorResource(id = R.color.textDark),
+                        fontSize = 14.sp,
+                        modifier = Modifier.padding(end = 4.dp)
+                    )
+                    CircularProgressIndicator(
+                        strokeWidth = 2.dp,
+                        color = LocalCourseColor.current,
+                        modifier = Modifier.size(16.dp)
+                    )
+                }
+            }
+
+            is SaveState.Saved -> {
+                Text(
+                    text = stringResource(id = R.string.speedGraderSaved),
+                    color = colorResource(id = R.color.textSuccess),
+                    fontSize = 14.sp
+                )
+            }
+
+            is SaveState.Failed -> {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.clickable {
+                        showErrorDialog = true
+                    }
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.speedGraderFailed),
+                        color = colorResource(id = R.color.textDark),
+                        fontSize = 14.sp,
+                        modifier = Modifier.padding(end = 4.dp)
+                    )
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_info_solid),
+                        contentDescription = stringResource(id = R.string.speedGraderSaveErrorContentDescription),
+                        tint = colorResource(id = R.color.textInfo),
+                        modifier = Modifier.size(16.dp)
+                    )
+                }
+            }
+
+            SaveState.None -> {}
+        }
+    }
+
+    if (saveState is SaveState.Failed && showErrorDialog) {
+        SimpleAlertDialog(
+            dialogTitle = stringResource(id = R.string.speedGraderSaveErrorTitle),
+            dialogText = stringResource(id = R.string.speedGraderSaveErrorMessage),
+            dismissButtonText = stringResource(id = R.string.cancel),
+            confirmationButtonText = stringResource(id = R.string.retry),
+            onDismissRequest = { showErrorDialog = false },
+            onConfirmation = {
+                showErrorDialog = false
+                saveState.retry()
+            }
+        )
     }
 }
 
@@ -511,6 +609,57 @@ fun UserHeaderPreview() {
         courseColor = Color(color = android.graphics.Color.BLUE),
         anonymous = false,
         group = false
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun UserHeaderSavingPreview() {
+    UserHeader(
+        userUrl = null,
+        userName = "John Doe",
+        dueDate = Date(),
+        submissionStatus = SubmissionStateLabel.Graded,
+        expanded = false,
+        onExpandClick = null,
+        courseColor = Color(color = android.graphics.Color.BLUE),
+        anonymous = false,
+        group = false,
+        saveState = SaveState.Saving
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun UserHeaderSavedPreview() {
+    UserHeader(
+        userUrl = null,
+        userName = "John Doe",
+        dueDate = Date(),
+        submissionStatus = SubmissionStateLabel.Graded,
+        expanded = false,
+        onExpandClick = null,
+        courseColor = Color(color = android.graphics.Color.BLUE),
+        anonymous = false,
+        group = false,
+        saveState = SaveState.Saved
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun UserHeaderFailedPreview() {
+    UserHeader(
+        userUrl = null,
+        userName = "John Doe",
+        dueDate = Date(),
+        submissionStatus = SubmissionStateLabel.Graded,
+        expanded = false,
+        onExpandClick = null,
+        courseColor = Color(color = android.graphics.Color.BLUE),
+        anonymous = false,
+        group = false,
+        saveState = SaveState.Failed { }
     )
 }
 
