@@ -204,9 +204,11 @@ fun GradesScreen(
                                         iconColor = colorResource(R.color.textLightest)
                                     ) {
                                         DropdownMenuItem(
-                                            modifier = Modifier.background(
-                                                color = colorResource(id = R.color.backgroundLightestElevated)
-                                            ),
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .background(
+                                                    color = colorResource(id = R.color.backgroundLightestElevated)
+                                                ),
                                             onClick = {
                                                 overflowMenuExpanded = !overflowMenuExpanded
                                                 it.addBookmarkClick()

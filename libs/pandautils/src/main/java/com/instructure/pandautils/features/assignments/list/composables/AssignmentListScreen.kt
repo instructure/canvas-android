@@ -223,7 +223,9 @@ private fun AppBar(
                     ) {
                         state.overFlowItems.forEach { item ->
                             DropdownMenuItem(
-                                modifier = Modifier.background(color = colorResource(id = R.color.backgroundLightestElevated)),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(color = colorResource(id = R.color.backgroundLightestElevated)),
                                 onClick = {
                                     item.onClick()
                                     screenActionHandler(
