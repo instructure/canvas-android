@@ -273,7 +273,7 @@ private fun UploadSuccessContent(
             Icon(
                 painter = painterResource(R.drawable.ic_publish),
                 contentDescription = null,
-                tint = colorResource(R.color.white),
+                tint = colorResource(R.color.textLightest),
                 modifier = Modifier.size(24.dp)
             )
         }
@@ -288,7 +288,7 @@ private fun UploadSuccessContent(
                     text = item.title,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = colorResource(R.color.white),
+                    color = colorResource(R.color.textLightest),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.padding(end = 24.dp)
@@ -299,7 +299,7 @@ private fun UploadSuccessContent(
                         text = item.subtitle,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Normal,
-                        color = colorResource(R.color.white),
+                        color = colorResource(R.color.textLightest),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -315,7 +315,7 @@ private fun UploadSuccessContent(
                 Icon(
                     painter = painterResource(R.drawable.ic_close),
                     contentDescription = stringResource(R.string.dismiss),
-                    tint = colorResource(R.color.white),
+                    tint = colorResource(R.color.textLightest),
                     modifier = Modifier.size(20.dp)
                 )
             }
@@ -342,7 +342,7 @@ private fun UploadErrorContent(
             Icon(
                 painter = painterResource(R.drawable.ic_warning_red),
                 contentDescription = null,
-                tint = colorResource(R.color.white),
+                tint = colorResource(R.color.textLightest),
                 modifier = Modifier.size(24.dp)
             )
         }
@@ -357,7 +357,7 @@ private fun UploadErrorContent(
                     text = item.title,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = colorResource(R.color.white),
+                    color = colorResource(R.color.textLightest),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.padding(end = 24.dp)
@@ -368,7 +368,7 @@ private fun UploadErrorContent(
                         text = item.subtitle,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Normal,
-                        color = colorResource(R.color.white),
+                        color = colorResource(R.color.textLightest),
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -384,7 +384,7 @@ private fun UploadErrorContent(
                 Icon(
                     painter = painterResource(R.drawable.ic_close),
                     contentDescription = stringResource(R.string.dismiss),
-                    tint = colorResource(R.color.white),
+                    tint = colorResource(R.color.textLightest),
                     modifier = Modifier.size(20.dp)
                 )
             }
@@ -514,7 +514,7 @@ private fun SyncErrorContent(
             Icon(
                 painter = painterResource(R.drawable.ic_warning_red),
                 contentDescription = null,
-                tint = colorResource(R.color.white),
+                tint = colorResource(R.color.textLightest),
                 modifier = Modifier.size(24.dp)
             )
         }
@@ -529,7 +529,7 @@ private fun SyncErrorContent(
                     text = item.title,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = colorResource(R.color.white),
+                    color = colorResource(R.color.textLightest),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.padding(end = 24.dp)
@@ -539,7 +539,7 @@ private fun SyncErrorContent(
                     text = item.subtitle,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Normal,
-                    color = colorResource(R.color.white),
+                    color = colorResource(R.color.textLightest),
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -554,7 +554,7 @@ private fun SyncErrorContent(
                 Icon(
                     painter = painterResource(R.drawable.ic_close),
                     contentDescription = stringResource(R.string.a11y_contentDescription_syncDashboardNotificationDismiss),
-                    tint = colorResource(R.color.white),
+                    tint = colorResource(R.color.textLightest),
                     modifier = Modifier.size(20.dp)
                 )
             }
