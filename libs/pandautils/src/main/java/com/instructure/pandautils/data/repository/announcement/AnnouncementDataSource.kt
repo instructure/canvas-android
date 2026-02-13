@@ -18,19 +18,7 @@ package com.instructure.pandautils.data.repository.announcement
 
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.pandautils.repository.Repository
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
 
-class AnnouncementRepositoryImpl(
-    localDataSource: AnnouncementLocalDataSource,
-    networkDataSource: AnnouncementNetworkDataSource,
-    networkStateProvider: NetworkStateProvider,
-    featureFlagProvider: FeatureFlagProvider
-) : Repository<AnnouncementDataSource>(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider),
-    AnnouncementRepository {
-
-    override suspend fun getCourseAnnouncements(courseId: Long, forceRefresh: Boolean): DataResult<List<DiscussionTopicHeader>> {
-        return dataSource().getCourseAnnouncements(courseId, forceRefresh)
-    }
+interface AnnouncementDataSource {
+    suspend fun getCourseAnnouncements(courseId: Long, forceRefresh: Boolean): DataResult<List<DiscussionTopicHeader>>
 }

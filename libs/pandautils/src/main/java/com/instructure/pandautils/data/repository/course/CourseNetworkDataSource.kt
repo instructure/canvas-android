@@ -16,34 +16,38 @@
 
 package com.instructure.pandautils.data.repository.course
 
+import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DashboardCard
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.pandautils.repository.Repository
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.canvasapi2.utils.depaginate
 
-class CourseRepositoryImpl(
-    localDataSource: CourseLocalDataSource,
-    networkDataSource: CourseNetworkDataSource,
-    networkStateProvider: NetworkStateProvider,
-    featureFlagProvider: FeatureFlagProvider
-) : Repository<CourseDataSource>(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider),
-    CourseRepository {
+class CourseNetworkDataSource(
+    private val courseApi: CourseAPI.CoursesInterface
+) : CourseDataSource {
 
     override suspend fun getCourse(courseId: Long, forceRefresh: Boolean): DataResult<Course> {
-        return dataSource().getCourse(courseId, forceRefresh)
+        val params = RestParams(isForceReadFromNetwork = forceRefresh)
+        return courseApi.getCourse(courseId, params)
     }
 
     override suspend fun getCourses(forceRefresh: Boolean): DataResult<List<Course>> {
-        return dataSource().getCourses(forceRefresh)
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceRefresh)
+        return courseApi.getFirstPageCourses(params).depaginate { nextUrl ->
+            courseApi.next(nextUrl, params)
+        }
     }
 
     override suspend fun getFavoriteCourses(forceRefresh: Boolean): DataResult<List<Course>> {
-        return dataSource().getFavoriteCourses(forceRefresh)
+        val params = RestParams(isForceReadFromNetwork = forceRefresh)
+        return courseApi.getFavoriteCourses(params).depaginate { nextUrl ->
+            courseApi.next(nextUrl, params)
+        }
     }
 
     override suspend fun getDashboardCards(forceRefresh: Boolean): DataResult<List<DashboardCard>> {
-        return dataSource().getDashboardCards(forceRefresh)
+        val params = RestParams(isForceReadFromNetwork = forceRefresh)
+        return courseApi.getDashboardCourses(params)
     }
 }

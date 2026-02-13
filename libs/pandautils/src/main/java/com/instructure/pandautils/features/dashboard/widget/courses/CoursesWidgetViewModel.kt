@@ -213,14 +213,8 @@ class CoursesWidgetViewModel @Inject constructor(
             _uiState.update { it.copy(isLoading = true, isError = false) }
 
             try {
-                val isOnline = networkStateProvider.isOnline()
-
                 courses = loadFavoriteCoursesUseCase(LoadFavoriteCoursesParams(forceRefresh))
-                groups = if (isOnline) {
-                    loadGroupsUseCase(LoadGroupsParams(forceRefresh))
-                } else {
-                    emptyList()
-                }
+                groups = loadGroupsUseCase(LoadGroupsParams(forceRefresh))
 
                 val announcementsMap = courses.associate { course ->
                     course.id to try {
