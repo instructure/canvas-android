@@ -46,6 +46,7 @@ import androidx.core.view.MenuItemCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
@@ -490,12 +491,41 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
         ViewCompat.setOnApplyWindowInsetsListener(bottomBar) { view, insets ->
             val navigationBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
-            view.setPadding(
-                view.paddingLeft,
-                view.paddingTop,
-                view.paddingRight,
-                navigationBars.bottom
-            )
+            val displayCutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
+            val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
+            if (isLandscape) {
+                // In landscape, use both padding for content and margins to move the bar away from edges
+                val leftInset = maxOf(navigationBars.left, displayCutout.left)
+                val rightInset = maxOf(navigationBars.right, displayCutout.right)
+
+                view.setPadding(
+                    leftInset,
+                    view.paddingTop,
+                    rightInset,
+                    view.paddingBottom
+                )
+
+                view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                    this.leftMargin = leftInset
+                    this.rightMargin = rightInset
+                    this.bottomMargin = navigationBars.bottom
+                }
+            } else {
+                // In portrait, only apply display cutout and bottom navigation bar
+                view.setPadding(
+                    displayCutout.left,
+                    view.paddingTop,
+                    displayCutout.right,
+                    view.paddingBottom
+                )
+
+                view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                    this.leftMargin = 0
+                    this.rightMargin = 0
+                    this.bottomMargin = navigationBars.bottom
+                }
+            }
 
             // Update offline indicator margin based on bottom bar visibility
             // When bottom bar is visible, no margin needed (bottom bar handles insets)
@@ -503,6 +533,31 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             val layoutParams = offlineIndicator.root.layoutParams as? ViewGroup.MarginLayoutParams
             layoutParams?.bottomMargin = if (bottomBar.isVisible) 0 else navigationBars.bottom
             offlineIndicator.root.layoutParams = layoutParams
+
+            insets
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.bottomBarDivider) { view, insets ->
+            val navigationBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+            val displayCutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
+            val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
+            if (isLandscape) {
+                // In landscape, apply horizontal margins to match bottom bar
+                val leftInset = maxOf(navigationBars.left, displayCutout.left)
+                val rightInset = maxOf(navigationBars.right, displayCutout.right)
+
+                view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                    this.leftMargin = leftInset
+                    this.rightMargin = rightInset
+                }
+            } else {
+                // In portrait, apply display cutout margins to match bottom bar
+                view.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                    this.leftMargin = displayCutout.left
+                    this.rightMargin = displayCutout.right
+                }
+            }
 
             insets
         }
