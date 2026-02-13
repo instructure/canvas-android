@@ -86,6 +86,7 @@ fun ToDoFilterScreen(
                 navIconRes = R.drawable.ic_close,
                 navIconContentDescription = stringResource(id = R.string.close),
                 navigationActionClick = onDismiss,
+                windowInsets = WindowInsets(0, 0, 0, 0),
                 actions = {
                     TextButton(
                         onClick = {
@@ -101,8 +102,8 @@ fun ToDoFilterScreen(
                 }
             )
         },
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
-        modifier = modifier
+        modifier = modifier,
+        contentWindowInsets = WindowInsets(0, 0, 0, 0)
     ) { padding ->
         ToDoFilterContent(
             uiState = uiState,

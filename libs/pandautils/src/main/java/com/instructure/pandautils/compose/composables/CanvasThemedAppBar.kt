@@ -56,6 +56,7 @@ fun CanvasThemedAppBar(
     navIconContentDescription: String = stringResource(id = R.string.back),
     backgroundColor: Color = Color(color = ThemePrefs.primaryColor),
     contentColor: Color = Color(color = ThemePrefs.primaryTextColor),
+    windowInsets: WindowInsets = WindowInsets.statusBars,
     actions: @Composable RowScope.() -> Unit = {}
 ) {
     TopAppBar(
@@ -98,7 +99,7 @@ fun CanvasThemedAppBar(
         },
         modifier = modifier.testTag("toolbar"),
         elevation = 0.dp,
-        windowInsets = WindowInsets.statusBars
+        windowInsets = windowInsets
     )
 }
 
