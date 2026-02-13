@@ -16,26 +16,20 @@
 
 package com.instructure.pandautils.domain.usecase.courses
 
-import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DashboardCard
 import com.instructure.pandautils.data.repository.course.CourseRepository
 import com.instructure.pandautils.domain.usecase.BaseUseCase
 import javax.inject.Inject
 
-data class LoadFavoriteCoursesParams(
-    val forceRefresh: Boolean = false
-)
-
-class LoadFavoriteCoursesUseCase @Inject constructor(
+class LoadDashboardCardsUseCase @Inject constructor(
     private val courseRepository: CourseRepository
-) : BaseUseCase<LoadFavoriteCoursesParams, List<Course>>() {
+) : BaseUseCase<LoadDashboardCardsUseCase.Params, List<DashboardCard>>() {
 
-    override suspend fun execute(params: LoadFavoriteCoursesParams): List<Course> {
-        val courses = courseRepository.getCourses(params.forceRefresh).dataOrThrow
-        val dashboardCards = courseRepository.getDashboardCards(params.forceRefresh).dataOrThrow
-        val dashboardCardIds = dashboardCards.map { it.id }.toSet()
-
-        return courses
-            .filter { it.isFavorite && dashboardCardIds.contains(it.id) }
-            .sortedBy { course -> dashboardCards.find { it.id == course.id }?.position ?: Int.MAX_VALUE }
+    override suspend fun execute(params: Params): List<DashboardCard> {
+        return courseRepository.getDashboardCards(params.forceRefresh).dataOrThrow
     }
+
+    data class Params(
+        val forceRefresh: Boolean = false
+    )
 }

@@ -16,20 +16,20 @@
 
 package com.instructure.pandautils.domain.usecase.courses
 
-import com.instructure.canvasapi2.models.Group
-import com.instructure.pandautils.data.repository.group.GroupRepository
+import com.instructure.canvasapi2.models.Course
+import com.instructure.pandautils.data.repository.course.CourseRepository
 import com.instructure.pandautils.domain.usecase.BaseUseCase
 import javax.inject.Inject
 
-data class LoadGroupsParams(
-    val forceRefresh: Boolean = false
-)
+class LoadAllCoursesUseCase @Inject constructor(
+    private val courseRepository: CourseRepository
+) : BaseUseCase<LoadAllCoursesUseCase.Params, List<Course>>() {
 
-class LoadGroupsUseCase @Inject constructor(
-    private val groupRepository: GroupRepository
-) : BaseUseCase<LoadGroupsParams, List<Group>>() {
-
-    override suspend fun execute(params: LoadGroupsParams): List<Group> {
-        return groupRepository.getGroups(params.forceRefresh).dataOrThrow
+    override suspend fun execute(params: Params): List<Course> {
+        return courseRepository.getCourses(params.forceRefresh).dataOrThrow
     }
+
+    data class Params(
+        val forceRefresh: Boolean = false
+    )
 }

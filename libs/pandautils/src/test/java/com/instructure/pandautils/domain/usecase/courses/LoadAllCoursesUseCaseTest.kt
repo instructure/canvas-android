@@ -16,9 +16,9 @@
 
 package com.instructure.pandautils.domain.usecase.courses
 
-import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.pandautils.data.repository.group.GroupRepository
+import com.instructure.pandautils.data.repository.course.CourseRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -30,14 +30,14 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
-class LoadGroupsUseCaseTest {
+class LoadAllCoursesUseCaseTest {
 
-    private val groupRepository: GroupRepository = mockk(relaxed = true)
-    private lateinit var useCase: LoadGroupsUseCase
+    private val courseRepository: CourseRepository = mockk(relaxed = true)
+    private lateinit var useCase: LoadAllCoursesUseCase
 
     @Before
     fun setup() {
-        useCase = LoadGroupsUseCase(groupRepository)
+        useCase = LoadAllCoursesUseCase(courseRepository)
     }
 
     @After
@@ -46,16 +46,16 @@ class LoadGroupsUseCaseTest {
     }
 
     @Test
-    fun `execute returns all groups`() = runTest {
-        val groups = listOf(
-            Group(id = 1, name = "Group A", isFavorite = true),
-            Group(id = 2, name = "Group B", isFavorite = false),
-            Group(id = 3, name = "Group C", isFavorite = true)
+    fun `execute returns all courses`() = runTest {
+        val courses = listOf(
+            Course(id = 1, name = "Course A"),
+            Course(id = 2, name = "Course B"),
+            Course(id = 3, name = "Course C")
         )
 
-        coEvery { groupRepository.getGroups(any()) } returns DataResult.Success(groups)
+        coEvery { courseRepository.getCourses(any()) } returns DataResult.Success(courses)
 
-        val result = useCase(LoadGroupsParams())
+        val result = useCase(LoadAllCoursesUseCase.Params())
 
         assertEquals(3, result.size)
         assertEquals(1L, result[0].id)
@@ -65,51 +65,51 @@ class LoadGroupsUseCaseTest {
 
     @Test
     fun `execute returns empty list when repository returns empty list`() = runTest {
-        coEvery { groupRepository.getGroups(any()) } returns DataResult.Success(emptyList())
+        coEvery { courseRepository.getCourses(any()) } returns DataResult.Success(emptyList())
 
-        val result = useCase(LoadGroupsParams())
+        val result = useCase(LoadAllCoursesUseCase.Params())
 
         assertTrue(result.isEmpty())
     }
 
     @Test
     fun `execute passes forceRefresh parameter to repository`() = runTest {
-        coEvery { groupRepository.getGroups(any()) } returns DataResult.Success(emptyList())
+        coEvery { courseRepository.getCourses(any()) } returns DataResult.Success(emptyList())
 
-        useCase(LoadGroupsParams(forceRefresh = true))
+        useCase(LoadAllCoursesUseCase.Params(forceRefresh = true))
 
-        coVerify { groupRepository.getGroups(true) }
+        coVerify { courseRepository.getCourses(true) }
     }
 
     @Test
     fun `execute passes false forceRefresh by default`() = runTest {
-        coEvery { groupRepository.getGroups(any()) } returns DataResult.Success(emptyList())
+        coEvery { courseRepository.getCourses(any()) } returns DataResult.Success(emptyList())
 
-        useCase(LoadGroupsParams())
+        useCase(LoadAllCoursesUseCase.Params())
 
-        coVerify { groupRepository.getGroups(false) }
+        coVerify { courseRepository.getCourses(false) }
     }
 
     @Test(expected = IllegalStateException::class)
     fun `execute throws when repository returns failure`() = runTest {
-        coEvery { groupRepository.getGroups(any()) } returns DataResult.Fail()
+        coEvery { courseRepository.getCourses(any()) } returns DataResult.Fail()
 
-        useCase(LoadGroupsParams())
+        useCase(LoadAllCoursesUseCase.Params())
     }
 
     @Test
-    fun `execute returns all groups from repository`() = runTest {
-        val groups = listOf(
-            Group(id = 1, name = "Group A", isFavorite = true),
-            Group(id = 2, name = "Group B", isFavorite = false),
-            Group(id = 3, name = "Group C", isFavorite = false)
+    fun `execute returns all courses from repository`() = runTest {
+        val courses = listOf(
+            Course(id = 1, name = "Course A"),
+            Course(id = 2, name = "Course B"),
+            Course(id = 3, name = "Course C")
         )
 
-        coEvery { groupRepository.getGroups(any()) } returns DataResult.Success(groups)
+        coEvery { courseRepository.getCourses(any()) } returns DataResult.Success(courses)
 
-        val result = useCase(LoadGroupsParams())
+        val result = useCase(LoadAllCoursesUseCase.Params())
 
         assertEquals(3, result.size)
-        assertEquals(groups, result)
+        assertEquals(courses, result)
     }
 }
