@@ -57,7 +57,8 @@ fun CanvasAppBar(
     navIconContentDescription: String = stringResource(id = R.string.close),
     actions: @Composable RowScope.() -> Unit = {},
     backgroundColor: Color = colorResource(id = R.color.backgroundLightestElevated),
-    textColor: Color = colorResource(id = R.color.textDarkest)
+    textColor: Color = colorResource(id = R.color.textDarkest),
+    windowInsets: WindowInsets = WindowInsets.statusBars
 ) {
     TopAppBar(
         title = {
@@ -97,7 +98,7 @@ fun CanvasAppBar(
         modifier = modifier.testTag("toolbar")
             .windowInsetsPadding(WindowInsets.displayCutout),
         actions = actions,
-        windowInsets = WindowInsets.statusBars
+        windowInsets = windowInsets
     )
 }
 
@@ -110,7 +111,8 @@ fun CanvasAppBar(
     navIconContentDescription: String = stringResource(id = R.string.close),
     actions: @Composable RowScope.() -> Unit = {},
     backgroundColor: Color = colorResource(id = R.color.backgroundLightestElevated),
-    textColor: Color = colorResource(id = R.color.textDarkest)
+    textColor: Color = colorResource(id = R.color.textDarkest),
+    windowInsets: WindowInsets = WindowInsets.statusBars
 ) {
     TopAppBar(
         title = {
@@ -141,7 +143,7 @@ fun CanvasAppBar(
         modifier = modifier.testTag("toolbar")
             .windowInsetsPadding(WindowInsets.displayCutout),
         actions = actions,
-        windowInsets = WindowInsets.statusBars
+        windowInsets = windowInsets
     )
 }
 
