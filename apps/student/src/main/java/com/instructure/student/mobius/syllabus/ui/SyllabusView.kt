@@ -113,6 +113,21 @@ class SyllabusView(
         }
     }
 
+    private fun setupWebViewInsets() {
+        webviewBinding?.syllabusScrollView?.let { scrollView ->
+            ViewCompat.setOnApplyWindowInsetsListener(scrollView) { view, insets ->
+                val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                view.setPadding(
+                    view.paddingLeft,
+                    view.paddingTop,
+                    view.paddingRight,
+                    systemBars.bottom
+                )
+                insets
+            }
+        }
+    }
+
     override fun applyTheme() {
         ViewStyler.themeToolbarColored(context as Activity, binding.toolbar, canvasContext)
         binding.syllabusTabLayout.setBackgroundColor(canvasContext.color)
@@ -131,6 +146,7 @@ class SyllabusView(
         webviewBinding = adapter.webviewBinding
         eventsBinding = adapter.eventsBinding
         setupRecyclerViewInsets()
+        setupWebViewInsets()
         when (state) {
             SyllabusViewState.Loading -> {
                 binding.swipeRefreshLayout.isRefreshing = true
