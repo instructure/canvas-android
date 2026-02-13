@@ -24,5 +24,6 @@ data class InstitutionalAnnouncementsUiState(
     val error: Boolean = false,
     val announcements: List<InstitutionalAnnouncement> = emptyList(),
     val onRefresh: () -> Unit = {},
+    val onDismiss: (Long) -> Unit = {},
     val color: ThemedColor = ThemedColor(GlobalConfig.DEFAULT_COLOR)
 )

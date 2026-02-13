@@ -140,6 +140,7 @@ fun InstitutionalAnnouncementsContent(
                         announcement = announcement,
                         onClick = { onAnnouncementClick(announcement.subject, announcement.message) },
                         color = Color(uiState.color.color()),
+                        onDismiss = { uiState.onDismiss(announcement.id) },
                         modifier = Modifier.weight(1f)
                     )
                 }
@@ -168,6 +169,7 @@ private fun AnnouncementCard(
     announcement: InstitutionalAnnouncement,
     onClick: () -> Unit,
     color: Color,
+    onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val cardShape = RoundedCornerShape(16.dp)
@@ -273,7 +275,9 @@ private fun AnnouncementCard(
             Icon(
                 painter = painterResource(id = R.drawable.ic_close),
                 contentDescription = null,
-                modifier = Modifier.size(24.dp),
+                modifier = Modifier
+                    .size(24.dp)
+                    .clickable(onClick = onDismiss),
                 tint = colorResource(R.color.textDark)
             )
         }

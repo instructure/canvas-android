@@ -16,7 +16,9 @@
 package com.instructure.pandautils.features.dashboard.widget.institutionalannouncements
 
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.instructure.canvasapi2.models.AccountNotification
 import com.instructure.pandautils.domain.models.accountnotification.InstitutionalAnnouncement
+import com.instructure.pandautils.domain.usecase.accountnotification.DeleteAccountNotificationUseCase
 import com.instructure.pandautils.domain.usecase.accountnotification.LoadInstitutionalAnnouncementsParams
 import com.instructure.pandautils.domain.usecase.accountnotification.LoadInstitutionalAnnouncementsUseCase
 import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
@@ -25,6 +27,7 @@ import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemedColor
 import io.mockk.Runs
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
@@ -50,6 +53,7 @@ import java.util.Date
 class InstitutionalAnnouncementsViewModelTest {
 
     private val loadInstitutionalAnnouncementsUseCase: LoadInstitutionalAnnouncementsUseCase = mockk(relaxed = true)
+    private val deleteAccountNotificationUseCase: DeleteAccountNotificationUseCase = mockk(relaxed = true)
     private val observeGlobalConfigUseCase: ObserveGlobalConfigUseCase = mockk(relaxed = true)
     private val crashlytics: FirebaseCrashlytics = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
@@ -254,8 +258,163 @@ class InstitutionalAnnouncementsViewModelTest {
     private fun createViewModel(): InstitutionalAnnouncementsViewModel {
         return InstitutionalAnnouncementsViewModel(
             loadInstitutionalAnnouncementsUseCase,
+            deleteAccountNotificationUseCase,
             observeGlobalConfigUseCase,
             crashlytics
         )
+    }
+
+    @Test
+    fun `Dismiss removes announcement from list immediately`() {
+        val announcements = listOf(
+            InstitutionalAnnouncement(
+                id = 1L,
+                subject = "Announcement 1",
+                message = "Message 1",
+                startDate = Date(),
+                icon = "info",
+                logoUrl = ""
+            ),
+            InstitutionalAnnouncement(
+                id = 2L,
+                subject = "Announcement 2",
+                message = "Message 2",
+                startDate = Date(),
+                icon = "warning",
+                logoUrl = ""
+            ),
+            InstitutionalAnnouncement(
+                id = 3L,
+                subject = "Announcement 3",
+                message = "Message 3",
+                startDate = Date(),
+                icon = "calendar",
+                logoUrl = ""
+            )
+        )
+
+        coEvery {
+            loadInstitutionalAnnouncementsUseCase(LoadInstitutionalAnnouncementsParams(forceRefresh = true))
+        } returns announcements
+
+        coEvery {
+            deleteAccountNotificationUseCase(any())
+        } returns AccountNotification(id = 2L)
+
+        val viewModel = createViewModel()
+
+        assertEquals(3, viewModel.uiState.value.announcements.size)
+
+        viewModel.uiState.value.onDismiss(2L)
+
+        assertEquals(2, viewModel.uiState.value.announcements.size)
+        assertEquals(1L, viewModel.uiState.value.announcements[0].id)
+        assertEquals(3L, viewModel.uiState.value.announcements[1].id)
+    }
+
+    @Test
+    fun `Dismiss calls deleteAccountNotificationUseCase with correct id`() {
+        val announcements = listOf(
+            InstitutionalAnnouncement(
+                id = 1L,
+                subject = "Test",
+                message = "Message",
+                startDate = Date(),
+                icon = "info",
+                logoUrl = ""
+            )
+        )
+
+        coEvery {
+            loadInstitutionalAnnouncementsUseCase(LoadInstitutionalAnnouncementsParams(forceRefresh = true))
+        } returns announcements
+
+        coEvery {
+            deleteAccountNotificationUseCase(any())
+        } returns AccountNotification(id = 1L)
+
+        val viewModel = createViewModel()
+
+        viewModel.uiState.value.onDismiss(1L)
+
+        coVerify { deleteAccountNotificationUseCase(DeleteAccountNotificationUseCase.Params(1L)) }
+    }
+
+    @Test
+    fun `Dismiss handles error without affecting UI state`() {
+        val announcements = listOf(
+            InstitutionalAnnouncement(
+                id = 1L,
+                subject = "Test",
+                message = "Message",
+                startDate = Date(),
+                icon = "info",
+                logoUrl = ""
+            )
+        )
+
+        coEvery {
+            loadInstitutionalAnnouncementsUseCase(LoadInstitutionalAnnouncementsParams(forceRefresh = true))
+        } returns announcements
+
+        val exception = Exception("Network error")
+        coEvery {
+            deleteAccountNotificationUseCase(any())
+        } throws exception
+
+        val viewModel = createViewModel()
+
+        viewModel.uiState.value.onDismiss(1L)
+
+        assertTrue(viewModel.uiState.value.announcements.isEmpty())
+        every { crashlytics.recordException(exception) } just Runs
+    }
+
+    @Test
+    fun `Dismiss multiple announcements removes only specified ones`() {
+        val announcements = listOf(
+            InstitutionalAnnouncement(
+                id = 1L,
+                subject = "Announcement 1",
+                message = "Message 1",
+                startDate = Date(),
+                icon = "info",
+                logoUrl = ""
+            ),
+            InstitutionalAnnouncement(
+                id = 2L,
+                subject = "Announcement 2",
+                message = "Message 2",
+                startDate = Date(),
+                icon = "warning",
+                logoUrl = ""
+            ),
+            InstitutionalAnnouncement(
+                id = 3L,
+                subject = "Announcement 3",
+                message = "Message 3",
+                startDate = Date(),
+                icon = "calendar",
+                logoUrl = ""
+            )
+        )
+
+        coEvery {
+            loadInstitutionalAnnouncementsUseCase(LoadInstitutionalAnnouncementsParams(forceRefresh = true))
+        } returns announcements
+
+        coEvery {
+            deleteAccountNotificationUseCase(any())
+        } returns AccountNotification(id = 1L)
+
+        val viewModel = createViewModel()
+
+        assertEquals(3, viewModel.uiState.value.announcements.size)
+
+        viewModel.uiState.value.onDismiss(1L)
+        viewModel.uiState.value.onDismiss(3L)
+
+        assertEquals(1, viewModel.uiState.value.announcements.size)
+        assertEquals(2L, viewModel.uiState.value.announcements[0].id)
     }
 }
