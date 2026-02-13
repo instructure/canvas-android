@@ -109,6 +109,9 @@ private fun AppBar(
     uiState: InboxDetailsUiState,
     actionHandler: (InboxDetailsAction) -> Unit
 ) {
+    val context = LocalContext.current
+    val isTeacherApp = context.packageName.contains("teacher")
+
     TopAppBar(
         title = {
             Text(
@@ -140,7 +143,10 @@ private fun AppBar(
         elevation = 0.dp,
         modifier = Modifier
             .testTag("toolbar")
-            .windowInsetsPadding(WindowInsets.displayCutout),
+            .then(
+                if (isTeacherApp) Modifier.windowInsetsPadding(WindowInsets.displayCutout)
+                else Modifier
+            ),
         windowInsets = WindowInsets.statusBars
     )
 }
@@ -152,13 +158,19 @@ private fun InboxDetailsScreenContent(
     messageActionHandler: (MessageAction) -> Unit,
     actionHandler: (InboxDetailsAction) -> Unit
 ) {
+    val context = LocalContext.current
+    val isTeacherApp = context.packageName.contains("teacher")
+
     val pullToRefreshState = rememberPullRefreshState(refreshing = false, onRefresh = {
         actionHandler(InboxDetailsAction.RefreshCalled)
     })
 
     Box(
         modifier = Modifier
-            .windowInsetsPadding(WindowInsets.displayCutout)
+            .then(
+                if (isTeacherApp) Modifier.windowInsetsPadding(WindowInsets.displayCutout)
+                else Modifier
+            )
             .fillMaxSize()
             .pullRefresh(pullToRefreshState)
             .padding(padding)
