@@ -23,6 +23,7 @@ data class WidgetMetadata(
     val isEditable: Boolean = true
 ) {
     companion object {
+        const val WIDGET_ID_PROGRESS = "progress"
         const val WIDGET_ID_GLOBAL = "global"
         const val WIDGET_ID_CONFERENCES = "conferences"
         const val WIDGET_ID_COURSE_INVITATIONS = "course_invitations"

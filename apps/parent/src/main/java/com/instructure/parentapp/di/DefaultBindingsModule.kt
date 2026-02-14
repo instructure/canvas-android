@@ -25,6 +25,7 @@ import com.instructure.pandautils.features.dashboard.widget.conferences.Conferen
 import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidgetBehavior
 import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidgetRouter
 import com.instructure.pandautils.features.dashboard.widget.forecast.ForecastWidgetRouter
+import com.instructure.pandautils.features.dashboard.widget.progress.ProgressWidgetRouter
 import com.instructure.pandautils.features.dashboard.widget.todo.TodoWidgetBehavior
 import com.instructure.pandautils.features.dashboard.widget.todo.TodoWidgetRouter
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragmentBehavior
@@ -147,6 +148,11 @@ class DefaultBindingsModule {
 
     @Provides
     fun provideForecastWidgetRouter(): ForecastWidgetRouter {
+        throw NotImplementedError()
+    }
+
+    @Provides
+    fun provideProgressWidgetRouter(): ProgressWidgetRouter {
         throw NotImplementedError()
     }
 

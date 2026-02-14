@@ -62,7 +62,7 @@ class LtiSubmissionViewFragment : BaseCanvasFragment() {
                     url,
                     title,
                     sessionLessLaunch = false,
-                    assignmentLti = false,
+                    assignmentLti = ltiType == LtiType.NEW_QUIZZES_LTI,
                     ltiTool = ltiTool,
                     openInternally = ltiType.openInternally
                 )
