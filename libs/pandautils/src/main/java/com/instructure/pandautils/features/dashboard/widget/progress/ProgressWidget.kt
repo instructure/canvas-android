@@ -149,8 +149,6 @@ fun ProgressWidgetContent(
                 }
             }
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 

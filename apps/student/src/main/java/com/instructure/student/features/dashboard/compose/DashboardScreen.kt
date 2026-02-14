@@ -298,7 +298,8 @@ private fun GetWidgetComposable(
         WidgetMetadata.WIDGET_ID_PROGRESS -> ProgressWidget(
             refreshSignal = refreshSignal,
             columns = columns,
-            onShowSnackbar = onShowSnackbar
+            onShowSnackbar = onShowSnackbar,
+            modifier = globalModifier
         )
 
         WidgetMetadata.WIDGET_ID_CONFERENCES -> ConferencesWidget(
