@@ -13,6 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package com.instructure.teacher.ui.pages.compose
 
 import androidx.compose.ui.semantics.getOrNull
@@ -26,6 +27,7 @@ import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.hasAnyDescendant
+import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
@@ -34,13 +36,10 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextReplacement
-import androidx.test.espresso.Espresso
+import androidx.test.espresso.Espresso.closeSoftKeyboard
 import com.instructure.composetest.hasTestTagThatContains
-import com.instructure.espresso.OnViewWithId
-import com.instructure.espresso.OnViewWithText
-import com.instructure.espresso.WaitForViewWithId
-import com.instructure.espresso.WaitForViewWithText
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.getStringFromResource
 import com.instructure.teacher.R
 
 /**
@@ -53,20 +52,7 @@ import com.instructure.teacher.R
  * status, and asserting the enabled or disabled state of the excuse and no grade buttons. This page extends the BasePage
  * class.
  */
-class SpeedGraderGradePage(private val composeTestRule: ComposeTestRule) : BasePage() { // TODO: YET this is a 'hybrid' page because it's highly used in tests, we'll eliminate the non-compose parts step by step.
-
-    private val gradeContainer by OnViewWithId(R.id.gradeContainer)
-    private val gradeTextContainer by OnViewWithId(R.id.gradeTextContainer)
-    private val gradingField by OnViewWithText(R.string.grade)
-
-    private val addGradeIcon by WaitForViewWithId(R.id.addGradeIcon)
-    private val gradeValueText by WaitForViewWithId(R.id.gradeValueText)
-
-    private val slider by OnViewWithId(R.id.speedGraderSlider)
-
-    //dialog views
-    private val gradeEditText by WaitForViewWithId(R.id.gradeEditText)
-    private val customizeGradeTitle by WaitForViewWithText(R.string.customize_grade)
+class SpeedGraderGradePage(private val composeTestRule: ComposeTestRule) : BasePage() {
 
     /**
      * Assert that the 'Grade' label is displayed on the SpeedGrader page's 'Grade & Rubric' tab.
@@ -103,6 +89,99 @@ class SpeedGraderGradePage(private val composeTestRule: ComposeTestRule) : BaseP
      */
     fun assertNoRubricCriterionDisplayed() {
         composeTestRule.onAllNodes(hasTestTagThatContains("rubricCriterionDescription"), useUnmergedTree = true).assertCountEquals(0)
+    }
+
+    /**
+     * Asserts that a rubric criterion with the specified description is displayed.
+     *
+     * @param description The rubric criterion description to check for.
+     */
+    fun assertRubricCriterionDisplayed(description: String) {
+        composeTestRule.onNode(hasTestTag("rubricCriterionDescription-$description"), useUnmergedTree = true)
+            .performScrollTo()
+            .assertIsDisplayed()
+    }
+
+    /**
+     * Clicks a rubric rating point box with the specified point value.
+     *
+     * @param points The point value of the rating box to click.
+     */
+    fun clickRubricRatingPointBox(points: String) {
+        composeTestRule.onNode(hasTestTag("rubricRatingPointBox-$points"), useUnmergedTree = true)
+            .performScrollTo()
+            .performClick()
+        composeTestRule.waitForIdle()
+    }
+
+    /**
+     * Enters a score in the rubric criterion score input field.
+     *
+     * @param criterionId The ID of the rubric criterion.
+     * @param score The score value to enter.
+     */
+    fun enterRubricScore(criterionId: String, score: String) {
+        composeTestRule.onNode(hasTestTag("rubricCriterionScoreInput-$criterionId"), useUnmergedTree = true)
+            .performScrollTo()
+            .performTextReplacement(score)
+        composeTestRule.waitForIdle()
+        closeSoftKeyboard()
+    }
+
+    /**
+     * Enters a note in the rubric note input field.
+     *
+     * @param note The note text to enter.
+     */
+    fun enterRubricNote(note: String) {
+        composeTestRule.onNode(hasTestTag("rubricNoteInput"), useUnmergedTree = true)
+            .performScrollTo()
+            .performTextReplacement(note)
+        composeTestRule.waitForIdle()
+        closeSoftKeyboard()
+    }
+
+    /**
+     * Asserts that a rubric rating description box is displayed with the specified description.
+     *
+     * @param description The rubric rating description to check for.
+     */
+    fun assertRubricRatingDescriptionDisplayed(description: String) {
+        composeTestRule.onNode(hasTestTag("rubricRatingDescription-$description"), useUnmergedTree = true)
+            .performScrollTo()
+            .assertIsDisplayed()
+    }
+
+    /**
+     * Asserts that a rubric rating description box is not displayed.
+     *
+     * @param description The rubric rating description that should not be displayed.
+     */
+    @OptIn(ExperimentalTestApi::class)
+    fun assertRubricRatingDescriptionNotDisplayed(description: String) {
+        composeTestRule.waitUntilDoesNotExist(hasTestTag("rubricRatingDescription-$description"), timeoutMillis = 5000)
+    }
+
+    /**
+     * Clicks the send button to submit the rubric note.
+     */
+    fun clickSendRubricNoteButton() {
+        composeTestRule.onNode((hasContentDescription(getStringFromResource(R.string.a11y_sendRubricNoteContentDescription))), useUnmergedTree = true)
+            .performClick()
+        composeTestRule.waitForIdle()
+    }
+
+    /**
+     * Asserts that the rubric note is displayed with the edit button.
+     *
+     * @param noteText The note text to verify is displayed.
+     */
+    fun assertRubricNoteDisplayedWithEditButton(noteText: String) {
+        composeTestRule.onNode(hasText(noteText), useUnmergedTree = true)
+            .performScrollTo()
+            .assertIsDisplayed()
+        composeTestRule.onNode((hasContentDescription(getStringFromResource(R.string.content_description_edit_rubric_comment))), useUnmergedTree = true)
+            .assertIsDisplayed()
     }
 
     /**
@@ -172,7 +251,7 @@ class SpeedGraderGradePage(private val composeTestRule: ComposeTestRule) : BaseP
         composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("speedGraderCurrentGradeGradeLabel").performClick() // To loose focus from the text field to apply changes.
         composeTestRule.waitForIdle()
-        Espresso.closeSoftKeyboard()
+        closeSoftKeyboard()
     }
 
     /**

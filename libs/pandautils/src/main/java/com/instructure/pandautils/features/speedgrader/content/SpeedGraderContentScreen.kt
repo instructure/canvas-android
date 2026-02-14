@@ -376,7 +376,8 @@ private fun Selector(
             .clickable {
                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
             }
-            .padding(8.dp),
+            .padding(8.dp)
+            .testTag("attemptSelector"),
         expanded = expanded,
         onExpandedChange = { expanded = !expanded },
     ) {
