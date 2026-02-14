@@ -20,11 +20,9 @@ import android.content.res.Resources
 import androidx.fragment.app.FragmentActivity
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
-import com.instructure.pandautils.data.model.GradedSubmission
 import com.instructure.pandautils.domain.usecase.assignment.LoadAssignmentGroupsUseCase
 import com.instructure.pandautils.domain.usecase.assignment.LoadMissingAssignmentsParams
 import com.instructure.pandautils.domain.usecase.assignment.LoadMissingAssignmentsUseCase
