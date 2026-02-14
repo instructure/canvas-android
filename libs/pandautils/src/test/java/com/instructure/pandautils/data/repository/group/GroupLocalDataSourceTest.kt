@@ -13,24 +13,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.instructure.pandautils.data.repository.group
 
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.pandautils.repository.Repository
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
+import org.junit.Test
 
-class GroupRepositoryImpl(
-    localDataSource: GroupLocalDataSource,
-    networkDataSource: GroupNetworkDataSource,
-    networkStateProvider: NetworkStateProvider,
-    featureFlagProvider: FeatureFlagProvider
-) : Repository<GroupDataSource>(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider),
-    GroupRepository {
+class GroupLocalDataSourceTest {
 
-    override suspend fun getGroups(forceRefresh: Boolean): DataResult<List<Group>> {
-        return dataSource().getGroups(forceRefresh)
+    private val dataSource = GroupLocalDataSource()
+
+    @Test
+    fun `getGroups returns empty list`() = runTest {
+        val result = dataSource.getGroups(false)
+
+        assertTrue(result is DataResult.Success)
+        assertEquals(emptyList<Group>(), (result as DataResult.Success).data)
+    }
+
+    @Test
+    fun `getGroups returns empty list with forceRefresh`() = runTest {
+        val result = dataSource.getGroups(true)
+
+        assertTrue(result is DataResult.Success)
+        assertEquals(emptyList<Group>(), (result as DataResult.Success).data)
     }
 }

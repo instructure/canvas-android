@@ -18,19 +18,10 @@ package com.instructure.pandautils.data.repository.group
 
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.pandautils.repository.Repository
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
 
-class GroupRepositoryImpl(
-    localDataSource: GroupLocalDataSource,
-    networkDataSource: GroupNetworkDataSource,
-    networkStateProvider: NetworkStateProvider,
-    featureFlagProvider: FeatureFlagProvider
-) : Repository<GroupDataSource>(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider),
-    GroupRepository {
+class GroupLocalDataSource : GroupDataSource {
 
     override suspend fun getGroups(forceRefresh: Boolean): DataResult<List<Group>> {
-        return dataSource().getGroups(forceRefresh)
+        return DataResult.Success(emptyList())
     }
 }
