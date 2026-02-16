@@ -33,7 +33,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
@@ -217,7 +216,6 @@ private fun UserHeader(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
-            .requiredHeight(84.dp)
             .fillMaxWidth()
             .padding(start = 22.dp, top = 12.dp, bottom = 12.dp, end = 22.dp)
     ) {
@@ -229,13 +227,17 @@ private fun UserHeader(
             group = group
         )
         Column(
-            modifier = Modifier.padding(start = 12.dp)
+            modifier = Modifier
+                .padding(start = 12.dp)
+                .weight(1f)
         ) {
             Text(
                 text = userName.orEmpty(),
                 color = colorResource(id = R.color.textDarkest),
                 fontWeight = FontWeight.SemiBold,
-                fontSize = 16.sp
+                fontSize = 16.sp,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
             )
             if (submissionStatus != SubmissionStateLabel.None) {
                 SubmissionStatus(
@@ -257,9 +259,10 @@ private fun UserHeader(
             }
         }
 
-        Spacer(modifier = Modifier.weight(1f))
-
-        SaveStateIndicator(saveState = saveState)
+        SaveStateIndicator(
+            saveState = saveState,
+            modifier = Modifier.padding(start = 8.dp)
+        )
 
         if (horizontal) {
             var expandedState by remember { mutableStateOf(expanded) }
@@ -289,7 +292,10 @@ private fun UserHeader(
 }
 
 @Composable
-private fun SaveStateIndicator(saveState: SaveState) {
+private fun SaveStateIndicator(
+    saveState: SaveState,
+    modifier: Modifier = Modifier
+) {
     var showErrorDialog by remember { mutableStateOf(false) }
     val view = LocalView.current
     val context = LocalContext.current
@@ -302,7 +308,7 @@ private fun SaveStateIndicator(saveState: SaveState) {
             }
 
             is SaveState.Failed -> {
-                view.announceForAccessibility(context.getString(R.string.speedGraderFailed))
+                view.announceForAccessibility(context.getString(R.string.speedGraderSaveErrorContentDescription))
             }
 
             else -> {}
@@ -312,7 +318,7 @@ private fun SaveStateIndicator(saveState: SaveState) {
     Crossfade(
         targetState = saveState,
         animationSpec = tween(300),
-        modifier = Modifier.animateContentSize(),
+        modifier = modifier.animateContentSize(),
         label = "saveStateAnimation"
     ) { state ->
         when (state) {
