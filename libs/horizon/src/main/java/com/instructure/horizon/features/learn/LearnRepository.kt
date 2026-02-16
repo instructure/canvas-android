@@ -15,29 +15,14 @@
  */
 package com.instructure.horizon.features.learn
 
-import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithModuleItemDurations
-import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
-import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
-import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetProgramsManager
-import com.instructure.canvasapi2.utils.ApiPrefs
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetLearningLibraryManager
+import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearningLibraryCollection
 import javax.inject.Inject
 
 class LearnRepository @Inject constructor(
-    private val horizonGetCoursesManager: HorizonGetCoursesManager,
-    private val getProgramsManager: GetProgramsManager,
-    private val apiPrefs: ApiPrefs
+    private val getLearningLibraryManager: GetLearningLibraryManager,
 ) {
-    suspend fun getCoursesWithProgress(forceNetwork: Boolean): List<CourseWithProgress> {
-        val courseWithProgress = horizonGetCoursesManager.getCoursesWithProgress(apiPrefs.user?.id ?: -1, forceNetwork).dataOrThrow
-        return courseWithProgress
-    }
-
-    suspend fun getCoursesById(courseIds: List<Long>, forceNetwork: Boolean = false): List<CourseWithModuleItemDurations> = coroutineScope {
-        courseIds.map { id ->
-            async { horizonGetCoursesManager.getProgramCourses(id, forceNetwork).dataOrThrow }
-        }.awaitAll()
+    suspend fun getEnrolledLearningLibraries(forceNetwork: Boolean): List<EnrolledLearningLibraryCollection> {
+        return getLearningLibraryManager.getEnrolledLearningLibraryCollections(4, forceNetwork).collections
     }
 }
