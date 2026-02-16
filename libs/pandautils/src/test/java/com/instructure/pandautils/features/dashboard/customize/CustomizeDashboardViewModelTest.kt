@@ -358,4 +358,49 @@ class CustomizeDashboardViewModelTest {
         val state = viewModel.uiState.value
         assertEquals("Hello, Test User", state.widgets[0].displayName)
     }
+
+    @Test
+    fun testGetDisplayNameForTodoWidget() = runTest {
+        val metadata = listOf(
+            WidgetMetadata(id = WidgetMetadata.WIDGET_ID_TODO, position = 0, isVisible = true, isEditable = true)
+        )
+        coEvery { observeWidgetMetadataUseCase(Unit) } returns flowOf(metadata)
+        coEvery { observeWidgetConfigUseCase(any()) } returns flowOf(emptyList())
+        every { resources.getString(R.string.widget_toDo) } returns "To Do"
+
+        viewModel = createViewModel()
+
+        val state = viewModel.uiState.value
+        assertEquals("To Do", state.widgets[0].displayName)
+    }
+
+    @Test
+    fun testGlobalSettingsLoaded() = runTest {
+        val globalSettings = listOf(
+            WidgetSettingItem(key = "globalSetting1", value = 0xFF0000FF.toInt(), type = SettingType.COLOR),
+            WidgetSettingItem(key = "globalSetting2", value = true, type = SettingType.BOOLEAN)
+        )
+        coEvery { observeWidgetMetadataUseCase(Unit) } returns flowOf(emptyList())
+        coEvery { observeWidgetConfigUseCase(WidgetMetadata.WIDGET_ID_GLOBAL) } returns flowOf(globalSettings)
+
+        viewModel = createViewModel()
+
+        val state = viewModel.uiState.value
+        assertEquals(2, state.globalSettings.size)
+        assertEquals("globalSetting1", state.globalSettings[0].key)
+        assertEquals(0xFF0000FF.toInt(), state.globalSettings[0].value)
+        assertEquals("globalSetting2", state.globalSettings[1].key)
+        assertEquals(true, state.globalSettings[1].value)
+    }
+
+    @Test
+    fun testGlobalSettingsEmptyByDefault() = runTest {
+        coEvery { observeWidgetMetadataUseCase(Unit) } returns flowOf(emptyList())
+        coEvery { observeWidgetConfigUseCase(WidgetMetadata.WIDGET_ID_GLOBAL) } returns flowOf(emptyList())
+
+        viewModel = createViewModel()
+
+        val state = viewModel.uiState.value
+        assertEquals(0, state.globalSettings.size)
+    }
 }

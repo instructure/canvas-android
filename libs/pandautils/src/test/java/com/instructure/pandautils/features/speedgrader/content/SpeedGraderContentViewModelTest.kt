@@ -486,6 +486,101 @@ class SpeedGraderContentViewModelTest {
         assertEquals(SubmissionStateLabel.Graded, viewModel.uiState.value.submissionState)
     }
 
+    @Test
+    fun `saveState changes to Saving when GradeSaving event is posted for current student`() = runTest {
+        coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
+
+        createViewModel()
+
+        assertEquals(SaveState.None, viewModel.uiState.value.saveState)
+
+        gradingEventHandler.postEvent(GradingEvent.GradeSaving(studentId))
+
+        assertEquals(SaveState.Saving, viewModel.uiState.value.saveState)
+    }
+
+    @Test
+    fun `saveState does not change when GradeSaving event is posted for different student`() = runTest {
+        coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
+
+        createViewModel()
+
+        assertEquals(SaveState.None, viewModel.uiState.value.saveState)
+
+        gradingEventHandler.postEvent(GradingEvent.GradeSaving(999L))
+
+        assertEquals(SaveState.None, viewModel.uiState.value.saveState)
+    }
+
+    @Test
+    fun `saveState changes to Saved when GradeSaved event is posted for current student`() = runTest {
+        coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
+
+        createViewModel()
+
+        gradingEventHandler.postEvent(GradingEvent.GradeSaving(studentId))
+        assertEquals(SaveState.Saving, viewModel.uiState.value.saveState)
+
+        gradingEventHandler.postEvent(GradingEvent.GradeSaved(studentId))
+        assertEquals(SaveState.Saved, viewModel.uiState.value.saveState)
+    }
+
+    @Test
+    fun `saveState auto-dismisses to None after 3 seconds when Saved`() = runTest {
+        coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
+
+        createViewModel()
+
+        gradingEventHandler.postEvent(GradingEvent.GradeSaved(studentId))
+        assertEquals(SaveState.Saved, viewModel.uiState.value.saveState)
+
+        testDispatcher.scheduler.advanceUntilIdle()
+        assertEquals(SaveState.None, viewModel.uiState.value.saveState)
+    }
+
+    @Test
+    fun `saveState changes to Failed when GradeSaveFailed event is posted for current student`() = runTest {
+        coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
+
+        createViewModel()
+
+        val retry = {}
+        gradingEventHandler.postEvent(GradingEvent.GradeSaveFailed(studentId, retry))
+
+        assert(viewModel.uiState.value.saveState is SaveState.Failed)
+    }
+
+    @Test
+    fun `saveState does not change when GradeSaved event is posted for different student`() = runTest {
+        coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
+
+        createViewModel()
+
+        gradingEventHandler.postEvent(GradingEvent.GradeSaving(studentId))
+        assertEquals(SaveState.Saving, viewModel.uiState.value.saveState)
+
+        gradingEventHandler.postEvent(GradingEvent.GradeSaved(999L))
+        assertEquals(SaveState.Saving, viewModel.uiState.value.saveState)
+    }
+
+    @Test
+    fun `saved auto-dismiss timer is cancelled when new GradeSaving event arrives`() = runTest {
+        coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
+
+        createViewModel()
+
+        gradingEventHandler.postEvent(GradingEvent.GradeSaved(studentId))
+        assertEquals(SaveState.Saved, viewModel.uiState.value.saveState)
+
+        testDispatcher.scheduler.advanceTimeBy(1500)
+
+        gradingEventHandler.postEvent(GradingEvent.GradeSaving(studentId))
+        assertEquals(SaveState.Saving, viewModel.uiState.value.saveState)
+
+        testDispatcher.scheduler.advanceUntilIdle()
+        assertEquals(SaveState.Saving, viewModel.uiState.value.saveState)
+    }
+
     private fun mockAttachment(
         id: String = "1",
         url: String = "https://example.com/file_$id.pdf",

@@ -80,6 +80,11 @@ class CustomizeDashboardViewModel @Inject constructor(
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     private fun loadWidgets() {
         viewModelScope.launch {
+            observeWidgetConfigUseCase(WidgetMetadata.WIDGET_ID_GLOBAL).collect { settingItems ->
+                _uiState.update { it.copy(globalSettings = settingItems) }
+            }
+        }
+        viewModelScope.launch {
             observeWidgetMetadataUseCase(Unit)
                 .map { metadata ->
                     metadata
@@ -184,6 +189,7 @@ class CustomizeDashboardViewModel @Inject constructor(
             WidgetMetadata.WIDGET_ID_WELCOME -> resources.getString(R.string.widget_hello, apiPrefs.user?.shortName)
             WidgetMetadata.WIDGET_ID_FORECAST -> resources.getString(R.string.widget_weekly_summary)
             WidgetMetadata.WIDGET_ID_COURSES -> resources.getString(R.string.courses_and_groups)
+            WidgetMetadata.WIDGET_ID_TODO -> resources.getString(R.string.widget_toDo)
             else -> widgetId
         }
     }

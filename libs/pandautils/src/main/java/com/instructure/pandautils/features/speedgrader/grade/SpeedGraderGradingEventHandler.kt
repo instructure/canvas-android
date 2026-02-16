@@ -25,6 +25,9 @@ sealed class GradingEvent {
     data object RubricUpdated : GradingEvent()
     data object PostPolicyUpdated : GradingEvent()
     data object GradeChanged : GradingEvent()
+    data class GradeSaving(val studentId: Long) : GradingEvent()
+    data class GradeSaved(val studentId: Long) : GradingEvent()
+    data class GradeSaveFailed(val studentId: Long, val retry: () -> Unit) : GradingEvent()
 }
 
 @Singleton

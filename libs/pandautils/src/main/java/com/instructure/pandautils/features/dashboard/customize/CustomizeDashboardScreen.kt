@@ -168,7 +168,7 @@ private fun WidgetList(
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
-        modifier = modifier,
+        modifier = modifier.testTag("widgetsList"),
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -178,6 +178,16 @@ private fun WidgetList(
                 isEnabled = uiState.isDashboardRedesignEnabled,
                 onToggle = uiState.onToggleDashboardRedesign
             )
+        }
+        item {
+            WidgetSettingsContent(
+                widgetId = WidgetMetadata.WIDGET_ID_GLOBAL,
+                settings = uiState.globalSettings,
+                onUpdateSetting = uiState.onUpdateSetting,
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
+            CanvasDivider()
         }
         item {
             Text(
@@ -334,6 +344,7 @@ private fun WidgetListItem(
                     onUpdateSetting = onUpdateSetting,
                     modifier = Modifier
                         .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
                 )
             }
         }
@@ -357,8 +368,7 @@ private fun WidgetSettingsContent(
                         checked = setting.value as? Boolean ?: false,
                         onCheckedChange = { newValue ->
                             onUpdateSetting(widgetId, setting.key, newValue)
-                        },
-                        modifier = Modifier.padding(horizontal = 16.dp)
+                        }
                     )
                 }
 
@@ -376,7 +386,7 @@ private fun WidgetSettingsContent(
                         onColorSelected = { newValue ->
                             onUpdateSetting(widgetId, setting.key, newValue)
                         },
-                        titleModifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                        titleModifier = Modifier.padding(vertical = 8.dp)
                     )
                 }
             }
@@ -388,7 +398,7 @@ private fun WidgetSettingsContent(
 private fun getSettingLabel(key: String): String {
     return when (key) {
         "showGreeting" -> stringResource(R.string.widget_setting_show_greeting)
-        "backgroundColor" -> stringResource(R.string.background_color)
+        "backgroundColor" -> stringResource(R.string.widgetSettings_widgetsColor)
         CoursesConfig.KEY_SHOW_GRADES -> stringResource(R.string.widget_setting_show_grades)
         CoursesConfig.KEY_SHOW_COLOR_OVERLAY -> stringResource(R.string.widget_setting_show_color_overlay)
         else -> key
