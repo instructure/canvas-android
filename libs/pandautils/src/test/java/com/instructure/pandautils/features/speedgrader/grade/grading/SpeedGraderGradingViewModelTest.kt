@@ -21,9 +21,11 @@ import io.mockk.unmockkAll
 import io.mockk.verify
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -700,7 +702,7 @@ class SpeedGraderGradingViewModelTest {
 
         createViewModel()
 
-        kotlinx.coroutines.launch {
+        CoroutineScope(testDispatcher).launch {
             gradingEventHandler.events.collect { event ->
                 eventsList.add(event)
             }
@@ -725,7 +727,7 @@ class SpeedGraderGradingViewModelTest {
 
         createViewModel()
 
-        kotlinx.coroutines.launch {
+        CoroutineScope(testDispatcher).launch {
             gradingEventHandler.events.collect { event ->
                 eventsList.add(event)
             }
@@ -764,7 +766,7 @@ class SpeedGraderGradingViewModelTest {
 
         createViewModel()
 
-        kotlinx.coroutines.launch {
+        CoroutineScope(testDispatcher).launch {
             gradingEventHandler.events.collect { event ->
                 eventsList.add(event)
             }
@@ -790,7 +792,7 @@ class SpeedGraderGradingViewModelTest {
 
         createViewModel()
 
-        kotlinx.coroutines.launch {
+        CoroutineScope(testDispatcher).launch {
             gradingEventHandler.events.collect { event ->
                 eventsList.add(event)
             }

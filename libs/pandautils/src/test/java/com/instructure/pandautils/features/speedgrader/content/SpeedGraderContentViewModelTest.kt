@@ -534,7 +534,7 @@ class SpeedGraderContentViewModelTest {
         gradingEventHandler.postEvent(GradingEvent.GradeSaved(studentId))
         assertEquals(SaveState.Saved, viewModel.uiState.value.saveState)
 
-        testDispatcher.scheduler.advanceTimeBy(3000)
+        testDispatcher.scheduler.advanceUntilIdle()
         assertEquals(SaveState.None, viewModel.uiState.value.saveState)
     }
 
@@ -577,7 +577,7 @@ class SpeedGraderContentViewModelTest {
         gradingEventHandler.postEvent(GradingEvent.GradeSaving(studentId))
         assertEquals(SaveState.Saving, viewModel.uiState.value.saveState)
 
-        testDispatcher.scheduler.advanceTimeBy(3000)
+        testDispatcher.scheduler.advanceUntilIdle()
         assertEquals(SaveState.Saving, viewModel.uiState.value.saveState)
     }
 
