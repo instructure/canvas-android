@@ -14,10 +14,10 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.learn.common.learninglibrary.list
+package com.instructure.horizon.features.learn.learninglibrary.list
 
 import androidx.compose.ui.text.input.TextFieldValue
-import com.instructure.horizon.features.learn.common.learninglibrary.common.LearnLearningLibraryCollectionItemState
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryCollectionState
 import com.instructure.horizon.horizonui.platform.LoadingState
 
 data class LearnLearningLibraryListUiState(
@@ -25,9 +25,6 @@ data class LearnLearningLibraryListUiState(
     val collections: List<LearnLearningLibraryCollectionState> = emptyList(),
     val searchQuery: TextFieldValue = TextFieldValue(""),
     val updateSearchQuery: (TextFieldValue) -> Unit = {},
-)
-
-data class LearnLearningLibraryCollectionState(
-    val name: String,
-    val items: List<LearnLearningLibraryCollectionItemState>
+    val onBookmarkClicked: (itemId: String) -> Unit = {},
+    val onEnrollClicked: (itemId: String) -> Unit = {},
 )

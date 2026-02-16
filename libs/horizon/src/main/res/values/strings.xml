@@ -514,7 +514,7 @@
     <string name="a11y_notebookHighlightMarkedAs">%1$s, marked as %2$s, double tap to edit note</string>
     <string name="learnCoursesTabLabel">Courses</string>
     <string name="learnProgramsTabLabel">Programs</string>
-    <string name="learnLearningLibraryTabLabel">Learning Library</string>
+    <string name="learnBrowseTabLabel">Browse</string>
     <string name="reportAProblemDescriptionMessage">File a ticket for a personal response from our support team.</string>
     <string name="igniteAIEnterAPromptLabel">Enter a prompt</string>
     <string name="a11y_igniteAiLoadingContentDescription">Loading response</string>

@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.learn.common.learninglibrary.common
+package com.instructure.horizon.features.learn.learninglibrary.common
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
@@ -24,18 +24,20 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
 import com.instructure.horizon.R
+import com.instructure.horizon.features.learn.learninglibrary.list.toUiChipState
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
@@ -62,6 +64,7 @@ data class LearnLearningLibraryCollectionItemState(
     val isBookmarked: Boolean,
     val isCompleted: Boolean,
     val canEnroll: Boolean,
+    val type: CollectionItemType,
     val chips: List<LearnLearningLibraryCollectionItemChipState>
 )
 
@@ -85,7 +88,16 @@ fun LearnLearningLibraryItem(
         .clickable(onClick = { onClick() })
     ) {
         Column(Modifier.padding(24.dp)) {
-            LoadingImage(state.imageUrl, modifier.clip(HorizonCornerRadius.level1_5))
+            LoadingImage(
+                imageUrl = state.imageUrl,
+                placeholder = {
+                    val typeChip = state.type.toUiChipState()
+                    LearningLibraryItemImagePlaceholder(
+                        typeChip?.iconRes,
+                        typeChip?.color ?: StatusChipColor.Grey
+                    )
+                }
+            )
             HorizonSpace(SpaceSize.SPACE_16)
             Text(
                 text = state.name,
@@ -96,6 +108,7 @@ fun LearnLearningLibraryItem(
             if (state.canEnroll) {
                 Column {
                     LearnLearningLibraryItemChipContent(state.chips)
+                    HorizonSpace(SpaceSize.SPACE_12)
                     LearnLearningLibraryItemButtonContentRow(state, onEnrollClick, onBookmarkClick)
                 }
             } else {
@@ -151,8 +164,11 @@ private fun LearnLearningLibraryItemButtonContentRow(
                 label = stringResource(R.string.learnLearningLibraryItemEnrollLabel),
                 width = ButtonWidth.FILL,
                 height = ButtonHeight.NORMAL,
-                color = ButtonColor.WhiteOutline,
-                onClick = { onEnrollClick() }
+                color = ButtonColor.BlackOutline,
+                onClick = { onEnrollClick() },
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 6.dp)
             )
         }
         if (state.isCompleted) {
@@ -179,6 +195,27 @@ private fun LearnLearningLibraryItemButtonContentRow(
 }
 
 @Composable
+private fun LearningLibraryItemImagePlaceholder(
+    iconRes: Int?,
+    color: StatusChipColor
+) {
+    Box(
+        Modifier
+            .fillMaxSize()
+            .background(color.fillColor),
+        contentAlignment = Alignment.Center
+    ) {
+        iconRes?.let {
+            Icon(
+                painter = painterResource(iconRes),
+                contentDescription = null,
+                tint = color.contentColor
+            )
+        }
+    }
+}
+
+@Composable
 @Preview
 private fun LearningLibraryItemCompletedPreview() {
     val state = LearnLearningLibraryCollectionItemState(
@@ -188,6 +225,7 @@ private fun LearningLibraryItemCompletedPreview() {
         isBookmarked = true,
         isCompleted = true,
         canEnroll = false,
+        type = CollectionItemType.COURSE,
         chips = listOf(
             LearnLearningLibraryCollectionItemChipState(
                 label = "Required",
@@ -221,6 +259,7 @@ private fun LearningLibraryItemEnrollPreview() {
         isBookmarked = true,
         isCompleted = false,
         canEnroll = true,
+        type = CollectionItemType.COURSE,
         chips = listOf(
             LearnLearningLibraryCollectionItemChipState(
                 label = "Required",
@@ -254,6 +293,7 @@ private fun LearningLibraryItemPreview() {
         isBookmarked = false,
         isCompleted = false,
         canEnroll = true,
+        type = CollectionItemType.COURSE,
         chips = listOf(
             LearnLearningLibraryCollectionItemChipState(
                 label = "Required",

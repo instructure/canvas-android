@@ -31,6 +31,7 @@ sealed class LearnRoute {
                 "$baseUrl/${selectedTab.stringValue}"
         }
     }
+
     data class LearnCourseDetailsScreen(val courseId: Long): LearnRoute() {
         companion object {
             const val courseIdAttr = "courseId"
@@ -47,5 +48,22 @@ sealed class LearnRoute {
             const val route = "$baseUrl/{$programIdAttr}"
             fun route(programId: String) = "$baseUrl/$programId"
         }
+    }
+
+    data object LearnLearningLibraryDetailsScreen: LearnRoute() {
+        const val collectionIdIdAttr = "collectionId"
+        const val baseUrl = "learning_library"
+        const val route = "${baseUrl}/{$collectionIdIdAttr}"
+        fun route(collectionId: String) = "${baseUrl}/$collectionId"
+    }
+
+    data object LearnLearningLibraryBookmarkScreen: LearnRoute() {
+        const val baseUrl = "learning_library/bookmark"
+        const val route = baseUrl
+    }
+
+    data object LearnLearningLibraryCompletedScreen: LearnRoute() {
+        const val baseUrl = "learning_library/completed"
+        const val route = baseUrl
     }
 }

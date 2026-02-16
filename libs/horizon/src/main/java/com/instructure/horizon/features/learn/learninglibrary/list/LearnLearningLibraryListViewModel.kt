@@ -1,0 +1,201 @@
+/*
+ * Copyright (C) 2026 - present Instructure, Inc.
+ *
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, version 3 of the License.
+ *
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+package com.instructure.horizon.features.learn.learninglibrary.list
+
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
+import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearningLibraryCollection
+import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItem
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.R
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryCollectionItemChipState
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryCollectionItemState
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryCollectionState
+import com.instructure.horizon.horizonui.molecules.StatusChipColor
+import com.instructure.horizon.horizonui.platform.LoadingState
+import com.instructure.pandautils.utils.orDefault
+import com.instructure.pandautils.utils.toFormattedString
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
+import javax.inject.Inject
+
+@HiltViewModel
+class LearnLearningLibraryListViewModel @Inject constructor(
+    private val repository: LearnLearningLibraryListRepository
+): ViewModel() {
+
+    private val _uiState = MutableStateFlow(LearnLearningLibraryListUiState(
+        loadingState = LoadingState(
+            onRefresh = ::refreshData,
+            onSnackbarDismiss = ::onDismissSnackbar
+        ),
+        updateSearchQuery = ::updateSearchQuery,
+        onBookmarkClicked = ::onBookmarkItem,
+        onEnrollClicked = ::onEnrollItem
+    ))
+    val uiState = _uiState
+
+    init {
+        loadData()
+    }
+
+    private fun loadData() {
+        viewModelScope.tryLaunch {
+            _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = true)) }
+            val result = fetchData()
+            _uiState.update { it.copy(collections = result.toUiState()) }
+            _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = false)) }
+        } catch {
+            _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = false, isError = true)) }
+        }
+    }
+
+    private fun refreshData() {
+        viewModelScope.tryLaunch {
+            _uiState.update { it.copy(loadingState = it.loadingState.copy(isRefreshing = true)) }
+            val result = fetchData(true)
+            _uiState.update { it.copy(collections = result.toUiState()) }
+            _uiState.update { it.copy(loadingState = it.loadingState.copy(isRefreshing = true, isError = false)) }
+        } catch {
+            _uiState.update { it.copy(loadingState = it.loadingState.copy(isRefreshing = false, snackbarMessage = "Failed to load Learning Library")) }
+        }
+    }
+
+    private suspend fun fetchData(forceNetwork: Boolean = false): List<EnrolledLearningLibraryCollection> {
+        return repository.getEnrolledLearningLibraries(forceNetwork)
+    }
+
+    private fun updateSearchQuery(value: TextFieldValue) {
+        _uiState.update { it.copy(searchQuery = value) }
+    }
+
+    private fun onBookmarkItem(itemId: String) {
+        // TODO
+    }
+
+    private fun onEnrollItem(itemId: String) {
+        // TODO
+    }
+
+    private fun onDismissSnackbar() {
+        _uiState.update { it.copy(loadingState = it.loadingState.copy(snackbarMessage = null)) }
+    }
+}
+
+private fun List<EnrolledLearningLibraryCollection>.toUiState(): List<LearnLearningLibraryCollectionState> {
+    return this.map {
+        LearnLearningLibraryCollectionState(
+            id = it.id,
+            name = it.name,
+            itemCount = it.items.size,
+            items = it.items.map { item ->
+                LearnLearningLibraryCollectionItemState(
+                    id = item.id,
+                    imageUrl = item.canvasCourse?.courseImageUrl,
+                    name = item.canvasCourse?.courseName.orEmpty(),
+                    isBookmarked = false, // TODO
+                    canEnroll = !item.isEnrolledInCanvas.orDefault(true), // TODO
+                    isCompleted = item.completionPercentage == 100.0,
+                    type = item.itemType,
+                    chips = listOf(
+                        item.itemType.toUiChipState(),
+                        item.completionPercentage?.toProgressUiChipState(),
+                        item.toUnitsUiChipState(),
+                        item.toEstimatedDurationUiChipState()
+                    ).mapNotNull { it }
+                )
+            }
+        )
+    }
+}
+
+fun CollectionItemType.toUiChipState(): LearnLearningLibraryCollectionItemChipState? {
+    return when(this) {
+        CollectionItemType.PAGE -> LearnLearningLibraryCollectionItemChipState(
+            label = "Page",
+            color = StatusChipColor.Sky,
+            iconRes = R.drawable.text_snippet
+        )
+        CollectionItemType.FILE -> LearnLearningLibraryCollectionItemChipState(
+            label = "File",
+            color = StatusChipColor.Sky,
+            iconRes = R.drawable.attach_file
+        )
+        CollectionItemType.EXTERNAL_URL -> LearnLearningLibraryCollectionItemChipState(
+            label = "External link",
+            color = StatusChipColor.Orange,
+            iconRes = R.drawable.text_snippet
+        )
+        CollectionItemType.EXTERNAL_TOOL -> LearnLearningLibraryCollectionItemChipState(
+            label = "External tool",
+            color = StatusChipColor.Honey,
+            iconRes = R.drawable.note_alt
+        )
+        CollectionItemType.COURSE -> LearnLearningLibraryCollectionItemChipState(
+            label = "Course",
+            color = StatusChipColor.Institution,
+            iconRes = R.drawable.book_2
+        )
+        CollectionItemType.PROGRAM -> LearnLearningLibraryCollectionItemChipState(
+            label = "Program",
+            color = StatusChipColor.Violet,
+            iconRes = R.drawable.book_5,
+        )
+        else -> null
+    }
+}
+
+private fun Double.toProgressUiChipState(): LearnLearningLibraryCollectionItemChipState? {
+    return if (this > 0 && this < 100) {
+        LearnLearningLibraryCollectionItemChipState(
+            label = "In progress",
+            color = StatusChipColor.Grey,
+            iconRes = R.drawable.trending_up
+        )
+    } else {
+        null
+    }
+}
+
+private fun LearningLibraryCollectionItem.toEstimatedDurationUiChipState(): LearnLearningLibraryCollectionItemChipState? {
+    val estimatedMinutes = this.canvasCourse?.estimatedDurationMinutes
+    return if (estimatedMinutes != null) {
+        LearnLearningLibraryCollectionItemChipState(
+            label = "$estimatedMinutes mins",
+            color = StatusChipColor.Grey,
+            iconRes = R.drawable.schedule
+        )
+    } else {
+        null
+    }
+}
+
+private fun LearningLibraryCollectionItem.toUnitsUiChipState(): LearnLearningLibraryCollectionItemChipState? {
+    return if (this.itemType == CollectionItemType.COURSE && this.canvasCourse != null && this.canvasCourse?.moduleItemCount.orDefault() > 0) {
+        LearnLearningLibraryCollectionItemChipState(
+            label = "${this.canvasCourse?.moduleItemCount.orDefault().toFormattedString(0)} units",
+            color = StatusChipColor.Grey,
+            iconRes = R.drawable.courses_format_list_bulleted
+        )
+    } else {
+        null
+    }
+}

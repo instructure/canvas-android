@@ -33,6 +33,9 @@ import com.instructure.horizon.features.home.HomeNavigationRoute
 import com.instructure.horizon.features.learn.LearnScreen
 import com.instructure.horizon.features.learn.LearnTab
 import com.instructure.horizon.features.learn.LearnViewModel
+import com.instructure.horizon.features.learn.learninglibrary.bookmark.LearnLearningLibraryBookmarkScreen
+import com.instructure.horizon.features.learn.learninglibrary.completed.LearnLearningLibraryCompletedScreen
+import com.instructure.horizon.features.learn.learninglibrary.details.LearnLearningLibraryDetailsScreen
 import com.instructure.horizon.features.learn.course.details.CourseDetailsScreen
 import com.instructure.horizon.features.learn.course.details.CourseDetailsViewModel
 import com.instructure.horizon.features.learn.program.details.ProgramDetailsScreen
@@ -132,5 +135,27 @@ fun NavGraphBuilder.learnNavigation(
             val state by viewModel.state.collectAsState()
             ProgramDetailsScreen(state, navController)
         }
+    }
+    composable(
+        route = LearnRoute.LearnLearningLibraryDetailsScreen.route,
+        arguments = listOf(
+            navArgument(LearnRoute.LearnLearningLibraryDetailsScreen.collectionIdIdAttr) {
+                type = NavType.StringType
+            }
+        ),
+        deepLinks = listOf(
+            navDeepLink {
+                uriPattern =
+                    "${ApiPrefs.fullDomain}/${LearnRoute.LearnLearningLibraryDetailsScreen.route}"
+            }
+        )
+    ) {
+        LearnLearningLibraryDetailsScreen()
+    }
+    composable(LearnRoute.LearnLearningLibraryBookmarkScreen.route) {
+        LearnLearningLibraryBookmarkScreen()
+    }
+    composable(LearnRoute.LearnLearningLibraryCompletedScreen.route) {
+        LearnLearningLibraryCompletedScreen()
     }
 }

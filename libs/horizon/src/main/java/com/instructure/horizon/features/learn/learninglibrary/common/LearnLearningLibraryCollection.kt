@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.learn.common.learninglibrary.common
+package com.instructure.horizon.features.learn.learninglibrary.common
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.clickable
@@ -39,6 +39,7 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -216,6 +217,7 @@ private fun LearnLearningLibraryCollectionSingleItem() {
                     isBookmarked = true,
                     canEnroll = true,
                     isCompleted = false,
+                    type = CollectionItemType.COURSE,
                     chips = listOf(
                         LearnLearningLibraryCollectionItemChipState(
                             label = "Recommended"
@@ -235,6 +237,7 @@ private fun LearnLearningLibraryCollectionSingleItem() {
                     isBookmarked = false,
                     canEnroll = false,
                     isCompleted = true,
+                    type = CollectionItemType.COURSE,
                     chips = listOf(
                         LearnLearningLibraryCollectionItemChipState(
                             label = "Recommended"
@@ -278,6 +281,7 @@ private fun LearnLearningLibraryCollectionMultipleItems() {
                     isBookmarked = true,
                     canEnroll = true,
                     isCompleted = false,
+                    type = CollectionItemType.COURSE,
                     chips = listOf(
                         LearnLearningLibraryCollectionItemChipState(
                             label = "Recommended"
@@ -297,6 +301,7 @@ private fun LearnLearningLibraryCollectionMultipleItems() {
                     isBookmarked = false,
                     canEnroll = false,
                     isCompleted = true,
+                    type = CollectionItemType.COURSE,
                     chips = listOf(
                         LearnLearningLibraryCollectionItemChipState(
                             label = "Recommended"
@@ -323,6 +328,7 @@ private fun LearnLearningLibraryCollectionMultipleItems() {
                     isBookmarked = true,
                     canEnroll = true,
                     isCompleted = false,
+                    type = CollectionItemType.COURSE,
                     chips = listOf(
                         LearnLearningLibraryCollectionItemChipState(
                             label = "Recommended"
@@ -342,6 +348,7 @@ private fun LearnLearningLibraryCollectionMultipleItems() {
                     isBookmarked = false,
                     canEnroll = false,
                     isCompleted = true,
+                    type = CollectionItemType.COURSE,
                     chips = listOf(
                         LearnLearningLibraryCollectionItemChipState(
                             label = "Recommended"

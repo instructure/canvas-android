@@ -43,7 +43,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonColors
 fun LoadingImage(
     imageUrl: String?,
     modifier: Modifier = Modifier,
-    placeHolder: (@Composable () -> Unit)? = { ImagePlaceholder() }
+    placeholder: (@Composable () -> Unit)? = { ImagePlaceholder() }
 ) {
     var isImageLoading by rememberSaveable { mutableStateOf(true) }
     if (!imageUrl.isNullOrEmpty()) {
@@ -87,7 +87,7 @@ fun LoadingImage(
                 .aspectRatio(1.69f)
                 .background(HorizonColors.Surface.institution().copy(alpha = 0.1f))
         ) {
-            placeHolder?.invoke()
+            placeholder?.invoke()
         }
     }
 }

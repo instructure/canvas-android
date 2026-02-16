@@ -102,7 +102,7 @@ private fun Searchbar(state: LearnCourseListUiState) {
         value = state.searchQuery,
         onValueChange = { state.updateSearchQuery(it) },
         placeholder = stringResource(R.string.learnCourseListSearchBarPlaceholder),
-        modifier = Modifier.padding(24.dp)
+        modifier = Modifier.fillMaxWidth().padding(24.dp)
     )
 }
 

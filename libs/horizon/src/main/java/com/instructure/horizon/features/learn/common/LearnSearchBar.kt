@@ -20,7 +20,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Icon
@@ -46,8 +45,7 @@ fun LearnSearchBar(
     modifier: Modifier = Modifier,
 ) {
     BasicTextField(
-        modifier = modifier
-            .fillMaxWidth(),
+        modifier = modifier,
         value = value,
         onValueChange = onValueChange,
         singleLine = true,

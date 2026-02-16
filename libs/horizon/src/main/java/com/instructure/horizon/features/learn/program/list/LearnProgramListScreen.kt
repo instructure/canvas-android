@@ -86,7 +86,7 @@ private fun Searchbar(state: LearnProgramListUiState) {
         value = state.searchQuery,
         onValueChange = { state.updateSearchQuery(it) },
         placeholder = stringResource(R.string.learnProgramListSearchBarPlaceholder),
-        modifier = Modifier.padding(24.dp)
+        modifier = Modifier.fillMaxWidth().padding(24.dp)
     )
 }
 
