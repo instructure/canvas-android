@@ -18,6 +18,7 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.unmockkAll
+import io.mockk.verify
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
 import kotlinx.coroutines.Dispatchers
@@ -687,5 +688,120 @@ class SpeedGraderGradingViewModelTest {
         gradingEventHandler.postEvent(GradingEvent.RubricUpdated)
 
         assertEquals("missing", viewModel.uiState.first().gradingStatus)
+    }
+
+    @Test
+    fun `score change posts GradeSaving and GradeSaved events with studentId`() = runTest {
+        val submission = createMockSubmission()
+        val eventsList = mutableListOf<GradingEvent>()
+
+        coEvery { repository.getSubmissionGrade(any(), any(), any()) } returns submission
+        coEvery { repository.updateSubmissionGrade(any(), any(), any(), any(), any()) } returns mockk()
+
+        createViewModel()
+
+        kotlinx.coroutines.launch {
+            gradingEventHandler.events.collect { event ->
+                eventsList.add(event)
+            }
+        }
+
+        val uiState = viewModel.uiState.first()
+        uiState.onScoreChange(90f)
+
+        testDispatcher.scheduler.advanceTimeBy(600)
+
+        assert(eventsList.any { it is GradingEvent.GradeSaving && it.studentId == studentId })
+        assert(eventsList.any { it is GradingEvent.GradeSaved && it.studentId == studentId })
+    }
+
+    @Test
+    fun `excuse posts GradeSaving and GradeSaved events with studentId`() = runTest {
+        val submission = createMockSubmission()
+        val eventsList = mutableListOf<GradingEvent>()
+
+        coEvery { repository.getSubmissionGrade(any(), any(), any()) } returns submission
+        coEvery { repository.excuseSubmission(any(), any(), any()) } returns mockk()
+
+        createViewModel()
+
+        kotlinx.coroutines.launch {
+            gradingEventHandler.events.collect { event ->
+                eventsList.add(event)
+            }
+        }
+
+        val uiState = viewModel.uiState.first()
+        uiState.onExcuse()
+
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        assert(eventsList.any { it is GradingEvent.GradeSaving && it.studentId == studentId })
+        assert(eventsList.any { it is GradingEvent.GradeSaved && it.studentId == studentId })
+    }
+
+    @Test
+    fun `status change posts GradeSaving and GradeSaved events with studentId`() = runTest {
+        val submission = createMockSubmission()
+        val eventsList = mutableListOf<GradingEvent>()
+
+        coEvery { repository.getSubmissionGrade(any(), any(), any()) } returns submission
+        coEvery { repository.updateSubmissionStatus(any(), any(), any()) } returns UpdateSubmissionStatusMutation.Data(
+            updateSubmissionGradeStatus = UpdateSubmissionStatusMutation.UpdateSubmissionGradeStatus(
+                submission = UpdateSubmissionStatusMutation.Submission(
+                    status = "Missing",
+                    score = 95.0,
+                    grade = "A",
+                    enteredGrade = "A",
+                    enteredScore = 95.0,
+                    secondsLate = 0.0,
+                    deductedPoints = 0.0,
+                    excused = false,
+                    late = false
+                )
+            )
+        )
+
+        createViewModel()
+
+        kotlinx.coroutines.launch {
+            gradingEventHandler.events.collect { event ->
+                eventsList.add(event)
+            }
+        }
+
+        val uiState = viewModel.uiState.first()
+        val newStatus = GradeStatus(null, "missing", "Missing")
+        uiState.onStatusChange(newStatus)
+
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        assert(eventsList.any { it is GradingEvent.GradeSaving && it.studentId == studentId })
+        assert(eventsList.any { it is GradingEvent.GradeSaved && it.studentId == studentId })
+    }
+
+    @Test
+    fun `score change error posts GradeSaveFailed event with studentId`() = runTest {
+        val submission = createMockSubmission()
+        val eventsList = mutableListOf<GradingEvent>()
+
+        coEvery { repository.getSubmissionGrade(any(), any(), any()) } returns submission
+        coEvery { repository.updateSubmissionGrade(any(), any(), any(), any(), any()) } throws Exception("Network error")
+
+        createViewModel()
+
+        kotlinx.coroutines.launch {
+            gradingEventHandler.events.collect { event ->
+                eventsList.add(event)
+            }
+        }
+
+        val uiState = viewModel.uiState.first()
+        uiState.onScoreChange(90f)
+
+        testDispatcher.scheduler.advanceTimeBy(600)
+
+        assert(eventsList.any { it is GradingEvent.GradeSaving && it.studentId == studentId })
+        assert(eventsList.any { it is GradingEvent.GradeSaveFailed && it.studentId == studentId })
     }
 }
