@@ -19,6 +19,7 @@ package com.instructure.canvasapi2.managers.graphql.horizon.journey
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
 import com.instructure.canvasapi2.di.JourneyApolloClient
+import com.instructure.canvasapi2.enqueueMutation
 import com.instructure.canvasapi2.enqueueQuery
 import com.instructure.canvasapi2.models.journey.learninglibrary.CanvasCourseInfo
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
@@ -30,10 +31,14 @@ import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibrary
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionResponse
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryPageInfo
 import com.instructure.canvasapi2.models.journey.learninglibrary.toApolloType
+import com.instructure.journey.EnrollLearningLibraryItemMutation
 import com.instructure.journey.GetEnrolledLearningLibraryCollectionsQuery
 import com.instructure.journey.GetLearningLibraryCollectionItemsQuery
 import com.instructure.journey.GetLearningLibraryCollectionsQuery
+import com.instructure.journey.ToggleLearningLibraryItemIsBookmarkedMutation
 import com.instructure.journey.type.CollectionSortMode
+import com.instructure.journey.type.EnrollLearnerInCollectionItemInput
+import com.instructure.journey.type.ToggleCollectionItemBookmarkInput
 
 interface GetLearningLibraryManager {
     suspend fun getLearningLibraryCollections(
@@ -60,6 +65,10 @@ interface GetLearningLibraryManager {
         itemLimitPerCollection: Int? = null,
         forceNetwork: Boolean = false
     ): EnrolledLearningLibraryCollectionsResponse
+
+    suspend fun toggleLearningLibraryItemIsBookmarked(itemId: String): Boolean
+
+    suspend fun enrollLearningLibraryItem(itemId: String): LearningLibraryCollectionItem
 }
 
 class GetLearningLibraryManagerImpl(
@@ -208,6 +217,47 @@ class GetLearningLibraryManagerImpl(
                     }
                 )
             }
+        )
+    }
+
+    override suspend fun toggleLearningLibraryItemIsBookmarked(itemId: String): Boolean {
+        val mutation = ToggleLearningLibraryItemIsBookmarkedMutation(
+            ToggleCollectionItemBookmarkInput(itemId)
+        )
+        val result = journeyClient.enqueueMutation(mutation).dataOrThrow().toggleCollectionItemBookmark
+
+        return result.isBookmarked
+    }
+
+    override suspend fun enrollLearningLibraryItem(itemId: String): LearningLibraryCollectionItem {
+        val mutation = EnrollLearningLibraryItemMutation(
+            EnrollLearnerInCollectionItemInput(itemId)
+        )
+        val result = journeyClient.enqueueMutation(mutation).dataOrThrow().enrollLearnerInCollectionItem
+
+        return LearningLibraryCollectionItem(
+            id = result.item.id,
+            libraryId = result.item.libraryId,
+            itemType = CollectionItemType.valueOf(result.item.itemType.name),
+            displayOrder = result.item.displayOrder,
+            canvasCourse = result.item.canvasCourse?.let { course ->
+                CanvasCourseInfo(
+                    courseId = course.courseId,
+                    canvasUrl = course.canvasUrl,
+                    courseName = course.courseName,
+                    courseImageUrl = course.courseImageUrl,
+                    moduleCount = course.moduleCount,
+                    moduleItemCount = course.moduleItemCount,
+                    estimatedDurationMinutes = course.estimatedDurationMinutes
+                )
+            },
+            programId = result.item.programId,
+            programCourseId = result.item.programCourseId,
+            createdAt = result.item.createdAt,
+            updatedAt = result.item.updatedAt,
+            isBookmarked = result.item.isBookmarked,
+            completionPercentage = result.item.completionPercentage,
+            isEnrolledInCanvas = result.item.isEnrolledInCanvas
         )
     }
 }

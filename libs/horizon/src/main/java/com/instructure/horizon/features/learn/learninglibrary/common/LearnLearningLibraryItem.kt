@@ -31,6 +31,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -45,13 +46,13 @@ import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.foundation.horizonShadow
-import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.ButtonHeight
 import com.instructure.horizon.horizonui.molecules.ButtonWidth
-import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
+import com.instructure.horizon.horizonui.molecules.LoadingButton
+import com.instructure.horizon.horizonui.molecules.LoadingIconButton
 import com.instructure.horizon.horizonui.molecules.LoadingImage
 import com.instructure.horizon.horizonui.molecules.StatusChip
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
@@ -62,8 +63,10 @@ data class LearnLearningLibraryCollectionItemState(
     val imageUrl: String?,
     val name: String,
     val isBookmarked: Boolean,
+    val bookmarkLoading: Boolean,
     val isCompleted: Boolean,
     val canEnroll: Boolean,
+    val enrollLoading: Boolean,
     val type: CollectionItemType,
     val chips: List<LearnLearningLibraryCollectionItemChipState>
 )
@@ -96,7 +99,8 @@ fun LearnLearningLibraryItem(
                         typeChip?.iconRes,
                         typeChip?.color ?: StatusChipColor.Grey
                     )
-                }
+                },
+                modifier = Modifier.clip(HorizonCornerRadius.level1_5)
             )
             HorizonSpace(SpaceSize.SPACE_16)
             Text(
@@ -160,12 +164,15 @@ private fun LearnLearningLibraryItemButtonContentRow(
         horizontalArrangement = Arrangement.spacedBy(2.dp),
     ) {
         if (state.canEnroll) {
-            Button(
+            LoadingButton(
                 label = stringResource(R.string.learnLearningLibraryItemEnrollLabel),
+                loading = state.enrollLoading,
+                fixedLoadingSize = true,
                 width = ButtonWidth.FILL,
                 height = ButtonHeight.NORMAL,
                 color = ButtonColor.BlackOutline,
                 onClick = { onEnrollClick() },
+                contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .weight(1f)
                     .padding(end = 6.dp)
@@ -180,7 +187,8 @@ private fun LearnLearningLibraryItemButtonContentRow(
         }
 
         AnimatedContent(state.isBookmarked) { isBookmarked ->
-            IconButton(
+            LoadingIconButton(
+                loading = state.bookmarkLoading,
                 iconRes = if (isBookmarked) R.drawable.bookmark_fill else R.drawable.bookmark,
                 contentDescription = if (isBookmarked)
                     stringResource(R.string.a11y_learnLearningLibraryItemRemoveBookmarkContentDescription)
@@ -225,6 +233,8 @@ private fun LearningLibraryItemCompletedPreview() {
         isBookmarked = true,
         isCompleted = true,
         canEnroll = false,
+        bookmarkLoading = false,
+        enrollLoading = false,
         type = CollectionItemType.COURSE,
         chips = listOf(
             LearnLearningLibraryCollectionItemChipState(
@@ -259,6 +269,8 @@ private fun LearningLibraryItemEnrollPreview() {
         isBookmarked = true,
         isCompleted = false,
         canEnroll = true,
+        bookmarkLoading = false,
+        enrollLoading = false,
         type = CollectionItemType.COURSE,
         chips = listOf(
             LearnLearningLibraryCollectionItemChipState(
@@ -293,6 +305,8 @@ private fun LearningLibraryItemPreview() {
         isBookmarked = false,
         isCompleted = false,
         canEnroll = true,
+        bookmarkLoading = false,
+        enrollLoading = false,
         type = CollectionItemType.COURSE,
         chips = listOf(
             LearnLearningLibraryCollectionItemChipState(

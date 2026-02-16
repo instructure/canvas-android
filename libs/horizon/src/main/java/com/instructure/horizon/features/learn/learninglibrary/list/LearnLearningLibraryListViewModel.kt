@@ -16,6 +16,7 @@
  */
 package com.instructure.horizon.features.learn.learninglibrary.list
 
+import android.content.Context
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -33,12 +34,14 @@ import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toFormattedString
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
 class LearnLearningLibraryListViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val repository: LearnLearningLibraryListRepository
 ): ViewModel() {
 
@@ -93,11 +96,94 @@ class LearnLearningLibraryListViewModel @Inject constructor(
     }
 
     private fun onBookmarkItem(itemId: String) {
-        // TODO
+        viewModelScope.tryLaunch {
+            _uiState.update { it.copy(collections = it.collections.map { collectionState ->
+                collectionState.copy(
+                    items = collectionState.items.map { collectionItemState ->
+                        if (collectionItemState.id == itemId) {
+                            collectionItemState.copy(bookmarkLoading = true)
+                        } else {
+                            collectionItemState
+                        }
+                    }
+                )
+            })}
+
+            val newIsBookmarked = repository.toggleLearningLibraryItemIsBookmarked(itemId)
+
+            _uiState.update { it.copy(collections = it.collections.map { collectionState ->
+                collectionState.copy(
+                    items = collectionState.items.map { collectionItemState ->
+                        if (collectionItemState.id == itemId) {
+                            collectionItemState.copy(
+                                bookmarkLoading = false,
+                                isBookmarked = newIsBookmarked
+                            )
+                        } else {
+                            collectionItemState
+                        }
+                    }
+                )
+            })}
+        } catch {
+            _uiState.update { it.copy(collections = it.collections.map { collectionState ->
+                collectionState.copy(
+                    items = collectionState.items.map { collectionItemState ->
+                        if (collectionItemState.id == itemId) {
+                            collectionItemState.copy(
+                                bookmarkLoading = false,
+                            )
+                        } else {
+                            collectionItemState
+                        }
+                    }
+                )
+            }, loadingState = it.loadingState.copy(errorMessage = context.getString(R.string.learnLearningLibraryFailedToUpdateBookmarkMessage)))}
+        }
     }
 
     private fun onEnrollItem(itemId: String) {
-        // TODO
+        viewModelScope.tryLaunch {
+            _uiState.update { it.copy(collections = it.collections.map { collectionState ->
+                collectionState.copy(
+                    items = collectionState.items.map { collectionItemState ->
+                        if (collectionItemState.id == itemId) {
+                            collectionItemState.copy(enrollLoading = true)
+                        } else {
+                            collectionItemState
+                        }
+                    }
+                )
+            })}
+
+            val newItem = repository.enrollLearningLibraryItem(itemId)
+
+            _uiState.update { it.copy(collections = it.collections.map { collectionState ->
+                collectionState.copy(
+                    items = collectionState.items.map { collectionItemState ->
+                        if (collectionItemState.id == itemId) {
+                            newItem.toUiState()
+                        } else {
+                            collectionItemState
+                        }
+                    }
+                )
+            })}
+        } catch {
+            _uiState.update { it.copy(collections = it.collections.map { collectionState ->
+                collectionState.copy(
+                    items = collectionState.items.map { collectionItemState ->
+                        if (collectionItemState.id == itemId) {
+                            collectionItemState.copy(
+                                enrollLoading = false,
+                            )
+                        } else {
+                            collectionItemState
+                        }
+                    }
+                )
+            }, loadingState = it.loadingState.copy(errorMessage = context.getString(R.string.learnLearningLibraryFailedToEnrollMessage)))}
+        }
     }
 
     private fun onDismissSnackbar() {
@@ -118,24 +204,30 @@ private fun List<EnrolledLearningLibraryCollection>.toUiState(): List<LearnLearn
             name = it.name,
             itemCount = it.items.size,
             items = it.items.map { item ->
-                LearnLearningLibraryCollectionItemState(
-                    id = item.id,
-                    imageUrl = item.canvasCourse?.courseImageUrl,
-                    name = item.canvasCourse?.courseName.orEmpty(),
-                    isBookmarked = false, // TODO
-                    canEnroll = !item.isEnrolledInCanvas.orDefault(true), // TODO
-                    isCompleted = item.completionPercentage == 100.0,
-                    type = item.itemType,
-                    chips = listOf(
-                        item.itemType.toUiChipState(),
-                        item.completionPercentage?.toProgressUiChipState(),
-                        item.toUnitsUiChipState(),
-                        item.toEstimatedDurationUiChipState()
-                    ).mapNotNull { it }
-                )
+                item.toUiState()
             }
         )
     }
+}
+
+private fun LearningLibraryCollectionItem.toUiState(): LearnLearningLibraryCollectionItemState {
+    return LearnLearningLibraryCollectionItemState(
+        id = this.id,
+        imageUrl = this.canvasCourse?.courseImageUrl,
+        name = this.canvasCourse?.courseName.orEmpty(),
+        isBookmarked = this.isBookmarked,
+        canEnroll = this.itemType == CollectionItemType.COURSE && !this.isEnrolledInCanvas.orDefault(true),
+        bookmarkLoading = false,
+        enrollLoading = false,
+        isCompleted = this.completionPercentage == 100.0,
+        type = this.itemType,
+        chips = listOf(
+            this.itemType.toUiChipState(),
+            this.completionPercentage?.toProgressUiChipState(),
+            this.toUnitsUiChipState(),
+            this.toEstimatedDurationUiChipState()
+        ).mapNotNull { it }
+    )
 }
 
 fun CollectionItemType.toUiChipState(): LearnLearningLibraryCollectionItemChipState? {

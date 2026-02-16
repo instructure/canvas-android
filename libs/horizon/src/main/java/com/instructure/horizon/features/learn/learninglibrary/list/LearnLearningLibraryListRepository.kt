@@ -18,12 +18,21 @@ package com.instructure.horizon.features.learn.learninglibrary.list
 
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetLearningLibraryManager
 import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearningLibraryCollection
+import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItem
 import javax.inject.Inject
 
 class LearnLearningLibraryListRepository @Inject constructor(
-    private val getLearningLibraryManager: GetLearningLibraryManager
+    private val getLearningLibraryManager: GetLearningLibraryManager,
 ) {
     suspend fun getEnrolledLearningLibraries(forceNetwork: Boolean): List<EnrolledLearningLibraryCollection> {
         return getLearningLibraryManager.getEnrolledLearningLibraryCollections(4, forceNetwork).collections
+    }
+
+    suspend fun toggleLearningLibraryItemIsBookmarked(itemId: String): Boolean {
+        return getLearningLibraryManager.toggleLearningLibraryItemIsBookmarked(itemId)
+    }
+
+    suspend fun enrollLearningLibraryItem(itemId: String): LearningLibraryCollectionItem {
+        return getLearningLibraryManager.enrollLearningLibraryItem(itemId)
     }
 }

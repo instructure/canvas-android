@@ -1,0 +1,28 @@
+mutation EnrollLearningLibraryItem($input: EnrollLearnerInCollectionItemInput!) {
+  enrollLearnerInCollectionItem(input: $input) {
+      wasAlreadyEnrolled
+      item {
+          id
+          libraryId
+          itemType
+          displayOrder
+          canvasCourse {
+              courseId
+              canvasUrl
+              courseName
+              courseImageUrl
+              moduleCount
+              moduleItemCount
+              estimatedDurationMinutes
+          }
+          programId
+          programCourseId
+          createdAt
+          updatedAt
+          isBookmarked
+          completionPercentage
+          isEnrolledInCanvas
+          canvasEnrollmentId
+      }
+  }
+}

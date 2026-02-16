@@ -412,6 +412,9 @@ type EnrichedLearningLibraryCourseMembershipGQL {
 
     # Whether user is enrolled in the Canvas course (null for programs)
     isEnrolledInCanvas: Boolean
+
+    # Canvas enrollment ID for the user in this course (null if not enrolled or for programs)
+    canvasEnrollmentId: String
 }
 
 type EnrolledLearningLibraryCollectionGQL {
@@ -435,6 +438,9 @@ type EnrolledLearningLibraryCollectionGQL {
 
     # Collection items with user-specific enrichment (limited by itemLimitPerCollection)
     items: [EnrichedLearningLibraryCourseMembershipGQL!]!
+
+    # Total number of items in this collection (all items, not just the limited subset returned)
+    totalItemCount: Int!
 }
 
 type EnrolledLearningLibraryCollectionsResponseGQL {
@@ -521,6 +527,19 @@ type LearningLibraryCollectionsWithCountsCursorResponseGQL {
 
     # Cursor-based pagination information
     pageInfo: CursorPaginationInfoGQL!
+}
+
+type ToggleCollectionItemBookmarkResponseGQL {
+    # Whether the item is now bookmarked (true) or unbookmarked (false)
+    isBookmarked: Boolean!
+}
+
+type CollectionItemEnrollmentResponseGQL {
+    # The collection item with enriched metadata
+    item: EnrichedLearningLibraryCourseMembershipGQL!
+
+    # Whether the user was already enrolled in the Canvas course before this request
+    wasAlreadyEnrolled: Boolean!
 }
 
 type LearningLibraryCollectionEnrollmentGQL {
@@ -970,6 +989,15 @@ type ForceProgressRecalcResultGQL {
     failed: [String!]!
 }
 
+type CourseProgressSyncResultGQL {
+    completionPercentage: Float!
+    isEnrolledInCanvas: Boolean!
+    canvasEnrollmentId: String
+    lastSyncedAt: DateTime!
+    updatedProgramIds: [String!]!
+    failedProgramIds: [String!]!
+}
+
 type RedwoodResponseGQL {
     # GraphQL response data from Redwood
     data: JSON
@@ -1115,6 +1143,11 @@ type Query {
     enrolledLearningLibraryCollections(
         input: EnrolledLearningLibraryCollectionsQueryInput
     ): EnrolledLearningLibraryCollectionsResponseGQL!
+
+    # Get a single collection the user is enrolled in with ALL items (no pagination)
+    enrolledLearningLibraryCollection(
+        id: String!
+    ): EnrolledLearningLibraryCollectionGQL!
     crmConfigJwt: CrmJwtGQL!
     testSnowflakeQuery: JSON!
     getSnowflakeQueryStatus(queryId: String!): String!
@@ -1245,6 +1278,9 @@ input LearningLibraryCollectionItemsQueryInput {
 
     # If true, only return items with 100% completion
     completedOnly: Boolean = false
+
+    # Filter items by a specific collection ID
+    collectionId: String
 }
 
 input EnrolledLearningLibraryCollectionsQueryInput {
@@ -1441,10 +1477,19 @@ type Mutation {
         canvasCourseFilter: CanvasCourseFilterInputGQL
     ): ForceProgressRecalcResultGQL!
 
+    # Sync a single course progress from Canvas and trigger recalculation for affected programs. Collections automatically get fresh data via the shared CourseProgressEntity.
+    syncCourseProgress(canvasCourseId: String!): CourseProgressSyncResultGQL!
+
     # Create a new empty Learning Library Collection
     createLearningLibraryCollection(
         input: CreateLearningLibraryInput
         accountId: String!
+    ): LearningLibraryCollectionGQL!
+
+    # Update a Learning Library Collection
+    updateLearningLibraryCollection(
+        id: String!
+        input: UpdateLearningLibraryCollectionInput!
     ): LearningLibraryCollectionGQL!
 
     # Add Canvas courses to a Learning Library collection with metadata enrichment
@@ -1458,11 +1503,21 @@ type Mutation {
     # Delete a Learning Library Collection item by ID
     deleteLearningLibraryCollectionItem(itemId: String!): Boolean!
 
+    # Toggle bookmark for a collection item (create if not exists, delete if exists)
+    toggleCollectionItemBookmark(
+        input: ToggleCollectionItemBookmarkInput!
+    ): ToggleCollectionItemBookmarkResponseGQL!
+
     # Enroll multiple users to multiple learning library collections (creates all user-collection combinations)
     batchEnrollUsersToCollections(
         collectionIds: [String!]!
         userIds: [String!]!
     ): [LearningLibraryCollectionEnrollmentGQL!]!
+
+    # Enroll the current user in a Canvas course from a collection item
+    enrollLearnerInCollectionItem(
+        input: EnrollLearnerInCollectionItemInput!
+    ): CollectionItemEnrollmentResponseGQL!
     deleteWidget(id: String!, userAccountId: String!): Boolean!
     createWidget(input: CreateWidgetInput!, userAccountId: String!): WidgetGQL!
     updateWidget(
@@ -1736,12 +1791,33 @@ input CreateLearningLibraryInput {
     description: String
 }
 
+input UpdateLearningLibraryCollectionInput {
+    # Internal name of the learning library collection
+    name: String!
+
+    # Public-facing name of the collection
+    publicName: String
+
+    # Description of the collection
+    description: String
+}
+
 input AddCoursesToCollectionInput {
     # Learning Library Collection ID
     collectionId: String!
 
     # Array of Canvas course IDs to add
     courseIds: [String!]!
+}
+
+input ToggleCollectionItemBookmarkInput {
+    # Collection item (course membership) ID to toggle bookmark for
+    collectionItemId: String!
+}
+
+input EnrollLearnerInCollectionItemInput {
+    # The collection item (course membership) ID to enroll in
+    collectionItemId: String!
 }
 
 input CreateWidgetInput {
