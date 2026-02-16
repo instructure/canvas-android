@@ -18,6 +18,7 @@ package com.instructure.teacher.fragments
 
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
@@ -71,9 +72,10 @@ class DueDatesFragment : BaseSyncFragment<DueDateGroup, DueDatesPresenter, DueDa
     override fun withPagination() = false
     override fun getPresenterFactory() = DueDatesPresenterFactory(mAssignment)
     override fun onCreateView(view: View) {
-        binding.toolbar.applyTopSystemBarInsets()
+        view.findViewById<Toolbar>(R.id.toolbar)?.applyTopSystemBarInsets()
 
-        ViewCompat.setOnApplyWindowInsetsListener(dueDateRecyclerView) { v, insets ->
+        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
+        ViewCompat.setOnApplyWindowInsetsListener(recyclerView) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.updatePadding(bottom = systemBars.bottom)
             insets
