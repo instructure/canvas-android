@@ -53,6 +53,8 @@ class LearnLearningLibraryListViewModel @Inject constructor(
     ))
     val uiState = _uiState
 
+    private var allCollections: List<LearnLearningLibraryCollectionState> = emptyList()
+
     init {
         loadData()
     }
@@ -61,7 +63,8 @@ class LearnLearningLibraryListViewModel @Inject constructor(
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = true)) }
             val result = fetchData()
-            _uiState.update { it.copy(collections = result.toUiState()) }
+            allCollections = result.toUiState()
+            _uiState.update { it.copy(collections = allCollections.applyFilters()) }
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = false)) }
         } catch {
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = false, isError = true)) }
@@ -72,7 +75,8 @@ class LearnLearningLibraryListViewModel @Inject constructor(
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isRefreshing = true)) }
             val result = fetchData(true)
-            _uiState.update { it.copy(collections = result.toUiState()) }
+            allCollections = result.toUiState()
+            _uiState.update { it.copy(collections = allCollections.applyFilters()) }
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isRefreshing = true, isError = false)) }
         } catch {
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isRefreshing = false, snackbarMessage = "Failed to load Learning Library")) }
@@ -85,6 +89,7 @@ class LearnLearningLibraryListViewModel @Inject constructor(
 
     private fun updateSearchQuery(value: TextFieldValue) {
         _uiState.update { it.copy(searchQuery = value) }
+        _uiState.update { it.copy(collections = allCollections.applyFilters()) }
     }
 
     private fun onBookmarkItem(itemId: String) {
@@ -97,6 +102,12 @@ class LearnLearningLibraryListViewModel @Inject constructor(
 
     private fun onDismissSnackbar() {
         _uiState.update { it.copy(loadingState = it.loadingState.copy(snackbarMessage = null)) }
+    }
+
+    private fun List<LearnLearningLibraryCollectionState>.applyFilters(): List<LearnLearningLibraryCollectionState> {
+        return this.filter {
+            it.name.contains(_uiState.value.searchQuery.text, ignoreCase = true)
+        }
     }
 }
 

@@ -71,6 +71,10 @@ fun LazyListScope.LearnLearningLibraryCollection(
     onCollectionDetailsClick: (itemId: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    if (collections.isEmpty()) {
+        item { EmptyMessage() }
+    }
+
     items(collections) { collectionItem ->
         LearnLearningLibraryCollectionItem(
             collectionItem,
@@ -373,4 +377,14 @@ private fun LearnLearningLibraryCollectionMultipleItems() {
             {}
         )
     }
+}
+
+@Composable
+private fun EmptyMessage() {
+    Text(
+        text = stringResource(R.string.learnLearningLibraryListEmptyMessage),
+        style = HorizonTypography.p1,
+        color = HorizonColors.Text.body(),
+        modifier = Modifier.padding(horizontal = 24.dp)
+    )
 }
