@@ -18,6 +18,7 @@ package com.instructure.pandautils.features.dashboard.customize
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -43,6 +44,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -636,6 +639,7 @@ private fun SurveyDialog(
 
                 SURVEY_OPTIONS.forEach { option ->
                     SurveyOption(
+                        id = option.id,
                         text = stringResource(option.textRes),
                         selected = selectedOption == option.id,
                         onClick = { selectedOption = option.id }
@@ -720,6 +724,7 @@ private fun SurveyDialog(
 
 @Composable
 private fun SurveyOption(
+    id: String,
     text: String,
     selected: Boolean,
     onClick: () -> Unit
@@ -727,13 +732,15 @@ private fun SurveyOption(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .clickable { onClick() }
+            .padding(vertical = 8.dp)
+            .testTag("surveyOption_$id"),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        androidx.compose.material3.RadioButton(
+        RadioButton(
             selected = selected,
             onClick = onClick,
-            colors = androidx.compose.material3.RadioButtonDefaults.colors(
+            colors = RadioButtonDefaults.colors(
                 selectedColor = Color(ThemePrefs.brandColor),
                 unselectedColor = colorResource(R.color.textDark)
             )
