@@ -1080,6 +1080,12 @@
     <string name="pageTitleMustBeSet">Page title must be set.</string>
     <string name="pageDetails">Page Details</string>
     <string name="saving">Saving</string>
+    <string name="speedGraderSaving">Saving</string>
+    <string name="speedGraderSaved">Saved</string>
+    <string name="speedGraderFailed">Failed</string>
+    <string name="speedGraderSaveErrorTitle">Oops something went wrong</string>
+    <string name="speedGraderSaveErrorMessage">There was an error while saving your grade modification. You can retry, or try again later.</string>
+    <string name="speedGraderSaveErrorContentDescription">Grade save failed. Tap for details.</string>
     <string name="confirmDeleteEvent">Are you sure you wish to delete this event?</string>
     <string name="conferencesNotSupported">Conferences are not yet supported on mobile.</string>
     <string name="filePreviewContentDescription">File preview image</string>
