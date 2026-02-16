@@ -270,7 +270,7 @@ private fun WidgetList(
             items = widgets,
             key = { it.id }
         ) { metadata ->
-            GetWidgetComposable(metadata.id, refreshSignal, columns, onShowSnackbar, router, globalModifier = modifier.padding(top = 16.dp))
+            GetWidgetComposable(metadata.id, refreshSignal, columns, onShowSnackbar, router, modifier = modifier.padding(top = 16.dp))
         }
 
         item {
@@ -279,7 +279,7 @@ private fun WidgetList(
                 color = Color(color.color()),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp)
             )
         }
     }
@@ -292,41 +292,41 @@ private fun GetWidgetComposable(
     columns: Int,
     onShowSnackbar: (String, String?, (() -> Unit)?) -> Unit,
     router: DashboardRouter,
-    globalModifier: Modifier = Modifier
+    modifier: Modifier = Modifier
 ) {
     return when (widgetId) {
         WidgetMetadata.WIDGET_ID_PROGRESS -> ProgressWidget(
             refreshSignal = refreshSignal,
             columns = columns,
             onShowSnackbar = onShowSnackbar,
-            modifier = globalModifier
+            modifier = modifier
         )
 
         WidgetMetadata.WIDGET_ID_CONFERENCES -> ConferencesWidget(
             refreshSignal = refreshSignal,
             columns = columns,
             onShowSnackbar = onShowSnackbar,
-            modifier = globalModifier
+            modifier = modifier
         )
 
-        WidgetMetadata.WIDGET_ID_WELCOME -> WelcomeWidget(refreshSignal = refreshSignal, modifier = globalModifier)
-        WidgetMetadata.WIDGET_ID_COURSES -> CoursesWidget(refreshSignal = refreshSignal, columns = columns, modifier = globalModifier)
+        WidgetMetadata.WIDGET_ID_WELCOME -> WelcomeWidget(refreshSignal = refreshSignal, modifier = modifier)
+        WidgetMetadata.WIDGET_ID_COURSES -> CoursesWidget(refreshSignal = refreshSignal, columns = columns, modifier = modifier)
         WidgetMetadata.WIDGET_ID_COURSE_INVITATIONS -> CourseInvitationsWidget(
             refreshSignal = refreshSignal,
             columns = columns,
             onShowSnackbar = onShowSnackbar,
-            modifier = globalModifier
+            modifier = modifier
         )
 
         WidgetMetadata.WIDGET_ID_INSTITUTIONAL_ANNOUNCEMENTS -> InstitutionalAnnouncementsWidget(
             refreshSignal = refreshSignal,
             columns = columns,
             onAnnouncementClick = router::routeToGlobalAnnouncement,
-            modifier = globalModifier
+            modifier = modifier
         )
 
-        WidgetMetadata.WIDGET_ID_FORECAST -> ForecastWidget(refreshSignal = refreshSignal, modifier = globalModifier)
-        WidgetMetadata.WIDGET_ID_TODO -> TodoWidget(refreshSignal = refreshSignal, onShowSnackbar = onShowSnackbar, modifier = globalModifier)
+        WidgetMetadata.WIDGET_ID_FORECAST -> ForecastWidget(refreshSignal = refreshSignal, modifier = modifier)
+        WidgetMetadata.WIDGET_ID_TODO -> TodoWidget(refreshSignal = refreshSignal, onShowSnackbar = onShowSnackbar, modifier = modifier)
 
         else -> {}
     }

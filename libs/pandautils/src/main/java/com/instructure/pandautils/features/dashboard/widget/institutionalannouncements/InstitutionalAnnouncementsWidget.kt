@@ -63,6 +63,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.PagerIndicator
 import com.instructure.pandautils.domain.models.accountnotification.InstitutionalAnnouncement
 import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ThemedColor
 import kotlinx.coroutines.flow.SharedFlow
 import java.text.SimpleDateFormat
@@ -197,6 +198,7 @@ private fun AnnouncementCard(
                         contentDescription = null,
                         modifier = Modifier
                             .size(40.dp)
+                            .background(Color(ThemePrefs.logoBackgroundColor), shape = RoundedCornerShape(8.dp))
                             .clip(RoundedCornerShape(8.dp)),
                         contentScale = ContentScale.Inside
                     )
