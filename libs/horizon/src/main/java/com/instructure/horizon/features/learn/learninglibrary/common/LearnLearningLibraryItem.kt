@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
 import com.instructure.horizon.R
 import com.instructure.horizon.features.learn.learninglibrary.list.toUiChipState
+import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
@@ -60,6 +61,7 @@ import com.instructure.horizon.horizonui.molecules.StatusChipState
 
 data class LearnLearningLibraryCollectionItemState(
     val id: String,
+    val courseId: Long,
     val imageUrl: String?,
     val name: String,
     val isBookmarked: Boolean,
@@ -69,7 +71,14 @@ data class LearnLearningLibraryCollectionItemState(
     val enrollLoading: Boolean,
     val type: CollectionItemType,
     val chips: List<LearnLearningLibraryCollectionItemChipState>
-)
+) {
+    fun toRoute(): String? {
+        return when (type) {
+            CollectionItemType.COURSE -> LearnRoute.LearnCourseDetailsScreen.route(courseId)
+            else -> null
+        }
+    }
+}
 
 data class LearnLearningLibraryCollectionItemChipState(
     val label: String,
@@ -228,6 +237,7 @@ private fun LearningLibraryItemImagePlaceholder(
 private fun LearningLibraryItemCompletedPreview() {
     val state = LearnLearningLibraryCollectionItemState(
         id = "1",
+        courseId = 1,
         imageUrl = "https://example.com/image.png",
         name = "Example Course",
         isBookmarked = true,
@@ -264,6 +274,7 @@ private fun LearningLibraryItemCompletedPreview() {
 private fun LearningLibraryItemEnrollPreview() {
     val state = LearnLearningLibraryCollectionItemState(
         id = "1",
+        courseId = 1,
         imageUrl = "https://example.com/image.png",
         name = "Example Course",
         isBookmarked = true,
@@ -300,6 +311,7 @@ private fun LearningLibraryItemEnrollPreview() {
 private fun LearningLibraryItemPreview() {
     val state = LearnLearningLibraryCollectionItemState(
         id = "1",
+        courseId = 1,
         imageUrl = "https://example.com/image.png",
         name = "Example Course",
         isBookmarked = false,

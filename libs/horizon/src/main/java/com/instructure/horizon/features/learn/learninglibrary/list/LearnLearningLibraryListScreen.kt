@@ -65,8 +65,8 @@ fun LearnLearningLibraryListScreen(
                 state.collections.take(state.itemsToDisplays),
                 state.onBookmarkClicked,
                 state.onEnrollClicked,
-                {
-                    // TODO
+                { route ->
+                    route?.let { navController.navigate(route) }
                 },
                 {
                     navController.navigate(LearnRoute.LearnLearningLibraryDetailsScreen.route(it))

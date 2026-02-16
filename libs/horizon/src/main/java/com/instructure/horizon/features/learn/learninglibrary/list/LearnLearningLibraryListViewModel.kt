@@ -220,6 +220,7 @@ private fun List<EnrolledLearningLibraryCollection>.toUiState(): List<LearnLearn
 private fun LearningLibraryCollectionItem.toUiState(): LearnLearningLibraryCollectionItemState {
     return LearnLearningLibraryCollectionItemState(
         id = this.id,
+        courseId = this.canvasCourse?.courseId?.toLongOrNull() ?: -1L,
         imageUrl = this.canvasCourse?.courseImageUrl,
         name = this.canvasCourse?.courseName.orEmpty(),
         isBookmarked = this.isBookmarked,

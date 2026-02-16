@@ -67,7 +67,7 @@ fun LazyListScope.LearnLearningLibraryCollection(
     collections: List<LearnLearningLibraryCollectionState>,
     onBookmarkClick: (itemId: String) -> Unit,
     onEnrollClick: (itemId: String) -> Unit,
-    onItemClick: (itemId: String) -> Unit,
+    onItemClick: (route: String?) -> Unit,
     onCollectionDetailsClick: (itemId: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -96,7 +96,7 @@ fun LearnLearningLibraryCollectionItem(
     itemCount: Int,
     onBookmarkClick: (itemId: String) -> Unit,
     onEnrollClick: (itemId: String) -> Unit,
-    onItemClick: (itemId: String) -> Unit,
+    onItemClick: (route: String?) -> Unit,
     onCollectionDetailsClick: (itemId: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -116,7 +116,7 @@ fun LearnLearningLibraryCollectionItem(
         state.items.take(itemCount).forEach { itemState ->
             LearnLearningLibraryItem(
                 state = itemState,
-                onClick = { onItemClick(itemState.id) },
+                onClick = { onItemClick(itemState.toRoute()) },
                 onBookmarkClick = { onBookmarkClick(itemState.id) },
                 onEnrollClick = { onEnrollClick(itemState.id) }
             )
@@ -218,6 +218,7 @@ private fun LearnLearningLibraryCollectionSingleItem() {
             items = listOf(
                 LearnLearningLibraryCollectionItemState(
                     id = "1",
+                    courseId = 1,
                     imageUrl = null,
                     name = "Collection Item 1",
                     isBookmarked = true,
@@ -240,6 +241,7 @@ private fun LearnLearningLibraryCollectionSingleItem() {
                 ),
                 LearnLearningLibraryCollectionItemState(
                     id = "2",
+                    courseId = 1,
                     imageUrl = null,
                     name = "Collection Item 2",
                     isBookmarked = false,
@@ -286,6 +288,7 @@ private fun LearnLearningLibraryCollectionMultipleItems() {
             items = listOf(
                 LearnLearningLibraryCollectionItemState(
                     id = "1",
+                    courseId = 1,
                     imageUrl = null,
                     name = "Collection Item 1",
                     isBookmarked = true,
@@ -308,6 +311,7 @@ private fun LearnLearningLibraryCollectionMultipleItems() {
                 ),
                 LearnLearningLibraryCollectionItemState(
                     id = "2",
+                    courseId = 1,
                     imageUrl = null,
                     name = "Collection Item 2",
                     isBookmarked = false,
@@ -337,6 +341,7 @@ private fun LearnLearningLibraryCollectionMultipleItems() {
             items = listOf(
                 LearnLearningLibraryCollectionItemState(
                     id = "1",
+                    courseId = 1,
                     imageUrl = null,
                     name = "Collection Item 1",
                     isBookmarked = true,
@@ -359,6 +364,7 @@ private fun LearnLearningLibraryCollectionMultipleItems() {
                 ),
                 LearnLearningLibraryCollectionItemState(
                     id = "2",
+                    courseId = 1,
                     imageUrl = null,
                     name = "Collection Item 2",
                     isBookmarked = false,
