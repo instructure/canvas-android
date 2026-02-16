@@ -1,23 +1,7 @@
-/*
- * Copyright (C) 2024 - present Instructure, Inc.
- *
- *     Licensed under the Apache License, Version 2.0 (the "License");
- *     you may not use this file except in compliance with the License.
- *     You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *     Unless required by applicable law or agreed to in writing, software
- *     distributed under the License is distributed on an "AS IS" BASIS,
- *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *     See the License for the specific language governing permissions and
- *     limitations under the License.
- */
-package com.instructure.pandautils.features.calendar
+package com.instructure.pandautils.compose.composables.calendar
 
 import org.junit.After
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.threeten.bp.Clock
@@ -48,9 +32,9 @@ class CalendarStateMapperTest {
     fun `Format header UI state for selected date`() {
         val headerUiState = calendarStateMapper.createHeaderUiState(LocalDate.of(2023, 4, 20), null, loading = true)
 
-        assertEquals("2023", headerUiState.yearTitle)
-        assertEquals("April", headerUiState.monthTitle)
-        assertTrue(headerUiState.loadingMonths)
+        Assert.assertEquals("2023", headerUiState.yearTitle)
+        Assert.assertEquals("April", headerUiState.monthTitle)
+        Assert.assertTrue(headerUiState.loadingMonths)
     }
 
     @Test
@@ -59,15 +43,15 @@ class CalendarStateMapperTest {
             LocalDate.of(2023, 4, 20),
             LocalDate.of(2024, 2, 21))
 
-        assertEquals("2024", headerUiState.yearTitle)
-        assertEquals("February", headerUiState.monthTitle)
+        Assert.assertEquals("2024", headerUiState.yearTitle)
+        Assert.assertEquals("February", headerUiState.monthTitle)
     }
 
     @Test
     fun `Return one row body for calendar when it's not expanded with weekends disabled`() {
         val bodyUiState = calendarStateMapper.createBodyUiState(false, LocalDate.of(2023, 4, 20))
 
-        assertEquals(1, bodyUiState.currentPage.calendarRows.size)
+        Assert.assertEquals(1, bodyUiState.currentPage.calendarRows.size)
 
         val expectedCalendarRow = CalendarRowUiState(
             listOf(
@@ -81,14 +65,14 @@ class CalendarStateMapperTest {
             )
         )
 
-        assertEquals(expectedCalendarRow, bodyUiState.currentPage.calendarRows.first())
+        Assert.assertEquals(expectedCalendarRow, bodyUiState.currentPage.calendarRows.first())
     }
 
     @Test
     fun `Return all rows for the month for calendar when it's expanded with disabled days from previous month`() {
         val bodyUiState = calendarStateMapper.createBodyUiState(true, LocalDate.of(2023, 4, 20))
 
-        assertEquals(6, bodyUiState.currentPage.calendarRows.size)
+        Assert.assertEquals(6, bodyUiState.currentPage.calendarRows.size)
 
         val expectedFirstCalendarRow = CalendarRowUiState(
             listOf(
@@ -102,7 +86,7 @@ class CalendarStateMapperTest {
             )
         )
 
-        assertEquals(expectedFirstCalendarRow, bodyUiState.currentPage.calendarRows.first())
+        Assert.assertEquals(expectedFirstCalendarRow, bodyUiState.currentPage.calendarRows.first())
     }
 
     @Test
@@ -127,7 +111,7 @@ class CalendarStateMapperTest {
             )
         )
 
-        assertEquals(expectedCalendarRow, bodyUiState.currentPage.calendarRows.first())
+        Assert.assertEquals(expectedCalendarRow, bodyUiState.currentPage.calendarRows.first())
     }
 
     @Test
@@ -148,7 +132,7 @@ class CalendarStateMapperTest {
             )
         )
 
-        assertEquals(expectedCalendarRow, bodyUiState.previousPage.calendarRows.first())
+        Assert.assertEquals(expectedCalendarRow, bodyUiState.previousPage.calendarRows.first())
     }
 
     @Test
@@ -169,7 +153,7 @@ class CalendarStateMapperTest {
             )
         )
 
-        assertEquals(expectedCalendarRow, bodyUiState.nextPage.calendarRows.first())
+        Assert.assertEquals(expectedCalendarRow, bodyUiState.nextPage.calendarRows.first())
     }
 
     @Test
@@ -178,7 +162,7 @@ class CalendarStateMapperTest {
             expanded = true, selectedDay = LocalDate.of(2023, 5, 20), jumpToToday = true, scrollToPageOffset = -1
         )
 
-        assertEquals(6, bodyUiState.previousPage.calendarRows.size)
+        Assert.assertEquals(6, bodyUiState.previousPage.calendarRows.size)
 
         val expectedFirstCalendarRow = CalendarRowUiState(
             listOf(
@@ -192,7 +176,7 @@ class CalendarStateMapperTest {
             )
         )
 
-        assertEquals(expectedFirstCalendarRow, bodyUiState.previousPage.calendarRows.first())
+        Assert.assertEquals(expectedFirstCalendarRow, bodyUiState.previousPage.calendarRows.first())
     }
 
     @Test
@@ -201,7 +185,7 @@ class CalendarStateMapperTest {
             expanded = true, selectedDay = LocalDate.of(2023, 3, 20), jumpToToday = true, scrollToPageOffset = 1
         )
 
-        assertEquals(6, bodyUiState.nextPage.calendarRows.size)
+        Assert.assertEquals(6, bodyUiState.nextPage.calendarRows.size)
 
         val expectedFirstCalendarRow = CalendarRowUiState(
             listOf(
@@ -215,6 +199,6 @@ class CalendarStateMapperTest {
             )
         )
 
-        assertEquals(expectedFirstCalendarRow, bodyUiState.nextPage.calendarRows.first())
+        Assert.assertEquals(expectedFirstCalendarRow, bodyUiState.nextPage.calendarRows.first())
     }
 }

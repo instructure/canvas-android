@@ -411,7 +411,7 @@ private fun GradesScreenContent(
                             .height(24.dp)
                             .semantics {
                                 hideFromAccessibility()
-                            }
+                            }.testTag("basedOnGradedAssignmentsSwitch")
                     )
                 }
 
@@ -454,7 +454,7 @@ private fun GradesScreenContent(
                                 .height(24.dp)
                                 .semantics {
                                     hideFromAccessibility()
-                                }
+                                }.testTag("showWhatIfScoreSwitch")
                         )
                     }
                 }
@@ -784,7 +784,7 @@ private fun GradesCard(
                         } else {
                             colorResource(id = R.color.textDarkest)
                         },
-                        modifier = Modifier.padding(start = 8.dp)
+                        modifier = Modifier.padding(start = 8.dp).testTag("totalGradeScoreText")
                     )
                 }
             }

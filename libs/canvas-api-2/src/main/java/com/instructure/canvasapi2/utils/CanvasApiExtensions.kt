@@ -53,6 +53,11 @@ fun LocalDateTime?.toApiString(): String? {
     return DateTimeFormatter.ISO_INSTANT.format(zonedDateTime.truncatedTo(ChronoUnit.SECONDS))
 }
 
+fun LocalDateTime.toApiStringSafe(): String {
+    val zonedDateTime = this.atZone(ZoneId.systemDefault()).withZoneSameInstant(ZoneOffset.UTC)
+    return DateTimeFormatter.ISO_INSTANT.format(zonedDateTime.truncatedTo(ChronoUnit.SECONDS))
+}
+
 fun String?.toDate(): Date? {
     this ?: return null
 

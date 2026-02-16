@@ -32,6 +32,7 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -64,11 +65,14 @@ import com.instructure.pandautils.compose.composables.OverflowMenu
 import com.instructure.pandautils.compose.composables.rememberWithRequireNetwork
 import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
+import com.instructure.pandautils.features.dashboard.widget.conferences.ConferencesWidget
 import com.instructure.pandautils.features.dashboard.widget.courseinvitation.CourseInvitationsWidget
 import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidget
-import com.instructure.pandautils.features.dashboard.widget.institutionalannouncements.InstitutionalAnnouncementsWidget
-import com.instructure.pandautils.features.dashboard.widget.welcome.WelcomeWidget
 import com.instructure.pandautils.features.dashboard.widget.forecast.ForecastWidget
+import com.instructure.pandautils.features.dashboard.widget.institutionalannouncements.InstitutionalAnnouncementsWidget
+import com.instructure.pandautils.features.dashboard.widget.progress.ProgressWidget
+import com.instructure.pandautils.features.dashboard.widget.todo.TodoWidget
+import com.instructure.pandautils.features.dashboard.widget.welcome.WelcomeWidget
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.student.R
 import com.instructure.student.activity.NavigationActivity
@@ -165,7 +169,12 @@ fun DashboardScreenContent(
             )
         },
         snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
+            SnackbarHost(hostState = snackbarHostState) { data ->
+                Snackbar(
+                    snackbarData = data,
+                    actionColor = Color(ThemePrefs.textButtonColor)
+                )
+            }
         }
     ) { paddingValues ->
         Box(
@@ -268,6 +277,18 @@ private fun GetWidgetComposable(
     router: DashboardRouter
 ) {
     return when (widgetId) {
+        WidgetMetadata.WIDGET_ID_PROGRESS -> ProgressWidget(
+            refreshSignal = refreshSignal,
+            columns = columns,
+            onShowSnackbar = onShowSnackbar
+        )
+
+        WidgetMetadata.WIDGET_ID_CONFERENCES -> ConferencesWidget(
+            refreshSignal = refreshSignal,
+            columns = columns,
+            onShowSnackbar = onShowSnackbar
+        )
+
         WidgetMetadata.WIDGET_ID_WELCOME -> WelcomeWidget(refreshSignal = refreshSignal)
         WidgetMetadata.WIDGET_ID_COURSES -> CoursesWidget(refreshSignal = refreshSignal, columns = columns)
         WidgetMetadata.WIDGET_ID_COURSE_INVITATIONS -> CourseInvitationsWidget(
@@ -283,6 +304,8 @@ private fun GetWidgetComposable(
         )
 
         WidgetMetadata.WIDGET_ID_FORECAST -> ForecastWidget(refreshSignal = refreshSignal)
+        WidgetMetadata.WIDGET_ID_TODO -> TodoWidget(refreshSignal = refreshSignal, onShowSnackbar = onShowSnackbar)
+
         else -> {}
     }
 }
