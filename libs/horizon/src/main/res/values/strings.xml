@@ -559,8 +559,23 @@
     <string name="learnLearningLibraryFailedToUpdateBookmarkMessage">Failed to update the bookmark</string>
     <string name="learnLearningLibraryFailedToEnrollMessage">Failed to enroll in item</string>
     <string name="learningLibraryListShowMoreLabel">Show more</string>
+    <string name="learnLearningLibraryInProgressLabel">In progress</string>
+    <string name="learnLearningLibraryProgramLabel">Program</string>
+    <string name="learnLearningLibraryCourseLabel">Course</string>
+    <string name="learnLearningLibraryExternalToolLabel">External tool</string>
+    <string name="learnLearningLibraryExternalLinkLabel">External link</string>
+    <string name="learnLearningLibraryFileLabel">File</string>
+    <string name="learnLearningLibraryPageLabel">Page</string>
     <plurals name="learnLearningLibraryCollectionItemCount">
         <item quantity="one">%1$d item</item>
         <item quantity="other">%1$d items</item>
+    </plurals>
+    <plurals name="learnLearningLibraryEstimatedDuration">
+        <item quantity="one">%1$d min</item>
+        <item quantity="other">%1$d mins</item>
+    </plurals>
+    <plurals name="learnLearningLibraryContainedUnits">
+        <item quantity="one">%1$d unit</item>
+        <item quantity="other">%1$d units</item>
     </plurals>
 </resources>

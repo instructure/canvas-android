@@ -38,7 +38,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
 import com.instructure.horizon.R
-import com.instructure.horizon.features.learn.learninglibrary.list.toUiChipState
+import com.instructure.horizon.features.learn.learninglibrary.list.iconRes
+import com.instructure.horizon.features.learn.learninglibrary.list.statusColor
 import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
@@ -103,10 +104,9 @@ fun LearnLearningLibraryItem(
             LoadingImage(
                 imageUrl = state.imageUrl,
                 placeholder = {
-                    val typeChip = state.type.toUiChipState()
                     LearningLibraryItemImagePlaceholder(
-                        typeChip?.iconRes,
-                        typeChip?.color ?: StatusChipColor.Grey
+                        state.type.iconRes(),
+                        state.type.statusColor() ?: StatusChipColor.Grey
                     )
                 },
                 modifier = Modifier.clip(HorizonCornerRadius.level1_5)

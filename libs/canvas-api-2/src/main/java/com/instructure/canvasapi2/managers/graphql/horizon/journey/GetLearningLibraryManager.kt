@@ -39,6 +39,7 @@ import com.instructure.journey.ToggleLearningLibraryItemIsBookmarkedMutation
 import com.instructure.journey.type.CollectionSortMode
 import com.instructure.journey.type.EnrollLearnerInCollectionItemInput
 import com.instructure.journey.type.ToggleCollectionItemBookmarkInput
+import javax.inject.Inject
 
 interface GetLearningLibraryManager {
     suspend fun getLearningLibraryCollections(
@@ -71,7 +72,7 @@ interface GetLearningLibraryManager {
     suspend fun enrollLearningLibraryItem(itemId: String): LearningLibraryCollectionItem
 }
 
-class GetLearningLibraryManagerImpl(
+class GetLearningLibraryManagerImpl @Inject constructor(
     @JourneyApolloClient private val journeyClient: ApolloClient,
 ): GetLearningLibraryManager {
     override suspend fun getLearningLibraryCollections(
