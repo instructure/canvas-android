@@ -104,7 +104,7 @@ class ToDoWidgetUpdaterTest {
         assertEquals(WidgetState.NotLoggedIn, flow.last().state)
     }
 
-    @Test
+    @Test(expected = IllegalStateException::class)
     fun `Emits Error state when api calls fail`() = runTest {
         coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Fail()
 
