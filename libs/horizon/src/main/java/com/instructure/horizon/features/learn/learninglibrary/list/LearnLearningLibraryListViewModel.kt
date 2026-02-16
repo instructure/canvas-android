@@ -45,18 +45,21 @@ class LearnLearningLibraryListViewModel @Inject constructor(
     private val repository: LearnLearningLibraryListRepository
 ): ViewModel() {
 
+    private var allCollections: List<LearnLearningLibraryCollectionState> = emptyList()
+    private val pageSize: Int = 3
+
     private val _uiState = MutableStateFlow(LearnLearningLibraryListUiState(
         loadingState = LoadingState(
             onRefresh = ::refreshData,
             onSnackbarDismiss = ::onDismissSnackbar
         ),
+        itemsToDisplays = pageSize,
+        increaseItemsToDisplay = ::increaseItemsToDisplay,
         updateSearchQuery = ::updateSearchQuery,
         onBookmarkClicked = ::onBookmarkItem,
         onEnrollClicked = ::onEnrollItem
     ))
     val uiState = _uiState
-
-    private var allCollections: List<LearnLearningLibraryCollectionState> = emptyList()
 
     init {
         loadData()
@@ -188,6 +191,10 @@ class LearnLearningLibraryListViewModel @Inject constructor(
 
     private fun onDismissSnackbar() {
         _uiState.update { it.copy(loadingState = it.loadingState.copy(snackbarMessage = null)) }
+    }
+
+    private fun increaseItemsToDisplay() {
+        _uiState.update { it.copy(itemsToDisplays = it.itemsToDisplays + pageSize) }
     }
 
     private fun List<LearnLearningLibraryCollectionState>.applyFilters(): List<LearnLearningLibraryCollectionState> {

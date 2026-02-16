@@ -24,6 +24,8 @@ data class LearnLearningLibraryListUiState(
     val loadingState: LoadingState = LoadingState(),
     val collections: List<LearnLearningLibraryCollectionState> = emptyList(),
     val searchQuery: TextFieldValue = TextFieldValue(""),
+    val itemsToDisplays: Int = 1,
+    val increaseItemsToDisplay: () -> Unit = {},
     val updateSearchQuery: (TextFieldValue) -> Unit = {},
     val onBookmarkClicked: (itemId: String) -> Unit = {},
     val onEnrollClicked: (itemId: String) -> Unit = {},

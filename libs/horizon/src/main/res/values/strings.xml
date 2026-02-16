@@ -558,6 +558,7 @@
     <string name="learnLearningLibraryListEmptyMessage">No results found. Try adjusting your search terms.</string>
     <string name="learnLearningLibraryFailedToUpdateBookmarkMessage">Failed to update the bookmark</string>
     <string name="learnLearningLibraryFailedToEnrollMessage">Failed to enroll in item</string>
+    <string name="learningLibraryListShowMoreLabel">Show more</string>
     <plurals name="learnLearningLibraryCollectionItemCount">
         <item quantity="one">%1$d item</item>
         <item quantity="other">%1$d items</item>

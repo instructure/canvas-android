@@ -79,6 +79,7 @@ fun LazyListScope.LearnLearningLibraryCollection(
         LearnLearningLibraryCollectionItem(
             collectionItem,
             collections.size > 1,
+            if (collections.size > 1) 2 else 4,
             onBookmarkClick,
             onEnrollClick,
             onItemClick,
@@ -89,9 +90,10 @@ fun LazyListScope.LearnLearningLibraryCollection(
 }
 
 @Composable
-private fun LearnLearningLibraryCollectionItem(
+fun LearnLearningLibraryCollectionItem(
     state: LearnLearningLibraryCollectionState,
     isCollapsable: Boolean,
+    itemCount: Int,
     onBookmarkClick: (itemId: String) -> Unit,
     onEnrollClick: (itemId: String) -> Unit,
     onItemClick: (itemId: String) -> Unit,
@@ -111,7 +113,7 @@ private fun LearnLearningLibraryCollectionItem(
         )
         HorizonSpace(SpaceSize.SPACE_24)
 
-        state.items.forEach { itemState ->
+        state.items.take(itemCount).forEach { itemState ->
             LearnLearningLibraryItem(
                 state = itemState,
                 onClick = { onItemClick(itemState.id) },

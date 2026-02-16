@@ -38,6 +38,10 @@ import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.foundation.horizonBorderShadow
+import com.instructure.horizon.horizonui.molecules.Button
+import com.instructure.horizon.horizonui.molecules.ButtonColor
+import com.instructure.horizon.horizonui.molecules.ButtonHeight
+import com.instructure.horizon.horizonui.molecules.ButtonWidth
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
@@ -58,7 +62,7 @@ fun LearnLearningLibraryListScreen(
             }
 
             LearnLearningLibraryCollection(
-                state.collections,
+                state.collections.take(state.itemsToDisplays),
                 state.onBookmarkClicked,
                 state.onEnrollClicked,
                 {
@@ -69,6 +73,19 @@ fun LearnLearningLibraryListScreen(
                 },
                 Modifier.padding(horizontal = 24.dp)
             )
+
+            if (state.collections.size > state.itemsToDisplays) {
+                item {
+                    Button(
+                        label = stringResource(R.string.learningLibraryListShowMoreLabel),
+                        height = ButtonHeight.SMALL,
+                        width = ButtonWidth.FILL,
+                        color = ButtonColor.BlackOutline,
+                        onClick = state.increaseItemsToDisplay,
+                        modifier = Modifier.padding(horizontal = 24.dp)
+                    )
+                }
+            }
         }
     }
 }
