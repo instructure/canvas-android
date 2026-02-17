@@ -21,6 +21,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.MutableLiveData
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.Course
@@ -125,6 +126,7 @@ class CoursesWidgetViewModelTest {
         )
         coEvery { featureFlagProvider.offlineEnabled() } returns false
         every { networkStateProvider.isOnline() } returns true
+        every { networkStateProvider.isOnlineLiveData } returns MutableLiveData(true)
         every { localBroadcastManager.registerReceiver(any(), any()) } returns Unit
         every { localBroadcastManager.unregisterReceiver(any()) } returns Unit
         coEvery { courseSyncSettingsDao.findAll() } returns emptyList()
@@ -351,6 +353,7 @@ class CoursesWidgetViewModelTest {
         coEvery { featureFlagProvider.offlineEnabled() } returns true
         coEvery { courseSyncSettingsDao.findAll() } returns emptyList()
         every { networkStateProvider.isOnline() } returns false
+        every { networkStateProvider.isOnlineLiveData } returns MutableLiveData(false)
 
         val courses = listOf(Course(id = 1, name = "Course", isFavorite = true))
         coEvery { loadFavoriteCoursesUseCase(any()) } returns courses
@@ -369,6 +372,7 @@ class CoursesWidgetViewModelTest {
             CourseSyncSettingsEntity(courseId = 1, courseName = "Course", fullContentSync = true)
         )
         every { networkStateProvider.isOnline() } returns false
+        every { networkStateProvider.isOnlineLiveData } returns MutableLiveData(false)
 
         val courses = listOf(Course(id = 1, name = "Course", isFavorite = true))
         coEvery { loadFavoriteCoursesUseCase(any()) } returns courses
@@ -980,10 +984,12 @@ class CoursesWidgetViewModelTest {
         )
         val syncUpdateFlow = kotlinx.coroutines.flow.MutableSharedFlow<Unit>()
 
+        val networkLiveData = MutableLiveData(false)
         coEvery { featureFlagProvider.offlineEnabled() } returns true
         coEvery { loadFavoriteCoursesUseCase(any()) } returns courses
         every { observeOfflineSyncUpdatesUseCase(Unit) } returns syncUpdateFlow
         every { networkStateProvider.isOnline() } returns false
+        every { networkStateProvider.isOnlineLiveData } returns networkLiveData
         coEvery { courseSyncSettingsDao.findAll() } returns listOf(
             CourseSyncSettingsEntity(courseId = 1, courseName = "Course 1", fullContentSync = true)
         )

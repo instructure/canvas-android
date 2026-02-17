@@ -216,6 +216,7 @@ fun DashboardScreenContent(
                         refreshSignal = refreshSignal,
                         onShowSnackbar = onShowSnackbar,
                         router = router,
+                        isOnline = uiState.isOnline,
                         modifier = Modifier.fillMaxSize()
                     )
                 }
@@ -239,6 +240,7 @@ private fun WidgetList(
     refreshSignal: SharedFlow<Unit>,
     onShowSnackbar: (String, String?, (() -> Unit)?) -> Unit,
     router: DashboardRouter,
+    isOnline: Boolean,
     modifier: Modifier = Modifier
 ) {
     val activity = LocalActivity.current ?: return
@@ -260,7 +262,7 @@ private fun WidgetList(
             items = widgets,
             key = { it.id }
         ) { metadata ->
-            GetWidgetComposable(metadata.id, refreshSignal, columns, onShowSnackbar, router)
+            GetWidgetComposable(metadata.id, refreshSignal, columns, onShowSnackbar, router, isOnline)
         }
     }
 }
@@ -271,7 +273,8 @@ private fun GetWidgetComposable(
     refreshSignal: SharedFlow<Unit>,
     columns: Int,
     onShowSnackbar: (String, String?, (() -> Unit)?) -> Unit,
-    router: DashboardRouter
+    router: DashboardRouter,
+    isOnline: Boolean
 ) {
     return when (widgetId) {
         WidgetMetadata.WIDGET_ID_CONFERENCES -> ConferencesWidget(
@@ -285,7 +288,8 @@ private fun GetWidgetComposable(
         WidgetMetadata.WIDGET_ID_COURSE_INVITATIONS -> CourseInvitationsWidget(
             refreshSignal = refreshSignal,
             columns = columns,
-            onShowSnackbar = onShowSnackbar
+            onShowSnackbar = onShowSnackbar,
+            isOnline = isOnline
         )
 
         WidgetMetadata.WIDGET_ID_INSTITUTIONAL_ANNOUNCEMENTS -> InstitutionalAnnouncementsWidget(

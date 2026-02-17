@@ -22,6 +22,7 @@ data class DashboardUiState(
     val loading: Boolean = true,
     val error: String? = null,
     val refreshing: Boolean = false,
+    val isOnline: Boolean = true,
     val widgets: List<WidgetMetadata> = emptyList(),
     val onRefresh: () -> Unit = {},
     val onRetry: () -> Unit = {}

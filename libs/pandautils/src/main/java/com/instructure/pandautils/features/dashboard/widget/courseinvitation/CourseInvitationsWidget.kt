@@ -70,14 +70,17 @@ fun CourseInvitationsWidget(
     refreshSignal: SharedFlow<Unit>,
     columns: Int,
     onShowSnackbar: (String, String?, (() -> Unit)?) -> Unit,
+    isOnline: Boolean = true,
     modifier: Modifier = Modifier
 ) {
     val viewModel: CourseInvitationsViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
 
-    LaunchedEffect(refreshSignal) {
+    LaunchedEffect(refreshSignal, isOnline) {
         refreshSignal.collect {
-            uiState.onRefresh()
+            if (isOnline) {
+                uiState.onRefresh()
+            }
         }
     }
 
@@ -91,7 +94,8 @@ fun CourseInvitationsWidget(
     CourseInvitationsContent(
         modifier = modifier,
         uiState = uiState,
-        columns = columns
+        columns = columns,
+        isOnline = isOnline
     )
 }
 
@@ -100,7 +104,8 @@ fun CourseInvitationsWidget(
 fun CourseInvitationsContent(
     modifier: Modifier = Modifier,
     uiState: CourseInvitationsUiState,
-    columns: Int
+    columns: Int,
+    isOnline: Boolean = true
 ) {
     if (uiState.loading || uiState.error || uiState.invitations.isEmpty()) {
         return
@@ -142,6 +147,7 @@ fun CourseInvitationsContent(
                         invitation = invitation,
                         onAccept = { uiState.onAcceptInvitation(invitation) },
                         onDecline = { invitationToDecline = invitation },
+                        actionsEnabled = isOnline,
                         modifier = Modifier.weight(1f)
                     )
                 }
@@ -219,6 +225,7 @@ private fun InvitationCard(
     invitation: CourseInvitation,
     onAccept: () -> Unit,
     onDecline: () -> Unit,
+    actionsEnabled: Boolean = true,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -254,13 +261,16 @@ private fun InvitationCard(
             ) {
                 Button(
                     onClick = onAccept,
+                    enabled = actionsEnabled,
                     modifier = Modifier
                         .weight(1f)
                         .height(32.dp),
                     shape = RoundedCornerShape(100.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(ThemePrefs.brandColor),
-                        contentColor = colorResource(R.color.textLightest)
+                        contentColor = colorResource(R.color.textLightest),
+                        disabledContainerColor = Color(ThemePrefs.brandColor).copy(alpha = 0.5f),
+                        disabledContentColor = colorResource(R.color.textLightest).copy(alpha = 0.5f)
                     ),
                     elevation = ButtonDefaults.buttonElevation(
                         defaultElevation = 0.dp,
@@ -279,17 +289,21 @@ private fun InvitationCard(
 
                 OutlinedButton(
                     onClick = onDecline,
+                    enabled = actionsEnabled,
                     modifier = Modifier
                         .weight(1f)
                         .height(32.dp),
                     shape = RoundedCornerShape(100.dp),
                     colors = ButtonDefaults.outlinedButtonColors(
                         containerColor = colorResource(R.color.backgroundLightest),
-                        contentColor = colorResource(R.color.textDarkest)
+                        contentColor = colorResource(R.color.textDarkest),
+                        disabledContainerColor = colorResource(R.color.backgroundLightest),
+                        disabledContentColor = colorResource(R.color.textDarkest).copy(alpha = 0.5f)
                     ),
                     border = BorderStroke(
                         0.5.dp,
-                        colorResource(R.color.borderMedium)
+                        if (actionsEnabled) colorResource(R.color.borderMedium)
+                        else colorResource(R.color.borderMedium).copy(alpha = 0.5f)
                     ),
                     contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp)
                 ) {
