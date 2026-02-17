@@ -30,11 +30,20 @@ import com.instructure.student.fragment.OldDashboardFragment
 import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.fragment.ParentFragment
 
-class DefaultNavigationBehavior(apiPrefs: ApiPrefs) : NavigationBehavior {
+class DefaultNavigationBehavior(
+    apiPrefs: ApiPrefs,
+    private val widgetDashboardCanvasFlag: Boolean,
+    private val newDashboardEnabled: Boolean
+) : NavigationBehavior {
+
+    private fun shouldShowNewDashboard(): Boolean {
+        val killSwitch = RemoteConfigUtils.getBoolean(RemoteConfigParam.DASHBOARD_REDESIGN)
+        return killSwitch && widgetDashboardCanvasFlag && newDashboardEnabled
+    }
 
     private val dashboardFragmentClass: Class<out Fragment>
         get() {
-            return if (RemoteConfigUtils.getBoolean(RemoteConfigParam.DASHBOARD_REDESIGN)) {
+            return if (shouldShowNewDashboard()) {
                 DashboardFragment::class.java
             } else {
                 OldDashboardFragment::class.java
@@ -63,7 +72,7 @@ class DefaultNavigationBehavior(apiPrefs: ApiPrefs) : NavigationBehavior {
     override val bottomBarMenu: Int = R.menu.bottom_bar_menu
 
     override fun createHomeFragmentRoute(canvasContext: CanvasContext?): Route {
-        return if (RemoteConfigUtils.getBoolean(RemoteConfigParam.DASHBOARD_REDESIGN)) {
+        return if (shouldShowNewDashboard()) {
             DashboardFragment.makeRoute(ApiPrefs.user)
         } else {
             OldDashboardFragment.makeRoute(ApiPrefs.user)
@@ -71,7 +80,7 @@ class DefaultNavigationBehavior(apiPrefs: ApiPrefs) : NavigationBehavior {
     }
 
     override fun createHomeFragment(route: Route): ParentFragment {
-        return if (RemoteConfigUtils.getBoolean(RemoteConfigParam.DASHBOARD_REDESIGN)) {
+        return if (shouldShowNewDashboard()) {
             DashboardFragment.newInstance(route)
         } else {
             OldDashboardFragment.newInstance(route)

@@ -24,9 +24,8 @@ import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.AnalyticsParamConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.RemoteConfigParam
-import com.instructure.canvasapi2.utils.RemoteConfigPrefs
-import com.instructure.canvasapi2.utils.RemoteConfigUtils
+import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveGlobalConfigUseCase
+import com.instructure.pandautils.features.dashboard.widget.usecase.UpdateNewDashboardPreferenceUseCase
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetConfigUseCase
@@ -56,8 +55,8 @@ class CustomizeDashboardViewModel @Inject constructor(
     private val updateWidgetConfigUseCase: UpdateWidgetConfigUseCase,
     private val resources: Resources,
     private val apiPrefs: ApiPrefs,
-    private val remoteConfigUtils: RemoteConfigUtils,
-    private val remoteConfigPrefs: RemoteConfigPrefs,
+    private val observeGlobalConfigUseCase: ObserveGlobalConfigUseCase,
+    private val updateNewDashboardPreferenceUseCase: UpdateNewDashboardPreferenceUseCase,
     private val analytics: Analytics
 ) : ViewModel() {
 
@@ -78,8 +77,11 @@ class CustomizeDashboardViewModel @Inject constructor(
     }
 
     private fun loadDashboardRedesignFlag() {
-        val isDashboardRedesignEnabled = remoteConfigUtils.getBoolean(RemoteConfigParam.DASHBOARD_REDESIGN)
-        _uiState.update { it.copy(isDashboardRedesignEnabled = isDashboardRedesignEnabled) }
+        viewModelScope.launch {
+            observeGlobalConfigUseCase(Unit).collect { config ->
+                _uiState.update { it.copy(isDashboardRedesignEnabled = config.newDashboardEnabled) }
+            }
+        }
     }
 
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
@@ -185,8 +187,9 @@ class CustomizeDashboardViewModel @Inject constructor(
     }
 
     private fun toggleDashboardRedesign(enabled: Boolean) {
-        remoteConfigPrefs.putString(RemoteConfigParam.DASHBOARD_REDESIGN.rc_name, enabled.toString())
-        _uiState.update { it.copy(isDashboardRedesignEnabled = enabled) }
+        viewModelScope.launch {
+            updateNewDashboardPreferenceUseCase(UpdateNewDashboardPreferenceUseCase.Params(enabled))
+        }
     }
 
     private fun getDisplayName(widgetId: String): String {
