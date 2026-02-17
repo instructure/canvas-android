@@ -35,6 +35,7 @@ import com.instructure.pandautils.features.discussion.create.CreateDiscussionWeb
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyDisplayCutoutInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.bind
 import com.instructure.pandautils.utils.color
@@ -72,6 +73,9 @@ class DueDatesFragment : BaseSyncFragment<DueDateGroup, DueDatesPresenter, DueDa
     override fun withPagination() = false
     override fun getPresenterFactory() = DueDatesPresenterFactory(mAssignment)
     override fun onCreateView(view: View) {
+        // Apply display cutout insets to root view to prevent content from extending behind camera cutout
+        view.applyDisplayCutoutInsets()
+
         view.findViewById<Toolbar>(R.id.toolbar)?.applyTopSystemBarInsets()
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
