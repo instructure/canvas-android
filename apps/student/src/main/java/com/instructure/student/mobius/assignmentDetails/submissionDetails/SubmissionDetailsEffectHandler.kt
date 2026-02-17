@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.correctAttemptNumbers
 import com.instructure.canvasapi2.utils.exhaustive
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsSharedEvent
@@ -82,6 +83,13 @@ class SubmissionDetailsEffectHandler(
             )
 
             val submissionResult = repository.getSingleSubmission(effect.courseId, effect.assignmentId, finalUserId, true)
+
+            // Correct attempt numbers in submission history if needed (for new quizzes that don't provide them)
+            val correctedSubmissionResult = submissionResult.dataOrNull?.let { submission ->
+                val correctedHistory = submission.submissionHistory.correctAttemptNumbers()
+                DataResult.Success(submission.copy(submissionHistory = correctedHistory))
+            } ?: submissionResult
+
             val assignmentResult = repository.getAssignment(effect.assignmentId, effect.courseId, true)
 
             val studioLTIToolResult = if (repository.isOnline() && assignmentResult.containsSubmissionType(Assignment.SubmissionType.ONLINE_UPLOAD)) {
@@ -139,7 +147,7 @@ class SubmissionDetailsEffectHandler(
             consumer.accept(
                 SubmissionDetailsEvent.DataLoaded(
                     assignmentResult,
-                    submissionResult,
+                    correctedSubmissionResult,
                     ltiTool,
                     isStudioEnabled,
                     quizResult,

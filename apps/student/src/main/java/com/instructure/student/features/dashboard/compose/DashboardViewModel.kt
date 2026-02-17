@@ -16,9 +16,12 @@
 
 package com.instructure.student.features.dashboard.compose
 
+import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.pandautils.compose.SnackbarMessage
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.usecase.EnsureDefaultWidgetsUseCase
@@ -39,7 +42,8 @@ import javax.inject.Inject
 class DashboardViewModel @Inject constructor(
     private val networkStateProvider: NetworkStateProvider,
     private val ensureDefaultWidgetsUseCase: EnsureDefaultWidgetsUseCase,
-    private val observeWidgetMetadataUseCase: ObserveWidgetMetadataUseCase
+    private val observeWidgetMetadataUseCase: ObserveWidgetMetadataUseCase,
+    private val analytics: Analytics
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -55,6 +59,8 @@ class DashboardViewModel @Inject constructor(
 
     private val _snackbarMessage = MutableSharedFlow<SnackbarMessage>()
     val snackbarMessage = _snackbarMessage.asSharedFlow()
+
+    private var widgetVisibilityTracked = false
 
     init {
         loadDashboard()
@@ -79,9 +85,14 @@ class DashboardViewModel @Inject constructor(
                     val visibleWidgets = widgets.filter { it.isVisible }
                     val filtered = if (isOnline) visibleWidgets
                     else visibleWidgets.filter { it.id in OFFLINE_VISIBLE_WIDGETS }
-                    filtered to isOnline
-                }.collect { (filteredWidgets, isOnline) ->
+                    Triple(filtered, isOnline, widgets)
+                }.collect { (filteredWidgets, isOnline, allWidgets) ->
                     _uiState.update { it.copy(loading = false, error = null, widgets = filteredWidgets, isOnline = isOnline) }
+
+                    if (!widgetVisibilityTracked) {
+                        trackWidgetVisibility(allWidgets)
+                        widgetVisibilityTracked = true
+                    }
                 }
             } catch (e: Exception) {
                 _uiState.update { it.copy(loading = false, error = e.message) }
@@ -112,6 +123,16 @@ class DashboardViewModel @Inject constructor(
                     _refreshSignal.emit(Unit)
                 }
         }
+    }
+
+    private fun trackWidgetVisibility(widgets: List<WidgetMetadata>) {
+        val bundle = Bundle().apply {
+            widgets.filter { it.isEditable }.forEach { widget ->
+                val position = if (widget.isVisible) widget.position.toString() else "-1"
+                putString(widget.id, position)
+            }
+        }
+        analytics.logEvent(AnalyticsEventConstants.DASHBOARD_WIDGET_VISIBILITY, bundle)
     }
 
     companion object {

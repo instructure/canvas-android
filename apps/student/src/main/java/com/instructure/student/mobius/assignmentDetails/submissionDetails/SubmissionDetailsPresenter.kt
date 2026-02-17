@@ -40,31 +40,10 @@ object SubmissionDetailsPresenter : Presenter<SubmissionDetailsModel, Submission
             .filterNotNull()
             .sortedByDescending { it.submittedAt }
 
-        // Check if any attempt number is missing or invalid
-        val hasAnyMissingAttemptNumber = validSubmissions.any { it.attempt == 0L }
-
-        // Create submission to attempt number mapping
-        val submissionToAttemptMap = if (hasAnyMissingAttemptNumber) {
-            // Re-index from newest (highest) to 1
-            validSubmissions.mapIndexed { index, submission ->
-                submission to (validSubmissions.size - index).toLong()
-            }.toMap()
-        } else {
-            // Use original attempt numbers
-            validSubmissions.associateWith { it.attempt }
-        }
-
-        val selectedSubmission = if (hasAnyMissingAttemptNumber) {
-            // Find by position in the sorted list
-            val attemptNumber = model.selectedSubmissionAttempt
-            validSubmissions.firstOrNull { submissionToAttemptMap[it] == attemptNumber }
-        } else {
-            validSubmissions.firstOrNull { it.attempt == model.selectedSubmissionAttempt }
-        }
+        val selectedSubmission = validSubmissions.firstOrNull { it.attempt == model.selectedSubmissionAttempt }
 
         val submissionVersions: List<Pair<Long, String>> = validSubmissions.map { submission ->
-            val attemptNumber = submissionToAttemptMap[submission] ?: submission.attempt
-            attemptNumber to submission.submittedAt?.let { getFormattedAttemptDate(it) }.orEmpty()
+            submission.attempt to submission.submittedAt?.let { getFormattedAttemptDate(it) }.orEmpty()
         }
 
         val selectedVersionIdx = submissionVersions

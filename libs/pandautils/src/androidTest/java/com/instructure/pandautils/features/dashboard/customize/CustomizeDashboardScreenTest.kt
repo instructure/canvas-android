@@ -585,6 +585,9 @@ class CustomizeDashboardScreenTest {
         ).performClick()
         composeTestRule.onNodeWithTag("confirmationDialogConfirmButton").performClick()
 
+        // Select a survey option
+        composeTestRule.onNodeWithTag("surveyOption_hard_to_find").performClick()
+
         // Enter feedback
         composeTestRule.onNodeWithTag("surveyDialogFeedbackField").performTextInput("Test feedback")
 
@@ -637,6 +640,139 @@ class CustomizeDashboardScreenTest {
                 .onAllNodes(hasTestTag("surveyDialog"))
                 .fetchSemanticsNodes().isEmpty()
         }
+    }
+
+    @Test
+    fun testSurveyDialogOptionsDisplayed() {
+        val widgets = listOf(
+            WidgetItem(
+                metadata = WidgetMetadata(
+                    id = "widget1",
+                    position = 0,
+                    isVisible = true,
+                    isEditable = true
+                ),
+                displayName = "Widget 1",
+                settings = emptyList()
+            )
+        )
+
+        val uiState = CustomizeDashboardUiState(
+            loading = false,
+            widgets = widgets,
+            isDashboardRedesignEnabled = true
+        )
+
+        composeTestRule.setContent {
+            CustomizeDashboardScreenContent(
+                uiState = uiState,
+                onRestartApp = {},
+                onNavigateBack = {}
+            )
+        }
+
+        // Navigate to survey dialog
+        composeTestRule.onNode(
+            hasTestTag("dashboardRedesignToggle"),
+            useUnmergedTree = true
+        ).performClick()
+        composeTestRule.onNodeWithTag("confirmationDialogConfirmButton").performClick()
+
+        // Verify all survey options are displayed
+        composeTestRule.onNodeWithTag("surveyOption_hard_to_find").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("surveyOption_prefer_old_layout").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("surveyOption_something_broken").assertIsDisplayed()
+
+        // Verify option text is displayed
+        composeTestRule.onNodeWithText("Hard to find things").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Prefer the old layout").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Something didn't work right").assertIsDisplayed()
+    }
+
+    @Test
+    fun testSurveyDialogSubmitEnabledWithOnlyOption() {
+        val widgets = listOf(
+            WidgetItem(
+                metadata = WidgetMetadata(
+                    id = "widget1",
+                    position = 0,
+                    isVisible = true,
+                    isEditable = true
+                ),
+                displayName = "Widget 1",
+                settings = emptyList()
+            )
+        )
+
+        val uiState = CustomizeDashboardUiState(
+            loading = false,
+            widgets = widgets,
+            isDashboardRedesignEnabled = true
+        )
+
+        composeTestRule.setContent {
+            CustomizeDashboardScreenContent(
+                uiState = uiState,
+                onRestartApp = {},
+                onNavigateBack = {}
+            )
+        }
+
+        // Navigate to survey dialog
+        composeTestRule.onNode(
+            hasTestTag("dashboardRedesignToggle"),
+            useUnmergedTree = true
+        ).performClick()
+        composeTestRule.onNodeWithTag("confirmationDialogConfirmButton").performClick()
+
+        // Select option but don't enter feedback
+        composeTestRule.onNodeWithTag("surveyOption_hard_to_find").performClick()
+
+        // Submit button should be enabled (feedback is optional)
+        composeTestRule.onNodeWithTag("surveyDialogSubmitButton").assertIsEnabled()
+    }
+
+    @Test
+    fun testSurveyDialogSubmitDisabledWithOnlyFeedback() {
+        val widgets = listOf(
+            WidgetItem(
+                metadata = WidgetMetadata(
+                    id = "widget1",
+                    position = 0,
+                    isVisible = true,
+                    isEditable = true
+                ),
+                displayName = "Widget 1",
+                settings = emptyList()
+            )
+        )
+
+        val uiState = CustomizeDashboardUiState(
+            loading = false,
+            widgets = widgets,
+            isDashboardRedesignEnabled = true
+        )
+
+        composeTestRule.setContent {
+            CustomizeDashboardScreenContent(
+                uiState = uiState,
+                onRestartApp = {},
+                onNavigateBack = {}
+            )
+        }
+
+        // Navigate to survey dialog
+        composeTestRule.onNode(
+            hasTestTag("dashboardRedesignToggle"),
+            useUnmergedTree = true
+        ).performClick()
+        composeTestRule.onNodeWithTag("confirmationDialogConfirmButton").performClick()
+
+        // Enter feedback but don't select option
+        composeTestRule.onNodeWithTag("surveyDialogFeedbackField").performTextInput("Test feedback")
+
+        // Submit button should still be disabled
+        composeTestRule.onNodeWithTag("surveyDialogSubmitButton").assertIsNotEnabled()
     }
 
     @Test

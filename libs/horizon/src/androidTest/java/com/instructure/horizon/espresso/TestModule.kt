@@ -29,6 +29,7 @@ import com.instructure.pandautils.features.dashboard.notifications.DashboardRout
 import com.instructure.pandautils.features.dashboard.widget.conferences.ConferencesWidgetRouter
 import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidgetBehavior
 import com.instructure.pandautils.features.dashboard.widget.forecast.ForecastWidgetRouter
+import com.instructure.pandautils.features.dashboard.widget.progress.ProgressWidgetRouter
 import com.instructure.pandautils.features.dashboard.widget.todo.TodoWidgetBehavior
 import com.instructure.pandautils.features.dashboard.widget.todo.TodoWidgetRouter
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragmentBehavior
@@ -373,6 +374,11 @@ object HorizonTestModule {
 
     @Provides
     fun provideForecastWidgetRouter(): ForecastWidgetRouter {
+        throw NotImplementedError("This is a test module. Implementation not required.")
+    }
+
+    @Provides
+    fun provideProgressWidgetRouter(): ProgressWidgetRouter {
         throw NotImplementedError("This is a test module. Implementation not required.")
     }
 

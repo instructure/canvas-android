@@ -1080,6 +1080,12 @@
     <string name="pageTitleMustBeSet">Page title must be set.</string>
     <string name="pageDetails">Page Details</string>
     <string name="saving">Saving</string>
+    <string name="speedGraderSaving">Saving</string>
+    <string name="speedGraderSaved">Saved</string>
+    <string name="speedGraderFailed">Failed</string>
+    <string name="speedGraderSaveErrorTitle">Oops something went wrong</string>
+    <string name="speedGraderSaveErrorMessage">There was an error while saving your grade modification. You can retry, or try again later.</string>
+    <string name="speedGraderSaveErrorContentDescription">Grade save failed. Tap for details.</string>
     <string name="confirmDeleteEvent">Are you sure you wish to delete this event?</string>
     <string name="conferencesNotSupported">Conferences are not yet supported on mobile.</string>
     <string name="filePreviewContentDescription">File preview image</string>
@@ -2265,6 +2271,9 @@
     <string name="courseInvitationDeclineConfirmTitle">Decline Invitation</string>
     <string name="courseInvitationDeclineConfirmMessage">Are you sure you want to decline the invitation to %s?</string>
 
+    <!-- Progress Widget -->
+    <string name="progressWidgetTitle">Progress</string>
+
     <!-- Welcome Widget -->
     <!-- Greetings with name (%s is the student's first name) -->
     <string name="welcomeGreetingMorningWithName">Good morning, %s!</string>
@@ -2400,6 +2409,9 @@
     <string name="restart_now">Restart now</string>
     <string name="switched_back">Switched back?</string>
     <string name="switched_back_message">Thanks for trying the new dashboard! Could you tell us why you switched back?</string>
+    <string name="survey_option_hard_to_find">Hard to find things</string>
+    <string name="survey_option_prefer_old_layout">Prefer the old layout</string>
+    <string name="survey_option_something_broken">Something didn\'t work right</string>
     <string name="what_could_we_improve">What could we improve?</string>
     <string name="skip">Skip</string>
     <string name="widget_setting_show_greeting">Show greeting</string>

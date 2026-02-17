@@ -18,11 +18,13 @@ package com.instructure.pandautils.features.dashboard.customize
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -30,7 +32,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -40,6 +44,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -60,10 +66,12 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
@@ -92,7 +100,8 @@ fun CustomizeDashboardScreen(router: DashboardRouter, onNavigateBack: () -> Unit
     CustomizeDashboardScreenContent(
         uiState = uiState,
         onNavigateBack = onNavigateBack,
-        onRestartApp = { router.restartApp() }
+        onRestartApp = { router.restartApp() },
+        onTrackSurvey = viewModel::trackDashboardSurvey
     )
 }
 
@@ -100,7 +109,8 @@ fun CustomizeDashboardScreen(router: DashboardRouter, onNavigateBack: () -> Unit
 fun CustomizeDashboardScreenContent(
     uiState: CustomizeDashboardUiState,
     onRestartApp: () -> Unit,
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    onTrackSurvey: (String, String) -> Unit = { _, _ -> }
 ) {
     Scaffold(
         modifier = Modifier.background(colorResource(R.color.backgroundLight)),
@@ -153,6 +163,7 @@ fun CustomizeDashboardScreenContent(
                     WidgetList(
                         uiState = uiState,
                         onRestartApp = onRestartApp,
+                        onTrackSurvey = onTrackSurvey,
                         modifier = Modifier.fillMaxSize()
                     )
                 }
@@ -165,6 +176,7 @@ fun CustomizeDashboardScreenContent(
 private fun WidgetList(
     uiState: CustomizeDashboardUiState,
     onRestartApp: () -> Unit,
+    onTrackSurvey: (String, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -176,7 +188,8 @@ private fun WidgetList(
             FeatureFlagToggle(
                 onRestartApp = onRestartApp,
                 isEnabled = uiState.isDashboardRedesignEnabled,
-                onToggle = uiState.onToggleDashboardRedesign
+                onToggle = uiState.onToggleDashboardRedesign,
+                onTrackSurvey = onTrackSurvey
             )
         }
         item {
@@ -453,7 +466,8 @@ private fun BooleanSettingRow(
 private fun FeatureFlagToggle(
     isEnabled: Boolean,
     onToggle: (Boolean) -> Unit,
-    onRestartApp: () -> Unit
+    onRestartApp: () -> Unit,
+    onTrackSurvey: (String, String) -> Unit
 ) {
     var showConfirmationDialog by remember { mutableStateOf(false) }
     var showSurveyDialog by remember { mutableStateOf(false) }
@@ -502,8 +516,8 @@ private fun FeatureFlagToggle(
     if (showSurveyDialog) {
         SurveyDialog(
             onRestartApp = onRestartApp,
-            onSubmit = { feedback ->
-                // TODO: Send feedback to backend
+            onSubmit = { selectedOption, feedback ->
+                onTrackSurvey(selectedOption, feedback)
                 showSurveyDialog = false
             },
             onSkip = {
@@ -565,13 +579,26 @@ private fun ConfirmationDialog(
     )
 }
 
+private data class SurveyOptionData(
+    val id: String,
+    val textRes: Int
+)
+
+private val SURVEY_OPTIONS = listOf(
+    SurveyOptionData(AnalyticsEventConstants.SURVEY_OPTION_HARD_TO_FIND, R.string.survey_option_hard_to_find),
+    SurveyOptionData(AnalyticsEventConstants.SURVEY_OPTION_PREFER_OLD_LAYOUT, R.string.survey_option_prefer_old_layout),
+    SurveyOptionData(AnalyticsEventConstants.SURVEY_OPTION_SOMETHING_BROKEN, R.string.survey_option_something_broken)
+)
+
 @Composable
 private fun SurveyDialog(
     onRestartApp: () -> Unit,
-    onSubmit: (String) -> Unit,
+    onSubmit: (String, String) -> Unit,
     onSkip: () -> Unit
 ) {
+    var selectedOption by remember { mutableStateOf<String?>(null) }
     var feedback by remember { mutableStateOf("") }
+    val maxCharacters = 255
 
     fun restartApp() {
         GlobalScope.launch {
@@ -599,18 +626,49 @@ private fun SurveyDialog(
         },
         text = {
             Column(
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                modifier = Modifier.verticalScroll(rememberScrollState())
             ) {
                 Text(
                     text = stringResource(R.string.switched_back_message),
                     modifier = Modifier.testTag("surveyDialogMessage")
                 )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                CanvasDivider()
+
+                SURVEY_OPTIONS.forEach { option ->
+                    SurveyOption(
+                        id = option.id,
+                        text = stringResource(option.textRes),
+                        selected = selectedOption == option.id,
+                        onClick = { selectedOption = option.id }
+                    )
+                }
+
+                CanvasDivider()
+
+                Spacer(modifier = Modifier.height(16.dp))
+
                 OutlinedTextField(
                     value = feedback,
-                    onValueChange = { feedback = it },
-                    label = {
+                    onValueChange = {
+                        if (it.length <= maxCharacters) {
+                            feedback = it
+                        }
+                    },
+                    placeholder = {
                         Text(
                             text = stringResource(R.string.what_could_we_improve),
+                            color = colorResource(R.color.textDark)
+                        )
+                    },
+                    supportingText = {
+                        Text(
+                            text = "${feedback.length}/$maxCharacters",
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = TextAlign.End,
+                            color = colorResource(R.color.textDark)
                         )
                     },
                     modifier = Modifier
@@ -619,10 +677,9 @@ private fun SurveyDialog(
                     shape = RoundedCornerShape(8.dp),
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedTextColor = colorResource(R.color.textDarkest),
-                        focusedLabelColor = colorResource(R.color.textDark),
                         focusedBorderColor = colorResource(R.color.borderMedium),
-                        focusedPlaceholderColor = colorResource(R.color.textDark),
-                        unfocusedPlaceholderColor = colorResource(R.color.textDark)
+                        unfocusedTextColor = colorResource(R.color.textDarkest),
+                        unfocusedBorderColor = colorResource(R.color.borderMedium)
                     )
                 )
             }
@@ -630,10 +687,10 @@ private fun SurveyDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    onSubmit(feedback)
+                    onSubmit(selectedOption.orEmpty(), feedback)
                     restartApp()
                 },
-                enabled = feedback.isNotBlank(),
+                enabled = selectedOption != null,
                 colors = ButtonDefaults.textButtonColors(
                     contentColor = Color(ThemePrefs.brandColor),
                     disabledContentColor = Color(ThemePrefs.brandColor).copy(alpha = 0.6f),
@@ -663,6 +720,38 @@ private fun SurveyDialog(
         },
         modifier = Modifier.testTag("surveyDialog")
     )
+}
+
+@Composable
+private fun SurveyOption(
+    id: String,
+    text: String,
+    selected: Boolean,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() }
+            .padding(vertical = 8.dp)
+            .testTag("surveyOption_$id"),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        RadioButton(
+            selected = selected,
+            onClick = onClick,
+            colors = RadioButtonDefaults.colors(
+                selectedColor = Color(ThemePrefs.brandColor),
+                unselectedColor = colorResource(R.color.textDark)
+            )
+        )
+        Text(
+            text = text,
+            modifier = Modifier.padding(start = 8.dp),
+            fontWeight = FontWeight.SemiBold,
+            color = colorResource(R.color.textDarkest)
+        )
+    }
 }
 
 @Preview(showBackground = true)

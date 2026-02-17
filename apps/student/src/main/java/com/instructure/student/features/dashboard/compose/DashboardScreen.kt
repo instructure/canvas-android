@@ -69,6 +69,7 @@ import com.instructure.pandautils.features.dashboard.widget.courseinvitation.Cou
 import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidget
 import com.instructure.pandautils.features.dashboard.widget.forecast.ForecastWidget
 import com.instructure.pandautils.features.dashboard.widget.institutionalannouncements.InstitutionalAnnouncementsWidget
+import com.instructure.pandautils.features.dashboard.widget.progress.ProgressWidget
 import com.instructure.pandautils.features.dashboard.widget.todo.TodoWidget
 import com.instructure.pandautils.features.dashboard.widget.welcome.WelcomeWidget
 import com.instructure.pandautils.utils.ThemePrefs
@@ -277,6 +278,12 @@ private fun GetWidgetComposable(
     isOnline: Boolean
 ) {
     return when (widgetId) {
+        WidgetMetadata.WIDGET_ID_PROGRESS -> ProgressWidget(
+            refreshSignal = refreshSignal,
+            columns = columns,
+            onShowSnackbar = onShowSnackbar
+        )
+
         WidgetMetadata.WIDGET_ID_CONFERENCES -> ConferencesWidget(
             refreshSignal = refreshSignal,
             columns = columns,

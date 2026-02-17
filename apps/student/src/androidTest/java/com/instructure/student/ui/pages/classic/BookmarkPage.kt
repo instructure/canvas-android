@@ -91,6 +91,12 @@ class BookmarkPage : BasePage() {
     fun addBookmarkToHomeScreen(bookmarkName: String, device: UiDevice) {
         clickOnMoreMenu(bookmarkName)
         onView(allOf(withId(R.id.title), containsTextCaseInsensitive("Add to Home"), isDisplayed())).click()
-        device.findObject(UiSelector().textContains("Add automatically")).click()
+        val selector = device.findObject(UiSelector().textContains("Add automatically")) // If runs on API lvl 29 (nightly)
+        if (selector.exists()) {
+            selector.click()
+        } else {
+            device.findObject(UiSelector().textContains("Add to Home screen")).click() // If runs on API lvl 32 (mostly used locally)
+        }
+
     }
 }

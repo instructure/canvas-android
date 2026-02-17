@@ -46,6 +46,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.Pronouns
+import com.instructure.canvasapi2.utils.correctAttemptNumbers
 import com.instructure.canvasapi2.utils.isNullOrEmpty
 import com.instructure.canvasapi2.utils.isRtl
 import com.instructure.canvasapi2.utils.isValid
@@ -66,11 +67,11 @@ import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
 import com.instructure.pandautils.utils.AssignmentUtils2
 import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.isAllowedToSubmitWithOverrides
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.getSubAssignmentSubmissionGrade
 import com.instructure.pandautils.utils.getSubAssignmentSubmissionStateLabel
 import com.instructure.pandautils.utils.getSubmissionStateLabel
+import com.instructure.pandautils.utils.isAllowedToSubmitWithOverrides
 import com.instructure.pandautils.utils.isAudioVisualExtension
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.orderedCheckpoints
@@ -449,39 +450,14 @@ class AssignmentDetailsViewModel @Inject constructor(
 
         val submissionHistory = assignment.submission?.submissionHistory
         val attempts = submissionHistory?.let { history ->
-            // Check if any attempt number is missing or invalid
-            val hasAnyMissingAttemptNumber = history.any { it?.attempt == null || it?.attempt == 0L }
+            // Correct attempt numbers if needed (for new quizzes that don't provide them)
+            val correctedSubmissions = history.correctAttemptNumbers()
 
-            val sortedHistory = if (hasAnyMissingAttemptNumber) {
-                // Fallback: sort by submittedAt descending
-                history.sortedByDescending { it?.submittedAt }
-            } else {
-                // Normal case: sort by attempt number descending
-                history.sortedByDescending { it?.attempt }
-            }
-
-            if (hasAnyMissingAttemptNumber) {
-                // Filter out null submissions and those without submittedAt, then index from newest to 1
-                val validSubmissions = sortedHistory.mapNotNull { submission ->
-                    submission?.submittedAt?.toFormattedString()?.let { formattedDate ->
-                        submission to formattedDate
-                    }
-                }
-
-                validSubmissions.mapIndexed { index, (submission, formattedDate) ->
-                    val attemptNumber = validSubmissions.size - index
-                    AssignmentDetailsAttemptItemViewModel(
-                        AssignmentDetailsAttemptViewData(
-                            resources.getString(R.string.attempt, attemptNumber),
-                            formattedDate,
-                            submission
-                        )
-                    )
-                }
-            } else {
-                // Use original attempt numbers
-                sortedHistory.mapNotNull { submission ->
-                    submission?.submittedAt?.toFormattedString()?.let { formattedDate ->
+            // Sort by attempt number descending (newest first)
+            correctedSubmissions
+                .sortedByDescending { it.attempt }
+                .mapNotNull { submission ->
+                    submission.submittedAt?.toFormattedString()?.let { formattedDate ->
                         AssignmentDetailsAttemptItemViewModel(
                             AssignmentDetailsAttemptViewData(
                                 resources.getString(R.string.attempt, submission.attempt),
@@ -491,7 +467,6 @@ class AssignmentDetailsViewModel @Inject constructor(
                         )
                     }
                 }
-            }
         }.orEmpty()
 
         val submissionTypes = assignment.getSubmissionTypes()
