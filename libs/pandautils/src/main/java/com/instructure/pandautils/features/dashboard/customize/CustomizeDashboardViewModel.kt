@@ -17,8 +17,12 @@
 package com.instructure.pandautils.features.dashboard.customize
 
 import android.content.res.Resources
+import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
+import com.instructure.canvasapi2.utils.AnalyticsParamConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.canvasapi2.utils.RemoteConfigPrefs
@@ -53,7 +57,8 @@ class CustomizeDashboardViewModel @Inject constructor(
     private val resources: Resources,
     private val apiPrefs: ApiPrefs,
     private val remoteConfigUtils: RemoteConfigUtils,
-    private val remoteConfigPrefs: RemoteConfigPrefs
+    private val remoteConfigPrefs: RemoteConfigPrefs,
+    private val analytics: Analytics
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -204,5 +209,13 @@ class CustomizeDashboardViewModel @Inject constructor(
                 )
             )
         }
+    }
+
+    fun trackDashboardSurvey(selectedOption: String, userFeedback: String) {
+        val bundle = Bundle().apply {
+            putString(AnalyticsParamConstants.SELECTED_REASON, selectedOption)
+            putString(AnalyticsParamConstants.ADDITIONAL_FEEDBACK, userFeedback)
+        }
+        analytics.logEvent(AnalyticsEventConstants.DASHBOARD_SURVEY_SUBMITTED, bundle)
     }
 }

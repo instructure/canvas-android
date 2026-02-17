@@ -2409,6 +2409,9 @@
     <string name="restart_now">Restart now</string>
     <string name="switched_back">Switched back?</string>
     <string name="switched_back_message">Thanks for trying the new dashboard! Could you tell us why you switched back?</string>
+    <string name="survey_option_hard_to_find">Hard to find things</string>
+    <string name="survey_option_prefer_old_layout">Prefer the old layout</string>
+    <string name="survey_option_something_broken">Something didn\'t work right</string>
     <string name="what_could_we_improve">What could we improve?</string>
     <string name="skip">Skip</string>
     <string name="widget_setting_show_greeting">Show greeting</string>

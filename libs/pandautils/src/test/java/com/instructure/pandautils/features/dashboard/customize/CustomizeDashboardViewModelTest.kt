@@ -17,8 +17,12 @@
 package com.instructure.pandautils.features.dashboard.customize
 
 import android.content.res.Resources
+import android.os.Bundle
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
+import com.instructure.canvasapi2.utils.AnalyticsParamConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.canvasapi2.utils.RemoteConfigPrefs
@@ -35,10 +39,10 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkConstructor
+import io.mockk.slot
 import io.mockk.unmockkAll
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
@@ -49,6 +53,9 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -69,12 +76,29 @@ class CustomizeDashboardViewModelTest {
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val remoteConfigUtils: RemoteConfigUtils = mockk(relaxed = true)
     private val remoteConfigPrefs: RemoteConfigPrefs = mockk(relaxed = true)
+    private val analytics: Analytics = mockk(relaxed = true)
+    private val bundleStorage = mutableMapOf<String, String?>()
 
     private lateinit var viewModel: CustomizeDashboardViewModel
 
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
+
+        // Clear bundle storage for each test
+        bundleStorage.clear()
+
+        // Mock Bundle constructor for analytics tests
+        mockkConstructor(Bundle::class)
+        every { anyConstructed<Bundle>().putString(any(), any()) } answers {
+            val key = firstArg<String>()
+            val value = secondArg<String>()
+            bundleStorage[key] = value
+        }
+        every { anyConstructed<Bundle>().getString(any()) } answers {
+            val key = firstArg<String>()
+            bundleStorage[key]
+        }
 
         val user = User(id = 1, shortName = "Test User")
         every { apiPrefs.user } returns user
@@ -100,7 +124,8 @@ class CustomizeDashboardViewModelTest {
             resources,
             apiPrefs,
             remoteConfigUtils,
-            remoteConfigPrefs
+            remoteConfigPrefs,
+            analytics
         )
     }
 
@@ -402,5 +427,39 @@ class CustomizeDashboardViewModelTest {
 
         val state = viewModel.uiState.value
         assertEquals(0, state.globalSettings.size)
+    }
+
+    @Test
+    fun testTrackDashboardSurvey() = runTest {
+        viewModel = createViewModel()
+        viewModel.trackDashboardSurvey(AnalyticsEventConstants.SURVEY_OPTION_HARD_TO_FIND, "The navigation was confusing")
+
+        val bundleSlot = slot<Bundle>()
+        verify {
+            analytics.logEvent(
+                AnalyticsEventConstants.DASHBOARD_SURVEY_SUBMITTED,
+                capture(bundleSlot)
+            )
+        }
+
+        assertEquals(AnalyticsEventConstants.SURVEY_OPTION_HARD_TO_FIND, bundleSlot.captured.getString(AnalyticsParamConstants.SELECTED_REASON))
+        assertEquals("The navigation was confusing", bundleSlot.captured.getString(AnalyticsParamConstants.ADDITIONAL_FEEDBACK))
+    }
+
+    @Test
+    fun testTrackDashboardSurveyWithEmptyFeedback() = runTest {
+        viewModel = createViewModel()
+        viewModel.trackDashboardSurvey(AnalyticsEventConstants.SURVEY_OPTION_PREFER_OLD_LAYOUT, "")
+
+        val bundleSlot = slot<Bundle>()
+        verify {
+            analytics.logEvent(
+                AnalyticsEventConstants.DASHBOARD_SURVEY_SUBMITTED,
+                capture(bundleSlot)
+            )
+        }
+
+        assertEquals(AnalyticsEventConstants.SURVEY_OPTION_PREFER_OLD_LAYOUT, bundleSlot.captured.getString(AnalyticsParamConstants.SELECTED_REASON))
+        assertEquals("", bundleSlot.captured.getString(AnalyticsParamConstants.ADDITIONAL_FEEDBACK))
     }
 }
