@@ -20,18 +20,13 @@ import android.content.res.Resources
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
 import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearningLibraryCollection
-import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItem
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
-import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryCollectionItemChipState
-import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryCollectionItemState
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryCollectionState
-import com.instructure.horizon.horizonui.molecules.StatusChipColor
+import com.instructure.horizon.features.learn.learninglibrary.common.toUiState
 import com.instructure.horizon.horizonui.platform.LoadingState
-import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -68,7 +63,7 @@ class LearnLearningLibraryListViewModel @Inject constructor(
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = true)) }
             val result = fetchData()
-            allCollections = result.toUiState()
+            allCollections = result.toUiState(resources)
             _uiState.update { it.copy(collections = allCollections.applyFilters()) }
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = false)) }
         } catch {
@@ -80,7 +75,7 @@ class LearnLearningLibraryListViewModel @Inject constructor(
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isRefreshing = true)) }
             val result = fetchData(true)
-            allCollections = result.toUiState()
+            allCollections = result.toUiState(resources)
             _uiState.update { it.copy(collections = allCollections.applyFilters()) }
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isRefreshing = false, isError = false)) }
         } catch {
@@ -164,7 +159,7 @@ class LearnLearningLibraryListViewModel @Inject constructor(
                 collectionState.copy(
                     items = collectionState.items.map { collectionItemState ->
                         if (collectionItemState.id == itemId) {
-                            newItem.toUiState()
+                            newItem.toUiState(resources)
                         } else {
                             collectionItemState
                         }
@@ -200,136 +195,5 @@ class LearnLearningLibraryListViewModel @Inject constructor(
         return this.filter {
             it.name.contains(_uiState.value.searchQuery.text.trim(), ignoreCase = true)
         }
-    }
-
-    private fun List<EnrolledLearningLibraryCollection>.toUiState(): List<LearnLearningLibraryCollectionState> {
-        return this.map {
-            LearnLearningLibraryCollectionState(
-                id = it.id,
-                name = it.name,
-                itemCount = it.items.size,
-                items = it.items.map { item ->
-                    item.toUiState()
-                }
-            )
-        }
-    }
-
-    private fun LearningLibraryCollectionItem.toUiState(): LearnLearningLibraryCollectionItemState {
-        return LearnLearningLibraryCollectionItemState(
-            id = this.id,
-            courseId = this.canvasCourse?.courseId?.toLongOrNull() ?: -1L,
-            imageUrl = this.canvasCourse?.courseImageUrl,
-            name = this.canvasCourse?.courseName.orEmpty(),
-            isBookmarked = this.isBookmarked,
-            canEnroll = this.itemType == CollectionItemType.COURSE && !this.isEnrolledInCanvas.orDefault(true),
-            bookmarkLoading = false,
-            enrollLoading = false,
-            isCompleted = this.completionPercentage == 100.0,
-            type = this.itemType,
-            chips = listOf(
-                this.itemType.toUiChipState(),
-                this.completionPercentage?.toProgressUiChipState(),
-                this.toUnitsUiChipState(),
-                this.toEstimatedDurationUiChipState()
-            ).mapNotNull { it }
-        )
-    }
-
-    private fun CollectionItemType.toUiChipState(): LearnLearningLibraryCollectionItemChipState? {
-        return when(this) {
-            CollectionItemType.PAGE -> LearnLearningLibraryCollectionItemChipState(
-                label = resources.getString(R.string.learnLearningLibraryPageLabel),
-                color = StatusChipColor.Sky,
-                iconRes = R.drawable.text_snippet
-            )
-            CollectionItemType.FILE -> LearnLearningLibraryCollectionItemChipState(
-                label = resources.getString(R.string.learnLearningLibraryFileLabel),
-                color = StatusChipColor.Sky,
-                iconRes = R.drawable.attach_file
-            )
-            CollectionItemType.EXTERNAL_URL -> LearnLearningLibraryCollectionItemChipState(
-                label = resources.getString(R.string.learnLearningLibraryExternalLinkLabel),
-                color = StatusChipColor.Orange,
-                iconRes = R.drawable.text_snippet
-            )
-            CollectionItemType.EXTERNAL_TOOL -> LearnLearningLibraryCollectionItemChipState(
-                label = resources.getString(R.string.learnLearningLibraryExternalToolLabel),
-                color = StatusChipColor.Honey,
-                iconRes = R.drawable.note_alt
-            )
-            CollectionItemType.COURSE -> LearnLearningLibraryCollectionItemChipState(
-                label = resources.getString(R.string.learnLearningLibraryCourseLabel),
-                color = StatusChipColor.Institution,
-                iconRes = R.drawable.book_2
-            )
-            CollectionItemType.PROGRAM -> LearnLearningLibraryCollectionItemChipState(
-                label = resources.getString(R.string.learnLearningLibraryProgramLabel),
-                color = StatusChipColor.Violet,
-                iconRes = R.drawable.book_5,
-            )
-            else -> null
-        }
-    }
-
-    private fun Double.toProgressUiChipState(): LearnLearningLibraryCollectionItemChipState? {
-        return if (this > 0 && this < 100) {
-            LearnLearningLibraryCollectionItemChipState(
-                label = resources.getString(R.string.learnLearningLibraryInProgressLabel),
-                color = StatusChipColor.Grey,
-                iconRes = R.drawable.trending_up
-            )
-        } else {
-            null
-        }
-    }
-
-    private fun LearningLibraryCollectionItem.toEstimatedDurationUiChipState(): LearnLearningLibraryCollectionItemChipState? {
-        val estimatedMinutes = this.canvasCourse?.estimatedDurationMinutes
-        return if (estimatedMinutes != null) {
-            LearnLearningLibraryCollectionItemChipState(
-                label = resources.getQuantityString(R.plurals.learnLearningLibraryEstimatedDuration, estimatedMinutes.toInt(), estimatedMinutes.toInt()),
-                color = StatusChipColor.Grey,
-                iconRes = R.drawable.schedule
-            )
-        } else {
-            null
-        }
-    }
-
-    private fun LearningLibraryCollectionItem.toUnitsUiChipState(): LearnLearningLibraryCollectionItemChipState? {
-        return if (this.itemType == CollectionItemType.COURSE && this.canvasCourse != null && this.canvasCourse?.moduleItemCount.orDefault() > 0) {
-            LearnLearningLibraryCollectionItemChipState(
-                label = resources.getQuantityString(R.plurals.learnLearningLibraryContainedUnits, this.canvasCourse?.moduleItemCount.orDefault().toInt(), this.canvasCourse?.moduleItemCount.orDefault().toInt()),
-                color = StatusChipColor.Grey,
-                iconRes = R.drawable.courses_format_list_bulleted
-            )
-        } else {
-            null
-        }
-    }
-}
-
-fun CollectionItemType.iconRes(): Int? {
-    return when(this) {
-        CollectionItemType.PAGE -> R.drawable.text_snippet
-        CollectionItemType.FILE -> R.drawable.attach_file
-        CollectionItemType.EXTERNAL_URL -> R.drawable.text_snippet
-        CollectionItemType.EXTERNAL_TOOL -> R.drawable.note_alt
-        CollectionItemType.COURSE -> R.drawable.book_2
-        CollectionItemType.PROGRAM -> R.drawable.book_5
-        else -> null
-    }
-}
-
-fun CollectionItemType.statusColor(): StatusChipColor? {
-    return when(this) {
-        CollectionItemType.PAGE -> StatusChipColor.Sky
-        CollectionItemType.FILE -> StatusChipColor.Sky
-        CollectionItemType.EXTERNAL_URL -> StatusChipColor.Orange
-        CollectionItemType.EXTERNAL_TOOL -> StatusChipColor.Honey
-        CollectionItemType.COURSE -> StatusChipColor.Institution
-        CollectionItemType.PROGRAM -> StatusChipColor.Violet
-        else -> null
     }
 }

@@ -38,8 +38,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
 import com.instructure.horizon.R
-import com.instructure.horizon.features.learn.learninglibrary.list.iconRes
-import com.instructure.horizon.features.learn.learninglibrary.list.statusColor
 import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
