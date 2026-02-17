@@ -37,13 +37,17 @@ import com.instructure.canvasapi2.managers.AssignmentManager
 import com.instructure.canvasapi2.managers.GroupCategoriesManager
 import com.instructure.canvasapi2.managers.SectionManager
 import com.instructure.canvasapi2.managers.UserManager
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Assignment.Companion.GPA_SCALE_TYPE
 import com.instructure.canvasapi2.models.Assignment.Companion.LETTER_GRADE_TYPE
 import com.instructure.canvasapi2.models.Assignment.Companion.NOT_GRADED_TYPE
 import com.instructure.canvasapi2.models.Assignment.Companion.PASS_FAIL_TYPE
 import com.instructure.canvasapi2.models.Assignment.Companion.PERCENT_TYPE
 import com.instructure.canvasapi2.models.Assignment.Companion.POINTS_TYPE
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.models.Section
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.models.postmodels.AssignmentPostBody
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.NumberHelper
@@ -61,7 +65,26 @@ import com.instructure.pandautils.dialogs.DatePickerDialogFragment
 import com.instructure.pandautils.dialogs.TimePickerDialogFragment
 import com.instructure.pandautils.discussions.DiscussionUtils
 import com.instructure.pandautils.fragments.BaseFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.BooleanArg
+import com.instructure.pandautils.utils.MediaUploadUtils
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.Placeholder
+import com.instructure.pandautils.utils.RequestCodes
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyDisplayCutoutInsets
+import com.instructure.pandautils.utils.applyTheme
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
+import com.instructure.pandautils.utils.children
+import com.instructure.pandautils.utils.descendants
+import com.instructure.pandautils.utils.handleLTIPlaceHolders
+import com.instructure.pandautils.utils.hideKeyboard
+import com.instructure.pandautils.utils.onTextChanged
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.toast
+import com.instructure.pandautils.utils.withArgs
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentEditAssignmentDetailsBinding
@@ -71,17 +94,20 @@ import com.instructure.teacher.events.AssignmentUpdatedEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.models.DueDateGroup
 import com.instructure.teacher.router.RouteMatcher
-import com.instructure.teacher.utils.*
+import com.instructure.teacher.utils.EditDateGroups
+import com.instructure.teacher.utils.getColorCompat
+import com.instructure.teacher.utils.groupedDueDates
+import com.instructure.teacher.utils.setGroupedDueDates
+import com.instructure.teacher.utils.setupCloseButton
+import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.view.AssignmentOverrideView
-import com.instructure.pandautils.utils.applyTopSystemBarInsets
-import com.instructure.pandautils.utils.applyBottomSystemBarInsets
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.text.DecimalFormat
 import java.text.ParseException
-import java.util.*
+import java.util.Date
 
 @PageView(url = "{canvasContext}/assignments/{assignmentId}")
 @ScreenView(SCREEN_VIEW_EDIT_ASSIGNMENT_DETAILS)
@@ -172,6 +198,7 @@ class EditAssignmentDetailsFragment : BaseFragment() {
     }
 
     private fun setupWindowInsets() = with(binding) {
+        root.applyDisplayCutoutInsets()
         scrollView.applyBottomSystemBarInsets()
     }
 
