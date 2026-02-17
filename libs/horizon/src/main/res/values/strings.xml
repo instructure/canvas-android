@@ -566,6 +566,17 @@
     <string name="learnLearningLibraryExternalLinkLabel">External link</string>
     <string name="learnLearningLibraryFileLabel">File</string>
     <string name="learnLearningLibraryPageLabel">Page</string>
+    <string name="learnLearningLibraryDetailsStatusFilterAllLabel">All items</string>
+    <string name="learnLearningLibraryDetailsStatusFilterCompletedLabel">Completed</string>
+    <string name="learnLearningLibraryDetailsStatusFilterBookmarkedLabel">Bookmarked</string>
+    <string name="LearnLearningLibraryDetailsTypeFilterAllLabel">All item types</string>
+    <string name="LearnLearningLibraryDetailsTypeFilterAssessmentsLabel">Assessments</string>
+    <string name="LearnLearningLibraryDetailsTypeFilterAssignmentsLabel">Assignments</string>
+    <string name="LearnLearningLibraryDetailsTypeFilterExternalLinksLabel">External links</string>
+    <string name="LearnLearningLibraryDetailsTypeFilterExternalToolsLabel">External tools</string>
+    <string name="LearnLearningLibraryDetailsTypeFilterFilesLabel">Files</string>
+    <string name="LearnLearningLibraryDetailsTypeFilterPagesLabel">Pages</string>
+    <string name="learnLarningLibraryFailedToLoadCollectionMessage">Failed to load collection</string>
     <plurals name="learnLearningLibraryCollectionItemCount">
         <item quantity="one">%1$d item</item>
         <item quantity="other">%1$d items</item>

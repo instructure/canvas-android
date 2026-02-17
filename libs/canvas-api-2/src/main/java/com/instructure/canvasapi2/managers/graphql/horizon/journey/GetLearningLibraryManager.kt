@@ -32,6 +32,7 @@ import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibrary
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryPageInfo
 import com.instructure.canvasapi2.models.journey.learninglibrary.toApolloType
 import com.instructure.journey.EnrollLearningLibraryItemMutation
+import com.instructure.journey.GetEnrolledLearningLibraryCollectionQuery
 import com.instructure.journey.GetEnrolledLearningLibraryCollectionsQuery
 import com.instructure.journey.GetLearningLibraryCollectionItemsQuery
 import com.instructure.journey.GetLearningLibraryCollectionsQuery
@@ -66,6 +67,11 @@ interface GetLearningLibraryManager {
         itemLimitPerCollection: Int? = null,
         forceNetwork: Boolean = false
     ): EnrolledLearningLibraryCollectionsResponse
+
+    suspend fun getEnrolledLearningLibraryCollection(
+        id: String,
+        forceNetwork: Boolean = false
+    ): EnrolledLearningLibraryCollection
 
     suspend fun toggleLearningLibraryItemIsBookmarked(itemId: String): Boolean
 
@@ -216,6 +222,49 @@ class GetLearningLibraryManagerImpl @Inject constructor(
                             isEnrolledInCanvas = item.isEnrolledInCanvas
                         )
                     }
+                )
+            }
+        )
+    }
+
+    override suspend fun getEnrolledLearningLibraryCollection(
+        id: String,
+        forceNetwork: Boolean
+    ): EnrolledLearningLibraryCollection {
+        val query = GetEnrolledLearningLibraryCollectionQuery(id)
+        val result = journeyClient.enqueueQuery(query, forceNetwork = forceNetwork).dataOrThrow().enrolledLearningLibraryCollection
+
+        return EnrolledLearningLibraryCollection(
+            id = result.id,
+            name = result.name,
+            publicName = result.publicName,
+            description = result.description,
+            createdAt = result.createdAt,
+            updatedAt = result.updatedAt,
+            items = result.items.map { item ->
+                LearningLibraryCollectionItem(
+                    id = item.id,
+                    libraryId = item.libraryId,
+                    itemType = CollectionItemType.valueOf(item.itemType.name),
+                    displayOrder = item.displayOrder,
+                    canvasCourse = item.canvasCourse?.let { course ->
+                        CanvasCourseInfo(
+                            courseId = course.courseId,
+                            canvasUrl = course.canvasUrl,
+                            courseName = course.courseName,
+                            courseImageUrl = course.courseImageUrl,
+                            moduleCount = course.moduleCount,
+                            moduleItemCount = course.moduleItemCount,
+                            estimatedDurationMinutes = course.estimatedDurationMinutes
+                        )
+                    },
+                    programId = item.programId,
+                    programCourseId = item.programCourseId,
+                    createdAt = item.createdAt,
+                    updatedAt = item.updatedAt,
+                    isBookmarked = item.isBookmarked,
+                    completionPercentage = item.completionPercentage,
+                    isEnrolledInCanvas = item.isEnrolledInCanvas
                 )
             }
         )
