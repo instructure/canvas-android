@@ -119,8 +119,9 @@ class DashboardViewModel @Inject constructor(
 
     private fun trackWidgetVisibility(widgets: List<WidgetMetadata>) {
         val bundle = Bundle().apply {
-            widgets.forEach { widget ->
-                putString(widget.id, widget.isVisible.toString())
+            widgets.filter { it.isEditable }.forEach { widget ->
+                val position = if (widget.isVisible) widget.position.toString() else "-1"
+                putString(widget.id, position)
             }
         }
         analytics.logEvent(AnalyticsEventConstants.DASHBOARD_WIDGET_VISIBILITY, bundle)

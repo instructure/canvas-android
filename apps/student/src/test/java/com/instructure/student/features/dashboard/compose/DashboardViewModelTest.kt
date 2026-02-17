@@ -376,10 +376,10 @@ class DashboardViewModelTest {
         assertEquals(AnalyticsEventConstants.DASHBOARD_WIDGET_VISIBILITY, eventNameSlot.captured)
 
         val capturedBundle = bundleSlot.captured
-        assertEquals("true", capturedBundle.getString("welcome"))
-        assertEquals("false", capturedBundle.getString("forecast"))
-        assertEquals("true", capturedBundle.getString("todo"))
-        assertEquals("true", capturedBundle.getString("courses"))
+        assertEquals("0", capturedBundle.getString("welcome"))
+        assertEquals("-1", capturedBundle.getString("forecast"))
+        assertEquals("2", capturedBundle.getString("todo"))
+        assertEquals("3", capturedBundle.getString("courses"))
     }
 
     @Test
@@ -413,8 +413,33 @@ class DashboardViewModelTest {
         advanceUntilIdle()
 
         val capturedBundle = bundleSlot.captured
-        assertEquals("true", capturedBundle.getString("widget1"))
-        assertEquals("false", capturedBundle.getString("widget2"))
-        assertEquals("false", capturedBundle.getString("widget3"))
+        assertEquals("0", capturedBundle.getString("widget1"))
+        assertEquals("-1", capturedBundle.getString("widget2"))
+        assertEquals("-1", capturedBundle.getString("widget3"))
+    }
+
+    @Test
+    fun testWidgetPositionTrackedCorrectly() = runTest {
+        val widgets = listOf(
+            WidgetMetadata("welcome", 0, true),
+            WidgetMetadata("forecast", 3, true),
+            WidgetMetadata("todo", 5, false),
+            WidgetMetadata("courses", 1, true)
+        )
+        coEvery { observeWidgetMetadataUseCase(Unit) } returns flowOf(widgets)
+
+        val bundleSlot = slot<Bundle>()
+        every { analytics.logEvent(any(), capture(bundleSlot)) } returns Unit
+
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        val capturedBundle = bundleSlot.captured
+        // Visible widgets should report their actual position
+        assertEquals("0", capturedBundle.getString("welcome"))
+        assertEquals("3", capturedBundle.getString("forecast"))
+        assertEquals("1", capturedBundle.getString("courses"))
+        // Hidden widgets should report -1
+        assertEquals("-1", capturedBundle.getString("todo"))
     }
 }
