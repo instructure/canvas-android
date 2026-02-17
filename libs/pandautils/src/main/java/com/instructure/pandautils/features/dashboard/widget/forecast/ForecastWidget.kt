@@ -55,7 +55,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.fragment.app.FragmentActivity
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
@@ -195,10 +194,7 @@ fun ForecastWidgetContent(
                                         if (assignments.isEmpty()) {
                                             ForecastWidgetEmptyState(section = section)
                                         } else {
-                                            AssignmentList(
-                                                assignments = assignments,
-                                                onAssignmentClick = uiState.onAssignmentClick
-                                            )
+                                            AssignmentList(assignments = assignments)
                                         }
                                     }
                                 }
@@ -214,7 +210,6 @@ fun ForecastWidgetContent(
 @Composable
 private fun AssignmentList(
     assignments: List<AssignmentItem>,
-    onAssignmentClick: (FragmentActivity, Long, Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -231,8 +226,7 @@ private fun AssignmentList(
     ) {
         assignments.forEachIndexed { index, assignment ->
             AssignmentListItem(
-                assignment = assignment,
-                onAssignmentClick = onAssignmentClick
+                assignment = assignment
             )
 
             if (index < assignments.size - 1) {
@@ -428,7 +422,6 @@ private fun ForecastWidgetContentPreview() {
             ),
             missingAssignments = listOf(
                 AssignmentItem(
-                    id = 1,
                     courseId = 101,
                     courseName = "COGS101",
                     assignmentName = "The Mind's Maze: Mapping Cognition",
@@ -440,7 +433,6 @@ private fun ForecastWidgetContentPreview() {
                     url = ""
                 ),
                 AssignmentItem(
-                    id = 2,
                     courseId = 204,
                     courseName = "POLI204",
                     assignmentName = "Fix a hyperdrive motivator",
@@ -454,7 +446,6 @@ private fun ForecastWidgetContentPreview() {
             ),
             dueAssignments = listOf(
                 AssignmentItem(
-                    id = 3,
                     courseId = 150,
                     courseName = "ENVS150",
                     assignmentName = "Web of Life: Mapping Ecological Interdependence",

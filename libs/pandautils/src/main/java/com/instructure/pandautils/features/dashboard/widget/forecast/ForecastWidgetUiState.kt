@@ -36,7 +36,6 @@ data class WeekPeriod(
 )
 
 data class AssignmentItem(
-    val id: Long,
     val courseId: Long,
     val courseName: String,
     val assignmentName: String,
@@ -47,7 +46,8 @@ data class AssignmentItem(
     val iconRes: Int,
     val url: String,
     val score: Double? = null,
-    val grade: String? = null
+    val grade: String? = null,
+    val onClick: ((FragmentActivity) -> Unit)? = null,
 )
 
 data class ForecastWidgetUiState(

@@ -20,6 +20,7 @@ import android.content.res.Resources
 import androidx.fragment.app.FragmentActivity
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
@@ -35,6 +36,7 @@ import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveGlobalConfigUseCase
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemedColor
+import com.instructure.pandautils.utils.getUrl
 import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -42,6 +44,7 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkObject
+import io.mockk.mockkStatic
 import io.mockk.unmockkAll
 import io.mockk.verify
 import junit.framework.TestCase.assertEquals
@@ -335,12 +338,53 @@ class ForecastWidgetViewModelTest {
     @Test
     fun `onAssignmentClick calls router`() = runTest {
         val activity: FragmentActivity = mockk(relaxed = true)
+        val assignment = mockk<Assignment>(relaxed = true) {
+            every { id } returns 123L
+            every { courseId } returns 456L
+            every { name } returns "Test Assignment"
+            every { dueAt } returns "2025-03-01T10:00:00Z"
+            every { pointsPossible } returns 10.0
+            every { htmlUrl } returns "url"
+            every { discussionTopicHeader } returns null
+        }
+        coEvery { loadMissingAssignmentsUseCase(any()) } returns listOf(assignment)
+
         viewModel = createViewModel()
         advanceUntilIdle()
 
-        viewModel.uiState.value.onAssignmentClick(activity, 123L, 456L)
+        val assignmentItem = viewModel.uiState.value.missingAssignments.first()
+        assignmentItem.onClick?.invoke(activity)
 
         verify { forecastWidgetRouter.routeToAssignmentDetails(activity, 123L, 456L) }
+    }
+
+    @Test
+    fun `onPlannerItemClick calls router`() = runTest {
+        val activity: FragmentActivity = mockk(relaxed = true)
+        val expectedUrl = "https://example.com/planner/item"
+        val plannerItem = mockk<PlannerItem>(relaxed = true) {
+            every { courseId } returns 789L
+            every { contextName } returns "Test Course"
+            every { plannable } returns mockk(relaxed = true) {
+                every { title } returns "Test Planner Item"
+                every { pointsPossible } returns 15.0
+            }
+            every { plannableDate } returns mockk(relaxed = true)
+            every { htmlUrl } returns expectedUrl
+        }
+
+        mockkStatic("com.instructure.pandautils.utils.PlannerItemExtensionsKt")
+        every { plannerItem.getUrl(apiPrefs) } returns expectedUrl
+
+        coEvery { loadUpcomingAssignmentsUseCase(any()) } returns listOf(plannerItem)
+
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        val assignmentItem = viewModel.uiState.value.dueAssignments.first()
+        assignmentItem.onClick?.invoke(activity)
+
+        verify { forecastWidgetRouter.routeToPlannerItem(activity, expectedUrl) }
     }
 
     @Test
@@ -409,8 +453,8 @@ class ForecastWidgetViewModelTest {
         val assignments = viewModel.uiState.value.missingAssignments
         assertEquals(2, assignments.size)
         // Should be sorted by dueAt, so assignment2 should come first
-        assertEquals(2L, assignments[0].id)
-        assertEquals(1L, assignments[1].id)
+        assertEquals("Assignment 2", assignments[0].assignmentName)
+        assertEquals("Assignment 1", assignments[1].assignmentName)
     }
 
     @Test
