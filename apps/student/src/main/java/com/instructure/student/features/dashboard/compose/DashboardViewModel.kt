@@ -20,11 +20,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.pandautils.compose.SnackbarMessage
 import com.instructure.pandautils.features.dashboard.widget.usecase.EnsureDefaultWidgetsUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveGlobalConfigUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetMetadataUseCase
-import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.NetworkStateProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -32,7 +32,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -42,6 +41,7 @@ class DashboardViewModel @Inject constructor(
     private val networkStateProvider: NetworkStateProvider,
     private val ensureDefaultWidgetsUseCase: EnsureDefaultWidgetsUseCase,
     private val observeWidgetMetadataUseCase: ObserveWidgetMetadataUseCase,
+    private val analytics: Analytics,
     private val observeGlobalConfigUseCase: ObserveGlobalConfigUseCase,
     private val crashlytics: FirebaseCrashlytics
 ) : ViewModel() {
@@ -59,6 +59,8 @@ class DashboardViewModel @Inject constructor(
 
     private val _snackbarMessage = MutableSharedFlow<SnackbarMessage>()
     val snackbarMessage = _snackbarMessage.asSharedFlow()
+
+    private var widgetVisibilityTracked = false
 
     init {
         loadDashboard()
@@ -80,6 +82,11 @@ class DashboardViewModel @Inject constructor(
                 observeWidgetMetadataUseCase(Unit).collect { widgets ->
                     val visibleWidgets = widgets.filter { it.isVisible }
                     _uiState.update { it.copy(loading = false, error = null, widgets = visibleWidgets) }
+
+                    if (!widgetVisibilityTracked) {
+                        trackWidgetVisibility(widgets)
+                        widgetVisibilityTracked = true
+                    }
                 }
             } catch (e: Exception) {
                 _uiState.update { it.copy(loading = false, error = e.message) }
@@ -110,6 +117,16 @@ class DashboardViewModel @Inject constructor(
                     _refreshSignal.emit(Unit)
                 }
         }
+    }
+
+    private fun trackWidgetVisibility(widgets: List<WidgetMetadata>) {
+        val bundle = Bundle().apply {
+            widgets.filter { it.isEditable }.forEach { widget ->
+                val position = if (widget.isVisible) widget.position.toString() else "-1"
+                putString(widget.id, position)
+            }
+        }
+        analytics.logEvent(AnalyticsEventConstants.DASHBOARD_WIDGET_VISIBILITY, bundle)
     }
 
     private fun observeConfig() {
