@@ -25,7 +25,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -63,7 +62,9 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.PagerIndicator
 import com.instructure.pandautils.domain.models.accountnotification.InstitutionalAnnouncement
+import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ThemedColor
 import kotlinx.coroutines.flow.SharedFlow
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -139,6 +140,8 @@ fun InstitutionalAnnouncementsContent(
                     AnnouncementCard(
                         announcement = announcement,
                         onClick = { onAnnouncementClick(announcement.subject, announcement.message) },
+                        color = Color(uiState.color.color()),
+                        onDismiss = { uiState.onDismiss(announcement.id) },
                         modifier = Modifier.weight(1f)
                     )
                 }
@@ -153,12 +156,10 @@ fun InstitutionalAnnouncementsContent(
                 pagerState = pagerState,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 12.dp, bottom = 16.dp),
+                    .padding(top = 12.dp),
                 activeColor = colorResource(R.color.backgroundDarkest),
                 inactiveColor = colorResource(R.color.backgroundDarkest).copy(alpha = 0.4f)
             )
-        } else {
-            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
@@ -168,6 +169,8 @@ fun InstitutionalAnnouncementsContent(
 private fun AnnouncementCard(
     announcement: InstitutionalAnnouncement,
     onClick: () -> Unit,
+    color: Color,
+    onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val cardShape = RoundedCornerShape(16.dp)
@@ -192,9 +195,10 @@ private fun AnnouncementCard(
                 if (announcement.logoUrl.isNotEmpty()) {
                     GlideImage(
                         model = announcement.logoUrl,
-                        contentDescription = announcement.institutionName,
+                        contentDescription = null,
                         modifier = Modifier
                             .size(40.dp)
+                            .background(Color(ThemePrefs.logoBackgroundColor), shape = RoundedCornerShape(8.dp))
                             .clip(RoundedCornerShape(8.dp)),
                         contentScale = ContentScale.Inside
                     )
@@ -203,18 +207,11 @@ private fun AnnouncementCard(
                         modifier = Modifier
                             .size(40.dp)
                             .background(
-                                color = Color(ThemePrefs.brandColor),
+                                color = color,
                                 shape = RoundedCornerShape(8.dp)
                             ),
                         contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = announcement.institutionName.take(3).uppercase(),
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = colorResource(R.color.white)
-                        )
-                    }
+                    ) {}
                 }
 
                 Box(
@@ -245,11 +242,11 @@ private fun AnnouncementCard(
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = announcement.institutionName,
+                    text = stringResource(R.string.dashboard_globalAnnouncement),
                     fontSize = 12.sp,
                     lineHeight = 16.sp,
                     fontWeight = FontWeight.Normal,
-                    color = Color(ThemePrefs.brandColor),
+                    color = color,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -278,9 +275,11 @@ private fun AnnouncementCard(
             }
 
             Icon(
-                painter = painterResource(id = R.drawable.ic_arrow_down),
+                painter = painterResource(id = R.drawable.ic_close),
                 contentDescription = null,
-                modifier = Modifier.size(24.dp),
+                modifier = Modifier
+                    .size(24.dp)
+                    .clickable(onClick = onDismiss),
                 tint = colorResource(R.color.textDark)
             )
         }
@@ -321,7 +320,6 @@ fun InstitutionalAnnouncementsContentPreview() {
                     id = 1,
                     subject = "Back to School Ceremony Dress Code",
                     message = "Canvas will be offline for maintenance...",
-                    institutionName = "Canvas College Sydney",
                     startDate = Date(),
                     icon = AccountNotification.ACCOUNT_NOTIFICATION_WARNING,
                     logoUrl = ""
@@ -330,12 +328,12 @@ fun InstitutionalAnnouncementsContentPreview() {
                     id = 2,
                     subject = "New Feature Release",
                     message = "We're excited to announce...",
-                    institutionName = "Canvas College Sydney",
                     startDate = Date(),
                     icon = AccountNotification.ACCOUNT_NOTIFICATION_CALENDAR,
                     logoUrl = ""
                 )
-            )
+            ),
+            color = ThemedColor(GlobalConfig.DEFAULT_COLOR)
         ),
         columns = 1,
         onAnnouncementClick = { _, _ -> }

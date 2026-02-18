@@ -17,6 +17,7 @@
 package com.instructure.pandautils.domain.usecase.enrollment
 
 import com.instructure.canvasapi2.apis.EnrollmentAPI
+import com.instructure.canvasapi2.utils.isValidTerm
 import com.instructure.pandautils.data.repository.course.CourseRepository
 import com.instructure.pandautils.data.repository.enrollment.EnrollmentRepository
 import com.instructure.pandautils.domain.models.enrollment.CourseInvitation
@@ -38,22 +39,24 @@ class LoadCourseInvitationsUseCase @Inject constructor(
     override suspend fun execute(params: LoadCourseInvitationsParams): List<CourseInvitation> {
         val enrollments = enrollmentRepository.getSelfEnrollments(
             types = null,
-            states = listOf(EnrollmentAPI.STATE_INVITED),
+            states = listOf(EnrollmentAPI.STATE_INVITED, EnrollmentAPI.STATE_CURRENT_AND_FUTURE),
             forceRefresh = params.forceRefresh
-        ).dataOrThrow
+        ).dataOrThrow.filter { it.enrollmentState == EnrollmentAPI.STATE_INVITED }
 
         return coroutineScope {
             enrollments.map { enrollment ->
                 async {
                     val course = courseRepository.getCourse(enrollment.courseId, params.forceRefresh).dataOrThrow
-                    CourseInvitation(
-                        enrollmentId = enrollment.id,
-                        courseId = enrollment.courseId,
-                        courseName = course.name,
-                        userId = enrollment.userId
-                    )
+                    if (course.isValidTerm() && !course.accessRestrictedByDate && course.isEnrollmentBeforeEndDateOrNotRestricted()) {
+                        CourseInvitation(
+                            enrollmentId = enrollment.id,
+                            courseId = enrollment.courseId,
+                            courseName = course.name,
+                            userId = enrollment.userId
+                        )
+                    } else null
                 }
-            }.awaitAll()
+            }.awaitAll().filterNotNull()
         }
     }
 }

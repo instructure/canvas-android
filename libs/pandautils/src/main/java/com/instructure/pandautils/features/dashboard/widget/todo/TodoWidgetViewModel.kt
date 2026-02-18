@@ -97,6 +97,7 @@ class TodoWidgetViewModel @Inject constructor(
         TodoWidgetUiState(
             selectedDay = selectedDay,
             calendarBodyUiState = createCalendarBodyUiState(),
+            yearTitle = getYearTitle(),
             monthTitle = getMonthTitle(),
             showCompleted = showCompleted,
             scrollToPageOffset = 0,
@@ -218,6 +219,7 @@ class TodoWidgetViewModel @Inject constructor(
                 scrollToPageOffset = 0,
                 eventIndicators = eventIndicators
             ),
+            yearTitle = getYearTitle(),
             monthTitle = getMonthTitle(),
             selectedDay = selectedDay,
             showCompleted = showCompleted,
@@ -259,6 +261,16 @@ class TodoWidgetViewModel @Inject constructor(
         scrollToPageOffset = 0,
         eventIndicators = emptyMap()
     )
+
+    private fun getYearTitle(): String? {
+        val currentYear = LocalDate.now(clock).year
+        val selectedYear = selectedDay.year
+        return if (selectedYear != currentYear) {
+            selectedYear.toString()
+        } else {
+            null
+        }
+    }
 
     private fun getMonthTitle(): String {
         return selectedDay.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
