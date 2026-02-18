@@ -14,18 +14,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.instructure.teacher.features.dashboard.widget.forecast
+package com.instructure.pandautils.domain.usecase.courses
 
-import androidx.fragment.app.FragmentActivity
-import com.instructure.pandautils.features.dashboard.widget.forecast.ForecastWidgetRouter
+import com.instructure.canvasapi2.models.Course
+import com.instructure.pandautils.data.repository.course.CourseRepository
+import com.instructure.pandautils.domain.usecase.BaseUseCase
+import javax.inject.Inject
 
-class TeacherForecastWidgetRouter : ForecastWidgetRouter {
+class LoadAllCoursesUseCase @Inject constructor(
+    private val courseRepository: CourseRepository
+) : BaseUseCase<LoadAllCoursesUseCase.Params, List<Course>>() {
 
-    override fun routeToAssignmentDetails(activity: FragmentActivity, assignmentId: Long, courseId: Long) {
-        // TODO: Implement routing for teacher app
+    override suspend fun execute(params: Params): List<Course> {
+        return courseRepository.getCourses(params.forceRefresh).dataOrThrow
     }
 
-    override fun routeToPlannerItem(activity: FragmentActivity, htmlUrl: String) {
-        // TODO("Not yet implemented")
-    }
+    data class Params(
+        val forceRefresh: Boolean = false
+    )
 }

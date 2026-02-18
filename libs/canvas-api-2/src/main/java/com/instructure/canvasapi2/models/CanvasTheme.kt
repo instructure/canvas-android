@@ -38,6 +38,8 @@ class CanvasTheme(
         var accent: String,
         @SerializedName("ic-brand-header-image")
         var logoUrl: String,
+        @SerializedName("ic-brand-global-nav-logo-bgd")
+        val mobileLogoBackground: String,
         @SerializedName("ic-brand-mobile-global-nav-logo")
         val mobileLogoUrl: String? = null,
 ) : CanvasComparable<CanvasTheme>()

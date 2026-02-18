@@ -103,7 +103,6 @@ class InstitutionalAnnouncementsWidgetTest {
                 id = 1L,
                 subject = "Campus Maintenance",
                 message = "Campus will be closed for maintenance",
-                institutionName = "Test University",
                 startDate = Date(),
                 icon = "info",
                 logoUrl = ""
@@ -127,7 +126,6 @@ class InstitutionalAnnouncementsWidgetTest {
         composeTestRule.waitForIdle()
         composeTestRule.onNodeWithText("Announcements (1)").assertIsDisplayed()
         composeTestRule.onNodeWithText("Campus Maintenance").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Test University").assertIsDisplayed()
     }
 
     @Test
@@ -137,7 +135,6 @@ class InstitutionalAnnouncementsWidgetTest {
                 id = 1L,
                 subject = "Campus Maintenance",
                 message = "Message 1",
-                institutionName = "Test University",
                 startDate = Date(),
                 icon = "info",
                 logoUrl = ""
@@ -146,7 +143,6 @@ class InstitutionalAnnouncementsWidgetTest {
                 id = 2L,
                 subject = "New Semester",
                 message = "Message 2",
-                institutionName = "Test University",
                 startDate = Date(),
                 icon = "calendar",
                 logoUrl = ""
@@ -155,7 +151,6 @@ class InstitutionalAnnouncementsWidgetTest {
                 id = 3L,
                 subject = "System Update",
                 message = "Message 3",
-                institutionName = "Test University",
                 startDate = Date(),
                 icon = "warning",
                 logoUrl = ""
@@ -208,7 +203,6 @@ class InstitutionalAnnouncementsWidgetTest {
                 id = 1L,
                 subject = "Test Announcement",
                 message = "Test Message",
-                institutionName = "Test University",
                 startDate = Date(),
                 icon = "info",
                 logoUrl = ""
@@ -252,7 +246,6 @@ class InstitutionalAnnouncementsWidgetTest {
                 id = 1L,
                 subject = "Announcement 1",
                 message = "Message 1",
-                institutionName = "Test University",
                 startDate = Date(),
                 icon = "info",
                 logoUrl = ""
@@ -261,7 +254,6 @@ class InstitutionalAnnouncementsWidgetTest {
                 id = 2L,
                 subject = "Announcement 2",
                 message = "Message 2",
-                institutionName = "Test University",
                 startDate = Date(),
                 icon = "calendar",
                 logoUrl = ""
@@ -270,7 +262,6 @@ class InstitutionalAnnouncementsWidgetTest {
                 id = 3L,
                 subject = "Announcement 3",
                 message = "Message 3",
-                institutionName = "Test University",
                 startDate = Date(),
                 icon = "warning",
                 logoUrl = ""
@@ -314,7 +305,6 @@ class InstitutionalAnnouncementsWidgetTest {
                 id = 1L,
                 subject = "No Date Announcement",
                 message = "Message",
-                institutionName = "Test University",
                 startDate = null,
                 icon = "info",
                 logoUrl = ""
@@ -337,7 +327,6 @@ class InstitutionalAnnouncementsWidgetTest {
 
         composeTestRule.waitForIdle()
         composeTestRule.onNodeWithText("No Date Announcement").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Test University").assertIsDisplayed()
     }
 
     @Test
@@ -347,7 +336,6 @@ class InstitutionalAnnouncementsWidgetTest {
                 id = 1L,
                 subject = "Announcement 1",
                 message = "Message 1",
-                institutionName = "Test University",
                 startDate = Date(),
                 icon = "info",
                 logoUrl = ""
@@ -356,7 +344,6 @@ class InstitutionalAnnouncementsWidgetTest {
                 id = 2L,
                 subject = "Announcement 2",
                 message = "Message 2",
-                institutionName = "Test University",
                 startDate = Date(),
                 icon = "calendar",
                 logoUrl = ""

@@ -18,6 +18,8 @@ package com.instructure.pandautils.features.dashboard.widget.courseinvitation
 
 import com.instructure.pandautils.compose.SnackbarMessage
 import com.instructure.pandautils.domain.models.enrollment.CourseInvitation
+import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
+import com.instructure.pandautils.utils.ThemedColor
 
 data class CourseInvitationsUiState(
     val loading: Boolean = true,
@@ -27,5 +29,6 @@ data class CourseInvitationsUiState(
     val onRefresh: () -> Unit = {},
     val onAcceptInvitation: (CourseInvitation) -> Unit = {},
     val onDeclineInvitation: (CourseInvitation) -> Unit = {},
-    val onClearSnackbar: () -> Unit = {}
+    val onClearSnackbar: () -> Unit = {},
+    val color: ThemedColor = ThemedColor(GlobalConfig.DEFAULT_COLOR)
 )
