@@ -344,7 +344,9 @@ private fun RubricCriterion(
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 BasicTextFieldWithHintDecoration(
-                    modifier = Modifier.padding(end = 8.dp),
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        .testTag("rubricCriterionScoreInput-${rubricCriterion.id}"),
                     value = textFieldScore,
                     onValueChange = { textFieldScore = it },
                     hint = stringResource(R.string.rubricScoreHint),
@@ -466,6 +468,7 @@ private fun RatingDescription(
         if (selected) colorResource(R.color.textLightest) else colorResource(R.color.textDarkest)
     Box(
         modifier = modifier
+            .testTag("rubricRatingDescription-$description")
             .background(
                 backgroundColor,
                 shape = RoundedCornerShape(24.dp)
@@ -511,6 +514,7 @@ private fun PointValueBox(
     with(sharedTransitionScope) {
         Box(
             modifier = modifier
+                .testTag("rubricRatingPointBox-$point")
                 .sharedElement(
                     rememberSharedContentState(key = id),
                     animatedVisibilityScope = animatedVisibilityScope
@@ -555,6 +559,7 @@ private fun RubricNoteField(
     val haptic = LocalHapticFeedback.current
     OutlinedTextField(
         modifier = modifier
+            .testTag("rubricNoteInput")
             .padding(start = 16.dp, end = 16.dp, bottom = 12.dp)
             .fillMaxWidth()
             .background(Color.Transparent),

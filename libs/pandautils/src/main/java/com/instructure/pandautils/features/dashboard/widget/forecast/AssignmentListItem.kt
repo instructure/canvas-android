@@ -46,7 +46,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.formatRelativeWithTime
@@ -58,7 +57,6 @@ import java.util.Date
 @Composable
 fun AssignmentListItem(
     assignment: AssignmentItem,
-    onAssignmentClick: (FragmentActivity, Long, Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -69,7 +67,7 @@ fun AssignmentListItem(
         modifier = modifier
             .fillMaxWidth()
             .clickable {
-                onAssignmentClick(context.getFragmentActivity(), assignment.id, assignment.courseId)
+                assignment.onClick?.invoke(context.getFragmentActivity())
             }
             .padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -110,12 +108,6 @@ fun AssignmentListItem(
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 when {
-                    assignment.weight != null -> {
-                        WeightChip(
-                            weight = assignment.weight,
-                            color = courseColor
-                        )
-                    }
                     assignment.grade != null -> {
                         Text(
                             text = assignment.grade,
@@ -138,6 +130,13 @@ fun AssignmentListItem(
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.fillMaxWidth()
             )
+
+            if (assignment.weight != null) {
+                WeightChip(
+                    weight = assignment.weight,
+                    color = courseColor
+                )
+        }
 
             val dateText = assignment.dueDate?.formatRelativeWithTime(context)
                 ?: assignment.gradedDate?.formatRelativeWithTime(context)
@@ -194,7 +193,6 @@ private fun AssignmentListItemPreview() {
     ContextKeeper.appContext = LocalContext.current
     AssignmentListItem(
         assignment = AssignmentItem(
-            id = 1,
             courseId = 101,
             courseName = "COGS101",
             assignmentName = "The Mind's Maze: Mapping Cognition",
@@ -204,8 +202,7 @@ private fun AssignmentListItemPreview() {
             weight = 10.0,
             iconRes = R.drawable.ic_quiz,
             url = ""
-        ),
-        onAssignmentClick = { _, _, _ -> }
+        )
     )
 }
 
@@ -215,7 +212,6 @@ private fun AssignmentListItemNoWeightPreview() {
     ContextKeeper.appContext = LocalContext.current
     AssignmentListItem(
         assignment = AssignmentItem(
-            id = 2,
             courseId = 204,
             courseName = "POLI204",
             assignmentName = "Fix a hyperdrive motivator using only duct tape and panic before the ship explodes, and everyone gets frig...",
@@ -225,7 +221,6 @@ private fun AssignmentListItemNoWeightPreview() {
             weight = null,
             iconRes = R.drawable.ic_assignment,
             url = ""
-        ),
-        onAssignmentClick = { _, _, _ -> }
+        )
     )
 }

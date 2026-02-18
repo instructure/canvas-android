@@ -30,6 +30,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -54,12 +55,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.fragment.app.FragmentActivity
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ShimmerBox
+import com.instructure.pandautils.compose.composables.TodayButton
 import kotlinx.coroutines.flow.SharedFlow
 import java.time.LocalDate
 import java.util.Date
@@ -93,15 +94,32 @@ fun ForecastWidgetContent(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Text(
-            text = stringResource(R.string.forecastWidgetTitle),
-            fontSize = 14.sp,
-            lineHeight = 19.sp,
-            color = colorResource(R.color.textDarkest),
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
-        )
+                .height(24.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(R.string.forecastWidgetTitle),
+                fontSize = 14.sp,
+                lineHeight = 19.sp,
+                color = colorResource(R.color.textDarkest)
+            )
+
+            if (!uiState.isCurrentWeek) {
+                TodayButton(
+                    title = stringResource(R.string.forecastWidget_currentWeek),
+                    onClick = uiState.onJumpToCurrentWeek,
+                    buttonColor = Color(uiState.backgroundColor.color()),
+                    textColor = colorResource(R.color.textLightest)
+                )
+            } else {
+                Spacer(modifier = Modifier.height(24.dp))
+            }
+        }
 
         Card(
             colors = CardDefaults.cardColors(containerColor = Color(uiState.backgroundColor.color())),
@@ -156,7 +174,7 @@ fun ForecastWidgetContent(
                                 animationSpec = tween(durationMillis = 300)
                             ) + fadeOut(animationSpec = tween(durationMillis = 300))
                         ) {
-                            if (uiState.isLoadingItems) {
+                            if (uiState.isLoadingItemsForSection[uiState.selectedSection] == true) {
                                 ForecastWidgetItemsLoadingState()
                             } else {
                                 AnimatedContent(
@@ -176,10 +194,7 @@ fun ForecastWidgetContent(
                                         if (assignments.isEmpty()) {
                                             ForecastWidgetEmptyState(section = section)
                                         } else {
-                                            AssignmentList(
-                                                assignments = assignments,
-                                                onAssignmentClick = uiState.onAssignmentClick
-                                            )
+                                            AssignmentList(assignments = assignments)
                                         }
                                     }
                                 }
@@ -195,7 +210,6 @@ fun ForecastWidgetContent(
 @Composable
 private fun AssignmentList(
     assignments: List<AssignmentItem>,
-    onAssignmentClick: (FragmentActivity, Long, Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -212,8 +226,7 @@ private fun AssignmentList(
     ) {
         assignments.forEachIndexed { index, assignment ->
             AssignmentListItem(
-                assignment = assignment,
-                onAssignmentClick = onAssignmentClick
+                assignment = assignment
             )
 
             if (index < assignments.size - 1) {
@@ -409,7 +422,6 @@ private fun ForecastWidgetContentPreview() {
             ),
             missingAssignments = listOf(
                 AssignmentItem(
-                    id = 1,
                     courseId = 101,
                     courseName = "COGS101",
                     assignmentName = "The Mind's Maze: Mapping Cognition",
@@ -421,7 +433,6 @@ private fun ForecastWidgetContentPreview() {
                     url = ""
                 ),
                 AssignmentItem(
-                    id = 2,
                     courseId = 204,
                     courseName = "POLI204",
                     assignmentName = "Fix a hyperdrive motivator",
@@ -435,7 +446,6 @@ private fun ForecastWidgetContentPreview() {
             ),
             dueAssignments = listOf(
                 AssignmentItem(
-                    id = 3,
                     courseId = 150,
                     courseName = "ENVS150",
                     assignmentName = "Web of Life: Mapping Ecological Interdependence",
