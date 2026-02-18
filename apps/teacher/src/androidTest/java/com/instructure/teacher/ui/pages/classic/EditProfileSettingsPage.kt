@@ -16,9 +16,9 @@
  */
 package com.instructure.teacher.ui.pages.classic
 
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.assertHasText
 import com.instructure.espresso.clearText
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
@@ -26,7 +26,6 @@ import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.typeText
 import com.instructure.teacher.R
-import com.instructure.pandautils.R as PandaUtilsR
 
 /**
  * The `EditProfileSettingsPage` class represents a page for editing profile settings.
@@ -72,7 +71,7 @@ class EditProfileSettingsPage : BasePage(R.id.editProfileSettingsPage) {
      * @param expectedHint The expected hint text.
      */
     fun assertUserNameHint(expectedHint: String) {
-        onView(withId(R.id.usersName)).check(matches(ViewMatchers.withHint(expectedHint)))
+        onView(withId(R.id.usersName)).assertHasText(expectedHint)
     }
 
     /**
@@ -86,36 +85,36 @@ class EditProfileSettingsPage : BasePage(R.id.editProfileSettingsPage) {
      * Asserts that the profile photo dialog is displayed with both options.
      */
     fun assertProfilePhotoDialogDisplayed() {
-        onView(withId(PandaUtilsR.id.takePhotoItem)).check(matches(ViewMatchers.isDisplayed()))
-        onView(withId(PandaUtilsR.id.chooseFromGalleryItem)).check(matches(ViewMatchers.isDisplayed()))
+        onView(withId(R.id.takePhotoItem)).assertDisplayed()
+        onView(withId(R.id.chooseFromGalleryItem)).assertDisplayed()
     }
 
     /**
      * Clicks on "Choose photo from Gallery" option in the profile photo dialog.
      */
     fun clickChooseFromGallery() {
-        onView(withId(PandaUtilsR.id.chooseFromGalleryItem)).click()
+        onView(withId(R.id.chooseFromGalleryItem)).click()
     }
 
     /**
      * Asserts that the avatar crop overlay is displayed.
      */
     fun assertAvatarCropOverlayDisplayed() {
-        onView(withId(PandaUtilsR.id.overlayView)).check(matches(ViewMatchers.isDisplayed()))
+        onView(withId(R.id.overlayView)).assertDisplayed()
     }
 
     /**
      * Asserts that the crop instructions text is displayed.
      */
     fun assertCropInstructionsDisplayed() {
-        onView(withId(PandaUtilsR.id.instructionsText)).check(matches(ViewMatchers.isDisplayed()))
+        onView(withId(R.id.instructionsText)).assertDisplayed()
     }
 
     /**
      * Clicks the save button (checkmark) in the avatar crop screen.
      */
     fun clickAvatarCropSave() {
-        onView(withId(PandaUtilsR.id.save)).click()
+        onView(withId(R.id.save)).click()
     }
 
 }

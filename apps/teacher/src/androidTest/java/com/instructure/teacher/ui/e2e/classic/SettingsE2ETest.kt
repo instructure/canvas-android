@@ -33,6 +33,7 @@ import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.dataseeding.api.ConversationsApi
 import com.instructure.dataseeding.api.CoursesApi
 import com.instructure.dataseeding.api.EnrollmentsApi
+import com.instructure.dataseeding.api.UserApi
 import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.pandautils.utils.AppTheme
 import com.instructure.teacher.BuildConfig
@@ -230,12 +231,20 @@ class SettingsE2ETest : TeacherComposeTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.E2E)
+    @TestMetaData(Priority.COMMON, FeatureCategory.SETTINGS, TestCategory.E2E)
     fun testProfilePictureChangeE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val teacher = data.teachersList[0]
+
+        val imageFileName = "sample.jpg"
+        Log.d(PREPARATION_TAG, "Copy '$imageFileName' from assets to external cache directory.")
+        copyAssetFileToExternalCache(activityRule.activity, imageFileName)
+
+        Log.d(PREPARATION_TAG, "Fetch the initial user profile to get the original avatar URL.")
+        val initialProfile = UserApi.getUserProfile(teacher.id)
+        val initialAvatarUrl = initialProfile.avatarUrl
 
         Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
         tokenLogin(teacher)
@@ -258,10 +267,6 @@ class SettingsE2ETest : TeacherComposeTest() {
 
         Log.d(ASSERTION_TAG, "Assert that the profile photo dialog is displayed with both 'Take photo' and 'Choose photo from Gallery' options.")
         editProfileSettingsPage.assertProfilePhotoDialogDisplayed()
-
-        val imageFileName = "sample.jpg"
-        Log.d(PREPARATION_TAG, "Copy '$imageFileName' from assets to external cache directory.")
-        copyAssetFileToExternalCache(activityRule.activity, imageFileName)
 
         Log.d(PREPARATION_TAG, "Stub image picker intent to select '$imageFileName'.")
         Intents.init()
@@ -293,6 +298,14 @@ class SettingsE2ETest : TeacherComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the Profile Settings Page is displayed with avatar after saving the profile picture change.")
         profileSettingsPage.assertPageObjects()
         profileSettingsPage.assertUserAvatarDisplayed()
+
+        Log.d(PREPARATION_TAG, "Fetch the updated user profile to verify the avatar URL changed.")
+        val updatedProfile = UserApi.getUserProfile(teacher.id)
+        val updatedAvatarUrl = updatedProfile.avatarUrl
+
+        Log.d(ASSERTION_TAG, "Assert that the avatar URL has changed from the initial value.")
+        assert(initialAvatarUrl != updatedAvatarUrl) { "Avatar URL should have changed after uploading a new profile picture. Initial: $initialAvatarUrl, Updated: $updatedAvatarUrl" }
+        assert(!updatedAvatarUrl.isNullOrEmpty()) { "Updated avatar URL should not be null or empty after uploading a profile picture" }
     }
 
     @E2E
