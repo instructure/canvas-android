@@ -15,12 +15,12 @@
  */
 package com.instructure.pandautils.compose.composables.calendar
 
+import com.instructure.pandautils.utils.getSystemFirstDayOfWeek
 import org.threeten.bp.Clock
 import org.threeten.bp.DayOfWeek
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.TextStyle
 import org.threeten.bp.temporal.ChronoUnit
-import org.threeten.bp.temporal.WeekFields
 import java.util.Locale
 
 class CalendarStateMapper(private val clock: Clock) {
@@ -57,7 +57,7 @@ class CalendarStateMapper(private val clock: Clock) {
     ): CalendarPageUiState {
         val daysInMonth = date.lengthOfMonth()
         val firstDayOfMonth = date.withDayOfMonth(1)
-        val localeFirstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek.value
+        val localeFirstDayOfWeek = getSystemFirstDayOfWeek().value
         val firstDayOfWeekIndex =
             (7 + (firstDayOfMonth.dayOfWeek.value - localeFirstDayOfWeek)) % 7 // We need to add 7 to avoid negative values
 
