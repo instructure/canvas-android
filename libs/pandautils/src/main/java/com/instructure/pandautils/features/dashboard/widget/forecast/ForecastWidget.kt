@@ -454,7 +454,20 @@ private fun ForecastWidgetContentPreview() {
                     pointsPossible = 75.0,
                     weight = 15.0,
                     iconRes = R.drawable.ic_assignment,
-                    url = ""
+                    url = "",
+                    isSubmitted = true
+                ),
+                AssignmentItem(
+                    courseId = 101,
+                    courseName = "COGS101",
+                    assignmentName = "The Mind's Maze: Mapping Cognition",
+                    dueDate = Date(),
+                    gradedDate = null,
+                    pointsPossible = 100.0,
+                    weight = 10.0,
+                    iconRes = R.drawable.ic_quiz,
+                    url = "",
+                    isGraded = true
                 )
             ),
             recentGrades = emptyList(),

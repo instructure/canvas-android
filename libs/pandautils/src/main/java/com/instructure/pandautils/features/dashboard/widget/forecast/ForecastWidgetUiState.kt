@@ -47,6 +47,8 @@ data class AssignmentItem(
     val url: String,
     val score: Double? = null,
     val grade: String? = null,
+    val isSubmitted: Boolean = false,
+    val isGraded: Boolean = false,
     val onClick: ((FragmentActivity) -> Unit)? = null,
 )
 

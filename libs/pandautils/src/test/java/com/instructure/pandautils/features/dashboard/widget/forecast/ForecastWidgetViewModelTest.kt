@@ -521,4 +521,61 @@ class ForecastWidgetViewModelTest {
             )
         }
     }
+
+    @Test
+    fun `upcoming assignments map submitted status from PlannerItem`() = runTest {
+        val plannerItem = mockk<PlannerItem>(relaxed = true) {
+            every { submissionState } returns mockk(relaxed = true) {
+                every { submitted } returns true
+                every { graded } returns false
+            }
+        }
+
+        coEvery { loadUpcomingAssignmentsUseCase(any()) } returns listOf(plannerItem)
+
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        val assignments = viewModel.uiState.value.dueAssignments
+        assertEquals(1, assignments.size)
+        assertTrue(assignments[0].isSubmitted)
+        assertFalse(assignments[0].isGraded)
+    }
+
+    @Test
+    fun `upcoming assignments map graded status from PlannerItem`() = runTest {
+        val plannerItem = mockk<PlannerItem>(relaxed = true) {
+            every { submissionState } returns mockk(relaxed = true) {
+                every { submitted } returns true
+                every { graded } returns true
+            }
+        }
+
+        coEvery { loadUpcomingAssignmentsUseCase(any()) } returns listOf(plannerItem)
+
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        val assignments = viewModel.uiState.value.dueAssignments
+        assertEquals(1, assignments.size)
+        assertTrue(assignments[0].isSubmitted)
+        assertTrue(assignments[0].isGraded)
+    }
+
+    @Test
+    fun `upcoming assignments default to not submitted or graded when submissionState is null`() = runTest {
+        val plannerItem = mockk<PlannerItem>(relaxed = true) {
+            every { submissionState } returns null
+        }
+
+        coEvery { loadUpcomingAssignmentsUseCase(any()) } returns listOf(plannerItem)
+
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        val assignments = viewModel.uiState.value.dueAssignments
+        assertEquals(1, assignments.size)
+        assertFalse(assignments[0].isSubmitted)
+        assertFalse(assignments[0].isGraded)
+    }
 }

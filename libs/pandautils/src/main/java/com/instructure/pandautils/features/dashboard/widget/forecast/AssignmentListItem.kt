@@ -142,14 +142,72 @@ fun AssignmentListItem(
                 ?: assignment.gradedDate?.formatRelativeWithTime(context)
                     .orEmpty()
 
-            if (dateText.isNotEmpty()) {
-                Text(
-                    text = dateText,
-                    fontSize = 12.sp,
-                    lineHeight = 16.sp,
-                    color = colorResource(R.color.textDark),
-                    modifier = Modifier.fillMaxWidth()
-                )
+            if (dateText.isNotEmpty() || assignment.isSubmitted || assignment.isGraded) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (dateText.isNotEmpty()) {
+                        Text(
+                            text = dateText,
+                            fontSize = 12.sp,
+                            lineHeight = 16.sp,
+                            color = colorResource(R.color.textDark)
+                        )
+                    }
+
+                    if ((assignment.isSubmitted || assignment.isGraded) && dateText.isNotEmpty()) {
+                        VerticalDivider(
+                            modifier = Modifier.height(16.dp),
+                            thickness = 0.5.dp,
+                            color = colorResource(R.color.borderMedium)
+                        )
+                    }
+
+                    when {
+                        assignment.isGraded -> {
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(2.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_complete_solid),
+                                    contentDescription = null,
+                                    tint = colorResource(R.color.textSuccess),
+                                    modifier = Modifier.size(16.dp)
+                                )
+                                Text(
+                                    text = stringResource(R.string.forecastWidget_graded),
+                                    fontSize = 12.sp,
+                                    lineHeight = 16.sp,
+                                    color = colorResource(R.color.textSuccess)
+                                )
+                            }
+                        }
+                        assignment.isSubmitted -> {
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(2.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_complete),
+                                    contentDescription = null,
+                                    tint = colorResource(R.color.textSuccess),
+                                    modifier = Modifier.size(16.dp)
+                                )
+                                Text(
+                                    text = stringResource(R.string.forecastWidget_submitted),
+                                    fontSize = 12.sp,
+                                    lineHeight = 16.sp,
+                                    color = colorResource(R.color.textSuccess)
+                                )
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -221,6 +279,46 @@ private fun AssignmentListItemNoWeightPreview() {
             weight = null,
             iconRes = R.drawable.ic_assignment,
             url = ""
+        )
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AssignmentListItemSubmittedPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    AssignmentListItem(
+        assignment = AssignmentItem(
+            courseId = 150,
+            courseName = "ENVS150",
+            assignmentName = "Web of Life: Mapping Ecological Interdependence",
+            dueDate = Date(System.currentTimeMillis() + 86400000),
+            gradedDate = null,
+            pointsPossible = 75.0,
+            weight = 10.0,
+            iconRes = R.drawable.ic_assignment,
+            url = "",
+            isSubmitted = true
+        )
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AssignmentListItemGradedPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    AssignmentListItem(
+        assignment = AssignmentItem(
+            courseId = 101,
+            courseName = "COGS101",
+            assignmentName = "The Mind's Maze: Mapping Cognition",
+            dueDate = Date(),
+            gradedDate = null,
+            pointsPossible = 100.0,
+            weight = 10.0,
+            iconRes = R.drawable.ic_quiz,
+            url = "",
+            isGraded = true
         )
     )
 }

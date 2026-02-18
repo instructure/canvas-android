@@ -290,6 +290,8 @@ class ForecastWidgetViewModel @Inject constructor(
                     weight = weight,
                     iconRes = item.getIconForPlannerItem(),
                     url = item.htmlUrl.orEmpty(),
+                    isSubmitted = item.submissionState?.submitted == true,
+                    isGraded = item.submissionState?.graded == true,
                     onClick = {
                         forecastWidgetRouter.routeToPlannerItem(it, item.getUrl(apiPrefs))
                     }
