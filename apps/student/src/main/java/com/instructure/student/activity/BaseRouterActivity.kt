@@ -286,7 +286,8 @@ abstract class BaseRouterActivity : CallbackActivity(), FullScreenInteractions {
         mime: String,
         url: String,
         filename: String,
-        fileID: String?
+        fileID: String?,
+        localFile: Boolean = false
     ) {
         showLoadingIndicator()
         lifecycleScope.launch {
@@ -298,14 +299,25 @@ abstract class BaseRouterActivity : CallbackActivity(), FullScreenInteractions {
                     )
                 )
             } else {
-                openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(
-                    canvasContext,
-                    mime,
-                    url,
-                    filename,
-                    fileID
-                )
-                LoaderUtils.restartLoaderWithBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(
+                openMediaBundle = if (localFile) {
+                    OpenMediaAsyncTaskLoader.createLocalBundle(
+                        canvasContext,
+                        mime,
+                        url,
+                        filename,
+                        fileID,
+                        false
+                    )
+                } else {
+                    OpenMediaAsyncTaskLoader.createBundle(
+                        canvasContext,
+                        mime,
+                        url,
+                        filename,
+                        fileID
+                    )
+                }
+                LoaderUtils.restartLoaderWithBundle(
                     LoaderManager.getInstance(this@BaseRouterActivity),
                     openMediaBundle,
                     loaderCallbacks,

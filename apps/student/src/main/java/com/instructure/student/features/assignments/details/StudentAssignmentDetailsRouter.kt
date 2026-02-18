@@ -185,7 +185,8 @@ class StudentAssignmentDetailsRouter: AssignmentDetailsRouter() {
             attachment.contentType.orEmpty(),
             attachment.url.orEmpty(),
             attachment.fileName.orEmpty(),
-            attachment.id.toString()
+            attachment.id.toString(),
+            attachment.isLocalFile
         )
     }
 
