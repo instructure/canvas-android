@@ -546,6 +546,8 @@
     <string name="a11y_inputErrorMessage">Error: %1$s</string>
     <string name="a11y_required">Required</string>
     <string name="learnLearningLibraryListSearchPlaceholder">Search</string>
+    <string name="learnLearningLibraryBookmarksTitle">Bookmarks</string>
+    <string name="learnLearningLibraryCompletedTitle">Completed</string>
     <string name="a11y_learnLearningLibraryBookmarkContentDescription">Bookmarked Learning Library items</string>
     <string name="a11y_learnLearningLibraryCompletedContentDescription">Completed Learning Library items</string>
     <string name="a11y_learnLearningLibraryItemCompletedContentDescription">Completed</string>

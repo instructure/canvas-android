@@ -119,7 +119,7 @@ private fun LearnLearningLibraryListFilterRow(
             elevation = HorizonElevation.level4,
             contentDescription = stringResource(R.string.a11y_learnLearningLibraryBookmarkContentDescription),
             onClick = {
-                navController.navigate(LearnRoute.LearnLearningLibraryBookmarkScreen.route)
+                navController.navigate(LearnRoute.LearnLearningLibraryBookmarkScreen.route())
             }
         )
         HorizonSpace(SpaceSize.SPACE_8)
@@ -130,7 +130,7 @@ private fun LearnLearningLibraryListFilterRow(
             elevation = HorizonElevation.level4,
             contentDescription = stringResource(R.string.a11y_learnLearningLibraryCompletedContentDescription),
             onClick = {
-                navController.navigate(LearnRoute.LearnLearningLibraryCompletedScreen.route)
+                navController.navigate(LearnRoute.LearnLearningLibraryCompletedScreen.route())
             }
         )
     }

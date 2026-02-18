@@ -33,11 +33,11 @@ import com.instructure.horizon.features.home.HomeNavigationRoute
 import com.instructure.horizon.features.learn.LearnScreen
 import com.instructure.horizon.features.learn.LearnTab
 import com.instructure.horizon.features.learn.LearnViewModel
-import com.instructure.horizon.features.learn.learninglibrary.item.LearnLearningLibraryBookmarkScreen
-import com.instructure.horizon.features.learn.learninglibrary.completed.LearnLearningLibraryCompletedScreen
-import com.instructure.horizon.features.learn.learninglibrary.details.LearnLearningLibraryDetailsScreen
 import com.instructure.horizon.features.learn.course.details.CourseDetailsScreen
 import com.instructure.horizon.features.learn.course.details.CourseDetailsViewModel
+import com.instructure.horizon.features.learn.learninglibrary.details.LearnLearningLibraryDetailsScreen
+import com.instructure.horizon.features.learn.learninglibrary.item.LearnLearningLibraryItemScreen
+import com.instructure.horizon.features.learn.learninglibrary.item.LearnLearningLibraryItemViewModel
 import com.instructure.horizon.features.learn.program.details.ProgramDetailsScreen
 import com.instructure.horizon.features.learn.program.details.ProgramDetailsViewModel
 
@@ -152,10 +152,30 @@ fun NavGraphBuilder.learnNavigation(
     ) {
         LearnLearningLibraryDetailsScreen()
     }
-    composable(LearnRoute.LearnLearningLibraryBookmarkScreen.route) {
-        LearnLearningLibraryBookmarkScreen()
+    composable(
+        route = LearnRoute.LearnLearningLibraryBookmarkScreen.route,
+        arguments = listOf(
+            navArgument(LearnRoute.LearnLearningLibraryBookmarkScreen.typeAttr) {
+                type = NavType.StringType
+                defaultValue = "bookmark"
+            }
+        )
+    ) {
+        val viewModel = hiltViewModel<LearnLearningLibraryItemViewModel>()
+        val state by viewModel.uiState.collectAsState()
+        LearnLearningLibraryItemScreen(state, navController)
     }
-    composable(LearnRoute.LearnLearningLibraryCompletedScreen.route) {
-        LearnLearningLibraryCompletedScreen()
+    composable(
+        route = LearnRoute.LearnLearningLibraryCompletedScreen.route,
+        arguments = listOf(
+            navArgument(LearnRoute.LearnLearningLibraryCompletedScreen.typeAttr) {
+                type = NavType.StringType
+                defaultValue = "completed"
+            }
+        )
+    ) {
+        val viewModel = hiltViewModel<LearnLearningLibraryItemViewModel>()
+        val state by viewModel.uiState.collectAsState()
+        LearnLearningLibraryItemScreen(state, navController)
     }
 }

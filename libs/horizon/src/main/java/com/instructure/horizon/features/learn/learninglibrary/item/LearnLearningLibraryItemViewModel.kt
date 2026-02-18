@@ -43,9 +43,16 @@ class LearnLearningLibraryItemViewModel @Inject constructor(
 ): ViewModel() {
     private val pageSize: Int = 10
 
-    val bookmarkOnly = private val programId = savedStateHandle.get<String>(LearnRoute.LearnLearningLibraryBookmarkScreen.programIdAttr) ?: ""
+    private val screenType = savedStateHandle.get<String>(LearnRoute.LearnLearningLibraryBookmarkScreen.typeAttr)
+    val bookmarkOnly = screenType == "bookmark"
+    val completedOnly = screenType == "completed"
 
     private val _uiState = MutableStateFlow(LearnLearningLibraryItemUiState(
+        title = if (bookmarkOnly) {
+            resources.getString(R.string.learnLearningLibraryBookmarksTitle)
+        } else {
+            resources.getString(R.string.learnLearningLibraryCompletedTitle)
+        },
         loadingState = LoadingState(
             onRefresh = ::refreshData,
             onSnackbarDismiss = ::onDismissSnackbar
@@ -67,7 +74,7 @@ class LearnLearningLibraryItemViewModel @Inject constructor(
     private fun loadData(
         cursor: String? = nextCursor,
         searchQuery: String? = uiState.value.searchQuery.text,
-        filterType: CollectionItemType? = uiState.value.typeFilter?.toCollectionItemType(),
+        filterType: CollectionItemType? = uiState.value.typeFilter.toCollectionItemType(),
     ) {
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = true)) }
@@ -93,7 +100,7 @@ class LearnLearningLibraryItemViewModel @Inject constructor(
     private suspend fun fetchData(
         cursor: String? = nextCursor,
         searchQuery: String? = uiState.value.searchQuery.text,
-        filterType: CollectionItemType? = uiState.value.typeFilter?.toCollectionItemType(),
+        filterType: CollectionItemType? = uiState.value.typeFilter.toCollectionItemType(),
         forceNetwork: Boolean = false
     ) {
         val response = repository.getLearningLibraryItems(
@@ -101,6 +108,8 @@ class LearnLearningLibraryItemViewModel @Inject constructor(
             limit = pageSize,
             searchQuery = searchQuery,
             typeFilter = filterType,
+            bookmarkedOnly = bookmarkOnly,
+            completedOnly = completedOnly,
             forceNetwork = forceNetwork
         )
 
