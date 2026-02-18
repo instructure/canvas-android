@@ -32,6 +32,7 @@ object EdgeToEdgeHelper {
         statusBarStyle: SystemBarStyle? = null,
         navigationBarStyle: SystemBarStyle? = null
     ) {
+        if (!isEdgeToEdgeEnforced()) return
         when (activity) {
             is ComponentActivity -> {
                 if (statusBarStyle != null && navigationBarStyle != null) {
@@ -73,6 +74,7 @@ object EdgeToEdgeHelper {
     }
 
     fun setTransparentSystemBars(window: Window) {
+        if (!isEdgeToEdgeEnforced()) return
         window.statusBarColor = android.graphics.Color.TRANSPARENT
         window.navigationBarColor = android.graphics.Color.TRANSPARENT
         WindowCompat.setDecorFitsSystemWindows(window, false)

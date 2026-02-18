@@ -88,6 +88,7 @@ object WindowInsetsHelper {
 }
 
 fun View.applyTopSystemBarInsets() {
+    if (!EdgeToEdgeHelper.isEdgeToEdgeEnforced()) return
     ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
         val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
         view.updatePadding(top = systemBars.top)
@@ -100,6 +101,7 @@ fun View.applyTopSystemBarInsets() {
 }
 
 fun View.applyBottomSystemBarInsets() {
+    if (!EdgeToEdgeHelper.isEdgeToEdgeEnforced()) return
     ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
         val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
         view.updatePadding(bottom = systemBars.bottom)
@@ -114,6 +116,7 @@ fun View.applyBottomSystemBarInsets() {
 private val TAG_ORIGINAL_MIN_HEIGHT = "originalMinHeight".hashCode()
 
 fun View.applyBottomSystemBarInsetsWithHeight() {
+    if (!EdgeToEdgeHelper.isEdgeToEdgeEnforced()) return
     // Only capture original minHeight once to prevent accumulation on multiple calls
     val originalMinHeight = getTag(TAG_ORIGINAL_MIN_HEIGHT) as? Int ?: minimumHeight.also {
         setTag(TAG_ORIGINAL_MIN_HEIGHT, it)
@@ -133,6 +136,7 @@ fun View.applyBottomSystemBarInsetsWithHeight() {
 private val TAG_ORIGINAL_BOTTOM_MARGIN = "originalBottomMargin".hashCode()
 
 fun View.applyBottomSystemBarMargin() {
+    if (!EdgeToEdgeHelper.isEdgeToEdgeEnforced()) return
     // Only capture original margin once to prevent accumulation on multiple calls
     val originalBottomMargin = getTag(TAG_ORIGINAL_BOTTOM_MARGIN) as? Int ?: run {
         val margin = (layoutParams as? android.view.ViewGroup.MarginLayoutParams)?.bottomMargin ?: 0
@@ -155,6 +159,7 @@ fun View.applyBottomSystemBarMargin() {
 private val TAG_ORIGINAL_BOTTOM_RIGHT_MARGINS = "originalBottomRightMargins".hashCode()
 
 fun View.applyBottomAndRightSystemBarMargin() {
+    if (!EdgeToEdgeHelper.isEdgeToEdgeEnforced()) return
     // Only capture original margins once to prevent accumulation on multiple calls
     val originalMargins = getTag(TAG_ORIGINAL_BOTTOM_RIGHT_MARGINS) as? Pair<Int, Int> ?: run {
         val params = layoutParams as? android.view.ViewGroup.MarginLayoutParams
@@ -192,6 +197,7 @@ fun View.applyBottomAndRightSystemBarMargin() {
 private val TAG_ORIGINAL_BOTTOM_RIGHT_PADDING = "originalBottomRightPadding".hashCode()
 
 fun View.applyBottomAndRightSystemBarPadding() {
+    if (!EdgeToEdgeHelper.isEdgeToEdgeEnforced()) return
     // Only capture original padding once to prevent accumulation on multiple calls
     val originalPadding = getTag(TAG_ORIGINAL_BOTTOM_RIGHT_PADDING) as? Pair<Int, Int> ?: run {
         val padding = Pair(paddingBottom, paddingRight)
@@ -215,6 +221,7 @@ fun View.applyBottomAndRightSystemBarPadding() {
 }
 
 fun View.applyHorizontalSystemBarInsets() {
+    if (!EdgeToEdgeHelper.isEdgeToEdgeEnforced()) return
     ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
         val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
         view.updatePadding(left = systemBars.left, right = systemBars.right)
@@ -233,6 +240,7 @@ fun View.applySystemBarInsets(
     right: Boolean = false,
     consumed: Boolean = false
 ) {
+    if (!EdgeToEdgeHelper.isEdgeToEdgeEnforced()) return
     ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
         val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
         view.updatePadding(
@@ -246,6 +254,7 @@ fun View.applySystemBarInsets(
 }
 
 fun View.applyImeAndSystemBarInsets() {
+    if (!EdgeToEdgeHelper.isEdgeToEdgeEnforced()) return
     ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
         val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
         val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -271,6 +280,7 @@ fun View.doOnApplyWindowInsets(block: (view: View, insets: Insets) -> WindowInse
  * Also helps constrain keyboard width to match the content area.
  */
 fun View.applyDisplayCutoutInsets() {
+    if (!EdgeToEdgeHelper.isEdgeToEdgeEnforced()) return
     ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
         val displayCutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
         view.updatePadding(left = displayCutout.left, right = displayCutout.right)
