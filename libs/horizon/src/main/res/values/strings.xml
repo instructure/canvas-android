@@ -566,6 +566,7 @@
     <string name="learnLearningLibraryExternalLinkLabel">External link</string>
     <string name="learnLearningLibraryFileLabel">File</string>
     <string name="learnLearningLibraryPageLabel">Page</string>
+    <string name="learnLearningLibraryBookmarkFailedToLoadMessage">Failed to load collections items</string>
     <plurals name="learnLearningLibraryCollectionItemCount">
         <item quantity="one">%1$d item</item>
         <item quantity="other">%1$d items</item>
@@ -578,4 +579,11 @@
         <item quantity="one">%1$d unit</item>
         <item quantity="other">%1$d units</item>
     </plurals>
+    <string name="LearnLearningLibraryTypeFilterAllLabel">All item types</string>
+    <string name="LearnLearningLibraryTypeFilterAssessmentsLabel">Assessments</string>
+    <string name="LearnLearningLibraryTypeFilterAssignmentsLabel">Assignments</string>
+    <string name="LearnLearningLibraryTypeFilterExternalLinksLabel">External links</string>
+    <string name="LearnLearningLibraryTypeFilterExternalToolsLabel">External tools</string>
+    <string name="LearnLearningLibraryTypeFilterFilesLabel">Files</string>
+    <string name="LearnLearningLibraryTypeFilterPagesLabel">Pages</string>
 </resources>
