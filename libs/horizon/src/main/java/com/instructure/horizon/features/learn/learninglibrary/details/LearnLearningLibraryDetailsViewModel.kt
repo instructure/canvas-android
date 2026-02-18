@@ -57,7 +57,8 @@ class LearnLearningLibraryDetailsViewModel @Inject constructor(
         updateSearchQuery = ::updateSearchQuery,
         updateSelectedStatusFilter = ::updateSelectedStatusFilter,
         updateTypeFilter = ::updateSelectedTypeFilter,
-        onBookmarkClicked = ::toggleItemBookmarked
+        onBookmarkClicked = ::toggleItemBookmarked,
+        onEnrollClicked = ::onEnrollItem
     ))
     val uiState = _uiState.asStateFlow()
 
@@ -129,19 +130,16 @@ class LearnLearningLibraryDetailsViewModel @Inject constructor(
 
             val newIsBookmarked = repository.toggleLearningLibraryItemIsBookmarked(itemId)
 
+            allItems = allItems.map { collectionItemState ->
+                if (collectionItemState.id == itemId) {
+                    collectionItemState.copy(isBookmarked = newIsBookmarked)
+                } else {
+                    collectionItemState
+                }
+            }
+
             _uiState.update {
-                it.copy(
-                    items = it.items.map { collectionItemState ->
-                        if (collectionItemState.id == itemId) {
-                            collectionItemState.copy(
-                                bookmarkLoading = false,
-                                isBookmarked = newIsBookmarked
-                            )
-                        } else {
-                            collectionItemState
-                        }
-                    }
-                )
+                it.copy(items = allItems.applyFilters())
             }
         } catch {
             _uiState.update {
@@ -177,16 +175,16 @@ class LearnLearningLibraryDetailsViewModel @Inject constructor(
 
             val newItem = repository.enrollLearningLibraryItem(itemId)
 
+            allItems = allItems.map { collectionItemState ->
+                if (collectionItemState.id == itemId) {
+                    newItem.toUiState(resources)
+                } else {
+                    collectionItemState
+                }
+            }
+
             _uiState.update {
-                it.copy(
-                    items = it.items.map { collectionItemState ->
-                        if (collectionItemState.id == itemId) {
-                            newItem.toUiState(resources)
-                        } else {
-                            collectionItemState
-                        }
-                    }
-                )
+                it.copy(items = allItems.applyFilters())
             }
         } catch {
             _uiState.update {

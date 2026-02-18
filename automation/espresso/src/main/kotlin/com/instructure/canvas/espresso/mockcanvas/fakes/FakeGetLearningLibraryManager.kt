@@ -128,6 +128,14 @@ class FakeGetLearningLibraryManager : GetLearningLibraryManager {
         )
     }
 
+    override suspend fun getEnrolledLearningLibraryCollection(
+        id: String,
+        forceNetwork: Boolean
+    ): EnrolledLearningLibraryCollection {
+        return enrolledCollections.find { it.id == id }
+            ?: throw IllegalArgumentException("Enrolled collection not found: $id")
+    }
+
     override suspend fun toggleLearningLibraryItemIsBookmarked(itemId: String): Boolean {
         collectionItems.values.flatten().find { it.id == itemId }?.let { item ->
             val updatedItem = item.copy(isBookmarked = !item.isBookmarked)

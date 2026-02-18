@@ -31,6 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -79,6 +80,7 @@ private fun LearnLearningLibraryDetailsContent(
 
     LazyColumn(
         state = scrollState,
+        modifier = Modifier.testTag("CollapsableBody")
     ) {
         stickyHeader {
             LearnLearningLibraryDetailsContentFilter(state, scrollState)
@@ -145,7 +147,8 @@ private fun LearnLearningLibraryDetailsContentFilter(
             selectedItem = DropdownItem(value = state.selectedStatusFilter, label = stringResource(state.selectedStatusFilter.labelRes)),
             onItemSelected = { it?.let { state.updateSelectedStatusFilter(it.value) } },
             placeholder = "",
-            dropdownWidth = 200.dp
+            dropdownWidth = 200.dp,
+            verticalPadding = 6.dp
         )
 
         HorizonSpace(SpaceSize.SPACE_8)
@@ -155,7 +158,8 @@ private fun LearnLearningLibraryDetailsContentFilter(
             selectedItem = DropdownItem(value = state.selectedTypeFilter, label = stringResource(state.selectedTypeFilter.labelRes)),
             onItemSelected = { it?.let { state.updateTypeFilter(it.value) } },
             placeholder = "",
-            dropdownWidth = 200.dp
+            dropdownWidth = 200.dp,
+            verticalPadding = 6.dp
         )
 
         Spacer(Modifier.weight(1f))
