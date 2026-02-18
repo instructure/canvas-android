@@ -61,18 +61,19 @@ fun LearnLearningLibraryItemScreen(
     state: LearnLearningLibraryItemUiState,
     navController: NavHostController
 ) {
-    LoadingStateWrapper(state.loadingState){
-        CollapsableHeaderScreen(
-            headerContent = {
-                LearnLearningLibraryItemHeader(state, navController)
-            },
-            bodyContent = {
+    CollapsableHeaderScreen(
+        headerContent = {
+            LearnLearningLibraryItemHeader(state, navController)
+        },
+        bodyContent = {
+            LoadingStateWrapper(state.loadingState) {
                 LearnLearningLibraryItemContent(state, navController)
             }
-        )
-    }
+        }
+    )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LearnLearningLibraryItemContent(
     state: LearnLearningLibraryItemUiState,

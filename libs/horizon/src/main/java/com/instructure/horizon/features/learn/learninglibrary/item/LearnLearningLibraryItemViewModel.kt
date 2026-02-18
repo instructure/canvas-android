@@ -30,11 +30,17 @@ import com.instructure.horizon.features.learn.learninglibrary.common.toUiState
 import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.horizonui.platform.LoadingState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@OptIn(FlowPreview::class)
 @HiltViewModel
 class LearnLearningLibraryItemViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
@@ -66,9 +72,16 @@ class LearnLearningLibraryItemViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     private var nextCursor: String? = null
+    private val searchQueryFlow = MutableStateFlow("")
 
     init {
         loadData()
+        viewModelScope.launch {
+            searchQueryFlow
+                .drop(1)
+                .debounce(300)
+                .collectLatest { loadData(cursor = null) }
+        }
     }
 
     private fun loadData(
@@ -152,7 +165,7 @@ class LearnLearningLibraryItemViewModel @Inject constructor(
 
     private fun onUpdateSearchQuery(value: TextFieldValue) {
         _uiState.update { it.copy(searchQuery = value) }
-        loadData(cursor = null)
+        searchQueryFlow.tryEmit(value.text)
     }
 
     private fun onUpdateTypeFilter(value: LearnLearningLibraryTypeFilter) {
