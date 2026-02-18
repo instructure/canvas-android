@@ -36,6 +36,7 @@ import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveGlobalConfigUseCase
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemedColor
+import com.instructure.pandautils.utils.getSystemLocaleCalendar
 import com.instructure.pandautils.utils.getUrl
 import io.mockk.Runs
 import io.mockk.coEvery
@@ -46,6 +47,7 @@ import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.mockkStatic
 import io.mockk.unmockkAll
+import io.mockk.unmockkStatic
 import io.mockk.verify
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertFalse
@@ -63,6 +65,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import java.time.LocalDate
+import java.util.Calendar
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ForecastWidgetViewModelTest {
@@ -98,12 +101,17 @@ class ForecastWidgetViewModelTest {
 
         mockkObject(ColorKeeper)
         every { ColorKeeper.createThemedColor(any()) } returns ThemedColor(0, 0)
+
+        // Mock getSystemLocaleCalendar to return a simple Calendar instance for testing
+        mockkStatic(::getSystemLocaleCalendar)
+        every { getSystemLocaleCalendar() } returns Calendar.getInstance()
     }
 
     @After
     fun teardown() {
         Dispatchers.resetMain()
         unmockkAll()
+        unmockkStatic(::getSystemLocaleCalendar)
     }
 
     private fun createViewModel(): ForecastWidgetViewModel {
