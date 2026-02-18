@@ -19,6 +19,7 @@ package com.instructure.pandautils.features.dashboard.widget.courseinvitation
 import android.content.res.Resources
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.SnackbarMessage
 import com.instructure.pandautils.domain.models.enrollment.CourseInvitation
@@ -26,10 +27,13 @@ import com.instructure.pandautils.domain.usecase.enrollment.HandleCourseInvitati
 import com.instructure.pandautils.domain.usecase.enrollment.HandleCourseInvitationUseCase
 import com.instructure.pandautils.domain.usecase.enrollment.LoadCourseInvitationsParams
 import com.instructure.pandautils.domain.usecase.enrollment.LoadCourseInvitationsUseCase
+import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveGlobalConfigUseCase
+import com.instructure.pandautils.utils.ColorKeeper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -38,6 +42,8 @@ import javax.inject.Inject
 class CourseInvitationsViewModel @Inject constructor(
     private val loadCourseInvitationsUseCase: LoadCourseInvitationsUseCase,
     private val handleCourseInvitationUseCase: HandleCourseInvitationUseCase,
+    private val observeGlobalConfigUseCase: ObserveGlobalConfigUseCase,
+    private val crashlytics: FirebaseCrashlytics,
     private val resources: Resources
 ) : ViewModel() {
 
@@ -53,6 +59,7 @@ class CourseInvitationsViewModel @Inject constructor(
 
     init {
         loadInvitations()
+        observeConfig()
     }
 
     private fun loadInvitations() {
@@ -131,6 +138,17 @@ class CourseInvitationsViewModel @Inject constructor(
                     )
                 }
             }
+        }
+    }
+
+    private fun observeConfig() {
+        viewModelScope.launch {
+            observeGlobalConfigUseCase(Unit)
+                .catch { crashlytics.recordException(it) }
+                .collect { config ->
+                    val themedColor = ColorKeeper.createThemedColor(config.backgroundColor)
+                    _uiState.update { it.copy(color = themedColor) }
+                }
         }
     }
 }

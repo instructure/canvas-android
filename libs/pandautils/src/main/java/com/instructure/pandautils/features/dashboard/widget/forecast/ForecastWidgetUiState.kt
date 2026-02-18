@@ -36,7 +36,6 @@ data class WeekPeriod(
 )
 
 data class AssignmentItem(
-    val id: Long,
     val courseId: Long,
     val courseName: String,
     val assignmentName: String,
@@ -47,16 +46,18 @@ data class AssignmentItem(
     val iconRes: Int,
     val url: String,
     val score: Double? = null,
-    val grade: String? = null
+    val grade: String? = null,
+    val onClick: ((FragmentActivity) -> Unit)? = null,
 )
 
 data class ForecastWidgetUiState(
     val isLoading: Boolean = false,
-    val isLoadingItems: Boolean = false,
+    val isLoadingItemsForSection: Map<ForecastSection, Boolean> = ForecastSection.entries.associateWith { false },
     val isError: Boolean = false,
     val weekPeriod: WeekPeriod? = null,
     val canNavigatePrevious: Boolean = true,
     val canNavigateNext: Boolean = true,
+    val isCurrentWeek: Boolean = true,
     val missingAssignments: List<AssignmentItem> = emptyList(),
     val dueAssignments: List<AssignmentItem> = emptyList(),
     val recentGrades: List<AssignmentItem> = emptyList(),
@@ -64,6 +65,7 @@ data class ForecastWidgetUiState(
     val backgroundColor: ThemedColor = ThemedColor(GlobalConfig.DEFAULT_COLOR),
     val onNavigatePrevious: () -> Unit = {},
     val onNavigateNext: () -> Unit = {},
+    val onJumpToCurrentWeek: () -> Unit = {},
     val onSectionSelected: (ForecastSection) -> Unit = {},
     val onAssignmentClick: (FragmentActivity, Long, Long) -> Unit = { _, _, _ -> },
     val onRetry: () -> Unit = {}

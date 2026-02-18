@@ -30,7 +30,7 @@ class EnrollmentRepositoryImpl(
         states: List<String>?,
         forceRefresh: Boolean
     ): DataResult<List<Enrollment>> {
-        val params = RestParams(isForceReadFromNetwork = forceRefresh)
+        val params = RestParams(isForceReadFromNetwork = forceRefresh, usePerPageQueryParam = true)
         return enrollmentApi.getFirstPageSelfEnrollments(types, states, params)
     }
 
