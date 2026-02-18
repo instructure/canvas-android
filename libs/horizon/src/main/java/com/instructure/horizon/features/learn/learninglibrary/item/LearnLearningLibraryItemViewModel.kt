@@ -14,10 +14,11 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.learn.learninglibrary.bookmark
+package com.instructure.horizon.features.learn.learninglibrary.item
 
 import android.content.res.Resources
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
@@ -26,6 +27,7 @@ import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
 import com.instructure.horizon.features.learn.learninglibrary.common.toUiState
+import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.horizonui.platform.LoadingState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,13 +36,16 @@ import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
-class LearnLearningLibraryBookmarkViewModel @Inject constructor(
+class LearnLearningLibraryItemViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val resources: Resources,
-    private val repository: LearnLearningLibraryBookmarkRepository,
+    private val repository: LearnLearningLibraryItemRepository,
 ): ViewModel() {
     private val pageSize: Int = 10
 
-    private val _uiState = MutableStateFlow(LearnLearningLibraryBookmarkUiState(
+    val bookmarkOnly = private val programId = savedStateHandle.get<String>(LearnRoute.LearnLearningLibraryBookmarkScreen.programIdAttr) ?: ""
+
+    private val _uiState = MutableStateFlow(LearnLearningLibraryItemUiState(
         loadingState = LoadingState(
             onRefresh = ::refreshData,
             onSnackbarDismiss = ::onDismissSnackbar
@@ -80,7 +85,7 @@ class LearnLearningLibraryBookmarkViewModel @Inject constructor(
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isRefreshing = false, isError = false)) }
         } catch {
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isRefreshing = false, snackbarMessage = resources.getString(
-                R.string.learnLearningLibraryBookmarkFailedToLoadMessage
+                R.string.learnLearningLibraryItemFailedToLoadMessage
             ))) }
         }
     }
@@ -91,7 +96,7 @@ class LearnLearningLibraryBookmarkViewModel @Inject constructor(
         filterType: CollectionItemType? = uiState.value.typeFilter?.toCollectionItemType(),
         forceNetwork: Boolean = false
     ) {
-        val response = repository.getBookmarkedLearningLibraryItems(
+        val response = repository.getLearningLibraryItems(
             afterCursor = cursor,
             limit = pageSize,
             searchQuery = searchQuery,
@@ -130,7 +135,7 @@ class LearnLearningLibraryBookmarkViewModel @Inject constructor(
             _uiState.update { it.copy(
                 isMoreButtonLoading = false,
                 loadingState = it.loadingState.copy(
-                    snackbarMessage = resources.getString(R.string.learnLearningLibraryBookmarkFailedToLoadMessage)
+                    snackbarMessage = resources.getString(R.string.learnLearningLibraryItemFailedToLoadMessage)
                 )
             ) }
         }
@@ -141,7 +146,7 @@ class LearnLearningLibraryBookmarkViewModel @Inject constructor(
         loadData(cursor = null)
     }
 
-    private fun onUpdateTypeFilter(value: LearnLearningLibraryTypeFilter?) {
+    private fun onUpdateTypeFilter(value: LearnLearningLibraryTypeFilter) {
         _uiState.update { it.copy(typeFilter = value) }
         loadData(cursor = null)
     }

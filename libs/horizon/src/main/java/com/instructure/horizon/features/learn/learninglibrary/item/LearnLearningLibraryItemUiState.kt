@@ -14,23 +14,24 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.learn.learninglibrary.bookmark
+package com.instructure.horizon.features.learn.learninglibrary.item
 
 import androidx.compose.ui.text.input.TextFieldValue
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryCollectionItemState
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
 import com.instructure.horizon.horizonui.platform.LoadingState
 
-data class LearnLearningLibraryBookmarkUiState(
+data class LearnLearningLibraryItemUiState(
     val loadingState: LoadingState = LoadingState(),
+    val title: String = "",
     val items: List<LearnLearningLibraryCollectionItemState> = emptyList(),
     val showMoreButton: Boolean = false,
     val onShowMoreClicked: () -> Unit = {},
     val isMoreButtonLoading: Boolean = false,
     val searchQuery: TextFieldValue = TextFieldValue(""),
     val updateSearchQuery: (TextFieldValue) -> Unit = {},
-    val typeFilter: LearnLearningLibraryTypeFilter? = null,
-    val updateTypeFilter: (LearnLearningLibraryTypeFilter?) -> Unit = {},
+    val typeFilter: LearnLearningLibraryTypeFilter = LearnLearningLibraryTypeFilter.All,
+    val updateTypeFilter: (LearnLearningLibraryTypeFilter) -> Unit = {},
     val onBookmarkClicked: (itemId: String) -> Unit = {},
     val onEnrollClicked: (itemId: String) -> Unit = {},
 )

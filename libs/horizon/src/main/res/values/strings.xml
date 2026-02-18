@@ -566,7 +566,7 @@
     <string name="learnLearningLibraryExternalLinkLabel">External link</string>
     <string name="learnLearningLibraryFileLabel">File</string>
     <string name="learnLearningLibraryPageLabel">Page</string>
-    <string name="learnLearningLibraryBookmarkFailedToLoadMessage">Failed to load collections items</string>
+    <string name="learnLearningLibraryItemFailedToLoadMessage">Failed to load collections items</string>
     <plurals name="learnLearningLibraryCollectionItemCount">
         <item quantity="one">%1$d item</item>
         <item quantity="other">%1$d items</item>
@@ -586,4 +586,6 @@
     <string name="LearnLearningLibraryTypeFilterExternalToolsLabel">External tools</string>
     <string name="LearnLearningLibraryTypeFilterFilesLabel">Files</string>
     <string name="LearnLearningLibraryTypeFilterPagesLabel">Pages</string>
+    <string name="learnLearningLibraryItemSearchPlaceholder">Search</string>
+    <string name="learnLearningLibraryItemEmptyMessage">No results found. Try adjusting your search terms.</string>
 </resources>
