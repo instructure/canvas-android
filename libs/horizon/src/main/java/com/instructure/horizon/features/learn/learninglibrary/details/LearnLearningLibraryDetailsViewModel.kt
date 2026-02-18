@@ -161,6 +161,51 @@ class LearnLearningLibraryDetailsViewModel @Inject constructor(
         }
     }
 
+    private fun onEnrollItem(itemId: String) {
+        viewModelScope.tryLaunch {
+            _uiState.update {
+                it.copy(
+                    items = it.items.map { collectionItemState ->
+                        if (collectionItemState.id == itemId) {
+                            collectionItemState.copy(enrollLoading = true)
+                        } else {
+                            collectionItemState
+                        }
+                    }
+                )
+            }
+
+            val newItem = repository.enrollLearningLibraryItem(itemId)
+
+            _uiState.update {
+                it.copy(
+                    items = it.items.map { collectionItemState ->
+                        if (collectionItemState.id == itemId) {
+                            newItem.toUiState(resources)
+                        } else {
+                            collectionItemState
+                        }
+                    }
+                )
+            }
+        } catch {
+            _uiState.update {
+                it.copy(
+                    items = it.items.map { collectionItemState ->
+                        if (collectionItemState.id == itemId) {
+                            collectionItemState.copy(
+                                enrollLoading = false,
+                            )
+                        } else {
+                            collectionItemState
+                        }
+                    },
+                    loadingState = it.loadingState.copy(errorMessage = resources.getString(R.string.learnLearningLibraryFailedToEnrollMessage))
+                )
+            }
+        }
+    }
+
     private fun List<LearnLearningLibraryCollectionItemState>.applyFilters(): List<LearnLearningLibraryCollectionItemState> {
         return this.filter {
             it.name.contains(_uiState.value.searchQuery.text.trim(), ignoreCase = true)

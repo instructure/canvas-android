@@ -35,6 +35,7 @@ data class LearnLearningLibraryDetailsUiState(
     val selectedTypeFilter: LearnLearningLibraryDetailsTypeFilter = LearnLearningLibraryDetailsTypeFilter.All,
     val updateTypeFilter: (LearnLearningLibraryDetailsTypeFilter) -> Unit = {},
     val onBookmarkClicked: (itemId: String) -> Unit = {},
+    val onEnrollClicked: (itemId: String) -> Unit = {},
 )
 
 enum class LearnLearningLibraryDetailsStatusFilter(@StringRes val labelRes: Int) {

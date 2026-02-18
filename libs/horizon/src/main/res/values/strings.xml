@@ -577,6 +577,9 @@
     <string name="LearnLearningLibraryDetailsTypeFilterFilesLabel">Files</string>
     <string name="LearnLearningLibraryDetailsTypeFilterPagesLabel">Pages</string>
     <string name="learnLarningLibraryFailedToLoadCollectionMessage">Failed to load collection</string>
+    <string name="learnLearningLibraryDetailsSearchLabel">Search collection</string>
+    <string name="learningLibraryDetailsShowMoreLabel">Show more</string>
+    <string name="learnLearningLibraryDetailsEmptyMessage">No results found. Try adjusting your search terms.</string>
     <plurals name="learnLearningLibraryCollectionItemCount">
         <item quantity="one">%1$d item</item>
         <item quantity="other">%1$d items</item>

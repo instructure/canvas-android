@@ -33,11 +33,12 @@ import com.instructure.horizon.features.home.HomeNavigationRoute
 import com.instructure.horizon.features.learn.LearnScreen
 import com.instructure.horizon.features.learn.LearnTab
 import com.instructure.horizon.features.learn.LearnViewModel
+import com.instructure.horizon.features.learn.course.details.CourseDetailsScreen
+import com.instructure.horizon.features.learn.course.details.CourseDetailsViewModel
 import com.instructure.horizon.features.learn.learninglibrary.bookmark.LearnLearningLibraryBookmarkScreen
 import com.instructure.horizon.features.learn.learninglibrary.completed.LearnLearningLibraryCompletedScreen
 import com.instructure.horizon.features.learn.learninglibrary.details.LearnLearningLibraryDetailsScreen
-import com.instructure.horizon.features.learn.course.details.CourseDetailsScreen
-import com.instructure.horizon.features.learn.course.details.CourseDetailsViewModel
+import com.instructure.horizon.features.learn.learninglibrary.details.LearnLearningLibraryDetailsViewModel
 import com.instructure.horizon.features.learn.program.details.ProgramDetailsScreen
 import com.instructure.horizon.features.learn.program.details.ProgramDetailsViewModel
 
@@ -150,7 +151,9 @@ fun NavGraphBuilder.learnNavigation(
             }
         )
     ) {
-        LearnLearningLibraryDetailsScreen()
+        val viewModel = hiltViewModel<LearnLearningLibraryDetailsViewModel>()
+        val state by viewModel.uiState.collectAsState()
+        LearnLearningLibraryDetailsScreen(state, navController)
     }
     composable(LearnRoute.LearnLearningLibraryBookmarkScreen.route) {
         LearnLearningLibraryBookmarkScreen()
