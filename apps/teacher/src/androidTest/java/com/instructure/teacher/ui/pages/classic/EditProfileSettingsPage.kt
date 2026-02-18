@@ -16,9 +16,10 @@
  */
 package com.instructure.teacher.ui.pages.classic
 
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.assertHasText
 import com.instructure.espresso.clearText
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
@@ -71,7 +72,7 @@ class EditProfileSettingsPage : BasePage(R.id.editProfileSettingsPage) {
      * @param expectedHint The expected hint text.
      */
     fun assertUserNameHint(expectedHint: String) {
-        onView(withId(R.id.usersName)).assertHasText(expectedHint)
+        onView(withId(R.id.usersName)).check(matches(ViewMatchers.withHint(expectedHint)))
     }
 
     /**
