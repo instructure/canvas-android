@@ -50,6 +50,8 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.formatRelativeWithTime
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.composables.SubmissionState
+import com.instructure.pandautils.features.grades.SubmissionStateLabel
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getFragmentActivity
 import java.util.Date
@@ -166,46 +168,8 @@ fun AssignmentListItem(
                     }
 
                     when {
-                        assignment.isGraded -> {
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(2.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.weight(1f)
-                            ) {
-                                Icon(
-                                    painter = painterResource(R.drawable.ic_complete_solid),
-                                    contentDescription = null,
-                                    tint = colorResource(R.color.textSuccess),
-                                    modifier = Modifier.size(16.dp)
-                                )
-                                Text(
-                                    text = stringResource(R.string.forecastWidget_graded),
-                                    fontSize = 12.sp,
-                                    lineHeight = 16.sp,
-                                    color = colorResource(R.color.textSuccess)
-                                )
-                            }
-                        }
-                        assignment.isSubmitted -> {
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(2.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.weight(1f)
-                            ) {
-                                Icon(
-                                    painter = painterResource(R.drawable.ic_complete),
-                                    contentDescription = null,
-                                    tint = colorResource(R.color.textSuccess),
-                                    modifier = Modifier.size(16.dp)
-                                )
-                                Text(
-                                    text = stringResource(R.string.forecastWidget_submitted),
-                                    fontSize = 12.sp,
-                                    lineHeight = 16.sp,
-                                    color = colorResource(R.color.textSuccess)
-                                )
-                            }
-                        }
+                        assignment.isGraded -> SubmissionState(SubmissionStateLabel.Graded, fontSize = 12.sp)
+                        assignment.isSubmitted -> SubmissionState(SubmissionStateLabel.Submitted, fontSize = 12.sp)
                     }
                 }
             }

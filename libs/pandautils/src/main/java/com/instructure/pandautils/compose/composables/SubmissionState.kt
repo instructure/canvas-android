@@ -31,6 +31,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.pandautils.R
@@ -41,12 +42,13 @@ import com.instructure.pandautils.utils.drawableId
 @Composable
 fun SubmissionState(
     submissionStateLabel: SubmissionStateLabel,
-    testTag: String,
-    colorOverride: Int? = null
+    testTag: String = "",
+    colorOverride: Int? = null,
+    fontSize: TextUnit = 14.sp
 ) {
     if (submissionStateLabel != SubmissionStateLabel.None) {
         val color = colorOverride ?: submissionStateLabel.colorRes
-        Row {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 painter = painterResource(id = submissionStateLabel.iconRes),
                 contentDescription = null,
@@ -65,7 +67,7 @@ fun SubmissionState(
                     is SubmissionStateLabel.Custom -> submissionStateLabel.label
                 },
                 color = colorResource(id = color),
-                fontSize = 14.sp,
+                fontSize = fontSize,
                 modifier = Modifier.testTag(testTag)
             )
         }
