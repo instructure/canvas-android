@@ -24,7 +24,6 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToIndex
-import androidx.compose.ui.test.performTextInput
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.pandautils.features.dashboard.widget.SettingType
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
@@ -504,7 +503,7 @@ class CustomizeDashboardScreenTest {
         composeTestRule.onNodeWithTag("surveyDialog").assertIsDisplayed()
         composeTestRule.onNodeWithTag("surveyDialogTitle").assertIsDisplayed()
         composeTestRule.onNodeWithTag("surveyDialogMessage").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("surveyDialogFeedbackField").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("surveyDialogFeedbackButton").assertIsDisplayed()
         composeTestRule.onNodeWithTag("surveyDialogSubmitButton").assertIsDisplayed()
         composeTestRule.onNodeWithTag("surveyDialogSkipButton").assertIsDisplayed()
     }
@@ -550,7 +549,7 @@ class CustomizeDashboardScreenTest {
     }
 
     @Test
-    fun testSurveyDialogSubmitButtonEnabledWithText() {
+    fun testSurveyDialogSubmitButtonEnabledWithOption() {
         val widgets = listOf(
             WidgetItem(
                 metadata = WidgetMetadata(
@@ -587,9 +586,6 @@ class CustomizeDashboardScreenTest {
 
         // Select a survey option
         composeTestRule.onNodeWithTag("surveyOption_hard_to_find").performClick()
-
-        // Enter feedback
-        composeTestRule.onNodeWithTag("surveyDialogFeedbackField").performTextInput("Test feedback")
 
         // Submit button should be enabled
         composeTestRule.onNodeWithTag("surveyDialogSubmitButton").assertIsEnabled()
@@ -725,15 +721,15 @@ class CustomizeDashboardScreenTest {
         ).performClick()
         composeTestRule.onNodeWithTag("confirmationDialogConfirmButton").performClick()
 
-        // Select option but don't enter feedback
+        // Select option
         composeTestRule.onNodeWithTag("surveyOption_hard_to_find").performClick()
 
-        // Submit button should be enabled (feedback is optional)
+        // Submit button should be enabled
         composeTestRule.onNodeWithTag("surveyDialogSubmitButton").assertIsEnabled()
     }
 
     @Test
-    fun testSurveyDialogSubmitDisabledWithOnlyFeedback() {
+    fun testSurveyDialogFeedbackButtonDisplayed() {
         val widgets = listOf(
             WidgetItem(
                 metadata = WidgetMetadata(
@@ -768,11 +764,10 @@ class CustomizeDashboardScreenTest {
         ).performClick()
         composeTestRule.onNodeWithTag("confirmationDialogConfirmButton").performClick()
 
-        // Enter feedback but don't select option
-        composeTestRule.onNodeWithTag("surveyDialogFeedbackField").performTextInput("Test feedback")
-
-        // Submit button should still be disabled
-        composeTestRule.onNodeWithTag("surveyDialogSubmitButton").assertIsNotEnabled()
+        // Verify feedback section is displayed
+        composeTestRule.onNodeWithText("What do you think of the new dashboard?").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Let us know!").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("surveyDialogFeedbackButton").assertIsDisplayed()
     }
 
     @Test
