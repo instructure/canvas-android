@@ -32,6 +32,7 @@ import com.instructure.pandautils.domain.usecase.assignment.LoadUpcomingAssignme
 import com.instructure.pandautils.domain.usecase.audit.LoadRecentGradeChangesParams
 import com.instructure.pandautils.domain.usecase.audit.LoadRecentGradeChangesUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCase
+import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveGlobalConfigUseCase
 import com.instructure.pandautils.utils.ColorKeeper
@@ -538,8 +539,7 @@ class ForecastWidgetViewModelTest {
 
         val assignments = viewModel.uiState.value.dueAssignments
         assertEquals(1, assignments.size)
-        assertTrue(assignments[0].isSubmitted)
-        assertFalse(assignments[0].isGraded)
+        assertEquals(SubmissionStateLabel.Submitted, assignments[0].submissionStateLabel)
     }
 
     @Test
@@ -558,8 +558,7 @@ class ForecastWidgetViewModelTest {
 
         val assignments = viewModel.uiState.value.dueAssignments
         assertEquals(1, assignments.size)
-        assertTrue(assignments[0].isSubmitted)
-        assertTrue(assignments[0].isGraded)
+        assertEquals(SubmissionStateLabel.Graded, assignments[0].submissionStateLabel)
     }
 
     @Test
@@ -575,7 +574,6 @@ class ForecastWidgetViewModelTest {
 
         val assignments = viewModel.uiState.value.dueAssignments
         assertEquals(1, assignments.size)
-        assertFalse(assignments[0].isSubmitted)
-        assertFalse(assignments[0].isGraded)
+        assertEquals(SubmissionStateLabel.None, assignments[0].submissionStateLabel)
     }
 }

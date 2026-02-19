@@ -60,6 +60,7 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ShimmerBox
+import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 import com.instructure.pandautils.compose.composables.TodayButton
 import kotlinx.coroutines.flow.SharedFlow
 import java.time.LocalDate
@@ -455,7 +456,7 @@ private fun ForecastWidgetContentPreview() {
                     weight = 15.0,
                     iconRes = R.drawable.ic_assignment,
                     url = "",
-                    isSubmitted = true
+                    submissionStateLabel = SubmissionStateLabel.Submitted
                 ),
                 AssignmentItem(
                     courseId = 101,
@@ -467,7 +468,7 @@ private fun ForecastWidgetContentPreview() {
                     weight = 10.0,
                     iconRes = R.drawable.ic_quiz,
                     url = "",
-                    isGraded = true
+                    submissionStateLabel = SubmissionStateLabel.Graded
                 )
             ),
             recentGrades = emptyList(),

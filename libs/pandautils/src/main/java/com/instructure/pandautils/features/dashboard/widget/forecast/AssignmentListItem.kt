@@ -50,8 +50,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.formatRelativeWithTime
 import com.instructure.pandautils.R
-import com.instructure.pandautils.compose.composables.SubmissionState
-import com.instructure.pandautils.features.grades.SubmissionStateLabel
+import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getFragmentActivity
 import java.util.Date
@@ -144,7 +143,9 @@ fun AssignmentListItem(
                 ?: assignment.gradedDate?.formatRelativeWithTime(context)
                     .orEmpty()
 
-            if (dateText.isNotEmpty() || assignment.isSubmitted || assignment.isGraded) {
+            val hasSubmissionState = assignment.submissionStateLabel != SubmissionStateLabel.None
+
+            if (dateText.isNotEmpty() || hasSubmissionState) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -159,7 +160,7 @@ fun AssignmentListItem(
                         )
                     }
 
-                    if ((assignment.isSubmitted || assignment.isGraded) && dateText.isNotEmpty()) {
+                    if (hasSubmissionState && dateText.isNotEmpty()) {
                         VerticalDivider(
                             modifier = Modifier.height(16.dp),
                             thickness = 0.5.dp,
@@ -167,9 +168,37 @@ fun AssignmentListItem(
                         )
                     }
 
-                    when {
-                        assignment.isGraded -> SubmissionState(SubmissionStateLabel.Graded, fontSize = 12.sp)
-                        assignment.isSubmitted -> SubmissionState(SubmissionStateLabel.Submitted, fontSize = 12.sp)
+                    if (hasSubmissionState) {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(2.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.weight(1f, fill = false)
+                        ) {
+                            Icon(
+                                painter = painterResource(assignment.submissionStateLabel.iconRes),
+                                contentDescription = null,
+                                tint = colorResource(assignment.submissionStateLabel.colorRes),
+                                modifier = Modifier.size(16.dp)
+                            )
+                            when (val label = assignment.submissionStateLabel) {
+                                is SubmissionStateLabel.Predefined -> {
+                                    Text(
+                                        text = stringResource(label.labelRes),
+                                        fontSize = 12.sp,
+                                        lineHeight = 16.sp,
+                                        color = colorResource(label.colorRes)
+                                    )
+                                }
+                                is SubmissionStateLabel.Custom -> {
+                                    Text(
+                                        text = label.label,
+                                        fontSize = 12.sp,
+                                        lineHeight = 16.sp,
+                                        color = colorResource(label.colorRes)
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -262,7 +291,7 @@ private fun AssignmentListItemSubmittedPreview() {
             weight = 10.0,
             iconRes = R.drawable.ic_assignment,
             url = "",
-            isSubmitted = true
+            submissionStateLabel = SubmissionStateLabel.Submitted
         )
     )
 }
@@ -282,7 +311,7 @@ private fun AssignmentListItemGradedPreview() {
             weight = 10.0,
             iconRes = R.drawable.ic_quiz,
             url = "",
-            isGraded = true
+            submissionStateLabel = SubmissionStateLabel.Graded
         )
     )
 }

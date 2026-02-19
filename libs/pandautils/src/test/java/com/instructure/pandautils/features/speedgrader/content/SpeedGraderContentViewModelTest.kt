@@ -27,7 +27,7 @@ import com.instructure.canvasapi2.type.SubmissionType
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandares.R
-import com.instructure.pandautils.features.grades.SubmissionStateLabel
+import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 import com.instructure.pandautils.features.speedgrader.SpeedGraderSelectedAttemptHolder
 import com.instructure.pandautils.features.speedgrader.grade.GradingEvent
 import com.instructure.pandautils.features.speedgrader.grade.SpeedGraderGradingEventHandler

@@ -30,6 +30,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.canvasapi2.utils.toDate
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 import com.instructure.pandautils.data.model.GradedSubmission
 import com.instructure.pandautils.domain.usecase.assignment.LoadAssignmentGroupsUseCase
 import com.instructure.pandautils.domain.usecase.assignment.LoadMissingAssignmentsParams
@@ -280,6 +281,11 @@ class ForecastWidgetViewModel @Inject constructor(
             .sortedBy { it.plannableDate }
             .map { item ->
                 val weight = calculatePlannerItemWeight(item)
+                val submissionStateLabel = when {
+                    item.submissionState?.graded == true -> SubmissionStateLabel.Graded
+                    item.submissionState?.submitted == true -> SubmissionStateLabel.Submitted
+                    else -> SubmissionStateLabel.None
+                }
                 AssignmentItem(
                     courseId = item.courseId ?: 0,
                     courseName = item.contextName.orEmpty(),
@@ -290,8 +296,7 @@ class ForecastWidgetViewModel @Inject constructor(
                     weight = weight,
                     iconRes = item.getIconForPlannerItem(),
                     url = item.htmlUrl.orEmpty(),
-                    isSubmitted = item.submissionState?.submitted == true,
-                    isGraded = item.submissionState?.graded == true,
+                    submissionStateLabel = submissionStateLabel,
                     onClick = {
                         forecastWidgetRouter.routeToPlannerItem(it, item.getUrl(apiPrefs))
                     }

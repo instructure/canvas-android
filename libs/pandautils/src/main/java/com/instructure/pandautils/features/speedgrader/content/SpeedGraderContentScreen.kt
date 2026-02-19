@@ -83,9 +83,9 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.LocalCourseColor
 import com.instructure.pandautils.compose.composables.CanvasDivider
 import com.instructure.pandautils.compose.composables.SimpleAlertDialog
+import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 import com.instructure.pandautils.compose.composables.UserAvatar
 import com.instructure.pandautils.compose.modifiers.conditional
-import com.instructure.pandautils.features.grades.SubmissionStateLabel
 import com.instructure.pandautils.features.speedgrader.SpeedGraderSharedViewModel
 import com.instructure.pandautils.utils.drawableId
 import com.instructure.pandautils.utils.getFragmentActivity
