@@ -45,6 +45,7 @@ import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.getAssignmentIcon
 import com.instructure.pandautils.utils.getIconForPlannerItem
 import com.instructure.pandautils.utils.getUrl
+import com.instructure.pandautils.utils.getSystemFirstDayOfWeek
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
@@ -365,7 +366,7 @@ class ForecastWidgetViewModel @Inject constructor(
     private fun calculateWeekPeriod(offsetWeeks: Int): WeekPeriod {
         val locale = Locale.getDefault()
         val today = LocalDate.now()
-        val firstDayOfWeek = WeekFields.of(locale).firstDayOfWeek
+        val firstDayOfWeek = getSystemFirstDayOfWeek()
 
         val currentWeekStart = today.with(TemporalAdjusters.previousOrSame(firstDayOfWeek))
         val targetWeekStart = currentWeekStart.plusWeeks(offsetWeeks.toLong())
