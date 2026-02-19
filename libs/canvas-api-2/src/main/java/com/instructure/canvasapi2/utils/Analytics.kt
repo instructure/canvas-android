@@ -217,5 +217,4 @@ object AnalyticsParamConstants {
 
     //dashboard survey
     const val SELECTED_REASON = "selected_reason"
-    const val ADDITIONAL_FEEDBACK = "additional_feedback"
 }
