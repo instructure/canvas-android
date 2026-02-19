@@ -2152,8 +2152,6 @@
     <string name="forecastWidgetEmptyMissing">No missing assignments. You\'re all caught up!</string>
     <string name="forecastWidgetEmptyDue">No assignments due this week.</string>
     <string name="forecastWidgetEmptyRecentGrades">No new grades in this week.</string>
-    <string name="forecastWidget_submitted">Submitted</string>
-    <string name="forecastWidget_graded">Graded</string>
     <string name="a11y_contentDescription_previousWeek">Previous week</string>
     <string name="a11y_contentDescription_nextWeek">Next week</string>
 

@@ -50,6 +50,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.formatRelativeWithTime
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.composables.SubmissionState
 import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getFragmentActivity
@@ -168,38 +169,7 @@ fun AssignmentListItem(
                         )
                     }
 
-                    if (hasSubmissionState) {
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(2.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.weight(1f, fill = false)
-                        ) {
-                            Icon(
-                                painter = painterResource(assignment.submissionStateLabel.iconRes),
-                                contentDescription = null,
-                                tint = colorResource(assignment.submissionStateLabel.colorRes),
-                                modifier = Modifier.size(16.dp)
-                            )
-                            when (val label = assignment.submissionStateLabel) {
-                                is SubmissionStateLabel.Predefined -> {
-                                    Text(
-                                        text = stringResource(label.labelRes),
-                                        fontSize = 12.sp,
-                                        lineHeight = 16.sp,
-                                        color = colorResource(label.colorRes)
-                                    )
-                                }
-                                is SubmissionStateLabel.Custom -> {
-                                    Text(
-                                        text = label.label,
-                                        fontSize = 12.sp,
-                                        lineHeight = 16.sp,
-                                        color = colorResource(label.colorRes)
-                                    )
-                                }
-                            }
-                        }
-                    }
+                    SubmissionState(assignment.submissionStateLabel, fontSize = 12.sp)
                 }
             }
         }
