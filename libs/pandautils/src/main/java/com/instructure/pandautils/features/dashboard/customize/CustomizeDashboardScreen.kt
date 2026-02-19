@@ -230,6 +230,11 @@ private fun WidgetList(
                 modifier = Modifier.animateItem()
             )
         }
+        item {
+            FeedbackButton(
+                feedbackUrl = uiState.feedbackUrl
+            )
+        }
     }
 }
 
@@ -604,7 +609,6 @@ private fun SurveyDialog(
     feedbackUrl: String
 ) {
     var selectedOption by remember { mutableStateOf<String?>(null) }
-    val context = LocalContext.current
 
     fun restartApp() {
         GlobalScope.launch {
@@ -654,58 +658,10 @@ private fun SurveyDialog(
 
                 CanvasDivider()
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    Text(
-                        text = stringResource(R.string.what_do_you_think_of_new_dashboard),
-                        fontSize = 14.sp,
-                        lineHeight = 19.sp,
-                        textAlign = TextAlign.Center,
-                        color = colorResource(R.color.textDarkest)
-                    )
-
-                    OutlinedButton(
-                        onClick = {
-                            try {
-                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(feedbackUrl))
-                                if (intent.resolveActivity(context.packageManager) != null) {
-                                    context.startActivity(intent)
-                                } else {
-                                    context.toast(context.getString(R.string.no_app_to_handle_link))
-                                }
-                            } catch (e: Exception) {
-                                context.toast(context.getString(R.string.no_app_to_handle_link))
-                            }
-                        },
-                        shape = RoundedCornerShape(24.dp),
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            containerColor = Color.Transparent,
-                            contentColor = Color(ThemePrefs.textButtonColor)
-                        ),
-                        border = BorderStroke(1.dp, Color(ThemePrefs.textButtonColor)),
-                        contentPadding = PaddingValues(start = 12.dp, end = 8.dp, top = 4.dp, bottom = 4.dp),
-                        modifier = Modifier
-                            .height(30.dp)
-                            .testTag("surveyDialogFeedbackButton")
-                    ) {
-                        Text(
-                            text = stringResource(R.string.let_us_know),
-                            fontSize = 14.sp,
-                            lineHeight = 17.sp
-                        )
-                        Spacer(modifier = Modifier.size(6.dp))
-                        Icon(
-                            painter = painterResource(R.drawable.ic_external_link),
-                            contentDescription = null,
-                            modifier = Modifier.size(16.dp)
-                        )
-                    }
-                }
+                FeedbackButton(
+                    feedbackUrl = feedbackUrl,
+                    testTag = "surveyDialogFeedbackButton"
+                )
             }
         },
         confirmButton = {
@@ -775,6 +731,68 @@ private fun SurveyOption(
             fontWeight = FontWeight.SemiBold,
             color = colorResource(R.color.textDarkest)
         )
+    }
+}
+
+@Composable
+private fun FeedbackButton(
+    feedbackUrl: String,
+    modifier: Modifier = Modifier,
+    testTag: String = "feedbackButton"
+) {
+    val context = LocalContext.current
+
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Text(
+            text = stringResource(R.string.what_do_you_think_of_new_dashboard),
+            fontSize = 14.sp,
+            lineHeight = 19.sp,
+            textAlign = TextAlign.Center,
+            color = colorResource(R.color.textDarkest)
+        )
+
+        OutlinedButton(
+            onClick = {
+                try {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(feedbackUrl))
+                    if (intent.resolveActivity(context.packageManager) != null) {
+                        context.startActivity(intent)
+                    } else {
+                        context.toast(context.getString(R.string.no_app_to_handle_link))
+                    }
+                } catch (e: Exception) {
+                    context.toast(context.getString(R.string.no_app_to_handle_link))
+                }
+            },
+            shape = RoundedCornerShape(24.dp),
+            colors = ButtonDefaults.outlinedButtonColors(
+                containerColor = Color.Transparent,
+                contentColor = Color(ThemePrefs.textButtonColor)
+            ),
+            border = BorderStroke(1.dp, Color(ThemePrefs.textButtonColor)),
+            contentPadding = PaddingValues(start = 12.dp, end = 8.dp, top = 4.dp, bottom = 4.dp),
+            modifier = Modifier
+                .height(30.dp)
+                .testTag(testTag)
+        ) {
+            Text(
+                text = stringResource(R.string.let_us_know),
+                fontSize = 14.sp,
+                lineHeight = 17.sp
+            )
+            Spacer(modifier = Modifier.size(6.dp))
+            Icon(
+                painter = painterResource(R.drawable.ic_external_link),
+                contentDescription = null,
+                modifier = Modifier.size(16.dp)
+            )
+        }
     }
 }
 

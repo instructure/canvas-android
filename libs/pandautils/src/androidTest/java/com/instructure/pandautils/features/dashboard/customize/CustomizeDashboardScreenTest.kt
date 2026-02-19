@@ -764,9 +764,10 @@ class CustomizeDashboardScreenTest {
         ).performClick()
         composeTestRule.onNodeWithTag("confirmationDialogConfirmButton").performClick()
 
-        // Verify feedback section is displayed
-        composeTestRule.onNodeWithText("What do you think of the new dashboard?").assertIsDisplayed()
-        composeTestRule.onNodeWithText("Let us know!").assertIsDisplayed()
+        // Verify survey dialog is displayed
+        composeTestRule.onNodeWithTag("surveyDialog").assertIsDisplayed()
+
+        // Verify feedback button in survey dialog is displayed
         composeTestRule.onNodeWithTag("surveyDialogFeedbackButton").assertIsDisplayed()
     }
 
