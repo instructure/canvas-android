@@ -20,13 +20,10 @@ import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
-import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.repository.WidgetConfigDataRepository
 import com.instructure.pandautils.room.offline.facade.CourseFacade
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
-import kotlinx.coroutines.runBlocking
 import com.instructure.student.features.navigation.NavigationRepository
 import com.instructure.student.features.navigation.datasource.NavigationLocalDataSource
 import com.instructure.student.features.navigation.datasource.NavigationNetworkDataSource
@@ -64,15 +61,7 @@ class NavigationActivityModule {
         return if (canvasForElementary || apiPrefs.showElementaryView) {
             ElementaryNavigationBehavior(apiPrefs)
         } else {
-            val (canvasFlag, userPref) = runBlocking {
-                val canvasFlag = featureFlagProvider.checkWidgetDashboardFlag()
-                val globalConfigJson = widgetConfigDataRepository.getConfigJson(WidgetMetadata.WIDGET_ID_GLOBAL)
-                val userPref = globalConfigJson?.let {
-                    try { GlobalConfig.fromJson(it) } catch (e: Exception) { GlobalConfig() }
-                }?.newDashboardEnabled ?: true
-                canvasFlag to userPref
-            }
-            DefaultNavigationBehavior(apiPrefs, canvasFlag, userPref)
+            DefaultNavigationBehavior(apiPrefs, featureFlagProvider, widgetConfigDataRepository)
         }
     }
 
