@@ -206,6 +206,11 @@
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/AppTheme.NoActionBar"/>
 
+        <activity android:name=".activities.RetainedFullscreenActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
         <activity
             android:name="com.instructure.teacher.activities.MasterDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
