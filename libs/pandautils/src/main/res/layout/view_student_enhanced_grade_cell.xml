@@ -73,7 +73,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawablePadding="7dp"
-                android:text="@string/submissionAndRubric"
+                android:text="@string/submissionAndFeedback"
                 android:textColor="@{viewData.submissionAndRubricLabelColor}"
                 android:textSize="16sp"
                 android:visibility="@{viewData.state == viewData.State.UPLOADING || viewData.state == viewData.State.FAILED ? View.GONE : View.VISIBLE}"

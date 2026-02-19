@@ -46,6 +46,7 @@
     <string name="submissionStatusFailedTitle">Submission Failed</string>
     <string name="submissionStatusFailedSubtitle">Tap to view details</string>
     <string name="submissionAndRubric">Submission &amp; Rubric</string>
+    <string name="submissionAndFeedback">Submission &amp; Feedback</string>
     <string name="commentsAndRubric">Comments &amp; Rubric</string>
     <string name="errorLoadingAssignment">There was a problem loading this assignment. Please check your connection and try again.</string>
     <string name="submitted">Submitted</string>

@@ -118,7 +118,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         Log.d(PREPARATION_TAG, "Submit assignment: '${pointsTextAssignment.name}' for student: '${student.name}'.")
         SubmissionsApi.seedAssignmentSubmission(course.id, student.token, pointsTextAssignment.id, submissionSeedsList = listOf(SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = SubmissionType.ONLINE_TEXT_ENTRY)))
 
-        Log.d(ASSERTION_TAG, "Refresh the Assignment Details Page. Assert that the assignment's status is submitted and the 'Submission and Rubric' label is displayed.")
+        Log.d(ASSERTION_TAG, "Refresh the Assignment Details Page. Assert that the assignment's status is submitted and the 'Submission and Feedback' label is displayed.")
         assignmentDetailsPage.refresh()
         assignmentDetailsPage.assertStatusSubmitted()
         assignmentDetailsPage.assertSubmissionAndRubricLabel()
@@ -126,7 +126,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         Log.d(PREPARATION_TAG, "Make another submission for assignment: '${pointsTextAssignment.name}' for student: '${student.name}'.")
         val secondSubmissionAttempt = SubmissionsApi.seedAssignmentSubmission(course.id, student.token, pointsTextAssignment.id, submissionSeedsList = listOf(SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = SubmissionType.ONLINE_TEXT_ENTRY)))
 
-        Log.d(ASSERTION_TAG, "Refresh the Assignment Details Page. Assert that the assignment's status is submitted and the 'Submission and Rubric' label is displayed.")
+        Log.d(ASSERTION_TAG, "Refresh the Assignment Details Page. Assert that the assignment's status is submitted and the 'Submission and Feedback' label is displayed.")
         assignmentDetailsPage.refresh()
         assignmentDetailsPage.assertStatusSubmitted()
         assignmentDetailsPage.assertSubmissionAndRubricLabel()

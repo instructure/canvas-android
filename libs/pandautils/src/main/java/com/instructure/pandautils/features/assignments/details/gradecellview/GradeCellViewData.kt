@@ -70,7 +70,7 @@ data class GradeCellViewData(
                     state = State.EMPTY,
                     gradeCellContentDescription = getContentDescriptionText(
                         resources,
-                        resources.getString(R.string.submissionAndRubric)
+                        resources.getString(R.string.submissionAndFeedback)
                     )
                 )
                 submission!!.isSubmitted -> GradeCellViewData(
