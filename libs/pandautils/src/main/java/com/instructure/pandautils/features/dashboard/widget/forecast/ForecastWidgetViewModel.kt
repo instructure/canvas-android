@@ -44,6 +44,7 @@ import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveGloba
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.getAssignmentIcon
 import com.instructure.pandautils.utils.getIconForPlannerItem
+import com.instructure.pandautils.utils.getUrl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
@@ -91,8 +92,8 @@ class ForecastWidgetViewModel @Inject constructor(
         ForecastWidgetUiState(
             onNavigatePrevious = ::navigatePrevious,
             onNavigateNext = ::navigateNext,
+            onJumpToCurrentWeek = ::jumpToCurrentWeek,
             onSectionSelected = ::toggleSection,
-            onAssignmentClick = ::onAssignmentClick,
             onRetry = ::retry
         )
     )
@@ -100,7 +101,7 @@ class ForecastWidgetViewModel @Inject constructor(
 
     init {
         val initialWeekPeriod = calculateWeekPeriod(currentWeekOffset)
-        _uiState.update { it.copy(weekPeriod = initialWeekPeriod) }
+        _uiState.update { it.copy(weekPeriod = initialWeekPeriod, isCurrentWeek = true) }
 
         observeConfig()
         loadData(forceRefresh = false)
@@ -116,15 +117,23 @@ class ForecastWidgetViewModel @Inject constructor(
         updateWeekPeriodAndReload()
     }
 
+    private fun jumpToCurrentWeek() {
+        currentWeekOffset = 0
+        updateWeekPeriodAndReload()
+    }
+
     private fun updateWeekPeriodAndReload() {
         val weekPeriod = calculateWeekPeriod(currentWeekOffset)
 
         weekNavigationJob?.cancel()
 
-        _uiState.update {
-            it.copy(
+        _uiState.update { uiState ->
+            uiState.copy(
                 weekPeriod = weekPeriod,
-                isLoadingItems = it.selectedSection != null,
+                isCurrentWeek = currentWeekOffset == 0,
+                isLoadingItemsForSection = ForecastSection.entries.associateWith { value ->
+                    uiState.selectedSection != null && value != ForecastSection.MISSING
+                },
                 isError = false
             )
         }
@@ -135,13 +144,13 @@ class ForecastWidgetViewModel @Inject constructor(
             try {
                 loadUpcomingAssignments(forceRefresh = true)
                 loadRecentGrades(forceRefresh = true)
-                _uiState.update { it.copy(isLoadingItems = false) }
+                _uiState.update { it.copy(isLoadingItemsForSection = ForecastSection.entries.associateWith { false }) }
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
                 // Only set error state if this job wasn't cancelled by new navigation
                 if (isActive) {
-                    _uiState.update { it.copy(isLoadingItems = false, isError = true) }
+                    _uiState.update { it.copy(isLoadingItemsForSection = ForecastSection.entries.associateWith { false }, isError = true) }
                     crashlytics.recordException(e)
                 }
             }
@@ -252,7 +261,6 @@ class ForecastWidgetViewModel @Inject constructor(
             .map { assignment ->
                 val weight = calculateAssignmentWeight(assignment)
                 AssignmentItem(
-                    id = assignment.id,
                     courseId = assignment.courseId,
                     courseName = assignment.course?.name.orEmpty(),
                     assignmentName = assignment.name.orEmpty(),
@@ -261,7 +269,8 @@ class ForecastWidgetViewModel @Inject constructor(
                     pointsPossible = assignment.pointsPossible,
                     weight = weight,
                     iconRes = assignment.getAssignmentIcon(),
-                    url = assignment.htmlUrl.orEmpty()
+                    url = assignment.htmlUrl.orEmpty(),
+                    onClick = { onAssignmentClick(it, assignment.discussionTopicHeader?.assignmentId ?: assignment.id, assignment.courseId)}
                 )
             }
     }
@@ -272,7 +281,6 @@ class ForecastWidgetViewModel @Inject constructor(
             .map { item ->
                 val weight = calculatePlannerItemWeight(item)
                 AssignmentItem(
-                    id = item.plannable.id,
                     courseId = item.courseId ?: 0,
                     courseName = item.contextName.orEmpty(),
                     assignmentName = item.plannable.title,
@@ -281,7 +289,10 @@ class ForecastWidgetViewModel @Inject constructor(
                     pointsPossible = item.plannable.pointsPossible ?: 0.0,
                     weight = weight,
                     iconRes = item.getIconForPlannerItem(),
-                    url = item.htmlUrl.orEmpty()
+                    url = item.htmlUrl.orEmpty(),
+                    onClick = {
+                        forecastWidgetRouter.routeToPlannerItem(it, item.getUrl(apiPrefs))
+                    }
                 )
             }
     }
@@ -296,7 +307,6 @@ class ForecastWidgetViewModel @Inject constructor(
                     null
                 }
                 AssignmentItem(
-                    id = submission.assignmentId,
                     courseId = submission.courseId,
                     courseName = submission.courseName,
                     assignmentName = submission.assignmentName,
@@ -307,7 +317,8 @@ class ForecastWidgetViewModel @Inject constructor(
                     iconRes = R.drawable.ic_assignment,
                     url = submission.assignmentUrl ?: "",
                     score = submission.score,
-                    grade = formatGrade(submission, course)
+                    grade = formatGrade(submission, course),
+                    onClick = { onAssignmentClick(it, submission.assignmentId, submission.courseId)}
                 )
             }
     }

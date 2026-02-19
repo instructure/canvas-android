@@ -17,19 +17,28 @@
 package com.instructure.student.features.dashboard.compose
 
 import androidx.activity.compose.LocalActivity
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
@@ -52,6 +61,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -73,6 +83,7 @@ import com.instructure.pandautils.features.dashboard.widget.progress.ProgressWid
 import com.instructure.pandautils.features.dashboard.widget.todo.TodoWidget
 import com.instructure.pandautils.features.dashboard.widget.welcome.WelcomeWidget
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.student.R
 import com.instructure.student.activity.NavigationActivity
 import kotlinx.coroutines.flow.SharedFlow
@@ -218,6 +229,7 @@ fun DashboardScreenContent(
                         onShowSnackbar = onShowSnackbar,
                         router = router,
                         isOnline = uiState.isOnline,
+                        color = uiState.color,
                         modifier = Modifier.fillMaxSize()
                     )
                 }
@@ -242,6 +254,7 @@ private fun WidgetList(
     onShowSnackbar: (String, String?, (() -> Unit)?) -> Unit,
     router: DashboardRouter,
     isOnline: Boolean,
+    color: ThemedColor,
     modifier: Modifier = Modifier
 ) {
     val activity = LocalActivity.current ?: return
@@ -254,16 +267,22 @@ private fun WidgetList(
         else -> 1
     }
 
-    LazyColumn(
-        modifier = modifier,
-        contentPadding = PaddingValues(vertical = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
+    LazyColumn(modifier = modifier, contentPadding = PaddingValues(bottom = 16.dp)) {
         items(
             items = widgets,
             key = { it.id }
         ) { metadata ->
-            GetWidgetComposable(metadata.id, refreshSignal, columns, onShowSnackbar, router, isOnline)
+            GetWidgetComposable(metadata.id, refreshSignal, columns, onShowSnackbar, router, isOnline, modifier = Modifier.padding(top = 16.dp))
+        }
+
+        item {
+            CustomizeDashboardButton(
+                onClick = { router.routeToCustomizeDashboard() },
+                color = Color(color.color()),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+            )
         }
     }
 }
@@ -275,39 +294,79 @@ private fun GetWidgetComposable(
     columns: Int,
     onShowSnackbar: (String, String?, (() -> Unit)?) -> Unit,
     router: DashboardRouter,
-    isOnline: Boolean
+    isOnline: Boolean,
+    modifier: Modifier = Modifier
 ) {
     return when (widgetId) {
         WidgetMetadata.WIDGET_ID_PROGRESS -> ProgressWidget(
             refreshSignal = refreshSignal,
             columns = columns,
-            onShowSnackbar = onShowSnackbar
+            onShowSnackbar = onShowSnackbar,
+            modifier = modifier
         )
 
         WidgetMetadata.WIDGET_ID_CONFERENCES -> ConferencesWidget(
             refreshSignal = refreshSignal,
             columns = columns,
-            onShowSnackbar = onShowSnackbar
+            onShowSnackbar = onShowSnackbar,
+            modifier = modifier
         )
 
-        WidgetMetadata.WIDGET_ID_WELCOME -> WelcomeWidget(refreshSignal = refreshSignal)
-        WidgetMetadata.WIDGET_ID_COURSES -> CoursesWidget(refreshSignal = refreshSignal, columns = columns)
+        WidgetMetadata.WIDGET_ID_WELCOME -> WelcomeWidget(refreshSignal = refreshSignal, modifier = modifier)
+        WidgetMetadata.WIDGET_ID_COURSES -> CoursesWidget(refreshSignal = refreshSignal, columns = columns, modifier = modifier)
         WidgetMetadata.WIDGET_ID_COURSE_INVITATIONS -> CourseInvitationsWidget(
             refreshSignal = refreshSignal,
             columns = columns,
             onShowSnackbar = onShowSnackbar,
-            isOnline = isOnline
+            isOnline = isOnline,
+            modifier = modifier
         )
 
         WidgetMetadata.WIDGET_ID_INSTITUTIONAL_ANNOUNCEMENTS -> InstitutionalAnnouncementsWidget(
             refreshSignal = refreshSignal,
             columns = columns,
-            onAnnouncementClick = router::routeToGlobalAnnouncement
+            onAnnouncementClick = router::routeToGlobalAnnouncement,
+            modifier = modifier
         )
 
-        WidgetMetadata.WIDGET_ID_FORECAST -> ForecastWidget(refreshSignal = refreshSignal)
-        WidgetMetadata.WIDGET_ID_TODO -> TodoWidget(refreshSignal = refreshSignal, onShowSnackbar = onShowSnackbar)
+        WidgetMetadata.WIDGET_ID_FORECAST -> ForecastWidget(refreshSignal = refreshSignal, modifier = modifier)
+        WidgetMetadata.WIDGET_ID_TODO -> TodoWidget(refreshSignal = refreshSignal, onShowSnackbar = onShowSnackbar, modifier = modifier)
 
         else -> {}
+    }
+}
+
+@Composable
+private fun CustomizeDashboardButton(
+    onClick: () -> Unit,
+    color: Color,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        OutlinedButton(
+            onClick = onClick,
+            shape = RoundedCornerShape(24.dp),
+            colors = ButtonDefaults.outlinedButtonColors(
+                containerColor = Color.Transparent,
+                contentColor = color
+            ),
+            border = BorderStroke(1.dp, color),
+            contentPadding = PaddingValues(start = 8.dp, end = 12.dp, top = 0.dp, bottom = 0.dp),
+            modifier = Modifier.height(30.dp)
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_edit_new),
+                contentDescription = null,
+                modifier = Modifier.padding(end = 6.dp).size(16.dp),
+                tint = color
+            )
+            Text(
+                text = stringResource(R.string.customize_dashboard),
+                color = color
+            )
+        }
     }
 }

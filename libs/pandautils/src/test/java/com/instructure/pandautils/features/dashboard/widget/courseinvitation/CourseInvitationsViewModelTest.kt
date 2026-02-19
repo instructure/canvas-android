@@ -21,19 +21,28 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.pandautils.R
 import com.instructure.pandautils.domain.models.enrollment.CourseInvitation
 import com.instructure.pandautils.domain.usecase.enrollment.HandleCourseInvitationParams
 import com.instructure.pandautils.domain.usecase.enrollment.HandleCourseInvitationUseCase
 import com.instructure.pandautils.domain.usecase.enrollment.LoadCourseInvitationsParams
 import com.instructure.pandautils.domain.usecase.enrollment.LoadCourseInvitationsUseCase
+import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
+import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveGlobalConfigUseCase
+import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.ThemedColor
+import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
+import io.mockk.mockkObject
 import io.mockk.unmockkAll
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
@@ -61,6 +70,8 @@ class CourseInvitationsViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
     private val loadCourseInvitationsUseCase: LoadCourseInvitationsUseCase = mockk(relaxed = true)
     private val handleCourseInvitationUseCase: HandleCourseInvitationUseCase = mockk(relaxed = true)
+    private val observeGlobalConfigUseCase: ObserveGlobalConfigUseCase = mockk(relaxed = true)
+    private val crashlytics: FirebaseCrashlytics = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
 
     private lateinit var viewModel: CourseInvitationsViewModel
@@ -70,6 +81,12 @@ class CourseInvitationsViewModelTest {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
         setupStrings()
+
+        coEvery { observeGlobalConfigUseCase(Unit) } returns flowOf(GlobalConfig())
+        every { crashlytics.recordException(any()) } just Runs
+
+        mockkObject(ColorKeeper)
+        every { ColorKeeper.createThemedColor(any()) } returns ThemedColor(0, 0)
     }
 
     private fun setupStrings() {
@@ -306,7 +323,28 @@ class CourseInvitationsViewModelTest {
         assertNull(state.snackbarMessage)
     }
 
+    @Test
+    fun `observeConfig updates color`() = runTest {
+        val testColor = 0xFF00FF00.toInt()
+        val themedColor = ThemedColor(testColor, testColor)
+        every { ColorKeeper.createThemedColor(testColor) } returns themedColor
+        coEvery { observeGlobalConfigUseCase(Unit) } returns flowOf(GlobalConfig(backgroundColor = testColor))
+        coEvery { loadCourseInvitationsUseCase(LoadCourseInvitationsParams(forceRefresh = true)) } returns emptyList()
+
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertEquals(themedColor, state.color)
+    }
+
     private fun createViewModel(): CourseInvitationsViewModel {
-        return CourseInvitationsViewModel(loadCourseInvitationsUseCase, handleCourseInvitationUseCase, resources)
+        return CourseInvitationsViewModel(
+            loadCourseInvitationsUseCase,
+            handleCourseInvitationUseCase,
+            observeGlobalConfigUseCase,
+            crashlytics,
+            resources
+        )
     }
 }

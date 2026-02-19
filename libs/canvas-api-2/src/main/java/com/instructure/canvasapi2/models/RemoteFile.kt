@@ -17,8 +17,11 @@
 
 package com.instructure.canvasapi2.models
 
+import android.webkit.URLUtil
 import com.google.gson.annotations.SerializedName
+import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.toDate
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -59,6 +62,9 @@ data class RemoteFile(
 ) : CanvasModel<RemoteFile>() {
     override val comparisonDate get() = createdAt.toDate()
     override val comparisonString get() = displayName
+
+    @IgnoredOnParcel
+    val isLocalFile = url.isValid() && !URLUtil.isNetworkUrl(url)
 
     fun toAttachment(): Attachment = Attachment(
         id = id,

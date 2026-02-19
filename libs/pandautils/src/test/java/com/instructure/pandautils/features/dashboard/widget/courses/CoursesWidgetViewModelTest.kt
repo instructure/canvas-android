@@ -25,13 +25,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DashboardCard
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.Group
 import com.instructure.pandautils.data.repository.user.UserRepository
 import com.instructure.pandautils.domain.usecase.announcements.LoadCourseAnnouncementsUseCase
+import com.instructure.pandautils.domain.usecase.courses.LoadAllCoursesUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCase
-import com.instructure.pandautils.domain.usecase.courses.LoadFavoriteCoursesParams
-import com.instructure.pandautils.domain.usecase.courses.LoadFavoriteCoursesUseCase
+import com.instructure.pandautils.domain.usecase.courses.LoadDashboardCardsUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadGroupsParams
 import com.instructure.pandautils.domain.usecase.courses.LoadGroupsUseCase
 import com.instructure.pandautils.domain.usecase.offline.ObserveOfflineSyncUpdatesUseCase
@@ -79,7 +80,8 @@ class CoursesWidgetViewModelTest {
     var instantExecutorRule = InstantTaskExecutorRule()
 
     private val testDispatcher = UnconfinedTestDispatcher()
-    private val loadFavoriteCoursesUseCase: LoadFavoriteCoursesUseCase = mockk()
+    private val loadAllCoursesUseCase: LoadAllCoursesUseCase = mockk()
+    private val loadDashboardCardsUseCase: LoadDashboardCardsUseCase = mockk()
     private val loadGroupsUseCase: LoadGroupsUseCase = mockk()
     private val loadCourseUseCase: LoadCourseUseCase = mockk()
     private val loadCourseAnnouncementsUseCase: LoadCourseAnnouncementsUseCase = mockk()
@@ -113,7 +115,8 @@ class CoursesWidgetViewModelTest {
     }
 
     private fun setupDefaultMocks() {
-        coEvery { loadFavoriteCoursesUseCase(any()) } returns emptyList()
+        coEvery { loadAllCoursesUseCase(any()) } returns emptyList()
+        coEvery { loadDashboardCardsUseCase(any()) } returns emptyList()
         coEvery { loadGroupsUseCase(any()) } returns emptyList()
         coEvery { loadCourseAnnouncementsUseCase(any()) } returns emptyList()
         every { sectionExpandedStateDataStore.observeCoursesExpanded() } returns flowOf(true)
@@ -144,10 +147,15 @@ class CoursesWidgetViewModelTest {
             Course(id = 1, name = "Course 1", isFavorite = true),
             Course(id = 2, name = "Course 2", isFavorite = true)
         )
+        val dashboardCards = listOf(
+            DashboardCard(id = 1, position = 0),
+            DashboardCard(id = 2, position = 1)
+        )
         val groups = listOf(
             Group(id = 1, name = "Group 1", isFavorite = true)
         )
-        coEvery { loadFavoriteCoursesUseCase(any()) } returns courses
+        coEvery { loadAllCoursesUseCase(any()) } returns courses
+        coEvery { loadDashboardCardsUseCase(any()) } returns dashboardCards
         coEvery { loadGroupsUseCase(any()) } returns groups
 
         viewModel = createViewModel()
@@ -162,7 +170,7 @@ class CoursesWidgetViewModelTest {
     @Test
     fun `init sets error state when loading fails`() {
         setupDefaultMocks()
-        coEvery { loadFavoriteCoursesUseCase(any()) } throws RuntimeException("Network error")
+        coEvery { loadAllCoursesUseCase(any()) } throws RuntimeException("Network error")
 
         viewModel = createViewModel()
 
@@ -174,13 +182,14 @@ class CoursesWidgetViewModelTest {
     @Test
     fun `refresh reloads data with forceRefresh`() {
         setupDefaultMocks()
-        coEvery { loadFavoriteCoursesUseCase(any()) } returns emptyList()
+        coEvery { loadAllCoursesUseCase(any()) } returns emptyList()
         coEvery { loadGroupsUseCase(any()) } returns emptyList()
 
         viewModel = createViewModel()
         viewModel.refresh()
 
-        coVerify { loadFavoriteCoursesUseCase(LoadFavoriteCoursesParams(forceRefresh = true)) }
+        coVerify { loadAllCoursesUseCase(LoadAllCoursesUseCase.Params(forceRefresh = true)) }
+        coVerify { loadDashboardCardsUseCase(LoadDashboardCardsUseCase.Params(forceRefresh = true)) }
         coVerify { loadGroupsUseCase(LoadGroupsParams(forceRefresh = true)) }
     }
 
@@ -267,7 +276,8 @@ class CoursesWidgetViewModelTest {
                 enrollments = mutableListOf(enrollment)
             )
         )
-        coEvery { loadFavoriteCoursesUseCase(any()) } returns courses
+        coEvery { loadAllCoursesUseCase(any()) } returns courses
+        coEvery { loadDashboardCardsUseCase(any()) } returns courses.map { DashboardCard(id = it.id, position = 0) }
 
         viewModel = createViewModel()
 
@@ -290,7 +300,8 @@ class CoursesWidgetViewModelTest {
             computedCurrentScore = 88.0
         )
         val course = Course(id = 1, name = "Course", isFavorite = true, enrollments = mutableListOf(enrollment))
-        coEvery { loadFavoriteCoursesUseCase(any()) } returns listOf(course)
+        coEvery { loadAllCoursesUseCase(any()) } returns listOf(course)
+        coEvery { loadDashboardCardsUseCase(any()) } returns listOf(DashboardCard(id = 1, position = 0))
 
         viewModel = createViewModel()
 
@@ -307,7 +318,8 @@ class CoursesWidgetViewModelTest {
             computedCurrentScore = 75.0
         )
         val course = Course(id = 1, name = "Course", isFavorite = true, enrollments = mutableListOf(enrollment))
-        coEvery { loadFavoriteCoursesUseCase(any()) } returns listOf(course)
+        coEvery { loadAllCoursesUseCase(any()) } returns listOf(course)
+        coEvery { loadDashboardCardsUseCase(any()) } returns listOf(DashboardCard(id = 1, position = 0))
 
         viewModel = createViewModel()
 
@@ -327,7 +339,8 @@ class CoursesWidgetViewModelTest {
             hideFinalGrades = true,
             enrollments = mutableListOf(enrollment)
         )
-        coEvery { loadFavoriteCoursesUseCase(any()) } returns listOf(course)
+        coEvery { loadAllCoursesUseCase(any()) } returns listOf(course)
+        coEvery { loadDashboardCardsUseCase(any()) } returns listOf(DashboardCard(id = 1, position = 0))
 
         viewModel = createViewModel()
 
@@ -339,7 +352,8 @@ class CoursesWidgetViewModelTest {
     fun `grade is mapped as Hidden when no enrollment`() {
         setupDefaultMocks()
         val course = Course(id = 1, name = "Course", isFavorite = true)
-        coEvery { loadFavoriteCoursesUseCase(any()) } returns listOf(course)
+        coEvery { loadAllCoursesUseCase(any()) } returns listOf(course)
+        coEvery { loadDashboardCardsUseCase(any()) } returns listOf(DashboardCard(id = 1, position = 0))
 
         viewModel = createViewModel()
 
@@ -356,7 +370,8 @@ class CoursesWidgetViewModelTest {
         every { networkStateProvider.isOnlineLiveData } returns MutableLiveData(false)
 
         val courses = listOf(Course(id = 1, name = "Course", isFavorite = true))
-        coEvery { loadFavoriteCoursesUseCase(any()) } returns courses
+        coEvery { loadAllCoursesUseCase(any()) } returns courses
+        coEvery { loadDashboardCardsUseCase(any()) } returns courses.map { DashboardCard(id = it.id, position = 0) }
 
         viewModel = createViewModel()
 
@@ -375,7 +390,8 @@ class CoursesWidgetViewModelTest {
         every { networkStateProvider.isOnlineLiveData } returns MutableLiveData(false)
 
         val courses = listOf(Course(id = 1, name = "Course", isFavorite = true))
-        coEvery { loadFavoriteCoursesUseCase(any()) } returns courses
+        coEvery { loadAllCoursesUseCase(any()) } returns courses
+        coEvery { loadDashboardCardsUseCase(any()) } returns courses.map { DashboardCard(id = it.id, position = 0) }
         coEvery { courseDao.findByIds(setOf(1)) } returns listOf(
             CourseEntity(Course(id = 1, name = "Course"))
         )
@@ -393,7 +409,8 @@ class CoursesWidgetViewModelTest {
         every { networkStateProvider.isOnline() } returns true
 
         val courses = listOf(Course(id = 1, name = "Course", isFavorite = true))
-        coEvery { loadFavoriteCoursesUseCase(any()) } returns courses
+        coEvery { loadAllCoursesUseCase(any()) } returns courses
+        coEvery { loadDashboardCardsUseCase(any()) } returns courses.map { DashboardCard(id = it.id, position = 0) }
 
         viewModel = createViewModel()
 
@@ -404,10 +421,12 @@ class CoursesWidgetViewModelTest {
     @Test
     fun `groups are mapped to GroupCardItems correctly`() {
         setupDefaultMocks()
-        val parentCourse = Course(id = 100, name = "Parent Course")
+        val parentCourse = Course(id = 100, name = "Parent Course", isFavorite = true)
         val groups = listOf(
             Group(id = 1, name = "Study Group", courseId = 100, membersCount = 5, isFavorite = true)
         )
+        coEvery { loadAllCoursesUseCase(any()) } returns listOf(parentCourse)
+        coEvery { loadDashboardCardsUseCase(any()) } returns listOf(DashboardCard(id = 100, position = 0))
         coEvery { loadGroupsUseCase(any()) } returns groups
         coEvery { loadCourseUseCase(any()) } returns parentCourse
 
@@ -441,7 +460,8 @@ class CoursesWidgetViewModelTest {
     fun `onCourseClick delegates to behavior`() {
         setupDefaultMocks()
         val course = Course(id = 1, name = "Course", isFavorite = true)
-        coEvery { loadFavoriteCoursesUseCase(any()) } returns listOf(course)
+        coEvery { loadAllCoursesUseCase(any()) } returns listOf(course)
+        coEvery { loadDashboardCardsUseCase(any()) } returns listOf(DashboardCard(id = 1, position = 0))
 
         viewModel = createViewModel()
         val activity: FragmentActivity = mockk()
@@ -467,7 +487,8 @@ class CoursesWidgetViewModelTest {
     fun `onManageOfflineContent delegates to behavior`() {
         setupDefaultMocks()
         val course = Course(id = 1, name = "Course", isFavorite = true)
-        coEvery { loadFavoriteCoursesUseCase(any()) } returns listOf(course)
+        coEvery { loadAllCoursesUseCase(any()) } returns listOf(course)
+        coEvery { loadDashboardCardsUseCase(any()) } returns listOf(DashboardCard(id = 1, position = 0))
 
         viewModel = createViewModel()
         val activity: FragmentActivity = mockk()
@@ -480,7 +501,8 @@ class CoursesWidgetViewModelTest {
     fun `onCustomizeCourse delegates to behavior`() {
         setupDefaultMocks()
         val course = Course(id = 1, name = "Course", isFavorite = true)
-        coEvery { loadFavoriteCoursesUseCase(any()) } returns listOf(course)
+        coEvery { loadAllCoursesUseCase(any()) } returns listOf(course)
+        coEvery { loadDashboardCardsUseCase(any()) } returns listOf(DashboardCard(id = 1, position = 0))
 
         viewModel = createViewModel()
         val activity: FragmentActivity = mockk()
@@ -521,7 +543,8 @@ class CoursesWidgetViewModelTest {
         every { extras.getBoolean(Const.COURSE_FAVORITES) } returns true
 
         viewModel = createViewModel()
-        coEvery { loadFavoriteCoursesUseCase(LoadFavoriteCoursesParams(forceRefresh = true)) } returns emptyList()
+        coEvery { loadAllCoursesUseCase(LoadAllCoursesUseCase.Params(forceRefresh = true)) } returns emptyList()
+        coEvery { loadDashboardCardsUseCase(LoadDashboardCardsUseCase.Params(forceRefresh = true)) } returns emptyList()
         coEvery { loadGroupsUseCase(LoadGroupsParams(forceRefresh = true)) } returns emptyList()
 
         val receiverSlot = slot<BroadcastReceiver>()
@@ -529,7 +552,8 @@ class CoursesWidgetViewModelTest {
 
         receiverSlot.captured.onReceive(mockk(), intent)
 
-        coVerify { loadFavoriteCoursesUseCase(LoadFavoriteCoursesParams(forceRefresh = true)) }
+        coVerify { loadAllCoursesUseCase(LoadAllCoursesUseCase.Params(forceRefresh = true)) }
+        coVerify { loadDashboardCardsUseCase(LoadDashboardCardsUseCase.Params(forceRefresh = true)) }
         coVerify { loadGroupsUseCase(LoadGroupsParams(forceRefresh = true)) }
     }
 
@@ -549,7 +573,8 @@ class CoursesWidgetViewModelTest {
 
         receiverSlot.captured.onReceive(mockk(), intent)
 
-        coVerify(exactly = 1) { loadFavoriteCoursesUseCase(LoadFavoriteCoursesParams(forceRefresh = false)) }
+        coVerify(exactly = 1) { loadAllCoursesUseCase(LoadAllCoursesUseCase.Params(forceRefresh = false)) }
+        coVerify(exactly = 1) { loadDashboardCardsUseCase(LoadDashboardCardsUseCase.Params(forceRefresh = false)) }
         coVerify(exactly = 1) { loadGroupsUseCase(LoadGroupsParams(forceRefresh = false)) }
     }
 
@@ -557,7 +582,7 @@ class CoursesWidgetViewModelTest {
     fun `exception during load is recorded to crashlytics`() {
         setupDefaultMocks()
         val exception = Exception("Test exception")
-        coEvery { loadFavoriteCoursesUseCase(any()) } throws exception
+        coEvery { loadAllCoursesUseCase(any()) } throws exception
 
         viewModel = createViewModel()
 
@@ -581,7 +606,8 @@ class CoursesWidgetViewModelTest {
             mockk<com.instructure.canvasapi2.models.DiscussionTopicHeader>(relaxed = true)
         )
 
-        coEvery { loadFavoriteCoursesUseCase(any()) } returns courses
+        coEvery { loadAllCoursesUseCase(any()) } returns courses
+        coEvery { loadDashboardCardsUseCase(any()) } returns courses.map { DashboardCard(id = it.id, position = 0) }
         coEvery { loadCourseAnnouncementsUseCase(any()) } returns emptyList()
         coEvery { loadCourseAnnouncementsUseCase(match { it.courseId == 1L }) } returns announcements1
         coEvery { loadCourseAnnouncementsUseCase(match { it.courseId == 2L }) } returns announcements2
@@ -602,7 +628,8 @@ class CoursesWidgetViewModelTest {
         )
         val exception = Exception("Failed to load announcements")
 
-        coEvery { loadFavoriteCoursesUseCase(any()) } returns courses
+        coEvery { loadAllCoursesUseCase(any()) } returns courses
+        coEvery { loadDashboardCardsUseCase(any()) } returns courses.map { DashboardCard(id = it.id, position = 0) }
         coEvery { loadCourseAnnouncementsUseCase(match { it.courseId == 1L }) } throws exception
         coEvery { loadCourseAnnouncementsUseCase(match { it.courseId == 2L }) } returns emptyList()
 
@@ -626,7 +653,8 @@ class CoursesWidgetViewModelTest {
         )
         val activity: FragmentActivity = mockk(relaxed = true)
 
-        coEvery { loadFavoriteCoursesUseCase(any()) } returns courses
+        coEvery { loadAllCoursesUseCase(any()) } returns courses
+        coEvery { loadDashboardCardsUseCase(any()) } returns courses.map { DashboardCard(id = it.id, position = 0) }
         coEvery { loadCourseAnnouncementsUseCase(any()) } returns announcements
 
         viewModel = createViewModel()
@@ -644,7 +672,8 @@ class CoursesWidgetViewModelTest {
         )
         val activity: FragmentActivity = mockk(relaxed = true)
 
-        coEvery { loadFavoriteCoursesUseCase(any()) } returns courses
+        coEvery { loadAllCoursesUseCase(any()) } returns courses
+        coEvery { loadDashboardCardsUseCase(any()) } returns courses.map { DashboardCard(id = it.id, position = 0) }
 
         viewModel = createViewModel()
 
@@ -699,7 +728,8 @@ class CoursesWidgetViewModelTest {
             mockk<com.instructure.canvasapi2.models.DiscussionTopicHeader>(relaxed = true)
         )
 
-        coEvery { loadFavoriteCoursesUseCase(any()) } returns initialCourses
+        coEvery { loadAllCoursesUseCase(any()) } returns initialCourses
+        coEvery { loadDashboardCardsUseCase(any()) } returns initialCourses.map { DashboardCard(id = it.id, position = 0) }
         coEvery { loadCourseUseCase(any()) } returns updatedCourse
         coEvery { loadCourseAnnouncementsUseCase(any()) } returns announcements
 
@@ -727,7 +757,8 @@ class CoursesWidgetViewModelTest {
             Course(id = 1, name = "Course 1", isFavorite = true)
         )
 
-        coEvery { loadFavoriteCoursesUseCase(any()) } returns courses
+        coEvery { loadAllCoursesUseCase(any()) } returns courses
+        coEvery { loadDashboardCardsUseCase(any()) } returns courses.map { DashboardCard(id = it.id, position = 0) }
 
         viewModel = createViewModel()
 
@@ -742,7 +773,7 @@ class CoursesWidgetViewModelTest {
 
         receiverSlot.captured.onReceive(mockk(), intent)
 
-        coVerify(atLeast = 2) { loadFavoriteCoursesUseCase(any()) }
+        coVerify(atLeast = 2) { loadAllCoursesUseCase(any()) }
     }
 
     @Test
@@ -754,7 +785,8 @@ class CoursesWidgetViewModelTest {
         val updatedCourse = Course(id = 1, name = "Updated Course 1", isFavorite = true)
         val exception = Exception("Failed to load announcements")
 
-        coEvery { loadFavoriteCoursesUseCase(any()) } returns initialCourses
+        coEvery { loadAllCoursesUseCase(any()) } returns initialCourses
+        coEvery { loadDashboardCardsUseCase(any()) } returns initialCourses.map { DashboardCard(id = it.id, position = 0) }
         coEvery { loadCourseUseCase(any()) } returns updatedCourse
         coEvery { loadCourseAnnouncementsUseCase(any()) } throws exception
 
@@ -782,7 +814,8 @@ class CoursesWidgetViewModelTest {
         )
         val exception = Exception("Failed to load course")
 
-        coEvery { loadFavoriteCoursesUseCase(any()) } returns initialCourses
+        coEvery { loadAllCoursesUseCase(any()) } returns initialCourses
+        coEvery { loadDashboardCardsUseCase(any()) } returns initialCourses.map { DashboardCard(id = it.id, position = 0) }
         coEvery { loadCourseUseCase(any()) } throws exception
 
         viewModel = createViewModel()
@@ -806,7 +839,8 @@ class CoursesWidgetViewModelTest {
             Course(id = 2, name = "Course 2", isFavorite = true),
             Course(id = 3, name = "Course 3", isFavorite = true)
         )
-        coEvery { loadFavoriteCoursesUseCase(any()) } returns courses
+        coEvery { loadAllCoursesUseCase(any()) } returns courses
+        coEvery { loadDashboardCardsUseCase(any()) } returns courses.map { DashboardCard(id = it.id, position = 0) }
 
         viewModel = createViewModel()
         val initialState = viewModel.uiState.value
@@ -826,7 +860,8 @@ class CoursesWidgetViewModelTest {
             Course(id = 2, name = "Course 2", isFavorite = true),
             Course(id = 3, name = "Course 3", isFavorite = true)
         )
-        coEvery { loadFavoriteCoursesUseCase(any()) } returns courses
+        coEvery { loadAllCoursesUseCase(any()) } returns courses
+        coEvery { loadDashboardCardsUseCase(any()) } returns courses.map { DashboardCard(id = it.id, position = 0) }
 
         viewModel = createViewModel()
 
@@ -846,7 +881,8 @@ class CoursesWidgetViewModelTest {
             Course(id = 2, name = "Course 2", isFavorite = true),
             Course(id = 3, name = "Course 3", isFavorite = true)
         )
-        coEvery { loadFavoriteCoursesUseCase(any()) } returns courses
+        coEvery { loadAllCoursesUseCase(any()) } returns courses
+        coEvery { loadDashboardCardsUseCase(any()) } returns courses.map { DashboardCard(id = it.id, position = 0) }
 
         viewModel = createViewModel()
 
@@ -866,7 +902,8 @@ class CoursesWidgetViewModelTest {
             Course(id = 2, name = "Course 2", isFavorite = true),
             Course(id = 3, name = "Course 3", isFavorite = true)
         )
-        coEvery { loadFavoriteCoursesUseCase(any()) } returns courses
+        coEvery { loadAllCoursesUseCase(any()) } returns courses
+        coEvery { loadDashboardCardsUseCase(any()) } returns courses.map { DashboardCard(id = it.id, position = 0) }
         coEvery { userRepository.updateDashboardPositions(any()) } returns mockk()
 
         viewModel = createViewModel()
@@ -892,7 +929,8 @@ class CoursesWidgetViewModelTest {
             Course(id = 2, name = "Course 2", isFavorite = true)
         )
         val exception = Exception("Failed to update positions")
-        coEvery { loadFavoriteCoursesUseCase(any()) } returns courses
+        coEvery { loadAllCoursesUseCase(any()) } returns courses
+        coEvery { loadDashboardCardsUseCase(any()) } returns courses.map { DashboardCard(id = it.id, position = 0) }
         coEvery { userRepository.updateDashboardPositions(any()) } throws exception
 
         viewModel = createViewModel()
@@ -918,11 +956,12 @@ class CoursesWidgetViewModelTest {
         coEvery { featureFlagProvider.offlineEnabled() } returns true
         coEvery { courseSyncSettingsDao.findAll() } returns syncSettings
         coEvery { courseDao.findByIds(setOf(1, 2, 3)) } returns syncedCourses
-        coEvery { loadFavoriteCoursesUseCase(any()) } returns listOf(
+        coEvery { loadAllCoursesUseCase(any()) } returns listOf(
             Course(id = 1, name = "Course 1"),
             Course(id = 2, name = "Course 2"),
             Course(id = 3, name = "Course 3")
         )
+        coEvery { loadDashboardCardsUseCase(any()) } returns listOf(DashboardCard(id = 1, position = 0), DashboardCard(id = 2, position = 1), DashboardCard(id = 3, position = 2))
 
         viewModel = createViewModel()
 
@@ -943,7 +982,8 @@ class CoursesWidgetViewModelTest {
         val syncUpdateFlow = kotlinx.coroutines.flow.MutableSharedFlow<Unit>()
 
         coEvery { featureFlagProvider.offlineEnabled() } returns true
-        coEvery { loadFavoriteCoursesUseCase(any()) } returns courses
+        coEvery { loadAllCoursesUseCase(any()) } returns courses
+        coEvery { loadDashboardCardsUseCase(any()) } returns courses.map { DashboardCard(id = it.id, position = 0) }
         every { observeOfflineSyncUpdatesUseCase(Unit) } returns syncUpdateFlow
         coEvery { courseSyncSettingsDao.findAll() } returns listOf(
             CourseSyncSettingsEntity(courseId = 1, courseName = "Course 1", fullContentSync = true)
@@ -986,7 +1026,8 @@ class CoursesWidgetViewModelTest {
 
         val networkLiveData = MutableLiveData(false)
         coEvery { featureFlagProvider.offlineEnabled() } returns true
-        coEvery { loadFavoriteCoursesUseCase(any()) } returns courses
+        coEvery { loadAllCoursesUseCase(any()) } returns courses
+        coEvery { loadDashboardCardsUseCase(any()) } returns courses.map { DashboardCard(id = it.id, position = 0) }
         every { observeOfflineSyncUpdatesUseCase(Unit) } returns syncUpdateFlow
         every { networkStateProvider.isOnline() } returns false
         every { networkStateProvider.isOnlineLiveData } returns networkLiveData
@@ -1071,7 +1112,8 @@ class CoursesWidgetViewModelTest {
 
     private fun createViewModel(): CoursesWidgetViewModel {
         return CoursesWidgetViewModel(
-            loadFavoriteCoursesUseCase = loadFavoriteCoursesUseCase,
+            loadAllCoursesUseCase = loadAllCoursesUseCase,
+            loadDashboardCardsUseCase = loadDashboardCardsUseCase,
             loadGroupsUseCase = loadGroupsUseCase,
             loadCourseUseCase = loadCourseUseCase,
             loadCourseAnnouncementsUseCase = loadCourseAnnouncementsUseCase,

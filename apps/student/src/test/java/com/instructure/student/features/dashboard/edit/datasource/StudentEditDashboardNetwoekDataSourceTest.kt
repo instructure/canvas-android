@@ -54,7 +54,7 @@ class StudentEditDashboardNetworkDataSourceTest {
     }
 
     @Test
-    fun `Do not show unpublished future courses`() = runTest {
+    fun `Show unpublished future courses`() = runTest {
         coEvery { courseApi.firstPageCoursesByEnrollmentState("active", any()) } returns
             DataResult.Success(listOf(Course(1, name = "Course 1")))
 
@@ -66,10 +66,11 @@ class StudentEditDashboardNetworkDataSourceTest {
 
         val result = dataSource.getCourses()
 
-        assertEquals(3, result.flatten().size)
+        assertEquals(4, result.flatten().size)
         assertEquals("Course 1", result.flatten().first().name)
         assertEquals("Course 2", result.flatten()[1].name)
         assertEquals("Course 3", result.flatten()[2].name)
+        assertEquals("Course 4", result.flatten()[3].name)
     }
 
     @Test(expected = IllegalStateException::class)

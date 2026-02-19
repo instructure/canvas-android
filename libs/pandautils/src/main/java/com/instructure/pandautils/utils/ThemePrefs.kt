@@ -57,6 +57,8 @@ object ThemePrefs : PrefManager("CanvasTheme") {
     // Used for text buttons (for example dialog buttons) and small image buttons.
     var textButtonColor by ColorPref(R.color.textInfo)
 
+    var logoBackgroundColor by ColorPref(R.color.transparent)
+
     var logoUrl by StringPref()
 
     var mobileLogoUrl by StringPref()
@@ -116,6 +118,8 @@ object ThemePrefs : PrefManager("CanvasTheme") {
         primaryTextColor = parseColor(theme.primaryText, primaryTextColor) // ic-brand-global-nav-menu-item__text-color - Nav Text
 
         val tempButtonColor = parseColor(theme.button, buttonColor) // ic-brand-button--primary-bgd - Primary Button
+
+        logoBackgroundColor = parseColor(theme.mobileLogoBackground, logoBackgroundColor)
 
         buttonColor = ColorUtils.correctContrastForButtonBackground(
             tempButtonColor,

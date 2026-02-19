@@ -46,35 +46,21 @@ class LoadGroupsUseCaseTest {
     }
 
     @Test
-    fun `execute returns only favorite groups`() = runTest {
+    fun `execute returns all groups`() = runTest {
         val groups = listOf(
-            Group(id = 1, name = "Favorite Group", isFavorite = true),
-            Group(id = 2, name = "Non-Favorite Group", isFavorite = false),
-            Group(id = 3, name = "Another Favorite", isFavorite = true)
+            Group(id = 1, name = "Group A", isFavorite = true),
+            Group(id = 2, name = "Group B", isFavorite = false),
+            Group(id = 3, name = "Group C", isFavorite = true)
         )
 
         coEvery { groupRepository.getGroups(any()) } returns DataResult.Success(groups)
 
         val result = useCase(LoadGroupsParams())
 
-        assertEquals(2, result.size)
-        assertTrue(result.all { it.isFavorite })
+        assertEquals(3, result.size)
         assertEquals(1L, result[0].id)
-        assertEquals(3L, result[1].id)
-    }
-
-    @Test
-    fun `execute returns empty list when no favorite groups exist`() = runTest {
-        val groups = listOf(
-            Group(id = 1, name = "Group A", isFavorite = false),
-            Group(id = 2, name = "Group B", isFavorite = false)
-        )
-
-        coEvery { groupRepository.getGroups(any()) } returns DataResult.Success(groups)
-
-        val result = useCase(LoadGroupsParams())
-
-        assertTrue(result.isEmpty())
+        assertEquals(2L, result[1].id)
+        assertEquals(3L, result[2].id)
     }
 
     @Test
@@ -112,11 +98,11 @@ class LoadGroupsUseCaseTest {
     }
 
     @Test
-    fun `execute returns all groups when all are favorites`() = runTest {
+    fun `execute returns all groups from repository`() = runTest {
         val groups = listOf(
             Group(id = 1, name = "Group A", isFavorite = true),
-            Group(id = 2, name = "Group B", isFavorite = true),
-            Group(id = 3, name = "Group C", isFavorite = true)
+            Group(id = 2, name = "Group B", isFavorite = false),
+            Group(id = 3, name = "Group C", isFavorite = false)
         )
 
         coEvery { groupRepository.getGroups(any()) } returns DataResult.Success(groups)
@@ -124,5 +110,6 @@ class LoadGroupsUseCaseTest {
         val result = useCase(LoadGroupsParams())
 
         assertEquals(3, result.size)
+        assertEquals(groups, result)
     }
 }

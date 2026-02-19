@@ -50,7 +50,6 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -155,12 +154,10 @@ fun ConferencesWidgetContent(
                 pagerState = pagerState,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 12.dp, bottom = 16.dp),
+                    .padding(top = 12.dp),
                 activeColor = colorResource(R.color.backgroundDarkest),
                 inactiveColor = colorResource(R.color.backgroundDarkest).copy(alpha = 0.4f)
             )
-        } else {
-            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }

@@ -22,19 +22,27 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.MutableLiveData
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.pandautils.compose.SnackbarMessage
+import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.usecase.EnsureDefaultWidgetsUseCase
+import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveGlobalConfigUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetMetadataUseCase
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.pandautils.utils.ThemedColor
+import io.mockk.Runs
 import io.mockk.clearMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkConstructor
+import io.mockk.mockkObject
 import io.mockk.slot
 import io.mockk.unmockkAll
 import io.mockk.verify
@@ -70,6 +78,8 @@ class DashboardViewModelTest {
     private val observeWidgetMetadataUseCase: ObserveWidgetMetadataUseCase = mockk(relaxed = true)
     private val analytics: Analytics = mockk(relaxed = true)
     private val bundleStorage = mutableMapOf<String, String?>()
+    private val observeGlobalConfigUseCase: ObserveGlobalConfigUseCase = mockk(relaxed = true)
+    private val crashlytics: FirebaseCrashlytics = mockk(relaxed = true)
 
     private lateinit var viewModel: DashboardViewModel
 
@@ -99,10 +109,16 @@ class DashboardViewModelTest {
         every { networkStateProvider.isOnline() } returns true
         every { networkStateProvider.isOnlineLiveData } returns networkStateLiveData
         coEvery { observeWidgetMetadataUseCase(Unit) } returns flowOf(emptyList())
+        coEvery { observeGlobalConfigUseCase(Unit) } returns flowOf(GlobalConfig())
+        every { crashlytics.recordException(any()) } just Runs
+
+        mockkObject(ColorKeeper)
+        every { ColorKeeper.createThemedColor(any()) } returns ThemedColor(0, 0)
     }
 
     private fun createViewModel(): DashboardViewModel {
-        return DashboardViewModel(networkStateProvider, ensureDefaultWidgetsUseCase, observeWidgetMetadataUseCase, analytics)
+        return DashboardViewModel(networkStateProvider, ensureDefaultWidgetsUseCase, observeWidgetMetadataUseCase, analytics, observeGlobalConfigUseCase,
+            crashlytics)
     }
 
     @After
@@ -526,5 +542,19 @@ class DashboardViewModelTest {
         assertEquals("1", capturedBundle.getString("courses"))
         // Hidden widgets should report -1
         assertEquals("-1", capturedBundle.getString("todo"))
+    }
+
+    @Test
+    fun testObserveConfigUpdatesColor() = runTest {
+        val testColor = 0xFF00FF00.toInt()
+        val themedColor = ThemedColor(testColor, testColor)
+        every { ColorKeeper.createThemedColor(testColor) } returns themedColor
+        coEvery { observeGlobalConfigUseCase(Unit) } returns flowOf(GlobalConfig(backgroundColor = testColor))
+
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertEquals(themedColor, state.color)
     }
 }

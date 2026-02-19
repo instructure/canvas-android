@@ -44,7 +44,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import kotlinx.coroutines.launch
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -61,7 +60,8 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.PagerIndicator
 import com.instructure.pandautils.domain.models.enrollment.CourseInvitation
-import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
+import com.instructure.pandautils.utils.ThemedColor
 import kotlinx.coroutines.flow.SharedFlow
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -148,6 +148,7 @@ fun CourseInvitationsContent(
                         onAccept = { uiState.onAcceptInvitation(invitation) },
                         onDecline = { invitationToDecline = invitation },
                         actionsEnabled = isOnline,
+                        buttonColor = Color(uiState.color.color()),
                         modifier = Modifier.weight(1f)
                     )
                 }
@@ -163,12 +164,10 @@ fun CourseInvitationsContent(
                 pagerState = pagerState,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 12.dp, bottom = 16.dp),
+                    .padding(top = 12.dp),
                 activeColor = colorResource(R.color.backgroundDarkest),
                 inactiveColor = colorResource(R.color.backgroundDarkest).copy(alpha = 0.4f)
             )
-        } else {
-            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 
@@ -226,6 +225,7 @@ private fun InvitationCard(
     onAccept: () -> Unit,
     onDecline: () -> Unit,
     actionsEnabled: Boolean = true,
+    buttonColor: Color,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -259,34 +259,6 @@ private fun InvitationCard(
                     .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Button(
-                    onClick = onAccept,
-                    enabled = actionsEnabled,
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(32.dp),
-                    shape = RoundedCornerShape(100.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(ThemePrefs.brandColor),
-                        contentColor = colorResource(R.color.textLightest),
-                        disabledContainerColor = Color(ThemePrefs.brandColor).copy(alpha = 0.5f),
-                        disabledContentColor = colorResource(R.color.textLightest).copy(alpha = 0.5f)
-                    ),
-                    elevation = ButtonDefaults.buttonElevation(
-                        defaultElevation = 0.dp,
-                        pressedElevation = 0.dp,
-                        focusedElevation = 0.dp
-                    ),
-                    contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp)
-                ) {
-                    Text(
-                        text = stringResource(R.string.acceptCourseInvitation),
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        textAlign = TextAlign.Center
-                    )
-                }
-
                 OutlinedButton(
                     onClick = onDecline,
                     enabled = actionsEnabled,
@@ -311,6 +283,34 @@ private fun InvitationCard(
                         text = stringResource(R.string.declineCourseInvitation),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Normal,
+                        textAlign = TextAlign.Center
+                    )
+                }
+
+                Button(
+                    onClick = onAccept,
+                    enabled = actionsEnabled,
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(32.dp),
+                    shape = RoundedCornerShape(100.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = buttonColor,
+                        contentColor = colorResource(R.color.textLightest),
+                        disabledContainerColor = buttonColor.copy(alpha = 0.5f),
+                        disabledContentColor = colorResource(R.color.textLightest).copy(alpha = 0.5f)
+                    ),
+                    elevation = ButtonDefaults.buttonElevation(
+                        defaultElevation = 0.dp,
+                        pressedElevation = 0.dp,
+                        focusedElevation = 0.dp
+                    ),
+                    contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.acceptCourseInvitation),
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.SemiBold,
                         textAlign = TextAlign.Center
                     )
                 }
