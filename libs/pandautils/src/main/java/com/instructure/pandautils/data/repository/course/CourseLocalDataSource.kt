@@ -33,23 +33,7 @@ class CourseLocalDataSource(
     }
 
     override suspend fun getCourses(forceRefresh: Boolean): DataResult<List<Course>> {
-        val syncedCourses = courseFacade.getAllCourses()
-        val syncedCourseIds = syncedCourses.map { it.id }.toSet()
-
-        val dashboardCards = dashboardCardDao.findAll()
-        val unsyncedCourses = dashboardCards
-            .filter { it.id !in syncedCourseIds }
-            .map { card ->
-                Course(
-                    id = card.id,
-                    name = card.shortName ?: card.originalName.orEmpty(),
-                    originalName = card.originalName,
-                    courseCode = card.courseCode,
-                    isFavorite = true
-                )
-            }
-
-        return DataResult.Success(syncedCourses + unsyncedCourses)
+        return DataResult.Success(courseFacade.getAllCourses())
     }
 
     override suspend fun getFavoriteCourses(forceRefresh: Boolean): DataResult<List<Course>> {

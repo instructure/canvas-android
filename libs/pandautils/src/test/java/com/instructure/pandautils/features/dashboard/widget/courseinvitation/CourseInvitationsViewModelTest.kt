@@ -21,6 +21,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.MutableLiveData
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.pandautils.R
 import com.instructure.pandautils.domain.models.enrollment.CourseInvitation
@@ -31,6 +32,7 @@ import com.instructure.pandautils.domain.usecase.enrollment.LoadCourseInvitation
 import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveGlobalConfigUseCase
 import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.ThemedColor
 import io.mockk.Runs
 import io.mockk.coEvery
@@ -71,6 +73,7 @@ class CourseInvitationsViewModelTest {
     private val loadCourseInvitationsUseCase: LoadCourseInvitationsUseCase = mockk(relaxed = true)
     private val handleCourseInvitationUseCase: HandleCourseInvitationUseCase = mockk(relaxed = true)
     private val observeGlobalConfigUseCase: ObserveGlobalConfigUseCase = mockk(relaxed = true)
+    private val networkStateProvider: NetworkStateProvider = mockk()
     private val crashlytics: FirebaseCrashlytics = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
 
@@ -83,6 +86,7 @@ class CourseInvitationsViewModelTest {
         setupStrings()
 
         coEvery { observeGlobalConfigUseCase(Unit) } returns flowOf(GlobalConfig())
+        every { networkStateProvider.isOnlineLiveData } returns MutableLiveData(true)
         every { crashlytics.recordException(any()) } just Runs
 
         mockkObject(ColorKeeper)
@@ -343,6 +347,7 @@ class CourseInvitationsViewModelTest {
             loadCourseInvitationsUseCase,
             handleCourseInvitationUseCase,
             observeGlobalConfigUseCase,
+            networkStateProvider,
             crashlytics,
             resources
         )

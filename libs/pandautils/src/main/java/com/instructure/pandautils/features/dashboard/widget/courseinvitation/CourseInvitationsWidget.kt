@@ -60,8 +60,6 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.PagerIndicator
 import com.instructure.pandautils.domain.models.enrollment.CourseInvitation
-import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
-import com.instructure.pandautils.utils.ThemedColor
 import kotlinx.coroutines.flow.SharedFlow
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -70,15 +68,14 @@ fun CourseInvitationsWidget(
     refreshSignal: SharedFlow<Unit>,
     columns: Int,
     onShowSnackbar: (String, String?, (() -> Unit)?) -> Unit,
-    isOnline: Boolean = true,
     modifier: Modifier = Modifier
 ) {
     val viewModel: CourseInvitationsViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
 
-    LaunchedEffect(refreshSignal, isOnline) {
+    LaunchedEffect(refreshSignal) {
         refreshSignal.collect {
-            if (isOnline) {
+            if (uiState.isOnline) {
                 uiState.onRefresh()
             }
         }
@@ -94,8 +91,7 @@ fun CourseInvitationsWidget(
     CourseInvitationsContent(
         modifier = modifier,
         uiState = uiState,
-        columns = columns,
-        isOnline = isOnline
+        columns = columns
     )
 }
 
@@ -104,8 +100,7 @@ fun CourseInvitationsWidget(
 fun CourseInvitationsContent(
     modifier: Modifier = Modifier,
     uiState: CourseInvitationsUiState,
-    columns: Int,
-    isOnline: Boolean = true
+    columns: Int
 ) {
     if (uiState.loading || uiState.error || uiState.invitations.isEmpty()) {
         return
@@ -147,7 +142,7 @@ fun CourseInvitationsContent(
                         invitation = invitation,
                         onAccept = { uiState.onAcceptInvitation(invitation) },
                         onDecline = { invitationToDecline = invitation },
-                        actionsEnabled = isOnline,
+                        actionsEnabled = uiState.isOnline,
                         buttonColor = Color(uiState.color.color()),
                         modifier = Modifier.weight(1f)
                     )

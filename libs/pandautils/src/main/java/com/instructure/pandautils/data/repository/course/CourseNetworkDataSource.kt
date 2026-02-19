@@ -40,7 +40,7 @@ class CourseNetworkDataSource(
     }
 
     override suspend fun getFavoriteCourses(forceRefresh: Boolean): DataResult<List<Course>> {
-        val params = RestParams(isForceReadFromNetwork = forceRefresh)
+        val params = RestParams(isForceReadFromNetwork = forceRefresh, usePerPageQueryParam = true)
         return courseApi.getFavoriteCourses(params).depaginate { nextUrl ->
             courseApi.next(nextUrl, params)
         }

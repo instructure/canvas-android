@@ -59,57 +59,16 @@ class CourseLocalDataSourceTest {
     fun `getCourses returns synced courses from facade`() = runTest {
         val courses = listOf(Course(id = 1, name = "Course 1"), Course(id = 2, name = "Course 2"))
         coEvery { courseFacade.getAllCourses() } returns courses
-        coEvery { dashboardCardDao.findAll() } returns courses.map { DashboardCardEntity(DashboardCard(it.id)) }
 
         val result = dataSource.getCourses(false)
 
         assertTrue(result is DataResult.Success)
-        assertEquals(2, (result as DataResult.Success).data.size)
+        assertEquals(courses, (result as DataResult.Success).data)
     }
 
     @Test
-    fun `getCourses includes unsynced courses from dashboard cards`() = runTest {
-        val syncedCourse = Course(id = 1, name = "Synced Course", isFavorite = true)
-        coEvery { courseFacade.getAllCourses() } returns listOf(syncedCourse)
-        coEvery { dashboardCardDao.findAll() } returns listOf(
-            DashboardCardEntity(DashboardCard(id = 1, shortName = "Synced Course")),
-            DashboardCardEntity(DashboardCard(id = 2, shortName = "Unsynced Course", courseCode = "UC101")),
-            DashboardCardEntity(DashboardCard(id = 3, shortName = "Another Unsynced", originalName = "Original Name"))
-        )
-
-        val result = dataSource.getCourses(false)
-
-        assertTrue(result is DataResult.Success)
-        val data = (result as DataResult.Success).data
-        assertEquals(3, data.size)
-        assertEquals(syncedCourse, data[0])
-        assertEquals(2L, data[1].id)
-        assertEquals("Unsynced Course", data[1].name)
-        assertEquals("UC101", data[1].courseCode)
-        assertTrue(data[1].isFavorite)
-        assertEquals(3L, data[2].id)
-        assertEquals("Another Unsynced", data[2].name)
-        assertEquals("Original Name", data[2].originalName)
-    }
-
-    @Test
-    fun `getCourses uses originalName when shortName is null for unsynced courses`() = runTest {
+    fun `getCourses returns empty when no synced courses`() = runTest {
         coEvery { courseFacade.getAllCourses() } returns emptyList()
-        coEvery { dashboardCardDao.findAll() } returns listOf(
-            DashboardCardEntity(DashboardCard(id = 1, shortName = null, originalName = "Original Name"))
-        )
-
-        val result = dataSource.getCourses(false)
-
-        assertTrue(result is DataResult.Success)
-        val data = (result as DataResult.Success).data
-        assertEquals("Original Name", data[0].name)
-    }
-
-    @Test
-    fun `getCourses returns empty when no synced courses and no dashboard cards`() = runTest {
-        coEvery { courseFacade.getAllCourses() } returns emptyList()
-        coEvery { dashboardCardDao.findAll() } returns emptyList()
 
         val result = dataSource.getCourses(false)
 

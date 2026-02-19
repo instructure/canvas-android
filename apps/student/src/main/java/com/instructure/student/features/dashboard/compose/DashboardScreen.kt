@@ -228,7 +228,6 @@ fun DashboardScreenContent(
                         refreshSignal = refreshSignal,
                         onShowSnackbar = onShowSnackbar,
                         router = router,
-                        isOnline = uiState.isOnline,
                         color = uiState.color,
                         modifier = Modifier.fillMaxSize()
                     )
@@ -253,7 +252,6 @@ private fun WidgetList(
     refreshSignal: SharedFlow<Unit>,
     onShowSnackbar: (String, String?, (() -> Unit)?) -> Unit,
     router: DashboardRouter,
-    isOnline: Boolean,
     color: ThemedColor,
     modifier: Modifier = Modifier
 ) {
@@ -272,7 +270,7 @@ private fun WidgetList(
             items = widgets,
             key = { it.id }
         ) { metadata ->
-            GetWidgetComposable(metadata.id, refreshSignal, columns, onShowSnackbar, router, isOnline, modifier = Modifier.padding(top = 16.dp))
+            GetWidgetComposable(metadata.id, refreshSignal, columns, onShowSnackbar, router, modifier = Modifier.padding(top = 16.dp))
         }
 
         item {
@@ -294,7 +292,6 @@ private fun GetWidgetComposable(
     columns: Int,
     onShowSnackbar: (String, String?, (() -> Unit)?) -> Unit,
     router: DashboardRouter,
-    isOnline: Boolean,
     modifier: Modifier = Modifier
 ) {
     return when (widgetId) {
@@ -318,7 +315,6 @@ private fun GetWidgetComposable(
             refreshSignal = refreshSignal,
             columns = columns,
             onShowSnackbar = onShowSnackbar,
-            isOnline = isOnline,
             modifier = modifier
         )
 

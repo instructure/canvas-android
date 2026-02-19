@@ -27,18 +27,16 @@ import androidx.lifecycle.viewModelScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.DashboardCard
 import com.instructure.canvasapi2.models.DashboardPositions
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
 import com.instructure.pandautils.data.repository.user.UserRepository
 import com.instructure.pandautils.domain.usecase.announcements.LoadCourseAnnouncementsUseCase
-import com.instructure.pandautils.domain.usecase.courses.LoadAllCoursesUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCaseParams
-import com.instructure.pandautils.domain.usecase.courses.LoadDashboardCardsUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadGroupsParams
 import com.instructure.pandautils.domain.usecase.courses.LoadGroupsUseCase
+import com.instructure.pandautils.domain.usecase.courses.LoadVisibleCoursesUseCase
 import com.instructure.pandautils.domain.usecase.offline.ObserveOfflineSyncUpdatesUseCase
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.courses.model.CourseCardItem
@@ -69,8 +67,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CoursesWidgetViewModel @Inject constructor(
-    private val loadAllCoursesUseCase: LoadAllCoursesUseCase,
-    private val loadDashboardCardsUseCase: LoadDashboardCardsUseCase,
+    private val loadVisibleCoursesUseCase: LoadVisibleCoursesUseCase,
     private val loadGroupsUseCase: LoadGroupsUseCase,
     private val loadCourseUseCase: LoadCourseUseCase,
     private val loadCourseAnnouncementsUseCase: LoadCourseAnnouncementsUseCase,
@@ -222,14 +219,11 @@ class CoursesWidgetViewModel @Inject constructor(
             try {
                 val isOnline = networkStateProvider.isOnline()
 
-                allCourses = loadAllCoursesUseCase(LoadAllCoursesUseCase.Params(forceRefresh))
-                val dashboardCards = loadDashboardCardsUseCase(LoadDashboardCardsUseCase.Params(forceRefresh))
+                val result = loadVisibleCoursesUseCase(LoadVisibleCoursesUseCase.Params(forceRefresh))
+                allCourses = result.allCourses
+                visibleCourses = result.visibleCourses
 
                 val coursesMap = allCourses.associateBy { it.id }
-
-                visibleCourses = dashboardCards
-                    .map { createCourseFromDashboardCard(it, coursesMap) }
-                    .sortedBy { course -> dashboardCards.find { it.id == course.id }?.position ?: Int.MAX_VALUE }
 
                 val allGroups = if (isOnline) {
                     loadGroupsUseCase(LoadGroupsParams(forceRefresh))
@@ -271,12 +265,6 @@ class CoursesWidgetViewModel @Inject constructor(
                 crashlytics.recordException(e)
             }
         }
-    }
-
-    private fun createCourseFromDashboardCard(dashboardCard: DashboardCard, courseMap: Map<Long, Course>): Course {
-        val course = courseMap[dashboardCard.id]
-        return course
-            ?: Course(id = dashboardCard.id, name = dashboardCard.shortName ?: "", originalName = dashboardCard.originalName, courseCode = dashboardCard.courseCode)
     }
 
     private suspend fun mapCoursesToCardItems(
