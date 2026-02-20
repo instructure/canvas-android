@@ -502,4 +502,8 @@
         <item quantity="other">%d Mnt</item>
     </plurals>
     <string name="notATeacherDescription">Salah satu app kami yang lain mungkin lebih cocok. Ketuk ikon untuk login di sana.</string>
+    <string name="gradePercentAccessibility">Nilai: %d persen</string>
+    <string name="gradePointsAccessibility">Nilai: %s poin</string>
+    <string name="gradePercentTextFieldAccessibility">Nilai: %d persen, %s</string>
+    <string name="gradePointsTextFieldAccessibility">Nilai: %s poin, %s</string>
 </resources>

@@ -421,8 +421,8 @@
     <string name="submitted_late">늦게 제출됨</string>
     <string name="havent_submitted_yet">아직 제출되지 않음</string>
     <string name="havent_been_graded">채점되지 않음</string>
-    <string name="scored_less_than">미만 점수 획득&#8230;</string>
-    <string name="scored_more_than">초과 점수 획득&#8230;</string>
+    <string name="scored_less_than">다음 점수 미만 획득</string>
+    <string name="scored_more_than">다음 점수 초과 획득</string>
     <string name="scored_less_than_value">%s 미만 점수 획득</string>
     <string name="scored_more_than_value">%s 초과 점수 획득</string>
     <string name="add_comment">의견/댓글 추가</string>

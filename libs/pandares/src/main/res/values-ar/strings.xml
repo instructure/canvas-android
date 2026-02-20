@@ -297,6 +297,7 @@
     <string name="checkBoxWhatIfGradeOption">عرض النتيجة المفترضة</string>
     <string name="whatIfDialogText">النتيجة المفترضة</string>
     <string name="whatIfScoreExceedsMaximum">لا يمكن أن تتجاوز الدرجات الحد الأقصى من النقاط</string>
+    <string name="whatIfScoreExceedsMaximumWarning">تتجاوز الدرجة الحد الأقصى من النقاط</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s من إجمالي %2$s نقاط، %3$s</string>
     <string name="inbox">علبة الوارد</string>
@@ -2058,6 +2059,15 @@
     <string name="courseDetailsMessageContentDescription">إرسال رسالة حول هذا المساق</string>
     <string name="gradeLockedContentDescription">تم قفل الدرجة</string>
     <string name="gradesRefreshFailed">تعذر تحديث الدرجات</string>
+    <string name="showWhatIfScore">عرض نتيجة What-if</string>
+    <string name="editWhatIfScore">تحرير درجة What-if</string>
+    <string name="editWhatIfScoreTitle">تحرير درجة What-if</string>
+    <string name="whatIfScoreLabel">What-if</string>
+    <string name="whatIfScoreCurrentGraded">درجة %1$.0f من %2$.0f</string>
+    <string name="whatIfScoreCurrentUngraded">لم يتم التقييم بالدرجات، الحد الأقصى للدرجة هو %.0f</string>
+    <string name="whatIfScoreDisplay">What-if: %s</string>
+    <string name="gradesBasedOnGradedAndWhatIf">بناءً على المهام التي تم تقييمها، ودرجة What-if</string>
+    <string name="clearWhatIfScore">مسح درجة What-if</string>
     <string name="chooseACourseToMessage">اختر مساقاً لإرسال رسالة</string>
     <string name="regardingHiddenMessage">بخصوص: %1$s، %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">بخصوص: %1$s، المهمة - %2$s</string>

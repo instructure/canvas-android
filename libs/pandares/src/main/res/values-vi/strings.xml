@@ -278,6 +278,7 @@
     <string name="checkBoxWhatIfGradeOption">Hiển Thị Điểm Giả Định</string>
     <string name="whatIfDialogText">Điểm Giả Định</string>
     <string name="whatIfScoreExceedsMaximum">Điểm không được vượt quá điểm thành phần tối đa</string>
+    <string name="whatIfScoreExceedsMaximumWarning">Điểm vượt quá điểm thành phần tối đa</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s trên tổng số %2$s điểm thành phần, %3$s</string>
     <string name="inbox">Hộp Thư Đến</string>
@@ -1924,6 +1925,15 @@
     <string name="courseDetailsMessageContentDescription">Gửi tin nhắn về khóa học này</string>
     <string name="gradeLockedContentDescription">Đã khóa điểm</string>
     <string name="gradesRefreshFailed">Làm mới điểm thất bại</string>
+    <string name="showWhatIfScore">Hiển Thị Điểm Giả Định</string>
+    <string name="editWhatIfScore">Chỉnh Sửa Điểm Giả Định</string>
+    <string name="editWhatIfScoreTitle">Chỉnh Sửa Điểm Giả Định</string>
+    <string name="whatIfScoreLabel">Giả định</string>
+    <string name="whatIfScoreCurrentGraded">Điểm %1$.0f / %2$.0f</string>
+    <string name="whatIfScoreCurrentUngraded">Chưa chấm điểm, điểm tối đa %.0f</string>
+    <string name="whatIfScoreDisplay">Giả Định: %s</string>
+    <string name="gradesBasedOnGradedAndWhatIf">Dựa trên các bài tập đã được chấm điểm, và Điểm Giả Định</string>
+    <string name="clearWhatIfScore">Xóa Điểm Giả Định</string>
     <string name="chooseACourseToMessage">Chọn khóa học để nhắn tin</string>
     <string name="regardingHiddenMessage">Về việc: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">Về việc: %1$s, Bài Tập - %2$s</string>
