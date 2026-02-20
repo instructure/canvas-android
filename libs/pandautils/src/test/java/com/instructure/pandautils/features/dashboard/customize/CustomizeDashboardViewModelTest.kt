@@ -33,8 +33,8 @@ import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveGloba
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetConfigUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetMetadataUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.SwapWidgetPositionsUseCase
-import com.instructure.pandautils.features.dashboard.widget.usecase.UpdateNewDashboardPreferenceUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.ToggleWidgetVisibilityUseCase
+import com.instructure.pandautils.features.dashboard.widget.usecase.UpdateNewDashboardPreferenceUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.UpdateWidgetConfigUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
