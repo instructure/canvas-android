@@ -2408,6 +2408,7 @@
     <string name="changing_dashboard_layout">Changing dashboard layout</string>
     <string name="changing_dashboard_layout_message">To change the dashboard layout you have to restart the application</string>
     <string name="restart_now">Restart now</string>
+    <string name="turn_on_new_dashboard">Turn on the new dashboard</string>
     <string name="switched_back">Switched back?</string>
     <string name="switched_back_message">Thanks for trying the new dashboard! Could you tell us why you switched back?</string>
     <string name="survey_option_hard_to_find">Hard to find things</string>
