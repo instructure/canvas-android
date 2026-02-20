@@ -197,7 +197,10 @@ class LearnLearningLibraryItemViewModel @Inject constructor(
                 it.copy(
                     items = it.items.map { collectionItemState ->
                         if (collectionItemState.id == itemId) {
-                            collectionItemState.copy(isBookmarked = newIsBookmarked)
+                            collectionItemState.copy(
+                                isBookmarked = newIsBookmarked,
+                                bookmarkLoading = false
+                            )
                         } else {
                             collectionItemState
                         }
