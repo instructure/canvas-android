@@ -432,7 +432,7 @@ class CustomizeDashboardViewModelTest {
     @Test
     fun testTrackDashboardSurvey() = runTest {
         viewModel = createViewModel()
-        viewModel.trackDashboardSurvey(AnalyticsEventConstants.SURVEY_OPTION_HARD_TO_FIND, "The navigation was confusing")
+        viewModel.trackDashboardSurvey(AnalyticsEventConstants.SURVEY_OPTION_HARD_TO_FIND)
 
         val bundleSlot = slot<Bundle>()
         verify {
@@ -443,13 +443,12 @@ class CustomizeDashboardViewModelTest {
         }
 
         assertEquals(AnalyticsEventConstants.SURVEY_OPTION_HARD_TO_FIND, bundleSlot.captured.getString(AnalyticsParamConstants.SELECTED_REASON))
-        assertEquals("The navigation was confusing", bundleSlot.captured.getString(AnalyticsParamConstants.ADDITIONAL_FEEDBACK))
     }
 
     @Test
     fun testTrackDashboardSurveyWithEmptyFeedback() = runTest {
         viewModel = createViewModel()
-        viewModel.trackDashboardSurvey(AnalyticsEventConstants.SURVEY_OPTION_PREFER_OLD_LAYOUT, "")
+        viewModel.trackDashboardSurvey(AnalyticsEventConstants.SURVEY_OPTION_PREFER_OLD_LAYOUT)
 
         val bundleSlot = slot<Bundle>()
         verify {
@@ -460,6 +459,5 @@ class CustomizeDashboardViewModelTest {
         }
 
         assertEquals(AnalyticsEventConstants.SURVEY_OPTION_PREFER_OLD_LAYOUT, bundleSlot.captured.getString(AnalyticsParamConstants.SELECTED_REASON))
-        assertEquals("", bundleSlot.captured.getString(AnalyticsParamConstants.ADDITIONAL_FEEDBACK))
     }
 }

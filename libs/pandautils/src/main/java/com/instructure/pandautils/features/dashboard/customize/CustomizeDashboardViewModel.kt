@@ -67,7 +67,8 @@ class CustomizeDashboardViewModel @Inject constructor(
             onMoveDown = this::moveWidgetDown,
             onToggleVisibility = this::toggleVisibility,
             onToggleDashboardRedesign = this::toggleDashboardRedesign,
-            onUpdateSetting = this::updateSetting
+            onUpdateSetting = this::updateSetting,
+            feedbackUrl = remoteConfigPrefs.getString(RemoteConfigParam.DASHBOARD_FEEDBACK_URL.rc_name, "").orEmpty()
         )
     )
     val uiState: StateFlow<CustomizeDashboardUiState> = _uiState.asStateFlow()
@@ -211,10 +212,9 @@ class CustomizeDashboardViewModel @Inject constructor(
         }
     }
 
-    fun trackDashboardSurvey(selectedOption: String, userFeedback: String) {
+    fun trackDashboardSurvey(selectedOption: String) {
         val bundle = Bundle().apply {
             putString(AnalyticsParamConstants.SELECTED_REASON, selectedOption)
-            putString(AnalyticsParamConstants.ADDITIONAL_FEEDBACK, userFeedback)
         }
         analytics.logEvent(AnalyticsEventConstants.DASHBOARD_SURVEY_SUBMITTED, bundle)
     }

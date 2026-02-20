@@ -2413,6 +2413,9 @@
     <string name="survey_option_prefer_old_layout">Prefer the old layout</string>
     <string name="survey_option_something_broken">Something didn\'t work right</string>
     <string name="what_could_we_improve">What could we improve?</string>
+    <string name="what_do_you_think_of_new_dashboard">What do you think of the new dashboard?</string>
+    <string name="let_us_know">Let us know!</string>
+    <string name="no_app_to_handle_link">No app available to open this link</string>
     <string name="skip">Skip</string>
     <string name="widget_setting_show_greeting">Show greeting</string>
     <string name="background_color">Background color</string>
