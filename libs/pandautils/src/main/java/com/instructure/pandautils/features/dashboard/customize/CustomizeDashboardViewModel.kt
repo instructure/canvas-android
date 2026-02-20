@@ -33,8 +33,8 @@ import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetConfigUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetMetadataUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.SwapWidgetPositionsUseCase
+import com.instructure.pandautils.features.dashboard.widget.usecase.ToggleWidgetVisibilityUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.UpdateWidgetConfigUseCase
-import com.instructure.pandautils.features.dashboard.widget.usecase.UpdateWidgetVisibilityUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -52,7 +52,7 @@ import javax.inject.Inject
 class CustomizeDashboardViewModel @Inject constructor(
     private val observeWidgetMetadataUseCase: ObserveWidgetMetadataUseCase,
     private val swapWidgetPositionsUseCase: SwapWidgetPositionsUseCase,
-    private val updateWidgetVisibilityUseCase: UpdateWidgetVisibilityUseCase,
+    private val toggleWidgetVisibilityUseCase: ToggleWidgetVisibilityUseCase,
     private val observeWidgetConfigUseCase: ObserveWidgetConfigUseCase,
     private val updateWidgetConfigUseCase: UpdateWidgetConfigUseCase,
     private val resources: Resources,
@@ -181,11 +181,11 @@ class CustomizeDashboardViewModel @Inject constructor(
     }
 
     private fun toggleVisibility(widgetId: String) {
-        val widgetItem = _uiState.value.widgets.firstOrNull { it.metadata.id == widgetId } ?: return
+        val widgetsMetadata = _uiState.value.widgets.map { it.metadata }
 
         viewModelScope.launch {
-            updateWidgetVisibilityUseCase(
-                UpdateWidgetVisibilityUseCase.Params(widgetId, !widgetItem.metadata.isVisible)
+            toggleWidgetVisibilityUseCase(
+                ToggleWidgetVisibilityUseCase.Params(widgetId, widgetsMetadata)
             )
         }
     }

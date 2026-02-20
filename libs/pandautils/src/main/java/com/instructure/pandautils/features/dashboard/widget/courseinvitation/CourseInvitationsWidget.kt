@@ -19,6 +19,7 @@ package com.instructure.pandautils.features.dashboard.widget.courseinvitation
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -102,7 +103,14 @@ fun CourseInvitationsContent(
     uiState: CourseInvitationsUiState,
     columns: Int
 ) {
-    if (uiState.loading || uiState.error || uiState.invitations.isEmpty()) {
+    if (uiState.loading) {
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .height(1.dp))
+        return
+    }
+
+    if (uiState.error || uiState.invitations.isEmpty()) {
         return
     }
 

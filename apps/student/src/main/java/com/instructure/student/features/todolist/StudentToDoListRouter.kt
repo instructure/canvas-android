@@ -53,6 +53,6 @@ class StudentToDoListRouter(
         val route = CalendarFragment.makeRoute()
         RouteMatcher.route(activity, route)
 
-        calendarSharedEvents.sendEvent(activity.lifecycleScope, SharedCalendarAction.SelectDay(date))
+        calendarSharedEvents.sendEvent(activity.lifecycleScope, SharedCalendarAction.SelectDay(date, true))
     }
 }

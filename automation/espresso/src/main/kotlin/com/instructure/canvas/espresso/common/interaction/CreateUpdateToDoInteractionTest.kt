@@ -63,7 +63,6 @@ abstract class CreateUpdateToDoInteractionTest : CanvasComposeTest() {
         calendarToDoCreateUpdatePage.clickSave()
 
         composeTestRule.waitForIdle()
-        calendarScreenPage.swipeEventsLeft()
         calendarScreenPage.assertItemDetails("New Todo", "To Do")
     }
 
