@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.AnalyticsParamConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.RemoteConfigPrefs
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
 import com.instructure.pandautils.features.dashboard.widget.SettingType
@@ -77,6 +78,7 @@ class CustomizeDashboardViewModelTest {
     private val observeGlobalConfigUseCase: ObserveGlobalConfigUseCase = mockk(relaxed = true)
     private val updateNewDashboardPreferenceUseCase: UpdateNewDashboardPreferenceUseCase = mockk(relaxed = true)
     private val analytics: Analytics = mockk(relaxed = true)
+    private val remoteConfigPrefs: RemoteConfigPrefs = mockk(relaxed = true)
     private val bundleStorage = mutableMapOf<String, String?>()
 
     private lateinit var viewModel: CustomizeDashboardViewModel
@@ -126,7 +128,8 @@ class CustomizeDashboardViewModelTest {
             apiPrefs,
             observeGlobalConfigUseCase,
             updateNewDashboardPreferenceUseCase,
-            analytics
+            analytics,
+            remoteConfigPrefs
         )
     }
 
