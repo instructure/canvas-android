@@ -2143,7 +2143,7 @@
     <string name="settingsSwitchExperience">Switch to Canvas Career</string>
 
     <string name="forecastWidgetTitle">Weekly Summary</string>
-    <string name="forecastWidgetWeekPeriod">Week #%1$d | %2$s</string>
+    <string name="forecastWidgetWeekPeriod">Week %1$d | %2$s</string>
     <string name="forecastWidgetMissing">Missing</string>
     <string name="forecastWidgetDue">Due</string>
     <string name="forecastWidgetRecentGrades">New Grades</string>
@@ -2151,7 +2151,7 @@
     <string name="forecastWidgetErrorMessage">We\'re having trouble loading your assignments. Please check your connection and try again.</string>
     <string name="forecastWidgetEmptyMissing">No missing assignments. You\'re all caught up!</string>
     <string name="forecastWidgetEmptyDue">No assignments due this week.</string>
-    <string name="forecastWidgetEmptyRecentGrades">No new grades in the past 7 days.</string>
+    <string name="forecastWidgetEmptyRecentGrades">No new grades in this week.</string>
     <string name="a11y_contentDescription_previousWeek">Previous week</string>
     <string name="a11y_contentDescription_nextWeek">Next week</string>
 
@@ -2414,6 +2414,9 @@
     <string name="survey_option_prefer_old_layout">Prefer the old layout</string>
     <string name="survey_option_something_broken">Something didn\'t work right</string>
     <string name="what_could_we_improve">What could we improve?</string>
+    <string name="what_do_you_think_of_new_dashboard">What do you think of the new dashboard?</string>
+    <string name="let_us_know">Let us know!</string>
+    <string name="no_app_to_handle_link">No app available to open this link</string>
     <string name="skip">Skip</string>
     <string name="widget_setting_show_greeting">Show greeting</string>
     <string name="background_color">Background color</string>
@@ -2442,4 +2445,6 @@
     <string name="todoWidget_today">Today</string>
     <string name="a11y_todoWidget_jumpToToday">Jump to today</string>
     <string name="widgetSettings_widgetsColor">Dashboard Main Color</string>
+    <string name="dashboard_globalAnnouncement">Global Announcement</string>
+    <string name="forecastWidget_currentWeek">Current week</string>
 </resources>

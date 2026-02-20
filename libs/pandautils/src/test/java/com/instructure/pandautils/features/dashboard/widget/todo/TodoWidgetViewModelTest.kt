@@ -720,6 +720,33 @@ class TodoWidgetViewModelTest {
         assertEquals(0, viewModel.uiState.value.scrollToPageOffset)
     }
 
+    @Test
+    fun `yearTitle is null when selected date is in current year`() = runTest {
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        assertEquals(null, viewModel.uiState.value.yearTitle)
+    }
+
+    @Test
+    fun `yearTitle updates when navigating to different year`() = runTest {
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        val initialYearTitle = viewModel.uiState.value.yearTitle
+        assertEquals(null, initialYearTitle)
+
+        // Navigate back many weeks to reach a different year (e.g., 2024)
+        repeat(10) {
+            viewModel.uiState.value.onNavigateWeek(-1)
+            viewModel.uiState.value.onPageChanged(-1)
+            advanceUntilIdle()
+        }
+
+        val newYearTitle = viewModel.uiState.value.yearTitle
+        assertEquals("2024", newYearTitle)
+    }
+
     private fun createPlannerItem(
         id: Long,
         title: String,

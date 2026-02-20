@@ -16,7 +16,10 @@
 
 package com.instructure.pandautils.features.dashboard.customize
 
+import android.content.Intent
 import android.content.res.Configuration
+import android.net.Uri
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -42,8 +45,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Scaffold
@@ -89,6 +91,7 @@ import com.instructure.pandautils.features.dashboard.widget.courses.CoursesConfi
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ThemedColor
+import com.instructure.pandautils.utils.toast
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -110,7 +113,7 @@ fun CustomizeDashboardScreenContent(
     uiState: CustomizeDashboardUiState,
     onRestartApp: () -> Unit,
     onNavigateBack: () -> Unit,
-    onTrackSurvey: (String, String) -> Unit = { _, _ -> }
+    onTrackSurvey: (String) -> Unit = { _ -> }
 ) {
     Scaffold(
         modifier = Modifier.background(colorResource(R.color.backgroundLight)),
@@ -176,7 +179,7 @@ fun CustomizeDashboardScreenContent(
 private fun WidgetList(
     uiState: CustomizeDashboardUiState,
     onRestartApp: () -> Unit,
-    onTrackSurvey: (String, String) -> Unit,
+    onTrackSurvey: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -189,7 +192,8 @@ private fun WidgetList(
                 onRestartApp = onRestartApp,
                 isEnabled = uiState.isDashboardRedesignEnabled,
                 onToggle = uiState.onToggleDashboardRedesign,
-                onTrackSurvey = onTrackSurvey
+                onTrackSurvey = onTrackSurvey,
+                feedbackUrl = uiState.feedbackUrl
             )
         }
         item {
@@ -224,6 +228,11 @@ private fun WidgetList(
                 onToggleVisibility = { uiState.onToggleVisibility(widgetItem.metadata.id) },
                 onUpdateSetting = uiState.onUpdateSetting,
                 modifier = Modifier.animateItem()
+            )
+        }
+        item {
+            FeedbackButton(
+                feedbackUrl = uiState.feedbackUrl
             )
         }
     }
@@ -467,7 +476,8 @@ private fun FeatureFlagToggle(
     isEnabled: Boolean,
     onToggle: (Boolean) -> Unit,
     onRestartApp: () -> Unit,
-    onTrackSurvey: (String, String) -> Unit
+    onTrackSurvey: (String) -> Unit,
+    feedbackUrl: String
 ) {
     var showConfirmationDialog by remember { mutableStateOf(false) }
     var showSurveyDialog by remember { mutableStateOf(false) }
@@ -516,13 +526,14 @@ private fun FeatureFlagToggle(
     if (showSurveyDialog) {
         SurveyDialog(
             onRestartApp = onRestartApp,
-            onSubmit = { selectedOption, feedback ->
-                onTrackSurvey(selectedOption, feedback)
+            onSubmit = { selectedOption ->
+                onTrackSurvey(selectedOption)
                 showSurveyDialog = false
             },
             onSkip = {
                 showSurveyDialog = false
-            }
+            },
+            feedbackUrl = feedbackUrl
         )
     }
 }
@@ -553,7 +564,7 @@ private fun ConfirmationDialog(
             TextButton(
                 onClick = onConfirm,
                 colors = ButtonDefaults.textButtonColors(
-                    contentColor = Color(ThemePrefs.brandColor)
+                    contentColor = Color(ThemePrefs.textButtonColor)
                 ),
                 modifier = Modifier.testTag("confirmationDialogConfirmButton")
             ) {
@@ -566,7 +577,7 @@ private fun ConfirmationDialog(
             TextButton(
                 onClick = onDismiss,
                 colors = ButtonDefaults.textButtonColors(
-                    contentColor = Color(ThemePrefs.brandColor)
+                    contentColor = Color(ThemePrefs.textButtonColor)
                 ),
                 modifier = Modifier.testTag("confirmationDialogDismissButton")
             ) {
@@ -593,12 +604,11 @@ private val SURVEY_OPTIONS = listOf(
 @Composable
 private fun SurveyDialog(
     onRestartApp: () -> Unit,
-    onSubmit: (String, String) -> Unit,
-    onSkip: () -> Unit
+    onSubmit: (String) -> Unit,
+    onSkip: () -> Unit,
+    feedbackUrl: String
 ) {
     var selectedOption by remember { mutableStateOf<String?>(null) }
-    var feedback by remember { mutableStateOf("") }
-    val maxCharacters = 255
 
     fun restartApp() {
         GlobalScope.launch {
@@ -648,52 +658,22 @@ private fun SurveyDialog(
 
                 CanvasDivider()
 
-                Spacer(modifier = Modifier.height(16.dp))
-
-                OutlinedTextField(
-                    value = feedback,
-                    onValueChange = {
-                        if (it.length <= maxCharacters) {
-                            feedback = it
-                        }
-                    },
-                    placeholder = {
-                        Text(
-                            text = stringResource(R.string.what_could_we_improve),
-                            color = colorResource(R.color.textDark)
-                        )
-                    },
-                    supportingText = {
-                        Text(
-                            text = "${feedback.length}/$maxCharacters",
-                            modifier = Modifier.fillMaxWidth(),
-                            textAlign = TextAlign.End,
-                            color = colorResource(R.color.textDark)
-                        )
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .testTag("surveyDialogFeedbackField"),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedTextColor = colorResource(R.color.textDarkest),
-                        focusedBorderColor = colorResource(R.color.borderMedium),
-                        unfocusedTextColor = colorResource(R.color.textDarkest),
-                        unfocusedBorderColor = colorResource(R.color.borderMedium)
-                    )
+                FeedbackButton(
+                    feedbackUrl = feedbackUrl,
+                    testTag = "surveyDialogFeedbackButton"
                 )
             }
         },
         confirmButton = {
             TextButton(
                 onClick = {
-                    onSubmit(selectedOption.orEmpty(), feedback)
+                    onSubmit(selectedOption.orEmpty())
                     restartApp()
                 },
                 enabled = selectedOption != null,
                 colors = ButtonDefaults.textButtonColors(
-                    contentColor = Color(ThemePrefs.brandColor),
-                    disabledContentColor = Color(ThemePrefs.brandColor).copy(alpha = 0.6f),
+                    contentColor = Color(ThemePrefs.textButtonColor),
+                    disabledContentColor = Color(ThemePrefs.textButtonColor).copy(alpha = 0.6f),
                 ),
                 modifier = Modifier.testTag("surveyDialogSubmitButton")
             ) {
@@ -709,7 +689,7 @@ private fun SurveyDialog(
                     restartApp()
                 },
                 colors = ButtonDefaults.textButtonColors(
-                    contentColor = Color(ThemePrefs.brandColor),
+                    contentColor = Color(ThemePrefs.textButtonColor),
                 ),
                 modifier = Modifier.testTag("surveyDialogSkipButton")
             ) {
@@ -751,6 +731,68 @@ private fun SurveyOption(
             fontWeight = FontWeight.SemiBold,
             color = colorResource(R.color.textDarkest)
         )
+    }
+}
+
+@Composable
+private fun FeedbackButton(
+    feedbackUrl: String,
+    modifier: Modifier = Modifier,
+    testTag: String = "feedbackButton"
+) {
+    val context = LocalContext.current
+
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Text(
+            text = stringResource(R.string.what_do_you_think_of_new_dashboard),
+            fontSize = 14.sp,
+            lineHeight = 19.sp,
+            textAlign = TextAlign.Center,
+            color = colorResource(R.color.textDarkest)
+        )
+
+        OutlinedButton(
+            onClick = {
+                try {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(feedbackUrl))
+                    if (intent.resolveActivity(context.packageManager) != null) {
+                        context.startActivity(intent)
+                    } else {
+                        context.toast(context.getString(R.string.no_app_to_handle_link))
+                    }
+                } catch (e: Exception) {
+                    context.toast(context.getString(R.string.no_app_to_handle_link))
+                }
+            },
+            shape = RoundedCornerShape(24.dp),
+            colors = ButtonDefaults.outlinedButtonColors(
+                containerColor = Color.Transparent,
+                contentColor = Color(ThemePrefs.textButtonColor)
+            ),
+            border = BorderStroke(1.dp, Color(ThemePrefs.textButtonColor)),
+            contentPadding = PaddingValues(start = 12.dp, end = 8.dp, top = 4.dp, bottom = 4.dp),
+            modifier = Modifier
+                .height(30.dp)
+                .testTag(testTag)
+        ) {
+            Text(
+                text = stringResource(R.string.let_us_know),
+                fontSize = 14.sp,
+                lineHeight = 17.sp
+            )
+            Spacer(modifier = Modifier.size(6.dp))
+            Icon(
+                painter = painterResource(R.drawable.ic_external_link),
+                contentDescription = null,
+                modifier = Modifier.size(16.dp)
+            )
+        }
     }
 }
 

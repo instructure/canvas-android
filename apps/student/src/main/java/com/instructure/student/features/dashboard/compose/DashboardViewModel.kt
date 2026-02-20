@@ -20,12 +20,15 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.pandautils.compose.SnackbarMessage
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.usecase.EnsureDefaultWidgetsUseCase
+import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveGlobalConfigUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetMetadataUseCase
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.NetworkStateProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -33,6 +36,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -42,7 +47,9 @@ class DashboardViewModel @Inject constructor(
     private val networkStateProvider: NetworkStateProvider,
     private val ensureDefaultWidgetsUseCase: EnsureDefaultWidgetsUseCase,
     private val observeWidgetMetadataUseCase: ObserveWidgetMetadataUseCase,
-    private val analytics: Analytics
+    private val analytics: Analytics,
+    private val observeGlobalConfigUseCase: ObserveGlobalConfigUseCase,
+    private val crashlytics: FirebaseCrashlytics
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -64,6 +71,7 @@ class DashboardViewModel @Inject constructor(
     init {
         loadDashboard()
         observeNetworkState()
+        observeConfig()
     }
 
     fun showSnackbar(message: String, actionLabel: String? = null, action: (() -> Unit)? = null) {
@@ -77,12 +85,19 @@ class DashboardViewModel @Inject constructor(
             _uiState.update { it.copy(loading = true, error = null) }
             try {
                 launch { ensureDefaultWidgetsUseCase(Unit) }
-                observeWidgetMetadataUseCase(Unit).collect { widgets ->
+                combine(
+                    observeWidgetMetadataUseCase(Unit),
+                    networkStateProvider.isOnlineLiveData.asFlow()
+                ) { widgets, isOnline ->
                     val visibleWidgets = widgets.filter { it.isVisible }
-                    _uiState.update { it.copy(loading = false, error = null, widgets = visibleWidgets) }
+                    val filtered = if (isOnline) visibleWidgets
+                    else visibleWidgets.filter { it.id in OFFLINE_VISIBLE_WIDGETS }
+                    Triple(filtered, isOnline, widgets)
+                }.collect { (filteredWidgets, isOnline, allWidgets) ->
+                    _uiState.update { it.copy(loading = false, error = null, widgets = filteredWidgets, isOnline = isOnline) }
 
                     if (!widgetVisibilityTracked) {
-                        trackWidgetVisibility(widgets)
+                        trackWidgetVisibility(allWidgets)
                         widgetVisibilityTracked = true
                     }
                 }
@@ -125,5 +140,24 @@ class DashboardViewModel @Inject constructor(
             }
         }
         analytics.logEvent(AnalyticsEventConstants.DASHBOARD_WIDGET_VISIBILITY, bundle)
+    }
+
+    private fun observeConfig() {
+        viewModelScope.launch {
+            observeGlobalConfigUseCase(Unit)
+                .catch { crashlytics.recordException(it) }
+                .collect { config ->
+                    val themedColor = ColorKeeper.createThemedColor(config.backgroundColor)
+                    _uiState.update { it.copy(color = themedColor) }
+                }
+        }
+    }
+
+    companion object {
+        private val OFFLINE_VISIBLE_WIDGETS = setOf(
+            WidgetMetadata.WIDGET_ID_COURSES,
+            WidgetMetadata.WIDGET_ID_COURSE_INVITATIONS,
+            WidgetMetadata.WIDGET_ID_INSTITUTIONAL_ANNOUNCEMENTS
+        )
     }
 }
