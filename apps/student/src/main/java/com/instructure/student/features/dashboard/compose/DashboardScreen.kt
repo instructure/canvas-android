@@ -270,7 +270,7 @@ private fun WidgetList(
             items = widgets,
             key = { it.id }
         ) { metadata ->
-            GetWidgetComposable(metadata.id, refreshSignal, columns, onShowSnackbar, router, modifier = modifier.padding(top = 16.dp))
+            GetWidgetComposable(metadata.id, refreshSignal, columns, onShowSnackbar, router, modifier = Modifier.padding(top = 16.dp))
         }
 
         item {

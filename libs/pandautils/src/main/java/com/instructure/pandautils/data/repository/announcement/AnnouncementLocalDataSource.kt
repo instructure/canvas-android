@@ -18,19 +18,17 @@ package com.instructure.pandautils.data.repository.announcement
 
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.pandautils.repository.Repository
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.pandautils.room.offline.facade.DiscussionTopicHeaderFacade
 
-class AnnouncementRepositoryImpl(
-    localDataSource: AnnouncementLocalDataSource,
-    networkDataSource: AnnouncementNetworkDataSource,
-    networkStateProvider: NetworkStateProvider,
-    featureFlagProvider: FeatureFlagProvider
-) : Repository<AnnouncementDataSource>(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider),
-    AnnouncementRepository {
+class AnnouncementLocalDataSource(
+    private val discussionTopicHeaderFacade: DiscussionTopicHeaderFacade
+) : AnnouncementDataSource {
 
-    override suspend fun getCourseAnnouncements(courseId: Long, forceRefresh: Boolean): DataResult<List<DiscussionTopicHeader>> {
-        return dataSource().getCourseAnnouncements(courseId, forceRefresh)
+    override suspend fun getCourseAnnouncements(
+        courseId: Long,
+        forceRefresh: Boolean
+    ): DataResult<List<DiscussionTopicHeader>> {
+        val announcements = discussionTopicHeaderFacade.getAnnouncementsForCourse(courseId)
+        return DataResult.Success(announcements)
     }
 }

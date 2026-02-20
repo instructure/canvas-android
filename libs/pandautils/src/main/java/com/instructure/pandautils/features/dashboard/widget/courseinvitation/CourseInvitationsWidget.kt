@@ -60,8 +60,6 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.PagerIndicator
 import com.instructure.pandautils.domain.models.enrollment.CourseInvitation
-import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
-import com.instructure.pandautils.utils.ThemedColor
 import kotlinx.coroutines.flow.SharedFlow
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -77,7 +75,9 @@ fun CourseInvitationsWidget(
 
     LaunchedEffect(refreshSignal) {
         refreshSignal.collect {
-            uiState.onRefresh()
+            if (uiState.isOnline) {
+                uiState.onRefresh()
+            }
         }
     }
 
@@ -142,6 +142,7 @@ fun CourseInvitationsContent(
                         invitation = invitation,
                         onAccept = { uiState.onAcceptInvitation(invitation) },
                         onDecline = { invitationToDecline = invitation },
+                        actionsEnabled = uiState.isOnline,
                         buttonColor = Color(uiState.color.color()),
                         modifier = Modifier.weight(1f)
                     )
@@ -218,6 +219,7 @@ private fun InvitationCard(
     invitation: CourseInvitation,
     onAccept: () -> Unit,
     onDecline: () -> Unit,
+    actionsEnabled: Boolean = true,
     buttonColor: Color,
     modifier: Modifier = Modifier
 ) {
@@ -254,17 +256,21 @@ private fun InvitationCard(
             ) {
                 OutlinedButton(
                     onClick = onDecline,
+                    enabled = actionsEnabled,
                     modifier = Modifier
                         .weight(1f)
                         .height(32.dp),
                     shape = RoundedCornerShape(100.dp),
                     colors = ButtonDefaults.outlinedButtonColors(
                         containerColor = colorResource(R.color.backgroundLightest),
-                        contentColor = colorResource(R.color.textDarkest)
+                        contentColor = colorResource(R.color.textDarkest),
+                        disabledContainerColor = colorResource(R.color.backgroundLightest),
+                        disabledContentColor = colorResource(R.color.textDarkest).copy(alpha = 0.5f)
                     ),
                     border = BorderStroke(
                         0.5.dp,
-                        colorResource(R.color.borderMedium)
+                        if (actionsEnabled) colorResource(R.color.borderMedium)
+                        else colorResource(R.color.borderMedium).copy(alpha = 0.5f)
                     ),
                     contentPadding = PaddingValues(horizontal = 10.dp, vertical = 0.dp)
                 ) {
@@ -278,13 +284,16 @@ private fun InvitationCard(
 
                 Button(
                     onClick = onAccept,
+                    enabled = actionsEnabled,
                     modifier = Modifier
                         .weight(1f)
                         .height(32.dp),
                     shape = RoundedCornerShape(100.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = buttonColor,
-                        contentColor = colorResource(R.color.textLightest)
+                        contentColor = colorResource(R.color.textLightest),
+                        disabledContainerColor = buttonColor.copy(alpha = 0.5f),
+                        disabledContentColor = colorResource(R.color.textLightest).copy(alpha = 0.5f)
                     ),
                     elevation = ButtonDefaults.buttonElevation(
                         defaultElevation = 0.dp,

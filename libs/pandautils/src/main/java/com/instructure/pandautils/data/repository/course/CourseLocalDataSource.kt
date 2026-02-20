@@ -19,31 +19,30 @@ package com.instructure.pandautils.data.repository.course
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DashboardCard
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.pandautils.repository.Repository
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.pandautils.room.offline.daos.DashboardCardDao
+import com.instructure.pandautils.room.offline.facade.CourseFacade
 
-class CourseRepositoryImpl(
-    localDataSource: CourseLocalDataSource,
-    networkDataSource: CourseNetworkDataSource,
-    networkStateProvider: NetworkStateProvider,
-    featureFlagProvider: FeatureFlagProvider
-) : Repository<CourseDataSource>(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider),
-    CourseRepository {
+class CourseLocalDataSource(
+    private val courseFacade: CourseFacade,
+    private val dashboardCardDao: DashboardCardDao
+) : CourseDataSource {
 
     override suspend fun getCourse(courseId: Long, forceRefresh: Boolean): DataResult<Course> {
-        return dataSource().getCourse(courseId, forceRefresh)
+        val course = courseFacade.getCourseById(courseId)
+        return if (course != null) DataResult.Success(course) else DataResult.Fail()
     }
 
     override suspend fun getCourses(forceRefresh: Boolean): DataResult<List<Course>> {
-        return dataSource().getCourses(forceRefresh)
+        return DataResult.Success(courseFacade.getAllCourses())
     }
 
     override suspend fun getFavoriteCourses(forceRefresh: Boolean): DataResult<List<Course>> {
-        return dataSource().getFavoriteCourses(forceRefresh)
+        val courses = courseFacade.getAllCourses().filter { it.isFavorite }
+        return DataResult.Success(courses)
     }
 
     override suspend fun getDashboardCards(forceRefresh: Boolean): DataResult<List<DashboardCard>> {
-        return dataSource().getDashboardCards(forceRefresh)
+        val cards = dashboardCardDao.findAll().map { it.toApiModel() }
+        return DataResult.Success(cards)
     }
 }

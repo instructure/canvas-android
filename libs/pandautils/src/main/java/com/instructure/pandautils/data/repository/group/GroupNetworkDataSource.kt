@@ -16,21 +16,19 @@
 
 package com.instructure.pandautils.data.repository.group
 
+import com.instructure.canvasapi2.apis.GroupAPI
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.pandautils.repository.Repository
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.canvasapi2.utils.depaginate
 
-class GroupRepositoryImpl(
-    localDataSource: GroupLocalDataSource,
-    networkDataSource: GroupNetworkDataSource,
-    networkStateProvider: NetworkStateProvider,
-    featureFlagProvider: FeatureFlagProvider
-) : Repository<GroupDataSource>(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider),
-    GroupRepository {
+class GroupNetworkDataSource(
+    private val groupApi: GroupAPI.GroupInterface
+) : GroupDataSource {
 
     override suspend fun getGroups(forceRefresh: Boolean): DataResult<List<Group>> {
-        return dataSource().getGroups(forceRefresh)
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceRefresh)
+        return groupApi.getFirstPageGroups(params)
+            .depaginate { nextUrl -> groupApi.getNextPageGroups(nextUrl, params) }
     }
 }
