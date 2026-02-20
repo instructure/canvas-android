@@ -24,6 +24,8 @@ import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.AnalyticsParamConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.RemoteConfigParam
+import com.instructure.canvasapi2.utils.RemoteConfigPrefs
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveGlobalConfigUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.UpdateNewDashboardPreferenceUseCase
 import com.instructure.pandautils.R
@@ -57,7 +59,8 @@ class CustomizeDashboardViewModel @Inject constructor(
     private val apiPrefs: ApiPrefs,
     private val observeGlobalConfigUseCase: ObserveGlobalConfigUseCase,
     private val updateNewDashboardPreferenceUseCase: UpdateNewDashboardPreferenceUseCase,
-    private val analytics: Analytics
+    private val analytics: Analytics,
+    remoteConfigPrefs: RemoteConfigPrefs
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
