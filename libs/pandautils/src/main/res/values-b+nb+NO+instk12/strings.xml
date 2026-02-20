@@ -502,4 +502,8 @@
         <item quantity="other">%d min</item>
     </plurals>
     <string name="notATeacherDescription">En av våre andre applikasjoner kan være mer tilpasset. Trykk på et ikon for å logge inn der.</string>
+    <string name="gradePercentAccessibility">Vurdering: %d prosent</string>
+    <string name="gradePointsAccessibility">Vurdering: %s poeng</string>
+    <string name="gradePercentTextFieldAccessibility">Vurdering: %d prosent, %s</string>
+    <string name="gradePointsTextFieldAccessibility">Vurdering: %s poeng, %s</string>
 </resources>

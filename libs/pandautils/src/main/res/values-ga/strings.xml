@@ -501,4 +501,8 @@
         <item quantity="other">%d Nóiméad</item>
     </plurals>
     <string name="notATeacherDescription">B’fhéidir go mbeadh ceann dár n-aipeanna eile níos oiriúnaí. Tapáil deilbhín chun logáil isteach ann.</string>
+    <string name="gradePercentAccessibility">Marc: %d faoin gcéad</string>
+    <string name="gradePointsAccessibility">Marc: %s pointe</string>
+    <string name="gradePercentTextFieldAccessibility">Marc: %d faoin gcéad, %s</string>
+    <string name="gradePointsTextFieldAccessibility">Marc: %s pointe, %s</string>
 </resources>

@@ -278,6 +278,7 @@
     <string name="checkBoxWhatIfGradeOption">Die hypothetische Punktzahl anzeigen</string>
     <string name="whatIfDialogText">Hypothetische Punktzahl</string>
     <string name="whatIfScoreExceedsMaximum">Die maximale Punktzahl darf nicht überschritten werden</string>
+    <string name="whatIfScoreExceedsMaximumWarning">Die Punktzahl überschreitet die maximalen Punkte</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s von %2$s Punkten, %3$s</string>
     <string name="inbox">Posteingang</string>
@@ -1923,6 +1924,15 @@
     <string name="courseDetailsMessageContentDescription">Nachricht über diesen Kurs senden</string>
     <string name="gradeLockedContentDescription">Note gesperrt</string>
     <string name="gradesRefreshFailed">Noten konnten nicht aktualisiert werden.</string>
+    <string name="showWhatIfScore">Was-wäre-wenn-Ergebnis anzeigen</string>
+    <string name="editWhatIfScore">Hypothetische Punktzahl bearbeiten</string>
+    <string name="editWhatIfScoreTitle">Hypothetische Punktzahl bearbeiten</string>
+    <string name="whatIfScoreLabel">Hypothetisch</string>
+    <string name="whatIfScoreCurrentGraded">Punktzahl %1$.0f von %2$.0f</string>
+    <string name="whatIfScoreCurrentUngraded">Nicht benotet, max. Punktzahl %.0f</string>
+    <string name="whatIfScoreDisplay">Hypothetisch: %s</string>
+    <string name="gradesBasedOnGradedAndWhatIf">Basierend auf benoteten Aufgaben und hypothetischer Punktzahl</string>
+    <string name="clearWhatIfScore">Hypothetische Punktzahl löschen</string>
     <string name="chooseACourseToMessage">Einen Kurs zur Benachrichtigung wählen</string>
     <string name="regardingHiddenMessage">Betreffend: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">Betreffend: %1$s, Aufgabe – %2$s</string>

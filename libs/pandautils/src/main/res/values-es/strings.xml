@@ -501,4 +501,8 @@
         <item quantity="other">%d minutos</item>
     </plurals>
     <string name="notATeacherDescription">Una de nuestras otras aplicaciones podría ser más adecuada. Toque un ícono para iniciar sesión allí.</string>
+    <string name="gradePercentAccessibility">Calificación: %d porcentaje</string>
+    <string name="gradePointsAccessibility">Calificación: %s puntos</string>
+    <string name="gradePercentTextFieldAccessibility">Calificación: %d porcentaje, %s</string>
+    <string name="gradePointsTextFieldAccessibility">Calificación: %s puntos, %s</string>
 </resources>

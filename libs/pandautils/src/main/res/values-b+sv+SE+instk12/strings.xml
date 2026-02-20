@@ -501,4 +501,8 @@
         <item quantity="other">%d minuter</item>
     </plurals>
     <string name="notATeacherDescription">En av våra andra appar kanske passar bättre. Tryck på en ikon för att logga in där.</string>
+    <string name="gradePercentAccessibility">Bedömning: %d procent</string>
+    <string name="gradePointsAccessibility">Bedömning: %s poäng</string>
+    <string name="gradePercentTextFieldAccessibility">Bedömning: %d procent, %s</string>
+    <string name="gradePointsTextFieldAccessibility">Bedömning: %s poäng, %s</string>
 </resources>

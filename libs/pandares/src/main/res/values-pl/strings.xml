@@ -288,6 +288,7 @@
     <string name="checkBoxWhatIfGradeOption">Pokaż wynik a-może</string>
     <string name="whatIfDialogText">Wynik a-może</string>
     <string name="whatIfScoreExceedsMaximum">Wynik nie może przekroczyć maksymalnej liczby punktów</string>
+    <string name="whatIfScoreExceedsMaximumWarning">Wynik przekracza maksymalną liczbę punktów</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s z %2$s pkt, %3$s</string>
     <string name="inbox">Skrzynka odbiorcza</string>
@@ -1991,6 +1992,15 @@
     <string name="courseDetailsMessageContentDescription">Wyślij wiadomość o tym kursie</string>
     <string name="gradeLockedContentDescription">Zablokowano ocenę</string>
     <string name="gradesRefreshFailed">Nie udało się odświeżyć ocen</string>
+    <string name="showWhatIfScore">Pokaż wynik prawdopodobny</string>
+    <string name="editWhatIfScore">Edytuj wynik prawdopodobny</string>
+    <string name="editWhatIfScoreTitle">Edytuj wynik prawdopodobny</string>
+    <string name="whatIfScoreLabel">Prawdopodobny</string>
+    <string name="whatIfScoreCurrentGraded">Wynik: %1$.0f z %2$.0f</string>
+    <string name="whatIfScoreCurrentUngraded">Nie oceniono, maks. wynik %.0f</string>
+    <string name="whatIfScoreDisplay">Prawdopodobny: %s</string>
+    <string name="gradesBasedOnGradedAndWhatIf">W oparciu o ocenione zadania oraz wynik prawdopodobny</string>
+    <string name="clearWhatIfScore">Usuń wynik prawdopodobny</string>
     <string name="chooseACourseToMessage">Wybierz kurs do przesłania</string>
     <string name="regardingHiddenMessage">W odniesieniu do: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">W odniesieniu do: %1$s, zadanie - %2$s</string>

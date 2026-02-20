@@ -278,6 +278,7 @@
     <string name="checkBoxWhatIfGradeOption">Taispeáin an Scór dá mba rud é</string>
     <string name="whatIfDialogText">Scór dá mba rud é</string>
     <string name="whatIfScoreExceedsMaximum">Ní féidir leis an scór uasta n bpointí a shárú</string>
+    <string name="whatIfScoreExceedsMaximumWarning">Sáraíonn an scór uasmhéid na bpointí</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s as %2$s pointí, %3$s</string>
     <string name="inbox">Bosca Isteach</string>
@@ -1938,6 +1939,15 @@
     <string name="courseDetailsMessageContentDescription">Seol teachtaireacht faoin gcúrsa seo</string>
     <string name="gradeLockedContentDescription">Marc faoi ghlas</string>
     <string name="gradesRefreshFailed">Theip ar na marcanna a athnuachan</string>
+    <string name="showWhatIfScore">Taispeáin an Scór Dá mBá Rud é</string>
+    <string name="editWhatIfScore">Cuir "Scór dá mba rud é" in Eagar</string>
+    <string name="editWhatIfScoreTitle">Cuir "Scór dá mba rud é" in Eagar</string>
+    <string name="whatIfScoreLabel">Dá mba rud é</string>
+    <string name="whatIfScoreCurrentGraded">Scór %1$.0f as %2$.0f</string>
+    <string name="whatIfScoreCurrentUngraded">Níl sé marcáilte, scór uasta %.0f</string>
+    <string name="whatIfScoreDisplay">Dá mba rud é %s</string>
+    <string name="gradesBasedOnGradedAndWhatIf">Bunaithe ar thascanna marcáilte, agus Scór dá mba rud é</string>
+    <string name="clearWhatIfScore">Glan Scór dá mba rud é</string>
     <string name="chooseACourseToMessage">Roghnaigh cúrsa chun teachtaireacht a dhéanamh</string>
     <string name="regardingHiddenMessage">Maidir le: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">Maidir le: %1$s, Tasc - %2$s</string>

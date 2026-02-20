@@ -278,6 +278,7 @@
     <string name="checkBoxWhatIfGradeOption">Tampilkan Skor Bagaimana-Kalau</string>
     <string name="whatIfDialogText">Skor Bagaimana-Kalau</string>
     <string name="whatIfScoreExceedsMaximum">Skor tidak boleh melebihi poin maksimum</string>
+    <string name="whatIfScoreExceedsMaximumWarning">Skor melebihi poin maksimum</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s dari %2$s poin, %3$s</string>
     <string name="inbox">Kotak Masuk</string>
@@ -1926,6 +1927,15 @@
     <string name="courseDetailsMessageContentDescription">Kirim pesan tentang kursus ini</string>
     <string name="gradeLockedContentDescription">Nilai terkunci</string>
     <string name="gradesRefreshFailed">Gagal memuat ulang nilai</string>
+    <string name="showWhatIfScore">Tampilkan Skor Bagaimana-Kalau</string>
+    <string name="editWhatIfScore">Edit Skor Bagaimana-Kalau</string>
+    <string name="editWhatIfScoreTitle">Edit Skor Bagaimana-Kalau</string>
+    <string name="whatIfScoreLabel">Bagaimana-Kalau</string>
+    <string name="whatIfScoreCurrentGraded">Skor %1$.0f dari %2$.0f</string>
+    <string name="whatIfScoreCurrentUngraded">Tidak dinilai, skor maks %.0f</string>
+    <string name="whatIfScoreDisplay">Bagaimana-Kalau: %s</string>
+    <string name="gradesBasedOnGradedAndWhatIf">Berdasarkan tugas yang dinilai, dan Skor Bagaimana-Kalau</string>
+    <string name="clearWhatIfScore">Kosongkan Skor Bagaimana-Kalau</string>
     <string name="chooseACourseToMessage">Pilih kursus ke pesan</string>
     <string name="regardingHiddenMessage">Tentang: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">Tentang: %1$s, Tugas - %2$s</string>

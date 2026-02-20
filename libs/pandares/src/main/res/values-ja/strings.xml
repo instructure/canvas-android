@@ -273,6 +273,7 @@
     <string name="checkBoxWhatIfGradeOption">仮定のスコアを表示</string>
     <string name="whatIfDialogText">仮定のスコア</string>
     <string name="whatIfScoreExceedsMaximum">スコアは最大点数を超えることはできません</string>
+    <string name="whatIfScoreExceedsMaximumWarning">スコアは最大点数を超えることはできません</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s / %2$s 点、%3$s</string>
     <string name="inbox">受信トレイ</string>
@@ -1889,6 +1890,15 @@
     <string name="courseDetailsMessageContentDescription">このコースに関するメッセージを送信する</string>
     <string name="gradeLockedContentDescription">評定がロックされました</string>
     <string name="gradesRefreshFailed">評定更新に失敗</string>
+    <string name="showWhatIfScore">仮定スコアを表示</string>
+    <string name="editWhatIfScore">仮定スコアを編集</string>
+    <string name="editWhatIfScoreTitle">仮定スコアを編集</string>
+    <string name="whatIfScoreLabel">仮定</string>
+    <string name="whatIfScoreCurrentGraded">%1$.0f / %2$.0fのスコア</string>
+    <string name="whatIfScoreCurrentUngraded">未採点、最大スコア%.0f</string>
+    <string name="whatIfScoreDisplay">仮定: %s</string>
+    <string name="gradesBasedOnGradedAndWhatIf">採点済みの課題および仮定スコアに基づく</string>
+    <string name="clearWhatIfScore">仮定スコアを消去する</string>
     <string name="chooseACourseToMessage">メッセージを送るコースを選択する</string>
     <string name="regardingHiddenMessage">件名：%1$s、%2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">件名：%1$s、課題 - %2$s</string>
