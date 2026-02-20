@@ -29,7 +29,7 @@ import com.instructure.pandautils.features.dashboard.widget.repository.WidgetCon
 import com.instructure.pandautils.utils.CanvasFont
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.student.R
-import com.instructure.student.features.dashboard.compose.DashboardFragment
+import com.instructure.student.features.dashboard.compose.NewDashboardFragment
 import com.instructure.student.fragment.OldDashboardFragment
 import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.fragment.ParentFragment
@@ -62,7 +62,7 @@ class DefaultNavigationBehavior(
     private val dashboardFragmentClass: Class<out Fragment>
         get() {
             return if (shouldShowNewDashboard()) {
-                DashboardFragment::class.java
+                NewDashboardFragment::class.java
             } else {
                 OldDashboardFragment::class.java
             }
@@ -93,7 +93,7 @@ class DefaultNavigationBehavior(
 
     override fun createHomeFragmentRoute(canvasContext: CanvasContext?): Route {
         return if (shouldShowNewDashboard()) {
-            DashboardFragment.makeRoute(ApiPrefs.user)
+            NewDashboardFragment.makeRoute(ApiPrefs.user)
         } else {
             OldDashboardFragment.makeRoute(ApiPrefs.user)
         }
@@ -101,7 +101,7 @@ class DefaultNavigationBehavior(
 
     override fun createHomeFragment(route: Route): ParentFragment {
         return if (shouldShowNewDashboard()) {
-            DashboardFragment.newInstance(route)
+            NewDashboardFragment.newInstance(route)
         } else {
             OldDashboardFragment.newInstance(route)
         }
