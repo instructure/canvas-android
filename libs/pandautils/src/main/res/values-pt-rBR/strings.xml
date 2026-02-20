@@ -501,4 +501,8 @@
         <item quantity="other">%d Mins</item>
     </plurals>
     <string name="notATeacherDescription">Um de nossos outros aplicativos pode ser mais adequado. Toque em um ícone para fazer login nele.</string>
+    <string name="gradePercentAccessibility">Nota: %d por cento</string>
+    <string name="gradePointsAccessibility">Nota: %s pontos</string>
+    <string name="gradePercentTextFieldAccessibility">Nota: %d por cento, %s</string>
+    <string name="gradePointsTextFieldAccessibility">Nota: %s pontos, %s</string>
 </resources>

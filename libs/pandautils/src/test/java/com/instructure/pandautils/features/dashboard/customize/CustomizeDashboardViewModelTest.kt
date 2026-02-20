@@ -24,15 +24,16 @@ import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.AnalyticsParamConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.canvasapi2.utils.RemoteConfigPrefs
-import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
 import com.instructure.pandautils.features.dashboard.widget.SettingType
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
+import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveGlobalConfigUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetConfigUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetMetadataUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.SwapWidgetPositionsUseCase
+import com.instructure.pandautils.features.dashboard.widget.usecase.UpdateNewDashboardPreferenceUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.ToggleWidgetVisibilityUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.UpdateWidgetConfigUseCase
 import io.mockk.coEvery
@@ -74,9 +75,10 @@ class CustomizeDashboardViewModelTest {
     private val updateWidgetConfigUseCase: UpdateWidgetConfigUseCase = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
-    private val remoteConfigUtils: RemoteConfigUtils = mockk(relaxed = true)
-    private val remoteConfigPrefs: RemoteConfigPrefs = mockk(relaxed = true)
+    private val observeGlobalConfigUseCase: ObserveGlobalConfigUseCase = mockk(relaxed = true)
+    private val updateNewDashboardPreferenceUseCase: UpdateNewDashboardPreferenceUseCase = mockk(relaxed = true)
     private val analytics: Analytics = mockk(relaxed = true)
+    private val remoteConfigPrefs: RemoteConfigPrefs = mockk(relaxed = true)
     private val bundleStorage = mutableMapOf<String, String?>()
 
     private lateinit var viewModel: CustomizeDashboardViewModel
@@ -103,7 +105,7 @@ class CustomizeDashboardViewModelTest {
         val user = User(id = 1, shortName = "Test User")
         every { apiPrefs.user } returns user
         every { resources.getString(R.string.widget_hello, any()) } returns "Hello, Test User"
-        every { remoteConfigUtils.getBoolean(RemoteConfigParam.DASHBOARD_REDESIGN) } returns false
+        coEvery { observeGlobalConfigUseCase(Unit) } returns flowOf(GlobalConfig())
         coEvery { observeWidgetMetadataUseCase(Unit) } returns flowOf(emptyList())
         coEvery { observeWidgetConfigUseCase(any()) } returns flowOf(emptyList())
     }
@@ -114,7 +116,8 @@ class CustomizeDashboardViewModelTest {
         unmockkAll()
     }
 
-    private fun createViewModel(): CustomizeDashboardViewModel {
+    private fun createViewModel(globalConfig: GlobalConfig = GlobalConfig()): CustomizeDashboardViewModel {
+        coEvery { observeGlobalConfigUseCase(Unit) } returns flowOf(globalConfig)
         return CustomizeDashboardViewModel(
             observeWidgetMetadataUseCase,
             swapWidgetPositionsUseCase,
@@ -123,9 +126,10 @@ class CustomizeDashboardViewModelTest {
             updateWidgetConfigUseCase,
             resources,
             apiPrefs,
-            remoteConfigUtils,
-            remoteConfigPrefs,
-            analytics
+            observeGlobalConfigUseCase,
+            updateNewDashboardPreferenceUseCase,
+            analytics,
+            remoteConfigPrefs
         )
     }
 
@@ -360,26 +364,44 @@ class CustomizeDashboardViewModelTest {
     }
 
     @Test
-    fun testDashboardRedesignFlagLoadedOnInit() = runTest {
-        every { remoteConfigUtils.getBoolean(RemoteConfigParam.DASHBOARD_REDESIGN) } returns true
+    fun testDashboardRedesignEnabledWhenGlobalConfigIsTrue() = runTest {
+        viewModel = createViewModel(GlobalConfig(newDashboardEnabled = true))
 
-        viewModel = createViewModel()
-
-        val state = viewModel.uiState.value
-        assertTrue(state.isDashboardRedesignEnabled)
+        assertTrue(viewModel.uiState.value.isDashboardRedesignEnabled)
     }
 
     @Test
-    fun testToggleDashboardRedesignFlag() = runTest {
-        every { remoteConfigUtils.getBoolean(RemoteConfigParam.DASHBOARD_REDESIGN) } returns false
+    fun testDashboardRedesignDisabledWhenGlobalConfigIsFalse() = runTest {
+        viewModel = createViewModel(GlobalConfig(newDashboardEnabled = false))
 
+        assertFalse(viewModel.uiState.value.isDashboardRedesignEnabled)
+    }
+
+    @Test
+    fun testDashboardRedesignDefaultsToTrue() = runTest {
+        viewModel = createViewModel(GlobalConfig())
+
+        assertTrue(viewModel.uiState.value.isDashboardRedesignEnabled)
+    }
+
+    @Test
+    fun testToggleDashboardRedesignCallsUseCase() = runTest {
         viewModel = createViewModel()
+        viewModel.uiState.value.onToggleDashboardRedesign(false)
+
+        coVerify {
+            updateNewDashboardPreferenceUseCase(UpdateNewDashboardPreferenceUseCase.Params(false))
+        }
+    }
+
+    @Test
+    fun testToggleDashboardRedesignEnableCallsUseCase() = runTest {
+        viewModel = createViewModel(GlobalConfig(newDashboardEnabled = false))
         viewModel.uiState.value.onToggleDashboardRedesign(true)
 
         coVerify {
-            remoteConfigPrefs.putString(RemoteConfigParam.DASHBOARD_REDESIGN.rc_name, "true")
+            updateNewDashboardPreferenceUseCase(UpdateNewDashboardPreferenceUseCase.Params(true))
         }
-        assertTrue(viewModel.uiState.value.isDashboardRedesignEnabled)
     }
 
     @Test

@@ -278,6 +278,7 @@
     <string name="checkBoxWhatIfGradeOption">Vis Hva-om-poengberegning</string>
     <string name="whatIfDialogText">Hva-om poengberegning</string>
     <string name="whatIfScoreExceedsMaximum">Poengsum kan ikke overstige maksimalt antall poeng</string>
+    <string name="whatIfScoreExceedsMaximumWarning">Poengsum overstiger maksimalt antall poeng</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s av %2$s poeng, %3$s</string>
     <string name="inbox">Innboks</string>
@@ -1924,6 +1925,15 @@
     <string name="courseDetailsMessageContentDescription">Send en melding om dette emnet</string>
     <string name="gradeLockedContentDescription">Vurdering låst</string>
     <string name="gradesRefreshFailed">Kunne ikke oppdatere vurderinger</string>
+    <string name="showWhatIfScore">Vis Hva-om-poengberegning</string>
+    <string name="editWhatIfScore">Rediger hva-om-poengberegning</string>
+    <string name="editWhatIfScoreTitle">Rediger hva-om-poengberegning</string>
+    <string name="whatIfScoreLabel">Hva-om</string>
+    <string name="whatIfScoreCurrentGraded">Vurder %1$.0f av %2$.0f</string>
+    <string name="whatIfScoreCurrentUngraded">Ikke vurdert, maksimal poengsum %.0f</string>
+    <string name="whatIfScoreDisplay">Hva-om: %s</string>
+    <string name="gradesBasedOnGradedAndWhatIf">Basert på vurderte oppgaver og hva-om-poengberegning</string>
+    <string name="clearWhatIfScore">Fjern hva-om-poengberegning</string>
     <string name="chooseACourseToMessage">Velg et emne du vil sende melding til</string>
     <string name="regardingHiddenMessage">Vedrørende: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">Vedrørende: %1$s, Oppgave - %2$s</string>

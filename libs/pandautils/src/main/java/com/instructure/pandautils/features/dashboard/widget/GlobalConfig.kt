@@ -20,7 +20,8 @@ import com.google.gson.Gson
 
 data class GlobalConfig(
     override val widgetId: String = WidgetMetadata.WIDGET_ID_GLOBAL,
-    val backgroundColor: Int = DEFAULT_COLOR
+    val backgroundColor: Int = DEFAULT_COLOR,
+    val newDashboardEnabled: Boolean = true
 ) : WidgetConfig {
     override fun toJson(): String = Gson().toJson(this)
 

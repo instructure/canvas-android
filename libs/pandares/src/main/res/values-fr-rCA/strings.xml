@@ -278,6 +278,7 @@
     <string name="checkBoxWhatIfGradeOption">Afficher le score hypothétique</string>
     <string name="whatIfDialogText">Score hypothétique</string>
     <string name="whatIfScoreExceedsMaximum">Le score ne peut pas dépasser le nombre maximum de points</string>
+    <string name="whatIfScoreExceedsMaximumWarning">Le score dépasse le nombre maximum de points</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s de %2$s points, %3$s</string>
     <string name="inbox">Boîte de réception</string>
@@ -1923,6 +1924,15 @@
     <string name="courseDetailsMessageContentDescription">Envoyer un message à propos de ce cours</string>
     <string name="gradeLockedContentDescription">Notation bloquée</string>
     <string name="gradesRefreshFailed">Échec lors de l’actualisation des notes</string>
+    <string name="showWhatIfScore">Afficher le score de simulation What-If</string>
+    <string name="editWhatIfScore">Modifier le score de simulation What-If</string>
+    <string name="editWhatIfScoreTitle">Modifier le score de simulation What-If</string>
+    <string name="whatIfScoreLabel">What-if</string>
+    <string name="whatIfScoreCurrentGraded">Score %1$.0f sur %2$.0f</string>
+    <string name="whatIfScoreCurrentUngraded">Non noté, score maximum %.0f</string>
+    <string name="whatIfScoreDisplay">What-if : %s</string>
+    <string name="gradesBasedOnGradedAndWhatIf">Sur la base des travaux notés et du score de simulation What-If</string>
+    <string name="clearWhatIfScore">Effacer le score de simulation What-If</string>
     <string name="chooseACourseToMessage">Choisissez un cours pour lequel envoyer un message</string>
     <string name="regardingHiddenMessage">En ce qui concerne : %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">En ce qui concerne : %1$s, travail — %2$s</string>

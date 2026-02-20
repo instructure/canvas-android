@@ -25,6 +25,7 @@ import com.instructure.pandautils.room.appdatabase.daos.EnvironmentFeatureFlagsD
 import com.instructure.pandautils.room.appdatabase.entities.EnvironmentFeatureFlags
 
 const val FEATURE_FLAG_OFFLINE = "mobile_offline_mode"
+const val FEATURE_FLAG_WIDGET_DASHBOARD = "widget_dashboard"
 class FeatureFlagProvider(
     private val userManager: UserManager,
     private val apiPrefs: ApiPrefs,
@@ -61,6 +62,10 @@ class FeatureFlagProvider(
 
     suspend fun checkAccountSurveyNotificationsFlag(): Boolean {
         return checkEnvironmentFeatureFlag("account_survey_notifications")
+    }
+
+    suspend fun checkWidgetDashboardFlag(): Boolean {
+        return checkEnvironmentFeatureFlag(FEATURE_FLAG_WIDGET_DASHBOARD)
     }
 
     suspend fun checkRestrictStudentAccessFlag(): Boolean {

@@ -501,4 +501,8 @@
         <item quantity="other">%d min</item>
     </plurals>
     <string name="notATeacherDescription">Yksi muista sovelluksistamme saattaa olla paremmin sopiva. Napauta kuvaketta kirjautuaksesi sinne.</string>
+    <string name="gradePercentAccessibility">Arvosana: %d prosenttia</string>
+    <string name="gradePointsAccessibility">Arvosana: %s pistettä</string>
+    <string name="gradePercentTextFieldAccessibility">Arvosana: %d prosenttia, %s</string>
+    <string name="gradePointsTextFieldAccessibility">Arvosana: %s  pisteet, %s</string>
 </resources>

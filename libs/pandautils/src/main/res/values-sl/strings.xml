@@ -501,4 +501,8 @@
         <item quantity="other">%d min</item>
     </plurals>
     <string name="notATeacherDescription">Morda bi bolj ustrezala kakšna druga aplikacija. Tapnite ikono, da se prijavite tam.</string>
+    <string name="gradePercentAccessibility">Ocena: %d odstotkov</string>
+    <string name="gradePointsAccessibility">Ocena: %s točk</string>
+    <string name="gradePercentTextFieldAccessibility">Ocena: %d odstotkov, %s</string>
+    <string name="gradePointsTextFieldAccessibility">Ocena: %s točk, %s</string>
 </resources>

@@ -31,8 +31,9 @@ import com.instructure.student.fragment.ParentFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+//This needed to be named NewDashboardFragment because Pendo tracking would break otherwise.
 @AndroidEntryPoint
-class DashboardFragment : ParentFragment() {
+class NewDashboardFragment : ParentFragment() {
 
     @Inject
     lateinit var router: DashboardRouter
@@ -63,12 +64,12 @@ class DashboardFragment : ParentFragment() {
         ViewStyler.setStatusBarDark(requireActivity(), ThemePrefs.primaryColor)
     }
 
-    companion object {
+    companion object Companion {
         fun makeRoute(canvasContext: CanvasContext?) =
-            Route(DashboardFragment::class.java, canvasContext)
+            Route(NewDashboardFragment::class.java, canvasContext)
 
-        fun newInstance(route: Route): DashboardFragment {
-            val fragment = DashboardFragment()
+        fun newInstance(route: Route): NewDashboardFragment {
+            val fragment = NewDashboardFragment()
             fragment.arguments = route.arguments
             return fragment
         }
