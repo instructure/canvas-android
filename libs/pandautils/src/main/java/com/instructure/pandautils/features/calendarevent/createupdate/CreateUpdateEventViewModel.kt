@@ -37,6 +37,7 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventFragment.Companion.INITIAL_DATE
+import com.instructure.pandautils.utils.getSystemFirstDayOfWeek
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toLocalDate
 import com.instructure.pandautils.utils.toLocalTime
@@ -592,7 +593,7 @@ class CreateUpdateEventViewModel @Inject constructor(
         )
         val endsOn = selectedRRule?.until?.let { LocalDate.of(it.year(), it.month(), it.day()) }
 
-        val localeFirstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek.value
+        val localeFirstDayOfWeek = getSystemFirstDayOfWeek().value
         // Shift the starting point to the correct day
         val shiftAmount = localeFirstDayOfWeek - daysOfWeek.first().value
         val shiftedDaysOfWeekLocalized = Array(7) { daysOfWeek[(it + shiftAmount) % 7] }.toList()

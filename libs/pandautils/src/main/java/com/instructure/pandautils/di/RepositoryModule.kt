@@ -29,18 +29,24 @@ import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.managers.graphql.RecentGradedSubmissionsManager
 import com.instructure.pandautils.data.repository.accountnotification.AccountNotificationRepository
 import com.instructure.pandautils.data.repository.accountnotification.AccountNotificationRepositoryImpl
+import com.instructure.pandautils.data.repository.announcement.AnnouncementLocalDataSource
+import com.instructure.pandautils.data.repository.announcement.AnnouncementNetworkDataSource
 import com.instructure.pandautils.data.repository.announcement.AnnouncementRepository
 import com.instructure.pandautils.data.repository.announcement.AnnouncementRepositoryImpl
 import com.instructure.pandautils.data.repository.assignment.AssignmentRepository
 import com.instructure.pandautils.data.repository.assignment.AssignmentRepositoryImpl
 import com.instructure.pandautils.data.repository.conference.ConferenceRepository
 import com.instructure.pandautils.data.repository.conference.ConferenceRepositoryImpl
+import com.instructure.pandautils.data.repository.course.CourseLocalDataSource
+import com.instructure.pandautils.data.repository.course.CourseNetworkDataSource
 import com.instructure.pandautils.data.repository.course.CourseRepository
 import com.instructure.pandautils.data.repository.course.CourseRepositoryImpl
 import com.instructure.pandautils.data.repository.coursenickname.CourseNicknameRepository
 import com.instructure.pandautils.data.repository.coursenickname.CourseNicknameRepositoryImpl
 import com.instructure.pandautils.data.repository.enrollment.EnrollmentRepository
 import com.instructure.pandautils.data.repository.enrollment.EnrollmentRepositoryImpl
+import com.instructure.pandautils.data.repository.group.GroupLocalDataSource
+import com.instructure.pandautils.data.repository.group.GroupNetworkDataSource
 import com.instructure.pandautils.data.repository.group.GroupRepository
 import com.instructure.pandautils.data.repository.group.GroupRepositoryImpl
 import com.instructure.pandautils.data.repository.planner.PlannerRepository
@@ -49,6 +55,11 @@ import com.instructure.pandautils.data.repository.submission.SubmissionRepositor
 import com.instructure.pandautils.data.repository.submission.SubmissionRepositoryImpl
 import com.instructure.pandautils.data.repository.user.UserRepository
 import com.instructure.pandautils.data.repository.user.UserRepositoryImpl
+import com.instructure.pandautils.room.offline.daos.DashboardCardDao
+import com.instructure.pandautils.room.offline.facade.CourseFacade
+import com.instructure.pandautils.room.offline.facade.DiscussionTopicHeaderFacade
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.NetworkStateProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -68,11 +79,29 @@ class RepositoryModule {
     }
 
     @Provides
+    fun provideCourseNetworkDataSource(
+        courseApi: CourseAPI.CoursesInterface
+    ): CourseNetworkDataSource {
+        return CourseNetworkDataSource(courseApi)
+    }
+
+    @Provides
+    fun provideCourseLocalDataSource(
+        courseFacade: CourseFacade,
+        dashboardCardDao: DashboardCardDao
+    ): CourseLocalDataSource {
+        return CourseLocalDataSource(courseFacade, dashboardCardDao)
+    }
+
+    @Provides
     @Singleton
     fun provideCourseRepository(
-        courseApi: CourseAPI.CoursesInterface
+        localDataSource: CourseLocalDataSource,
+        networkDataSource: CourseNetworkDataSource,
+        networkStateProvider: NetworkStateProvider,
+        featureFlagProvider: FeatureFlagProvider
     ): CourseRepository {
-        return CourseRepositoryImpl(courseApi)
+        return CourseRepositoryImpl(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider)
     }
 
     @Provides
@@ -92,11 +121,28 @@ class RepositoryModule {
     }
 
     @Provides
+    fun provideAnnouncementNetworkDataSource(
+        announcementApi: AnnouncementAPI.AnnouncementInterface
+    ): AnnouncementNetworkDataSource {
+        return AnnouncementNetworkDataSource(announcementApi)
+    }
+
+    @Provides
+    fun provideAnnouncementLocalDataSource(
+        discussionTopicHeaderFacade: DiscussionTopicHeaderFacade
+    ): AnnouncementLocalDataSource {
+        return AnnouncementLocalDataSource(discussionTopicHeaderFacade)
+    }
+
+    @Provides
     @Singleton
     fun provideAnnouncementRepository(
-        announcementApi: AnnouncementAPI.AnnouncementInterface
+        localDataSource: AnnouncementLocalDataSource,
+        networkDataSource: AnnouncementNetworkDataSource,
+        networkStateProvider: NetworkStateProvider,
+        featureFlagProvider: FeatureFlagProvider
     ): AnnouncementRepository {
-        return AnnouncementRepositoryImpl(announcementApi)
+        return AnnouncementRepositoryImpl(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider)
     }
 
     @Provides
@@ -108,11 +154,26 @@ class RepositoryModule {
     }
 
     @Provides
+    fun provideGroupNetworkDataSource(
+        groupApi: GroupAPI.GroupInterface
+    ): GroupNetworkDataSource {
+        return GroupNetworkDataSource(groupApi)
+    }
+
+    @Provides
+    fun provideGroupLocalDataSource(): GroupLocalDataSource {
+        return GroupLocalDataSource()
+    }
+
+    @Provides
     @Singleton
     fun provideGroupRepository(
-        groupApi: GroupAPI.GroupInterface
+        localDataSource: GroupLocalDataSource,
+        networkDataSource: GroupNetworkDataSource,
+        networkStateProvider: NetworkStateProvider,
+        featureFlagProvider: FeatureFlagProvider
     ): GroupRepository {
-        return GroupRepositoryImpl(groupApi)
+        return GroupRepositoryImpl(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider)
     }
 
     @Provides

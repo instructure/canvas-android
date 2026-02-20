@@ -38,8 +38,8 @@ import androidx.compose.ui.unit.sp
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.CanvasDivider
 import com.instructure.pandautils.compose.composables.SubmissionState
+import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 import com.instructure.pandautils.features.assignments.details.DiscussionCheckpointViewState
-import com.instructure.pandautils.features.grades.SubmissionStateLabel
 
 @Composable
 fun DiscussionCheckpointLayout(

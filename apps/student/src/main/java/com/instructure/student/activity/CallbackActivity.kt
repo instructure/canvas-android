@@ -187,11 +187,6 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
                 StudentPrefs.hideCourseColorOverlay = it.hideDashCardColorOverlays
             }
 
-            val launchDefinitions = awaitApi { LaunchDefinitionsManager.getLaunchDefinitions(it, false) }
-            launchDefinitions?.let {
-                gotLaunchDefinitions(it)
-            }
-
             if (!ApiPrefs.isMasquerading) {
                 // We don't know how the crashlytics stores the userId so we just set it to empty to make sure we don't log it.
                 val crashlytics = FirebaseCrashlytics.getInstance()
@@ -205,6 +200,11 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
 
             if (RemoteConfigUtils.getBoolean(RemoteConfigParam.TODO_REDESIGN)) {
                 getToDoCount()
+            }
+
+            val launchDefinitions = awaitApi { LaunchDefinitionsManager.getLaunchDefinitions(it, false) }
+            launchDefinitions?.let {
+                gotLaunchDefinitions(it)
             }
 
             initialCoreDataLoadingComplete()

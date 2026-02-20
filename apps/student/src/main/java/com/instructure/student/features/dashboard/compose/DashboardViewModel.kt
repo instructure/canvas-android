@@ -37,6 +37,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -84,12 +85,19 @@ class DashboardViewModel @Inject constructor(
             _uiState.update { it.copy(loading = true, error = null) }
             try {
                 launch { ensureDefaultWidgetsUseCase(Unit) }
-                observeWidgetMetadataUseCase(Unit).collect { widgets ->
+                combine(
+                    observeWidgetMetadataUseCase(Unit),
+                    networkStateProvider.isOnlineLiveData.asFlow()
+                ) { widgets, isOnline ->
                     val visibleWidgets = widgets.filter { it.isVisible }
-                    _uiState.update { it.copy(loading = false, error = null, widgets = visibleWidgets) }
+                    val filtered = if (isOnline) visibleWidgets
+                    else visibleWidgets.filter { it.id in OFFLINE_VISIBLE_WIDGETS }
+                    Triple(filtered, isOnline, widgets)
+                }.collect { (filteredWidgets, isOnline, allWidgets) ->
+                    _uiState.update { it.copy(loading = false, error = null, widgets = filteredWidgets, isOnline = isOnline) }
 
                     if (!widgetVisibilityTracked) {
-                        trackWidgetVisibility(widgets)
+                        trackWidgetVisibility(allWidgets)
                         widgetVisibilityTracked = true
                     }
                 }
@@ -143,5 +151,13 @@ class DashboardViewModel @Inject constructor(
                     _uiState.update { it.copy(color = themedColor) }
                 }
         }
+    }
+
+    companion object {
+        private val OFFLINE_VISIBLE_WIDGETS = setOf(
+            WidgetMetadata.WIDGET_ID_COURSES,
+            WidgetMetadata.WIDGET_ID_COURSE_INVITATIONS,
+            WidgetMetadata.WIDGET_ID_INSTITUTIONAL_ANNOUNCEMENTS
+        )
     }
 }

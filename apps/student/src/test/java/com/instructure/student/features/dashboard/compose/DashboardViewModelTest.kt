@@ -83,6 +83,8 @@ class DashboardViewModelTest {
 
     private lateinit var viewModel: DashboardViewModel
 
+    private val networkStateLiveData = MutableLiveData(true)
+
     @Before
     fun setUp() {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
@@ -105,6 +107,7 @@ class DashboardViewModelTest {
         clearMocks(analytics, answers = false)
 
         every { networkStateProvider.isOnline() } returns true
+        every { networkStateProvider.isOnlineLiveData } returns networkStateLiveData
         coEvery { observeWidgetMetadataUseCase(Unit) } returns flowOf(emptyList())
         coEvery { observeGlobalConfigUseCase(Unit) } returns flowOf(GlobalConfig())
         every { crashlytics.recordException(any()) } just Runs
@@ -369,6 +372,88 @@ class DashboardViewModelTest {
         assertEquals(1, refreshSignals.size)
 
         job.cancel()
+    }
+
+    @Test
+    fun testOfflineFiltersToOfflineVisibleWidgetsOnly() = runTest {
+        val networkStateLiveData = MutableLiveData(false)
+        every { networkStateProvider.isOnlineLiveData } returns networkStateLiveData
+
+        val widgets = listOf(
+            WidgetMetadata(WidgetMetadata.WIDGET_ID_COURSES, 0, true),
+            WidgetMetadata(WidgetMetadata.WIDGET_ID_CONFERENCES, 1, true),
+            WidgetMetadata(WidgetMetadata.WIDGET_ID_COURSE_INVITATIONS, 2, true),
+            WidgetMetadata(WidgetMetadata.WIDGET_ID_INSTITUTIONAL_ANNOUNCEMENTS, 3, true),
+            WidgetMetadata(WidgetMetadata.WIDGET_ID_WELCOME, 4, true),
+            WidgetMetadata(WidgetMetadata.WIDGET_ID_FORECAST, 5, true),
+            WidgetMetadata(WidgetMetadata.WIDGET_ID_TODO, 6, true)
+        )
+        coEvery { observeWidgetMetadataUseCase(Unit) } returns flowOf(widgets)
+
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertEquals(3, state.widgets.size)
+        assertEquals(WidgetMetadata.WIDGET_ID_COURSES, state.widgets[0].id)
+        assertEquals(WidgetMetadata.WIDGET_ID_COURSE_INVITATIONS, state.widgets[1].id)
+        assertEquals(WidgetMetadata.WIDGET_ID_INSTITUTIONAL_ANNOUNCEMENTS, state.widgets[2].id)
+        assertFalse(state.isOnline)
+    }
+
+    @Test
+    fun testOnlineShowsAllVisibleWidgets() = runTest {
+        val networkStateLiveData = MutableLiveData(true)
+        every { networkStateProvider.isOnlineLiveData } returns networkStateLiveData
+
+        val widgets = listOf(
+            WidgetMetadata(WidgetMetadata.WIDGET_ID_COURSES, 0, true),
+            WidgetMetadata(WidgetMetadata.WIDGET_ID_CONFERENCES, 1, true),
+            WidgetMetadata(WidgetMetadata.WIDGET_ID_COURSE_INVITATIONS, 2, true),
+            WidgetMetadata(WidgetMetadata.WIDGET_ID_TODO, 3, true)
+        )
+        coEvery { observeWidgetMetadataUseCase(Unit) } returns flowOf(widgets)
+
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertEquals(4, state.widgets.size)
+        assertTrue(state.isOnline)
+    }
+
+    @Test
+    fun testIsOnlineStateUpdatesWhenNetworkChanges() = runTest {
+        val networkStateLiveData = MutableLiveData(true)
+        every { networkStateProvider.isOnlineLiveData } returns networkStateLiveData
+
+        val widgets = listOf(
+            WidgetMetadata(WidgetMetadata.WIDGET_ID_COURSES, 0, true),
+            WidgetMetadata(WidgetMetadata.WIDGET_ID_CONFERENCES, 1, true)
+        )
+        coEvery { observeWidgetMetadataUseCase(Unit) } returns flowOf(widgets)
+
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        // Initially online
+        assertTrue(viewModel.uiState.value.isOnline)
+        assertEquals(2, viewModel.uiState.value.widgets.size)
+
+        // Go offline
+        networkStateLiveData.postValue(false)
+        advanceUntilIdle()
+
+        assertFalse(viewModel.uiState.value.isOnline)
+        assertEquals(1, viewModel.uiState.value.widgets.size)
+        assertEquals(WidgetMetadata.WIDGET_ID_COURSES, viewModel.uiState.value.widgets[0].id)
+
+        // Go back online
+        networkStateLiveData.postValue(true)
+        advanceUntilIdle()
+
+        assertTrue(viewModel.uiState.value.isOnline)
+        assertEquals(2, viewModel.uiState.value.widgets.size)
     }
 
     @Test

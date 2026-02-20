@@ -26,6 +26,7 @@ data class CourseInvitationsUiState(
     val error: Boolean = false,
     val invitations: List<CourseInvitation> = emptyList(),
     val snackbarMessage: SnackbarMessage? = null,
+    val isOnline: Boolean = true,
     val onRefresh: () -> Unit = {},
     val onAcceptInvitation: (CourseInvitation) -> Unit = {},
     val onDeclineInvitation: (CourseInvitation) -> Unit = {},

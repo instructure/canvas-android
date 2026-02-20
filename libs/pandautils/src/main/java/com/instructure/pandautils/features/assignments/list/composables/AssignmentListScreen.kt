@@ -91,6 +91,7 @@ import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.OverflowMenu
 import com.instructure.pandautils.compose.composables.SearchBarLive
 import com.instructure.pandautils.compose.composables.SubmissionState
+import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 import com.instructure.pandautils.features.assignments.list.AssignmentGroupItemState
 import com.instructure.pandautils.features.assignments.list.AssignmentListScreenEvent
 import com.instructure.pandautils.features.assignments.list.AssignmentListScreenOption
@@ -98,7 +99,6 @@ import com.instructure.pandautils.features.assignments.list.AssignmentListUiStat
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentFilter
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterScreen
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentStatusFilterOption
-import com.instructure.pandautils.features.grades.SubmissionStateLabel
 import com.instructure.pandautils.utils.ScreenState
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getAssignmentIcon

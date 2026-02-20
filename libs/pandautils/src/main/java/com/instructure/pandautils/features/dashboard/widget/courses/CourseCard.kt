@@ -105,8 +105,7 @@ fun CourseCard(
     Box(modifier = modifier.testTag("CourseCard_${courseCard.id}")) {
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .alpha(if (courseCard.isClickable) 1f else 0.5f),
+            .fillMaxWidth(),
         shape = cardShape,
         colors = CardDefaults.cardColors(
             containerColor = colorResource(R.color.backgroundLightest)
@@ -119,6 +118,7 @@ fun CourseCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(COURSE_CARD_HEIGHT)
+                .alpha(if (courseCard.isClickable) 1f else 0.5f)
                 .clickable(enabled = courseCard.isClickable) { activity?.let { onCourseClick(it, courseCard.id) } },
             verticalAlignment = Alignment.CenterVertically
         ) {

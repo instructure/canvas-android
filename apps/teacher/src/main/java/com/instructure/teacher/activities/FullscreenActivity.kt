@@ -43,7 +43,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 
 @AndroidEntryPoint
-class FullscreenActivity : BaseAppCompatActivity(), FullScreenInteractions {
+open class FullscreenActivity : BaseAppCompatActivity(), FullScreenInteractions {
 
     private val binding by viewBinding(ActivityFullscreenBinding::inflate)
 
