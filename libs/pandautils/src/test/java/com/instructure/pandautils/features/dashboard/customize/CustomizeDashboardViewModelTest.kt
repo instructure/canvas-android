@@ -33,8 +33,8 @@ import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetConfigUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetMetadataUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.SwapWidgetPositionsUseCase
+import com.instructure.pandautils.features.dashboard.widget.usecase.ToggleWidgetVisibilityUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.UpdateWidgetConfigUseCase
-import com.instructure.pandautils.features.dashboard.widget.usecase.UpdateWidgetVisibilityUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -69,7 +69,7 @@ class CustomizeDashboardViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
     private val observeWidgetMetadataUseCase: ObserveWidgetMetadataUseCase = mockk(relaxed = true)
     private val swapWidgetPositionsUseCase: SwapWidgetPositionsUseCase = mockk(relaxed = true)
-    private val updateWidgetVisibilityUseCase: UpdateWidgetVisibilityUseCase = mockk(relaxed = true)
+    private val toggleWidgetVisibilityUseCase: ToggleWidgetVisibilityUseCase = mockk(relaxed = true)
     private val observeWidgetConfigUseCase: ObserveWidgetConfigUseCase = mockk(relaxed = true)
     private val updateWidgetConfigUseCase: UpdateWidgetConfigUseCase = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
@@ -118,7 +118,7 @@ class CustomizeDashboardViewModelTest {
         return CustomizeDashboardViewModel(
             observeWidgetMetadataUseCase,
             swapWidgetPositionsUseCase,
-            updateWidgetVisibilityUseCase,
+            toggleWidgetVisibilityUseCase,
             observeWidgetConfigUseCase,
             updateWidgetConfigUseCase,
             resources,
@@ -309,7 +309,13 @@ class CustomizeDashboardViewModelTest {
         viewModel.uiState.value.onToggleVisibility("widget1")
 
         coVerify {
-            updateWidgetVisibilityUseCase(UpdateWidgetVisibilityUseCase.Params("widget1", false))
+            toggleWidgetVisibilityUseCase(
+                match { params ->
+                    params.widgetId == "widget1" &&
+                    params.widgets.size == 1 &&
+                    params.widgets[0].id == "widget1"
+                }
+            )
         }
     }
 
@@ -325,7 +331,13 @@ class CustomizeDashboardViewModelTest {
         viewModel.uiState.value.onToggleVisibility("widget1")
 
         coVerify {
-            updateWidgetVisibilityUseCase(UpdateWidgetVisibilityUseCase.Params("widget1", true))
+            toggleWidgetVisibilityUseCase(
+                match { params ->
+                    params.widgetId == "widget1" &&
+                    params.widgets.size == 1 &&
+                    params.widgets[0].id == "widget1"
+                }
+            )
         }
     }
 
