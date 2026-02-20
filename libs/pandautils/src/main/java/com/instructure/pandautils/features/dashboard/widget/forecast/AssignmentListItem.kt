@@ -50,6 +50,8 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.formatRelativeWithTime
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.composables.SubmissionState
+import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getFragmentActivity
 import java.util.Date
@@ -142,14 +144,33 @@ fun AssignmentListItem(
                 ?: assignment.gradedDate?.formatRelativeWithTime(context)
                     .orEmpty()
 
-            if (dateText.isNotEmpty()) {
-                Text(
-                    text = dateText,
-                    fontSize = 12.sp,
-                    lineHeight = 16.sp,
-                    color = colorResource(R.color.textDark),
-                    modifier = Modifier.fillMaxWidth()
-                )
+            val hasSubmissionState = assignment.submissionStateLabel != SubmissionStateLabel.None
+
+            if (dateText.isNotEmpty() || hasSubmissionState) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (dateText.isNotEmpty()) {
+                        Text(
+                            text = dateText,
+                            fontSize = 12.sp,
+                            lineHeight = 16.sp,
+                            color = colorResource(R.color.textDark)
+                        )
+                    }
+
+                    if (hasSubmissionState && dateText.isNotEmpty()) {
+                        VerticalDivider(
+                            modifier = Modifier.height(16.dp),
+                            thickness = 0.5.dp,
+                            color = colorResource(R.color.borderMedium)
+                        )
+                    }
+
+                    SubmissionState(assignment.submissionStateLabel, fontSize = 12.sp)
+                }
             }
         }
     }
@@ -221,6 +242,46 @@ private fun AssignmentListItemNoWeightPreview() {
             weight = null,
             iconRes = R.drawable.ic_assignment,
             url = ""
+        )
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AssignmentListItemSubmittedPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    AssignmentListItem(
+        assignment = AssignmentItem(
+            courseId = 150,
+            courseName = "ENVS150",
+            assignmentName = "Web of Life: Mapping Ecological Interdependence",
+            dueDate = Date(System.currentTimeMillis() + 86400000),
+            gradedDate = null,
+            pointsPossible = 75.0,
+            weight = 10.0,
+            iconRes = R.drawable.ic_assignment,
+            url = "",
+            submissionStateLabel = SubmissionStateLabel.Submitted
+        )
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AssignmentListItemGradedPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    AssignmentListItem(
+        assignment = AssignmentItem(
+            courseId = 101,
+            courseName = "COGS101",
+            assignmentName = "The Mind's Maze: Mapping Cognition",
+            dueDate = Date(),
+            gradedDate = null,
+            pointsPossible = 100.0,
+            weight = 10.0,
+            iconRes = R.drawable.ic_quiz,
+            url = "",
+            submissionStateLabel = SubmissionStateLabel.Graded
         )
     )
 }

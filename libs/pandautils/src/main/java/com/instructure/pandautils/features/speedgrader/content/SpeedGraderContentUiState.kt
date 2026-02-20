@@ -18,7 +18,7 @@
 import android.net.Uri
 import android.os.Parcelable
 import com.instructure.canvasapi2.models.Attachment
-import com.instructure.pandautils.features.grades.SubmissionStateLabel
+import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 import kotlinx.parcelize.Parcelize
 import java.util.Date
 

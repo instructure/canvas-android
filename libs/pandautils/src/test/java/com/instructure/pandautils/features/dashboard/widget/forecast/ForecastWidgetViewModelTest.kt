@@ -32,6 +32,7 @@ import com.instructure.pandautils.domain.usecase.assignment.LoadUpcomingAssignme
 import com.instructure.pandautils.domain.usecase.audit.LoadRecentGradeChangesParams
 import com.instructure.pandautils.domain.usecase.audit.LoadRecentGradeChangesUseCase
 import com.instructure.pandautils.domain.usecase.courses.LoadCourseUseCase
+import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveGlobalConfigUseCase
 import com.instructure.pandautils.utils.ColorKeeper
@@ -528,5 +529,59 @@ class ForecastWidgetViewModelTest {
                 )
             )
         }
+    }
+
+    @Test
+    fun `upcoming assignments map submitted status from PlannerItem`() = runTest {
+        val plannerItem = mockk<PlannerItem>(relaxed = true) {
+            every { submissionState } returns mockk(relaxed = true) {
+                every { submitted } returns true
+                every { graded } returns false
+            }
+        }
+
+        coEvery { loadUpcomingAssignmentsUseCase(any()) } returns listOf(plannerItem)
+
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        val assignments = viewModel.uiState.value.dueAssignments
+        assertEquals(1, assignments.size)
+        assertEquals(SubmissionStateLabel.Submitted, assignments[0].submissionStateLabel)
+    }
+
+    @Test
+    fun `upcoming assignments map graded status from PlannerItem`() = runTest {
+        val plannerItem = mockk<PlannerItem>(relaxed = true) {
+            every { submissionState } returns mockk(relaxed = true) {
+                every { submitted } returns true
+                every { graded } returns true
+            }
+        }
+
+        coEvery { loadUpcomingAssignmentsUseCase(any()) } returns listOf(plannerItem)
+
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        val assignments = viewModel.uiState.value.dueAssignments
+        assertEquals(1, assignments.size)
+        assertEquals(SubmissionStateLabel.Graded, assignments[0].submissionStateLabel)
+    }
+
+    @Test
+    fun `upcoming assignments default to not submitted or graded when submissionState is null`() = runTest {
+        val plannerItem = mockk<PlannerItem>(relaxed = true) {
+            every { submissionState } returns null
+        }
+
+        coEvery { loadUpcomingAssignmentsUseCase(any()) } returns listOf(plannerItem)
+
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        val assignments = viewModel.uiState.value.dueAssignments
+        assertEquals(1, assignments.size)
+        assertEquals(SubmissionStateLabel.None, assignments[0].submissionStateLabel)
     }
 }

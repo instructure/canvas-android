@@ -34,6 +34,7 @@ import com.instructure.canvasapi2.models.Checkpoint
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.pandautils.compose.composables.DiscussionCheckpointUiState
+import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 import com.instructure.pandautils.features.assignments.list.AssignmentGroupItemState
 import com.instructure.pandautils.features.assignments.list.AssignmentListMenuOverFlowItem
 import com.instructure.pandautils.features.assignments.list.AssignmentListScreenOption
@@ -45,7 +46,6 @@ import com.instructure.pandautils.features.assignments.list.filter.AssignmentLis
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterOptions
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterType
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListSelectedFilters
-import com.instructure.pandautils.features.grades.SubmissionStateLabel
 import com.instructure.pandautils.utils.DisplayGrade
 import com.instructure.pandautils.utils.ScreenState
 import com.jakewharton.threetenabp.AndroidThreeTen

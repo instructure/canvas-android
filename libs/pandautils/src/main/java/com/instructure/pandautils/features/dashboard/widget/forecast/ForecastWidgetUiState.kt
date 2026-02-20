@@ -17,6 +17,7 @@
 package com.instructure.pandautils.features.dashboard.widget.forecast
 
 import androidx.fragment.app.FragmentActivity
+import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
 import com.instructure.pandautils.utils.ThemedColor
 import java.time.LocalDate
@@ -47,6 +48,7 @@ data class AssignmentItem(
     val url: String,
     val score: Double? = null,
     val grade: String? = null,
+    val submissionStateLabel: SubmissionStateLabel = SubmissionStateLabel.None,
     val onClick: ((FragmentActivity) -> Unit)? = null,
 )
 
