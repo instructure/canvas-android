@@ -33,6 +33,7 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.student.R
@@ -62,6 +63,7 @@ class LockedModuleItemFragment : ParentFragment() {
         binding.explanationWebView.loadHtml(lockExplanation, "")
 
         binding.toolbar.setupAsBackButton(this)
+        binding.toolbar.applyTopSystemBarInsets()
         ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, course)
     }
     //endregion

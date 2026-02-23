@@ -19,6 +19,8 @@ package com.instructure.student.mobius.syllabus.ui
 import android.app.Activity
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.FragmentActivity
 import com.google.android.material.tabs.TabLayout
 import com.instructure.canvasapi2.models.CanvasContext
@@ -75,10 +77,55 @@ class SyllabusView(
         binding.toolbar.title = context.getString(com.instructure.pandares.R.string.syllabus)
         binding.toolbar.subtitle = canvasContext.name
 
+        setupWindowInsets()
+
         adapter = SyllabusTabAdapter(activity, canvasContext, getTabTitles())
 
         binding.syllabusPager.adapter = adapter
         binding.syllabusTabLayout.setupWithViewPager(binding.syllabusPager, true)
+    }
+
+    private fun setupWindowInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.toolbar) { view, insets ->
+            val statusBars = insets.getInsets(WindowInsetsCompat.Type.statusBars())
+            view.setPadding(
+                view.paddingLeft,
+                statusBars.top,
+                view.paddingRight,
+                view.paddingBottom
+            )
+            insets
+        }
+    }
+
+    private fun setupRecyclerViewInsets() {
+        eventsBinding?.syllabusEventsRecycler?.let { recyclerView ->
+            ViewCompat.setOnApplyWindowInsetsListener(recyclerView) { view, insets ->
+                val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                view.setPadding(
+                    view.paddingLeft,
+                    view.paddingTop,
+                    view.paddingRight,
+                    systemBars.bottom
+                )
+                insets
+            }
+        }
+    }
+
+    private fun setupWebViewInsets() {
+        webviewBinding?.syllabusScrollView?.let { scrollView ->
+            ViewCompat.setOnApplyWindowInsetsListener(scrollView) { view, insets ->
+                val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                view.setPadding(
+                    view.paddingLeft,
+                    view.paddingTop,
+                    view.paddingRight,
+                    systemBars.bottom
+                )
+                insets
+            }
+        }
     }
 
     override fun applyTheme() {
@@ -98,6 +145,8 @@ class SyllabusView(
     override fun render(state: SyllabusViewState) {
         webviewBinding = adapter.webviewBinding
         eventsBinding = adapter.eventsBinding
+        setupRecyclerViewInsets()
+        setupWebViewInsets()
         when (state) {
             SyllabusViewState.Loading -> {
                 binding.swipeRefreshLayout.isRefreshing = true

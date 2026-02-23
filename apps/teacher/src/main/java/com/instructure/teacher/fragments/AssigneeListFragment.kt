@@ -22,6 +22,10 @@ import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.widget.TextView
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.instructure.canvasapi2.models.CanvasComparable
@@ -33,7 +37,13 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNEE_LIST
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.fragments.BaseExpandableSyncFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.IntArg
+import com.instructure.pandautils.utils.ParcelableArrayListArg
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
+import com.instructure.pandautils.utils.bind
+import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.views.EmptyView
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.AssigneeListAdapter
@@ -42,7 +52,11 @@ import com.instructure.teacher.factory.AssigneeListPresenterFactory
 import com.instructure.teacher.holders.AssigneeViewHolder
 import com.instructure.teacher.models.AssigneeCategory
 import com.instructure.teacher.presenters.AssigneeListPresenter
-import com.instructure.teacher.utils.*
+import com.instructure.teacher.utils.EditDateGroups
+import com.instructure.teacher.utils.RecyclerViewUtils
+import com.instructure.teacher.utils.getColorCompat
+import com.instructure.teacher.utils.setupCloseButton
+import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.viewinterface.AssigneeListView
 
 @ScreenView(SCREEN_VIEW_ASSIGNEE_LIST)
@@ -72,7 +86,16 @@ class AssigneeListFragment : BaseExpandableSyncFragment<
     override fun withPagination() = false
     override fun perPageCount() = ApiPrefs.perPageCount
     override fun getPresenterFactory() = AssigneeListPresenterFactory(mDateGroups, mTargetIdx, sections, groups, students)
-    override fun onCreateView(view: View) {}
+    override fun onCreateView(view: View) {
+        view.findViewById<Toolbar>(R.id.toolbar)?.applyTopSystemBarInsets()
+
+        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
+        ViewCompat.setOnApplyWindowInsetsListener(recyclerView) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.updatePadding(bottom = systemBars.bottom)
+            insets
+        }
+    }
 
     private fun performSave() {
         presenter.save()

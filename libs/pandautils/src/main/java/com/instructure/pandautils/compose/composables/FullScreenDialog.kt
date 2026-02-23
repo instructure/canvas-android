@@ -19,16 +19,23 @@ package com.instructure.pandautils.compose.composables
 
 import android.view.WindowManager
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.union
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
+import androidx.core.view.WindowCompat
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.R
 
@@ -49,8 +56,28 @@ fun FullScreenDialog(
         (LocalView.current.parent as? DialogWindowProvider)?.window?.apply {
             setDimAmount(0f)
             clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+            WindowCompat.setDecorFitsSystemWindows(this, false)
+
+            // Enable drawing behind system bars
+            addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN)
+            addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+
+            // Ensure the window extends to full screen height
+            setLayout(
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.MATCH_PARENT
+            )
         }
-        var modifier = Modifier.fillMaxSize()
+        val layoutDirection = LocalLayoutDirection.current
+        val insets = WindowInsets.systemBars.union(WindowInsets.displayCutout).asPaddingValues()
+        var modifier = Modifier
+            .fillMaxSize()
+            .padding(
+                top = insets.calculateTopPadding(),
+                start = insets.calculateLeftPadding(layoutDirection),
+                end = insets.calculateRightPadding(layoutDirection)
+                // Intentionally not applying bottom padding so content background extends behind navigation bar
+            )
         if (ApiPrefs.isMasquerading) {
             modifier = modifier.padding(
                 top = dimensionResource(R.dimen.masqueradeButtonSize),

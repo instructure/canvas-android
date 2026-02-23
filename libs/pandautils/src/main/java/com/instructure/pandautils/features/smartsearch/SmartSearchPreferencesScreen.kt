@@ -23,6 +23,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -36,7 +37,6 @@ import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.RadioButton
 import androidx.compose.material.RadioButtonDefaults
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
@@ -59,6 +59,7 @@ import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.models.SmartSearchFilter
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.CanvasAppBar
+import com.instructure.pandautils.compose.composables.CanvasScaffold
 import com.instructure.pandautils.compose.composables.FullScreenDialog
 
 enum class SmartSearchSortType {
@@ -77,13 +78,15 @@ fun SmartSearchPreferencesScreen(
     val selectedTypes = remember { filters.toMutableStateList() }
     var selectedSort by remember { mutableStateOf(sortType) }
     FullScreenDialog(onDismissRequest = onCancel) {
-        Scaffold(
+        CanvasScaffold(
+            contentWindowInsets = WindowInsets(0),
             topBar = {
                 CanvasAppBar(
                     backgroundColor = color,
                     textColor = colorResource(R.color.textLightest),
                     title = stringResource(R.string.searchPreferencesTitle),
                     navigationActionClick = onCancel,
+                    windowInsets = WindowInsets(0, 0, 0, 0),
                     actions = {
                         TextButton(
                             onClick = { onDone(selectedTypes, selectedSort) },

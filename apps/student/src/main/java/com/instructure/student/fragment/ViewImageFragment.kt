@@ -24,7 +24,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.palette.graphics.Palette
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -32,10 +31,25 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.interfaces.ShareableFile
 import com.instructure.pandautils.models.EditableFile
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.BooleanArg
+import com.instructure.pandautils.utils.FileFolderDeletedEvent
+import com.instructure.pandautils.utils.FileFolderUpdatedEvent
+import com.instructure.pandautils.utils.IntArg
+import com.instructure.pandautils.utils.NullableParcelableArg
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.StringArg
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
+import com.instructure.pandautils.utils.isTablet
+import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.viewExternally
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentViewImageBinding
 import org.greenrobot.eventbus.EventBus
@@ -87,6 +101,8 @@ class ViewImageFragment : BaseCanvasFragment(), ShareableFile {
             ViewStyler.themeToolbarLight(requireActivity(), toolbar)
             ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
         }
+
+        toolbar.applyTopSystemBarInsets()
     }
 
     private val requestListener = object : RequestListener<Drawable> {

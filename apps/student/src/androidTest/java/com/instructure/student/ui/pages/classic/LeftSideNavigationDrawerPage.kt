@@ -75,7 +75,8 @@ class LeftSideNavigationDrawerPage : BasePage() {
 
     fun logout() {
         onView(hamburgerButtonMatcher).click()
-        logoutButton.scrollTo().click()
+        onView(withId(R.id.navigationDrawer)).swipeUp() // Swipe up to ensure the logout button is visible (since edge-to-edge the android navigation bar overlaps with Logout button).
+        logoutButton.click()
         onViewWithText(android.R.string.ok).click()
         // It can potentially take a long time for the sign-out to take effect, especially on
         // slow FTL devices.  So let's pause for a bit until we see the canvas logo.

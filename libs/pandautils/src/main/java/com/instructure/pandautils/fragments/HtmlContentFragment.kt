@@ -29,6 +29,8 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.setupAsCloseButton
 import com.instructure.pandautils.views.CanvasWebView
 import dagger.hilt.android.AndroidEntryPoint
@@ -56,10 +58,12 @@ class HtmlContentFragment : BaseCanvasFragment() {
         setupToolbar()
         setupWebView(binding.canvasWebViewWrapper.webView)
 
+        binding.canvasWebViewWrapper.applyBottomSystemBarInsets()
         binding.canvasWebViewWrapper.loadHtml(html, title)
     }
 
     private fun setupToolbar() {
+        binding.toolbar.applyTopSystemBarInsets()
         binding.toolbar.title = title
         binding.toolbar.setupAsCloseButton(this)
         if (darkToolbar) {

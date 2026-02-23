@@ -56,7 +56,10 @@ import com.instructure.pandautils.utils.Placeholder
 import com.instructure.pandautils.utils.RequestCodes
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyDisplayCutoutInsets
 import com.instructure.pandautils.utils.applyTheme
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.children
 import com.instructure.pandautils.utils.descendants
 import com.instructure.pandautils.utils.handleLTIPlaceHolders
@@ -152,6 +155,13 @@ class EditQuizDetailsFragment : BasePresenterFragment<
         // Hide Keyboard
         requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
         setupToolbar()
+        setupWindowInsets()
+    }
+
+    private fun setupWindowInsets() = with(binding) {
+        root.applyDisplayCutoutInsets()
+        toolbar.applyTopSystemBarInsets()
+        scrollView.applyBottomSystemBarInsets()
     }
 
     override fun populateQuizDetails() {

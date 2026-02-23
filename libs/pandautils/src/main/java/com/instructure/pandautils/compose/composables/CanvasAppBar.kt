@@ -18,6 +18,10 @@ package com.instructure.pandautils.compose.composables
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -53,7 +57,8 @@ fun CanvasAppBar(
     navIconContentDescription: String = stringResource(id = R.string.close),
     actions: @Composable RowScope.() -> Unit = {},
     backgroundColor: Color = colorResource(id = R.color.backgroundLightestElevated),
-    textColor: Color = colorResource(id = R.color.textDarkest)
+    textColor: Color = colorResource(id = R.color.textDarkest),
+    windowInsets: WindowInsets = WindowInsets.statusBars
 ) {
     TopAppBar(
         title = {
@@ -90,8 +95,55 @@ fun CanvasAppBar(
                 )
             }
         },
-        modifier = modifier.testTag("toolbar"),
-        actions = actions
+        modifier = modifier.testTag("toolbar")
+            .windowInsetsPadding(WindowInsets.displayCutout),
+        actions = actions,
+        windowInsets = windowInsets
+    )
+}
+
+@Composable
+fun CanvasAppBar(
+    title: @Composable () -> Unit,
+    navigationActionClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    @DrawableRes navIconRes: Int = R.drawable.ic_close,
+    navIconContentDescription: String = stringResource(id = R.string.close),
+    actions: @Composable RowScope.() -> Unit = {},
+    backgroundColor: Color = colorResource(id = R.color.backgroundLightestElevated),
+    textColor: Color = colorResource(id = R.color.textDarkest),
+    windowInsets: WindowInsets = WindowInsets.statusBars
+) {
+    TopAppBar(
+        title = {
+            Column(
+                modifier = Modifier.semantics(mergeDescendants = true) {
+                    isTraversalGroup = true
+                    traversalIndex = -1f
+                    heading()
+                }
+            ) {
+                title()
+            }
+        },
+        elevation = 2.dp,
+        backgroundColor = backgroundColor,
+        contentColor = textColor,
+        navigationIcon = {
+            IconButton(
+                modifier = Modifier.testTag("navigationButton"),
+                onClick = navigationActionClick
+            ) {
+                Icon(
+                    painter = painterResource(id = navIconRes),
+                    contentDescription = navIconContentDescription
+                )
+            }
+        },
+        modifier = modifier.testTag("toolbar")
+            .windowInsetsPadding(WindowInsets.displayCutout),
+        actions = actions,
+        windowInsets = windowInsets
     )
 }
 

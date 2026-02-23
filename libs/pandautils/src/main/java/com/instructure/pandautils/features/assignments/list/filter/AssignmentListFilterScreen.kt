@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
@@ -39,6 +38,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.composables.CanvasScaffold
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.MultiChoicePicker
 import com.instructure.pandautils.compose.composables.SingleChoicePicker
@@ -57,7 +57,7 @@ fun AssignmentListFilterScreen(
     onBackPressed: () -> Unit
 ) {
     var selectedFilters by remember { mutableStateOf(selectedOptions) }
-    Scaffold(
+    CanvasScaffold(
         backgroundColor = colorResource(id = com.instructure.pandares.R.color.backgroundLightest),
         topBar = {
             CanvasThemedAppBar(

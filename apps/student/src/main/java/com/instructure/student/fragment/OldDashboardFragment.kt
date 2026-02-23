@@ -30,6 +30,7 @@ import android.view.MotionEvent.ACTION_CANCEL
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
@@ -169,6 +170,8 @@ class OldDashboardFragment : ParentFragment() {
         recyclerBinding = CourseGridRecyclerRefreshLayoutBinding.bind(binding.root)
 
         applyTheme()
+
+        binding.toolbar.applyTopSystemBarInsets()
 
         networkStateProvider.isOnlineLiveData.observe(this) { online ->
             recyclerAdapter?.refresh()

@@ -51,6 +51,7 @@ import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applySystemBarInsets
 import com.instructure.pandautils.utils.setGone
 import com.instructure.student.R
 import com.instructure.student.databinding.ActivityVideoViewBinding
@@ -71,6 +72,7 @@ class VideoViewActivity : BaseCanvasActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         binding.playerView.requestFocus()
+        binding.playerView.applySystemBarInsets(bottom = true)
         mediaDataSourceFactory = buildDataSourceFactory(true)
         mainHandler = Handler()
         val videoTrackSelectionFactory: ExoTrackSelection.Factory = AdaptiveTrackSelection.Factory()

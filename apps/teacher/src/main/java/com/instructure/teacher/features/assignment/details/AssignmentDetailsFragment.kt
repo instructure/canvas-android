@@ -46,12 +46,16 @@ import com.instructure.pandautils.features.speedgrader.SpeedGraderFragment
 import com.instructure.pandautils.features.speedgrader.SubmissionListFilter
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.AssignmentGradedEvent
+import com.instructure.pandautils.utils.BooleanArg
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.accessibilityClassName
+import com.instructure.pandautils.utils.applyBottomSystemBarMargin
+import com.instructure.pandautils.utils.applyDisplayCutoutInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.loadHtmlWithIframes
@@ -107,6 +111,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
     private var assignment: Assignment by ParcelableArg(Assignment(), ASSIGNMENT)
     private var course: Course by ParcelableArg(Course())
     private var assignmentId: Long by LongArg(0L, ASSIGNMENT_ID)
+    private var isInModulesPager: Boolean by BooleanArg(key = IS_IN_MODULES_PAGER, default = false)
 
     private var needToForceNetwork = false
 
@@ -164,9 +169,13 @@ class AssignmentDetailsFragment : BasePresenterFragment<
 
     override fun getPresenterFactory() = AssignmentDetailPresenterFactory(assignment, assignmentsApi)
 
-    override fun onPresenterPrepared(presenter: AssignmentDetailsPresenter) {}
+    override fun onPresenterPrepared(presenter: AssignmentDetailsPresenter) {
+        // Apply display cutout insets to root view to prevent content from extending behind camera cutout
+        binding.root.applyDisplayCutoutInsets()
+    }
 
     private fun setupToolbar() = with(binding) {
+        toolbar.applyTopSystemBarInsets()
         toolbar.setupBackButtonWithExpandCollapseAndBack(this@AssignmentDetailsFragment) {
             toolbar.updateToolbarExpandCollapseIcon(this@AssignmentDetailsFragment)
             ViewStyler.themeToolbarColored(requireActivity(), toolbar, course.color, requireContext().getColor(R.color.textLightest))
@@ -181,6 +190,11 @@ class AssignmentDetailsFragment : BasePresenterFragment<
     }
 
     private fun setupViews(assignment: Assignment) = with(binding) {
+        if (!isInModulesPager) {
+            swipeRefreshLayout.applyBottomSystemBarMargin()
+            viewDiscussionButton.applyBottomSystemBarMargin()
+        }
+
         swipeRefreshLayout.setOnRefreshListener {
             presenter.loadData(true)
 
@@ -527,20 +541,23 @@ class AssignmentDetailsFragment : BasePresenterFragment<
     companion object {
         @JvmStatic val ASSIGNMENT = "assignment"
         @JvmStatic val ASSIGNMENT_ID = "assignmentId"
+        private const val IS_IN_MODULES_PAGER = "isInModulesPager"
 
         fun newInstance(course: Course, args: Bundle) = AssignmentDetailsFragment().withArgs(args).apply {
             this.course = course
         }
 
-        fun makeBundle(assignment: Assignment): Bundle {
+        fun makeBundle(assignment: Assignment, isInModulesPager: Boolean = false): Bundle {
             val args = Bundle()
             args.putParcelable(ASSIGNMENT, assignment)
+            args.putBoolean(IS_IN_MODULES_PAGER, isInModulesPager)
             return args
         }
 
-        fun makeBundle(assignmentId: Long): Bundle {
+        fun makeBundle(assignmentId: Long, isInModulesPager: Boolean = false): Bundle {
             val args = Bundle()
             args.putLong(ASSIGNMENT_ID, assignmentId)
+            args.putBoolean(IS_IN_MODULES_PAGER, isInModulesPager)
             return args
         }
 

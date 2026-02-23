@@ -35,6 +35,8 @@ import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -53,6 +55,8 @@ import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.ColorUtils
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.setupAsBackButton
 import retrofit2.Response
 import java.util.Locale
@@ -110,14 +114,31 @@ abstract class BaseLoginFindSchoolActivity : BaseCanvasActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        setupWindowInsets()
         bindViews()
         applyTheme()
+    }
+
+    private fun setupWindowInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
+            val insets = windowInsets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+            view.setPadding(
+                insets.left,
+                0,
+                insets.right,
+                0
+            )
+            windowInsets
+        }
     }
 
     private fun bindViews() = with(binding) {
         mWhatsYourSchoolName = findViewById(R.id.whatsYourSchoolName)
         mLoginFlowLogout = findViewById(R.id.loginFlowLogout)
         toolbar.apply {
+            applyTopSystemBarInsets()
             navigationIcon?.isAutoMirrored = true
             setupAsBackButton { finish() }
             inflateMenu(R.menu.menu_next)
@@ -197,6 +218,7 @@ abstract class BaseLoginFindSchoolActivity : BaseCanvasActivity() {
         recyclerView.addItemDecoration(DividerItemDecoration(this@BaseLoginFindSchoolActivity, RecyclerView.VERTICAL))
         recyclerView.layoutManager = LinearLayoutManager(this@BaseLoginFindSchoolActivity, RecyclerView.VERTICAL, false)
         recyclerView.adapter = mDomainAdapter
+        recyclerView.applyBottomSystemBarInsets()
     }
 
     /**

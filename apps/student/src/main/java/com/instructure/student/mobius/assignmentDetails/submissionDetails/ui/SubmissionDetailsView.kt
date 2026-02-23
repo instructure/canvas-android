@@ -42,6 +42,8 @@ import com.instructure.pandautils.binding.BindableSpinnerAdapter
 import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptItemViewModel
 import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptViewData
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyImeAndSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.asStateList
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.hideKeyboard
@@ -110,12 +112,15 @@ class SubmissionDetailsView(
     }
 
     init {
+        binding.toolbar.applyTopSystemBarInsets()
         binding.toolbar.setupAsBackButton { activity.onBackPressed() }
         binding.retryButton.onClick { consumer?.accept(SubmissionDetailsEvent.RefreshRequested) }
         binding.drawerViewPager.offscreenPageLimit = 3
         binding.drawerViewPager.adapter = drawerPagerAdapter
         configureDrawerTabLayout()
         configureSlidingPanelHeight()
+
+        binding.slidingUpPanelLayout.applyImeAndSystemBarInsets()
 
         if (isAccessibilityEnabled(context)) {
             binding.slidingUpPanelLayout.anchorPoint = 1.0f

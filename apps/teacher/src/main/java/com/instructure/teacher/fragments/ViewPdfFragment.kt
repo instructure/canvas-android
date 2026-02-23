@@ -23,12 +23,16 @@ import android.view.View
 import android.view.ViewGroup
 import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import com.instructure.pandautils.analytics.SCREEN_VIEW_VIEW_PDF
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.utils.*
 import com.instructure.pandautils.utils.Utils.copyToClipboard
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentViewPdfBinding
 import com.instructure.teacher.factory.ViewPdfFragmentPresenterFactory
@@ -61,6 +65,12 @@ class ViewPdfFragment : PresenterFragment<ViewPdfFragmentPresenter, ViewPdfFragm
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater.inflate(R.layout.fragment_view_pdf, container, false)
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.toolbar.applyTopSystemBarInsets()
+    }
+
     override fun onResume() {
         super.onResume()
 
@@ -89,6 +99,7 @@ class ViewPdfFragment : PresenterFragment<ViewPdfFragmentPresenter, ViewPdfFragm
     override fun onActivityCreated(savedInstanceState: Bundle?) = with(binding) {
         super.onActivityCreated(savedInstanceState)
         toolbar.title = url
+        setupWindowInsets()
 
         editableFile?.let {
             toolbar.setupMenu(R.menu.menu_file_details) { menu ->
@@ -149,6 +160,12 @@ class ViewPdfFragment : PresenterFragment<ViewPdfFragmentPresenter, ViewPdfFragm
     override fun onLoadingError() {
         toast(R.string.errorLoadingFiles)
         activity?.onBackPressed()
+    }
+
+    private fun setupWindowInsets() = with(binding) {
+        if (isInModulesPager || (isTablet && toolbarColor != 0)) {
+            toolbar.applyTopSystemBarInsets()
+        }
     }
 
     companion object {

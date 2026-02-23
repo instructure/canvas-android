@@ -39,10 +39,13 @@ import com.instructure.pandautils.features.file.download.FileDownloadWorker
 import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.pandautils.utils.BooleanArg
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.PermissionUtils
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getModuleItemId
 import com.instructure.pandautils.utils.isTablet
@@ -85,6 +88,7 @@ class PageDetailsFragment : BasePresenterFragment<
     private var canvasContext: CanvasContext by ParcelableArg(default = Course())
     private var page: Page by ParcelableArg(Page(), PAGE)
     private var pageId: String by StringArg(key = PAGE_ID)
+    private var isInModulesPager: Boolean by BooleanArg(key = IS_IN_MODULES_PAGER, default = false)
 
     private var downloadUrl: String? = null
     var downloadFileName: String? = null
@@ -138,6 +142,9 @@ class PageDetailsFragment : BasePresenterFragment<
             presenter.getPage(page.url ?: "", canvasContext, true)
         }
         setupToolbar()
+        if (!isInModulesPager) {
+            canvasWebViewWraper.applyBottomSystemBarInsets()
+        }
 
         canvasWebViewWraper.webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
             override fun openMediaFromWebView(mime: String, url: String, filename: String) {
@@ -222,6 +229,7 @@ class PageDetailsFragment : BasePresenterFragment<
     }
 
     private fun setupToolbar() = with(binding) {
+        toolbar.applyTopSystemBarInsets()
         toolbar.setupMenu(R.menu.menu_page_details) { openEditPage(page) }
 
         toolbar.setupBackButtonWithExpandCollapseAndBack(this@PageDetailsFragment) {
@@ -268,13 +276,18 @@ class PageDetailsFragment : BasePresenterFragment<
 
     companion object {
         const val PAGE = "pageDetailsPage"
-
         const val PAGE_ID = "pageDetailsId"
+        private const val IS_IN_MODULES_PAGER = "isInModulesPager"
 
-        fun makeBundle(page: Page): Bundle = Bundle().apply { putParcelable(PAGE, page) }
+        fun makeBundle(page: Page, isInModulesPager: Boolean = false): Bundle = Bundle().apply {
+            putParcelable(PAGE, page)
+            putBoolean(IS_IN_MODULES_PAGER, isInModulesPager)
+        }
 
-        fun makeBundle(pageId: String): Bundle = Bundle().apply { putString(PAGE_ID, pageId) }
-
+        fun makeBundle(pageId: String, isInModulesPager: Boolean = false): Bundle = Bundle().apply {
+            putString(PAGE_ID, pageId)
+            putBoolean(IS_IN_MODULES_PAGER, isInModulesPager)
+        }
 
         fun newInstance(canvasContext: CanvasContext, args: Bundle) = PageDetailsFragment().withArgs(args).apply {
             this.canvasContext = canvasContext

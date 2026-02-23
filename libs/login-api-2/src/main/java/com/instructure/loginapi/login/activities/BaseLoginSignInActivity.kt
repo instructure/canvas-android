@@ -41,6 +41,8 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.instructure.canvasapi2.RequestInterceptor.Companion.acceptedLanguageString
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.TokenRefreshState
@@ -87,8 +89,10 @@ import com.instructure.loginapi.login.util.SavedLoginInfo
 import com.instructure.loginapi.login.viewmodel.LoginViewModel
 import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.utils.EdgeToEdgeHelper
 import com.instructure.pandautils.utils.Utils
 import com.instructure.pandautils.utils.ViewStyler.themeStatusBar
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAsBackButton
@@ -135,7 +139,9 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        EdgeToEdgeHelper.enableEdgeToEdge(this)
         setContentView(binding.root)
+        setupWindowInsets()
         canvasLogin = intent!!.extras!!.getInt(Const.CANVAS_LOGIN, 0)
         setupViews()
         applyTheme()
@@ -163,9 +169,25 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
         }
     }
 
+    private fun setupWindowInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
+            val insets = windowInsets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+            view.setPadding(
+                insets.left,
+                0,
+                insets.right,
+                insets.bottom
+            )
+            windowInsets
+        }
+    }
+
     @SuppressLint("SetJavaScriptEnabled")
     private fun setupViews() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        toolbar.applyTopSystemBarInsets()
         toolbar.title = accountDomain.domain
         toolbar.navigationIcon?.isAutoMirrored = true
         toolbar.setupAsBackButton {

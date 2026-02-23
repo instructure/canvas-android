@@ -23,6 +23,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -38,7 +39,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
@@ -66,6 +66,7 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
+import com.instructure.pandautils.compose.composables.CanvasScaffold
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
@@ -82,7 +83,7 @@ fun AlertsScreen(
     lazyListState: LazyListState = LazyListState()
 ) {
     CanvasTheme {
-        Scaffold(
+        CanvasScaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
             content = { padding ->
                 val pullRefreshState = rememberPullRefreshState(
@@ -128,9 +129,8 @@ fun AlertsScreen(
                                 uiState = uiState,
                                 actionHandler = actionHandler,
                                 lazyListState = lazyListState,
-                                modifier = Modifier
-                                    .padding(padding)
-                                    .fillMaxSize()
+                                scaffoldPadding = padding,
+                                modifier = Modifier.fillMaxSize()
                             )
                         }
                     }
@@ -155,11 +155,13 @@ fun AlertsListContent(
     uiState: AlertsUiState,
     actionHandler: (AlertsAction) -> Unit,
     lazyListState: LazyListState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    scaffoldPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     LazyColumn(
         state = lazyListState,
-        modifier = modifier.testTag("alertsList")
+        modifier = modifier.testTag("alertsList"),
+        contentPadding = scaffoldPadding
     ) {
         items(uiState.alerts, key = { it.alertId }) { alert ->
             AlertsListItem(

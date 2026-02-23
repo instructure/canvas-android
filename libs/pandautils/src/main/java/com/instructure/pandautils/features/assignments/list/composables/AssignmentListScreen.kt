@@ -28,6 +28,8 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -35,6 +37,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -44,7 +47,6 @@ import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
@@ -78,6 +80,7 @@ import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
+import com.instructure.pandautils.compose.composables.CanvasScaffold
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.CheckpointItem
 import com.instructure.pandautils.compose.composables.EmptyContent
@@ -120,7 +123,7 @@ fun AssignmentListScreen(
     CanvasTheme {
         when (state.screenOption) {
             AssignmentListScreenOption.List -> {
-                Scaffold(
+                CanvasScaffold(
                     backgroundColor = colorResource(id = R.color.backgroundLightest),
                     topBar = {
                         AppBar(
@@ -220,7 +223,9 @@ private fun AppBar(
                     ) {
                         state.overFlowItems.forEach { item ->
                             DropdownMenuItem(
-                                modifier = Modifier.background(color = colorResource(id = R.color.backgroundLightestElevated)),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(color = colorResource(id = R.color.backgroundLightestElevated)),
                                 onClick = {
                                     item.onClick()
                                     screenActionHandler(
@@ -266,6 +271,7 @@ private fun AssignmentListWrapper(
 
     Box(
         modifier = modifier
+            .windowInsetsPadding(WindowInsets.displayCutout)
             .pullRefresh(pullRefreshState)
     ) {
         when (state.state) {

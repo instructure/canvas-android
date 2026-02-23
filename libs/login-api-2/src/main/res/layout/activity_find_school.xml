@@ -27,7 +27,8 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
+        android:layout_height="wrap_content"
+        android:minHeight="?android:attr/actionBarSize"
         android:background="@color/backgroundLightestElevated"
         android:elevation="6dp"
         app:theme="@style/ToolBarStyleDark"
@@ -81,7 +82,8 @@
         android:contentDescription="@string/matchingSchools"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:clipToPadding="false"/>
 
     <TextView
         android:id="@+id/loginFlowLogout"

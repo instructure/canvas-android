@@ -41,6 +41,8 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.addSearch
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.closeSearch
 import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.makeBundle
@@ -99,6 +101,7 @@ class QuizListFragment : ParentFragment(), Bookmarkable {
             R.id.emptyView,
             R.id.listView
         )
+        recyclerBinding.swipeRefreshLayout.applyBottomSystemBarInsets()
     }
 
     override fun applyTheme() {
@@ -106,6 +109,7 @@ class QuizListFragment : ParentFragment(), Bookmarkable {
             setupToolbarMenu(toolbar)
             toolbar.title = title()
             toolbar.setupAsBackButton(this@QuizListFragment)
+            toolbar.applyTopSystemBarInsets()
             toolbar.addSearch(getString(R.string.searchQuizzesHint)) { query ->
                 if (query.isBlank()) {
                     recyclerBinding.emptyView.emptyViewText(R.string.noItemsToDisplayShort)

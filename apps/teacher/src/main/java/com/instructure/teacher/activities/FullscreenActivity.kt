@@ -20,6 +20,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.GroupManager
@@ -53,6 +55,8 @@ open class FullscreenActivity : BaseAppCompatActivity(), FullScreenInteractions 
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        setupWindowInsets()
+
         if (savedInstanceState == null) {
             mRoute = intent.extras!!.getParcelable(Route.ROUTE)
             mRoute?.let { handleRoute(it) }
@@ -60,6 +64,20 @@ open class FullscreenActivity : BaseAppCompatActivity(), FullScreenInteractions 
             if (mRoute == null) {
                 finish()
             }
+        }
+    }
+
+    private fun setupWindowInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.container) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(
+                systemBars.left,
+                0,
+                systemBars.right,
+                0
+            )
+            // Don't consume the insets - let them propagate to child fragments
+            insets
         }
     }
 
