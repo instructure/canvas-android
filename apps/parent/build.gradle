@@ -68,7 +68,7 @@ android {
     }
 
 
-    lintOptions {
+    lint {
         abortOnError false
     }
 

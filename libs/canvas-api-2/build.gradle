@@ -79,7 +79,7 @@ android {
         jvmTarget = JavaVersion.VERSION_17
     }
 
-    lintOptions {
+    lint {
         abortOnError false
     }
 }

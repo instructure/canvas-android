@@ -77,7 +77,7 @@ android {
         }
     }
 
-    lintOptions {
+    lint {
         abortOnError false
     }
 
@@ -190,10 +190,6 @@ android {
         configurations.androidTestImplementation.dependencies.each { androidTestCompileDependency ->
             configurations.androidTestImplementation.exclude module: "${compileDependency.getName()}"
         }
-    }
-
-    dexOptions {
-        javaMaxHeapSize '4g'
     }
 
 
