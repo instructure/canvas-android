@@ -70,6 +70,7 @@ class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteractions) 
     private val submissionTypesTextView by OnViewWithId(R.id.submissionTypesTextView)
     private val instructionsSectionLabel by OnViewWithId(R.id.instructionsSectionLabel, autoAssert = false)
     private val editButton by OnViewWithId(R.id.menu_edit)
+    private val speedGraderQuickAccessButton by OnViewWithId(R.id.menu_speedGrader)
     private val dueDatesLayout by OnViewWithId(R.id.dueLayout)
     private val submissionsLayout by OnViewWithId(R.id.submissionsLayout)
     private val viewAllSubmissions by OnViewWithId(R.id.viewAllSubmissions)
@@ -114,6 +115,14 @@ class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteractions) 
      */
     fun openEditPage() {
         editButton.click()
+    }
+
+    /**
+     * Open the SpeedGrader page (by clicking on the SpeedGrader quick access button).
+     *
+     */
+    fun openSpeedGrader() {
+        speedGraderQuickAccessButton.click()
     }
 
     /**

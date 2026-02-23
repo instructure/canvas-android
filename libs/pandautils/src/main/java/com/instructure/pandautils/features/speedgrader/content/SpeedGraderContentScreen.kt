@@ -237,7 +237,8 @@ private fun UserHeader(
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 16.sp,
                 maxLines = 2,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.testTag("speedGraderUserName")
             )
             if (submissionStatus != SubmissionStateLabel.None) {
                 SubmissionStatus(

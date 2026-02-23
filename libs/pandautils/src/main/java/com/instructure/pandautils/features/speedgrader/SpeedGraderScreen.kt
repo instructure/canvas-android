@@ -153,7 +153,9 @@ fun SpeedGraderScreen(
                 )
 
                 HorizontalPager(
-                    modifier = Modifier.padding(padding),
+                    modifier = Modifier
+                        .padding(padding)
+                        .testTag("speedGraderPager"),
                     state = pagerState,
                     userScrollEnabled = viewPagerEnabled
                 ) { page ->
