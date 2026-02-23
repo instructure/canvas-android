@@ -100,7 +100,7 @@ class OldToDoListFragment : ParentFragment() {
         override fun onShowErrorCrouton(message: Int) = Unit
     }
 
-    override fun title(): String = getString(R.string.Todo)
+    override fun title(): String = getString(R.string.TodoNew)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return layoutInflater.inflate(R.layout.fragment_list_todo, container, false)

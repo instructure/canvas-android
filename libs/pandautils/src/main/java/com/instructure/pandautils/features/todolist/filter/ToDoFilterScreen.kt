@@ -82,7 +82,7 @@ fun ToDoFilterScreen(
         backgroundColor = colorResource(R.color.backgroundLightest),
         topBar = {
             CanvasThemedAppBar(
-                title = stringResource(id = R.string.todoFilterPreferences),
+                title = stringResource(id = R.string.todoFilterPreferencesNew),
                 navIconRes = R.drawable.ic_close,
                 navIconContentDescription = stringResource(id = R.string.close),
                 navigationActionClick = onDismiss,
@@ -295,7 +295,7 @@ fun ToDoFilterScreenPreview() {
             uiState = ToDoFilterUiState(
                 checkboxItems = listOf(
                     FilterCheckboxItem(
-                        titleRes = R.string.todoFilterShowPersonalToDos,
+                        titleRes = R.string.todoFilterShowPersonalToDosNew,
                         checked = false,
                         onToggle = {}
                     ),

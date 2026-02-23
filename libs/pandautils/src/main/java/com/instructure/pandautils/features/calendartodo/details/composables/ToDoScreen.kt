@@ -134,8 +134,8 @@ private fun OverFlowMenuSegment(
     var showDeleteConfirmationDialog by rememberSaveable { mutableStateOf(false) }
     if (showDeleteConfirmationDialog) {
         SimpleAlertDialog(
-            dialogTitle = stringResource(id = R.string.todoDeleteConfirmationTitle),
-            dialogText = stringResource(id = R.string.todoDeleteConfirmationText),
+            dialogTitle = stringResource(id = R.string.todoDeleteConfirmationTitleNew),
+            dialogText = stringResource(id = R.string.todoDeleteConfirmationTextNew),
             dismissButtonText = stringResource(id = R.string.cancel),
             confirmationButtonText = stringResource(id = R.string.delete),
             onDismissRequest = {

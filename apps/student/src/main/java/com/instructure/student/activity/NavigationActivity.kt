@@ -1497,7 +1497,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
     }
 
     override fun updateToDoCount(toDoCount: Int) {
-        updateBottomBarBadge(R.id.bottomNavigationToDo, toDoCount, R.plurals.a11y_todoBadgeCount)
+        updateBottomBarBadge(R.id.bottomNavigationToDo, toDoCount, R.plurals.a11y_todoBadgeCountNew)
     }
 
     override fun onToDoCountChanged(count: Int) {

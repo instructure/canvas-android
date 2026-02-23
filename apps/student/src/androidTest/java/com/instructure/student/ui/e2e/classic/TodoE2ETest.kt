@@ -129,7 +129,7 @@ class TodoE2ETest : StudentComposeTest() {
         toDoFilterPage.assertToDoFilterScreenDetails()
 
         Log.d(ASSERTION_TAG, "Assert that all 'Visible items' filter options are disabled by default on the ToDo Filter Page.")
-        toDoFilterPage.assertVisibleItemOptionCheckedState(R.string.todoFilterShowPersonalToDos, false)
+        toDoFilterPage.assertVisibleItemOptionCheckedState(R.string.todoFilterShowPersonalToDosNew, false)
         toDoFilterPage.assertVisibleItemOptionCheckedState(R.string.todoFilterShowCalendarEvents, false)
         toDoFilterPage.assertVisibleItemOptionCheckedState(R.string.todoFilterShowCompleted, false)
         toDoFilterPage.assertVisibleItemOptionCheckedState(R.string.todoFilterFavoriteCoursesOnly, false)
@@ -557,7 +557,7 @@ class TodoE2ETest : StudentComposeTest() {
         toDoListPage.clickFilterButton()
 
         Log.d(STEP_TAG, "Select the 'Show Personal To Dos' and 'Show Calendar Events' visible items filter and click on 'Done' button.")
-        toDoFilterPage.selectVisibleItemsOption(R.string.todoFilterShowPersonalToDos)
+        toDoFilterPage.selectVisibleItemsOption(R.string.todoFilterShowPersonalToDosNew)
         toDoFilterPage.selectVisibleItemsOption(R.string.todoFilterShowCalendarEvents)
         toDoFilterPage.clickDone()
 
@@ -600,7 +600,7 @@ class TodoE2ETest : StudentComposeTest() {
         toDoListPage.clickFilterButton()
 
         Log.d(STEP_TAG, "Select the 'Show Calendar Events' visible item filter and click on 'Done' button.")
-        toDoFilterPage.selectVisibleItemsOption(R.string.todoFilterShowPersonalToDos) // Toggle off Personal To Dos
+        toDoFilterPage.selectVisibleItemsOption(R.string.todoFilterShowPersonalToDosNew) // Toggle off Personal To Dos
         toDoFilterPage.selectVisibleItemsOption(R.string.todoFilterShowCalendarEvents) // Toggle on Calendar Events
         toDoFilterPage.clickDone()
 
@@ -624,7 +624,7 @@ class TodoE2ETest : StudentComposeTest() {
         toDoListPage.clickFilterButton()
 
         Log.d(STEP_TAG, "Select the 'Show Calendar Events' visible item filter and click on 'Done' button.")
-        toDoFilterPage.selectVisibleItemsOption(R.string.todoFilterShowPersonalToDos) // Toggle off Personal To Dos
+        toDoFilterPage.selectVisibleItemsOption(R.string.todoFilterShowPersonalToDosNew) // Toggle off Personal To Dos
         toDoFilterPage.clickDone()
 
         Log.d(ASSERTION_TAG, "Assert that '${testCalendarEvent.title}' calendar event and '${testCalendarPersonalToDo.title}' personal To Do are displayed because we filtered to Personal To Dos and calendar events.")
