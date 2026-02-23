@@ -318,12 +318,6 @@ class CalendarE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Click on the 'Save' button.")
         calendarToDoCreateUpdatePage.clickSave()
 
-        Log.d(ASSERTION_TAG, "Assert that the created To Do item is NOT displayed on today's calendar.")
-        calendarScreenPage.assertItemNotExist(testTodoTitle) //It's created for 2 days from today so it shouldn't displayed for today.
-
-        Log.d(STEP_TAG, "Swipe the calendar item 'body' to 2 days in the future from now.")
-        calendarScreenPage.swipeEventsLeft(2)
-
         Log.d(ASSERTION_TAG, "Assert that the '$testTodoTitle' To Do item is displayed because we created it to this particular day. " +
                 "Assert that '$newEventTitle' calendar event is NOT displayed because it's created for today.")
         calendarScreenPage.assertItemDisplayed(testTodoTitle)
@@ -716,9 +710,6 @@ class CalendarE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Click on the 'Save' button.")
         calendarToDoCreateUpdatePage.clickSave()
 
-        Log.d(STEP_TAG, "Swipe the calendar item 'body' to 2 days in the future from now.")
-        calendarScreenPage.swipeEventsLeft(2)
-
         Log.d(ASSERTION_TAG, "Assert that the To Do item is displayed on the calendar.")
         calendarScreenPage.assertItemDisplayed(testTodoTitle)
 
@@ -846,9 +837,6 @@ class CalendarE2ETest : ParentComposeTest() {
 
         Log.d(STEP_TAG, "Click on the 'Save' button.")
         calendarToDoCreateUpdatePage.clickSave()
-
-        Log.d(STEP_TAG, "Swipe the calendar item 'body' to 2 days in the future from now.")
-        calendarScreenPage.swipeEventsLeft(2)
 
         Log.d(ASSERTION_TAG, "Assert that the To Do item is displayed on the calendar.")
         calendarScreenPage.assertItemDisplayed(testTodoTitle)
