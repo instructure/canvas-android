@@ -278,6 +278,7 @@
     <string name="checkBoxWhatIfGradeOption">Mostra la puntuació Què passaria si</string>
     <string name="whatIfDialogText">Puntuació Què passaria si</string>
     <string name="whatIfScoreExceedsMaximum">La puntuació no pot superar la quantitat màxima de punts</string>
+    <string name="whatIfScoreExceedsMaximumWarning">La puntuació supera la quantitat màxima de punts</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s de %2$s punts, %3$s</string>
     <string name="inbox">Safata d\'entrada</string>
@@ -1924,6 +1925,15 @@
     <string name="courseDetailsMessageContentDescription">Envia un missatge sobre aquesta assignatura</string>
     <string name="gradeLockedContentDescription">S’ha bloquejat la nota</string>
     <string name="gradesRefreshFailed">No s\'han pogut actualitzar les notes</string>
+    <string name="showWhatIfScore">Mostreu la puntuació Què passaria si</string>
+    <string name="editWhatIfScore">Editeu la puntuació Què passaria si</string>
+    <string name="editWhatIfScoreTitle">Editeu la puntuació Què passaria si</string>
+    <string name="whatIfScoreLabel">Què passaria si</string>
+    <string name="whatIfScoreCurrentGraded">Puntuació de %1$.0f sobre %2$.0f</string>
+    <string name="whatIfScoreCurrentUngraded">Sense qualificar, puntuació màxima de %.0f</string>
+    <string name="whatIfScoreDisplay">Què passaria si: %s</string>
+    <string name="gradesBasedOnGradedAndWhatIf">Es basa en activitats qualificades i en la puntuació Què passaria si</string>
+    <string name="clearWhatIfScore">Esborreu la puntuació Què passaria si</string>
     <string name="chooseACourseToMessage">Trieu una assignatura per enviar el missatge</string>
     <string name="regardingHiddenMessage">Sobre: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">Sobre: %1$s, activitat - %2$s</string>

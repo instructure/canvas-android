@@ -12,6 +12,7 @@ import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdat
 import com.instructure.pandautils.features.calendartodo.details.ToDoFragment
 import com.instructure.pandautils.features.dashboard.customize.CustomizeDashboardFragment
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
+import com.instructure.pandautils.features.dashboard.widget.courses.customize.CustomizeCourseFragment
 import com.instructure.pandautils.features.discussion.create.CreateDiscussionWebViewFragment
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
@@ -31,7 +32,7 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.student.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.student.activity.NothingToSeeHereFragment
 import com.instructure.student.features.coursebrowser.CourseBrowserFragment
-import com.instructure.student.features.dashboard.compose.DashboardFragment
+import com.instructure.student.features.dashboard.compose.NewDashboardFragment
 import com.instructure.student.features.discussion.details.DiscussionDetailsFragment
 import com.instructure.student.features.discussion.list.DiscussionListFragment
 import com.instructure.student.features.elementary.course.ElementaryCourseFragment
@@ -116,7 +117,7 @@ object RouteResolver {
 
         return when {
             cls.isA<OldDashboardFragment>() -> OldDashboardFragment.newInstance(route)
-            cls.isA<DashboardFragment>() -> DashboardFragment.newInstance(route)
+            cls.isA<NewDashboardFragment>() -> NewDashboardFragment.newInstance(route)
             cls.isA<ElementaryDashboardFragment>() -> ElementaryDashboardFragment.newInstance(route)
             cls.isA<OldToDoListFragment>() -> OldToDoListFragment.newInstance(route)
             cls.isA<ToDoListFragment>() -> ToDoListFragment.newInstance(route)
@@ -189,6 +190,7 @@ object RouteResolver {
             cls.isA<SmartSearchFragment>() -> SmartSearchFragment.newInstance(route)
             cls.isA<InboxSignatureFragment>() -> InboxSignatureFragment()
             cls.isA<CustomizeDashboardFragment>() -> CustomizeDashboardFragment.newInstance(route)
+            cls.isA<CustomizeCourseFragment>() -> CustomizeCourseFragment.newInstance(route)
             cls.isA<InternalWebviewFragment>() -> InternalWebviewFragment.newInstance(route) // Keep this at the end
             else -> null
         }

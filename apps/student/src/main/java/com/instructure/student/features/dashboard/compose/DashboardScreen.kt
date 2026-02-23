@@ -17,22 +17,30 @@
 package com.instructure.student.features.dashboard.compose
 
 import androidx.activity.compose.LocalActivity
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridItemSpan
-import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -53,6 +61,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -62,13 +71,19 @@ import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.OverflowMenu
+import com.instructure.pandautils.compose.composables.rememberWithRequireNetwork
 import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
+import com.instructure.pandautils.features.dashboard.widget.conferences.ConferencesWidget
 import com.instructure.pandautils.features.dashboard.widget.courseinvitation.CourseInvitationsWidget
 import com.instructure.pandautils.features.dashboard.widget.courses.CoursesWidget
+import com.instructure.pandautils.features.dashboard.widget.forecast.ForecastWidget
 import com.instructure.pandautils.features.dashboard.widget.institutionalannouncements.InstitutionalAnnouncementsWidget
+import com.instructure.pandautils.features.dashboard.widget.progress.ProgressWidget
+import com.instructure.pandautils.features.dashboard.widget.todo.TodoWidget
 import com.instructure.pandautils.features.dashboard.widget.welcome.WelcomeWidget
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.student.R
 import com.instructure.student.activity.NavigationActivity
 import kotlinx.coroutines.flow.SharedFlow
@@ -120,6 +135,10 @@ fun DashboardScreenContent(
 
     var showMenu by remember { mutableStateOf(false) }
 
+    val manageOfflineContentClick = rememberWithRequireNetwork {
+        router.routeToManageOfflineContent()
+    }
+
     Scaffold(
         modifier = Modifier.background(colorResource(R.color.backgroundLight)),
         topBar = {
@@ -138,6 +157,7 @@ fun DashboardScreenContent(
                     ) {
                         DropdownMenuItem(onClick = {
                             showMenu = !showMenu
+                            manageOfflineContentClick()
                         }) {
                             Text(
                                 stringResource(R.string.course_menu_manage_offline_content),
@@ -158,7 +178,12 @@ fun DashboardScreenContent(
             )
         },
         snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
+            SnackbarHost(hostState = snackbarHostState) { data ->
+                Snackbar(
+                    snackbarData = data,
+                    actionColor = Color(ThemePrefs.textButtonColor)
+                )
+            }
         }
     ) { paddingValues ->
         Box(
@@ -198,11 +223,12 @@ fun DashboardScreenContent(
                 }
 
                 else -> {
-                    WidgetGrid(
+                    WidgetList(
                         widgets = uiState.widgets,
                         refreshSignal = refreshSignal,
                         onShowSnackbar = onShowSnackbar,
                         router = router,
+                        color = uiState.color,
                         modifier = Modifier.fillMaxSize()
                     )
                 }
@@ -221,11 +247,12 @@ fun DashboardScreenContent(
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Composable
-private fun WidgetGrid(
+private fun WidgetList(
     widgets: List<WidgetMetadata>,
     refreshSignal: SharedFlow<Unit>,
     onShowSnackbar: (String, String?, (() -> Unit)?) -> Unit,
     router: DashboardRouter,
+    color: ThemedColor,
     modifier: Modifier = Modifier
 ) {
     val activity = LocalActivity.current ?: return
@@ -238,24 +265,22 @@ private fun WidgetGrid(
         else -> 1
     }
 
-    LazyVerticalStaggeredGrid(
-        columns = StaggeredGridCells.Fixed(columns),
-        modifier = modifier,
-        contentPadding = PaddingValues(vertical = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp),
-        verticalItemSpacing = 16.dp
-    ) {
+    LazyColumn(modifier = modifier, contentPadding = PaddingValues(bottom = 16.dp)) {
         items(
             items = widgets,
-            span = { metadata ->
-                if (metadata.isFullWidth) {
-                    StaggeredGridItemSpan.FullLine
-                } else {
-                    StaggeredGridItemSpan.SingleLane
-                }
-            }
+            key = { it.id }
         ) { metadata ->
-            GetWidgetComposable(metadata.id, refreshSignal, columns, onShowSnackbar, router)
+            GetWidgetComposable(metadata.id, refreshSignal, columns, onShowSnackbar, router, modifier = Modifier.padding(top = 16.dp))
+        }
+
+        item {
+            CustomizeDashboardButton(
+                onClick = { router.routeToCustomizeDashboard() },
+                color = Color(color.color()),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+            )
         }
     }
 }
@@ -266,23 +291,78 @@ private fun GetWidgetComposable(
     refreshSignal: SharedFlow<Unit>,
     columns: Int,
     onShowSnackbar: (String, String?, (() -> Unit)?) -> Unit,
-    router: DashboardRouter
+    router: DashboardRouter,
+    modifier: Modifier = Modifier
 ) {
     return when (widgetId) {
-        WidgetMetadata.WIDGET_ID_WELCOME -> WelcomeWidget(refreshSignal = refreshSignal)
-        WidgetMetadata.WIDGET_ID_COURSES -> CoursesWidget(refreshSignal = refreshSignal, columns = columns)
+        WidgetMetadata.WIDGET_ID_PROGRESS -> ProgressWidget(
+            refreshSignal = refreshSignal,
+            columns = columns,
+            onShowSnackbar = onShowSnackbar,
+            modifier = modifier
+        )
+
+        WidgetMetadata.WIDGET_ID_CONFERENCES -> ConferencesWidget(
+            refreshSignal = refreshSignal,
+            columns = columns,
+            onShowSnackbar = onShowSnackbar,
+            modifier = modifier
+        )
+
+        WidgetMetadata.WIDGET_ID_WELCOME -> WelcomeWidget(refreshSignal = refreshSignal, modifier = modifier)
+        WidgetMetadata.WIDGET_ID_COURSES -> CoursesWidget(refreshSignal = refreshSignal, columns = columns, modifier = modifier)
         WidgetMetadata.WIDGET_ID_COURSE_INVITATIONS -> CourseInvitationsWidget(
             refreshSignal = refreshSignal,
             columns = columns,
-            onShowSnackbar = onShowSnackbar
+            onShowSnackbar = onShowSnackbar,
+            modifier = modifier
         )
 
         WidgetMetadata.WIDGET_ID_INSTITUTIONAL_ANNOUNCEMENTS -> InstitutionalAnnouncementsWidget(
             refreshSignal = refreshSignal,
             columns = columns,
-            onAnnouncementClick = router::routeToGlobalAnnouncement
+            onAnnouncementClick = router::routeToGlobalAnnouncement,
+            modifier = modifier
         )
 
+        WidgetMetadata.WIDGET_ID_FORECAST -> ForecastWidget(refreshSignal = refreshSignal, modifier = modifier)
+        WidgetMetadata.WIDGET_ID_TODO -> TodoWidget(refreshSignal = refreshSignal, onShowSnackbar = onShowSnackbar, modifier = modifier)
+
         else -> {}
+    }
+}
+
+@Composable
+private fun CustomizeDashboardButton(
+    onClick: () -> Unit,
+    color: Color,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.Center
+    ) {
+        OutlinedButton(
+            onClick = onClick,
+            shape = RoundedCornerShape(24.dp),
+            colors = ButtonDefaults.outlinedButtonColors(
+                containerColor = Color.Transparent,
+                contentColor = color
+            ),
+            border = BorderStroke(1.dp, color),
+            contentPadding = PaddingValues(start = 8.dp, end = 12.dp, top = 0.dp, bottom = 0.dp),
+            modifier = Modifier.height(30.dp)
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_edit_new),
+                contentDescription = null,
+                modifier = Modifier.padding(end = 6.dp).size(16.dp),
+                tint = color
+            )
+            Text(
+                text = stringResource(R.string.customize_dashboard),
+                color = color
+            )
+        }
     }
 }

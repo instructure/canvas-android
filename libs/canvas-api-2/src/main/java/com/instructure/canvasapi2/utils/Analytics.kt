@@ -172,6 +172,15 @@ object AnalyticsEventConstants {
     const val WIDGET_SINGLE_GRADE_OPEN_ITEM_ACTION = "widget_single_grade_open_item_action"
     const val WIDGET_SINGLE_GRADE_OPEN_APP_ACTION = "widget_single_grade_open_app_action"
 
+    /* Dashboard Widget Visibility */
+    const val DASHBOARD_WIDGET_VISIBILITY = "dashboard_widget_visibility"
+    const val DASHBOARD_SURVEY_SUBMITTED = "dashboard_survey_submitted"
+
+    /* Dashboard Survey Options */
+    const val SURVEY_OPTION_HARD_TO_FIND = "hard_to_find"
+    const val SURVEY_OPTION_PREFER_OLD_LAYOUT = "prefer_old_layout"
+    const val SURVEY_OPTION_SOMETHING_BROKEN = "something_broken"
+
     /* To Do List */
     const val TODO_ITEM_MARKED_DONE = "todo_item_marked_done"
     const val TODO_ITEM_MARKED_UNDONE = "todo_item_marked_undone"
@@ -205,4 +214,7 @@ object AnalyticsParamConstants {
     const val FILTER_FAVOURITE_COURSES = "filter_favourite_courses"
     const val FILTER_SELECTED_DATE_RANGE_PAST = "filter_selected_date_range_past"
     const val FILTER_SELECTED_DATE_RANGE_FUTURE = "filter_selected_date_range_future"
+
+    //dashboard survey
+    const val SELECTED_REASON = "selected_reason"
 }

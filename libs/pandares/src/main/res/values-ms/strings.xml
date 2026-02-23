@@ -278,6 +278,7 @@
     <string name="checkBoxWhatIfGradeOption">Masukkan Markah Andaian</string>
     <string name="whatIfDialogText">Markah Andaian</string>
     <string name="whatIfScoreExceedsMaximum">Skor tidak boleh melebihi mata maksimum</string>
+    <string name="whatIfScoreExceedsMaximumWarning">Markah melebihi mata maksimum</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s daripada %2$s mata, %3$s</string>
     <string name="inbox">Peti masuk</string>
@@ -1929,6 +1930,15 @@
     <string name="courseDetailsMessageContentDescription">Hantar mesej mengenai kursus ini</string>
     <string name="gradeLockedContentDescription">Gred dikunci</string>
     <string name="gradesRefreshFailed">Gagal menyegarkan semula gred</string>
+    <string name="showWhatIfScore">Tunjukkan Markah Andaian</string>
+    <string name="editWhatIfScore">Edit Markah Andaian</string>
+    <string name="editWhatIfScoreTitle">Edit Markah Andaian</string>
+    <string name="whatIfScoreLabel">Andaian</string>
+    <string name="whatIfScoreCurrentGraded">Markah %1$.0f daripada %2$.0f</string>
+    <string name="whatIfScoreCurrentUngraded">Tidak digredkan, markah maksimum %.0f</string>
+    <string name="whatIfScoreDisplay">Andaian: %s</string>
+    <string name="gradesBasedOnGradedAndWhatIf">Berdasarkan tugasan yang digredkan dan Markah Andaian</string>
+    <string name="clearWhatIfScore">Kosongkan Markah Andaian</string>
     <string name="chooseACourseToMessage">Pilih kursus untuk dihantar mesej</string>
     <string name="regardingHiddenMessage">Berkenaan: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">Berkenaan: %1$s, Tugasan - %2$s</string>

@@ -20,7 +20,6 @@ import android.os.SystemClock.sleep
 import android.util.Log
 import android.view.KeyEvent
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.rule.GrantPermissionRule
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
@@ -28,7 +27,6 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
-import com.instructure.canvas.espresso.annotations.Stub
 import com.instructure.canvas.espresso.checkToastText
 import com.instructure.canvas.espresso.common.pages.compose.AssignmentListPage
 import com.instructure.canvas.espresso.pressBackButton
@@ -120,7 +118,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         Log.d(PREPARATION_TAG, "Submit assignment: '${pointsTextAssignment.name}' for student: '${student.name}'.")
         SubmissionsApi.seedAssignmentSubmission(course.id, student.token, pointsTextAssignment.id, submissionSeedsList = listOf(SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = SubmissionType.ONLINE_TEXT_ENTRY)))
 
-        Log.d(ASSERTION_TAG, "Refresh the Assignment Details Page. Assert that the assignment's status is submitted and the 'Submission and Rubric' label is displayed.")
+        Log.d(ASSERTION_TAG, "Refresh the Assignment Details Page. Assert that the assignment's status is submitted and the 'Submission and Feedback' label is displayed.")
         assignmentDetailsPage.refresh()
         assignmentDetailsPage.assertStatusSubmitted()
         assignmentDetailsPage.assertSubmissionAndRubricLabel()
@@ -128,7 +126,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         Log.d(PREPARATION_TAG, "Make another submission for assignment: '${pointsTextAssignment.name}' for student: '${student.name}'.")
         val secondSubmissionAttempt = SubmissionsApi.seedAssignmentSubmission(course.id, student.token, pointsTextAssignment.id, submissionSeedsList = listOf(SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = SubmissionType.ONLINE_TEXT_ENTRY)))
 
-        Log.d(ASSERTION_TAG, "Refresh the Assignment Details Page. Assert that the assignment's status is submitted and the 'Submission and Rubric' label is displayed.")
+        Log.d(ASSERTION_TAG, "Refresh the Assignment Details Page. Assert that the assignment's status is submitted and the 'Submission and Feedback' label is displayed.")
         assignmentDetailsPage.refresh()
         assignmentDetailsPage.assertStatusSubmitted()
         assignmentDetailsPage.assertSubmissionAndRubricLabel()
@@ -1282,7 +1280,6 @@ class AssignmentsE2ETest: StudentComposeTest() {
         dashboardPage.assertCourseGrade(course.name, "49.47%")
     }
 
-    @Stub("Grades screen has been redesigned, needs to be fixed in ticket MBL-19640")
     @E2E
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.GRADES, TestCategory.E2E)
@@ -1318,7 +1315,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         CoursesApi.updateCourseSettings(course.id, restrictQuantitativeDataMap)
 
         Log.d(ASSERTION_TAG, "Refresh the Dashboard page. Assert that the course grade is B-, as it is converted to letter grade because of the restriction.")
-        retryWithIncreasingDelay(times = 10, maxDelay = 4000) {
+        retryWithIncreasingDelay(times = 15, maxDelay = 5000) {
             dashboardPage.refresh()
             dashboardPage.assertCourseGrade(course.name, "B-")
         }
@@ -1354,30 +1351,29 @@ class AssignmentsE2ETest: StudentComposeTest() {
         dashboardPage.selectCourse(course)
         courseBrowserPage.selectGrades()
 
-        Log.d(ASSERTION_TAG, "Assert that the Total Grade is F and all of the assignment grades are displayed properly (so they have been converted to letter grade).")
-        courseGradesPage.assertTotalGrade(ViewMatchers.withText("F"))
-        courseGradesPage.assertAssignmentDisplayed(pointsTextAssignment.name, "B-")
-        courseGradesPage.assertAssignmentDisplayed(percentageAssignment.name, "D")
-        courseGradesPage.assertAssignmentDisplayed(letterGradeAssignment.name, "C")
-        courseGradesPage.assertAssignmentDisplayed(passFailAssignment.name, "Incomplete")
-        if(isLowResDevice()) courseGradesPage.swipeUp()
-        courseGradesPage.assertAssignmentDisplayed(gpaScaleAssignment.name, "F")
+        Log.d(ASSERTION_TAG, "Assert that the Total Grade is 'F' and all of the assignment grades are displayed properly (so they have been converted to letter grade).")
+        gradesPage.assertTotalGradeText("F")
+        gradesPage.assertAssignmentGradeText(pointsTextAssignment.name, "B-")
+        gradesPage.assertAssignmentGradeText(percentageAssignment.name, "D")
+        gradesPage.assertAssignmentGradeText(letterGradeAssignment.name, "C")
+        gradesPage.assertAssignmentGradeText(passFailAssignment.name, "Incomplete")
+        gradesPage.assertAssignmentGradeText(gpaScaleAssignment.name, "F")
 
         Log.d(PREPARATION_TAG, "Update '${course.name}' course's settings: Enable restriction for quantitative data.")
         restrictQuantitativeDataMap["restrict_quantitative_data"] = false
         CoursesApi.updateCourseSettings(course.id, restrictQuantitativeDataMap)
 
-        Log.d(STEP_TAG, "Refresh the Course Grade Page.")
-        courseGradesPage.refresh() //First go to the top of the recycler view
-        courseGradesPage.refresh() //Actual refresh
+        Log.d(STEP_TAG, "Swipe to the top of the Course Grades Page and refresh it.")
+        gradesPage.scrollDownScreen() // First go to the top of the recycler view
+        gradesPage.refresh() // Actual refresh
 
-        Log.d(ASSERTION_TAG, "Assert that the Total Grade is 49.47% and all of the assignment grades are displayed properly. We now show numeric grades because restriction to quantitative data has been disabled.")
-        courseGradesPage.assertTotalGrade(ViewMatchers.withText("49.47%"))
-        courseGradesPage.assertAssignmentDisplayed(pointsTextAssignment.name, "12/15")
-        courseGradesPage.assertAssignmentDisplayed(percentageAssignment.name, "66.67%")
-        courseGradesPage.assertAssignmentDisplayed(letterGradeAssignment.name, "11.4/15 (C)")
-        courseGradesPage.assertAssignmentDisplayed(passFailAssignment.name, "Incomplete")
-        courseGradesPage.swipeUp()
-        courseGradesPage.assertAssignmentDisplayed(gpaScaleAssignment.name, "3.7/15 (F)")
+        Log.d(ASSERTION_TAG, "Assert that the Total Grade is '49.47%' and all of the assignment grades are displayed properly. We now show numeric grades because restriction to quantitative data has been disabled.")
+        gradesPage.assertTotalGradeText("49.47%")
+        gradesPage.assertAssignmentGradeText(pointsTextAssignment.name, "12/15")
+        gradesPage.assertAssignmentGradeText(percentageAssignment.name, "66.67%")
+        gradesPage.assertAssignmentGradeText(letterGradeAssignment.name, "11.4/15 (C)")
+        gradesPage.assertAssignmentGradeText(passFailAssignment.name, "Incomplete")
+        gradesPage.scrollDownScreen()
+        gradesPage.assertAssignmentGradeText(gpaScaleAssignment.name, "3.7/15 (F)")
     }
 }

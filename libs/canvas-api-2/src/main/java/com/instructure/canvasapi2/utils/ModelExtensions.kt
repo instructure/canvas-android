@@ -236,3 +236,34 @@ fun List<Submission>.countCustomGradeStatus(vararg states: String, requireNoGrad
                 (!requireNoGradeMatch || !it.isGradeMatchesCurrentSubmission || it.grade == null)
     }
 }
+
+/**
+ * Corrects attempt numbers in submission history when the API doesn't provide them.
+ *
+ * For new quizzes and some other assignment types, the submission_history items may have
+ * missing or invalid attempt numbers (0 or null). This function detects that case and
+ * re-indexes submissions based on their submission date, with the newest submission
+ * getting the highest attempt number.
+ *
+ * @return List of submissions with corrected attempt numbers
+ */
+fun List<Submission?>.correctAttemptNumbers(): List<Submission> {
+    // Filter out nulls and sort by submission date descending (newest first)
+    val validSubmissions = this
+        .filterNotNull()
+        .sortedByDescending { it.submittedAt }
+
+    // Check if any submission has missing or invalid attempt number
+    val hasAnyMissingAttemptNumber = validSubmissions.any { it.attempt == 0L }
+
+    return if (hasAnyMissingAttemptNumber) {
+        // Re-index from newest (highest) to 1 and return copies with corrected attempt numbers
+        validSubmissions.mapIndexed { index, submission ->
+            val attemptNumber = (validSubmissions.size - index).toLong()
+            submission.copy(attempt = attemptNumber)
+        }
+    } else {
+        // Original attempt numbers are valid, return as-is
+        validSubmissions
+    }
+}

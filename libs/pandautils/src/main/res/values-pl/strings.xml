@@ -519,4 +519,8 @@
         <item quantity="other">%d min</item>
     </plurals>
     <string name="notATeacherDescription">Jedna z innych naszych aplikacji może się okazać bardziej przydatna. Stuknij ikonę, aby się zalogować.</string>
+    <string name="gradePercentAccessibility">Ocena: %d – procent</string>
+    <string name="gradePointsAccessibility">Ocena: %s punkty</string>
+    <string name="gradePercentTextFieldAccessibility">Ocena: %d %. %s</string>
+    <string name="gradePointsTextFieldAccessibility">Ocena: %s pkt, %s</string>
 </resources>

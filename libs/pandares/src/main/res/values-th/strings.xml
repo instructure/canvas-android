@@ -278,6 +278,7 @@
     <string name="checkBoxWhatIfGradeOption">แสดงคะแนน What-If</string>
     <string name="whatIfDialogText">คะแนน What-If</string>
     <string name="whatIfScoreExceedsMaximum">คะแนนจะต้องไม่เกินคะแนนสูงสุด</string>
+    <string name="whatIfScoreExceedsMaximumWarning">คะแนนจะต้องเกินกว่าคะแนนสูงสุด</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s จาก %2$s คะแนน, %3$s</string>
     <string name="inbox">กล่องจดหมาย</string>
@@ -1923,6 +1924,15 @@
     <string name="courseDetailsMessageContentDescription">ส่งข้อความเกี่ยวกับบทเรียนนี้</string>
     <string name="gradeLockedContentDescription">ล็อคเกรดแล้ว</string>
     <string name="gradesRefreshFailed">ไม่สามารถรีเฟรชเกรดได้</string>
+    <string name="showWhatIfScore">แสดงคะแนน What-if</string>
+    <string name="editWhatIfScore">แก้ไขคะแนน What-if</string>
+    <string name="editWhatIfScoreTitle">แก้ไขคะแนน What-if</string>
+    <string name="whatIfScoreLabel">What-if</string>
+    <string name="whatIfScoreCurrentGraded">คะแนน %1$.0f จาก %2$.0f</string>
+    <string name="whatIfScoreCurrentUngraded">ไม่ได้ให้เกรด คะแนนสูงสุด %.0f</string>
+    <string name="whatIfScoreDisplay">What-if: %s</string>
+    <string name="gradesBasedOnGradedAndWhatIf">จากภารกิจที่ให้เกรดและคะแนน What-If</string>
+    <string name="clearWhatIfScore">ล้างคะแนน What-if</string>
     <string name="chooseACourseToMessage">เลือกบทเรียนที่จะส่งข้อความ</string>
     <string name="regardingHiddenMessage">เกี่ยวกับ: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">เกี่ยวกับ: %1$s, ภารกิจ - %2$s</string>

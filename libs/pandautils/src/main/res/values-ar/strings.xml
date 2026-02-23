@@ -533,4 +533,8 @@
         <item quantity="other">%d من الدقائق</item>
     </plurals>
     <string name="notATeacherDescription">قد يكون أحد تطبيقاتنا الأخرى مناسبًا بشكل أفضل. اضغط على أيقونة لتسجيل الدخول هناك.</string>
+    <string name="gradePercentAccessibility">درجة التقييم: %d بالمئة</string>
+    <string name="gradePointsAccessibility">درجة التقييم: %s من النقاط</string>
+    <string name="gradePercentTextFieldAccessibility">درجة التقييم: %d بالمئة، %s</string>
+    <string name="gradePointsTextFieldAccessibility">درجة التقييم: %s من النقاط، %s</string>
 </resources>

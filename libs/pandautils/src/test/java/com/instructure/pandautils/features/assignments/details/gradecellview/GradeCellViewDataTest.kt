@@ -187,4 +187,109 @@ class GradeCellViewDataTest {
         Assert.assertEquals(1.0f, gradeCell.chartPercent)
         Assert.assertEquals("", gradeCell.outOf)
     }
+
+    @Test
+    fun `Create letter grade cell with numeric grade converted to letter when quantitative data is restricted`() {
+        val gradeCell = GradeCellViewData.fromSubmission(
+            resources,
+            colorKeeper.getOrGenerateColor(Course()),
+            themePrefs.textButtonColor,
+            Assignment(gradingType = Assignment.LETTER_GRADE_TYPE, pointsPossible = 100.0),
+            Submission(submittedAt = Date(), grade = "91", score = 91.0, enteredScore = 91.0),
+            restrictQuantitativeData = true,
+            gradingScheme = listOf(
+                GradingSchemeRow("A+", 0.97),
+                GradingSchemeRow("A", 0.93),
+                GradingSchemeRow("A-", 0.90),
+                GradingSchemeRow("B+", 0.87),
+                GradingSchemeRow("F", 0.0)
+            )
+        )
+
+        Assert.assertEquals(GradeCellViewData.State.GRADED, gradeCell.state)
+        Assert.assertEquals("A-", gradeCell.grade)
+        Assert.assertEquals("", gradeCell.score)
+        Assert.assertEquals(1.0f, gradeCell.chartPercent)
+        Assert.assertEquals("", gradeCell.outOf)
+    }
+
+    @Test
+    fun `Create letter grade cell with numeric grade for zero-point assignment converted to letter when quantitative data is restricted`() {
+        val gradeCell = GradeCellViewData.fromSubmission(
+            resources,
+            colorKeeper.getOrGenerateColor(Course()),
+            themePrefs.textButtonColor,
+            Assignment(gradingType = Assignment.LETTER_GRADE_TYPE, pointsPossible = 0.0),
+            Submission(submittedAt = Date(), grade = "90", score = 90.0, enteredScore = 90.0),
+            restrictQuantitativeData = true,
+            gradingScheme = listOf(
+                GradingSchemeRow("A+", 0.97),
+                GradingSchemeRow("A", 0.93),
+                GradingSchemeRow("A-", 0.90),
+                GradingSchemeRow("B+", 0.87),
+                GradingSchemeRow("F", 0.0)
+            )
+        )
+
+        Assert.assertEquals(GradeCellViewData.State.GRADED, gradeCell.state)
+        Assert.assertEquals("A-", gradeCell.grade)
+    }
+
+    @Test
+    fun `Create letter grade cell with high numeric grade for zero-point assignment converted to high letter when quantitative data is restricted`() {
+        val gradeCell = GradeCellViewData.fromSubmission(
+            resources,
+            colorKeeper.getOrGenerateColor(Course()),
+            themePrefs.textButtonColor,
+            Assignment(gradingType = Assignment.LETTER_GRADE_TYPE, pointsPossible = 0.0),
+            Submission(submittedAt = Date(), grade = "98", score = 98.0, enteredScore = 98.0),
+            restrictQuantitativeData = true,
+            gradingScheme = listOf(
+                GradingSchemeRow("A+", 0.97),
+                GradingSchemeRow("A", 0.93),
+                GradingSchemeRow("A-", 0.90),
+                GradingSchemeRow("F", 0.0)
+            )
+        )
+
+        Assert.assertEquals(GradeCellViewData.State.GRADED, gradeCell.state)
+        Assert.assertEquals("A+", gradeCell.grade)
+    }
+
+    @Test
+    fun `Create letter grade cell with numeric grade and no grading scheme keeps numeric when quantitative data is restricted`() {
+        val gradeCell = GradeCellViewData.fromSubmission(
+            resources,
+            colorKeeper.getOrGenerateColor(Course()),
+            themePrefs.textButtonColor,
+            Assignment(gradingType = Assignment.LETTER_GRADE_TYPE, pointsPossible = 100.0),
+            Submission(submittedAt = Date(), grade = "91", score = 91.0, enteredScore = 91.0),
+            restrictQuantitativeData = true,
+            gradingScheme = emptyList()
+        )
+
+        Assert.assertEquals(GradeCellViewData.State.GRADED, gradeCell.state)
+        Assert.assertEquals("91", gradeCell.grade)
+    }
+
+    @Test
+    fun `Create GPA scale cell with numeric grade converted to letter when quantitative data is restricted`() {
+        val gradeCell = GradeCellViewData.fromSubmission(
+            resources,
+            colorKeeper.getOrGenerateColor(Course()),
+            themePrefs.textButtonColor,
+            Assignment(gradingType = Assignment.GPA_SCALE_TYPE, pointsPossible = 100.0),
+            Submission(submittedAt = Date(), grade = "85", score = 85.0, enteredScore = 85.0),
+            restrictQuantitativeData = true,
+            gradingScheme = listOf(
+                GradingSchemeRow("A", 0.90),
+                GradingSchemeRow("B", 0.80),
+                GradingSchemeRow("C", 0.70),
+                GradingSchemeRow("F", 0.0)
+            )
+        )
+
+        Assert.assertEquals(GradeCellViewData.State.GRADED, gradeCell.state)
+        Assert.assertEquals("B", gradeCell.grade)
+    }
 }

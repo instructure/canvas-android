@@ -51,7 +51,7 @@ class GradesElementaryE2ETest : StudentTest() {
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.E2E, SecondaryFeatureCategory.K5_GRADES)
-    fun gradesE2ETest() {
+    fun testElementaryGradesE2ETest() {
 
         Log.d(PREPARATION_TAG, "Seeding data for K5 sub-account.")
         val data = seedDataForK5(
@@ -88,14 +88,14 @@ class GradesElementaryE2ETest : StudentTest() {
         elementaryDashboardPage.selectTab(ElementaryDashboardPage.ElementaryTabType.GRADES)
 
         Log.d(ASSERTION_TAG, "Assert that the page is loaded correctly.")
-        gradesPage.assertPageObjects()
+        elementaryGradesPage.assertPageObjects()
 
         Thread.sleep(3000)
 
         Log.d(ASSERTION_TAG, "Assert that the corresponding course grades are displayed.")
-        gradesPage.assertCourseShownWithGrades(nonHomeroomCourses[0].name, "93%")
-        gradesPage.assertCourseShownWithGrades(nonHomeroomCourses[1].name, "9%")
-        gradesPage.assertCourseShownWithGrades(nonHomeroomCourses[2].name, "Not Graded")
+        elementaryGradesPage.assertCourseShownWithGrades(nonHomeroomCourses[0].name, "93%")
+        elementaryGradesPage.assertCourseShownWithGrades(nonHomeroomCourses[1].name, "9%")
+        elementaryGradesPage.assertCourseShownWithGrades(nonHomeroomCourses[2].name, "Not Graded")
 
         Log.d(PREPARATION_TAG, "Grade the previously seeded submission for '${testAssignment2.name}' assignment.")
         SubmissionsApi.gradeSubmission(teacher.token, nonHomeroomCourses[0].id, testAssignment2.id, student.id, postedGrade = "C-")
@@ -103,31 +103,31 @@ class GradesElementaryE2ETest : StudentTest() {
         Thread.sleep(5000) //This time is needed here to let the SubMissionApi does it's job.
 
         Log.d(ASSERTION_TAG, "Refresh Grades Elementary Page. Assert that the previously graded, '${testAssignment2.name}' assignment's grade has been changed, but only that one.")
-        gradesPage.refresh()
+        elementaryGradesPage.refresh()
         Thread.sleep(5000) //We need to wait here because sometimes if we refresh the page fastly, the old grade will be seen.
-        gradesPage.assertCourseShownWithGrades(nonHomeroomCourses[0].name, "73%")
-        gradesPage.assertCourseShownWithGrades(nonHomeroomCourses[1].name, "9%")
-        gradesPage.assertCourseShownWithGrades(nonHomeroomCourses[2].name, "Not Graded")
+        elementaryGradesPage.assertCourseShownWithGrades(nonHomeroomCourses[0].name, "73%")
+        elementaryGradesPage.assertCourseShownWithGrades(nonHomeroomCourses[1].name, "9%")
+        elementaryGradesPage.assertCourseShownWithGrades(nonHomeroomCourses[2].name, "Not Graded")
 
         Log.d(ASSERTION_TAG, "Assert that the 'Current Grading Period' option is selected.")
-        gradesPage.assertSelectedGradingPeriod(gradesPage.getStringFromResource(R.string.currentGradingPeriod))
+        elementaryGradesPage.assertSelectedGradingPeriod(elementaryGradesPage.getStringFromResource(R.string.currentGradingPeriod))
 
         Log.d(STEP_TAG, "Change 'Current Grading Period' to '${testGradingPeriodListApiModel.gradingPeriods[0].title}'.")
-        gradesPage.scrollToItem(R.id.gradingPeriodSelector, gradesPage.getStringFromResource(R.string.currentGradingPeriod))
-        gradesPage.clickGradingPeriodSelector()
-        gradesPage.selectGradingPeriod(testGradingPeriodListApiModel.gradingPeriods[0].title)
+        elementaryGradesPage.scrollToItem(R.id.gradingPeriodSelector, elementaryGradesPage.getStringFromResource(R.string.currentGradingPeriod))
+        elementaryGradesPage.clickGradingPeriodSelector()
+        elementaryGradesPage.selectGradingPeriod(testGradingPeriodListApiModel.gradingPeriods[0].title)
 
         Log.d(STEP_TAG, "Checking if a course's grades page is displayed after clicking on a course row on elementary grades page.")
-        gradesPage.clickGradeRow(nonHomeroomCourses[0].name)
+        elementaryGradesPage.clickGradeRow(nonHomeroomCourses[0].name)
 
         Log.d(ASSERTION_TAG, "Assert that we have left the grades elementary page. We are asserting this because in beta environment, subject page's not always available for k5 user.")
-        gradesPage.assertCourseNotDisplayed(nonHomeroomCourses[0].name)
+        elementaryGradesPage.assertCourseNotDisplayed(nonHomeroomCourses[0].name)
 
         Log.d(STEP_TAG, "Navigate back to Grades Elementary Page.")
         Espresso.pressBack()
 
         Log.d(ASSERTION_TAG, "Assert that the Grades page is loaded correctly.")
-        gradesPage.assertPageObjects()
+        elementaryGradesPage.assertPageObjects()
     }
 }
 

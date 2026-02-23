@@ -77,6 +77,9 @@ class CreateUpdateToDoFragment : BaseCanvasFragment(), NavigationCallbacks, Frag
                 sharedEvents.sendEvent(lifecycleScope, SharedCalendarAction.CloseToDoScreen)
                 sharedEvents.sendEvent(lifecycleScope, SharedCalendarAction.RefreshDays(action.days))
                 sharedEvents.sendEvent(lifecycleScope, SharedCalendarAction.RefreshToDoList)
+                if (action.days.firstOrNull() != null) {
+                    sharedEvents.sendEvent(lifecycleScope, SharedCalendarAction.SelectDay(action.days.first()))
+                }
             }
 
             is CreateUpdateToDoViewModelAction.NavigateBack -> navigateBack()

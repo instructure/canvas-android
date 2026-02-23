@@ -278,6 +278,7 @@
     <string name="checkBoxWhatIfGradeOption">Whakāturia aha-Ki te Tohu</string>
     <string name="whatIfDialogText">Aha-Ki te Tohu</string>
     <string name="whatIfScoreExceedsMaximum">Kāore e taea e te kaute te neke atu i ngā tohu mōrahi</string>
+    <string name="whatIfScoreExceedsMaximumWarning">Neke atu i te mōrahi ngā tohu i te kaute</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s waho ō %2$s ngā koinga, %3$s</string>
     <string name="inbox">Pouakauru</string>
@@ -1923,6 +1924,15 @@
     <string name="courseDetailsMessageContentDescription">Tukuna he karere mō tēnei akoranga</string>
     <string name="gradeLockedContentDescription">Koeke maukati</string>
     <string name="gradesRefreshFailed">I rāhua te whakahou i ngā kōeke</string>
+    <string name="showWhatIfScore">Whakaatuhia he Aha-mehemea te kaute</string>
+    <string name="editWhatIfScore">Whakatikahia te Kaute Aha-mehemea</string>
+    <string name="editWhatIfScoreTitle">Whakatikahia te Kaute Aha-mehemea</string>
+    <string name="whatIfScoreLabel">Aha-mehemea</string>
+    <string name="whatIfScoreCurrentGraded">Kaute %1$.0f i waho o %2$.0f</string>
+    <string name="whatIfScoreCurrentUngraded">Kāore anō kia mākahia, kaute mōrahi %.0f</string>
+    <string name="whatIfScoreDisplay">Aha-mehemea: %s</string>
+    <string name="gradesBasedOnGradedAndWhatIf">I runga i ngā mahi kua mākahia, me te Kaute "Aha-mehemea"</string>
+    <string name="clearWhatIfScore">Mukua te Kaute "Aha-mehemea"</string>
     <string name="chooseACourseToMessage">Kōwhiri he akoranga hei karare</string>
     <string name="regardingHiddenMessage">E pā ana: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">E pā ana: %1$s, Whakataunga: %2$s</string>

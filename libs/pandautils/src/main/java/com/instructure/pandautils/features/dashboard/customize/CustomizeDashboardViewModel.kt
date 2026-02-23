@@ -17,19 +17,24 @@
 package com.instructure.pandautils.features.dashboard.customize
 
 import android.content.res.Resources
+import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
+import com.instructure.canvasapi2.utils.AnalyticsParamConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.canvasapi2.utils.RemoteConfigPrefs
-import com.instructure.canvasapi2.utils.RemoteConfigUtils
+import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveGlobalConfigUseCase
+import com.instructure.pandautils.features.dashboard.widget.usecase.UpdateNewDashboardPreferenceUseCase
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetConfigUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetMetadataUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.SwapWidgetPositionsUseCase
-import com.instructure.pandautils.features.dashboard.widget.usecase.UpdateWidgetVisibilityUseCase
-import com.instructure.pandautils.features.dashboard.widget.usecase.UpdateWidgetSettingUseCase
+import com.instructure.pandautils.features.dashboard.widget.usecase.ToggleWidgetVisibilityUseCase
+import com.instructure.pandautils.features.dashboard.widget.usecase.UpdateWidgetConfigUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -47,13 +52,15 @@ import javax.inject.Inject
 class CustomizeDashboardViewModel @Inject constructor(
     private val observeWidgetMetadataUseCase: ObserveWidgetMetadataUseCase,
     private val swapWidgetPositionsUseCase: SwapWidgetPositionsUseCase,
-    private val updateWidgetVisibilityUseCase: UpdateWidgetVisibilityUseCase,
+    private val toggleWidgetVisibilityUseCase: ToggleWidgetVisibilityUseCase,
     private val observeWidgetConfigUseCase: ObserveWidgetConfigUseCase,
-    private val updateWidgetSettingUseCase: UpdateWidgetSettingUseCase,
+    private val updateWidgetConfigUseCase: UpdateWidgetConfigUseCase,
     private val resources: Resources,
     private val apiPrefs: ApiPrefs,
-    private val remoteConfigUtils: RemoteConfigUtils,
-    private val remoteConfigPrefs: RemoteConfigPrefs
+    private val observeGlobalConfigUseCase: ObserveGlobalConfigUseCase,
+    private val updateNewDashboardPreferenceUseCase: UpdateNewDashboardPreferenceUseCase,
+    private val analytics: Analytics,
+    remoteConfigPrefs: RemoteConfigPrefs
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -62,7 +69,8 @@ class CustomizeDashboardViewModel @Inject constructor(
             onMoveDown = this::moveWidgetDown,
             onToggleVisibility = this::toggleVisibility,
             onToggleDashboardRedesign = this::toggleDashboardRedesign,
-            onUpdateSetting = this::updateSetting
+            onUpdateSetting = this::updateSetting,
+            feedbackUrl = remoteConfigPrefs.getString(RemoteConfigParam.DASHBOARD_FEEDBACK_URL.rc_name, "").orEmpty()
         )
     )
     val uiState: StateFlow<CustomizeDashboardUiState> = _uiState.asStateFlow()
@@ -73,12 +81,20 @@ class CustomizeDashboardViewModel @Inject constructor(
     }
 
     private fun loadDashboardRedesignFlag() {
-        val isDashboardRedesignEnabled = remoteConfigUtils.getBoolean(RemoteConfigParam.DASHBOARD_REDESIGN)
-        _uiState.update { it.copy(isDashboardRedesignEnabled = isDashboardRedesignEnabled) }
+        viewModelScope.launch {
+            observeGlobalConfigUseCase(Unit).collect { config ->
+                _uiState.update { it.copy(isDashboardRedesignEnabled = config.newDashboardEnabled) }
+            }
+        }
     }
 
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     private fun loadWidgets() {
+        viewModelScope.launch {
+            observeWidgetConfigUseCase(WidgetMetadata.WIDGET_ID_GLOBAL).collect { settingItems ->
+                _uiState.update { it.copy(globalSettings = settingItems) }
+            }
+        }
         viewModelScope.launch {
             observeWidgetMetadataUseCase(Unit)
                 .map { metadata ->
@@ -165,36 +181,47 @@ class CustomizeDashboardViewModel @Inject constructor(
     }
 
     private fun toggleVisibility(widgetId: String) {
-        val widgetItem = _uiState.value.widgets.firstOrNull { it.metadata.id == widgetId } ?: return
+        val widgetsMetadata = _uiState.value.widgets.map { it.metadata }
 
         viewModelScope.launch {
-            updateWidgetVisibilityUseCase(
-                UpdateWidgetVisibilityUseCase.Params(widgetId, !widgetItem.metadata.isVisible)
+            toggleWidgetVisibilityUseCase(
+                ToggleWidgetVisibilityUseCase.Params(widgetId, widgetsMetadata)
             )
         }
     }
 
     private fun toggleDashboardRedesign(enabled: Boolean) {
-        remoteConfigPrefs.putString(RemoteConfigParam.DASHBOARD_REDESIGN.rc_name, enabled.toString())
-        _uiState.update { it.copy(isDashboardRedesignEnabled = enabled) }
+        viewModelScope.launch {
+            updateNewDashboardPreferenceUseCase(UpdateNewDashboardPreferenceUseCase.Params(enabled))
+        }
     }
 
     private fun getDisplayName(widgetId: String): String {
         return when (widgetId) {
             WidgetMetadata.WIDGET_ID_WELCOME -> resources.getString(R.string.widget_hello, apiPrefs.user?.shortName)
+            WidgetMetadata.WIDGET_ID_FORECAST -> resources.getString(R.string.widget_weekly_summary)
+            WidgetMetadata.WIDGET_ID_COURSES -> resources.getString(R.string.courses_and_groups)
+            WidgetMetadata.WIDGET_ID_TODO -> resources.getString(R.string.widget_toDo)
             else -> widgetId
         }
     }
 
     private fun updateSetting(widgetId: String, key: String, value: Any) {
         viewModelScope.launch {
-            updateWidgetSettingUseCase(
-                UpdateWidgetSettingUseCase.Params(
+            updateWidgetConfigUseCase(
+                UpdateWidgetConfigUseCase.Params(
                     widgetId = widgetId,
                     key = key,
                     value = value
                 )
             )
         }
+    }
+
+    fun trackDashboardSurvey(selectedOption: String) {
+        val bundle = Bundle().apply {
+            putString(AnalyticsParamConstants.SELECTED_REASON, selectedOption)
+        }
+        analytics.logEvent(AnalyticsEventConstants.DASHBOARD_SURVEY_SUBMITTED, bundle)
     }
 }

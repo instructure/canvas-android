@@ -58,7 +58,7 @@ class ElementaryDashboardInteractionTest : StudentTest() {
 
         elementaryDashboardPage.selectTab(ElementaryDashboardPage.ElementaryTabType.GRADES)
         elementaryDashboardPage.assertElementaryTabVisibleAndSelected(ElementaryDashboardPage.ElementaryTabType.GRADES)
-        gradesPage.assertPageObjects()
+        elementaryGradesPage.assertPageObjects()
 
         elementaryDashboardPage.selectTab(ElementaryDashboardPage.ElementaryTabType.RESOURCES)
         elementaryDashboardPage.assertElementaryTabVisibleAndSelected(ElementaryDashboardPage.ElementaryTabType.RESOURCES)

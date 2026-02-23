@@ -17,4 +17,5 @@ package com.instructure.pandautils.features.todolist
 
 interface OnToDoCountChanged {
     fun onToDoCountChanged(count: Int)
+    fun refreshToDoCount()
 }

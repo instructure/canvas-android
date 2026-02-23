@@ -210,7 +210,7 @@ class PdfInteractionTest : StudentComposeTest() {
     }
 
     private fun goToAssignmentPdfSubmission(hasComment: Boolean = false, hasSentComment: Boolean = false, commentContents: String? = null, sentCommentContents: String? = null) {
-        // Test clicking on the Submission and Rubric button to load the Submission Details Page
+        // Test clicking on the Submission and Feedback button to load the Submission Details Page
         val data = MockCanvas.init(
                 studentCount = 1,
                 teacherCount = 1,

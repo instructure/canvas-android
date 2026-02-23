@@ -501,4 +501,8 @@
         <item quantity="other">%d Min</item>
     </plurals>
     <string name="notATeacherDescription">He pai ake pea tetahi o a maatau taupānga. Patohia tetahi ata hei takiuru ki reira.</string>
+    <string name="gradePercentAccessibility">Taumata: %d ōrau</string>
+    <string name="gradePointsAccessibility">Taumata: %s ngā koinga</string>
+    <string name="gradePercentTextFieldAccessibility">Taumata: %d ōrau, %s</string>
+    <string name="gradePointsTextFieldAccessibility">Taumata: %s ngā tohu, %s</string>
 </resources>
