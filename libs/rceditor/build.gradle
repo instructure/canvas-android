@@ -40,7 +40,6 @@ static String isTesting() {
 android {
     namespace 'instructure.rceditor'
     compileSdkVersion Versions.COMPILE_SDK
-    buildToolsVersion Versions.BUILD_TOOLS
 
     defaultConfig {
         minSdkVersion Versions.MIN_SDK

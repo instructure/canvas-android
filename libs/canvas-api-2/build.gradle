@@ -42,7 +42,6 @@ buildscript {
 android {
     namespace 'com.instructure.canvasapi2'
     compileSdkVersion Versions.COMPILE_SDK
-    buildToolsVersion Versions.BUILD_TOOLS
 
     defaultConfig {
         minSdkVersion Versions.MIN_SDK

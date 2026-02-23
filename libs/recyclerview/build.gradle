@@ -29,7 +29,6 @@ static String isTesting() {
 android {
     namespace 'instructure.com.pandarecycler'
     compileSdkVersion Versions.COMPILE_SDK
-    buildToolsVersion Versions.BUILD_TOOLS
 
     defaultConfig {
         minSdkVersion Versions.MIN_SDK
