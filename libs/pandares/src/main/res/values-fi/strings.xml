@@ -278,6 +278,7 @@
     <string name="checkBoxWhatIfGradeOption">Näytä Mitä jos -pistemäärä</string>
     <string name="whatIfDialogText">Mitä jos -pistemäärä</string>
     <string name="whatIfScoreExceedsMaximum">Pisteet eivät saa ylittää enimmäispistemäärää</string>
+    <string name="whatIfScoreExceedsMaximumWarning">Pisteet eivät saa ylittää enimmäispistemäärää</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s / %2$s pistettä, %3$s</string>
     <string name="inbox">Saapuneet</string>
@@ -1923,6 +1924,15 @@
     <string name="courseDetailsMessageContentDescription">Lähetä viesti tästä kurssista</string>
     <string name="gradeLockedContentDescription">Arvosana lukittu</string>
     <string name="gradesRefreshFailed">Arvosanojen päivitys epäonnistui</string>
+    <string name="showWhatIfScore">Näytä Mitä jos -pistemäärä</string>
+    <string name="editWhatIfScore">Muokkaa mitä jos -pistemäärää</string>
+    <string name="editWhatIfScoreTitle">Muokkaa mitä jos -pistemäärää</string>
+    <string name="whatIfScoreLabel">Mitä jos</string>
+    <string name="whatIfScoreCurrentGraded">Pistemäärä %1$.0f/%2$.0f</string>
+    <string name="whatIfScoreCurrentUngraded">Arvosanaa ei annettu, maksimipistemäärä %.0f</string>
+    <string name="whatIfScoreDisplay">Mitä-jos: %s</string>
+    <string name="gradesBasedOnGradedAndWhatIf">Arvosteltujen tehtävien ja entä jos -pisteiden perusteella</string>
+    <string name="clearWhatIfScore">Tyhjennä entä jos -pisteet</string>
     <string name="chooseACourseToMessage">Valitse kurssi, jolle lähetetään viesti</string>
     <string name="regardingHiddenMessage">Koskee: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">Koskee: %1$s, Tehtävä - %2$s</string>

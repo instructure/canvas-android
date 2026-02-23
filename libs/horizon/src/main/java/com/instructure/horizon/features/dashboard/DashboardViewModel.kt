@@ -15,13 +15,18 @@
  */
 package com.instructure.horizon.features.dashboard
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.poll
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -30,8 +35,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val dashboardRepository: DashboardRepository,
+    private val apiPrefs: ApiPrefs,
     private val themePrefs: ThemePrefs,
+    private val localeUtils: LocaleUtils,
     private val dashboardEventHandler: DashboardEventHandler
 ) : ViewModel() {
 
@@ -61,6 +69,11 @@ class DashboardViewModel @Inject constructor(
     }
 
     private suspend fun loadLogo() {
+        val user = dashboardRepository.getSelf()
+        user?.let { saveUserInfo(it) }
+
+        val theme = dashboardRepository.getTheme()
+        _uiState.update { it.copy(theme = theme) }
         // We need to poll for the logo URL because the Dashboard already starts to load when the canvas theme is not yet applied at the first launch.
         poll(
             pollInterval = 50,
@@ -81,6 +94,14 @@ class DashboardViewModel @Inject constructor(
                     unreadNotifications = unreadNotifications
                 )
             )
+        }
+    }
+
+    private fun saveUserInfo(user: User) {
+        val oldLocale = apiPrefs.effectiveLocale
+        apiPrefs.user = user
+        if (apiPrefs.effectiveLocale != oldLocale) {
+            localeUtils.restartApp(context)
         }
     }
 

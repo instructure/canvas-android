@@ -18,12 +18,13 @@ package com.instructure.pandautils.features.dashboard.widget.usecase
 
 import com.google.gson.Gson
 import com.google.gson.JsonObject
+import com.instructure.pandautils.domain.usecase.BaseFlowUseCase
 import com.instructure.pandautils.features.dashboard.customize.WidgetSettingItem
+import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
 import com.instructure.pandautils.features.dashboard.widget.SettingType
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
+import com.instructure.pandautils.features.dashboard.widget.courses.CoursesConfig
 import com.instructure.pandautils.features.dashboard.widget.repository.WidgetConfigDataRepository
-import com.instructure.pandautils.features.dashboard.widget.welcome.WelcomeConfig
-import com.instructure.pandautils.domain.usecase.BaseFlowUseCase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -42,15 +43,21 @@ class ObserveWidgetConfigUseCase @Inject constructor(
 
     private fun getDefaultConfig(widgetId: String): com.instructure.pandautils.features.dashboard.widget.WidgetConfig? {
         return when (widgetId) {
-            WidgetMetadata.WIDGET_ID_WELCOME -> WelcomeConfig()
+            WidgetMetadata.WIDGET_ID_GLOBAL -> GlobalConfig()
+            WidgetMetadata.WIDGET_ID_COURSES -> CoursesConfig()
             else -> null
         }
     }
 
     private fun deserializeConfig(widgetId: String, json: String): com.instructure.pandautils.features.dashboard.widget.WidgetConfig? {
         return when (widgetId) {
-            WidgetMetadata.WIDGET_ID_WELCOME -> try {
-                gson.fromJson(json, WelcomeConfig::class.java)
+            WidgetMetadata.WIDGET_ID_GLOBAL -> try {
+                gson.fromJson(json, GlobalConfig::class.java)
+            } catch (e: Exception) {
+                null
+            }
+            WidgetMetadata.WIDGET_ID_COURSES -> try {
+                gson.fromJson(json, CoursesConfig::class.java)
             } catch (e: Exception) {
                 null
             }

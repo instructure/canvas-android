@@ -288,6 +288,7 @@
     <string name="checkBoxWhatIfGradeOption">Показать возможную оценку</string>
     <string name="whatIfDialogText">Возможная оценка</string>
     <string name="whatIfScoreExceedsMaximum">Оценка не может превышать максимальное количество баллов</string>
+    <string name="whatIfScoreExceedsMaximumWarning">Оценка превышает максимальное количество баллов</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s из %2$s баллов, %3$s</string>
     <string name="inbox">Входящие</string>
@@ -1991,6 +1992,15 @@
     <string name="courseDetailsMessageContentDescription">Отправить сообщение об этом курсе</string>
     <string name="gradeLockedContentDescription">Оценка заблокирована</string>
     <string name="gradesRefreshFailed">Не удалось обновить оценки</string>
+    <string name="showWhatIfScore">Показать оценку What-if</string>
+    <string name="editWhatIfScore">Редактировать оценку What-if</string>
+    <string name="editWhatIfScoreTitle">Редактировать оценку What-if</string>
+    <string name="whatIfScoreLabel">What-if</string>
+    <string name="whatIfScoreCurrentGraded">Оценка %1$.0f из %2$.0f</string>
+    <string name="whatIfScoreCurrentUngraded">Не оценено, макс. оценка %.0f</string>
+    <string name="whatIfScoreDisplay">What-if: %s</string>
+    <string name="gradesBasedOnGradedAndWhatIf">На основе оцениваемых заданий и оценки What-if</string>
+    <string name="clearWhatIfScore">Сбросить оценку What-if</string>
     <string name="chooseACourseToMessage">Выбрать курс для сообщения</string>
     <string name="regardingHiddenMessage">Касательно: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">Касательно: %1$s, задание - %2$s</string>

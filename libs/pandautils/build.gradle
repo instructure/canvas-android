@@ -113,7 +113,6 @@ configurations {
     androidTestImplementation.exclude module:'protobuf-lite'
 
     all*.resolutionStrategy {
-        force 'io.grpc:grpc-netty:1.75.0'
         force Libs.KOTLIN_STD_LIB
     }
 }
@@ -129,9 +128,6 @@ dependencies {
     implementation Libs.CAMERA_VIEW
 
     implementation Libs.LOTTIE
-
-    // Explicitly add secure grpc-netty version to override any transitive dependencies
-    implementation 'io.grpc:grpc-netty:1.75.0'
 
     /* Kotlin */
     implementation Libs.KOTLIN_STD_LIB
@@ -236,6 +232,7 @@ dependencies {
     api Libs.COMPOSE_MATERIAL3_WINDOW_SIZE
     api Libs.COMPOSE_NAVIGATION_HILT
     api Libs.COMPOSE_FRAGMENT
+    api Libs.COMPOSE_REORDERABLE
 
 
     implementation Libs.FLEXBOX_LAYOUT

@@ -29,18 +29,23 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -59,7 +64,8 @@ import com.instructure.pandautils.utils.getFragmentActivityOrNull
 fun GroupCard(
     groupCard: GroupCardItem,
     onGroupClick: (FragmentActivity, Long) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onMessageClick: ((FragmentActivity, Long) -> Unit)
 ) {
     val activity = LocalActivity.current?.getFragmentActivityOrNull()
 
@@ -94,40 +100,42 @@ fun GroupCard(
                             color = Color(CanvasContext.emptyGroupContext(id = groupCard.id).color),
                             shape = RoundedCornerShape(14.dp)
                         ),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.BottomStart
                 ) {
                     Column(
                         modifier = Modifier.padding(8.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.SpaceBetween
+                        horizontalAlignment = Alignment.Start,
+                        verticalArrangement = Arrangement.Bottom
                     ) {
-                        Spacer(modifier = Modifier.weight(1f))
-
                         Card(
-                            shape = RoundedCornerShape(16.dp),
+                            shape = RoundedCornerShape(24.dp),
                             colors = CardDefaults.cardColors(
                                 containerColor = colorResource(R.color.backgroundLightest)
                             ),
                             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                         ) {
-                            Text(
-                                text = groupCard.memberCount.toString(),
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Medium,
-                                color = Color(CanvasContext.emptyGroupContext(id = groupCard.id).color),
-                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
-                                lineHeight = 21.sp
-                            )
+                            Row(
+                                modifier = Modifier
+                                    .height(28.dp)
+                                    .padding(horizontal = 4.dp, vertical = 2.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                Text(
+                                    text = groupCard.memberCount.toString(),
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = Color(CanvasContext.emptyGroupContext(id = groupCard.id).color),
+                                    lineHeight = 21.sp
+                                )
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_user_filled),
+                                    contentDescription = pluralStringResource(R.plurals.groupMemberCount, groupCard.memberCount),
+                                    modifier = Modifier.size(16.dp),
+                                    tint = Color(CanvasContext.emptyGroupContext(id = groupCard.id).color)
+                                )
+                            }
                         }
-
-                        Text(
-                            text = pluralStringResource(R.plurals.groupMemberCount, groupCard.memberCount),
-                            fontSize = 14.sp,
-                            color = colorResource(R.color.textLightest),
-                            lineHeight = 19.sp
-                        )
-
-                        Spacer(modifier = Modifier.weight(1f))
                     }
                 }
             }
@@ -158,6 +166,22 @@ fun GroupCard(
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     lineHeight = 21.sp
+                )
+            }
+
+            Box(
+                modifier = Modifier
+                    .padding(end = 16.dp)
+                    .clip(CircleShape)
+                    .size(48.dp)
+                    .clickable { activity?.let { onMessageClick.invoke(it, groupCard.id) } },
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_inbox),
+                    contentDescription = stringResource(R.string.messageGroup),
+                    modifier = Modifier.size(24.dp),
+                    tint = colorResource(R.color.textDark)
                 )
             }
         }
@@ -222,7 +246,8 @@ private fun GroupCardPreview() {
             parentCourseName = "Introduction to Computer Science",
             memberCount = 5
         ),
-        onGroupClick = {_, _ -> }
+        onGroupClick = {_, _ -> },
+        onMessageClick = {_, _ -> }
     )
 }
 

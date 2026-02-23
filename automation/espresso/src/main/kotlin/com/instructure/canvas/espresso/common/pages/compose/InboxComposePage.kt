@@ -38,6 +38,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeUp
+import androidx.test.espresso.Espresso
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Message
 
@@ -141,6 +142,7 @@ class InboxComposePage(private val composeTestRule: ComposeTestRule) {
         composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("textFieldWithHeaderTextField").performClick()
         composeTestRule.onNodeWithTag("textFieldWithHeaderTextField").performTextReplacement(body)
+        Espresso.closeSoftKeyboard()
     }
 
     fun clickOnCloseButton() {

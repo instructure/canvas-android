@@ -17,30 +17,40 @@ package com.instructure.pandautils.features.dashboard.widget.institutionalannoun
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.instructure.pandautils.domain.usecase.accountnotification.DeleteAccountNotificationUseCase
 import com.instructure.pandautils.domain.usecase.accountnotification.LoadInstitutionalAnnouncementsParams
 import com.instructure.pandautils.domain.usecase.accountnotification.LoadInstitutionalAnnouncementsUseCase
+import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveGlobalConfigUseCase
+import com.instructure.pandautils.utils.ColorKeeper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class InstitutionalAnnouncementsViewModel @Inject constructor(
-    private val loadInstitutionalAnnouncementsUseCase: LoadInstitutionalAnnouncementsUseCase
+    private val loadInstitutionalAnnouncementsUseCase: LoadInstitutionalAnnouncementsUseCase,
+    private val deleteAccountNotificationUseCase: DeleteAccountNotificationUseCase,
+    private val observeGlobalConfigUseCase: ObserveGlobalConfigUseCase,
+    private val crashlytics: FirebaseCrashlytics
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
         InstitutionalAnnouncementsUiState(
-            onRefresh = ::loadAnnouncements
+            onRefresh = ::loadAnnouncements,
+            onDismiss = ::dismissAnnouncement
         )
     )
     val uiState: StateFlow<InstitutionalAnnouncementsUiState> = _uiState.asStateFlow()
 
     init {
         loadAnnouncements()
+        observeConfig()
     }
 
     private fun loadAnnouncements() {
@@ -64,6 +74,35 @@ class InstitutionalAnnouncementsViewModel @Inject constructor(
                         error = true
                     )
                 }
+            }
+        }
+    }
+
+    private fun observeConfig() {
+        viewModelScope.launch {
+            observeGlobalConfigUseCase(Unit)
+                .catch { crashlytics.recordException(it) }
+                .collect { config ->
+                    val themedColor = ColorKeeper.createThemedColor(config.backgroundColor)
+                    _uiState.update { it.copy(color = themedColor) }
+                }
+        }
+    }
+
+    private fun dismissAnnouncement(accountNotificationId: Long) {
+        _uiState.update {
+            it.copy(announcements = it.announcements.filter { announcement ->
+                announcement.id != accountNotificationId
+            })
+        }
+
+        viewModelScope.launch {
+            try {
+                deleteAccountNotificationUseCase(
+                    DeleteAccountNotificationUseCase.Params(accountNotificationId)
+                )
+            } catch (e: Exception) {
+                crashlytics.recordException(e)
             }
         }
     }
