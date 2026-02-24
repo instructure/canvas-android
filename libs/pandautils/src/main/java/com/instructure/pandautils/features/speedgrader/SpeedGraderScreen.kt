@@ -154,7 +154,8 @@ fun SpeedGraderScreen(
                 HorizontalPager(
                     modifier = Modifier
                         .windowInsetsPadding(WindowInsets.displayCutout)
-                        .padding(padding),
+                        .padding(padding)
+                        .testTag("speedGraderPager"),
                     state = pagerState,
                     userScrollEnabled = viewPagerEnabled
                 ) { page ->

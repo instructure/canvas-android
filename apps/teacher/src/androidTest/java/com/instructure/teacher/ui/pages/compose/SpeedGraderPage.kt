@@ -37,6 +37,8 @@ import androidx.compose.ui.test.performTextClearance
 import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.swipeLeft
+import androidx.compose.ui.test.swipeRight
 import androidx.compose.ui.test.swipeUp
 import androidx.test.espresso.Espresso.closeSoftKeyboard
 import androidx.test.espresso.matcher.ViewMatchers.hasDescendant
@@ -168,7 +170,8 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
     }
 
     /**
-     * Selects the "Grades & Rubric" tab.
+     * Selects the specified tab (e.g., "Grades", "Comments") in the SpeedGrader page.
+     * @param tabTitle The tab's name which will be selected.
      */
     fun selectTab(tabTitle: String) {
         composeTestRule.onNode(hasTestTag("speedGraderTab-${tabTitle}"), useUnmergedTree = true)
@@ -506,6 +509,42 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
         onWebView(withId(R.id.contentWebView))
             .withElement(findElement(Locator.TAG_NAME, "html"))
             .check(webMatches(getText(), Matchers.containsString(student.shortName)))
+    }
+
+    /**
+     * Asserts the current student name displayed in the SpeedGrader page.
+     *
+     * @param studentName The expected name of the current student to be displayed.
+     */
+    fun assertCurrentStudent(studentName: String) {
+        composeTestRule.onNode(hasTestTag("speedGraderUserName") and hasText(studentName), useUnmergedTree = true).assertIsDisplayed()
+    }
+
+    /**
+     * Asserts the current student submission status.
+     *
+     * @param status The expected submission status to be displayed.
+     */
+    fun assertCurrentStudentStatus(status: String) {
+        composeTestRule.onNode(hasTestTag("submissionStatusLabel") and hasText(status), useUnmergedTree = true).assertIsDisplayed()
+    }
+
+    /**
+     * Swipes left to navigate to the next student in the SpeedGrader page.
+     */
+    fun swipeToNextStudent() {
+        composeTestRule.onNodeWithTag("speedGraderPager")
+            .performTouchInput { swipeLeft() }
+        composeTestRule.waitForIdle()
+    }
+
+    /**
+     * Swipes right to navigate to the previous student in the SpeedGrader page.
+     */
+    fun swipeToPreviousStudent() {
+        composeTestRule.onNodeWithTag("speedGraderPager")
+            .performTouchInput { swipeRight() }
+        composeTestRule.waitForIdle()
     }
 
     /**
