@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.instructure.horizon.R
@@ -36,6 +37,9 @@ import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.molecules.IconButton
+import com.instructure.horizon.horizonui.molecules.IconButtonColor
+import com.instructure.horizon.horizonui.molecules.IconButtonSize
 
 @Composable
 fun LearnSearchBar(
@@ -50,34 +54,55 @@ fun LearnSearchBar(
         onValueChange = onValueChange,
         singleLine = true,
         textStyle = HorizonTypography.p1,
-        decorationBox = { SearchBarDecorationBox(value, placeholder) { it() } },
+        decorationBox = { SearchBarDecorationBox(value, onValueChange, placeholder) { it() } },
     )
 }
 
 @Composable
-private fun SearchBarDecorationBox(value: TextFieldValue, placeholder: String, innerTextField: @Composable () -> Unit) {
+private fun SearchBarDecorationBox(
+    value: TextFieldValue,
+    onValueChange: (TextFieldValue) -> Unit,
+    placeholder: String,
+    innerTextField: @Composable () -> Unit
+) {
     Box(
         contentAlignment = Alignment.CenterStart,
         modifier = Modifier
             .background(HorizonColors.Surface.cardPrimary(), HorizonCornerRadius.level6)
             .border(1.dp, HorizonColors.LineAndBorder.containerStroke(), HorizonCornerRadius.level6)
-            .padding(horizontal = 16.dp, vertical = 12.dp)
+            .padding(horizontal = 16.dp)
     ){
-        innerTextField()
-        if (value.text.isEmpty()) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.search),
+                contentDescription = null,
+                tint = HorizonColors.Icon.light()
+            )
+            HorizonSpace(SpaceSize.SPACE_8)
+            Box(
+                contentAlignment = Alignment.CenterStart,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(vertical = 12.dp)
             ) {
-                Icon(
-                    painter = painterResource(R.drawable.search),
-                    contentDescription = null,
-                    tint = HorizonColors.Icon.light()
-                )
-                HorizonSpace(SpaceSize.SPACE_8)
-                Text(
-                    text = placeholder,
-                    style = HorizonTypography.p1,
-                    color = HorizonColors.Text.placeholder()
+                if (value.text.isEmpty()) {
+                    Text(
+                        text = placeholder,
+                        style = HorizonTypography.p1,
+                        color = HorizonColors.Text.placeholder(),
+                    )
+                }
+                innerTextField()
+            }
+             if (value.text.isNotEmpty()) {
+                IconButton(
+                    iconRes = R.drawable.cancel,
+                    size = IconButtonSize.SMALL,
+                    color = IconButtonColor.Ghost,
+                    contentDescription = stringResource(R.string.a11y_learnClearSearchQueryContentDescription),
+                    onClick = { onValueChange(TextFieldValue("")) }
                 )
             }
         }

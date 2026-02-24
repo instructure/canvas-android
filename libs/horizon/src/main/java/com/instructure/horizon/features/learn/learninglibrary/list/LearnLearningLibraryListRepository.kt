@@ -17,13 +17,35 @@
 package com.instructure.horizon.features.learn.learninglibrary.list
 
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetLearningLibraryManager
+import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
 import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearningLibraryCollection
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItem
+import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItemsResponse
 import javax.inject.Inject
 
 class LearnLearningLibraryListRepository @Inject constructor(
     private val getLearningLibraryManager: GetLearningLibraryManager,
 ) {
+    suspend fun getLearningLibraryItems(
+        afterCursor: String? = null,
+        limit: Int? = 10,
+        searchQuery: String? = null,
+        typeFilter: CollectionItemType? = null,
+        bookmarkedOnly: Boolean = false,
+        completedOnly: Boolean = false,
+        forceNetwork: Boolean
+    ): LearningLibraryCollectionItemsResponse {
+        return getLearningLibraryManager.getLearningLibraryCollectionItems(
+            cursor = afterCursor,
+            limit = limit,
+            bookmarkedOnly = bookmarkedOnly,
+            completedOnly = completedOnly,
+            searchTerm = searchQuery,
+            types = typeFilter?.let { listOf(it) },
+            forceNetwork = forceNetwork
+        )
+    }
+
     suspend fun getEnrolledLearningLibraries(forceNetwork: Boolean): List<EnrolledLearningLibraryCollection> {
         return getLearningLibraryManager.getEnrolledLearningLibraryCollections(4, forceNetwork).collections
     }
