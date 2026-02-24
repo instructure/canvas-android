@@ -17,6 +17,7 @@
 package com.instructure.pandautils.features.file.upload
 
 import android.Manifest
+import android.app.Activity
 import android.app.Dialog
 import android.content.DialogInterface
 import android.content.pm.PackageManager
@@ -27,6 +28,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
@@ -44,6 +47,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.base.BaseCanvasDialogFragment
 import com.instructure.pandautils.databinding.FragmentFileUploadDialogBinding
 import com.instructure.pandautils.features.shareextension.ShareExtensionActivity
+import com.instructure.pandautils.features.file.upload.scanner.DocumentScannerManager
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FileUploadUtils
 import com.instructure.pandautils.utils.IntArg
@@ -71,6 +75,9 @@ class FileUploadDialogFragment : BaseCanvasDialogFragment() {
 
     @Inject
     lateinit var fileUploadEventHandler: FileUploadEventHandler
+
+    @Inject
+    lateinit var documentScannerManager: DocumentScannerManager
 
     private var uploadType: FileUploadType by SerializableArg(FileUploadType.ASSIGNMENT)
     private var canvasContext: CanvasContext by ParcelableArg(ApiPrefs.user)
@@ -114,6 +121,16 @@ class FileUploadDialogFragment : BaseCanvasDialogFragment() {
     private val multipleFilePickerContract = registerForActivityResult(ActivityResultContracts.GetMultipleContents()) {
         it?.let {
             viewModel.addFiles(it)
+        }
+    }
+
+    private val scannerLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result: ActivityResult ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val scanResult = documentScannerManager.handleScanResultFromIntent(result.data)
+            val pdfUri = scanResult.pdfUri
+            if (pdfUri != null) {
+                viewModel.addFile(pdfUri)
+            }
         }
     }
 
@@ -236,6 +253,7 @@ class FileUploadDialogFragment : BaseCanvasDialogFragment() {
             is FileUploadAction.PickFile -> pickFromFiles()
             is FileUploadAction.PickMultipleFile -> pickMultipleFile()
             is FileUploadAction.PickMultipleImage -> pickMultipleImage()
+            is FileUploadAction.LaunchScanner -> launchScanner()
             is FileUploadAction.ShowToast -> Toast.makeText(requireContext(), action.toast, Toast.LENGTH_SHORT).show()
             is FileUploadAction.UploadStarted -> dismiss()
             is FileUploadAction.AttachmentSelectedAction -> {
@@ -300,6 +318,16 @@ class FileUploadDialogFragment : BaseCanvasDialogFragment() {
 
     private fun pickMultipleImage() {
         multipleFilePickerContract.launch("image/*")
+    }
+
+    private fun launchScanner() {
+        documentScannerManager.getStartScanIntent(requireActivity())
+            .addOnSuccessListener { intentSender ->
+                scannerLauncher.launch(IntentSenderRequest.Builder(intentSender).build())
+            }
+            .addOnFailureListener {
+                Toast.makeText(requireContext(), R.string.errorOccurred, Toast.LENGTH_SHORT).show()
+            }
     }
 
     companion object {

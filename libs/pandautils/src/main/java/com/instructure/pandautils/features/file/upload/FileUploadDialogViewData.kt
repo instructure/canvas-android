@@ -39,6 +39,7 @@ sealed class FileUploadAction {
     object PickFile : FileUploadAction()
     object PickMultipleImage : FileUploadAction()
     object PickMultipleFile : FileUploadAction()
+    object LaunchScanner : FileUploadAction()
     object UploadStarted : FileUploadAction()
     data class ShowToast(val toast: String) : FileUploadAction()
     data class AttachmentSelectedAction(val event: Int, val attachment: FileSubmitObject?) : FileUploadAction()

@@ -62,6 +62,7 @@ class PickerSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup, va
 
         binding.sourceDevice.setOnClickListener { consumer?.accept(PickerSubmissionUploadEvent.SelectFileClicked) }
         binding.sourceGallery.setOnClickListener { consumer?.accept(PickerSubmissionUploadEvent.GalleryClicked) }
+        binding.sourceScanner.setOnClickListener { consumer?.accept(PickerSubmissionUploadEvent.ScannerClicked) }
     }
 
     override fun onConnect(output: Consumer<PickerSubmissionUploadEvent>) {
@@ -118,6 +119,7 @@ class PickerSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup, va
         sourceCamera.setVisible(visibilities.sourceCamera)
         sourceDevice.setVisible(visibilities.sourceFile)
         sourceGallery.setVisible(visibilities.sourceGallery)
+        sourceScanner.setVisible(visibilities.sourceScanner)
     }
 
     fun getSelectFileIntent() = Intent(Intent.ACTION_GET_CONTENT).apply {

@@ -27,6 +27,7 @@ data class PickerVisibilities(
     val sourceCamera: Boolean = false,
     val sourceGallery: Boolean = false,
     val sourceFile: Boolean = false,
+    val sourceScanner: Boolean = false,
     val submit: Boolean = false
 )
 

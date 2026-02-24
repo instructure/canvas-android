@@ -23,6 +23,7 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
+import com.instructure.pandautils.features.file.upload.scanner.DocumentScannerManager
 import com.instructure.pandautils.utils.ActivityResult
 import com.instructure.pandautils.utils.FilePrefs
 import com.instructure.pandautils.utils.FileUploadUtils
@@ -64,7 +65,8 @@ class PickerSubmissionUploadEffectHandlerTest : Assert() {
     private val view: PickerSubmissionUploadView = mockk(relaxed = true)
     private val eventConsumer: Consumer<PickerSubmissionUploadEvent> = mockk(relaxed = true)
     private val submissionHelper: SubmissionHelper = mockk(relaxed = true)
-    private val effectHandler = PickerSubmissionUploadEffectHandler(context, submissionHelper)
+    private val documentScannerManager: DocumentScannerManager = mockk(relaxed = true)
+    private val effectHandler = PickerSubmissionUploadEffectHandler(context, submissionHelper, documentScannerManager)
     private val connection = effectHandler.connect(eventConsumer)
 
     @ExperimentalCoroutinesApi
