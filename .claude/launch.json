@@ -1,0 +1,29 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Student App (Debug)",
+      "runtimeExecutable": "./gradlew",
+      "runtimeArgs": [":student:installDevDebug"],
+      "port": 0
+    },
+    {
+      "name": "Teacher App (Debug)",
+      "runtimeExecutable": "./gradlew",
+      "runtimeArgs": [":teacher:installDevDebug"],
+      "port": 0
+    },
+    {
+      "name": "Parent App (Debug)",
+      "runtimeExecutable": "./gradlew",
+      "runtimeArgs": [":parent:installDevDebug"],
+      "port": 0
+    },
+    {
+      "name": "SoSeedy CLI (Data Seeding)",
+      "runtimeExecutable": "./gradlew",
+      "runtimeArgs": ["fatJar"],
+      "port": 0
+    }
+  ]
+}
