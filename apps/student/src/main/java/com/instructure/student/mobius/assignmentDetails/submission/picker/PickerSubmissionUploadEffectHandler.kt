@@ -22,6 +22,7 @@ import android.net.Uri
 import androidx.core.content.FileProvider
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.exhaustive
+import com.instructure.pandautils.features.file.upload.scanner.DocumentScannerManager
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FilePrefs
 import com.instructure.pandautils.utils.FileUploadUtils
@@ -50,7 +51,8 @@ import java.io.File
 // We need a context in this class to register receivers and to access the database
 class PickerSubmissionUploadEffectHandler(
     private val context: Context,
-    private val submissionHelper: SubmissionHelper
+    private val submissionHelper: SubmissionHelper,
+    private val documentScannerManager: DocumentScannerManager
 ) : EffectHandler<PickerSubmissionUploadView, PickerSubmissionUploadEvent, PickerSubmissionUploadEffect>() {
 
     override fun connect(output: Consumer<PickerSubmissionUploadEvent>): Connection<PickerSubmissionUploadEffect> {
@@ -94,8 +96,10 @@ class PickerSubmissionUploadEffectHandler(
                 } else if (it.requestCode == REQUEST_DOCUMENT_SCANNING) {
                     event.remove()
 
-                    if (it.data != null && it.data?.data != null) {
-                        consumer.accept(PickerSubmissionUploadEvent.OnFileSelected(it.data!!.data!!))
+                    val scanResult = documentScannerManager.handleScanResultFromIntent(it.data)
+                    val pdfUri = scanResult.pdfUri
+                    if (pdfUri != null) {
+                        consumer.accept(PickerSubmissionUploadEvent.OnFileSelected(pdfUri))
                     } else {
                         view?.showErrorMessage(R.string.unexpectedErrorOpeningFile)
                     }
@@ -114,6 +118,9 @@ class PickerSubmissionUploadEffectHandler(
             }
             PickerSubmissionUploadEffect.LaunchSelectFile -> {
                 launchSelectFile()
+            }
+            PickerSubmissionUploadEffect.LaunchScanner -> {
+                launchScanner()
             }
             is PickerSubmissionUploadEffect.LoadFileContents -> {
                 loadFile(effect.allowedExtensions, effect.uri, context)
@@ -213,6 +220,21 @@ class PickerSubmissionUploadEffectHandler(
         view?.getSelectFileIntent()?.let {
             (context.getFragmentActivity()).startActivityForResult(it, REQUEST_PICK_FILE_FROM_DEVICE)
         }
+    }
+
+    private fun launchScanner() {
+        val activity = context.getFragmentActivity()
+        documentScannerManager.getStartScanIntent(activity)
+            .addOnSuccessListener { intentSender ->
+                activity.startIntentSenderForResult(
+                    intentSender,
+                    REQUEST_DOCUMENT_SCANNING,
+                    null, 0, 0, 0
+                )
+            }
+            .addOnFailureListener {
+                view?.showErrorMessage(R.string.unexpectedErrorOpeningFile)
+            }
     }
 
     private fun launchCamera() {

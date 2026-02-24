@@ -25,6 +25,7 @@ sealed class PickerSubmissionUploadEvent {
     object CameraClicked : PickerSubmissionUploadEvent()
     object GalleryClicked : PickerSubmissionUploadEvent()
     object SelectFileClicked : PickerSubmissionUploadEvent()
+    object ScannerClicked : PickerSubmissionUploadEvent()
     data class OnFileSelected(val uri: Uri) : PickerSubmissionUploadEvent()
     data class OnFileRemoved(val fileIndex: Int) : PickerSubmissionUploadEvent()
     data class OnFileAdded(val file: FileSubmitObject?) : PickerSubmissionUploadEvent()
@@ -34,6 +35,7 @@ sealed class PickerSubmissionUploadEffect {
     object LaunchCamera : PickerSubmissionUploadEffect()
     object LaunchGallery : PickerSubmissionUploadEffect()
     object LaunchSelectFile : PickerSubmissionUploadEffect()
+    object LaunchScanner : PickerSubmissionUploadEffect()
     data class HandleSubmit(val model: PickerSubmissionUploadModel) : PickerSubmissionUploadEffect()
     data class LoadFileContents(val uri: Uri, val allowedExtensions: List<String>) :
         PickerSubmissionUploadEffect()
@@ -51,7 +53,8 @@ data class PickerSubmissionUploadModel(
     val files: List<FileSubmitObject> = emptyList(),
     val isLoadingFile: Boolean = false,
     val attemptId: Long? = null,
-    val mediaSource: String? = null
+    val mediaSource: String? = null,
+    val scannerAvailable: Boolean = false
 )
 
 enum class PickerSubmissionMode {
