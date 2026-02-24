@@ -169,7 +169,7 @@ class ToDoFragment : BaseSyncFragment<ToDo, ToDoPresenter, ToDoView, ToDoViewHol
     }
 
     override fun onRouteFailed() {
-        toast(R.string.errorToDoRouteFailed)
+        toast(R.string.errorToDoRouteFailedNew)
     }
 
     @Suppress("unused")

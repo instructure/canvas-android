@@ -162,7 +162,7 @@ abstract class ToDoListInteractionTest : CanvasComposeTest() {
 
         composeTestRule.waitForIdle()
         toDoListPage.clickFilterButton()
-        toDoFilterPage.selectVisibleItemsOption(R.string.todoFilterShowPersonalToDos)
+        toDoFilterPage.selectVisibleItemsOption(R.string.todoFilterShowPersonalToDosNew)
         toDoFilterPage.clickDone()
         composeTestRule.waitForIdle()
         toDoListPage.clickOnItem(todo.plannable.title)
@@ -360,7 +360,7 @@ abstract class ToDoListInteractionTest : CanvasComposeTest() {
 
         // Enable personal todos filter
         toDoListPage.clickFilterButton()
-        toDoFilterPage.selectVisibleItemsOption(R.string.todoFilterShowPersonalToDos)
+        toDoFilterPage.selectVisibleItemsOption(R.string.todoFilterShowPersonalToDosNew)
         toDoFilterPage.clickDone()
 
         composeTestRule.waitForIdle()

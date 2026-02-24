@@ -30,7 +30,7 @@
         android:elevation="6dp"
         app:popupTheme="@style/ToolBarPopupStyle"
         app:theme="@style/ToolBarStyle"
-        app:title="@string/tab_todo"
+        app:title="@string/tab_todo_new"
         tools:ignore="UnusedAttribute"/>
 
     <com.instructure.pandautils.views.SwipeRefreshLayoutAppBar

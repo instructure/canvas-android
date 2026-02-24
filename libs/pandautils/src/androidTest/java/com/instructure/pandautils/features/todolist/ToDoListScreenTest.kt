@@ -89,7 +89,7 @@ class ToDoListScreenTest {
         }
 
         composeTestRule.onNodeWithTag("todoListEmpty").assertIsDisplayed()
-        composeTestRule.onNodeWithText(context.getString(R.string.noToDosForNow)).assertIsDisplayed()
+        composeTestRule.onNodeWithText(context.getString(R.string.noToDosForNowNew)).assertIsDisplayed()
         composeTestRule.onNodeWithText(context.getString(R.string.noToDosForNowSubtext)).assertIsDisplayed()
     }
 
@@ -245,7 +245,7 @@ class ToDoListScreenTest {
             )
         }
 
-        composeTestRule.onNodeWithText(context.getString(R.string.noToDosForNow)).assertIsDisplayed()
+        composeTestRule.onNodeWithText(context.getString(R.string.noToDosForNowNew)).assertIsDisplayed()
         composeTestRule.onNodeWithText("Filtered Item").assertIsNotDisplayed()
     }
 

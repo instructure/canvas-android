@@ -186,7 +186,7 @@ fun ToDoListScreen(
         backgroundColor = colorResource(R.color.backgroundLightest),
         topBar = {
             CanvasThemedAppBar(
-                title = stringResource(id = R.string.Todo),
+                title = stringResource(id = R.string.TodoNew),
                 navIconRes = R.drawable.ic_hamburger,
                 navIconContentDescription = stringResource(id = R.string.navigation_drawer_open),
                 navigationActionClick = navigationIconClick,
@@ -291,7 +291,7 @@ internal fun ToDoListContent(
 
         filteredItemsByDate.isEmpty() -> {
             EmptyContent(
-                emptyTitle = stringResource(id = R.string.noToDosForNow),
+                emptyTitle = stringResource(id = R.string.noToDosForNowNew),
                 emptyMessage = stringResource(id = R.string.noToDosForNowSubtext),
                 imageRes = R.drawable.ic_no_events,
                 modifier = modifier

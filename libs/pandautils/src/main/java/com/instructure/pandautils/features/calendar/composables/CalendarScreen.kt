@@ -197,7 +197,7 @@ fun CalendarScreen(
                         {
                             ExpandableFabItem(
                                 icon = painterResource(id = R.drawable.ic_todo),
-                                text = stringResource(id = R.string.calendarAddToDo),
+                                text = stringResource(id = R.string.calendarAddToDoNew),
                                 modifier = Modifier
                                     .clickable {
                                         fabExpandedState.value = false
