@@ -29,7 +29,15 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSE_SETTINGS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
+import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.withArgs
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentCourseSettingsBinding
 
@@ -50,6 +58,7 @@ class CourseSettingsFragment : ParentFragment() {
     override fun applyTheme() {
         binding.toolbar.title = title()
         binding.toolbar.setupAsBackButton(this)
+        binding.toolbar.applyTopSystemBarInsets()
         ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, course)
     }
 
@@ -67,6 +76,7 @@ class CourseSettingsFragment : ParentFragment() {
         startDate.text = DateHelper.dateToDayMonthYearString(requireContext(), course.startDate)
         endLayout.setVisible(course.endDate != null)
         endDate.text = DateHelper.dateToDayMonthYearString(requireContext(), course.endDate)
+        scrollView.applyBottomSystemBarInsets()
     }
 
     companion object {

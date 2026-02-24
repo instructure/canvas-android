@@ -278,6 +278,7 @@
     <string name="checkBoxWhatIfGradeOption">Prikaži simulacijo rezultatov</string>
     <string name="whatIfDialogText">Simulacija rezultatov</string>
     <string name="whatIfScoreExceedsMaximum">Rezultat ne sme preseči največjega števila točk</string>
+    <string name="whatIfScoreExceedsMaximumWarning">Rezultat presega največje število točk</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s od %2$s točk, %3$s</string>
     <string name="inbox">Pošta</string>
@@ -1923,6 +1924,15 @@
     <string name="courseDetailsMessageContentDescription">Pošlji sporočilo o tem predmetu</string>
     <string name="gradeLockedContentDescription">Ocena zaklenjena</string>
     <string name="gradesRefreshFailed">Osveževanje ocen ni uspelo</string>
+    <string name="showWhatIfScore">Prikaži simulacijo rezultatov</string>
+    <string name="editWhatIfScore">Urejanje simulacije rezultatov</string>
+    <string name="editWhatIfScoreTitle">Urejanje simulacije rezultatov</string>
+    <string name="whatIfScoreLabel">Simulacija</string>
+    <string name="whatIfScoreCurrentGraded">Rezultat %1$.0f od %2$.0f</string>
+    <string name="whatIfScoreCurrentUngraded">Ni ocenjeno, najvišji rezultat %.0f</string>
+    <string name="whatIfScoreDisplay">Simulacija: %s</string>
+    <string name="gradesBasedOnGradedAndWhatIf">Na podlagi ocenjenih nalog in simulacije rezultatov</string>
+    <string name="clearWhatIfScore">Počisti simulacijo rezultatov</string>
     <string name="chooseACourseToMessage">Izberite predmet za pošiljanje sporočila</string>
     <string name="regardingHiddenMessage">Zadeva: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">Zadeva: %1$s, Naloga – %2$s</string>

@@ -27,6 +27,9 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Page
@@ -53,6 +56,7 @@ import com.instructure.pandautils.utils.RequestCodes
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.applyTheme
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.handleLTIPlaceHolders
 import com.instructure.pandautils.utils.hideKeyboard
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
@@ -97,7 +101,15 @@ class CreateOrEditPageDetailsFragment : BasePresenterFragment<
     override val skipCheck = false
     override fun onRefreshFinished() {}
     override fun onRefreshStarted() {}
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) { }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding.toolbar.applyTopSystemBarInsets()
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.scrollView) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.updatePadding(bottom = systemBars.bottom)
+            insets
+        }
+    }
     override fun onPresenterPrepared(presenter: CreateOrEditPagePresenter) {}
 
     override val bindingInflater: (layoutInflater: LayoutInflater) -> FragmentCreateOrEditPageBinding = FragmentCreateOrEditPageBinding::inflate

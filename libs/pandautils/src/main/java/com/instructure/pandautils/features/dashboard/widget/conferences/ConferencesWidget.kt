@@ -100,7 +100,14 @@ fun ConferencesWidgetContent(
     uiState: ConferencesUiState,
     columns: Int
 ) {
-    if (uiState.loading || uiState.error || uiState.conferences.isEmpty()) {
+    if (uiState.loading) {
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .height(1.dp))
+        return
+    }
+
+    if (uiState.error || uiState.conferences.isEmpty()) {
         return
     }
 

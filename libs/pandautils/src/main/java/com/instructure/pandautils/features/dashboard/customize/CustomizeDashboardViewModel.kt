@@ -26,14 +26,15 @@ import com.instructure.canvasapi2.utils.AnalyticsParamConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.canvasapi2.utils.RemoteConfigPrefs
-import com.instructure.canvasapi2.utils.RemoteConfigUtils
+import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveGlobalConfigUseCase
+import com.instructure.pandautils.features.dashboard.widget.usecase.UpdateNewDashboardPreferenceUseCase
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetConfigUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetMetadataUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.SwapWidgetPositionsUseCase
+import com.instructure.pandautils.features.dashboard.widget.usecase.ToggleWidgetVisibilityUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.UpdateWidgetConfigUseCase
-import com.instructure.pandautils.features.dashboard.widget.usecase.UpdateWidgetVisibilityUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -51,14 +52,15 @@ import javax.inject.Inject
 class CustomizeDashboardViewModel @Inject constructor(
     private val observeWidgetMetadataUseCase: ObserveWidgetMetadataUseCase,
     private val swapWidgetPositionsUseCase: SwapWidgetPositionsUseCase,
-    private val updateWidgetVisibilityUseCase: UpdateWidgetVisibilityUseCase,
+    private val toggleWidgetVisibilityUseCase: ToggleWidgetVisibilityUseCase,
     private val observeWidgetConfigUseCase: ObserveWidgetConfigUseCase,
     private val updateWidgetConfigUseCase: UpdateWidgetConfigUseCase,
     private val resources: Resources,
     private val apiPrefs: ApiPrefs,
-    private val remoteConfigUtils: RemoteConfigUtils,
-    private val remoteConfigPrefs: RemoteConfigPrefs,
-    private val analytics: Analytics
+    private val observeGlobalConfigUseCase: ObserveGlobalConfigUseCase,
+    private val updateNewDashboardPreferenceUseCase: UpdateNewDashboardPreferenceUseCase,
+    private val analytics: Analytics,
+    remoteConfigPrefs: RemoteConfigPrefs
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -79,8 +81,11 @@ class CustomizeDashboardViewModel @Inject constructor(
     }
 
     private fun loadDashboardRedesignFlag() {
-        val isDashboardRedesignEnabled = remoteConfigUtils.getBoolean(RemoteConfigParam.DASHBOARD_REDESIGN)
-        _uiState.update { it.copy(isDashboardRedesignEnabled = isDashboardRedesignEnabled) }
+        viewModelScope.launch {
+            observeGlobalConfigUseCase(Unit).collect { config ->
+                _uiState.update { it.copy(isDashboardRedesignEnabled = config.newDashboardEnabled) }
+            }
+        }
     }
 
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
@@ -176,18 +181,19 @@ class CustomizeDashboardViewModel @Inject constructor(
     }
 
     private fun toggleVisibility(widgetId: String) {
-        val widgetItem = _uiState.value.widgets.firstOrNull { it.metadata.id == widgetId } ?: return
+        val widgetsMetadata = _uiState.value.widgets.map { it.metadata }
 
         viewModelScope.launch {
-            updateWidgetVisibilityUseCase(
-                UpdateWidgetVisibilityUseCase.Params(widgetId, !widgetItem.metadata.isVisible)
+            toggleWidgetVisibilityUseCase(
+                ToggleWidgetVisibilityUseCase.Params(widgetId, widgetsMetadata)
             )
         }
     }
 
     private fun toggleDashboardRedesign(enabled: Boolean) {
-        remoteConfigPrefs.putString(RemoteConfigParam.DASHBOARD_REDESIGN.rc_name, enabled.toString())
-        _uiState.update { it.copy(isDashboardRedesignEnabled = enabled) }
+        viewModelScope.launch {
+            updateNewDashboardPreferenceUseCase(UpdateNewDashboardPreferenceUseCase.Params(enabled))
+        }
     }
 
     private fun getDisplayName(widgetId: String): String {

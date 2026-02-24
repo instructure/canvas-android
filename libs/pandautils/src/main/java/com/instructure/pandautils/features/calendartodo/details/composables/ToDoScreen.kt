@@ -19,6 +19,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -91,6 +92,7 @@ internal fun ToDoScreen(
 
         Scaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
+            contentWindowInsets = WindowInsets(0, 0, 0, 0),
             topBar = {
                 CanvasThemedAppBar(
                     title = title,
@@ -132,8 +134,8 @@ private fun OverFlowMenuSegment(
     var showDeleteConfirmationDialog by rememberSaveable { mutableStateOf(false) }
     if (showDeleteConfirmationDialog) {
         SimpleAlertDialog(
-            dialogTitle = stringResource(id = R.string.todoDeleteConfirmationTitle),
-            dialogText = stringResource(id = R.string.todoDeleteConfirmationText),
+            dialogTitle = stringResource(id = R.string.todoDeleteConfirmationTitleNew),
+            dialogText = stringResource(id = R.string.todoDeleteConfirmationTextNew),
             dismissButtonText = stringResource(id = R.string.cancel),
             confirmationButtonText = stringResource(id = R.string.delete),
             onDismissRequest = {

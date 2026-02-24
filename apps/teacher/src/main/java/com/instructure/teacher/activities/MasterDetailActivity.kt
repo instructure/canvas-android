@@ -24,6 +24,8 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
 import android.view.ViewTreeObserver
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.percentlayout.widget.PercentLayoutHelper
 import com.instructure.canvasapi2.StatusCallback
@@ -37,6 +39,7 @@ import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.interfaces.NavigationCallbacks
+import com.instructure.pandautils.utils.EdgeToEdgeHelper
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.setGone
@@ -67,9 +70,12 @@ class MasterDetailActivity : BaseAppCompatActivity(), MasterDetailInteractions {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) = with(binding) {
+        EdgeToEdgeHelper.enableEdgeToEdge(this@MasterDetailActivity)
         super.onCreate(savedInstanceState)
 
         setContentView(binding.root)
+
+        setupWindowInsets()
 
         mRoute = intent.extras!!.getParcelable(Route.ROUTE)
 
@@ -116,6 +122,20 @@ class MasterDetailActivity : BaseAppCompatActivity(), MasterDetailInteractions {
         } else {
             fakeToolbarMaster.setBackgroundColor(ThemePrefs.primaryColor)
             fakeToolbarDetail.setBackgroundColor(ThemePrefs.primaryColor)
+        }
+    }
+
+    private fun setupWindowInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.rootView) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(
+                systemBars.left,
+                0,
+                systemBars.right,
+                0
+            )
+            // Don't consume the insets - let them propagate to child fragments
+            insets
         }
     }
 

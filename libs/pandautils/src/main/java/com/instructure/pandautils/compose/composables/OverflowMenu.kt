@@ -17,6 +17,7 @@
 
 package com.instructure.pandautils.compose.composables
 
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -28,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.instructure.pandautils.R
 
 @Composable
@@ -50,7 +52,7 @@ fun OverflowMenu(
         )
     }
     DropdownMenu(
-        modifier = modifier,
+        modifier = modifier.widthIn(min = 196.dp),
         expanded = showMenu,
         onDismissRequest = {
             onDismissRequest()

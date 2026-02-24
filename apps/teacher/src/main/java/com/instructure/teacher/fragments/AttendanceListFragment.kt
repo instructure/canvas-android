@@ -51,6 +51,7 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.enableAlgorithmicDarkening
 import com.instructure.pandautils.utils.isTablet
@@ -113,6 +114,7 @@ class AttendanceListFragment : BaseSyncFragment<
 
     private fun setupViews() = with(binding) {
         webView.enableAlgorithmicDarkening()
+        toolbar.applyTopSystemBarInsets()
         toolbar.setupMenu(R.menu.menu_attendance) { menuItem ->
             when(menuItem.itemId) {
                 R.id.menuFilterSections -> { /* Do Nothing */ }

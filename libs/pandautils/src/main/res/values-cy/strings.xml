@@ -501,4 +501,8 @@
         <item quantity="other">%d Munud</item>
     </plurals>
     <string name="notATeacherDescription">Efallai y byddai un o\'r apiau eraill yn fwy addas. Cliciwch ar eicon i fewngofnodi yn y fan honno.</string>
+    <string name="gradePercentAccessibility">Gradd: %d canran</string>
+    <string name="gradePointsAccessibility">Gradd: %s pwynt</string>
+    <string name="gradePercentTextFieldAccessibility">Gradd: %d canran, %s</string>
+    <string name="gradePointsTextFieldAccessibility">Gradd: %s pwynt, %s</string>
 </resources>

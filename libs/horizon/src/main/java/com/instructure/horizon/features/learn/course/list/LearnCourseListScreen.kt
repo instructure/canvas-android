@@ -76,7 +76,7 @@ import com.instructure.horizon.horizonui.molecules.DropdownChip
 import com.instructure.horizon.horizonui.molecules.DropdownItem
 import com.instructure.horizon.horizonui.molecules.ProgressBarSmall
 import com.instructure.horizon.horizonui.molecules.ProgressBarStyle
-import com.instructure.horizon.horizonui.organisms.CollapsableHeaderScreen
+import com.instructure.horizon.horizonui.organisms.scaffolds.CollapsableHeaderScreen
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.pandautils.compose.modifiers.conditional
 import kotlin.math.roundToInt
@@ -87,22 +87,23 @@ fun LearnCourseListScreen(
     navController: NavHostController
 ) {
     CollapsableHeaderScreen(
-        headerContent = {
-            Searchbar(state)
+        statusBarColor = null,
+        headerContent = { paddingValues ->
+            Searchbar(state, Modifier.padding(paddingValues))
         },
-        bodyContent = {
-            LearnCourseListContent(state, navController)
+        bodyContent = { paddingValues ->
+            LearnCourseListContent(state, navController, Modifier.padding(paddingValues))
         }
     )
 }
 
 @Composable
-private fun Searchbar(state: LearnCourseListUiState) {
+private fun Searchbar(state: LearnCourseListUiState, modifier: Modifier = Modifier) {
     LearnSearchBar(
         value = state.searchQuery,
         onValueChange = { state.updateSearchQuery(it) },
         placeholder = stringResource(R.string.learnCourseListSearchBarPlaceholder),
-        modifier = Modifier.padding(24.dp)
+        modifier = modifier.padding(24.dp)
     )
 }
 
@@ -110,9 +111,10 @@ private fun Searchbar(state: LearnCourseListUiState) {
 @Composable
 private fun LearnCourseListContent(
     state: LearnCourseListUiState,
-    navController: NavHostController
+    navController: NavHostController,
+    modifier: Modifier = Modifier,
 ) {
-    LoadingStateWrapper(state.loadingState) {
+    LoadingStateWrapper(state.loadingState, modifier) {
         val scrollState = rememberLazyListState()
         LazyColumn(
             state = scrollState,

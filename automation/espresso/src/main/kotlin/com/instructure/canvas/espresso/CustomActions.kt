@@ -348,7 +348,13 @@ fun checkToastText(text: String, activity: Activity) {
 }
 
 fun checkToastText(@StringRes stringRes: Int, activity: Activity) {
-    onView(withText(stringRes)).inRoot(withDecorView(not(`is`(activity.window.decorView)))).check(matches(isDisplayed()))
+    retryWithIncreasingDelay(times = 3, initialDelay = 500, maxDelay = 5000) {
+        try {
+            onView(withText(stringRes)).inRoot(withDecorView(not(`is`(activity.window.decorView)))).check(matches(isDisplayed()))
+        } catch (e: NoMatchingViewException) {
+            // Toast did not appear yet, so try to check it again.
+        }
+    }
 
     retryWithIncreasingDelay(times = 5, initialDelay = 500, maxDelay = 15500) {
         try {

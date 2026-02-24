@@ -37,7 +37,6 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.SnackbarResult
@@ -77,6 +76,7 @@ import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.models.TermsOfService
 import com.instructure.pandares.R
 import com.instructure.pandautils.compose.CanvasTheme
+import com.instructure.pandautils.compose.composables.CanvasScaffold
 import com.instructure.pandautils.compose.composables.Loading
 
 @Composable
@@ -96,7 +96,7 @@ internal fun CreateAccountScreen(
             }
         }
 
-        Scaffold(
+        CanvasScaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
             snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
             content = { padding ->

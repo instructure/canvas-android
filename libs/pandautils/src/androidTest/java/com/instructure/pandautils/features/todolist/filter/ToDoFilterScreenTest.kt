@@ -63,7 +63,7 @@ class ToDoFilterScreenTest {
             )
         }
 
-        composeTestRule.onNodeWithText(context.getString(R.string.todoFilterShowPersonalToDos)).assertIsDisplayed().assertHasClickAction()
+        composeTestRule.onNodeWithText(context.getString(R.string.todoFilterShowPersonalToDosNew)).assertIsDisplayed().assertHasClickAction()
         composeTestRule.onNodeWithText(context.getString(R.string.todoFilterShowCalendarEvents)).assertIsDisplayed().assertHasClickAction()
         composeTestRule.onNodeWithText(context.getString(R.string.todoFilterShowCompleted)).assertIsDisplayed().assertHasClickAction()
         composeTestRule.onNodeWithText(context.getString(R.string.todoFilterFavoriteCoursesOnly)).assertIsDisplayed().assertHasClickAction()
@@ -79,7 +79,7 @@ class ToDoFilterScreenTest {
             )
         }
 
-        composeTestRule.onNodeWithText(context.getString(R.string.todoFilterShowPersonalToDos))
+        composeTestRule.onNodeWithText(context.getString(R.string.todoFilterShowPersonalToDosNew))
             .assertIsDisplayed()
         composeTestRule.onNodeWithText(context.getString(R.string.todoFilterShowCalendarEvents))
             .assertIsDisplayed()
@@ -99,7 +99,7 @@ class ToDoFilterScreenTest {
             )
         }
 
-        composeTestRule.onNodeWithText(context.getString(R.string.todoFilterShowPersonalToDos))
+        composeTestRule.onNodeWithText(context.getString(R.string.todoFilterShowPersonalToDosNew))
             .assertIsDisplayed()
         composeTestRule.onNodeWithText(context.getString(R.string.todoFilterShowCalendarEvents))
             .assertIsDisplayed()
@@ -119,7 +119,7 @@ class ToDoFilterScreenTest {
             )
         }
 
-        composeTestRule.onNodeWithText(context.getString(R.string.todoFilterShowPersonalToDos))
+        composeTestRule.onNodeWithText(context.getString(R.string.todoFilterShowPersonalToDosNew))
             .assertIsDisplayed()
         composeTestRule.onNodeWithText(context.getString(R.string.todoFilterShowCalendarEvents))
             .assertIsDisplayed()
@@ -184,7 +184,7 @@ class ToDoFilterScreenTest {
             )
         }
 
-        composeTestRule.onNodeWithText(context.getString(R.string.todoFilterShowPersonalToDos)).performClick()
+        composeTestRule.onNodeWithText(context.getString(R.string.todoFilterShowPersonalToDosNew)).performClick()
 
         assert(callbackInvoked)
         assertEquals(true, toggledValue)
@@ -238,7 +238,7 @@ class ToDoFilterScreenTest {
             )
         }
 
-        composeTestRule.onNodeWithText(context.getString(R.string.todoFilterShowPersonalToDos))
+        composeTestRule.onNodeWithText(context.getString(R.string.todoFilterShowPersonalToDosNew))
             .assertIsDisplayed()
         composeTestRule.onNodeWithText(context.getString(R.string.todoFilterShowCalendarEvents))
             .assertIsDisplayed()
@@ -276,7 +276,7 @@ class ToDoFilterScreenTest {
         return ToDoFilterUiState(
             checkboxItems = listOf(
                 FilterCheckboxItem(
-                    titleRes = R.string.todoFilterShowPersonalToDos,
+                    titleRes = R.string.todoFilterShowPersonalToDosNew,
                     checked = checkboxStates[0],
                     onToggle = { onCheckboxToggle(0, it) }
                 ),

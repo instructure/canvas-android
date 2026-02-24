@@ -287,7 +287,7 @@ class ScheduleViewModel @Inject constructor(
                 .map { entry ->
                     val color = if (coursesMap.containsKey(entry.key?.id)) coursesMap[entry.key?.id].color else resources.getColor(R.color.textInfo)
                     val scheduleViewData = ScheduleCourseViewData(
-                            entry.key?.name ?: resources.getString(R.string.schedule_todo_title),
+                            entry.key?.name ?: resources.getString(R.string.schedule_todo_title_new),
                             entry.key != null && !entry.key!!.homeroomCourse,
                             color,
                             entry.key?.imageUrl ?: "",
@@ -404,7 +404,7 @@ class ScheduleViewModel @Inject constructor(
             PlannableType.ASSIGNMENT, PlannableType.SUB_ASSIGNMENT -> resources.getString(R.string.a11y_assignment)
             PlannableType.PLANNER_NOTE -> resources.getString(R.string.a11y_planner_note)
             PlannableType.QUIZ -> resources.getString(R.string.a11y_quiz)
-            PlannableType.TODO -> resources.getString(R.string.a11y_todo)
+            PlannableType.TODO -> resources.getString(R.string.a11y_todo_new)
             PlannableType.WIKI_PAGE -> resources.getString(R.string.a11y_page)
             PlannableType.ASSESSMENT_REQUEST -> resources.getString(R.string.a11y_assessment_request)
         }
@@ -555,7 +555,7 @@ class ScheduleViewModel @Inject constructor(
             PlannableType.ANNOUNCEMENT -> simpleDateFormat.format(plannerItem.plannableDate)
             PlannableType.CALENDAR_EVENT -> getCalendarEventDueText(plannerItem)
             PlannableType.PLANNER_NOTE -> resources.getString(
-                    R.string.schedule_todo_due_text,
+                    R.string.schedule_todo_due_text_new,
                     simpleDateFormat.format(plannerItem.plannable.todoDate.toDate() ?: plannerItem.plannableDate)
             )
             else -> resources.getString(R.string.schedule_due_text, simpleDateFormat.format(plannerItem.plannableDate))

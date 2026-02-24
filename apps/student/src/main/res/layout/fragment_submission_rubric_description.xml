@@ -24,6 +24,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="?android:attr/actionBarSize"
         android:elevation="6dp"
         tools:navigationIcon="@drawable/ic_back_arrow"
         tools:title="Rubric Criterion Title"/>
