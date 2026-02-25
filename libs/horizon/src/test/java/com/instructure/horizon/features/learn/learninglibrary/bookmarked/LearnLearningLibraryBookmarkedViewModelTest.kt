@@ -14,11 +14,10 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.learn.learninglibrary.item
+package com.instructure.horizon.features.learn.learninglibrary.bookmarked
 
 import android.content.res.Resources
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.models.journey.learninglibrary.CanvasCourseInfo
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItem
@@ -26,7 +25,6 @@ import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibrary
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryPageInfo
 import com.instructure.horizon.R
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
-import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.pandautils.utils.ThemePrefs
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -51,9 +49,9 @@ import org.junit.Test
 import java.util.Date
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class LearnLearningLibraryItemViewModelTest {
+class LearnLearningLibraryBookmarkedViewModelTest {
     private val resources: Resources = mockk(relaxed = true)
-    private val repository: LearnLearningLibraryItemRepository = mockk(relaxed = true)
+    private val repository: LearnLearningLibraryBookmarkedRepository = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val testItems = listOf(
@@ -82,58 +80,6 @@ class LearnLearningLibraryItemViewModelTest {
     }
 
     @Test
-    fun `bookmarkOnly is true when saved state type is bookmark`() {
-        val viewModel = getViewModel(type = "bookmark")
-
-        assertTrue(viewModel.bookmarkOnly)
-    }
-
-    @Test
-    fun `completedOnly is true when saved state type is completed`() {
-        val viewModel = getViewModel(type = "completed")
-
-        assertTrue(viewModel.completedOnly)
-    }
-
-    @Test
-    fun `bookmarkOnly is false when saved state type is completed`() {
-        val viewModel = getViewModel(type = "completed")
-
-        assertFalse(viewModel.bookmarkOnly)
-    }
-
-    @Test
-    fun `completedOnly is false when saved state type is bookmark`() {
-        val viewModel = getViewModel(type = "bookmark")
-
-        assertFalse(viewModel.completedOnly)
-    }
-
-    @Test
-    fun `both flags are false when saved state type is unrecognized`() {
-        val viewModel = getViewModel(type = "other")
-
-        assertFalse(viewModel.bookmarkOnly)
-        assertFalse(viewModel.completedOnly)
-    }
-
-    @Test
-    fun `title is set to bookmarks title when in bookmark mode`() {
-        every { resources.getString(R.string.learnLearningLibraryBookmarksTitle) } returns "Bookmarks"
-        val viewModel = getViewModel(type = "bookmark")
-
-        assertEquals("Bookmarks", viewModel.uiState.value.title)
-    }
-
-    @Test
-    fun `title is set to completed title when in completed mode`() {
-        every { resources.getString(R.string.learnLearningLibraryCompletedTitle) } returns "Completed"
-        val viewModel = getViewModel(type = "completed")
-
-        assertEquals("Completed", viewModel.uiState.value.title)
-    }
-
-    @Test
     fun `initial load populates items successfully`() {
         val viewModel = getViewModel()
 
@@ -144,8 +90,8 @@ class LearnLearningLibraryItemViewModelTest {
     }
 
     @Test
-    fun `initial load calls repository with bookmarkedOnly flag in bookmark mode`() {
-        getViewModel(type = "bookmark")
+    fun `initial load calls repository with bookmarkedOnly flag`() {
+        getViewModel()
 
         coVerify {
             repository.getLearningLibraryItems(
@@ -155,23 +101,6 @@ class LearnLearningLibraryItemViewModelTest {
                 typeFilter = any(),
                 bookmarkedOnly = true,
                 completedOnly = false,
-                forceNetwork = false
-            )
-        }
-    }
-
-    @Test
-    fun `initial load calls repository with completedOnly flag in completed mode`() {
-        getViewModel(type = "completed")
-
-        coVerify {
-            repository.getLearningLibraryItems(
-                afterCursor = null,
-                limit = any(),
-                searchQuery = any(),
-                typeFilter = any(),
-                bookmarkedOnly = false,
-                completedOnly = true,
                 forceNetwork = false
             )
         }
@@ -486,8 +415,7 @@ class LearnLearningLibraryItemViewModelTest {
         assertEquals("item2", items[0].id)
     }
 
-    private fun getViewModel(type: String = "bookmark") = LearnLearningLibraryItemViewModel(
-        savedStateHandle = SavedStateHandle(mapOf(LearnRoute.LearnLearningLibraryBookmarkScreen.typeAttr to type)),
+    private fun getViewModel() = LearnLearningLibraryBookmarkedViewModel(
         resources = resources,
         repository = repository
     )

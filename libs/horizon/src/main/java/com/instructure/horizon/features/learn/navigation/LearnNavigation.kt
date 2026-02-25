@@ -35,9 +35,9 @@ import com.instructure.horizon.features.learn.LearnTab
 import com.instructure.horizon.features.learn.LearnViewModel
 import com.instructure.horizon.features.learn.course.details.CourseDetailsScreen
 import com.instructure.horizon.features.learn.course.details.CourseDetailsViewModel
+import com.instructure.horizon.features.learn.learninglibrary.bookmarked.LearnLearningLibraryBookmarkedScreen
+import com.instructure.horizon.features.learn.learninglibrary.bookmarked.LearnLearningLibraryBookmarkedViewModel
 import com.instructure.horizon.features.learn.learninglibrary.details.LearnLearningLibraryDetailsScreen
-import com.instructure.horizon.features.learn.learninglibrary.item.LearnLearningLibraryItemScreen
-import com.instructure.horizon.features.learn.learninglibrary.item.LearnLearningLibraryItemViewModel
 import com.instructure.horizon.features.learn.program.details.ProgramDetailsScreen
 import com.instructure.horizon.features.learn.program.details.ProgramDetailsViewModel
 
@@ -154,28 +154,9 @@ fun NavGraphBuilder.learnNavigation(
     }
     composable(
         route = LearnRoute.LearnLearningLibraryBookmarkScreen.route,
-        arguments = listOf(
-            navArgument(LearnRoute.LearnLearningLibraryBookmarkScreen.typeAttr) {
-                type = NavType.StringType
-                defaultValue = "bookmark"
-            }
-        )
     ) {
-        val viewModel = hiltViewModel<LearnLearningLibraryItemViewModel>()
+        val viewModel = hiltViewModel<LearnLearningLibraryBookmarkedViewModel>()
         val state by viewModel.uiState.collectAsState()
-        LearnLearningLibraryItemScreen(state, navController)
-    }
-    composable(
-        route = LearnRoute.LearnLearningLibraryCompletedScreen.route,
-        arguments = listOf(
-            navArgument(LearnRoute.LearnLearningLibraryCompletedScreen.typeAttr) {
-                type = NavType.StringType
-                defaultValue = "completed"
-            }
-        )
-    ) {
-        val viewModel = hiltViewModel<LearnLearningLibraryItemViewModel>()
-        val state by viewModel.uiState.collectAsState()
-        LearnLearningLibraryItemScreen(state, navController)
+        LearnLearningLibraryBookmarkedScreen(state, navController)
     }
 }

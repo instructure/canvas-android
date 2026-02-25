@@ -114,11 +114,6 @@ val animationRules = listOf(
     ),
     NavigationTransitionAnimationRule(
         from = LearnRoute.LearnScreen.route,
-        to = LearnRoute.LearnLearningLibraryCompletedScreen.route,
-        style = NavigationTransitionAnimation.SLIDE
-    ),
-    NavigationTransitionAnimationRule(
-        from = LearnRoute.LearnScreen.route,
         to = LearnRoute.LearnLearningLibraryBookmarkScreen.route,
         style = NavigationTransitionAnimation.SLIDE
     ),

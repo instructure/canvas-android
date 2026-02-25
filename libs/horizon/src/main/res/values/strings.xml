@@ -588,8 +588,8 @@
     <string name="LearnLearningLibraryTypeFilterExternalToolsLabel">External tools</string>
     <string name="LearnLearningLibraryTypeFilterFilesLabel">Files</string>
     <string name="LearnLearningLibraryTypeFilterPagesLabel">Pages</string>
-    <string name="learnLearningLibraryItemSearchPlaceholder">Search</string>
-    <string name="learnLearningLibraryItemEmptyMessage">No results found. Try adjusting your search terms.</string>
+    <string name="learnLearningLibraryBookmarkedSearchPlaceholder">Search</string>
+    <string name="learnLearningLibraryBookmarkedEmptyMessage">No results found. Try adjusting your search terms.</string>
     <string name="learnLearningLibraryStatusFilterAllLabel">Any status</string>
     <string name="learnLearningLibraryStatusFilterCompletedLabel">Completed</string>
     <string name="learnLearningLibraryStatusFilterBookmarkedLabel">Bookmarked</string>

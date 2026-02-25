@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.learn.learninglibrary.item
+package com.instructure.horizon.features.learn.learninglibrary.bookmarked
 
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetLearningLibraryManager
 import com.instructure.canvasapi2.models.journey.learninglibrary.CanvasCourseInfo
@@ -32,7 +32,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import java.util.Date
 
-class LearnLearningLibraryItemRepositoryTest {
+class LearnLearningLibraryBookmarkedRepositoryTest {
     private val getLearningLibraryManager: GetLearningLibraryManager = mockk(relaxed = true)
 
     @Test
@@ -240,7 +240,7 @@ class LearnLearningLibraryItemRepositoryTest {
         coVerify { getLearningLibraryManager.enrollLearningLibraryItem("item1") }
     }
 
-    private fun getRepository() = LearnLearningLibraryItemRepository(getLearningLibraryManager)
+    private fun getRepository() = LearnLearningLibraryBookmarkedRepository(getLearningLibraryManager)
 
     private fun createTestResponse(
         items: List<LearningLibraryCollectionItem>,

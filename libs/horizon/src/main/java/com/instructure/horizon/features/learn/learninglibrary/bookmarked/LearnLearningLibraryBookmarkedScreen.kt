@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.learn.learninglibrary.item
+package com.instructure.horizon.features.learn.learninglibrary.bookmarked
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -57,17 +57,17 @@ import com.instructure.pandautils.compose.modifiers.conditional
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LearnLearningLibraryItemScreen(
-    state: LearnLearningLibraryItemUiState,
+fun LearnLearningLibraryBookmarkedScreen(
+    state: LearnLearningLibraryBookmarkedUiState,
     navController: NavHostController
 ) {
     CollapsableHeaderScreen(
         headerContent = {
-            LearnLearningLibraryItemHeader(state, navController)
+            LearnLearningLibraryBookmarkedHeader(state, navController)
         },
         bodyContent = {
             LoadingStateWrapper(state.loadingState) {
-                LearnLearningLibraryItemContent(state, navController)
+                LearnLearningLibraryBookmarkedContent(state, navController)
             }
         }
     )
@@ -75,8 +75,8 @@ fun LearnLearningLibraryItemScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun LearnLearningLibraryItemContent(
-    state: LearnLearningLibraryItemUiState,
+private fun LearnLearningLibraryBookmarkedContent(
+    state: LearnLearningLibraryBookmarkedUiState,
     navController: NavHostController
 ) {
     val scrollState = rememberLazyListState()
@@ -86,7 +86,7 @@ private fun LearnLearningLibraryItemContent(
         modifier = Modifier.testTag("CollapsableBody")
     ) {
         stickyHeader {
-            LearnLearningLibraryItemContentFilter(state, scrollState)
+            LearnLearningLibraryBookmarkedContentFilter(state, scrollState)
         }
 
         item {
@@ -131,8 +131,8 @@ private fun LearnLearningLibraryItemContent(
 }
 
 @Composable
-private fun LearnLearningLibraryItemContentFilter(
-    state: LearnLearningLibraryItemUiState,
+private fun LearnLearningLibraryBookmarkedContentFilter(
+    state: LearnLearningLibraryBookmarkedUiState,
     scrollState: LazyListState
 ) {
     Row(
@@ -173,8 +173,8 @@ private fun LearnLearningLibraryItemContentFilter(
 }
 
 @Composable
-private fun LearnLearningLibraryItemHeader(
-    state: LearnLearningLibraryItemUiState,
+private fun LearnLearningLibraryBookmarkedHeader(
+    state: LearnLearningLibraryBookmarkedUiState,
     navController: NavHostController
 ) {
     Column {
@@ -191,7 +191,7 @@ private fun LearnLearningLibraryItemHeader(
                 modifier = Modifier.padding(end = 16.dp)
             )
             Text(
-                text = state.title,
+                text = stringResource(R.string.learnLearningLibraryBookmarksTitle),
                 style = HorizonTypography.h3,
                 color = HorizonColors.Text.title()
             )
@@ -199,7 +199,7 @@ private fun LearnLearningLibraryItemHeader(
         LearnSearchBar(
             value = state.searchQuery,
             onValueChange = state.updateSearchQuery,
-            placeholder = stringResource(R.string.learnLearningLibraryItemSearchPlaceholder),
+            placeholder = stringResource(R.string.learnLearningLibraryBookmarkedSearchPlaceholder),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp)
@@ -210,7 +210,7 @@ private fun LearnLearningLibraryItemHeader(
 @Composable
 private fun EmptyMessage() {
     Text(
-        text = stringResource(R.string.learnLearningLibraryItemEmptyMessage),
+        text = stringResource(R.string.learnLearningLibraryBookmarkedEmptyMessage),
         style = HorizonTypography.p1,
         color = HorizonColors.Text.body(),
         modifier = Modifier.padding(horizontal = 24.dp)

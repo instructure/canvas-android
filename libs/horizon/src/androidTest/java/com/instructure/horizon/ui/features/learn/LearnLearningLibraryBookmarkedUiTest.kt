@@ -22,22 +22,21 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performScrollToNode
 import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
+import com.instructure.horizon.features.learn.learninglibrary.bookmarked.LearnLearningLibraryBookmarkedScreen
+import com.instructure.horizon.features.learn.learninglibrary.bookmarked.LearnLearningLibraryBookmarkedUiState
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryCollectionItemChipState
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryCollectionItemState
-import com.instructure.horizon.features.learn.learninglibrary.item.LearnLearningLibraryItemScreen
-import com.instructure.horizon.features.learn.learninglibrary.item.LearnLearningLibraryItemUiState
 import com.instructure.horizon.horizonui.platform.LoadingState
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class LearnLearningLibraryItemUiTest {
+class LearnLearningLibraryBookmarkedUiTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
@@ -85,13 +84,12 @@ class LearnLearningLibraryItemUiTest {
 
     @Test
     fun testLoadingStateDisplaysSpinner() {
-        val state = LearnLearningLibraryItemUiState(
+        val state = LearnLearningLibraryBookmarkedUiState(
             loadingState = LoadingState(isLoading = true),
-            title = "Bookmarks"
         )
 
         composeTestRule.setContent {
-            LearnLearningLibraryItemScreen(state = state, navController = rememberNavController())
+            LearnLearningLibraryBookmarkedScreen(state = state, navController = rememberNavController())
         }
 
         composeTestRule.onNodeWithTag("LoadingSpinner").assertIsDisplayed()
@@ -99,43 +97,26 @@ class LearnLearningLibraryItemUiTest {
 
     @Test
     fun testTitleDisplayedInHeader() {
-        val state = LearnLearningLibraryItemUiState(
+        val state = LearnLearningLibraryBookmarkedUiState(
             loadingState = LoadingState(isLoading = false),
-            title = "Bookmarks",
             items = testItems
         )
 
         composeTestRule.setContent {
-            LearnLearningLibraryItemScreen(state = state, navController = rememberNavController())
+            LearnLearningLibraryBookmarkedScreen(state = state, navController = rememberNavController())
         }
 
         composeTestRule.onNodeWithText("Bookmarks").assertIsDisplayed()
     }
 
     @Test
-    fun testCompletedTitleDisplayedInHeader() {
-        val state = LearnLearningLibraryItemUiState(
-            loadingState = LoadingState(isLoading = false),
-            title = "Completed",
-            items = testItems
-        )
-
-        composeTestRule.setContent {
-            LearnLearningLibraryItemScreen(state = state, navController = rememberNavController())
-        }
-
-        composeTestRule.onNodeWithText("Completed").assertIsDisplayed()
-    }
-
-    @Test
     fun testBackButtonDisplayedInHeader() {
-        val state = LearnLearningLibraryItemUiState(
+        val state = LearnLearningLibraryBookmarkedUiState(
             loadingState = LoadingState(isLoading = false),
-            title = "Bookmarks"
         )
 
         composeTestRule.setContent {
-            LearnLearningLibraryItemScreen(state = state, navController = rememberNavController())
+            LearnLearningLibraryBookmarkedScreen(state = state, navController = rememberNavController())
         }
 
         composeTestRule.onNodeWithContentDescription("Navigate back").assertIsDisplayed()
@@ -143,13 +124,12 @@ class LearnLearningLibraryItemUiTest {
 
     @Test
     fun testSearchBarDisplayedInHeader() {
-        val state = LearnLearningLibraryItemUiState(
+        val state = LearnLearningLibraryBookmarkedUiState(
             loadingState = LoadingState(isLoading = false),
-            title = "Bookmarks"
         )
 
         composeTestRule.setContent {
-            LearnLearningLibraryItemScreen(state = state, navController = rememberNavController())
+            LearnLearningLibraryBookmarkedScreen(state = state, navController = rememberNavController())
         }
 
         composeTestRule.onNodeWithText("Search").assertIsDisplayed()
@@ -157,14 +137,13 @@ class LearnLearningLibraryItemUiTest {
 
     @Test
     fun testItemsAreDisplayed() {
-        val state = LearnLearningLibraryItemUiState(
+        val state = LearnLearningLibraryBookmarkedUiState(
             loadingState = LoadingState(isLoading = false),
-            title = "Bookmarks",
             items = testItems
         )
 
         composeTestRule.setContent {
-            LearnLearningLibraryItemScreen(state = state, navController = rememberNavController())
+            LearnLearningLibraryBookmarkedScreen(state = state, navController = rememberNavController())
         }
 
         composeTestRule.onNodeWithTag("CollapsableBody").performScrollToNode(hasText("Python Basics"))
@@ -173,14 +152,13 @@ class LearnLearningLibraryItemUiTest {
 
     @Test
     fun testMultipleItemsAreDisplayed() {
-        val state = LearnLearningLibraryItemUiState(
+        val state = LearnLearningLibraryBookmarkedUiState(
             loadingState = LoadingState(isLoading = false),
-            title = "Bookmarks",
             items = testItems
         )
 
         composeTestRule.setContent {
-            LearnLearningLibraryItemScreen(state = state, navController = rememberNavController())
+            LearnLearningLibraryBookmarkedScreen(state = state, navController = rememberNavController())
         }
 
         composeTestRule.onNodeWithTag("CollapsableBody").performScrollToNode(hasText("React Advanced"))
@@ -189,14 +167,13 @@ class LearnLearningLibraryItemUiTest {
 
     @Test
     fun testEmptyMessageDisplayedWhenNoItems() {
-        val state = LearnLearningLibraryItemUiState(
+        val state = LearnLearningLibraryBookmarkedUiState(
             loadingState = LoadingState(isLoading = false),
-            title = "Bookmarks",
             items = emptyList()
         )
 
         composeTestRule.setContent {
-            LearnLearningLibraryItemScreen(state = state, navController = rememberNavController())
+            LearnLearningLibraryBookmarkedScreen(state = state, navController = rememberNavController())
         }
 
         composeTestRule.onNodeWithText("No results found. Try adjusting your search terms.").assertIsDisplayed()
@@ -204,14 +181,13 @@ class LearnLearningLibraryItemUiTest {
 
     @Test
     fun testEmptyMessageNotDisplayedWhenItemsExist() {
-        val state = LearnLearningLibraryItemUiState(
+        val state = LearnLearningLibraryBookmarkedUiState(
             loadingState = LoadingState(isLoading = false),
-            title = "Bookmarks",
             items = testItems
         )
 
         composeTestRule.setContent {
-            LearnLearningLibraryItemScreen(state = state, navController = rememberNavController())
+            LearnLearningLibraryBookmarkedScreen(state = state, navController = rememberNavController())
         }
 
         composeTestRule.onNodeWithText("No results found. Try adjusting your search terms.").assertDoesNotExist()
@@ -219,14 +195,13 @@ class LearnLearningLibraryItemUiTest {
 
     @Test
     fun testItemCountDisplayedInFilterBar() {
-        val state = LearnLearningLibraryItemUiState(
+        val state = LearnLearningLibraryBookmarkedUiState(
             loadingState = LoadingState(isLoading = false),
-            title = "Bookmarks",
             items = testItems
         )
 
         composeTestRule.setContent {
-            LearnLearningLibraryItemScreen(state = state, navController = rememberNavController())
+            LearnLearningLibraryBookmarkedScreen(state = state, navController = rememberNavController())
         }
 
         composeTestRule.onNodeWithText("3").assertIsDisplayed()
@@ -234,15 +209,14 @@ class LearnLearningLibraryItemUiTest {
 
     @Test
     fun testShowMoreButtonDisplayedWhenEnabled() {
-        val state = LearnLearningLibraryItemUiState(
+        val state = LearnLearningLibraryBookmarkedUiState(
             loadingState = LoadingState(isLoading = false),
-            title = "Bookmarks",
             items = testItems,
             showMoreButton = true
         )
 
         composeTestRule.setContent {
-            LearnLearningLibraryItemScreen(state = state, navController = rememberNavController())
+            LearnLearningLibraryBookmarkedScreen(state = state, navController = rememberNavController())
         }
 
         composeTestRule.onNodeWithTag("CollapsableBody").performScrollToNode(hasText("Show more"))
@@ -251,15 +225,14 @@ class LearnLearningLibraryItemUiTest {
 
     @Test
     fun testShowMoreButtonNotDisplayedWhenDisabled() {
-        val state = LearnLearningLibraryItemUiState(
+        val state = LearnLearningLibraryBookmarkedUiState(
             loadingState = LoadingState(isLoading = false),
-            title = "Bookmarks",
             items = testItems,
             showMoreButton = false
         )
 
         composeTestRule.setContent {
-            LearnLearningLibraryItemScreen(state = state, navController = rememberNavController())
+            LearnLearningLibraryBookmarkedScreen(state = state, navController = rememberNavController())
         }
 
         composeTestRule.onNodeWithText("Show more").assertDoesNotExist()
@@ -267,14 +240,13 @@ class LearnLearningLibraryItemUiTest {
 
     @Test
     fun testEnrollButtonDisplayedForEnrollableItem() {
-        val state = LearnLearningLibraryItemUiState(
+        val state = LearnLearningLibraryBookmarkedUiState(
             loadingState = LoadingState(isLoading = false),
-            title = "Bookmarks",
             items = listOf(testItems[0])
         )
 
         composeTestRule.setContent {
-            LearnLearningLibraryItemScreen(state = state, navController = rememberNavController())
+            LearnLearningLibraryBookmarkedScreen(state = state, navController = rememberNavController())
         }
 
         composeTestRule.onNodeWithText("Enroll").assertIsDisplayed()
@@ -282,14 +254,13 @@ class LearnLearningLibraryItemUiTest {
 
     @Test
     fun testEnrollButtonNotDisplayedForNonEnrollableItem() {
-        val state = LearnLearningLibraryItemUiState(
+        val state = LearnLearningLibraryBookmarkedUiState(
             loadingState = LoadingState(isLoading = false),
-            title = "Bookmarks",
             items = listOf(testItems[1])
         )
 
         composeTestRule.setContent {
-            LearnLearningLibraryItemScreen(state = state, navController = rememberNavController())
+            LearnLearningLibraryBookmarkedScreen(state = state, navController = rememberNavController())
         }
 
         composeTestRule.onNodeWithText("Enroll").assertDoesNotExist()
@@ -297,14 +268,13 @@ class LearnLearningLibraryItemUiTest {
 
     @Test
     fun testBookmarkIconDisplayedForUnbookmarkedItem() {
-        val state = LearnLearningLibraryItemUiState(
+        val state = LearnLearningLibraryBookmarkedUiState(
             loadingState = LoadingState(isLoading = false),
-            title = "Bookmarks",
             items = listOf(testItems[0])
         )
 
         composeTestRule.setContent {
-            LearnLearningLibraryItemScreen(state = state, navController = rememberNavController())
+            LearnLearningLibraryBookmarkedScreen(state = state, navController = rememberNavController())
         }
 
         composeTestRule.onNodeWithContentDescription("Bookmark").assertIsDisplayed()
@@ -312,14 +282,13 @@ class LearnLearningLibraryItemUiTest {
 
     @Test
     fun testRemoveBookmarkIconDisplayedForBookmarkedItem() {
-        val state = LearnLearningLibraryItemUiState(
+        val state = LearnLearningLibraryBookmarkedUiState(
             loadingState = LoadingState(isLoading = false),
-            title = "Bookmarks",
             items = listOf(testItems[1])
         )
 
         composeTestRule.setContent {
-            LearnLearningLibraryItemScreen(state = state, navController = rememberNavController())
+            LearnLearningLibraryBookmarkedScreen(state = state, navController = rememberNavController())
         }
 
         composeTestRule.onNodeWithContentDescription("Remove bookmark").assertIsDisplayed()
@@ -327,14 +296,13 @@ class LearnLearningLibraryItemUiTest {
 
     @Test
     fun testCompletedIconDisplayedForCompletedItem() {
-        val state = LearnLearningLibraryItemUiState(
+        val state = LearnLearningLibraryBookmarkedUiState(
             loadingState = LoadingState(isLoading = false),
-            title = "Bookmarks",
             items = listOf(testItems[2])
         )
 
         composeTestRule.setContent {
-            LearnLearningLibraryItemScreen(state = state, navController = rememberNavController())
+            LearnLearningLibraryBookmarkedScreen(state = state, navController = rememberNavController())
         }
 
         composeTestRule.onNodeWithContentDescription("Completed").assertIsDisplayed()
@@ -342,14 +310,13 @@ class LearnLearningLibraryItemUiTest {
 
     @Test
     fun testCompletedIconNotDisplayedForIncompleteItem() {
-        val state = LearnLearningLibraryItemUiState(
+        val state = LearnLearningLibraryBookmarkedUiState(
             loadingState = LoadingState(isLoading = false),
-            title = "Bookmarks",
             items = listOf(testItems[0])
         )
 
         composeTestRule.setContent {
-            LearnLearningLibraryItemScreen(state = state, navController = rememberNavController())
+            LearnLearningLibraryBookmarkedScreen(state = state, navController = rememberNavController())
         }
 
         composeTestRule.onNodeWithContentDescription("Completed").assertDoesNotExist()
@@ -357,14 +324,13 @@ class LearnLearningLibraryItemUiTest {
 
     @Test
     fun testItemChipsAreDisplayed() {
-        val state = LearnLearningLibraryItemUiState(
+        val state = LearnLearningLibraryBookmarkedUiState(
             loadingState = LoadingState(isLoading = false),
-            title = "Bookmarks",
             items = listOf(testItems[1])
         )
 
         composeTestRule.setContent {
-            LearnLearningLibraryItemScreen(state = state, navController = rememberNavController())
+            LearnLearningLibraryBookmarkedScreen(state = state, navController = rememberNavController())
         }
 
         composeTestRule.onNodeWithText("Page").assertIsDisplayed()

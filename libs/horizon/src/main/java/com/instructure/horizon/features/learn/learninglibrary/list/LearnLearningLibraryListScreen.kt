@@ -214,7 +214,7 @@ private fun LearnLearningLibraryListFilterRow(
                 elevation = HorizonElevation.level4,
                 contentDescription = stringResource(R.string.a11y_learnLearningLibraryBookmarkContentDescription),
                 onClick = {
-                    navController.navigate(LearnRoute.LearnLearningLibraryBookmarkScreen.route())
+                    navController.navigate(LearnRoute.LearnLearningLibraryBookmarkScreen.route)
                 }
             )
         }
@@ -303,7 +303,7 @@ private fun LearnLearningLibraryListFilterRow(
 @Composable
 private fun EmptyMessage() {
     Text(
-        text = stringResource(R.string.learnLearningLibraryItemEmptyMessage),
+        text = stringResource(R.string.learnLearningLibraryBookmarkedEmptyMessage),
         style = HorizonTypography.p1,
         color = HorizonColors.Text.body(),
         modifier = Modifier.padding(horizontal = 24.dp)

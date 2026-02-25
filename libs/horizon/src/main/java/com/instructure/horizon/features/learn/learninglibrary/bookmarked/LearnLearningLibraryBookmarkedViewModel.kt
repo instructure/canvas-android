@@ -14,11 +14,10 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.learn.learninglibrary.item
+package com.instructure.horizon.features.learn.learninglibrary.bookmarked
 
 import android.content.res.Resources
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
@@ -27,7 +26,6 @@ import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
 import com.instructure.horizon.features.learn.learninglibrary.common.toUiState
-import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.horizonui.platform.LoadingState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
@@ -42,23 +40,13 @@ import javax.inject.Inject
 
 @OptIn(FlowPreview::class)
 @HiltViewModel
-class LearnLearningLibraryItemViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
+class LearnLearningLibraryBookmarkedViewModel @Inject constructor(
     private val resources: Resources,
-    private val repository: LearnLearningLibraryItemRepository,
+    private val repository: LearnLearningLibraryBookmarkedRepository,
 ): ViewModel() {
     private val pageSize: Int = 10
 
-    private val screenType = savedStateHandle.get<String>(LearnRoute.LearnLearningLibraryBookmarkScreen.typeAttr)
-    val bookmarkOnly = screenType == "bookmark"
-    val completedOnly = screenType == "completed"
-
-    private val _uiState = MutableStateFlow(LearnLearningLibraryItemUiState(
-        title = if (bookmarkOnly) {
-            resources.getString(R.string.learnLearningLibraryBookmarksTitle)
-        } else {
-            resources.getString(R.string.learnLearningLibraryCompletedTitle)
-        },
+    private val _uiState = MutableStateFlow(LearnLearningLibraryBookmarkedUiState(
         loadingState = LoadingState(
             onRefresh = ::refreshData,
             onSnackbarDismiss = ::onDismissSnackbar
@@ -121,8 +109,8 @@ class LearnLearningLibraryItemViewModel @Inject constructor(
             limit = pageSize,
             searchQuery = searchQuery,
             typeFilter = filterType,
-            bookmarkedOnly = bookmarkOnly,
-            completedOnly = completedOnly,
+            bookmarkedOnly = true,
+            completedOnly = false,
             forceNetwork = forceNetwork
         )
 

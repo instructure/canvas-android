@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.learn.learninglibrary.item
+package com.instructure.horizon.features.learn.learninglibrary.bookmarked
 
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetLearningLibraryManager
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
@@ -22,7 +22,7 @@ import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibrary
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItemsResponse
 import javax.inject.Inject
 
-class LearnLearningLibraryItemRepository @Inject constructor(
+class LearnLearningLibraryBookmarkedRepository @Inject constructor(
     private val getLearningLibraryManager: GetLearningLibraryManager
 ) {
     suspend fun getLearningLibraryItems(
