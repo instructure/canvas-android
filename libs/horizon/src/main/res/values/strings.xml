@@ -546,8 +546,8 @@
     <string name="a11y_inputErrorMessage">Error: %1$s</string>
     <string name="a11y_required">Required</string>
     <string name="learnLearningLibraryListSearchPlaceholder">Search</string>
-    <string name="a11y_learnLearningLibraryBookmarkContentDescription">Bookmarked Learning Library items</string>
-    <string name="a11y_learnLearningLibraryCompletedContentDescription">Completed Learning Library items</string>
+    <string name="a11y_learnLearningLibraryBookmarkContentDescription">Bookmarked items</string>
+    <string name="a11y_learnLearningLibraryCompletedContentDescription">Completed items</string>
     <string name="a11y_learnLearningLibraryItemCompletedContentDescription">Completed</string>
     <string name="a11y_learnLearningLibraryItemBookmarkContentDescription">Bookmark</string>
     <string name="a11y_learnLearningLibraryItemRemoveBookmarkContentDescription">Remove bookmark</string>
@@ -592,4 +592,19 @@
         <item quantity="one">%1$d unit</item>
         <item quantity="other">%1$d units</item>
     </plurals>
+    <string name="LearnLearningLibraryTypeFilterAllLabel">Any type</string>
+    <string name="LearnLearningLibraryTypeFilterAssessmentsLabel">Assessments</string>
+    <string name="LearnLearningLibraryTypeFilterAssignmentsLabel">Assignments</string>
+    <string name="LearnLearningLibraryTypeFilterExternalLinksLabel">External links</string>
+    <string name="LearnLearningLibraryTypeFilterExternalToolsLabel">External tools</string>
+    <string name="LearnLearningLibraryTypeFilterFilesLabel">Files</string>
+    <string name="LearnLearningLibraryTypeFilterPagesLabel">Pages</string>
+    <string name="learnLearningLibraryItemSearchPlaceholder">Search</string>
+    <string name="learnLearningLibraryItemEmptyMessage">No results found. Try adjusting your search terms.</string>
+    <string name="learnLearningLibraryStatusFilterAllLabel">Any status</string>
+    <string name="learnLearningLibraryStatusFilterCompletedLabel">Completed</string>
+    <string name="learnLearningLibraryStatusFilterBookmarkedLabel">Bookmarked</string>
+    <string name="learnLearningLibraryFailedToLoadMessage">Failed to load collections</string>
+    <string name="a11y_learningLibraryClearFiltersContentDescription">Clear filters</string>
+    <string name="a11y_learnClearSearchQueryContentDescription">Clear search query</string>
 </resources>

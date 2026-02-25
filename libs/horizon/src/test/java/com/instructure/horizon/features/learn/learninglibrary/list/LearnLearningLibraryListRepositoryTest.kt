@@ -22,6 +22,8 @@ import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemT
 import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearningLibraryCollection
 import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearningLibraryCollectionsResponse
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItem
+import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItemsResponse
+import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryPageInfo
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -80,12 +82,23 @@ class LearnLearningLibraryListRepositoryTest {
         )
     )
 
+    private val emptyPageInfo = LearningLibraryPageInfo(
+        nextCursor = null,
+        previousCursor = null,
+        hasNextPage = false,
+        hasPreviousPage = false
+    )
+
     @Before
     fun setup() {
         val response = EnrolledLearningLibraryCollectionsResponse(
             collections = testCollections
         )
         coEvery { getLearningLibraryManager.getEnrolledLearningLibraryCollections(any(), any()) } returns response
+        coEvery { getLearningLibraryManager.getLearningLibraryCollectionItems(any(), any(), any(), any(), any(), any(), any(), any()) } returns LearningLibraryCollectionItemsResponse(
+            items = emptyList(),
+            pageInfo = emptyPageInfo
+        )
     }
 
     @Test
@@ -114,6 +127,113 @@ class LearnLearningLibraryListRepositoryTest {
         val result = repository.getEnrolledLearningLibraries(false)
 
         assertEquals(0, result.size)
+    }
+
+    @Test
+    fun `getLearningLibraryItems returns items with no filters`() = runTest {
+        val items = listOf(createTestCollectionItem("item1", "Python", "1", false, CollectionItemType.COURSE))
+        coEvery { getLearningLibraryManager.getLearningLibraryCollectionItems(any(), any(), any(), any(), any(), any(), any(), any()) } returns LearningLibraryCollectionItemsResponse(
+            items = items,
+            pageInfo = emptyPageInfo
+        )
+        val repository = getRepository()
+
+        val result = repository.getLearningLibraryItems(forceNetwork = false)
+
+        assertEquals(1, result.items.size)
+        assertEquals(items, result.items)
+    }
+
+    @Test
+    fun `getLearningLibraryItems with cursor passes cursor to manager`() = runTest {
+        val repository = getRepository()
+
+        repository.getLearningLibraryItems(afterCursor = "cursor123", forceNetwork = false)
+
+        coVerify { getLearningLibraryManager.getLearningLibraryCollectionItems(cursor = "cursor123", any(), any(), any(), any(), any(), any(), any()) }
+    }
+
+    @Test
+    fun `getLearningLibraryItems with searchQuery passes searchTerm to manager`() = runTest {
+        val repository = getRepository()
+
+        repository.getLearningLibraryItems(searchQuery = "python", forceNetwork = false)
+
+        coVerify { getLearningLibraryManager.getLearningLibraryCollectionItems(any(), any(), any(), any(), searchTerm = "python", any(), any(), any()) }
+    }
+
+    @Test
+    fun `getLearningLibraryItems with typeFilter passes types to manager`() = runTest {
+        val repository = getRepository()
+
+        repository.getLearningLibraryItems(typeFilter = CollectionItemType.COURSE, forceNetwork = false)
+
+        coVerify { getLearningLibraryManager.getLearningLibraryCollectionItems(any(), any(), any(), any(), any(), types = listOf(CollectionItemType.COURSE), any(), any()) }
+    }
+
+    @Test
+    fun `getLearningLibraryItems with null typeFilter passes null types to manager`() = runTest {
+        val repository = getRepository()
+
+        repository.getLearningLibraryItems(typeFilter = null, forceNetwork = false)
+
+        coVerify { getLearningLibraryManager.getLearningLibraryCollectionItems(any(), any(), any(), any(), any(), types = null, any(), any()) }
+    }
+
+    @Test
+    fun `getLearningLibraryItems with bookmarkedOnly passes bookmarkedOnly to manager`() = runTest {
+        val repository = getRepository()
+
+        repository.getLearningLibraryItems(bookmarkedOnly = true, forceNetwork = false)
+
+        coVerify { getLearningLibraryManager.getLearningLibraryCollectionItems(any(), any(), any(), bookmarkedOnly = true, any(), any(), any(), any()) }
+    }
+
+    @Test
+    fun `getLearningLibraryItems with completedOnly passes completedOnly to manager`() = runTest {
+        val repository = getRepository()
+
+        repository.getLearningLibraryItems(completedOnly = true, forceNetwork = false)
+
+        coVerify { getLearningLibraryManager.getLearningLibraryCollectionItems(any(), any(), any(), any(), any(), any(), completedOnly = true, any()) }
+    }
+
+    @Test
+    fun `getLearningLibraryItems with forceNetwork true passes flag to manager`() = runTest {
+        val repository = getRepository()
+
+        repository.getLearningLibraryItems(forceNetwork = true)
+
+        coVerify { getLearningLibraryManager.getLearningLibraryCollectionItems(any(), any(), any(), any(), any(), any(), any(), forceNetwork = true) }
+    }
+
+    @Test
+    fun `getLearningLibraryItems returns pagination info`() = runTest {
+        val pageInfo = LearningLibraryPageInfo(
+            nextCursor = "next_cursor",
+            previousCursor = null,
+            hasNextPage = true,
+            hasPreviousPage = false
+        )
+        coEvery { getLearningLibraryManager.getLearningLibraryCollectionItems(any(), any(), any(), any(), any(), any(), any(), any()) } returns LearningLibraryCollectionItemsResponse(
+            items = emptyList(),
+            pageInfo = pageInfo
+        )
+        val repository = getRepository()
+
+        val result = repository.getLearningLibraryItems(forceNetwork = false)
+
+        assertTrue(result.pageInfo.hasNextPage)
+        assertEquals("next_cursor", result.pageInfo.nextCursor)
+    }
+
+    @Test
+    fun `getLearningLibraryItems with limit passes limit to manager`() = runTest {
+        val repository = getRepository()
+
+        repository.getLearningLibraryItems(limit = 5, forceNetwork = false)
+
+        coVerify { getLearningLibraryManager.getLearningLibraryCollectionItems(any(), limit = 5, any(), any(), any(), any(), any(), any()) }
     }
 
     @Test
