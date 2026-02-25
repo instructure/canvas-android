@@ -188,7 +188,7 @@ class FakeGetLearningLibraryManager : GetLearningLibraryManager {
 
     private fun initializeMockData() {
         val now = Date()
-        val courses = MockCanvas.data.courses.values.toList()
+        val courses = MockCanvas.data?.courses?.values?.toList() ?: emptyList()
 
         // Create Learning Library Collections
         val collection1 = LearningLibraryCollection(
