@@ -1,0 +1,30 @@
+name: Release Student
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches:
+      - 'release/student'
+
+concurrency:
+  group: release-student-${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  release:
+    uses: ./.github/workflows/reusable-release-pipeline.yml
+    with:
+      app-name: student
+      app-display-name: Student
+      include-e2e-offline: true
+      slack-emoji: ':student-app:'
+    secrets:
+      ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+      ANDROID_RELEASE_KEYSTORE_B64: ${{ secrets.ANDROID_RELEASE_KEYSTORE_B64 }}
+      GCLOUD_KEY: ${{ secrets.GCLOUD_KEY }}
+      SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
+      OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
+      ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+      ANDROID_KEYSTORE_ALIAS: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
+      ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD }}
+      SLACK_URL: ${{ secrets.SLACK_URL }}

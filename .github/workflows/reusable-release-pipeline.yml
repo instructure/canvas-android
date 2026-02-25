@@ -1,0 +1,378 @@
+name: Reusable Release Pipeline
+
+on:
+  workflow_call:
+    inputs:
+      app-name:
+        description: 'App name (student, teacher, parent)'
+        required: true
+        type: string
+      app-display-name:
+        description: 'App display name (Student, Teacher, Parent)'
+        required: true
+        type: string
+      include-e2e-offline:
+        description: 'Include E2E offline tests (Student only)'
+        required: false
+        default: false
+        type: boolean
+      slack-emoji:
+        description: 'Slack emoji for the app'
+        required: true
+        type: string
+    secrets:
+      ACCESS_TOKEN:
+        required: true
+      ANDROID_RELEASE_KEYSTORE_B64:
+        required: true
+      GCLOUD_KEY:
+        required: true
+      SPLUNK_MOBILE_TOKEN:
+        required: true
+      OBSERVE_MOBILE_TOKEN:
+        required: true
+      ANDROID_KEYSTORE_PASSWORD:
+        required: true
+      ANDROID_KEYSTORE_ALIAS:
+        required: true
+      ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD:
+        required: true
+      SLACK_URL:
+        required: true
+
+jobs:
+  build-qa-debug:
+    name: build-qa-debug
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+          fetch-depth: 1
+          token: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: wrapper
+          java-version: '17'
+
+      - name: Build QA debug and test APKs
+        run: |
+          ./gradle/gradlew -p apps \
+            :${{ inputs.app-name }}:assembleQaDebug \
+            :${{ inputs.app-name }}:assembleQaDebugAndroidTest \
+            --build-cache \
+            --parallel \
+            --max-workers=4 \
+            --no-daemon \
+            -Dorg.gradle.jvmargs="-Xmx6g -XX:+HeapDumpOnOutOfMemoryError" \
+            -Dkotlin.compiler.execution.strategy=in-process
+        env:
+          GRADLE_OPTS: "-Djava.net.preferIPv4Stack=true"
+
+      - name: Upload QA debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.app-name }}-qa-debug.apk
+          path: apps/${{ inputs.app-name }}/build/outputs/apk/qa/debug/${{ inputs.app-name }}-qa-debug.apk
+          retention-days: 1
+
+      - name: Upload QA test APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.app-name }}-qa-debug-androidTest.apk
+          path: apps/${{ inputs.app-name }}/build/outputs/apk/androidTest/qa/debug/${{ inputs.app-name }}-qa-debug-androidTest.apk
+          retention-days: 1
+
+  unit-tests:
+    name: unit-tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+          fetch-depth: 1
+          token: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: wrapper
+          java-version: '17'
+
+      - name: Run unit tests
+        run: |
+          ./gradle/gradlew -p apps \
+            :${{ inputs.app-name }}:testDevDebugUnitTest \
+            --build-cache \
+            --parallel \
+            --max-workers=4 \
+            --no-daemon \
+            -Dorg.gradle.jvmargs="-Xmx6g -XX:+HeapDumpOnOutOfMemoryError" \
+            -Dkotlin.compiler.execution.strategy=in-process
+        env:
+          GRADLE_OPTS: "-Djava.net.preferIPv4Stack=true"
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.app-name }}-unit-test-results
+          path: |
+            apps/${{ inputs.app-name }}/build/reports/tests/testDevDebugUnitTest/
+            apps/${{ inputs.app-name }}/build/test-results/testDevDebugUnitTest/
+          retention-days: 1
+
+  flank-tests:
+    name: flank-${{ matrix.test-type }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    needs: build-qa-debug
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - test-type: portrait
+            flank-config: flank.yml
+          - test-type: landscape
+            flank-config: flank_landscape.yml
+          - test-type: tablet
+            flank-config: flank_tablet.yml
+          - test-type: e2e
+            flank-config: flank_e2e.yml
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Setup Service account
+        env:
+          GCLOUD_KEY: ${{ secrets.GCLOUD_KEY }}
+        run: |
+          if [ -z "${GCLOUD_KEY}" ]; then
+            echo "Error: GCLOUD_KEY secret is not set"
+            exit 1
+          fi
+          echo "${GCLOUD_KEY}" > service-account-key.json
+          chmod 600 service-account-key.json
+
+      - name: Setup Flank config
+        run: cp ./apps/${{ inputs.app-name }}/${{ matrix.flank-config }} ./flank.yml
+
+      - name: Copy APKs to expected locations
+        run: |
+          if [ -d "${{ inputs.app-name }}-qa-debug.apk" ]; then
+            mkdir -p apps/${{ inputs.app-name }}/build/outputs/apk/qa/debug
+            mv ${{ inputs.app-name }}-qa-debug.apk/${{ inputs.app-name }}-qa-debug.apk apps/${{ inputs.app-name }}/build/outputs/apk/qa/debug/
+            rm -rf ${{ inputs.app-name }}-qa-debug.apk
+          fi
+          if [ -d "${{ inputs.app-name }}-qa-debug-androidTest.apk" ]; then
+            mkdir -p apps/${{ inputs.app-name }}/build/outputs/apk/androidTest/qa/debug
+            mv ${{ inputs.app-name }}-qa-debug-androidTest.apk/${{ inputs.app-name }}-qa-debug-androidTest.apk apps/${{ inputs.app-name }}/build/outputs/apk/androidTest/qa/debug/
+            rm -rf ${{ inputs.app-name }}-qa-debug-androidTest.apk
+          fi
+
+      - name: Run Flank tests
+        uses: Flank/flank@v23.10.1
+        with:
+          version: 'v23.07.0'
+          platform: 'android'
+          service_account: './service-account-key.json'
+          flank_configuration_file: './flank.yml'
+
+      - name: Report test results
+        if: always()
+        run: |
+          if [ -d results ] && [ "$(ls results 2>/dev/null | wc -l)" -eq 1 ]; then
+            ./apps/postProcessTestRun.bash ${{ inputs.app-name }} results/$(ls results)
+          else
+            echo "Warning: Expected exactly one results directory, found: $(ls results 2>/dev/null || echo 'none')"
+          fi
+        env:
+          SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
+          OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
+          BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
+          BITRISE_GIT_BRANCH: ${{ github.head_ref || github.ref_name }}
+          BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Cleanup sensitive files
+        if: always()
+        run: rm -f service-account-key.json
+
+  e2e-offline:
+    name: e2e-offline
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    needs: build-qa-debug
+    if: ${{ inputs.include-e2e-offline }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Setup Service account
+        env:
+          GCLOUD_KEY: ${{ secrets.GCLOUD_KEY }}
+        run: |
+          if [ -z "${GCLOUD_KEY}" ]; then
+            echo "Error: GCLOUD_KEY secret is not set"
+            exit 1
+          fi
+          echo "${GCLOUD_KEY}" > service-account-key.json
+          chmod 600 service-account-key.json
+
+      - name: Setup Flank config
+        run: cp ./apps/${{ inputs.app-name }}/flank_e2e_offline.yml ./flank.yml
+
+      - name: Copy APKs to expected locations
+        run: |
+          if [ -d "${{ inputs.app-name }}-qa-debug.apk" ]; then
+            mkdir -p apps/${{ inputs.app-name }}/build/outputs/apk/qa/debug
+            mv ${{ inputs.app-name }}-qa-debug.apk/${{ inputs.app-name }}-qa-debug.apk apps/${{ inputs.app-name }}/build/outputs/apk/qa/debug/
+            rm -rf ${{ inputs.app-name }}-qa-debug.apk
+          fi
+          if [ -d "${{ inputs.app-name }}-qa-debug-androidTest.apk" ]; then
+            mkdir -p apps/${{ inputs.app-name }}/build/outputs/apk/androidTest/qa/debug
+            mv ${{ inputs.app-name }}-qa-debug-androidTest.apk/${{ inputs.app-name }}-qa-debug-androidTest.apk apps/${{ inputs.app-name }}/build/outputs/apk/androidTest/qa/debug/
+            rm -rf ${{ inputs.app-name }}-qa-debug-androidTest.apk
+          fi
+
+      - name: Run Flank E2E offline tests
+        uses: Flank/flank@v23.10.1
+        with:
+          version: 'v23.07.0'
+          platform: 'android'
+          service_account: './service-account-key.json'
+          flank_configuration_file: './flank.yml'
+
+      - name: Report test results
+        if: always()
+        run: |
+          if [ -d results ] && [ "$(ls results 2>/dev/null | wc -l)" -eq 1 ]; then
+            ./apps/postProcessTestRun.bash ${{ inputs.app-name }} results/$(ls results)
+          else
+            echo "Warning: Expected exactly one results directory, found: $(ls results 2>/dev/null || echo 'none')"
+          fi
+        env:
+          SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
+          OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
+          BITRISE_TRIGGERED_WORKFLOW_ID: ${{ github.workflow }}
+          BITRISE_GIT_BRANCH: ${{ github.head_ref || github.ref_name }}
+          BITRISE_BUILD_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: Cleanup sensitive files
+        if: always()
+        run: rm -f service-account-key.json
+
+  build-release-candidate:
+    name: build-release-candidate
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    needs: [unit-tests, flank-tests, e2e-offline]
+    if: |
+      always() &&
+      needs.unit-tests.result == 'success' &&
+      needs.flank-tests.result == 'success' &&
+      (needs.e2e-offline.result == 'success' || needs.e2e-offline.result == 'skipped')
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+          fetch-depth: 1
+          token: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: wrapper
+          java-version: '17'
+
+      - name: Decode release keystore
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_RELEASE_KEYSTORE_B64 }}
+        run: |
+          echo "$KEYSTORE_B64" | base64 --decode > release.jks
+          chmod 600 release.jks
+
+      - name: Build release candidate
+        run: |
+          ./gradle/gradlew -p apps \
+            :${{ inputs.app-name }}:assembleProdRelease \
+            :${{ inputs.app-name }}:bundleProdRelease \
+            --stacktrace \
+            --build-cache \
+            --parallel \
+            --max-workers=4 \
+            --no-daemon \
+            -Dorg.gradle.jvmargs="-Xmx6g -XX:+HeapDumpOnOutOfMemoryError" \
+            -Dkotlin.compiler.execution.strategy=in-process \
+            -Pandroid.injected.signing.store.file=$(pwd)/release.jks \
+            -Pandroid.injected.signing.store.password="${KEYSTORE_PASSWORD}" \
+            -Pandroid.injected.signing.key.alias="${KEYSTORE_KEY_ALIAS}" \
+            -Pandroid.injected.signing.key.password="${KEYSTORE_KEY_PASSWORD}"
+        env:
+          GRADLE_OPTS: "-Djava.net.preferIPv4Stack=true"
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEYSTORE_KEY_ALIAS: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
+          KEYSTORE_KEY_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD }}
+
+      - name: Upload release APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.app-name }}-prod-release.apk
+          path: apps/${{ inputs.app-name }}/build/outputs/apk/prod/release/${{ inputs.app-name }}-prod-release.apk
+          retention-days: 7
+
+      - name: Upload release AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.app-name }}-prod-release.aab
+          path: apps/${{ inputs.app-name }}/build/outputs/bundle/prodRelease/${{ inputs.app-name }}-prod-release.aab
+          retention-days: 7
+
+      - name: Cleanup sensitive files
+        if: always()
+        run: rm -f release.jks
+
+  slack-notification:
+    name: slack-notification
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [build-release-candidate]
+    if: always()
+    steps:
+      - name: Notify Slack on success
+        if: needs.build-release-candidate.result == 'success'
+        uses: slackapi/slack-github-action@v2
+        with:
+          webhook: ${{ secrets.SLACK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "text": ":android: ${{ inputs.slack-emoji }} Android ${{ inputs.app-display-name }} RC Available :android:\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|Download artifacts from GitHub Actions>"
+            }
+
+      - name: Notify Slack on failure
+        if: needs.build-release-candidate.result != 'success'
+        uses: slackapi/slack-github-action@v2
+        with:
+          webhook: ${{ secrets.SLACK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "text": ":x: ${{ inputs.slack-emoji }} Android ${{ inputs.app-display-name }} Release Pipeline Failed\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View failed run>"
+            }

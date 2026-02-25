@@ -1,0 +1,90 @@
+name: Create Tag
+
+on:
+  push:
+    branches:
+      - 'release/student'
+      - 'release/teacher'
+      - 'release/parent'
+
+jobs:
+  create-tag:
+    name: create-tag
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    env:
+      JIRA_USERNAME: ${{ secrets.JIRA_USERNAME }}
+      JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Determine app from branch
+        id: app-info
+        run: |
+          APP_NAME=$(echo "${GITHUB_REF_NAME}" | sed 's|release/||')
+          echo "app-name=${APP_NAME}" >> "$GITHUB_OUTPUT"
+
+          VERSION_CODE=$(grep 'versionCode' apps/${APP_NAME}/build.gradle | head -1 | awk '{print $NF}')
+          VERSION_NAME=$(grep 'versionName' apps/${APP_NAME}/build.gradle | head -1 | awk '{print $NF}')
+          VERSION_NAME=${VERSION_NAME//\"/}
+          VERSION_NAME=${VERSION_NAME//\'/}
+
+          TAG="${APP_NAME}-${VERSION_NAME}-${VERSION_CODE}"
+          echo "version-code=${VERSION_CODE}" >> "$GITHUB_OUTPUT"
+          echo "version-name=${VERSION_NAME}" >> "$GITHUB_OUTPUT"
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+
+          echo "App: ${APP_NAME}"
+          echo "Version: ${VERSION_NAME} (${VERSION_CODE})"
+          echo "Tag: ${TAG}"
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create and push tag
+        id: create-tag
+        run: |
+          TAG="${{ steps.app-info.outputs.tag }}"
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            echo "Tag $TAG already exists, skipping tag creation"
+            echo "tag-exists=true" >> "$GITHUB_OUTPUT"
+          else
+            git tag "$TAG"
+            git push origin "$TAG"
+            echo "tag-exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create GitHub Release
+        if: steps.create-tag.outputs.tag-exists != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        run: |
+          APP_NAME="${{ steps.app-info.outputs.app-name }}"
+          VERSION_NAME="${{ steps.app-info.outputs.version-name }}"
+          VERSION_CODE="${{ steps.app-info.outputs.version-code }}"
+          TAG="${{ steps.app-info.outputs.tag }}"
+
+          gh release create "$TAG" \
+            --title "${APP_NAME} ${VERSION_NAME} (${VERSION_CODE})" \
+            --notes "${APP_NAME} ${VERSION_NAME} (${VERSION_CODE})" \
+            --draft
+
+      - name: Update JIRA fix versions
+        if: steps.create-tag.outputs.tag-exists != 'true' && env.JIRA_USERNAME != ''
+        run: |
+          cd scripts
+          npm install jira-client@4.0.1
+          node update-jira-issues.js "${{ steps.app-info.outputs.tag }}"

@@ -1,0 +1,77 @@
+name: Deploy Teacher
+
+on:
+  push:
+    tags:
+      - 'teacher-*'
+
+concurrency:
+  group: deploy-teacher
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    name: build-and-deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+          token: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: wrapper
+          java-version: '17'
+
+      - name: Decode release keystore
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_RELEASE_KEYSTORE_B64 }}
+        run: |
+          echo "$KEYSTORE_B64" | base64 --decode > release.jks
+          chmod 600 release.jks
+
+      - name: Build production release
+        run: |
+          ./gradle/gradlew -p apps \
+            :teacher:assembleProdRelease \
+            :teacher:bundleProdRelease \
+            --stacktrace \
+            --build-cache \
+            --parallel \
+            --max-workers=4 \
+            --no-daemon \
+            -Dorg.gradle.jvmargs="-Xmx6g -XX:+HeapDumpOnOutOfMemoryError" \
+            -Dkotlin.compiler.execution.strategy=in-process \
+            -Pandroid.injected.signing.store.file=$(pwd)/release.jks \
+            -Pandroid.injected.signing.store.password="${KEYSTORE_PASSWORD}" \
+            -Pandroid.injected.signing.key.alias="${KEYSTORE_KEY_ALIAS}" \
+            -Pandroid.injected.signing.key.password="${KEYSTORE_KEY_PASSWORD}"
+        env:
+          GRADLE_OPTS: "-Djava.net.preferIPv4Stack=true"
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEYSTORE_KEY_ALIAS: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
+          KEYSTORE_KEY_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD }}
+
+      - name: Extract update priority
+        id: priority
+        run: |
+          UPDATE_PRIORITY=$(grep 'updatePriority' apps/teacher/build.gradle | head -1 | awk '{print $NF}')
+          echo "value=${UPDATE_PRIORITY}" >> "$GITHUB_OUTPUT"
+
+      - name: Upload to Google Play
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.GPLAY_SERVICE_ACCOUNT_KEY }}
+          packageName: com.instructure.teacher
+          releaseFiles: apps/teacher/build/outputs/bundle/prodRelease/teacher-prod-release.aab
+          track: internal
+          inAppUpdatePriority: ${{ steps.priority.outputs.value }}
+          status: completed
+
+      - name: Cleanup sensitive files
+        if: always()
+        run: rm -f release.jks

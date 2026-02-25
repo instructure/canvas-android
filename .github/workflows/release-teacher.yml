@@ -1,0 +1,30 @@
+name: Release Teacher
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches:
+      - 'release/teacher'
+
+concurrency:
+  group: release-teacher-${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  release:
+    uses: ./.github/workflows/reusable-release-pipeline.yml
+    with:
+      app-name: teacher
+      app-display-name: Teacher
+      include-e2e-offline: false
+      slack-emoji: ':teacher-app:'
+    secrets:
+      ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+      ANDROID_RELEASE_KEYSTORE_B64: ${{ secrets.ANDROID_RELEASE_KEYSTORE_B64 }}
+      GCLOUD_KEY: ${{ secrets.GCLOUD_KEY }}
+      SPLUNK_MOBILE_TOKEN: ${{ secrets.SPLUNK_MOBILE_TOKEN }}
+      OBSERVE_MOBILE_TOKEN: ${{ secrets.OBSERVE_MOBILE_TOKEN }}
+      ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+      ANDROID_KEYSTORE_ALIAS: ${{ secrets.ANDROID_KEYSTORE_ALIAS }}
+      ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PRIVATE_KEY_PASSWORD }}
+      SLACK_URL: ${{ secrets.SLACK_URL }}
