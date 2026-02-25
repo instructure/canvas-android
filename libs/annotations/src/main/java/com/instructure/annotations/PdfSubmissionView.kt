@@ -31,6 +31,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.lifecycleScope
 import com.instructure.annotations.AnnotationDialogs.AnnotationCommentDialog
 import com.instructure.annotations.AnnotationDialogs.AnnotationErrorDialog
 import com.instructure.annotations.AnnotationDialogs.FreeTextDialog
@@ -46,7 +47,7 @@ import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.weave.StatusCallbackError
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.catch
-import com.instructure.canvasapi2.utils.weave.tryWeave
+import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.utils.filecache.FileCache
 import com.instructure.pandautils.utils.filecache.awaitFileDownload
 import com.instructure.pandautils.utils.onClick
@@ -92,8 +93,10 @@ import com.pspdfkit.ui.toolbar.ContextualToolbar
 import com.pspdfkit.ui.toolbar.ContextualToolbarMenuItem
 import com.pspdfkit.ui.toolbar.ToolbarCoordinatorLayout
 import com.pspdfkit.ui.toolbar.grouping.MenuItemGroupingRule
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.Response
 import java.io.File
 import java.util.EnumSet
@@ -106,7 +109,9 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
     protected val commentRepliesHashMap: HashMap<String, ArrayList<CanvaDocAnnotation>> = HashMap()
     protected var pdfFragment: PdfFragment? = null
     protected var noteHinter: AnnotationNoteHinter? = null
-    protected val supportFragmentManager: FragmentManager = (context as AppCompatActivity).supportFragmentManager
+    private val activity = context as AppCompatActivity
+    protected val supportFragmentManager: FragmentManager = activity.supportFragmentManager
+    protected val viewScope = activity.lifecycleScope
 
     private val annotationCreationList = mutableListOf(AnnotationTool.INK, AnnotationTool.HIGHLIGHT, AnnotationTool.STRIKEOUT, AnnotationTool.SQUARE, AnnotationTool.STAMP, AnnotationTool.FREETEXT, AnnotationTool.ERASER, AnnotationTool.NOTE)
     private val annotationEditList = mutableListOf(
@@ -140,10 +145,12 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
     private var pdfContentJob: Job? = null
     private var annotationsJob: Job? = null
     private var sendCommentJob: Job? = null
+    private var appearanceGeneratorsJob: Job? = null
     private var currentAnnotationModeTool: AnnotationTool? = null
     private var currentAnnotationModeType: AnnotationType? = null
     private var isUpdatingWithNoNetwork = false
     private var stampRaceFlag = true
+    private var appearanceGeneratorsLoaded = false
 
     @get:ColorRes
     abstract val progressColor: Int
@@ -180,6 +187,7 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
         annotationsJob?.cancel()
         pdfContentJob?.cancel()
         fileJob?.cancel()
+        appearanceGeneratorsJob?.cancel()
     }
 
     protected fun unregisterPdfFragmentListeners() {
@@ -235,11 +243,13 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
                 val annotation = pdfFragment?.selectedAnnotations?.get(0)
                 // Remove the annotation
                 if (annotation != null) {
-                    pdfFragment?.document?.annotationProvider?.removeAnnotationFromPage(annotation)
-                    pdfFragment?.notifyAnnotationHasChanged(annotation)
-                    pdfFragment?.clearSelectedAnnotations()
-                    pdfFragment?.exitCurrentlyActiveMode()
-                    pdfFragment?.enterAnnotationCreationMode()
+                    viewScope.launch {
+                        pdfFragment?.document?.annotationProvider?.removeAnnotationFromPage(annotation)
+                        pdfFragment?.notifyAnnotationHasChanged(annotation)
+                        pdfFragment?.clearSelectedAnnotations()
+                        pdfFragment?.exitCurrentlyActiveMode()
+                        pdfFragment?.enterAnnotationCreationMode()
+                    }
                     return@setOnMenuItemClickListener true
                 }
             }
@@ -367,7 +377,7 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
     }
 
     protected fun handlePdfContent(url: String) {
-        pdfContentJob = tryWeave {
+        pdfContentJob = viewScope.tryLaunch {
             if (url.contains("canvadoc")) {
                 val redirectUrl = getCanvaDocsRedirect(url, domain = ApiPrefs.overrideDomains[courseId])
                 //extract the domain for API use
@@ -404,10 +414,10 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
         }
     }
 
-    private val documentListener = object : DocumentListener by DocumentListenerSimpleDelegate() {
+    private val documentListener = object : DocumentListener {
         override fun onDocumentLoaded(pdfDocument: PdfDocument) {
             setupPdfAnnotationDefaults()
-            loadCustomAppearanceGenerators()
+            loadCustomAppearanceGeneratorsAsync()
 
             docSession.rotations?.let { rotations ->
                 pdfFragment?.document?.let {
@@ -422,14 +432,9 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
     }
 
     private fun loadAnnotations() {
-        annotationsJob = tryWeave {
+        annotationsJob = viewScope.tryLaunch {
             // Snag them annotations with the session id
             val annotations = awaitApi { CanvaDocsManager.getAnnotations(apiValues.sessionId, apiValues.canvaDocsDomain, it) }
-            // There is a freeze in the PdfSubmissionView, where the root cause is unknown.
-            // The main issue is that the pdfFragment?.document?.annotationProvider?.addAnnotationToPage(annotation) completely freezes the thread.
-            // I suspect something under the hood is still loading in the PSPDFKit, but there was no way to detect it.
-            // Adding a delay to wait for this loading significantly reduces the probability of this freezing.
-            delay(200)
 
             // Grab all the annotations and sort them by type (descending).
             // This will result in all of the comments being iterated over first as the COMMENT_REPLY type is last in the AnnotationType enum.
@@ -492,7 +497,7 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
 
     protected fun load(url: String?, onFinished: (Uri) -> Unit) {
         fileJob?.cancel()
-        fileJob = tryWeave {
+        fileJob = viewScope.tryLaunch {
             progressBar.isIndeterminate = true
             progressBar.setColor(ContextCompat.getColor(this@PdfSubmissionView.context, R.color.textDark))
             val teacherYellow = ContextCompat.getColor(this@PdfSubmissionView.context, progressColor)
@@ -507,10 +512,10 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
             handler.postDelayed(showLoadingRunner, jitterThreshold)
 
             // If we don't have a url we'll display an error
-            val tempFile: File? = FileCache.awaitFileDownload(url!!) {
-                onUI {
+            val tempFile: File? = FileCache.awaitFileDownload(url!!) { progress ->
+                viewScope.launch {
                     progressBar.setColor(teacherYellow)
-                    progressBar.setProgress(it)
+                    progressBar.setProgress(progress)
                 }
             }
 
@@ -538,6 +543,12 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
     }
 
     private val annotationUpdateListener = object : AnnotationProvider.OnAnnotationUpdatedListener {
+        override fun onAnnotationZOrderChanged(
+            pageIndex: Int,
+            oldOrder: List<@JvmSuppressWildcards Annotation>,
+            newOrder: List<@JvmSuppressWildcards Annotation>
+        ) = Unit
+
         override fun onAnnotationCreated(annotation: Annotation) {
             if (!annotation.isAttached || annotationNetworkCheck(annotation)) return
 
@@ -574,8 +585,6 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
                 deleteAnnotation(annotation)
             }
         }
-
-        override fun onAnnotationZOrderChanged(p0: Int, p1: MutableList<Annotation>, p2: MutableList<Annotation>) {}
     }
 
     private fun annotationNetworkCheck(annotation: Annotation): Boolean {
@@ -586,9 +595,11 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
             } else {
                 isUpdatingWithNoNetwork = true
                 if (annotation.isAttached) {
-                    pdfFragment?.clearSelectedAnnotations()
-                    pdfFragment?.document?.annotationProvider?.removeAnnotationFromPage(annotation)
-                    pdfFragment?.notifyAnnotationHasChanged(annotation)
+                    viewScope.launch {
+                        pdfFragment?.clearSelectedAnnotations()
+                        pdfFragment?.document?.annotationProvider?.removeAnnotationFromPage(annotation)
+                        pdfFragment?.notifyAnnotationHasChanged(annotation)
+                    }
                 }
                 showNoInternetDialog()
             }
@@ -643,7 +654,7 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
             commentsButton.isEnabled = false
         }
 
-        createAnnotationJob = tryWeave {
+        createAnnotationJob = viewScope.tryLaunch {
             val canvaDocAnnotation = annotation.convertPDFAnnotationToCanvaDoc(apiValues.documentId)
             if (canvaDocAnnotation != null) {
                 val newAnnotation = awaitApi { CanvaDocsManager.putAnnotation(apiValues.sessionId, generateAnnotationId(), canvaDocAnnotation, apiValues.canvaDocsDomain, it) }
@@ -679,7 +690,7 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
         // Don't want to update if we just created a stamp.
         if(annotation.type == AnnotationType.STAMP && !stampRaceFlag) return
         // Annotation modified; Update it
-        updateAnnotationJob = tryWeave {
+        updateAnnotationJob = viewScope.tryLaunch {
             val canvaDocAnnotation = annotation.convertPDFAnnotationToCanvaDoc(apiValues.documentId)
             if (canvaDocAnnotation != null && !annotation.name.isNullOrEmpty()) {
                 awaitApi<CanvaDocAnnotation> { CanvaDocsManager.putAnnotation(apiValues.sessionId, annotation.name!!, canvaDocAnnotation, apiValues.canvaDocsDomain, it) }
@@ -691,9 +702,11 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
                     // Not found; Annotation has been deleted and no longer exists.
                     val dialog = AnnotationErrorDialog.getInstance(supportFragmentManager) {
                         // Delete annotation after user clicks OK on dialog
-                        pdfFragment?.clearSelectedAnnotations()
-                        pdfFragment?.document?.annotationProvider?.removeAnnotationFromPage(annotation)
-                        pdfFragment?.notifyAnnotationHasChanged(annotation)
+                        viewScope.launch {
+                            pdfFragment?.clearSelectedAnnotations()
+                            pdfFragment?.document?.annotationProvider?.removeAnnotationFromPage(annotation)
+                            pdfFragment?.notifyAnnotationHasChanged(annotation)
+                        }
                     }
                     dialog.show(supportFragmentManager, AnnotationErrorDialog::class.java.simpleName)
                 }
@@ -708,7 +721,7 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
 
     private fun deleteAnnotation(annotation: Annotation) {
         // Annotation deleted; DELETE
-        deleteAnnotationJob = tryWeave {
+        deleteAnnotationJob = viewScope.tryLaunch {
             // If it is not found, don't hit the server (it will fail)
             if (!annotation.name.isNullOrEmpty())
                 awaitApi { CanvaDocsManager.deleteAnnotation(apiValues.sessionId, annotation.name!!, apiValues.canvaDocsDomain, it) }
@@ -724,7 +737,7 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
         // Annotation modified; Update it
         commentsButton.isEnabled = false
 
-        sendCommentJob = tryWeave {
+        sendCommentJob = viewScope.tryLaunch {
             val newCommentReply = awaitApi {
                 CanvaDocsManager.putAnnotation(apiValues.sessionId, generateAnnotationId(), createCommentReplyAnnotation(comment
                         ?: "", inReplyToId, apiValues.documentId, ApiPrefs.user?.id.toString(), page), apiValues.canvaDocsDomain, it)
@@ -962,34 +975,54 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
         return stamps
     }
 
-    private fun loadCustomAppearanceGenerators() {
-        // Register custom stamp appearance stream generator as a global appearance stream generator.
-        val customStampAppearanceStreamGenerator = CustomStampAppearanceStreamGenerator()
-        pdfFragment?.document?.annotationProvider?.addAppearanceStreamGenerator(customStampAppearanceStreamGenerator)
+    private fun loadCustomAppearanceGeneratorsAsync() {
+        // Avoid loading multiple times
+        if (appearanceGeneratorsLoaded) return
+        appearanceGeneratorsLoaded = true
 
-        // Create appearance stream generators with a PDF containing vector logo.
-        val black = AssetAppearanceStreamGenerator(blackStampFile)
-        val blue = AssetAppearanceStreamGenerator(blueStampFile)
-        val brown = AssetAppearanceStreamGenerator(brownStampFile)
-        val green = AssetAppearanceStreamGenerator(greenStampFile)
-        val navy = AssetAppearanceStreamGenerator(navyStampFile)
-        val orange = AssetAppearanceStreamGenerator(orangeStampFile)
-        val pink = AssetAppearanceStreamGenerator(pinkStampFile)
-        val purple = AssetAppearanceStreamGenerator(purpleStampFile)
-        val red = AssetAppearanceStreamGenerator(redStampFile)
-        val yellow = AssetAppearanceStreamGenerator(yellowStampFile)
+        // Load appearance generators asynchronously to prevent ANR
+        // These generators load and parse PDF files from assets, which can cause blocking I/O
+        appearanceGeneratorsJob = viewScope.tryLaunch {
+            // Perform I/O operations on background thread
+            val generators = withContext(Dispatchers.IO) {
+                // Create appearance stream generators with a PDF containing vector logo.
+                // This reads and parses 10 PDF files from assets, which can block the main thread
+                val black = AssetAppearanceStreamGenerator(blackStampFile)
+                val blue = AssetAppearanceStreamGenerator(blueStampFile)
+                val brown = AssetAppearanceStreamGenerator(brownStampFile)
+                val green = AssetAppearanceStreamGenerator(greenStampFile)
+                val navy = AssetAppearanceStreamGenerator(navyStampFile)
+                val orange = AssetAppearanceStreamGenerator(orangeStampFile)
+                val pink = AssetAppearanceStreamGenerator(pinkStampFile)
+                val purple = AssetAppearanceStreamGenerator(purpleStampFile)
+                val red = AssetAppearanceStreamGenerator(redStampFile)
+                val yellow = AssetAppearanceStreamGenerator(yellowStampFile)
 
-        // Register created appearance stream generator for the custom subject.
-        customStampAppearanceStreamGenerator.addAppearanceStreamGenerator(blackStampSubject, black)
-        customStampAppearanceStreamGenerator.addAppearanceStreamGenerator(blueStampSubject, blue)
-        customStampAppearanceStreamGenerator.addAppearanceStreamGenerator(brownStampSubject, brown)
-        customStampAppearanceStreamGenerator.addAppearanceStreamGenerator(greenStampSubject, green)
-        customStampAppearanceStreamGenerator.addAppearanceStreamGenerator(navyStampSubject, navy)
-        customStampAppearanceStreamGenerator.addAppearanceStreamGenerator(orangeStampSubject, orange)
-        customStampAppearanceStreamGenerator.addAppearanceStreamGenerator(pinkStampSubject, pink)
-        customStampAppearanceStreamGenerator.addAppearanceStreamGenerator(purpleStampSubject, purple)
-        customStampAppearanceStreamGenerator.addAppearanceStreamGenerator(redStampSubject, red)
-        customStampAppearanceStreamGenerator.addAppearanceStreamGenerator(yellowStampSubject, yellow)
+                mapOf(
+                    blackStampSubject to black,
+                    blueStampSubject to blue,
+                    brownStampSubject to brown,
+                    greenStampSubject to green,
+                    navyStampSubject to navy,
+                    orangeStampSubject to orange,
+                    pinkStampSubject to pink,
+                    purpleStampSubject to purple,
+                    redStampSubject to red,
+                    yellowStampSubject to yellow
+                )
+            }
+
+            // Register on main thread after loading completes
+            val customStampAppearanceStreamGenerator = CustomStampAppearanceStreamGenerator()
+            pdfFragment?.document?.annotationProvider?.addAppearanceStreamGenerator(customStampAppearanceStreamGenerator)
+
+            // Register created appearance stream generator for the custom subject.
+            generators.forEach { (subject, generator) ->
+                customStampAppearanceStreamGenerator.addAppearanceStreamGenerator(subject, generator)
+            }
+        } catch {
+            appearanceGeneratorsLoaded = false
+        }
     }
     //endregion
 
@@ -1054,10 +1087,12 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
                     ?: return else return
             if ((cancelled && annotation.contents.isNullOrEmpty()) || text.isEmpty()) {
                 // Remove the annotation
-                pdfFragment?.document?.annotationProvider?.removeAnnotationFromPage(annotation)
-                pdfFragment?.notifyAnnotationHasChanged(annotation)
-                pdfFragment?.clearSelectedAnnotations()
-                pdfFragment?.enterAnnotationCreationMode()
+                viewScope.launch {
+                    pdfFragment?.document?.annotationProvider?.removeAnnotationFromPage(annotation)
+                    pdfFragment?.notifyAnnotationHasChanged(annotation)
+                    pdfFragment?.clearSelectedAnnotations()
+                    pdfFragment?.enterAnnotationCreationMode()
+                }
                 return
             }
 
