@@ -1,0 +1,159 @@
+name: Release Notes
+
+on:
+  workflow_dispatch:
+    inputs:
+      apps:
+        description: 'Apps to generate notes for'
+        type: choice
+        options:
+          - all
+          - student
+          - teacher
+          - parent
+        default: all
+
+jobs:
+  student-notes:
+    name: student-release-notes
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: inputs.apps == 'all' || inputs.apps == 'student'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Fetch tags
+        run: git fetch --force --tags
+
+      - name: Generate release notes
+        id: notes
+        run: |
+          TAG=$(git tag --list --sort=-version:refname 'student-*' | head -n 1)
+          if [ -z "$TAG" ]; then
+            echo "No tags found for student"
+            exit 1
+          fi
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+          FULL_OUTPUT=$(node scripts/generate-release-notes.js "$TAG")
+          NOTES=$(echo "$FULL_OUTPUT" | sed -n '/^Release Notes:$/,$ p' | tail -n +2)
+          if [ -z "$NOTES" ]; then
+            NOTES="No release notes found."
+          fi
+          echo "notes<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$NOTES" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+      - name: Post to Slack
+        uses: slackapi/slack-github-action@v2
+        with:
+          webhook: ${{ secrets.SLACK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "text": ":student-app: *Student Release Notes* (${{ steps.notes.outputs.tag }})\n```\n${{ steps.notes.outputs.notes }}\n```"
+            }
+
+  teacher-notes:
+    name: teacher-release-notes
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: inputs.apps == 'all' || inputs.apps == 'teacher'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Fetch tags
+        run: git fetch --force --tags
+
+      - name: Generate release notes
+        id: notes
+        run: |
+          TAG=$(git tag --list --sort=-version:refname 'teacher-*' | head -n 1)
+          if [ -z "$TAG" ]; then
+            echo "No tags found for teacher"
+            exit 1
+          fi
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+          FULL_OUTPUT=$(node scripts/generate-release-notes.js "$TAG")
+          NOTES=$(echo "$FULL_OUTPUT" | sed -n '/^Release Notes:$/,$ p' | tail -n +2)
+          if [ -z "$NOTES" ]; then
+            NOTES="No release notes found."
+          fi
+          echo "notes<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$NOTES" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+      - name: Post to Slack
+        uses: slackapi/slack-github-action@v2
+        with:
+          webhook: ${{ secrets.SLACK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "text": ":teacher-app: *Teacher Release Notes* (${{ steps.notes.outputs.tag }})\n```\n${{ steps.notes.outputs.notes }}\n```"
+            }
+
+  parent-notes:
+    name: parent-release-notes
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: inputs.apps == 'all' || inputs.apps == 'parent'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Fetch tags
+        run: git fetch --force --tags
+
+      - name: Generate release notes
+        id: notes
+        run: |
+          TAG=$(git tag --list --sort=-version:refname 'parent-*' | head -n 1)
+          if [ -z "$TAG" ]; then
+            echo "No tags found for parent"
+            exit 1
+          fi
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+          FULL_OUTPUT=$(node scripts/generate-release-notes.js "$TAG")
+          NOTES=$(echo "$FULL_OUTPUT" | sed -n '/^Release Notes:$/,$ p' | tail -n +2)
+          if [ -z "$NOTES" ]; then
+            NOTES="No release notes found."
+          fi
+          echo "notes<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$NOTES" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+      - name: Post to Slack
+        uses: slackapi/slack-github-action@v2
+        with:
+          webhook: ${{ secrets.SLACK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "text": ":parent-app: *Parent Release Notes* (${{ steps.notes.outputs.tag }})\n```\n${{ steps.notes.outputs.notes }}\n```"
+            }
