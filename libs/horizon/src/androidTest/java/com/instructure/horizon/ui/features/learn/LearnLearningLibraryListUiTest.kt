@@ -571,7 +571,7 @@ class LearnLearningLibraryListUiTest {
             LearnLearningLibraryListScreen(state = state, navController = rememberNavController())
         }
 
-        composeTestRule.onNodeWithContentDescription("Bookmarked Learning Library items").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Bookmarked items").assertIsDisplayed()
     }
 
     @Test
