@@ -33,6 +33,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -94,7 +95,8 @@ private fun LearnLearningLibraryCollections(
     LoadingStateWrapper(state.collectionState.loadingState) {
         LazyColumn(
             state = scrollState,
-            contentPadding = PaddingValues(top = 16.dp)
+            contentPadding = PaddingValues(top = 16.dp),
+            modifier = Modifier.testTag("CollapsableBody")
         ) {
             LearnLearningLibraryCollection(
                 state.collectionState.collections.take(state.collectionState.itemsToDisplays),
@@ -133,8 +135,10 @@ private fun LearnLearningLibraryItems(
     navController: NavHostController,
 ) {
     LoadingStateWrapper(state.itemState.loadingState) {
-        LazyColumn(state = scrollState) {
-
+        LazyColumn(
+            state = scrollState,
+            modifier = Modifier.testTag("CollapsableBody")
+        ) {
             item {
                 if (state.itemState.items.isEmpty()) {
                     EmptyMessage()
