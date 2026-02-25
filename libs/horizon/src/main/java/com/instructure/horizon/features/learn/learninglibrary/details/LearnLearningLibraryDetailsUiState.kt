@@ -16,10 +16,10 @@
  */
 package com.instructure.horizon.features.learn.learninglibrary.details
 
-import androidx.annotation.StringRes
 import androidx.compose.ui.text.input.TextFieldValue
-import com.instructure.horizon.R
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryCollectionItemState
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryStatusFilter
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
 import com.instructure.horizon.horizonui.platform.LoadingState
 
 data class LearnLearningLibraryDetailsUiState(
@@ -30,26 +30,10 @@ data class LearnLearningLibraryDetailsUiState(
     val updateSearchQuery: (TextFieldValue) -> Unit = {},
     val itemsToDisplays: Int = 1,
     val increaseItemsToDisplay: () -> Unit = {},
-    val selectedStatusFilter: LearnLearningLibraryDetailsStatusFilter = LearnLearningLibraryDetailsStatusFilter.All,
-    val updateSelectedStatusFilter: (LearnLearningLibraryDetailsStatusFilter) -> Unit = {},
-    val selectedTypeFilter: LearnLearningLibraryDetailsTypeFilter = LearnLearningLibraryDetailsTypeFilter.All,
-    val updateTypeFilter: (LearnLearningLibraryDetailsTypeFilter) -> Unit = {},
+    val selectedStatusFilter: LearnLearningLibraryStatusFilter = LearnLearningLibraryStatusFilter.All,
+    val updateSelectedStatusFilter: (LearnLearningLibraryStatusFilter) -> Unit = {},
+    val selectedTypeFilter: LearnLearningLibraryTypeFilter = LearnLearningLibraryTypeFilter.All,
+    val updateTypeFilter: (LearnLearningLibraryTypeFilter) -> Unit = {},
     val onBookmarkClicked: (itemId: String) -> Unit = {},
     val onEnrollClicked: (itemId: String) -> Unit = {},
 )
-
-enum class LearnLearningLibraryDetailsStatusFilter(@StringRes val labelRes: Int) {
-    All(R.string.learnLearningLibraryDetailsStatusFilterAllLabel),
-    Completed(R.string.learnLearningLibraryDetailsStatusFilterCompletedLabel),
-    Bookmarked(R.string.learnLearningLibraryDetailsStatusFilterBookmarkedLabel)
-}
-
-enum class LearnLearningLibraryDetailsTypeFilter(@StringRes val labelRes: Int) {
-    All(R.string.LearnLearningLibraryDetailsTypeFilterAllLabel),
-    Assessments(R.string.LearnLearningLibraryDetailsTypeFilterAssessmentsLabel),
-    Assignments(R.string.LearnLearningLibraryDetailsTypeFilterAssignmentsLabel),
-    ExternalLinks(R.string.LearnLearningLibraryDetailsTypeFilterExternalLinksLabel),
-    ExternalTools(R.string.LearnLearningLibraryDetailsTypeFilterExternalToolsLabel),
-    Files(R.string.LearnLearningLibraryDetailsTypeFilterFilesLabel),
-    Pages(R.string.LearnLearningLibraryDetailsTypeFilterPagesLabel)
-}

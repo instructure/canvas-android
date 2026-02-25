@@ -24,6 +24,8 @@ import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemT
 import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearningLibraryCollection
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItem
 import com.instructure.horizon.R
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryStatusFilter
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
 import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.pandautils.utils.ThemePrefs
 import io.mockk.coEvery
@@ -165,8 +167,8 @@ class LearnLearningLibraryDetailsViewModelTest {
         val viewModel = getViewModel()
 
         val state = viewModel.uiState.value
-        assertEquals(LearnLearningLibraryDetailsStatusFilter.All, state.selectedStatusFilter)
-        assertEquals(LearnLearningLibraryDetailsTypeFilter.All, state.selectedTypeFilter)
+        assertEquals(LearnLearningLibraryStatusFilter.All, state.selectedStatusFilter)
+        assertEquals(LearnLearningLibraryTypeFilter.All, state.selectedTypeFilter)
     }
 
     @Test
@@ -238,7 +240,7 @@ class LearnLearningLibraryDetailsViewModelTest {
     fun `All status filter shows all items`() = runTest {
         val viewModel = getViewModel()
 
-        viewModel.uiState.value.updateSelectedStatusFilter(LearnLearningLibraryDetailsStatusFilter.All)
+        viewModel.uiState.value.updateSelectedStatusFilter(LearnLearningLibraryStatusFilter.All)
 
         val state = viewModel.uiState.value
         assertEquals(6, state.items.size)
@@ -248,7 +250,7 @@ class LearnLearningLibraryDetailsViewModelTest {
     fun `Completed status filter shows only completed items`() = runTest {
         val viewModel = getViewModel()
 
-        viewModel.uiState.value.updateSelectedStatusFilter(LearnLearningLibraryDetailsStatusFilter.Completed)
+        viewModel.uiState.value.updateSelectedStatusFilter(LearnLearningLibraryStatusFilter.Completed)
 
         val state = viewModel.uiState.value
         assertEquals(2, state.items.size)
@@ -259,7 +261,7 @@ class LearnLearningLibraryDetailsViewModelTest {
     fun `Bookmarked status filter shows only bookmarked items`() = runTest {
         val viewModel = getViewModel()
 
-        viewModel.uiState.value.updateSelectedStatusFilter(LearnLearningLibraryDetailsStatusFilter.Bookmarked)
+        viewModel.uiState.value.updateSelectedStatusFilter(LearnLearningLibraryStatusFilter.Bookmarked)
 
         val state = viewModel.uiState.value
         assertEquals(2, state.items.size)
@@ -270,7 +272,7 @@ class LearnLearningLibraryDetailsViewModelTest {
     fun `All type filter shows all items`() = runTest {
         val viewModel = getViewModel()
 
-        viewModel.uiState.value.updateTypeFilter(LearnLearningLibraryDetailsTypeFilter.All)
+        viewModel.uiState.value.updateTypeFilter(LearnLearningLibraryTypeFilter.All)
 
         val state = viewModel.uiState.value
         assertEquals(6, state.items.size)
@@ -280,7 +282,7 @@ class LearnLearningLibraryDetailsViewModelTest {
     fun `Assignments type filter shows only assignments`() = runTest {
         val viewModel = getViewModel()
 
-        viewModel.uiState.value.updateTypeFilter(LearnLearningLibraryDetailsTypeFilter.Assignments)
+        viewModel.uiState.value.updateTypeFilter(LearnLearningLibraryTypeFilter.Assignments)
 
         val state = viewModel.uiState.value
         assertEquals(1, state.items.size)
@@ -291,7 +293,7 @@ class LearnLearningLibraryDetailsViewModelTest {
     fun `Pages type filter shows only pages`() = runTest {
         val viewModel = getViewModel()
 
-        viewModel.uiState.value.updateTypeFilter(LearnLearningLibraryDetailsTypeFilter.Pages)
+        viewModel.uiState.value.updateTypeFilter(LearnLearningLibraryTypeFilter.Pages)
 
         val state = viewModel.uiState.value
         assertEquals(1, state.items.size)
@@ -302,7 +304,7 @@ class LearnLearningLibraryDetailsViewModelTest {
     fun `Files type filter shows only files`() = runTest {
         val viewModel = getViewModel()
 
-        viewModel.uiState.value.updateTypeFilter(LearnLearningLibraryDetailsTypeFilter.Files)
+        viewModel.uiState.value.updateTypeFilter(LearnLearningLibraryTypeFilter.Files)
 
         val state = viewModel.uiState.value
         assertEquals(1, state.items.size)
@@ -313,7 +315,7 @@ class LearnLearningLibraryDetailsViewModelTest {
     fun `ExternalLinks type filter shows only external URLs`() = runTest {
         val viewModel = getViewModel()
 
-        viewModel.uiState.value.updateTypeFilter(LearnLearningLibraryDetailsTypeFilter.ExternalLinks)
+        viewModel.uiState.value.updateTypeFilter(LearnLearningLibraryTypeFilter.ExternalLinks)
 
         val state = viewModel.uiState.value
         assertEquals(1, state.items.size)
@@ -324,7 +326,7 @@ class LearnLearningLibraryDetailsViewModelTest {
     fun `ExternalTools type filter shows only external tools`() = runTest {
         val viewModel = getViewModel()
 
-        viewModel.uiState.value.updateTypeFilter(LearnLearningLibraryDetailsTypeFilter.ExternalTools)
+        viewModel.uiState.value.updateTypeFilter(LearnLearningLibraryTypeFilter.ExternalTools)
 
         val state = viewModel.uiState.value
         assertEquals(1, state.items.size)
@@ -335,7 +337,7 @@ class LearnLearningLibraryDetailsViewModelTest {
     fun `Assessments type filter returns empty list`() = runTest {
         val viewModel = getViewModel()
 
-        viewModel.uiState.value.updateTypeFilter(LearnLearningLibraryDetailsTypeFilter.Assessments)
+        viewModel.uiState.value.updateTypeFilter(LearnLearningLibraryTypeFilter.Assessments)
 
         val state = viewModel.uiState.value
         assertEquals(0, state.items.size)
@@ -346,7 +348,7 @@ class LearnLearningLibraryDetailsViewModelTest {
         val viewModel = getViewModel()
 
         viewModel.uiState.value.updateSearchQuery(TextFieldValue("Advanced"))
-        viewModel.uiState.value.updateSelectedStatusFilter(LearnLearningLibraryDetailsStatusFilter.Bookmarked)
+        viewModel.uiState.value.updateSelectedStatusFilter(LearnLearningLibraryStatusFilter.Bookmarked)
 
         val state = viewModel.uiState.value
         assertEquals(1, state.items.size)
@@ -359,7 +361,7 @@ class LearnLearningLibraryDetailsViewModelTest {
         val viewModel = getViewModel()
 
         viewModel.uiState.value.updateSearchQuery(TextFieldValue("Development"))
-        viewModel.uiState.value.updateTypeFilter(LearnLearningLibraryDetailsTypeFilter.Files)
+        viewModel.uiState.value.updateTypeFilter(LearnLearningLibraryTypeFilter.Files)
 
         val state = viewModel.uiState.value
         assertEquals(1, state.items.size)
@@ -372,8 +374,8 @@ class LearnLearningLibraryDetailsViewModelTest {
         val viewModel = getViewModel()
 
         viewModel.uiState.value.updateSearchQuery(TextFieldValue("External"))
-        viewModel.uiState.value.updateSelectedStatusFilter(LearnLearningLibraryDetailsStatusFilter.Completed)
-        viewModel.uiState.value.updateTypeFilter(LearnLearningLibraryDetailsTypeFilter.ExternalLinks)
+        viewModel.uiState.value.updateSelectedStatusFilter(LearnLearningLibraryStatusFilter.Completed)
+        viewModel.uiState.value.updateTypeFilter(LearnLearningLibraryTypeFilter.ExternalLinks)
 
         val state = viewModel.uiState.value
         assertEquals(1, state.items.size)
@@ -408,7 +410,7 @@ class LearnLearningLibraryDetailsViewModelTest {
     fun `Pagination works with filtered items`() = runTest {
         val viewModel = getViewModel()
 
-        viewModel.uiState.value.updateSelectedStatusFilter(LearnLearningLibraryDetailsStatusFilter.Bookmarked)
+        viewModel.uiState.value.updateSelectedStatusFilter(LearnLearningLibraryStatusFilter.Bookmarked)
         viewModel.uiState.value.increaseItemsToDisplay()
 
         val state = viewModel.uiState.value
@@ -483,7 +485,7 @@ class LearnLearningLibraryDetailsViewModelTest {
         coEvery { repository.toggleLearningLibraryItemIsBookmarked("item1") } returns true
 
         viewModel.uiState.value.onBookmarkClicked("item1")
-        viewModel.uiState.value.updateSelectedStatusFilter(LearnLearningLibraryDetailsStatusFilter.Bookmarked)
+        viewModel.uiState.value.updateSelectedStatusFilter(LearnLearningLibraryStatusFilter.Bookmarked)
 
         val state = viewModel.uiState.value
         val item = state.items.find { it.id == "item1" }
@@ -546,13 +548,13 @@ class LearnLearningLibraryDetailsViewModelTest {
         val viewModel = getViewModel()
         coEvery { repository.getLearningLibraryItems(testCollectionId, true) } returns testCollection
 
-        viewModel.uiState.value.updateSelectedStatusFilter(LearnLearningLibraryDetailsStatusFilter.Completed)
+        viewModel.uiState.value.updateSelectedStatusFilter(LearnLearningLibraryStatusFilter.Completed)
         val itemCountBeforeRefresh = viewModel.uiState.value.items.size
 
         viewModel.uiState.value.loadingState.onRefresh()
 
         val state = viewModel.uiState.value
-        assertEquals(LearnLearningLibraryDetailsStatusFilter.Completed, state.selectedStatusFilter)
+        assertEquals(LearnLearningLibraryStatusFilter.Completed, state.selectedStatusFilter)
         assertEquals(itemCountBeforeRefresh, state.items.size)
     }
 

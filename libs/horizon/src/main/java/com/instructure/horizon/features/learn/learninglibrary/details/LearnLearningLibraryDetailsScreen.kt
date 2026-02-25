@@ -38,6 +38,8 @@ import androidx.navigation.NavHostController
 import com.instructure.horizon.R
 import com.instructure.horizon.features.learn.common.LearnSearchBar
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryItem
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryStatusFilter
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
@@ -143,7 +145,7 @@ private fun LearnLearningLibraryDetailsContentFilter(
             }
     ) {
         DropdownChip(
-            items = LearnLearningLibraryDetailsStatusFilter.entries.map { DropdownItem(value = it, label = stringResource(it.labelRes)) },
+            items = LearnLearningLibraryStatusFilter.entries.map { DropdownItem(value = it, label = stringResource(it.labelRes)) },
             selectedItem = DropdownItem(value = state.selectedStatusFilter, label = stringResource(state.selectedStatusFilter.labelRes)),
             onItemSelected = { it?.let { state.updateSelectedStatusFilter(it.value) } },
             placeholder = "",
@@ -154,7 +156,7 @@ private fun LearnLearningLibraryDetailsContentFilter(
         HorizonSpace(SpaceSize.SPACE_8)
 
         DropdownChip(
-            items = LearnLearningLibraryDetailsTypeFilter.entries.map { DropdownItem(value = it, label = stringResource(it.labelRes)) },
+            items = LearnLearningLibraryTypeFilter.entries.map { DropdownItem(value = it, label = stringResource(it.labelRes)) },
             selectedItem = DropdownItem(value = state.selectedTypeFilter, label = stringResource(state.selectedTypeFilter.labelRes)),
             onItemSelected = { it?.let { state.updateTypeFilter(it.value) } },
             placeholder = "",

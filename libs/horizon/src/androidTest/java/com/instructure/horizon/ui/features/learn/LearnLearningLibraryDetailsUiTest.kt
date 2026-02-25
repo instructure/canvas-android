@@ -29,9 +29,9 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryCollectionItemChipState
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryCollectionItemState
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryStatusFilter
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
 import com.instructure.horizon.features.learn.learninglibrary.details.LearnLearningLibraryDetailsScreen
-import com.instructure.horizon.features.learn.learninglibrary.details.LearnLearningLibraryDetailsStatusFilter
-import com.instructure.horizon.features.learn.learninglibrary.details.LearnLearningLibraryDetailsTypeFilter
 import com.instructure.horizon.features.learn.learninglibrary.details.LearnLearningLibraryDetailsUiState
 import com.instructure.horizon.horizonui.platform.LoadingState
 import org.junit.Rule
@@ -174,7 +174,7 @@ class LearnLearningLibraryDetailsUiTest {
             loadingState = LoadingState(isLoading = false),
             items = testItems,
             itemsToDisplays = 10,
-            selectedStatusFilter = LearnLearningLibraryDetailsStatusFilter.All
+            selectedStatusFilter = LearnLearningLibraryStatusFilter.All
         )
 
         composeTestRule.setContent {
@@ -184,7 +184,7 @@ class LearnLearningLibraryDetailsUiTest {
             )
         }
 
-        composeTestRule.onNodeWithText("All items", useUnmergedTree = true)
+        composeTestRule.onNodeWithText("Any status", useUnmergedTree = true)
             .assertExists()
     }
 
@@ -194,7 +194,7 @@ class LearnLearningLibraryDetailsUiTest {
             loadingState = LoadingState(isLoading = false),
             items = testItems,
             itemsToDisplays = 10,
-            selectedTypeFilter = LearnLearningLibraryDetailsTypeFilter.All
+            selectedTypeFilter = LearnLearningLibraryTypeFilter.All
         )
 
         composeTestRule.setContent {
@@ -204,7 +204,7 @@ class LearnLearningLibraryDetailsUiTest {
             )
         }
 
-        composeTestRule.onNodeWithText("All item types", useUnmergedTree = true)
+        composeTestRule.onNodeWithText("Any type", useUnmergedTree = true)
             .assertExists()
     }
 

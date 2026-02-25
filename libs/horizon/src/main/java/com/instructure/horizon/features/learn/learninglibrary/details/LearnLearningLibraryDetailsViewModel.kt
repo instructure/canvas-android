@@ -27,6 +27,8 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryCollectionItemState
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryStatusFilter
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
 import com.instructure.horizon.features.learn.learninglibrary.common.toUiState
 import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.horizonui.platform.LoadingState
@@ -212,23 +214,23 @@ class LearnLearningLibraryDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun LearnLearningLibraryCollectionItemState.isSatisfyStatusFilter(statusFilter: LearnLearningLibraryDetailsStatusFilter): Boolean {
+    private fun LearnLearningLibraryCollectionItemState.isSatisfyStatusFilter(statusFilter: LearnLearningLibraryStatusFilter): Boolean {
         return when (statusFilter) {
-            LearnLearningLibraryDetailsStatusFilter.All -> true
-            LearnLearningLibraryDetailsStatusFilter.Completed -> this.isCompleted
-            LearnLearningLibraryDetailsStatusFilter.Bookmarked -> this.isBookmarked
+            LearnLearningLibraryStatusFilter.All -> true
+            LearnLearningLibraryStatusFilter.Completed -> this.isCompleted
+            LearnLearningLibraryStatusFilter.Bookmarked -> this.isBookmarked
         }
     }
 
-    private fun LearnLearningLibraryCollectionItemState.isSatisfyTypeFilter(typeFilter: LearnLearningLibraryDetailsTypeFilter): Boolean {
+    private fun LearnLearningLibraryCollectionItemState.isSatisfyTypeFilter(typeFilter: LearnLearningLibraryTypeFilter): Boolean {
         return when (typeFilter) {
-            LearnLearningLibraryDetailsTypeFilter.All -> true
-            LearnLearningLibraryDetailsTypeFilter.Assessments -> false
-            LearnLearningLibraryDetailsTypeFilter.Assignments -> this.type == CollectionItemType.ASSIGNMENT
-            LearnLearningLibraryDetailsTypeFilter.ExternalLinks -> this.type == CollectionItemType.EXTERNAL_URL
-            LearnLearningLibraryDetailsTypeFilter.ExternalTools -> this.type == CollectionItemType.EXTERNAL_TOOL
-            LearnLearningLibraryDetailsTypeFilter.Files -> this.type == CollectionItemType.FILE
-            LearnLearningLibraryDetailsTypeFilter.Pages -> this.type == CollectionItemType.PAGE
+            LearnLearningLibraryTypeFilter.All -> true
+            LearnLearningLibraryTypeFilter.Assessments -> false
+            LearnLearningLibraryTypeFilter.Assignments -> this.type == CollectionItemType.ASSIGNMENT
+            LearnLearningLibraryTypeFilter.ExternalLinks -> this.type == CollectionItemType.EXTERNAL_URL
+            LearnLearningLibraryTypeFilter.ExternalTools -> this.type == CollectionItemType.EXTERNAL_TOOL
+            LearnLearningLibraryTypeFilter.Files -> this.type == CollectionItemType.FILE
+            LearnLearningLibraryTypeFilter.Pages -> this.type == CollectionItemType.PAGE
         }
     }
 
@@ -245,12 +247,12 @@ class LearnLearningLibraryDetailsViewModel @Inject constructor(
         _uiState.update { it.copy(items = allItems.applyFilters()) }
     }
 
-    private fun updateSelectedStatusFilter(value: LearnLearningLibraryDetailsStatusFilter) {
+    private fun updateSelectedStatusFilter(value: LearnLearningLibraryStatusFilter) {
         _uiState.update { it.copy(selectedStatusFilter = value) }
         _uiState.update { it.copy(items = allItems.applyFilters()) }
     }
 
-    private fun updateSelectedTypeFilter(value: LearnLearningLibraryDetailsTypeFilter) {
+    private fun updateSelectedTypeFilter(value: LearnLearningLibraryTypeFilter) {
         _uiState.update { it.copy(selectedTypeFilter = value) }
         _uiState.update { it.copy(items = allItems.applyFilters()) }
     }
