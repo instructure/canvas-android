@@ -214,7 +214,7 @@ private fun LearnLearningLibraryListFilterRow(
                 elevation = HorizonElevation.level4,
                 contentDescription = stringResource(R.string.a11y_learnLearningLibraryBookmarkContentDescription),
                 onClick = {
-                    navController.navigate(LearnRoute.LearnLearningLibraryBookmarkScreen.route)
+                    navController.navigate(LearnRoute.LearnLearningLibraryBookmarkScreen.route())
                 }
             )
         }
