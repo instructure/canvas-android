@@ -68,7 +68,6 @@ class LearnLearningLibraryListViewModel @Inject constructor(
             itemsToDisplays = collectionPageSize,
             increaseItemsToDisplay = ::increaseCollectionsToDisplay,
             onBookmarkClicked = ::onCollectionBookmarkItem,
-            onEnrollClicked = ::onCollectionEnrollItem,
         ),
         itemState = LearnLearningLibraryListItemUiState(
             loadingState = LoadingState(
@@ -78,7 +77,6 @@ class LearnLearningLibraryListViewModel @Inject constructor(
             items = allCollections.flatMap { it.items },
             onShowMoreClicked = ::increaseItemsToDisplay,
             onBookmarkClicked = ::onBookmarkItem,
-            onEnrollClicked = ::onEnrollItem,
             isMoreButtonLoading = false
         )
     ))
@@ -246,50 +244,6 @@ class LearnLearningLibraryListViewModel @Inject constructor(
         }
     }
 
-    private fun onCollectionEnrollItem(itemId: String) {
-        viewModelScope.tryLaunch {
-            _uiState.update { it.copy(collectionState = it.collectionState.copy(collections = it.collectionState.collections.map { collectionState ->
-                collectionState.copy(
-                    items = collectionState.items.map { collectionItemState ->
-                        if (collectionItemState.id == itemId) {
-                            collectionItemState.copy(enrollLoading = true)
-                        } else {
-                            collectionItemState
-                        }
-                    }
-                )
-            }))}
-
-            val newItem = repository.enrollLearningLibraryItem(itemId)
-
-            _uiState.update { it.copy(collectionState = it.collectionState.copy(collections = it.collectionState.collections.map { collectionState ->
-                collectionState.copy(
-                    items = collectionState.items.map { collectionItemState ->
-                        if (collectionItemState.id == itemId) {
-                            newItem.toUiState(resources)
-                        } else {
-                            collectionItemState
-                        }
-                    }
-                )
-            }))}
-        } catch {
-            _uiState.update { it.copy(collectionState = it.collectionState.copy(collections = it.collectionState.collections.map { collectionState ->
-                collectionState.copy(
-                    items = collectionState.items.map { collectionItemState ->
-                        if (collectionItemState.id == itemId) {
-                            collectionItemState.copy(
-                                enrollLoading = false,
-                            )
-                        } else {
-                            collectionItemState
-                        }
-                    }
-                )
-            }, loadingState = it.collectionState.loadingState.copy(errorMessage = resources.getString(R.string.learnLearningLibraryFailedToEnrollMessage)))) }
-        }
-    }
-
     private fun onBookmarkItem(itemId: String) {
         viewModelScope.tryLaunch {
             _uiState.update {
@@ -376,96 +330,6 @@ class LearnLearningLibraryListViewModel @Inject constructor(
                                         collectionItemState.copy(
                                             bookmarkLoading = false,
                                         )
-                                    } else {
-                                        collectionItemState
-                                    }
-                                }
-                            )
-                        }
-                    )
-                )
-            }
-        }
-    }
-
-    private fun onEnrollItem(itemId: String) {
-        viewModelScope.tryLaunch {
-            _uiState.update {
-                it.copy(
-                    itemState = it.itemState.copy(
-                        items = it.itemState.items.map { collectionItemState ->
-                            if (collectionItemState.id == itemId) {
-                                collectionItemState.copy(enrollLoading = true)
-                            } else {
-                                collectionItemState
-                            }
-                        }
-                    ),
-                    collectionState = it.collectionState.copy(
-                        collections = it.collectionState.collections.map { collectionState ->
-                            collectionState.copy(
-                                items = collectionState.items.map { collectionItemState ->
-                                    if (collectionItemState.id == itemId) {
-                                        collectionItemState.copy(enrollLoading = true)
-                                    } else {
-                                        collectionItemState
-                                    }
-                                }
-                            )
-                        }
-                    )
-                )
-            }
-
-            val newItem = repository.enrollLearningLibraryItem(itemId)
-
-            _uiState.update {
-                it.copy(
-                    itemState = it.itemState.copy(
-                        items = it.itemState.items.map { collectionItemState ->
-                            if (collectionItemState.id == itemId) {
-                                newItem.toUiState(resources)
-                            } else {
-                                collectionItemState
-                            }
-                        }
-                    ),
-                    collectionState = it.collectionState.copy(
-                        collections = it.collectionState.collections.map { collectionState ->
-                            collectionState.copy(
-                                items = collectionState.items.map { collectionItemState ->
-                                    if (collectionItemState.id == itemId) {
-                                        newItem.toUiState(resources)
-                                    } else {
-                                        collectionItemState
-                                    }
-                                }
-                            )
-                        }
-                    )
-                )
-            }
-        } catch {
-            _uiState.update {
-                it.copy(
-                    itemState = it.itemState.copy(
-                        items = it.itemState.items.map { collectionItemState ->
-                            if (collectionItemState.id == itemId) {
-                                collectionItemState.copy(
-                                    enrollLoading = false,
-                                )
-                            } else {
-                                collectionItemState
-                            }
-                        },
-                        loadingState = it.itemState.loadingState.copy(errorMessage = resources.getString(R.string.learnLearningLibraryFailedToEnrollMessage))
-                    ),
-                    collectionState = it.collectionState.copy(
-                        collections = it.collectionState.collections.map { collectionState ->
-                            collectionState.copy(
-                                items = collectionState.items.map { collectionItemState ->
-                                    if (collectionItemState.id == itemId) {
-                                        collectionItemState.copy(enrollLoading = false)
                                     } else {
                                         collectionItemState
                                     }

@@ -46,7 +46,6 @@ data class LearnLearningLibraryListCollectionUiState(
     val itemsToDisplays: Int = 1,
     val increaseItemsToDisplay: () -> Unit = {},
     val onBookmarkClicked: (itemId: String) -> Unit = {},
-    val onEnrollClicked: (itemId: String) -> Unit = {},
 )
 
 data class LearnLearningLibraryListItemUiState(
@@ -56,5 +55,4 @@ data class LearnLearningLibraryListItemUiState(
     val showMoreButton: Boolean = false,
     val isMoreButtonLoading: Boolean = false,
     val onBookmarkClicked: (itemId: String) -> Unit = {},
-    val onEnrollClicked: (itemId: String) -> Unit = {},
 )

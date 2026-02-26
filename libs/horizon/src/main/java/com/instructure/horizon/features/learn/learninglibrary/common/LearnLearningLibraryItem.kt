@@ -67,7 +67,6 @@ data class LearnLearningLibraryCollectionItemState(
     val bookmarkLoading: Boolean,
     val isCompleted: Boolean,
     val canEnroll: Boolean,
-    val enrollLoading: Boolean,
     val type: CollectionItemType,
     val chips: List<LearnLearningLibraryCollectionItemChipState>
 ) {
@@ -173,7 +172,6 @@ private fun LearnLearningLibraryItemButtonContentRow(
         if (state.canEnroll) {
             LoadingButton(
                 label = stringResource(R.string.learnLearningLibraryItemEnrollLabel),
-                loading = state.enrollLoading,
                 fixedLoadingSize = true,
                 width = ButtonWidth.FILL,
                 height = ButtonHeight.NORMAL,
@@ -242,7 +240,6 @@ private fun LearningLibraryItemCompletedPreview() {
         isCompleted = true,
         canEnroll = false,
         bookmarkLoading = false,
-        enrollLoading = false,
         type = CollectionItemType.COURSE,
         chips = listOf(
             LearnLearningLibraryCollectionItemChipState(
@@ -279,7 +276,6 @@ private fun LearningLibraryItemEnrollPreview() {
         isCompleted = false,
         canEnroll = true,
         bookmarkLoading = false,
-        enrollLoading = false,
         type = CollectionItemType.COURSE,
         chips = listOf(
             LearnLearningLibraryCollectionItemChipState(
@@ -316,7 +312,6 @@ private fun LearningLibraryItemPreview() {
         isCompleted = false,
         canEnroll = true,
         bookmarkLoading = false,
-        enrollLoading = false,
         type = CollectionItemType.COURSE,
         chips = listOf(
             LearnLearningLibraryCollectionItemChipState(
