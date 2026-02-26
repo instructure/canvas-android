@@ -18,6 +18,7 @@ package com.instructure.horizon.features.learn.learninglibrary.details
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -40,6 +41,7 @@ import com.instructure.horizon.features.learn.common.LearnSearchBar
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryItem
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryStatusFilter
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
+import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
@@ -54,7 +56,7 @@ import com.instructure.horizon.horizonui.molecules.DropdownItem
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
-import com.instructure.horizon.horizonui.organisms.CollapsableHeaderScreen
+import com.instructure.horizon.horizonui.organisms.scaffolds.CollapsableHeaderScreen
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.pandautils.compose.modifiers.conditional
 
@@ -63,11 +65,11 @@ import com.instructure.pandautils.compose.modifiers.conditional
 fun LearnLearningLibraryDetailsScreen(state: LearnLearningLibraryDetailsUiState, navController: NavHostController) {
     LoadingStateWrapper(state.loadingState){
         CollapsableHeaderScreen(
-            headerContent = {
-                LearnLearningLibraryDetailsHeader(state, navController)
+            headerContent = { contentPadding ->
+                LearnLearningLibraryDetailsHeader(state, navController, Modifier.padding(contentPadding))
             },
-            bodyContent = {
-                LearnLearningLibraryDetailsContent(state, navController)
+            bodyContent = { contentPadding ->
+                LearnLearningLibraryDetailsContent(state, navController, contentPadding)
             }
         )
     }
@@ -76,12 +78,14 @@ fun LearnLearningLibraryDetailsScreen(state: LearnLearningLibraryDetailsUiState,
 @Composable
 private fun LearnLearningLibraryDetailsContent(
     state: LearnLearningLibraryDetailsUiState,
-    navController: NavHostController
+    navController: NavHostController,
+    contentPadding: PaddingValues,
 ) {
     val scrollState = rememberLazyListState()
 
     LazyColumn(
         state = scrollState,
+        contentPadding = contentPadding,
         modifier = Modifier.testTag("CollapsableBody")
     ) {
         stickyHeader {
@@ -104,7 +108,7 @@ private fun LearnLearningLibraryDetailsContent(
                     state.onBookmarkClicked(collectionItemState.id)
                 },
                 onEnrollClick = {
-                    state.onEnrollClicked(collectionItemState.id)
+                    navController.navigate(LearnRoute.LearnLearningLibraryEnrollScreen.route(collectionItemState.id))
                 },
                 modifier = Modifier
                     .padding(horizontal = 24.dp)
@@ -177,9 +181,10 @@ private fun LearnLearningLibraryDetailsContentFilter(
 @Composable
 private fun LearnLearningLibraryDetailsHeader(
     state: LearnLearningLibraryDetailsUiState,
-    navController: NavHostController
+    navController: NavHostController,
+    modifier: Modifier
 ) {
-    Column {
+    Column(modifier) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp)
