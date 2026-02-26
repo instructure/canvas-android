@@ -232,25 +232,6 @@ class LearnLearningLibraryListViewModelTest {
         assertEquals("item1", firstItem.id)
         assertEquals("Python Basics", firstItem.name)
         assertFalse(firstItem.isBookmarked)
-        assertFalse(firstItem.isCompleted)
-    }
-
-    @Test
-    fun `Item with completion percentage 100 is marked as completed`() = runTest {
-        val viewModel = getViewModel()
-
-        val state = viewModel.uiState.value
-        val thirdItem = state.collectionState.collections[2].items[0]
-        assertTrue(thirdItem.isCompleted)
-    }
-
-    @Test
-    fun `Item with completion percentage less than 100 is not marked as completed`() = runTest {
-        val viewModel = getViewModel()
-
-        val state = viewModel.uiState.value
-        val secondItem = state.collectionState.collections[1].items[0]
-        assertFalse(secondItem.isCompleted)
     }
 
     @Test

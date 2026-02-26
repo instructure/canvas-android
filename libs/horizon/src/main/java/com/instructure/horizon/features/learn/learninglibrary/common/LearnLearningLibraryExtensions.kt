@@ -24,7 +24,7 @@ import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.pandautils.utils.orDefault
 
-suspend fun List<EnrolledLearningLibraryCollection>.toUiState(resources: Resources): List<LearnLearningLibraryCollectionState> {
+fun List<EnrolledLearningLibraryCollection>.toUiState(resources: Resources): List<LearnLearningLibraryCollectionState> {
     return this.map {
         LearnLearningLibraryCollectionState(
             id = it.id,
@@ -37,7 +37,7 @@ suspend fun List<EnrolledLearningLibraryCollection>.toUiState(resources: Resourc
     }
 }
 
-suspend fun LearningLibraryCollectionItem.toUiState(resources: Resources): LearnLearningLibraryCollectionItemState {
+fun LearningLibraryCollectionItem.toUiState(resources: Resources): LearnLearningLibraryCollectionItemState {
     val courseId = this.canvasCourse?.courseId?.toLongOrNull() ?: -1L
     val canEnroll = this.itemType == CollectionItemType.COURSE && !this.isEnrolledInCanvas.orDefault(true)
 
