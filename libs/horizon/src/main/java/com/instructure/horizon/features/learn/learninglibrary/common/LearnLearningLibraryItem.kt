@@ -65,7 +65,6 @@ data class LearnLearningLibraryCollectionItemState(
     val name: String,
     val isBookmarked: Boolean,
     val bookmarkLoading: Boolean,
-    val isCompleted: Boolean,
     val canEnroll: Boolean,
     val type: CollectionItemType,
     val chips: List<LearnLearningLibraryCollectionItemChipState>
@@ -187,13 +186,6 @@ private fun LearnLearningLibraryItemButtonContentRow(
                     .padding(end = 6.dp)
             )
         }
-        if (state.isCompleted) {
-            Icon(
-                painter = painterResource(R.drawable.check_circle),
-                contentDescription = stringResource(R.string.a11y_learnLearningLibraryItemCompletedContentDescription),
-                tint = HorizonColors.Icon.default()
-            )
-        }
 
         AnimatedContent(state.isBookmarked) { isBookmarked ->
             LoadingIconButton(
@@ -234,42 +226,6 @@ private fun LearningLibraryItemImagePlaceholder(
 
 @Composable
 @Preview
-private fun LearningLibraryItemCompletedPreview() {
-    val state = LearnLearningLibraryCollectionItemState(
-        id = "1",
-        courseId = 1,
-        imageUrl = "https://example.com/image.png",
-        name = "Example Course",
-        isBookmarked = true,
-        isCompleted = true,
-        canEnroll = false,
-        bookmarkLoading = false,
-        type = CollectionItemType.COURSE,
-        chips = listOf(
-            LearnLearningLibraryCollectionItemChipState(
-                label = "Required",
-                color = StatusChipColor.Green,
-            ),
-            LearnLearningLibraryCollectionItemChipState(
-                label = "Completed",
-                color = StatusChipColor.Green,
-            ),
-            LearnLearningLibraryCollectionItemChipState(
-                label = "Locked",
-                color = StatusChipColor.Grey,
-            ),
-            LearnLearningLibraryCollectionItemChipState(
-                label = "Locked",
-                color = StatusChipColor.Grey,
-            )
-        )
-    )
-
-    LearnLearningLibraryItem(state, {}, {}, {})
-}
-
-@Composable
-@Preview
 private fun LearningLibraryItemEnrollPreview() {
     val state = LearnLearningLibraryCollectionItemState(
         id = "1",
@@ -277,7 +233,6 @@ private fun LearningLibraryItemEnrollPreview() {
         imageUrl = "https://example.com/image.png",
         name = "Example Course",
         isBookmarked = true,
-        isCompleted = false,
         canEnroll = true,
         bookmarkLoading = false,
         type = CollectionItemType.COURSE,
@@ -313,7 +268,6 @@ private fun LearningLibraryItemPreview() {
         imageUrl = "https://example.com/image.png",
         name = "Example Course",
         isBookmarked = false,
-        isCompleted = false,
         canEnroll = true,
         bookmarkLoading = false,
         type = CollectionItemType.COURSE,

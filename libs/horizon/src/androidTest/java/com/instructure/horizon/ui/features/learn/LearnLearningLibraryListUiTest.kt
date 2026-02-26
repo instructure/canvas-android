@@ -17,10 +17,8 @@
 package com.instructure.horizon.ui.features.learn
 
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onLast
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -62,7 +60,6 @@ class LearnLearningLibraryListUiTest {
                     name = "Introduction to Programming",
                     isBookmarked = false,
                     bookmarkLoading = false,
-                    isCompleted = false,
                     canEnroll = true,
                     type = CollectionItemType.COURSE,
                     chips = listOf(
@@ -77,7 +74,6 @@ class LearnLearningLibraryListUiTest {
                     name = "Advanced Algorithms",
                     isBookmarked = true,
                     bookmarkLoading = false,
-                    isCompleted = false,
                     canEnroll = false,
                     type = CollectionItemType.PAGE,
                     chips = listOf(
@@ -98,7 +94,6 @@ class LearnLearningLibraryListUiTest {
                     name = "Machine Learning",
                     isBookmarked = false,
                     bookmarkLoading = false,
-                    isCompleted = true,
                     canEnroll = false,
                     type = CollectionItemType.COURSE,
                     chips = listOf(
@@ -119,7 +114,6 @@ class LearnLearningLibraryListUiTest {
                     name = "React Basics",
                     isBookmarked = false,
                     bookmarkLoading = false,
-                    isCompleted = false,
                     canEnroll = true,
                     type = CollectionItemType.COURSE,
                     chips = listOf(
@@ -138,7 +132,6 @@ class LearnLearningLibraryListUiTest {
             name = "Introduction to Programming",
             isBookmarked = false,
             bookmarkLoading = false,
-            isCompleted = false,
             canEnroll = true,
             type = CollectionItemType.COURSE,
             chips = listOf(
@@ -153,7 +146,6 @@ class LearnLearningLibraryListUiTest {
             name = "Machine Learning",
             isBookmarked = true,
             bookmarkLoading = false,
-            isCompleted = true,
             canEnroll = false,
             type = CollectionItemType.COURSE,
             chips = listOf(
@@ -434,38 +426,6 @@ class LearnLearningLibraryListUiTest {
         }
 
         composeTestRule.onNodeWithText("Enroll", useUnmergedTree = true).assertDoesNotExist()
-    }
-
-    @Test
-    fun testCompletedIconDisplayedForCompletedItem() {
-        val state = LearnLearningLibraryListUiState(
-            statusFilter = LearnLearningLibraryStatusFilter.Completed,
-            itemState = LearnLearningLibraryListItemUiState(
-                items = listOf(testItems[1])
-            )
-        )
-
-        composeTestRule.setContent {
-            LearnLearningLibraryListScreen(state = state, navController = rememberNavController())
-        }
-
-        composeTestRule.onAllNodes(hasContentDescription("Completed")).onLast().assertIsDisplayed()
-    }
-
-    @Test
-    fun testCompletedIconNotDisplayedForIncompleteItem() {
-        val state = LearnLearningLibraryListUiState(
-            statusFilter = LearnLearningLibraryStatusFilter.Bookmarked,
-            itemState = LearnLearningLibraryListItemUiState(
-                items = listOf(testItems[0])
-            )
-        )
-
-        composeTestRule.setContent {
-            LearnLearningLibraryListScreen(state = state, navController = rememberNavController())
-        }
-
-        composeTestRule.onNodeWithContentDescription("Completed").assertDoesNotExist()
     }
 
     @Test

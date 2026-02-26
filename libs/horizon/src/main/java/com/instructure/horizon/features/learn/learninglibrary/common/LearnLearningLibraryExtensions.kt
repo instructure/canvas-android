@@ -49,13 +49,12 @@ suspend fun LearningLibraryCollectionItem.toUiState(resources: Resources): Learn
         isBookmarked = this.isBookmarked,
         canEnroll = canEnroll,
         bookmarkLoading = false,
-        isCompleted = this.completionPercentage == 100.0,
         type = this.itemType,
         chips = listOf(
             this.itemType.toUiChipState(resources),
-            this.completionPercentage?.toProgressUiChipState(resources),
+            this.toEstimatedDurationUiChipState(resources),
             this.toUnitsUiChipState(resources),
-            this.toEstimatedDurationUiChipState(resources)
+            this.completionPercentage?.toProgressUiChipState(resources),
         ).mapNotNull { it }
     )
 }
@@ -102,6 +101,12 @@ fun Double.toProgressUiChipState(resources: Resources): LearnLearningLibraryColl
             label = resources.getString(R.string.learnLearningLibraryInProgressLabel),
             color = StatusChipColor.Grey,
             iconRes = R.drawable.trending_up
+        )
+    } else if (this == 100.0) {
+        LearnLearningLibraryCollectionItemChipState(
+            label = resources.getString(R.string.learnLearningLibraryCompletedLabel),
+            color = StatusChipColor.Green,
+            iconRes = R.drawable.check_circle
         )
     } else {
         null
