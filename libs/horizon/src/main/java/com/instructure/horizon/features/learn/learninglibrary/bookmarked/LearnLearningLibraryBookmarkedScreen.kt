@@ -64,6 +64,8 @@ fun LearnLearningLibraryBookmarkedScreen(
     navController: NavHostController
 ) {
     CollapsableHeaderScreen(
+        statusBarColor = HorizonColors.Surface.pagePrimary(),
+        navigationBarColor = HorizonColors.Surface.pagePrimary(),
         headerContent = { paddingValues ->
             LearnLearningLibraryBookmarkedHeader(
                 state,
