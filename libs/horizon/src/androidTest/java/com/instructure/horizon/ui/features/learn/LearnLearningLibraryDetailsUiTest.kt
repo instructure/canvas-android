@@ -53,7 +53,6 @@ class LearnLearningLibraryDetailsUiTest {
             bookmarkLoading = false,
             isCompleted = false,
             canEnroll = true,
-            enrollLoading = false,
             type = CollectionItemType.COURSE,
             chips = listOf(
                 LearnLearningLibraryCollectionItemChipState(label = "Course"),
@@ -69,7 +68,6 @@ class LearnLearningLibraryDetailsUiTest {
             bookmarkLoading = false,
             isCompleted = false,
             canEnroll = false,
-            enrollLoading = false,
             type = CollectionItemType.ASSIGNMENT,
             chips = listOf(
                 LearnLearningLibraryCollectionItemChipState(label = "Assignment")
@@ -84,7 +82,6 @@ class LearnLearningLibraryDetailsUiTest {
             bookmarkLoading = false,
             isCompleted = true,
             canEnroll = false,
-            enrollLoading = false,
             type = CollectionItemType.PAGE,
             chips = listOf(
                 LearnLearningLibraryCollectionItemChipState(label = "Page")
@@ -284,7 +281,6 @@ class LearnLearningLibraryDetailsUiTest {
                 bookmarkLoading = false,
                 isCompleted = false,
                 canEnroll = false,
-                enrollLoading = false,
                 type = CollectionItemType.COURSE,
                 chips = emptyList()
             )
@@ -436,7 +432,6 @@ class LearnLearningLibraryDetailsUiTest {
                 bookmarkLoading = false,
                 isCompleted = false,
                 canEnroll = false,
-                enrollLoading = false,
                 type = CollectionItemType.COURSE,
                 chips = emptyList()
             )
@@ -476,7 +471,6 @@ class LearnLearningLibraryDetailsUiTest {
                 bookmarkLoading = false,
                 isCompleted = false,
                 canEnroll = false,
-                enrollLoading = false,
                 type = CollectionItemType.COURSE,
                 chips = emptyList()
             )
