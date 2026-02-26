@@ -560,6 +560,7 @@
     <string name="learnLearningLibraryFailedToEnrollMessage">Failed to enroll in item</string>
     <string name="learningLibraryListShowMoreLabel">Show more</string>
     <string name="learnLearningLibraryInProgressLabel">In progress</string>
+    <string name="learnLearningLibraryCompletedLabel">Completed</string>
     <string name="learnLearningLibraryProgramLabel">Program</string>
     <string name="learnLearningLibraryCourseLabel">Course</string>
     <string name="learnLearningLibraryExternalToolLabel">External tool</string>
