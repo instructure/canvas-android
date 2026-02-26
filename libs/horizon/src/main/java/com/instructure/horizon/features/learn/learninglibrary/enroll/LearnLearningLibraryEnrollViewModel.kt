@@ -24,6 +24,8 @@ import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibrary
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.features.learn.LearnEvent
+import com.instructure.horizon.features.learn.LearnEventHandler
 import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.horizonui.platform.LoadingState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,7 +38,8 @@ import javax.inject.Inject
 class LearnLearningLibraryEnrollViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val resources: Resources,
-    private val repository: LearnLearningLibraryEnrollRepository
+    private val repository: LearnLearningLibraryEnrollRepository,
+    private val eventHandler: LearnEventHandler
 ) : ViewModel() {
     private var learningLibraryItemId: String? = savedStateHandle.get<String>(LearnRoute.LearnLearningLibraryEnrollScreen.learningLibraryIdAttr)
     private var learningLibraryItem: LearningLibraryCollectionItem? = null
@@ -80,6 +83,7 @@ class LearnLearningLibraryEnrollViewModel @Inject constructor(
             _state.update { it.copy(isEnrollLoading = true) }
             repository.enrollLearningLibraryItem(learningLibraryItem!!.id)
             _state.update { it.copy(isEnrollLoading = false, navigateToCourseId = learningLibraryItem!!.canvasCourse!!.courseId.toLong()) }
+            eventHandler.postEvent(LearnEvent.RefreshLearningLibraryList)
         } catch {
             _state.update { it.copy(
                 loadingState = it.loadingState.copy(

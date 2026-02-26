@@ -25,6 +25,8 @@ import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearnin
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.features.learn.LearnEvent
+import com.instructure.horizon.features.learn.LearnEventHandler
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryCollectionState
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryStatusFilter
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
@@ -45,7 +47,8 @@ import javax.inject.Inject
 @HiltViewModel
 class LearnLearningLibraryListViewModel @Inject constructor(
     private val resources: Resources,
-    private val repository: LearnLearningLibraryListRepository
+    private val repository: LearnLearningLibraryListRepository,
+    private val eventHandler: LearnEventHandler
 ): ViewModel() {
 
     private var allCollections: List<LearnLearningLibraryCollectionState> = emptyList()
@@ -90,6 +93,21 @@ class LearnLearningLibraryListViewModel @Inject constructor(
                 .drop(1)
                 .debounce(300)
                 .collectLatest { loadItems(cursor = null) }
+        }
+
+        viewModelScope.launch {
+            eventHandler.events.collectLatest {
+                when (it) {
+                    LearnEvent.RefreshLearningLibraryList -> {
+                        if (uiState.value.isEmptyFilter()) {
+                            refreshCollections()
+                        } else {
+                            refreshItems()
+                        }
+                    }
+                    else -> {}
+                }
+            }
         }
     }
 

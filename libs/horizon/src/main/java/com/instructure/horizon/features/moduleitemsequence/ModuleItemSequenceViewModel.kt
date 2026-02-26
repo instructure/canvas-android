@@ -582,7 +582,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
         courseProgressChanged = true
         viewModelScope.launch {
             dashboardEventHandler.postEvent(DashboardEvent.ProgressRefresh)
-            learnEventHandler.postEvent(LearnEvent.RefreshRequested)
+            learnEventHandler.postEvent(LearnEvent.RefreshCourseProgress)
         }
     }
 }
