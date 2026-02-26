@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -46,6 +45,7 @@ import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
 import com.instructure.horizon.horizonui.molecules.LoadingButton
+import com.instructure.horizon.horizonui.organisms.scaffolds.EdgeToEdgeScaffold
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebViewWrapper
 
@@ -62,7 +62,9 @@ fun LearnLearningLibraryEnrollScreen(
             navController.navigate(LearnRoute.LearnCourseDetailsScreen.route(it))
         }
     }
-    Scaffold(
+    EdgeToEdgeScaffold(
+        statusBarColor = HorizonColors.Surface.pageSecondary(),
+        navigationBarColor = HorizonColors.Surface.pageSecondary(),
         containerColor = HorizonColors.Surface.pageSecondary(),
         topBar = {
             LearnLearningLibraryEnrollScreenTopBar(
