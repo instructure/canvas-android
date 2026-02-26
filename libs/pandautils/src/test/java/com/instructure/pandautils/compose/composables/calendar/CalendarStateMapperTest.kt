@@ -1,5 +1,9 @@
 package com.instructure.pandautils.compose.composables.calendar
 
+import com.instructure.pandautils.utils.getSystemLocaleCalendar
+import io.mockk.every
+import io.mockk.mockkStatic
+import io.mockk.unmockkStatic
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
@@ -8,6 +12,7 @@ import org.threeten.bp.Clock
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneId
+import java.util.Calendar
 import java.util.Locale
 
 class CalendarStateMapperTest {
@@ -21,11 +26,16 @@ class CalendarStateMapperTest {
     @Before
     fun setup() {
         Locale.setDefault(Locale.US)
+
+        // Mock getSystemLocaleCalendar to return a simple Calendar instance for testing
+        mockkStatic(::getSystemLocaleCalendar)
+        every { getSystemLocaleCalendar() } returns Calendar.getInstance()
     }
 
     @After
     fun tearDown() {
         Locale.setDefault(locale)
+        unmockkStatic(::getSystemLocaleCalendar)
     }
 
     @Test

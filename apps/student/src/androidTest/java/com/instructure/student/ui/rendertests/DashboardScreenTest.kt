@@ -1,14 +1,35 @@
+/*
+ * Copyright (C) 2026 - present Instructure, Inc.
+ *
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ *
+ */
+
 package com.instructure.student.ui.rendertests
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
+import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.student.features.dashboard.compose.DashboardScreenContent
 import com.instructure.student.features.dashboard.compose.DashboardUiState
 import kotlinx.coroutines.flow.MutableSharedFlow
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -123,5 +144,77 @@ class DashboardScreenTest {
 
         composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("dashboardPullRefreshIndicator").assertIsDisplayed()
+    }
+
+    @Test
+    fun testCustomizeDashboardButtonIsDisplayed() {
+        val mockWidgets = listOf(
+            WidgetMetadata("widget1", 0, true),
+            WidgetMetadata("widget2", 1, true)
+        )
+        val mockUiState = DashboardUiState(
+            loading = false,
+            error = null,
+            refreshing = false,
+            widgets = mockWidgets,
+            onRefresh = {},
+            onRetry = {}
+        )
+
+        composeTestRule.setContent {
+            DashboardScreenContent(
+                uiState = mockUiState,
+                refreshSignal = MutableSharedFlow(),
+                snackbarMessageFlow = MutableSharedFlow(),
+                onShowSnackbar = { _, _, _ -> },
+                router = mockRouter
+            )
+        }
+
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText("Customize Dashboard").assertIsDisplayed()
+    }
+
+    @Test
+    fun testCustomizeDashboardButtonCallsRouter() {
+        var routerCalled = false
+        val testRouter = object : DashboardRouter {
+            override fun routeToGlobalAnnouncement(subject: String, message: String) {}
+            override fun routeToSubmissionDetails(canvasContext: CanvasContext, assignmentId: Long, attemptId: Long) {}
+            override fun routeToMyFiles(canvasContext: CanvasContext, folderId: Long) {}
+            override fun routeToSyncProgress() {}
+            override fun routeToManageOfflineContent() {}
+            override fun routeToCustomizeDashboard() {
+                routerCalled = true
+            }
+            override fun restartApp() {}
+        }
+
+        val mockWidgets = listOf(
+            WidgetMetadata("widget1", 0, true)
+        )
+        val mockUiState = DashboardUiState(
+            loading = false,
+            error = null,
+            refreshing = false,
+            widgets = mockWidgets,
+            onRefresh = {},
+            onRetry = {}
+        )
+
+        composeTestRule.setContent {
+            DashboardScreenContent(
+                uiState = mockUiState,
+                refreshSignal = MutableSharedFlow(),
+                snackbarMessageFlow = MutableSharedFlow(),
+                onShowSnackbar = { _, _, _ -> },
+                router = testRouter
+            )
+        }
+
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithText("Customize Dashboard").performClick()
+
+        assertTrue("Router's routeToCustomizeDashboard should be called", routerCalled)
     }
 }

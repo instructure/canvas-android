@@ -20,10 +20,13 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.CanvasContext.Companion.emptyCourseContext
 import com.instructure.pandautils.activities.BaseActionBarActivity
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.EdgeToEdgeHelper
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.toast
@@ -35,7 +38,9 @@ import com.instructure.student.fragment.InternalWebviewFragment.Companion.newIns
 class InternalWebViewActivity : BaseActionBarActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        EdgeToEdgeHelper.enableEdgeToEdge(this)
         toolbar?.let { ViewStyler.themeToolbarLight(this, it) }
+        setupWindowInsets()
         if (savedInstanceState == null) {
             val bundle = intent.getBundleExtra(Const.EXTRAS)
             bundle?.getString(Const.ACTION_BAR_TITLE)?.let { toolbar?.title = it }
@@ -73,6 +78,70 @@ class InternalWebViewActivity : BaseActionBarActivity() {
     override fun onBackPressed() {
         val fragment = supportFragmentManager.findFragmentById(R.id.container) as? InternalWebviewFragment
         if (fragment?.handleBackPressed() != true) super.onBackPressed()
+    }
+
+    private fun setupWindowInsets() {
+        val container = findViewById<android.view.View>(R.id.container)
+
+        // Setup toolbar insets - handle top (status bar) + horizontal (nav bars + display cutout) in one listener
+        toolbar?.let { toolbar ->
+            ViewCompat.setOnApplyWindowInsetsListener(toolbar) { view, insets ->
+                val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                val displayCutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
+                val isLandscape = resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
+
+                if (isLandscape) {
+                    // In landscape, apply status bar at top and nav bars + display cutout horizontally
+                    val leftPadding = maxOf(systemBars.left, displayCutout.left)
+                    val rightPadding = maxOf(systemBars.right, displayCutout.right)
+
+                    view.setPadding(
+                        leftPadding,
+                        systemBars.top,
+                        rightPadding,
+                        0
+                    )
+                } else {
+                    // In portrait, apply status bar at top and display cutout horizontally
+                    view.setPadding(
+                        displayCutout.left,
+                        systemBars.top,
+                        displayCutout.right,
+                        0
+                    )
+                }
+                insets
+            }
+        }
+
+        // Setup container insets
+        ViewCompat.setOnApplyWindowInsetsListener(container) { view, insets ->
+            val navigationBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+            val displayCutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
+            val isLandscape = resources.configuration.orientation == android.content.res.Configuration.ORIENTATION_LANDSCAPE
+
+            if (isLandscape) {
+                // In landscape, apply navigation bars + display cutout horizontally and nav bar at bottom
+                val leftPadding = maxOf(navigationBars.left, displayCutout.left)
+                val rightPadding = maxOf(navigationBars.right, displayCutout.right)
+
+                view.setPadding(
+                    leftPadding,
+                    0,
+                    rightPadding,
+                    navigationBars.bottom
+                )
+            } else {
+                // In portrait, only apply display cutout insets horizontally
+                view.setPadding(
+                    displayCutout.left,
+                    0,
+                    displayCutout.right,
+                    0
+                )
+            }
+            insets
+        }
     }
 
     private fun setActionBarStatusBarColor(color: Int) {

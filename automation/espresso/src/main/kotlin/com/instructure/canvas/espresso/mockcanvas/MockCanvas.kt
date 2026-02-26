@@ -132,7 +132,8 @@ class MockCanvas {
             primary = "#394B58",
             primaryText = "#ffffff",
             accent = "#7a25cb",
-            logoUrl = Randomizer.randomImageUrlSmall()
+            mobileLogoBackground = "#ffffff",
+            logoUrl = Randomizer.randomImageUrlSmall(),
     )
 
     /** Map of auth token to associated user id */

@@ -26,6 +26,8 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.utils.MediaUploadUtils
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.setMenu
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAsBackButton
@@ -51,6 +53,8 @@ class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
     init {
         binding.toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
         binding.toolbar.title = context.getString(R.string.textEntry)
+        binding.toolbar.applyTopSystemBarInsets()
+        binding.rce.applyBottomSystemBarInsets()
     }
 
     override fun onConnect(output: Consumer<TextSubmissionUploadEvent>) = with(binding) {

@@ -34,13 +34,13 @@ import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.DiscussionCheckpointUiState
 import com.instructure.pandautils.compose.composables.GroupedListViewEvent
+import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentFilter
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentGroupByOption
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterData
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterType
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListSelectedFilters
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentStatusFilterOption
-import com.instructure.pandautils.features.grades.SubmissionStateLabel
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.DisplayGrade
 import com.instructure.pandautils.utils.ScreenState

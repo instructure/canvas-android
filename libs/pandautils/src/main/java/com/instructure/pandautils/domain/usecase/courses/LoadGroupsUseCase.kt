@@ -30,8 +30,6 @@ class LoadGroupsUseCase @Inject constructor(
 ) : BaseUseCase<LoadGroupsParams, List<Group>>() {
 
     override suspend fun execute(params: LoadGroupsParams): List<Group> {
-        val groups = groupRepository.getGroups(params.forceRefresh).dataOrThrow
-
-        return groups.filter { it.isFavorite }
+        return groupRepository.getGroups(params.forceRefresh).dataOrThrow
     }
 }

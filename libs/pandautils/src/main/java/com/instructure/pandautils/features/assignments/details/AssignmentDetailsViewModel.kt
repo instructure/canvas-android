@@ -54,11 +54,11 @@ import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.BR
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptItemViewModel
 import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptViewData
 import com.instructure.pandautils.features.assignments.details.gradecellview.GradeCellViewData
 import com.instructure.pandautils.features.assignments.details.itemviewmodels.ReminderItemViewModel
-import com.instructure.pandautils.features.grades.SubmissionStateLabel
 import com.instructure.pandautils.features.reminder.ReminderItem
 import com.instructure.pandautils.features.reminder.ReminderManager
 import com.instructure.pandautils.features.reminder.ReminderViewState

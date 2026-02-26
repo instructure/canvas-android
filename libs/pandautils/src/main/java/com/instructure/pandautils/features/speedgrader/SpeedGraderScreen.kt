@@ -18,15 +18,14 @@ package com.instructure.pandautils.features.speedgrader
 
 import android.view.WindowManager
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.ime
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -54,6 +53,7 @@ import androidx.navigation.navArgument
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.LocalCourseColor
 import com.instructure.pandautils.compose.composables.CanvasAppBar
+import com.instructure.pandautils.compose.composables.CanvasScaffold
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.utils.getFragmentActivity
 import kotlinx.coroutines.launch
@@ -107,7 +107,8 @@ fun SpeedGraderScreen(
         }
     }
 
-    Scaffold(
+    CanvasScaffold(
+        backgroundColor = colorResource(id = R.color.backgroundLightest),
         snackbarHost = {
             SnackbarHost(snackbarHostState) { data ->
                 Snackbar(
@@ -137,9 +138,7 @@ fun SpeedGraderScreen(
                     }
                 }
             )
-        },
-        modifier = Modifier.imePadding(),
-        contentWindowInsets = WindowInsets.ime
+        }
     ) { padding ->
         when {
             uiState.loading -> {
@@ -153,7 +152,9 @@ fun SpeedGraderScreen(
                 )
 
                 HorizontalPager(
-                    modifier = Modifier.padding(padding),
+                    modifier = Modifier
+                        .windowInsetsPadding(WindowInsets.displayCutout)
+                        .padding(padding),
                     state = pagerState,
                     userScrollEnabled = viewPagerEnabled
                 ) { page ->

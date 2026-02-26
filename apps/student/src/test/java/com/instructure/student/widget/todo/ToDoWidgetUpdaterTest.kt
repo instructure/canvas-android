@@ -33,6 +33,7 @@ import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.room.appdatabase.entities.ToDoFilterEntity
 import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.getSystemLocaleCalendar
 import com.instructure.student.R
 import com.instructure.student.widget.glance.WidgetState
 import io.mockk.coEvery
@@ -40,7 +41,9 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
+import io.mockk.mockkStatic
 import io.mockk.unmockkAll
+import io.mockk.unmockkStatic
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.test.runTest
@@ -68,18 +71,23 @@ class ToDoWidgetUpdaterTest {
         ContextKeeper.appContext = mockk(relaxed = true)
         mockkObject(DateHelper)
         every { DateHelper.getPreferredTimeFormat(any()) } returns SimpleDateFormat("HH:mm", Locale.getDefault())
-        every { context.getString(R.string.userCalendarToDo) } returns "To Do"
+        every { context.getString(R.string.userCalendarToDoNew) } returns "To Do"
         every { context.getString(R.string.widgetAllDay) } returns "All day"
 
         // Set up default mocks
         every { apiPrefs.user } returns User(1L)
         coEvery { repository.getToDoFilters() } returns ToDoFilterEntity(userDomain = "domain", userId = 1L, personalTodos = true, calendarEvents = true)
         coEvery { repository.getCourses(any()) } returns emptyList()
+
+        // Mock getSystemLocaleCalendar to return a simple Calendar instance for testing
+        mockkStatic(::getSystemLocaleCalendar)
+        every { getSystemLocaleCalendar() } returns Calendar.getInstance()
     }
 
     @After
     fun tearDown() {
         unmockkAll()
+        unmockkStatic(::getSystemLocaleCalendar)
     }
 
     @Test

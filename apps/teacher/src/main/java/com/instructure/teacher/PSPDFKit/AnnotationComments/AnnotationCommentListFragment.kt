@@ -95,6 +95,13 @@ class AnnotationCommentListFragment : BaseListFragment<
         setupToolbar()
         presenter.loadData(false)
         setupCommentInput()
+        setupWindowInsets()
+    }
+
+    private fun setupWindowInsets() = with(binding) {
+        toolbar.applyTopSystemBarInsets()
+        annotationCommentsRecyclerView.applyImeAndSystemBarInsets()
+        commentInputContainer.applyImeAndSystemBarInsets()
     }
 
     fun setupToolbar() {

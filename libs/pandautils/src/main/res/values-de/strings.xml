@@ -501,4 +501,8 @@
         <item quantity="other">%d Min</item>
     </plurals>
     <string name="notATeacherDescription">Eine unserer anderen Apps ist vielleicht besser geeignet. Tippen Sie auf ein Symbol, um sich dort anzumelden.</string>
+    <string name="gradePercentAccessibility">Klasse: %d Prozent</string>
+    <string name="gradePointsAccessibility">Klasse: %s Punkte</string>
+    <string name="gradePercentTextFieldAccessibility">Klasse: %d Prozent, %s</string>
+    <string name="gradePointsTextFieldAccessibility">Klasse: %s Punkte, %s</string>
 </resources>

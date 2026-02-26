@@ -29,7 +29,7 @@ import com.instructure.canvasapi2.utils.convertPercentScoreToLetterGrade
 import com.instructure.canvasapi2.utils.convertScoreToLetterGrade
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.pandautils.R
-import com.instructure.pandautils.features.grades.SubmissionStateLabel
+import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 import com.instructure.pandautils.utils.Const.REPLY_TO_ENTRY
 import com.instructure.pandautils.utils.Const.REPLY_TO_TOPIC
 

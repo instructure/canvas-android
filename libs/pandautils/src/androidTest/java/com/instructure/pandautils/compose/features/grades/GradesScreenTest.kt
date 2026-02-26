@@ -33,12 +33,12 @@ import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.composetest.hasDrawable
 import com.instructure.pandares.R
 import com.instructure.pandautils.compose.composables.DiscussionCheckpointUiState
+import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 import com.instructure.pandautils.features.grades.AppBarUiState
 import com.instructure.pandautils.features.grades.AssignmentGroupUiState
 import com.instructure.pandautils.features.grades.AssignmentUiState
 import com.instructure.pandautils.features.grades.GradesScreen
 import com.instructure.pandautils.features.grades.GradesUiState
-import com.instructure.pandautils.features.grades.SubmissionStateLabel
 import com.instructure.pandautils.features.grades.gradepreferences.GradePreferencesUiState
 import com.instructure.pandautils.utils.DisplayGrade
 import org.junit.Rule

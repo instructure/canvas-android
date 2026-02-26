@@ -32,7 +32,6 @@ import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import java.util.Date
 
 class LoadInstitutionalAnnouncementsUseCaseTest {
 
@@ -48,7 +47,6 @@ class LoadInstitutionalAnnouncementsUseCaseTest {
 
         useCase = LoadInstitutionalAnnouncementsUseCase(
             accountNotificationRepository,
-            userRepository,
             ThemePrefs
         )
     }
@@ -60,13 +58,6 @@ class LoadInstitutionalAnnouncementsUseCaseTest {
 
     @Test
     fun `execute returns sorted announcements limited to 5`() = runTest {
-        val date1 = Date(1000L)
-        val date2 = Date(2000L)
-        val date3 = Date(3000L)
-        val date4 = Date(4000L)
-        val date5 = Date(5000L)
-        val date6 = Date(6000L)
-
         val notifications = listOf(
             AccountNotification(id = 1L, subject = "Announcement 1", message = "Message 1", icon = "info", startAt = "1970-01-01T00:00:01Z"),
             AccountNotification(id = 2L, subject = "Announcement 2", message = "Message 2", icon = "warning", startAt = "1970-01-01T00:00:03Z"),
@@ -155,7 +146,6 @@ class LoadInstitutionalAnnouncementsUseCaseTest {
         assertEquals(123L, result[0].id)
         assertEquals("Test Subject", result[0].subject)
         assertEquals("Test Message", result[0].message)
-        assertEquals("Canvas University", result[0].institutionName)
         assertEquals("warning", result[0].icon)
         assertEquals("https://example.com/logo.png", result[0].logoUrl)
     }
@@ -239,7 +229,6 @@ class LoadInstitutionalAnnouncementsUseCaseTest {
         val result = useCase(LoadInstitutionalAnnouncementsParams(forceRefresh = false))
 
         assertEquals(1, result.size)
-        assertEquals("", result[0].institutionName)
     }
 
     @Test
@@ -281,6 +270,5 @@ class LoadInstitutionalAnnouncementsUseCaseTest {
         val result = useCase(LoadInstitutionalAnnouncementsParams(forceRefresh = false))
 
         assertEquals(1, result.size)
-        assertEquals("Instructure University", result[0].institutionName)
     }
 }

@@ -58,6 +58,8 @@ import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.isCourse
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.applyBottomSystemBarMargin
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.utils.withArgs
 import com.instructure.student.R
@@ -98,8 +100,11 @@ class PeopleDetailsFragment : ParentFragment(), Bookmarkable {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.userBackground.applyTopSystemBarInsets()
+        binding.avatar.applyTopSystemBarInsets()
         binding.compose.backgroundTintList = ColorStateList.valueOf(ThemePrefs.buttonColor)
         binding.compose.setImageDrawable(ColorKeeper.getColoredDrawable(requireContext(), R.drawable.ic_send, ThemePrefs.buttonTextColor))
+        binding.compose.applyBottomSystemBarMargin()
         binding.compose.setOnClickListener {
             // Messaging other users is not available in Student view
             val route = if (ApiPrefs.isStudentView) NothingToSeeHereFragment.makeRoute() else {

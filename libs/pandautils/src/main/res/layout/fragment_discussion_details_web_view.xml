@@ -30,7 +30,8 @@
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?android:attr/actionBarSize"
+                android:layout_height="wrap_content"
+                android:minHeight="?android:attr/actionBarSize"
                 android:elevation="6dp"
                 app:layout_constraintTop_toTopOf="parent"
                 app:theme="@style/ToolBarStyle" />

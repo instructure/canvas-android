@@ -17,6 +17,7 @@
 
 package com.instructure.teacher.features.syllabus.ui
 
+import android.os.Bundle
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.utils.Const
@@ -30,6 +31,11 @@ class SyllabusRepositoryFragment : SyllabusFragment() {
 
     @Inject
     lateinit var syllabusRepository: SyllabusRepository
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = false
+    }
 
     override fun getRepository() = syllabusRepository
 

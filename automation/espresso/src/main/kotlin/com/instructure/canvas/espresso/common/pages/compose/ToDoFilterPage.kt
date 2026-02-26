@@ -39,7 +39,7 @@ import com.instructure.pandautils.R
 class ToDoFilterPage(private val composeTestRule: ComposeTestRule) : BasePage() {
 
     fun assertFilterScreenTitle() {
-        composeTestRule.onNodeWithText(getStringFromResource(R.string.todoFilterPreferences))
+        composeTestRule.onNodeWithText(getStringFromResource(R.string.todoFilterPreferencesNew))
             .assertIsDisplayed()
     }
 
@@ -72,7 +72,7 @@ class ToDoFilterPage(private val composeTestRule: ComposeTestRule) : BasePage() 
             .performScrollToNode(hasText(getStringFromResource(R.string.todoFilterVisibleItems)))
         composeTestRule.onNodeWithText(getStringFromResource(R.string.todoFilterVisibleItems)).performScrollTo()
             .assertIsDisplayed()
-        composeTestRule.onNodeWithText(getStringFromResource(R.string.todoFilterShowPersonalToDos)).performScrollTo()
+        composeTestRule.onNodeWithText(getStringFromResource(R.string.todoFilterShowPersonalToDosNew)).performScrollTo()
             .assertIsDisplayed()
         composeTestRule.onNodeWithText(getStringFromResource(R.string.todoFilterShowCalendarEvents)).performScrollTo()
             .assertIsDisplayed()

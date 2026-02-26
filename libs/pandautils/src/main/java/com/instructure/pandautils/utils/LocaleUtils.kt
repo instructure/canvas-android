@@ -27,6 +27,8 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.capitalized
 import com.instructure.canvasapi2.utils.isValid
+import java.time.DayOfWeek
+import java.util.Calendar
 import java.util.Locale
 import kotlin.system.exitProcess
 
@@ -95,3 +97,24 @@ val Locale.cleanDisplayName: String
         ).filter { it.isValid() }
         return if (displayTags.isNotEmpty()) "$displayLanguage (${displayTags.joinToString()})" else displayLanguage
     }
+
+fun getSystemFirstDayOfWeek(): DayOfWeek {
+    val calendarFirstDay = getSystemLocaleCalendar().firstDayOfWeek
+
+    // Convert Calendar constants to DayOfWeek enum
+    return when (calendarFirstDay) {
+        Calendar.MONDAY -> DayOfWeek.MONDAY
+        Calendar.TUESDAY -> DayOfWeek.TUESDAY
+        Calendar.WEDNESDAY -> DayOfWeek.WEDNESDAY
+        Calendar.THURSDAY -> DayOfWeek.THURSDAY
+        Calendar.FRIDAY -> DayOfWeek.FRIDAY
+        Calendar.SATURDAY -> DayOfWeek.SATURDAY
+        Calendar.SUNDAY -> DayOfWeek.SUNDAY
+        else -> DayOfWeek.SUNDAY // fallback to Sunday, since most of the users are using Sunday
+    }
+}
+
+fun getSystemLocaleCalendar(): Calendar {
+    val deviceLocale = ConfigurationCompat.getLocales(Resources.getSystem().configuration)[0]
+    return if (deviceLocale != null) Calendar.getInstance(deviceLocale) else Calendar.getInstance()
+}

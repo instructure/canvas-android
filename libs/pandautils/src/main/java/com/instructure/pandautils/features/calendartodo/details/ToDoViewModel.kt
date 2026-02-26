@@ -108,7 +108,7 @@ class ToDoViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     loading = false,
-                    loadError = context.getString(R.string.errorLoadingTodo)
+                    loadError = context.getString(R.string.errorLoadingTodoNew)
                 )
             }
         }
@@ -156,7 +156,7 @@ class ToDoViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     deleting = false,
-                    errorSnack = context.getString(R.string.todoDeleteErrorMessage)
+                    errorSnack = context.getString(R.string.todoDeleteErrorMessageNew)
                 )
             }
         }

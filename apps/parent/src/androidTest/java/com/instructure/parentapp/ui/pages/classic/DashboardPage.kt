@@ -51,6 +51,7 @@ class DashboardPage : BasePage(R.id.drawer_layout) {
     }
 
     fun openLeftSideMenu() {
+        waitForRender()
         onViewWithId(R.id.navigationButtonHolder).click()
     }
 

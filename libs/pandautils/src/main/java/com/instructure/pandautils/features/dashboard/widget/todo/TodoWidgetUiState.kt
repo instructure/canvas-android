@@ -36,6 +36,7 @@ data class TodoWidgetUiState(
     val selectedDay: LocalDate = LocalDate.now(),
     val calendarBodyUiState: CalendarBodyUiState? = null,
     val showCompleted: Boolean = false,
+    val yearTitle: String? = null,
     val monthTitle: String = "",
     val scrollToPageOffset: Int = 0,
     val removingItemIds: Set<String> = emptySet(),
