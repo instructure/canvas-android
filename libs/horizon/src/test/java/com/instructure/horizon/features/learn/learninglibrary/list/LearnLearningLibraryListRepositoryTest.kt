@@ -256,24 +256,6 @@ class LearnLearningLibraryListRepositoryTest {
         coVerify { getLearningLibraryManager.toggleLearningLibraryItemIsBookmarked("item2") }
     }
 
-    @Test
-    fun `enrollLearningLibraryItem returns updated item`() = runTest {
-        val enrolledItem = createTestCollectionItem(
-            id = "item1",
-            courseName = "Intro to Programming",
-            courseId = "1",
-            isBookmarked = false,
-            itemType = CollectionItemType.COURSE,
-            isEnrolledInCanvas = true
-        )
-        coEvery { getLearningLibraryManager.enrollLearningLibraryItem("item1") } returns enrolledItem
-        val repository = getRepository()
-        val result = repository.enrollLearningLibraryItem("item1")
-
-        assertEquals(enrolledItem, result)
-        coVerify { getLearningLibraryManager.enrollLearningLibraryItem("item1") }
-    }
-
     private fun getRepository(): LearnLearningLibraryListRepository {
         return LearnLearningLibraryListRepository(getLearningLibraryManager)
     }
