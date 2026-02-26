@@ -1,3 +1,6 @@
 [submodule "android-vault"]
 	path = android-vault
 	url = git@github.com:instructure/android-vault.git
+[submodule "libs/llama.cpp"]
+	path = libs/llama.cpp
+	url = https://github.com/ggml-org/llama.cpp.git

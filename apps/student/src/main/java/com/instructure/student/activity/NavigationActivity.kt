@@ -305,6 +305,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                     val fragment = SettingsFragment.newInstance(route)
                     addFragment(fragment, route)
                 }
+                R.id.navigationDrawerItem_llmTest -> {
+                    startActivity(android.content.Intent(this@NavigationActivity, com.instructure.student.features.llmtest.LlmTestActivity::class.java))
+                }
                 R.id.navigationDrawerItem_closeDrawer -> {
                     closeNavigationDrawer()
                 }
@@ -813,6 +816,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             navigationDrawerItemHelp.onClickWithRequireNetwork(mNavigationDrawerItemClickListener)
             navigationDrawerItemLogout.setOnClickListener(mNavigationDrawerItemClickListener)
             navigationDrawerSettings.setOnClickListener(mNavigationDrawerItemClickListener)
+            navigationDrawerItemLlmTest.setOnClickListener(mNavigationDrawerItemClickListener)
             navigationDrawerItemStartMasquerading.setOnClickListener(mNavigationDrawerItemClickListener)
             navigationDrawerItemStopMasquerading.setOnClickListener(mNavigationDrawerItemClickListener)
             navigationDrawerItemCloseDrawer.setOnClickListener(mNavigationDrawerItemClickListener)

@@ -138,6 +138,10 @@
             android:configChanges="orientation|screenSize"
             android:theme="@style/Theme.AppCompat.NoActionBar"/>
 
+        <activity
+            android:name=".features.llmtest.LlmTestActivity"
+            android:theme="@style/CanvasMaterialTheme_Default" />
+
         <activity android:name=".activity.VideoViewActivity"
             android:label="@string/student_app_name"
             android:theme="@style/CanvasMaterialTheme_Default"

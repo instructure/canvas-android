@@ -258,6 +258,24 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/navigationDrawerItem_llmTest"
+                style="@style/NavigationDrawerItem"
+                tools:ignore="UseCompoundDrawables">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    style="@style/NavigationDrawerIcon"
+                    app:srcCompat="@drawable/ic_info" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="LLM Test"
+                    android:textSize="16sp"
+                    android:textColor="@color/textDarkest"/>
+
+            </LinearLayout>
+
             <Space
                 android:id="@+id/navigationDrawerSettingsSpacer"
                 android:layout_width="match_parent"
