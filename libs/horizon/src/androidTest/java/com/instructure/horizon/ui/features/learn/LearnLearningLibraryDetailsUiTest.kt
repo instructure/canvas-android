@@ -51,7 +51,6 @@ class LearnLearningLibraryDetailsUiTest {
             name = "Introduction to Programming",
             isBookmarked = false,
             bookmarkLoading = false,
-            isCompleted = false,
             canEnroll = true,
             type = CollectionItemType.COURSE,
             chips = listOf(
@@ -66,7 +65,6 @@ class LearnLearningLibraryDetailsUiTest {
             name = "Advanced Algorithms",
             isBookmarked = true,
             bookmarkLoading = false,
-            isCompleted = false,
             canEnroll = false,
             type = CollectionItemType.ASSIGNMENT,
             chips = listOf(
@@ -80,7 +78,6 @@ class LearnLearningLibraryDetailsUiTest {
             name = "Data Structures",
             isBookmarked = false,
             bookmarkLoading = false,
-            isCompleted = true,
             canEnroll = false,
             type = CollectionItemType.PAGE,
             chips = listOf(
@@ -279,7 +276,6 @@ class LearnLearningLibraryDetailsUiTest {
                 name = "Course $it",
                 isBookmarked = false,
                 bookmarkLoading = false,
-                isCompleted = false,
                 canEnroll = false,
                 type = CollectionItemType.COURSE,
                 chips = emptyList()
@@ -348,30 +344,6 @@ class LearnLearningLibraryDetailsUiTest {
     }
 
     @Test
-    fun testCompletedItemDisplaysCompletionIndicator() {
-        val completedItem = listOf(
-            testItems[2]
-        )
-
-        val state = LearnLearningLibraryDetailsUiState(
-            loadingState = LoadingState(isLoading = false),
-            items = completedItem,
-            itemsToDisplays = 10
-        )
-
-        composeTestRule.setContent {
-            LearnLearningLibraryDetailsScreen(
-                state = state,
-                navController = rememberNavController()
-            )
-        }
-
-        composeTestRule.onNodeWithTag("CollapsableBody").performScrollToNode(hasText("Data Structures"))
-        composeTestRule.onNodeWithText("Data Structures", useUnmergedTree = true)
-            .assertIsDisplayed()
-    }
-
-    @Test
     fun testEnrollButtonDisplayedForEnrollableItems() {
         val enrollableItem = listOf(
             testItems[0]
@@ -430,7 +402,6 @@ class LearnLearningLibraryDetailsUiTest {
                 name = "Course $it",
                 isBookmarked = false,
                 bookmarkLoading = false,
-                isCompleted = false,
                 canEnroll = false,
                 type = CollectionItemType.COURSE,
                 chips = emptyList()
@@ -469,7 +440,6 @@ class LearnLearningLibraryDetailsUiTest {
                 name = "Course $it",
                 isBookmarked = false,
                 bookmarkLoading = false,
-                isCompleted = false,
                 canEnroll = false,
                 type = CollectionItemType.COURSE,
                 chips = emptyList()
