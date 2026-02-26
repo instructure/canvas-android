@@ -25,9 +25,7 @@ import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearnin
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollection
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItem
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItemsResponse
-import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionResponse
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryPageInfo
-import com.instructure.journey.type.CollectionSortMode
 import java.util.Date
 
 class FakeGetLearningLibraryManager : GetLearningLibraryManager {
@@ -38,34 +36,6 @@ class FakeGetLearningLibraryManager : GetLearningLibraryManager {
 
     init {
         initializeMockData()
-    }
-
-    override suspend fun getLearningLibraryCollections(
-        cursor: String?,
-        limit: Int?,
-        forward: Boolean?,
-        search: String?,
-        sortMode: CollectionSortMode?,
-        forceNetwork: Boolean
-    ): LearningLibraryCollectionResponse {
-        var filteredCollections = learningLibraryCollections
-
-        if (!search.isNullOrBlank()) {
-            filteredCollections = filteredCollections.filter {
-                it.name.contains(search, ignoreCase = true) ||
-                it.description?.contains(search, ignoreCase = true) == true
-            }.toMutableList()
-        }
-
-        return LearningLibraryCollectionResponse(
-            learningLibraryCollections = filteredCollections,
-            pageInfo = LearningLibraryPageInfo(
-                nextCursor = null,
-                previousCursor = null,
-                hasNextPage = false,
-                hasPreviousPage = false
-            )
-        )
     }
 
     override suspend fun getLearningLibraryCollectionItems(
@@ -192,6 +162,13 @@ class FakeGetLearningLibraryManager : GetLearningLibraryManager {
         }
 
         return updatedItem
+    }
+
+    override suspend fun getLearningLibraryItem(
+        itemId: String,
+        forceNetwork: Boolean
+    ): LearningLibraryCollectionItem {
+        return collectionItems[itemId].orEmpty().first()
     }
 
     private fun initializeMockData() {

@@ -64,7 +64,6 @@ class LearnLearningLibraryListUiTest {
                     bookmarkLoading = false,
                     isCompleted = false,
                     canEnroll = true,
-                    enrollLoading = false,
                     type = CollectionItemType.COURSE,
                     chips = listOf(
                         LearnLearningLibraryCollectionItemChipState(label = "Course"),
@@ -80,7 +79,6 @@ class LearnLearningLibraryListUiTest {
                     bookmarkLoading = false,
                     isCompleted = false,
                     canEnroll = false,
-                    enrollLoading = false,
                     type = CollectionItemType.PAGE,
                     chips = listOf(
                         LearnLearningLibraryCollectionItemChipState(label = "Page")
@@ -102,7 +100,6 @@ class LearnLearningLibraryListUiTest {
                     bookmarkLoading = false,
                     isCompleted = true,
                     canEnroll = false,
-                    enrollLoading = false,
                     type = CollectionItemType.COURSE,
                     chips = listOf(
                         LearnLearningLibraryCollectionItemChipState(label = "Course")
@@ -124,7 +121,6 @@ class LearnLearningLibraryListUiTest {
                     bookmarkLoading = false,
                     isCompleted = false,
                     canEnroll = true,
-                    enrollLoading = false,
                     type = CollectionItemType.COURSE,
                     chips = listOf(
                         LearnLearningLibraryCollectionItemChipState(label = "Course")
@@ -144,7 +140,6 @@ class LearnLearningLibraryListUiTest {
             bookmarkLoading = false,
             isCompleted = false,
             canEnroll = true,
-            enrollLoading = false,
             type = CollectionItemType.COURSE,
             chips = listOf(
                 LearnLearningLibraryCollectionItemChipState(label = "Course"),
@@ -160,7 +155,6 @@ class LearnLearningLibraryListUiTest {
             bookmarkLoading = false,
             isCompleted = true,
             canEnroll = false,
-            enrollLoading = false,
             type = CollectionItemType.COURSE,
             chips = listOf(
                 LearnLearningLibraryCollectionItemChipState(label = "Course")
