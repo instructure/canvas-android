@@ -32,5 +32,4 @@ data class LearnLearningLibraryBookmarkedUiState(
     val typeFilter: LearnLearningLibraryTypeFilter = LearnLearningLibraryTypeFilter.All,
     val updateTypeFilter: (LearnLearningLibraryTypeFilter) -> Unit = {},
     val onBookmarkClicked: (itemId: String) -> Unit = {},
-    val onEnrollClicked: (itemId: String) -> Unit = {},
 )

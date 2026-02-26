@@ -361,45 +361,6 @@ class LearnLearningLibraryBookmarkedViewModelTest {
     }
 
     @Test
-    fun `onEnrollItem updates item from repository and clears enrollLoading`() {
-        val enrolledItem = createTestCollectionItem(id = "item1", courseName = "Python Basics", isEnrolledInCanvas = true)
-        coEvery { repository.enrollLearningLibraryItem("item1") } returns enrolledItem
-        val viewModel = getViewModel()
-
-        viewModel.uiState.value.onEnrollClicked("item1")
-
-        val item = viewModel.uiState.value.items.first { it.id == "item1" }
-        assertFalse(item.enrollLoading)
-        coVerify { repository.enrollLearningLibraryItem("item1") }
-    }
-
-    @Test
-    fun `onEnrollItem only modifies the targeted item`() {
-        val enrolledItem = createTestCollectionItem(id = "item1", isEnrolledInCanvas = true)
-        coEvery { repository.enrollLearningLibraryItem("item1") } returns enrolledItem
-        val viewModel = getViewModel()
-
-        viewModel.uiState.value.onEnrollClicked("item1")
-
-        val otherItem = viewModel.uiState.value.items.first { it.id == "item2" }
-        assertFalse(otherItem.enrollLoading)
-    }
-
-    @Test
-    fun `onEnrollItem shows error message and resets loading on failure`() {
-        coEvery { repository.enrollLearningLibraryItem("item1") } throws Exception("Network error")
-        every { resources.getString(R.string.learnLearningLibraryFailedToEnrollMessage) } returns "Failed to enroll"
-        val viewModel = getViewModel()
-
-        viewModel.uiState.value.onEnrollClicked("item1")
-
-        val state = viewModel.uiState.value
-        val item = state.items.first { it.id == "item1" }
-        assertFalse(item.enrollLoading)
-        assertNotNull(state.loadingState.errorMessage)
-    }
-
-    @Test
     fun `items are replaced not appended when cursor is null`() {
         val firstLoad = listOf(createTestCollectionItem(id = "item1", courseName = "Old Item"))
         val secondLoad = listOf(createTestCollectionItem(id = "item2", courseName = "New Item"))

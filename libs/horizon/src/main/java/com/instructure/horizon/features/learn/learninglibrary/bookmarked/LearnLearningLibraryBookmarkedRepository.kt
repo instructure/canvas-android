@@ -18,7 +18,6 @@ package com.instructure.horizon.features.learn.learninglibrary.bookmarked
 
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetLearningLibraryManager
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
-import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItem
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItemsResponse
 import javax.inject.Inject
 
@@ -47,9 +46,5 @@ class LearnLearningLibraryBookmarkedRepository @Inject constructor(
 
     suspend fun toggleLearningLibraryItemIsBookmarked(itemId: String): Boolean {
         return getLearningLibraryManager.toggleLearningLibraryItemIsBookmarked(itemId)
-    }
-
-    suspend fun enrollLearningLibraryItem(itemId: String): LearningLibraryCollectionItem {
-        return getLearningLibraryManager.enrollLearningLibraryItem(itemId)
     }
 }

@@ -55,7 +55,6 @@ class LearnLearningLibraryBookmarkedViewModel @Inject constructor(
         updateTypeFilter = ::onUpdateTypeFilter,
         onShowMoreClicked = ::onShowMoreClicked,
         onBookmarkClicked = ::toggleItemBookmarked,
-        onEnrollClicked = ::onEnrollItem
     ))
     val uiState = _uiState.asStateFlow()
 
@@ -208,51 +207,6 @@ class LearnLearningLibraryBookmarkedViewModel @Inject constructor(
                         }
                     },
                     loadingState = it.loadingState.copy(errorMessage = resources.getString(R.string.learnLearningLibraryFailedToUpdateBookmarkMessage))
-                )
-            }
-        }
-    }
-
-    private fun onEnrollItem(itemId: String) {
-        viewModelScope.tryLaunch {
-            _uiState.update {
-                it.copy(
-                    items = it.items.map { collectionItemState ->
-                        if (collectionItemState.id == itemId) {
-                            collectionItemState.copy(enrollLoading = true)
-                        } else {
-                            collectionItemState
-                        }
-                    }
-                )
-            }
-
-            val newItem = repository.enrollLearningLibraryItem(itemId)
-
-            _uiState.update {
-                it.copy(
-                    items = it.items.map { collectionItemState ->
-                        if (collectionItemState.id == itemId) {
-                            newItem.toUiState(resources)
-                        } else {
-                            collectionItemState
-                        }
-                    }
-                )
-            }
-        } catch {
-            _uiState.update {
-                it.copy(
-                    items = it.items.map { collectionItemState ->
-                        if (collectionItemState.id == itemId) {
-                            collectionItemState.copy(
-                                enrollLoading = false,
-                            )
-                        } else {
-                            collectionItemState
-                        }
-                    },
-                    loadingState = it.loadingState.copy(errorMessage = resources.getString(R.string.learnLearningLibraryFailedToEnrollMessage))
                 )
             }
         }
