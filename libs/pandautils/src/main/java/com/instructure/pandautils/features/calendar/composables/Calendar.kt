@@ -63,6 +63,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -127,7 +128,7 @@ fun Calendar(
     todayFocusRequester: FocusRequester? = null
 ) {
     Column(modifier = modifier) {
-        var centerIndex by remember { mutableIntStateOf(PAGE_COUNT / 2) }
+        var centerIndex by rememberSaveable { mutableIntStateOf(PAGE_COUNT / 2) }
         val pagerState = rememberPagerState(
             initialPage = PAGE_COUNT / 2,
             initialPageOffsetFraction = 0f

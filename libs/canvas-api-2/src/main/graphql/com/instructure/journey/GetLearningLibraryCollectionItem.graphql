@@ -1,0 +1,24 @@
+query GetLearningLibraryCollectionItem($itemId: String!) {
+    learningLibraryCollectionItem(collectionItemId: $itemId) {
+        id
+        libraryId
+        itemType
+        displayOrder
+        canvasCourse {
+            courseId
+            canvasUrl
+            courseName
+            courseImageUrl
+            moduleCount
+            moduleItemCount
+            estimatedDurationMinutes
+        }
+        programId
+        programCourseId
+        createdAt
+        updatedAt
+        isBookmarked
+        completionPercentage
+        isEnrolledInCanvas
+    }
+}

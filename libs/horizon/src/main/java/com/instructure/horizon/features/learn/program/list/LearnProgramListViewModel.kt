@@ -24,6 +24,8 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.features.learn.LearnEvent
+import com.instructure.horizon.features.learn.LearnEventHandler
 import com.instructure.horizon.features.learn.program.list.LearnProgramFilterOption.Companion.getProgressOption
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.pandautils.utils.formatMonthDayYear
@@ -33,7 +35,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import org.threeten.bp.zone.ZoneRulesProvider.refresh
 import javax.inject.Inject
 import kotlin.time.Duration
 
@@ -41,7 +46,8 @@ import kotlin.time.Duration
 class LearnProgramListViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val resources: Resources,
-    private val repository: LearnProgramListRepository
+    private val repository: LearnProgramListRepository,
+    private val eventHandler: LearnEventHandler
 ): ViewModel() {
 
     private val pageCount = 10
@@ -60,6 +66,15 @@ class LearnProgramListViewModel @Inject constructor(
 
     init {
         loadData()
+
+        viewModelScope.launch {
+            eventHandler.events.collectLatest {
+                when (it) {
+                    LearnEvent.RefreshProgramList -> { refresh() }
+                    else -> {}
+                }
+            }
+        }
     }
 
     private fun loadData() {

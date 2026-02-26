@@ -51,7 +51,7 @@ class ToDoScreenTest {
     fun assertToolbar() {
         composeTestRule.setContent {
             ToDoScreen(
-                title = "To Do",
+                title = "To-do",
                 toDoUiState = ToDoUiState(),
                 actionHandler = {},
                 navigationActionClick = {},
@@ -60,7 +60,7 @@ class ToDoScreenTest {
 
         val toolbar = composeTestRule.onNodeWithTag("toolbar")
         toolbar.assertExists()
-        composeTestRule.onNode(hasParent(hasTestTag("toolbar")).and(hasText("To Do")))
+        composeTestRule.onNode(hasParent(hasTestTag("toolbar")).and(hasText("To-do")))
             .assertIsDisplayed()
         val backButton =
             composeTestRule.onNode(hasParent(hasTestTag("toolbar")).and(hasContentDescription("Back")))
@@ -78,7 +78,7 @@ class ToDoScreenTest {
     fun assertToolbarActions() {
         composeTestRule.setContent {
             ToDoScreen(
-                title = "To Do",
+                title = "To-do",
                 toDoUiState = ToDoUiState(),
                 actionHandler = {},
                 navigationActionClick = {},
@@ -102,8 +102,8 @@ class ToDoScreenTest {
             .assertHasClickAction()
             .performClick()
 
-        composeTestRule.onNode(hasText("Delete To Do?")).assertIsDisplayed()
-        composeTestRule.onNode(hasText("This will permanently delete your To Do item."))
+        composeTestRule.onNode(hasText("Delete To-do?")).assertIsDisplayed()
+        composeTestRule.onNode(hasText("This will permanently delete your To-do item."))
             .assertIsDisplayed()
         val cancelDelete = composeTestRule.onNode(hasText("Cancel"))
         cancelDelete
@@ -121,14 +121,14 @@ class ToDoScreenTest {
             ToDoScreen(
                 title = "Toolbar title",
                 toDoUiState = ToDoUiState(
-                    title = "To Do title",
+                    title = "To-do title",
                 ),
                 actionHandler = {},
                 navigationActionClick = {},
             )
         }
 
-        composeTestRule.onNode(hasText("To Do title")).assertIsDisplayed()
+        composeTestRule.onNode(hasText("To-do title")).assertIsDisplayed()
     }
 
     @SuppressLint("MissingColorAlphaChannel")
@@ -138,7 +138,7 @@ class ToDoScreenTest {
             ToDoScreen(
                 title = "Toolbar title",
                 toDoUiState = ToDoUiState(
-                    title = "To Do title",
+                    title = "To-do title",
                     contextName = "Canvas Context",
                     contextColor = 0x000000,
                 ),
@@ -166,7 +166,7 @@ class ToDoScreenTest {
             ToDoScreen(
                 title = "Toolbar title",
                 toDoUiState = ToDoUiState(
-                    title = "To Do title",
+                    title = "To-do title",
                     date = dateTitle,
                 ),
                 actionHandler = {},
@@ -183,15 +183,15 @@ class ToDoScreenTest {
             ToDoScreen(
                 title = "Toolbar title",
                 toDoUiState = ToDoUiState(
-                    title = "To Do title",
-                    description = "To Do description",
+                    title = "To-do title",
+                    description = "To-do description",
                 ),
                 actionHandler = {},
                 navigationActionClick = {},
             )
         }
 
-        composeTestRule.onNode(hasText("To Do description")).assertIsDisplayed()
+        composeTestRule.onNode(hasText("To-do description")).assertIsDisplayed()
     }
 
     @Test
@@ -200,7 +200,7 @@ class ToDoScreenTest {
             ToDoScreen(
                 title = "Toolbar title",
                 toDoUiState = ToDoUiState(
-                    title = "To Do title",
+                    title = "To-do title",
                     errorSnack = "Error message",
                 ),
                 actionHandler = {},

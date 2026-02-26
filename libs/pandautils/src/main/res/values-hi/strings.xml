@@ -501,4 +501,8 @@
         <item quantity="other">%d मिनट</item>
     </plurals>
     <string name="notATeacherDescription">हमारा कोई अन्य ऐप बेहतर विकल्प हो सकता है। वहां लॉग इन करने के लिए एक आइकन पर टैप करें।</string>
+    <string name="gradePercentAccessibility">ग्रेड: %d प्रतिशत</string>
+    <string name="gradePointsAccessibility">ग्रेड: %s पॉइंट्स</string>
+    <string name="gradePercentTextFieldAccessibility">ग्रेड: %d प्रतिशत, %s</string>
+    <string name="gradePointsTextFieldAccessibility">ग्रेड: %s पॉइंट्स, %s</string>
 </resources>

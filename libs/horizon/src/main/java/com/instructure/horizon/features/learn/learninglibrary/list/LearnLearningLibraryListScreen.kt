@@ -70,6 +70,7 @@ fun LearnLearningLibraryListScreen(
 ) {
     val collectionScrollState = rememberLazyListState()
     val itemScrollState = rememberLazyListState()
+
     Column(Modifier.fillMaxSize()) {
         LearnLearningLibraryListFilterRow(
             state,
@@ -78,9 +79,17 @@ fun LearnLearningLibraryListScreen(
         )
 
         if (state.isEmptyFilter()) {
-            LearnLearningLibraryCollections(state, collectionScrollState, navController)
+            LearnLearningLibraryCollections(
+                state,
+                collectionScrollState,
+                navController
+            )
         } else {
-            LearnLearningLibraryItems(state, itemScrollState, navController)
+            LearnLearningLibraryItems(
+                state,
+                itemScrollState,
+                navController
+            )
         }
     }
 }
@@ -101,7 +110,9 @@ private fun LearnLearningLibraryCollections(
             LearnLearningLibraryCollection(
                 state.collectionState.collections.take(state.collectionState.itemsToDisplays),
                 state.collectionState.onBookmarkClicked,
-                state.collectionState.onEnrollClicked,
+                { itemId ->
+                    navController.navigate(LearnRoute.LearnLearningLibraryEnrollScreen.route(itemId))
+                },
                 { route ->
                     route?.let { navController.navigate(route) }
                 },
@@ -155,7 +166,7 @@ private fun LearnLearningLibraryItems(
                         state.itemState.onBookmarkClicked(collectionItemState.id)
                     },
                     onEnrollClick = {
-                        state.itemState.onEnrollClicked(collectionItemState.id)
+                        navController.navigate(LearnRoute.LearnLearningLibraryEnrollScreen.route(collectionItemState.id))
                     },
                     modifier = Modifier
                         .padding(horizontal = 24.dp)

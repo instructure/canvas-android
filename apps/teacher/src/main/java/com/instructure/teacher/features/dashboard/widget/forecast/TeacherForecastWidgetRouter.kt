@@ -24,4 +24,8 @@ class TeacherForecastWidgetRouter : ForecastWidgetRouter {
     override fun routeToAssignmentDetails(activity: FragmentActivity, assignmentId: Long, courseId: Long) {
         // TODO: Implement routing for teacher app
     }
+
+    override fun routeToPlannerItem(activity: FragmentActivity, htmlUrl: String) {
+        // TODO("Not yet implemented")
+    }
 }

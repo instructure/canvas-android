@@ -58,6 +58,14 @@ sealed class LearnRoute {
     }
 
     data object LearnLearningLibraryBookmarkScreen: LearnRoute() {
-        const val route = "learning_library/bookmark"
+        const val baseUrl = "learning_library/bookmark"
+        const val route = baseUrl
+    }
+
+    data object LearnLearningLibraryEnrollScreen: LearnRoute() {
+        const val learningLibraryIdAttr = "learningLibraryId"
+        const val baseUrl = "learning_library/enroll"
+        const val route = "$baseUrl/{$learningLibraryIdAttr}"
+        fun route(learningLibraryId: String) = "$baseUrl/$learningLibraryId"
     }
 }

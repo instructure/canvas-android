@@ -43,7 +43,6 @@ import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
@@ -82,10 +81,11 @@ import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.LocalCourseColor
 import com.instructure.pandautils.compose.composables.CanvasDivider
+import com.instructure.pandautils.compose.composables.CanvasScaffold
 import com.instructure.pandautils.compose.composables.SimpleAlertDialog
+import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 import com.instructure.pandautils.compose.composables.UserAvatar
 import com.instructure.pandautils.compose.modifiers.conditional
-import com.instructure.pandautils.features.grades.SubmissionStateLabel
 import com.instructure.pandautils.features.speedgrader.SpeedGraderSharedViewModel
 import com.instructure.pandautils.utils.drawableId
 import com.instructure.pandautils.utils.getFragmentActivity
@@ -128,11 +128,11 @@ private fun SpeedGraderContentScreen(
     onExpandClick: (() -> Unit)?,
     toggleViewPager: (Boolean) -> Unit
 ) {
-    Scaffold(
-        containerColor = colorResource(id = R.color.backgroundLightest),
+    CanvasScaffold(
+        backgroundColor = colorResource(id = R.color.backgroundLightest),
         modifier = Modifier.fillMaxSize()
-    ) {
-        Column(Modifier.padding(it)) {
+    ) { paddingValues ->
+        Column(modifier = Modifier.padding(paddingValues)) {
             UserHeader(
                 userUrl = uiState.userUrl,
                 userName = uiState.userName,

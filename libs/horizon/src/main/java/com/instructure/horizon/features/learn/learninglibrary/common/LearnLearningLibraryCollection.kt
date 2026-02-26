@@ -225,7 +225,6 @@ private fun LearnLearningLibraryCollectionSingleItem() {
                     canEnroll = true,
                     isCompleted = false,
                     bookmarkLoading = false,
-                    enrollLoading = false,
                     type = CollectionItemType.COURSE,
                     chips = listOf(
                         LearnLearningLibraryCollectionItemChipState(
@@ -248,7 +247,6 @@ private fun LearnLearningLibraryCollectionSingleItem() {
                     canEnroll = false,
                     isCompleted = true,
                     bookmarkLoading = false,
-                    enrollLoading = false,
                     type = CollectionItemType.COURSE,
                     chips = listOf(
                         LearnLearningLibraryCollectionItemChipState(
@@ -295,7 +293,6 @@ private fun LearnLearningLibraryCollectionMultipleItems() {
                     canEnroll = true,
                     isCompleted = false,
                     bookmarkLoading = false,
-                    enrollLoading = false,
                     type = CollectionItemType.COURSE,
                     chips = listOf(
                         LearnLearningLibraryCollectionItemChipState(
@@ -318,7 +315,6 @@ private fun LearnLearningLibraryCollectionMultipleItems() {
                     canEnroll = false,
                     isCompleted = true,
                     bookmarkLoading = false,
-                    enrollLoading = false,
                     type = CollectionItemType.COURSE,
                     chips = listOf(
                         LearnLearningLibraryCollectionItemChipState(
@@ -348,7 +344,6 @@ private fun LearnLearningLibraryCollectionMultipleItems() {
                     canEnroll = true,
                     isCompleted = false,
                     bookmarkLoading = true,
-                    enrollLoading = true,
                     type = CollectionItemType.COURSE,
                     chips = listOf(
                         LearnLearningLibraryCollectionItemChipState(
@@ -371,7 +366,6 @@ private fun LearnLearningLibraryCollectionMultipleItems() {
                     canEnroll = false,
                     isCompleted = true,
                     bookmarkLoading = false,
-                    enrollLoading = false,
                     type = CollectionItemType.COURSE,
                     chips = listOf(
                         LearnLearningLibraryCollectionItemChipState(

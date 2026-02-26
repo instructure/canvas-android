@@ -502,4 +502,8 @@
         <item quantity="other">%d Phút</item>
     </plurals>
     <string name="notATeacherDescription">Một trong các ứng dụng khác có thể thích hợp hơn. Chạm một biểu tượng để đăng nhập vào đó.</string>
+    <string name="gradePercentAccessibility">Điểm: %d phần trăm</string>
+    <string name="gradePointsAccessibility">Điểm: %s điểm</string>
+    <string name="gradePercentTextFieldAccessibility">Điểm: %d phần trăm, %s</string>
+    <string name="gradePointsTextFieldAccessibility">Điểm: %s điểm, %s</string>
 </resources>

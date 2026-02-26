@@ -17,12 +17,9 @@
 
 package com.instructure.pandautils.features.grades
 
-import androidx.annotation.ColorRes
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import com.instructure.canvasapi2.models.GradingPeriod
-import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.DiscussionCheckpointUiState
+import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 import com.instructure.pandautils.features.grades.gradepreferences.GradePreferencesUiState
 import com.instructure.pandautils.features.grades.gradepreferences.SortBy
 import com.instructure.pandautils.utils.DisplayGrade
@@ -70,7 +67,7 @@ data class AssignmentGroupUiState(
 
 data class AssignmentUiState(
     val id: Long,
-    @DrawableRes val iconRes: Int,
+    val iconRes: Int,
     val name: String,
     val dueDate: String,
     val submissionStateLabel: SubmissionStateLabel,
@@ -81,33 +78,6 @@ data class AssignmentUiState(
     val checkpoints: List<DiscussionCheckpointUiState> = emptyList(),
     val checkpointsExpanded: Boolean = false
 )
-
-sealed class SubmissionStateLabel {
-    abstract val iconRes: Int
-    abstract val colorRes: Int
-
-    data class Predefined(
-        @DrawableRes override val iconRes: Int,
-        @ColorRes override val colorRes: Int,
-        @StringRes val labelRes: Int
-    ) : SubmissionStateLabel()
-
-    data class Custom(
-        override val iconRes: Int,
-        override val colorRes: Int,
-        val label: String
-    ) : SubmissionStateLabel()
-
-    companion object {
-        val NotSubmitted = Predefined(R.drawable.ic_unpublish, R.color.backgroundDark, R.string.notSubmitted)
-        val Missing = Predefined(R.drawable.ic_unpublish, R.color.textDanger, R.string.missingSubmissionLabel)
-        val Late = Predefined(R.drawable.ic_clock, R.color.textWarning, R.string.lateSubmissionLabel)
-        val Submitted = Predefined(R.drawable.ic_complete, R.color.textSuccess, R.string.submitted)
-        val Graded = Predefined(R.drawable.ic_complete_solid, R.color.textSuccess, R.string.gradedSubmissionLabel)
-        val Excused = Predefined(R.drawable.ic_complete_solid, R.color.textWarning, R.string.gradingStatus_excused)
-        val None = Predefined(0, 0, 0)
-    }
-}
 
 sealed class GradesAction {
     data class Refresh(val clearItems: Boolean = false) : GradesAction()

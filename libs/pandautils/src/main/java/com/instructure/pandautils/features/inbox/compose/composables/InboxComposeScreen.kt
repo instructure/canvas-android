@@ -42,7 +42,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.LocalContentAlpha
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -80,6 +79,7 @@ import com.instructure.pandares.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasAppBar
 import com.instructure.pandautils.compose.composables.CanvasDivider
+import com.instructure.pandautils.compose.composables.CanvasScaffold
 import com.instructure.pandautils.compose.composables.LabelSwitchRow
 import com.instructure.pandautils.compose.composables.LabelTextFieldRow
 import com.instructure.pandautils.compose.composables.Loading
@@ -109,7 +109,7 @@ fun InboxComposeScreen(
     val bodyFocusRequester = remember { FocusRequester() }
 
     CanvasTheme {
-        Scaffold(
+        CanvasScaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
             topBar = {
                 CanvasAppBar(

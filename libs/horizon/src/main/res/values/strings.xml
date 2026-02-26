@@ -596,4 +596,10 @@
     <string name="learnLearningLibraryFailedToLoadMessage">Failed to load collections</string>
     <string name="a11y_learningLibraryClearFiltersContentDescription">Clear filters</string>
     <string name="a11y_learnClearSearchQueryContentDescription">Clear search query</string>
+    <string name="learnLearningLibraryEnrollDialogOverviewTitle">Overview</string>
+    <string name="learnLearningLibraryEnrollDialogReadyToJoinTitle">Ready to join?</string>
+    <string name="learnLearningLibraryEnrollDialogNotNowLabel">Not now</string>
+    <string name="learnLearningLibraryEnrollDialogEnrollLabel">Enroll</string>
+    <string name="learnLearningLibraryEnrollDialogDetailsMessage">Enroll to access the course and start learning.</string>
+    <string name="learnLearningLibraryEnrollDialogFailedToEnrollMessage">Failed to enroll</string>
 </resources>

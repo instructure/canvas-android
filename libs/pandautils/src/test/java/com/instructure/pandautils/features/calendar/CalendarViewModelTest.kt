@@ -110,7 +110,7 @@ class CalendarViewModelTest {
             "${args[0]} ${args[1]} - ${args[2]}"
         }
 
-        every { context.getString(eq(R.string.courseToDo), any()) } answers {
+        every { context.getString(eq(R.string.courseToDoNew), any()) } answers {
             val args = secondArg<Array<Any>>()
             "${args[0]} To Do"
         }
@@ -129,7 +129,7 @@ class CalendarViewModelTest {
         every { context.getString(R.string.calendarEventMissing) } returns "missing"
         every { context.getString(R.string.calendarEventGraded) } returns "graded"
         every { context.getString(R.string.calendarEventSubmitted) } returns "needs grading"
-        every { context.getString(R.string.userCalendarToDo) } returns "To Do"
+        every { context.getString(R.string.userCalendarToDoNew) } returns "To Do"
         every { context.getString(eq(R.string.calendarEventPoints), any()) } answers {
             val args = secondArg<Array<Any>>()
             "${args[0]} pts"

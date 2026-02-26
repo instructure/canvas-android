@@ -23,19 +23,24 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.features.learn.LearnEvent
+import com.instructure.horizon.features.learn.LearnEventHandler
 import com.instructure.horizon.features.learn.course.list.LearnCourseFilterOption.Companion.getProgressOption
 import com.instructure.horizon.horizonui.platform.LoadingState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LearnCourseListViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val repository: LearnCourseListRepository
+    private val repository: LearnCourseListRepository,
+    private val eventHandler: LearnEventHandler,
 ): ViewModel() {
     private val _uiState = MutableStateFlow(LearnCourseListUiState(
         loadingState = LoadingState(onRefresh = ::refresh, onSnackbarDismiss = ::dismissSnackbar),
@@ -50,6 +55,15 @@ class LearnCourseListViewModel @Inject constructor(
 
     init {
         loadCourses()
+
+        viewModelScope.launch {
+            eventHandler.events.collectLatest {
+                when (it) {
+                    LearnEvent.RefreshCourseList -> { refresh() }
+                    else -> {}
+                }
+            }
+        }
     }
 
     private suspend fun fetchData(forceRefresh: Boolean = false): List<LearnCourseState> {

@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibrary
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItemsResponse
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryPageInfo
 import com.instructure.horizon.R
+import com.instructure.horizon.features.learn.LearnEventHandler
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryStatusFilter
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
 import com.instructure.pandautils.utils.ThemePrefs
@@ -51,6 +52,7 @@ import java.util.Date
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class LearnLearningLibraryListViewModelTest {
+    private val eventHandler: LearnEventHandler = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
     private val repository: LearnLearningLibraryListRepository = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
@@ -402,41 +404,6 @@ class LearnLearningLibraryListViewModelTest {
     }
 
     @Test
-    fun `onCollectionEnrollClicked sets loading state and updates item`() = runTest {
-        val viewModel = getViewModel()
-        val enrolledItem = createTestCollectionItem(
-            id = "item1",
-            courseId = "1",
-            courseName = "Python Basics Enrolled",
-            completionPercentage = 0.0,
-            isBookmarked = false,
-            isEnrolledInCanvas = true
-        )
-        coEvery { repository.enrollLearningLibraryItem("item1") } returns enrolledItem
-
-        viewModel.uiState.value.collectionState.onEnrollClicked("item1")
-
-        val state = viewModel.uiState.value
-        val firstItem = state.collectionState.collections[0].items[0]
-        assertFalse(firstItem.enrollLoading)
-        coVerify { repository.enrollLearningLibraryItem("item1") }
-    }
-
-    @Test
-    fun `onCollectionEnrollClicked handles errors and shows error message`() = runTest {
-        val viewModel = getViewModel()
-        every { resources.getString(R.string.learnLearningLibraryFailedToEnrollMessage) } returns "Failed to enroll"
-        coEvery { repository.enrollLearningLibraryItem("item1") } throws Exception("Network error")
-
-        viewModel.uiState.value.collectionState.onEnrollClicked("item1")
-
-        val state = viewModel.uiState.value
-        val firstItem = state.collectionState.collections[0].items[0]
-        assertFalse(firstItem.enrollLoading)
-        assertTrue(state.collectionState.loadingState.errorMessage != null)
-    }
-
-    @Test
     fun `isEmptyFilter returns true when no filters are applied`() = runTest {
         val viewModel = getViewModel()
 
@@ -756,69 +723,8 @@ class LearnLearningLibraryListViewModelTest {
         assertTrue(state.itemState.loadingState.errorMessage != null)
     }
 
-    @Test
-    fun `onItemEnrollClicked updates both item and collection states`() = runTest {
-        val collectionsWithUnenrolled = listOf(
-            createTestCollection(
-                id = "collection1",
-                name = "Introduction to Programming",
-                items = listOf(
-                    createTestCollectionItem(
-                        id = "item1",
-                        courseId = "1",
-                        courseName = "Python Basics",
-                        isEnrolledInCanvas = false,
-                        itemType = CollectionItemType.COURSE
-                    )
-                )
-            )
-        )
-        coEvery { repository.getEnrolledLearningLibraries(any()) } returns collectionsWithUnenrolled
-        val testItems = listOf(
-            createTestCollectionItem(id = "item1", courseName = "Python Basics", isEnrolledInCanvas = false, itemType = CollectionItemType.COURSE)
-        )
-        coEvery { repository.getLearningLibraryItems(any(), any(), any(), any(), any(), any(), any()) } returns LearningLibraryCollectionItemsResponse(
-            items = testItems,
-            pageInfo = LearningLibraryPageInfo(null, null, false, false)
-        )
-        val enrolledItem = createTestCollectionItem(id = "item1", courseName = "Python Basics", isEnrolledInCanvas = true, itemType = CollectionItemType.COURSE)
-        coEvery { repository.enrollLearningLibraryItem("item1") } returns enrolledItem
-        val viewModel = getViewModel()
-        viewModel.uiState.value.updateStatusFilter(LearnLearningLibraryStatusFilter.Bookmarked)
-
-        viewModel.uiState.value.itemState.onEnrollClicked("item1")
-
-        val itemStateItem = viewModel.uiState.value.itemState.items.find { it.id == "item1" }
-        assertFalse(itemStateItem!!.canEnroll)
-        val collectionItem = viewModel.uiState.value.collectionState.collections
-            .flatMap { it.items }
-            .find { it.id == "item1" }
-        assertFalse(collectionItem!!.canEnroll)
-    }
-
-    @Test
-    fun `onItemEnrollClicked error shows error in item state`() = runTest {
-        val testItems = listOf(
-            createTestCollectionItem(id = "item1", courseName = "Python Basics", isEnrolledInCanvas = false, itemType = CollectionItemType.COURSE)
-        )
-        coEvery { repository.getLearningLibraryItems(any(), any(), any(), any(), any(), any(), any()) } returns LearningLibraryCollectionItemsResponse(
-            items = testItems,
-            pageInfo = LearningLibraryPageInfo(null, null, false, false)
-        )
-        every { resources.getString(R.string.learnLearningLibraryFailedToEnrollMessage) } returns "Failed to enroll"
-        coEvery { repository.enrollLearningLibraryItem("item1") } throws Exception("Network error")
-        val viewModel = getViewModel()
-        viewModel.uiState.value.updateStatusFilter(LearnLearningLibraryStatusFilter.Bookmarked)
-
-        viewModel.uiState.value.itemState.onEnrollClicked("item1")
-
-        val state = viewModel.uiState.value
-        assertFalse(state.itemState.items.find { it.id == "item1" }!!.enrollLoading)
-        assertTrue(state.itemState.loadingState.errorMessage != null)
-    }
-
     private fun getViewModel(): LearnLearningLibraryListViewModel {
-        return LearnLearningLibraryListViewModel(resources, repository)
+        return LearnLearningLibraryListViewModel(resources, repository, eventHandler)
     }
 
     private fun createTestCollection(

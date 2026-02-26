@@ -24,6 +24,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="?android:attr/actionBarSize"
         android:elevation="2dp"
         tools:ignore="UnusedAttribute"/>
 
@@ -39,7 +40,8 @@
         android:animateLayoutChanges="true"
         android:id="@+id/commentInputContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:minHeight="56dp"
         android:layout_alignParentBottom="true"
         android:background="@color/backgroundLightest">
 

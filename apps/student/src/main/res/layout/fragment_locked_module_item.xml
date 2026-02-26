@@ -27,6 +27,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="?android:attr/actionBarSize"
         app:layout_constraintTop_toTopOf="parent"
         tools:background="#00bcd5"
         tools:title="Ecosystem Health and Human Well-Being"

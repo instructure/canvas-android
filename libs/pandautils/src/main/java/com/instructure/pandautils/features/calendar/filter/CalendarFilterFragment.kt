@@ -12,11 +12,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.instructure.pandautils.base.BaseCanvasBottomSheetDialogFragment
 import com.instructure.pandautils.features.calendar.CalendarSharedEvents
 import com.instructure.pandautils.features.calendar.filter.composables.CalendarFiltersScreen
-import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.WindowInsetsHelper
 import com.instructure.pandautils.utils.collectOneOffEvents
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -54,7 +53,8 @@ class CalendarFilterFragment : BaseCanvasBottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        ViewStyler.setStatusBarLight(requireActivity())
+        // Set status bar icons to light (white) for visibility over the dialog
+        WindowInsetsHelper.setStatusBarAppearance(requireActivity().window, isLightStatusBar = false)
         setFullScreen()
     }
 

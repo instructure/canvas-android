@@ -23,9 +23,9 @@ import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import com.instructure.pandares.R
+import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 import com.instructure.pandautils.features.assignments.details.DiscussionCheckpointViewState
 import com.instructure.pandautils.features.assignments.details.composables.DiscussionCheckpointLayout
-import com.instructure.pandautils.features.grades.SubmissionStateLabel
 import org.junit.Rule
 import org.junit.Test
 
@@ -39,13 +39,13 @@ class DiscussionCheckpointLayoutTest {
         val checkpoints = listOf(
             DiscussionCheckpointViewState(
                 name = "Reply to topic",
-                stateLabel = SubmissionStateLabel.Companion.Graded,
+                stateLabel = SubmissionStateLabel.Graded,
                 grade = "5 / 5 pts",
                 courseColor = Color.RED
             ),
             DiscussionCheckpointViewState(
                 name = "Additional replies (3)",
-                stateLabel = SubmissionStateLabel.Companion.Late,
+                stateLabel = SubmissionStateLabel.Late,
                 grade = "3 / 5 pts",
                 courseColor = Color.RED
             )

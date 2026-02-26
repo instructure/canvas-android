@@ -20,4 +20,5 @@ import androidx.fragment.app.FragmentActivity
 
 interface ForecastWidgetRouter {
     fun routeToAssignmentDetails(activity: FragmentActivity, assignmentId: Long, courseId: Long)
+    fun routeToPlannerItem(activity: FragmentActivity, htmlUrl: String)
 }

@@ -38,6 +38,7 @@ import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.DiscussionCheckpointUiState
+import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 import com.instructure.pandautils.features.grades.gradepreferences.GradePreferencesUiState
 import com.instructure.pandautils.features.grades.gradepreferences.SortBy
 import com.instructure.pandautils.utils.Const

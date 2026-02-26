@@ -501,4 +501,8 @@
         <item quantity="other">%d mín.</item>
     </plurals>
     <string name="notATeacherDescription">Eitthvað af hinum öppunum okkar gæti hentað betur. Pikkaðu á tákn til að skrá þig inn þar.</string>
+    <string name="gradePercentAccessibility">Einkunn: %d prósent</string>
+    <string name="gradePointsAccessibility">Einkunn: %s punktar</string>
+    <string name="gradePercentTextFieldAccessibility">Einkunn: %d prósent, %s</string>
+    <string name="gradePointsTextFieldAccessibility">Einkunn: %s punktar, %s</string>
 </resources>
