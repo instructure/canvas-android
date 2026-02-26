@@ -57,8 +57,8 @@ class DashboardTimeSpentViewModelTest {
     fun `init loads time spent data successfully`() = runTest {
         val minutesSpend = listOf(300, 450)
         val courses = listOf(
-            CourseWithProgress(courseId = 1L, courseName = "Course 1", progress = 0.0),
-            CourseWithProgress(courseId = 2L, courseName = "Course 2", progress = 0.0)
+            CourseWithProgress(courseId = 1L, courseName = "Course 1", courseImageUrl = null, courseSyllabus = null, progress = 0.0),
+            CourseWithProgress(courseId = 2L, courseName = "Course 2", courseImageUrl = null, courseSyllabus = null, progress = 0.0)
         )
         val timeSpentData = TimeSpentWidgetData(
             lastModifiedDate = Date(),
@@ -96,7 +96,7 @@ class DashboardTimeSpentViewModelTest {
     fun `calculates hours from minutesPerDay correctly`() = runTest {
         val minutesSpent = 480
         val courses = listOf(
-            CourseWithProgress(courseId = 1L, courseName = "Course 1", progress = 0.0)
+            CourseWithProgress(courseId = 1L, courseName = "Course 1", courseImageUrl = null, courseSyllabus = null, progress = 0.0)
         )
         val timeSpentData = TimeSpentWidgetData(
             lastModifiedDate = Date(),
@@ -135,7 +135,7 @@ class DashboardTimeSpentViewModelTest {
     @Test
     fun `filters time spent data by available courses`() = runTest {
         val courses = listOf(
-            CourseWithProgress(courseId = 1L, courseName = "Course 1", progress = 0.0)
+            CourseWithProgress(courseId = 1L, courseName = "Course 1", courseImageUrl = null, courseSyllabus = null, progress = 0.0)
         )
         val timeSpentData = TimeSpentWidgetData(
             lastModifiedDate = Date(),
@@ -159,7 +159,7 @@ class DashboardTimeSpentViewModelTest {
     @Test
     fun `handles null minutesPerDay gracefully`() = runTest {
         val courses = listOf(
-            CourseWithProgress(courseId = 1L, courseName = "Course 1", progress = 0.0)
+            CourseWithProgress(courseId = 1L, courseName = "Course 1", courseImageUrl = null, courseSyllabus = null, progress = 0.0)
         )
         val timeSpentData = TimeSpentWidgetData(
             lastModifiedDate = Date(),
@@ -180,8 +180,8 @@ class DashboardTimeSpentViewModelTest {
     @Test
     fun `onCourseSelected updates selected course id`() = runTest {
         val courses = listOf(
-            CourseWithProgress(courseId = 1L, courseName = "Math 101", progress = 0.0),
-            CourseWithProgress(courseId = 2L, courseName = "Science 201", progress = 0.0)
+            CourseWithProgress(courseId = 1L, courseName = "Math 101", courseImageUrl = null, courseSyllabus = null, progress = 0.0),
+            CourseWithProgress(courseId = 2L, courseName = "Science 201", courseImageUrl = null, courseSyllabus = null, progress = 0.0)
         )
         val timeSpentData = TimeSpentWidgetData(
             lastModifiedDate = Date(),
@@ -208,7 +208,7 @@ class DashboardTimeSpentViewModelTest {
     @Test
     fun `onCourseSelected with null clears selection`() = runTest {
         val courses = listOf(
-            CourseWithProgress(courseId = 1L, courseName = "Math 101", progress = 0.0)
+            CourseWithProgress(courseId = 1L, courseName = "Math 101", courseImageUrl = null, courseSyllabus = null, progress = 0.0)
         )
         val timeSpentData = TimeSpentWidgetData(
             lastModifiedDate = Date(),

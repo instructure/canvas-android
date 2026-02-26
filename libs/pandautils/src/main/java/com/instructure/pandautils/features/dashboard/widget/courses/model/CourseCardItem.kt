@@ -16,13 +16,16 @@
 
 package com.instructure.pandautils.features.dashboard.widget.courses.model
 
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
+
 data class CourseCardItem(
     val id: Long,
     val name: String,
     val courseCode: String?,
     val imageUrl: String?,
+    val color: Int,
     val grade: GradeDisplay,
-    val announcementCount: Int = 0,
+    val announcements: List<DiscussionTopicHeader> = emptyList(),
     val isSynced: Boolean = false,
     val isClickable: Boolean = true
 )

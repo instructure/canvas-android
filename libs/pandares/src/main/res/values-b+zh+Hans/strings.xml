@@ -273,6 +273,7 @@
     <string name="checkBoxWhatIfGradeOption">显示假设的分数</string>
     <string name="whatIfDialogText">假设的分数</string>
     <string name="whatIfScoreExceedsMaximum">分数不能超过满分</string>
+    <string name="whatIfScoreExceedsMaximumWarning">分数超过满分</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">得分 %1$s，总分 %2$s，%3$s</string>
     <string name="inbox">收件箱</string>
@@ -1889,6 +1890,15 @@
     <string name="courseDetailsMessageContentDescription">发送有关此课程的消息</string>
     <string name="gradeLockedContentDescription">评分已锁定</string>
     <string name="gradesRefreshFailed">无法刷新评分</string>
+    <string name="showWhatIfScore">显示假设分数</string>
+    <string name="editWhatIfScore">编辑假设分数</string>
+    <string name="editWhatIfScoreTitle">编辑假设分数</string>
+    <string name="whatIfScoreLabel">假设</string>
+    <string name="whatIfScoreCurrentGraded">分数 %1$.0f，满分 %2$.0f</string>
+    <string name="whatIfScoreCurrentUngraded">未评分，满分 %.0f</string>
+    <string name="whatIfScoreDisplay">假设：%s</string>
+    <string name="gradesBasedOnGradedAndWhatIf">基于已评分的作业和假设分数</string>
+    <string name="clearWhatIfScore">清除假设分数</string>
     <string name="chooseACourseToMessage">选择一个课程来发送讯息</string>
     <string name="regardingHiddenMessage">事由：%1$s，%2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">事由：%1$s，作业 - %2$s</string>

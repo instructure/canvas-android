@@ -1,0 +1,19 @@
+query HorizonGetCourseById($courseId: ID!, $userId: ID!) {
+    legacyNode(_id: $courseId, type: Course) {
+        ... on Course {
+            id: _id
+            name
+            image_download_url: imageUrl
+            syllabus_body: syllabusBody
+            usersConnection(filter: {userIds: [$userId]}) {
+                nodes {
+                    courseProgression {
+                        requirements {
+                            completionPercentage
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

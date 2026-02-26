@@ -19,6 +19,7 @@ package com.instructure.teacher.ui.e2e.classic
 import android.util.Log
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.NoMatchingViewException
+import androidx.test.espresso.intent.Intents
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
@@ -32,6 +33,7 @@ import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.dataseeding.api.ConversationsApi
 import com.instructure.dataseeding.api.CoursesApi
 import com.instructure.dataseeding.api.EnrollmentsApi
+import com.instructure.dataseeding.api.UserApi
 import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.pandautils.utils.AppTheme
 import com.instructure.teacher.BuildConfig
@@ -200,6 +202,110 @@ class SettingsE2ETest : TeacherComposeTest() {
             Log.d(ASSERTION_TAG, "Assert that the username value remained '$newUserName'.")
             profileSettingsPage.assertUserNameIs(newUserName)
         }
+
+        Log.d(STEP_TAG, "Click on Edit Pencil Icon on the toolbar.")
+        profileSettingsPage.clickEditPencilIcon()
+
+        Log.d(STEP_TAG, "Clear the profile name field completely (leave it empty).")
+        editProfileSettingsPage.clearUserNameInputField()
+
+        Log.d(ASSERTION_TAG, "Assert that the hint text shows '$newUserName' (the last applied name).")
+        editProfileSettingsPage.assertUserNameHint(newUserName)
+
+        Log.d(STEP_TAG, "Click on 'Save' button with empty profile name.")
+        editProfileSettingsPage.clickOnSave()
+
+        //this is a workaround for that sometimes on FTL we need to click twice on the back button to navigate back to the Profile Settings page.
+        //Probably because of sometimes the soft keyboard does not show up.
+        try {
+            Log.d(STEP_TAG, "Check if the user has landed on Settings Page. If yes, navigate back to Profile Settings Page.")
+            settingsPage.clickOnSettingsItem("Profile Settings")
+        } catch (e: IllegalStateException) {
+            Log.d(STEP_TAG, "Did not throw the user back to the Settings Page, so the scenario can be continued.")
+        }
+
+        Log.d(ASSERTION_TAG, "Assert that the username remained '$newUserName' (not cleared/empty) after saving with empty field.")
+        profileSettingsPage.assertPageObjects()
+        profileSettingsPage.assertUserNameIs(newUserName)
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.COMMON, FeatureCategory.SETTINGS, TestCategory.E2E)
+    fun testProfilePictureChangeE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val teacher = data.teachersList[0]
+
+        val imageFileName = "sample.jpg"
+        Log.d(PREPARATION_TAG, "Copy '$imageFileName' from assets to external cache directory.")
+        copyAssetFileToExternalCache(activityRule.activity, imageFileName)
+
+        Log.d(PREPARATION_TAG, "Fetch the initial user profile to get the original avatar URL.")
+        val initialProfile = UserApi.getUserProfile(teacher.id)
+        val initialAvatarUrl = initialProfile.avatarUrl
+
+        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
+        tokenLogin(teacher)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Navigate to User Settings Page.")
+        leftSideNavigationDrawerPage.clickSettingsMenu()
+
+        Log.d(STEP_TAG, "Open Profile Settings Page.")
+        settingsPage.clickOnSettingsItem("Profile Settings")
+
+        Log.d(ASSERTION_TAG, "Assert that the Profile Settings Page is displayed correctly.")
+        profileSettingsPage.assertPageObjects()
+
+        Log.d(STEP_TAG, "Click on Edit Pencil Icon on the toolbar.")
+        profileSettingsPage.clickEditPencilIcon()
+
+        Log.d(STEP_TAG, "Click on the profile camera icon to change profile picture.")
+        editProfileSettingsPage.clickProfileCameraIcon()
+
+        Log.d(ASSERTION_TAG, "Assert that the profile photo dialog is displayed with both 'Take photo' and 'Choose photo from Gallery' options.")
+        editProfileSettingsPage.assertProfilePhotoDialogDisplayed()
+
+        Log.d(PREPARATION_TAG, "Stub image picker intent to select '$imageFileName'.")
+        Intents.init()
+        try {
+            stubImagePickerIntent(imageFileName)
+            Log.d(STEP_TAG, "Click on 'Choose photo from Gallery' option.")
+            editProfileSettingsPage.clickChooseFromGallery()
+        } finally {
+            Intents.release()
+        }
+
+        Log.d(ASSERTION_TAG, "Assert that the Avatar Crop Overlay screen and crop instructions are displayed.")
+        editProfileSettingsPage.assertAvatarCropOverlayDisplayed()
+        editProfileSettingsPage.assertCropInstructionsDisplayed()
+
+        Log.d(STEP_TAG, "Click the save (checkmark) button to save the cropped image.")
+        editProfileSettingsPage.clickAvatarCropSave()
+
+        Log.d(STEP_TAG, "Click on 'Save' button to save the profile changes.")
+        editProfileSettingsPage.clickOnSave()
+
+        try {
+            Log.d(STEP_TAG, "Check if the user has landed on Settings Page. If yes, navigate back to Profile Settings Page.")
+            settingsPage.clickOnSettingsItem("Profile Settings")
+        } catch (e: IllegalStateException) {
+            Log.d(STEP_TAG, "Did not throw the user back to the Settings Page, so the scenario can be continued.")
+        }
+
+        Log.d(ASSERTION_TAG, "Assert that the Profile Settings Page is displayed with avatar after saving the profile picture change.")
+        profileSettingsPage.assertPageObjects()
+        profileSettingsPage.assertUserAvatarDisplayed()
+
+        Log.d(PREPARATION_TAG, "Fetch the updated user profile to verify the avatar URL changed.")
+        val updatedProfile = UserApi.getUserProfile(teacher.id)
+        val updatedAvatarUrl = updatedProfile.avatarUrl
+
+        Log.d(ASSERTION_TAG, "Assert that the avatar URL has changed from the initial value.")
+        assert(initialAvatarUrl != updatedAvatarUrl) { "Avatar URL should have changed after uploading a new profile picture. Initial: $initialAvatarUrl, Updated: $updatedAvatarUrl" }
+        assert(!updatedAvatarUrl.isNullOrEmpty()) { "Updated avatar URL should not be null or empty after uploading a profile picture" }
     }
 
     @E2E

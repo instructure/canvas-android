@@ -25,7 +25,6 @@ import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardEvent
 import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.features.dashboard.DashboardItemState
-import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardButtonRoute
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardHeaderState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardState
@@ -110,6 +109,6 @@ private fun AnnouncementBannerItem.toPaginatedWidgetCardItemState(context: Conte
         source = source,
         date = date,
         title = title,
-        route = DashboardPaginatedWidgetCardButtonRoute.MainRoute(route)
+        route = route
     )
 }

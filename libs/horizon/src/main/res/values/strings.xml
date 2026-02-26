@@ -512,10 +512,36 @@
     <string name="a11y_nextModuleItem">Next module item</string>
     <string name="a11y_nextModule">Next module</string>
     <string name="a11y_notebookHighlightMarkedAs">%1$s, marked as %2$s, double tap to edit note</string>
+    <string name="learnCoursesTabLabel">Courses</string>
+    <string name="learnProgramsTabLabel">Programs</string>
     <string name="reportAProblemDescriptionMessage">File a ticket for a personal response from our support team.</string>
     <string name="igniteAIEnterAPromptLabel">Enter a prompt</string>
     <string name="a11y_igniteAiLoadingContentDescription">Loading response</string>
     <string name="a11y_aiAssistFlashcardClickActionLabel">Flip the card</string>
+    <string name="learnCourseListFailedToLoadCoursesMessage">Failed to load courses</string>
+    <string name="learnCourseListFilterAll">All courses</string>
+    <string name="learnCourseListFilterNotStarted">Not started</string>
+    <string name="learnCourseListFilterInProgress">In progress</string>
+    <string name="learnCourseListFilterCompleted">Completed</string>
+    <string name="learnCourseListStartLearningLabel">Start learning</string>
+    <string name="learnCourseListResumeLearningLabel">Resume learning</string>
+    <string name="learnCourseListViewCourseLabel">View course</string>
+    <string name="learnCourseListShowMoreLabel">Show more</string>
+    <string name="learnCourseListSearchBarPlaceholder">Search courses</string>
+    <string name="learnCourseOverviewPartOfProgramsLabel">Part of %1$s</string>
+    <string name="learnCourseListEmptyMessage">No results found. Try adjusting your search terms.</string>
+    <string name="learnProgramListFilterAll">All programs</string>
+    <string name="learnProgramListFilterNotStarted">Not started</string>
+    <string name="learnProgramListFilterInProgress">In progress</string>
+    <string name="learnProgramListFilterCompleted">Completed</string>
+    <string name="learnProgramListShowMoreLabel">Show more</string>
+    <string name="learnProgramListEmptyMessage">No results found. Try adjusting your search terms.</string>
+    <string name="learnProgramListSearchBarPlaceholder">Search programs</string>
+    <string name="learnProgramListFailedToLoadMessage">Failed to load programs</string>
+    <plurals name="learnProgramListCourseCount">
+        <item quantity="one">%1$d course</item>
+        <item quantity="other">%1$d courses</item>
+    </plurals>
     <string name="a11y_inputErrorMessage">Error: %1$s</string>
     <string name="a11y_required">Required</string>
 </resources>

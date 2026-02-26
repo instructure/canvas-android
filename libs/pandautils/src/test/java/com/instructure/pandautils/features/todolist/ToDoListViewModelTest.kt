@@ -32,21 +32,27 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.composables.todo.ToDoItemType
+import com.instructure.pandautils.compose.composables.todo.ToDoItemUiState
+import com.instructure.pandautils.compose.composables.todo.ToDoStateMapper
 import com.instructure.pandautils.features.calendar.CalendarSharedEvents
 import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.features.todolist.filter.DateRangeSelection
 import com.instructure.pandautils.room.appdatabase.daos.ToDoFilterDao
 import com.instructure.pandautils.room.appdatabase.entities.ToDoFilterEntity
 import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.pandautils.utils.getSystemLocaleCalendar
 import io.mockk.clearMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkConstructor
+import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.unmockkAll
 import io.mockk.unmockkConstructor
+import io.mockk.unmockkStatic
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -62,6 +68,7 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import java.util.Calendar
 import java.util.Date
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -77,6 +84,7 @@ class ToDoListViewModelTest {
     private val analytics: Analytics = mockk(relaxed = true)
     private val toDoListViewModelBehavior: ToDoListViewModelBehavior = mockk(relaxed = true)
     private val calendarSharedEvents: CalendarSharedEvents = mockk(relaxed = true)
+    private val toDoStateMapper: ToDoStateMapper = mockk(relaxed = true)
 
     private val testUser = User(id = 123L, name = "Test User")
     private val testDomain = "test.instructure.com"
@@ -124,6 +132,18 @@ class ToDoListViewModelTest {
             futureDateRange = DateRangeSelection.THIS_WEEK
         )
         coEvery { toDoFilterDao.findByUser(any(), any()) } returns defaultTestFilter
+
+        // Mock toDoStateMapper to return proper ToDoItemUiState
+        every { toDoStateMapper.mapToUiState(any(), any(), any(), any()) } answers {
+            val plannerItem = firstArg<PlannerItem>()
+            val onSwipeToDone = thirdArg<() -> Unit>()
+            val onCheckboxToggle = arg<(Boolean) -> Unit>(3)
+            createToDoItemUiState(plannerItem, onSwipeToDone, onCheckboxToggle)
+        }
+
+        // Mock getSystemLocaleCalendar to return a simple Calendar instance for testing
+        mockkStatic(::getSystemLocaleCalendar)
+        every { getSystemLocaleCalendar() } returns Calendar.getInstance()
     }
 
     @After
@@ -131,6 +151,7 @@ class ToDoListViewModelTest {
         Dispatchers.resetMain()
         unmockkConstructor(Bundle::class)
         unmockkAll()
+        unmockkStatic(::getSystemLocaleCalendar)
     }
 
     @Test
@@ -291,34 +312,6 @@ class ToDoListViewModelTest {
         val uiState = viewModel.uiState.value
 
         assertEquals(2, uiState.itemsByDate.keys.size)
-    }
-
-    @Test
-    fun `ViewModel maps item types correctly`() = runTest {
-        val plannerItems = listOf(
-            createPlannerItem(id = 1L, title = "Assignment", plannableType = PlannableType.ASSIGNMENT),
-            createPlannerItem(id = 2L, title = "Quiz", plannableType = PlannableType.QUIZ),
-            createPlannerItem(id = 3L, title = "Discussion", plannableType = PlannableType.DISCUSSION_TOPIC),
-            createPlannerItem(id = 4L, title = "Calendar Event", plannableType = PlannableType.CALENDAR_EVENT),
-            createPlannerItem(id = 5L, title = "Planner Note", plannableType = PlannableType.PLANNER_NOTE),
-            createPlannerItem(id = 6L, title = "Sub Assignment", plannableType = PlannableType.SUB_ASSIGNMENT)
-        )
-
-        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
-        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(plannerItems)
-
-        val viewModel = getViewModel()
-
-        val uiState = viewModel.uiState.value
-        val allItems = uiState.itemsByDate.values.flatten()
-
-        assertEquals(6, allItems.size)
-        assertEquals(ToDoItemType.ASSIGNMENT, allItems.find { it.title == "Assignment" }?.itemType)
-        assertEquals(ToDoItemType.QUIZ, allItems.find { it.title == "Quiz" }?.itemType)
-        assertEquals(ToDoItemType.DISCUSSION, allItems.find { it.title == "Discussion" }?.itemType)
-        assertEquals(ToDoItemType.CALENDAR_EVENT, allItems.find { it.title == "Calendar Event" }?.itemType)
-        assertEquals(ToDoItemType.PLANNER_NOTE, allItems.find { it.title == "Planner Note" }?.itemType)
-        assertEquals(ToDoItemType.SUB_ASSIGNMENT, allItems.find { it.title == "Sub Assignment" }?.itemType)
     }
 
     @Test
@@ -1395,67 +1388,6 @@ class ToDoListViewModelTest {
     }
 
     @Test
-    fun `Account-level calendar events are not clickable`() = runTest {
-        val accountCalendarEvent = createPlannerItem(
-            id = 1L,
-            title = "Account Event",
-            plannableType = PlannableType.CALENDAR_EVENT
-        ).copy(contextType = "Account")
-
-        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
-        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(listOf(accountCalendarEvent))
-
-        val viewModel = getViewModel()
-
-        val uiState = viewModel.uiState.value
-        val item = uiState.itemsByDate.values.flatten().first()
-
-        assertFalse(item.isClickable)
-        assertEquals(ToDoItemType.CALENDAR_EVENT, item.itemType)
-    }
-
-    @Test
-    fun `Course-level calendar events are clickable`() = runTest {
-        val courseCalendarEvent = createPlannerItem(
-            id = 1L,
-            title = "Course Event",
-            courseId = 1L,
-            plannableType = PlannableType.CALENDAR_EVENT
-        ).copy(contextType = "Course")
-
-        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
-        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(listOf(courseCalendarEvent))
-
-        val viewModel = getViewModel()
-
-        val uiState = viewModel.uiState.value
-        val item = uiState.itemsByDate.values.flatten().first()
-
-        assertTrue(item.isClickable)
-        assertEquals(ToDoItemType.CALENDAR_EVENT, item.itemType)
-    }
-
-    @Test
-    fun `User-level calendar events are clickable`() = runTest {
-        val userCalendarEvent = createPlannerItem(
-            id = 1L,
-            title = "User Event",
-            plannableType = PlannableType.CALENDAR_EVENT
-        ).copy(contextType = "User")
-
-        coEvery { repository.getCourses(any()) } returns DataResult.Success(emptyList())
-        coEvery { repository.getPlannerItems(any(), any(), any()) } returns DataResult.Success(listOf(userCalendarEvent))
-
-        val viewModel = getViewModel()
-
-        val uiState = viewModel.uiState.value
-        val item = uiState.itemsByDate.values.flatten().first()
-
-        assertTrue(item.isClickable)
-        assertEquals(ToDoItemType.CALENDAR_EVENT, item.itemType)
-    }
-
-    @Test
     fun `RefreshToDoList event triggers loadData with forceRefresh`() = runTest {
         val courses = listOf(Course(id = 1L, name = "Course 1", courseCode = "CS101"))
         val initialPlannerItems = listOf(createPlannerItem(id = 1L, title = "Assignment 1"))
@@ -1690,7 +1622,18 @@ class ToDoListViewModelTest {
 
     // Helper functions
     private fun getViewModel(): ToDoListViewModel {
-        return ToDoListViewModel(context, repository, networkStateProvider, firebaseCrashlytics, toDoFilterDao, apiPrefs, analytics, toDoListViewModelBehavior, calendarSharedEvents)
+        return ToDoListViewModel(
+            context,
+            repository,
+            networkStateProvider,
+            firebaseCrashlytics,
+            toDoFilterDao,
+            apiPrefs,
+            analytics,
+            toDoListViewModelBehavior,
+            calendarSharedEvents,
+            toDoStateMapper
+        )
     }
 
     private fun createPlannerItem(
@@ -1730,6 +1673,44 @@ class ToDoListViewModelTest {
             newActivity = null,
             plannerOverride = null,
             plannableItemDetails = null
+        )
+    }
+
+    private fun createToDoItemUiState(
+        plannerItem: PlannerItem,
+        onSwipeToDone: () -> Unit,
+        onCheckboxToggle: (Boolean) -> Unit
+    ): ToDoItemUiState {
+        val itemType = when (plannerItem.plannableType) {
+            PlannableType.ASSIGNMENT -> ToDoItemType.ASSIGNMENT
+            PlannableType.SUB_ASSIGNMENT -> ToDoItemType.SUB_ASSIGNMENT
+            PlannableType.QUIZ -> ToDoItemType.QUIZ
+            PlannableType.DISCUSSION_TOPIC -> ToDoItemType.DISCUSSION
+            PlannableType.CALENDAR_EVENT -> ToDoItemType.CALENDAR_EVENT
+            PlannableType.PLANNER_NOTE -> ToDoItemType.PLANNER_NOTE
+            else -> ToDoItemType.CALENDAR_EVENT
+        }
+
+        val isAccountLevelEvent = plannerItem.contextType?.equals("Account", ignoreCase = true) == true
+        val isClickable = !(isAccountLevelEvent && itemType == ToDoItemType.CALENDAR_EVENT)
+        val isComplete = plannerItem.plannerOverride?.markedComplete == true ||
+                        plannerItem.submissionState?.submitted == true
+
+        return ToDoItemUiState(
+            id = plannerItem.plannable.id.toString(),
+            title = plannerItem.plannable.title,
+            date = plannerItem.plannableDate,
+            dateLabel = "Date Label",
+            contextLabel = "",
+            canvasContext = plannerItem.canvasContext,
+            itemType = itemType,
+            isChecked = isComplete,
+            iconRes = 0,
+            tag = "",
+            htmlUrl = "",
+            isClickable = isClickable,
+            onSwipeToDone = onSwipeToDone,
+            onCheckboxToggle = onCheckboxToggle
         )
     }
 }

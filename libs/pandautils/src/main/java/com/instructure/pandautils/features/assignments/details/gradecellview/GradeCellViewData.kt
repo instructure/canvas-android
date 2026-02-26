@@ -7,6 +7,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.GradingSchemeRow
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.canvasapi2.utils.convertPercentScoreToLetterGrade
 import com.instructure.canvasapi2.utils.convertScoreToLetterGrade
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.assignments.details.mobius.gradeCell.GradeCellViewState
@@ -69,7 +70,7 @@ data class GradeCellViewData(
                     state = State.EMPTY,
                     gradeCellContentDescription = getContentDescriptionText(
                         resources,
-                        resources.getString(R.string.submissionAndRubric)
+                        resources.getString(R.string.submissionAndFeedback)
                     )
                 )
                 submission!!.isSubmitted -> GradeCellViewData(
@@ -137,7 +138,26 @@ data class GradeCellViewData(
                 val grade = if (assignment.isGradingTypeQuantitative) {
                     convertScoreToLetterGrade(submission.score, assignment.pointsPossible, gradingScheme)
                 } else {
-                    submission.grade ?: ""
+                    // For letter grade or GPA scale types, check if grade is numeric and convert if needed
+                    val submittedGrade = submission.grade ?: ""
+                    val isNumericGrade = submittedGrade.toDoubleOrNull() != null
+                    if (isNumericGrade && gradingScheme.isNotEmpty()) {
+                        // Grade is numeric, convert it to a letter grade
+                        if (assignment.pointsPossible == 0.0) {
+                            // For 0-point assignments, treat the score as a percentage (0-100 scale)
+                            val percentScore = when {
+                                submission.score.isNaN() || submission.score.isInfinite() -> 0.0
+                                else -> (submission.score / 100.0).coerceIn(0.0, 1.0)
+                            }
+                            convertPercentScoreToLetterGrade(percentScore, gradingScheme)
+                        } else {
+                            // Normal case: convert score to letter grade based on points possible
+                            convertScoreToLetterGrade(submission.score, assignment.pointsPossible, gradingScheme)
+                        }
+                    } else {
+                        // Grade already contains letters or no grading scheme, use as-is
+                        submittedGrade
+                    }
                 }
                 val accessibleGradeString = getContentDescriptionForMinusGradeString(grade, resources)
                 val contentDescription = resources.getString(

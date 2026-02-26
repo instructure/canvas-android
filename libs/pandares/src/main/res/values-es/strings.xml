@@ -278,6 +278,7 @@
     <string name="checkBoxWhatIfGradeOption">Mostrar el puntaje Qué pasaría si</string>
     <string name="whatIfDialogText">Puntaje Qué pasaría si</string>
     <string name="whatIfScoreExceedsMaximum">El puntaje no puede superar el máximo de puntos</string>
+    <string name="whatIfScoreExceedsMaximumWarning">El puntaje excede el máximo de puntos</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s de %2$s puntos, %3$s</string>
     <string name="inbox">Bandeja de entrada</string>
@@ -1923,6 +1924,15 @@
     <string name="courseDetailsMessageContentDescription">Enviar un mensaje acerca de este curso</string>
     <string name="gradeLockedContentDescription">Calificación bloqueada</string>
     <string name="gradesRefreshFailed">No se pudieron actualizar las calificaciones</string>
+    <string name="showWhatIfScore">Mostrar el puntaje hipotético</string>
+    <string name="editWhatIfScore">Editar el puntaje hipotético</string>
+    <string name="editWhatIfScoreTitle">Editar el puntaje hipotético</string>
+    <string name="whatIfScoreLabel">Hipotético</string>
+    <string name="whatIfScoreCurrentGraded">Puntaje %1$.0f de %2$.0f</string>
+    <string name="whatIfScoreCurrentUngraded">No calificado, puntaje máximo %.0f</string>
+    <string name="whatIfScoreDisplay">Hipotético: %s</string>
+    <string name="gradesBasedOnGradedAndWhatIf">Basado en tareas calificadas y puntaje hipotético</string>
+    <string name="clearWhatIfScore">Eliminar el puntaje hipotético</string>
     <string name="chooseACourseToMessage">Elija un curso para enviar un mensaje</string>
     <string name="regardingHiddenMessage">Asunto: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">Asunto: %1$s, Tarea: %2$s</string>

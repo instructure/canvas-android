@@ -16,10 +16,14 @@
 package com.instructure.pandautils.features.dashboard.widget.institutionalannouncements
 
 import com.instructure.pandautils.domain.models.accountnotification.InstitutionalAnnouncement
+import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
+import com.instructure.pandautils.utils.ThemedColor
 
 data class InstitutionalAnnouncementsUiState(
     val loading: Boolean = true,
     val error: Boolean = false,
     val announcements: List<InstitutionalAnnouncement> = emptyList(),
-    val onRefresh: () -> Unit = {}
+    val onRefresh: () -> Unit = {},
+    val onDismiss: (Long) -> Unit = {},
+    val color: ThemedColor = ThemedColor(GlobalConfig.DEFAULT_COLOR)
 )

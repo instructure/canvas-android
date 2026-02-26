@@ -20,12 +20,11 @@ import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithModuleItemD
 import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
 import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetProgramsManager
-import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.journey.type.ProgramVariantType
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
@@ -38,96 +37,108 @@ class LearnRepositoryTest {
     private val getProgramsManager: GetProgramsManager = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
 
-    private val userId = 1L
+    private val testUser = User(id = 123L)
+    private val coursesWithProgress = listOf(
+        CourseWithProgress(
+            courseId = 1L,
+            courseName = "Course 1",
+            courseImageUrl = "https://example.com/image1.png",
+            progress = 50.0,
+            courseSyllabus = "Syllabus 1"
+        ),
+        CourseWithProgress(
+            courseId = 2L,
+            courseName = "Course 2",
+            courseImageUrl = "https://example.com/image2.png",
+            progress = 100.0,
+            courseSyllabus = "Syllabus 2"
+        )
+    )
 
     @Before
     fun setup() {
-        every { apiPrefs.user } returns User(id = userId, name = "Test User")
+        every { apiPrefs.user } returns testUser
+        coEvery { horizonGetCoursesManager.getCoursesWithProgress(any(), any()) } returns DataResult.Success(coursesWithProgress)
     }
 
     @Test
-    fun `Test successful courses with progress retrieval`() = runTest {
-        val courses = listOf(
-            CourseWithProgress(
-                courseId = 1L,
-                courseName = "Course 1",
-                courseSyllabus = "",
-                progress = 50.0
-            ),
-            CourseWithProgress(
-                courseId = 2L,
-                courseName = "Course 2",
-                courseSyllabus = "",
-                progress = 75.0
-            )
-        )
-        coEvery { horizonGetCoursesManager.getCoursesWithProgress(userId, false) } returns DataResult.Success(courses)
-
-        val result = getRepository().getCoursesWithProgress(false)
+    fun `getCoursesWithProgress returns list of courses with progress`() = runTest {
+        val repository = getRepository()
+        val result = repository.getCoursesWithProgress(false)
 
         assertEquals(2, result.size)
-        assertEquals(courses, result)
-    }
-
-    @Test(expected = IllegalStateException::class)
-    fun `Test failed courses retrieval throws exception`() = runTest {
-        coEvery { horizonGetCoursesManager.getCoursesWithProgress(userId, false) } returns DataResult.Fail()
-
-        getRepository().getCoursesWithProgress(false)
+        assertEquals(coursesWithProgress, result)
+        coVerify { horizonGetCoursesManager.getCoursesWithProgress(123L, false) }
     }
 
     @Test
-    fun `Test successful programs retrieval`() = runTest {
-        val programs = listOf(
-            Program(
-                id = "1",
-                name = "Program 1",
-                description = "Program 1 Description",
-                sortedRequirements = emptyList(),
+    fun `getCoursesWithProgress with forceNetwork true calls API with force network`() = runTest {
+        val repository = getRepository()
+        repository.getCoursesWithProgress(true)
+
+        coVerify { horizonGetCoursesManager.getCoursesWithProgress(123L, true) }
+    }
+
+    @Test
+    fun `getCoursesWithProgress uses -1 when user is null`() = runTest {
+        every { apiPrefs.user } returns null
+        val repository = getRepository()
+        repository.getCoursesWithProgress(false)
+
+        coVerify { horizonGetCoursesManager.getCoursesWithProgress(-1L, false) }
+    }
+
+    @Test
+    fun `getCoursesById returns list of courses`() = runTest {
+        val courseIds = listOf(1L, 2L, 3L)
+        val expectedCourses = courseIds.map { id ->
+            CourseWithModuleItemDurations(
+                courseId = id,
+                courseName = "Course $id",
+                moduleItemsDuration = listOf("30m", "45m"),
                 startDate = null,
-                endDate = null,
-                variant = ProgramVariantType.LINEAR,
-            ),
-            Program(
-                id = "2",
-                name = "Program 2",
-                description = "Program 2 Description",
-                sortedRequirements = emptyList(),
-                startDate = null,
-                endDate = null,
-                variant = ProgramVariantType.NON_LINEAR,
+                endDate = null
             )
-        )
-        coEvery { getProgramsManager.getPrograms(false) } returns programs
+        }
 
-        val result = getRepository().getPrograms(false)
+        coEvery { horizonGetCoursesManager.getProgramCourses(1L, false) } returns DataResult.Success(expectedCourses[0])
+        coEvery { horizonGetCoursesManager.getProgramCourses(2L, false) } returns DataResult.Success(expectedCourses[1])
+        coEvery { horizonGetCoursesManager.getProgramCourses(3L, false) } returns DataResult.Success(expectedCourses[2])
 
-        assertEquals(2, result.size)
-        assertEquals(programs, result)
+        val repository = getRepository()
+        val result = repository.getCoursesById(courseIds)
+
+        assertEquals(3, result.size)
+        assertEquals(expectedCourses, result)
+        coVerify { horizonGetCoursesManager.getProgramCourses(1L, false) }
+        coVerify { horizonGetCoursesManager.getProgramCourses(2L, false) }
+        coVerify { horizonGetCoursesManager.getProgramCourses(3L, false) }
     }
 
     @Test
-    fun `Test successful get courses by id`() = runTest {
-        val courseIds = listOf(1L, 2L)
-        val course1 = CourseWithModuleItemDurations(courseId = 1L, courseName = "Course 1")
-        val course2 = CourseWithModuleItemDurations(courseId = 2L, courseName = "Course 2")
-
-        coEvery { horizonGetCoursesManager.getProgramCourses(1L, false) } returns DataResult.Success(course1)
-        coEvery { horizonGetCoursesManager.getProgramCourses(2L, false) } returns DataResult.Success(course2)
-
-        val result = getRepository().getCoursesById(courseIds, false)
-
-        assertEquals(2, result.size)
-        assertEquals(course1, result[0])
-        assertEquals(course2, result[1])
-    }
-
-    @Test(expected = IllegalStateException::class)
-    fun `Test failed get courses by id throws exception`() = runTest {
+    fun `getCoursesById with forceNetwork true calls API with force network`() = runTest {
         val courseIds = listOf(1L)
-        coEvery { horizonGetCoursesManager.getProgramCourses(1L, false) } returns DataResult.Fail()
+        val course = CourseWithModuleItemDurations(
+            courseId = 1L,
+            courseName = "Course 1",
+            moduleItemsDuration = listOf("30m"),
+            startDate = null,
+            endDate = null
+        )
+        coEvery { horizonGetCoursesManager.getProgramCourses(1L, true) } returns DataResult.Success(course)
 
-        getRepository().getCoursesById(courseIds, false)
+        val repository = getRepository()
+        repository.getCoursesById(courseIds, forceNetwork = true)
+
+        coVerify { horizonGetCoursesManager.getProgramCourses(1L, true) }
+    }
+
+    @Test
+    fun `getCoursesById with empty list returns empty list`() = runTest {
+        val repository = getRepository()
+        val result = repository.getCoursesById(emptyList())
+
+        assertEquals(0, result.size)
     }
 
     private fun getRepository(): LearnRepository {

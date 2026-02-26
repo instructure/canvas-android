@@ -333,7 +333,9 @@ class NotebookScreenUiTest {
         return CourseWithProgress(
             courseId = id,
             courseName = name,
-            progress = 0.0
+            progress = 0.0,
+            courseImageUrl = null,
+            courseSyllabus = null
         )
     }
 }

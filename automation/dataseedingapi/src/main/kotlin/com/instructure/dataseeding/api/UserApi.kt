@@ -1,20 +1,19 @@
-//
-// Copyright (C) 2018-present Instructure, Inc.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
-
-
+/*
+ * Copyright (C) 2018 - present Instructure, Inc.
+ *
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
+ *
+ */
 package com.instructure.dataseeding.api
 
 import com.instructure.dataseeding.model.CanvasUserApiModel
@@ -70,6 +69,9 @@ object UserApi {
 
         @GET("accounts/self/terms_of_service")
         fun getTermsOfService(): Call<TermsOfServiceApiResponseModel>
+
+        @GET("users/{userId}/profile?include[]=avatar_url")
+        fun getUserProfile(@Path("userId") userId: Long): Call<CanvasUserApiModel>
     }
 
     private fun userService(token: String): UserService
@@ -90,6 +92,10 @@ object UserApi {
 
     fun getTermsOfService(): TermsOfServiceApiResponseModel {
         return userAdminService.getTermsOfService().execute().body()!!
+    }
+
+    fun getUserProfile(userId: Long): CanvasUserApiModel {
+        return userAdminService.getUserProfile(userId).execute().body()!!
     }
 
     fun createCanvasUser(

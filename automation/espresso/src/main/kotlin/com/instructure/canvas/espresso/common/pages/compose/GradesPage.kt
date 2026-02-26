@@ -17,15 +17,22 @@
 
 package com.instructure.canvas.espresso.common.pages.compose
 
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
+import androidx.compose.ui.test.assertIsOff
+import androidx.compose.ui.test.assertIsOn
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.hasAnyAncestor
+import androidx.compose.ui.test.hasAnyChild
 import androidx.compose.ui.test.hasAnyDescendant
+import androidx.compose.ui.test.hasAnySibling
 import androidx.compose.ui.test.hasContentDescription
+import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
@@ -38,6 +45,7 @@ import androidx.compose.ui.test.swipeDown
 import androidx.compose.ui.test.swipeUp
 import com.instructure.composetest.hasDrawable
 import com.instructure.pandautils.R
+import java.lang.Thread.sleep
 
 
 class GradesPage(private val composeTestRule: ComposeTestRule) {
@@ -62,17 +70,12 @@ class GradesPage(private val composeTestRule: ComposeTestRule) {
     }
 
     fun assertTotalGradeText(grade: String) {
-        composeTestRule.onNodeWithText(grade)
+        composeTestRule.onNode(hasTestTag("totalGradeScoreText") and hasText(grade), useUnmergedTree = true)
             .assertIsDisplayed()
     }
 
     fun assertAssignmentGradeText(assignmentName: String, gradeText: String) {
         composeTestRule.onNode(hasText(assignmentName, substring = true) and hasText(gradeText, substring = true)).assertIsDisplayed()
-    }
-
-    fun clickBasedOnGradedAssignments() {
-        composeTestRule.onNodeWithText("Based on graded assignments")
-            .performClick()
     }
 
     fun assertGroupHeaderIsDisplayed(name: String) {
@@ -123,9 +126,14 @@ class GradesPage(private val composeTestRule: ComposeTestRule) {
             .assertIsDisplayed()
     }
 
-    fun scrollScreen() {
+    fun scrollDownScreen() {
         composeTestRule.onNodeWithTag("gradesList")
             .performTouchInput { swipeUp() }
+    }
+
+    fun scrollUpScreen() {
+        composeTestRule.onNodeWithTag("gradesList")
+            .performTouchInput { swipeDown() }
     }
 
     fun assertCardText(text: String) {
@@ -140,6 +148,7 @@ class GradesPage(private val composeTestRule: ComposeTestRule) {
 
     fun refresh() {
         composeTestRule.onNodeWithTag("gradesList").performTouchInput { swipeDown() }
+        composeTestRule.waitForIdle()
     }
 
     fun assertGradesPreferencesFilterScreenLabels() {
@@ -153,9 +162,38 @@ class GradesPage(private val composeTestRule: ComposeTestRule) {
         composeTestRule.onNodeWithText(subtitle, useUnmergedTree = true).assertIsDisplayed()
     }
 
+    fun clickBasedOnGradedAssignments() {
+        composeTestRule.onNodeWithText("Based on graded assignments")
+            .performClick()
+        composeTestRule.waitForIdle()
+    }
+
+    fun assertBasedOnGradedAssignmentsToggleState(isOn: Boolean) {
+        if (isOn) {
+            composeTestRule.onNodeWithTag("basedOnGradedAssignmentsSwitch", useUnmergedTree = true)
+                .assertIsDisplayed().assertIsOn()
+        }
+        else {
+            composeTestRule.onNodeWithTag("basedOnGradedAssignmentsSwitch", useUnmergedTree = true)
+                .assertIsDisplayed().assertIsOff()
+        }
+    }
+
     fun clickShowWhatIfScore() {
         composeTestRule.onNodeWithTag("showWhatIfScoreLabel", useUnmergedTree = true)
             .performClick()
+        composeTestRule.waitForIdle()
+    }
+
+    fun assertShowWhatIfScoreToggleState(isOn: Boolean) {
+        if (isOn) {
+            composeTestRule.onNodeWithTag("showWhatIfScoreSwitch", useUnmergedTree = true)
+                .assertIsDisplayed().assertIsOn()
+        }
+        else {
+            composeTestRule.onNodeWithTag("showWhatIfScoreSwitch", useUnmergedTree = true)
+                .assertIsDisplayed().assertIsOff()
+        }
     }
 
     fun assertShowWhatIfScoreIsDisplayed() {
@@ -172,6 +210,7 @@ class GradesPage(private val composeTestRule: ComposeTestRule) {
             ),
             useUnmergedTree = true
         ).performClick()
+        composeTestRule.waitForIdle()
     }
 
     fun enterWhatIfScore(score: String) {
@@ -179,21 +218,25 @@ class GradesPage(private val composeTestRule: ComposeTestRule) {
             .performClick()
         composeTestRule.onNodeWithTag("whatIfScoreInput")
             .performTextInput(score)
+        composeTestRule.waitForIdle()
     }
 
     fun clickDoneInWhatIfDialog() {
         composeTestRule.onNodeWithTag("doneButton")
             .performClick()
+        composeTestRule.waitForIdle()
     }
 
     fun clickCancelInWhatIfDialog() {
         composeTestRule.onNodeWithTag("cancelButton")
             .performClick()
+        composeTestRule.waitForIdle()
     }
 
     fun clickClearWhatIfScore() {
         composeTestRule.onNodeWithTag("clearWhatIfScoreButton")
             .performClick()
+        composeTestRule.waitForIdle()
     }
 
     fun assertWhatIfGradeText(assignmentName: String, gradeText: String) {
@@ -201,5 +244,30 @@ class GradesPage(private val composeTestRule: ComposeTestRule) {
             .performScrollToNode(hasText(assignmentName))
         composeTestRule.onNodeWithTag("whatIfGradeText", useUnmergedTree = true)
             .assertTextEquals(gradeText)
+    }
+
+    fun assertAssignmentDueDate(assignmentName: String, dueDate: String) {
+        composeTestRule.onNode(hasTestTag("assignmentDueDate") and hasText(dueDate, substring = true
+        ) and hasParent(hasAnyChild(hasText(assignmentName))), useUnmergedTree = true)
+        .assertIsDisplayed()
+    }
+
+    fun assertAssignmentStatus(assignmentName: String, stateText: String) {
+        composeTestRule.onNode(hasTestTag("submissionStateLabel") and hasText(stateText
+        ) and hasParent(hasAnyChild(hasText(assignmentName))), useUnmergedTree = true)
+        .assertIsDisplayed()
+    }
+
+    fun clickAssignmentGroupExpandCollapseButton(assignmentGroupName: String) {
+        composeTestRule.onNode(
+            hasTestTag("assignmentGroupExpandCollapseIcon") and hasAnySibling(hasText(assignmentGroupName)), useUnmergedTree = true
+        ).performClick()
+        composeTestRule.waitForIdle()
+        sleep(1000)
+    }
+
+    fun assertAllAssignmentItemCount(expectedCount: Int) {
+        composeTestRule.onAllNodesWithTag("assignmentItem")
+            .assertCountEquals(expectedCount)
     }
 }

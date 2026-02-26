@@ -57,7 +57,7 @@ import com.instructure.horizon.horizonui.molecules.PillType
 @Composable
 fun DashboardSkillHighlightsCardContent(
     state: DashboardSkillHighlightsCardState,
-    homeNavController: NavHostController,
+    navController: NavHostController,
     isLoading: Boolean,
     modifier: Modifier = Modifier,
 ) {
@@ -98,7 +98,7 @@ fun DashboardSkillHighlightsCardContent(
                             SkillCard(
                                 skill,
                                 skill.proficiencyLevel.opacity(),
-                                homeNavController,
+                                navController,
                                 modifier = Modifier
                                     .weight(1f)
                                     .shimmerEffect(
@@ -117,7 +117,7 @@ fun DashboardSkillHighlightsCardContent(
                             SkillCard(
                                 skill,
                                 skill.proficiencyLevel.opacity(),
-                                homeNavController,
+                                navController,
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .shimmerEffect(
@@ -138,7 +138,7 @@ fun DashboardSkillHighlightsCardContent(
 private fun SkillCard(
     skill: SkillHighlight,
     opacity: Float,
-    homeNavController: NavHostController,
+    navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -148,8 +148,8 @@ private fun SkillCard(
             .background(HorizonColors.PrimitivesGreen.green12().copy(alpha = opacity))
             .fillMaxWidth()
             .clickable {
-                homeNavController.navigate(HomeNavigationRoute.Skillspace.route) {
-                    popUpTo(homeNavController.graph.findStartDestination().id) {
+                navController.navigate(HomeNavigationRoute.Skillspace.route) {
+                    popUpTo(navController.graph.findStartDestination().id) {
                         saveState = true
                     }
                     launchSingleTop = true

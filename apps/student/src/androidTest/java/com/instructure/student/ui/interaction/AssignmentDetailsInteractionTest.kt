@@ -460,7 +460,7 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
     fun testNavigating_viewSubmissionDetailsWithSubmission() {
-        // Test clicking on the Submission and Rubric button to load the Submission Details Page
+        // Test clicking on the Submission and Feedback button to load the Submission Details Page
         val data = setUpData()
         goToAssignmentList()
         val assignmentList = data.assignments
@@ -476,7 +476,7 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
     fun testNavigating_viewSubmissionDetailsWithoutSubmission() {
-        // Test clicking on the Submission and Rubric button to load the Submission Details Page
+        // Test clicking on the Submission and Feedback button to load the Submission Details Page
         val data = setUpData()
         goToAssignmentList()
         val assignmentList = data.assignments
@@ -588,7 +588,7 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
         goToAssignmentList()
         assignmentListPage.clickAssignment(assignment)
 
-        assignmentDetailsPage.assertGradeDisplayed("3.7")
+        assignmentDetailsPage.assertGradeDisplayed("A")
         assignmentDetailsPage.assertOutOfTextNotDisplayed()
         assignmentDetailsPage.assertScoreNotDisplayed()
     }
@@ -885,7 +885,7 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
     }
 
     private fun setUpData(restrictQuantitativeData: Boolean = false): MockCanvas {
-        // Test clicking on the Submission and Rubric button to load the Submission Details Page
+        // Test clicking on the Submission and Feedback button to load the Submission Details Page
         val data = MockCanvas.init(
             studentCount = 1,
             courseCount = 1

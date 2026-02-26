@@ -17,18 +17,21 @@
 
 package com.instructure.parentapp.ui.espresso
 
-import androidx.work.DefaultWorkerFactory
+import androidx.work.Configuration
 import androidx.work.WorkerFactory
+import com.instructure.canvas.espresso.WorkManagerTestAppManager
+import com.instructure.canvas.espresso.WorkManagerTestHelper
 import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.parentapp.util.BaseAppManager
 
-open class TestAppManager : BaseAppManager() {
+open class TestAppManager : BaseAppManager(), WorkManagerTestAppManager {
 
-    private var workerFactory: WorkerFactory? = null
+    override val workManagerTestHelper = WorkManagerTestHelper()
 
-    override fun getWorkManagerFactory(): WorkerFactory {
-        return workerFactory ?: DefaultWorkerFactory
-    }
+    override val workManagerConfiguration: Configuration
+        get() = workManagerTestHelper.workManagerConfiguration
+
+    override fun getWorkManagerFactory(): WorkerFactory = workManagerTestHelper.getWorkManagerFactory()
 
     override fun getScheduler(): AlarmScheduler? {
         return null

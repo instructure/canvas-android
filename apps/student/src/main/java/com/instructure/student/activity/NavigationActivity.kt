@@ -137,6 +137,7 @@ import com.instructure.student.events.CourseColorOverlayToggledEvent
 import com.instructure.student.events.ShowConfettiEvent
 import com.instructure.student.events.ShowGradesToggledEvent
 import com.instructure.student.events.UserUpdatedEvent
+import com.instructure.student.features.dashboard.compose.NewDashboardFragment
 import com.instructure.student.features.files.list.FileListFragment
 import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
 import com.instructure.student.features.navigation.NavigationRepository
@@ -684,17 +685,27 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             }
         }
 
+        // Hide these settings when the new dashboard is active (they're now in customize dashboard)
+        val isNewDashboardActive = navigationBehavior.homeFragmentClass == NewDashboardFragment::class.java
+        if (isNewDashboardActive) {
+            navigationDrawerBinding.navigationDrawerSettingsSpacer.setGone()
+            navigationDrawerBinding.navigationMenuItemsDivider.setGone()
+            navigationDrawerBinding.optionsMenuTitle.setGone()
+            navigationDrawerBinding.navigationDrawerItemShowGrades.setGone()
+            navigationDrawerBinding.navigationDrawerItemColorOverlay.setGone()
+            navigationDrawerBinding.optionsMenuItemsDivider.setGone()
+        } else {
+            //Load Show Grades
+            navigationDrawerBinding.navigationDrawerShowGradesSwitch.isChecked = StudentPrefs.showGradesOnCard
+            navigationDrawerBinding.navigationDrawerShowGradesSwitch.setOnCheckedChangeListener { _, isChecked ->
+                StudentPrefs.showGradesOnCard = isChecked
+                EventBus.getDefault().post(ShowGradesToggledEvent)
+            }
+            ViewStyler.themeSwitch(this@NavigationActivity, navigationDrawerBinding.navigationDrawerShowGradesSwitch, ThemePrefs.brandColor)
 
-        //Load Show Grades
-        navigationDrawerBinding.navigationDrawerShowGradesSwitch.isChecked = StudentPrefs.showGradesOnCard
-        navigationDrawerBinding.navigationDrawerShowGradesSwitch.setOnCheckedChangeListener { _, isChecked ->
-            StudentPrefs.showGradesOnCard = isChecked
-            EventBus.getDefault().post(ShowGradesToggledEvent)
+            // Set up Color Overlay setting
+            setUpColorOverlaySwitch()
         }
-        ViewStyler.themeSwitch(this@NavigationActivity, navigationDrawerBinding.navigationDrawerShowGradesSwitch, ThemePrefs.brandColor)
-
-        // Set up Color Overlay setting
-        setUpColorOverlaySwitch()
 
         //Load version
         try {
@@ -1317,6 +1328,10 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
     override fun onToDoCountChanged(count: Int) {
         updateToDoCount(count)
+    }
+
+    override fun refreshToDoCount() {
+        handleToDoListRefresh()
     }
 
     private fun updateBottomBarBadge(@IdRes menuItemId: Int, count: Int, @PluralsRes quantityContentDescription: Int? = null) = with(binding) {

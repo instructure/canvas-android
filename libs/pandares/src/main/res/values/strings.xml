@@ -46,6 +46,7 @@
     <string name="submissionStatusFailedTitle">Submission Failed</string>
     <string name="submissionStatusFailedSubtitle">Tap to view details</string>
     <string name="submissionAndRubric">Submission &amp; Rubric</string>
+    <string name="submissionAndFeedback">Submission &amp; Feedback</string>
     <string name="commentsAndRubric">Comments &amp; Rubric</string>
     <string name="errorLoadingAssignment">There was a problem loading this assignment. Please check your connection and try again.</string>
     <string name="submitted">Submitted</string>
@@ -219,6 +220,7 @@
 
     <!-- Date strings -->
     <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
     <string name="past">Past</string>
     <string name="noDate">No Date</string>
     <string name="future">Future</string>
@@ -473,6 +475,7 @@
     <string name="group">Group</string>
     <string name="groups">Groups</string>
     <string name="groupMembers">Group Members</string>
+    <string name="messageGroup">Message group</string>
 
     <string name="loading">Loading&#8230;</string>
     <string name="select_item_to_display">Select from the list</string>
@@ -1078,6 +1081,12 @@
     <string name="pageTitleMustBeSet">Page title must be set.</string>
     <string name="pageDetails">Page Details</string>
     <string name="saving">Saving</string>
+    <string name="speedGraderSaving">Saving</string>
+    <string name="speedGraderSaved">Saved</string>
+    <string name="speedGraderFailed">Failed</string>
+    <string name="speedGraderSaveErrorTitle">Oops something went wrong</string>
+    <string name="speedGraderSaveErrorMessage">There was an error while saving your grade modification. You can retry, or try again later.</string>
+    <string name="speedGraderSaveErrorContentDescription">Grade save failed. Tap for details.</string>
     <string name="confirmDeleteEvent">Are you sure you wish to delete this event?</string>
     <string name="conferencesNotSupported">Conferences are not yet supported on mobile.</string>
     <string name="filePreviewContentDescription">File preview image</string>
@@ -1224,6 +1233,11 @@
     <string name="conferenceDetails">Conference Details</string>
     <string name="recordings">Recordings</string>
     <string name="conferenceInProgress">Conference in progress</string>
+
+    <!-- Conferences Widget -->
+    <string name="conferencesWidgetTitle">Conferences (%d)</string>
+    <string name="conferencesWidgetConferenceInProgress">Conference in progress</string>
+    <string name="conferencesWidgetDismissed">Conference dismissed</string>
 
     <string name="a11y_criterion_content_description">Criterion rating %s</string>
     <string name="a11y_criterion_description_content_description">%s, %s</string>
@@ -2129,6 +2143,19 @@
     <string name="widgetGradesErrorLoadingCourses">An error occurred while loading courses.</string>
     <string name="settingsSwitchExperience">Switch to Canvas Career</string>
 
+    <string name="forecastWidgetTitle">Weekly Summary</string>
+    <string name="forecastWidgetWeekPeriod">Week %1$d | %2$s</string>
+    <string name="forecastWidgetMissing">Missing</string>
+    <string name="forecastWidgetDue">Due</string>
+    <string name="forecastWidgetRecentGrades">New Grades</string>
+    <string name="forecastWidgetGradeWeight">%d%% of final grade</string>
+    <string name="forecastWidgetErrorMessage">We\'re having trouble loading your assignments. Please check your connection and try again.</string>
+    <string name="forecastWidgetEmptyMissing">No missing assignments. You\'re all caught up!</string>
+    <string name="forecastWidgetEmptyDue">No assignments due this week.</string>
+    <string name="forecastWidgetEmptyRecentGrades">No new grades in this week.</string>
+    <string name="a11y_contentDescription_previousWeek">Previous week</string>
+    <string name="a11y_contentDescription_nextWeek">Next week</string>
+
     <string name="speedGraderGradeTabTitle">Grade &amp; Rubric</string>
     <string name="speedGraderDetailsTabTitle">Details</string>
     <string name="a11y_contentDescription_expandPanel">Expand panel</string>
@@ -2244,6 +2271,9 @@
     <string name="courseInvitationDeclined">Invitation to %s declined</string>
     <string name="courseInvitationDeclineConfirmTitle">Decline Invitation</string>
     <string name="courseInvitationDeclineConfirmMessage">Are you sure you want to decline the invitation to %s?</string>
+
+    <!-- Progress Widget -->
+    <string name="progressWidgetTitle">Progress</string>
 
     <!-- Welcome Widget -->
     <!-- Greetings with name (%s is the student's first name) -->
@@ -2367,6 +2397,7 @@
 
     <!-- Widget Display Names -->
     <string name="widget_hello">Hello, %s</string>
+    <string name="courses_and_groups">Courses &amp; Groups</string>
 
     <!-- Customize Dashboard -->
     <string name="customize_dashboard">Customize Dashboard</string>
@@ -2377,16 +2408,44 @@
     <string name="changing_dashboard_layout">Changing dashboard layout</string>
     <string name="changing_dashboard_layout_message">To change the dashboard layout you have to restart the application</string>
     <string name="restart_now">Restart now</string>
+    <string name="turn_on_new_dashboard">Turn on the new dashboard</string>
     <string name="switched_back">Switched back?</string>
     <string name="switched_back_message">Thanks for trying the new dashboard! Could you tell us why you switched back?</string>
+    <string name="survey_option_hard_to_find">Hard to find things</string>
+    <string name="survey_option_prefer_old_layout">Prefer the old layout</string>
+    <string name="survey_option_something_broken">Something didn\'t work right</string>
     <string name="what_could_we_improve">What could we improve?</string>
+    <string name="what_do_you_think_of_new_dashboard">What do you think of the new dashboard?</string>
+    <string name="let_us_know">Let us know!</string>
+    <string name="no_app_to_handle_link">No app available to open this link</string>
     <string name="skip">Skip</string>
     <string name="widget_setting_show_greeting">Show greeting</string>
     <string name="background_color">Background color</string>
+    <string name="widget_setting_show_grades">Course Grades</string>
+    <string name="widget_setting_show_color_overlay">Course Color Overlay</string>
     <string name="offline_content_available">Offline content available</string>
     <string name="a11y_contentDescription_moreOptions">More options</string>
     <string name="customizeCourse">Customize Course</string>
     <string name="favoriteCoursesAndGroups">Favorite Courses and Groups</string>
     <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
     <string name="ltiToolsOffline">External Tools are not available offline.</string>
+    <string name="widget_weekly_summary">Weekly Summary</string>
+
+    <string name="dashboardCourseNickname">Nickname</string>
+    <string name="dashboardCourseNicknameHint">Write course nickname here</string>
+    <string name="dashboardCourseColor">Course Color</string>
+    <string name="widget_toDo">Daily To-do</string>
+    <string name="dailyToDoWidgetTitle">Daily To-do</string>
+    <string name="todoWidget_showCompleted">Show Completed</string>
+    <string name="todoWidget_emptyTitle">You\'re all done for now!</string>
+    <string name="todoWidget_emptyMessage">Looks like you\'re free for this day.\nDo you want to add some To-dos?</string>
+    <string name="todoWidget_addTodo">Add To-do</string>
+    <string name="todoWidget_errorTitle">Oops, Something went wrong</string>
+    <string name="todoWidget_errorMessage">We weren\'t able to load your To-dos.\nTry again, or come back later.</string>
+    <string name="todoWidget_refresh">Refresh</string>
+    <string name="todoWidget_today">Today</string>
+    <string name="a11y_todoWidget_jumpToToday">Jump to today</string>
+    <string name="widgetSettings_widgetsColor">Dashboard Main Color</string>
+    <string name="dashboard_globalAnnouncement">Global Announcement</string>
+    <string name="forecastWidget_currentWeek">Current week</string>
 </resources>

@@ -501,4 +501,8 @@
         <item quantity="other">%d minuti</item>
     </plurals>
     <string name="notATeacherDescription">Una delle altre nostre app può essere la scelta migliore. Toccare un’icona per accedere.</string>
+    <string name="gradePercentAccessibility">Voto: %d percentuale</string>
+    <string name="gradePointsAccessibility">Voto: %s punti</string>
+    <string name="gradePercentTextFieldAccessibility">Voto: %d percentuale, %s</string>
+    <string name="gradePointsTextFieldAccessibility">Voto: %s punti, %s</string>
 </resources>

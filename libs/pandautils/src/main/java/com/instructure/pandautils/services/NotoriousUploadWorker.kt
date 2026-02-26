@@ -200,7 +200,7 @@ class NotoriousUploadWorker @AssistedInject constructor(
 
     private fun broadcastSubmission(submission: Submission): Result {
         builder.setContentText(context.getString(R.string.fileUploadSuccess))
-            .setProgress(100, 100, false)
+            .setProgress(0, 0, false)
             .setOngoing(false)
         notificationManager.notify(notificationId, builder.build())
 
@@ -245,7 +245,7 @@ class NotoriousUploadWorker @AssistedInject constructor(
 
     private fun showErrorNotification() {
         builder.setContentText(context.getString(R.string.errorUploadingFile))
-            .setProgress(100, 100, false)
+            .setProgress(0, 0, false)
             .setOngoing(false)
         notificationManager.notify(
             notificationId,

@@ -238,4 +238,10 @@ class InboxDetailsPage(private val composeTestRule: ComposeTestRule) {
         onView(withResourceIdContaining("pspdf__toolbar_main"))
             .assertDisplayed()
     }
+
+    // Verifies that the PSPDFKit document view is displayed
+    fun assertPdfDocumentViewDisplayed() {
+        onView(withResourceIdContaining("pdfFragmentContainer"))
+            .assertDisplayed()
+    }
 }

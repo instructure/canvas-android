@@ -155,4 +155,17 @@ object ColorUtils {
             return color
         }
     }
+
+    fun Int.toApiHexString(): String {
+        var hexColor = Integer.toHexString(this)
+        // Remove alpha if present
+        if (hexColor.length > 6) {
+            hexColor = hexColor.substring(hexColor.length - 6)
+        }
+        // Remove # if present
+        if (hexColor.startsWith("#")) {
+            hexColor = hexColor.replace("#", "")
+        }
+        return hexColor
+    }
 }

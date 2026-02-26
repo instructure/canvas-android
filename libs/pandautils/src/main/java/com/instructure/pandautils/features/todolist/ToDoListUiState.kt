@@ -15,8 +15,7 @@
  */
 package com.instructure.pandautils.features.todolist
 
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.composables.todo.ToDoItemUiState
 import java.util.Date
 
 data class ToDoListUiState(
@@ -42,29 +41,3 @@ data class ConfirmationSnackbarData(
     val title: String,
     val markedAsDone: Boolean
 )
-
-data class ToDoItemUiState(
-    val id: String,
-    val title: String,
-    val date: Date,
-    val dateLabel: String?,
-    val contextLabel: String,
-    val canvasContext: CanvasContext,
-    val itemType: ToDoItemType,
-    val isChecked: Boolean = false,
-    val iconRes: Int = R.drawable.ic_calendar,
-    val tag: String? = null,
-    val htmlUrl: String? = null,
-    val isClickable: Boolean = true,
-    val onSwipeToDone: () -> Unit = {},
-    val onCheckboxToggle: (Boolean) -> Unit = {}
-)
-
-enum class ToDoItemType {
-    ASSIGNMENT,
-    SUB_ASSIGNMENT,
-    QUIZ,
-    DISCUSSION,
-    CALENDAR_EVENT,
-    PLANNER_NOTE
-}

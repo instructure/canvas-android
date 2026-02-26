@@ -187,7 +187,7 @@ class CourseDetailsGradesE2ETest : ParentComposeTest() {
 
         Log.d(STEP_TAG, "Refresh the Grades page and scroll to the down the assignment list.")
         gradesPage.refresh()
-        gradesPage.scrollScreen()
+        gradesPage.scrollDownScreen()
 
         Log.d(ASSERTION_TAG, "Assert the 'Card' label is 'Based on graded assignments'.")
         gradesPage.assertCardText("Based on graded assignments")

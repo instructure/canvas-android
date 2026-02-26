@@ -20,10 +20,10 @@ import android.content.Context
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.pandautils.room.studentdb.StudentDb
 import com.instructure.pandautils.utils.color
 import com.instructure.student.R
 import com.instructure.student.mobius.common.ui.Presenter
-import com.instructure.pandautils.room.studentdb.StudentDb
 import kotlinx.coroutines.runBlocking
 import java.util.Date
 
@@ -45,24 +45,27 @@ class SubmissionCommentsPresenter(private val studentDb: StudentDb) : Presenter<
 
         val tint = CanvasContext.emptyCourseContext(model.assignment.courseId).color
 
-        val comments =
-            model.comments.filter { it.attempt == null || it.attempt == model.attemptId || !model.assignmentEnhancementsEnabled }
-                .map { comment ->
-                    val date = comment.createdAt ?: Date(0)
-                    CommentItemState.CommentItem(
-                        id = comment.id,
-                        authorName = comment.author?.displayName.orEmpty(),
-                        authorPronouns = comment.author?.pronouns,
-                        avatarUrl = comment.author?.avatarImageUrl.orEmpty(),
-                        sortDate = date,
-                        dateText = date.getSubmissionFormattedDate(context),
-                        message = comment.comment.orEmpty(),
-                        isAudience = comment.authorId != self.id,
-                        media = comment.mediaComment,
-                        attachments = comment.attachments,
-                        tint = tint
-                    )
-                }
+        val comments = model.comments.filter {
+            it.attempt == null ||
+                    it.attempt == model.attemptId ||
+                    !model.assignmentEnhancementsEnabled ||
+                    (it.attempt == 0L && model.attemptId == 1L)
+        }.map { comment ->
+            val date = comment.createdAt ?: Date(0)
+            CommentItemState.CommentItem(
+                id = comment.id,
+                authorName = comment.author?.displayName.orEmpty(),
+                authorPronouns = comment.author?.pronouns,
+                avatarUrl = comment.author?.avatarImageUrl.orEmpty(),
+                sortDate = date,
+                dateText = date.getSubmissionFormattedDate(context),
+                message = comment.comment.orEmpty(),
+                isAudience = comment.authorId != self.id,
+                media = comment.mediaComment,
+                attachments = comment.attachments,
+                tint = tint
+            )
+        }
 
         val submissions = model.submissionHistory
             .filter { it.attempt == model.attemptId || !model.assignmentEnhancementsEnabled }

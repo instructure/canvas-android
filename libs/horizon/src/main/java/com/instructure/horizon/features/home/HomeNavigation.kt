@@ -15,23 +15,17 @@
  */
 package com.instructure.horizon.features.home
 
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
+import androidx.navigation.compose.navigation
 import com.instructure.horizon.features.account.navigation.accountNavigation
 import com.instructure.horizon.features.dashboard.DashboardScreen
 import com.instructure.horizon.features.dashboard.DashboardViewModel
-import com.instructure.horizon.features.dashboard.widget.course.list.DashboardCourseListScreen
-import com.instructure.horizon.features.dashboard.widget.course.list.DashboardCourseListViewModel
-import com.instructure.horizon.features.learn.LearnScreen
-import com.instructure.horizon.features.learn.LearnViewModel
+import com.instructure.horizon.features.learn.navigation.learnNavigation
 import com.instructure.horizon.features.skillspace.SkillspaceScreen
 import com.instructure.horizon.features.skillspace.SkillspaceViewModel
 import com.instructure.horizon.horizonui.animation.NavigationTransitionAnimation
@@ -42,62 +36,38 @@ import com.instructure.horizon.horizonui.animation.popExitTransition
 import com.instructure.horizon.horizonui.showroom.ShowroomContent
 import com.instructure.horizon.horizonui.showroom.ShowroomItem
 import com.instructure.horizon.horizonui.showroom.showroomItems
+import com.instructure.horizon.navigation.MainNavigationRoute
 import kotlinx.serialization.Serializable
-
-const val COURSE_PREFIX = "course_"
-const val PROGRAM_PREFIX = "program_"
 
 @Serializable
 sealed class HomeNavigationRoute(val route: String) {
     data object Dashboard : HomeNavigationRoute("dashboard")
-    data object CourseList: HomeNavigationRoute("courses")
-    data object Learn : HomeNavigationRoute("learn?learningItemId={learningItemId}") {
-        fun withCourse(courseId: Long? = null) =
-            if (courseId != null) "learn?learningItemId=$COURSE_PREFIX$courseId" else "learn"
-
-        fun withProgram(programId: String? = null) =
-            if (programId != null) "learn?learningItemId=$PROGRAM_PREFIX$programId" else "learn"
-    }
-
+    data object Learn : HomeNavigationRoute("learn")
     data object Skillspace : HomeNavigationRoute("skillspace")
     data object Account : HomeNavigationRoute("account")
 }
 
-@Composable
-fun HomeNavigation(navController: NavHostController, mainNavController: NavHostController, modifier: Modifier = Modifier) {
-    NavHost(
-        navController,
+fun NavGraphBuilder.horizonHomeNavigation(
+    navController: NavHostController,
+) {
+    navigation(
+        route = MainNavigationRoute.Home.route,
+        startDestination = HomeNavigationRoute.Dashboard.route,
         enterTransition = { enterTransition(NavigationTransitionAnimation.SCALE) },
         exitTransition = { exitTransition(NavigationTransitionAnimation.SCALE) },
         popEnterTransition = { popEnterTransition(NavigationTransitionAnimation.SCALE) },
         popExitTransition = { popExitTransition(NavigationTransitionAnimation.SCALE) },
-        startDestination = HomeNavigationRoute.Dashboard.route, modifier = modifier
     ) {
+        learnNavigation(navController)
         composable(HomeNavigationRoute.Dashboard.route) {
             val viewModel = hiltViewModel<DashboardViewModel>()
             val uiState by viewModel.uiState.collectAsState()
-            DashboardScreen(uiState, mainNavController, navController)
-        }
-        composable(
-            route = HomeNavigationRoute.Learn.route, arguments = listOf(
-                navArgument("learningItemId") {
-                    type = NavType.StringType
-                    defaultValue = ""
-                }
-            )) {
-            val viewModel = hiltViewModel<LearnViewModel>()
-            val uiState by viewModel.state.collectAsState()
-            LearnScreen(uiState, mainNavController = mainNavController)
+            DashboardScreen(uiState, navController)
         }
         composable(HomeNavigationRoute.Skillspace.route) {
             val viewModel = hiltViewModel<SkillspaceViewModel>()
             val uiState by viewModel.uiState.collectAsState()
             SkillspaceScreen(uiState)
-        }
-        composable(HomeNavigationRoute.CourseList.route) {
-            val viewModel = hiltViewModel<DashboardCourseListViewModel>()
-            val uiState by viewModel.uiState.collectAsState()
-            DashboardCourseListScreen(uiState, navController)
         }
         accountNavigation(navController)
 

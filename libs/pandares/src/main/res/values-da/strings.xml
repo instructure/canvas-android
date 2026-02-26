@@ -278,6 +278,7 @@
     <string name="checkBoxWhatIfGradeOption">Vis Hvad-du-hvis score</string>
     <string name="whatIfDialogText">Hvad-nu-hvis score</string>
     <string name="whatIfScoreExceedsMaximum">Resultatet kan ikke overstige det maksimale antal point</string>
+    <string name="whatIfScoreExceedsMaximumWarning">Resultatet overstiger det maksimale antal point</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s ud af %2$s point, %3$s</string>
     <string name="inbox">Indbakke</string>
@@ -1923,6 +1924,15 @@
     <string name="courseDetailsMessageContentDescription">Send en besked om dette fag</string>
     <string name="gradeLockedContentDescription">Karakter låst</string>
     <string name="gradesRefreshFailed">Kunne ikke opdatere karakterer</string>
+    <string name="showWhatIfScore">Vis hvad-nu-hvis-resultat</string>
+    <string name="editWhatIfScore">Rediger hvad-nu-hvis-resultat</string>
+    <string name="editWhatIfScoreTitle">Rediger hvad-nu-hvis-resultat</string>
+    <string name="whatIfScoreLabel">Hvad-nu-hvis</string>
+    <string name="whatIfScoreCurrentGraded">Resultat %1$.0f ud af %2$.0f</string>
+    <string name="whatIfScoreCurrentUngraded">Ikke bedømt, maks. resultat %.0f</string>
+    <string name="whatIfScoreDisplay">Hvad-nu-hvis: %s</string>
+    <string name="gradesBasedOnGradedAndWhatIf">Baseret på bedømte opgaver og hvad-nu-hvis-resultat</string>
+    <string name="clearWhatIfScore">Ryd hvad-nu-hvis-resultat</string>
     <string name="chooseACourseToMessage">Vælg et fag at sende en meddelelse til</string>
     <string name="regardingHiddenMessage">Vedrørende: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">Vedrørende: %1$s, Opgave - %2$s</string>

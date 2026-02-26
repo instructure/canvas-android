@@ -23,5 +23,13 @@ val widgetDatabaseMigrations = arrayOf(
     createMigration(1, 2) { database ->
         database.execSQL("ALTER TABLE widget_metadata ADD COLUMN isEditable INTEGER NOT NULL DEFAULT 1")
         database.execSQL("ALTER TABLE widget_metadata ADD COLUMN isFullWidth INTEGER NOT NULL DEFAULT 0")
+    },
+
+    createMigration(2, 3) { database ->
+        // Drop isFullWidth column by recreating the table
+        database.execSQL("CREATE TABLE widget_metadata_new (widgetId TEXT PRIMARY KEY NOT NULL, position INTEGER NOT NULL, isVisible INTEGER NOT NULL, isEditable INTEGER NOT NULL DEFAULT 1)")
+        database.execSQL("INSERT INTO widget_metadata_new (widgetId, position, isVisible, isEditable) SELECT widgetId, position, isVisible, isEditable FROM widget_metadata")
+        database.execSQL("DROP TABLE widget_metadata")
+        database.execSQL("ALTER TABLE widget_metadata_new RENAME TO widget_metadata")
     }
 )

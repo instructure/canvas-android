@@ -23,7 +23,7 @@ data class DashboardPaginatedWidgetCardItemState(
     val source: String? = null,
     val date: Date? = null,
     val title: String? = null,
-    val route: DashboardPaginatedWidgetCardButtonRoute? = null
+    val route: String? = null
 ) {
     companion object {
         val Loading = DashboardPaginatedWidgetCardItemState(
@@ -35,7 +35,7 @@ data class DashboardPaginatedWidgetCardItemState(
             title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Announcement title shown here.",
             source = "Institution or Course Name Here",
             date = Date(),
-            route = DashboardPaginatedWidgetCardButtonRoute.MainRoute("")
+            route = null
         )
     }
 }
@@ -45,8 +45,3 @@ data class DashboardPaginatedWidgetCardHeaderState(
     val color: Color,
     @DrawableRes val iconRes: Int,
 )
-
-sealed class DashboardPaginatedWidgetCardButtonRoute {
-    data class MainRoute(val route: String) : DashboardPaginatedWidgetCardButtonRoute()
-    data class HomeRoute(val route: String) : DashboardPaginatedWidgetCardButtonRoute()
-}

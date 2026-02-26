@@ -83,7 +83,7 @@ data class ConferenceRecording(
 
 @Parcelize
 data class PlaybackFormat(
-    val length: String,
+    val length: String?,
     val type: String,
     val url: String
 ) : Parcelable

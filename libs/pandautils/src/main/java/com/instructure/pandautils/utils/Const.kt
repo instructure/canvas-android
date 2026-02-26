@@ -180,4 +180,6 @@ object Const {
     // Discussion Checkpoints tags
     const val REPLY_TO_TOPIC = "reply_to_topic"
     const val REPLY_TO_ENTRY = "reply_to_entry"
+
+    const val PRIVACY_POLICY_URL = "https://www.instructure.com/policies/product-privacy-policy"
 }

@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsBehaviour
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsColorProvider
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRepository
@@ -81,14 +82,16 @@ class AssignmentDetailsViewModelModule {
         assignmentInterface: AssignmentAPI.AssignmentInterface,
         quizInterface: QuizAPI.QuizInterface,
         submissionInterface: SubmissionAPI.SubmissionInterface,
-        customGradeStatusesManager: CustomGradeStatusesManager
+        customGradeStatusesManager: CustomGradeStatusesManager,
+        apiPrefs: ApiPrefs
     ): AssignmentDetailsNetworkDataSource {
         return AssignmentDetailsNetworkDataSource(
             coursesInterface,
             assignmentInterface,
             quizInterface,
             submissionInterface,
-            customGradeStatusesManager
+            customGradeStatusesManager,
+            apiPrefs
         )
     }
 

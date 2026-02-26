@@ -278,6 +278,7 @@
     <string name="checkBoxWhatIfGradeOption">क्या-अगर अंक दिखाएं</string>
     <string name="whatIfDialogText">क्या-अगर अंक</string>
     <string name="whatIfScoreExceedsMaximum">अंक अधिकतम पॉइंट्स से अधिक नहीं हो सकते</string>
+    <string name="whatIfScoreExceedsMaximumWarning">अंक अधिकतम पॉइंट्स से अधिक हैं</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%2$s पॉइंट्स में से %1$s, %3$s</string>
     <string name="inbox">इनबॉक्स</string>
@@ -1931,6 +1932,15 @@
     <string name="courseDetailsMessageContentDescription">इस पाठ्यक्रम के बारे में संदेश भेजें</string>
     <string name="gradeLockedContentDescription">ग्रेड लॉक किया गया</string>
     <string name="gradesRefreshFailed">ग्रेड रीफ़्रेश करने में विफल</string>
+    <string name="showWhatIfScore">क्या-अगर अंक दिखाएं</string>
+    <string name="editWhatIfScore">क्या-अगर अंक संपादित करें</string>
+    <string name="editWhatIfScoreTitle">क्या-अगर अंक संपादित करें</string>
+    <string name="whatIfScoreLabel">क्या-अगर</string>
+    <string name="whatIfScoreCurrentGraded">अंक %1$.0f कुल %2$.0f</string>
+    <string name="whatIfScoreCurrentUngraded">ग्रेड नहीं दिया गया, अधिकतम अंक %.0f</string>
+    <string name="whatIfScoreDisplay">क्या-अगर: %s</string>
+    <string name="gradesBasedOnGradedAndWhatIf">ग्रेडेड असाइनमेंट और क्या-अगर अंक पर आधारित</string>
+    <string name="clearWhatIfScore">क्या-अगर अंक साफ़ करें</string>
     <string name="chooseACourseToMessage">संदेश भेजने के लिए कोई पाठ्यक्रम चुनें</string>
     <string name="regardingHiddenMessage">इसके संबंध में: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">इसके संबंध में: %1$s, असाइनमेंट - %2$s</string>

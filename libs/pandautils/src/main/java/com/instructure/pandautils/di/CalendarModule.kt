@@ -15,9 +15,9 @@
  */
 package com.instructure.pandautils.di
 
+import com.instructure.pandautils.compose.composables.calendar.CalendarStateMapper
 import com.instructure.pandautils.features.calendar.CalendarPrefs
 import com.instructure.pandautils.features.calendar.CalendarSharedEvents
-import com.instructure.pandautils.features.calendar.CalendarStateMapper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

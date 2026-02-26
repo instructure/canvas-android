@@ -21,16 +21,18 @@ import com.instructure.canvasapi2.apis.LaunchDefinitionsAPI
 import com.instructure.canvasapi2.apis.OAuthAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.utils.ApiPrefs
 
 class LtiLaunchRepository(
     private val launchDefinitionsApi: LaunchDefinitionsAPI.LaunchDefinitionsInterface,
     private val assignmentApi: AssignmentAPI.AssignmentInterface,
-    private val oAuthInterface: OAuthAPI.OAuthInterface
+    private val oAuthInterface: OAuthAPI.OAuthInterface,
+    private val apiPrefs: ApiPrefs
 ) {
     suspend fun getLtiFromAuthenticationUrl(url: String, ltiTool: LTITool?): LTITool {
-        val params = RestParams(isForceReadFromNetwork = true)
         return ltiTool?.let {
             val courseId = if (ltiTool.courseId == 0L) ltiTool.contextId ?: 0L else ltiTool.courseId
+            val params = RestParams(isForceReadFromNetwork = true, domain = apiPrefs.overrideDomains[courseId])
             assignmentApi.getExternalToolLaunchUrl(courseId, ltiTool.id, ltiTool.assignmentId, restParams = params).dataOrNull
         } ?: launchDefinitionsApi.getLtiFromAuthenticationUrl(url, RestParams(isForceReadFromNetwork = true)).dataOrThrow
     }

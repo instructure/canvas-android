@@ -77,5 +77,5 @@ abstract class StudentComposeTest : StudentTest() {
         ), composeTestRule
     )
     val textSubmissionUploadPage = TextSubmissionUploadPage(composeTestRule)
-    val gradeListPage = GradesPage(composeTestRule)
+    val gradesPage = GradesPage(composeTestRule)
 }

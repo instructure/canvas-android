@@ -21,7 +21,6 @@ import com.instructure.canvasapi2.GetCoursesQuery
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
 import com.instructure.canvasapi2.type.EnrollmentWorkflowState
 import com.instructure.horizon.R
-import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardButtonRoute
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardHeaderState
 import com.instructure.horizon.features.dashboard.widget.DashboardPaginatedWidgetCardItemState
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetPageState
@@ -31,7 +30,7 @@ import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCo
 import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCourseCardModuleItemState
 import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCourseCardParentProgramState
 import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCourseCardState
-import com.instructure.horizon.features.home.HomeNavigationRoute
+import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 
 internal suspend fun List<GetCoursesQuery.Enrollment>.mapToDashboardCourseCardState(
@@ -56,7 +55,7 @@ internal fun List<Program>.mapToDashboardCourseCardState(context: Context): List
                 R.string.dashboardCourseCardProgramDetailsMessage,
                 program.name
             ),
-            route = DashboardPaginatedWidgetCardButtonRoute.HomeRoute(HomeNavigationRoute.Learn.withProgram(program.id)),
+            route = LearnRoute.LearnProgramDetailsScreen.route(program.id),
         )
     }
 }

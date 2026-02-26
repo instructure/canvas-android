@@ -15,7 +15,7 @@
  */
 package com.instructure.pandautils.features.assignments.details
 
-import com.instructure.pandautils.features.grades.SubmissionStateLabel
+import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 
 data class DiscussionCheckpointViewState(
     val name: String,

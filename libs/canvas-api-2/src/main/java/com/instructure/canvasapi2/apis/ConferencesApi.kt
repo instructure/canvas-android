@@ -42,6 +42,9 @@ object ConferencesApi {
         @GET("conferences?state=live")
         fun getLiveConferences(): Call<ConferenceList>
 
+        @GET("conferences?state=live")
+        suspend fun getLiveConferences(@Tag params: RestParams): DataResult<ConferenceList>
+
         @GET
         fun getNextPage(@Url nextUrl: String): Call<ConferenceList>
 

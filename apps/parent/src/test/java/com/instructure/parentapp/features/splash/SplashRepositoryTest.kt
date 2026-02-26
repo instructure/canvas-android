@@ -123,7 +123,7 @@ class SplashRepositoryTest {
 
     @Test
     fun `Get theme successfully returns data`() = runTest {
-        val expected = CanvasTheme("", "", "", "", "", "", "", "")
+        val expected = CanvasTheme("", "", "", "", "", "", "", "", "")
 
         coEvery { themeApi.getTheme(any()) } returns DataResult.Success(expected)
 

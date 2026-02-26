@@ -31,6 +31,8 @@ import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.isInvited
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.composables.todo.ToDoItemUiState
+import com.instructure.pandautils.compose.composables.todo.ToDoStateMapper
 import com.instructure.pandautils.features.calendar.CalendarSharedEvents
 import com.instructure.pandautils.features.calendar.SharedCalendarAction
 import com.instructure.pandautils.features.todolist.filter.DateRangeSelection
@@ -38,11 +40,6 @@ import com.instructure.pandautils.room.appdatabase.daos.ToDoFilterDao
 import com.instructure.pandautils.room.appdatabase.entities.ToDoFilterEntity
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.filterByToDoFilters
-import com.instructure.pandautils.utils.getContextNameForPlannerItem
-import com.instructure.pandautils.utils.getDateTextForPlannerItem
-import com.instructure.pandautils.utils.getIconForPlannerItem
-import com.instructure.pandautils.utils.getTagForPlannerItem
-import com.instructure.pandautils.utils.getUrl
 import com.instructure.pandautils.utils.isComplete
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -67,6 +64,7 @@ class ToDoListViewModel @Inject constructor(
     private val analytics: Analytics,
     private val toDoListViewModelBehavior: ToDoListViewModelBehavior,
     private val calendarSharedEvents: CalendarSharedEvents,
+    private val toDoStateMapper: ToDoStateMapper,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -181,35 +179,10 @@ class ToDoListViewModel @Inject constructor(
     }
 
     private fun mapToUiState(plannerItem: PlannerItem, courseMap: Map<Long, Course>): ToDoItemUiState {
-        val itemType = when (plannerItem.plannableType) {
-            PlannableType.ASSIGNMENT -> ToDoItemType.ASSIGNMENT
-            PlannableType.SUB_ASSIGNMENT -> ToDoItemType.SUB_ASSIGNMENT
-            PlannableType.QUIZ -> ToDoItemType.QUIZ
-            PlannableType.DISCUSSION_TOPIC -> ToDoItemType.DISCUSSION
-            PlannableType.CALENDAR_EVENT -> ToDoItemType.CALENDAR_EVENT
-            PlannableType.PLANNER_NOTE -> ToDoItemType.PLANNER_NOTE
-            else -> ToDoItemType.CALENDAR_EVENT
-        }
-
         val itemId = plannerItem.plannable.id.toString()
-
-        // Account-level calendar events should not be clickable
-        val isAccountLevelEvent = plannerItem.contextType?.equals("Account", ignoreCase = true) == true
-        val isClickable = !(isAccountLevelEvent && itemType == ToDoItemType.CALENDAR_EVENT)
-
-        return ToDoItemUiState(
-            id = itemId,
-            title = plannerItem.plannable.title,
-            date = plannerItem.plannableDate,
-            dateLabel = plannerItem.getDateTextForPlannerItem(context),
-            contextLabel = plannerItem.getContextNameForPlannerItem(context, courseMap.values),
-            canvasContext = plannerItem.canvasContext,
-            itemType = itemType,
-            isChecked = plannerItem.isComplete(),
-            iconRes = plannerItem.getIconForPlannerItem(),
-            tag = plannerItem.getTagForPlannerItem(context),
-            htmlUrl = plannerItem.getUrl(apiPrefs),
-            isClickable = isClickable,
+        return toDoStateMapper.mapToUiState(
+            plannerItem = plannerItem,
+            courseMap = courseMap,
             onSwipeToDone = { handleSwipeToDone(itemId) },
             onCheckboxToggle = { isChecked -> handleCheckboxToggle(itemId, isChecked) }
         )

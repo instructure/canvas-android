@@ -47,7 +47,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonTypography
 @Composable
 fun DashboardSkillOverviewCardContent(
     state: DashboardSkillOverviewCardState,
-    homeNavController: NavHostController,
+    navController: NavHostController,
     isLoading: Boolean,
     pageState: DashboardWidgetPageState,
     modifier: Modifier = Modifier,
@@ -60,8 +60,8 @@ fun DashboardSkillOverviewCardContent(
         isLoading = isLoading,
         useMinWidth = false,
         onClick = {
-            homeNavController.navigate(HomeNavigationRoute.Skillspace.route) {
-                popUpTo(homeNavController.graph.findStartDestination().id) {
+            navController.navigate(HomeNavigationRoute.Skillspace.route) {
+                popUpTo(navController.graph.findStartDestination().id) {
                     saveState = true
                 }
                 launchSingleTop = true

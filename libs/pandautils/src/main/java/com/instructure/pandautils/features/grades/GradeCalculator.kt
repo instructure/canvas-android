@@ -270,7 +270,7 @@ class GradeCalculator @Inject constructor() {
         }
 
         // Normalize if total weight is less than 100
-        if (totalWeight < 100.0.toBigDecimal() && earnedScore != BigDecimal.ZERO) {
+        if (totalWeight < 100.0.toBigDecimal() && totalWeight > BigDecimal.ZERO && earnedScore != BigDecimal.ZERO) {
             earnedScore = (earnedScore divideBy totalWeight.toDouble()) * 100.0
         }
 

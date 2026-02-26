@@ -97,11 +97,10 @@ import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.Loading
+import com.instructure.pandautils.compose.composables.calendar.CalendarBody
+import com.instructure.pandautils.compose.composables.calendar.CalendarHeaderUiState
+import com.instructure.pandautils.compose.composables.calendar.CalendarStateMapper
 import com.instructure.pandautils.features.calendar.CalendarAction
-import com.instructure.pandautils.features.calendar.CalendarDayUiState
-import com.instructure.pandautils.features.calendar.CalendarHeaderUiState
-import com.instructure.pandautils.features.calendar.CalendarRowUiState
-import com.instructure.pandautils.features.calendar.CalendarStateMapper
 import com.instructure.pandautils.features.calendar.CalendarUiState
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.announceAccessibilityText
@@ -216,7 +215,8 @@ fun Calendar(
                         todayFocusRequester = todayFocusRequester,
                         modifier = Modifier
                             .height(height.dp)
-                            .testTag("calendarBody$monthOffset")
+                            .testTag("calendarBody$monthOffset"),
+                        calendarRowHeightInDp = CALENDAR_ROW_HEIGHT
                     )
                 } else {
                     Loading(
@@ -232,7 +232,7 @@ fun Calendar(
 }
 
 @Composable
-fun CalendarHeader(
+private fun CalendarHeader(
     headerUiState: CalendarHeaderUiState,
     calendarOpen: Boolean,
     actionHandler: (CalendarAction) -> Unit,
@@ -338,181 +338,7 @@ fun CalendarHeader(
 }
 
 @Composable
-fun CalendarBody(
-    calendarRows: List<CalendarRowUiState>,
-    selectedDay: LocalDate,
-    selectedDayChanged: (LocalDate) -> Unit,
-    scaleRatio: Float,
-    modifier: Modifier = Modifier,
-    todayFocusRequester: FocusRequester? = null
-) {
-    Column(
-        modifier
-            .background(colorResource(id = R.color.backgroundLightest))
-    ) {
-        DayHeaders(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 16.dp, end = 16.dp)
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-        CalendarPage(calendarRows, selectedDay, selectedDayChanged, scaleRatio, todayFocusRequester = todayFocusRequester)
-    }
-}
-
-@Composable
-fun DayHeaders(modifier: Modifier = Modifier) {
-    Row(
-        modifier = modifier.clearAndSetSemantics { testTag = "dayHeaders" }, horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        val daysOfWeek = DayOfWeek.entries.toTypedArray()
-        val localeFirstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek.value
-        // Shift the starting point to the correct day
-        val shiftAmount = localeFirstDayOfWeek - daysOfWeek.first().value
-        val shiftedDaysOfWeek = Array(7) { daysOfWeek[(it + shiftAmount) % 7] }
-
-        for (day in shiftedDaysOfWeek) {
-            val headerText = day.getDisplayName(TextStyle.SHORT, Locale.getDefault())
-            val colorResource =
-                if (day == DayOfWeek.SUNDAY || day == DayOfWeek.SATURDAY) R.color.textDark else R.color.textDarkest
-            Text(
-                text = headerText,
-                fontSize = 12.sp,
-                color = colorResource(id = colorResource),
-                modifier = Modifier.width(32.dp),
-                textAlign = TextAlign.Center
-            )
-        }
-    }
-}
-
-@Composable
-fun CalendarPage(
-    calendarRows: List<CalendarRowUiState>,
-    selectedDay: LocalDate,
-    selectedDayChanged: (LocalDate) -> Unit,
-    scaleRatio: Float,
-    modifier: Modifier = Modifier,
-    todayFocusRequester: FocusRequester? = null
-) {
-    Column(modifier = modifier) {
-        calendarRows.forEachIndexed { index, it ->
-            // We only scale when it's expanding/collapsing, when it's not we need to show even the rows that don't have the selected day
-            // to be able to see the neighbouring pages
-            val scale = if (it.days.any { day -> day.date == selectedDay } || calendarRows.size == 1) 1.0f else scaleRatio
-            DaysOfWeekRow(
-                days = it.days, selectedDay, selectedDayChanged, todayFocusRequester = todayFocusRequester, modifier = Modifier
-                    .height(CALENDAR_ROW_HEIGHT.dp * scale)
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, end = 16.dp, bottom = 4.dp)
-                    .scale(scaleX = 1.0f, scaleY = scale)
-                    .alpha(scale)
-                    .testTag("calendarRow$index")
-            )
-        }
-    }
-}
-
-@Composable
-fun DaysOfWeekRow(
-    days: List<CalendarDayUiState>,
-    selectedDay: LocalDate,
-    selectedDayChanged: (LocalDate) -> Unit,
-    modifier: Modifier = Modifier,
-    todayFocusRequester: FocusRequester? = null
-) {
-    Row(
-        modifier = modifier, horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        days.forEach { dayState ->
-            val textColor = when {
-                dayState.date == selectedDay -> Color(ThemePrefs.buttonTextColor)
-                dayState.today -> Color(ThemePrefs.textButtonColor)
-                dayState.enabled -> colorResource(id = R.color.textDarkest)
-                else -> colorResource(id = R.color.textDark)
-            }
-            val dayContentDescription =
-                dayState.contentDescription + " " + pluralStringResource(
-                    id = R.plurals.a11y_calendar_day_event_count,
-                    dayState.indicatorCount,
-                    dayState.indicatorCount
-                )
-
-            var columnModifier = Modifier
-                .width(32.dp)
-                .wrapContentHeight()
-
-            if (dayState.today && dayState.enabled && todayFocusRequester != null) {
-                columnModifier = columnModifier
-                    .focusRequester(todayFocusRequester)
-                    .focusable()
-            }
-
-            Column(
-                columnModifier
-                    .testTag(dayState.dayNumber.toString())
-                    .selectable(dayState.date == selectedDay) {
-                        selectedDayChanged(dayState.date)
-                    }
-                    .semantics(mergeDescendants = true) {
-                        contentDescription = dayContentDescription
-                        role = Role.Button
-                    }
-            ) {
-                var dayModifier = Modifier
-                    .width(32.dp)
-                    .height(32.dp)
-                    .clip(RoundedCornerShape(32.dp))
-
-                if (dayState.date == selectedDay) {
-                    dayModifier = dayModifier
-                        .background(
-                            color = Color(ThemePrefs.buttonColor),
-                            shape = RoundedCornerShape(500.dp),
-                        )
-                }
-
-                Text(
-                    text = dayState.dayNumber.toString(),
-                    fontSize = 16.sp,
-                    color = textColor,
-                    modifier = dayModifier
-                        .wrapContentHeight(align = Alignment.CenterVertically)
-                        .clearAndSetSemantics { },
-                    textAlign = TextAlign.Center
-                )
-                Row(
-                    Modifier
-                        .height(10.dp)
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    repeat(dayState.indicatorCount) {
-                        EventIndicator(modifier = Modifier.clearAndSetSemantics {
-                            testTag = "eventIndicator$it"
-                        })
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun EventIndicator(modifier: Modifier = Modifier) {
-    Box(
-        modifier
-            .padding(horizontal = 3.dp)
-            .graphicsLayer()
-            .clip(CircleShape)
-            .size(4.dp)
-            .background(Color(ThemePrefs.buttonColor))
-    )
-}
-
-@Composable
-fun AccessibilityButtons(
+private fun AccessibilityButtons(
     previousContentDescription: String,
     nextContentDescription: String,
     pagerState: PagerState,

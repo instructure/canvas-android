@@ -35,5 +35,5 @@ object Const {
     const val noPictureURL = "images/dotted_pic.png"
     const val USE_DEFAULT_DOMAIN = "useDefaultDomain"
 
-    const val FIND_SCHOOL_HELP_URL = "https://community.canvaslms.com/docs/DOC-10726-67952720322"
+    const val FIND_SCHOOL_HELP_URL = "https://community.instructure.com/en/kb/articles/662717-where-do-i-find-my-institutions-url-to-access-canvas"
 }

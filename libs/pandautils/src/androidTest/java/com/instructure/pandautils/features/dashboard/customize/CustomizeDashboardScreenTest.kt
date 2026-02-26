@@ -23,7 +23,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performTextInput
+import androidx.compose.ui.test.performScrollToIndex
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.pandautils.features.dashboard.widget.SettingType
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
@@ -503,7 +503,7 @@ class CustomizeDashboardScreenTest {
         composeTestRule.onNodeWithTag("surveyDialog").assertIsDisplayed()
         composeTestRule.onNodeWithTag("surveyDialogTitle").assertIsDisplayed()
         composeTestRule.onNodeWithTag("surveyDialogMessage").assertIsDisplayed()
-        composeTestRule.onNodeWithTag("surveyDialogFeedbackField").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("surveyDialogFeedbackButton").assertIsDisplayed()
         composeTestRule.onNodeWithTag("surveyDialogSubmitButton").assertIsDisplayed()
         composeTestRule.onNodeWithTag("surveyDialogSkipButton").assertIsDisplayed()
     }
@@ -549,7 +549,7 @@ class CustomizeDashboardScreenTest {
     }
 
     @Test
-    fun testSurveyDialogSubmitButtonEnabledWithText() {
+    fun testSurveyDialogSubmitButtonEnabledWithOption() {
         val widgets = listOf(
             WidgetItem(
                 metadata = WidgetMetadata(
@@ -584,8 +584,8 @@ class CustomizeDashboardScreenTest {
         ).performClick()
         composeTestRule.onNodeWithTag("confirmationDialogConfirmButton").performClick()
 
-        // Enter feedback
-        composeTestRule.onNodeWithTag("surveyDialogFeedbackField").performTextInput("Test feedback")
+        // Select a survey option
+        composeTestRule.onNodeWithTag("surveyOption_hard_to_find").performClick()
 
         // Submit button should be enabled
         composeTestRule.onNodeWithTag("surveyDialogSubmitButton").assertIsEnabled()
@@ -636,6 +636,139 @@ class CustomizeDashboardScreenTest {
                 .onAllNodes(hasTestTag("surveyDialog"))
                 .fetchSemanticsNodes().isEmpty()
         }
+    }
+
+    @Test
+    fun testSurveyDialogOptionsDisplayed() {
+        val widgets = listOf(
+            WidgetItem(
+                metadata = WidgetMetadata(
+                    id = "widget1",
+                    position = 0,
+                    isVisible = true,
+                    isEditable = true
+                ),
+                displayName = "Widget 1",
+                settings = emptyList()
+            )
+        )
+
+        val uiState = CustomizeDashboardUiState(
+            loading = false,
+            widgets = widgets,
+            isDashboardRedesignEnabled = true
+        )
+
+        composeTestRule.setContent {
+            CustomizeDashboardScreenContent(
+                uiState = uiState,
+                onRestartApp = {},
+                onNavigateBack = {}
+            )
+        }
+
+        // Navigate to survey dialog
+        composeTestRule.onNode(
+            hasTestTag("dashboardRedesignToggle"),
+            useUnmergedTree = true
+        ).performClick()
+        composeTestRule.onNodeWithTag("confirmationDialogConfirmButton").performClick()
+
+        // Verify all survey options are displayed
+        composeTestRule.onNodeWithTag("surveyOption_hard_to_find").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("surveyOption_prefer_old_layout").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("surveyOption_something_broken").assertIsDisplayed()
+
+        // Verify option text is displayed
+        composeTestRule.onNodeWithText("Hard to find things").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Prefer the old layout").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Something didn't work right").assertIsDisplayed()
+    }
+
+    @Test
+    fun testSurveyDialogSubmitEnabledWithOnlyOption() {
+        val widgets = listOf(
+            WidgetItem(
+                metadata = WidgetMetadata(
+                    id = "widget1",
+                    position = 0,
+                    isVisible = true,
+                    isEditable = true
+                ),
+                displayName = "Widget 1",
+                settings = emptyList()
+            )
+        )
+
+        val uiState = CustomizeDashboardUiState(
+            loading = false,
+            widgets = widgets,
+            isDashboardRedesignEnabled = true
+        )
+
+        composeTestRule.setContent {
+            CustomizeDashboardScreenContent(
+                uiState = uiState,
+                onRestartApp = {},
+                onNavigateBack = {}
+            )
+        }
+
+        // Navigate to survey dialog
+        composeTestRule.onNode(
+            hasTestTag("dashboardRedesignToggle"),
+            useUnmergedTree = true
+        ).performClick()
+        composeTestRule.onNodeWithTag("confirmationDialogConfirmButton").performClick()
+
+        // Select option
+        composeTestRule.onNodeWithTag("surveyOption_hard_to_find").performClick()
+
+        // Submit button should be enabled
+        composeTestRule.onNodeWithTag("surveyDialogSubmitButton").assertIsEnabled()
+    }
+
+    @Test
+    fun testSurveyDialogFeedbackButtonDisplayed() {
+        val widgets = listOf(
+            WidgetItem(
+                metadata = WidgetMetadata(
+                    id = "widget1",
+                    position = 0,
+                    isVisible = true,
+                    isEditable = true
+                ),
+                displayName = "Widget 1",
+                settings = emptyList()
+            )
+        )
+
+        val uiState = CustomizeDashboardUiState(
+            loading = false,
+            widgets = widgets,
+            isDashboardRedesignEnabled = true
+        )
+
+        composeTestRule.setContent {
+            CustomizeDashboardScreenContent(
+                uiState = uiState,
+                onRestartApp = {},
+                onNavigateBack = {}
+            )
+        }
+
+        // Navigate to survey dialog
+        composeTestRule.onNode(
+            hasTestTag("dashboardRedesignToggle"),
+            useUnmergedTree = true
+        ).performClick()
+        composeTestRule.onNodeWithTag("confirmationDialogConfirmButton").performClick()
+
+        // Verify survey dialog is displayed
+        composeTestRule.onNodeWithTag("surveyDialog").assertIsDisplayed()
+
+        // Verify feedback button in survey dialog is displayed
+        composeTestRule.onNodeWithTag("surveyDialogFeedbackButton").assertIsDisplayed()
     }
 
     @Test
@@ -692,5 +825,300 @@ class CustomizeDashboardScreenTest {
         composeTestRule.onNodeWithTag("widgetItem_widget1").assertIsDisplayed()
         composeTestRule.onNodeWithTag("widgetItem_widget2").assertIsDisplayed()
         composeTestRule.onNodeWithTag("widgetItem_widget3").assertIsDisplayed()
+    }
+
+    @Test
+    fun testTodoWidgetDisplayed() {
+        val widgets = listOf(
+            WidgetItem(
+                metadata = WidgetMetadata(
+                    id = "todo",
+                    position = 0,
+                    isVisible = true,
+                    isEditable = true
+                ),
+                displayName = "To Do",
+                settings = emptyList()
+            )
+        )
+
+        val uiState = CustomizeDashboardUiState(
+            loading = false,
+            widgets = widgets
+        )
+
+        composeTestRule.setContent {
+            CustomizeDashboardScreenContent(
+                uiState = uiState,
+                onRestartApp = {},
+                onNavigateBack = {}
+            )
+        }
+
+        composeTestRule.onNodeWithText("To Do").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("widgetItem_todo").assertIsDisplayed()
+    }
+
+    @Test
+    fun testGlobalSettingsWithBackgroundColor() {
+        val globalSettings = listOf(
+            WidgetSettingItem(
+                key = "backgroundColor",
+                value = 0xFF0000FF.toInt(),
+                type = SettingType.COLOR
+            )
+        )
+
+        val widgets = listOf(
+            WidgetItem(
+                metadata = WidgetMetadata(
+                    id = "widget1",
+                    position = 0,
+                    isVisible = true,
+                    isEditable = true
+                ),
+                displayName = "Widget 1",
+                settings = emptyList()
+            )
+        )
+
+        val uiState = CustomizeDashboardUiState(
+            loading = false,
+            widgets = widgets,
+            globalSettings = globalSettings
+        )
+
+        composeTestRule.setContent {
+            CustomizeDashboardScreenContent(
+                uiState = uiState,
+                onRestartApp = {},
+                onNavigateBack = {}
+            )
+        }
+
+        // Verify the widgets color label is displayed (from globalSettings)
+        composeTestRule.onNodeWithText("Dashboard Main Color").assertIsDisplayed()
+    }
+
+    @Test
+    fun testMultipleGlobalSettings() {
+        val globalSettings = listOf(
+            WidgetSettingItem(
+                key = "backgroundColor",
+                value = 0xFF0000FF.toInt(),
+                type = SettingType.COLOR
+            ),
+            WidgetSettingItem(
+                key = "showGreeting",
+                value = true,
+                type = SettingType.BOOLEAN
+            )
+        )
+
+        val widgets = listOf(
+            WidgetItem(
+                metadata = WidgetMetadata(
+                    id = "widget1",
+                    position = 0,
+                    isVisible = true,
+                    isEditable = true
+                ),
+                displayName = "Widget 1",
+                settings = emptyList()
+            )
+        )
+
+        val uiState = CustomizeDashboardUiState(
+            loading = false,
+            widgets = widgets,
+            globalSettings = globalSettings
+        )
+
+        composeTestRule.setContent {
+            CustomizeDashboardScreenContent(
+                uiState = uiState,
+                onRestartApp = {},
+                onNavigateBack = {}
+            )
+        }
+
+        // Verify both global settings are displayed
+        composeTestRule.onNodeWithText("Dashboard Main Color").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Show greeting").assertIsDisplayed()
+    }
+
+    @Test
+    fun testWelcomeWidgetDisplayedWithCustomName() {
+        val widgets = listOf(
+            WidgetItem(
+                metadata = WidgetMetadata(
+                    id = "welcome",
+                    position = 0,
+                    isVisible = true,
+                    isEditable = true
+                ),
+                displayName = "Hello, Test User",
+                settings = emptyList()
+            )
+        )
+
+        val uiState = CustomizeDashboardUiState(
+            loading = false,
+            widgets = widgets
+        )
+
+        composeTestRule.setContent {
+            CustomizeDashboardScreenContent(
+                uiState = uiState,
+                onRestartApp = {},
+                onNavigateBack = {}
+            )
+        }
+
+        composeTestRule.onNodeWithText("Hello, Test User").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("widgetItem_welcome").assertIsDisplayed()
+    }
+
+    @Test
+    fun testAllDefaultWidgetsDisplayed() {
+        val widgets = listOf(
+            WidgetItem(
+                metadata = WidgetMetadata(
+                    id = "course_invitations",
+                    position = 0,
+                    isVisible = true,
+                    isEditable = false
+                ),
+                displayName = "Course Invitations",
+                settings = emptyList()
+            ),
+            WidgetItem(
+                metadata = WidgetMetadata(
+                    id = "institutional_announcements",
+                    position = 1,
+                    isVisible = true,
+                    isEditable = false
+                ),
+                displayName = "Institutional Announcements",
+                settings = emptyList()
+            ),
+            WidgetItem(
+                metadata = WidgetMetadata(
+                    id = "welcome",
+                    position = 2,
+                    isVisible = true,
+                    isEditable = true
+                ),
+                displayName = "Hello, Test User",
+                settings = emptyList()
+            ),
+            WidgetItem(
+                metadata = WidgetMetadata(
+                    id = "courses",
+                    position = 3,
+                    isVisible = true,
+                    isEditable = true
+                ),
+                displayName = "Courses",
+                settings = emptyList()
+            ),
+            WidgetItem(
+                metadata = WidgetMetadata(
+                    id = "forecast",
+                    position = 4,
+                    isVisible = true,
+                    isEditable = true
+                ),
+                displayName = "Forecast",
+                settings = emptyList()
+            ),
+            WidgetItem(
+                metadata = WidgetMetadata(
+                    id = "todo",
+                    position = 5,
+                    isVisible = true,
+                    isEditable = true
+                ),
+                displayName = "To Do",
+                settings = emptyList()
+            )
+        )
+
+        val uiState = CustomizeDashboardUiState(
+            loading = false,
+            widgets = widgets
+        )
+
+        composeTestRule.setContent {
+            CustomizeDashboardScreenContent(
+                uiState = uiState,
+                onRestartApp = {},
+                onNavigateBack = {}
+            )
+        }
+
+        composeTestRule.onNodeWithText("Course Invitations").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Institutional Announcements").assertIsDisplayed()
+
+        composeTestRule.onNodeWithTag("widgetsList")
+            .performScrollToIndex(4)
+        composeTestRule.onNodeWithText("Hello, Test User").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Courses").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Forecast").assertIsDisplayed()
+
+        composeTestRule.onNodeWithTag("widgetsList")
+            .performScrollToIndex(7)
+
+        composeTestRule.onNodeWithText("To Do").assertIsDisplayed()
+    }
+
+    @Test
+    fun testWidgetSettingsUpdate() {
+        var updateCalled = false
+        var updatedWidgetId = ""
+        var updatedKey = ""
+        var updatedValue: Any? = null
+
+        val widgets = listOf(
+            WidgetItem(
+                metadata = WidgetMetadata(
+                    id = "courses",
+                    position = 0,
+                    isVisible = true,
+                    isEditable = true
+                ),
+                displayName = "Courses",
+                settings = listOf(
+                    WidgetSettingItem(
+                        key = "showGrades",
+                        value = false,
+                        type = SettingType.BOOLEAN
+                    )
+                )
+            )
+        )
+
+        val uiState = CustomizeDashboardUiState(
+            loading = false,
+            widgets = widgets,
+            onUpdateSetting = { widgetId, key, value ->
+                updateCalled = true
+                updatedWidgetId = widgetId
+                updatedKey = key
+                updatedValue = value
+            }
+        )
+
+        composeTestRule.setContent {
+            CustomizeDashboardScreenContent(
+                uiState = uiState,
+                onRestartApp = {},
+                onNavigateBack = {}
+            )
+        }
+
+        // Verify the widget and its settings are displayed
+        composeTestRule.onNodeWithText("Courses").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("widgetItem_courses").assertIsDisplayed()
     }
 }

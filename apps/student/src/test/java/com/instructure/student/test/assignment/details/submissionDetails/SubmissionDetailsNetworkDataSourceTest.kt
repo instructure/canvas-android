@@ -20,10 +20,12 @@ package com.instructure.student.test.assignment.details.submissionDetails
 import com.instructure.canvasapi2.apis.*
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.datasource.SubmissionDetailsNetworkDataSource
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import junit.framework.TestCase
 import kotlinx.coroutines.test.runTest
@@ -39,11 +41,13 @@ class SubmissionDetailsNetworkDataSourceTest {
     private val quizApi: QuizAPI.QuizInterface = mockk(relaxed = true)
     private val featuresApi: FeaturesAPI.FeaturesInterface = mockk(relaxed = true)
     private val courseApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
+    private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private lateinit var networkDataSource: SubmissionDetailsNetworkDataSource
 
     @Before
     fun setup() {
-        networkDataSource = SubmissionDetailsNetworkDataSource(enrollmentApi, submissionApi, assignmentApi, quizApi, featuresApi, courseApi)
+        every { apiPrefs.overrideDomains } returns mutableMapOf()
+        networkDataSource = SubmissionDetailsNetworkDataSource(enrollmentApi, submissionApi, assignmentApi, quizApi, featuresApi, courseApi, apiPrefs)
     }
 
     @Test

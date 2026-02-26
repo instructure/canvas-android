@@ -311,6 +311,41 @@ class GradeCalculatorTest {
         assertEquals(92.5, result, 0.01)
     }
 
+    @Test
+    fun calculateGrade_whatIfScoreWithNoGradedAssignments_doesNotCrash() {
+        // Regression test for division by zero bug
+        // When a course has weighted groups but no graded assignments yet,
+        // totalWeight is 0. Adding a what-if score should not crash.
+        val groups = listOf(
+            createAssignmentGroup(
+                id = 1,
+                name = "Homework",
+                weight = 50.0,
+                assignments = listOf(
+                    createAssignment(1, "Assignment 1", 100.0, submission = null)
+                )
+            ),
+            createAssignmentGroup(
+                id = 2,
+                name = "Exams",
+                weight = 50.0,
+                assignments = listOf(
+                    createAssignment(2, "Exam 1", 200.0, submission = null)
+                )
+            )
+        )
+
+        val whatIfScores = mapOf(1L to 85.0)
+
+        val result = calculator.calculateGrade(groups, whatIfScores, applyGroupWeights = true, onlyGraded = true)
+
+        // Should not crash and return the what-if grade
+        // Homework: 85/100 = 85% * 50% = 42.5
+        // Exams: no graded assignments, so 0 weight
+        // Total weight is only 50 (from homework), so normalize: 42.5 / 50 * 100 = 85%
+        assertEquals(85.0, result, 0.01)
+    }
+
     // Excused assignments tests
 
     @Test
