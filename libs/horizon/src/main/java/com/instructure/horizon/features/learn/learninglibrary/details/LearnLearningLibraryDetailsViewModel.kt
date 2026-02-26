@@ -23,10 +23,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
 import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearningLibraryCollection
+import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItem
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
-import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryCollectionItemState
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryStatusFilter
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
 import com.instructure.horizon.features.learn.learninglibrary.common.toUiState
@@ -46,7 +46,7 @@ class LearnLearningLibraryDetailsViewModel @Inject constructor(
 ): ViewModel() {
     private val collectionId = savedStateHandle.get<String>(LearnRoute.LearnLearningLibraryDetailsScreen.collectionIdIdAttr) ?: ""
 
-    private var allItems: List<LearnLearningLibraryCollectionItemState> = emptyList()
+    private var allItems: List<LearningLibraryCollectionItem> = emptyList()
     private val pageSize = 10
 
     private val _uiState = MutableStateFlow(LearnLearningLibraryDetailsUiState(
@@ -74,7 +74,7 @@ class LearnLearningLibraryDetailsViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     collectionName = collection.name,
-                    items = collection.items.map { it.toUiState(resources) }.applyFilters(),
+                    items = collection.items.applyFilters().map { it.toUiState(resources) },
                 )
             }
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = false, isError = false)) }
@@ -92,7 +92,7 @@ class LearnLearningLibraryDetailsViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     collectionName = collection.name,
-                    items = collection.items.map { it.toUiState(resources) }.applyFilters(),
+                    items = collection.items.applyFilters().map { it.toUiState(resources) },
                 )
             }
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isRefreshing = false, isError = false)) }
@@ -110,7 +110,7 @@ class LearnLearningLibraryDetailsViewModel @Inject constructor(
 
     private suspend fun fetchData(forceRefresh: Boolean = false): EnrolledLearningLibraryCollection {
         val result = repository.getLearningLibraryItems(collectionId, forceRefresh)
-        allItems = result.items.map { it.toUiState(resources) }
+        allItems = result.items
 
         return result
     }
@@ -140,7 +140,7 @@ class LearnLearningLibraryDetailsViewModel @Inject constructor(
             }
 
             _uiState.update {
-                it.copy(items = allItems.applyFilters())
+                it.copy(items = allItems.applyFilters().map { it.toUiState(resources) })
             }
         } catch {
             _uiState.update {
@@ -160,31 +160,31 @@ class LearnLearningLibraryDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun List<LearnLearningLibraryCollectionItemState>.applyFilters(): List<LearnLearningLibraryCollectionItemState> {
+    private fun List<LearningLibraryCollectionItem>.applyFilters(): List<LearningLibraryCollectionItem> {
         return this.filter {
-            it.name.contains(_uiState.value.searchQuery.text.trim(), ignoreCase = true)
+            it.canvasCourse?.courseName.orEmpty().contains(_uiState.value.searchQuery.text.trim(), ignoreCase = true)
                     && it.isSatisfyStatusFilter(_uiState.value.selectedStatusFilter)
                     && it.isSatisfyTypeFilter(_uiState.value.selectedTypeFilter)
         }
     }
 
-    private fun LearnLearningLibraryCollectionItemState.isSatisfyStatusFilter(statusFilter: LearnLearningLibraryStatusFilter): Boolean {
+    private fun LearningLibraryCollectionItem.isSatisfyStatusFilter(statusFilter: LearnLearningLibraryStatusFilter): Boolean {
         return when (statusFilter) {
             LearnLearningLibraryStatusFilter.All -> true
-            LearnLearningLibraryStatusFilter.Completed -> this.isCompleted
+            LearnLearningLibraryStatusFilter.Completed -> this.completionPercentage == 100.0
             LearnLearningLibraryStatusFilter.Bookmarked -> this.isBookmarked
         }
     }
 
-    private fun LearnLearningLibraryCollectionItemState.isSatisfyTypeFilter(typeFilter: LearnLearningLibraryTypeFilter): Boolean {
+    private fun LearningLibraryCollectionItem.isSatisfyTypeFilter(typeFilter: LearnLearningLibraryTypeFilter): Boolean {
         return when (typeFilter) {
             LearnLearningLibraryTypeFilter.All -> true
             LearnLearningLibraryTypeFilter.Assessments -> false
-            LearnLearningLibraryTypeFilter.Assignments -> this.type == CollectionItemType.ASSIGNMENT
-            LearnLearningLibraryTypeFilter.ExternalLinks -> this.type == CollectionItemType.EXTERNAL_URL
-            LearnLearningLibraryTypeFilter.ExternalTools -> this.type == CollectionItemType.EXTERNAL_TOOL
-            LearnLearningLibraryTypeFilter.Files -> this.type == CollectionItemType.FILE
-            LearnLearningLibraryTypeFilter.Pages -> this.type == CollectionItemType.PAGE
+            LearnLearningLibraryTypeFilter.Assignments -> this.itemType == CollectionItemType.ASSIGNMENT
+            LearnLearningLibraryTypeFilter.ExternalLinks -> this.itemType == CollectionItemType.EXTERNAL_URL
+            LearnLearningLibraryTypeFilter.ExternalTools -> this.itemType == CollectionItemType.EXTERNAL_TOOL
+            LearnLearningLibraryTypeFilter.Files -> this.itemType == CollectionItemType.FILE
+            LearnLearningLibraryTypeFilter.Pages -> this.itemType == CollectionItemType.PAGE
         }
     }
 
@@ -198,16 +198,16 @@ class LearnLearningLibraryDetailsViewModel @Inject constructor(
 
     private fun updateSearchQuery(value: TextFieldValue) {
         _uiState.update { it.copy(searchQuery = value) }
-        _uiState.update { it.copy(items = allItems.applyFilters()) }
+        _uiState.update { it.copy(items = allItems.applyFilters().map { it.toUiState(resources) }) }
     }
 
     private fun updateSelectedStatusFilter(value: LearnLearningLibraryStatusFilter) {
         _uiState.update { it.copy(selectedStatusFilter = value) }
-        _uiState.update { it.copy(items = allItems.applyFilters()) }
+        _uiState.update { it.copy(items = allItems.applyFilters().map { it.toUiState(resources) }) }
     }
 
     private fun updateSelectedTypeFilter(value: LearnLearningLibraryTypeFilter) {
         _uiState.update { it.copy(selectedTypeFilter = value) }
-        _uiState.update { it.copy(items = allItems.applyFilters()) }
+        _uiState.update { it.copy(items = allItems.applyFilters().map { it.toUiState(resources) }) }
     }
 }

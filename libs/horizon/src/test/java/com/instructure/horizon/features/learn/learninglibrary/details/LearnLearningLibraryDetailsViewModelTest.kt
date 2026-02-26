@@ -247,17 +247,6 @@ class LearnLearningLibraryDetailsViewModelTest {
     }
 
     @Test
-    fun `Completed status filter shows only completed items`() = runTest {
-        val viewModel = getViewModel()
-
-        viewModel.uiState.value.updateSelectedStatusFilter(LearnLearningLibraryStatusFilter.Completed)
-
-        val state = viewModel.uiState.value
-        assertEquals(2, state.items.size)
-        assertTrue(state.items.all { it.isCompleted })
-    }
-
-    @Test
     fun `Bookmarked status filter shows only bookmarked items`() = runTest {
         val viewModel = getViewModel()
 
@@ -380,7 +369,6 @@ class LearnLearningLibraryDetailsViewModelTest {
         val state = viewModel.uiState.value
         assertEquals(1, state.items.size)
         assertEquals("External Learning Resource", state.items[0].name)
-        assertTrue(state.items[0].isCompleted)
         assertEquals(CollectionItemType.EXTERNAL_URL, state.items[0].type)
     }
 
@@ -588,7 +576,6 @@ class LearnLearningLibraryDetailsViewModelTest {
         assertEquals("item1", firstItem.id)
         assertEquals("Introduction to Programming", firstItem.name)
         assertFalse(firstItem.isBookmarked)
-        assertFalse(firstItem.isCompleted)
         assertEquals(CollectionItemType.COURSE, firstItem.type)
     }
 

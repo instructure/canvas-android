@@ -65,6 +65,8 @@ import com.instructure.pandautils.compose.modifiers.conditional
 fun LearnLearningLibraryDetailsScreen(state: LearnLearningLibraryDetailsUiState, navController: NavHostController) {
     LoadingStateWrapper(state.loadingState){
         CollapsableHeaderScreen(
+            statusBarColor = HorizonColors.Surface.pagePrimary(),
+            navigationBarColor = HorizonColors.Surface.pagePrimary(),
             headerContent = { contentPadding ->
                 LearnLearningLibraryDetailsHeader(state, navController, Modifier.padding(contentPadding))
             },
