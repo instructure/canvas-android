@@ -14,13 +14,15 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.learn.learninglibrary.enrolldialog
+package com.instructure.horizon.features.learn.learninglibrary.enroll
 
 import com.instructure.horizon.horizonui.platform.LoadingState
 
-data class LearnLearningLibraryEnrollDialogState(
+data class LearnLearningLibraryEnrollState(
     val loadingState: LoadingState = LoadingState(),
     val syllabus: String? = null,
     val onEnrollClicked: () -> Unit = {},
-    val isEnrollLoading: Boolean = false
+    val isEnrollLoading: Boolean = false,
+    val navigateToCourseId: Long? = null,
+    val resetNavigateToCourseId: () -> Unit = {},
 )

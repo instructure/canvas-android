@@ -14,15 +14,17 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.learn.learninglibrary.enrolldialog
+package com.instructure.horizon.features.learn.learninglibrary.enroll
 
 import android.content.res.Resources
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItem
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.horizonui.platform.LoadingState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,22 +33,28 @@ import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
-class LearnLearningLibraryEnrollDialogViewModel @Inject constructor(
+class LearnLearningLibraryEnrollViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val resources: Resources,
-    private val repository: LearnLearningLibraryEnrollDialogRepository
+    private val repository: LearnLearningLibraryEnrollRepository
 ) : ViewModel() {
-    private var learningLibraryItemId: String? = null
+    private var learningLibraryItemId: String? = savedStateHandle.get<String>(LearnRoute.LearnLearningLibraryEnrollScreen.learningLibraryIdAttr)
     private var learningLibraryItem: LearningLibraryCollectionItem? = null
 
     private val _state = MutableStateFlow(
-        LearnLearningLibraryEnrollDialogState(
+        LearnLearningLibraryEnrollState(
             onEnrollClicked = ::onEnroll,
+            resetNavigateToCourseId = ::resetNavigateToCourseId,
             loadingState = LoadingState(
                 isPullToRefreshEnabled = false
             )
         )
     )
     val state = _state.asStateFlow()
+
+    init {
+        learningLibraryItemId?.let { loadData(it) }
+    }
 
     fun loadData(learningLibraryItemId: String) {
         this.learningLibraryItemId = learningLibraryItemId
@@ -58,7 +66,7 @@ class LearnLearningLibraryEnrollDialogViewModel @Inject constructor(
             val courseDetails = repository.loadCourseDetails(collectionItem.canvasCourse!!.courseId.toLong())
 
             _state.update { it.copy(
-                loadingState = it.loadingState.copy(isLoading = true),
+                loadingState = it.loadingState.copy(isLoading = false),
                 syllabus = courseDetails.courseSyllabus,
             ) }
         } catch {
@@ -71,7 +79,7 @@ class LearnLearningLibraryEnrollDialogViewModel @Inject constructor(
         viewModelScope.tryLaunch {
             _state.update { it.copy(isEnrollLoading = true) }
             repository.enrollLearningLibraryItem(learningLibraryItem!!.id)
-            _state.update { it.copy(isEnrollLoading = false) }
+            _state.update { it.copy(isEnrollLoading = false, navigateToCourseId = learningLibraryItem!!.canvasCourse!!.courseId.toLong()) }
         } catch {
             _state.update { it.copy(
                 loadingState = it.loadingState.copy(
@@ -80,5 +88,9 @@ class LearnLearningLibraryEnrollDialogViewModel @Inject constructor(
                 isEnrollLoading = false
             ) }
         }
+    }
+
+    private fun resetNavigateToCourseId() {
+        _state.update { it.copy(navigateToCourseId = null) }
     }
 }

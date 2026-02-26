@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.learn.learninglibrary.enrolldialog
+package com.instructure.horizon.features.learn.learninglibrary.enroll
 
 import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
 import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
@@ -23,7 +23,7 @@ import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibrary
 import com.instructure.canvasapi2.utils.ApiPrefs
 import javax.inject.Inject
 
-class LearnLearningLibraryEnrollDialogRepository @Inject constructor(
+class LearnLearningLibraryEnrollRepository @Inject constructor(
     private val getLearningLibraryManager: GetLearningLibraryManager,
     private val getCoursesManager: HorizonGetCoursesManager,
     private val apiPrefs: ApiPrefs

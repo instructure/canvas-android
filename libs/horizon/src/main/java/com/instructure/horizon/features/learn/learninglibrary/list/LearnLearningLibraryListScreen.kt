@@ -31,10 +31,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -47,7 +43,6 @@ import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearni
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryItem
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryStatusFilter
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
-import com.instructure.horizon.features.learn.learninglibrary.enrolldialog.LearnLearningLibraryEnrollDialog
 import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
@@ -75,16 +70,6 @@ fun LearnLearningLibraryListScreen(
 ) {
     val collectionScrollState = rememberLazyListState()
     val itemScrollState = rememberLazyListState()
-    var enrollDialogLearningLibraryItemId: String? by remember { mutableStateOf(
-        null
-    ) }
-
-    enrollDialogLearningLibraryItemId?.let {
-        LearnLearningLibraryEnrollDialog(
-            learningLibraryItemId = it,
-            onDismiss = { enrollDialogLearningLibraryItemId = null }
-        )
-    }
 
     Column(Modifier.fillMaxSize()) {
         LearnLearningLibraryListFilterRow(
@@ -97,14 +82,12 @@ fun LearnLearningLibraryListScreen(
             LearnLearningLibraryCollections(
                 state,
                 collectionScrollState,
-                { enrollDialogLearningLibraryItemId = it },
                 navController
             )
         } else {
             LearnLearningLibraryItems(
                 state,
                 itemScrollState,
-                { enrollDialogLearningLibraryItemId = it },
                 navController
             )
         }
@@ -116,7 +99,6 @@ fun LearnLearningLibraryListScreen(
 private fun LearnLearningLibraryCollections(
     state: LearnLearningLibraryListUiState,
     scrollState: LazyListState,
-    updateEnrollDialogLearningLibraryItemId: (String) -> Unit,
     navController: NavHostController,
 ) {
     LoadingStateWrapper(state.collectionState.loadingState) {
@@ -129,7 +111,7 @@ private fun LearnLearningLibraryCollections(
                 state.collectionState.collections.take(state.collectionState.itemsToDisplays),
                 state.collectionState.onBookmarkClicked,
                 { itemId ->
-                    updateEnrollDialogLearningLibraryItemId(itemId)
+                    navController.navigate(LearnRoute.LearnLearningLibraryEnrollScreen.route(itemId))
                 },
                 { route ->
                     route?.let { navController.navigate(route) }
@@ -161,7 +143,6 @@ private fun LearnLearningLibraryCollections(
 private fun LearnLearningLibraryItems(
     state: LearnLearningLibraryListUiState,
     scrollState: LazyListState,
-    updateEnrollDialogLearningLibraryItemId: (String) -> Unit,
     navController: NavHostController,
 ) {
     LoadingStateWrapper(state.itemState.loadingState) {
@@ -185,7 +166,7 @@ private fun LearnLearningLibraryItems(
                         state.itemState.onBookmarkClicked(collectionItemState.id)
                     },
                     onEnrollClick = {
-                        updateEnrollDialogLearningLibraryItemId(collectionItemState.id)
+                        navController.navigate(LearnRoute.LearnLearningLibraryEnrollScreen.route(collectionItemState.id))
                     },
                     modifier = Modifier
                         .padding(horizontal = 24.dp)

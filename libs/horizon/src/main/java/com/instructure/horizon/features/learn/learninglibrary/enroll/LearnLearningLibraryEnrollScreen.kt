@@ -14,9 +14,10 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.learn.learninglibrary.enrolldialog
+package com.instructure.horizon.features.learn.learninglibrary.enroll
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
@@ -24,17 +25,19 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.instructure.horizon.R
+import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
-import com.instructure.horizon.horizonui.foundation.horizonBorderShadow
+import com.instructure.horizon.horizonui.foundation.horizonBorder
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.ButtonHeight
@@ -42,32 +45,51 @@ import com.instructure.horizon.horizonui.molecules.ButtonWidth
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
+import com.instructure.horizon.horizonui.molecules.LoadingButton
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebViewWrapper
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LearnLearningLibraryEnrollDialog(
-    learningLibraryItemId: String,
-    onDismiss: () -> Unit
+fun LearnLearningLibraryEnrollScreen(
+    state: LearnLearningLibraryEnrollState,
+    navController: NavHostController
 ) {
-    val viewModel = hiltViewModel<LearnLearningLibraryEnrollDialogViewModel>()
-    viewModel.loadData(learningLibraryItemId)
-    val state by viewModel.state.collectAsState()
-
+    LaunchedEffect(state.navigateToCourseId) {
+        state.navigateToCourseId?.let {
+            state.resetNavigateToCourseId()
+            navController.popBackStack()
+            navController.navigate(LearnRoute.LearnCourseDetailsScreen.route(it))
+        }
+    }
     Scaffold(
-        containerColor = HorizonColors.Surface.pagePrimary(),
-        topBar = { LearnLearningLibraryEnrollDialogTopBar(state.syllabus, onDismiss) },
-        bottomBar = { LearnLearningLibraryEnrollDialogBottomBar(state.onEnrollClicked, onDismiss) }
-    ) {
-        LoadingStateWrapper(state.loadingState) {
-            LearnLearningLibraryEnrollDialogContent(state.syllabus)
+        containerColor = HorizonColors.Surface.pageSecondary(),
+        topBar = {
+            LearnLearningLibraryEnrollScreenTopBar(
+                state.syllabus,
+                { navController.popBackStack() }
+            )
+        },
+        bottomBar = {
+            LearnLearningLibraryEnrollScreenBottomBar(
+                state.isEnrollLoading,
+                state.onEnrollClicked,
+                { navController.popBackStack() }
+            )
+        }
+    ) { contentPadding ->
+        LoadingStateWrapper(
+            state.loadingState,
+            Modifier.padding(contentPadding),
+            containerColor = HorizonColors.Surface.pageSecondary(),
+        ) {
+            LearnLearningLibraryEnrollScreenContent(state.syllabus)
         }
     }
 }
 
 @Composable
-private fun LearnLearningLibraryEnrollDialogContent(
+private fun LearnLearningLibraryEnrollScreenContent(
     syllabus: String?,
 ) {
     if (syllabus.isNullOrBlank()) {
@@ -87,7 +109,7 @@ private fun LearnLearningLibraryEnrollDialogContent(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun LearnLearningLibraryEnrollDialogTopBar(
+private fun LearnLearningLibraryEnrollScreenTopBar(
     syllabus: String?,
     onDismiss: () -> Unit
 ) {
@@ -111,32 +133,35 @@ private fun LearnLearningLibraryEnrollDialogTopBar(
                 color = IconButtonColor.Ghost
             )
         },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = HorizonColors.Surface.pageSecondary(),
+            titleContentColor = HorizonColors.Text.title(),
+            navigationIconContentColor = HorizonColors.Icon.default()
+        ),
         modifier = Modifier
-            .background(HorizonColors.Surface.pagePrimary())
-            .padding(vertical = 16.dp)
-            .horizonBorderShadow(
+            .horizonBorder(
                 HorizonColors.LineAndBorder.lineStroke(),
                 bottom = 1.dp
             )
-            .padding(horizontal = 16.dp)
+            .background(HorizonColors.Surface.pageSecondary())
     )
 }
 
 @Composable
-private fun LearnLearningLibraryEnrollDialogBottomBar(
+private fun LearnLearningLibraryEnrollScreenBottomBar(
+    isEnrollButtonLoading: Boolean,
     onEnroll: () -> Unit,
     onDismiss: () -> Unit
 ) {
     BottomAppBar(
-        containerColor = HorizonColors.Surface.pagePrimary(),
+        contentPadding = PaddingValues(vertical = 12.dp, horizontal = 16.dp),
+        containerColor = HorizonColors.Surface.pageSecondary(),
         modifier = Modifier
-            .background(HorizonColors.Surface.pagePrimary())
-            .padding(vertical = 16.dp)
-            .horizonBorderShadow(
+            .horizonBorder(
                 HorizonColors.LineAndBorder.lineStroke(),
                 top = 1.dp
             )
-            .padding(horizontal = 16.dp)
+            .background(HorizonColors.Surface.pageSecondary())
     ) {
         Button(
             label = stringResource(R.string.learnLearningLibraryEnrollDialogNotNowLabel),
@@ -148,11 +173,14 @@ private fun LearnLearningLibraryEnrollDialogBottomBar(
 
         Spacer(Modifier.weight(1f))
 
-        Button(
+        LoadingButton(
+            loading = isEnrollButtonLoading,
             label = stringResource(R.string.learnLearningLibraryEnrollDialogEnrollLabel),
             width = ButtonWidth.RELATIVE,
             height = ButtonHeight.NORMAL,
             color = ButtonColor.Black,
+            contentAlignment = Alignment.Center,
+            fixedLoadingSize = true,
             onClick = onEnroll
         )
     }
