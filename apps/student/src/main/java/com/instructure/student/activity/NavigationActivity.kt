@@ -137,6 +137,7 @@ import com.instructure.student.events.CourseColorOverlayToggledEvent
 import com.instructure.student.events.ShowConfettiEvent
 import com.instructure.student.events.ShowGradesToggledEvent
 import com.instructure.student.events.UserUpdatedEvent
+import com.instructure.student.features.dashboard.compose.NewDashboardFragment
 import com.instructure.student.features.files.list.FileListFragment
 import com.instructure.student.features.modules.progression.CourseModuleProgressionFragment
 import com.instructure.student.features.navigation.NavigationRepository
@@ -684,9 +685,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             }
         }
 
-        // Hide these settings when dashboard redesign is enabled (they're now in customize dashboard)
-        val isDashboardRedesignEnabled = RemoteConfigUtils.getBoolean(RemoteConfigParam.DASHBOARD_REDESIGN)
-        if (isDashboardRedesignEnabled) {
+        // Hide these settings when the new dashboard is active (they're now in customize dashboard)
+        val isNewDashboardActive = navigationBehavior.homeFragmentClass == NewDashboardFragment::class.java
+        if (isNewDashboardActive) {
             navigationDrawerBinding.navigationDrawerSettingsSpacer.setGone()
             navigationDrawerBinding.navigationMenuItemsDivider.setGone()
             navigationDrawerBinding.optionsMenuTitle.setGone()
