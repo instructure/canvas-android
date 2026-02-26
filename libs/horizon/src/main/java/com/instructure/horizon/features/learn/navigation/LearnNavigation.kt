@@ -39,6 +39,9 @@ import com.instructure.horizon.features.learn.learninglibrary.bookmark.LearnLear
 import com.instructure.horizon.features.learn.learninglibrary.completed.LearnLearningLibraryCompletedScreen
 import com.instructure.horizon.features.learn.learninglibrary.details.LearnLearningLibraryDetailsScreen
 import com.instructure.horizon.features.learn.learninglibrary.details.LearnLearningLibraryDetailsViewModel
+import com.instructure.horizon.features.learn.course.details.CourseDetailsScreen
+import com.instructure.horizon.features.learn.learninglibrary.enroll.LearnLearningLibraryEnrollScreen
+import com.instructure.horizon.features.learn.learninglibrary.enroll.LearnLearningLibraryEnrollViewModel
 import com.instructure.horizon.features.learn.program.details.ProgramDetailsScreen
 import com.instructure.horizon.features.learn.program.details.ProgramDetailsViewModel
 
@@ -158,7 +161,16 @@ fun NavGraphBuilder.learnNavigation(
     composable(LearnRoute.LearnLearningLibraryBookmarkScreen.route) {
         LearnLearningLibraryBookmarkScreen()
     }
-    composable(LearnRoute.LearnLearningLibraryCompletedScreen.route) {
-        LearnLearningLibraryCompletedScreen()
+    composable(
+        route = LearnRoute.LearnLearningLibraryEnrollScreen.route,
+        arguments = listOf(
+            navArgument(LearnRoute.LearnLearningLibraryEnrollScreen.learningLibraryIdAttr) {
+                type = NavType.StringType
+            }
+        ),
+    ) {
+        val viewModel = hiltViewModel<LearnLearningLibraryEnrollViewModel>()
+        val state by viewModel.state.collectAsState()
+        LearnLearningLibraryEnrollScreen(state, navController)
     }
 }

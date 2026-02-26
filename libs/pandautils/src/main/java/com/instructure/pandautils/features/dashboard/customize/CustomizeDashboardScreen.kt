@@ -16,13 +16,18 @@
 
 package com.instructure.pandautils.features.dashboard.customize
 
+import android.content.Intent
 import android.content.res.Configuration
+import android.net.Uri
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -30,7 +35,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -38,8 +45,9 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -60,10 +68,12 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
@@ -81,6 +91,7 @@ import com.instructure.pandautils.features.dashboard.widget.courses.CoursesConfi
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ThemedColor
+import com.instructure.pandautils.utils.toast
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -92,7 +103,8 @@ fun CustomizeDashboardScreen(router: DashboardRouter, onNavigateBack: () -> Unit
     CustomizeDashboardScreenContent(
         uiState = uiState,
         onNavigateBack = onNavigateBack,
-        onRestartApp = { router.restartApp() }
+        onRestartApp = { router.restartApp() },
+        onTrackSurvey = viewModel::trackDashboardSurvey
     )
 }
 
@@ -100,7 +112,8 @@ fun CustomizeDashboardScreen(router: DashboardRouter, onNavigateBack: () -> Unit
 fun CustomizeDashboardScreenContent(
     uiState: CustomizeDashboardUiState,
     onRestartApp: () -> Unit,
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    onTrackSurvey: (String) -> Unit = { _ -> }
 ) {
     Scaffold(
         modifier = Modifier.background(colorResource(R.color.backgroundLight)),
@@ -153,6 +166,7 @@ fun CustomizeDashboardScreenContent(
                     WidgetList(
                         uiState = uiState,
                         onRestartApp = onRestartApp,
+                        onTrackSurvey = onTrackSurvey,
                         modifier = Modifier.fillMaxSize()
                     )
                 }
@@ -165,6 +179,7 @@ fun CustomizeDashboardScreenContent(
 private fun WidgetList(
     uiState: CustomizeDashboardUiState,
     onRestartApp: () -> Unit,
+    onTrackSurvey: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -176,7 +191,9 @@ private fun WidgetList(
             FeatureFlagToggle(
                 onRestartApp = onRestartApp,
                 isEnabled = uiState.isDashboardRedesignEnabled,
-                onToggle = uiState.onToggleDashboardRedesign
+                onToggle = uiState.onToggleDashboardRedesign,
+                onTrackSurvey = onTrackSurvey,
+                feedbackUrl = uiState.feedbackUrl
             )
         }
         item {
@@ -211,6 +228,11 @@ private fun WidgetList(
                 onToggleVisibility = { uiState.onToggleVisibility(widgetItem.metadata.id) },
                 onUpdateSetting = uiState.onUpdateSetting,
                 modifier = Modifier.animateItem()
+            )
+        }
+        item {
+            FeedbackButton(
+                feedbackUrl = uiState.feedbackUrl
             )
         }
     }
@@ -453,7 +475,9 @@ private fun BooleanSettingRow(
 private fun FeatureFlagToggle(
     isEnabled: Boolean,
     onToggle: (Boolean) -> Unit,
-    onRestartApp: () -> Unit
+    onRestartApp: () -> Unit,
+    onTrackSurvey: (String) -> Unit,
+    feedbackUrl: String
 ) {
     var showConfirmationDialog by remember { mutableStateOf(false) }
     var showSurveyDialog by remember { mutableStateOf(false) }
@@ -502,13 +526,14 @@ private fun FeatureFlagToggle(
     if (showSurveyDialog) {
         SurveyDialog(
             onRestartApp = onRestartApp,
-            onSubmit = { feedback ->
-                // TODO: Send feedback to backend
+            onSubmit = { selectedOption ->
+                onTrackSurvey(selectedOption)
                 showSurveyDialog = false
             },
             onSkip = {
                 showSurveyDialog = false
-            }
+            },
+            feedbackUrl = feedbackUrl
         )
     }
 }
@@ -539,7 +564,7 @@ private fun ConfirmationDialog(
             TextButton(
                 onClick = onConfirm,
                 colors = ButtonDefaults.textButtonColors(
-                    contentColor = Color(ThemePrefs.brandColor)
+                    contentColor = Color(ThemePrefs.textButtonColor)
                 ),
                 modifier = Modifier.testTag("confirmationDialogConfirmButton")
             ) {
@@ -552,7 +577,7 @@ private fun ConfirmationDialog(
             TextButton(
                 onClick = onDismiss,
                 colors = ButtonDefaults.textButtonColors(
-                    contentColor = Color(ThemePrefs.brandColor)
+                    contentColor = Color(ThemePrefs.textButtonColor)
                 ),
                 modifier = Modifier.testTag("confirmationDialogDismissButton")
             ) {
@@ -565,13 +590,25 @@ private fun ConfirmationDialog(
     )
 }
 
+private data class SurveyOptionData(
+    val id: String,
+    val textRes: Int
+)
+
+private val SURVEY_OPTIONS = listOf(
+    SurveyOptionData(AnalyticsEventConstants.SURVEY_OPTION_HARD_TO_FIND, R.string.survey_option_hard_to_find),
+    SurveyOptionData(AnalyticsEventConstants.SURVEY_OPTION_PREFER_OLD_LAYOUT, R.string.survey_option_prefer_old_layout),
+    SurveyOptionData(AnalyticsEventConstants.SURVEY_OPTION_SOMETHING_BROKEN, R.string.survey_option_something_broken)
+)
+
 @Composable
 private fun SurveyDialog(
     onRestartApp: () -> Unit,
     onSubmit: (String) -> Unit,
-    onSkip: () -> Unit
+    onSkip: () -> Unit,
+    feedbackUrl: String
 ) {
-    var feedback by remember { mutableStateOf("") }
+    var selectedOption by remember { mutableStateOf<String?>(null) }
 
     fun restartApp() {
         GlobalScope.launch {
@@ -599,44 +636,44 @@ private fun SurveyDialog(
         },
         text = {
             Column(
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                modifier = Modifier.verticalScroll(rememberScrollState())
             ) {
                 Text(
                     text = stringResource(R.string.switched_back_message),
                     modifier = Modifier.testTag("surveyDialogMessage")
                 )
-                OutlinedTextField(
-                    value = feedback,
-                    onValueChange = { feedback = it },
-                    label = {
-                        Text(
-                            text = stringResource(R.string.what_could_we_improve),
-                        )
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .testTag("surveyDialogFeedbackField"),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedTextColor = colorResource(R.color.textDarkest),
-                        focusedLabelColor = colorResource(R.color.textDark),
-                        focusedBorderColor = colorResource(R.color.borderMedium),
-                        focusedPlaceholderColor = colorResource(R.color.textDark),
-                        unfocusedPlaceholderColor = colorResource(R.color.textDark)
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                CanvasDivider()
+
+                SURVEY_OPTIONS.forEach { option ->
+                    SurveyOption(
+                        id = option.id,
+                        text = stringResource(option.textRes),
+                        selected = selectedOption == option.id,
+                        onClick = { selectedOption = option.id }
                     )
+                }
+
+                CanvasDivider()
+
+                FeedbackButton(
+                    feedbackUrl = feedbackUrl,
+                    testTag = "surveyDialogFeedbackButton"
                 )
             }
         },
         confirmButton = {
             TextButton(
                 onClick = {
-                    onSubmit(feedback)
+                    onSubmit(selectedOption.orEmpty())
                     restartApp()
                 },
-                enabled = feedback.isNotBlank(),
+                enabled = selectedOption != null,
                 colors = ButtonDefaults.textButtonColors(
-                    contentColor = Color(ThemePrefs.brandColor),
-                    disabledContentColor = Color(ThemePrefs.brandColor).copy(alpha = 0.6f),
+                    contentColor = Color(ThemePrefs.textButtonColor),
+                    disabledContentColor = Color(ThemePrefs.textButtonColor).copy(alpha = 0.6f),
                 ),
                 modifier = Modifier.testTag("surveyDialogSubmitButton")
             ) {
@@ -652,7 +689,7 @@ private fun SurveyDialog(
                     restartApp()
                 },
                 colors = ButtonDefaults.textButtonColors(
-                    contentColor = Color(ThemePrefs.brandColor),
+                    contentColor = Color(ThemePrefs.textButtonColor),
                 ),
                 modifier = Modifier.testTag("surveyDialogSkipButton")
             ) {
@@ -663,6 +700,100 @@ private fun SurveyDialog(
         },
         modifier = Modifier.testTag("surveyDialog")
     )
+}
+
+@Composable
+private fun SurveyOption(
+    id: String,
+    text: String,
+    selected: Boolean,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() }
+            .padding(vertical = 8.dp)
+            .testTag("surveyOption_$id"),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        RadioButton(
+            selected = selected,
+            onClick = onClick,
+            colors = RadioButtonDefaults.colors(
+                selectedColor = Color(ThemePrefs.brandColor),
+                unselectedColor = colorResource(R.color.textDark)
+            )
+        )
+        Text(
+            text = text,
+            modifier = Modifier.padding(start = 8.dp),
+            fontWeight = FontWeight.SemiBold,
+            color = colorResource(R.color.textDarkest)
+        )
+    }
+}
+
+@Composable
+private fun FeedbackButton(
+    feedbackUrl: String,
+    modifier: Modifier = Modifier,
+    testTag: String = "feedbackButton"
+) {
+    val context = LocalContext.current
+
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Text(
+            text = stringResource(R.string.what_do_you_think_of_new_dashboard),
+            fontSize = 14.sp,
+            lineHeight = 19.sp,
+            textAlign = TextAlign.Center,
+            color = colorResource(R.color.textDarkest)
+        )
+
+        OutlinedButton(
+            onClick = {
+                try {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(feedbackUrl))
+                    if (intent.resolveActivity(context.packageManager) != null) {
+                        context.startActivity(intent)
+                    } else {
+                        context.toast(context.getString(R.string.no_app_to_handle_link))
+                    }
+                } catch (e: Exception) {
+                    context.toast(context.getString(R.string.no_app_to_handle_link))
+                }
+            },
+            shape = RoundedCornerShape(24.dp),
+            colors = ButtonDefaults.outlinedButtonColors(
+                containerColor = Color.Transparent,
+                contentColor = Color(ThemePrefs.textButtonColor)
+            ),
+            border = BorderStroke(1.dp, Color(ThemePrefs.textButtonColor)),
+            contentPadding = PaddingValues(start = 12.dp, end = 8.dp, top = 4.dp, bottom = 4.dp),
+            modifier = Modifier
+                .height(30.dp)
+                .testTag(testTag)
+        ) {
+            Text(
+                text = stringResource(R.string.let_us_know),
+                fontSize = 14.sp,
+                lineHeight = 17.sp
+            )
+            Spacer(modifier = Modifier.size(6.dp))
+            Icon(
+                painter = painterResource(R.drawable.ic_external_link),
+                contentDescription = null,
+                modifier = Modifier.size(16.dp)
+            )
+        }
+    }
 }
 
 @Preview(showBackground = true)

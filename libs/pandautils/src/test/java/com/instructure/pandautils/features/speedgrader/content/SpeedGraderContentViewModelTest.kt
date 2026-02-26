@@ -27,7 +27,7 @@ import com.instructure.canvasapi2.type.SubmissionType
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandares.R
-import com.instructure.pandautils.features.grades.SubmissionStateLabel
+import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 import com.instructure.pandautils.features.speedgrader.SpeedGraderSelectedAttemptHolder
 import com.instructure.pandautils.features.speedgrader.grade.GradingEvent
 import com.instructure.pandautils.features.speedgrader.grade.SpeedGraderGradingEventHandler
@@ -47,7 +47,9 @@ import org.junit.Before
 import org.junit.Test
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
+import java.text.DateFormat
 import java.util.Date
+import java.util.Locale
 
 @ExperimentalCoroutinesApi
 class SpeedGraderContentViewModelTest {
@@ -430,8 +432,8 @@ class SpeedGraderContentViewModelTest {
         assertEquals(2L, viewModel.uiState.value.attemptSelectorUiState.selectedItemId)
         assertEquals(
             listOf(
-                SelectorItem(2, "Attempt 2", "Feb 7, 2024, 2:16 AM"),
-                SelectorItem(1, "Attempt 1", "Feb 6, 2024, 2:16 AM")
+                SelectorItem(2, "Attempt 2", formatExpectedDate(2)),
+                SelectorItem(1, "Attempt 1", formatExpectedDate(1))
             ),
             viewModel.uiState.value.attemptSelectorUiState.items
         )
@@ -628,6 +630,19 @@ class SpeedGraderContentViewModelTest {
         coEvery { submissionFields.attachments } returns attachments
         coEvery { submissionFields.submittedAt } returns submittedAt
         return submissionFields
+    }
+
+    private fun formatExpectedDate(attempt: Int): String {
+        val date = Date(
+            LocalDateTime
+                .of(2024, 2, 5 + attempt, 2, 16)
+                .atZone(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli()
+        )
+        val datePart = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault()).format(date)
+        val timePart = DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault()).format(date)
+        return "$datePart, $timePart"
     }
 
     private fun mockSubmissionHistory(vararg fields: SubmissionFields): SubmissionContentQuery.SubmissionHistoriesConnection {

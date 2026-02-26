@@ -50,14 +50,14 @@ class LoadCourseInvitationsUseCaseTest {
     @Test
     fun `execute returns course invitations successfully`() = runTest {
         val enrollments = listOf(
-            Enrollment(id = 1L, courseId = 100L, userId = 10L),
-            Enrollment(id = 2L, courseId = 200L, userId = 10L)
+            Enrollment(id = 1L, courseId = 100L, userId = 10L, enrollmentState = EnrollmentAPI.STATE_INVITED),
+            Enrollment(id = 2L, courseId = 200L, userId = 10L, enrollmentState = EnrollmentAPI.STATE_INVITED)
         )
         val course1 = Course(id = 100L, name = "Course 1")
         val course2 = Course(id = 200L, name = "Course 2")
 
         coEvery {
-            enrollmentRepository.getSelfEnrollments(null, listOf(EnrollmentAPI.STATE_INVITED), false)
+            enrollmentRepository.getSelfEnrollments(null, listOf(EnrollmentAPI.STATE_INVITED, EnrollmentAPI.STATE_CURRENT_AND_FUTURE), false)
         } returns DataResult.Success(enrollments)
         coEvery { courseRepository.getCourse(100L, false) } returns DataResult.Success(course1)
         coEvery { courseRepository.getCourse(200L, false) } returns DataResult.Success(course2)
@@ -78,12 +78,12 @@ class LoadCourseInvitationsUseCaseTest {
     @Test
     fun `execute with forceRefresh true passes correct params`() = runTest {
         val enrollments = listOf(
-            Enrollment(id = 1L, courseId = 100L, userId = 10L)
+            Enrollment(id = 1L, courseId = 100L, userId = 10L, enrollmentState = EnrollmentAPI.STATE_INVITED)
         )
         val course = Course(id = 100L, name = "Course 1")
 
         coEvery {
-            enrollmentRepository.getSelfEnrollments(null, listOf(EnrollmentAPI.STATE_INVITED), true)
+            enrollmentRepository.getSelfEnrollments(null, listOf(EnrollmentAPI.STATE_INVITED, EnrollmentAPI.STATE_CURRENT_AND_FUTURE), true)
         } returns DataResult.Success(enrollments)
         coEvery { courseRepository.getCourse(100L, true) } returns DataResult.Success(course)
 
@@ -95,12 +95,59 @@ class LoadCourseInvitationsUseCaseTest {
     @Test
     fun `execute returns empty list when no enrollments`() = runTest {
         coEvery {
-            enrollmentRepository.getSelfEnrollments(null, listOf(EnrollmentAPI.STATE_INVITED), false)
+            enrollmentRepository.getSelfEnrollments(null, listOf(EnrollmentAPI.STATE_INVITED, EnrollmentAPI.STATE_CURRENT_AND_FUTURE), false)
         } returns DataResult.Success(emptyList())
 
         val result = useCase(LoadCourseInvitationsParams(forceRefresh = false))
 
         assertEquals(0, result.size)
+    }
+
+    @Test
+    fun `execute filters out non-invited enrollments`() = runTest {
+        val enrollments = listOf(
+            Enrollment(id = 1L, courseId = 100L, userId = 10L, enrollmentState = EnrollmentAPI.STATE_INVITED),
+            Enrollment(id = 2L, courseId = 200L, userId = 10L, enrollmentState = EnrollmentAPI.STATE_ACTIVE),
+            Enrollment(id = 3L, courseId = 300L, userId = 10L, enrollmentState = EnrollmentAPI.STATE_INVITED)
+        )
+        val course1 = Course(id = 100L, name = "Course 1")
+        val course3 = Course(id = 300L, name = "Course 3")
+
+        coEvery {
+            enrollmentRepository.getSelfEnrollments(null, listOf(EnrollmentAPI.STATE_INVITED, EnrollmentAPI.STATE_CURRENT_AND_FUTURE), false)
+        } returns DataResult.Success(enrollments)
+        coEvery { courseRepository.getCourse(100L, false) } returns DataResult.Success(course1)
+        coEvery { courseRepository.getCourse(300L, false) } returns DataResult.Success(course3)
+
+        val result = useCase(LoadCourseInvitationsParams(forceRefresh = false))
+
+        assertEquals(2, result.size)
+        assertEquals(1L, result[0].enrollmentId)
+        assertEquals(100L, result[0].courseId)
+        assertEquals(3L, result[1].enrollmentId)
+        assertEquals(300L, result[1].courseId)
+    }
+
+    @Test
+    fun `execute filters out courses with access restricted by date`() = runTest {
+        val enrollments = listOf(
+            Enrollment(id = 1L, courseId = 100L, userId = 10L, enrollmentState = EnrollmentAPI.STATE_INVITED),
+            Enrollment(id = 2L, courseId = 200L, userId = 10L, enrollmentState = EnrollmentAPI.STATE_INVITED)
+        )
+        val course1 = Course(id = 100L, name = "Course 1", accessRestrictedByDate = true)
+        val course2 = Course(id = 200L, name = "Course 2", accessRestrictedByDate = false)
+
+        coEvery {
+            enrollmentRepository.getSelfEnrollments(null, listOf(EnrollmentAPI.STATE_INVITED, EnrollmentAPI.STATE_CURRENT_AND_FUTURE), false)
+        } returns DataResult.Success(enrollments)
+        coEvery { courseRepository.getCourse(100L, false) } returns DataResult.Success(course1)
+        coEvery { courseRepository.getCourse(200L, false) } returns DataResult.Success(course2)
+
+        val result = useCase(LoadCourseInvitationsParams(forceRefresh = false))
+
+        assertEquals(1, result.size)
+        assertEquals(2L, result[0].enrollmentId)
+        assertEquals(200L, result[0].courseId)
     }
 
     @Test(expected = IllegalStateException::class)
@@ -115,11 +162,11 @@ class LoadCourseInvitationsUseCaseTest {
     @Test(expected = IllegalStateException::class)
     fun `execute throws exception when course repository fails`() = runTest {
         val enrollments = listOf(
-            Enrollment(id = 1L, courseId = 100L, userId = 10L)
+            Enrollment(id = 1L, courseId = 100L, userId = 10L, enrollmentState = EnrollmentAPI.STATE_INVITED)
         )
 
         coEvery {
-            enrollmentRepository.getSelfEnrollments(null, listOf(EnrollmentAPI.STATE_INVITED), false)
+            enrollmentRepository.getSelfEnrollments(null, listOf(EnrollmentAPI.STATE_INVITED, EnrollmentAPI.STATE_CURRENT_AND_FUTURE), false)
         } returns DataResult.Success(enrollments)
         coEvery { courseRepository.getCourse(100L, false) } returns DataResult.Fail()
 
@@ -129,13 +176,13 @@ class LoadCourseInvitationsUseCaseTest {
     @Test(expected = IllegalStateException::class)
     fun `execute throws exception when any course repository fails`() = runTest {
         val enrollments = listOf(
-            Enrollment(id = 1L, courseId = 100L, userId = 10L),
-            Enrollment(id = 2L, courseId = 200L, userId = 10L)
+            Enrollment(id = 1L, courseId = 100L, userId = 10L, enrollmentState = EnrollmentAPI.STATE_INVITED),
+            Enrollment(id = 2L, courseId = 200L, userId = 10L, enrollmentState = EnrollmentAPI.STATE_INVITED)
         )
         val course1 = Course(id = 100L, name = "Course 1")
 
         coEvery {
-            enrollmentRepository.getSelfEnrollments(null, listOf(EnrollmentAPI.STATE_INVITED), false)
+            enrollmentRepository.getSelfEnrollments(null, listOf(EnrollmentAPI.STATE_INVITED, EnrollmentAPI.STATE_CURRENT_AND_FUTURE), false)
         } returns DataResult.Success(enrollments)
         coEvery { courseRepository.getCourse(100L, false) } returns DataResult.Success(course1)
         coEvery { courseRepository.getCourse(200L, false) } returns DataResult.Fail()

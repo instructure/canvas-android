@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -39,9 +38,10 @@ fun HorizonScaffold(
     snackbarHost: @Composable () -> Unit = {},
     content: @Composable (Modifier) -> Unit,
 ) {
-    Scaffold(
+    EdgeToEdgeScaffold(
         topBar = { HorizonTopAppBar(title, onBackPressed) },
         snackbarHost = snackbarHost,
+        containerColor = HorizonColors.Surface.pagePrimary(),
         contentColor = HorizonColors.Surface.pagePrimary()
     ) { innerPadding ->
         Box(

@@ -333,6 +333,14 @@ type MetadataUsersGql {
     users: [MetadataUserGQL!]!
 }
 
+type PageCursorGQL {
+    # Page number (1-based)
+    page: Int!
+
+    # Cursor to pass when fetching this page (null for page 1)
+    cursor: String
+}
+
 type CursorPaginationInfoGQL {
     # Cursor for the next page
     nextCursor: String
@@ -345,6 +353,12 @@ type CursorPaginationInfoGQL {
 
     # Whether there is a previous page
     hasPreviousPage: Boolean!
+
+    # Total count of items
+    totalCount: Int
+
+    # Cursors for all pages, enabling direct navigation to any page number
+    pageCursors: [PageCursorGQL!]
 }
 
 type CanvasCourseInfoGQL {
@@ -361,7 +375,17 @@ type LearningLibraryCourseMembershipGQL {
     id: String!
     libraryId: String!
     itemType: CollectionItemType!
+    status: CourseMembershipStatus!
     displayOrder: Float!
+
+    # Canvas module ID
+    canvasModuleId: String
+
+    # Canvas module item ID
+    canvasModuleItemId: String
+
+    # Canvas resource ID for the underlying content (page URL, assignment ID, file ID, etc.)
+    canvasResourceId: String
 
     # Canvas course information (only available for COURSE item types, null for PROGRAM types)
     canvasCourse: CanvasCourseInfoGQL
@@ -387,11 +411,27 @@ enum CollectionItemType {
     PROGRAM
 }
 
+# Status of a course membership in a learning library collection
+enum CourseMembershipStatus {
+    CREATING
+    CREATED
+}
+
 type EnrichedLearningLibraryCourseMembershipGQL {
     id: String!
     libraryId: String!
     itemType: CollectionItemType!
+    status: CourseMembershipStatus!
     displayOrder: Float!
+
+    # Canvas module ID
+    canvasModuleId: String
+
+    # Canvas module item ID
+    canvasModuleItemId: String
+
+    # Canvas resource ID for the underlying content (page URL, assignment ID, file ID, etc.)
+    canvasResourceId: String
 
     # Canvas course information (only available for COURSE item types, null for PROGRAM types)
     canvasCourse: CanvasCourseInfoGQL
@@ -488,6 +528,9 @@ type LearningLibraryCollectionWithCoursesGQL {
     publicName: String
     description: String
 
+    # Canvas account ID
+    accountId: String!
+
     # Course memberships in this collection
     courseMemberships: [LearningLibraryCourseMembershipGQL!]!
     createdAt: DateTime!
@@ -511,6 +554,9 @@ type LearningLibraryCollectionWithCountsGQL {
     # Public-facing name of the collection
     publicName: String
     description: String
+
+    # Canvas account ID
+    accountId: String!
 
     # Number of courses in this collection (excludes programs)
     courseCount: Int!
@@ -1049,6 +1095,52 @@ type ExperienceGQL {
     alignment: SkillTaxonomySkillAlignmentGQL
 }
 
+type RecommendedSkillMatchGQL {
+    taxonomySkillId: String!
+    taxonomySkillName: String!
+    similarityScore: Float!
+}
+
+type RecommendationSourceContextGQL {
+    sourceCourseId: String
+    sourceCourseName: String
+    sourceSkillName: String
+}
+
+type LearningRecommendationReasonDetailGQL {
+    reason: LearningRecommendationReason!
+    matchedSkills: [RecommendedSkillMatchGQL!]!
+    sourceContexts: [RecommendationSourceContextGQL!]!
+}
+
+enum LearningRecommendationReason {
+    PAST_LEARNINGS
+    BOOKMARKED_ITEMS
+    EXISTING_SKILLS
+    POPULARITY
+}
+
+type RecommendedCourseMetadataGQL {
+    canvasCourseName: String
+    canvasCourseImageUrl: String
+    canvasCourseModuleCount: Int!
+    canvasCourseModuleItemCount: Int!
+    estimatedDurationMinutes: Int
+    itemType: String!
+}
+
+type LearningRecommendationGQL {
+    courseId: String!
+    reasons: [LearningRecommendationReasonDetailGQL!]!
+    bestSimilarityScore: Float!
+    popularityCount: Int!
+    metadata: RecommendedCourseMetadataGQL
+}
+
+type LearningRecommendationsResponseGQL {
+    recommendations: [LearningRecommendationGQL!]!
+}
+
 type Query {
     skill(id: String!): SkillGQL
     skills(completedOnly: Boolean): [SkillGQL!]!
@@ -1056,6 +1148,7 @@ type Query {
         proficiencyLevel: String
         skillIds: [String!]! = []
     ): CourseRecommendationsGQL!
+    learningRecommendations: LearningRecommendationsResponseGQL!
     adminUsers(canvasBaseUrl: String!): [UserGQL!]!
     currentUser: UserGQL!
 
@@ -1121,23 +1214,31 @@ type Query {
 
     # Get Learning Library Collections with cursor-based pagination support
     learningLibraryCollections(
+        accountId: String!
         input: LearningLibraryCollectionsCursorQueryInput
     ): LearningLibraryCollectionsCursorResponseGQL!
 
     # Get Learning Library Collections with course and learner counts using cursor-based pagination
     learningLibraryCollectionsWithCounts(
+        accountId: String!
         input: LearningLibraryCollectionsCursorQueryInput
     ): LearningLibraryCollectionsWithCountsCursorResponseGQL!
 
     # Get a single Learning Library Collection by ID with all course memberships
     learningLibraryCollection(
         id: String!
+        accountId: String!
     ): LearningLibraryCollectionWithCoursesGQL!
 
     # Get paginated collection items from enrolled collections with filtering support
     learningLibraryCollectionItems(
         input: LearningLibraryCollectionItemsQueryInput
     ): LearningLibraryCollectionItemsResponseGQL!
+
+    # Get a single collection item by ID. User must be enrolled in a collection containing this item.
+    learningLibraryCollectionItem(
+        collectionItemId: String!
+    ): EnrichedLearningLibraryCourseMembershipGQL!
 
     # Get all collections the user is enrolled in with limited items per collection
     enrolledLearningLibraryCollections(
@@ -1427,46 +1528,46 @@ type Mutation {
     ): Boolean!
 
     # Create a new program
-    createProgram(program: String, accountId: String): ProgramGQL!
+    createProgram(program: String, accountId: String!): ProgramGQL!
 
     # Update program metadata
     updateProgramMetadata(
         metadata: UpdateProgramMetadataGQL!
-        accountId: String
+        accountId: String!
     ): ProgramGQL!
 
     # Delete a program
-    deleteProgram(programId: String!, accountId: String): Boolean!
+    deleteProgram(programId: String!, accountId: String!): Boolean!
 
     # Duplicate an existing program
-    duplicateProgram(programId: String!, accountId: String): ProgramGQL!
+    duplicateProgram(programId: String!, accountId: String!): ProgramGQL!
 
     # Unenroll a Journey user from a program
     unenrollUserFromProgram(
         enrollmentId: String!
         canvasUUID: String!
-        accountId: String
+        accountId: String!
     ): Boolean!
 
     # Enroll multiple Journey users to a program
     batchEnrollUserToProgram(
         programId: String!
         userIds: [String!]!
-        accountId: String
+        accountId: String!
     ): [ProgramEnrollmentGQL!]!
 
     # Enroll multiple Journey users to multiple programs
     batchEnrollUsersToPrograms(
         programIds: [String!]!
         enrolleeIds: [String!]!
-        accountId: String
+        accountId: String!
     ): [ProgramEnrollmentGQL!]!
 
     # Override program requirements
     updateProgramRequirements(
         programId: String!
         requirements: [UpdateProgramRequirementsRequirementGQL!]!
-        accountId: String
+        accountId: String!
     ): [ProgramRequirementGQL!]!
 
     # Enroll user to program requirement
@@ -1503,6 +1604,21 @@ type Mutation {
     # Delete a Learning Library Collection item by ID
     deleteLearningLibraryCollectionItem(itemId: String!): Boolean!
 
+    # Add a learning object (page, quiz, assignment, external URL/tool) to a collection
+    addLearningObjectToCollection(
+        input: AddLearningObjectToCollectionInput!
+    ): LearningLibraryCourseMembershipGQL!
+
+    # Update a learning library item (external URL, external tool, quiz/assessment, or file)
+    updateLearningLibraryItem(
+        input: UpdateLearningLibraryItemInput!
+    ): LearningLibraryCourseMembershipGQL!
+
+    # Initialize an external tool collection item (creates Canvas course and module, returns membership in CREATING state)
+    initializeExternalToolCollectionItem(
+        input: InitializeExternalToolCollectionItemInput!
+    ): LearningLibraryCourseMembershipGQL!
+
     # Toggle bookmark for a collection item (create if not exists, delete if exists)
     toggleCollectionItemBookmark(
         input: ToggleCollectionItemBookmarkInput!
@@ -1512,6 +1628,7 @@ type Mutation {
     batchEnrollUsersToCollections(
         collectionIds: [String!]!
         userIds: [String!]!
+        accountId: String!
     ): [LearningLibraryCollectionEnrollmentGQL!]!
 
     # Enroll the current user in a Canvas course from a collection item
@@ -1808,6 +1925,72 @@ input AddCoursesToCollectionInput {
 
     # Array of Canvas course IDs to add
     courseIds: [String!]!
+}
+
+input AddLearningObjectToCollectionInput {
+    # Learning Library Collection ID
+    collectionId: String!
+
+    # Type of learning object to add
+    itemType: CollectionItemType!
+
+    # Title of the item. Required for EXTERNAL_URL and EXTERNAL_TOOL. Optional for PAGE (defaults to "New Page").
+    title: String
+
+    # Body content of the page. Required for PAGE items.
+    body: String
+
+    # Name of the item. Required for QUIZ and ASSIGNMENT items.
+    name: String
+
+    # External URL. Required for EXTERNAL_URL and EXTERNAL_TOOL items.
+    externalUrl: String
+
+    # Whether the URL should open in a new tab. Required for EXTERNAL_URL and EXTERNAL_TOOL items.
+    newTab: Boolean
+
+    # Canvas course ID from a previously initialized external tool item. Required for EXTERNAL_TOOL items when completing a two-phase creation.
+    canvasCourseId: String
+}
+
+input UpdateLearningLibraryItemInput {
+    # ID of the LearningLibraryCourseMembership to update
+    itemId: String!
+
+    # Name/title of the item. Updates the Canvas course name and the module item title.
+    name: String
+
+    # Body/content of the item. Applies to page items only.
+    body: String
+
+    # Whether the item should open in a new tab. Applies to external URL, external tool, and file items.
+    newTab: Boolean
+
+    # External URL. Applies to external URL and external tool items.
+    externalUrl: String
+
+    # Grading type. Applies to assessment (quiz) items.
+    gradingType: GradingType
+
+    # Points possible. Applies to assessment (quiz) items.
+    pointsPossible: Int
+
+    # Estimated duration in minutes. Applies to assessment (quiz) and file items.
+    estimatedDurationMinutes: Int
+}
+
+# Grading type for assessments
+enum GradingType {
+    POINTS
+    PERCENTAGE
+    GPA_SCALE
+    PASS_FAIL
+    NOT_GRADED
+}
+
+input InitializeExternalToolCollectionItemInput {
+    # Learning Library Collection ID
+    collectionId: String!
 }
 
 input ToggleCollectionItemBookmarkInput {

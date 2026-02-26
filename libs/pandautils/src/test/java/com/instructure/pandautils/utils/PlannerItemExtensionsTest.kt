@@ -283,7 +283,7 @@ class PlannerItemExtensionsTest {
             contextName = null
         )
 
-        every { context.getString(R.string.userCalendarToDo) } returns "User To-Do"
+        every { context.getString(R.string.userCalendarToDoNew) } returns "User To-Do"
 
         val result = plannerItem.getContextNameForPlannerItem(context, emptyList())
 
@@ -299,7 +299,7 @@ class PlannerItemExtensionsTest {
             contextName = "Computer Science"
         )
 
-        every { context.getString(R.string.courseToDo, "CS101") } returns "CS101 To-Do"
+        every { context.getString(R.string.courseToDoNew, "CS101") } returns "CS101 To-Do"
 
         val result = plannerItem.getContextNameForPlannerItem(context, listOf(course))
 

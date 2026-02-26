@@ -99,7 +99,7 @@ class SplashViewModelTest {
         val colors = CanvasColor()
         coEvery { repository.getColors() } returns colors
 
-        val theme = CanvasTheme("", "", "", "", "", "", "", "")
+        val theme = CanvasTheme("", "", "", "", "", "", "", "", "")
         coEvery { repository.getTheme() } returns theme
 
         val students = User(id = 2L)
@@ -141,7 +141,7 @@ class SplashViewModelTest {
         val colors = CanvasColor()
         coEvery { repository.getColors() } returns colors
 
-        val theme = CanvasTheme("", "", "", "", "", "", "", "")
+        val theme = CanvasTheme("", "", "", "", "", "", "", "", "")
         coEvery { repository.getTheme() } returns theme
 
         coEvery { repository.getStudents() } returns emptyList()
@@ -165,7 +165,7 @@ class SplashViewModelTest {
         val colors = CanvasColor()
         coEvery { repository.getColors() } returns colors
 
-        val theme = CanvasTheme("", "", "", "", "", "", "", "")
+        val theme = CanvasTheme("", "", "", "", "", "", "", "", "")
         coEvery { repository.getTheme() } returns theme
 
         coEvery { repository.getStudents() } returns emptyList()

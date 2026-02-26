@@ -22,7 +22,6 @@ data class InstitutionalAnnouncement(
     val id: Long,
     val subject: String,
     val message: String,
-    val institutionName: String,
     val startDate: Date?,
     val icon: String,
     val logoUrl: String

@@ -41,15 +41,18 @@ import com.instructure.pandautils.features.todolist.filter.DateRangeSelection
 import com.instructure.pandautils.room.appdatabase.daos.ToDoFilterDao
 import com.instructure.pandautils.room.appdatabase.entities.ToDoFilterEntity
 import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.pandautils.utils.getSystemLocaleCalendar
 import io.mockk.clearMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkConstructor
+import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.unmockkAll
 import io.mockk.unmockkConstructor
+import io.mockk.unmockkStatic
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -65,6 +68,7 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import java.util.Calendar
 import java.util.Date
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -136,6 +140,10 @@ class ToDoListViewModelTest {
             val onCheckboxToggle = arg<(Boolean) -> Unit>(3)
             createToDoItemUiState(plannerItem, onSwipeToDone, onCheckboxToggle)
         }
+
+        // Mock getSystemLocaleCalendar to return a simple Calendar instance for testing
+        mockkStatic(::getSystemLocaleCalendar)
+        every { getSystemLocaleCalendar() } returns Calendar.getInstance()
     }
 
     @After
@@ -143,6 +151,7 @@ class ToDoListViewModelTest {
         Dispatchers.resetMain()
         unmockkConstructor(Bundle::class)
         unmockkAll()
+        unmockkStatic(::getSystemLocaleCalendar)
     }
 
     @Test

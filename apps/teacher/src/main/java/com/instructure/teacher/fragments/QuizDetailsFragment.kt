@@ -17,11 +17,15 @@ package com.instructure.teacher.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.widget.TextView
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
@@ -44,12 +48,15 @@ import com.instructure.pandautils.features.speedgrader.SpeedGraderFragment
 import com.instructure.pandautils.features.speedgrader.SubmissionListFilter
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.AssignmentGradedEvent
+import com.instructure.pandautils.utils.BooleanArg
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.NullableParcelableArg
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyDisplayCutoutInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.loadHtmlWithIframes
@@ -110,6 +117,7 @@ class QuizDetailsFragment : BasePresenterFragment<
     private var course: Course by ParcelableArg(default = Course())
     private var quizId: Long by LongArg(0L, QUIZ_ID)
     private var quiz: Quiz by ParcelableArg(Quiz(), QUIZ)
+    private var isInModulesPager: Boolean by BooleanArg(key = IS_IN_MODULES_PAGER, default = false)
 
     private var needToForceNetwork = false
 
@@ -144,6 +152,22 @@ class QuizDetailsFragment : BasePresenterFragment<
     }
 
     override fun onPresenterPrepared(presenter: QuizDetailsPresenter) = Unit
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.toolbar.applyTopSystemBarInsets()
+
+        // Apply display cutout insets to root view to prevent content from extending behind camera cutout
+        binding.root.applyDisplayCutoutInsets()
+
+        if (!isInModulesPager) {
+            ViewCompat.setOnApplyWindowInsetsListener(binding.swipeRefreshLayout) { v, insets ->
+                val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                v.updatePadding(bottom = systemBars.bottom)
+                insets
+            }
+        }
+    }
 
     override fun onRefreshFinished() = Unit
 
@@ -536,10 +560,17 @@ class QuizDetailsFragment : BasePresenterFragment<
     companion object {
         @JvmStatic val QUIZ_ID = "quiz_details_quiz_id"
         @JvmStatic val QUIZ = "quiz_details_quiz"
+        private const val IS_IN_MODULES_PAGER = "isInModulesPager"
 
-        fun makeBundle(quizId: Long): Bundle = Bundle().apply { putLong(QuizDetailsFragment.QUIZ_ID, quizId) }
+        fun makeBundle(quizId: Long, isInModulesPager: Boolean = false): Bundle = Bundle().apply {
+            putLong(QuizDetailsFragment.QUIZ_ID, quizId)
+            putBoolean(IS_IN_MODULES_PAGER, isInModulesPager)
+        }
 
-        fun makeBundle(quiz: Quiz): Bundle = Bundle().apply { putParcelable(QuizDetailsFragment.QUIZ, quiz) }
+        fun makeBundle(quiz: Quiz, isInModulesPager: Boolean = false): Bundle = Bundle().apply {
+            putParcelable(QuizDetailsFragment.QUIZ, quiz)
+            putBoolean(IS_IN_MODULES_PAGER, isInModulesPager)
+        }
 
         fun newInstance(course: Course, args: Bundle) = QuizDetailsFragment().withArgs(args).apply { this.course = course }
     }

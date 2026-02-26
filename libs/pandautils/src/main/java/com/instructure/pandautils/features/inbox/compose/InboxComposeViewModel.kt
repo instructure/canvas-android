@@ -636,7 +636,7 @@ class InboxComposeViewModel @Inject constructor(
         val now = Date()
         return fullCourse.workflowState != Course.WorkflowState.COMPLETED &&
                 fullCourse.endDate?.before(now) != true &&
-                fullCourse.term?.endDate?.before(now) != true
+                (fullCourse.restrictEnrollmentsToCourseDate || fullCourse.term?.endDate?.before(now) != true)
     }
 
     private fun createConversation() {

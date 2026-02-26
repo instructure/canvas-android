@@ -39,7 +39,7 @@
         android:id="@+id/bottomNavigationToDo"
         android:enabled="true"
         android:icon="@drawable/bottom_nav_todo"
-        android:title="@string/Todo"
+        android:title="@string/TodoNew"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction"/>
 

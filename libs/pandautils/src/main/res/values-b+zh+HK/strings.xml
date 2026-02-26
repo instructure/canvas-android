@@ -493,4 +493,8 @@
         <item quantity="other">%d 分鐘</item>
     </plurals>
     <string name="notATeacherDescription">我們的其中一個其他應用程式可能更適合您。點選圖示即可登入。</string>
+    <string name="gradePercentAccessibility">評分：%d 百分比</string>
+    <string name="gradePointsAccessibility">評分：%s 分</string>
+    <string name="gradePercentTextFieldAccessibility">評分：%d 百分比，%s</string>
+    <string name="gradePointsTextFieldAccessibility">評分：%s 分，%s</string>
 </resources>

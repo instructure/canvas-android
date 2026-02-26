@@ -43,7 +43,7 @@ import com.instructure.horizon.features.learn.learninglibrary.list.LearnLearning
 import com.instructure.horizon.features.learn.program.list.LearnProgramListScreen
 import com.instructure.horizon.features.learn.program.list.LearnProgramListViewModel
 import com.instructure.horizon.horizonui.foundation.HorizonColors
-import com.instructure.horizon.horizonui.organisms.CollapsableScaffold
+import com.instructure.horizon.horizonui.organisms.scaffolds.CollapsableScaffold
 import com.instructure.horizon.horizonui.organisms.tabrow.TabRow
 
 @Composable
@@ -68,18 +68,20 @@ fun LearnScreen(
 
     CollapsableScaffold(
         containerColor = HorizonColors.Surface.pagePrimary(),
-        topBar = {
+        topBar = { paddingValues ->
             TabRow(
                 tabs = state.tabs,
                 selectedIndex = state.tabs.indexOf(state.selectedTab),
                 onTabSelected = { state.updateSelectedTabIndex(it) },
                 tabAlignment = Alignment.Start,
                 tabItemToLabel = { stringResource(it.labelRes) },
-                modifier = Modifier.padding(horizontal = 24.dp)
+                modifier = Modifier
+                    .padding(paddingValues)
+                    .padding(horizontal = 24.dp)
             )
         }
-    ) {
-        HorizontalPager(pagerState) { pageIndex ->
+    ) { paddingValues ->
+        HorizontalPager(pagerState, Modifier.padding(paddingValues)) { pageIndex ->
             when(LearnTab.entries[pageIndex]) {
                 LearnTab.COURSES -> {
                     val viewModel = hiltViewModel<LearnCourseListViewModel>()

@@ -28,6 +28,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.dialogs.UnsavedChangesExitDialog
 import com.instructure.pandautils.discussions.DiscussionUtils
 import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentEditSyllabusBinding
@@ -58,6 +59,7 @@ class EditSyllabusView(
 
     fun setupToolbar() = with(binding) {
         val activity = context as? FragmentActivity
+        toolbar.applyTopSystemBarInsets()
         toolbar.setupCloseButton { activity?.onBackPressed() }
         toolbar.setupMenu(R.menu.menu_edit_syllabus) { menuItem ->
             when (menuItem.itemId) {

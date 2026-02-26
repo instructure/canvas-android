@@ -25,33 +25,21 @@ import com.instructure.canvasapi2.models.journey.learninglibrary.CanvasCourseInf
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
 import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearningLibraryCollection
 import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearningLibraryCollectionsResponse
-import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollection
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItem
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItemsResponse
-import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionResponse
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryPageInfo
 import com.instructure.canvasapi2.models.journey.learninglibrary.toApolloType
 import com.instructure.journey.EnrollLearningLibraryItemMutation
 import com.instructure.journey.GetEnrolledLearningLibraryCollectionQuery
 import com.instructure.journey.GetEnrolledLearningLibraryCollectionsQuery
+import com.instructure.journey.GetLearningLibraryCollectionItemQuery
 import com.instructure.journey.GetLearningLibraryCollectionItemsQuery
-import com.instructure.journey.GetLearningLibraryCollectionsQuery
 import com.instructure.journey.ToggleLearningLibraryItemIsBookmarkedMutation
-import com.instructure.journey.type.CollectionSortMode
 import com.instructure.journey.type.EnrollLearnerInCollectionItemInput
 import com.instructure.journey.type.ToggleCollectionItemBookmarkInput
 import javax.inject.Inject
 
 interface GetLearningLibraryManager {
-    suspend fun getLearningLibraryCollections(
-        cursor: String? = null,
-        limit: Int? = null,
-        forward: Boolean? = null,
-        search: String? = null,
-        sortMode: CollectionSortMode? = null,
-        forceNetwork: Boolean = false
-    ): LearningLibraryCollectionResponse
-
     suspend fun getLearningLibraryCollectionItems(
         cursor: String? = null,
         limit: Int? = null,
@@ -76,51 +64,13 @@ interface GetLearningLibraryManager {
     suspend fun toggleLearningLibraryItemIsBookmarked(itemId: String): Boolean
 
     suspend fun enrollLearningLibraryItem(itemId: String): LearningLibraryCollectionItem
+
+    suspend fun getLearningLibraryItem(itemId: String, forceNetwork: Boolean): LearningLibraryCollectionItem
 }
 
 class GetLearningLibraryManagerImpl @Inject constructor(
     @JourneyApolloClient private val journeyClient: ApolloClient,
 ): GetLearningLibraryManager {
-    override suspend fun getLearningLibraryCollections(
-        cursor: String?,
-        limit: Int?,
-        forward: Boolean?,
-        search: String?,
-        sortMode: CollectionSortMode?,
-        forceNetwork: Boolean
-    ): LearningLibraryCollectionResponse {
-        val query = GetLearningLibraryCollectionsQuery(
-            Optional.presentIfNotNull(cursor),
-            Optional.presentIfNotNull(limit),
-            Optional.presentIfNotNull(forward),
-            Optional.presentIfNotNull(search),
-            Optional.presentIfNotNull(sortMode)
-        )
-        val result = journeyClient.enqueueQuery(query, forceNetwork = forceNetwork).dataOrThrow().learningLibraryCollections
-
-        return LearningLibraryCollectionResponse(
-            learningLibraryCollections = result.collections.map { collection ->
-                LearningLibraryCollection(
-                    id = collection.id,
-                    name = collection.name,
-                    publicName = collection.publicName,
-                    description = collection.description,
-                    rootAccountUuid = collection.rootAccountUuid,
-                    accountId = collection.accountId,
-                    deletedAt = collection.deletedAt,
-                    createdAt = collection.createdAt,
-                    updatedAt = collection.updatedAt
-                )
-            },
-            pageInfo = LearningLibraryPageInfo(
-                nextCursor = result.pageInfo.nextCursor,
-                previousCursor = result.pageInfo.previousCursor,
-                hasNextPage = result.pageInfo.hasNextPage,
-                hasPreviousPage = result.pageInfo.hasPreviousPage
-            )
-        )
-    }
-
     override suspend fun getLearningLibraryCollectionItems(
         cursor: String?,
         limit: Int?,
@@ -308,6 +258,37 @@ class GetLearningLibraryManagerImpl @Inject constructor(
             isBookmarked = result.item.isBookmarked,
             completionPercentage = result.item.completionPercentage,
             isEnrolledInCanvas = result.item.isEnrolledInCanvas
+        )
+    }
+
+    override suspend fun getLearningLibraryItem(itemId: String, forceNetwork: Boolean): LearningLibraryCollectionItem {
+        val query = GetLearningLibraryCollectionItemQuery(itemId)
+
+        val result = journeyClient.enqueueQuery(query, forceNetwork).dataOrThrow().learningLibraryCollectionItem
+
+        return LearningLibraryCollectionItem(
+            id = result.id,
+            libraryId = result.libraryId,
+            itemType = CollectionItemType.valueOf(result.itemType.name),
+            displayOrder = result.displayOrder,
+            canvasCourse = result.canvasCourse?.let { course ->
+                CanvasCourseInfo(
+                    courseId = course.courseId,
+                    canvasUrl = course.canvasUrl,
+                    courseName = course.courseName,
+                    courseImageUrl = course.courseImageUrl,
+                    moduleCount = course.moduleCount,
+                    moduleItemCount = course.moduleItemCount,
+                    estimatedDurationMinutes = course.estimatedDurationMinutes
+                )
+            },
+            programId = result.programId,
+            programCourseId = result.programCourseId,
+            createdAt = result.createdAt,
+            updatedAt = result.updatedAt,
+            isBookmarked = result.isBookmarked,
+            completionPercentage = result.completionPercentage,
+            isEnrolledInCanvas = result.isEnrolledInCanvas
         )
     }
 }

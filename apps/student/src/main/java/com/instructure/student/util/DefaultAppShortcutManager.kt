@@ -53,8 +53,8 @@ class DefaultAppShortcutManager : AppShortcutManager {
         todoIntent.action = AppShortcutManager.ACTION_APP_SHORTCUT
         todoIntent.putExtra(AppShortcutManager.APP_SHORTCUT_PLACEMENT, AppShortcutManager.APP_SHORTCUT_TODO)
         val shortcutTodo = createShortcut(context, AppShortcutManager.APP_SHORTCUT_TODO,
-            context.getString(R.string.toDoList),
-            context.getString(R.string.toDoList),
+            context.getString(R.string.toDoListNew),
+            context.getString(R.string.toDoListNew),
             R.mipmap.ic_shortcut_todo,
             todoIntent)
 

@@ -46,12 +46,12 @@ import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.foundation.horizonShadow
+import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.ButtonHeight
 import com.instructure.horizon.horizonui.molecules.ButtonWidth
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
-import com.instructure.horizon.horizonui.molecules.LoadingButton
 import com.instructure.horizon.horizonui.molecules.LoadingIconButton
 import com.instructure.horizon.horizonui.molecules.LoadingImage
 import com.instructure.horizon.horizonui.molecules.StatusChip
@@ -67,7 +67,6 @@ data class LearnLearningLibraryCollectionItemState(
     val bookmarkLoading: Boolean,
     val isCompleted: Boolean,
     val canEnroll: Boolean,
-    val enrollLoading: Boolean,
     val type: CollectionItemType,
     val chips: List<LearnLearningLibraryCollectionItemChipState>
 ) {
@@ -96,7 +95,13 @@ fun LearnLearningLibraryItem(
     Box(modifier = modifier
         .horizonShadow(HorizonElevation.level4, shape = HorizonCornerRadius.level4)
         .background(color = HorizonColors.Surface.cardPrimary(), shape = HorizonCornerRadius.level4)
-        .clickable(onClick = { onClick() })
+        .clickable(onClick = {
+            if (state.canEnroll) {
+                onEnrollClick()
+            } else {
+                onClick()
+            }
+        })
     ) {
         Column(Modifier.padding(24.dp)) {
             LoadingImage(
@@ -171,15 +176,12 @@ private fun LearnLearningLibraryItemButtonContentRow(
         horizontalArrangement = Arrangement.spacedBy(2.dp),
     ) {
         if (state.canEnroll) {
-            LoadingButton(
+            Button(
                 label = stringResource(R.string.learnLearningLibraryItemEnrollLabel),
-                loading = state.enrollLoading,
-                fixedLoadingSize = true,
                 width = ButtonWidth.FILL,
                 height = ButtonHeight.NORMAL,
                 color = ButtonColor.BlackOutline,
                 onClick = { onEnrollClick() },
-                contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .weight(1f)
                     .padding(end = 6.dp)
@@ -242,7 +244,6 @@ private fun LearningLibraryItemCompletedPreview() {
         isCompleted = true,
         canEnroll = false,
         bookmarkLoading = false,
-        enrollLoading = false,
         type = CollectionItemType.COURSE,
         chips = listOf(
             LearnLearningLibraryCollectionItemChipState(
@@ -279,7 +280,6 @@ private fun LearningLibraryItemEnrollPreview() {
         isCompleted = false,
         canEnroll = true,
         bookmarkLoading = false,
-        enrollLoading = false,
         type = CollectionItemType.COURSE,
         chips = listOf(
             LearnLearningLibraryCollectionItemChipState(
@@ -316,7 +316,6 @@ private fun LearningLibraryItemPreview() {
         isCompleted = false,
         canEnroll = true,
         bookmarkLoading = false,
-        enrollLoading = false,
         type = CollectionItemType.COURSE,
         chips = listOf(
             LearnLearningLibraryCollectionItemChipState(

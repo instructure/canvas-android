@@ -493,4 +493,8 @@
         <item quantity="other">%d分</item>
     </plurals>
     <string name="notATeacherDescription">私たちの他のもひとつのアプリのほうが、もっと合うかもしれません。アイコンをタップしてログインしてください。</string>
+    <string name="gradePercentAccessibility">評定：%d パーセント</string>
+    <string name="gradePointsAccessibility">学年：%s 点</string>
+    <string name="gradePercentTextFieldAccessibility">学年：%d パーセント、%s</string>
+    <string name="gradePointsTextFieldAccessibility">評定：%s 点、%s</string>
 </resources>

@@ -50,6 +50,8 @@ import com.instructure.pandautils.utils.FileDownloader
 import com.instructure.pandautils.utils.NullableStringArg
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.getModuleItemId
 import com.instructure.pandautils.utils.loadHtmlWithIframes
 import com.instructure.pandautils.utils.makeBundle
@@ -311,6 +313,8 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
     }
 
     override fun applyTheme() {
+        binding.toolbar.applyTopSystemBarInsets()
+        binding.canvasWebViewWrapper.applyBottomSystemBarInsets()
         binding.toolbar.let {
             setupToolbarMenu(it, R.menu.menu_page_details)
             it.title = title()

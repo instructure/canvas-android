@@ -20,6 +20,7 @@ import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.features.dashboard.widget.repository.WidgetConfigDataRepository
 import com.instructure.pandautils.room.offline.facade.CourseFacade
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
@@ -51,11 +52,16 @@ class NavigationActivityModule {
     }
 
     @Provides
-    fun providesNavigationBehavior(@Named(CANVAS_FOR_ELEMENTARY) canvasForElementary: Boolean, apiPrefs: ApiPrefs): NavigationBehavior {
+    fun providesNavigationBehavior(
+        @Named(CANVAS_FOR_ELEMENTARY) canvasForElementary: Boolean,
+        apiPrefs: ApiPrefs,
+        featureFlagProvider: FeatureFlagProvider,
+        widgetConfigDataRepository: WidgetConfigDataRepository
+    ): NavigationBehavior {
         return if (canvasForElementary || apiPrefs.showElementaryView) {
             ElementaryNavigationBehavior(apiPrefs)
         } else {
-            DefaultNavigationBehavior(apiPrefs)
+            DefaultNavigationBehavior(apiPrefs, featureFlagProvider, widgetConfigDataRepository)
         }
     }
 

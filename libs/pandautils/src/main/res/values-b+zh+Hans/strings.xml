@@ -493,4 +493,8 @@
         <item quantity="other">%d 分钟</item>
     </plurals>
     <string name="notATeacherDescription">我们的其他应用程序可能更适合。点击图标以登录。</string>
+    <string name="gradePercentAccessibility">等级：%d%</string>
+    <string name="gradePointsAccessibility">等级：%s 分</string>
+    <string name="gradePercentTextFieldAccessibility">等级：%d%，%s</string>
+    <string name="gradePointsTextFieldAccessibility">等级：%s 分，%s</string>
 </resources>

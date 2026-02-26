@@ -71,13 +71,11 @@ class WidgetModule {
     }
 
     @Provides
-    @Singleton
     fun provideWidgetMetadataRepository(dao: WidgetMetadataDao): WidgetMetadataRepository {
         return WidgetMetadataRepositoryImpl(dao)
     }
 
     @Provides
-    @Singleton
     fun provideWidgetConfigDataRepository(dao: WidgetConfigDao): WidgetConfigDataRepository {
         return WidgetConfigDataRepository(dao)
     }

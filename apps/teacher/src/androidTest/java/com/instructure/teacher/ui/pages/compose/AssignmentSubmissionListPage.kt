@@ -267,6 +267,10 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
      * @param expectedCount
      */
     fun assertHasSubmission(expectedCount: Int = 1) {
+        composeTestRule.waitUntil(timeoutMillis = 10000) {
+            composeTestRule.onAllNodes(hasTestTag("submissionListItem"), useUnmergedTree = true)
+                .fetchSemanticsNodes().isNotEmpty()
+        }
         composeTestRule.onAllNodes(hasTestTag("submissionListItem"), useUnmergedTree = true)
             .assertCountEquals(expectedCount)
     }

@@ -28,4 +28,9 @@
         android:title="@string/course_menu_manage_offline_content"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/menu_dashboard_new"
+        android:title="@string/turn_on_new_dashboard"
+        app:showAsAction="never" />
+
 </menu>

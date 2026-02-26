@@ -24,7 +24,7 @@ import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.pandautils.utils.orDefault
 
-fun List<EnrolledLearningLibraryCollection>.toUiState(resources: Resources): List<LearnLearningLibraryCollectionState> {
+suspend fun List<EnrolledLearningLibraryCollection>.toUiState(resources: Resources): List<LearnLearningLibraryCollectionState> {
     return this.map {
         LearnLearningLibraryCollectionState(
             id = it.id,
@@ -37,16 +37,18 @@ fun List<EnrolledLearningLibraryCollection>.toUiState(resources: Resources): Lis
     }
 }
 
-fun LearningLibraryCollectionItem.toUiState(resources: Resources): LearnLearningLibraryCollectionItemState {
+suspend fun LearningLibraryCollectionItem.toUiState(resources: Resources): LearnLearningLibraryCollectionItemState {
+    val courseId = this.canvasCourse?.courseId?.toLongOrNull() ?: -1L
+    val canEnroll = this.itemType == CollectionItemType.COURSE && !this.isEnrolledInCanvas.orDefault(true)
+
     return LearnLearningLibraryCollectionItemState(
         id = this.id,
-        courseId = this.canvasCourse?.courseId?.toLongOrNull() ?: -1L,
+        courseId = courseId,
         imageUrl = this.canvasCourse?.courseImageUrl,
         name = this.canvasCourse?.courseName.orEmpty(),
         isBookmarked = this.isBookmarked,
-        canEnroll = this.itemType == CollectionItemType.COURSE && !this.isEnrolledInCanvas.orDefault(true),
+        canEnroll = canEnroll,
         bookmarkLoading = false,
-        enrollLoading = false,
         isCompleted = this.completionPercentage == 100.0,
         type = this.itemType,
         chips = listOf(

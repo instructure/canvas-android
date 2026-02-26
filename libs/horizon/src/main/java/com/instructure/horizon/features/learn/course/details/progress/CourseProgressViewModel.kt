@@ -59,7 +59,8 @@ class CourseProgressViewModel @Inject constructor(
         viewModelScope.launch {
             learnEventHandler.events.collect { event ->
                 when (event) {
-                    is LearnEvent.RefreshRequested -> refresh()
+                    is LearnEvent.RefreshCourseProgress -> refresh()
+                    else -> {}
                 }
             }
         }

@@ -37,7 +37,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -83,6 +82,7 @@ import com.instructure.horizon.horizonui.organisms.Modal
 import com.instructure.horizon.horizonui.organisms.ModalDialogState
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextArea
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextAreaState
+import com.instructure.horizon.horizonui.organisms.scaffolds.EdgeToEdgeScaffold
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebViewWrapper
@@ -101,11 +101,26 @@ fun HorizonInboxDetailsScreen(
     state: HorizonInboxDetailsUiState,
     navController: NavHostController
 ) {
-    Scaffold(
+    EdgeToEdgeScaffold(
+        statusBarColor = null,
+        navigationBarColor = if (state.replyState == null)
+            HorizonColors.Surface.cardPrimary()
+        else
+            HorizonColors.Surface.pagePrimary(),
         containerColor = HorizonColors.Surface.pagePrimary(),
-        topBar = { HorizonInboxDetailsHeader(state.title, state.titleIcon, state, navController) },
+        topBar = {
+            HorizonInboxDetailsHeader(
+                state.title,
+                state.titleIcon,
+                state,
+                navController
+            )
+        },
     ) { innerPadding ->
-        LoadingStateWrapper(state.loadingState, modifier = Modifier.padding(innerPadding)) {
+        LoadingStateWrapper(
+            state.loadingState,
+            modifier = Modifier.padding(innerPadding)
+        ) {
             BackHandler { onExit(state, navController) }
 
             state.replyState?.let { replyState ->
@@ -129,7 +144,11 @@ fun HorizonInboxDetailsScreen(
                                 replyState.updateShowExitConfirmationDialog(false)
                                 navController.popBackStack()
                             },
-                            secondaryButtonClick = { replyState.updateShowExitConfirmationDialog(false) }
+                            secondaryButtonClick = {
+                                replyState.updateShowExitConfirmationDialog(
+                                    false
+                                )
+                            }
                         )
                     )
                 }
@@ -186,7 +205,7 @@ private fun HorizonInboxDetailsHeader(
             containerColor = HorizonColors.Surface.pagePrimary(),
             titleContentColor = HorizonColors.Text.title(),
             navigationIconContentColor = HorizonColors.Icon.default()
-        )
+        ),
     )
 }
 
@@ -218,6 +237,7 @@ private fun HorizonInboxDetailsContent(
                 .semantics {
                     isTraversalGroup = true
                 },
+            reverseLayout = state.bottomLayout,
             contentPadding = PaddingValues(top = 16.dp)
         ) {
             itemsIndexed(state.items) { index, item ->

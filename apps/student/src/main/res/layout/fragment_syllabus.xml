@@ -27,6 +27,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
         android:elevation="6dp"
         tools:background="#00bcd5"
         tools:navigationIcon="@drawable/ic_back_arrow"
