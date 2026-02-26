@@ -117,8 +117,7 @@ private fun LearnLearningLibraryCollections(
                     route?.let { navController.navigate(route) }
                 },
                 {
-                    navController.navigate(LearnRoute.LearnLearningLibraryEnrollScreen.route(it))
-//                    navController.navigate(LearnRoute.LearnLearningLibraryDetailsScreen.route(it))
+                    navController.navigate(LearnRoute.LearnLearningLibraryDetailsScreen.route(it))
                 },
                 Modifier.padding(horizontal = 24.dp)
             )
