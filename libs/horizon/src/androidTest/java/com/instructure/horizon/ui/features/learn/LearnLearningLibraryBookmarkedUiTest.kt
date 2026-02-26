@@ -48,7 +48,6 @@ class LearnLearningLibraryBookmarkedUiTest {
             name = "Python Basics",
             isBookmarked = false,
             bookmarkLoading = false,
-            isCompleted = false,
             canEnroll = true,
             type = CollectionItemType.COURSE,
             chips = listOf(LearnLearningLibraryCollectionItemChipState(label = "Course"))
@@ -60,7 +59,6 @@ class LearnLearningLibraryBookmarkedUiTest {
             name = "React Advanced",
             isBookmarked = true,
             bookmarkLoading = false,
-            isCompleted = false,
             canEnroll = false,
             type = CollectionItemType.PAGE,
             chips = listOf(LearnLearningLibraryCollectionItemChipState(label = "Page"))
@@ -72,7 +70,6 @@ class LearnLearningLibraryBookmarkedUiTest {
             name = "Machine Learning",
             isBookmarked = false,
             bookmarkLoading = false,
-            isCompleted = true,
             canEnroll = false,
             type = CollectionItemType.COURSE,
             chips = listOf(LearnLearningLibraryCollectionItemChipState(label = "Course"))
@@ -289,34 +286,6 @@ class LearnLearningLibraryBookmarkedUiTest {
         }
 
         composeTestRule.onNodeWithContentDescription("Remove bookmark").assertIsDisplayed()
-    }
-
-    @Test
-    fun testCompletedIconDisplayedForCompletedItem() {
-        val state = LearnLearningLibraryBookmarkedUiState(
-            loadingState = LoadingState(isLoading = false),
-            items = listOf(testItems[2])
-        )
-
-        composeTestRule.setContent {
-            LearnLearningLibraryBookmarkedScreen(state = state, navController = rememberNavController())
-        }
-
-        composeTestRule.onNodeWithContentDescription("Completed").assertIsDisplayed()
-    }
-
-    @Test
-    fun testCompletedIconNotDisplayedForIncompleteItem() {
-        val state = LearnLearningLibraryBookmarkedUiState(
-            loadingState = LoadingState(isLoading = false),
-            items = listOf(testItems[0])
-        )
-
-        composeTestRule.setContent {
-            LearnLearningLibraryBookmarkedScreen(state = state, navController = rememberNavController())
-        }
-
-        composeTestRule.onNodeWithContentDescription("Completed").assertDoesNotExist()
     }
 
     @Test
