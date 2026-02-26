@@ -223,7 +223,6 @@ private fun LearnLearningLibraryCollectionSingleItem() {
                     name = "Collection Item 1",
                     isBookmarked = true,
                     canEnroll = true,
-                    isCompleted = false,
                     bookmarkLoading = false,
                     type = CollectionItemType.COURSE,
                     chips = listOf(
@@ -245,7 +244,6 @@ private fun LearnLearningLibraryCollectionSingleItem() {
                     name = "Collection Item 2",
                     isBookmarked = false,
                     canEnroll = false,
-                    isCompleted = true,
                     bookmarkLoading = false,
                     type = CollectionItemType.COURSE,
                     chips = listOf(
@@ -291,7 +289,6 @@ private fun LearnLearningLibraryCollectionMultipleItems() {
                     name = "Collection Item 1",
                     isBookmarked = true,
                     canEnroll = true,
-                    isCompleted = false,
                     bookmarkLoading = false,
                     type = CollectionItemType.COURSE,
                     chips = listOf(
@@ -313,7 +310,6 @@ private fun LearnLearningLibraryCollectionMultipleItems() {
                     name = "Collection Item 2",
                     isBookmarked = false,
                     canEnroll = false,
-                    isCompleted = true,
                     bookmarkLoading = false,
                     type = CollectionItemType.COURSE,
                     chips = listOf(
@@ -342,7 +338,6 @@ private fun LearnLearningLibraryCollectionMultipleItems() {
                     name = "Collection Item 1",
                     isBookmarked = true,
                     canEnroll = true,
-                    isCompleted = false,
                     bookmarkLoading = true,
                     type = CollectionItemType.COURSE,
                     chips = listOf(
@@ -364,7 +359,6 @@ private fun LearnLearningLibraryCollectionMultipleItems() {
                     name = "Collection Item 2",
                     isBookmarked = false,
                     canEnroll = false,
-                    isCompleted = true,
                     bookmarkLoading = false,
                     type = CollectionItemType.COURSE,
                     chips = listOf(
