@@ -1,5 +1,5 @@
 query GetEnrolledLearningLibraryCollections(
-  $itemLimitPerCollection: Int = 4
+  $itemLimitPerCollection: Int
 ) {
   enrolledLearningLibraryCollections(
     input: {
