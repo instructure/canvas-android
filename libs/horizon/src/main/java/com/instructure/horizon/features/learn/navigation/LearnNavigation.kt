@@ -36,7 +36,8 @@ import com.instructure.horizon.features.learn.LearnTab
 import com.instructure.horizon.features.learn.LearnViewModel
 import com.instructure.horizon.features.learn.course.details.CourseDetailsScreen
 import com.instructure.horizon.features.learn.course.details.CourseDetailsViewModel
-import com.instructure.horizon.features.learn.learninglibrary.bookmark.LearnLearningLibraryBookmarkScreen
+import com.instructure.horizon.features.learn.learninglibrary.bookmarked.LearnLearningLibraryBookmarkedScreen
+import com.instructure.horizon.features.learn.learninglibrary.bookmarked.LearnLearningLibraryBookmarkedViewModel
 import com.instructure.horizon.features.learn.learninglibrary.details.LearnLearningLibraryDetailsScreen
 import com.instructure.horizon.features.learn.learninglibrary.enroll.LearnLearningLibraryEnrollScreen
 import com.instructure.horizon.features.learn.learninglibrary.enroll.LearnLearningLibraryEnrollViewModel
@@ -162,8 +163,12 @@ fun NavGraphBuilder.learnNavigation(
     ) {
         LearnLearningLibraryDetailsScreen()
     }
-    composable(LearnRoute.LearnLearningLibraryBookmarkScreen.route) {
-        LearnLearningLibraryBookmarkScreen()
+    composable(
+        route = LearnRoute.LearnLearningLibraryBookmarkScreen.route,
+    ) {
+        val viewModel = hiltViewModel<LearnLearningLibraryBookmarkedViewModel>()
+        val state by viewModel.uiState.collectAsState()
+        LearnLearningLibraryBookmarkedScreen(state, navController)
     }
     composable(
         route = LearnRoute.LearnLearningLibraryEnrollScreen.route,
