@@ -75,6 +75,9 @@ import com.pspdfkit.configuration.page.PageScrollDirection
 import com.pspdfkit.document.PdfDocument
 import com.pspdfkit.listeners.DocumentListener
 import com.pspdfkit.ui.PdfFragment
+import com.pspdfkit.ui.annotations.OnAnnotationCreationModeChangeListener
+import com.pspdfkit.ui.annotations.OnAnnotationEditingModeChangeListener
+import com.pspdfkit.ui.annotations.OnAnnotationSelectedListener
 import com.pspdfkit.ui.inspector.PropertyInspectorCoordinatorLayout
 import com.pspdfkit.ui.inspector.annotation.AnnotationCreationInspectorController
 import com.pspdfkit.ui.inspector.annotation.AnnotationEditingInspectorController
@@ -86,7 +89,6 @@ import com.pspdfkit.ui.special_mode.controller.AnnotationCreationController
 import com.pspdfkit.ui.special_mode.controller.AnnotationEditingController
 import com.pspdfkit.ui.special_mode.controller.AnnotationSelectionController
 import com.pspdfkit.ui.special_mode.controller.AnnotationTool
-import com.pspdfkit.ui.special_mode.manager.AnnotationManager
 import com.pspdfkit.ui.toolbar.AnnotationCreationToolbar
 import com.pspdfkit.ui.toolbar.AnnotationEditingToolbar
 import com.pspdfkit.ui.toolbar.ContextualToolbar
@@ -102,7 +104,8 @@ import java.io.File
 import java.util.EnumSet
 
 @SuppressLint("ViewConstructor")
-abstract class PdfSubmissionView(context: Context, private val studentAnnotationView: Boolean = false, private val courseId: Long) : FrameLayout(context), AnnotationManager.OnAnnotationCreationModeChangeListener, AnnotationManager.OnAnnotationEditingModeChangeListener {
+abstract class PdfSubmissionView(context: Context, private val studentAnnotationView: Boolean = false, private val courseId: Long) :
+    FrameLayout(context), OnAnnotationCreationModeChangeListener, OnAnnotationEditingModeChangeListener {
 
     protected lateinit var docSession: DocSession
     protected lateinit var apiValues: ApiValues
@@ -113,7 +116,16 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
     protected val supportFragmentManager: FragmentManager = activity.supportFragmentManager
     protected val viewScope = activity.lifecycleScope
 
-    private val annotationCreationList = mutableListOf(AnnotationTool.INK, AnnotationTool.HIGHLIGHT, AnnotationTool.STRIKEOUT, AnnotationTool.SQUARE, AnnotationTool.STAMP, AnnotationTool.FREETEXT, AnnotationTool.ERASER, AnnotationTool.NOTE)
+    private val annotationCreationList = mutableListOf(
+        AnnotationTool.INK,
+        AnnotationTool.HIGHLIGHT,
+        AnnotationTool.STRIKEOUT,
+        AnnotationTool.SQUARE,
+        AnnotationTool.STAMP,
+        AnnotationTool.FREETEXT,
+        AnnotationTool.ERASER,
+        AnnotationTool.NOTE
+    )
     private val annotationEditList = mutableListOf(
         AnnotationType.INK,
         AnnotationType.HIGHLIGHT,
@@ -125,14 +137,16 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
     )
 
     private val pdfConfiguration: PdfConfiguration = PdfConfiguration.Builder()
-            .scrollDirection(PageScrollDirection.VERTICAL)
-            .enabledAnnotationTools(annotationCreationList)
-            .editableAnnotationTypes(annotationEditList)
-            .setAnnotationInspectorEnabled(true)
-            .layoutMode(PageLayoutMode.SINGLE)
-            .textSelectionEnabled(false)
-            .copyPastEnabled(false)
-            .build()
+        .scrollDirection(PageScrollDirection.VERTICAL)
+        .enabledAnnotationTools(annotationCreationList)
+        .editableAnnotationTypes(annotationEditList)
+        .setAnnotationInspectorEnabled(true)
+        .layoutMode(PageLayoutMode.SINGLE)
+        .textSelectionEnabled(false)
+        .copyPastEnabled(false)
+        .contentEditingEnabled(false)
+        .annotationPopupToolbarEnabled(false)
+        .build()
 
     private val annotationCreationToolbar = AnnotationCreationToolbar(context)
     private val annotationEditingToolbar = AnnotationEditingToolbar(context)
@@ -166,7 +180,13 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
     abstract fun disableViewPager()
     abstract fun enableViewPager()
     abstract fun setIsCurrentlyAnnotating(boolean: Boolean)
-    abstract fun showAnnotationComments(commentList: ArrayList<CanvaDocAnnotation>, headAnnotationId: String, docSession: DocSession, apiValues: ApiValues)
+    abstract fun showAnnotationComments(
+        commentList: ArrayList<CanvaDocAnnotation>,
+        headAnnotationId: String,
+        docSession: DocSession,
+        apiValues: ApiValues
+    )
+
     abstract fun showFileError()
 
     open fun logOnAnnotationSelectedAnalytics() {}
@@ -205,13 +225,14 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
         annotationEditingInspectorController = DefaultAnnotationEditingInspectorController(context, inspectorCoordinatorLayout)
         annotationCreationInspectorController = DefaultAnnotationCreationInspectorController(context, inspectorCoordinatorLayout)
 
-        annotationToolbarLayout.setOnContextualToolbarLifecycleListener(object : ToolbarCoordinatorLayout.OnContextualToolbarLifecycleListener {
+        annotationToolbarLayout.setOnContextualToolbarLifecycleListener(object :
+            ToolbarCoordinatorLayout.OnContextualToolbarLifecycleListener {
             override fun onDisplayContextualToolbar(p0: ContextualToolbar<*>) {}
             override fun onRemoveContextualToolbar(p0: ContextualToolbar<*>) {}
 
             override fun onPrepareContextualToolbar(toolbar: ContextualToolbar<*>) {
                 toolbar.layoutParams = ToolbarCoordinatorLayout.LayoutParams(
-                        ToolbarCoordinatorLayout.LayoutParams.Position.TOP, EnumSet.of(ToolbarCoordinatorLayout.LayoutParams.Position.TOP)
+                    ToolbarCoordinatorLayout.LayoutParams.Position.TOP, EnumSet.of(ToolbarCoordinatorLayout.LayoutParams.Position.TOP)
                 )
 
                 if (toolbar is AnnotationCreationToolbar) {
@@ -230,10 +251,13 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
 
         annotationEditingToolbar.setOnMenuItemClickListener { _, contextualToolbarMenuItem ->
             if (contextualToolbarMenuItem.title == context.getString(com.pspdfkit.R.string.pspdf__edit) &&
-                    currentAnnotationModeType == AnnotationType.FREETEXT) {
+                currentAnnotationModeType == AnnotationType.FREETEXT
+            ) {
 
-                val dialog = FreeTextDialog.getInstance(supportFragmentManager, true, pdfFragment?.selectedAnnotations?.get(0)?.contents
-                        ?: "", freeTextDialogCallback)
+                val dialog = FreeTextDialog.getInstance(
+                    supportFragmentManager, true, pdfFragment?.selectedAnnotations?.get(0)?.contents
+                        ?: "", freeTextDialogCallback
+                )
                 dialog.show(supportFragmentManager, FreeTextDialog::class.java.simpleName)
 
                 return@setOnMenuItemClickListener true
@@ -283,21 +307,21 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
         toolbar.setOnMenuItemClickListener(
             ContextualToolbar.OnMenuItemClickListener { contextualToolbar, menuItem ->
                 return@OnMenuItemClickListener (
-                    if (menuItem.id == R.id.grab_annotation) {
-                        if (!menuItem.isSelected) {
-                            contextualToolbar.menuItems.forEach { it.isSelected = false }
-                            pdfFragment?.exitCurrentlyActiveMode()
-                            pdfFragment?.enterAnnotationCreationMode(AnnotationTool.NONE)
-                            menuItem.isSelected = true
-                        }
-                        true
-                    } else {
-                        if (menuItem.isSelected) {
-                            val grab = contextualToolbar.menuItems.find { it.id == R.id.grab_annotation }
-                            Handler(Looper.getMainLooper()).postDelayed ({ grab?.isSelected = true }, 50)
-                        }
-                        false
-                    })
+                        if (menuItem.id == R.id.grab_annotation) {
+                            if (!menuItem.isSelected) {
+                                contextualToolbar.menuItems.forEach { it.isSelected = false }
+                                pdfFragment?.exitCurrentlyActiveMode()
+                                pdfFragment?.enterAnnotationCreationMode(AnnotationTool.NONE)
+                                menuItem.isSelected = true
+                            }
+                            true
+                        } else {
+                            if (menuItem.isSelected) {
+                                val grab = contextualToolbar.menuItems.find { it.id == R.id.grab_annotation }
+                                Handler(Looper.getMainLooper()).postDelayed({ grab?.isSelected = true }, 50)
+                            }
+                            false
+                        })
             }
         )
     }
@@ -334,13 +358,17 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
             // If the contents of the current annotation are empty we want to prompt them to add a comment
             if (commentRepliesHashMap[currentAnnotation.annotationId] == null || commentRepliesHashMap[currentAnnotation.annotationId]?.isEmpty() == true) {
                 // No comments for this annotation, show a dialog for the user to add some if they want
-                AnnotationCommentDialog.getInstance(supportFragmentManager, "", context.getString(R.string.addAnnotationComment)) { _, text ->
+                AnnotationCommentDialog.getInstance(
+                    supportFragmentManager,
+                    "",
+                    context.getString(R.string.addAnnotationComment)
+                ) { _, text ->
                     setIsCurrentlyAnnotating(true) //don't want the sliding panel getting in the way
                     // Create new comment reply for this annotation.
                     if (text.isValid()) {
                         createCommentAnnotation(currentAnnotation.annotationId, currentAnnotation.page, text)
                         // Add contents to the current annotation so we can add an indicator
-                        if(currentAnnotation.annotationType != CanvaDocAnnotation.AnnotationType.TEXT && currentAnnotation.annotationType != CanvaDocAnnotation.AnnotationType.FREE_TEXT) {
+                        if (currentAnnotation.annotationType != CanvaDocAnnotation.AnnotationType.TEXT && currentAnnotation.annotationType != CanvaDocAnnotation.AnnotationType.FREE_TEXT) {
                             currentPdfAnnotation.contents = "comment"
                             noteHinter?.notifyDrawablesChanged()
                             pdfFragment?.notifyAnnotationHasChanged(currentPdfAnnotation)
@@ -460,8 +488,9 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
                                 }
                             }
 
-                            if(commentRepliesHashMap.containsKey(annotation.name)
-                                && (item.annotationType != CanvaDocAnnotation.AnnotationType.TEXT && item.annotationType != CanvaDocAnnotation.AnnotationType.FREE_TEXT)) {
+                            if (commentRepliesHashMap.containsKey(annotation.name)
+                                && (item.annotationType != CanvaDocAnnotation.AnnotationType.TEXT && item.annotationType != CanvaDocAnnotation.AnnotationType.FREE_TEXT)
+                            ) {
                                 annotation.contents = "comment"
                             }
 
@@ -490,7 +519,10 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
 
         rotationMap.forEach { pageRotation ->
             pageRotation.key.toIntOrNull()?.let { pageIndex ->
-                pdfDocument.setRotationOffset(calculateRotationOffset(pdfDocument.getPageRotation(pageIndex), pageRotation.value), pageIndex)
+                pdfDocument.setRotationOffset(
+                    calculateRotationOffset(pdfDocument.getPageRotation(pageIndex), pageRotation.value),
+                    pageIndex
+                )
             }
         }
     }
@@ -607,9 +639,10 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
         return false
     }
 
-    private val annotationSelectedListener = object : AnnotationManager.OnAnnotationSelectedListener {
+    private val annotationSelectedListener = object : OnAnnotationSelectedListener {
         override fun onAnnotationSelected(annotation: Annotation, isCreated: Boolean) {
             logOnAnnotationSelectedAnalytics()
+            pdfFragment?.enterAnnotationEditingMode(annotation)
         }
 
         override fun onPrepareAnnotationSelection(p0: AnnotationSelectionController, annotation: Annotation, isCreated: Boolean): Boolean {
@@ -624,7 +657,10 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
                     setIsCurrentlyAnnotating(true)
                 }
 
-                if (annotation.type != AnnotationType.FREETEXT && annotation.name.isValid() && (!studentAnnotationView || hasComments(annotation))) {
+                if (annotation.type != AnnotationType.FREETEXT && annotation.name.isValid() && (!studentAnnotationView || hasComments(
+                        annotation
+                    ))
+                ) {
                     // if the annotation is an existing annotation (has an ID) and is NOT freetext
                     // we want to display the button to view/make comments
                     commentsButton.setVisible()
@@ -637,8 +673,8 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
     private fun hasComments(annotation: Annotation): Boolean {
         val currentAnnotation = annotation.convertPDFAnnotationToCanvaDoc(docSession.documentId)
         return currentAnnotation != null
-            && commentRepliesHashMap[currentAnnotation.annotationId] != null
-            && commentRepliesHashMap[currentAnnotation.annotationId]?.isNotEmpty() == true
+                && commentRepliesHashMap[currentAnnotation.annotationId] != null
+                && commentRepliesHashMap[currentAnnotation.annotationId]?.isNotEmpty() == true
     }
 
     //region Annotation Manipulation
@@ -657,7 +693,15 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
         createAnnotationJob = viewScope.tryLaunch {
             val canvaDocAnnotation = annotation.convertPDFAnnotationToCanvaDoc(apiValues.documentId)
             if (canvaDocAnnotation != null) {
-                val newAnnotation = awaitApi { CanvaDocsManager.putAnnotation(apiValues.sessionId, generateAnnotationId(), canvaDocAnnotation, apiValues.canvaDocsDomain, it) }
+                val newAnnotation = awaitApi {
+                    CanvaDocsManager.putAnnotation(
+                        apiValues.sessionId,
+                        generateAnnotationId(),
+                        canvaDocAnnotation,
+                        apiValues.canvaDocsDomain,
+                        it
+                    )
+                }
 
                 // Edit the annotation with the appropriate id
                 annotation.name = newAnnotation.annotationId
@@ -688,12 +732,20 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
         if (docSession.annotationMetadata?.canWrite() != true) return
 
         // Don't want to update if we just created a stamp.
-        if(annotation.type == AnnotationType.STAMP && !stampRaceFlag) return
+        if (annotation.type == AnnotationType.STAMP && !stampRaceFlag) return
         // Annotation modified; Update it
         updateAnnotationJob = viewScope.tryLaunch {
             val canvaDocAnnotation = annotation.convertPDFAnnotationToCanvaDoc(apiValues.documentId)
             if (canvaDocAnnotation != null && !annotation.name.isNullOrEmpty()) {
-                awaitApi<CanvaDocAnnotation> { CanvaDocsManager.putAnnotation(apiValues.sessionId, annotation.name!!, canvaDocAnnotation, apiValues.canvaDocsDomain, it) }
+                awaitApi<CanvaDocAnnotation> {
+                    CanvaDocsManager.putAnnotation(
+                        apiValues.sessionId,
+                        annotation.name!!,
+                        canvaDocAnnotation,
+                        apiValues.canvaDocsDomain,
+                        it
+                    )
+                }
             }
         } catch {
             if (it is StatusCallbackError) {
@@ -922,55 +974,75 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
         val yellow = AssetAppearanceStreamGenerator(yellowStampFile)
 
         // Create picker items with custom subject and custom appearance stream generator set.
-        stamps.add(StampPickerItem.fromTitle(context, blackStampSubject)
+        stamps.add(
+            StampPickerItem.fromTitle(context, blackStampSubject)
                 .withSize(18.66f, 26.66f)
                 .withAppearanceStreamGenerator(black)
-                .build())
+                .build()
+        )
 
-        stamps.add(StampPickerItem.fromTitle(context, blueStampSubject)
+        stamps.add(
+            StampPickerItem.fromTitle(context, blueStampSubject)
                 .withSize(18.66f, 26.66f)
                 .withAppearanceStreamGenerator(blue)
-                .build())
+                .build()
+        )
 
-        stamps.add(StampPickerItem.fromTitle(context, brownStampSubject)
+        stamps.add(
+            StampPickerItem.fromTitle(context, brownStampSubject)
                 .withSize(18.66f, 26.66f)
                 .withAppearanceStreamGenerator(brown)
-                .build())
+                .build()
+        )
 
-        stamps.add(StampPickerItem.fromTitle(context, greenStampSubject)
+        stamps.add(
+            StampPickerItem.fromTitle(context, greenStampSubject)
                 .withSize(18.66f, 26.66f)
                 .withAppearanceStreamGenerator(green)
-                .build())
+                .build()
+        )
 
-        stamps.add(StampPickerItem.fromTitle(context, navyStampSubject)
+        stamps.add(
+            StampPickerItem.fromTitle(context, navyStampSubject)
                 .withSize(18.66f, 26.66f)
                 .withAppearanceStreamGenerator(navy)
-                .build())
+                .build()
+        )
 
-        stamps.add(StampPickerItem.fromTitle(context, orangeStampSubject)
+        stamps.add(
+            StampPickerItem.fromTitle(context, orangeStampSubject)
                 .withSize(18.66f, 26.66f)
                 .withAppearanceStreamGenerator(orange)
-                .build())
+                .build()
+        )
 
-        stamps.add(StampPickerItem.fromTitle(context, pinkStampSubject)
+        stamps.add(
+            StampPickerItem.fromTitle(context, pinkStampSubject)
                 .withSize(18.66f, 26.66f)
                 .withAppearanceStreamGenerator(pink)
-                .build())
+                .build()
+        )
 
-        stamps.add(StampPickerItem.fromTitle(context, purpleStampSubject)
+        stamps.add(
+            StampPickerItem.fromTitle(context, purpleStampSubject)
                 .withSize(18.66f, 26.66f)
                 .withAppearanceStreamGenerator(purple)
-                .build())
+                .build()
+        )
 
-        stamps.add(StampPickerItem.fromTitle(context, redStampSubject)
+        stamps.add(
+            StampPickerItem.fromTitle(context, redStampSubject)
                 .withSize(18.66f, 26.66f)
                 .withAppearanceStreamGenerator(red)
-                .build())
+                .build()
+        )
 
-        stamps.add(StampPickerItem.fromTitle(context, yellowStampSubject)
+        stamps.add(
+            StampPickerItem.fromTitle(context, yellowStampSubject)
                 .withSize(18.66f, 26.66f)
                 .withAppearanceStreamGenerator(yellow)
-                .build())
+                .build()
+        )
 
         return stamps
     }

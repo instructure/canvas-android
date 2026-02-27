@@ -48,8 +48,9 @@ import com.instructure.student.R
 import com.instructure.student.databinding.ViewPdfStudentSubmissionBinding
 import com.instructure.student.router.RouteMatcher
 import com.pspdfkit.preferences.PSPDFKitPreferences
+import com.pspdfkit.ui.annotations.OnAnnotationCreationModeChangeListener
+import com.pspdfkit.ui.annotations.OnAnnotationEditingModeChangeListener
 import com.pspdfkit.ui.inspector.PropertyInspectorCoordinatorLayout
-import com.pspdfkit.ui.special_mode.manager.AnnotationManager
 import com.pspdfkit.ui.toolbar.ToolbarCoordinatorLayout
 import kotlinx.coroutines.Job
 import okhttp3.ResponseBody
@@ -67,7 +68,7 @@ class PdfStudentSubmissionView(
     private val studentAnnotationView: Boolean = false,
 ) : PdfSubmissionView(
     activity, studentAnnotationView, courseId
-), AnnotationManager.OnAnnotationCreationModeChangeListener, AnnotationManager.OnAnnotationEditingModeChangeListener {
+), OnAnnotationCreationModeChangeListener, OnAnnotationEditingModeChangeListener {
 
     private val binding: ViewPdfStudentSubmissionBinding
 

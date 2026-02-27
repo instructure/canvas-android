@@ -50,8 +50,9 @@ import com.instructure.teacher.view.AnnotationCommentDeleteAcknowledged
 import com.instructure.teacher.view.AnnotationCommentDeleted
 import com.instructure.teacher.view.AnnotationCommentEdited
 import com.pspdfkit.preferences.PSPDFKitPreferences
+import com.pspdfkit.ui.annotations.OnAnnotationCreationModeChangeListener
+import com.pspdfkit.ui.annotations.OnAnnotationEditingModeChangeListener
 import com.pspdfkit.ui.inspector.PropertyInspectorCoordinatorLayout
-import com.pspdfkit.ui.special_mode.manager.AnnotationManager
 import com.pspdfkit.ui.toolbar.ToolbarCoordinatorLayout
 import kotlinx.coroutines.Job
 import okhttp3.ResponseBody
@@ -69,8 +70,8 @@ class PdfTeacherSubmissionView(
     private val studentAnnotationSubmit: Boolean = false,
     private val studentAnnotationView: Boolean = false
 ) : PdfSubmissionView(activity, studentAnnotationView, courseId),
-    AnnotationManager.OnAnnotationCreationModeChangeListener,
-    AnnotationManager.OnAnnotationEditingModeChangeListener {
+    OnAnnotationCreationModeChangeListener,
+    OnAnnotationEditingModeChangeListener {
 
     private val binding: ViewPdfTeacherSubmissionBinding
 
