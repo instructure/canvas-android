@@ -22,6 +22,7 @@ sealed class LearnRoute {
     data object LearnScreen: LearnRoute() {
         const val selectedTabAttr = "selectedTab"
         const val selectedTabFromDetailsKey = "selectedTabFromDetails"
+        const val currentTabKey = "currentTab"
         private const val baseUrl = "learn_screen"
         const val route = "$baseUrl/{$selectedTabAttr}"
         fun route(selectedTab: LearnTab? = null): String {
