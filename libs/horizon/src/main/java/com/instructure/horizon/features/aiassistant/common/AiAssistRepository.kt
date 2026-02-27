@@ -1,10 +1,10 @@
 package com.instructure.horizon.features.aiassistant.common
 
 import com.instructure.canvasapi2.apis.JourneyAssistAPI
-import com.instructure.canvasapi2.models.journey.JourneyAssistChatMessage
-import com.instructure.canvasapi2.models.journey.JourneyAssistRequestBody
-import com.instructure.canvasapi2.models.journey.JourneyAssistRole
-import com.instructure.canvasapi2.models.journey.JourneyAssistState
+import com.instructure.canvasapi2.models.journey.assist.JourneyAssistChatMessage
+import com.instructure.canvasapi2.models.journey.assist.JourneyAssistRequestBody
+import com.instructure.canvasapi2.models.journey.assist.JourneyAssistRole
+import com.instructure.canvasapi2.models.journey.assist.JourneyAssistState
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
 import javax.inject.Inject
 

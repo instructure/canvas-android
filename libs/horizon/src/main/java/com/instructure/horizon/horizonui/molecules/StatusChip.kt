@@ -81,6 +81,16 @@ sealed class StatusChipColor(val contentColor: Color, val fillColor: Color = Col
         contentColor = HorizonColors.PrimitivesViolet.violet90,
         fillColor = HorizonColors.PrimitivesViolet.violet12
     )
+
+    data object Institution: StatusChipColor(
+        contentColor = HorizonColors.Surface.institution(),
+        fillColor = HorizonColors.Surface.institution().copy(alpha = 0.1f)
+    )
+
+    data object Orange: StatusChipColor(
+        contentColor = HorizonColors.PrimitivesCopper.copper90,
+        fillColor = HorizonColors.PrimitivesCopper.copper12
+    )
 }
 
 @Composable

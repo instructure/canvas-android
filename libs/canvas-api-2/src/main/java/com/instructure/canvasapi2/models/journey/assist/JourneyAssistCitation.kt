@@ -14,10 +14,24 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.canvasapi2.models.journey
+package com.instructure.canvasapi2.models.journey.assist
 
-data class JourneyAssistQuizItem(
-    val question: String,
-    val answers: List<String>,
-    val correctAnswerIndex: Int,
+import com.google.gson.annotations.SerializedName
+
+data class JourneyAssistCitation(
+    val title: String,
+    val courseID: String?,
+    val sourceID: String?,
+    val sourceType: JourneyAssistCitationType?
 )
+
+enum class JourneyAssistCitationType {
+    @SerializedName("wiki_page")
+    WIKI_PAGE,
+
+    @SerializedName("attachment")
+    ATTACHMENT,
+
+    @SerializedName("unknown")
+    UNKNOWN,
+}

@@ -17,6 +17,7 @@
 package com.instructure.horizon.features.learn.navigation
 
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -35,6 +36,10 @@ import com.instructure.horizon.features.learn.LearnTab
 import com.instructure.horizon.features.learn.LearnViewModel
 import com.instructure.horizon.features.learn.course.details.CourseDetailsScreen
 import com.instructure.horizon.features.learn.course.details.CourseDetailsViewModel
+import com.instructure.horizon.features.learn.learninglibrary.bookmark.LearnLearningLibraryBookmarkScreen
+import com.instructure.horizon.features.learn.learninglibrary.details.LearnLearningLibraryDetailsScreen
+import com.instructure.horizon.features.learn.learninglibrary.enroll.LearnLearningLibraryEnrollScreen
+import com.instructure.horizon.features.learn.learninglibrary.enroll.LearnLearningLibraryEnrollViewModel
 import com.instructure.horizon.features.learn.program.details.ProgramDetailsScreen
 import com.instructure.horizon.features.learn.program.details.ProgramDetailsViewModel
 
@@ -58,9 +63,13 @@ fun NavGraphBuilder.learnNavigation(
                     uriPattern = "${ApiPrefs.fullDomain}/{${LearnRoute.LearnScreen.selectedTabAttr}}"
                 }
             )
-        ) {
+        ) { backStackEntry ->
             val viewModel = hiltViewModel<LearnViewModel>()
             val uiState by viewModel.state.collectAsState()
+
+            SideEffect {
+                backStackEntry.savedStateHandle[LearnRoute.LearnScreen.currentTabKey] = uiState.selectedTab.stringValue
+            }
 
             val selectedTabFromDetailsFlow = remember {
                 navController.currentBackStackEntry?.savedStateHandle?.getStateFlow<String?>(
@@ -99,9 +108,11 @@ fun NavGraphBuilder.learnNavigation(
             )
         ) {
             val previousBackStackEntry = navController.previousBackStackEntry
+            val currentTab = previousBackStackEntry?.savedStateHandle?.get<String>(LearnRoute.LearnScreen.currentTabKey)
+                ?: LearnTab.COURSES.stringValue
             previousBackStackEntry?.savedStateHandle?.set(
                 LearnRoute.LearnScreen.selectedTabFromDetailsKey,
-                LearnTab.COURSES.stringValue
+                currentTab
             )
 
             val viewModel = hiltViewModel<CourseDetailsViewModel>()
@@ -123,14 +134,47 @@ fun NavGraphBuilder.learnNavigation(
             )
         ) {
             val previousBackStackEntry = navController.previousBackStackEntry
+            val currentTab = previousBackStackEntry?.savedStateHandle?.get<String>(LearnRoute.LearnScreen.currentTabKey)
+                ?: LearnTab.PROGRAMS.stringValue
             previousBackStackEntry?.savedStateHandle?.set(
                 LearnRoute.LearnScreen.selectedTabFromDetailsKey,
-                LearnTab.PROGRAMS.stringValue
+                currentTab
             )
 
             val viewModel = hiltViewModel<ProgramDetailsViewModel>()
             val state by viewModel.state.collectAsState()
             ProgramDetailsScreen(state, navController)
         }
+    }
+    composable(
+        route = LearnRoute.LearnLearningLibraryDetailsScreen.route,
+        arguments = listOf(
+            navArgument(LearnRoute.LearnLearningLibraryDetailsScreen.collectionIdIdAttr) {
+                type = NavType.StringType
+            }
+        ),
+        deepLinks = listOf(
+            navDeepLink {
+                uriPattern =
+                    "${ApiPrefs.fullDomain}/${LearnRoute.LearnLearningLibraryDetailsScreen.route}"
+            }
+        )
+    ) {
+        LearnLearningLibraryDetailsScreen()
+    }
+    composable(LearnRoute.LearnLearningLibraryBookmarkScreen.route) {
+        LearnLearningLibraryBookmarkScreen()
+    }
+    composable(
+        route = LearnRoute.LearnLearningLibraryEnrollScreen.route,
+        arguments = listOf(
+            navArgument(LearnRoute.LearnLearningLibraryEnrollScreen.learningLibraryIdAttr) {
+                type = NavType.StringType
+            }
+        ),
+    ) {
+        val viewModel = hiltViewModel<LearnLearningLibraryEnrollViewModel>()
+        val state by viewModel.state.collectAsState()
+        LearnLearningLibraryEnrollScreen(state, navController)
     }
 }

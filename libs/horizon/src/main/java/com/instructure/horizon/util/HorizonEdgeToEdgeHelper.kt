@@ -45,6 +45,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.unit.coerceAtLeast
+import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 
@@ -181,9 +183,9 @@ operator fun PaddingValues.plus(other: PaddingValues): PaddingValues {
 operator fun PaddingValues.minus(other: PaddingValues): PaddingValues {
     val layoutDirection = LocalLayoutDirection.current
     return PaddingValues(
-        start = this.calculateStartPadding(layoutDirection) - other.calculateStartPadding(layoutDirection),
-        top = this.calculateTopPadding() - other.calculateTopPadding(),
-        end = this.calculateEndPadding(layoutDirection) - other.calculateEndPadding(layoutDirection),
-        bottom = this.calculateBottomPadding() - other.calculateBottomPadding()
+        start = (this.calculateStartPadding(layoutDirection) - other.calculateStartPadding(layoutDirection)).coerceAtLeast(0.dp),
+        top = (this.calculateTopPadding() - other.calculateTopPadding()).coerceAtLeast(0.dp),
+        end = (this.calculateEndPadding(layoutDirection) - other.calculateEndPadding(layoutDirection)).coerceAtLeast(0.dp),
+        bottom = (this.calculateBottomPadding() - other.calculateBottomPadding()).coerceAtLeast(0.dp)
     )
 }

@@ -38,6 +38,8 @@ import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.features.learn.course.list.LearnCourseListScreen
 import com.instructure.horizon.features.learn.course.list.LearnCourseListViewModel
+import com.instructure.horizon.features.learn.learninglibrary.list.LearnLearningLibraryListScreen
+import com.instructure.horizon.features.learn.learninglibrary.list.LearnLearningLibraryListViewModel
 import com.instructure.horizon.features.learn.program.list.LearnProgramListScreen
 import com.instructure.horizon.features.learn.program.list.LearnProgramListViewModel
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -90,6 +92,11 @@ fun LearnScreen(
                     val viewModel = hiltViewModel<LearnProgramListViewModel>()
                     val state by viewModel.uiState.collectAsState()
                     LearnProgramListScreen(state, navController)
+                }
+                LearnTab.BROWSE -> {
+                    val viewModel = hiltViewModel<LearnLearningLibraryListViewModel>()
+                    val state by viewModel.uiState.collectAsState()
+                    LearnLearningLibraryListScreen(state, navController)
                 }
             }
         }

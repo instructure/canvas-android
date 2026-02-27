@@ -18,7 +18,7 @@ package com.instructure.horizon.features.aiassistant.quiz
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.instructure.canvasapi2.models.journey.JourneyAssistRole
+import com.instructure.canvasapi2.models.journey.assist.JourneyAssistRole
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider

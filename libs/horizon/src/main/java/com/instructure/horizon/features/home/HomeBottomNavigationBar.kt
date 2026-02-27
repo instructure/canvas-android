@@ -74,8 +74,9 @@ fun isBottomBarVisible(navController: NavHostController): Boolean {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
+    val subPageRoutes = bottomNavItems.filter { it.containsSubPages }.map { it.route }.toSet()
     return bottomNavItems.map { it.route }.contains(currentDestination?.route)
-            || bottomNavItems.filter { it.containsSubPages }.map { it.route }.contains(currentDestination?.parent?.route)
+            || currentDestination?.hierarchy?.drop(1)?.any { it.route in subPageRoutes } == true
 }
 
 @Composable

@@ -514,6 +514,7 @@
     <string name="a11y_notebookHighlightMarkedAs">%1$s, marked as %2$s, double tap to edit note</string>
     <string name="learnCoursesTabLabel">Courses</string>
     <string name="learnProgramsTabLabel">Programs</string>
+    <string name="learnBrowseTabLabel">Browse</string>
     <string name="reportAProblemDescriptionMessage">File a ticket for a personal response from our support team.</string>
     <string name="igniteAIEnterAPromptLabel">Enter a prompt</string>
     <string name="a11y_igniteAiLoadingContentDescription">Loading response</string>
@@ -544,4 +545,59 @@
     </plurals>
     <string name="a11y_inputErrorMessage">Error: %1$s</string>
     <string name="a11y_required">Required</string>
+    <string name="learnLearningLibraryListSearchPlaceholder">Search</string>
+    <string name="a11y_learnLearningLibraryBookmarkContentDescription">Bookmarked items</string>
+    <string name="a11y_learnLearningLibraryCompletedContentDescription">Completed items</string>
+    <string name="a11y_learnLearningLibraryItemCompletedContentDescription">Completed</string>
+    <string name="a11y_learnLearningLibraryItemBookmarkContentDescription">Bookmark</string>
+    <string name="a11y_learnLearningLibraryItemRemoveBookmarkContentDescription">Remove bookmark</string>
+    <string name="learnLearningLibraryItemEnrollLabel">Enroll</string>
+    <string name="a11y_learnLearningLibraryCollectionCollapseContentDescription">Collapse</string>
+    <string name="a11y_learnLearningLibraryCollectionExpandContentDescription">Expand</string>
+    <string name="learnLearningLibraryCollectionViewCollectionLabel">View full collection</string>
+    <string name="learnLearningLibraryListEmptyMessage">No results found. Try adjusting your search terms.</string>
+    <string name="learnLearningLibraryFailedToUpdateBookmarkMessage">Failed to update the bookmark</string>
+    <string name="learnLearningLibraryFailedToEnrollMessage">Failed to enroll in item</string>
+    <string name="learningLibraryListShowMoreLabel">Show more</string>
+    <string name="learnLearningLibraryInProgressLabel">In progress</string>
+    <string name="learnLearningLibraryCompletedLabel">Completed</string>
+    <string name="learnLearningLibraryProgramLabel">Program</string>
+    <string name="learnLearningLibraryCourseLabel">Course</string>
+    <string name="learnLearningLibraryExternalToolLabel">External tool</string>
+    <string name="learnLearningLibraryExternalLinkLabel">External link</string>
+    <string name="learnLearningLibraryFileLabel">File</string>
+    <string name="learnLearningLibraryPageLabel">Page</string>
+    <plurals name="learnLearningLibraryCollectionItemCount">
+        <item quantity="one">%1$d item</item>
+        <item quantity="other">%1$d items</item>
+    </plurals>
+    <plurals name="learnLearningLibraryEstimatedDuration">
+        <item quantity="one">%1$d min</item>
+        <item quantity="other">%1$d mins</item>
+    </plurals>
+    <plurals name="learnLearningLibraryContainedUnits">
+        <item quantity="one">%1$d unit</item>
+        <item quantity="other">%1$d units</item>
+    </plurals>
+    <string name="LearnLearningLibraryTypeFilterAllLabel">Any type</string>
+    <string name="LearnLearningLibraryTypeFilterAssessmentsLabel">Assessments</string>
+    <string name="LearnLearningLibraryTypeFilterAssignmentsLabel">Assignments</string>
+    <string name="LearnLearningLibraryTypeFilterExternalLinksLabel">External links</string>
+    <string name="LearnLearningLibraryTypeFilterExternalToolsLabel">External tools</string>
+    <string name="LearnLearningLibraryTypeFilterFilesLabel">Files</string>
+    <string name="LearnLearningLibraryTypeFilterPagesLabel">Pages</string>
+    <string name="learnLearningLibraryItemSearchPlaceholder">Search</string>
+    <string name="learnLearningLibraryItemEmptyMessage">No results found. Try adjusting your search terms.</string>
+    <string name="learnLearningLibraryStatusFilterAllLabel">Any status</string>
+    <string name="learnLearningLibraryStatusFilterCompletedLabel">Completed</string>
+    <string name="learnLearningLibraryStatusFilterBookmarkedLabel">Bookmarked</string>
+    <string name="learnLearningLibraryFailedToLoadMessage">Failed to load collections</string>
+    <string name="a11y_learningLibraryClearFiltersContentDescription">Clear filters</string>
+    <string name="a11y_learnClearSearchQueryContentDescription">Clear search query</string>
+    <string name="learnLearningLibraryEnrollDialogOverviewTitle">Overview</string>
+    <string name="learnLearningLibraryEnrollDialogReadyToJoinTitle">Ready to join?</string>
+    <string name="learnLearningLibraryEnrollDialogNotNowLabel">Not now</string>
+    <string name="learnLearningLibraryEnrollDialogEnrollLabel">Enroll</string>
+    <string name="learnLearningLibraryEnrollDialogDetailsMessage">Enroll to access the course and start learning.</string>
+    <string name="learnLearningLibraryEnrollDialogFailedToEnrollMessage">Failed to enroll</string>
 </resources>

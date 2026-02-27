@@ -16,9 +16,9 @@
  */
 package com.instructure.horizon.features.aiassistant.flashcard
 
-import com.instructure.canvasapi2.models.journey.JourneyAssistFlashCard
-import com.instructure.canvasapi2.models.journey.JourneyAssistRole
-import com.instructure.canvasapi2.models.journey.JourneyAssistState
+import com.instructure.canvasapi2.models.journey.assist.JourneyAssistFlashCard
+import com.instructure.canvasapi2.models.journey.assist.JourneyAssistRole
+import com.instructure.canvasapi2.models.journey.assist.JourneyAssistState
 import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
 import com.instructure.horizon.features.aiassistant.common.AiAssistRepository
 import com.instructure.horizon.features.aiassistant.common.AiAssistResponse

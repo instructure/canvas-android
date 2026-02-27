@@ -14,10 +14,9 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.canvasapi2.models.journey
+package com.instructure.canvasapi2.models.journey.assist
 
-data class JourneyAssistState(
-    val courseID: String? = null,
-    val fileID: String? = null,
-    val pageID: String? = null,
-)
+enum class JourneyAssistRole {
+    Assistant,
+    User
+}
