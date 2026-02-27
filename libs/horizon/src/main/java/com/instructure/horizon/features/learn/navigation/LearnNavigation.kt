@@ -37,10 +37,8 @@ import com.instructure.horizon.features.learn.LearnViewModel
 import com.instructure.horizon.features.learn.course.details.CourseDetailsScreen
 import com.instructure.horizon.features.learn.course.details.CourseDetailsViewModel
 import com.instructure.horizon.features.learn.learninglibrary.bookmark.LearnLearningLibraryBookmarkScreen
-import com.instructure.horizon.features.learn.learninglibrary.completed.LearnLearningLibraryCompletedScreen
 import com.instructure.horizon.features.learn.learninglibrary.details.LearnLearningLibraryDetailsScreen
 import com.instructure.horizon.features.learn.learninglibrary.details.LearnLearningLibraryDetailsViewModel
-import com.instructure.horizon.features.learn.course.details.CourseDetailsScreen
 import com.instructure.horizon.features.learn.learninglibrary.enroll.LearnLearningLibraryEnrollScreen
 import com.instructure.horizon.features.learn.learninglibrary.enroll.LearnLearningLibraryEnrollViewModel
 import com.instructure.horizon.features.learn.program.details.ProgramDetailsScreen
@@ -163,6 +161,14 @@ fun NavGraphBuilder.learnNavigation(
             }
         )
     ) {
+        val previousBackStackEntry = navController.previousBackStackEntry
+        val currentTab = previousBackStackEntry?.savedStateHandle?.get<String>(LearnRoute.LearnScreen.currentTabKey)
+            ?: LearnTab.BROWSE.stringValue
+        previousBackStackEntry?.savedStateHandle?.set(
+            LearnRoute.LearnScreen.selectedTabFromDetailsKey,
+            currentTab
+        )
+
         val viewModel = hiltViewModel<LearnLearningLibraryDetailsViewModel>()
         val state by viewModel.uiState.collectAsState()
         LearnLearningLibraryDetailsScreen(state, navController)
