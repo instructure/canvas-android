@@ -29,6 +29,7 @@ import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibrary
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItemsResponse
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryPageInfo
 import com.instructure.canvasapi2.models.journey.learninglibrary.toApolloType
+import com.instructure.canvasapi2.models.journey.learninglibrary.toModel
 import com.instructure.journey.EnrollLearningLibraryItemMutation
 import com.instructure.journey.GetEnrolledLearningLibraryCollectionQuery
 import com.instructure.journey.GetEnrolledLearningLibraryCollectionsQuery
@@ -97,7 +98,7 @@ class GetLearningLibraryManagerImpl @Inject constructor(
                 LearningLibraryCollectionItem(
                     id = item.id,
                     libraryId = item.libraryId,
-                    itemType = CollectionItemType.valueOf(item.itemType.name),
+                    itemType = item.itemType.toModel(),
                     displayOrder = item.displayOrder,
                     canvasCourse = item.canvasCourse?.let { course ->
                         CanvasCourseInfo(
@@ -150,7 +151,7 @@ class GetLearningLibraryManagerImpl @Inject constructor(
                         LearningLibraryCollectionItem(
                             id = item.id,
                             libraryId = item.libraryId,
-                            itemType = CollectionItemType.valueOf(item.itemType.name),
+                            itemType = item.itemType.toModel(),
                             displayOrder = item.displayOrder,
                             canvasCourse = item.canvasCourse?.let { course ->
                                 CanvasCourseInfo(
@@ -238,7 +239,7 @@ class GetLearningLibraryManagerImpl @Inject constructor(
         return LearningLibraryCollectionItem(
             id = result.item.id,
             libraryId = result.item.libraryId,
-            itemType = CollectionItemType.valueOf(result.item.itemType.name),
+            itemType = result.item.itemType.toModel(),
             displayOrder = result.item.displayOrder,
             canvasCourse = result.item.canvasCourse?.let { course ->
                 CanvasCourseInfo(
@@ -269,7 +270,7 @@ class GetLearningLibraryManagerImpl @Inject constructor(
         return LearningLibraryCollectionItem(
             id = result.id,
             libraryId = result.libraryId,
-            itemType = CollectionItemType.valueOf(result.itemType.name),
+            itemType = result.itemType.toModel(),
             displayOrder = result.displayOrder,
             canvasCourse = result.canvasCourse?.let { course ->
                 CanvasCourseInfo(

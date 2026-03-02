@@ -59,6 +59,7 @@ import com.instructure.horizon.horizonui.molecules.DropdownItem
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
+import com.instructure.horizon.horizonui.molecules.LoadingButton
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.pandautils.compose.modifiers.conditional
 
@@ -174,14 +175,16 @@ private fun LearnLearningLibraryItems(
                 )
             }
 
-            if (state.itemState.isMoreButtonLoading) {
+            if (state.itemState.showMoreButton) {
                 item {
-                    Button(
+                    LoadingButton(
+                        loading = state.itemState.isMoreButtonLoading,
                         label = stringResource(R.string.learningLibraryListShowMoreLabel),
                         height = ButtonHeight.SMALL,
                         width = ButtonWidth.FILL,
                         color = ButtonColor.BlackOutline,
                         onClick = state.itemState.onShowMoreClicked,
+                        contentAlignment = Alignment.Center,
                         modifier = Modifier
                             .padding(horizontal = 24.dp)
                             .padding(bottom = 24.dp)
