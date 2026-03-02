@@ -160,7 +160,7 @@ class FakeGetLearningLibraryManager : GetLearningLibraryManager {
         itemId: String,
         forceNetwork: Boolean
     ): LearningLibraryCollectionItem {
-        return collectionItems[itemId].orEmpty().first()
+        return collectionItems.values.flatten().first { it.id == itemId }
     }
 
     private fun initializeMockData() {
