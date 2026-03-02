@@ -160,7 +160,7 @@ private fun LearnLearningLibraryItems(
                 LearnLearningLibraryItem(
                     state = collectionItemState,
                     onClick = {
-                        collectionItemState.toRoute()?.let { navController.navigate(it) }
+                        collectionItemState.route?.let { navController.navigate(it) }
                     },
                     onBookmarkClick = {
                         state.itemState.onBookmarkClicked(collectionItemState.id)

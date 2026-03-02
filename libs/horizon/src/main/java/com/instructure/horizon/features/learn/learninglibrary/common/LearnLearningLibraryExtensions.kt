@@ -21,7 +21,9 @@ import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemT
 import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearningLibraryCollection
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItem
 import com.instructure.horizon.R
+import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
+import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.pandautils.utils.orDefault
 
 fun List<EnrolledLearningLibraryCollection>.toUiState(resources: Resources): List<LearnLearningLibraryCollectionState> {
@@ -38,18 +40,17 @@ fun List<EnrolledLearningLibraryCollection>.toUiState(resources: Resources): Lis
 }
 
 fun LearningLibraryCollectionItem.toUiState(resources: Resources): LearnLearningLibraryCollectionItemState {
-    val courseId = this.canvasCourse?.courseId?.toLongOrNull() ?: -1L
     val canEnroll = this.itemType == CollectionItemType.COURSE && !this.isEnrolledInCanvas.orDefault(true)
 
     return LearnLearningLibraryCollectionItemState(
         id = this.id,
-        courseId = courseId,
         imageUrl = this.canvasCourse?.courseImageUrl,
         name = this.canvasCourse?.courseName.orEmpty(),
         isBookmarked = this.isBookmarked,
         canEnroll = canEnroll,
         bookmarkLoading = false,
         type = this.itemType,
+        route = this.getRoute(),
         chips = listOf(
             this.itemType.toUiChipState(resources),
             this.toEstimatedDurationUiChipState(resources),
@@ -57,6 +58,23 @@ fun LearningLibraryCollectionItem.toUiState(resources: Resources): LearnLearning
             this.completionPercentage?.toProgressUiChipState(resources),
         ).mapNotNull { it }
     )
+}
+
+private fun LearningLibraryCollectionItem.getRoute(): Any? {
+    return when(this.itemType) {
+        CollectionItemType.COURSE -> this.canvasCourse?.courseId?.toLongOrNull()?.let{
+            LearnRoute.LearnCourseDetailsScreen.route(it)
+        }
+        CollectionItemType.PROGRAM -> this.programId?.let {
+            LearnRoute.LearnProgramDetailsScreen.route(it)
+        }
+        else -> MainNavigationRoute.ModuleItemSequence(
+            courseId = this.canvasCourse?.courseId?.toLongOrNull() ?: -1L,
+            moduleItemId = this.moduleInfo?.moduleItemId?.toLongOrNull(),
+            moduleItemAssetType = this.moduleInfo?.moduleItemType,
+            moduleItemAssetId = this.moduleInfo?.resourceId
+        )
+    }
 }
 
 fun CollectionItemType.toUiChipState(resources: Resources): LearnLearningLibraryCollectionItemChipState? {

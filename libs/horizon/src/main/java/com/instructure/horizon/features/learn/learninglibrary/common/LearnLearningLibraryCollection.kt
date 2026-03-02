@@ -67,7 +67,7 @@ fun LazyListScope.LearnLearningLibraryCollection(
     collections: List<LearnLearningLibraryCollectionState>,
     onBookmarkClick: (itemId: String) -> Unit,
     onEnrollClick: (itemId: String) -> Unit,
-    onItemClick: (route: String?) -> Unit,
+    onItemClick: (route: Any?) -> Unit,
     onCollectionDetailsClick: (itemId: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -96,7 +96,7 @@ fun LearnLearningLibraryCollectionItem(
     itemCount: Int,
     onBookmarkClick: (itemId: String) -> Unit,
     onEnrollClick: (itemId: String) -> Unit,
-    onItemClick: (route: String?) -> Unit,
+    onItemClick: (route: Any?) -> Unit,
     onCollectionDetailsClick: (itemId: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -116,7 +116,7 @@ fun LearnLearningLibraryCollectionItem(
         state.items.take(itemCount).forEach { itemState ->
             LearnLearningLibraryItem(
                 state = itemState,
-                onClick = { onItemClick(itemState.toRoute()) },
+                onClick = { onItemClick(itemState.route) },
                 onBookmarkClick = { onBookmarkClick(itemState.id) },
                 onEnrollClick = { onEnrollClick(itemState.id) }
             )
@@ -218,13 +218,13 @@ private fun LearnLearningLibraryCollectionSingleItem() {
             items = listOf(
                 LearnLearningLibraryCollectionItemState(
                     id = "1",
-                    courseId = 1,
                     imageUrl = null,
                     name = "Collection Item 1",
                     isBookmarked = true,
                     canEnroll = true,
                     bookmarkLoading = false,
                     type = CollectionItemType.COURSE,
+                    route = null,
                     chips = listOf(
                         LearnLearningLibraryCollectionItemChipState(
                             label = "Recommended"
@@ -239,13 +239,13 @@ private fun LearnLearningLibraryCollectionSingleItem() {
                 ),
                 LearnLearningLibraryCollectionItemState(
                     id = "2",
-                    courseId = 1,
                     imageUrl = null,
                     name = "Collection Item 2",
                     isBookmarked = false,
                     canEnroll = false,
                     bookmarkLoading = false,
                     type = CollectionItemType.COURSE,
+                    route = null,
                     chips = listOf(
                         LearnLearningLibraryCollectionItemChipState(
                             label = "Recommended"
@@ -284,13 +284,13 @@ private fun LearnLearningLibraryCollectionMultipleItems() {
             items = listOf(
                 LearnLearningLibraryCollectionItemState(
                     id = "1",
-                    courseId = 1,
                     imageUrl = null,
                     name = "Collection Item 1",
                     isBookmarked = true,
                     canEnroll = true,
                     bookmarkLoading = false,
                     type = CollectionItemType.COURSE,
+                    route = null,
                     chips = listOf(
                         LearnLearningLibraryCollectionItemChipState(
                             label = "Recommended"
@@ -305,13 +305,13 @@ private fun LearnLearningLibraryCollectionMultipleItems() {
                 ),
                 LearnLearningLibraryCollectionItemState(
                     id = "2",
-                    courseId = 1,
                     imageUrl = null,
                     name = "Collection Item 2",
                     isBookmarked = false,
                     canEnroll = false,
                     bookmarkLoading = false,
                     type = CollectionItemType.COURSE,
+                    route = null,
                     chips = listOf(
                         LearnLearningLibraryCollectionItemChipState(
                             label = "Recommended"
@@ -333,13 +333,13 @@ private fun LearnLearningLibraryCollectionMultipleItems() {
             items = listOf(
                 LearnLearningLibraryCollectionItemState(
                     id = "1",
-                    courseId = 1,
                     imageUrl = null,
                     name = "Collection Item 1",
                     isBookmarked = true,
                     canEnroll = true,
                     bookmarkLoading = true,
                     type = CollectionItemType.COURSE,
+                    route = null,
                     chips = listOf(
                         LearnLearningLibraryCollectionItemChipState(
                             label = "Recommended"
@@ -354,13 +354,13 @@ private fun LearnLearningLibraryCollectionMultipleItems() {
                 ),
                 LearnLearningLibraryCollectionItemState(
                     id = "2",
-                    courseId = 1,
                     imageUrl = null,
                     name = "Collection Item 2",
                     isBookmarked = false,
                     canEnroll = false,
                     bookmarkLoading = false,
                     type = CollectionItemType.COURSE,
+                    route = null,
                     chips = listOf(
                         LearnLearningLibraryCollectionItemChipState(
                             label = "Recommended"

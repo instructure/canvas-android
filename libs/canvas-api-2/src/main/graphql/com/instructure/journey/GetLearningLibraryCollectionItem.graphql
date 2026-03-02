@@ -20,5 +20,9 @@ query GetLearningLibraryCollectionItem($itemId: String!) {
         isBookmarked
         completionPercentage
         isEnrolledInCanvas
+        canvasEnrollmentId
+        canvasModuleId
+        canvasModuleItemId
+        canvasResourceId
     }
 }

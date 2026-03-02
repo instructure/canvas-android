@@ -563,6 +563,9 @@ type LearningLibraryCollectionWithCountsGQL {
 
     # Number of active learners enrolled in this collection
     learnerCount: Int!
+
+    # Number of unique skills aligned to learning objects in this collection
+    uniqueSkills: Int!
     createdAt: DateTime!
     updatedAt: DateTime!
 }
@@ -786,7 +789,8 @@ type SkillTaxonomySkillGQL {
     courses: [SkillTaxonomyCourseGQL!]!
     programs: [ProgramGQL!]!
     alignmentsGroupedByProficiencyScaleValue(
-        courseId: String!
+        courseId: String
+        collectionId: String
     ): [AlignmentsByProficiencyScaleValueGQL!]!
     coursesGroupedByProficiencyScaleValue(
         programId: String!
@@ -887,6 +891,28 @@ type AlignmentsByProficiencyScaleValueGQL {
     alignments: [SkillTaxonomySkillAlignmentGQL!]!
 }
 
+type SkillTaxonomyCollectionAlignmentGQL {
+    # Unique identifier for the skill alignment
+    id: ID!
+
+    # Unique identifier of the collection item (learning library course membership)
+    collectionItemId: String!
+
+    # Skill associated with the alignment
+    skill: SkillTaxonomySkillGQL
+
+    # Proficiency scale values for the skill alignment
+    proficiencyScaleValues: [SkillTaxonomyProficiencyScaleValueGQL!]!
+}
+
+type AssociateSkillsToCollectionItemsResultGQL {
+    # Skill alignments that were created or updated
+    persistedAlignments: [SkillTaxonomyCollectionAlignmentGQL!]!
+
+    # IDs of skill alignments that were deleted
+    deletedAlignments: [ID!]!
+}
+
 type AssociateSkillsToLearningObjectsResultGQL {
     # List of alignments that were successfully persisted
     persistedAlignments: [SkillTaxonomySkillAlignmentGQL!]!
@@ -917,6 +943,33 @@ type CoursesByProficiencyScaleValueGQL {
 
     # List of courses for the proficiency scale value
     courses: [SkillTaxonomyCourseGQL!]!
+}
+
+type SkillTaxonomyCollectionItemGQL {
+    # Unique identifier for the skill taxonomy learning object (null if not yet aligned)
+    id: ID
+
+    # Canvas resource ID of the collection item
+    contentId: String!
+
+    # Type of the learning object
+    type: String!
+
+    # Skill alignments for this collection item
+    alignments: [SkillTaxonomyCollectionAlignmentGQL!]!
+}
+
+type SkillTaxonomyCollectionGQL {
+    # Unique identifier for the collection (same as collectionId)
+    id: ID!
+
+    # Unique identifier for the learning library collection
+    collectionId: String!
+
+    # Learning object items in the collection with their skill alignments
+    learningObjects: [SkillTaxonomyCollectionItemGQL!]!
+    uniqueSkills: Float!
+    skills: [SkillTaxonomySkillGQL!]!
 }
 
 type SkillTaxonomyProficiencyScaleGQL {
@@ -1168,6 +1221,7 @@ type Query {
 
     # Check if skill extraction has run for course/module/module item
     hasSkillExtractionRun(input: SkillExtractionStatusInputGQL!): Boolean!
+    skillTaxonomyCollection(collectionId: String!): SkillTaxonomyCollectionGQL!
     contentLibraries(accountId: ID!): [ContentLibraryGQL!]!
     contentLibrary(courseId: ID!): ContentLibraryGQL!
     contentLibrariesForAccounts(
@@ -1494,6 +1548,9 @@ type Mutation {
     upsertSkillTaxonomyGroups(
         input: UpsertSkillTaxonomyGroupsInputGQL!
     ): [SkillTaxonomyGroupGQL!]!
+    associateSkillsToCollectionItems(
+        input: AssociateSkillsToCollectionItemsInputGQL!
+    ): AssociateSkillsToCollectionItemsResultGQL!
     sendEvent(input: EventInputGQL!): Boolean!
     createContentLibrary(accountId: ID!): ContentLibraryGQL!
     updateContentLibrary(args: ContentLibraryInputGQL!): ContentLibraryGQL!
@@ -1829,6 +1886,39 @@ input UpsertSkillTaxonomyGroupInputGQL {
 
     # The name of the skill taxonomy group
     name: String!
+}
+
+input AssociateSkillsToCollectionItemsInputGQL {
+    # Unique identifier for the learning library collection
+    collectionId: String!
+
+    # List of collection items with skill alignments to create or update
+    learningObjects: [CreateOrUpdateAlignmentCollectionItemInputGQL!]!
+
+    # List of skill alignment IDs to delete
+    alignmentsToDelete: [ID!]!
+}
+
+input CreateOrUpdateAlignmentCollectionItemInputGQL {
+    # Unique identifier for the learning object (null to create new)
+    id: ID
+
+    # Unique identifier of the collection item (learning library course membership)
+    collectionItemId: String!
+
+    # List of skill alignments to create or update for the collection item
+    alignmentsToPersist: [CreateOrUpdateCollectionItemAlignmentInputGQL!]!
+}
+
+input CreateOrUpdateCollectionItemAlignmentInputGQL {
+    # Unique identifier for the alignment (null to create new)
+    id: ID
+
+    # Unique identifier for the skill
+    skillId: ID!
+
+    # Unique identifiers for the proficiency scale values
+    proficiencyScaleValues: [ID!]!
 }
 
 input EventInputGQL {

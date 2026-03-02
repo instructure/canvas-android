@@ -38,7 +38,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
 import com.instructure.horizon.R
-import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
@@ -60,22 +59,15 @@ import com.instructure.horizon.horizonui.molecules.StatusChipState
 
 data class LearnLearningLibraryCollectionItemState(
     val id: String,
-    val courseId: Long,
     val imageUrl: String?,
     val name: String,
     val isBookmarked: Boolean,
     val bookmarkLoading: Boolean,
     val canEnroll: Boolean,
     val type: CollectionItemType,
+    val route: Any?,
     val chips: List<LearnLearningLibraryCollectionItemChipState>
-) {
-    fun toRoute(): String? {
-        return when (type) {
-            CollectionItemType.COURSE -> LearnRoute.LearnCourseDetailsScreen.route(courseId)
-            else -> null
-        }
-    }
-}
+)
 
 data class LearnLearningLibraryCollectionItemChipState(
     val label: String,
@@ -229,13 +221,13 @@ private fun LearningLibraryItemImagePlaceholder(
 private fun LearningLibraryItemEnrollPreview() {
     val state = LearnLearningLibraryCollectionItemState(
         id = "1",
-        courseId = 1,
         imageUrl = "https://example.com/image.png",
         name = "Example Course",
         isBookmarked = true,
         canEnroll = true,
         bookmarkLoading = false,
         type = CollectionItemType.COURSE,
+        route = null,
         chips = listOf(
             LearnLearningLibraryCollectionItemChipState(
                 label = "Required",
@@ -264,13 +256,13 @@ private fun LearningLibraryItemEnrollPreview() {
 private fun LearningLibraryItemPreview() {
     val state = LearnLearningLibraryCollectionItemState(
         id = "1",
-        courseId = 1,
         imageUrl = "https://example.com/image.png",
         name = "Example Course",
         isBookmarked = false,
         canEnroll = true,
         bookmarkLoading = false,
         type = CollectionItemType.COURSE,
+        route = null,
         chips = listOf(
             LearnLearningLibraryCollectionItemChipState(
                 label = "Required",
