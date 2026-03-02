@@ -230,7 +230,9 @@ class FakeGetLearningLibraryManager : GetLearningLibraryManager {
                     updatedAt = now,
                     isBookmarked = false,
                     completionPercentage = 0.0,
-                    isEnrolledInCanvas = true
+                    isEnrolledInCanvas = true,
+                    moduleInfo = null,
+                    canvasEnrollmentId = null
                 )
             )
 
@@ -247,7 +249,9 @@ class FakeGetLearningLibraryManager : GetLearningLibraryManager {
                     updatedAt = now,
                     isBookmarked = true,
                     completionPercentage = null,
-                    isEnrolledInCanvas = null
+                    isEnrolledInCanvas = null,
+                    moduleInfo = null,
+                    canvasEnrollmentId = null
                 )
             )
         }
@@ -275,7 +279,9 @@ class FakeGetLearningLibraryManager : GetLearningLibraryManager {
                     updatedAt = now,
                     isBookmarked = true,
                     completionPercentage = 50.0,
-                    isEnrolledInCanvas = true
+                    isEnrolledInCanvas = true,
+                    moduleInfo = null,
+                    canvasEnrollmentId = null
                 )
             )
         }
@@ -303,7 +309,9 @@ class FakeGetLearningLibraryManager : GetLearningLibraryManager {
                     updatedAt = now,
                     isBookmarked = false,
                     completionPercentage = 100.0,
-                    isEnrolledInCanvas = true
+                    isEnrolledInCanvas = true,
+                    moduleInfo = null,
+                    canvasEnrollmentId = null
                 )
             )
 
@@ -320,7 +328,9 @@ class FakeGetLearningLibraryManager : GetLearningLibraryManager {
                     updatedAt = now,
                     isBookmarked = false,
                     completionPercentage = null,
-                    isEnrolledInCanvas = null
+                    isEnrolledInCanvas = null,
+                    moduleInfo = null,
+                    canvasEnrollmentId = null
                 )
             )
         }

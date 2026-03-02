@@ -60,20 +60,20 @@ fun LearningLibraryCollectionItem.toUiState(resources: Resources): LearnLearning
     )
 }
 
-private fun LearningLibraryCollectionItem.getRoute(): Any? {
+private fun LearningLibraryCollectionItem.getRoute(): LearningLibraryRoute? {
     return when(this.itemType) {
         CollectionItemType.COURSE -> this.canvasCourse?.courseId?.toLongOrNull()?.let{
-            LearnRoute.LearnCourseDetailsScreen.route(it)
+            LearningLibraryRoute.StringRoute(LearnRoute.LearnCourseDetailsScreen.route(it))
         }
         CollectionItemType.PROGRAM -> this.programId?.let {
-            LearnRoute.LearnProgramDetailsScreen.route(it)
+            LearningLibraryRoute.StringRoute(LearnRoute.LearnProgramDetailsScreen.route(it))
         }
-        else -> MainNavigationRoute.ModuleItemSequence(
+        else -> LearningLibraryRoute.ObjectRoute(MainNavigationRoute.ModuleItemSequence(
             courseId = this.canvasCourse?.courseId?.toLongOrNull() ?: -1L,
             moduleItemId = this.moduleInfo?.moduleItemId?.toLongOrNull(),
             moduleItemAssetType = this.moduleInfo?.moduleItemType,
             moduleItemAssetId = this.moduleInfo?.resourceId
-        )
+        ))
     }
 }
 

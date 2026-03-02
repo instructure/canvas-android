@@ -65,7 +65,7 @@ data class LearnLearningLibraryCollectionItemState(
     val bookmarkLoading: Boolean,
     val canEnroll: Boolean,
     val type: CollectionItemType,
-    val route: Any?,
+    val route: LearningLibraryRoute?,
     val chips: List<LearnLearningLibraryCollectionItemChipState>
 )
 

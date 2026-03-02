@@ -106,12 +106,12 @@ class GetLearningLibraryManagerImpl @Inject constructor(
                             estimatedDurationMinutes = course.estimatedDurationMinutes
                         )
                     },
-                    moduleInfo = if (item.canvasModuleId != null && item.canvasModuleItemId != null && item.canvasResourceId != null && item.itemType.toModuleItemType() != null) {
+                    moduleInfo = if (item.canvasModuleItemId != null) {
                         LearningLibraryModuleInfo(
                             moduleId = item.canvasModuleId,
                             moduleItemId = item.canvasModuleItemId,
                             resourceId = item.canvasResourceId,
-                            moduleItemType = item.itemType.toModuleItemType()?.name.orEmpty()
+                            moduleItemType = item.itemType.toModuleItemType()?.name
                         )
                     } else {
                         null
@@ -170,12 +170,12 @@ class GetLearningLibraryManagerImpl @Inject constructor(
                                     estimatedDurationMinutes = course.estimatedDurationMinutes
                                 )
                             },
-                            moduleInfo = if (item.canvasModuleId != null && item.canvasModuleItemId != null && item.canvasResourceId != null && item.itemType.toModuleItemType() != null) {
+                            moduleInfo = if (item.canvasModuleItemId != null) {
                                 LearningLibraryModuleInfo(
                                     moduleId = item.canvasModuleId,
                                     moduleItemId = item.canvasModuleItemId,
                                     resourceId = item.canvasResourceId,
-                                    moduleItemType = item.itemType.toModuleItemType()?.name.orEmpty()
+                                    moduleItemType = item.itemType.toModuleItemType()?.name
                                 )
                             } else {
                                 null
@@ -226,12 +226,12 @@ class GetLearningLibraryManagerImpl @Inject constructor(
                     estimatedDurationMinutes = course.estimatedDurationMinutes
                 )
             },
-            moduleInfo = if (result.item.canvasModuleId != null && result.item.canvasModuleItemId != null && result.item.canvasResourceId != null && result.item.itemType.toModuleItemType() != null) {
+            moduleInfo = if (result.item.canvasModuleItemId != null) {
                 LearningLibraryModuleInfo(
                     moduleId = result.item.canvasModuleId,
                     moduleItemId = result.item.canvasModuleItemId,
                     resourceId = result.item.canvasResourceId,
-                    moduleItemType = result.item.itemType.toModuleItemType()?.name.orEmpty()
+                    moduleItemType = result.item.itemType.toModuleItemType()?.name
                 )
             } else {
                 null
@@ -268,12 +268,12 @@ class GetLearningLibraryManagerImpl @Inject constructor(
                     estimatedDurationMinutes = course.estimatedDurationMinutes
                 )
             },
-            moduleInfo = if (result.canvasModuleId != null && result.canvasModuleItemId != null && result.canvasResourceId != null && result.itemType.toModuleItemType() != null) {
+            moduleInfo = if (result.canvasModuleItemId != null) {
                 LearningLibraryModuleInfo(
                     moduleId = result.canvasModuleId,
                     moduleItemId = result.canvasModuleItemId,
                     resourceId = result.canvasResourceId,
-                    moduleItemType = result.itemType.toModuleItemType()?.name.orEmpty()
+                    moduleItemType = result.itemType.toModuleItemType()?.name
                 )
             } else {
                 null

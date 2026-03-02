@@ -67,7 +67,7 @@ fun LazyListScope.LearnLearningLibraryCollection(
     collections: List<LearnLearningLibraryCollectionState>,
     onBookmarkClick: (itemId: String) -> Unit,
     onEnrollClick: (itemId: String) -> Unit,
-    onItemClick: (route: Any?) -> Unit,
+    onItemClick: (route: LearningLibraryRoute?) -> Unit,
     onCollectionDetailsClick: (itemId: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -96,7 +96,7 @@ fun LearnLearningLibraryCollectionItem(
     itemCount: Int,
     onBookmarkClick: (itemId: String) -> Unit,
     onEnrollClick: (itemId: String) -> Unit,
-    onItemClick: (route: Any?) -> Unit,
+    onItemClick: (route: LearningLibraryRoute?) -> Unit,
     onCollectionDetailsClick: (itemId: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
