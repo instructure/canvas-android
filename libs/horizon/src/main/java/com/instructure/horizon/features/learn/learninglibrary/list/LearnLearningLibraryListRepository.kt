@@ -25,6 +25,8 @@ import javax.inject.Inject
 class LearnLearningLibraryListRepository @Inject constructor(
     private val getLearningLibraryManager: GetLearningLibraryManager,
 ) {
+    private val itemLimitPerCollection = 4
+
     suspend fun getLearningLibraryItems(
         afterCursor: String? = null,
         limit: Int? = 10,
@@ -46,7 +48,7 @@ class LearnLearningLibraryListRepository @Inject constructor(
     }
 
     suspend fun getEnrolledLearningLibraries(forceNetwork: Boolean): List<EnrolledLearningLibraryCollection> {
-        return getLearningLibraryManager.getEnrolledLearningLibraryCollections(4, forceNetwork).collections
+        return getLearningLibraryManager.getEnrolledLearningLibraryCollections(itemLimitPerCollection, forceNetwork).collections
     }
 
     suspend fun toggleLearningLibraryItemIsBookmarked(itemId: String): Boolean {
