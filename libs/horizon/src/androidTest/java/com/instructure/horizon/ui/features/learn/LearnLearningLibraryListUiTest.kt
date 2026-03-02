@@ -478,12 +478,12 @@ class LearnLearningLibraryListUiTest {
     }
 
     @Test
-    fun testShowMoreButtonDisplayedInItemViewWhenMoreButtonLoading() {
+    fun testShowMoreButtonDisplayedInItemViewWhenMoreButton() {
         val state = LearnLearningLibraryListUiState(
             statusFilter = LearnLearningLibraryStatusFilter.Bookmarked,
             itemState = LearnLearningLibraryListItemUiState(
                 items = testItems,
-                isMoreButtonLoading = true
+                showMoreButton = true
             )
         )
 
