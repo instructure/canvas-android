@@ -521,7 +521,7 @@ class LearnLearningLibraryDetailsViewModelTest {
     @Test
     fun `Refresh on error shows snackbar message`() = runTest {
         val viewModel = getViewModel()
-        every { resources.getString(R.string.learnLarningLibraryFailedToLoadCollectionMessage) } returns "Failed to load"
+        every { resources.getString(R.string.learnLearningLibraryFailedToLoadCollectionMessage) } returns "Failed to load"
         coEvery { repository.getLearningLibraryItems(testCollectionId, true) } throws Exception("Network error")
 
         viewModel.uiState.value.loadingState.onRefresh()
@@ -549,7 +549,7 @@ class LearnLearningLibraryDetailsViewModelTest {
     @Test
     fun `Dismiss snackbar clears snackbar message`() = runTest {
         val viewModel = getViewModel()
-        every { resources.getString(R.string.learnLarningLibraryFailedToLoadCollectionMessage) } returns "Failed to load"
+        every { resources.getString(R.string.learnLearningLibraryFailedToLoadCollectionMessage) } returns "Failed to load"
         coEvery { repository.getLearningLibraryItems(testCollectionId, true) } throws Exception("Network error")
         viewModel.uiState.value.loadingState.onRefresh()
 
