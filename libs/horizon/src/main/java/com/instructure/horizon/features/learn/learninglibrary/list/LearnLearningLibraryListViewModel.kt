@@ -135,7 +135,7 @@ class LearnLearningLibraryListViewModel @Inject constructor(
             fetchItems(cursor, searchQuery, typeFilter, bookmarkedOnly, completedOnly)
             _uiState.update { it.copy(itemState = it.itemState.copy(loadingState = it.itemState.loadingState.copy(isLoading = false))) }
         } catch {
-            _uiState.update { it.copy(itemState = it.itemState.copy(loadingState = it.itemState.loadingState.copy(isLoading = true, isError = true))) }
+            _uiState.update { it.copy(itemState = it.itemState.copy(loadingState = it.itemState.loadingState.copy(isLoading = false, isError = true))) }
         }
     }
 
@@ -170,8 +170,8 @@ class LearnLearningLibraryListViewModel @Inject constructor(
             limit = itemPageSize,
             searchQuery = searchQuery,
             typeFilter = filterType,
-            bookmarkedOnly = uiState.value.statusFilter == LearnLearningLibraryStatusFilter.Bookmarked,
-            completedOnly = uiState.value.statusFilter == LearnLearningLibraryStatusFilter.Completed,
+            bookmarkedOnly = bookmarkedOnly,
+            completedOnly = completedOnly,
             forceNetwork = forceNetwork
         )
 
@@ -186,7 +186,7 @@ class LearnLearningLibraryListViewModel @Inject constructor(
             itemNextCursor = null
             _uiState.update { it.copy(
                 itemState = it.itemState.copy(
-                    showMoreButton = true
+                    showMoreButton = false
                 ),
             ) }
         }
