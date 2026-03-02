@@ -29,6 +29,9 @@ import android.widget.ImageView
 import androidx.annotation.ColorRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.Insets
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
@@ -225,6 +228,13 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
         annotationEditingInspectorController = DefaultAnnotationEditingInspectorController(context, inspectorCoordinatorLayout)
         annotationCreationInspectorController = DefaultAnnotationCreationInspectorController(context, inspectorCoordinatorLayout)
 
+        // Consume status bar insets at the layout level to prevent PSPDFKit from applying them
+        ViewCompat.setOnApplyWindowInsetsListener(annotationToolbarLayout) { _, insets ->
+            WindowInsetsCompat.Builder(insets)
+                .setInsets(WindowInsetsCompat.Type.statusBars(), Insets.NONE)
+                .build()
+        }
+
         annotationToolbarLayout.setOnContextualToolbarLifecycleListener(object :
             ToolbarCoordinatorLayout.OnContextualToolbarLifecycleListener {
             override fun onDisplayContextualToolbar(p0: ContextualToolbar<*>) {}
@@ -232,7 +242,8 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
 
             override fun onPrepareContextualToolbar(toolbar: ContextualToolbar<*>) {
                 toolbar.layoutParams = ToolbarCoordinatorLayout.LayoutParams(
-                    ToolbarCoordinatorLayout.LayoutParams.Position.TOP, EnumSet.of(ToolbarCoordinatorLayout.LayoutParams.Position.TOP)
+                    ToolbarCoordinatorLayout.LayoutParams.Position.TOP,
+                    EnumSet.of(ToolbarCoordinatorLayout.LayoutParams.Position.TOP)
                 )
 
                 if (toolbar is AnnotationCreationToolbar) {
