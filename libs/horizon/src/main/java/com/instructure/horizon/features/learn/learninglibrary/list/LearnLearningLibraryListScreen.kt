@@ -317,7 +317,7 @@ private fun LearnLearningLibraryListFilterRow(
 @Composable
 private fun EmptyMessage() {
     Text(
-        text = stringResource(R.string.learnLearningLibraryBookmarkedEmptyMessage),
+        text = stringResource(R.string.learnLearningLibraryListEmptyMessage),
         style = HorizonTypography.p1,
         color = HorizonColors.Text.body(),
         modifier = Modifier.padding(horizontal = 24.dp)

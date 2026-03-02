@@ -44,7 +44,6 @@ import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.horizonBorderShadow
-import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.ButtonHeight
 import com.instructure.horizon.horizonui.molecules.ButtonWidth
@@ -53,6 +52,7 @@ import com.instructure.horizon.horizonui.molecules.DropdownItem
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
+import com.instructure.horizon.horizonui.molecules.LoadingButton
 import com.instructure.horizon.horizonui.organisms.scaffolds.CollapsableHeaderScreen
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.pandautils.compose.modifiers.conditional
@@ -125,12 +125,14 @@ private fun LearnLearningLibraryBookmarkedContent(
 
         if (state.showMoreButton) {
             item {
-                Button(
+                LoadingButton(
+                    loading = state.isMoreButtonLoading,
                     label = stringResource(R.string.learningLibraryListShowMoreLabel),
                     height = ButtonHeight.SMALL,
                     width = ButtonWidth.FILL,
                     color = ButtonColor.BlackOutline,
                     onClick = state.onShowMoreClicked,
+                    contentAlignment = Alignment.Center,
                     modifier = Modifier
                         .padding(horizontal = 24.dp)
                         .padding(bottom = 24.dp)
