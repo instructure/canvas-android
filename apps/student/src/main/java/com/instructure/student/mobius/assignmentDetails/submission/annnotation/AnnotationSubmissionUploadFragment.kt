@@ -30,6 +30,8 @@ import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.setMenu
 import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.pandautils.utils.withArgs
@@ -80,6 +82,8 @@ class AnnotationSubmissionUploadFragment : BaseCanvasFragment() {
         }
 
         setUpToolbar(binding.annotationSubmissionToolbar)
+        binding.annotationSubmissionToolbar.applyTopSystemBarInsets()
+        binding.annotationSubmissionViewContainer.applyBottomSystemBarInsets()
 
         return binding.root
     }

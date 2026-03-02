@@ -278,6 +278,7 @@
     <string name="checkBoxWhatIfGradeOption">Toon What-If score</string>
     <string name="whatIfDialogText">What-If score</string>
     <string name="whatIfScoreExceedsMaximum">Score kan het maximaal aantal punten niet overschrijden</string>
+    <string name="whatIfScoreExceedsMaximumWarning">De score overschrijdt het maximale aantal punten</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s van de %2$s punten, %3$s</string>
     <string name="inbox">Inbox</string>
@@ -1923,6 +1924,15 @@
     <string name="courseDetailsMessageContentDescription">Een bericht over deze cursus verzenden</string>
     <string name="gradeLockedContentDescription">Cijfer vergrendeld</string>
     <string name="gradesRefreshFailed">Verversen van cijfers mislukt</string>
+    <string name="showWhatIfScore">Wat-als-score weergeven</string>
+    <string name="editWhatIfScore">Wat-als-score bewerken</string>
+    <string name="editWhatIfScoreTitle">Wat-als-score bewerken</string>
+    <string name="whatIfScoreLabel">Wat-als</string>
+    <string name="whatIfScoreCurrentGraded">Score %1$.0f van de %2$.0f</string>
+    <string name="whatIfScoreCurrentUngraded">Niet beoordeeld, max. score %.0f</string>
+    <string name="whatIfScoreDisplay">Wat-als: %s</string>
+    <string name="gradesBasedOnGradedAndWhatIf">Gebaseerd op beoordeelde opdrachten en wat-als-score</string>
+    <string name="clearWhatIfScore">Wat-als-score wissen</string>
     <string name="chooseACourseToMessage">Kies een cursus voor bericht</string>
     <string name="regardingHiddenMessage">Betreffende: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">Betreffende: %1$s, opdracht - %2$s</string>

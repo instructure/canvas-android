@@ -60,7 +60,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -193,7 +192,7 @@ fun TodoWidgetContent(
                 ) {
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // Header with month and switch
+                    // Header with year, month and switch
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -201,12 +200,21 @@ fun TodoWidgetContent(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            text = uiState.monthTitle,
-                            fontSize = 22.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = colorResource(R.color.textDarkest)
-                        )
+                        Column {
+                            uiState.yearTitle?.let { year ->
+                                Text(
+                                    text = year,
+                                    fontSize = 12.sp,
+                                    color = colorResource(R.color.textDark)
+                                )
+                            }
+                            Text(
+                                text = uiState.monthTitle,
+                                fontSize = 22.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = colorResource(R.color.textDarkest)
+                            )
+                        }
 
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -365,7 +373,7 @@ private fun TodoItemsContainer(
             }
 
             todosError -> {
-                Box(modifier = Modifier.padding(16.dp)) {
+                Box() {
                     TodoItemsError(
                         onRefresh = onRefresh,
                         buttonColor = buttonColor
@@ -374,7 +382,7 @@ private fun TodoItemsContainer(
             }
 
             todos.isEmpty() -> {
-                Box(modifier = Modifier.padding(16.dp)) {
+                Box() {
                     TodoItemsEmpty(
                         onAddTodoClick = onAddTodoClick,
                         buttonColor = buttonColor
@@ -386,7 +394,9 @@ private fun TodoItemsContainer(
                 TodoItemsList(
                     todos = todos,
                     onTodoClick = onTodoClick,
-                    checkboxColor = buttonColor
+                    checkboxColor = buttonColor,
+                    onAddTodoClick = onAddTodoClick,
+                    buttonColor = buttonColor
                 )
             }
         }
@@ -424,67 +434,72 @@ private fun TodoItemsError(
     onRefresh: () -> Unit = {},
     buttonColor: Color
 ) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = Modifier.padding(vertical = 24.dp)
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.Top
     ) {
-        Icon(
-            painter = painterResource(R.drawable.ic_panda_notsupported),
-            contentDescription = null,
-            tint = Color.Unspecified,
-            modifier = Modifier.size(width = 102.dp, height = 104.dp)
-        )
+        Box(
+            modifier = Modifier.size(width = 72.dp, height = 56.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_panda_notsupported),
+                contentDescription = null,
+                tint = Color.Unspecified,
+                modifier = Modifier.size(40.dp)
+            )
+        }
 
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(4.dp)
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = 8.dp, end = 16.dp, top = 12.dp, bottom = 14.dp),
+            verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
             Text(
                 text = stringResource(R.string.todoWidget_errorTitle),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Medium,
-                color = colorResource(R.color.textDarkest),
-                textAlign = TextAlign.Center
+                color = colorResource(R.color.textDarkest)
             )
 
             Text(
                 text = stringResource(R.string.todoWidget_errorMessage),
                 fontSize = 14.sp,
-                color = colorResource(R.color.textDark),
-                textAlign = TextAlign.Center
+                color = colorResource(R.color.textDark)
             )
-        }
 
-        Button(
-            onClick = onRefresh,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = buttonColor
-            ),
-            shape = RoundedCornerShape(100.dp),
-            modifier = Modifier.height(30.dp),
-            contentPadding = PaddingValues(
-                start = 12.dp,
-                top = 0.dp,
-                end = 8.dp,
-                bottom = 0.dp
-            )
-        ) {
-            Text(
-                text = stringResource(R.string.todoWidget_refresh),
-                color = colorResource(R.color.textLightest),
-                fontSize = 14.sp,
-                modifier = Modifier.align(Alignment.CenterVertically)
-            )
-            Spacer(modifier = Modifier.size(6.dp))
-            Icon(
-                painter = painterResource(R.drawable.ic_refresh_lined),
-                contentDescription = null,
-                tint = colorResource(R.color.textLightest),
-                modifier = Modifier
-                    .size(16.dp)
-                    .align(Alignment.CenterVertically)
-            )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Button(
+                onClick = onRefresh,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = buttonColor
+                ),
+                shape = RoundedCornerShape(100.dp),
+                modifier = Modifier.height(30.dp),
+                contentPadding = PaddingValues(
+                    start = 12.dp,
+                    top = 4.dp,
+                    end = 8.dp,
+                    bottom = 4.dp
+                )
+            ) {
+                Text(
+                    text = stringResource(R.string.todoWidget_refresh),
+                    color = colorResource(R.color.textLightest),
+                    fontSize = 14.sp
+                )
+                Spacer(modifier = Modifier.size(6.dp))
+                Icon(
+                    painter = painterResource(R.drawable.ic_refresh_lined),
+                    contentDescription = null,
+                    tint = colorResource(R.color.textLightest),
+                    modifier = Modifier.size(16.dp)
+                )
+            }
         }
     }
 }
@@ -494,65 +509,87 @@ private fun TodoItemsEmpty(
     onAddTodoClick: (FragmentActivity) -> Unit = {},
     buttonColor: Color
 ) {
-    val activity = LocalContext.current.getFragmentActivityOrNull()
-
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = Modifier.padding(vertical = 24.dp)
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.Start,
+        verticalAlignment = Alignment.Top
     ) {
-        Icon(
-            painter = painterResource(R.drawable.ic_no_events),
-            contentDescription = null,
-            tint = Color.Unspecified,
-            modifier = Modifier.size(width = 160.dp, height = 106.dp)
-        )
-
-        Text(
-            text = stringResource(R.string.todoWidget_emptyTitle),
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Medium,
-            color = colorResource(R.color.textDarkest),
-            textAlign = TextAlign.Center
-        )
-
-        Text(
-            text = stringResource(R.string.todoWidget_emptyMessage),
-            fontSize = 14.sp,
-            color = colorResource(R.color.textDark),
-            textAlign = TextAlign.Center
-        )
-
-        Button(
-            onClick = { activity?.let { onAddTodoClick(it) } },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = buttonColor
-            ),
-            shape = RoundedCornerShape(24.dp),
-            modifier = Modifier.height(30.dp),
-            contentPadding = PaddingValues(
-                start = 8.dp,
-                0.dp,
-                end = 12.dp,
-                bottom = 0.dp,
-            )
+        Box(
+            modifier = Modifier.size(width = 72.dp, height = 56.dp),
+            contentAlignment = Alignment.Center
         ) {
             Icon(
-                painter = painterResource(R.drawable.ic_add_lined),
+                painter = painterResource(R.drawable.ic_no_events),
                 contentDescription = null,
-                tint = colorResource(R.color.textLightest),
-                modifier = Modifier
-                    .size(16.dp)
-                    .align(Alignment.CenterVertically)
-            )
-            Spacer(modifier = Modifier.size(4.dp))
-            Text(
-                text = stringResource(R.string.todoWidget_addTodo),
-                color = colorResource(R.color.textLightest),
-                fontSize = 14.sp,
-                modifier = Modifier.align(Alignment.CenterVertically)
+                tint = Color.Unspecified,
+                modifier = Modifier.size(width = 72.dp, height = 40.dp)
             )
         }
+
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = 8.dp, end = 16.dp, top = 12.dp, bottom = 14.dp),
+            verticalArrangement = Arrangement.spacedBy(2.dp)
+        ) {
+            Text(
+                text = stringResource(R.string.todoWidget_emptyTitle),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium,
+                color = colorResource(R.color.textDarkest)
+            )
+
+            Text(
+                text = stringResource(R.string.todoWidget_emptyMessage),
+                fontSize = 14.sp,
+                color = colorResource(R.color.textDark)
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            AddTodoButton(
+                onAddTodoClick = onAddTodoClick,
+                buttonColor = buttonColor
+            )
+        }
+    }
+}
+
+@Composable
+private fun AddTodoButton(
+    onAddTodoClick: (FragmentActivity) -> Unit,
+    buttonColor: Color,
+    modifier: Modifier = Modifier
+) {
+    val activity = LocalContext.current.getFragmentActivityOrNull()
+
+    Button(
+        onClick = { activity?.let { onAddTodoClick(it) } },
+        colors = ButtonDefaults.buttonColors(
+            containerColor = buttonColor
+        ),
+        shape = RoundedCornerShape(24.dp),
+        modifier = modifier.height(30.dp),
+        contentPadding = PaddingValues(
+            start = 8.dp,
+            top = 4.dp,
+            end = 12.dp,
+            bottom = 4.dp
+        )
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.ic_add_lined),
+            contentDescription = null,
+            tint = colorResource(R.color.textLightest),
+            modifier = Modifier.size(16.dp)
+        )
+        Spacer(modifier = Modifier.size(6.dp))
+        Text(
+            text = stringResource(R.string.todoWidget_addTodo),
+            color = colorResource(R.color.textLightest),
+            fontSize = 14.sp
+        )
     }
 }
 
@@ -561,6 +598,8 @@ private fun TodoItemsList(
     todos: List<ToDoItemUiState>,
     onTodoClick: (FragmentActivity, String) -> Unit,
     checkboxColor: Color,
+    onAddTodoClick: (FragmentActivity) -> Unit,
+    buttonColor: Color,
     modifier: Modifier = Modifier
 ) {
     val activity = LocalContext.current.getFragmentActivityOrNull()
@@ -593,6 +632,28 @@ private fun TodoItemsList(
                 }
             }
         }
+
+        CanvasDivider(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 80.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            AddTodoButton(
+                onAddTodoClick = onAddTodoClick,
+                buttonColor = buttonColor
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
@@ -667,18 +728,20 @@ private fun TodoWidgetEmptyPreview() {
     AndroidThreeTen.init(context)
 
     val calendarStateMapper = CalendarStateMapper(Clock.systemDefaultZone())
+    val pastDate = LocalDate.of(2023, 9, 15)
 
     TodoWidgetContent(
         uiState = TodoWidgetUiState(
             todosLoading = false,
             calendarBodyUiState = calendarStateMapper.createBodyUiState(
                 expanded = false,
-                selectedDay = LocalDate.now(),
+                selectedDay = pastDate,
                 jumpToToday = false,
                 scrollToPageOffset = 0,
                 eventIndicators = emptyMap()
             ),
-            monthTitle = LocalDate.now().month.getDisplayName(
+            yearTitle = "2023",
+            monthTitle = pastDate.month.getDisplayName(
                 TextStyle.FULL,
                 Locale.getDefault()
             ),

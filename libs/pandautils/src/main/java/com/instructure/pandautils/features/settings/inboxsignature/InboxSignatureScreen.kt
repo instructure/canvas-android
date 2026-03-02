@@ -17,10 +17,18 @@ package com.instructure.pandautils.features.settings.inboxsignature
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
@@ -57,6 +65,7 @@ fun InboxSignatureScreen(uiState: InboxSignatureUiState, actionHandler: (InboxSi
     CanvasTheme {
         Scaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
+            contentWindowInsets = WindowInsets.ime.union(WindowInsets.navigationBars.only(WindowInsetsSides.Bottom)),
             topBar = {
                 CanvasThemedAppBar(
                     title = stringResource(id = R.string.inboxSignatureScreenTitle),
@@ -94,6 +103,7 @@ fun InboxSignatureScreen(uiState: InboxSignatureUiState, actionHandler: (InboxSi
 fun InboxSignatureContent(uiState: InboxSignatureUiState, actionHandler: (InboxSignatureAction) -> Unit, modifier: Modifier = Modifier) {
     Column(
         modifier
+            .windowInsetsPadding(WindowInsets.displayCutout)
             .fillMaxSize()
             .verticalScroll(rememberScrollState())) {
         Spacer(modifier = Modifier.size(16.dp))

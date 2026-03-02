@@ -103,9 +103,9 @@ fun PlannerItem.getContextNameForPlannerItem(context: Context, courses: Collecti
     return when (plannableType) {
         PlannableType.PLANNER_NOTE -> {
             if (contextName.isNullOrEmpty()) {
-                context.getString(R.string.userCalendarToDo)
+                context.getString(R.string.userCalendarToDoNew)
             } else {
-                context.getString(R.string.courseToDo, courseTitle ?: contextName)
+                context.getString(R.string.courseToDoNew, courseTitle ?: contextName)
             }
         }
 

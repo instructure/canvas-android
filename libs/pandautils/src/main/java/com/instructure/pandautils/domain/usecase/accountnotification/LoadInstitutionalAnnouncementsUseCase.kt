@@ -17,7 +17,6 @@
 package com.instructure.pandautils.domain.usecase.accountnotification
 
 import com.instructure.pandautils.data.repository.accountnotification.AccountNotificationRepository
-import com.instructure.pandautils.data.repository.user.UserRepository
 import com.instructure.pandautils.domain.models.accountnotification.InstitutionalAnnouncement
 import com.instructure.pandautils.domain.usecase.BaseUseCase
 import com.instructure.pandautils.utils.ThemePrefs
@@ -29,7 +28,6 @@ data class LoadInstitutionalAnnouncementsParams(
 
 class LoadInstitutionalAnnouncementsUseCase @Inject constructor(
     private val accountNotificationRepository: AccountNotificationRepository,
-    private val userRepository: UserRepository,
     private val themePrefs: ThemePrefs
 ) : BaseUseCase<LoadInstitutionalAnnouncementsParams, List<InstitutionalAnnouncement>>() {
 
@@ -38,8 +36,6 @@ class LoadInstitutionalAnnouncementsUseCase @Inject constructor(
             forceRefresh = params.forceRefresh
         ).dataOrThrow
 
-        val account = userRepository.getAccount(forceRefresh = params.forceRefresh).dataOrNull
-        val institutionName = account?.name.orEmpty()
         val logoUrl = themePrefs.mobileLogoUrl
 
         return notifications
@@ -50,7 +46,6 @@ class LoadInstitutionalAnnouncementsUseCase @Inject constructor(
                     id = notification.id,
                     subject = notification.subject,
                     message = notification.message,
-                    institutionName = institutionName,
                     startDate = notification.startDate,
                     icon = notification.icon,
                     logoUrl = logoUrl

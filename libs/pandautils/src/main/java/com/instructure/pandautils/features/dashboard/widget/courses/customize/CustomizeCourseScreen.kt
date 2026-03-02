@@ -37,6 +37,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -50,7 +51,10 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -63,11 +67,14 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.ColorPicker
 import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.getActivityOrNull
 
 @Composable
 fun CustomizeCourseScreen(
@@ -95,11 +102,21 @@ fun CustomizeCourseScreenContent(
     onNavigateBack: () -> Unit
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
+    val density = LocalDensity.current
+    var appBarHeight by remember { mutableStateOf(0.dp) }
 
     LaunchedEffect(uiState.errorMessage) {
         uiState.errorMessage?.let { message ->
             snackbarHostState.showSnackbar(message)
             uiState.onErrorHandled()
+        }
+    }
+
+    val activity = LocalContext.current.getActivityOrNull()
+
+    SideEffect {
+        activity?.let {
+            ViewStyler.setStatusBarDark(it, uiState.initialColor)
         }
     }
 
@@ -111,7 +128,7 @@ fun CustomizeCourseScreenContent(
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(0.dp)
+            contentPadding = PaddingValues(top = if (!uiState.showColorOverlay) appBarHeight else 0.dp)
         ) {
             item {
                 CourseHeader(
@@ -175,8 +192,13 @@ fun CustomizeCourseScreenContent(
             navIconRes = R.drawable.ic_close_lined,
             navIconContentDescription = stringResource(R.string.close),
             navigationActionClick = onNavigateBack,
-            backgroundColor = Color.Transparent,
+            backgroundColor = if (uiState.showColorOverlay) Color.Transparent else Color(uiState.initialColor),
             contentColor = colorResource(R.color.textLightest),
+            modifier = Modifier.onGloballyPositioned { coordinates ->
+                appBarHeight = with(density) {
+                    coordinates.size.height.toDp()
+                }
+            },
             actions = {
                 TextButton(
                     onClick = uiState.onDone,
@@ -305,6 +327,7 @@ private fun NicknameCard(
 @Preview(showBackground = true)
 @Composable
 private fun CustomizeCourseScreenPreview() {
+    ContextKeeper.appContext = LocalContext.current
     CanvasTheme {
         CustomizeCourseScreenContent(
             uiState = CustomizeCourseUiState(

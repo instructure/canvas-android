@@ -29,4 +29,8 @@ class StudentForecastWidgetRouter : ForecastWidgetRouter {
         val route = AssignmentDetailsFragment.makeRoute(canvasContext, assignmentId)
         RouteMatcher.route(activity, route)
     }
+
+    override fun routeToPlannerItem(activity: FragmentActivity, htmlUrl: String) {
+        RouteMatcher.routeUrl(activity, htmlUrl)
+    }
 }

@@ -16,6 +16,7 @@
 package com.instructure.pandautils.features.dashboard.widget.todo
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
 import androidx.compose.foundation.pager.rememberPagerState
@@ -27,6 +28,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.instructure.pandautils.compose.composables.calendar.CalendarBody
 import com.instructure.pandautils.compose.composables.calendar.CalendarBodyUiState
 import com.instructure.pandautils.compose.composables.calendar.CalendarColors
@@ -89,7 +91,7 @@ fun WeekCalendarView(
                     selectedDayChanged = onDaySelected,
                     scaleRatio = 0f,
                     calendarColors = calendarColors,
-                    modifier = Modifier
+                    modifier = Modifier.padding(horizontal = 16.dp)
                 )
             }
         }

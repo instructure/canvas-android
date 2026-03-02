@@ -23,11 +23,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
@@ -35,7 +38,6 @@ import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
@@ -66,6 +68,7 @@ import com.instructure.canvasapi2.models.Message
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
+import com.instructure.pandautils.compose.composables.CanvasScaffold
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
@@ -88,7 +91,7 @@ fun InboxDetailsScreen(
     actionHandler: (InboxDetailsAction) -> Unit
 ) {
     CanvasTheme {
-        Scaffold(
+        CanvasScaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
             topBar = {
                 AppBar(title, uiState, actionHandler)
@@ -106,6 +109,9 @@ private fun AppBar(
     uiState: InboxDetailsUiState,
     actionHandler: (InboxDetailsAction) -> Unit
 ) {
+    val context = LocalContext.current
+    val isTeacherApp = context.packageName.contains("teacher")
+
     TopAppBar(
         title = {
             Text(
@@ -136,8 +142,12 @@ private fun AppBar(
         contentColor = Color(color = ThemePrefs.primaryTextColor),
         elevation = 0.dp,
         modifier = Modifier
-            .height(64.dp)
-            .testTag("toolbar"),
+            .testTag("toolbar")
+            .then(
+                if (isTeacherApp) Modifier.windowInsetsPadding(WindowInsets.displayCutout)
+                else Modifier
+            ),
+        windowInsets = WindowInsets.statusBars
     )
 }
 @OptIn(ExperimentalMaterialApi::class)
@@ -148,12 +158,19 @@ private fun InboxDetailsScreenContent(
     messageActionHandler: (MessageAction) -> Unit,
     actionHandler: (InboxDetailsAction) -> Unit
 ) {
+    val context = LocalContext.current
+    val isTeacherApp = context.packageName.contains("teacher")
+
     val pullToRefreshState = rememberPullRefreshState(refreshing = false, onRefresh = {
         actionHandler(InboxDetailsAction.RefreshCalled)
     })
 
     Box(
         modifier = Modifier
+            .then(
+                if (isTeacherApp) Modifier.windowInsetsPadding(WindowInsets.displayCutout)
+                else Modifier
+            )
             .fillMaxSize()
             .pullRefresh(pullToRefreshState)
             .padding(padding)

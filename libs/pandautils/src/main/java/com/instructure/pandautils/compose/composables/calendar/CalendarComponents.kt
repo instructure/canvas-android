@@ -60,6 +60,7 @@ import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.getSystemFirstDayOfWeek
 import com.jakewharton.threetenabp.AndroidThreeTen
 import org.threeten.bp.Clock
 import org.threeten.bp.DayOfWeek
@@ -115,7 +116,7 @@ private fun DayHeaders(modifier: Modifier = Modifier) {
         modifier = modifier.clearAndSetSemantics { testTag = "dayHeaders" }, horizontalArrangement = Arrangement.SpaceBetween
     ) {
         val daysOfWeek = DayOfWeek.entries.toTypedArray()
-        val localeFirstDayOfWeek = WeekFields.of(Locale.getDefault()).firstDayOfWeek.value
+        val localeFirstDayOfWeek = getSystemFirstDayOfWeek().value
         // Shift the starting point to the correct day
         val shiftAmount = localeFirstDayOfWeek - daysOfWeek.first().value
         val shiftedDaysOfWeek = Array(7) { daysOfWeek[(it + shiftAmount) % 7] }

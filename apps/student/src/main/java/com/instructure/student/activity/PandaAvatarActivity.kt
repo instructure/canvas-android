@@ -20,7 +20,12 @@ package com.instructure.student.activity
 import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Intent
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffXfermode
 import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.os.Bundle
@@ -28,12 +33,19 @@ import android.os.Environment
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.animation.*
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import android.view.animation.AnticipateInterpolator
+import android.view.animation.OvershootInterpolator
+import android.view.animation.TranslateAnimation
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
+import android.widget.ScrollView
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
@@ -41,14 +53,26 @@ import com.instructure.canvasapi2.utils.PrefManager
 import com.instructure.pandautils.analytics.SCREEN_VIEW_PANDA_AVATAR
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.DP
+import com.instructure.pandautils.utils.PermissionUtils
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomAndRightSystemBarPadding
+import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.requestAccessibilityFocus
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
 import com.instructure.student.databinding.PandaImageBinding
 import com.instructure.student.util.PandaDrawables
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.util.*
+import java.util.Date
 
 private object PandaAvatarPrefs : PrefManager(Const.NAME)
 
@@ -65,6 +89,7 @@ class PandaAvatarActivity : ParentActivity() {
         setSupportActionBar(binding.toolbar)
         setupViews()
         setupListeners()
+        applyWindowInsets()
         Analytics.logEvent(AnalyticsEventConstants.PANDA_AVATAR_EDITOR_OPENED)
     }
 
@@ -340,6 +365,47 @@ class PandaAvatarActivity : ParentActivity() {
             slide(up = false)
         } else {
             super.onBackPressed()
+        }
+    }
+
+    private fun applyWindowInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val navigationBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+            val displayCutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
+
+            val leftPadding = maxOf(navigationBars.left, displayCutout.left)
+            val rightPadding = maxOf(navigationBars.right, displayCutout.right)
+
+            view.setPadding(
+                leftPadding,
+                0,
+                rightPadding,
+                0
+            )
+
+            // Apply top margin to toolbar
+            val toolbarParams = binding.toolbar.layoutParams as? RelativeLayout.LayoutParams
+            toolbarParams?.topMargin = systemBars.top
+            binding.toolbar.layoutParams = toolbarParams
+
+            // Apply bottom margin to editOptions
+            val editOptionsParams = binding.editOptions.layoutParams as? RelativeLayout.LayoutParams
+            editOptionsParams?.bottomMargin = systemBars.bottom
+            binding.editOptions.layoutParams = editOptionsParams
+
+            // Apply bottom margin to partsOptions
+            val partsOptionsParams = binding.partsOptions.layoutParams as? RelativeLayout.LayoutParams
+            partsOptionsParams?.bottomMargin = systemBars.bottom
+            binding.partsOptions.layoutParams = partsOptionsParams
+
+            insets
+        }
+
+        // Apply bottom and right padding to ScrollView for landscape mode navigation bar
+        (binding.pandaImages.parent as? ScrollView)?.let { scrollView ->
+            scrollView.applyBottomAndRightSystemBarPadding()
+            scrollView.clipToPadding = false
         }
     }
 

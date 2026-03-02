@@ -278,6 +278,7 @@
     <string name="checkBoxWhatIfGradeOption">Visa tänk om-resultat</string>
     <string name="whatIfDialogText">Tänk om-resultat</string>
     <string name="whatIfScoreExceedsMaximum">Resultatet får inte överstiga maxpoängen</string>
+    <string name="whatIfScoreExceedsMaximumWarning">Resultatet överstiger maxpoängen</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s av %2$s poäng, %3$s</string>
     <string name="inbox">Inkorg</string>
@@ -1923,6 +1924,15 @@
     <string name="courseDetailsMessageContentDescription">Skicka ett meddelande om den här kursen</string>
     <string name="gradeLockedContentDescription">Omdömet är låst</string>
     <string name="gradesRefreshFailed">Det gick inte att uppdatera omdömen</string>
+    <string name="showWhatIfScore">Visa What if-poäng</string>
+    <string name="editWhatIfScore">Redigera What if-poäng</string>
+    <string name="editWhatIfScoreTitle">Redigera What if-poäng</string>
+    <string name="whatIfScoreLabel">Vad om</string>
+    <string name="whatIfScoreCurrentGraded">Poäng %1$.0f av %2$.0f</string>
+    <string name="whatIfScoreCurrentUngraded">Inte bedömt, maxpoäng %.0f</string>
+    <string name="whatIfScoreDisplay">What-if: %s</string>
+    <string name="gradesBasedOnGradedAndWhatIf">Baserad på bedömda uppgifter och What if-poäng</string>
+    <string name="clearWhatIfScore">Rensa What if-poäng</string>
     <string name="chooseACourseToMessage">Välj en kurs att skicka meddelande till</string>
     <string name="regardingHiddenMessage">Angående : %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">Angående : %1$s, uppgift – %2$s</string>

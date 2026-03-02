@@ -314,7 +314,7 @@
         <receiver
             android:name=".widget.todo.ToDoWidgetReceiver"
             android:exported="true"
-            android:label="@string/todoWidgetTitleLong">
+            android:label="@string/todoWidgetTitleLongNew">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />

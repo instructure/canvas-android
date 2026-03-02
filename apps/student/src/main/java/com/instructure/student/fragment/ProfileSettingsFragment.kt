@@ -83,10 +83,12 @@ class ProfileSettingsFragment : ParentFragment(), LoaderManager.LoaderCallbacks<
         applyTheme()
         setupViews()
         getUserPermissions()
+        binding.scrollView.applyBottomSystemBarInsets()
     }
 
     override fun applyTheme() {
         binding.toolbar.setupAsBackButton(this)
+        binding.toolbar.applyTopSystemBarInsets()
         ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
     }
 

@@ -278,6 +278,7 @@
     <string name="checkBoxWhatIfGradeOption">Mostrar Pontuação de “E Se”</string>
     <string name="whatIfDialogText">Pontuação de “E Se”</string>
     <string name="whatIfScoreExceedsMaximum">A pontuação não pode exceder o número máximo de pontos</string>
+    <string name="whatIfScoreExceedsMaximumWarning">A pontuação excede a pontuação máxima</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s de %2$s pontos, %3$s</string>
     <string name="inbox">Caixa de entrada</string>
@@ -1923,6 +1924,15 @@
     <string name="courseDetailsMessageContentDescription">Enviar uma mensagem sobre este curso</string>
     <string name="gradeLockedContentDescription">Nota bloqueada</string>
     <string name="gradesRefreshFailed">Falha ao atualizar notas</string>
+    <string name="showWhatIfScore">Mostrar pontuação hipotética</string>
+    <string name="editWhatIfScore">Editar pontuação “E se...”</string>
+    <string name="editWhatIfScoreTitle">Editar pontuação “E se...”</string>
+    <string name="whatIfScoreLabel">Variação hipotética</string>
+    <string name="whatIfScoreCurrentGraded">Pontuação %1$.0f de %2$.0f</string>
+    <string name="whatIfScoreCurrentUngraded">Não avaliado, pontuação máxima %.0f</string>
+    <string name="whatIfScoreDisplay">E se: %s</string>
+    <string name="gradesBasedOnGradedAndWhatIf">Com base nas tarefas avaliadas e na pontuação do teste "E se..."</string>
+    <string name="clearWhatIfScore">Limpar pontuação “E se...”</string>
     <string name="chooseACourseToMessage">Escolher um curso para enviar mensagem</string>
     <string name="regardingHiddenMessage">Sobre: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">Sobre: %1$s, Tarefa - %2$s</string>

@@ -31,7 +31,6 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -70,8 +69,10 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.Shimmer
 import com.instructure.pandautils.compose.composables.rememberWithRequireNetwork
+import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
 import com.instructure.pandautils.features.dashboard.widget.courses.model.CourseCardItem
 import com.instructure.pandautils.features.dashboard.widget.courses.model.GradeDisplay
+import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getFragmentActivityOrNull
 
@@ -85,6 +86,7 @@ fun CourseCard(
     showColorOverlay: Boolean,
     onCourseClick: (FragmentActivity, Long) -> Unit,
     modifier: Modifier = Modifier,
+    dashboardColor: Color = Color(ThemedColor(GlobalConfig.DEFAULT_COLOR).color()),
     onManageOfflineContent: ((FragmentActivity, Long) -> Unit)? = null,
     onCustomizeCourse: ((FragmentActivity, Long) -> Unit)? = null,
     onAnnouncementClick: ((FragmentActivity, Long) -> Unit)? = null,
@@ -103,8 +105,7 @@ fun CourseCard(
     Box(modifier = modifier.testTag("CourseCard_${courseCard.id}")) {
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .alpha(if (courseCard.isClickable) 1f else 0.5f),
+            .fillMaxWidth(),
         shape = cardShape,
         colors = CardDefaults.cardColors(
             containerColor = colorResource(R.color.backgroundLightest)
@@ -117,6 +118,7 @@ fun CourseCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(COURSE_CARD_HEIGHT)
+                .alpha(if (courseCard.isClickable) 1f else 0.5f)
                 .clickable(enabled = courseCard.isClickable) { activity?.let { onCourseClick(it, courseCard.id) } },
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -173,7 +175,6 @@ fun CourseCard(
                         DropdownMenu(
                             expanded = showMenu,
                             onDismissRequest = { showMenu = false },
-                            modifier = Modifier.width(200.dp),
                             shape = RoundedCornerShape(8.dp),
                             containerColor = colorResource(R.color.backgroundLightest)
                         ) {
@@ -268,7 +269,7 @@ fun CourseCard(
                             .align(Alignment.TopEnd)
                             .offset(x = (-8).dp, y = 6.dp)
                             .background(
-                                color = Color(CanvasContext.emptyCourseContext(id = courseCard.id).color),
+                                color = dashboardColor,
                                 shape = RoundedCornerShape(12.dp)
                             )
                             .padding(horizontal = 5.dp, vertical = 2.dp)
@@ -277,7 +278,7 @@ fun CourseCard(
                             text = courseCard.announcements.size.toString(),
                             fontSize = 10.sp,
                             fontWeight = FontWeight.SemiBold,
-                            color = Color.White,
+                            color = colorResource(R.color.textLightest),
                             lineHeight = 8.sp
                         )
                     }

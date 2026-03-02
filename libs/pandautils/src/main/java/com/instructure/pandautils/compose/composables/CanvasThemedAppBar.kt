@@ -18,6 +18,8 @@ package com.instructure.pandautils.compose.composables
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -54,6 +56,7 @@ fun CanvasThemedAppBar(
     navIconContentDescription: String = stringResource(id = R.string.back),
     backgroundColor: Color = Color(color = ThemePrefs.primaryColor),
     contentColor: Color = Color(color = ThemePrefs.primaryTextColor),
+    windowInsets: WindowInsets = WindowInsets.statusBars,
     actions: @Composable RowScope.() -> Unit = {}
 ) {
     TopAppBar(
@@ -95,7 +98,8 @@ fun CanvasThemedAppBar(
             }
         },
         modifier = modifier.testTag("toolbar"),
-        elevation = 0.dp
+        elevation = 0.dp,
+        windowInsets = windowInsets
     )
 }
 

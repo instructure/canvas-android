@@ -47,6 +47,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 import com.instructure.pandautils.features.assignments.details.gradecellview.GradeCellViewData
 import com.instructure.pandautils.features.reminder.DateTimePicker
 import com.instructure.pandautils.features.reminder.ReminderManager
@@ -1384,14 +1385,14 @@ class AssignmentDetailsViewModelTest {
         // First checkpoint - graded
         assertEquals("Reply to topic", viewModel.discussionCheckpoints.value[0].name)
         assertEquals("5 / 5 pts", viewModel.discussionCheckpoints.value[0].grade)
-        assertTrue(viewModel.discussionCheckpoints.value[0].stateLabel is com.instructure.pandautils.features.grades.SubmissionStateLabel.Predefined)
-        assertEquals(R.string.gradedSubmissionLabel, (viewModel.discussionCheckpoints.value[0].stateLabel as com.instructure.pandautils.features.grades.SubmissionStateLabel.Predefined).labelRes)
+        assertTrue(viewModel.discussionCheckpoints.value[0].stateLabel is SubmissionStateLabel.Predefined)
+        assertEquals(R.string.gradedSubmissionLabel, (viewModel.discussionCheckpoints.value[0].stateLabel as SubmissionStateLabel.Predefined).labelRes)
 
         // Second checkpoint - late
         assertEquals("Additional replies (3)", viewModel.discussionCheckpoints.value[1].name)
         assertEquals("3 / 5 pts", viewModel.discussionCheckpoints.value[1].grade)
-        assertTrue(viewModel.discussionCheckpoints.value[1].stateLabel is com.instructure.pandautils.features.grades.SubmissionStateLabel.Predefined)
-        assertEquals(R.string.lateSubmissionLabel, (viewModel.discussionCheckpoints.value[1].stateLabel as com.instructure.pandautils.features.grades.SubmissionStateLabel.Predefined).labelRes)
+        assertTrue(viewModel.discussionCheckpoints.value[1].stateLabel is SubmissionStateLabel.Predefined)
+        assertEquals(R.string.lateSubmissionLabel, (viewModel.discussionCheckpoints.value[1].stateLabel as SubmissionStateLabel.Predefined).labelRes)
     }
 
     @Test

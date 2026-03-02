@@ -32,7 +32,7 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.student.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.student.activity.NothingToSeeHereFragment
 import com.instructure.student.features.coursebrowser.CourseBrowserFragment
-import com.instructure.student.features.dashboard.compose.DashboardFragment
+import com.instructure.student.features.dashboard.compose.NewDashboardFragment
 import com.instructure.student.features.discussion.details.DiscussionDetailsFragment
 import com.instructure.student.features.discussion.list.DiscussionListFragment
 import com.instructure.student.features.elementary.course.ElementaryCourseFragment
@@ -117,7 +117,7 @@ object RouteResolver {
 
         return when {
             cls.isA<OldDashboardFragment>() -> OldDashboardFragment.newInstance(route)
-            cls.isA<DashboardFragment>() -> DashboardFragment.newInstance(route)
+            cls.isA<NewDashboardFragment>() -> NewDashboardFragment.newInstance(route)
             cls.isA<ElementaryDashboardFragment>() -> ElementaryDashboardFragment.newInstance(route)
             cls.isA<OldToDoListFragment>() -> OldToDoListFragment.newInstance(route)
             cls.isA<ToDoListFragment>() -> ToDoListFragment.newInstance(route)

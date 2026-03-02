@@ -112,7 +112,7 @@ class ToDoListPage(private val composeTestRule: ComposeTestRule) : BasePage() {
     }
 
     fun assertEmptyState() {
-        composeTestRule.onNodeWithText(getStringFromResource(R.string.noToDosForNow))
+        composeTestRule.onNodeWithText(getStringFromResource(R.string.noToDosForNowNew))
             .assertIsDisplayed()
     }
 

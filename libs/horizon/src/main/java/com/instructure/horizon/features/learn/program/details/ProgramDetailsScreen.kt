@@ -56,28 +56,34 @@ import com.instructure.horizon.horizonui.molecules.ProgressBarSmallInline
 import com.instructure.horizon.horizonui.molecules.StatusChip
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.molecules.StatusChipState
-import com.instructure.horizon.horizonui.organisms.CollapsableHeaderScreen
+import com.instructure.horizon.horizonui.organisms.scaffolds.CollapsableHeaderScreen
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
+import com.instructure.horizon.util.plus
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ProgramDetailsScreen(uiState: ProgramDetailsUiState, navController: NavHostController, modifier: Modifier = Modifier) {
     LoadingStateWrapper(loadingState = uiState.loadingState, modifier) {
         CollapsableHeaderScreen(
-            headerContent = {
-                ProgramDetailsHeader(uiState, navController)
+            statusBarColor = HorizonColors.Surface.pagePrimary(),
+            headerContent = { paddingValues ->
+                ProgramDetailsHeader(uiState, navController, Modifier.padding(paddingValues))
             },
-            bodyContent = {
-                ProgramDetailsContent(uiState, navController)
+            bodyContent = { paddingValues ->
+                ProgramDetailsContent(uiState, navController, paddingValues)
             }
         )
     }
 }
 
 @Composable
-private fun ProgramDetailsHeader(uiState: ProgramDetailsUiState, navController: NavHostController) {
+private fun ProgramDetailsHeader(
+    uiState: ProgramDetailsUiState,
+    navController: NavHostController,
+    modifier: Modifier = Modifier
+) {
     Column(
-        Modifier
+        modifier
             .fillMaxWidth()
             .padding(horizontal = 24.dp, vertical = 8.dp)
     ) {
@@ -106,9 +112,13 @@ private fun ProgramDetailsHeader(uiState: ProgramDetailsUiState, navController: 
 }
 
 @Composable
-private fun ProgramDetailsContent(uiState: ProgramDetailsUiState, navController: NavHostController) {
+private fun ProgramDetailsContent(
+    uiState: ProgramDetailsUiState,
+    navController: NavHostController,
+    paddingValues: PaddingValues,
+) {
     LazyColumn(
-        contentPadding = PaddingValues(horizontal = 24.dp),
+        contentPadding = PaddingValues(horizontal = 24.dp) + paddingValues,
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         if (uiState.description.isNotEmpty()) {

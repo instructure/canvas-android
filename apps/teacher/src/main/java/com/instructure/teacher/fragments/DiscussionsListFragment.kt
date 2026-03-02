@@ -42,6 +42,10 @@ import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.addSearch
+import com.instructure.pandautils.utils.applyBottomAndRightSystemBarMargin
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyDisplayCutoutInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.closeSearch
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.color
@@ -122,6 +126,9 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
         })
 
         setupViews()
+
+        // Apply display cutout insets to root view to prevent content from extending behind camera cutout
+        rootView.applyDisplayCutoutInsets()
 
         lifecycleScope.collectOneOffEvents(discussionSharedEvents.events.flowWithLifecycle(lifecycle)) { handleSharedAction(it) }
     }
@@ -221,6 +228,8 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
     }
 
     private fun setupToolbar() = with(binding) {
+        discussionListToolbar.applyTopSystemBarInsets()
+        swipeRefreshLayout.applyBottomSystemBarInsets()
         discussionListToolbar.title = if(isAnnouncements) getString(R.string.tab_announcements) else getString(R.string.tab_discussions)
         discussionListToolbar.subtitle = canvasContext.name
         discussionListToolbar.setupBackButton(this@DiscussionsListFragment)
@@ -237,9 +246,11 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
     }
 
     private fun setupViews() = with(binding) {
+        createNewDiscussion.applyBottomAndRightSystemBarMargin()
         createNewDiscussion.setGone()
         createNewDiscussion.backgroundTintList = ViewStyler.makeColorStateListForButton()
         createNewDiscussion.setImageDrawable(ColorUtils.colorIt(ThemePrefs.buttonTextColor, createNewDiscussion.drawable))
+
         createNewDiscussion.onClickWithRequireNetwork {
             if(isAnnouncements) {
                 val route = CreateDiscussionWebViewFragment.makeRoute(canvasContext, true)

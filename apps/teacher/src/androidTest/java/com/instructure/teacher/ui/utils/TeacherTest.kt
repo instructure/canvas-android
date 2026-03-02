@@ -14,7 +14,6 @@
  *     limitations under the License.
  *
  */
-
 package com.instructure.teacher.ui.utils
 
 import android.app.Activity
@@ -187,6 +186,21 @@ abstract class TeacherTest : CanvasTest() {
             AllOf.allOf(
                 IntentMatchers.hasAction(Intent.ACTION_GET_CONTENT),
                 IntentMatchers.hasType("*/*"),
+            )
+        ).respondWith(Instrumentation.ActivityResult(Activity.RESULT_OK, resultData))
+    }
+
+    fun stubImagePickerIntent(fileName: String) {
+        val resultData = Intent()
+        val dir = activityRule.activity.externalCacheDir
+        val file = File(dir?.path, fileName)
+        val uri = Uri.fromFile(file)
+        resultData.data = uri
+
+        Intents.intending(
+            AllOf.allOf(
+                IntentMatchers.hasAction(Intent.ACTION_PICK),
+                IntentMatchers.hasType("image/*")
             )
         ).respondWith(Instrumentation.ActivityResult(Activity.RESULT_OK, resultData))
     }

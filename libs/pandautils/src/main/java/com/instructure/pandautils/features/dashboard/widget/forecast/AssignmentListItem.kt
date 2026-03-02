@@ -46,11 +46,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.formatRelativeWithTime
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.composables.SubmissionState
+import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getFragmentActivity
 import java.util.Date
@@ -58,7 +59,6 @@ import java.util.Date
 @Composable
 fun AssignmentListItem(
     assignment: AssignmentItem,
-    onAssignmentClick: (FragmentActivity, Long, Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -69,7 +69,7 @@ fun AssignmentListItem(
         modifier = modifier
             .fillMaxWidth()
             .clickable {
-                onAssignmentClick(context.getFragmentActivity(), assignment.id, assignment.courseId)
+                assignment.onClick?.invoke(context.getFragmentActivity())
             }
             .padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -110,12 +110,6 @@ fun AssignmentListItem(
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 when {
-                    assignment.weight != null -> {
-                        WeightChip(
-                            weight = assignment.weight,
-                            color = courseColor
-                        )
-                    }
                     assignment.grade != null -> {
                         Text(
                             text = assignment.grade,
@@ -139,18 +133,44 @@ fun AssignmentListItem(
                 modifier = Modifier.fillMaxWidth()
             )
 
+            if (assignment.weight != null) {
+                WeightChip(
+                    weight = assignment.weight,
+                    color = courseColor
+                )
+        }
+
             val dateText = assignment.dueDate?.formatRelativeWithTime(context)
                 ?: assignment.gradedDate?.formatRelativeWithTime(context)
                     .orEmpty()
 
-            if (dateText.isNotEmpty()) {
-                Text(
-                    text = dateText,
-                    fontSize = 12.sp,
-                    lineHeight = 16.sp,
-                    color = colorResource(R.color.textDark),
-                    modifier = Modifier.fillMaxWidth()
-                )
+            val hasSubmissionState = assignment.submissionStateLabel != SubmissionStateLabel.None
+
+            if (dateText.isNotEmpty() || hasSubmissionState) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (dateText.isNotEmpty()) {
+                        Text(
+                            text = dateText,
+                            fontSize = 12.sp,
+                            lineHeight = 16.sp,
+                            color = colorResource(R.color.textDark)
+                        )
+                    }
+
+                    if (hasSubmissionState && dateText.isNotEmpty()) {
+                        VerticalDivider(
+                            modifier = Modifier.height(16.dp),
+                            thickness = 0.5.dp,
+                            color = colorResource(R.color.borderMedium)
+                        )
+                    }
+
+                    SubmissionState(assignment.submissionStateLabel, fontSize = 12.sp)
+                }
             }
         }
     }
@@ -194,7 +214,6 @@ private fun AssignmentListItemPreview() {
     ContextKeeper.appContext = LocalContext.current
     AssignmentListItem(
         assignment = AssignmentItem(
-            id = 1,
             courseId = 101,
             courseName = "COGS101",
             assignmentName = "The Mind's Maze: Mapping Cognition",
@@ -204,8 +223,7 @@ private fun AssignmentListItemPreview() {
             weight = 10.0,
             iconRes = R.drawable.ic_quiz,
             url = ""
-        ),
-        onAssignmentClick = { _, _, _ -> }
+        )
     )
 }
 
@@ -215,7 +233,6 @@ private fun AssignmentListItemNoWeightPreview() {
     ContextKeeper.appContext = LocalContext.current
     AssignmentListItem(
         assignment = AssignmentItem(
-            id = 2,
             courseId = 204,
             courseName = "POLI204",
             assignmentName = "Fix a hyperdrive motivator using only duct tape and panic before the ship explodes, and everyone gets frig...",
@@ -225,7 +242,46 @@ private fun AssignmentListItemNoWeightPreview() {
             weight = null,
             iconRes = R.drawable.ic_assignment,
             url = ""
-        ),
-        onAssignmentClick = { _, _, _ -> }
+        )
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AssignmentListItemSubmittedPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    AssignmentListItem(
+        assignment = AssignmentItem(
+            courseId = 150,
+            courseName = "ENVS150",
+            assignmentName = "Web of Life: Mapping Ecological Interdependence",
+            dueDate = Date(System.currentTimeMillis() + 86400000),
+            gradedDate = null,
+            pointsPossible = 75.0,
+            weight = 10.0,
+            iconRes = R.drawable.ic_assignment,
+            url = "",
+            submissionStateLabel = SubmissionStateLabel.Submitted
+        )
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AssignmentListItemGradedPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    AssignmentListItem(
+        assignment = AssignmentItem(
+            courseId = 101,
+            courseName = "COGS101",
+            assignmentName = "The Mind's Maze: Mapping Cognition",
+            dueDate = Date(),
+            gradedDate = null,
+            pointsPossible = 100.0,
+            weight = 10.0,
+            iconRes = R.drawable.ic_quiz,
+            url = "",
+            submissionStateLabel = SubmissionStateLabel.Graded
+        )
     )
 }

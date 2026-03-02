@@ -34,7 +34,17 @@ import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.analytics.SCREEN_VIEW_PAGE_LIST
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.BooleanArg
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.addSearch
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
+import com.instructure.pandautils.utils.closeSearch
+import com.instructure.pandautils.utils.isTablet
+import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentCoursePagesBinding
 import com.instructure.student.databinding.PandaRecyclerRefreshLayoutBinding
@@ -125,6 +135,7 @@ class PageListFragment : ParentFragment(), Bookmarkable {
         recyclerAdapter?.let {
             configureRecyclerView(rootView!!, requireContext(), it, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView)
         }
+        recyclerBinding.swipeRefreshLayout.applyBottomSystemBarInsets()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -171,6 +182,7 @@ class PageListFragment : ParentFragment(), Bookmarkable {
             setupToolbarMenu(toolbar)
             toolbar.title = title()
             toolbar.setupAsBackButton(this@PageListFragment)
+            toolbar.applyTopSystemBarInsets()
             toolbar.addSearch(getString(R.string.searchPagesHint)) { query ->
                 if (query.isBlank()) {
                     recyclerBinding.emptyView.emptyViewText(R.string.noItemsToDisplayShort)

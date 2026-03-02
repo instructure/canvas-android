@@ -278,6 +278,7 @@
     <string name="checkBoxWhatIfGradeOption">Dangos Sgôr "Beth-os"</string>
     <string name="whatIfDialogText">Sgôr "Beth-os"</string>
     <string name="whatIfScoreExceedsMaximum">Does dim modd i’r sgôr fod yn fwy na’r nifer uchaf o bwyntiau</string>
+    <string name="whatIfScoreExceedsMaximumWarning">Mae’r sgôr yn fwy na’r nifer uchaf o bwyntiau</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s allan o %2$s pwynt, %3$s</string>
     <string name="inbox">Blwch Derbyn</string>
@@ -1923,6 +1924,15 @@
     <string name="courseDetailsMessageContentDescription">Anfon neges am y cwrs hwn</string>
     <string name="gradeLockedContentDescription">Gradd wedi’i chloi</string>
     <string name="gradesRefreshFailed">Wedi methu adnewyddu’r graddau</string>
+    <string name="showWhatIfScore">Dangos Sgôr Beth-os</string>
+    <string name="editWhatIfScore">Golygu Sgôr Beth-os</string>
+    <string name="editWhatIfScoreTitle">Golygu Sgôr Beth-os</string>
+    <string name="whatIfScoreLabel">Beth-os</string>
+    <string name="whatIfScoreCurrentGraded">Sgôr %1$.0f allan o %2$.0f</string>
+    <string name="whatIfScoreCurrentUngraded">Heb ei raddio, sgor uchaf %.0f</string>
+    <string name="whatIfScoreDisplay">Beth-os: %s</string>
+    <string name="gradesBasedOnGradedAndWhatIf">Yn seiliedig ar aseiniadau wedi’u graddio, a’r Sgôr Beth-os</string>
+    <string name="clearWhatIfScore">Clirio Sgôr Beth-os</string>
     <string name="chooseACourseToMessage">Dewiswch gwrs i anfon neges ato</string>
     <string name="regardingHiddenMessage">Ynghylch: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">Ynghylch: %1$s, Aseiniad - %2$s</string>

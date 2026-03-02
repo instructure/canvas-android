@@ -97,6 +97,7 @@ class TodoWidgetViewModel @Inject constructor(
         TodoWidgetUiState(
             selectedDay = selectedDay,
             calendarBodyUiState = createCalendarBodyUiState(),
+            yearTitle = getYearTitle(),
             monthTitle = getMonthTitle(),
             showCompleted = showCompleted,
             scrollToPageOffset = 0,
@@ -147,14 +148,18 @@ class TodoWidgetViewModel @Inject constructor(
 
     private fun jumpToToday() {
         val today = LocalDate.now(clock)
-        if (selectedDay == today) {
+        selectDay(today)
+    }
+
+    private fun selectDay(day: LocalDate) {
+        if (selectedDay == day) {
             return
         }
 
-        val weekOffset = calculateWeekOffset(selectedDay, today)
+        val weekOffset = calculateWeekOffset(selectedDay, day)
         if (weekOffset == 0) {
             // Today is in the current week, just select it
-            selectedDay = today
+            selectedDay = day
             _uiState.update { createNewUiState() }
         } else {
             // Today is in a different week
@@ -162,8 +167,8 @@ class TodoWidgetViewModel @Inject constructor(
             // If offset = 1 (going forward), next page should have today → current should be (today - 1 week)
             // If offset = -1 (going backward), previous page should have today → current should be (today + 1 week)
             val weeksToAdjust = if (weekOffset > 0) -1L else 1L
-            selectedDay = today.plusWeeks(weeksToAdjust)
-            pendingSelectedDay = today
+            selectedDay = day.plusWeeks(weeksToAdjust)
+            pendingSelectedDay = day
             _uiState.update { createNewUiState().copy(scrollToPageOffset = weekOffset) }
         }
     }
@@ -218,6 +223,7 @@ class TodoWidgetViewModel @Inject constructor(
                 scrollToPageOffset = 0,
                 eventIndicators = eventIndicators
             ),
+            yearTitle = getYearTitle(),
             monthTitle = getMonthTitle(),
             selectedDay = selectedDay,
             showCompleted = showCompleted,
@@ -259,6 +265,16 @@ class TodoWidgetViewModel @Inject constructor(
         scrollToPageOffset = 0,
         eventIndicators = emptyMap()
     )
+
+    private fun getYearTitle(): String? {
+        val currentYear = LocalDate.now(clock).year
+        val selectedYear = selectedDay.year
+        return if (selectedYear != currentYear) {
+            selectedYear.toString()
+        } else {
+            null
+        }
+    }
 
     private fun getMonthTitle(): String {
         return selectedDay.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
@@ -604,6 +620,9 @@ class TodoWidgetViewModel @Inject constructor(
                 when (action) {
                     is SharedCalendarAction.RefreshToDoList -> {
                         refresh()
+                    }
+                    is SharedCalendarAction.SelectDay -> {
+                        if (!action.fromTodoList) selectDay(action.date)
                     }
                     else -> {} // Ignore other calendar actions
                 }

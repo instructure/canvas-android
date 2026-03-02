@@ -89,6 +89,7 @@ class CustomizeCourseViewModel @Inject constructor(
             imageUrl = course.imageUrl,
             nickname = course.originalName?.let { course.name }.orEmpty(),
             selectedColor = currentColor,
+            initialColor = currentColor,
             availableColors = availableColors,
             showColorOverlay = false,
             onNicknameChanged = onNicknameChanged,

@@ -23,6 +23,7 @@ data class CustomizeCourseUiState(
     val imageUrl: String? = null,
     val nickname: String = "",
     val selectedColor: Int = 0,
+    val initialColor: Int = 0,
     val availableColors: List<Int> = emptyList(),
     val showColorOverlay: Boolean = true,
     val isLoading: Boolean = false,

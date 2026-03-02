@@ -100,40 +100,42 @@ fun GroupCard(
                             color = Color(CanvasContext.emptyGroupContext(id = groupCard.id).color),
                             shape = RoundedCornerShape(14.dp)
                         ),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.BottomStart
                 ) {
                     Column(
                         modifier = Modifier.padding(8.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.SpaceBetween
+                        horizontalAlignment = Alignment.Start,
+                        verticalArrangement = Arrangement.Bottom
                     ) {
-                        Spacer(modifier = Modifier.weight(1f))
-
                         Card(
-                            shape = RoundedCornerShape(16.dp),
+                            shape = RoundedCornerShape(24.dp),
                             colors = CardDefaults.cardColors(
                                 containerColor = colorResource(R.color.backgroundLightest)
                             ),
                             elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                         ) {
-                            Text(
-                                text = groupCard.memberCount.toString(),
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Medium,
-                                color = Color(CanvasContext.emptyGroupContext(id = groupCard.id).color),
-                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
-                                lineHeight = 21.sp
-                            )
+                            Row(
+                                modifier = Modifier
+                                    .height(28.dp)
+                                    .padding(horizontal = 4.dp, vertical = 2.dp),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+                                Text(
+                                    text = groupCard.memberCount.toString(),
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = Color(CanvasContext.emptyGroupContext(id = groupCard.id).color),
+                                    lineHeight = 21.sp
+                                )
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_user_filled),
+                                    contentDescription = pluralStringResource(R.plurals.groupMemberCount, groupCard.memberCount),
+                                    modifier = Modifier.size(16.dp),
+                                    tint = Color(CanvasContext.emptyGroupContext(id = groupCard.id).color)
+                                )
+                            }
                         }
-
-                        Text(
-                            text = pluralStringResource(R.plurals.groupMemberCount, groupCard.memberCount),
-                            fontSize = 14.sp,
-                            color = colorResource(R.color.textLightest),
-                            lineHeight = 19.sp
-                        )
-
-                        Spacer(modifier = Modifier.weight(1f))
                     }
                 }
             }
