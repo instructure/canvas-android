@@ -101,7 +101,7 @@ class LearnLearningLibraryDetailsViewModel @Inject constructor(
                 it.copy(
                     loadingState = it.loadingState.copy(
                         isRefreshing = false,
-                        snackbarMessage = resources.getString(R.string.learnLarningLibraryFailedToLoadCollectionMessage)
+                        snackbarMessage = resources.getString(R.string.learnLearningLibraryFailedToLoadCollectionMessage)
                     )
                 )
             }
@@ -179,7 +179,9 @@ class LearnLearningLibraryDetailsViewModel @Inject constructor(
     private fun LearningLibraryCollectionItem.isSatisfyTypeFilter(typeFilter: LearnLearningLibraryTypeFilter): Boolean {
         return when (typeFilter) {
             LearnLearningLibraryTypeFilter.All -> true
-            LearnLearningLibraryTypeFilter.Assessments -> false
+            LearnLearningLibraryTypeFilter.Courses -> this.itemType == CollectionItemType.COURSE
+            LearnLearningLibraryTypeFilter.Programs -> this.itemType == CollectionItemType.PROGRAM
+            LearnLearningLibraryTypeFilter.Assessments -> this.itemType == CollectionItemType.QUIZ
             LearnLearningLibraryTypeFilter.Assignments -> this.itemType == CollectionItemType.ASSIGNMENT
             LearnLearningLibraryTypeFilter.ExternalLinks -> this.itemType == CollectionItemType.EXTERNAL_URL
             LearnLearningLibraryTypeFilter.ExternalTools -> this.itemType == CollectionItemType.EXTERNAL_TOOL
