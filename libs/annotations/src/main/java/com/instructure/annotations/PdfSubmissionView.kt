@@ -679,6 +679,11 @@ abstract class PdfSubmissionView(context: Context, private val studentAnnotation
             }
             return true
         }
+
+        override fun onAnnotationDeselected(annotation: Annotation?, reselected: Boolean) {
+            super.onAnnotationDeselected(annotation, reselected)
+            commentsButton.setGone()
+        }
     }
 
     private fun hasComments(annotation: Annotation): Boolean {
