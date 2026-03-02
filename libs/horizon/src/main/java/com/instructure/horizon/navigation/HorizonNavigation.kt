@@ -16,8 +16,10 @@
 package com.instructure.horizon.navigation
 
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -104,7 +106,11 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         bottomBar = { BottomNavigationBar(navController) }
     ) { innerPadding ->
-        val animatedBottomPadding = if (bottomBarVisible) innerPadding.calculateBottomPadding() else 0.dp
+        // Keep the bottomBar behind the keyboard
+        val animatedBottomPadding = if (bottomBarVisible && WindowInsets.ime.asPaddingValues().calculateBottomPadding() == 0.dp)
+            innerPadding.calculateBottomPadding()
+        else
+            0.dp
 
         NavHost(
             enterTransition = { enterTransition() },
