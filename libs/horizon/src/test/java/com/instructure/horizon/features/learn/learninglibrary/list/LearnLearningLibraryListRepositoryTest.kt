@@ -289,6 +289,8 @@ class LearnLearningLibraryListRepositoryTest {
         programId = "",
         programCourseId = "",
         createdAt = Date(),
-        updatedAt = Date()
+        updatedAt = Date(),
+        moduleInfo = null,
+        canvasEnrollmentId = null
     )
 }

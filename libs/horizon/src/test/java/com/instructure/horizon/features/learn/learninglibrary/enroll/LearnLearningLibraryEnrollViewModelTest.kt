@@ -277,6 +277,8 @@ class LearnLearningLibraryEnrollViewModelTest {
         updatedAt = Date(),
         isBookmarked = false,
         completionPercentage = 0.0,
-        isEnrolledInCanvas = false
+        isEnrolledInCanvas = false,
+        moduleInfo = null,
+        canvasEnrollmentId = null
     )
 }
