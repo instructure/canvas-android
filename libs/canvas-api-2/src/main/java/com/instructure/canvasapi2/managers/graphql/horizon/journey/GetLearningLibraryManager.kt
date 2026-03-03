@@ -198,7 +198,7 @@ class GetLearningLibraryManagerImpl @Inject constructor(
                 LearningLibraryCollectionItem(
                     id = item.id,
                     libraryId = item.libraryId,
-                    itemType = CollectionItemType.valueOf(item.itemType.name),
+                    itemType = item.itemType.toModel(),
                     displayOrder = item.displayOrder,
                     canvasCourse = item.canvasCourse?.let { course ->
                         CanvasCourseInfo(

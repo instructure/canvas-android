@@ -127,7 +127,7 @@ private fun LearnLearningLibraryDetailsContent(
                     color = ButtonColor.BlackOutline,
                     onClick = state.increaseItemsToDisplay,
                     modifier = Modifier
-                         .padding(horizontal = 24.dp)
+                        .padding(horizontal = 24.dp)
                         .padding(bottom = 24.dp)
                 )
             }
