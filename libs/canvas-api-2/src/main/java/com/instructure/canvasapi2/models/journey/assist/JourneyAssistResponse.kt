@@ -1,4 +1,4 @@
-package com.instructure.canvasapi2.models.journey
+package com.instructure.canvasapi2.models.journey.assist
 
 data class JourneyAssistResponse(
     val state: JourneyAssistState? = null,

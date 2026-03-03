@@ -50,6 +50,7 @@ import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCo
 import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCourseCardError
 import com.instructure.horizon.features.dashboard.widget.course.card.DashboardCourseCardState
 import com.instructure.horizon.features.dashboard.widget.course.card.DashboardMoreCourseCard
+import com.instructure.horizon.features.home.HomeNavigationRoute
 import com.instructure.horizon.features.learn.LearnTab
 import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -165,6 +166,7 @@ private fun DashboardCourseSectionContent(
                                 .padding(bottom = 12.dp)
                                 .height(maxCardHeight.toDp.dp)
                         ) {
+                            navController.clearBackStack(HomeNavigationRoute.Learn.route)
                             navController.navigate(LearnRoute.LearnScreen.route(LearnTab.COURSES)) {
                                 popUpTo(navController.graph.findStartDestination().id) {
                                     saveState = true
@@ -180,6 +182,7 @@ private fun DashboardCourseSectionContent(
             Button(
                 stringResource(R.string.dashboardSeeAllCoursesLabel),
                 onClick = {
+                    navController.clearBackStack(HomeNavigationRoute.Learn.route)
                     navController.navigate(LearnRoute.LearnScreen.route(LearnTab.COURSES)) {
                         popUpTo(navController.graph.findStartDestination().id) {
                             saveState = true

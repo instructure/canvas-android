@@ -21,7 +21,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 sealed interface LearnEvent {
-    data object RefreshRequested : LearnEvent
+    data object RefreshCourseProgress : LearnEvent
+    data object RefreshCourseList : LearnEvent
+    data object RefreshProgramList : LearnEvent
+    data object RefreshLearningLibraryList : LearnEvent
 }
 
 @Singleton

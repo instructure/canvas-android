@@ -14,9 +14,10 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.canvasapi2.models.journey
+package com.instructure.canvasapi2.models.journey.assist
 
-data class JourneyAssistChipOption(
-    val chip: String,
-    val prompt: String
+data class JourneyAssistRequestBody(
+    val prompt: String,
+    val history: List<JourneyAssistChatMessage>,
+    val state: JourneyAssistState
 )

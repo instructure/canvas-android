@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithModuleItemD
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.ProgramRequirement
 import com.instructure.horizon.R
+import com.instructure.horizon.features.learn.LearnEventHandler
 import com.instructure.journey.type.ProgramVariantType
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -43,6 +44,7 @@ import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class LearnProgramListViewModelTest {
+    private val eventHandler: LearnEventHandler = mockk(relaxed = true)
     private val context: Context = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
     private val repository: LearnProgramListRepository = mockk(relaxed = true)
@@ -391,7 +393,7 @@ class LearnProgramListViewModelTest {
     }
 
     private fun getViewModel(): LearnProgramListViewModel {
-        return LearnProgramListViewModel(context, resources, repository)
+        return LearnProgramListViewModel(context, resources, repository, eventHandler)
     }
 
     private fun createTestProgram(

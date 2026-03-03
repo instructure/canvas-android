@@ -19,6 +19,7 @@ package com.instructure.horizon.features.learn.course.list
 import android.content.Context
 import androidx.compose.ui.text.input.TextFieldValue
 import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
+import com.instructure.horizon.features.learn.LearnEventHandler
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -37,6 +38,7 @@ import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class LearnCourseListViewModelTest {
+    private val eventHandler: LearnEventHandler = mockk(relaxed = true)
     private val context: Context = mockk(relaxed = true)
     private val repository: LearnCourseListRepository = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
@@ -357,6 +359,6 @@ class LearnCourseListViewModelTest {
     }
 
     private fun getViewModel(): LearnCourseListViewModel {
-        return LearnCourseListViewModel(context, repository)
+        return LearnCourseListViewModel(context, repository, eventHandler)
     }
 }

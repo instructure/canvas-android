@@ -1,0 +1,5 @@
+mutation ToggleLearningLibraryItemIsBookmarked($input: ToggleCollectionItemBookmarkInput!) {
+    toggleCollectionItemBookmark(input: $input) {
+        isBookmarked
+  }
+}

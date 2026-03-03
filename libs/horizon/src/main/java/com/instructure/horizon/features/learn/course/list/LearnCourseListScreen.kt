@@ -103,7 +103,7 @@ private fun Searchbar(state: LearnCourseListUiState, modifier: Modifier = Modifi
         value = state.searchQuery,
         onValueChange = { state.updateSearchQuery(it) },
         placeholder = stringResource(R.string.learnCourseListSearchBarPlaceholder),
-        modifier = modifier.padding(24.dp)
+        modifier = modifier.fillMaxWidth().padding(24.dp)
     )
 }
 
@@ -249,7 +249,7 @@ private fun CourseImage(
                     override fun onLoadFailed(
                         e: GlideException?,
                         model: Any?,
-                        target: com.bumptech.glide.request.target.Target<Drawable>,
+                        target: Target<Drawable>,
                         isFirstResource: Boolean
                     ): Boolean {
                         isImageLoading = false
