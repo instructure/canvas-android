@@ -42,6 +42,7 @@ class LearnLearningLibraryDetailsRepositoryTest {
         description = "Test description",
         createdAt = Date(),
         updatedAt = Date(),
+        totalItemCount = 3,
         items = listOf(
             createTestCollectionItem(
                 id = "item1",

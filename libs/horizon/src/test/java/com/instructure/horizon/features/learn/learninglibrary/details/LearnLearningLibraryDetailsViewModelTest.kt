@@ -124,7 +124,7 @@ class LearnLearningLibraryDetailsViewModelTest {
         every { resources.getQuantityString(any(), any()) } returns "items"
         every { resources.getQuantityString(any(), any(), *anyVararg()) } returns "items"
 
-        every { savedStateHandle.get<String>(LearnRoute.LearnLearningLibraryDetailsScreen.collectionIdIdAttr) } returns testCollectionId
+        every { savedStateHandle.get<String>(LearnRoute.LearnLearningLibraryDetailsScreen.collectionIdAttr) } returns testCollectionId
 
         coEvery { repository.getLearningLibraryItems(any(), any()) } returns testCollection
     }
@@ -594,7 +594,8 @@ class LearnLearningLibraryDetailsViewModelTest {
         description = "Test description",
         createdAt = Date(),
         updatedAt = Date(),
-        items = items
+        items = items,
+        totalItemCount = items.size
     )
 
     private fun createTestCollectionItem(

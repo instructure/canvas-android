@@ -42,6 +42,7 @@ class LearnLearningLibraryListRepositoryTest {
         EnrolledLearningLibraryCollection(
             id = "collection1",
             name = "Software Engineering",
+            totalItemCount = 2,
             items = listOf(
                 createTestCollectionItem(
                     id = "item1",
@@ -66,6 +67,7 @@ class LearnLearningLibraryListRepositoryTest {
         EnrolledLearningLibraryCollection(
             id = "collection2",
             name = "Data Science",
+            totalItemCount = 1,
             items = listOf(
                 createTestCollectionItem(
                     id = "item3",

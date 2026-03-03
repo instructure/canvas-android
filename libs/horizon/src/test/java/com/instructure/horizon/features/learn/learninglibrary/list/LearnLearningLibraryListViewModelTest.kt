@@ -719,7 +719,8 @@ class LearnLearningLibraryListViewModelTest {
         description = "Test description",
         createdAt = Date(),
         updatedAt = Date(),
-        items = items
+        items = items,
+        totalItemCount = items.size
     )
 
     private fun createTestCollectionItem(

@@ -346,7 +346,8 @@ class FakeGetLearningLibraryManager : GetLearningLibraryManager {
                 description = collection1.description,
                 createdAt = collection1.createdAt,
                 updatedAt = collection1.updatedAt,
-                items = items1
+                items = items1,
+                totalItemCount = items1.size
             )
         )
 
@@ -358,7 +359,8 @@ class FakeGetLearningLibraryManager : GetLearningLibraryManager {
                 description = collection2.description,
                 createdAt = collection2.createdAt,
                 updatedAt = collection2.updatedAt,
-                items = items2
+                items = items2,
+                totalItemCount = items2.size
             )
         )
 
@@ -370,7 +372,8 @@ class FakeGetLearningLibraryManager : GetLearningLibraryManager {
                 description = collection3.description,
                 createdAt = collection3.createdAt,
                 updatedAt = collection3.updatedAt,
-                items = items3
+                items = items3,
+                totalItemCount = items3.size
             )
         )
     }
