@@ -16,7 +16,10 @@
  */
 package com.instructure.horizon.features.learn.learninglibrary.common
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -113,28 +116,39 @@ fun LearnLearningLibraryCollectionItem(
         )
         HorizonSpace(SpaceSize.SPACE_24)
 
-        if (state.items.isEmpty()) {
-            Text(
-                text = stringResource(R.string.learnLearningLibraryEmptyCollectionMessage),
-                style = HorizonTypography.p1,
-                color = HorizonColors.Text.body(),
-                modifier = Modifier.padding(horizontal = 24.dp)
-            )
+        AnimatedVisibility(
+            isExpanded,
+            enter = expandVertically(),
+            exit = shrinkVertically()
+        ) {
+            Column(
+                Modifier.fillMaxWidth()
+            ) {
+                if (state.items.isEmpty()) {
+                    Text(
+                        text = stringResource(R.string.learnLearningLibraryEmptyCollectionMessage),
+                        style = HorizonTypography.p1,
+                        color = HorizonColors.Text.body(),
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                    )
+                    HorizonSpace(SpaceSize.SPACE_24)
+                }
+                state.items.take(itemCount).forEach { itemState ->
+                    LearnLearningLibraryItem(
+                        state = itemState,
+                        onClick = { onItemClick(itemState.route) },
+                        onBookmarkClick = { onBookmarkClick(itemState.id) },
+                        onEnrollClick = { onEnrollClick(itemState.id) }
+                    )
+                    HorizonSpace(SpaceSize.SPACE_24)
+                }
+                LearnLearningLibraryCollectionDetailsRow(
+                    state.itemCount,
+                    onCollectionDetailsClick = { onCollectionDetailsClick(state.id) }
+                )
+                HorizonSpace(SpaceSize.SPACE_24)
+            }
         }
-        state.items.take(itemCount).forEach { itemState ->
-            LearnLearningLibraryItem(
-                state = itemState,
-                onClick = { onItemClick(itemState.route) },
-                onBookmarkClick = { onBookmarkClick(itemState.id) },
-                onEnrollClick = { onEnrollClick(itemState.id) }
-            )
-            HorizonSpace(SpaceSize.SPACE_24)
-        }
-        LearnLearningLibraryCollectionDetailsRow(
-            state.itemCount,
-            onCollectionDetailsClick = { onCollectionDetailsClick(state.id) }
-        )
-        HorizonSpace(SpaceSize.SPACE_24)
 
         if (isCollapsable) {
             HorizonDivider()
