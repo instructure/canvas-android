@@ -357,7 +357,7 @@ class LearnLearningLibraryBookmarkedViewModelTest {
         val state = viewModel.uiState.value
         val item = state.items.first { it.id == "item1" }
         assertFalse(item.bookmarkLoading)
-        assertNotNull(state.loadingState.errorMessage)
+        assertNotNull(state.loadingState.snackbarMessage)
     }
 
     @Test
