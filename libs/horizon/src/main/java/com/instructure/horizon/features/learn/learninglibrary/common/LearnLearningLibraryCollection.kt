@@ -113,6 +113,14 @@ fun LearnLearningLibraryCollectionItem(
         )
         HorizonSpace(SpaceSize.SPACE_24)
 
+        if (state.items.isEmpty()) {
+            Text(
+                text = stringResource(R.string.learnLearningLibraryEmptyCollectionMessage),
+                style = HorizonTypography.p1,
+                color = HorizonColors.Text.body(),
+                modifier = Modifier.padding(horizontal = 24.dp)
+            )
+        }
         state.items.take(itemCount).forEach { itemState ->
             LearnLearningLibraryItem(
                 state = itemState,
@@ -204,6 +212,16 @@ private fun LearnLearningLibraryCollectionDetailsRow(
             onClick = { onCollectionDetailsClick() }
         )
     }
+}
+
+@Composable
+private fun EmptyMessage() {
+    Text(
+        text = stringResource(R.string.learnLearningLibraryListEmptyMessage),
+        style = HorizonTypography.p1,
+        color = HorizonColors.Text.body(),
+        modifier = Modifier.padding(horizontal = 24.dp)
+    )
 }
 
 @Composable
@@ -388,11 +406,24 @@ private fun LearnLearningLibraryCollectionMultipleItems() {
 }
 
 @Composable
-private fun EmptyMessage() {
-    Text(
-        text = stringResource(R.string.learnLearningLibraryListEmptyMessage),
-        style = HorizonTypography.p1,
-        color = HorizonColors.Text.body(),
-        modifier = Modifier.padding(horizontal = 24.dp)
+@Preview(showBackground = true)
+private fun LearnLearningLibraryEmptyCollectionPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    val collections = listOf(
+        LearnLearningLibraryCollectionState(
+            id = "1",
+            name = "Collection 1",
+            itemCount = 0,
+            items = emptyList()
+        )
     )
+    LazyColumn {
+        LearnLearningLibraryCollection(
+            collections,
+            {},
+            {},
+            {},
+            {}
+        )
+    }
 }
