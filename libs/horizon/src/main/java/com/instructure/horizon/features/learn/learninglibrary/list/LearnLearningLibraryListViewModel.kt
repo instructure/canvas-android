@@ -258,7 +258,7 @@ class LearnLearningLibraryListViewModel @Inject constructor(
                         }
                     }
                 )
-            }, loadingState = it.collectionState.loadingState.copy(errorMessage = resources.getString(R.string.learnLearningLibraryFailedToUpdateBookmarkMessage)))) }
+            }, loadingState = it.collectionState.loadingState.copy(snackbarMessage = resources.getString(R.string.learnLearningLibraryFailedToUpdateBookmarkMessage)))) }
         }
     }
 
@@ -338,7 +338,7 @@ class LearnLearningLibraryListViewModel @Inject constructor(
                                 collectionItemState
                             }
                         },
-                        loadingState = it.itemState.loadingState.copy(errorMessage = resources.getString(R.string.learnLearningLibraryFailedToUpdateBookmarkMessage))
+                        loadingState = it.itemState.loadingState.copy(snackbarMessage = resources.getString(R.string.learnLearningLibraryFailedToUpdateBookmarkMessage))
                     ),
                     collectionState = it.collectionState.copy(
                         collections = it.collectionState.collections.map { collectionState ->

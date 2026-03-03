@@ -206,7 +206,7 @@ class LearnLearningLibraryBookmarkedViewModel @Inject constructor(
                             collectionItemState
                         }
                     },
-                    loadingState = it.loadingState.copy(errorMessage = resources.getString(R.string.learnLearningLibraryFailedToUpdateBookmarkMessage))
+                    loadingState = it.loadingState.copy(snackbarMessage = resources.getString(R.string.learnLearningLibraryFailedToUpdateBookmarkMessage))
                 )
             }
         }
