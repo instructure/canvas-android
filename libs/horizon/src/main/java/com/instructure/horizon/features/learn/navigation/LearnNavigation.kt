@@ -150,7 +150,7 @@ fun NavGraphBuilder.learnNavigation(
     composable(
         route = LearnRoute.LearnLearningLibraryDetailsScreen.route,
         arguments = listOf(
-            navArgument(LearnRoute.LearnLearningLibraryDetailsScreen.collectionIdIdAttr) {
+            navArgument(LearnRoute.LearnLearningLibraryDetailsScreen.collectionIdAttr) {
                 type = NavType.StringType
             }
         ),

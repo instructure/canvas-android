@@ -147,6 +147,7 @@ class GetLearningLibraryManagerImpl @Inject constructor(
                     description = collection.description,
                     createdAt = collection.createdAt,
                     updatedAt = collection.updatedAt,
+                    totalItemCount = collection.totalItemCount,
                     items = collection.items.map { item ->
                         LearningLibraryCollectionItem(
                             id = item.id,
@@ -192,6 +193,7 @@ class GetLearningLibraryManagerImpl @Inject constructor(
             description = result.description,
             createdAt = result.createdAt,
             updatedAt = result.updatedAt,
+            totalItemCount = result.totalItemCount,
             items = result.items.map { item ->
                 LearningLibraryCollectionItem(
                     id = item.id,

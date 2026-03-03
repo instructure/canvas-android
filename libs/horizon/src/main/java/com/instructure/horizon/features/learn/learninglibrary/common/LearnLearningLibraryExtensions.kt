@@ -29,7 +29,7 @@ fun List<EnrolledLearningLibraryCollection>.toUiState(resources: Resources): Lis
         LearnLearningLibraryCollectionState(
             id = it.id,
             name = it.name,
-            itemCount = it.items.size,
+            itemCount = it.totalItemCount,
             items = it.items.map { item ->
                 item.toUiState(resources)
             }

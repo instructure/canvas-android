@@ -44,7 +44,7 @@ class LearnLearningLibraryDetailsViewModel @Inject constructor(
     private val resources: Resources,
     private val repository: LearnLearningLibraryDetailsRepository
 ): ViewModel() {
-    private val collectionId = savedStateHandle.get<String>(LearnRoute.LearnLearningLibraryDetailsScreen.collectionIdIdAttr) ?: ""
+    private val collectionId = savedStateHandle.get<String>(LearnRoute.LearnLearningLibraryDetailsScreen.collectionIdAttr) ?: ""
 
     private var allItems: List<LearningLibraryCollectionItem> = emptyList()
     private val pageSize = 10
