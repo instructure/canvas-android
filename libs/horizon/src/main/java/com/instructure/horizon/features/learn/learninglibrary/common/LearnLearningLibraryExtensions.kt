@@ -40,7 +40,7 @@ fun List<EnrolledLearningLibraryCollection>.toUiState(resources: Resources): Lis
 }
 
 fun LearningLibraryCollectionItem.toUiState(resources: Resources): LearnLearningLibraryCollectionItemState {
-    val canEnroll = this.itemType == CollectionItemType.COURSE && !this.isEnrolledInCanvas.orDefault(true)
+    val canEnroll = (this.itemType == CollectionItemType.COURSE || this.itemType == CollectionItemType.PROGRAM) && !this.isEnrolledInCanvas.orDefault(true)
 
     return LearnLearningLibraryCollectionItemState(
         id = this.id,
