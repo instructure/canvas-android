@@ -39,6 +39,7 @@ import com.instructure.horizon.features.learn.course.details.CourseDetailsViewMo
 import com.instructure.horizon.features.learn.learninglibrary.bookmarked.LearnLearningLibraryBookmarkedScreen
 import com.instructure.horizon.features.learn.learninglibrary.bookmarked.LearnLearningLibraryBookmarkedViewModel
 import com.instructure.horizon.features.learn.learninglibrary.details.LearnLearningLibraryDetailsScreen
+import com.instructure.horizon.features.learn.learninglibrary.details.LearnLearningLibraryDetailsViewModel
 import com.instructure.horizon.features.learn.learninglibrary.enroll.LearnLearningLibraryEnrollScreen
 import com.instructure.horizon.features.learn.learninglibrary.enroll.LearnLearningLibraryEnrollViewModel
 import com.instructure.horizon.features.learn.program.details.ProgramDetailsScreen
@@ -150,7 +151,7 @@ fun NavGraphBuilder.learnNavigation(
     composable(
         route = LearnRoute.LearnLearningLibraryDetailsScreen.route,
         arguments = listOf(
-            navArgument(LearnRoute.LearnLearningLibraryDetailsScreen.collectionIdIdAttr) {
+            navArgument(LearnRoute.LearnLearningLibraryDetailsScreen.collectionIdAttr) {
                 type = NavType.StringType
             }
         ),
@@ -161,7 +162,17 @@ fun NavGraphBuilder.learnNavigation(
             }
         )
     ) {
-        LearnLearningLibraryDetailsScreen()
+        val previousBackStackEntry = navController.previousBackStackEntry
+        val currentTab = previousBackStackEntry?.savedStateHandle?.get<String>(LearnRoute.LearnScreen.currentTabKey)
+            ?: LearnTab.BROWSE.stringValue
+        previousBackStackEntry?.savedStateHandle?.set(
+            LearnRoute.LearnScreen.selectedTabFromDetailsKey,
+            currentTab
+        )
+
+        val viewModel = hiltViewModel<LearnLearningLibraryDetailsViewModel>()
+        val state by viewModel.uiState.collectAsState()
+        LearnLearningLibraryDetailsScreen(state, navController)
     }
     composable(
         route = LearnRoute.LearnLearningLibraryBookmarkScreen.route,

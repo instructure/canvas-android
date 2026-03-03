@@ -1,0 +1,33 @@
+query GetEnrolledLearningLibraryCollection($id: String!) {
+    enrolledLearningLibraryCollection(id: $id) {
+        id
+        name
+        publicName
+        description
+        createdAt
+        updatedAt
+        items {
+            id
+            libraryId
+            itemType
+            displayOrder
+            canvasCourse {
+                courseId
+                canvasUrl
+                courseName
+                courseImageUrl
+                moduleCount
+                moduleItemCount
+                estimatedDurationMinutes
+            }
+            programId
+            programCourseId
+            createdAt
+            updatedAt
+            isBookmarked
+            completionPercentage
+            isEnrolledInCanvas
+        }
+        totalItemCount
+    }
+}

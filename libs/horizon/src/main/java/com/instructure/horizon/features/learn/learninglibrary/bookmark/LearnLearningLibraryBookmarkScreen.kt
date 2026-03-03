@@ -14,17 +14,12 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.canvasapi2.models.journey.learninglibrary
+package com.instructure.horizon.features.learn.learninglibrary.bookmark
 
-import java.util.Date
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
 
-data class EnrolledLearningLibraryCollection(
-    val id: String,
-    val name: String,
-    val publicName: String?,
-    val description: String?,
-    val createdAt: Date,
-    val updatedAt: Date,
-    val totalItemCount: Int,
-    val items: List<LearningLibraryCollectionItem>
-)
+@Composable
+fun LearnLearningLibraryBookmarkScreen() {
+    Text("Learning Library Bookmark Screen")
+}

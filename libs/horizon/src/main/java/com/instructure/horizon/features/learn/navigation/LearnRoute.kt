@@ -52,9 +52,9 @@ sealed class LearnRoute {
     }
 
     data object LearnLearningLibraryDetailsScreen: LearnRoute() {
-        const val collectionIdIdAttr = "collectionId"
+        const val collectionIdAttr = "collectionId"
         const val baseUrl = "learning_library"
-        const val route = "${baseUrl}/{$collectionIdIdAttr}"
+        const val route = "${baseUrl}/{$collectionIdAttr}"
         fun route(collectionId: String) = "${baseUrl}/$collectionId"
     }
 

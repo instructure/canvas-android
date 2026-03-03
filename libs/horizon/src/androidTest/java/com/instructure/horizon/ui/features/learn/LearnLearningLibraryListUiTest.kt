@@ -190,7 +190,7 @@ class LearnLearningLibraryListUiTest {
         val state = LearnLearningLibraryListUiState(
             collectionState = LearnLearningLibraryListCollectionUiState(
                 collections = testCollections,
-                itemsToDisplays = 10
+                itemsToDisplay = 10
             )
         )
 
@@ -213,7 +213,7 @@ class LearnLearningLibraryListUiTest {
         val state = LearnLearningLibraryListUiState(
             collectionState = LearnLearningLibraryListCollectionUiState(
                 collections = listOf(testCollections[1]),
-                itemsToDisplays = 10
+                itemsToDisplay = 10
             )
         )
 
@@ -245,7 +245,7 @@ class LearnLearningLibraryListUiTest {
         val state = LearnLearningLibraryListUiState(
             collectionState = LearnLearningLibraryListCollectionUiState(
                 collections = testCollections,
-                itemsToDisplays = 10
+                itemsToDisplay = 10
             )
         )
 
@@ -262,7 +262,7 @@ class LearnLearningLibraryListUiTest {
         val state = LearnLearningLibraryListUiState(
             collectionState = LearnLearningLibraryListCollectionUiState(
                 collections = testCollections,
-                itemsToDisplays = 2
+                itemsToDisplay = 2
             )
         )
 
@@ -279,7 +279,7 @@ class LearnLearningLibraryListUiTest {
         val state = LearnLearningLibraryListUiState(
             collectionState = LearnLearningLibraryListCollectionUiState(
                 collections = testCollections,
-                itemsToDisplays = 10
+                itemsToDisplay = 10
             )
         )
 
@@ -295,7 +295,7 @@ class LearnLearningLibraryListUiTest {
         val state = LearnLearningLibraryListUiState(
             collectionState = LearnLearningLibraryListCollectionUiState(
                 collections = testCollections,
-                itemsToDisplays = 2
+                itemsToDisplay = 2
             )
         )
 
@@ -517,7 +517,7 @@ class LearnLearningLibraryListUiTest {
         val state = LearnLearningLibraryListUiState(
             collectionState = LearnLearningLibraryListCollectionUiState(
                 collections = testCollections,
-                itemsToDisplays = 10
+                itemsToDisplay = 10
             )
         )
 
@@ -561,7 +561,7 @@ class LearnLearningLibraryListUiTest {
         val state = LearnLearningLibraryListUiState(
             collectionState = LearnLearningLibraryListCollectionUiState(
                 collections = testCollections,
-                itemsToDisplays = 10
+                itemsToDisplay = 10
             )
         )
 
@@ -577,7 +577,7 @@ class LearnLearningLibraryListUiTest {
         val state = LearnLearningLibraryListUiState(
             collectionState = LearnLearningLibraryListCollectionUiState(
                 collections = testCollections,
-                itemsToDisplays = 3
+                itemsToDisplay = 3
             )
         )
 
@@ -593,7 +593,7 @@ class LearnLearningLibraryListUiTest {
         val state = LearnLearningLibraryListUiState(
             collectionState = LearnLearningLibraryListCollectionUiState(
                 collections = testCollections,
-                itemsToDisplays = 2
+                itemsToDisplay = 2
             )
         )
 

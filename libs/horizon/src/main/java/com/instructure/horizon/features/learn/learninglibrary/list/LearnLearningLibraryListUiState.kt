@@ -43,7 +43,7 @@ data class LearnLearningLibraryListUiState(
 data class LearnLearningLibraryListCollectionUiState(
     val loadingState: LoadingState = LoadingState(),
     val collections: List<LearnLearningLibraryCollectionState> = emptyList(),
-    val itemsToDisplays: Int = 1,
+    val itemsToDisplay: Int = 1,
     val increaseItemsToDisplay: () -> Unit = {},
     val onBookmarkClicked: (itemId: String) -> Unit = {},
 )
