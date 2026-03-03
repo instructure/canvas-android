@@ -28,11 +28,14 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.SelectContextUiState
+import com.instructure.pandautils.utils.getSystemLocaleCalendar
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
+import io.mockk.mockkStatic
+import io.mockk.unmockkStatic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
@@ -52,6 +55,7 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.LocalTime
 import org.threeten.bp.ZoneId
+import java.util.Calendar
 
 
 @ExperimentalCoroutinesApi
@@ -78,11 +82,16 @@ class CreateUpdateEventViewModelTest {
         coEvery { repository.getCanvasContexts() } returns listOf(User(1))
         mockkObject(CanvasRestAdapter)
         every { CanvasRestAdapter.clearCacheUrls(any()) } returns mockk()
+
+        // Mock getSystemLocaleCalendar to return a simple Calendar instance for testing
+        mockkStatic(::getSystemLocaleCalendar)
+        every { getSystemLocaleCalendar() } returns Calendar.getInstance()
     }
 
     @After
     fun tearDown() {
         Dispatchers.resetMain()
+        unmockkStatic(::getSystemLocaleCalendar)
     }
 
     @Test

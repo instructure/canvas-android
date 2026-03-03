@@ -18,15 +18,12 @@ package com.instructure.student.ui.e2e.classic.offline
 
 import android.util.Log
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.OfflineE2E
-import com.instructure.canvas.espresso.annotations.Stub
-import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.QuizzesApi
 import com.instructure.dataseeding.api.SubmissionsApi
@@ -38,6 +35,7 @@ import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
 import com.instructure.espresso.getDateInCanvasCalendarFormat
+import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.extensions.seedData
 import com.instructure.student.ui.utils.extensions.tokenLogin
@@ -54,7 +52,6 @@ class OfflineGradesE2ETest : StudentComposeTest() {
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @OfflineE2E
-    @Stub("Stubbed because of What-if and Grades changes, fix in MBL-19640")
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.GRADES, TestCategory.E2E, SecondaryFeatureCategory.OFFLINE_MODE)
     fun testOfflineGradesE2E() {
@@ -147,85 +144,88 @@ class OfflineGradesE2ETest : StudentComposeTest() {
         OfflineTestUtils.assertOfflineIndicator()
 
         Log.d(ASSERTION_TAG, "Assert that the total grade is 60 because there is only one graded assignment and it's graded to 60% and we have the 'Base on graded assignments' checkbox enabled.")
-        courseGradesPage.assertTotalGrade(containsTextCaseInsensitive("60"))
+        gradesPage.assertTotalGradeText("60%")
 
         Log.d(ASSERTION_TAG, "Assert that 'Base on graded assignment' checkbox is checked and the 'Show What-If Score' checkbox is NOT checked by default.")
-        courseGradesPage.assertBaseOnGradedAssignmentsChecked()
-        courseGradesPage.assertWhatIfUnChecked()
+        gradesPage.assertBasedOnGradedAssignmentsToggleState(true)
+        gradesPage.assertShowWhatIfScoreToggleState(false)
 
         val dueDateInCanvasFormat = getDateInCanvasCalendarFormat(1.days.fromNow.iso8601)
         Log.d(ASSERTION_TAG, "Assert that the '${assignment.name}' assignment's due date is tomorrow ('$dueDateInCanvasFormat').")
-        courseGradesPage.assertAssignmentDueDate(assignment.name, dueDateInCanvasFormat)
+        gradesPage.assertAssignmentDueDate(assignment.name, dueDateInCanvasFormat)
 
         Log.d(ASSERTION_TAG, "Assert that the '${assignment2.name}' assignment's due date is tomorrow ('$dueDateInCanvasFormat').")
-        courseGradesPage.assertAssignmentDueDate(assignment2.name, dueDateInCanvasFormat)
+        gradesPage.assertAssignmentDueDate(assignment2.name, dueDateInCanvasFormat)
 
         Log.d(ASSERTION_TAG, "Assert that the '${quiz.title}' quiz's due date has not set.")
-        courseGradesPage.assertAssignmentDueDate(quiz.title, "No due date")
+        gradesPage.assertAssignmentDueDate(quiz.title, "No due date")
 
         Log.d(ASSERTION_TAG, "Assert that the '${quiz.title}' quiz status is 'Not Submitted'.")
-        courseGradesPage.assertAssignmentStatus(quiz.title, "Not Submitted")
+        gradesPage.assertAssignmentStatus(quiz.title, "Not Submitted")
 
-        val assignmentMatcher = ViewMatchers.withText(assignment.name)
         Log.d(ASSERTION_TAG, "Assert that the '${assignment.name}' assignment is displayed and there is 60% grade for it.")
-        courseGradesPage.assertItemDisplayed(assignmentMatcher)
-        courseGradesPage.assertGradeDisplayed(assignmentMatcher, containsTextCaseInsensitive("60"))
+        gradesPage.assertAssignmentIsDisplayed(assignment.name)
+        retryWithIncreasingDelay(times = 10, maxDelay = 4000, catchBlock = { gradesPage.refresh() }) {
+            gradesPage.assertAssignmentGradeText(assignment.name, "60%")
+        }
 
-        val quizMatcher = ViewMatchers.withText(quiz.title)
         Log.d(ASSERTION_TAG, "Assert that the '${quiz.title}' quiz is displayed and there is no grade for it.")
-        courseGradesPage.assertItemDisplayed(quizMatcher)
-        courseGradesPage.assertGradeNotDisplayed(quizMatcher)
+        gradesPage.assertAssignmentIsDisplayed(quiz.title)
+        gradesPage.assertAssignmentGradeText(quiz.title, "-/10")
 
-        val assignmentMatcher2 = ViewMatchers.withText(assignment2.name)
         Log.d(ASSERTION_TAG, "Assert that the '${assignment2.name}' assignment is displayed it's graded is 'Excused'.")
-        courseGradesPage.assertItemDisplayed(assignmentMatcher2)
-        courseGradesPage.assertGradeDisplayed(assignmentMatcher2, containsTextCaseInsensitive("EX/15"))
+        gradesPage.assertAssignmentIsDisplayed(assignment2.name)
+        gradesPage.assertAssignmentGradeText(assignment2.name, "EX/15")
 
         Log.d(STEP_TAG, "Check in the 'What-If Score' checkbox.")
-        courseGradesPage.checkWhatIf()
+        gradesPage.clickShowWhatIfScore()
 
         Log.d(ASSERTION_TAG, "Assert that the 'Show What-If Score' checkbox is checked.")
-        courseGradesPage.assertWhatIfChecked()
+        gradesPage.assertShowWhatIfScoreToggleState(true)
 
         Log.d(STEP_TAG, "Enter '12' as a what-if grade for '${assignment.name}' assignment.")
-        courseGradesPage.enterWhatIfGrade(assignmentMatcher, "12")
+        gradesPage.clickEditWhatIfScore(assignment.name)
+        gradesPage.enterWhatIfScore("12")
+        gradesPage.clickDoneInWhatIfDialog()
 
-        Log.d(ASSERTION_TAG, "Assert that 'Total Grade' contains the score '80'.")
-        courseGradesPage.assertTotalGrade(containsTextCaseInsensitive("80"))
+        Log.d(ASSERTION_TAG, "Assert that 'Total' grade is '80%'.")
+        gradesPage.assertTotalGradeText("80%")
 
         Log.d(STEP_TAG, "Enter '4' (of 10) as a what-if grade for '${quiz.title}' quiz.")
-        courseGradesPage.enterWhatIfGrade(quizMatcher, "4")
+        gradesPage.clickEditWhatIfScore(quiz.title)
+        gradesPage.enterWhatIfScore("4")
+        gradesPage.clickDoneInWhatIfDialog()
 
-        Log.d(ASSERTION_TAG, "Assert that 'Total Grade' contains the score '64'.")
-        courseGradesPage.assertTotalGrade(containsTextCaseInsensitive("64"))
+        Log.d(ASSERTION_TAG, "Assert that 'Total' grade is '64%'.")
+        gradesPage.assertTotalGradeText("64%")
 
-        Log.d(STEP_TAG, "Uncheck 'Base on graded assignments' checkbox (while What-If Score is still enabled!).")
-        courseGradesPage.uncheckBaseOnGradedAssignments()
+        Log.d(STEP_TAG, "Check out 'Base on graded assignments' checkbox (while What-If Score is still enabled!).")
+        gradesPage.clickBasedOnGradedAssignments()
 
-        Log.d(ASSERTION_TAG, "Assert that we can see the correct score (40%) and the 'Base on graded assignments' checkbox is unchecked.")
-        courseGradesPage.assertBaseOnGradedAssignmentsUnChecked()
-        courseGradesPage.refreshUntilAssertTotalGrade(containsTextCaseInsensitive("40%"))
+        Log.d(ASSERTION_TAG, "Assert that we can see the correct 'Total' grade score (64%) and the 'Base on graded assignments' checkbox is unchecked. Excused assignment should not count neither as graded or ungraded, so it does not change the 'Total' grade.")
+        gradesPage.assertBasedOnGradedAssignmentsToggleState(false)
+        gradesPage.assertTotalGradeText("64%")
 
         Log.d(STEP_TAG, "Uncheck the 'Show What-If Score' checkbox.")
-        courseGradesPage.uncheckWhatIf()
+        gradesPage.clickShowWhatIfScore()
 
         Log.d(ASSERTION_TAG, "Assert that the 'Show What-If Score' checkbox is unchecked.")
-        courseGradesPage.assertWhatIfUnChecked()
+        gradesPage.assertShowWhatIfScoreToggleState(false)
 
-        Log.d(ASSERTION_TAG, "Assert that the Total Grade is becoming 36% because there is still only one 'real' grade, but since the 'Base on graded assignments' is not checked," +
+        Log.d(ASSERTION_TAG, "Assert that the 'Total' grade is becoming 36% because there is still only one 'real' grade, but since the 'Base on graded assignments' is not checked," +
                 " the score will be lower than 60% (9/30 is 36% as the 'Not Submitted' is still not counted). Also assert that the '${assignment.name}' assignment's grades has been set back to 60% as we disabled the 'Show What-If Score' checkbox.")
-        courseGradesPage.assertTotalGrade(containsTextCaseInsensitive("36"))
-        courseGradesPage.assertGradeDisplayed(assignmentMatcher, containsTextCaseInsensitive("60"))
+        gradesPage.assertTotalGradeText("36%")
+        gradesPage.assertAssignmentGradeText(assignment.name, "60%")
 
-        Log.d(STEP_TAG, "Check 'Base on graded assignments' checkbox.")
-        courseGradesPage.checkBaseOnGradedAssignments()
+        Log.d(STEP_TAG, "Check in 'Base on graded assignments' checkbox.")
+        gradesPage.clickBasedOnGradedAssignments()
 
         Log.d(ASSERTION_TAG, "Assert that we can see the correct score (60%) and the 'Base on graded assignments' checkbox is checked.")
-        courseGradesPage.assertBaseOnGradedAssignmentsChecked()
-        courseGradesPage.refreshUntilAssertTotalGrade(containsTextCaseInsensitive("60%"))
+        gradesPage.assertBasedOnGradedAssignmentsToggleState(true)
+        gradesPage.assertTotalGradeText("60%")
 
         Log.d(STEP_TAG, "Open '${assignment.name}' assignment.")
-        courseGradesPage.openAssignment(assignment.name)
+        gradesPage.clickAssignment(assignment.name)
 
         Log.d(ASSERTION_TAG, "Assert if the Assignment Details Page is displayed with the corresponding grade.")
         assignmentDetailsPage.assertPageObjects()
@@ -234,17 +234,17 @@ class OfflineGradesE2ETest : StudentComposeTest() {
         Log.d(STEP_TAG, "Navigate back to Course Grades Page.")
         Espresso.pressBack()
 
-        Log.d(STEP_TAG, "Click on the expand/collapse button to collapse the list.")
-        courseGradesPage.clickOnExpandCollapseButton()
+        Log.d(STEP_TAG, "Collapse the assignment list.")
+        gradesPage.clickAssignmentGroupExpandCollapseButton("Upcoming Assignments")
 
-        Log.d(ASSERTION_TAG, "Assert that the assignment will disappear from the list view.")
-        courseGradesPage.assertAssignmentCount(0)
+        Log.d(ASSERTION_TAG, "Assert that the '${assignment.name}' and '${assignment2.name}' assignments will disappear from the list view so only the '${quiz.title}' quiz is displayed.")
+        gradesPage.assertAllAssignmentItemCount(1)
 
-        Log.d(STEP_TAG, "Click on the expand/collapse button again to expand the list.")
-        courseGradesPage.clickOnExpandCollapseButton()
+        Log.d(STEP_TAG, "Expand the assignment list.")
+        gradesPage.clickAssignmentGroupExpandCollapseButton("Upcoming Assignments")
 
-        Log.d(ASSERTION_TAG, "Assert that the assignment will disappear from the list view.")
-        courseGradesPage.assertAssignmentCount(3)
+        Log.d(ASSERTION_TAG, "Assert that the assignment will be displayed again in the list view.")
+        gradesPage.assertAllAssignmentItemCount(3)
     }
 
     @After
@@ -262,7 +262,6 @@ class OfflineGradesE2ETest : StudentComposeTest() {
                 QuizAnswer(id = 1, weight = 1, text = "Odd"),
                 QuizAnswer(id = 1, weight = 1, text = "Even")
             )
-
         ),
         QuizQuestion(
             pointsPossible = 5,
@@ -273,7 +272,6 @@ class OfflineGradesE2ETest : StudentComposeTest() {
                 QuizAnswer(id = 1, weight = 1, text = "A Gazillion"),
                 QuizAnswer(id = 1, weight = 1, text = "13")
             )
-
         )
     )
 }

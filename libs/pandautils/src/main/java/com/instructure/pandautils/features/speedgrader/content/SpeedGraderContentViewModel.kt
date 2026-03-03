@@ -36,12 +36,14 @@ import com.instructure.canvasapi2.type.SubmissionStatusTagType
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.pandautils.R
-import com.instructure.pandautils.features.grades.SubmissionStateLabel
+import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 import com.instructure.pandautils.features.speedgrader.SpeedGraderSelectedAttemptHolder
 import com.instructure.pandautils.features.speedgrader.grade.GradingEvent
 import com.instructure.pandautils.features.speedgrader.grade.SpeedGraderGradingEventHandler
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -70,6 +72,8 @@ class SpeedGraderContentViewModel @Inject constructor(
 
     private val overrideDomain = apiPrefs.overrideDomains[courseId]
 
+    private var savedDismissJob: Job? = null
+
     init {
         viewModelScope.launch {
             fetchData()
@@ -78,6 +82,39 @@ class SpeedGraderContentViewModel @Inject constructor(
                     when (it) {
                         is GradingEvent.GradeChanged -> {
                             updateSubmissionState()
+                        }
+
+                        is GradingEvent.GradeSaving -> {
+                            if (it.studentId == studentId) {
+                                savedDismissJob?.cancel()
+                                _uiState.update { state ->
+                                    state.copy(saveState = SaveState.Saving)
+                                }
+                            }
+                        }
+
+                        is GradingEvent.GradeSaved -> {
+                            if (it.studentId == studentId) {
+                                _uiState.update { state ->
+                                    state.copy(saveState = SaveState.Saved)
+                                }
+                                savedDismissJob?.cancel()
+                                savedDismissJob = viewModelScope.launch {
+                                    delay(3000)
+                                    _uiState.update { state ->
+                                        state.copy(saveState = SaveState.None)
+                                    }
+                                }
+                            }
+                        }
+
+                        is GradingEvent.GradeSaveFailed -> {
+                            if (it.studentId == studentId) {
+                                savedDismissJob?.cancel()
+                                _uiState.update { state ->
+                                    state.copy(saveState = SaveState.Failed(it.retry))
+                                }
+                            }
                         }
 
                         else -> {}

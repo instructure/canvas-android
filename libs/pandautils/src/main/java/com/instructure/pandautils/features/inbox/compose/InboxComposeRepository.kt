@@ -103,8 +103,11 @@ abstract class InboxComposeRepository(
 
     open suspend fun canSendToAll(context: CanvasContext): DataResult<Boolean> {
         val restParams = RestParams()
-        val permissionResponse =  courseAPI.getCoursePermissions(context.id, listOf(
-            CanvasContextPermission.SEND_MESSAGES_ALL), restParams)
+        val permissionResponse = courseAPI.getCoursePermissions(
+            context.id,
+            listOf(CanvasContextPermission.SEND_MESSAGES_ALL),
+            restParams
+        )
 
         return permissionResponse.map {
             it.send_messages_all

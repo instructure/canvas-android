@@ -16,8 +16,11 @@
  */
 package com.instructure.horizon.features.dashboard
 
+import com.instructure.canvasapi2.apis.ThemeAPI
 import com.instructure.canvasapi2.apis.UnreadCountAPI
+import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.models.UnreadNotificationCount
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -28,6 +31,10 @@ import org.junit.Test
 
 class DashboardRepositoryTest {
     private val unreadCountApi: UnreadCountAPI.UnreadCountsInterface = mockk(relaxed = true)
+    private val themeApi: ThemeAPI.ThemeInterface = mockk(relaxed = true)
+    private val userApi: UserAPI.UsersInterface = mockk(relaxed = true)
+    private val apiPrefs: ApiPrefs = mockk(relaxed = true)
+
 
     private val notificationCounts = listOf(
         UnreadNotificationCount(
@@ -61,6 +68,6 @@ class DashboardRepositoryTest {
     }
 
     private fun getRepository(): DashboardRepository {
-        return DashboardRepository(unreadCountApi)
+        return DashboardRepository(apiPrefs, themeApi, userApi, unreadCountApi)
     }
 }

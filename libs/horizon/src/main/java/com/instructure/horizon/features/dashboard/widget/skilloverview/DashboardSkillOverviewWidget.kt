@@ -36,7 +36,7 @@ import kotlinx.coroutines.flow.update
 
 @Composable
 fun DashboardSkillOverviewWidget(
-    homeNavController: NavHostController,
+    navController: NavHostController,
     shouldRefresh: Boolean,
     refreshState: MutableStateFlow<List<Boolean>>,
     pageState: DashboardWidgetPageState,
@@ -54,21 +54,21 @@ fun DashboardSkillOverviewWidget(
         }
     }
 
-    DashboardSkillOverviewSection(state, pageState, homeNavController, modifier)
+    DashboardSkillOverviewSection(state, pageState, navController, modifier)
 }
 
 @Composable
 fun DashboardSkillOverviewSection(
     state: DashboardSkillOverviewUiState,
     pageState: DashboardWidgetPageState,
-    homeNavController: NavHostController,
+    navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
     when (state.state) {
         DashboardItemState.LOADING -> {
             DashboardSkillOverviewCardContent(
                 DashboardSkillOverviewCardState.Loading,
-                homeNavController,
+                navController,
                 true,
                 pageState,
                 modifier
@@ -88,7 +88,7 @@ fun DashboardSkillOverviewSection(
         DashboardItemState.SUCCESS -> {
             DashboardSkillOverviewCardContent(
                 state.cardState,
-                homeNavController,
+                navController,
                 false,
                 pageState,
                 modifier

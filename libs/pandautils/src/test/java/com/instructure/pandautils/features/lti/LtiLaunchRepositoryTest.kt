@@ -21,9 +21,11 @@ import com.instructure.canvasapi2.apis.LaunchDefinitionsAPI
 import com.instructure.canvasapi2.apis.OAuthAPI
 import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import kotlinx.coroutines.test.runTest
@@ -36,8 +38,9 @@ class LtiLaunchRepositoryTest {
     private val launchDefinitionsApi: LaunchDefinitionsAPI.LaunchDefinitionsInterface = mockk(relaxed = true)
     private val assignmentApi = mockk<AssignmentAPI.AssignmentInterface>()
     private val oAuthInterface = mockk<OAuthAPI.OAuthInterface>()
+    private val apiPrefs = mockk<ApiPrefs>(relaxed = true)
 
-    private val repository = LtiLaunchRepository(launchDefinitionsApi, assignmentApi, oAuthInterface)
+    private val repository = LtiLaunchRepository(launchDefinitionsApi, assignmentApi, oAuthInterface, apiPrefs)
 
     @Before
     fun setup() {
@@ -70,6 +73,7 @@ class LtiLaunchRepositoryTest {
         val url = "https://www.instructure.com"
         val ltiTool = LTITool(courseId = 1, id = 2, assignmentId = 3)
         val expected = LTITool()
+        every { apiPrefs.overrideDomains[any()] } returns null
         coEvery { assignmentApi.getExternalToolLaunchUrl(ltiTool.courseId, ltiTool.id, ltiTool.assignmentId, any(), any()) } returns DataResult.Success(expected)
 
         val result = repository.getLtiFromAuthenticationUrl(url, ltiTool)
@@ -84,6 +88,7 @@ class LtiLaunchRepositoryTest {
         val url = "https://www.instructure.com"
         val ltiTool = LTITool(courseId = 1, id = 2, assignmentId = 3)
         val expected = LTITool()
+        every { apiPrefs.overrideDomains[any()] } returns null
         coEvery { assignmentApi.getExternalToolLaunchUrl(ltiTool.courseId, ltiTool.id, ltiTool.assignmentId, any(), any()) } returns DataResult.Fail()
         coEvery { launchDefinitionsApi.getLtiFromAuthenticationUrl(url, any()) } returns DataResult.Success(expected)
 
@@ -98,6 +103,7 @@ class LtiLaunchRepositoryTest {
     fun `Get lti from authentication url throws exception when lti tool is present and both request fails`() = runTest {
         val url = "https://www.instructure.com"
         val ltiTool = LTITool(courseId = 1, id = 2, assignmentId = 3)
+        every { apiPrefs.overrideDomains[any()] } returns null
         coEvery { assignmentApi.getExternalToolLaunchUrl(ltiTool.courseId, ltiTool.id, ltiTool.assignmentId, any(), any()) } returns DataResult.Fail()
         coEvery { launchDefinitionsApi.getLtiFromAuthenticationUrl(url, any()) } returns DataResult.Fail()
 
@@ -138,11 +144,35 @@ class LtiLaunchRepositoryTest {
         val url = "https://www.instructure.com"
         val ltiTool = LTITool(courseId = 0, contextId = 123, id = 2, assignmentId = 3)
         val expected = LTITool()
+        every { apiPrefs.overrideDomains[any()] } returns null
         coEvery { assignmentApi.getExternalToolLaunchUrl(123, ltiTool.id, ltiTool.assignmentId, any(), any()) } returns DataResult.Success(expected)
 
         val result = repository.getLtiFromAuthenticationUrl(url, ltiTool)
 
         coVerify { assignmentApi.getExternalToolLaunchUrl(123, ltiTool.id, ltiTool.assignmentId, any(), any()) }
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun `Get lti from authentication url uses domain override for cross-shard courses`() = runTest {
+        val url = "https://www.instructure.com"
+        val courseId = 456L
+        val overrideDomain = "cross-shard.instructure.com"
+        val ltiTool = LTITool(courseId = courseId, id = 2, assignmentId = 3)
+        val expected = LTITool()
+        every { apiPrefs.overrideDomains[courseId] } returns overrideDomain
+        coEvery { assignmentApi.getExternalToolLaunchUrl(courseId, ltiTool.id, ltiTool.assignmentId, any(), any()) } returns DataResult.Success(expected)
+
+        val result = repository.getLtiFromAuthenticationUrl(url, ltiTool)
+
+        coVerify {
+            assignmentApi.getExternalToolLaunchUrl(
+                courseId = courseId,
+                externalToolId = ltiTool.id,
+                assignmentId = ltiTool.assignmentId,
+                restParams = match { it.domain == overrideDomain }
+            )
+        }
         assertEquals(expected, result)
     }
 }

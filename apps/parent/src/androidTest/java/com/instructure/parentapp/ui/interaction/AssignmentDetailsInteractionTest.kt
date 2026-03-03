@@ -246,7 +246,7 @@ class AssignmentDetailsInteractionTest : ParentComposeTest() {
         val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.GPA_SCALE, "3.7", 90.0, 100)
         gotoAssignment(data, assignment)
 
-        assignmentDetailsPage.assertGradeDisplayed("3.7")
+        assignmentDetailsPage.assertGradeDisplayed("A")
         assignmentDetailsPage.assertOutOfTextNotDisplayed()
         assignmentDetailsPage.assertScoreNotDisplayed()
     }

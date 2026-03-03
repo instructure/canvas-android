@@ -25,10 +25,11 @@ import com.instructure.canvasapi2.models.GradingSchemeRow
 import com.instructure.canvasapi2.models.SubAssignmentSubmission
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.canvasapi2.utils.convertPercentScoreToLetterGrade
 import com.instructure.canvasapi2.utils.convertScoreToLetterGrade
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.pandautils.R
-import com.instructure.pandautils.features.grades.SubmissionStateLabel
+import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 import com.instructure.pandautils.utils.Const.REPLY_TO_ENTRY
 import com.instructure.pandautils.utils.Const.REPLY_TO_TOPIC
 
@@ -106,7 +107,29 @@ private fun Assignment.getGrade(
      */
     if (gradingType == Assignment.GradingType.LETTER_GRADE || gradingType == Assignment.GradingType.GPA_SCALE) {
         if (restrictQuantitativeData) {
-            return DisplayGrade(grade, gradeContentDescription)
+            // Check if grade is numeric (doesn't contain letters) and convert to letter grade if needed
+            val isNumericGrade = grade.toDoubleOrNull() != null
+            val letterGrade = if (isNumericGrade && gradingScheme.isNotEmpty()) {
+                // Grade is numeric, convert it to a letter grade
+                if (possiblePoints == 0.0) {
+                    // For 0-point assignments, treat the score as a percentage (0-100 scale)
+                    // Handle edge cases: if score is invalid or out of range, use as percentage
+                    val percentScore = when {
+                        submissionScore.isNaN() || submissionScore.isInfinite() -> 0.0
+                        else -> (submissionScore / 100.0).coerceIn(0.0, 1.0)
+                    }
+                    convertPercentScoreToLetterGrade(percentScore, gradingScheme)
+                } else {
+                    // Normal case: convert score to letter grade based on points possible
+                    convertScoreToLetterGrade(submissionScore, possiblePoints, gradingScheme)
+                }
+            } else {
+                // Grade already contains letters or no grading scheme, use as-is
+                grade
+            }
+
+            val letterGradeContentDescription = getContentDescriptionForMinusGradeString(letterGrade, resources).validOrNull() ?: letterGrade
+            return DisplayGrade(letterGrade, letterGradeContentDescription)
         } else {
             val scoreText = NumberHelper.formatDecimal(submissionScore, 2, true)
             val possiblePointsText = NumberHelper.formatDecimal(possiblePoints, 2, true)

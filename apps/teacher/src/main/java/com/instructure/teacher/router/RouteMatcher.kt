@@ -78,6 +78,7 @@ import com.instructure.teacher.R
 import com.instructure.teacher.activities.BottomSheetActivity
 import com.instructure.teacher.activities.FullscreenActivity
 import com.instructure.teacher.activities.InternalWebViewActivity
+import com.instructure.teacher.activities.RetainedFullscreenActivity
 import com.instructure.teacher.activities.MasterDetailActivity
 import com.instructure.teacher.activities.SpeedGraderActivity
 import com.instructure.teacher.activities.ViewMediaActivity
@@ -368,6 +369,8 @@ object RouteMatcher : BaseRouteMatcher() {
             handleStudioImmersiveViewRoute(route, activity)
         } else if (route.routeContext === RouteContext.LTI) {
             handleLtiRoute(activity, route)
+        } else if (route.primaryClass == LtiLaunchFragment::class.java) {
+            handleLtiLaunchRoute(activity, route)
         } else if (activity.resources.getBoolean(R.bool.isDeviceTablet)) {
             handleTabletRoute(activity, route)
         } else {
@@ -465,6 +468,12 @@ object RouteMatcher : BaseRouteMatcher() {
         context.startActivity(FullscreenActivity.createIntent(context, route))
     }
 
+    private fun handleLtiLaunchRoute(context: Context, route: Route) {
+        Logger.i("RouteMatcher:handleLtiLaunchRoute()")
+        if (route.removePreviousScreen) (context as? Activity)?.finish()
+        context.startActivity(RetainedFullscreenActivity.createIntent(context, route))
+    }
+
     private fun handleMediaRoute(context: Context, route: Route) {
         Logger.i("RouteMatcher:handleMediaRoute()")
         context.startActivity(ViewMediaActivity.createIntent(context, route))
@@ -505,7 +514,7 @@ object RouteMatcher : BaseRouteMatcher() {
 
         if (canvasContext != null) {
             val ltiRoute = LtiLaunchFragment.makeRoute(canvasContext, url, sessionLessLaunch = true)
-            route(activity, ltiRoute)
+            handleLtiLaunchRoute(activity, ltiRoute)
         } else {
             handleWebViewUrl(activity, url)
         }

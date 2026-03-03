@@ -16,10 +16,14 @@
  */
 package com.instructure.pandautils.data.repository.user
 
+import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Account
+import com.instructure.canvasapi2.models.ColorChangeResponse
+import com.instructure.canvasapi2.models.DashboardPositions
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.pandautils.utils.ColorUtils.toApiHexString
 
 class UserRepositoryImpl(
     private val userApi: UserAPI.UsersInterface
@@ -28,5 +32,19 @@ class UserRepositoryImpl(
     override suspend fun getAccount(forceRefresh: Boolean): DataResult<Account> {
         val params = RestParams(isForceReadFromNetwork = forceRefresh)
         return userApi.getAccount(params)
+    }
+
+    override suspend fun setCourseColor(contextId: String, color: Int): DataResult<ColorChangeResponse> {
+        val params = RestParams(isForceReadFromNetwork = true)
+        return userApi.setColor(contextId, color.toApiHexString(), params)
+    }
+
+    override suspend fun updateDashboardPositions(positions: DashboardPositions): DataResult<DashboardPositions> {
+        val params = RestParams(isForceReadFromNetwork = true)
+        val result = userApi.updateDashboardPositions(positions, params)
+        if (result is DataResult.Success) {
+            CanvasRestAdapter.clearCacheUrls("dashboard/dashboard_cards")
+        }
+        return result
     }
 }

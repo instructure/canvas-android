@@ -16,6 +16,9 @@
 
 package com.instructure.pandautils.compose.composables
 
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
@@ -31,22 +34,50 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.pandautils.R
-import com.instructure.pandautils.features.grades.SubmissionStateLabel
 import com.instructure.pandautils.utils.drawableId
+
+sealed class SubmissionStateLabel {
+    abstract val iconRes: Int
+    abstract val colorRes: Int
+
+    data class Predefined(
+        @DrawableRes override val iconRes: Int,
+        @ColorRes override val colorRes: Int,
+        @StringRes val labelRes: Int
+    ) : SubmissionStateLabel()
+
+    data class Custom(
+        override val iconRes: Int,
+        override val colorRes: Int,
+        val label: String
+    ) : SubmissionStateLabel()
+
+    companion object {
+        val NotSubmitted = Predefined(R.drawable.ic_unpublish, R.color.backgroundDark, R.string.notSubmitted)
+        val Missing = Predefined(R.drawable.ic_unpublish, R.color.textDanger, R.string.missingSubmissionLabel)
+        val Late = Predefined(R.drawable.ic_clock, R.color.textWarning, R.string.lateSubmissionLabel)
+        val Submitted = Predefined(R.drawable.ic_complete, R.color.textSuccess, R.string.submitted)
+        val Graded = Predefined(R.drawable.ic_complete_solid, R.color.textSuccess, R.string.gradedSubmissionLabel)
+        val Excused = Predefined(R.drawable.ic_complete_solid, R.color.textWarning, R.string.gradingStatus_excused)
+        val None = Predefined(0, 0, 0)
+    }
+}
 
 
 @Composable
 fun SubmissionState(
     submissionStateLabel: SubmissionStateLabel,
-    testTag: String,
-    colorOverride: Int? = null
+    testTag: String = "",
+    colorOverride: Int? = null,
+    fontSize: TextUnit = 14.sp
 ) {
     if (submissionStateLabel != SubmissionStateLabel.None) {
         val color = colorOverride ?: submissionStateLabel.colorRes
-        Row {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 painter = painterResource(id = submissionStateLabel.iconRes),
                 contentDescription = null,
@@ -65,7 +96,7 @@ fun SubmissionState(
                     is SubmissionStateLabel.Custom -> submissionStateLabel.label
                 },
                 color = colorResource(id = color),
-                fontSize = 14.sp,
+                fontSize = fontSize,
                 modifier = Modifier.testTag(testTag)
             )
         }

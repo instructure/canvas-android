@@ -102,7 +102,7 @@ abstract class GradesInteractionTest : CanvasComposeTest() {
         composeTestRule.waitForIdle()
 
         gradesPage.assertCardText("Total")
-        gradesPage.scrollScreen()
+        gradesPage.scrollDownScreen()
         gradesPage.assertCardText("Based on graded assignments")
     }
 

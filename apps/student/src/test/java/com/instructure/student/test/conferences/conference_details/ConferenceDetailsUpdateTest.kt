@@ -17,7 +17,11 @@
 package com.instructure.student.test.conferences.conference_details
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Conference
+import com.instructure.canvasapi2.models.ConferenceRecording
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.PlaybackFormat
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.student.mobius.conferences.conference_details.ConferenceDetailsEffect
@@ -33,7 +37,6 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import io.mockk.every
 import io.mockk.mockkObject
-import io.mockk.mockkStatic
 import io.mockk.unmockkAll
 import org.junit.After
 import org.junit.Before
@@ -221,6 +224,46 @@ class ConferenceDetailsUpdateTest {
                 assertThatNext<ConferenceDetailsModel, ConferenceDetailsEffect>(
                     NextMatchers.hasModel(expectedModel),
                     matchesEffects(ConferenceDetailsEffect.ShowRecording(recording.recordingId, recording.playbackFormats[0].url))
+                )
+            )
+    }
+
+    @Test
+    fun `RecordingClicked prioritizes presentation type over notes when playbackUrl is null`() {
+        val conferenceWithMultipleFormats = baseConference.copy(
+            recordings = listOf(
+                ConferenceRecording(
+                    recordingId = "recording_3",
+                    playbackUrl = null,
+                    playbackFormats = listOf(
+                        PlaybackFormat(
+                            length = null,
+                            type = "notes",
+                            url = "https://some.fake.url/recording_3/notes"
+                        ),
+                        PlaybackFormat(
+                            length = "1",
+                            type = "presentation",
+                            url = "https://some.fake.url/recording_3/presentation"
+                        )
+                    )
+                )
+            )
+        )
+        val inputModel = initModel.copy(conference = conferenceWithMultipleFormats)
+        val expectedModel = inputModel.copy(launchingRecordings = mapOf("recording_3" to true))
+        updateSpec
+            .given(inputModel)
+            .whenEvent(ConferenceDetailsEvent.RecordingClicked(recordingId = "recording_3"))
+            .then(
+                assertThatNext(
+                    NextMatchers.hasModel(expectedModel),
+                    matchesEffects(
+                        ConferenceDetailsEffect.ShowRecording(
+                            "recording_3",
+                            "https://some.fake.url/recording_3/presentation"
+                        )
+                    )
                 )
             )
     }

@@ -24,7 +24,8 @@ import com.instructure.canvasapi2.utils.isNullOrEmpty
 import com.instructure.canvasapi2.utils.toDate
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.RawValue
-import java.util.*
+import org.threeten.bp.OffsetDateTime
+import java.util.Date
 
 @Parcelize
 data class Course(
@@ -361,6 +362,16 @@ data class Course(
         } else {
             isWithinDates(term?.startDate, term?.endDate, now)
         }
+    }
+
+    fun isEnrollmentBeforeEndDateOrNotRestricted(): Boolean {
+        val isBeforeEndDate = endAt?.let {
+            val now = OffsetDateTime.now()
+            val endDate = OffsetDateTime.parse(it).withOffsetSameInstant(OffsetDateTime.now().offset)
+            now.isBefore(endDate)
+        } ?: true // Case when the course has no end date
+
+        return !restrictEnrollmentsToCourseDate || isBeforeEndDate
     }
 
     /**

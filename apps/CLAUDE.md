@@ -125,6 +125,13 @@ The project uses a Router pattern for navigation between features:
 - **Usage**: ViewModels emit actions that are handled by Fragments, which delegate to app-specific routers
 - **Routing Methods**: Routers use `RouteMatcher.route()` to navigate to other fragments using `Route` objects
 - **Example Flow**: ViewModel → Action → Fragment.handleAction() → Router.routeTo*() → RouteMatcher.route()
+- 
+### Licenses
+
+- Files belonging to top-level projects (i.e. shippable apps) should all use the GNU General Public License v3.0.
+  These modules are: student, parent, teacher. Exceptions are UI and unit tests in those modules. Those should use Apache License Version 2.0.
+- Code in other modules should use the Apache License Version 2.0.
+- Always add the correct year information into the header of the license based on the current day.
 
 ## Additional Context
 

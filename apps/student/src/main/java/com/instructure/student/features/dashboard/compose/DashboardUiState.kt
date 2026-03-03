@@ -16,13 +16,17 @@
 
 package com.instructure.student.features.dashboard.compose
 
+import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
+import com.instructure.pandautils.utils.ThemedColor
 
 data class DashboardUiState(
     val loading: Boolean = true,
     val error: String? = null,
     val refreshing: Boolean = false,
+    val isOnline: Boolean = true,
     val widgets: List<WidgetMetadata> = emptyList(),
     val onRefresh: () -> Unit = {},
-    val onRetry: () -> Unit = {}
+    val onRetry: () -> Unit = {},
+    val color: ThemedColor = ThemedColor(GlobalConfig.DEFAULT_COLOR)
 )

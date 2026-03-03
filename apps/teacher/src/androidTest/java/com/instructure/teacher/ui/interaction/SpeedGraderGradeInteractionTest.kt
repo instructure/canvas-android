@@ -16,7 +16,6 @@
 package com.instructure.teacher.ui.interaction
 
 import android.util.Log
-import com.instructure.canvas.espresso.annotations.Stub
 import com.instructure.canvas.espresso.annotations.StubMultiAPILevel
 import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvas.espresso.mockcanvas.addAssignment
@@ -29,6 +28,7 @@ import com.instructure.canvas.espresso.mockcanvas.fakes.FakeCustomGradeStatusesM
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeDifferentiationTagsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeInboxSettingsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakePostPolicyManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeRecentGradedSubmissionsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeStudentContextManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionCommentsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionContentManager
@@ -46,11 +46,11 @@ import com.instructure.canvasapi2.managers.SubmissionRubricManager
 import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.managers.graphql.DifferentiationTagsManager
+import com.instructure.canvasapi2.managers.graphql.RecentGradedSubmissionsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionCommentsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionDetailsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionGradeManager
-import com.instructure.pandautils.di.DifferentiationTagsModule
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.RubricCriterion
@@ -60,6 +60,7 @@ import com.instructure.canvasapi2.type.GradingType
 import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.iso8601
+import com.instructure.pandautils.di.DifferentiationTagsModule
 import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.BindValue
@@ -124,6 +125,10 @@ class SpeedGraderGradeInteractionTest : TeacherComposeTest() {
     @BindValue
     @JvmField
     val differentiationTagsManager: DifferentiationTagsManager = FakeDifferentiationTagsManager()
+
+    @BindValue
+    @JvmField
+    val recentGradedSubmissionsManager: RecentGradedSubmissionsManager = FakeRecentGradedSubmissionsManager()
 
     @Test
     fun correctViewsForPointGradedWithoutRubric() {
@@ -260,7 +265,6 @@ class SpeedGraderGradeInteractionTest : TeacherComposeTest() {
         speedGraderGradePage.assertFinalGradePointsValueDisplayed("19 / 20 pts")
     }
 
-    @Stub  //TODO: Known issue that first when entering new grade which is over 100, it "throws back" to the maximum points possible and shows the slider again.
     @Test
     fun sliderHideWhenEnteredGradeIsOverHundred() {
         goToSpeedGraderGradePage()
@@ -269,7 +273,7 @@ class SpeedGraderGradeInteractionTest : TeacherComposeTest() {
         speedGraderGradePage.assertSliderVisible()
         speedGraderGradePage.enterNewGrade(grade)
         speedGraderGradePage.assertSliderHidden()
-        // This should be fixed in the future to make this test work properly. (Because this behaviour in the test is the expected).
+
         speedGraderGradePage.assertFinalGradePointsValueDisplayed("128.5 / 20 pts")
         speedGraderGradePage.assertLatePenaltyValueDisplayed("0 pts")
         speedGraderGradePage.assertFinalGradeIsDisplayed("128.5 / 20 pts")
@@ -306,22 +310,48 @@ class SpeedGraderGradeInteractionTest : TeacherComposeTest() {
         speedGraderGradePage.assertFinalGradeIsDisplayed("0 / 20 pts")
     }
 
-    @Stub
     @Test
     fun correctViewsForPointGradedWithRubric() {
-        goToSpeedGraderGradePage(GradingType.points, true)
+        val data = goToSpeedGraderGradePage(GradingType.points, true)
+        val rubricCriterion = data.assignments.values.first().rubric?.first()
+        requireNotNull(rubricCriterion) { "Rubric criterion should not be null" }
+
         speedGraderGradePage.assertSliderVisible()
         speedGraderGradePage.assertRubricsLabelDisplayed()
-        //TODO
+
+        speedGraderGradePage.assertRubricCriterionDisplayed("Description of criterion")
+        speedGraderGradePage.clickRubricRatingPointBox("10")
+        speedGraderGradePage.assertRubricRatingDescriptionDisplayed("Full Marks")
+
+        speedGraderGradePage.enterRubricScore(rubricCriterion.id.orEmpty(), "8.5")
+        speedGraderGradePage.assertRubricRatingDescriptionNotDisplayed("Full Marks")
+
+        val noteText = "Great work on this criterion!"
+        speedGraderGradePage.enterRubricNote(noteText)
+        speedGraderGradePage.clickSendRubricNoteButton()
+        speedGraderGradePage.assertRubricNoteDisplayedWithEditButton(noteText)
     }
 
-    @Stub
     @Test
     fun correctViewsForPercentageGradedWithRubric() {
-        goToSpeedGraderGradePage(GradingType.percent, true)
+        val data = goToSpeedGraderGradePage(GradingType.percent, true)
+        val rubricCriterion = data.assignments.values.first().rubric?.first()
+        requireNotNull(rubricCriterion) { "Rubric criterion should not be null" }
+
         speedGraderGradePage.assertSliderVisible()
         speedGraderGradePage.assertRubricsLabelDisplayed()
-        //TODO
+
+        speedGraderGradePage.assertRubricCriterionDisplayed("Description of criterion")
+        speedGraderGradePage.clickRubricRatingPointBox("7")
+        speedGraderGradePage.assertRubricRatingDescriptionDisplayed("Passable")
+
+        speedGraderGradePage.enterRubricScore(rubricCriterion.id.orEmpty(), "100")
+        speedGraderGradePage.assertRubricRatingDescriptionNotDisplayed("Passable")
+
+        val noteText = "Great work on this criterion!"
+        speedGraderGradePage.enterRubricNote(noteText)
+        speedGraderGradePage.clickSendRubricNoteButton()
+        speedGraderGradePage.assertRubricNoteDisplayedWithEditButton(noteText)
     }
 
     private fun goToSpeedGraderGradePage(
@@ -331,7 +361,7 @@ class SpeedGraderGradeInteractionTest : TeacherComposeTest() {
         score: Double = 12.0,
         grade: String = "60%",
         submission: Submission? = null
-    ) {
+    ): MockCanvas {
         val data = MockCanvas.init(teacherCount = 1, courseCount = 1, favoriteCourseCount = 1, studentCount = 1)
         val teacher = data.teachers[0]
         val student = data.students[0]
@@ -339,7 +369,7 @@ class SpeedGraderGradeInteractionTest : TeacherComposeTest() {
 
         data.addCoursePermissions(
             course.id,
-            CanvasContextPermission() // Just need to have some sort of permissions object registered
+            CanvasContextPermission()
         )
 
         val assignment = data.addAssignment(
@@ -390,5 +420,7 @@ class SpeedGraderGradeInteractionTest : TeacherComposeTest() {
         composeTestRule.waitForIdle()
         if (isCompactDevice()) speedGraderPage.clickExpandPanelButton()
         speedGraderPage.selectTab("Grade & Rubric")
+
+        return data
     }
 }

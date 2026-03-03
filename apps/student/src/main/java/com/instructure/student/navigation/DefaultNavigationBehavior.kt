@@ -23,33 +23,62 @@ import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.features.calendar.CalendarFragment
+import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
+import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
+import com.instructure.pandautils.features.dashboard.widget.repository.WidgetConfigDataRepository
 import com.instructure.pandautils.utils.CanvasFont
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.student.R
-import com.instructure.student.features.dashboard.compose.DashboardFragment
+import com.instructure.student.features.dashboard.compose.NewDashboardFragment
 import com.instructure.student.fragment.OldDashboardFragment
 import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.fragment.ParentFragment
+import kotlinx.coroutines.runBlocking
 
-class DefaultNavigationBehavior(apiPrefs: ApiPrefs) : NavigationBehavior {
+class DefaultNavigationBehavior(
+    private val apiPrefs: ApiPrefs,
+    private val featureFlagProvider: FeatureFlagProvider,
+    private val widgetConfigDataRepository: WidgetConfigDataRepository
+) : NavigationBehavior {
+
+    private val widgetDashboardCanvasFlag by lazy {
+        runBlocking { featureFlagProvider.checkWidgetDashboardFlag() }
+    }
+
+    private val newDashboardEnabled by lazy {
+        runBlocking {
+            val json = widgetConfigDataRepository.getConfigJson(WidgetMetadata.WIDGET_ID_GLOBAL)
+            json?.let {
+                try { GlobalConfig.fromJson(it) } catch (e: Exception) { GlobalConfig() }
+            }?.newDashboardEnabled ?: true
+        }
+    }
+
+    private fun shouldShowNewDashboard(): Boolean {
+        val killSwitch = RemoteConfigUtils.getBoolean(RemoteConfigParam.DASHBOARD_REDESIGN)
+        return killSwitch && widgetDashboardCanvasFlag && newDashboardEnabled
+    }
 
     private val dashboardFragmentClass: Class<out Fragment>
         get() {
-            return if (RemoteConfigUtils.getBoolean(RemoteConfigParam.DASHBOARD_REDESIGN)) {
-                DashboardFragment::class.java
+            return if (shouldShowNewDashboard()) {
+                NewDashboardFragment::class.java
             } else {
                 OldDashboardFragment::class.java
             }
         }
 
-    override val bottomNavBarFragments: List<Class<out Fragment>> = listOf(
-        dashboardFragmentClass,
-        CalendarFragment::class.java,
-        todoFragmentClass,
-        NotificationListFragment::class.java,
-        getInboxBottomBarFragment(apiPrefs)
-    )
+    override val bottomNavBarFragments: List<Class<out Fragment>>
+        get() = listOf(
+            dashboardFragmentClass,
+            CalendarFragment::class.java,
+            todoFragmentClass,
+            NotificationListFragment::class.java,
+            getInboxBottomBarFragment(apiPrefs)
+        )
 
-    override val homeFragmentClass: Class<out Fragment> = dashboardFragmentClass
+    override val homeFragmentClass: Class<out Fragment>
+        get() = dashboardFragmentClass
 
     override val visibleNavigationMenuItems: Set<NavigationMenuItem> = setOf(NavigationMenuItem.FILES, NavigationMenuItem.BOOKMARKS, NavigationMenuItem.SETTINGS)
 
@@ -63,16 +92,16 @@ class DefaultNavigationBehavior(apiPrefs: ApiPrefs) : NavigationBehavior {
     override val bottomBarMenu: Int = R.menu.bottom_bar_menu
 
     override fun createHomeFragmentRoute(canvasContext: CanvasContext?): Route {
-        return if (RemoteConfigUtils.getBoolean(RemoteConfigParam.DASHBOARD_REDESIGN)) {
-            DashboardFragment.makeRoute(ApiPrefs.user)
+        return if (shouldShowNewDashboard()) {
+            NewDashboardFragment.makeRoute(ApiPrefs.user)
         } else {
             OldDashboardFragment.makeRoute(ApiPrefs.user)
         }
     }
 
     override fun createHomeFragment(route: Route): ParentFragment {
-        return if (RemoteConfigUtils.getBoolean(RemoteConfigParam.DASHBOARD_REDESIGN)) {
-            DashboardFragment.newInstance(route)
+        return if (shouldShowNewDashboard()) {
+            NewDashboardFragment.newInstance(route)
         } else {
             OldDashboardFragment.newInstance(route)
         }

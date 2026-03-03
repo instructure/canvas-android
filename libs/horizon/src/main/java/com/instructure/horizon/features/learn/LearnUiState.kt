@@ -15,50 +15,24 @@
  */
 package com.instructure.horizon.features.learn
 
-import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithModuleItemDurations
-import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
-import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
-import com.instructure.horizon.horizonui.platform.LoadingState
+import androidx.annotation.StringRes
+import com.instructure.horizon.R
 
 data class LearnUiState(
-    val screenState: LoadingState = LoadingState(),
-    val learningItems: List<LearningItem> = emptyList(),
-    val selectedLearningItem: LearningItem? = null,
-    val onSelectedLearningItemChanged: ((LearningItem) -> Unit) = {},
-    val onProgramCourseSelected: (String, Long) -> Unit = { _, _ -> },
+    val tabs: List<LearnTab> = LearnTab.entries,
+    val selectedTab: LearnTab = LearnTab.COURSES,
+    val updateSelectedTabIndex: (Int) -> Unit = {},
+    val updateSelectedTab: (String) -> Unit = {},
 )
 
-sealed class LearningItem(val clickable: Boolean = true, val closeOnClick: Boolean = true, open val parentItem: LearningItem? = null) {
-    data class CourseItem(val courseWithProgress: CourseWithProgress, override val parentItem: LearningItem? = null) : LearningItem() {
-        override val title: String = courseWithProgress.courseName
-    }
-
-    data class ProgramGroupItem(val programId: String, val programName: String, val items: List<LearningItem>) : LearningItem(closeOnClick = false) {
-        override val title: String = programName
-    }
-
-    data class ProgramDetails(
-        val program: Program,
-        val courses: List<CourseWithModuleItemDurations>,
-        override val titleInDropdown: String
-    ) :
-        LearningItem() {
-        override val title: String = program.name
-    }
-
-    data class LockedCourseItem(val courseName: String) : LearningItem(clickable = false) {
-        override val title: String = courseName
-    }
-
-    data class BackToAllItems(override val title: String) : LearningItem(closeOnClick = false)
-
-    data class ProgramHeaderItem(val programName: String) : LearningItem(clickable = false) {
-        override val title: String = programName
-    }
-
-    abstract val title: String
-    open val titleInDropdown: String
-        get() {
-            return title
+enum class LearnTab(@get:StringRes val labelRes: Int, val stringValue: String) {
+    COURSES(R.string.learnCoursesTabLabel, "courses"),
+    PROGRAMS(R.string.learnProgramsTabLabel, "programs")
+    // TODO: LEARNING_LIBRARY("Learning Library")
+    ;
+    companion object {
+        fun fromStringValue(stringValue: String?): LearnTab? {
+            return entries.find { it.stringValue == stringValue }
         }
+    }
 }

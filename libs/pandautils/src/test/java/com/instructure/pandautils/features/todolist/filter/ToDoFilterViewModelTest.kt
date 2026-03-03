@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.R
 import com.instructure.pandautils.room.appdatabase.daos.ToDoFilterDao
 import com.instructure.pandautils.room.appdatabase.entities.ToDoFilterEntity
+import com.instructure.pandautils.utils.getSystemLocaleCalendar
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -30,6 +31,7 @@ import io.mockk.mockk
 import io.mockk.mockkConstructor
 import io.mockk.mockkStatic
 import io.mockk.unmockkAll
+import io.mockk.unmockkStatic
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
@@ -44,6 +46,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import java.text.SimpleDateFormat
+import java.util.Calendar
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ToDoFilterViewModelTest {
@@ -91,11 +94,16 @@ class ToDoFilterViewModelTest {
         every { context.getString(DateRangeSelection.FOUR_WEEKS.futureLabelResId) } returns "In 4 Weeks"
 
         coEvery { toDoFilterDao.findByUser(testDomain, testUser.id) } returns null
+
+        // Mock getSystemLocaleCalendar to return a simple Calendar instance for testing
+        mockkStatic(::getSystemLocaleCalendar)
+        every { getSystemLocaleCalendar() } returns Calendar.getInstance()
     }
 
     @After
     fun tearDown() {
         unmockkAll()
+        unmockkStatic(::getSystemLocaleCalendar)
         Dispatchers.resetMain()
     }
 

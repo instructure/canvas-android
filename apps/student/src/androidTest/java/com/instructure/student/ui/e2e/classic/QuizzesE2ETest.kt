@@ -18,7 +18,6 @@ package com.instructure.student.ui.e2e.classic
 
 import android.util.Log
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.sugar.Web.onWebView
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
@@ -30,15 +29,13 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
-import com.instructure.canvas.espresso.annotations.Stub
-import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.pressBackButton
 import com.instructure.dataseeding.api.QuizzesApi
 import com.instructure.dataseeding.model.QuizAnswer
 import com.instructure.dataseeding.model.QuizQuestion
 import com.instructure.student.R
 import com.instructure.student.ui.pages.classic.WebViewTextCheck
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.extensions.seedData
 import com.instructure.student.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -46,16 +43,16 @@ import org.hamcrest.Matchers.containsString
 import org.junit.Test
 
 @HiltAndroidTest
-class QuizzesE2ETest: StudentTest() {
+class QuizzesE2ETest: StudentComposeTest() {
+
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
-    @Stub("Grades screen has been redesigned, needs to be fixed in ticket MBL-19640")
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.PAGES, TestCategory.E2E)
-    fun testQuizzesE2E() {
+    fun testClassicQuizzesE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1)
@@ -146,7 +143,7 @@ class QuizzesE2ETest: StudentTest() {
         Log.d(STEP_TAG, "Submit the '${quizPublished.title}' quiz.")
         quizTakingPage.submitQuiz()
 
-        Thread.sleep(3000) // Wait for the quiz submission to finish.
+        Thread.sleep(5000) // Wait for the quiz submission to finish.
         Log.d(ASSERTION_TAG, "Assert (on web) that the '${quizPublished.title}' quiz now has a history.")
         onWebView(withId(R.id.contentWebView))
                 .withElement(findElement(Locator.ID, "quiz-submission-version-table"))
@@ -165,7 +162,10 @@ class QuizzesE2ETest: StudentTest() {
         courseBrowserPage.selectGrades()
 
         Log.d(ASSERTION_TAG, "Assert that the corresponding grade (10) is displayed for '${quizPublished.title}' quiz.")
-        courseGradesPage.assertGradeDisplayed(withText(quizPublished.title), containsTextCaseInsensitive("10"))
+        gradesPage.assertAssignmentGradeText(quizPublished.title, "10")
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Total' grade is 100% since the only assignment, the quiz has maximum points.")
+        gradesPage.assertTotalGradeText("100%")
     }
 
     private fun makeQuizQuestions() = listOf(
