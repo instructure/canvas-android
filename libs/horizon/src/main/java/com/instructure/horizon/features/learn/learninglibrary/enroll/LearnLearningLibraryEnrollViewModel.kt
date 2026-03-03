@@ -87,7 +87,7 @@ class LearnLearningLibraryEnrollViewModel @Inject constructor(
         } catch {
             _state.update { it.copy(
                 loadingState = it.loadingState.copy(
-                    errorMessage = resources.getString(R.string.learnLearningLibraryEnrollDialogFailedToEnrollMessage)
+                    snackbarMessage = resources.getString(R.string.learnLearningLibraryEnrollDialogFailedToEnrollMessage)
                 ),
                 isEnrollLoading = false
             ) }

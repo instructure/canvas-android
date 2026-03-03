@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.learn.learninglibrary.details
+package com.instructure.horizon.features.learn.learninglibrary.bookmarked
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -27,8 +27,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.Text
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,15 +39,11 @@ import androidx.navigation.NavHostController
 import com.instructure.horizon.R
 import com.instructure.horizon.features.learn.common.LearnSearchBar
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryItem
-import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryStatusFilter
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
 import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
-import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
-import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.foundation.horizonBorderShadow
-import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.ButtonHeight
 import com.instructure.horizon.horizonui.molecules.ButtonWidth
@@ -56,32 +52,41 @@ import com.instructure.horizon.horizonui.molecules.DropdownItem
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
+import com.instructure.horizon.horizonui.molecules.LoadingButton
 import com.instructure.horizon.horizonui.organisms.scaffolds.CollapsableHeaderScreen
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.pandautils.compose.modifiers.conditional
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LearnLearningLibraryDetailsScreen(state: LearnLearningLibraryDetailsUiState, navController: NavHostController) {
-    LoadingStateWrapper(state.loadingState){
-        CollapsableHeaderScreen(
-            statusBarColor = HorizonColors.Surface.pagePrimary(),
-            navigationBarColor = HorizonColors.Surface.pagePrimary(),
-            headerContent = { contentPadding ->
-                LearnLearningLibraryDetailsHeader(state, navController, Modifier.padding(contentPadding))
-            },
-            bodyContent = { contentPadding ->
-                LearnLearningLibraryDetailsContent(state, navController, contentPadding)
+fun LearnLearningLibraryBookmarkedScreen(
+    state: LearnLearningLibraryBookmarkedUiState,
+    navController: NavHostController
+) {
+    CollapsableHeaderScreen(
+        statusBarColor = HorizonColors.Surface.pagePrimary(),
+        navigationBarColor = HorizonColors.Surface.pagePrimary(),
+        headerContent = { paddingValues ->
+            LearnLearningLibraryBookmarkedHeader(
+                state,
+                navController,
+                Modifier.padding(paddingValues)
+            )
+        },
+        bodyContent = { paddingValues ->
+            LoadingStateWrapper(state.loadingState) {
+                LearnLearningLibraryBookmarkedContent(state, navController, paddingValues)
             }
-        )
-    }
+        }
+    )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun LearnLearningLibraryDetailsContent(
-    state: LearnLearningLibraryDetailsUiState,
+private fun LearnLearningLibraryBookmarkedContent(
+    state: LearnLearningLibraryBookmarkedUiState,
     navController: NavHostController,
-    contentPadding: PaddingValues,
+    contentPadding: PaddingValues
 ) {
     val scrollState = rememberLazyListState()
 
@@ -91,7 +96,7 @@ private fun LearnLearningLibraryDetailsContent(
         modifier = Modifier.testTag("CollapsableBody")
     ) {
         stickyHeader {
-            LearnLearningLibraryDetailsContentFilter(state, scrollState)
+            LearnLearningLibraryBookmarkedContentFilter(state, scrollState)
         }
 
         item {
@@ -100,7 +105,7 @@ private fun LearnLearningLibraryDetailsContent(
             }
         }
 
-        items(state.items.take(state.itemsToDisplay)) { collectionItemState ->
+        items(state.items) { collectionItemState ->
             LearnLearningLibraryItem(
                 state = collectionItemState,
                 onClick = {
@@ -118,14 +123,16 @@ private fun LearnLearningLibraryDetailsContent(
             )
         }
 
-        if (state.items.size > state.itemsToDisplay) {
+        if (state.showMoreButton) {
             item {
-                Button(
-                    label = stringResource(R.string.learningLibraryDetailsShowMoreLabel),
+                LoadingButton(
+                    loading = state.isMoreButtonLoading,
+                    label = stringResource(R.string.learningLibraryListShowMoreLabel),
                     height = ButtonHeight.SMALL,
                     width = ButtonWidth.FILL,
                     color = ButtonColor.BlackOutline,
-                    onClick = state.increaseItemsToDisplay,
+                    onClick = state.onShowMoreClicked,
+                    contentAlignment = Alignment.Center,
                     modifier = Modifier
                         .padding(horizontal = 24.dp)
                         .padding(bottom = 24.dp)
@@ -136,8 +143,8 @@ private fun LearnLearningLibraryDetailsContent(
 }
 
 @Composable
-private fun LearnLearningLibraryDetailsContentFilter(
-    state: LearnLearningLibraryDetailsUiState,
+private fun LearnLearningLibraryBookmarkedContentFilter(
+    state: LearnLearningLibraryBookmarkedUiState,
     scrollState: LazyListState
 ) {
     Row(
@@ -151,19 +158,16 @@ private fun LearnLearningLibraryDetailsContentFilter(
             }
     ) {
         DropdownChip(
-            items = LearnLearningLibraryStatusFilter.entries.map { DropdownItem(value = it, label = stringResource(it.labelRes)) },
-            selectedItem = DropdownItem(value = state.selectedStatusFilter, label = stringResource(state.selectedStatusFilter.labelRes)),
-            onItemSelected = { it?.let { state.updateSelectedStatusFilter(it.value) } },
-            placeholder = "",
-            dropdownWidth = 200.dp,
-            verticalPadding = 6.dp
-        )
-
-        HorizonSpace(SpaceSize.SPACE_8)
-
-        DropdownChip(
-            items = LearnLearningLibraryTypeFilter.entries.map { DropdownItem(value = it, label = stringResource(it.labelRes)) },
-            selectedItem = DropdownItem(value = state.selectedTypeFilter, label = stringResource(state.selectedTypeFilter.labelRes)),
+            items = LearnLearningLibraryTypeFilter.entries.map {
+                DropdownItem(
+                    value = it,
+                    label = stringResource(it.labelRes)
+                )
+            },
+            selectedItem = DropdownItem(
+                value = state.typeFilter,
+                label = stringResource(state.typeFilter.labelRes)
+            ),
             onItemSelected = { it?.let { state.updateTypeFilter(it.value) } },
             placeholder = "",
             dropdownWidth = 200.dp,
@@ -173,7 +177,7 @@ private fun LearnLearningLibraryDetailsContentFilter(
         Spacer(Modifier.weight(1f))
 
         Text(
-            text = state.items.take(state.itemsToDisplay).size.toString(),
+            text = state.items.size.toString(),
             style = HorizonTypography.p2,
             color = HorizonColors.Text.dataPoint()
         )
@@ -181,8 +185,8 @@ private fun LearnLearningLibraryDetailsContentFilter(
 }
 
 @Composable
-private fun LearnLearningLibraryDetailsHeader(
-    state: LearnLearningLibraryDetailsUiState,
+private fun LearnLearningLibraryBookmarkedHeader(
+    state: LearnLearningLibraryBookmarkedUiState,
     navController: NavHostController,
     modifier: Modifier
 ) {
@@ -200,7 +204,7 @@ private fun LearnLearningLibraryDetailsHeader(
                 modifier = Modifier.padding(end = 16.dp)
             )
             Text(
-                text = state.collectionName,
+                text = stringResource(R.string.learnLearningLibraryBookmarksTitle),
                 style = HorizonTypography.h3,
                 color = HorizonColors.Text.title()
             )
@@ -208,7 +212,7 @@ private fun LearnLearningLibraryDetailsHeader(
         LearnSearchBar(
             value = state.searchQuery,
             onValueChange = state.updateSearchQuery,
-            placeholder = stringResource(R.string.learnLearningLibraryDetailsSearchLabel),
+            placeholder = stringResource(R.string.learnLearningLibraryBookmarkedSearchPlaceholder),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp)
@@ -219,7 +223,7 @@ private fun LearnLearningLibraryDetailsHeader(
 @Composable
 private fun EmptyMessage() {
     Text(
-        text = stringResource(R.string.learnLearningLibraryDetailsEmptyMessage),
+        text = stringResource(R.string.learnLearningLibraryBookmarkedEmptyMessage),
         style = HorizonTypography.p1,
         color = HorizonColors.Text.body(),
         modifier = Modifier.padding(horizontal = 24.dp)

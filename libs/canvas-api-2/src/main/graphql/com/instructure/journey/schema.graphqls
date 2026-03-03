@@ -591,45 +591,6 @@ type CollectionItemEnrollmentResponseGQL {
     wasAlreadyEnrolled: Boolean!
 }
 
-type LearningLibraryCollectionEnrollmentGQL {
-    # Enrollment ID
-    id: String!
-
-    # Learning library collection ID
-    collectionId: String!
-
-    # User ID of the enrollee
-    enrolleeId: String!
-
-    # Enrollment status
-    status: LearningLibraryCollectionEnrollmentStatus!
-
-    # When the user enrolled
-    enrolledAt: DateTime!
-    createdAt: DateTime!
-    updatedAt: DateTime!
-}
-
-# Enrollment status for learning library collection
-enum LearningLibraryCollectionEnrollmentStatus {
-    ACTIVE
-    INACTIVE
-}
-
-type PaginationInfoGQL {
-    # Current page number (1-indexed)
-    currentPage: Int!
-
-    # Total number of pages available
-    totalPages: Int
-
-    # Whether there is a next page
-    hasNextPage: Boolean!
-
-    # Whether there is a previous page
-    hasPreviousPage: Boolean!
-}
-
 type CanvasUserGQL {
     # Canvas user ID
     id: ID!
@@ -660,6 +621,48 @@ type CanvasUserGQL {
 
     # Integration ID from Canvas
     integrationId: String
+}
+
+type LearningLibraryCollectionEnrollmentGQL {
+    # Enrollment ID
+    id: String!
+
+    # Learning library collection ID
+    collectionId: String!
+
+    # User ID of the enrollee
+    enrolleeId: String!
+
+    # Enrollment status
+    status: LearningLibraryCollectionEnrollmentStatus!
+
+    # When the user enrolled
+    enrolledAt: DateTime!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+
+    # Canvas user profile data (populated when fetching with user details)
+    canvasUser: CanvasUserGQL
+}
+
+# Enrollment status for learning library collection
+enum LearningLibraryCollectionEnrollmentStatus {
+    ACTIVE
+    INACTIVE
+}
+
+type PaginationInfoGQL {
+    # Current page number (1-indexed)
+    currentPage: Int!
+
+    # Total number of pages available
+    totalPages: Int
+
+    # Whether there is a next page
+    hasNextPage: Boolean!
+
+    # Whether there is a previous page
+    hasPreviousPage: Boolean!
 }
 
 type KeyValuePairGQL {
@@ -1303,6 +1306,12 @@ type Query {
     enrolledLearningLibraryCollection(
         id: String!
     ): EnrolledLearningLibraryCollectionGQL!
+
+    # Get all users enrolled in a learning library collection with their Canvas profile data
+    collectionEnrollments(
+        collectionId: String!
+        accountId: String!
+    ): [LearningLibraryCollectionEnrollmentGQL!]!
     crmConfigJwt: CrmJwtGQL!
     testSnowflakeQuery: JSON!
     getSnowflakeQueryStatus(queryId: String!): String!

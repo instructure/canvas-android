@@ -151,7 +151,7 @@ class LearnLearningLibraryListViewModelTest {
         val viewModel = getViewModel()
 
         val state = viewModel.uiState.value
-        assertEquals(3, state.collectionState.itemsToDisplays)
+        assertEquals(3, state.collectionState.itemsToDisplay)
     }
 
     @Test
@@ -192,12 +192,12 @@ class LearnLearningLibraryListViewModelTest {
     @Test
     fun `increaseItemsToDisplay increases count by pageSize`() = runTest {
         val viewModel = getViewModel()
-        val initialCount = viewModel.uiState.value.collectionState.itemsToDisplays
+        val initialCount = viewModel.uiState.value.collectionState.itemsToDisplay
 
         viewModel.uiState.value.collectionState.increaseItemsToDisplay()
 
         val state = viewModel.uiState.value
-        assertEquals(initialCount + 3, state.collectionState.itemsToDisplays)
+        assertEquals(initialCount + 3, state.collectionState.itemsToDisplay)
     }
 
     @Test
@@ -208,7 +208,7 @@ class LearnLearningLibraryListViewModelTest {
         viewModel.uiState.value.collectionState.increaseItemsToDisplay()
 
         val state = viewModel.uiState.value
-        assertEquals(9, state.collectionState.itemsToDisplays)
+        assertEquals(9, state.collectionState.itemsToDisplay)
     }
 
     @Test
@@ -381,7 +381,7 @@ class LearnLearningLibraryListViewModelTest {
         val state = viewModel.uiState.value
         val firstItem = state.collectionState.collections[0].items[0]
         assertFalse(firstItem.bookmarkLoading)
-        assertTrue(state.collectionState.loadingState.errorMessage != null)
+        assertTrue(state.collectionState.loadingState.snackbarMessage != null)
     }
 
     @Test
@@ -701,7 +701,7 @@ class LearnLearningLibraryListViewModelTest {
 
         val state = viewModel.uiState.value
         assertFalse(state.itemState.items.find { it.id == "item1" }!!.bookmarkLoading)
-        assertTrue(state.itemState.loadingState.errorMessage != null)
+        assertTrue(state.itemState.loadingState.snackbarMessage != null)
     }
 
     private fun getViewModel(): LearnLearningLibraryListViewModel {
@@ -719,7 +719,8 @@ class LearnLearningLibraryListViewModelTest {
         description = "Test description",
         createdAt = Date(),
         updatedAt = Date(),
-        items = items
+        items = items,
+        totalItemCount = items.size
     )
 
     private fun createTestCollectionItem(

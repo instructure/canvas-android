@@ -34,7 +34,6 @@ import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertNotNull
 import junit.framework.TestCase.assertNull
-import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -212,7 +211,7 @@ class LearnLearningLibraryEnrollViewModelTest {
 
         viewModel.state.value.onEnrollClicked()
 
-        assertNotNull(viewModel.state.value.loadingState.errorMessage)
+        assertNotNull(viewModel.state.value.loadingState.snackbarMessage)
     }
 
     @Test

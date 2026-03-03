@@ -68,7 +68,7 @@ class LearnLearningLibraryListViewModel @Inject constructor(
                 onSnackbarDismiss = ::onDismissSnackbar
             ),
             collections = allCollections,
-            itemsToDisplays = collectionPageSize,
+            itemsToDisplay = collectionPageSize,
             increaseItemsToDisplay = ::increaseCollectionsToDisplay,
             onBookmarkClicked = ::onCollectionBookmarkItem,
         ),
@@ -135,7 +135,7 @@ class LearnLearningLibraryListViewModel @Inject constructor(
             fetchItems(cursor, searchQuery, typeFilter, bookmarkedOnly, completedOnly)
             _uiState.update { it.copy(itemState = it.itemState.copy(loadingState = it.itemState.loadingState.copy(isLoading = false))) }
         } catch {
-            _uiState.update { it.copy(itemState = it.itemState.copy(loadingState = it.itemState.loadingState.copy(isLoading = true, isError = true))) }
+            _uiState.update { it.copy(itemState = it.itemState.copy(loadingState = it.itemState.loadingState.copy(isLoading = false, isError = true))) }
         }
     }
 
@@ -170,8 +170,8 @@ class LearnLearningLibraryListViewModel @Inject constructor(
             limit = itemPageSize,
             searchQuery = searchQuery,
             typeFilter = filterType,
-            bookmarkedOnly = uiState.value.statusFilter == LearnLearningLibraryStatusFilter.Bookmarked,
-            completedOnly = uiState.value.statusFilter == LearnLearningLibraryStatusFilter.Completed,
+            bookmarkedOnly = bookmarkedOnly,
+            completedOnly = completedOnly,
             forceNetwork = forceNetwork
         )
 
@@ -186,7 +186,7 @@ class LearnLearningLibraryListViewModel @Inject constructor(
             itemNextCursor = null
             _uiState.update { it.copy(
                 itemState = it.itemState.copy(
-                    showMoreButton = true
+                    showMoreButton = false
                 ),
             ) }
         }
@@ -258,7 +258,7 @@ class LearnLearningLibraryListViewModel @Inject constructor(
                         }
                     }
                 )
-            }, loadingState = it.collectionState.loadingState.copy(errorMessage = resources.getString(R.string.learnLearningLibraryFailedToUpdateBookmarkMessage)))) }
+            }, loadingState = it.collectionState.loadingState.copy(snackbarMessage = resources.getString(R.string.learnLearningLibraryFailedToUpdateBookmarkMessage)))) }
         }
     }
 
@@ -338,7 +338,7 @@ class LearnLearningLibraryListViewModel @Inject constructor(
                                 collectionItemState
                             }
                         },
-                        loadingState = it.itemState.loadingState.copy(errorMessage = resources.getString(R.string.learnLearningLibraryFailedToUpdateBookmarkMessage))
+                        loadingState = it.itemState.loadingState.copy(snackbarMessage = resources.getString(R.string.learnLearningLibraryFailedToUpdateBookmarkMessage))
                     ),
                     collectionState = it.collectionState.copy(
                         collections = it.collectionState.collections.map { collectionState ->
@@ -368,7 +368,7 @@ class LearnLearningLibraryListViewModel @Inject constructor(
     }
 
     private fun increaseCollectionsToDisplay() {
-        _uiState.update { it.copy(collectionState = it.collectionState.copy(itemsToDisplays = it.collectionState.itemsToDisplays + collectionPageSize)) }
+        _uiState.update { it.copy(collectionState = it.collectionState.copy(itemsToDisplay = it.collectionState.itemsToDisplay + collectionPageSize)) }
     }
 
     private fun increaseItemsToDisplay() {

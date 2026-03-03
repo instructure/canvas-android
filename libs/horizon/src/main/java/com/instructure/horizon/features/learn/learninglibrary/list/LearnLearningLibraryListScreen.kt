@@ -60,6 +60,7 @@ import com.instructure.horizon.horizonui.molecules.DropdownItem
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
+import com.instructure.horizon.horizonui.molecules.LoadingButton
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.pandautils.compose.modifiers.conditional
 
@@ -109,7 +110,7 @@ private fun LearnLearningLibraryCollections(
             modifier = Modifier.testTag("CollapsableBody")
         ) {
             LearnLearningLibraryCollection(
-                state.collectionState.collections.take(state.collectionState.itemsToDisplays),
+                state.collectionState.collections.take(state.collectionState.itemsToDisplay),
                 state.collectionState.onBookmarkClicked,
                 { itemId ->
                     navController.navigate(LearnRoute.LearnLearningLibraryEnrollScreen.route(itemId))
@@ -131,7 +132,7 @@ private fun LearnLearningLibraryCollections(
                 Modifier.padding(horizontal = 24.dp)
             )
 
-            if (state.collectionState.collections.size > state.collectionState.itemsToDisplays) {
+            if (state.collectionState.collections.size > state.collectionState.itemsToDisplay) {
                 item {
                     Button(
                         label = stringResource(R.string.learningLibraryListShowMoreLabel),
@@ -191,14 +192,16 @@ private fun LearnLearningLibraryItems(
                 )
             }
 
-            if (state.itemState.isMoreButtonLoading) {
+            if (state.itemState.showMoreButton) {
                 item {
-                    Button(
+                    LoadingButton(
+                        loading = state.itemState.isMoreButtonLoading,
                         label = stringResource(R.string.learningLibraryListShowMoreLabel),
                         height = ButtonHeight.SMALL,
                         width = ButtonWidth.FILL,
                         color = ButtonColor.BlackOutline,
                         onClick = state.itemState.onShowMoreClicked,
+                        contentAlignment = Alignment.Center,
                         modifier = Modifier
                             .padding(horizontal = 24.dp)
                             .padding(bottom = 24.dp)
@@ -313,7 +316,7 @@ private fun LearnLearningLibraryListFilterRow(
             Spacer(Modifier.weight(1f))
 
             val itemCount = if (state.isEmptyFilter()) {
-                state.collectionState.collections.take(state.collectionState.itemsToDisplays).size
+                state.collectionState.collections.take(state.collectionState.itemsToDisplay).size
             } else {
                 state.itemState.items.size
             }
@@ -331,7 +334,7 @@ private fun LearnLearningLibraryListFilterRow(
 @Composable
 private fun EmptyMessage() {
     Text(
-        text = stringResource(R.string.learnLearningLibraryItemEmptyMessage),
+        text = stringResource(R.string.learnLearningLibraryListEmptyMessage),
         style = HorizonTypography.p1,
         color = HorizonColors.Text.body(),
         modifier = Modifier.padding(horizontal = 24.dp)

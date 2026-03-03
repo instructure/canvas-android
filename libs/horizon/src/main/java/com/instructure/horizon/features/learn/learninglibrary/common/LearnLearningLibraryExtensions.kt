@@ -31,7 +31,7 @@ fun List<EnrolledLearningLibraryCollection>.toUiState(resources: Resources): Lis
         LearnLearningLibraryCollectionState(
             id = it.id,
             name = it.name,
-            itemCount = it.items.size,
+            itemCount = it.totalItemCount,
             items = it.items.map { item ->
                 item.toUiState(resources)
             }
@@ -109,7 +109,16 @@ fun CollectionItemType.toUiChipState(resources: Resources): LearnLearningLibrary
             color = StatusChipColor.Violet,
             iconRes = R.drawable.book_5,
         )
-        else -> null
+        CollectionItemType.QUIZ -> LearnLearningLibraryCollectionItemChipState(
+            label = resources.getString(R.string.learnLearningLibraryAssessmentLabel),
+            color = StatusChipColor.Green,
+            iconRes = R.drawable.fast_check,
+        )
+        CollectionItemType.ASSIGNMENT -> LearnLearningLibraryCollectionItemChipState(
+            label = resources.getString(R.string.learnLearningLibraryAssignmentLabel),
+            color = StatusChipColor.Green,
+            iconRes = R.drawable.fast_check,
+        )
     }
 }
 

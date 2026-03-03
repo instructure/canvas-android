@@ -14,19 +14,16 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.learn.learninglibrary.list
+package com.instructure.horizon.features.learn.learninglibrary.bookmarked
 
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetLearningLibraryManager
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
-import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearningLibraryCollection
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItemsResponse
 import javax.inject.Inject
 
-class LearnLearningLibraryListRepository @Inject constructor(
-    private val getLearningLibraryManager: GetLearningLibraryManager,
+class LearnLearningLibraryBookmarkedRepository @Inject constructor(
+    private val getLearningLibraryManager: GetLearningLibraryManager
 ) {
-    private val itemLimitPerCollection = 4
-
     suspend fun getLearningLibraryItems(
         afterCursor: String? = null,
         limit: Int? = 10,
@@ -45,10 +42,6 @@ class LearnLearningLibraryListRepository @Inject constructor(
             types = typeFilter?.let { listOf(it) },
             forceNetwork = forceNetwork
         )
-    }
-
-    suspend fun getEnrolledLearningLibraries(forceNetwork: Boolean): List<EnrolledLearningLibraryCollection> {
-        return getLearningLibraryManager.getEnrolledLearningLibraryCollections(itemLimitPerCollection, forceNetwork).collections
     }
 
     suspend fun toggleLearningLibraryItemIsBookmarked(itemId: String): Boolean {
