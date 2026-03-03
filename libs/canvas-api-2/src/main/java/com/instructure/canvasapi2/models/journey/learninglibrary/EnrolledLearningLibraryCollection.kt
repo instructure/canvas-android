@@ -25,5 +25,6 @@ data class EnrolledLearningLibraryCollection(
     val description: String?,
     val createdAt: Date,
     val updatedAt: Date,
+    val totalItemCount: Int,
     val items: List<LearningLibraryCollectionItem>
 )

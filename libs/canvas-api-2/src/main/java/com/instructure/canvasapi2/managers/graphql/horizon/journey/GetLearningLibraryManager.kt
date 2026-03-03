@@ -31,6 +31,7 @@ import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibrary
 import com.instructure.canvasapi2.models.journey.learninglibrary.toApolloType
 import com.instructure.canvasapi2.models.journey.learninglibrary.toModel
 import com.instructure.journey.EnrollLearningLibraryItemMutation
+import com.instructure.journey.GetEnrolledLearningLibraryCollectionQuery
 import com.instructure.journey.GetEnrolledLearningLibraryCollectionsQuery
 import com.instructure.journey.GetLearningLibraryCollectionItemQuery
 import com.instructure.journey.GetLearningLibraryCollectionItemsQuery
@@ -55,6 +56,11 @@ interface GetLearningLibraryManager {
         itemLimitPerCollection: Int? = null,
         forceNetwork: Boolean = false
     ): EnrolledLearningLibraryCollectionsResponse
+
+    suspend fun getEnrolledLearningLibraryCollection(
+        id: String,
+        forceNetwork: Boolean = false
+    ): EnrolledLearningLibraryCollection
 
     suspend fun toggleLearningLibraryItemIsBookmarked(itemId: String): Boolean
 
@@ -141,6 +147,7 @@ class GetLearningLibraryManagerImpl @Inject constructor(
                     description = collection.description,
                     createdAt = collection.createdAt,
                     updatedAt = collection.updatedAt,
+                    totalItemCount = collection.totalItemCount,
                     items = collection.items.map { item ->
                         LearningLibraryCollectionItem(
                             id = item.id,
@@ -167,6 +174,50 @@ class GetLearningLibraryManagerImpl @Inject constructor(
                             isEnrolledInCanvas = item.isEnrolledInCanvas
                         )
                     }
+                )
+            }
+        )
+    }
+
+    override suspend fun getEnrolledLearningLibraryCollection(
+        id: String,
+        forceNetwork: Boolean
+    ): EnrolledLearningLibraryCollection {
+        val query = GetEnrolledLearningLibraryCollectionQuery(id)
+        val result = journeyClient.enqueueQuery(query, forceNetwork = forceNetwork).dataOrThrow().enrolledLearningLibraryCollection
+
+        return EnrolledLearningLibraryCollection(
+            id = result.id,
+            name = result.name,
+            publicName = result.publicName,
+            description = result.description,
+            createdAt = result.createdAt,
+            updatedAt = result.updatedAt,
+            totalItemCount = result.totalItemCount,
+            items = result.items.map { item ->
+                LearningLibraryCollectionItem(
+                    id = item.id,
+                    libraryId = item.libraryId,
+                    itemType = item.itemType.toModel(),
+                    displayOrder = item.displayOrder,
+                    canvasCourse = item.canvasCourse?.let { course ->
+                        CanvasCourseInfo(
+                            courseId = course.courseId,
+                            canvasUrl = course.canvasUrl,
+                            courseName = course.courseName,
+                            courseImageUrl = course.courseImageUrl,
+                            moduleCount = course.moduleCount,
+                            moduleItemCount = course.moduleItemCount,
+                            estimatedDurationMinutes = course.estimatedDurationMinutes
+                        )
+                    },
+                    programId = item.programId,
+                    programCourseId = item.programCourseId,
+                    createdAt = item.createdAt,
+                    updatedAt = item.updatedAt,
+                    isBookmarked = item.isBookmarked,
+                    completionPercentage = item.completionPercentage,
+                    isEnrolledInCanvas = item.isEnrolledInCanvas
                 )
             }
         )
