@@ -109,7 +109,7 @@ private fun LearnLearningLibraryCollections(
             modifier = Modifier.testTag("CollapsableBody")
         ) {
             LearnLearningLibraryCollection(
-                state.collectionState.collections.take(state.collectionState.itemsToDisplays),
+                state.collectionState.collections.take(state.collectionState.itemsToDisplay),
                 state.collectionState.onBookmarkClicked,
                 { itemId ->
                     navController.navigate(LearnRoute.LearnLearningLibraryEnrollScreen.route(itemId))
@@ -123,7 +123,7 @@ private fun LearnLearningLibraryCollections(
                 Modifier.padding(horizontal = 24.dp)
             )
 
-            if (state.collectionState.collections.size > state.collectionState.itemsToDisplays) {
+            if (state.collectionState.collections.size > state.collectionState.itemsToDisplay) {
                 item {
                     Button(
                         label = stringResource(R.string.learningLibraryListShowMoreLabel),
@@ -299,7 +299,7 @@ private fun LearnLearningLibraryListFilterRow(
             Spacer(Modifier.weight(1f))
 
             val itemCount = if (state.isEmptyFilter()) {
-                state.collectionState.collections.take(state.collectionState.itemsToDisplays).size
+                state.collectionState.collections.take(state.collectionState.itemsToDisplay).size
             } else {
                 state.itemState.items.size
             }

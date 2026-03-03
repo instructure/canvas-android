@@ -28,7 +28,7 @@ data class LearnLearningLibraryDetailsUiState(
     val items: List<LearnLearningLibraryCollectionItemState> = emptyList(),
     val searchQuery: TextFieldValue = TextFieldValue(""),
     val updateSearchQuery: (TextFieldValue) -> Unit = {},
-    val itemsToDisplays: Int = 1,
+    val itemsToDisplay: Int = 1,
     val increaseItemsToDisplay: () -> Unit = {},
     val selectedStatusFilter: LearnLearningLibraryStatusFilter = LearnLearningLibraryStatusFilter.All,
     val updateSelectedStatusFilter: (LearnLearningLibraryStatusFilter) -> Unit = {},

@@ -68,7 +68,7 @@ class LearnLearningLibraryListViewModel @Inject constructor(
                 onSnackbarDismiss = ::onDismissSnackbar
             ),
             collections = allCollections,
-            itemsToDisplays = collectionPageSize,
+            itemsToDisplay = collectionPageSize,
             increaseItemsToDisplay = ::increaseCollectionsToDisplay,
             onBookmarkClicked = ::onCollectionBookmarkItem,
         ),
@@ -368,7 +368,7 @@ class LearnLearningLibraryListViewModel @Inject constructor(
     }
 
     private fun increaseCollectionsToDisplay() {
-        _uiState.update { it.copy(collectionState = it.collectionState.copy(itemsToDisplays = it.collectionState.itemsToDisplays + collectionPageSize)) }
+        _uiState.update { it.copy(collectionState = it.collectionState.copy(itemsToDisplay = it.collectionState.itemsToDisplay + collectionPageSize)) }
     }
 
     private fun increaseItemsToDisplay() {

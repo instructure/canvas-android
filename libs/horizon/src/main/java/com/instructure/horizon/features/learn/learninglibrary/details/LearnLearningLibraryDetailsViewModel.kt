@@ -54,7 +54,7 @@ class LearnLearningLibraryDetailsViewModel @Inject constructor(
             onRefresh = ::refreshData,
             onSnackbarDismiss = ::onDismissSnackbar
         ),
-        itemsToDisplays = pageSize,
+        itemsToDisplay = pageSize,
         increaseItemsToDisplay = ::increaseItemsToDisplay,
         updateSearchQuery = ::updateSearchQuery,
         updateSelectedStatusFilter = ::updateSelectedStatusFilter,
@@ -195,7 +195,7 @@ class LearnLearningLibraryDetailsViewModel @Inject constructor(
     }
 
     private fun increaseItemsToDisplay() {
-        _uiState.update { it.copy(itemsToDisplays = it.itemsToDisplays + pageSize) }
+        _uiState.update { it.copy(itemsToDisplay = it.itemsToDisplay + pageSize) }
     }
 
     private fun updateSearchQuery(value: TextFieldValue) {

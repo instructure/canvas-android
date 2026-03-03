@@ -100,7 +100,7 @@ private fun LearnLearningLibraryDetailsContent(
             }
         }
 
-        items(state.items.take(state.itemsToDisplays)) { collectionItemState ->
+        items(state.items.take(state.itemsToDisplay)) { collectionItemState ->
             LearnLearningLibraryItem(
                 state = collectionItemState,
                 onClick = {
@@ -118,10 +118,10 @@ private fun LearnLearningLibraryDetailsContent(
             )
         }
 
-        if (state.items.size > state.itemsToDisplays) {
+        if (state.items.size > state.itemsToDisplay) {
             item {
                 Button(
-                    label = stringResource(R.string.learningLibraryListShowMoreLabel),
+                    label = stringResource(R.string.learningLibraryDetailsShowMoreLabel),
                     height = ButtonHeight.SMALL,
                     width = ButtonWidth.FILL,
                     color = ButtonColor.BlackOutline,
@@ -173,7 +173,7 @@ private fun LearnLearningLibraryDetailsContentFilter(
         Spacer(Modifier.weight(1f))
 
         Text(
-            text = state.items.take(state.itemsToDisplays).size.toString(),
+            text = state.items.take(state.itemsToDisplay).size.toString(),
             style = HorizonTypography.p2,
             color = HorizonColors.Text.dataPoint()
         )

@@ -159,7 +159,7 @@ class LearnLearningLibraryDetailsViewModelTest {
         val viewModel = getViewModel()
 
         val state = viewModel.uiState.value
-        assertEquals(10, state.itemsToDisplays)
+        assertEquals(10, state.itemsToDisplay)
     }
 
     @Test
@@ -375,12 +375,12 @@ class LearnLearningLibraryDetailsViewModelTest {
     @Test
     fun `increaseItemsToDisplay increases count by pageSize`() = runTest {
         val viewModel = getViewModel()
-        val initialCount = viewModel.uiState.value.itemsToDisplays
+        val initialCount = viewModel.uiState.value.itemsToDisplay
 
         viewModel.uiState.value.increaseItemsToDisplay()
 
         val state = viewModel.uiState.value
-        assertEquals(initialCount + 10, state.itemsToDisplays)
+        assertEquals(initialCount + 10, state.itemsToDisplay)
     }
 
     @Test
@@ -391,7 +391,7 @@ class LearnLearningLibraryDetailsViewModelTest {
         viewModel.uiState.value.increaseItemsToDisplay()
 
         val state = viewModel.uiState.value
-        assertEquals(30, state.itemsToDisplays)
+        assertEquals(30, state.itemsToDisplay)
     }
 
     @Test
@@ -402,7 +402,7 @@ class LearnLearningLibraryDetailsViewModelTest {
         viewModel.uiState.value.increaseItemsToDisplay()
 
         val state = viewModel.uiState.value
-        assertEquals(20, state.itemsToDisplays)
+        assertEquals(20, state.itemsToDisplay)
         assertEquals(2, state.items.size)
     }
 

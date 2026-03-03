@@ -110,7 +110,7 @@ class LearnLearningLibraryDetailsUiTest {
             loadingState = LoadingState(isLoading = false),
             collectionName = "Software Engineering Collection",
             items = testItems,
-            itemsToDisplays = 10
+            itemsToDisplay = 10
         )
 
         composeTestRule.setContent {
@@ -129,7 +129,7 @@ class LearnLearningLibraryDetailsUiTest {
         val state = LearnLearningLibraryDetailsUiState(
             loadingState = LoadingState(isLoading = false),
             items = testItems,
-            itemsToDisplays = 10
+            itemsToDisplay = 10
         )
 
         composeTestRule.setContent {
@@ -148,7 +148,7 @@ class LearnLearningLibraryDetailsUiTest {
         val state = LearnLearningLibraryDetailsUiState(
             loadingState = LoadingState(isLoading = false),
             items = testItems,
-            itemsToDisplays = 10
+            itemsToDisplay = 10
         )
 
         composeTestRule.setContent {
@@ -167,7 +167,7 @@ class LearnLearningLibraryDetailsUiTest {
         val state = LearnLearningLibraryDetailsUiState(
             loadingState = LoadingState(isLoading = false),
             items = testItems,
-            itemsToDisplays = 10,
+            itemsToDisplay = 10,
             selectedStatusFilter = LearnLearningLibraryStatusFilter.All
         )
 
@@ -187,7 +187,7 @@ class LearnLearningLibraryDetailsUiTest {
         val state = LearnLearningLibraryDetailsUiState(
             loadingState = LoadingState(isLoading = false),
             items = testItems,
-            itemsToDisplays = 10,
+            itemsToDisplay = 10,
             selectedTypeFilter = LearnLearningLibraryTypeFilter.All
         )
 
@@ -207,7 +207,7 @@ class LearnLearningLibraryDetailsUiTest {
         val state = LearnLearningLibraryDetailsUiState(
             loadingState = LoadingState(isLoading = false),
             items = testItems,
-            itemsToDisplays = 10
+            itemsToDisplay = 10
         )
 
         composeTestRule.setContent {
@@ -226,7 +226,7 @@ class LearnLearningLibraryDetailsUiTest {
         val state = LearnLearningLibraryDetailsUiState(
             loadingState = LoadingState(isLoading = false),
             items = testItems,
-            itemsToDisplays = 10
+            itemsToDisplay = 10
         )
 
         composeTestRule.setContent {
@@ -250,7 +250,7 @@ class LearnLearningLibraryDetailsUiTest {
         val state = LearnLearningLibraryDetailsUiState(
             loadingState = LoadingState(isLoading = false),
             items = emptyList(),
-            itemsToDisplays = 10
+            itemsToDisplay = 10
         )
 
         composeTestRule.setContent {
@@ -285,7 +285,7 @@ class LearnLearningLibraryDetailsUiTest {
         val state = LearnLearningLibraryDetailsUiState(
             loadingState = LoadingState(isLoading = false),
             items = manyItems,
-            itemsToDisplays = 10
+            itemsToDisplay = 10
         )
 
         composeTestRule.setContent {
@@ -305,7 +305,7 @@ class LearnLearningLibraryDetailsUiTest {
         val state = LearnLearningLibraryDetailsUiState(
             loadingState = LoadingState(isLoading = false),
             items = testItems,
-            itemsToDisplays = 10
+            itemsToDisplay = 10
         )
 
         composeTestRule.setContent {
@@ -328,7 +328,7 @@ class LearnLearningLibraryDetailsUiTest {
         val state = LearnLearningLibraryDetailsUiState(
             loadingState = LoadingState(isLoading = false),
             items = bookmarkedItem,
-            itemsToDisplays = 10
+            itemsToDisplay = 10
         )
 
         composeTestRule.setContent {
@@ -352,7 +352,7 @@ class LearnLearningLibraryDetailsUiTest {
         val state = LearnLearningLibraryDetailsUiState(
             loadingState = LoadingState(isLoading = false),
             items = enrollableItem,
-            itemsToDisplays = 10
+            itemsToDisplay = 10
         )
 
         composeTestRule.setContent {
@@ -374,7 +374,7 @@ class LearnLearningLibraryDetailsUiTest {
         val state = LearnLearningLibraryDetailsUiState(
             loadingState = LoadingState(isLoading = false),
             items = filteredItems,
-            itemsToDisplays = 10,
+            itemsToDisplay = 10,
             searchQuery = TextFieldValue("Introduction")
         )
 
@@ -411,7 +411,7 @@ class LearnLearningLibraryDetailsUiTest {
         val state = LearnLearningLibraryDetailsUiState(
             loadingState = LoadingState(isLoading = false),
             items = manyItems,
-            itemsToDisplays = 10
+            itemsToDisplay = 10
         )
 
         composeTestRule.setContent {
@@ -449,7 +449,7 @@ class LearnLearningLibraryDetailsUiTest {
         val state = LearnLearningLibraryDetailsUiState(
             loadingState = LoadingState(isLoading = false),
             items = manyItems,
-            itemsToDisplays = 10
+            itemsToDisplay = 10
         )
 
         composeTestRule.setContent {
