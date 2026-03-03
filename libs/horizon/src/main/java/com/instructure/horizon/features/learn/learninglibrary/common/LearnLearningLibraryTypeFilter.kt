@@ -43,7 +43,6 @@ enum class LearnLearningLibraryTypeFilter(@StringRes val labelRes: Int) {
             ExternalTools -> CollectionItemType.EXTERNAL_TOOL
             Files -> CollectionItemType.FILE
             Pages -> CollectionItemType.PAGE
-            else -> null
         }
     }
 }

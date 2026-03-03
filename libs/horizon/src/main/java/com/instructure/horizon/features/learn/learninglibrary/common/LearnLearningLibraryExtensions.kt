@@ -96,7 +96,11 @@ fun CollectionItemType.toUiChipState(resources: Resources): LearnLearningLibrary
             color = StatusChipColor.Green,
             iconRes = R.drawable.fast_check,
         )
-        else -> null
+        CollectionItemType.ASSIGNMENT -> LearnLearningLibraryCollectionItemChipState(
+            label = resources.getString(R.string.learnLearningLibraryAssignmentLabel),
+            color = StatusChipColor.Green,
+            iconRes = R.drawable.fast_check,
+        )
     }
 }
 
