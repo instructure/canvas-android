@@ -31,7 +31,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -64,13 +64,19 @@ import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.Shimmer
+import com.instructure.pandautils.compose.composables.rememberWithRequireNetwork
+import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
 import com.instructure.pandautils.features.dashboard.widget.courses.model.CourseCardItem
 import com.instructure.pandautils.features.dashboard.widget.courses.model.GradeDisplay
+import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getFragmentActivityOrNull
+
+internal val COURSE_CARD_HEIGHT = 76.dp
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
@@ -80,32 +86,39 @@ fun CourseCard(
     showColorOverlay: Boolean,
     onCourseClick: (FragmentActivity, Long) -> Unit,
     modifier: Modifier = Modifier,
-    onMenuClick: ((Long) -> Unit)? = null,
+    dashboardColor: Color = Color(ThemedColor(GlobalConfig.DEFAULT_COLOR).color()),
     onManageOfflineContent: ((FragmentActivity, Long) -> Unit)? = null,
     onCustomizeCourse: ((FragmentActivity, Long) -> Unit)? = null,
+    onAnnouncementClick: ((FragmentActivity, Long) -> Unit)? = null,
 ) {
     var showMenu by remember { mutableStateOf(false) }
     val hasMenu = onManageOfflineContent != null && onCustomizeCourse != null
 
     val activity = LocalActivity.current?.getFragmentActivityOrNull()
 
+    val openMenuClick = rememberWithRequireNetwork {
+        showMenu = true
+    }
+
     val cardShape = RoundedCornerShape(16.dp)
 
     Box(modifier = modifier.testTag("CourseCard_${courseCard.id}")) {
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .alpha(if (courseCard.isClickable) 1f else 0.5f),
+            .fillMaxWidth(),
         shape = cardShape,
         colors = CardDefaults.cardColors(
             containerColor = colorResource(R.color.backgroundLightest)
         ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = if (courseCard.isClickable) 2.dp else 0.dp
+        )
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(76.dp)
+                .height(COURSE_CARD_HEIGHT)
+                .alpha(if (courseCard.isClickable) 1f else 0.5f)
                 .clickable(enabled = courseCard.isClickable) { activity?.let { onCourseClick(it, courseCard.id) } },
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -118,7 +131,7 @@ fun CourseCard(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(
-                            color = Color(CanvasContext.emptyCourseContext(id = courseCard.id).color),
+                            color = Color(courseCard.color),
                             shape = RoundedCornerShape(14.dp)
                         )
                 )
@@ -135,7 +148,7 @@ fun CourseCard(
                     )
                 }
 
-                if (hasMenu) {
+                if (hasMenu && courseCard.isClickable) {
                     Box(
                         modifier = Modifier
                             .align(Alignment.TopStart)
@@ -144,7 +157,7 @@ fun CourseCard(
                         Box(
                             modifier = Modifier
                                 .size(24.dp)
-                                .clickable { showMenu = true }
+                                .clickable(onClick = openMenuClick)
                                 .background(
                                     color = colorResource(R.color.backgroundLightest),
                                     shape = RoundedCornerShape(12.dp)
@@ -162,7 +175,6 @@ fun CourseCard(
                         DropdownMenu(
                             expanded = showMenu,
                             onDismissRequest = { showMenu = false },
-                            modifier = Modifier.width(200.dp),
                             shape = RoundedCornerShape(8.dp),
                             containerColor = colorResource(R.color.backgroundLightest)
                         ) {
@@ -220,9 +232,31 @@ fun CourseCard(
                 lineHeight = 21.sp
             )
 
-            if (courseCard.announcementCount > 0) {
+            if (courseCard.isSynced) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_offline_synced),
+                    contentDescription = stringResource(R.string.offline_content_available),
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        .size(24.dp),
+                    tint = colorResource(R.color.textDark)
+                )
+            }
+
+            if (courseCard.announcements.isNotEmpty()) {
                 Box(
-                    modifier = Modifier.padding(start = 8.dp, end = 16.dp)
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .size(48.dp)
+                        .clickable(enabled = courseCard.isClickable) {
+                            activity?.let {
+                                onAnnouncementClick?.invoke(
+                                    it,
+                                    courseCard.id
+                                )
+                            }
+                        },
+                    contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_announcement),
@@ -233,18 +267,18 @@ fun CourseCard(
                     Box(
                         modifier = Modifier
                             .align(Alignment.TopEnd)
-                            .offset(x = 8.dp, y = (-8).dp)
+                            .offset(x = (-8).dp, y = 6.dp)
                             .background(
-                                color = Color(CanvasContext.emptyCourseContext(id = courseCard.id).color),
+                                color = dashboardColor,
                                 shape = RoundedCornerShape(12.dp)
                             )
                             .padding(horizontal = 5.dp, vertical = 2.dp)
                     ) {
                         Text(
-                            text = courseCard.announcementCount.toString(),
+                            text = courseCard.announcements.size.toString(),
                             fontSize = 10.sp,
                             fontWeight = FontWeight.SemiBold,
-                            color = Color.White,
+                            color = colorResource(R.color.textLightest),
                             lineHeight = 8.sp
                         )
                     }
@@ -332,7 +366,7 @@ fun CourseCardShimmer(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(76.dp)
+                .height(COURSE_CARD_HEIGHT)
                 .padding(start = 2.dp, top = 2.dp, bottom = 2.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -369,16 +403,19 @@ private fun CourseCardPreview() {
             courseCode = "CS 101",
             imageUrl = null,
             grade = GradeDisplay.Percentage("85%"),
-            announcementCount = 4,
+            announcements = listOf(
+                DiscussionTopicHeader(id = 1L, title = "Announcement")
+            ),
             isSynced = true,
-            isClickable = true
+            isClickable = true,
+            color = android.graphics.Color.RED
         ),
         showGrade = true,
         showColorOverlay = true,
         onCourseClick = {_, _ ->},
-        onMenuClick = {},
         onCustomizeCourse = {_, _ ->},
-        onManageOfflineContent = {_, _ ->}
+        onManageOfflineContent = {_, _ ->},
+        onAnnouncementClick = {_, _ ->}
     )
 }
 

@@ -33,6 +33,19 @@ class FakeGetHorizonCourseManager(): HorizonGetCoursesManager {
         return DataResult.Success(getCourses())
     }
 
+    override suspend fun getCourseWithProgressById(
+        courseId: Long,
+        userId: Long,
+        forceNetwork: Boolean
+    ): DataResult<CourseWithProgress> {
+        val course = getCourses().find { it.courseId == courseId }
+        return if (course != null) {
+            DataResult.Success(course)
+        } else {
+            DataResult.Fail()
+        }
+    }
+
     override suspend fun getEnrollments(
         userId: Long,
         forceNetwork: Boolean
@@ -84,6 +97,9 @@ class FakeGetHorizonCourseManager(): HorizonGetCoursesManager {
             CourseWithModuleItemDurations(
                 courseId = courseId,
                 courseName = "Program Course",
+                moduleItemsDuration = emptyList(),
+                startDate = null,
+                endDate = null
             )
         )
     }
@@ -94,6 +110,7 @@ class FakeGetHorizonCourseManager(): HorizonGetCoursesManager {
             CourseWithProgress(
                 courseId = courses[0].id,
                 courseName = courses[0].name,
+                courseImageUrl = null,
                 courseSyllabus = "Syllabus for Course 1",
                 progress = 0.25
             )
@@ -102,6 +119,7 @@ class FakeGetHorizonCourseManager(): HorizonGetCoursesManager {
             CourseWithProgress(
                 courseId = courses[1].id,
                 courseName = courses[1].name,
+                courseImageUrl = null,
                 courseSyllabus = "Syllabus for Course 2",
                 progress = 1.0
             )
@@ -110,6 +128,7 @@ class FakeGetHorizonCourseManager(): HorizonGetCoursesManager {
             CourseWithProgress(
                 courseId = courses[2].id,
                 courseName = courses[2].name,
+                courseImageUrl = null,
                 courseSyllabus = null,
                 progress = 0.0
             )

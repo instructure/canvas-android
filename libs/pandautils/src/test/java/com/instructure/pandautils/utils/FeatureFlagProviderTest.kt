@@ -199,4 +199,34 @@ class FeatureFlagProviderTest {
 
         assertFalse(result)
     }
+
+    @Test
+    fun `checkWidgetDashboardFlag returns true when feature flag is enabled`() = runTest {
+        every { apiPrefs.user } returns User(id = 1L)
+        coEvery { environmentFeatureFlags.findByUserId(1L) } returns EnvironmentFeatureFlags(1L, mapOf(FEATURE_FLAG_WIDGET_DASHBOARD to true))
+
+        val result = featureFlagProvider.checkWidgetDashboardFlag()
+
+        assertTrue(result)
+    }
+
+    @Test
+    fun `checkWidgetDashboardFlag returns false when feature flag is disabled`() = runTest {
+        every { apiPrefs.user } returns User(id = 1L)
+        coEvery { environmentFeatureFlags.findByUserId(1L) } returns EnvironmentFeatureFlags(1L, mapOf(FEATURE_FLAG_WIDGET_DASHBOARD to false))
+
+        val result = featureFlagProvider.checkWidgetDashboardFlag()
+
+        assertFalse(result)
+    }
+
+    @Test
+    fun `checkWidgetDashboardFlag returns false when feature flag does not exist`() = runTest {
+        every { apiPrefs.user } returns User(id = 1L)
+        coEvery { environmentFeatureFlags.findByUserId(1L) } returns EnvironmentFeatureFlags(1L, mapOf("other_flag" to true))
+
+        val result = featureFlagProvider.checkWidgetDashboardFlag()
+
+        assertFalse(result)
+    }
 }

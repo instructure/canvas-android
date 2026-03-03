@@ -18,9 +18,9 @@ package com.instructure.pandautils.features.calendar
 import androidx.annotation.DrawableRes
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.PlannerItem
+import com.instructure.pandautils.compose.composables.calendar.CalendarBodyUiState
+import com.instructure.pandautils.compose.composables.calendar.CalendarHeaderUiState
 import org.threeten.bp.LocalDate
-import org.threeten.bp.format.TextStyle
-import java.util.Locale
 
 data class CalendarScreenUiState(
     val calendarUiState: CalendarUiState,
@@ -38,41 +38,6 @@ data class CalendarUiState(
     val pendingSelectedDay: LocalDate? = null, // Temporary selected date when the calendar is animating to a new month
     val todayTapped: Boolean = false
 )
-
-data class CalendarHeaderUiState(val monthTitle: String, val yearTitle: String, val loadingMonths: Boolean = false)
-
-data class CalendarBodyUiState(
-    val previousPage: CalendarPageUiState,
-    val currentPage: CalendarPageUiState,
-    val nextPage: CalendarPageUiState
-)
-
-data class CalendarPageUiState(
-    val calendarRows: List<CalendarRowUiState>,
-    val buttonContentDescription: String
-)
-
-data class CalendarRowUiState(val days: List<CalendarDayUiState>)
-
-data class CalendarDayUiState(
-    val dayNumber: Int,
-    val date: LocalDate = LocalDate.now(),
-    val enabled: Boolean = true,
-    val indicatorCount: Int = 0,
-) {
-    val today: Boolean
-        get() {
-            val today = LocalDate.now()
-            return date.isEqual(today)
-        }
-
-    val contentDescription: String = date.let {
-        val dayOfWeek = date.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault())
-        val month = date.month.getDisplayName(TextStyle.FULL, Locale.getDefault())
-        val day = date.dayOfMonth
-        "$dayOfWeek, $month $day"
-    }
-}
 
 data class CalendarEventsUiState(
     val previousPage: CalendarEventsPageUiState = CalendarEventsPageUiState(),
@@ -141,6 +106,6 @@ sealed class SharedCalendarAction(val delay: Long = 0L) {
     data class TodayButtonVisible(val visible: Boolean) : SharedCalendarAction()
     data object TodayButtonTapped : SharedCalendarAction()
     // Delay is needed to ensure fragment navigation completes and the fragment subscribes to the event before it's emitted
-    data class SelectDay(val date: LocalDate) : SharedCalendarAction(delay = 100)
+    data class SelectDay(val date: LocalDate, val fromTodoList: Boolean = false) : SharedCalendarAction(delay = 100)
     data object RefreshToDoList : SharedCalendarAction(delay = 50)
 }

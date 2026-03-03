@@ -35,7 +35,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.startActivity
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonIconPosition
@@ -43,14 +43,14 @@ import com.instructure.horizon.horizonui.molecules.ButtonWidth
 import com.instructure.horizon.horizonui.organisms.inputs.singleselectimage.SingleSelectImage
 import com.instructure.horizon.horizonui.organisms.inputs.singleselectimage.SingleSelectImageInputSize
 import com.instructure.horizon.horizonui.organisms.inputs.singleselectimage.SingleSelectImageState
-import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.horizon.horizonui.organisms.scaffolds.HorizonScaffold
+import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AccountCalendarFeedScreen(
     state: AccountCalendarUiState,
-    navController: NavController
+    navController: NavHostController
 ) {
     HorizonScaffold(
         title = stringResource(R.string.accountCalendarFeedTitle),

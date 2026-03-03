@@ -18,7 +18,7 @@
 import android.net.Uri
 import android.os.Parcelable
 import com.instructure.canvasapi2.models.Attachment
-import com.instructure.pandautils.features.grades.SubmissionStateLabel
+import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 import kotlinx.parcelize.Parcelize
 import java.util.Date
 
@@ -33,8 +33,16 @@ data class SpeedGraderContentUiState(
     val attemptSelectorUiState: SelectorUiState = SelectorUiState(),
     val anonymous: Boolean = false,
     val group: Boolean = false,
-    val baseUrl: String? = null
+    val baseUrl: String? = null,
+    val saveState: SaveState = SaveState.None
 )
+
+sealed class SaveState {
+    data object None : SaveState()
+    data object Saving : SaveState()
+    data object Saved : SaveState()
+    data class Failed(val retry: () -> Unit) : SaveState()
+}
 
 @Parcelize
 sealed class GradeableContent : Parcelable

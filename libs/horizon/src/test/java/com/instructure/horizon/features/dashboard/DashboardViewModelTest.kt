@@ -16,7 +16,10 @@
  */
 package com.instructure.horizon.features.dashboard
 
+import android.content.Context
 import com.instructure.canvasapi2.models.UnreadNotificationCount
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.ThemePrefs
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -35,8 +38,11 @@ import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class DashboardViewModelTest {
+    private val context: Context = mockk(relaxed = true)
     private val repository: DashboardRepository = mockk(relaxed = true)
+    private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val themePrefs: ThemePrefs = mockk(relaxed = true)
+    private val localeUtils: LocaleUtils = mockk(relaxed = true)
     private val dashboardEventHandler: DashboardEventHandler = DashboardEventHandler()
     private val testDispatcher = UnconfinedTestDispatcher()
 
@@ -150,6 +156,6 @@ class DashboardViewModelTest {
     }
 
     private fun getViewModel(): DashboardViewModel {
-        return DashboardViewModel(repository, themePrefs, dashboardEventHandler)
+        return DashboardViewModel(context, repository, apiPrefs, themePrefs, localeUtils, dashboardEventHandler)
     }
 }

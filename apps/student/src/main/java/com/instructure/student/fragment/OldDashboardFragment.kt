@@ -58,8 +58,13 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.dialogs.ColorPickerDialog
 import com.instructure.pandautils.dialogs.EditCourseNicknameDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.instructure.canvasapi2.utils.RemoteConfigParam
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.pandautils.features.dashboard.DashboardCourseItem
 import com.instructure.pandautils.features.dashboard.edit.EditDashboardFragment
+import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
+import com.instructure.pandautils.features.dashboard.widget.usecase.UpdateNewDashboardPreferenceUseCase
 import com.instructure.pandautils.features.dashboard.notifications.DashboardNotificationsFragment
 import com.instructure.pandautils.features.offline.offlinecontent.OfflineContentFragment
 import com.instructure.pandautils.features.offline.sync.AggregateProgressObserver
@@ -126,6 +131,12 @@ class OldDashboardFragment : ParentFragment() {
 
     @Inject
     lateinit var offlineAnalyticsManager: OfflineAnalyticsManager
+
+    @Inject
+    lateinit var dashboardRouter: DashboardRouter
+
+    @Inject
+    lateinit var updateNewDashboardPreferenceUseCase: UpdateNewDashboardPreferenceUseCase
 
     private val binding by viewBinding(FragmentCourseGridBinding::bind)
     private lateinit var recyclerBinding: CourseGridRecyclerRefreshLayoutBinding
@@ -274,6 +285,7 @@ class OldDashboardFragment : ParentFragment() {
                 R.id.menu_dashboard_offline -> activity?.withRequireNetwork {
                     RouteMatcher.route(requireActivity(), OfflineContentFragment.makeRoute())
                 }
+                R.id.menu_dashboard_new -> showEnableNewDashboardDialog()
             }
         }
 
@@ -285,11 +297,30 @@ class OldDashboardFragment : ParentFragment() {
         dashboardLayoutMenuItem.setTitle(menuTitleRes)
 
         lifecycleScope.launch {
+            val canvasFlag = featureFlagProvider.checkWidgetDashboardFlag()
+            if (!(canvasFlag && RemoteConfigUtils.getBoolean(RemoteConfigParam.DASHBOARD_REDESIGN))) {
+                toolbar.menu.removeItem(R.id.menu_dashboard_new)
+            }
+
             if (!featureFlagProvider.offlineEnabled()) {
                 toolbar.menu.removeItem(R.id.menu_dashboard_offline)
                 toolbar.menu.findItem(R.id.menu_dashboard_cards).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
             }
         }
+    }
+
+    private fun showEnableNewDashboardDialog() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.changing_dashboard_layout)
+            .setMessage(R.string.changing_dashboard_layout_message)
+            .setPositiveButton(R.string.restart_now) { _, _ ->
+                lifecycleScope.launch {
+                    updateNewDashboardPreferenceUseCase(UpdateNewDashboardPreferenceUseCase.Params(true))
+                    dashboardRouter.restartApp()
+                }
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .show()
     }
 
     private fun changeDashboardLayout(item: MenuItem) {

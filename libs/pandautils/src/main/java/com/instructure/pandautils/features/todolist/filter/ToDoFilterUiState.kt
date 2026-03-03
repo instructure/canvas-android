@@ -16,6 +16,7 @@
 package com.instructure.pandautils.features.todolist.filter
 
 import com.instructure.pandautils.R
+import com.instructure.pandautils.utils.getSystemLocaleCalendar
 import java.util.Calendar
 import java.util.Date
 
@@ -54,7 +55,7 @@ enum class DateRangeSelection(val pastLabelResId: Int, val futureLabelResId: Int
     FOUR_WEEKS(R.string.todoFilterFourWeeks, R.string.todoFilterInFourWeeks);
 
     fun calculatePastDateRange(): Date {
-        val calendar = Calendar.getInstance().apply { time = Date() }
+        val calendar = getSystemLocaleCalendar().apply { time = Date() }
 
         val weeksToAdd = when (this) {
             TODAY -> return calendar.apply { setStartOfDay() }.time
@@ -73,7 +74,7 @@ enum class DateRangeSelection(val pastLabelResId: Int, val futureLabelResId: Int
     }
 
     fun calculateFutureDateRange(): Date {
-        val calendar = Calendar.getInstance().apply { time = Date() }
+        val calendar = getSystemLocaleCalendar().apply { time = Date() }
 
         val weeksToAdd = when (this) {
             TODAY -> return calendar.apply { setEndOfDay() }.time

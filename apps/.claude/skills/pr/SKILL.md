@@ -57,6 +57,8 @@ Describe how to test the changes. Include:
 - Expected behavior
 - Any prerequisites or setup needed
 
+**SECURITY WARNING**: NEVER include test credentials, passwords, API keys, or sensitive URLs in the test plan. The repository is public.
+
 ### 2. Issue References
 
 Use `refs:` followed by issue numbers:
@@ -115,6 +117,7 @@ Complete the following items before marking PR as ready:
 
 ## Important Notes
 
+- **CRITICAL SECURITY**: NEVER include credentials, passwords, usernames, API keys, tokens, or any sensitive information in PR descriptions. The canvas-android repository is PUBLIC. Anyone on the internet can read PR descriptions. If test credentials or environment details are needed, they should be shared through secure internal channels only.
 - **DO NOT** include this checkbox item "- [ ] Run E2E test suite" or screenshots sections unless specifically needed
 - Always include the `affects:` field to specify which apps are impacted
 - Reference the related issue(s) with `refs:`

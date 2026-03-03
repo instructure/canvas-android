@@ -130,6 +130,7 @@ import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.OverflowMenu
 import com.instructure.pandautils.compose.composables.SearchBarLive
 import com.instructure.pandautils.compose.composables.SubmissionState
+import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 import com.instructure.pandautils.features.grades.gradepreferences.GradePreferencesScreen
 import com.instructure.pandautils.utils.DisplayGrade
 import com.instructure.pandautils.utils.announceAccessibilityText
@@ -408,7 +409,7 @@ private fun GradesScreenContent(
                             .height(24.dp)
                             .semantics {
                                 hideFromAccessibility()
-                            }
+                            }.testTag("basedOnGradedAssignmentsSwitch")
                     )
                 }
 
@@ -451,7 +452,7 @@ private fun GradesScreenContent(
                                 .height(24.dp)
                                 .semantics {
                                     hideFromAccessibility()
-                                }
+                                }.testTag("showWhatIfScoreSwitch")
                         )
                     }
                 }
@@ -781,7 +782,7 @@ private fun GradesCard(
                         } else {
                             colorResource(id = R.color.textDarkest)
                         },
-                        modifier = Modifier.padding(start = 8.dp)
+                        modifier = Modifier.padding(start = 8.dp).testTag("totalGradeScoreText")
                     )
                 }
             }

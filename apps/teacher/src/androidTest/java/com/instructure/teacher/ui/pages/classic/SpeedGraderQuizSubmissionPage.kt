@@ -13,12 +13,15 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package com.instructure.teacher.ui.pages.classic
 
+import androidx.annotation.StringRes
 import androidx.test.espresso.web.sugar.Web
 import androidx.test.espresso.web.webdriver.DriverAtoms
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.espresso.WaitForViewWithId
+import com.instructure.espresso.assertCompletelyDisplayed
 import com.instructure.espresso.assertVisible
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
@@ -47,8 +50,8 @@ class SpeedGraderQuizSubmissionPage : BasePage() {
     /**
      * Asserts that the page shows the "No Submission" state.
      */
-    fun assertShowsNoSubmissionState() {
-        waitForViewWithText(R.string.noSubmissionTeacher)
+    fun assertShowsNoSubmissionState(@StringRes stringRes: Int) {
+        waitForViewWithText(stringRes).assertCompletelyDisplayed()
     }
 
     /**

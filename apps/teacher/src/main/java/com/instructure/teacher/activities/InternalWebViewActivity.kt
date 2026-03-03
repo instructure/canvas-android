@@ -98,9 +98,9 @@ class InternalWebViewActivity : BasePresenterActivity<InternalWebViewPresenter, 
             }
         }
 
-        fun createIntent(context: Context, url: String, html: String, title: String, authenticate: Boolean): Intent {
+        fun createIntent(context: Context, url: String?, html: String, title: String, authenticate: Boolean): Intent {
             // Assumes no canvasContext
-            val extras = createBundle(null, url, title, authenticate)
+            val extras = createBundle(null, url.orEmpty(), title, authenticate)
             extras.putString(Const.HTML, html)
             return Intent(context, InternalWebViewActivity::class.java).apply {
                 putExtra(Const.EXTRAS, extras)
