@@ -25,8 +25,7 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.OfflineE2E
-import com.instructure.canvas.espresso.annotations.Stub
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.extensions.seedData
 import com.instructure.student.ui.utils.extensions.tokenLogin
 import com.instructure.student.ui.utils.offline.OfflineTestUtils.waitForNetworkToGoOffline
@@ -35,14 +34,13 @@ import org.junit.After
 import org.junit.Test
 
 @HiltAndroidTest
-class ManageOfflineContentE2ETest : StudentTest() {
+class ManageOfflineContentE2ETest : StudentComposeTest() {
 
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
     @OfflineE2E
-    @Stub("Stubbed because of What-if and Grades changes, fix in MBL-19640")
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.OFFLINE_CONTENT, TestCategory.E2E, SecondaryFeatureCategory.OFFLINE_MODE)
     fun testManageOfflineContentE2ETest() {
@@ -214,7 +212,7 @@ class ManageOfflineContentE2ETest : StudentTest() {
         courseBrowserPage.selectGrades()
 
         Log.d(ASSERTION_TAG,"Assert that the empty view is displayed on the 'Grades' page (just to check that it's available in offline mode.")
-        courseGradesPage.assertEmptyView()
+        gradesPage.assertEmptyStateIsDisplayed()
     }
 
     @After

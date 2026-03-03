@@ -35,10 +35,6 @@ android {
 
     packaging {
         resources {
-            pickFirsts += [
-                'META-INF/INDEX.LIST',
-                'META-INF/io.netty.versions.properties'
-            ]
             excludes += [
                 'META-INF/DEPENDENCIES',
                 'META-INF/LICENSE',
@@ -55,8 +51,8 @@ android {
     defaultConfig {
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 86
-        versionName = '2.3.1'
+        versionCode = 88
+        versionName = '2.4.0'
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner 'com.instructure.teacher.espresso.TeacherHiltTestRunner'
         testInstrumentationRunnerArguments disableAnalytics: 'true'

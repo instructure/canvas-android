@@ -34,6 +34,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -108,6 +109,7 @@ fun GroupHeader(
                 modifier = Modifier
                     .size(16.dp)
                     .rotate(iconRotation)
+                    .testTag("assignmentGroupExpandCollapseIcon")
             )
         }
         Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)

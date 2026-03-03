@@ -19,7 +19,6 @@ import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithModuleItemD
 import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
 import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetProgramsManager
-import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
 import com.instructure.canvasapi2.utils.ApiPrefs
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -34,10 +33,6 @@ class LearnRepository @Inject constructor(
     suspend fun getCoursesWithProgress(forceNetwork: Boolean): List<CourseWithProgress> {
         val courseWithProgress = horizonGetCoursesManager.getCoursesWithProgress(apiPrefs.user?.id ?: -1, forceNetwork).dataOrThrow
         return courseWithProgress
-    }
-
-    suspend fun getPrograms(forceNetwork: Boolean = false): List<Program> {
-        return getProgramsManager.getPrograms(forceNetwork)
     }
 
     suspend fun getCoursesById(courseIds: List<Long>, forceNetwork: Boolean = false): List<CourseWithModuleItemDurations> = coroutineScope {

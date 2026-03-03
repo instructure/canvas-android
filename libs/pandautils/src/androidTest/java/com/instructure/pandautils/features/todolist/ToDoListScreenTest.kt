@@ -27,6 +27,8 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.composables.todo.ToDoItemType
+import com.instructure.pandautils.compose.composables.todo.ToDoItemUiState
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before

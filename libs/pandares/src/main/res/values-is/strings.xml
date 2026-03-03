@@ -278,6 +278,7 @@
     <string name="checkBoxWhatIfGradeOption">Sýna spáða einkunn</string>
     <string name="whatIfDialogText">Spáð einkunn</string>
     <string name="whatIfScoreExceedsMaximum">Einkunn getur ekki farið yfir hámarksstig</string>
+    <string name="whatIfScoreExceedsMaximumWarning">Einkunn fer yfir hámarksstig</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s af %2$s punktum, %3$s</string>
     <string name="inbox">Innhólf</string>
@@ -1923,6 +1924,15 @@
     <string name="courseDetailsMessageContentDescription">Sendu skilaboð um þetta námskeið</string>
     <string name="gradeLockedContentDescription">Einkunn læst</string>
     <string name="gradesRefreshFailed">Mistókst að endurglæða einkunnir</string>
+    <string name="showWhatIfScore">Sýna spáða einkunn</string>
+    <string name="editWhatIfScore">Breyta spáðri einkunn</string>
+    <string name="editWhatIfScoreTitle">Breyta spáðri einkunn</string>
+    <string name="whatIfScoreLabel">Spáð</string>
+    <string name="whatIfScoreCurrentGraded">Einkunn %1$.0f af %2$.0f</string>
+    <string name="whatIfScoreCurrentUngraded">Ekki einkunnagjöf, hámarkseinkunn %.0f</string>
+    <string name="whatIfScoreDisplay">Spáð: %s</string>
+    <string name="gradesBasedOnGradedAndWhatIf">Byggt á einkunnargjöfum fyrir verkefni og Spáðri einkunn</string>
+    <string name="clearWhatIfScore">Hreinsa Spáða einkunn</string>
     <string name="chooseACourseToMessage">Veldu námskeið til að senda skilaboð til</string>
     <string name="regardingHiddenMessage">Varðandi: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">Varðandi: %1$s, Verkefni - %2$s</string>

@@ -272,6 +272,7 @@
     <string name="checkBoxFinalGradeOption">채점된 과제에 기반</string>
     <string name="checkBoxWhatIfGradeOption">가상 점수 표시</string>
     <string name="whatIfDialogText">가상 점수</string>
+    <string name="whatIfScoreExceedsMaximum">점수는 최대 점수를 초과할 수 없습니다</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s/%2$s점, %3$s</string>
     <string name="inbox">수신함</string>
@@ -895,6 +896,14 @@
         <item quantity="other">%s점</item>
     </plurals>
 
+    <plurals name="pointsPts">
+        <item quantity="other">점</item>
+    </plurals>
+
+    <plurals name="pointsPossible">
+        <item quantity="other">\/ %.0f점</item>
+    </plurals>
+
     <string name="timeLimit">시간 제한</string>
     <string name="newPushNotifications">%1$s개 새 알림</string>
     <string name="like">좋아요</string>
@@ -1020,6 +1029,11 @@
     <string name="downloadFailed">다운로드 실패</string>
     <string name="downloadSuccessful">다운로드됨</string>
 
+    <string name="downloading">다운로드</string>
+    <string name="downloadComplete">다운로드 완료</string>
+    <string name="fileDownloadNotificationPermissionDenied">다운로드를 시작했습니다. 알림을 사용으로 설정하여 진행률을 확인합니다.</string>
+    <string name="notificationChannelNameFileDownloadsName">다운로드 알림</string>
+    <string name="notificationChannelNameFileDownloadsDescription">계속되는 다운로드에 대한 Canvas 알림입니다.</string>
     <string name="full_due_date_details">전체 기한 날짜 세부 정보</string>
     <string name="submissions">제출</string>
     <string name="attachment">첨부</string>
@@ -1215,6 +1229,8 @@
     <string name="a11y_content_description_add_to_dashboard">대시보드에 추가</string>
     <string name="a11y_content_description_add_all_to_dashboard">모두 대시보드에 추가</string>
 
+    <string name="new_mobile_dashboard">새 모바일 대시보드</string>
+
     <!-- K5 Strings -->
     <string name="navDrawerAccount">계정</string>
     <string name="dashboardTabHomeroom">시작 페이지</string>
@@ -1338,6 +1354,9 @@
         <item quantity="other">%s개 읽지 않음 알림</item>
     </plurals>
 
+    <plurals name="a11y_todoBadgeCount">
+        <item quantity="other">%s 할 일 항목</item>
+    </plurals>
     <string name="noAnnotationSelected">선택된 알림 없음</string>
 
     <string name="emailNotifications">이메일 알림</string>
@@ -1877,6 +1896,8 @@
     <string name="gradePreferencesHeaderSortBy">정렬 기준</string>
     <string name="gradesEmptyTitle">과제 없음</string>
     <string name="gradesEmptyMessage">이 공간에는 아직 과제를 만들지 않은 것 같습니다.</string>
+    <string name="noMatchingAssignments">일치하는 과제 없음</string>
+    <string name="noMatchingAssignmentsDescription">검색과 일치하는 과제가 없습니다. 다른 검색어를 시도하세요.</string>
     <string name="errorLoadingGrades">학생의 성적을 로드하는 데 문제가 있습니다. 페이지를 다시 로드해 보거나 나중에 다시 확인하세요.</string>
     <string name="errorLoadingCourse">학생의 과목 세부 정보를 로드하는 데 문제가 있습니다. 페이지를 다시 로드해 보거나 나중에 다시 확인하세요.</string>
     <string name="gradesFilterContentDescription">필터링</string>
@@ -1990,12 +2011,16 @@
     <string name="inboxSignatureSwitchLabel">서명</string>
     <string name="inboxSignatureTextfieldHeader">서명 텍스트</string>
     <string name="due_dateTime">기한: %1$s, %2$s</string>
+    <string name="submitted_dateTime">제출됨: %2$s, %1$s</string>
     <string name="noDueDate">기한 날짜 없음</string>
     <string name="assignmentPointsPerMaximum">%1$s/%2$s</string>
     <string name="needsGradingCount">%1$s 채점 필요</string>
     <string name="assignmentListTitle">과제 목록</string>
     <plurals name="assignmentListMaxpoints">
         <item quantity="other">%d점</item>
+    </plurals>
+    <plurals name="percentGradeScore">
+        <item quantity="other">(%.0f점)</item>
     </plurals>
     <string name="noAssignments">과제 없음</string>
     <string name="assignmentGroup">과제 그룹</string>
@@ -2017,6 +2042,8 @@
     <string name="allAssignments">모든 과제</string>
     <string name="statusFilter">상태 필터링</string>
     <string name="a11y_contentDescription_filter">필터링</string>
+    <string name="a11y_filter_active">필터링 활성</string>
+    <string name="a11y_filter_inactive">필터링 비활성</string>
     <string name="a11y_contentDescription_postPolicy">게시 정책</string>
     <string name="late">늦게 제출</string>
     <string name="a11y_contentDescription_expand">펼치기</string>
@@ -2041,7 +2068,7 @@
     <string name="widgetErrorTitle">죄송합니다. 문제가 발생했습니다</string>
     <string name="widgetErrorSubtitle">지금은 작업을 표시하는 데 문제가 있습니다. 잠시 후에 다시 시도하거나 앱을 사용하세요.</string>
     <string name="widgetToDoEmptyTitle">현재는 모두 완료되었습니다.</string>
-    <string name="widgetToDoEmptySubtitle">다음 4주 동안 여유로운 것 같습니다. 할 일을 추가하시겠습니까?</string>
+    <string name="widgetToDoEmptySubtitle">여유 시간인 것 같습니다. 예정된 작업이 없습니다. 할 일을 추가하시겠습니까?</string>
     <string name="widgetNotLoggedInTitle">로그인하겠습니다!</string>
     <string name="widgetToDoNotLoggedInSubtitle">할 일을 보려면 앱에서 로그인하세요. 많은 시간이 걸리지 않습니다.</string>
     <string name="a11y_widgetToDoOpenToDoList">할 일 목록 열기 화면</string>
@@ -2055,4 +2082,262 @@
     <string name="widgetGradesErrorLoadingCourses">과목을 로드하는 데 오류가 발생했습니다.</string>
     <string name="settingsSwitchExperience">Canvas Career로 전환</string>
 
+    <string name="speedGraderGradeTabTitle">성적 및 루브릭</string>
+    <string name="speedGraderDetailsTabTitle">세부 정보</string>
+    <string name="a11y_contentDescription_expandPanel">패널 펼치기</string>
+    <string name="a11y_contentDescription_collapsePanel">패널 접기</string>
+    <string name="pointGradeHint">여기에 점수 기록</string>
+    <string name="percentageGradeHint">여기에 백분율 기록</string>
+    <string name="completeIncompleteGradeScore">%.0f/%.0f</string>
+    <string name="letterGrade">평점</string>
+    <string name="daysLate">늦음 날짜</string>
+    <plurals name="pointTotal">
+        <item quantity="other">%s/%s점</item>
+    </plurals>
+    <plurals name="groupMemberCount">
+        <item quantity="other">학생</item>
+    </plurals>
+    <string name="speedGraderLatePenaltyTitle">늦게 제출 벌점</string>
+    <string name="gradingStatus_none">없음</string>
+    <string name="gradingStatus_late">늦게 제출</string>
+    <string name="gradingStatus_missing">누락됨</string>
+    <string name="gradingStatus_extended">연장됨</string>
+    <string name="gradingStatus_excused">인정됨</string>
+    <string name="status">상태</string>
+    <string name="speedGraderStudentNotes">학생 메모</string>
+    <string name="speedGraderStudentNotesLoading">학생 메로 로드</string>
+    <string name="speedGraderStudentNotesErrorTitle">죄송합니다. 문제가 발생했습니다</string>
+    <string name="speedGraderStudentNotesErrorDescription">학생의 메모를 표시하는 데 문제가 있습니다.</string>
+    <string name="speedGraderStudentNotesErrorButtonText">새로 고치기</string>
+    <string name="not_graded">채점되지 않음</string>
+    <string name="speedGraderSubmissionDetails">제출 세부 정보</string>
+    <string name="speedGraderSubmissionDetailsLoading">제출 세부 정보 로드</string>
+    <string name="speedGraderWordCount">단어 수</string>
+    <string name="rubricsTitle">루브릭</string>
+    <string name="rubricScore">점수</string>
+    <string name="rubricScoreHint">여기에 점수 기록</string>
+    <string name="speedGraderCommentsTitle">의견(%s)</string>
+    <string name="anonymousGradingStudentLabel">학생</string>
+    <string name="anonymousGradingUserLabel">익명 사용자</string>
+    <string name="rubricNote">루브릭 메모</string>
+    <string name="content_description_edit_rubric_comment">루브릭 메모 편집</string>
+    <string name="rubricNoteHint">메모</string>
+    <string name="a11y_sendRubricNoteContentDescription">루브릭 메모 보내기</string>
+    <string name="select_attachment_type">첨부 파일 유형 선택</string>
+    <string name="choose_files">파일 선택</string>
+    <string name="a11y_expanded">펼쳐짐</string>
+    <string name="a11y_collapsed">접힘</string>
+    <string name="excuseStudent">학생 인정</string>
+    <string name="detailsEmptyMessage">이 학생 및 과제에 대한 추가 세부 정보가 없습니다</string>
+    <string name="daysLateHint">늦음 날자 기록</string>
+    <string name="reply_to_topic">주제에 대해 답변</string>
+    <string name="additional_replies">추가적 응답(%d)</string>
+    <string name="reply_to_topic_due">주제 기한에 대해 답변</string>
+    <string name="additional_replies_due">추가적 응답(%d) 기한</string>
+    <string name="a11y_discussion_checkpoints">토론 체크포인트</string>
+    <string name="multipleDueDates">여러 기한 날짜</string>
+    <string name="courseConcludedError">과목이 종결되었습니다. 메시지를 보낼 수 없습니다.</string>
+    <string name="openInDetailView">세부 정보 보기에서 열기</string>
+    <string name="immersiveView">몰입형 보기</string>
+    <string name="statuses">상태</string>
+    <string name="precise_filtering">정확한 필터링</string>
+    <string name="differentiation_tags">맞춤형 태그</string>
+    <string name="students_without_differentiation_tags">맞춤형 태그가 없는 학생</string>
+    <string name="sort_by">정렬 기준</string>
+    <string name="student_sortable_name">학생 정렬 가능한 이름</string>
+    <string name="student_name">학생 이름</string>
+    <string name="submission_date">제출 날짜</string>
+    <string name="submission_status">제출 상태</string>
+    <string name="write_score_here">여기에 점수 기록</string>
+    <string name="scored_more_than_with_max">/ %s점보다 높은 점수 획득</string>
+    <string name="scored_less_than_with_max">/ %s점보다 낮은 점수 획득</string>
+    <string name="scored_between_values">%1$s-%2$s 점수 획득</string>
+    <string name="multiple_filters">여러 필터링</string>
+    <string name="a11y_contentDescriptionToDoFilter">필터링</string>
+    <string name="errorLoadingToDos">할 일 항목을 로드하는 데 오류가 있었습니다. 연결을 확인하고 다시 시도하세요.</string>
+    <string name="errorUpdatingToDo">할 일 항목을 업데이트하는 데 오류가 있었습니다. 연결을 확인하고 다시 시도하세요.</string>
+    <string name="noToDosForNow">지금은 할 일이 없습니다.</string>
+    <string name="noToDosForNowSubtext">오늘은 편하게 쉬고 활력을 충전하기 좋은 날입니다.</string>
+    <string name="todoSwipeDone">완료</string>
+    <string name="todoSwipeUndo">실행 취소</string>
+    <string name="todoMarkedAsDone">%s 완료로 표시됨</string>
+    <string name="todoMarkedAsNotDone">%s 완료되지 않음으로 표시됨</string>
+    <string name="todoMarkedAsDoneSnackbarUndo">실행 취소</string>
+    <string name="todoActionOffline">이 작업은 오프라인으로 수행할 수 없습니다</string>
+
+    <!-- To Do List Filter Screen -->
+    <string name="todoFilterPreferences">할 일 목록 기본 설정</string>
+    <string name="todoFilterVisibleItems">표시되는 항목</string>
+    <string name="todoFilterShowPersonalToDos">개인 할 일 표시</string>
+    <string name="todoFilterShowCalendarEvents">캘린더 이벤트 표시</string>
+    <string name="todoFilterShowCompleted">완료됨 표시</string>
+    <string name="todoFilterFavoriteCoursesOnly">즐겨찾기 과목만</string>
+    <string name="todoFilterShowTasksFrom">다음부터 작업 표시</string>
+    <string name="todoFilterShowTasksUntil">다음까지 작업 표시</string>
+    <string name="todoFilterToday">오늘</string>
+    <string name="todoFilterThisWeek">이번 주</string>
+    <string name="todoFilterLastWeek">지난주</string>
+    <string name="todoFilterTwoWeeks">2주 전</string>
+    <string name="todoFilterThreeWeeks">3주 전</string>
+    <string name="todoFilterFourWeeks">4주 전</string>
+    <string name="todoFilterNextWeek">다음 주</string>
+    <string name="todoFilterInTwoWeeks">2주 후</string>
+    <string name="todoFilterInThreeWeeks">3주 후</string>
+    <string name="todoFilterInFourWeeks">4주 후</string>
+    <string name="todoFilterFromDate">%s부터</string>
+    <string name="todoFilterUntilDate">%s까지</string>
+    <string name="a11y_buttonSelectionSelected">선택됨</string>
+    <string name="a11y_buttonSelectionNotSelected">선택되지 않음</string>
+
+    <!-- Course Invitations -->
+    <string name="courseInvitationsTitle">과목 초대(%d)</string>
+    <string name="courseInvitationAccepted">%s에 초대를 추락했습니다</string>
+    <string name="courseInvitationDeclined">%s에 초대를 거절했습니다</string>
+    <string name="courseInvitationDeclineConfirmTitle">초대 거절</string>
+    <string name="courseInvitationDeclineConfirmMessage">%s에 초대를 거절하시겠습니까?</string>
+
+    <!-- Welcome Widget -->
+    <!-- Greetings with name (%s is the student's first name) -->
+    <string name="welcomeGreetingMorningWithName">안녕하세요 %s 님.</string>
+    <string name="welcomeGreetingAfternoonWithName">안녕하세요 %s 님.</string>
+    <string name="welcomeGreetingEveningWithName">안녕하세요 %s 님.</string>
+    <string name="welcomeGreetingNightWithName">안녕하세요 %s 님.</string>
+
+    <!-- Greetings without name (fallback when user has no first name) -->
+    <string name="welcomeGreetingMorning">안녕하세요.</string>
+    <string name="welcomeGreetingAfternoon">안녕하세요.</string>
+    <string name="welcomeGreetingEvening">안녕하세요.</string>
+    <string name="welcomeGreetingNight">안녕하세요.</string>
+
+    <!-- Welcome Widget Motivational Messages -->
+    <string-array name="welcomeMessagesGeneric">
+        <item>이해하셨습니다.</item>
+        <item>계속하세요. 지금 생각하는 것보다 귀하는 더 강력합니다.</item>
+        <item>한 번에 한 단계도 발전입니다.</item>
+        <item>포기하지 마세요. 미래의 자신을 생각하세요.</item>
+        <item>자신이 생각하는 것보다 더 많은 것을 할 수 있습니다.</item>
+        <item>어려운 날에도 한발 더 나아갑니다.</item>
+        <item>자신을 믿으세요. 이전에 더 힘든 것도 했습니다.</item>
+        <item>완벽보다는 한발 더 나아가려고 하세요. 잘하고 계십니다.</item>
+        <item>버티세요. 혼자만 겪는 일이 아닙니다.</item>
+        <item>자신이 생각하는 것보다 더 많이 배우고 성장하고 잘하고 있습니다.</item>
+        <item>넘어져도 괜찮습니다. 여전히 바른 길을 가고 있습니다.</item>
+        <item>더 노력하세요. 생각보다 멀지 않았습니다.</item>
+        <item>작은 성취도 중요합니다.</item>
+        <item>계속하세요. 생각보다 멀지 않았습니다.</item>
+        <item>잠시 멈추는 것도 괜찮습니다. 실수도 배움의 일부입니다.</item>
+        <item>시도했다면 이미 성공하는 것입니다.</item>
+        <item>더 나아가기 &gt; 완벽.</item>
+        <item>온 것만으로도 많은 것을 한 것입니다.</item>
+        <item>느려 보여도 기술을 쌓고 있습니다.</item>
+        <item>심호흡을 잊지 마세요. 잘하고 있습니다.</item>
+        <item>나의 속도가 올바른 속도입니다.</item>
+        <item>오늘 모든 것을 배울 필요는 없습니다.</item>
+        <item>잘 오셨습니다.</item>
+        <item>모든 노력이 모여 결실을 맺습니다.</item>
+        <item>얼마든지 다시 시작해도 괜찮습니다.</item>
+        <item>지금은 어렵지만 나중에는 쉽게 느껴질 것입니다.</item>
+        <item>계속 참석하는 것이 중요합니다.</item>
+        <item>천리 길도 한 걸음부터입니다.</item>
+        <item>휴식도 발전의 일부분입니다.</item>
+        <item>자신이 생각하는 것보다 잘하고 있습니다.</item>
+        <item>늦은 발전도 여전히 발전입니다.</item>
+        <item>미래는 하루에 만들어지 않지만 그 길을 가는 중입니다.</item>
+        <item>한 번에 한 과제, 한 순간, 한 단계씩 나아갑니다.</item>
+        <item>영향이 있으려면 완벽할 필요는 없습니다.</item>
+        <item>학습은 원래 혼란스럽습니다. </item>
+        <item>모든 시도는 실패처럼 느껴져도 성장의 과정입니다.</item>
+        <item>이전에 더 어려운 것도 해냈습니다. 이것도 해낼 수 있습니다.</item>
+        <item>아무도 볼 수 없지만 자신의 노력은 중요합니다.</item>
+        <item>좀 느려도 괜찮습니다.</item>
+        <item>큰 변화가 없는 것 같은 날에도 진전은 있습니다.</item>
+        <item>가는 길이 아직 분명할 필요는 없습니다. 그러나 멈추지는 마세요.</item>
+        <item>지금 생각하는 것보다 귀하는 더 강력합니다.</item>
+        <item>큰 목표는 작은 단계부터 달성합니다.</item>
+        <item>멈추지 말고 미래의 자신을 생각하세요.</item>
+        <item>혼란스런 발전도 여전히 발전입니다.</item>
+        <item>뒤처지지 않았습니다. 목표를 향해 가는 중입니다.</item>
+        <item>점차 알게 되는 것도 괜찮습니다.</item>
+        <item>아직 알 수 없지만 성장하고 있습니다.</item>
+        <item>오늘의 노력은 내일에 투자입니다.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesMorning">
+        <item>안녕하세요! 한 번에 한 수업, 한 단계씩 알아갑니다.</item>
+        <item>아직 준비가 되지 않았다고 생각하세요? 흔한 감정입니다. 현재 상태에서 시작하세요.</item>
+        <item>커피도 도움이 되지만 스스로에 대한 관용이 더 좋습니다.</item>
+        <item>시스템이 어렵게 느껴지세요? 모두 그렇게 느낄 수 있습니다. 너무 스트레스 받지 마세요.</item>
+        <item>지금 완벽할 필요는 없습니다. 가능성만 있으면 됩니다.</item>
+        <item>안녕하세요. 오늘은 배우고 성장하는 새로운 기회입니다.</item>
+        <item>오늘의 작은 단계도 목표를 향해 더 가까워지는 것입니다.</item>
+        <item>깊은 호흡을 하세요. 아직 모든 것을 다 알 필요는 없습니다.</item>
+        <item>시스템을 사용하는 것은 까다로울 수 있지만 모두 배우고 있습니다.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesAfternoon">
+        <item>시작이 반입니다. 이미 생각보다 많은 것을 해냈습니다.</item>
+        <item>발전이 없다고 느껴지세요? 모두가 벽에 부딪힙니다. 대신에 기어오르기를 멈추지 마세요.</item>
+        <item>직업, 성적 그리고 미래... 모든 것을 다 아는 사람은 없습니다.</item>
+        <item>뇌의 피로가 느껴지세요? 짧은 휴식 = 이후에 더 나은 집중력.</item>
+        <item>도움을 요청하세요. 정말로 혼자서 하는 사람은 없습니다.</item>
+        <item>오늘 이만큼 완성했습니다. 자신에 대해 자긍심을 가지세요.</item>
+        <item>잠시 멈춰야 합니까? 재충전도 학습의 일부분입니다.</item>
+        <item>가는 길이 불확실하다고 느껴져도 괜찮습니다. 기술은 단계별로 쌓입니다.</item>
+        <item>더 이상 나아갈 수 없다고 생각되면 도움을 요청하세요. 도움은 생각보다 가까이에 있습니다.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesEvening">
+        <item>오늘 하루가 지났습니다. 그것만으로도 성공입니다.</item>
+        <item>사람들이 그립습니까? 짧은 인사를 보내보세요.</item>
+        <item>오늘은 혼란스럽게 느껴지지만 참석했습니다. 이것이 중요합니다.</item>
+        <item>성적이 자신의 가치를 측정하지는 않습니다.</item>
+        <item>편하게 웃음을 짖고 마음껏 스크롤하세요. 그럴 자격이 있습니다.</item>
+        <item>오늘 하루를 마쳤습니다. 잘 보이지는 않아도 발전이 중요합니다.</item>
+        <item>친구나 멘토가 필요하세요? 생각하지 못한 순간에도 연결될 수 있습니다.</item>
+        <item>저녁 시간은 오늘 완료하지 못한 것 뿐만 아니라 오늘 배운 것을 뒤돌아볼 수 있는 시간입니다.</item>
+        <item>완벽보다 노력이 중요합니다.</item>
+    </string-array>
+
+    <string-array name="welcomeMessagesNight">
+        <item>아직 노력 중이세요? 존경합니다. 그렇지만 수면도 필요하다는 것을 잊지 마세요.</item>
+        <item>오늘 휴식은 내일을 위한 것입니다.</item>
+        <item>밤에는 걱정이 늘어납니다. 이런 생각을 믿지 마세요.</item>
+        <item>뒤처지지 않았습니다. 그저 목표를 향해 가는 중입니다.</item>
+        <item>컴퓨터를 끄세요. 뇌는 꿈꾸는 것도 필요합니다.</item>
+        <item>쉬는 것도 괜찮습니다. 내일은 새로운 기회가 기다리고 있습니다.</item>
+        <item>학습은 마라톤입니다. 단거리가 아닙니다. 오늘 밤에는 자신에게 쉼을 허락하세요.</item>
+        <item>과중한 걱정이 있다면 혼자 걱정할 필요는 없다는 것을 기억하세요.</item>
+        <item>시도는 이미 성취라는 것을 기억하고 하루를 마감하세요.</item>
+    </string-array>
+
+    <!-- Accessibility -->
+    <string name="welcomeWidgetContentDescription">환영 메시지: %1$s. %2$s</string>
+
+    <!-- Institutional Announcements -->
+    <string name="institutionalAnnouncementsTitle">공지(%d)</string>
+
+    <!-- Widget Display Names -->
+    <string name="widget_hello">안녕하세요, %s 님</string>
+
+    <!-- Customize Dashboard -->
+    <string name="customize_dashboard">대시보드 사용자 지정</string>
+    <string name="dashboard_widgets">위젯</string>
+    <string name="move_up">위로 이동</string>
+    <string name="move_down">아래로 이동</string>
+    <string name="no_widgets">사용 가능한 위젯 없음</string>
+    <string name="changing_dashboard_layout">대시보드 레이아웃 변경</string>
+    <string name="changing_dashboard_layout_message">대시보드 레이아웃을 변경하려면 애플리케이션을 다시 시작해야 합니다</string>
+    <string name="restart_now">지금 다시 시작</string>
+    <string name="switched_back">되돌리시겠습니까?</string>
+    <string name="switched_back_message">새 대시보드를 시도해 주셔서 감사합니다. 되돌린 이유를 알려주시겠습니까?</string>
+    <string name="what_could_we_improve">저희가 어떻게 개선할 수 있습니까?</string>
+    <string name="skip">건너뛰기</string>
+    <string name="widget_setting_show_greeting">인사 표시</string>
+    <string name="background_color">배경 색</string>
+    <string name="offline_content_available">오프라인 콘텐츠 사용할 수 있음</string>
+    <string name="a11y_contentDescription_moreOptions">더 많은 옵션</string>
+    <string name="customizeCourse">과목 사용자 지정</string>
+    <string name="favoriteCoursesAndGroups">즐겨 찾는 과목 및 그룹</string>
+    <string name="collapsibleSectionTitle">%1$s(%2$d)</string>
+    <string name="ltiToolsOffline">외부 도구는 오프라인에 사용할 수 없습니다.</string>
 </resources>

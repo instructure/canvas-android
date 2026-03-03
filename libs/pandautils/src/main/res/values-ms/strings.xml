@@ -502,4 +502,8 @@
         <item quantity="other">%d Minit</item>
     </plurals>
     <string name="notATeacherDescription">Salah satu daripada aplikasi kami yang lain mungkin lebih sesuai. Ketik ikon untuk log masuk di sana.</string>
+    <string name="gradePercentAccessibility">Gred: %d peratus</string>
+    <string name="gradePointsAccessibility">Gred: %s mata</string>
+    <string name="gradePercentTextFieldAccessibility">Gred: %d peratusan, %s</string>
+    <string name="gradePointsTextFieldAccessibility">Gred: %s mata, %s</string>
 </resources>

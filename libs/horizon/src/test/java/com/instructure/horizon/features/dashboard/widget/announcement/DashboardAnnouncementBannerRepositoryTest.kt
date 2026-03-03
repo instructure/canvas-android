@@ -48,7 +48,7 @@ class DashboardAnnouncementBannerRepositoryTest {
     @Test
     fun `Test successful unread course announcements retrieval`() = runTest {
         val courses = listOf(
-            CourseWithProgress(courseId = 1L, courseName = "Course 1", progress = 50.0)
+            CourseWithProgress(courseId = 1L, courseName = "Course 1", courseImageUrl = null, courseSyllabus = null, progress = 50.0)
         )
         val announcements = listOf(
             createDiscussionTopicHeader("1", "Course Announcement 1", "course_1", false)
@@ -67,7 +67,7 @@ class DashboardAnnouncementBannerRepositoryTest {
 
     @Test
     fun `Test filters out read announcements`() = runTest {
-        val courses = listOf(CourseWithProgress(courseId = 1L, courseName = "Course 1", progress = 10.0))
+        val courses = listOf(CourseWithProgress(courseId = 1L, courseName = "Course 1", courseImageUrl = null, courseSyllabus = null, progress = 10.0))
         val announcements = listOf(
             createDiscussionTopicHeader("1", "Unread Announcement", "course_1", false),
             createDiscussionTopicHeader("2", "Read Announcement", "course_1", true)
@@ -114,7 +114,7 @@ class DashboardAnnouncementBannerRepositoryTest {
 
     @Test
     fun `Test forceRefresh parameter is passed correctly`() = runTest {
-        val courses = listOf(CourseWithProgress(courseId = 1L, courseName = "Course 1", progress = 10.0))
+        val courses = listOf(CourseWithProgress(courseId = 1L, courseName = "Course 1", courseImageUrl = null, courseSyllabus = null, progress = 10.0))
         setupCourseMocks(courses, emptyList())
         coEvery { accountNotificationApi.getAccountNotifications(any(), any(), any()) } returns DataResult.Success(emptyList())
         coEvery { accountNotificationApi.getNextPageNotifications(any(), any()) } returns DataResult.Fail()

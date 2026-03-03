@@ -278,6 +278,7 @@
     <string name="checkBoxWhatIfGradeOption">Montre Kisa-Si Nòt</string>
     <string name="whatIfDialogText">Kisa-Si Nòt</string>
     <string name="whatIfScoreExceedsMaximum">Nòt la pa ka depase kantite pwen maksimòm yo</string>
+    <string name="whatIfScoreExceedsMaximumWarning">Nòt la depase kantite pwen maksimòm lan</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s sou %2$s pwen, %3$s</string>
     <string name="inbox">Bwat resepsyon</string>
@@ -1923,6 +1924,15 @@
     <string name="courseDetailsMessageContentDescription">Voye yon mesaj osijè e kou sa a</string>
     <string name="gradeLockedContentDescription">Nòt bloke</string>
     <string name="gradesRefreshFailed">Echèk aktyalizasyon nòt yo</string>
+    <string name="showWhatIfScore">Afiche rezilta analiz ipotèz</string>
+    <string name="editWhatIfScore">Chanje Nòt Similasyon an</string>
+    <string name="editWhatIfScoreTitle">Chanje Nòt Similasyon an</string>
+    <string name="whatIfScoreLabel">Similasyon</string>
+    <string name="whatIfScoreCurrentGraded">Nòt %1$.0f sou %2$.0f</string>
+    <string name="whatIfScoreCurrentUngraded">Pa gen nòt, nòt maksimòm %.0f</string>
+    <string name="whatIfScoreDisplay">Similasyon %s</string>
+    <string name="gradesBasedOnGradedAndWhatIf">Dapre devwa ki korije yo, ak Nòt Similasyon an</string>
+    <string name="clearWhatIfScore">Efase Nòt Similasyon an</string>
     <string name="chooseACourseToMessage">Chwazi yon kou pou voye mesaj</string>
     <string name="regardingHiddenMessage">Konsènan: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">Konsènan: %1$s, Devwa - %2$s</string>

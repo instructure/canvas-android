@@ -122,7 +122,7 @@ class LtiLaunchViewModel @Inject constructor(
 
     private fun launchLti(url: String) {
         viewModelScope.launch {
-            val authenticatedUrl = repository.authenticateUrl(url)
+            val authenticatedUrl = if (url.contains("session_token")) url else repository.authenticateUrl(url)
             if (openInternally || Assignment.internalLtiTools.any { url.contains(it) }) {
                 _events.send(LtiLaunchAction.LoadLtiWebView(authenticatedUrl))
             } else {

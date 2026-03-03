@@ -175,7 +175,7 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
     }
 
     fun assertSubmissionAndRubricLabel() {
-        onView(allOf(withId(R.id.submissionAndRubricLabel), withText(R.string.submissionAndRubric))).assertDisplayed()
+        onView(allOf(withId(R.id.submissionAndRubricLabel), withText(R.string.submissionAndFeedback))).assertDisplayed()
     }
 
     private fun assertStatus(statusResourceId: Int) {
@@ -321,7 +321,7 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
     }
 
     fun clickSubmissionAndRubric() {
-        onView(allOf(withId(R.id.submissionAndRubricLabel), withText(R.string.submissionAndRubric))).click()
+        onView(allOf(withId(R.id.submissionAndRubricLabel), withText(R.string.submissionAndFeedback))).click()
     }
 
     fun clickComposeMessageFAB() {

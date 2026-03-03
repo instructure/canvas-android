@@ -501,4 +501,8 @@
         <item quantity="other">%d minutes</item>
     </plurals>
     <string name="notATeacherDescription">L’une de nos autres applications est peut-être mieux adaptée. Appuyez sur une icône pour vous y connecter.</string>
+    <string name="gradePercentAccessibility">Note : %d pour cent</string>
+    <string name="gradePointsAccessibility">Note : %s points</string>
+    <string name="gradePercentTextFieldAccessibility">Note : %d pourcent, %s</string>
+    <string name="gradePointsTextFieldAccessibility">Note : %s points, %s</string>
 </resources>

@@ -217,7 +217,6 @@ class BookmarksE2ETest : StudentComposeTest() {
         device.findObject(UiSelector().textContains(bookmarkName)).click()
 
         Log.d(ASSERTION_TAG, "Assert that the bookmark shortcut opened the correct assignment: '${assignment.name}' with all details.")
-        assignmentDetailsPage.assertAssignmentTitle(assignment.name)
         assignmentDetailsPage.assertAssignmentDetails(assignment)
 
         Log.d(STEP_TAG, "Navigate back to the system home screen.")

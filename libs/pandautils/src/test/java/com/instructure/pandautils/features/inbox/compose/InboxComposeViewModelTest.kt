@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Message
 import com.instructure.canvasapi2.models.Recipient
+import com.instructure.canvasapi2.models.Term
 import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DataResult
@@ -1323,6 +1324,69 @@ class InboxComposeViewModelTest {
         assertEquals(InboxComposeViewModelAction.UpdateParentFragment, events[0])
         assertEquals(InboxComposeViewModelAction.ShowScreenResult(context.getString(R.string.messageSentSuccessfully)), events[1])
         assertEquals(InboxComposeViewModelAction.NavigateBack, events[2])
+    }
+
+    @Test
+    fun `Send message succeeds when course restricts to course date and term has ended`() = runTest {
+        val pastTermEndAt = "2020-01-01T00:00:00Z"
+        val courseWithRestrictedDates = Course(
+            id = 1,
+            name = "Active Course",
+            workflowState = Course.WorkflowState.AVAILABLE,
+            restrictEnrollmentsToCourseDate = true,
+            term = Term(endAt = pastTermEndAt)
+        )
+
+        coEvery { inboxComposeRepository.getCourses(any()) } returns DataResult.Success(listOf(courseWithRestrictedDates))
+        coEvery { inboxComposeRepository.getGroups(any()) } returns DataResult.Success(emptyList())
+        coEvery { inboxComposeRepository.createConversation(any(), any(), any(), any(), any(), any()) } returns DataResult.Success(mockk())
+
+        val viewmodel = getViewModel()
+
+        val events = mutableListOf<InboxComposeViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewmodel.events.toList(events)
+        }
+
+        viewmodel.handleAction(ContextPickerActionHandler.ContextClicked(courseWithRestrictedDates))
+        viewmodel.handleAction(InboxComposeActionHandler.AddRecipient(Recipient(stringId = "1")))
+        viewmodel.handleAction(InboxComposeActionHandler.SubjectChanged(TextFieldValue("Subject")))
+        viewmodel.handleAction(InboxComposeActionHandler.BodyChanged(TextFieldValue("Body")))
+        viewmodel.handleAction(InboxComposeActionHandler.SendClicked)
+
+        coVerify(exactly = 1) { inboxComposeRepository.createConversation(any(), any(), any(), any(), any(), any()) }
+    }
+
+    @Test
+    fun `Send message fails when course does not restrict to course date and term has ended`() = runTest {
+        val pastTermEndAt = "2020-01-01T00:00:00Z"
+        val courseWithExpiredTerm = Course(
+            id = 1,
+            name = "Course with expired term",
+            workflowState = Course.WorkflowState.AVAILABLE,
+            restrictEnrollmentsToCourseDate = false,
+            term = Term(endAt = pastTermEndAt)
+        )
+
+        coEvery { inboxComposeRepository.getCourses(any()) } returns DataResult.Success(listOf(courseWithExpiredTerm))
+        coEvery { inboxComposeRepository.getGroups(any()) } returns DataResult.Success(emptyList())
+        coEvery { context.getString(R.string.courseConcludedError) } returns "This course has concluded. You can no longer send messages."
+
+        val viewmodel = getViewModel()
+
+        val events = mutableListOf<InboxComposeViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewmodel.events.toList(events)
+        }
+
+        viewmodel.handleAction(ContextPickerActionHandler.ContextClicked(courseWithExpiredTerm))
+        viewmodel.handleAction(InboxComposeActionHandler.AddRecipient(Recipient(stringId = "1")))
+        viewmodel.handleAction(InboxComposeActionHandler.SubjectChanged(TextFieldValue("Subject")))
+        viewmodel.handleAction(InboxComposeActionHandler.BodyChanged(TextFieldValue("Body")))
+        viewmodel.handleAction(InboxComposeActionHandler.SendClicked)
+
+        coVerify(exactly = 0) { inboxComposeRepository.createConversation(any(), any(), any(), any(), any(), any()) }
+        assertEquals(InboxComposeViewModelAction.ShowScreenResult("This course has concluded. You can no longer send messages."), events.last())
     }
 
     // endregion

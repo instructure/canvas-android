@@ -17,9 +17,19 @@
 
 package com.instructure.student.mobius.assignmentDetails.submissionDetails.datasource
 
-import com.instructure.canvasapi2.apis.*
+import com.instructure.canvasapi2.apis.AssignmentAPI
+import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.EnrollmentAPI
+import com.instructure.canvasapi2.apis.FeaturesAPI
+import com.instructure.canvasapi2.apis.QuizAPI
+import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CourseSettings
+import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.models.Quiz
+import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
@@ -30,7 +40,8 @@ class SubmissionDetailsNetworkDataSource(
     private val assignmentApi: AssignmentAPI.AssignmentInterface,
     private val quizApi: QuizAPI.QuizInterface,
     private val featuresApi: FeaturesAPI.FeaturesInterface,
-    private val courseApi: CourseAPI.CoursesInterface
+    private val courseApi: CourseAPI.CoursesInterface,
+    private val apiPrefs: ApiPrefs
 ) : SubmissionDetailsDataSource {
 
     override suspend fun getObserveeEnrollments(forceNetwork: Boolean): DataResult<List<Enrollment>> {
@@ -41,7 +52,7 @@ class SubmissionDetailsNetworkDataSource(
     }
 
     override suspend fun getSingleSubmission(courseId: Long, assignmentId: Long, studentId: Long, forceNetwork: Boolean): DataResult<Submission> {
-        val params = RestParams(isForceReadFromNetwork = forceNetwork, domain = ApiPrefs.overrideDomains[courseId])
+        val params = RestParams(isForceReadFromNetwork = forceNetwork, domain = apiPrefs.overrideDomains[courseId])
         return submissionApi.getSingleSubmission(courseId, assignmentId, studentId, params)
     }
 
