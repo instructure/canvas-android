@@ -447,7 +447,7 @@ class LearnLearningLibraryDetailsViewModelTest {
         val item = state.items.find { it.id == "item1" }
         assertNotNull(item)
         assertFalse(item!!.bookmarkLoading)
-        assertNotNull(state.loadingState.errorMessage)
+        assertNotNull(state.loadingState.snackbarMessage)
     }
 
     @Test

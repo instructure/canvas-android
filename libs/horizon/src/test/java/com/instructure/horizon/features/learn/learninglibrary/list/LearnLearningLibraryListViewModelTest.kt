@@ -381,7 +381,7 @@ class LearnLearningLibraryListViewModelTest {
         val state = viewModel.uiState.value
         val firstItem = state.collectionState.collections[0].items[0]
         assertFalse(firstItem.bookmarkLoading)
-        assertTrue(state.collectionState.loadingState.errorMessage != null)
+        assertTrue(state.collectionState.loadingState.snackbarMessage != null)
     }
 
     @Test
@@ -701,7 +701,7 @@ class LearnLearningLibraryListViewModelTest {
 
         val state = viewModel.uiState.value
         assertFalse(state.itemState.items.find { it.id == "item1" }!!.bookmarkLoading)
-        assertTrue(state.itemState.loadingState.errorMessage != null)
+        assertTrue(state.itemState.loadingState.snackbarMessage != null)
     }
 
     private fun getViewModel(): LearnLearningLibraryListViewModel {
