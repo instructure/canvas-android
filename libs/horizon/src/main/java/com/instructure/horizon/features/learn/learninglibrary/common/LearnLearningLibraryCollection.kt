@@ -16,7 +16,10 @@
  */
 package com.instructure.horizon.features.learn.learninglibrary.common
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -67,7 +70,7 @@ fun LazyListScope.LearnLearningLibraryCollection(
     collections: List<LearnLearningLibraryCollectionState>,
     onBookmarkClick: (itemId: String) -> Unit,
     onEnrollClick: (itemId: String) -> Unit,
-    onItemClick: (route: String?) -> Unit,
+    onItemClick: (route: LearningLibraryRoute?) -> Unit,
     onCollectionDetailsClick: (itemId: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -96,7 +99,7 @@ fun LearnLearningLibraryCollectionItem(
     itemCount: Int,
     onBookmarkClick: (itemId: String) -> Unit,
     onEnrollClick: (itemId: String) -> Unit,
-    onItemClick: (route: String?) -> Unit,
+    onItemClick: (route: LearningLibraryRoute?) -> Unit,
     onCollectionDetailsClick: (itemId: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -113,20 +116,39 @@ fun LearnLearningLibraryCollectionItem(
         )
         HorizonSpace(SpaceSize.SPACE_24)
 
-        state.items.take(itemCount).forEach { itemState ->
-            LearnLearningLibraryItem(
-                state = itemState,
-                onClick = { onItemClick(itemState.toRoute()) },
-                onBookmarkClick = { onBookmarkClick(itemState.id) },
-                onEnrollClick = { onEnrollClick(itemState.id) }
-            )
-            HorizonSpace(SpaceSize.SPACE_24)
+        AnimatedVisibility(
+            isExpanded,
+            enter = expandVertically(),
+            exit = shrinkVertically()
+        ) {
+            Column(
+                Modifier.fillMaxWidth()
+            ) {
+                if (state.items.isEmpty()) {
+                    Text(
+                        text = stringResource(R.string.learnLearningLibraryEmptyCollectionMessage),
+                        style = HorizonTypography.p1,
+                        color = HorizonColors.Text.body(),
+                        modifier = Modifier.padding(horizontal = 8.dp)
+                    )
+                    HorizonSpace(SpaceSize.SPACE_24)
+                }
+                state.items.take(itemCount).forEach { itemState ->
+                    LearnLearningLibraryItem(
+                        state = itemState,
+                        onClick = { onItemClick(itemState.route) },
+                        onBookmarkClick = { onBookmarkClick(itemState.id) },
+                        onEnrollClick = { onEnrollClick(itemState.id) }
+                    )
+                    HorizonSpace(SpaceSize.SPACE_24)
+                }
+                LearnLearningLibraryCollectionDetailsRow(
+                    state.itemCount,
+                    onCollectionDetailsClick = { onCollectionDetailsClick(state.id) }
+                )
+                HorizonSpace(SpaceSize.SPACE_24)
+            }
         }
-        LearnLearningLibraryCollectionDetailsRow(
-            state.itemCount,
-            onCollectionDetailsClick = { onCollectionDetailsClick(state.id) }
-        )
-        HorizonSpace(SpaceSize.SPACE_24)
 
         if (isCollapsable) {
             HorizonDivider()
@@ -207,6 +229,16 @@ private fun LearnLearningLibraryCollectionDetailsRow(
 }
 
 @Composable
+private fun EmptyMessage() {
+    Text(
+        text = stringResource(R.string.learnLearningLibraryListEmptyMessage),
+        style = HorizonTypography.p1,
+        color = HorizonColors.Text.body(),
+        modifier = Modifier.padding(horizontal = 24.dp)
+    )
+}
+
+@Composable
 @Preview(showBackground = true)
 private fun LearnLearningLibraryCollectionSingleItem() {
     ContextKeeper.appContext = LocalContext.current
@@ -218,13 +250,13 @@ private fun LearnLearningLibraryCollectionSingleItem() {
             items = listOf(
                 LearnLearningLibraryCollectionItemState(
                     id = "1",
-                    courseId = 1,
                     imageUrl = null,
                     name = "Collection Item 1",
                     isBookmarked = true,
                     canEnroll = true,
                     bookmarkLoading = false,
                     type = CollectionItemType.COURSE,
+                    route = null,
                     chips = listOf(
                         LearnLearningLibraryCollectionItemChipState(
                             label = "Recommended"
@@ -239,13 +271,13 @@ private fun LearnLearningLibraryCollectionSingleItem() {
                 ),
                 LearnLearningLibraryCollectionItemState(
                     id = "2",
-                    courseId = 1,
                     imageUrl = null,
                     name = "Collection Item 2",
                     isBookmarked = false,
                     canEnroll = false,
                     bookmarkLoading = false,
                     type = CollectionItemType.COURSE,
+                    route = null,
                     chips = listOf(
                         LearnLearningLibraryCollectionItemChipState(
                             label = "Recommended"
@@ -284,13 +316,13 @@ private fun LearnLearningLibraryCollectionMultipleItems() {
             items = listOf(
                 LearnLearningLibraryCollectionItemState(
                     id = "1",
-                    courseId = 1,
                     imageUrl = null,
                     name = "Collection Item 1",
                     isBookmarked = true,
                     canEnroll = true,
                     bookmarkLoading = false,
                     type = CollectionItemType.COURSE,
+                    route = null,
                     chips = listOf(
                         LearnLearningLibraryCollectionItemChipState(
                             label = "Recommended"
@@ -305,13 +337,13 @@ private fun LearnLearningLibraryCollectionMultipleItems() {
                 ),
                 LearnLearningLibraryCollectionItemState(
                     id = "2",
-                    courseId = 1,
                     imageUrl = null,
                     name = "Collection Item 2",
                     isBookmarked = false,
                     canEnroll = false,
                     bookmarkLoading = false,
                     type = CollectionItemType.COURSE,
+                    route = null,
                     chips = listOf(
                         LearnLearningLibraryCollectionItemChipState(
                             label = "Recommended"
@@ -333,13 +365,13 @@ private fun LearnLearningLibraryCollectionMultipleItems() {
             items = listOf(
                 LearnLearningLibraryCollectionItemState(
                     id = "1",
-                    courseId = 1,
                     imageUrl = null,
                     name = "Collection Item 1",
                     isBookmarked = true,
                     canEnroll = true,
                     bookmarkLoading = true,
                     type = CollectionItemType.COURSE,
+                    route = null,
                     chips = listOf(
                         LearnLearningLibraryCollectionItemChipState(
                             label = "Recommended"
@@ -354,13 +386,13 @@ private fun LearnLearningLibraryCollectionMultipleItems() {
                 ),
                 LearnLearningLibraryCollectionItemState(
                     id = "2",
-                    courseId = 1,
                     imageUrl = null,
                     name = "Collection Item 2",
                     isBookmarked = false,
                     canEnroll = false,
                     bookmarkLoading = false,
                     type = CollectionItemType.COURSE,
+                    route = null,
                     chips = listOf(
                         LearnLearningLibraryCollectionItemChipState(
                             label = "Recommended"
@@ -388,11 +420,24 @@ private fun LearnLearningLibraryCollectionMultipleItems() {
 }
 
 @Composable
-private fun EmptyMessage() {
-    Text(
-        text = stringResource(R.string.learnLearningLibraryListEmptyMessage),
-        style = HorizonTypography.p1,
-        color = HorizonColors.Text.body(),
-        modifier = Modifier.padding(horizontal = 24.dp)
+@Preview(showBackground = true)
+private fun LearnLearningLibraryEmptyCollectionPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    val collections = listOf(
+        LearnLearningLibraryCollectionState(
+            id = "1",
+            name = "Collection 1",
+            itemCount = 0,
+            items = emptyList()
+        )
     )
+    LazyColumn {
+        LearnLearningLibraryCollection(
+            collections,
+            {},
+            {},
+            {},
+            {}
+        )
+    }
 }

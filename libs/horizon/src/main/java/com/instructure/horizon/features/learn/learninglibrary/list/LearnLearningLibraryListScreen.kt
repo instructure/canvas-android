@@ -43,6 +43,7 @@ import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearni
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryItem
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryStatusFilter
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
+import com.instructure.horizon.features.learn.learninglibrary.common.LearningLibraryRoute
 import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
@@ -115,7 +116,15 @@ private fun LearnLearningLibraryCollections(
                     navController.navigate(LearnRoute.LearnLearningLibraryEnrollScreen.route(itemId))
                 },
                 { route ->
-                    route?.let { navController.navigate(route) }
+                    when (route) {
+                        is LearningLibraryRoute.StringRoute -> {
+                            navController.navigate(route.route)
+                        }
+                        is LearningLibraryRoute.ObjectRoute -> {
+                            navController.navigate(route.route)
+                        }
+                        null -> {}
+                    }
                 },
                 {
                     navController.navigate(LearnRoute.LearnLearningLibraryDetailsScreen.route(it))
@@ -161,7 +170,15 @@ private fun LearnLearningLibraryItems(
                 LearnLearningLibraryItem(
                     state = collectionItemState,
                     onClick = {
-                        collectionItemState.toRoute()?.let { navController.navigate(it) }
+                        when (collectionItemState.route) {
+                            is LearningLibraryRoute.StringRoute -> {
+                                navController.navigate(collectionItemState.route.route)
+                            }
+                            is LearningLibraryRoute.ObjectRoute -> {
+                                navController.navigate(collectionItemState.route.route)
+                            }
+                            null -> {}
+                        }
                     },
                     onBookmarkClick = {
                         state.itemState.onBookmarkClicked(collectionItemState.id)

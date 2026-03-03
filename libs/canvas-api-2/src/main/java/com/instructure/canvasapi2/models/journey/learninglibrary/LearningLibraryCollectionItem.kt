@@ -24,11 +24,13 @@ data class LearningLibraryCollectionItem(
     val itemType: CollectionItemType,
     val displayOrder: Double,
     val canvasCourse: CanvasCourseInfo?,
+    val moduleInfo: LearningLibraryModuleInfo?,
     val programId: String?,
     val programCourseId: String?,
     val createdAt: Date,
     val updatedAt: Date,
     val isBookmarked: Boolean,
     val completionPercentage: Double?,
-    val isEnrolledInCanvas: Boolean?
+    val isEnrolledInCanvas: Boolean?,
+    val canvasEnrollmentId: String?,
 )

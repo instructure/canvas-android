@@ -46,13 +46,13 @@ class LearnLearningLibraryDetailsUiTest {
     private val testItems = listOf(
         LearnLearningLibraryCollectionItemState(
             id = "item1",
-            courseId = 1L,
             imageUrl = "https://example.com/course1.png",
             name = "Introduction to Programming",
             isBookmarked = false,
             bookmarkLoading = false,
             canEnroll = true,
             type = CollectionItemType.COURSE,
+            route = null,
             chips = listOf(
                 LearnLearningLibraryCollectionItemChipState(label = "Course"),
                 LearnLearningLibraryCollectionItemChipState(label = "60 mins")
@@ -60,26 +60,26 @@ class LearnLearningLibraryDetailsUiTest {
         ),
         LearnLearningLibraryCollectionItemState(
             id = "item2",
-            courseId = 2L,
             imageUrl = "https://example.com/course2.png",
             name = "Advanced Algorithms",
             isBookmarked = true,
             bookmarkLoading = false,
             canEnroll = false,
             type = CollectionItemType.ASSIGNMENT,
+            route = null,
             chips = listOf(
                 LearnLearningLibraryCollectionItemChipState(label = "Assignment")
             )
         ),
         LearnLearningLibraryCollectionItemState(
             id = "item3",
-            courseId = 3L,
             imageUrl = "https://example.com/course3.png",
             name = "Data Structures",
             isBookmarked = false,
             bookmarkLoading = false,
             canEnroll = false,
             type = CollectionItemType.PAGE,
+            route = null,
             chips = listOf(
                 LearnLearningLibraryCollectionItemChipState(label = "Page")
             )
@@ -271,13 +271,13 @@ class LearnLearningLibraryDetailsUiTest {
         val manyItems = (1..15).map {
             LearnLearningLibraryCollectionItemState(
                 id = "item$it",
-                courseId = it.toLong(),
                 imageUrl = "https://example.com/course$it.png",
                 name = "Course $it",
                 isBookmarked = false,
                 bookmarkLoading = false,
                 canEnroll = false,
                 type = CollectionItemType.COURSE,
+                route = null,
                 chips = emptyList()
             )
         }
@@ -397,13 +397,13 @@ class LearnLearningLibraryDetailsUiTest {
         val manyItems = (1..20).map {
             LearnLearningLibraryCollectionItemState(
                 id = "item$it",
-                courseId = it.toLong(),
                 imageUrl = "https://example.com/course$it.png",
                 name = "Course $it",
                 isBookmarked = false,
                 bookmarkLoading = false,
                 canEnroll = false,
                 type = CollectionItemType.COURSE,
+                route = null,
                 chips = emptyList()
             )
         }
@@ -435,13 +435,13 @@ class LearnLearningLibraryDetailsUiTest {
         val manyItems = (1..20).map {
             LearnLearningLibraryCollectionItemState(
                 id = "item$it",
-                courseId = it.toLong(),
                 imageUrl = "https://example.com/course$it.png",
                 name = "Course $it",
                 isBookmarked = false,
                 bookmarkLoading = false,
                 canEnroll = false,
                 type = CollectionItemType.COURSE,
+                route = null,
                 chips = emptyList()
             )
         }

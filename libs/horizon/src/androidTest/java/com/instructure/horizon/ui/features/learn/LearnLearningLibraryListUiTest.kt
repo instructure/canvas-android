@@ -55,13 +55,13 @@ class LearnLearningLibraryListUiTest {
             items = listOf(
                 LearnLearningLibraryCollectionItemState(
                     id = "item1",
-                    courseId = 1L,
                     imageUrl = null,
                     name = "Introduction to Programming",
                     isBookmarked = false,
                     bookmarkLoading = false,
                     canEnroll = true,
                     type = CollectionItemType.COURSE,
+                    route = null,
                     chips = listOf(
                         LearnLearningLibraryCollectionItemChipState(label = "Course"),
                         LearnLearningLibraryCollectionItemChipState(label = "60 mins")
@@ -69,13 +69,13 @@ class LearnLearningLibraryListUiTest {
                 ),
                 LearnLearningLibraryCollectionItemState(
                     id = "item2",
-                    courseId = 2L,
                     imageUrl = null,
                     name = "Advanced Algorithms",
                     isBookmarked = true,
                     bookmarkLoading = false,
                     canEnroll = false,
                     type = CollectionItemType.PAGE,
+                    route = null,
                     chips = listOf(
                         LearnLearningLibraryCollectionItemChipState(label = "Page")
                     )
@@ -89,13 +89,13 @@ class LearnLearningLibraryListUiTest {
             items = listOf(
                 LearnLearningLibraryCollectionItemState(
                     id = "item3",
-                    courseId = 3L,
                     imageUrl = null,
                     name = "Machine Learning",
                     isBookmarked = false,
                     bookmarkLoading = false,
                     canEnroll = false,
                     type = CollectionItemType.COURSE,
+                    route = null,
                     chips = listOf(
                         LearnLearningLibraryCollectionItemChipState(label = "Course")
                     )
@@ -109,13 +109,13 @@ class LearnLearningLibraryListUiTest {
             items = listOf(
                 LearnLearningLibraryCollectionItemState(
                     id = "item4",
-                    courseId = 4L,
                     imageUrl = null,
                     name = "React Basics",
                     isBookmarked = false,
                     bookmarkLoading = false,
                     canEnroll = true,
                     type = CollectionItemType.COURSE,
+                    route = null,
                     chips = listOf(
                         LearnLearningLibraryCollectionItemChipState(label = "Course")
                     )
@@ -127,13 +127,13 @@ class LearnLearningLibraryListUiTest {
     private val testItems = listOf(
         LearnLearningLibraryCollectionItemState(
             id = "item1",
-            courseId = 1L,
             imageUrl = null,
             name = "Introduction to Programming",
             isBookmarked = false,
             bookmarkLoading = false,
             canEnroll = true,
             type = CollectionItemType.COURSE,
+            route = null,
             chips = listOf(
                 LearnLearningLibraryCollectionItemChipState(label = "Course"),
                 LearnLearningLibraryCollectionItemChipState(label = "60 mins")
@@ -141,13 +141,13 @@ class LearnLearningLibraryListUiTest {
         ),
         LearnLearningLibraryCollectionItemState(
             id = "item2",
-            courseId = 2L,
             imageUrl = null,
             name = "Machine Learning",
             isBookmarked = true,
             bookmarkLoading = false,
             canEnroll = false,
             type = CollectionItemType.COURSE,
+            route = null,
             chips = listOf(
                 LearnLearningLibraryCollectionItemChipState(label = "Course")
             )

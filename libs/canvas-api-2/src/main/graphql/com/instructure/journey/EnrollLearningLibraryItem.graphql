@@ -23,6 +23,9 @@ mutation EnrollLearningLibraryItem($input: EnrollLearnerInCollectionItemInput!) 
           completionPercentage
           isEnrolledInCanvas
           canvasEnrollmentId
+          canvasModuleId
+          canvasModuleItemId
+          canvasResourceId
       }
   }
 }

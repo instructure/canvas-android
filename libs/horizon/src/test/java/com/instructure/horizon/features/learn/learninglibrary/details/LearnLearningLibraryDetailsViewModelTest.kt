@@ -626,6 +626,8 @@ class LearnLearningLibraryDetailsViewModelTest {
         programId = null,
         programCourseId = null,
         createdAt = Date(),
-        updatedAt = Date()
+        updatedAt = Date(),
+        moduleInfo = null,
+        canvasEnrollmentId = null
     )
 }

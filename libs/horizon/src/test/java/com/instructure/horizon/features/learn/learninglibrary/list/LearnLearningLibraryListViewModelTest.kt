@@ -751,6 +751,8 @@ class LearnLearningLibraryListViewModelTest {
         updatedAt = Date(),
         isBookmarked = isBookmarked,
         completionPercentage = completionPercentage,
-        isEnrolledInCanvas = isEnrolledInCanvas
+        isEnrolledInCanvas = isEnrolledInCanvas,
+        moduleInfo = null,
+        canvasEnrollmentId = null
     )
 }

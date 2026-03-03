@@ -612,4 +612,5 @@
     <string name="learnLearningLibraryEnrollDialogEnrollLabel">Enroll</string>
     <string name="learnLearningLibraryEnrollDialogDetailsMessage">Enroll to access the course and start learning.</string>
     <string name="learnLearningLibraryEnrollDialogFailedToEnrollMessage">Failed to enroll</string>
+    <string name="learnLearningLibraryEmptyCollectionMessage">No items in this collection</string>
 </resources>

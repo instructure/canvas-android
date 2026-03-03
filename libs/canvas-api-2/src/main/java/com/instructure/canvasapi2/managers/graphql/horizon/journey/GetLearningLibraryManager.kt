@@ -21,12 +21,14 @@ import com.apollographql.apollo.api.Optional
 import com.instructure.canvasapi2.di.JourneyApolloClient
 import com.instructure.canvasapi2.enqueueMutation
 import com.instructure.canvasapi2.enqueueQuery
+import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.journey.learninglibrary.CanvasCourseInfo
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
 import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearningLibraryCollection
 import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearningLibraryCollectionsResponse
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItem
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItemsResponse
+import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryModuleInfo
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryPageInfo
 import com.instructure.canvasapi2.models.journey.learninglibrary.toApolloType
 import com.instructure.canvasapi2.models.journey.learninglibrary.toModel
@@ -111,13 +113,24 @@ class GetLearningLibraryManagerImpl @Inject constructor(
                             estimatedDurationMinutes = course.estimatedDurationMinutes
                         )
                     },
+                    moduleInfo = if (item.canvasModuleItemId != null) {
+                        LearningLibraryModuleInfo(
+                            moduleId = item.canvasModuleId,
+                            moduleItemId = item.canvasModuleItemId,
+                            resourceId = item.canvasResourceId,
+                            moduleItemType = item.itemType.toModuleItemType()?.name
+                        )
+                    } else {
+                        null
+                    },
                     programId = item.programId,
                     programCourseId = item.programCourseId,
                     createdAt = item.createdAt,
                     updatedAt = item.updatedAt,
                     isBookmarked = item.isBookmarked,
                     completionPercentage = item.completionPercentage,
-                    isEnrolledInCanvas = item.isEnrolledInCanvas
+                    isEnrolledInCanvas = item.isEnrolledInCanvas,
+                    canvasEnrollmentId = item.canvasEnrollmentId
                 )
             },
             pageInfo = LearningLibraryPageInfo(
@@ -165,13 +178,24 @@ class GetLearningLibraryManagerImpl @Inject constructor(
                                     estimatedDurationMinutes = course.estimatedDurationMinutes
                                 )
                             },
+                            moduleInfo = if (item.canvasModuleItemId != null) {
+                                LearningLibraryModuleInfo(
+                                    moduleId = item.canvasModuleId,
+                                    moduleItemId = item.canvasModuleItemId,
+                                    resourceId = item.canvasResourceId,
+                                    moduleItemType = item.itemType.toModuleItemType()?.name
+                                )
+                            } else {
+                                null
+                            },
                             programId = item.programId,
                             programCourseId = item.programCourseId,
                             createdAt = item.createdAt,
                             updatedAt = item.updatedAt,
                             isBookmarked = item.isBookmarked,
                             completionPercentage = item.completionPercentage,
-                            isEnrolledInCanvas = item.isEnrolledInCanvas
+                            isEnrolledInCanvas = item.isEnrolledInCanvas,
+                            canvasEnrollmentId = item.canvasEnrollmentId
                         )
                     }
                 )
@@ -211,13 +235,24 @@ class GetLearningLibraryManagerImpl @Inject constructor(
                             estimatedDurationMinutes = course.estimatedDurationMinutes
                         )
                     },
+                    moduleInfo = if (item.canvasModuleItemId != null) {
+                        LearningLibraryModuleInfo(
+                            moduleId = item.canvasModuleId,
+                            moduleItemId = item.canvasModuleItemId,
+                            resourceId = item.canvasResourceId,
+                            moduleItemType = item.itemType.toModuleItemType()?.name
+                        )
+                    } else {
+                        null
+                    },
                     programId = item.programId,
                     programCourseId = item.programCourseId,
                     createdAt = item.createdAt,
                     updatedAt = item.updatedAt,
                     isBookmarked = item.isBookmarked,
                     completionPercentage = item.completionPercentage,
-                    isEnrolledInCanvas = item.isEnrolledInCanvas
+                    isEnrolledInCanvas = item.isEnrolledInCanvas,
+                    canvasEnrollmentId = item.canvasEnrollmentId
                 )
             }
         )
@@ -254,13 +289,24 @@ class GetLearningLibraryManagerImpl @Inject constructor(
                     estimatedDurationMinutes = course.estimatedDurationMinutes
                 )
             },
+            moduleInfo = if (result.item.canvasModuleItemId != null) {
+                LearningLibraryModuleInfo(
+                    moduleId = result.item.canvasModuleId,
+                    moduleItemId = result.item.canvasModuleItemId,
+                    resourceId = result.item.canvasResourceId,
+                    moduleItemType = result.item.itemType.toModuleItemType()?.name
+                )
+            } else {
+                null
+            },
             programId = result.item.programId,
             programCourseId = result.item.programCourseId,
             createdAt = result.item.createdAt,
             updatedAt = result.item.updatedAt,
             isBookmarked = result.item.isBookmarked,
             completionPercentage = result.item.completionPercentage,
-            isEnrolledInCanvas = result.item.isEnrolledInCanvas
+            isEnrolledInCanvas = result.item.isEnrolledInCanvas,
+            canvasEnrollmentId = result.item.canvasEnrollmentId
         )
     }
 
@@ -285,13 +331,36 @@ class GetLearningLibraryManagerImpl @Inject constructor(
                     estimatedDurationMinutes = course.estimatedDurationMinutes
                 )
             },
+            moduleInfo = if (result.canvasModuleItemId != null) {
+                LearningLibraryModuleInfo(
+                    moduleId = result.canvasModuleId,
+                    moduleItemId = result.canvasModuleItemId,
+                    resourceId = result.canvasResourceId,
+                    moduleItemType = result.itemType.toModuleItemType()?.name
+                )
+            } else {
+                null
+            },
             programId = result.programId,
             programCourseId = result.programCourseId,
             createdAt = result.createdAt,
             updatedAt = result.updatedAt,
             isBookmarked = result.isBookmarked,
             completionPercentage = result.completionPercentage,
-            isEnrolledInCanvas = result.isEnrolledInCanvas
+            isEnrolledInCanvas = result.isEnrolledInCanvas,
+            canvasEnrollmentId = result.canvasEnrollmentId
         )
+    }
+}
+
+private fun com.instructure.journey.type.CollectionItemType.toModuleItemType(): ModuleItem.Type? {
+    return when(this) {
+        com.instructure.journey.type.CollectionItemType.PAGE -> ModuleItem.Type.Page
+        com.instructure.journey.type.CollectionItemType.ASSIGNMENT -> ModuleItem.Type.Assignment
+        com.instructure.journey.type.CollectionItemType.QUIZ -> ModuleItem.Type.Quiz
+        com.instructure.journey.type.CollectionItemType.EXTERNAL_URL -> ModuleItem.Type.ExternalUrl
+        com.instructure.journey.type.CollectionItemType.EXTERNAL_TOOL -> ModuleItem.Type.ExternalTool
+        com.instructure.journey.type.CollectionItemType.FILE -> ModuleItem.Type.File
+        else -> null
     }
 }

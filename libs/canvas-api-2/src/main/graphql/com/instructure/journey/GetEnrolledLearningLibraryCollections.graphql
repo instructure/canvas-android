@@ -35,6 +35,10 @@ query GetEnrolledLearningLibraryCollections(
         isBookmarked
         completionPercentage
         isEnrolledInCanvas
+        canvasEnrollmentId
+        canvasModuleId
+        canvasModuleItemId
+        canvasResourceId
       }
     }
   }

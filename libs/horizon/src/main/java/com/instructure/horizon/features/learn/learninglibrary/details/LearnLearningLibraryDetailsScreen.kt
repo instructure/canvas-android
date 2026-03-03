@@ -41,6 +41,7 @@ import com.instructure.horizon.features.learn.common.LearnSearchBar
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryItem
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryStatusFilter
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
+import com.instructure.horizon.features.learn.learninglibrary.common.LearningLibraryRoute
 import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
@@ -104,7 +105,15 @@ private fun LearnLearningLibraryDetailsContent(
             LearnLearningLibraryItem(
                 state = collectionItemState,
                 onClick = {
-                    collectionItemState.toRoute()?.let { navController.navigate(it) }
+                    when (collectionItemState.route) {
+                        is LearningLibraryRoute.StringRoute -> {
+                            navController.navigate(collectionItemState.route.route)
+                        }
+                        is LearningLibraryRoute.ObjectRoute -> {
+                            navController.navigate(collectionItemState.route.route)
+                        }
+                        null -> {}
+                    }
                 },
                 onBookmarkClick = {
                     state.onBookmarkClicked(collectionItemState.id)

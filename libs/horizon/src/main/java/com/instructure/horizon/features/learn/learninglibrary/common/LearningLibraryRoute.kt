@@ -14,18 +14,9 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.canvasapi2.models.journey.learninglibrary
+package com.instructure.horizon.features.learn.learninglibrary.common
 
-import java.util.Date
-
-data class LearningLibraryCollection(
-    val id: String,
-    val name: String,
-    val publicName: String?,
-    val description: String?,
-    val rootAccountUuid: String,
-    val accountId: String,
-    val deletedAt: Date?,
-    val createdAt: Date,
-    val updatedAt: Date
-)
+sealed class LearningLibraryRoute {
+    data class StringRoute(val route: String): LearningLibraryRoute()
+    data class ObjectRoute(val route: Any): LearningLibraryRoute()
+}
