@@ -27,7 +27,6 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.annotation.ColorInt
 import androidx.core.text.TextUtilsCompat
-import androidx.lifecycle.lifecycleScope
 import com.instructure.annotations.CanvasPdfMenuGrouping
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.pandautils.analytics.SCREEN_VIEW_PSPDFKIT
