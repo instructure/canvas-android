@@ -235,13 +235,24 @@ class GetLearningLibraryManagerImpl @Inject constructor(
                             estimatedDurationMinutes = course.estimatedDurationMinutes
                         )
                     },
+                    moduleInfo = if (item.canvasModuleItemId != null) {
+                        LearningLibraryModuleInfo(
+                            moduleId = item.canvasModuleId,
+                            moduleItemId = item.canvasModuleItemId,
+                            resourceId = item.canvasResourceId,
+                            moduleItemType = item.itemType.toModuleItemType()?.name
+                        )
+                    } else {
+                        null
+                    },
                     programId = item.programId,
                     programCourseId = item.programCourseId,
                     createdAt = item.createdAt,
                     updatedAt = item.updatedAt,
                     isBookmarked = item.isBookmarked,
                     completionPercentage = item.completionPercentage,
-                    isEnrolledInCanvas = item.isEnrolledInCanvas
+                    isEnrolledInCanvas = item.isEnrolledInCanvas,
+                    canvasEnrollmentId = item.canvasEnrollmentId
                 )
             }
         )
