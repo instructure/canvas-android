@@ -31,6 +31,7 @@ import android.view.ViewGroup
 import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.CompoundButton
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -132,6 +133,7 @@ import com.instructure.pandautils.utils.postSticky
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.toPx
 import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
 import com.instructure.student.databinding.ActivityNavigationBinding
@@ -334,10 +336,10 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
              only one fragment on the backstack, which commonly occurs with non-root fragments when routing
              from external sources. */
             val visible = isBottomNavFragment(it) || supportFragmentManager.backStackEntryCount <= 1
-            binding.bottomBar.setVisible(visible)
+            binding.bottomBarContainer.setVisible(visible)
             binding.bottomBarDivider.setVisible(visible)
             // Request insets reapplication when bottom bar visibility changes
-            ViewCompat.requestApplyInsets(binding.bottomBar)
+            ViewCompat.requestApplyInsets(binding.bottomBarContainer)
         }
     }
 
@@ -489,7 +491,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             }
         }
 
-        ViewCompat.setOnApplyWindowInsetsListener(bottomBar) { view, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(bottomBarContainer) { view, insets ->
             val navigationBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
             val displayCutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
             val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
@@ -531,9 +533,17 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             // When bottom bar is visible, no margin needed (bottom bar handles insets)
             // When bottom bar is not visible, apply margin to clear Android nav buttons
             val layoutParams = offlineIndicator.root.layoutParams as? ViewGroup.MarginLayoutParams
-            layoutParams?.bottomMargin = if (bottomBar.isVisible) 0 else navigationBars.bottom
+            layoutParams?.bottomMargin = if (bottomBarContainer.isVisible) 0 else navigationBars.bottom
             offlineIndicator.root.layoutParams = layoutParams
 
+            insets
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(bottomBarContainer) { view, insets ->
+            val navigationBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+            bottomBarContainer.updateLayoutParams<LinearLayout.LayoutParams> {
+                height = 56.toPx + navigationBars.bottom
+            }
             insets
         }
 
@@ -575,7 +585,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             windowInsets
         }
 
-        ViewCompat.requestApplyInsets(bottomBar)
+        ViewCompat.requestApplyInsets(bottomBarContainer)
     }
 
     private fun updateStatusBarAppearanceForDrawer() {
@@ -637,9 +647,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
         currentFragment?.let {
             val visible = isBottomNavFragment(it) || supportFragmentManager.backStackEntryCount <= 1
-            binding.bottomBar.setVisible(visible)
+            binding.bottomBarContainer.setVisible(visible)
             binding.bottomBarDivider.setVisible(visible)
-            ViewCompat.requestApplyInsets(binding.bottomBar)
+            ViewCompat.requestApplyInsets(binding.bottomBarContainer)
         }
     }
 

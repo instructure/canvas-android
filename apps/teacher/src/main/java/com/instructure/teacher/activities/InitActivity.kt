@@ -104,6 +104,7 @@ import com.instructure.pandautils.utils.isAccessibilityEnabled
 import com.instructure.pandautils.utils.items
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.toPx
 import com.instructure.pandautils.utils.toast
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
@@ -325,8 +326,8 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
 
         ViewCompat.setOnApplyWindowInsetsListener(bottomBar) { view, insets ->
             val navigationBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
-            view.updateLayoutParams<RelativeLayout.LayoutParams> {
-                bottomMargin = navigationBars.bottom
+            bottomBarContainer.updateLayoutParams<RelativeLayout.LayoutParams> {
+                height = 56.toPx + navigationBars.bottom
             }
             insets
         }

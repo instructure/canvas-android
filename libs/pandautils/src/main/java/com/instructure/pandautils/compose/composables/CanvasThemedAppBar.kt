@@ -44,7 +44,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.ThemePrefs
 
 /**
- * App bar for main screens, colors are defined by the Canvas theme.
+ * App bar for main screens, colors are defined by the Canvas theme and has no elevation.
  */
 @Composable
 fun CanvasThemedAppBar(
@@ -82,6 +82,52 @@ fun CanvasThemedAppBar(
                         overflow = TextOverflow.Ellipsis
                     )
                 }
+            }
+        },
+        actions = actions,
+        backgroundColor = backgroundColor,
+        contentColor = contentColor,
+        navigationIcon = if (navIconRes == null) null else {
+            {
+                IconButton(onClick = navigationActionClick) {
+                    Icon(
+                        painterResource(id = navIconRes),
+                        contentDescription = navIconContentDescription
+                    )
+                }
+            }
+        },
+        modifier = modifier.testTag("toolbar"),
+        elevation = 0.dp,
+        windowInsets = windowInsets
+    )
+}
+
+/**
+ * App bar for main screens, colors are defined by the Canvas theme and has no elevation.
+ */
+@Composable
+fun CanvasThemedAppBar(
+    content: @Composable () -> Unit,
+    navigationActionClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    @DrawableRes navIconRes: Int? = R.drawable.ic_back_arrow,
+    navIconContentDescription: String = stringResource(id = R.string.back),
+    backgroundColor: Color = Color(color = ThemePrefs.primaryColor),
+    contentColor: Color = Color(color = ThemePrefs.primaryTextColor),
+    windowInsets: WindowInsets = WindowInsets.statusBars,
+    actions: @Composable RowScope.() -> Unit = {}
+) {
+    TopAppBar(
+        title = {
+            Column(
+                modifier = Modifier.semantics(mergeDescendants = true) {
+                    isTraversalGroup = true
+                    traversalIndex = -1f
+                    heading()
+                }
+            ) {
+                content()
             }
         },
         actions = actions,
