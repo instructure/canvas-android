@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.file.upload.scanner.DocumentScannerManager
 import com.instructure.pandautils.room.appdatabase.daos.FileUploadInputDao
 import io.mockk.every
 import io.mockk.mockk
@@ -40,6 +41,8 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -59,6 +62,7 @@ class FileUploadViewModelTest {
     private val fileUploadUtilsHelper: FileUploadUtilsHelper = mockk(relaxed = true)
     private val workManager: WorkManager = mockk(relaxed = true)
     private val fileUploadInputDao: FileUploadInputDao = mockk(relaxed = true)
+    private val documentScannerManager: DocumentScannerManager = mockk(relaxed = true)
 
     @Before
     fun setUp() {
@@ -345,7 +349,46 @@ class FileUploadViewModelTest {
         return FileSubmitObject(fileName, fileSize, "file", "/$fileName")
     }
 
+    @Test
+    fun `Scanner clicked emits LaunchScanner action`() {
+        val viewModel = createViewModel()
+        viewModel.events.observe(lifecycleOwner) {}
+
+        viewModel.onScannerClicked()
+
+        assertEquals(FileUploadAction.LaunchScanner, viewModel.events.value?.getContentIfNotHandled())
+    }
+
+    @Test
+    fun `Scanner clicked shows toast when one file only and file exists`() {
+        val uri: Uri = mockk(relaxed = true)
+        val viewModel = createViewModel()
+        val course = createCourse(1L, "Course 1")
+        val assignment = createAssignment(1L, "Assignment 1", 1L, listOf("pdf"))
+        val submitObject = createSubmitObject("test.pdf")
+
+        every { fileUploadUtilsHelper.getFileSubmitObjectFromInputStream(any(), any(), any()) } returns submitObject
+
+        viewModel.setData(assignment, arrayListOf(uri), FileUploadType.QUIZ, course, -1L, -1L, -1, -1L, -1L, null)
+
+        viewModel.events.observe(lifecycleOwner) {}
+
+        viewModel.onScannerClicked()
+        assertEquals(FileUploadAction.ShowToast("This submission only accepts one file upload"), viewModel.events.value?.getContentIfNotHandled())
+    }
+
+    @Test
+    fun `Scanner available delegates to DocumentScannerManager`() {
+        every { documentScannerManager.isDeviceSupported() } returns true
+        val viewModel = createViewModel()
+        assertTrue(viewModel.scannerAvailable)
+
+        every { documentScannerManager.isDeviceSupported() } returns false
+        val viewModel2 = createViewModel()
+        assertFalse(viewModel2.scannerAvailable)
+    }
+
     private fun createViewModel(): FileUploadDialogViewModel {
-        return FileUploadDialogViewModel(fileUploadUtilsHelper, resources, workManager, fileUploadInputDao)
+        return FileUploadDialogViewModel(fileUploadUtilsHelper, resources, workManager, fileUploadInputDao, documentScannerManager)
     }
 }

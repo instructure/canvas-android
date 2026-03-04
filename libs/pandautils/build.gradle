@@ -187,6 +187,7 @@ dependencies {
     implementation Libs.ANDROIDX_CONSTRAINT_LAYOUT
     implementation Libs.ANDROIDX_WEBKIT
     implementation Libs.PLAY_IN_APP_UPDATES
+    implementation Libs.MLKIT_DOCUMENT_SCANNER
 
     /* Work Manager */
     implementation Libs.ANDROIDX_WORK_MANAGER

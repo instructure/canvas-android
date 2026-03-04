@@ -47,6 +47,7 @@ object Versions {
     const val GLANCE = "1.1.1"
     const val LIVEDATA = "1.9.0"
     const val REORDERABLE = "2.4.0"
+    const val MLKIT_DOCUMENT_SCANNER = "16.0.0"
 }
 
 object Libs {
@@ -95,6 +96,7 @@ object Libs {
     const val PLAY_IN_APP_UPDATES = "com.google.android.play:app-update:2.1.0"
     const val FLEXBOX_LAYOUT = "com.google.android.flexbox:flexbox:3.0.0"
     const val MATERIAL_DESIGN = "com.google.android.material:material:1.13.0"
+    const val MLKIT_DOCUMENT_SCANNER = "com.google.android.gms:play-services-mlkit-document-scanner:${Versions.MLKIT_DOCUMENT_SCANNER}"
 
     /* Mobius */
     const val MOBIUS_CORE = "com.spotify.mobius:mobius-core:${Versions.MOBIUS}"
