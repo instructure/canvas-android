@@ -64,9 +64,9 @@ import com.instructure.canvasapi2.models.SmartSearchContentType
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
-import com.instructure.pandautils.compose.composables.CanvasAppBar
 import com.instructure.pandautils.compose.composables.CanvasDivider
 import com.instructure.pandautils.compose.composables.CanvasScaffold
+import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
@@ -114,13 +114,13 @@ private fun SmartSearchScreenContent(
 ) {
     CanvasScaffold(
         topBar = {
-            CanvasAppBar(
+            CanvasThemedAppBar(
                 backgroundColor = Color(uiState.canvasContext.color),
                 navIconRes = R.drawable.ic_back_arrow,
                 navIconContentDescription = stringResource(R.string.contentDescription_back),
                 navigationActionClick = navigationItemClick,
-                textColor = colorResource(R.color.textLightest),
-                title = {
+                contentColor = colorResource(R.color.textLightest),
+                content = {
                     SearchBar(
                         modifier = Modifier.testTag("searchBar"),
                         icon = R.drawable.ic_smart_search,
