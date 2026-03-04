@@ -80,7 +80,7 @@ class AssignmentDueDatesInteractionTest : TeacherComposeTest() {
         dashboardPage.openCourse(course)
         courseBrowserPage.openAssignmentsTab()
         assignmentListPage.clickAssignment(assignment)
-        assignmentDetailsPage.openAllDatesPage()
+        assignmentDetailsPage.openDueDatesPage()
 
         return assignment
     }
