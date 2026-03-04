@@ -175,6 +175,26 @@ private fun LlmTestScreen(
 
         Spacer(Modifier.height(16.dp))
 
+        // Tool log
+        if (uiState.toolLog.isNotEmpty()) {
+            Text("Tool calls:", style = MaterialTheme.typography.labelLarge)
+            Spacer(Modifier.height(4.dp))
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                tonalElevation = 2.dp,
+                shape = MaterialTheme.shapes.small
+            ) {
+                Text(
+                    text = uiState.toolLog,
+                    modifier = Modifier.padding(8.dp),
+                    fontFamily = FontFamily.Monospace,
+                    fontSize = 11.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            Spacer(Modifier.height(8.dp))
+        }
+
         // Output
         Text("Response:", style = MaterialTheme.typography.labelLarge)
         Spacer(Modifier.height(4.dp))

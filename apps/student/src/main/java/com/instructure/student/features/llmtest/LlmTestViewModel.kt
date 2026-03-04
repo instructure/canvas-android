@@ -21,8 +21,12 @@ import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.pandautils.domain.usecase.assignment.LoadAssignmentGroupsUseCase
 import com.instructure.pandautils.features.llm.engine.LlmEngine
 import com.instructure.pandautils.features.llm.engine.LlmState
+import com.instructure.pandautils.features.llm.tool.ChatEvent
+import com.instructure.pandautils.features.llm.tool.LlmAssistant
+import com.instructure.pandautils.features.llm.tool.buildTools
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -37,17 +41,44 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.File
 import java.io.FileOutputStream
+import java.text.SimpleDateFormat
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @HiltViewModel
 class LlmTestViewModel @Inject constructor(
     private val llmEngine: LlmEngine,
+    private val loadAssignmentGroupsUseCase: LoadAssignmentGroupsUseCase,
     @ApplicationContext private val appContext: Context
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LlmTestUiState())
     val uiState: StateFlow<LlmTestUiState> = _uiState.asStateFlow()
+
+    private var assistant: LlmAssistant? = null
+
+    private val tools = buildTools {
+        tool("get_assignment_groups") {
+            description = "Get all assignment groups and their assignments for a course, including names, due dates, and points"
+            parameter("course_id", "integer", "The ID of the course")
+            execute { args ->
+                val rawId = args["course_id"]
+                Log.d(TAG, "get_assignment_groups called with course_id=$rawId (${rawId?.javaClass?.simpleName})")
+                val courseId = when (rawId) {
+                    is Number -> rawId.toLong()
+                    is String -> rawId.toLongOrNull() ?: error("Invalid course_id: $rawId")
+                    else -> error("Missing or invalid course_id: $rawId")
+                }
+                Log.i(TAG, "Fetching assignment groups for course $courseId...")
+                val groups = loadAssignmentGroupsUseCase(
+                    LoadAssignmentGroupsUseCase.Params(courseId, forceNetwork = true)
+                )
+                Log.i(TAG, "Got ${groups.size} assignment groups")
+                formatAssignmentGroups(groups)
+            }
+        }
+    }
 
     init {
         viewModelScope.launch {
@@ -122,6 +153,8 @@ class LlmTestViewModel @Inject constructor(
                 _uiState.update { it.copy(modelName = modelFile.name) }
                 Log.i(TAG, "Loading model: ${modelFile.name}")
                 llmEngine.loadModel(modelFile.absolutePath)
+
+                assistant = LlmAssistant(engine = llmEngine, tools = tools)
             } catch (e: Exception) {
                 Log.e(TAG, "Auto-load failed", e)
                 _uiState.update { it.copy(error = e.message, isLoading = false, downloadProgress = null) }
@@ -145,15 +178,14 @@ class LlmTestViewModel @Inject constructor(
                             FileOutputStream(target).use { output -> input.copyTo(output) }
                         }
                         Log.i(TAG, "Copy done (${target.length() / 1024 / 1024} MB)")
-                    } else {
-                        Log.i(TAG, "Model already exists at ${target.absolutePath}")
                     }
                     target
                 }
 
                 _uiState.update { it.copy(modelName = modelFile.name) }
-                Log.i(TAG, "Loading model...")
                 llmEngine.loadModel(modelFile.absolutePath)
+
+                assistant = LlmAssistant(engine = llmEngine, tools = tools)
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to load model", e)
                 _uiState.update { it.copy(error = e.message, isLoading = false) }
@@ -162,11 +194,29 @@ class LlmTestViewModel @Inject constructor(
     }
 
     fun generate(prompt: String) {
+        val currentAssistant = assistant ?: return
         viewModelScope.launch {
-            _uiState.update { it.copy(response = "", error = null) }
+            _uiState.update { it.copy(response = "", error = null, toolLog = "") }
             try {
-                val response = llmEngine.complete(prompt)
-                _uiState.update { it.copy(response = response) }
+                currentAssistant.chatStream(prompt).collect { event ->
+                    when (event) {
+                        is ChatEvent.Token -> {
+                            _uiState.update { it.copy(response = it.response + event.text) }
+                        }
+                        is ChatEvent.ToolCallDetected -> {
+                            _uiState.update { it.copy(
+                                toolLog = it.toolLog + "-> ${event.name}(${event.arguments})\n",
+                                response = ""
+                            )}
+                        }
+                        is ChatEvent.ToolResult -> {
+                            _uiState.update { it.copy(
+                                toolLog = it.toolLog + "<- ${event.name}: ${event.result.length} chars\n",
+                                response = ""
+                            )}
+                        }
+                    }
+                }
             } catch (e: Exception) {
                 Log.e(TAG, "Generation failed", e)
                 _uiState.update { it.copy(error = e.message) }
@@ -176,8 +226,9 @@ class LlmTestViewModel @Inject constructor(
 
     fun unloadModel() {
         try {
+            assistant = null
             llmEngine.unloadModel()
-            _uiState.update { it.copy(modelName = null, response = "") }
+            _uiState.update { it.copy(modelName = null, response = "", toolLog = "") }
         } catch (e: Exception) {
             _uiState.update { it.copy(error = e.message) }
         }
@@ -185,6 +236,7 @@ class LlmTestViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
+        assistant = null
         llmEngine.destroy()
     }
 
@@ -192,6 +244,30 @@ class LlmTestViewModel @Inject constructor(
         private const val TAG = "LlmTestViewModel"
         private const val MODEL_URL = "https://huggingface.co/bartowski/Llama-3.2-3B-Instruct-GGUF/resolve/main/Llama-3.2-3B-Instruct-Q4_K_M.gguf"
         private const val MODEL_FILENAME = "Llama-3.2-3B-Instruct-Q4_K_M.gguf"
+
+        private val DATE_FORMAT = SimpleDateFormat("MMM d, yyyy 'at' h:mm a", Locale.US)
+
+        private fun formatAssignmentGroups(
+            groups: List<com.instructure.canvasapi2.models.AssignmentGroup>
+        ): String = buildString {
+            if (groups.isEmpty()) {
+                append("No assignment groups found.")
+                return@buildString
+            }
+            for (group in groups) {
+                appendLine("Group: ${group.name ?: "Unnamed"} (weight: ${group.groupWeight}%)")
+                val assignments = group.assignments
+                if (assignments.isEmpty()) {
+                    appendLine("  (no assignments)")
+                } else {
+                    for (a in assignments) {
+                        val due = a.dueDate?.let { DATE_FORMAT.format(it) } ?: "no due date"
+                        appendLine("  - \"${a.name}\" (id: ${a.id}) - Due: $due - ${a.pointsPossible} points")
+                    }
+                }
+                appendLine()
+            }
+        }
     }
 }
 
@@ -205,7 +281,8 @@ data class LlmTestUiState(
     val modelName: String? = null,
     val response: String = "",
     val error: String? = null,
-    val downloadProgress: Float? = null
+    val downloadProgress: Float? = null,
+    val toolLog: String = ""
 ) {
     fun fromEngineState(state: LlmState): LlmTestUiState = when (state) {
         is LlmState.Uninitialized -> copy(stateLabel = "Uninitialized", isLoading = false)
