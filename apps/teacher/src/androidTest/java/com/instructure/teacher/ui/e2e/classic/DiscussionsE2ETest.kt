@@ -20,19 +20,25 @@ import android.util.Log
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
+import com.instructure.canvas.espresso.pressBackButton
 import com.instructure.dataseeding.api.DiscussionTopicsApi
-import com.instructure.teacher.ui.utils.TeacherTest
+import com.instructure.espresso.getCustomDateCalendar
+import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.extensions.seedData
 import com.instructure.teacher.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 import java.lang.Thread.sleep
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.TimeZone
 
 @HiltAndroidTest
-class DiscussionsE2ETest : TeacherTest() {
+class DiscussionsE2ETest : TeacherComposeTest() {
 
     override fun displaysPageObjects() = Unit
 
@@ -195,5 +201,108 @@ class DiscussionsE2ETest : TeacherTest() {
         Log.d(ASSERTION_TAG, "Assert that the '${discussion3.title}' discussion can be seen.")
         discussionsListPage.assertDiscussionCount(1)
         discussionsListPage.assertHasDiscussion(discussion3.title)
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.DISCUSSIONS, TestCategory.E2E, SecondaryFeatureCategory.DISCUSSION_CHECKPOINTS)
+    fun testDiscussionCheckpointsCalendarE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+
+        val discussionWithCheckpointsTitle = "Test Discussion with Checkpoints"
+        val assignmentName = "Test Assignment with Checkpoints"
+
+        Log.d(PREPARATION_TAG, "Convert dates to match with different formats in different screens (Calendar, Assignment Details)")
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US).apply {
+            timeZone = TimeZone.getTimeZone("UTC")
+        }
+        val calendarDisplayFormat = SimpleDateFormat(" MMM d 'at' h:mm a", Locale.US)
+        val replyToTopicCalendar = getCustomDateCalendar(2)
+        val replyToEntryCalendar = getCustomDateCalendar(4)
+        val replyToTopicDueDate = dateFormat.format(replyToTopicCalendar.time)
+        val replyToEntryDueDate = dateFormat.format(replyToEntryCalendar.time)
+
+        Log.d(PREPARATION_TAG, "Seed a discussion topic with checkpoints for '${course.name}' course.")
+        DiscussionTopicsApi.createDiscussionTopicWithCheckpoints(course.id, teacher.token, discussionWithCheckpointsTitle, assignmentName, replyToTopicDueDate, replyToEntryDueDate)
+
+        val convertedReplyToTopicDueDate = calendarDisplayFormat.format(replyToTopicCalendar.time)
+        val convertedReplyToEntryDueDate = calendarDisplayFormat.format(replyToEntryCalendar.time)
+
+        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
+        tokenLogin(teacher)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Click on the 'Calendar' bottom menu to navigate to the Calendar page.")
+        dashboardPage.openCalendar()
+
+        Log.d(STEP_TAG, "Navigate forward 2 days to the 'Reply to Topic' checkpoint due date.")
+        calendarScreenPage.swipeEventsLeft(2)
+
+        Log.d(ASSERTION_TAG, "Assert that the '$discussionWithCheckpointsTitle Reply to Topic' checkpoint is displayed on its due date on the Calendar Page.")
+        calendarScreenPage.assertItemDetails("$discussionWithCheckpointsTitle Reply to Topic", course.name, "Due$convertedReplyToTopicDueDate")
+
+        Log.d(STEP_TAG, "Select the '$discussionWithCheckpointsTitle Reply to Topic' event and navigate back to the Calendar Page.")
+        calendarScreenPage.clickOnItem("$discussionWithCheckpointsTitle Reply to Topic")
+
+        Log.d(ASSERTION_TAG, "Assert that the assignment details page is displayed with the correct assignment name.")
+        assignmentDetailsPage.waitForRender()
+        assignmentDetailsPage.assertAssignmentName(discussionWithCheckpointsTitle)
+
+        Log.d(STEP_TAG, "Click on the 'Due Dates' section to navigate to the Due Dates page.")
+        assignmentDetailsPage.openDueDatesPage()
+
+        Log.d(ASSERTION_TAG, "Assert that 2 due dates are visible on the Due Dates page.")
+        assignmentDueDatesPage.assertDueDatesCount(2)
+
+        Log.d(ASSERTION_TAG, "Assert first due date is with date '$convertedReplyToTopicDueDate'.")
+        assignmentDueDatesPage.assertDueDateTime(convertedReplyToTopicDueDate)
+
+        Log.d(ASSERTION_TAG, "Assert second due date is with date '$convertedReplyToEntryDueDate'.")
+        assignmentDueDatesPage.assertDueDateTime(convertedReplyToEntryDueDate)
+
+        Log.d(STEP_TAG, "Navigate back to the Calendar Page.")
+        pressBackButton(2)
+
+        Log.d(STEP_TAG, "Navigate forward 2 more days to the 'Required Replies' checkpoint due date.")
+        calendarScreenPage.swipeEventsLeft(2)
+
+        Log.d(ASSERTION_TAG, "Assert that the '$discussionWithCheckpointsTitle Required Replies (2)' checkpoint is displayed on its due date on the Calendar Page.")
+        calendarScreenPage.assertItemDetails("$discussionWithCheckpointsTitle Required Replies (2)", course.name, "Due$convertedReplyToEntryDueDate")
+
+        Log.d(STEP_TAG, "Select the '$discussionWithCheckpointsTitle Required Replies (2)' event and navigate back to the Calendar Page.")
+        calendarScreenPage.clickOnItem("$discussionWithCheckpointsTitle Required Replies (2)")
+
+        Log.d(ASSERTION_TAG, "Assert that the assignment details page is displayed with the correct assignment name.")
+        assignmentDetailsPage.waitForRender()
+        assignmentDetailsPage.assertAssignmentName(discussionWithCheckpointsTitle)
+
+        Log.d(ASSERTION_TAG, "Assert that the assignment details page is displayed with the correct assignment name.")
+        assignmentDetailsPage.waitForRender()
+        assignmentDetailsPage.assertAssignmentName(discussionWithCheckpointsTitle)
+
+        Log.d(STEP_TAG, "Click on the 'Due Dates' section to navigate to the Due Dates page.")
+        assignmentDetailsPage.openDueDatesPage()
+
+        Log.d(ASSERTION_TAG, "Assert that 2 due dates are visible on the Due Dates page.")
+        assignmentDueDatesPage.assertDueDatesCount(2)
+
+        Log.d(ASSERTION_TAG, "Assert first due date is with date '$convertedReplyToTopicDueDate'.")
+        assignmentDueDatesPage.assertDueDateTime(convertedReplyToTopicDueDate)
+
+        Log.d(ASSERTION_TAG, "Assert second due date is with date '$convertedReplyToEntryDueDate'.")
+        assignmentDueDatesPage.assertDueDateTime(convertedReplyToEntryDueDate)
+
+        Log.d(STEP_TAG, "Navigate back to the Calendar Page.")
+        pressBackButton(2)
+
+        Log.d(STEP_TAG, "Navigate back 2 days to the 'Reply to Topic' checkpoint due date.")
+        calendarScreenPage.swipeEventsRight(2)
+
+        Log.d(ASSERTION_TAG, "Assert that the '$discussionWithCheckpointsTitle Reply to Topic' checkpoint is displayed on its due date on the Calendar Page.")
+        calendarScreenPage.assertItemDetails("$discussionWithCheckpointsTitle Reply to Topic", course.name, "Due$convertedReplyToTopicDueDate")
     }
 }
