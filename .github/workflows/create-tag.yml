@@ -18,11 +18,18 @@ jobs:
       JIRA_USERNAME: ${{ secrets.JIRA_USERNAME }}
       JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
     steps:
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.ACCESS_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -70,7 +77,7 @@ jobs:
       - name: Create GitHub Release
         if: steps.create-tag.outputs.tag-exists != 'true'
         env:
-          GH_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
           APP_NAME="${{ steps.app-info.outputs.app-name }}"
           VERSION_NAME="${{ steps.app-info.outputs.version-name }}"

@@ -21,7 +21,9 @@ on:
         required: true
         type: string
     secrets:
-      ACCESS_TOKEN:
+      GH_APP_ID:
+        required: true
+      GH_APP_PRIVATE_KEY:
         required: true
       ANDROID_RELEASE_KEYSTORE_B64:
         required: true
@@ -46,12 +48,19 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           submodules: 'recursive'
           fetch-depth: 1
-          token: ${{ secrets.ACCESS_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -92,12 +101,19 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           submodules: 'recursive'
           fetch-depth: 1
-          token: ${{ secrets.ACCESS_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -288,12 +304,19 @@ jobs:
       needs.flank-tests.result == 'success' &&
       (needs.e2e-offline.result == 'success' || needs.e2e-offline.result == 'skipped')
     steps:
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           submodules: 'recursive'
           fetch-depth: 1
-          token: ${{ secrets.ACCESS_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
