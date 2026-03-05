@@ -64,9 +64,7 @@ class DiscussionsE2ETest: ParentComposeTest() {
         Log.d(PREPARATION_TAG, "Read PDF file from assets.")
         val pdfFileName = "samplepdf.pdf"
         val context = InstrumentationRegistry.getInstrumentation().context
-        val inputStream = context.assets.open(pdfFileName)
-        val pdfBytes = inputStream.readBytes()
-        inputStream.close()
+        val pdfBytes = context.assets.open(pdfFileName).use { it.readBytes() }
 
         Log.d(PREPARATION_TAG, "Upload PDF file to course root folder using teacher token.")
         val uploadedFile = FileUploadsApi.uploadFile(courseId = courseRootFolder.id, assignmentId = null, file = pdfBytes, fileName = pdfFileName, token = teacher.token, fileUploadType = FileUploadType.COURSE_FILE)
