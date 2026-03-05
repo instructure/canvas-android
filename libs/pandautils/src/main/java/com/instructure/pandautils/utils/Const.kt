@@ -110,7 +110,7 @@ object Const {
     const val DISCUSSION_REPLY_SUBMITTED = "discussion_reply_submitted"
     const val TITLE = "title"
     const val BODY = "body"
-    const val PROFILE_URL = "canvas.instructure.com"
+    const val PROFILE_URL = "sso.canvaslms.com"
     const val CONVERSATION = "conversations"
     const val COURSES = "courses"
     const val GROUPS = "groups"
