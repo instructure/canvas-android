@@ -17,7 +17,9 @@
 package com.instructure.student.ui.e2e.classic
 
 import android.os.Environment
+import android.os.SystemClock.sleep
 import android.util.Log
+import androidx.media3.ui.R
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.intent.Intents
 import androidx.test.platform.app.InstrumentationRegistry
@@ -26,7 +28,6 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
-import com.instructure.canvas.espresso.common.pages.compose.AssignmentListPage
 import com.instructure.canvas.espresso.pressBackButton
 import com.instructure.canvasapi2.managers.DiscussionManager
 import com.instructure.canvasapi2.models.CanvasContext
@@ -35,6 +36,8 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.DiscussionTopicsApi
+import com.instructure.dataseeding.api.FileFolderApi
+import com.instructure.dataseeding.api.FileUploadsApi
 import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.model.FileUploadType
 import com.instructure.dataseeding.model.GradingType
@@ -43,6 +46,9 @@ import com.instructure.dataseeding.util.Randomizer
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
+import com.instructure.espresso.getVideoPosition
+import com.instructure.espresso.retryWithIncreasingDelay
+import com.instructure.espresso.triggerWorkManagerJobs
 import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.extensions.seedData
 import com.instructure.student.ui.utils.extensions.tokenLogin
@@ -308,6 +314,131 @@ class FilesE2ETest: StudentComposeTest() {
 
         Log.d(ASSERTION_TAG, "Assert that the file upload was successful so the file has displayed on the (global) File List Page.")
         fileListPage.assertItemDisplayed(testFile)
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.FILES, TestCategory.E2E)
+    fun testVideoFileUploadE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+        val videoFileName = "test_video.mp4"
+
+        Log.d(PREPARATION_TAG, "Setup the '$videoFileName' file on the device.")
+        setupFileOnDevice(videoFileName)
+
+        Log.d(PREPARATION_TAG, "Seed '$videoFileName' to the course root folder via the teacher so the Files tab is visible and the video can be opened by the student.")
+        val courseRootFolder = FileFolderApi.getCourseRootFolder(course.id, teacher.token)
+        val videoFileBytes = InstrumentationRegistry.getInstrumentation().context.assets.open(videoFileName).readBytes()
+        FileUploadsApi.uploadFile(courseId = courseRootFolder.id, assignmentId = null, file = videoFileBytes, fileName = videoFileName, token = teacher.token, fileUploadType = FileUploadType.COURSE_FILE)
+
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
+        tokenLogin(student)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Navigate to the global 'Files' Page from the left side menu.")
+        leftSideNavigationDrawerPage.clickFilesMenu()
+
+        Log.d(STEP_TAG, "Click on the 'Add' (+) icon and after that on the 'Upload File' icon.")
+        fileListPage.clickAddButton()
+        fileListPage.clickUploadFileButton()
+
+        Log.d(ASSERTION_TAG, "Assert that the File Chooser Page title is 'Upload To My Files'.")
+        fileChooserPage.assertDialogTitle("Upload To My Files")
+
+        Log.d(PREPARATION_TAG, "Simulate file picker intent for '$videoFileName'.")
+        Intents.init()
+        try {
+            stubFilePickerIntent(videoFileName)
+            fileChooserPage.chooseDevice()
+        } finally {
+            Intents.release()
+        }
+
+        Log.d(STEP_TAG, "Click on the 'Upload' button.")
+        fileChooserPage.clickUpload()
+
+        Log.d(ASSERTION_TAG, "Assert that '$videoFileName' is displayed in My Files after the upload.")
+        retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = {
+            triggerWorkManagerJobs("FileUploadWorker", 20000)
+        }) {
+            fileListPage.assertItemDisplayed(videoFileName)
+        }
+
+        Log.d(STEP_TAG, "Click on '$videoFileName' to open it.")
+        fileListPage.selectItem(videoFileName)
+
+        Log.d(ASSERTION_TAG, "Assert that the video player is displayed.")
+        videoPlayerPage.waitForPlayerViewAndTapToShowControls(device)
+
+        Log.d(ASSERTION_TAG, "Assert that the play/pause button is visible in the media controls.")
+        videoPlayerPage.assertPlayPauseButtonDisplayed()
+
+        Log.d(STEP_TAG, "Click play/pause button to pause the video.")
+        videoPlayerPage.clickPlayPauseButton()
+
+        Log.d(STEP_TAG, "Get the current video position.")
+        var firstVideoPositionText = getVideoPosition(R.id.exo_position)
+        Log.d(ASSERTION_TAG, "First video position: $firstVideoPositionText")
+
+        Log.d(STEP_TAG, "Click play/pause button to resume video playback, wait for video to play for 2 seconds then click play/pause button to pause again.")
+        videoPlayerPage.clickPlayPauseButton()
+        sleep(2000)
+        videoPlayerPage.clickPlayPauseButton()
+
+        Log.d(STEP_TAG, "Get the video position again.")
+        var secondVideoPositionText = getVideoPosition(R.id.exo_position)
+        Log.d(ASSERTION_TAG, "Second video position: $secondVideoPositionText")
+
+        Log.d(ASSERTION_TAG, "Assert that the video position has changed, confirming video is playing.")
+        assert(firstVideoPositionText != secondVideoPositionText) {
+            "Video position did not change. First: $firstVideoPositionText, Second: $secondVideoPositionText"
+        }
+
+        Log.d(STEP_TAG, "Navigate back to Dashboard Page.")
+        pressBackButton(2)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Select '${course.name}' course and navigate to the course files.")
+        dashboardPage.selectCourse(course)
+        courseBrowserPage.selectFiles()
+
+        Log.d(ASSERTION_TAG, "Assert that '$videoFileName' is displayed in the course files.")
+        fileListPage.assertItemDisplayed(videoFileName)
+
+        Log.d(STEP_TAG, "Click on '$videoFileName' to open it.")
+        fileListPage.selectItem(videoFileName)
+
+        Log.d(ASSERTION_TAG, "Assert that the video player is displayed.")
+        videoPlayerPage.waitForPlayerViewAndTapToShowControls(device)
+
+        Log.d(ASSERTION_TAG, "Assert that the play/pause button is visible in the media controls.")
+        videoPlayerPage.assertPlayPauseButtonDisplayed()
+
+        Log.d(STEP_TAG, "Click play/pause button to pause the video.")
+        videoPlayerPage.clickPlayPauseButton()
+
+        Log.d(STEP_TAG, "Get the current video position.")
+        firstVideoPositionText = getVideoPosition(R.id.exo_position)
+        Log.d(ASSERTION_TAG, "First video position: $firstVideoPositionText")
+
+        Log.d(STEP_TAG, "Click play/pause button to resume video playback, wait for video to play for 2 seconds then click play/pause button to pause again.")
+        videoPlayerPage.clickPlayPauseButton()
+        sleep(2000)
+        videoPlayerPage.clickPlayPauseButton()
+
+        Log.d(STEP_TAG, "Get the video position again.")
+        secondVideoPositionText = getVideoPosition(R.id.exo_position)
+        Log.d(ASSERTION_TAG, "Second video position: $secondVideoPositionText")
+
+        Log.d(ASSERTION_TAG, "Assert that the video position has changed, confirming video is playing.")
+        assert(firstVideoPositionText != secondVideoPositionText) {
+            "Video position did not change. First: $firstVideoPositionText, Second: $secondVideoPositionText"
+        }
     }
 
 }

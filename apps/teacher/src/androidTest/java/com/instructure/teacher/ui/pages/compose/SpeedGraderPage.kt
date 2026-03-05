@@ -311,7 +311,7 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
         composeTestRule.waitForIdle()
         swipeUpGradeAndRubric()
         waitForView(withId(R.id.recordAudioButton)).click()
-        Thread.sleep(3000) // Let the audio recording go for a bit
+        Thread.sleep(5000) // Let the audio recording go for a bit
         waitForView(withId(R.id.stopButton)).click()
         waitForView(withId(R.id.sendAudioButton)).click()
         composeTestRule.waitForIdle()
@@ -336,7 +336,7 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
         composeTestRule.waitForIdle()
         swipeUpGradeAndRubric()
         waitForView(withId(R.id.startRecordingButton)).click()
-        Thread.sleep(3000) // Let the video recording go for a bit
+        Thread.sleep(5000) // Let the video recording go for a bit
         waitForView(withId(R.id.endRecordingButton)).click()
         waitForView(withId(R.id.sendButton)).click()
         composeTestRule.waitForIdle()

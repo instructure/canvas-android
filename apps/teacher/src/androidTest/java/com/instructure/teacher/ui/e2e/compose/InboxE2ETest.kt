@@ -14,7 +14,6 @@
  *     limitations under the License.
  *
  */
-
 package com.instructure.teacher.ui.e2e.compose
 
 import android.os.Environment
@@ -816,26 +815,26 @@ class InboxE2ETest : TeacherComposeTest() {
         Log.d(STEP_TAG, "Click on the attachment to verify it can be opened.")
         inboxDetailsPage.clickAttachment(videoFileName)
 
-        Log.d(ASSERTION_TAG, "Wait for video to load and assert that the media play button is visible.")
-        inboxDetailsPage.assertPlayButtonDisplayed()
+        Log.d(ASSERTION_TAG, "Assert that the media comment preview (and the 'Play button') is displayed.")
+        videoPlayerPage.assertMediaCommentPreviewDisplayed()
 
-        Log.d(STEP_TAG, "Click the play button to start the video and on the screen to show media controls.")
-        inboxDetailsPage.clickPlayButton()
-        inboxDetailsPage.clickScreenCenterToShowControls(device)
+        Log.d(STEP_TAG, "Click the play button to start the video and wait for it to finish loading.")
+        videoPlayerPage.clickPlayButton()
+        videoPlayerPage.waitForVideoToStart(device)
 
         Log.d(ASSERTION_TAG, "Assert that the play/pause button is visible in the media controls.")
-        inboxDetailsPage.assertPlayPauseButtonDisplayed()
+        videoPlayerPage.assertPlayPauseButtonDisplayed()
 
         Log.d(STEP_TAG, "Click play/pause button to pause the video.")
-        inboxDetailsPage.clickPlayPauseButton()
+        videoPlayerPage.clickPlayPauseButton()
 
         Log.d(STEP_TAG, "Get the current video position.")
         val firstPositionText = getVideoPosition(R.id.exo_position)
 
         Log.d(STEP_TAG, "Click play/pause button to resume video playback, wait for video to play for 2 seconds then click play/pause button to pause again.")
-        inboxDetailsPage.clickPlayPauseButton()
+        videoPlayerPage.clickPlayPauseButton()
         sleep(2000)
-        inboxDetailsPage.clickPlayPauseButton()
+        videoPlayerPage.clickPlayPauseButton()
 
         Log.d(STEP_TAG, "Get the video position again.")
         val secondPositionText = getVideoPosition(R.id.exo_position)
