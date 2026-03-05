@@ -16,7 +16,9 @@ on:
         required: true
         type: string
     secrets:
-      ACCESS_TOKEN:
+      GH_APP_ID:
+        required: true
+      GH_APP_PRIVATE_KEY:
         required: true
       ANDROID_RELEASE_KEYSTORE_B64:
         required: true
@@ -30,12 +32,21 @@ jobs:
     name: ${{ inputs.app-type-lower }}-build
     runs-on: ubuntu-latest
     steps:
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: canvas-android,android-vault
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           submodules: 'recursive'
           fetch-depth: 1
-          token: ${{ secrets.ACCESS_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
