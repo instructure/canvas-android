@@ -25,6 +25,7 @@ import com.instructure.pandautils.utils.isCourseOrGroup
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.utils.withArgs
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionMode
+import com.instructure.pandautils.features.file.upload.scanner.DocumentScannerManager
 import com.instructure.student.mobius.assignmentDetails.submission.picker.PickerSubmissionUploadEffectHandler
 import com.instructure.student.mobius.common.ui.SubmissionHelper
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,7 +37,7 @@ class PickerSubmissionUploadFragment : BasePickerSubmissionUploadFragment() {
     @Inject
     lateinit var submissionHelper: SubmissionHelper
 
-    override fun makeEffectHandler() = PickerSubmissionUploadEffectHandler(requireContext(), submissionHelper)
+    override fun makeEffectHandler() = PickerSubmissionUploadEffectHandler(requireContext(), submissionHelper, documentScannerManager)
 
     companion object {
 

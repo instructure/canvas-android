@@ -17,7 +17,6 @@
 package com.instructure.teacher.ui.e2e.compose
 
 import android.util.Log
-import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
@@ -51,7 +50,6 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
-    @OptIn(ExperimentalTestApi::class)
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.GRADES, TestCategory.E2E)
@@ -130,10 +128,8 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the '${noSubStudent.name}' student has '-' as score as it's submission is not submitted yet.")
         assignmentSubmissionListPage.assertStudentScoreText(noSubStudent.name, "-")
 
-        Log.d(STEP_TAG, "Navigate back to the Assignment Details Page.")
+        Log.d(STEP_TAG, "Navigate back to the Assignment Details Page and click on 'View All Submission' arrow icon.")
         Espresso.pressBack()
-
-        Log.d(STEP_TAG, "Click on 'View All Submission' arrow icon.")
         assignmentDetailsPage.clickAllSubmissions()
 
         Log.d(STEP_TAG, "Click on '${student.name}' student's avatar.")
@@ -254,7 +250,96 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
             assignmentSubmissionListPage.assertGradesHidden(gradedStudent.name)
             assignmentSubmissionListPage.assertGradesHidden(student.name)
         }
+    }
 
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.GRADES, TestCategory.E2E)
+    fun testSpeedGraderQuickAccessButtonAndSwipeE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(teachers = 1, courses = 1, students = 3, favoriteCourses = 1)
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+        val sortedStudents = data.studentsList.sortedBy { it.sortableName.lowercase() }
+        val firstSubmittedStudent = sortedStudents[0]
+        val secondGradedStudent = sortedStudents[1]
+        val thirdNoSubmissionStudent = sortedStudents[2]
+
+        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course.")
+        val assignment = seedAssignments(
+            courseId = course.id,
+            dueAt = 1.days.fromNow.iso8601,
+            submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+            teacherToken = teacher.token,
+            pointsPossible = 15.0
+        )
+
+        Log.d(PREPARATION_TAG, "Seed a submission for '${assignment[0].name}' assignment with '${firstSubmittedStudent.name}' student.")
+        seedAssignmentSubmission(
+            submissionSeeds = listOf(
+                SubmissionsApi.SubmissionSeedInfo(
+                    amount = 1,
+                    submissionType = SubmissionType.ONLINE_TEXT_ENTRY
+                )
+            ),
+            assignmentId = assignment[0].id,
+            courseId = course.id,
+            studentToken = firstSubmittedStudent.token
+        )
+
+        Log.d(PREPARATION_TAG, "Seed a submission for '${assignment[0].name}' assignment with '${secondGradedStudent.name}' student.")
+        seedAssignmentSubmission(
+            submissionSeeds = listOf(
+                SubmissionsApi.SubmissionSeedInfo(
+                    amount = 1,
+                    submissionType = SubmissionType.ONLINE_TEXT_ENTRY
+                )
+            ),
+            assignmentId = assignment[0].id,
+            courseId = course.id,
+            studentToken = secondGradedStudent.token
+        )
+
+        Log.d(PREPARATION_TAG, "Grade the previously seeded submission for '${secondGradedStudent.name}' student.")
+        SubmissionsApi.gradeSubmission(
+            teacher.token,
+            course.id,
+            assignment[0].id,
+            secondGradedStudent.id,
+            postedGrade = "15"
+        )
+
+        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
+        tokenLogin(teacher)
+
+        Log.d(STEP_TAG, "Open '${course.name}' course and navigate to Assignments Page.")
+        dashboardPage.openCourse(course)
+        courseBrowserPage.openAssignmentsTab()
+
+        Log.d(STEP_TAG, "Click on '${assignment[0].name}' assignment.")
+        assignmentListPage.clickAssignment(assignment[0])
+
+        Log.d(STEP_TAG, "Open the SpeedGrader by clicking on the SpeedGrader quick access button.")
+        assignmentDetailsPage.openSpeedGrader()
+
+        Log.d(ASSERTION_TAG, "Assert that the the initial (first) student is '${firstSubmittedStudent.name}'.")
+        speedGraderPage.assertCurrentStudent(firstSubmittedStudent.name)
+        speedGraderPage.assertCurrentStudentStatus("Submitted")
+
+        Log.d(STEP_TAG, "Swipe to the next (second) student.")
+        speedGraderPage.swipeToNextStudent()
+
+        Log.d(ASSERTION_TAG, "Assert that the current student is '${secondGradedStudent.name}'.")
+        speedGraderPage.assertCurrentStudent(secondGradedStudent.name)
+        speedGraderPage.assertCurrentStudentStatus("Graded")
+
+        Log.d(STEP_TAG, "Swipe to the next (third) student.")
+        speedGraderPage.swipeToNextStudent()
+
+        Log.d(ASSERTION_TAG, "Assert that the current student is '${thirdNoSubmissionStudent.name}'.")
+        speedGraderPage.assertCurrentStudent(thirdNoSubmissionStudent.name)
+        speedGraderPage.assertCurrentStudentStatus("Not Submitted")
     }
 
 }
