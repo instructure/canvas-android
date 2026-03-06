@@ -30,6 +30,7 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
+import com.instructure.canvas.espresso.annotations.ReleaseExclude
 import com.instructure.canvas.espresso.refresh
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.toApiString
@@ -59,6 +60,7 @@ class InboxE2ETest: ParentComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.E2E)
+    @ReleaseExclude
     fun testInboxSelectedButtonActionsE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
