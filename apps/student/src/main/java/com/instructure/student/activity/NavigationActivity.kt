@@ -42,6 +42,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.Insets
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuItemCompat
 import androidx.core.view.ViewCompat
@@ -471,24 +472,29 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 0
             )
 
-            // Consume bottom insets only when offline indicator is visible
-            // When offline, the offline indicator and bottom bar handle bottom insets at the activity level
-            // When online, fragments need bottom insets to clear Android nav buttons
-            if (offlineIndicator.root.visibility == View.VISIBLE) {
-                WindowInsetsCompat.Builder(insets)
-                    .setInsets(
-                        WindowInsetsCompat.Type.navigationBars(),
-                        androidx.core.graphics.Insets.of(
-                            navigationBars.left,
-                            navigationBars.top,
-                            navigationBars.right,
-                            0 // Consume bottom insets when offline
-                        )
+            // Consume horizontal insets so child ComposeViews don't apply them again
+            // Also consume bottom insets when offline indicator is visible
+            val consumeBottom = offlineIndicator.root.visibility == View.VISIBLE
+            WindowInsetsCompat.Builder(insets)
+                .setInsets(
+                    WindowInsetsCompat.Type.navigationBars(),
+                    Insets.of(
+                        0, // Consume left
+                        navigationBars.top,
+                        0, // Consume right
+                        if (consumeBottom) 0 else navigationBars.bottom
                     )
-                    .build()
-            } else {
-                insets // Pass through bottom insets when online
-            }
+                )
+                .setInsets(
+                    WindowInsetsCompat.Type.displayCutout(),
+                    Insets.of(
+                        0, // Consume left
+                        displayCutout.top,
+                        0, // Consume right
+                        displayCutout.bottom
+                    )
+                )
+                .build()
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(bottomBarContainer) { view, insets ->
