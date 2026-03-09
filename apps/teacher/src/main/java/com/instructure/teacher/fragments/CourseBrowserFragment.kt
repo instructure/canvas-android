@@ -227,14 +227,14 @@ class CourseBrowserFragment : BaseSyncFragment<
             ViewCompat.requestApplyInsets(appBarLayout)
         } else {
             // Color overlay disabled: Update toolbar height and add padding
+            val actionBarSize = resources.getDimensionPixelSize(androidx.appcompat.R.dimen.abc_action_bar_default_height_material)
             ViewCompat.setOnApplyWindowInsetsListener(noOverlayToolbar) { view, insets ->
                 val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
 
-                // Update toolbar's actual height to accommodate status bar
+                // Update toolbar's actual height to accommodate status bar (use fixed base height)
                 val layoutParams = view.layoutParams
                 if (layoutParams != null) {
-                    val currentHeight = if (layoutParams.height > 0) layoutParams.height else view.height
-                    layoutParams.height = currentHeight + systemBars.top
+                    layoutParams.height = actionBarSize + systemBars.top
                     view.layoutParams = layoutParams
                 }
 
