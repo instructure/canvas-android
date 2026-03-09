@@ -269,6 +269,7 @@ private fun LearnLearningLibraryListFilterRow(
                     value = state.statusFilter,
                     label = stringResource(state.statusFilter.labelRes)
                 ),
+                showSelectedIcon = true,
                 onItemSelected = { it?.let { state.updateStatusFilter(it.value) } },
                 placeholder = "",
                 dropdownWidth = 200.dp,
@@ -288,6 +289,7 @@ private fun LearnLearningLibraryListFilterRow(
                     value = state.typeFilter,
                     label = stringResource(state.typeFilter.labelRes)
                 ),
+                showSelectedIcon = true,
                 onItemSelected = { it?.let { state.updateTypeFilter(it.value) } },
                 placeholder = "",
                 dropdownWidth = 200.dp,
