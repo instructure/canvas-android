@@ -106,7 +106,7 @@ private fun LearnLearningLibraryBookmarkedContent(
             }
         }
 
-        items(state.items) { collectionItemState ->
+        items(state.items, key = { it.id }) { collectionItemState ->
             LearnLearningLibraryItem(
                 state = collectionItemState,
                 onClick = {
@@ -129,6 +129,7 @@ private fun LearnLearningLibraryBookmarkedContent(
                 modifier = Modifier
                     .padding(horizontal = 24.dp)
                     .padding(bottom = 24.dp)
+                    .animateItem()
             )
         }
 

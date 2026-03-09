@@ -43,7 +43,8 @@ data class ModuleItemSequenceUiState(
     val hasUnreadComments: Boolean = false,
     val updateAiAssistContext: (AiAssistContextSource, String) -> Unit = { _, _ -> },
     val shouldRefreshPreviousScreen: Boolean = false,
-    val scrollToNoteId: String? = null
+    val scrollToNoteId: String? = null,
+    val showMyProgressButton: Boolean = true,
 )
 
 data class ModuleItemUiState(

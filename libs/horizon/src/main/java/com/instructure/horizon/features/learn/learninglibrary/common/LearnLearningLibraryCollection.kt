@@ -142,10 +142,12 @@ fun LearnLearningLibraryCollectionItem(
                     )
                     HorizonSpace(SpaceSize.SPACE_24)
                 }
-                LearnLearningLibraryCollectionDetailsRow(
-                    state.itemCount,
-                    onCollectionDetailsClick = { onCollectionDetailsClick(state.id) }
-                )
+                if (state.itemCount > state.items.size) {
+                    LearnLearningLibraryCollectionDetailsRow(
+                        state.itemCount,
+                        onCollectionDetailsClick = { onCollectionDetailsClick(state.id) }
+                    )
+                }
                 HorizonSpace(SpaceSize.SPACE_24)
             }
         }

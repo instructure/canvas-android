@@ -23,7 +23,6 @@ import com.instructure.horizon.R
 enum class LearnLearningLibraryTypeFilter(@StringRes val labelRes: Int) {
     All(R.string.LearnLearningLibraryTypeFilterAllLabel),
     Courses(R.string.LearnLearningLibraryTypeFilterCoursesLabel),
-    Programs(R.string.LearnLearningLibraryTypeFilterProgramsLabel),
     Assessments(R.string.LearnLearningLibraryTypeFilterAssessmentsLabel),
     Assignments(R.string.LearnLearningLibraryTypeFilterAssignmentsLabel),
     ExternalLinks(R.string.LearnLearningLibraryTypeFilterExternalLinksLabel),
@@ -36,7 +35,6 @@ enum class LearnLearningLibraryTypeFilter(@StringRes val labelRes: Int) {
         return when(this) {
             All -> null
             Courses -> CollectionItemType.COURSE
-            Programs -> CollectionItemType.PROGRAM
             Assessments -> CollectionItemType.QUIZ
             Assignments -> CollectionItemType.ASSIGNMENT
             ExternalLinks -> CollectionItemType.EXTERNAL_URL
