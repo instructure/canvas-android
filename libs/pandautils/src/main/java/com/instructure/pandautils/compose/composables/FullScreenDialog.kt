@@ -73,10 +73,11 @@ fun FullScreenDialog(
         var modifier = Modifier
             .fillMaxSize()
             .padding(
-                top = insets.calculateTopPadding(),
                 start = insets.calculateLeftPadding(layoutDirection),
                 end = insets.calculateRightPadding(layoutDirection)
-                // Intentionally not applying bottom padding so content background extends behind navigation bar
+                // Intentionally not applying top or bottom padding:
+                // - Top: Let content (Scaffold/AppBar) handle status bar insets to avoid double padding
+                // - Bottom: Content background extends behind navigation bar
             )
         if (ApiPrefs.isMasquerading) {
             modifier = modifier.padding(
