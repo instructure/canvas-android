@@ -102,8 +102,8 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
 
     companion object {
         const val ACCOUNT_DOMAIN = "accountDomain"
-        const val SUCCESS_URL = "/login/oauth2/auth?code="
-        const val ERROR_URL = "/login/oauth2/auth?error=access_denied"
+        const val SUCCESS_URL = "/canvas/login?code="
+        const val ERROR_URL = "/canvas/login?error=access_denied"
 
         init {
             AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
@@ -455,7 +455,7 @@ abstract class BaseLoginSignInActivity : BaseCanvasActivity(), OnAuthenticationS
             //Skip mobile verify
             builder.appendQueryParameter("redirect_uri", "urn:ietf:wg:oauth:2.0:oob")
         } else {
-            builder.appendQueryParameter("redirect_uri", "https://canvas.instructure.com/login/oauth2/auth")
+            builder.appendQueryParameter("redirect_uri", "https://sso.canvaslms.com/canvas/login")
         }
 
         //If an authentication provider is supplied we need to pass that along. This should only be appended if one exists.
