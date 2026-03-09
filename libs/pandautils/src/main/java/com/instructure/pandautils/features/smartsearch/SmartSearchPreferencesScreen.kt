@@ -86,7 +86,6 @@ fun SmartSearchPreferencesScreen(
                     contentColor = colorResource(R.color.textLightest),
                     title = stringResource(R.string.searchPreferencesTitle),
                     navigationActionClick = onCancel,
-                    windowInsets = WindowInsets(0, 0, 0, 0),
                     actions = {
                         TextButton(
                             onClick = { onDone(selectedTypes, selectedSort) },
