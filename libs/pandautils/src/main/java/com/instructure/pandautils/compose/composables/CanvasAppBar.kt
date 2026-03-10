@@ -19,9 +19,12 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
+import com.instructure.canvasapi2.utils.ApiPrefs
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -63,7 +66,11 @@ fun CanvasAppBar(
     actions: @Composable RowScope.() -> Unit = {},
     backgroundColor: Color = colorResource(id = R.color.backgroundLightestElevated),
     textColor: Color = colorResource(id = R.color.textDarkest),
-    windowInsets: WindowInsets = WindowInsets.statusBars
+    windowInsets: WindowInsets = if (ApiPrefs.isMasquerading) {
+        WindowInsets.statusBars.only(WindowInsetsSides.Horizontal)
+    } else {
+        WindowInsets.statusBars
+    }
 ) {
     TopAppBar(
         title = {
@@ -134,7 +141,11 @@ fun CanvasAppBar(
     actions: @Composable RowScope.() -> Unit = {},
     backgroundColor: Color = colorResource(id = R.color.backgroundLightestElevated),
     textColor: Color = colorResource(id = R.color.textDarkest),
-    windowInsets: WindowInsets = WindowInsets.statusBars
+    windowInsets: WindowInsets = if (ApiPrefs.isMasquerading) {
+        WindowInsets.statusBars.only(WindowInsetsSides.Horizontal)
+    } else {
+        WindowInsets.statusBars
+    }
 ) {
     TopAppBar(
         title = {

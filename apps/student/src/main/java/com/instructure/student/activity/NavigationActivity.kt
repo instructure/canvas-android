@@ -474,13 +474,14 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
             // Consume horizontal insets so child ComposeViews don't apply them again
             // Also consume bottom insets when offline indicator is visible
+            val masquerading = ApiPrefs.isMasquerading
             val consumeBottom = offlineIndicator.root.visibility == View.VISIBLE
             WindowInsetsCompat.Builder(insets)
                 .setInsets(
                     WindowInsetsCompat.Type.navigationBars(),
                     Insets.of(
                         0, // Consume left
-                        navigationBars.top,
+                        if (masquerading) 0 else navigationBars.top,
                         0, // Consume right
                         if (consumeBottom) 0 else navigationBars.bottom
                     )
@@ -489,7 +490,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                     WindowInsetsCompat.Type.displayCutout(),
                     Insets.of(
                         0, // Consume left
-                        displayCutout.top,
+                        if (masquerading) 0 else displayCutout.top,
                         0, // Consume right
                         displayCutout.bottom
                     )
