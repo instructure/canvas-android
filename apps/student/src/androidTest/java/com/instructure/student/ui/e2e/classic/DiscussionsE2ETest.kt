@@ -19,6 +19,7 @@ package com.instructure.student.ui.e2e.classic
 import android.os.SystemClock.sleep
 import android.util.Log
 import androidx.test.espresso.Espresso
+import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
@@ -27,6 +28,9 @@ import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
 import com.instructure.canvas.espresso.pressBackButton
 import com.instructure.dataseeding.api.DiscussionTopicsApi
+import com.instructure.dataseeding.api.FileFolderApi
+import com.instructure.dataseeding.api.FileUploadsApi
+import com.instructure.dataseeding.model.FileUploadType
 import com.instructure.espresso.convertIso8601ToCanvasFormat
 import com.instructure.espresso.getCustomDateCalendar
 import com.instructure.espresso.getDateInCanvasFormat
@@ -291,6 +295,75 @@ class DiscussionsE2ETest: StudentComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the checkpoints are displayed properly on the Assignment Details Page.")
         assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Reply to topic due", convertedReplyToTopicDueDate)
         assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Additional replies (2) due",convertedReplyToEntryDueDate)
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.DISCUSSIONS, TestCategory.E2E, SecondaryFeatureCategory.DISCUSSION_CHECKPOINTS)
+    fun testDiscussionCheckpointWithPdfAttachmentE2E() {
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+
+        Log.d(PREPARATION_TAG, "Get course root folder to upload the PDF file.")
+        val courseRootFolder = FileFolderApi.getCourseRootFolder(course.id, teacher.token)
+
+        Log.d(PREPARATION_TAG, "Read PDF file from assets.")
+        val pdfFileName = "samplepdf.pdf"
+        val context = InstrumentationRegistry.getInstrumentation().context
+        val pdfBytes = context.assets.open(pdfFileName).use { it.readBytes() }
+
+        Log.d(PREPARATION_TAG, "Upload PDF file to course root folder using teacher token.")
+        val uploadedFile = FileUploadsApi.uploadFile(courseId = courseRootFolder.id, assignmentId = null, file = pdfBytes, fileName = pdfFileName, token = teacher.token, fileUploadType = FileUploadType.COURSE_FILE)
+
+        Log.d(PREPARATION_TAG, "Seed a discussion topic with checkpoints and PDF attachment for '${course.name}' course.")
+        val discussionWithCheckpointsTitle = "Discussion with PDF Attachment"
+        val assignmentName = "Assignment with Checkpoints and PDF"
+        val replyToTopicDueDate = "2029-11-12T22:59:00Z"
+        val replyToEntryDueDate = "2029-11-19T22:59:00Z"
+        DiscussionTopicsApi.createDiscussionTopicWithCheckpoints(courseId = course.id, token = teacher.token, discussionTitle = discussionWithCheckpointsTitle, assignmentName = assignmentName, replyToTopicDueDate = replyToTopicDueDate, replyToEntryDueDate = replyToEntryDueDate, fileId = uploadedFile.id.toString())
+
+        val convertedReplyToTopicDueDate = "Due " + convertIso8601ToCanvasFormat("2029-11-12T22:59:00Z") + " 2:59 PM"
+        val convertedReplyToEntryDueDate = "Due " + convertIso8601ToCanvasFormat("2029-11-19T22:59:00Z") + " 2:59 PM"
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
+        tokenLogin(student)
+
+        Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Select course: '${course.name}'.")
+        dashboardPage.waitForRender()
+        dashboardPage.selectCourse(course.name)
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Discussions' Tab is displayed on the CourseBrowser Page.")
+        courseBrowserPage.assertTabDisplayed("Discussions")
+
+        Log.d(STEP_TAG, "Navigate to Assignments Page.")
+        courseBrowserPage.selectAssignments()
+
+        Log.d(ASSERTION_TAG, "Assert that the '${discussionWithCheckpointsTitle}' discussion is present along with 2 date info (For the 2 checkpoints).")
+        assignmentListPage.assertHasAssignmentWithCheckpoints(discussionWithCheckpointsTitle, dueAtString = convertedReplyToTopicDueDate, dueAtStringSecondCheckpoint = convertedReplyToEntryDueDate, expectedGrade = "-/15")
+
+        Log.d(STEP_TAG, "Click on '$discussionWithCheckpointsTitle' assignment.")
+        assignmentListPage.clickAssignment(discussionWithCheckpointsTitle)
+
+        Log.d(ASSERTION_TAG, "Assert that Assignment Details Page is displayed with correct title.")
+        assignmentDetailsPage.assertDisplayToolbarTitle()
+        assignmentDetailsPage.assertAssignmentTitle(discussionWithCheckpointsTitle)
+
+        Log.d(ASSERTION_TAG, "Assert that attachment icon is displayed.")
+        assignmentDetailsPage.assertAttachmentIconDisplayed()
+
+        Log.d(STEP_TAG, "Click on attachment icon to view attachments.")
+        assignmentDetailsPage.clickAttachmentIcon()
+
+        Log.d(ASSERTION_TAG, "Verify PDF viewer toolbar is displayed.")
+        assignmentDetailsPage.assertPdfViewerToolbarDisplayed()
+
+        Log.d(STEP_TAG, "Navigate back from PDF viewer to assignment details.")
+        Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that we're back on the assignment details page.")
+        assignmentDetailsPage.assertAssignmentTitle(discussionWithCheckpointsTitle)
     }
 
     @E2E

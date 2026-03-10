@@ -15,10 +15,10 @@
  *
  *
  */
-
 package com.instructure.teacher.ui.utils
 
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import com.instructure.canvas.espresso.common.pages.VideoPlayerPage
 import com.instructure.canvas.espresso.common.pages.compose.AssignmentListPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarEventCreateEditPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarEventDetailsPage
@@ -37,7 +37,6 @@ import com.instructure.teacher.ui.pages.compose.AssignmentSubmissionListPage
 import com.instructure.teacher.ui.pages.compose.ProgressPage
 import com.instructure.teacher.ui.pages.compose.SpeedGraderGradePage
 import com.instructure.teacher.ui.pages.compose.SpeedGraderPage
-
 import org.junit.Rule
 
 abstract class TeacherComposeTest : TeacherTest() {
@@ -63,4 +62,5 @@ abstract class TeacherComposeTest : TeacherTest() {
     val inboxSignatureSettingsPage = InboxSignatureSettingsPage(composeTestRule)
     val speedGraderPage = SpeedGraderPage(composeTestRule)
     val speedGraderGradePage = SpeedGraderGradePage(composeTestRule)
+    val videoPlayerPage = VideoPlayerPage()
 }
