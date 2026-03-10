@@ -37,6 +37,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.canvasapi2.utils.isValid
@@ -223,16 +224,21 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
         noOverlayToolbar.setBackgroundColor(canvasContext.color)
         appBarLayout.setBackgroundColor(canvasContext.color)
 
-        // Apply top padding to noOverlayToolbar
-        noOverlayToolbar.applyTopSystemBarInsets()
+        // Apply top padding to noOverlayToolbar (skip when masquerading - MasqueradeUI handles it)
+        if (!ApiPrefs.isMasquerading) {
+            noOverlayToolbar.applyTopSystemBarInsets()
+        }
 
         // Handle insets for color overlay mode
         ViewCompat.setOnApplyWindowInsetsListener(appBarLayout) { view, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
 
+            // Skip top insets when masquerading - MasqueradeUI handles it
+            val topInset = if (ApiPrefs.isMasquerading) 0 else systemBars.top
+
             if (overlayToolbar.isVisible) {
                 // Color overlay enabled: apply padding to push content below status bar
-                view.setPadding(view.paddingLeft, systemBars.top, view.paddingRight, view.paddingBottom)
+                view.setPadding(view.paddingLeft, topInset, view.paddingRight, view.paddingBottom)
             } else {
                 view.setPadding(view.paddingLeft, 0, view.paddingRight, view.paddingBottom)
             }

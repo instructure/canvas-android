@@ -19,7 +19,10 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.statusBars
+import com.instructure.canvasapi2.utils.ApiPrefs
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -56,7 +59,11 @@ fun CanvasThemedAppBar(
     navIconContentDescription: String = stringResource(id = R.string.back),
     backgroundColor: Color = Color(color = ThemePrefs.primaryColor),
     contentColor: Color = Color(color = ThemePrefs.primaryTextColor),
-    windowInsets: WindowInsets = WindowInsets.statusBars,
+    windowInsets: WindowInsets = if (ApiPrefs.isMasquerading) {
+        WindowInsets.statusBars.only(WindowInsetsSides.Horizontal)
+    } else {
+        WindowInsets.statusBars
+    },
     actions: @Composable RowScope.() -> Unit = {}
 ) {
     TopAppBar(

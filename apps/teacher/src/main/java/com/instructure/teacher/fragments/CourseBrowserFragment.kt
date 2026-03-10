@@ -217,11 +217,13 @@ class CourseBrowserFragment : BaseSyncFragment<
         appBarLayout.setBackgroundColor(presenter.canvasContext.color)
 
         // Handle insets based on color overlay setting
+        // Skip top insets when masquerading - MasqueradeUI handles it
         if (overlayToolbar.isVisible) {
             // Color overlay enabled: apply padding to AppBarLayout
             ViewCompat.setOnApplyWindowInsetsListener(appBarLayout) { view, insets ->
                 val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-                view.setPadding(view.paddingLeft, systemBars.top, view.paddingRight, view.paddingBottom)
+                val topInset = if (ApiPrefs.isMasquerading) 0 else systemBars.top
+                view.setPadding(view.paddingLeft, topInset, view.paddingRight, view.paddingBottom)
                 insets
             }
             ViewCompat.requestApplyInsets(appBarLayout)
@@ -230,16 +232,17 @@ class CourseBrowserFragment : BaseSyncFragment<
             val actionBarSize = resources.getDimensionPixelSize(androidx.appcompat.R.dimen.abc_action_bar_default_height_material)
             ViewCompat.setOnApplyWindowInsetsListener(noOverlayToolbar) { view, insets ->
                 val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                val topInset = if (ApiPrefs.isMasquerading) 0 else systemBars.top
 
                 // Update toolbar's actual height to accommodate status bar (use fixed base height)
                 val layoutParams = view.layoutParams
                 if (layoutParams != null) {
-                    layoutParams.height = actionBarSize + systemBars.top
+                    layoutParams.height = actionBarSize + topInset
                     view.layoutParams = layoutParams
                 }
 
                 // Add padding to push content down
-                view.setPadding(view.paddingLeft, systemBars.top, view.paddingRight, view.paddingBottom)
+                view.setPadding(view.paddingLeft, topInset, view.paddingRight, view.paddingBottom)
                 insets
             }
             ViewCompat.requestApplyInsets(noOverlayToolbar)
