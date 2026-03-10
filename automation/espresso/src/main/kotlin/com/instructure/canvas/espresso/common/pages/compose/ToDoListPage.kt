@@ -16,6 +16,9 @@
 package com.instructure.canvas.espresso.common.pages.compose
 
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasAnyAncestor
+import androidx.compose.ui.test.hasAnyDescendant
+import androidx.compose.ui.test.hasAnySibling
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
@@ -40,13 +43,45 @@ class ToDoListPage(private val composeTestRule: ComposeTestRule) : BasePage() {
         composeTestRule.waitForIdle()
     }
 
-    fun clickOnItem(itemTitle: String) {
-        composeTestRule.onNodeWithText(itemTitle).performClick()
+    fun clickOnItem(itemTitle: String, tagName: String = "") {
+        if(tagName.isEmpty()) {
+            composeTestRule.onNodeWithText(itemTitle).performClick()
+        }
+        else {
+            composeTestRule.onNode( hasTestTag("todoItemTitle") and hasText(itemTitle) and hasAnySibling(hasTestTag("todoItemTag") and hasText(tagName)), useUnmergedTree = true).performClick()
+        }
         composeTestRule.waitForIdle()
     }
 
     fun assertItemDisplayed(itemTitle: String) {
         composeTestRule.onNode( hasTestTag("todoItemTitle") and hasText(itemTitle), useUnmergedTree = true).assertIsDisplayed()
+    }
+
+    fun assertDiscussionCheckpointItemDisplayed(itemTitle: String, tagName: String = "") {
+        composeTestRule.onNode( hasTestTag("todoItemTitle") and hasText(itemTitle) and hasAnySibling(hasTestTag("todoItemTag") and hasText(tagName)), useUnmergedTree = true).assertIsDisplayed()
+        composeTestRule.onNode(hasTestTag("todoItemTag") and hasText(tagName) and hasAnySibling(hasTestTag("todoItemTitle") and hasText(itemTitle)), useUnmergedTree = true).assertIsDisplayed()
+    }
+
+    fun assertItemDueTime(itemTitle: String, tagName: String, dueDate: String) {
+        composeTestRule.onNode( hasTestTag("todoItemTime") and hasText(dueDate) and
+                hasAnySibling(hasTestTag("todoItemTitle") and hasText(itemTitle)) and
+                hasAnySibling(hasTestTag("todoItemTag") and hasText(tagName)), useUnmergedTree = true)
+            .assertIsDisplayed()
+    }
+
+    fun assertItemDateDay(itemTitle: String, dayOfMonth: String, dayOfWeek: String, day: String) {
+
+        composeTestRule.onNode( hasTestTag("dateBadgeMonth") and hasText(dayOfMonth) and hasAnyAncestor(
+            hasAnyDescendant(hasTestTag("todoItemTitle") and hasText(itemTitle))
+        ) and hasAnySibling(hasTestTag("dateBadgeDayOfWeek") and hasText(dayOfWeek)) and hasAnySibling(hasTestTag("dateBadgeDay") and hasText(day)), useUnmergedTree = true).assertIsDisplayed()
+
+        composeTestRule.onNode( hasTestTag("dateBadgeDayOfWeek") and hasText(dayOfWeek) and hasAnyAncestor(
+            hasAnyDescendant(hasTestTag("todoItemTitle") and hasText(itemTitle))
+        ) and hasAnySibling(hasTestTag("dateBadgeMonth") and hasText(dayOfMonth)) and hasAnySibling(hasTestTag("dateBadgeDay") and hasText(day)), useUnmergedTree = true).assertIsDisplayed()
+
+        composeTestRule.onNode( hasTestTag("dateBadgeDay") and hasText(day) and hasAnyAncestor(
+            hasAnyDescendant(hasTestTag("todoItemTitle") and hasText(itemTitle))
+        ) and hasAnySibling(hasTestTag("dateBadgeMonth") and hasText(dayOfMonth)) and hasAnySibling(hasTestTag("dateBadgeDayOfWeek") and hasText(dayOfWeek)), useUnmergedTree = true).assertIsDisplayed()
     }
 
     fun assertItemNotDisplayed(itemTitle: String) {
