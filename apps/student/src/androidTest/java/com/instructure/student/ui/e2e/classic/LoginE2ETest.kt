@@ -16,8 +16,11 @@
  */
 package com.instructure.student.ui.e2e.classic
 
+import android.app.Instrumentation
 import android.util.Log
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
@@ -37,6 +40,7 @@ import com.instructure.dataseeding.model.EnrollmentTypes.STUDENT_ENROLLMENT
 import com.instructure.dataseeding.model.EnrollmentTypes.TEACHER_ENROLLMENT
 import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.espresso.withIdlingResourceDisabled
+import com.instructure.student.R
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.extensions.enterDomain
 import com.instructure.student.ui.utils.extensions.seedData
@@ -414,6 +418,55 @@ class LoginE2ETest : StudentTest() {
 
         Log.d(ASSERTION_TAG, "Assert that the Login SignIn Page has been displayed.")
         loginSignInPage.assertPageObjects()
+    }
+
+    @Test
+    fun testLoginHowDoIFindMySchoolE2E() {
+
+        Log.d(STEP_TAG, "Click 'Find My School' button.")
+        loginLandingPage.clickFindMySchoolButton()
+
+        Log.d(STEP_TAG, "Enter and invalid domain to trigger the 'Tap here for login help.' link to be displayed.")
+        loginFindSchoolPage.enterDomain("invalid-domain")
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Tap here for login help.' link is displayed.")
+        loginFindSchoolPage.assertHowDoIFindMySchoolLinkDisplayed()
+
+        val expectedUrl = "https://community.instructure.com/en/kb/articles/662717-where-do-i-find-my-institutions-url-to-access-canvas"
+        val expectedIntent = IntentMatchers.hasData(expectedUrl)
+        Intents.init()
+        try {
+            Intents.intending(expectedIntent).respondWith(Instrumentation.ActivityResult(0, null))
+
+            Log.d(STEP_TAG, "Click on the 'Tap here for login help.' link.")
+            loginFindSchoolPage.clickOnHowDoIFindMySchoolLink()
+
+            Log.d(ASSERTION_TAG, "Assert that an intent with the correct URL was fired.")
+            Intents.intended(expectedIntent)
+        } finally {
+            Intents.release()
+        }
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.LOGIN, TestCategory.E2E)
+    fun testLoginCanFindSchoolE2E() {
+
+        Log.d(STEP_TAG, "Click 'Find My School' button.")
+        loginLandingPage.clickFindMySchoolButton()
+
+        Log.d(ASSERTION_TAG, "Assert that the Find School Page has been displayed properly.")
+        loginFindSchoolPage.assertPageObjects()
+
+        Log.d(ASSERTION_TAG, "Assert that the hint text is correct based on the device type.")
+        if(isTabletDevice()) loginFindSchoolPage.assertHintText(R.string.schoolInstructureCom)
+        else loginFindSchoolPage.assertHintText(R.string.loginHint)
+
+        Log.d(STEP_TAG, "Enter domain: 'harvest'.")
+        loginFindSchoolPage.enterDomain("harvest")
+
+        Log.d(ASSERTION_TAG, "Assert that the 'City Harvest Church (Singapore)' school is displayed among the search results.")
+        loginFindSchoolPage.assertSchoolSearchResults("City Harvest Church (Singapore)")
     }
 
     private fun loginWithUser(user: CanvasUserApiModel, lastSchoolSaved: Boolean = false) {
