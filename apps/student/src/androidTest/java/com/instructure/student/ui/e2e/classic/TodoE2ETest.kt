@@ -23,6 +23,7 @@ import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
 import com.instructure.espresso.getCustomDateCalendar
+import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.pandautils.R
 import com.instructure.student.ui.pages.classic.WebViewTextCheck
 import com.instructure.student.ui.utils.StudentComposeTest
@@ -714,15 +715,25 @@ class TodoE2ETest : StudentComposeTest() {
         Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
 
-        Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Select course: '${course.name}'.")
+        Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered.")
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG, "Click on the 'Calendar' bottom menu to navigate to the Calendar page.")
+        Log.d(STEP_TAG, "Click on the 'To Do' bottom menu to navigate to the To Do list page.")
         dashboardPage.clickTodoTab()
 
         Log.d(ASSERTION_TAG, "Assert that both checkpoints for the '$discussionWithCheckpointsTitle' discussion are displayed on the To Do List Page with the correct titles and due dates.")
-        toDoListPage.assertDiscussionCheckpointItemDisplayed(discussionWithCheckpointsTitle,"Reply to topic")
-        toDoListPage.assertDiscussionCheckpointItemDisplayed(discussionWithCheckpointsTitle,"Additional replies (2)")
+        retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = {
+            Log.d(STEP_TAG, "If some of the checkpoints won't displayed at start, open the To-do Filter Page as they're probably 'out of range' of the filter interval.")
+            toDoListPage.clickFilterButton()
+
+            Log.d(STEP_TAG, "Change the 'Show tasks until' filter to 'In Four Weeks' option and click on 'Done' button.")
+            toDoFilterPage.selectShowTasksUntilOption(R.string.todoFilterInFourWeeks)
+            toDoFilterPage.clickDone()
+        }) {
+            toDoListPage.assertDiscussionCheckpointItemDisplayed(discussionWithCheckpointsTitle, "Reply to topic")
+            toDoListPage.assertDiscussionCheckpointItemDisplayed(discussionWithCheckpointsTitle, "Additional replies (2)")
+        }
+
         toDoListPage.assertItemDateDay(discussionWithCheckpointsTitle, replyToTopicMonth, replyToTopicDayOfWeek, replyToTopicDay)
         toDoListPage.assertItemDateDay(discussionWithCheckpointsTitle, replyToEntryMonth, replyToEntryDayOfWeek, replyToEntryDay)
         toDoListPage.assertItemDueTime(discussionWithCheckpointsTitle, "Reply to topic","11:01 AM")
@@ -739,7 +750,7 @@ class TodoE2ETest : StudentComposeTest() {
         assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Reply to topic due", assignmentDetailsReplyToTopicDueDate)
         assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Additional replies (2) due", assignmentDetailsReplyToEntryDueDate)
 
-        Log.d(STEP_TAG, "Navigate back to Calendar Page.")
+        Log.d(STEP_TAG, "Navigate back to To Do list Page.")
         Espresso.pressBack()
 
         Log.d(STEP_TAG, "Click on the '$discussionWithCheckpointsTitle' discussion's 'Additional replies' checkpoint To Do item to open it's details.")

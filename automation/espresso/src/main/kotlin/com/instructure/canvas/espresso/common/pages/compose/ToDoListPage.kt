@@ -28,6 +28,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTouchInput
+import androidx.compose.ui.test.swipeDown
 import androidx.compose.ui.test.swipeLeft
 import androidx.compose.ui.test.swipeRight
 import com.instructure.espresso.assertDoesNotExistWithTimeout
@@ -82,6 +83,11 @@ class ToDoListPage(private val composeTestRule: ComposeTestRule) : BasePage() {
         composeTestRule.onNode( hasTestTag("dateBadgeDay") and hasText(day) and hasAnyAncestor(
             hasAnyDescendant(hasTestTag("todoItemTitle") and hasText(itemTitle))
         ) and hasAnySibling(hasTestTag("dateBadgeMonth") and hasText(dayOfMonth)) and hasAnySibling(hasTestTag("dateBadgeDayOfWeek") and hasText(dayOfWeek)), useUnmergedTree = true).assertIsDisplayed()
+    }
+
+    fun refresh() {
+        composeTestRule.onNodeWithTag("todoList").performTouchInput { swipeDown() }
+        composeTestRule.waitForIdle()
     }
 
     fun assertItemNotDisplayed(itemTitle: String) {
