@@ -702,12 +702,15 @@ class TodoE2ETest : StudentComposeTest() {
         val monthFormat = SimpleDateFormat("MMM", Locale.US)
         val dayOfWeekFormat = SimpleDateFormat("EEE", Locale.US)
         val dayFormat = SimpleDateFormat("d", Locale.US)
+        val dueTimeDisplayFormat = SimpleDateFormat("h:mm a", Locale.US)
         val replyToTopicMonth = monthFormat.format(replyToTopicCalendar.time)
         val replyToTopicDayOfWeek = dayOfWeekFormat.format(replyToTopicCalendar.time)
         val replyToTopicDay = dayFormat.format(replyToTopicCalendar.time)
         val replyToEntryMonth = monthFormat.format(replyToEntryCalendar.time)
         val replyToEntryDayOfWeek = dayOfWeekFormat.format(replyToEntryCalendar.time)
         val replyToEntryDay = dayFormat.format(replyToEntryCalendar.time)
+        val replyToTopicDueTimeDisplay = dueTimeDisplayFormat.format(replyToTopicCalendar.time)
+        val replyToEntryDueTimeDisplay = dueTimeDisplayFormat.format(replyToEntryCalendar.time)
 
         Log.d(PREPARATION_TAG, "Seed a discussion topic with checkpoints for '${course.name}' course.")
         DiscussionTopicsApi.createDiscussionTopicWithCheckpoints(course.id, teacher.token, discussionWithCheckpointsTitle, assignmentName, replyToTopicDueTime, replyToEntryDueTime)
@@ -736,8 +739,8 @@ class TodoE2ETest : StudentComposeTest() {
 
         toDoListPage.assertItemDateDay(discussionWithCheckpointsTitle, replyToTopicMonth, replyToTopicDayOfWeek, replyToTopicDay)
         toDoListPage.assertItemDateDay(discussionWithCheckpointsTitle, replyToEntryMonth, replyToEntryDayOfWeek, replyToEntryDay)
-        toDoListPage.assertItemDueTime(discussionWithCheckpointsTitle, "Reply to topic","11:01 AM")
-        toDoListPage.assertItemDueTime(discussionWithCheckpointsTitle, "Additional replies (2)","11:01 AM")
+        toDoListPage.assertItemDueTime(discussionWithCheckpointsTitle, "Reply to topic", replyToTopicDueTimeDisplay)
+        toDoListPage.assertItemDueTime(discussionWithCheckpointsTitle, "Additional replies (2)", replyToEntryDueTimeDisplay)
 
         Log.d(STEP_TAG, "Click on the '$discussionWithCheckpointsTitle' discussion's 'Reply to topic' checkpoint To Do item to open it's details.")
         toDoListPage.clickOnItem(discussionWithCheckpointsTitle, "Reply to topic")
