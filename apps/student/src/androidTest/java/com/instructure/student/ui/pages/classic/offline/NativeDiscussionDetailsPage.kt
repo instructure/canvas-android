@@ -278,7 +278,11 @@ class NativeDiscussionDetailsPage(val moduleItemInteractions: ModuleItemInteract
     }
 
     fun assertMainAttachmentDisplayed() {
-        onView(withId(R.id.attachmentIcon)).assertDisplayed()
+        onView(withId(R.id.attachmentIcon) + withAncestor(R.id.discussionDetailsPage)).assertDisplayed()
+    }
+
+    fun clickAttachmentIcon() {
+        onView(withId(R.id.attachmentIcon) + withAncestor(R.id.discussionDetailsPage)).click()
     }
 
     /**
