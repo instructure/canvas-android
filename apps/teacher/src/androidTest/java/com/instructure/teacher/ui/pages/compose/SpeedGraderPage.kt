@@ -551,7 +551,7 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
      * Clicks the back button.
      */
     fun clickBackButton() {
-        composeTestRule.onNode(hasTestTag("navigationButton")).performClick()
+        composeTestRule.onNode(hasTestTag("navigationButton") and hasAnyAncestor(hasTestTag("speedGraderAppBar")), useUnmergedTree = true).performClick()
         composeTestRule.waitForIdle()
     }
 

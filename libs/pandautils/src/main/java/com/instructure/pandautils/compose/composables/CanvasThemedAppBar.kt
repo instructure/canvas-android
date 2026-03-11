@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.statusBars
-import com.instructure.canvasapi2.utils.ApiPrefs
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -42,6 +41,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.ThemePrefs
@@ -96,7 +96,7 @@ fun CanvasThemedAppBar(
         contentColor = contentColor,
         navigationIcon = if (navIconRes == null) null else {
             {
-                IconButton(onClick = navigationActionClick) {
+                IconButton(onClick = navigationActionClick, modifier = Modifier.testTag("navigationButton")) {
                     Icon(
                         painterResource(id = navIconRes),
                         contentDescription = navIconContentDescription
