@@ -24,6 +24,7 @@ import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
 import com.instructure.canvas.espresso.checkToastText
+import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.espresso.getDateInCanvasCalendarFormat
@@ -614,6 +615,7 @@ class CalendarE2ETest: TeacherComposeTest() {
         calendarToDoCreateUpdatePage.clickSave()
 
         Log.d(ASSERTION_TAG, "Assert that the To-do item is displayed on the calendar.")
+        refresh()
         calendarScreenPage.assertItemDisplayed(testTodoTitle)
 
         Log.d(STEP_TAG, "Click on the previously created '$testTodoTitle' To-do item.")
@@ -745,6 +747,7 @@ class CalendarE2ETest: TeacherComposeTest() {
         calendarToDoCreateUpdatePage.clickSave()
 
         Log.d(ASSERTION_TAG, "Assert that the To-do item is displayed on the calendar.")
+        refresh()
         calendarScreenPage.assertItemDisplayed(testTodoTitle)
 
         Log.d(STEP_TAG, "Click on the previously created '$testTodoTitle' To-do item.")
