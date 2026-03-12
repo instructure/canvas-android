@@ -3,6 +3,7 @@ package com.instructure.canvasapi2.di
 import android.content.Context
 import com.instructure.canvasapi2.LoginRouter
 import com.instructure.canvasapi2.TokenRefresher
+import com.instructure.canvasapi2.apis.AccountDomainInterface
 import com.instructure.canvasapi2.apis.AccountNotificationAPI
 import com.instructure.canvasapi2.apis.AnnouncementAPI
 import com.instructure.canvasapi2.apis.AssignmentAPI
@@ -84,7 +85,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 const val PLANNER_API_SERIALIZE_NULLS = "PLANNER_API_SERIALIZE_NULLS"
-
+private const val DEFAULT_DOMAIN = "https://sso.canvaslms.com/"
 @Module
 @InstallIn(SingletonComponent::class)
 class ApiModule {
@@ -450,6 +451,17 @@ class ApiModule {
     @Provides
     fun provideHelpLinksInterfaceApi(): HelpLinksAPI.HelpLinksAPI {
         return RestBuilder().build(HelpLinksAPI.HelpLinksAPI::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideAccountDomainApi(): AccountDomainInterface {
+        return RestBuilder().build(
+            AccountDomainInterface::class.java,
+            RestParams(
+                shouldIgnoreToken = true,
+                domain = DEFAULT_DOMAIN
+            )
+        )
     }
 }
 
