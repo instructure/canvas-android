@@ -49,6 +49,8 @@ import com.pspdfkit.ui.toolbar.ContextualToolbar
 import com.pspdfkit.ui.toolbar.ContextualToolbarMenuItem
 import com.pspdfkit.ui.toolbar.ToolbarCoordinatorLayout
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.io.File
 import java.util.EnumSet
 import java.util.Locale
@@ -100,13 +102,15 @@ class CandroidPSPDFActivity : PdfActivity(), ToolbarCoordinatorLayout.OnContextu
     override fun onDestroy() {
         val path = filesDir.path + intent.data?.path?.replace("/files", "")
         document?.let {
-            val annotations = it.annotationProvider.getAllAnnotationsOfType(
-                EnumSet.allOf(AnnotationType::class.java)
-            )
-            if (annotations.isEmpty() && networkStateProvider.isOnline()) {
-                val file = File(path)
-                if (file.exists()) {
-                    file.delete()
+            GlobalScope.launch {
+                val annotations = it.annotationProvider.getAllAnnotationsOfType(
+                    EnumSet.allOf(AnnotationType::class.java)
+                )
+                if (annotations.isEmpty() && networkStateProvider.isOnline()) {
+                    val file = File(path)
+                    if (file.exists()) {
+                        file.delete()
+                    }
                 }
             }
         }
