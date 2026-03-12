@@ -20,6 +20,7 @@ import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetLearningLi
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
 import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearningLibraryCollection
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItemsResponse
+import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryRecommendation
 import javax.inject.Inject
 
 class LearnLearningLibraryListRepository @Inject constructor(
@@ -53,5 +54,9 @@ class LearnLearningLibraryListRepository @Inject constructor(
 
     suspend fun toggleLearningLibraryItemIsBookmarked(itemId: String): Boolean {
         return getLearningLibraryManager.toggleLearningLibraryItemIsBookmarked(itemId)
+    }
+
+    suspend fun getLearningLibraryRecommendedItems(forceNetwork: Boolean): List<LearningLibraryRecommendation> {
+        return getLearningLibraryManager.getLearningLibraryRecommendations(forceNetwork)
     }
 }

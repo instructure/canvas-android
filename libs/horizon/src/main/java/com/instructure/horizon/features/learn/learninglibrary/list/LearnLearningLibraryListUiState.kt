@@ -46,6 +46,8 @@ data class LearnLearningLibraryListCollectionUiState(
     val itemsToDisplay: Int = 1,
     val increaseItemsToDisplay: () -> Unit = {},
     val onBookmarkClicked: (itemId: String) -> Unit = {},
+    val userName: String = "",
+    val recommendedItems: List<LearnLearningLibraryCollectionItemState> = emptyList()
 )
 
 data class LearnLearningLibraryListItemUiState(

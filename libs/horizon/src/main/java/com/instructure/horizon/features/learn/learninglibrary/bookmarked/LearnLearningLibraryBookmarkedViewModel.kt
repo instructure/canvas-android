@@ -21,6 +21,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
+import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryRecommendation
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
@@ -112,6 +113,7 @@ class LearnLearningLibraryBookmarkedViewModel @Inject constructor(
             completedOnly = false,
             forceNetwork = forceNetwork
         )
+        val recommendations = fetchRecommendedItems(forceNetwork)
 
         if (response.pageInfo.hasNextPage && response.pageInfo.nextCursor != null) {
             nextCursor = response.pageInfo.nextCursor
@@ -128,11 +130,15 @@ class LearnLearningLibraryBookmarkedViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 items = if (cursor == null)
-                    response.items.map { it.toUiState(resources) }
+                    response.items.map { it.toUiState(resources, recommendations) }
                 else
-                    it.items + response.items.map { it.toUiState(resources) }
+                    it.items + response.items.map { it.toUiState(resources, recommendations) }
             )
         }
+    }
+
+    private suspend fun fetchRecommendedItems(forceNetwork: Boolean = false): List<LearningLibraryRecommendation> {
+        return repository.getLearningLibraryRecommendedItems(forceNetwork)
     }
 
     private fun onShowMoreClicked() {

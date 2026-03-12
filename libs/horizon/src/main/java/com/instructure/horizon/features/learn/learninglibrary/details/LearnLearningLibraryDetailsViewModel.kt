@@ -24,6 +24,7 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
 import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearningLibraryCollection
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItem
+import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryRecommendation
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
@@ -49,6 +50,8 @@ class LearnLearningLibraryDetailsViewModel @Inject constructor(
     private var allItems: List<LearningLibraryCollectionItem> = emptyList()
     private val pageSize = 10
 
+    private var recommendedItems: List<LearningLibraryRecommendation> = emptyList()
+
     private val _uiState = MutableStateFlow(LearnLearningLibraryDetailsUiState(
         loadingState = LoadingState(
             onRefresh = ::refreshData,
@@ -71,10 +74,11 @@ class LearnLearningLibraryDetailsViewModel @Inject constructor(
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = true)) }
             val collection = fetchData()
+            fetchRecommendedItems()
             _uiState.update {
                 it.copy(
                     collectionName = collection.name,
-                    items = collection.items.applyFilters().map { it.toUiState(resources) },
+                    items = collection.items.applyFilters().map { it.toUiState(resources, recommendedItems) },
                 )
             }
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = false, isError = false)) }
@@ -89,10 +93,11 @@ class LearnLearningLibraryDetailsViewModel @Inject constructor(
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isRefreshing = true)) }
             val collection = fetchData(true)
+            fetchRecommendedItems(true)
             _uiState.update {
                 it.copy(
                     collectionName = collection.name,
-                    items = collection.items.applyFilters().map { it.toUiState(resources) },
+                    items = collection.items.applyFilters().map { it.toUiState(resources, recommendedItems) },
                 )
             }
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isRefreshing = false, isError = false)) }
@@ -113,6 +118,10 @@ class LearnLearningLibraryDetailsViewModel @Inject constructor(
         allItems = result.items
 
         return result
+    }
+
+    private suspend fun fetchRecommendedItems(forceNetwork: Boolean = false){
+        recommendedItems = repository.getLearningLibraryRecommendedItems(forceNetwork)
     }
 
     private fun toggleItemBookmarked(itemId: String) {
@@ -140,7 +149,7 @@ class LearnLearningLibraryDetailsViewModel @Inject constructor(
             }
 
             _uiState.update {
-                it.copy(items = allItems.applyFilters().map { it.toUiState(resources) })
+                it.copy(items = allItems.applyFilters().map { it.toUiState(resources, recommendedItems) })
             }
         } catch {
             _uiState.update {
@@ -200,16 +209,16 @@ class LearnLearningLibraryDetailsViewModel @Inject constructor(
 
     private fun updateSearchQuery(value: TextFieldValue) {
         _uiState.update { it.copy(searchQuery = value) }
-        _uiState.update { it.copy(items = allItems.applyFilters().map { it.toUiState(resources) }) }
+        _uiState.update { it.copy(items = allItems.applyFilters().map { it.toUiState(resources, recommendedItems) }) }
     }
 
     private fun updateSelectedStatusFilter(value: LearnLearningLibraryStatusFilter) {
         _uiState.update { it.copy(selectedStatusFilter = value) }
-        _uiState.update { it.copy(items = allItems.applyFilters().map { it.toUiState(resources) }) }
+        _uiState.update { it.copy(items = allItems.applyFilters().map { it.toUiState(resources, recommendedItems) }) }
     }
 
     private fun updateSelectedTypeFilter(value: LearnLearningLibraryTypeFilter) {
         _uiState.update { it.copy(selectedTypeFilter = value) }
-        _uiState.update { it.copy(items = allItems.applyFilters().map { it.toUiState(resources) }) }
+        _uiState.update { it.copy(items = allItems.applyFilters().map { it.toUiState(resources, recommendedItems) }) }
     }
 }

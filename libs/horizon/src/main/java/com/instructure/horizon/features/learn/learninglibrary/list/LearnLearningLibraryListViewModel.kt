@@ -22,6 +22,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
 import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearningLibraryCollection
+import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryRecommendation
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
@@ -48,7 +50,8 @@ import javax.inject.Inject
 class LearnLearningLibraryListViewModel @Inject constructor(
     private val resources: Resources,
     private val repository: LearnLearningLibraryListRepository,
-    private val eventHandler: LearnEventHandler
+    private val eventHandler: LearnEventHandler,
+    private val apiPrefs: ApiPrefs,
 ): ViewModel() {
 
     private var allCollections: List<LearnLearningLibraryCollectionState> = emptyList()
@@ -67,6 +70,7 @@ class LearnLearningLibraryListViewModel @Inject constructor(
                 onRefresh = ::refreshCollections,
                 onSnackbarDismiss = ::onDismissSnackbar
             ),
+            userName = apiPrefs.user?.shortName ?: resources.getString(R.string.learnLEarningLibraryListYou),
             collections = allCollections,
             itemsToDisplay = collectionPageSize,
             increaseItemsToDisplay = ::increaseCollectionsToDisplay,
@@ -111,11 +115,22 @@ class LearnLearningLibraryListViewModel @Inject constructor(
         }
     }
 
+    private suspend fun fetchRecommendedItems(forceNetwork: Boolean = false): List<LearningLibraryRecommendation> {
+        val recommendations = repository.getLearningLibraryRecommendedItems(forceNetwork)
+        _uiState.update {
+            it.copy(collectionState = it.collectionState.copy(
+                recommendedItems = recommendations.map { it.toUiState(resources) }
+            ))
+        }
+        return recommendations
+    }
+
     private fun loadCollections() {
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(collectionState = it.collectionState.copy(loadingState = it.collectionState.loadingState.copy(isLoading = true))) }
             val result = fetchCollections()
-            allCollections = result.toUiState(resources)
+            val recommendedItems = fetchRecommendedItems()
+            allCollections = result.toUiState(resources, recommendedItems)
             _uiState.update { it.copy(collectionState = it.collectionState.copy(collections = allCollections)) }
             _uiState.update { it.copy(collectionState = it.collectionState.copy(loadingState = it.collectionState.loadingState.copy(isLoading = false))) }
         } catch {
@@ -143,7 +158,8 @@ class LearnLearningLibraryListViewModel @Inject constructor(
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(collectionState = it.collectionState.copy(loadingState = it.collectionState.loadingState.copy(isRefreshing = true))) }
             val result = fetchCollections(true)
-            allCollections = result.toUiState(resources)
+            val recommendedItems = fetchRecommendedItems(true)
+            allCollections = result.toUiState(resources, recommendedItems)
             _uiState.update { it.copy(collectionState = it.collectionState.copy(collections = allCollections)) }
             _uiState.update { it.copy(collectionState = it.collectionState.copy(loadingState = it.collectionState.loadingState.copy(isRefreshing = false, isError = false))) }
         } catch {
@@ -174,6 +190,7 @@ class LearnLearningLibraryListViewModel @Inject constructor(
             completedOnly = completedOnly,
             forceNetwork = forceNetwork
         )
+        val recommendedItems = fetchRecommendedItems()
 
         if (response.pageInfo.hasNextPage && response.pageInfo.nextCursor != null) {
             itemNextCursor = response.pageInfo.nextCursor
@@ -195,9 +212,9 @@ class LearnLearningLibraryListViewModel @Inject constructor(
             it.copy(
                 itemState = it.itemState.copy(
                     items = if (cursor == null)
-                        response.items.map { it.toUiState(resources) }
+                        response.items.map { it.toUiState(resources, recommendedItems) }
                     else
-                        it.itemState.items + response.items.map { it.toUiState(resources) }
+                        it.itemState.items + response.items.map { it.toUiState(resources, recommendedItems) }
                 ),
             )
         }
@@ -217,48 +234,80 @@ class LearnLearningLibraryListViewModel @Inject constructor(
 
     private fun onCollectionBookmarkItem(itemId: String) {
         viewModelScope.tryLaunch {
-            _uiState.update { it.copy(collectionState = it.collectionState.copy(collections = it.collectionState.collections.map { collectionState ->
-                collectionState.copy(
-                    items = collectionState.items.map { collectionItemState ->
-                        if (collectionItemState.id == itemId) {
-                            collectionItemState.copy(bookmarkLoading = true)
-                        } else {
-                            collectionItemState
+            _uiState.update { it.copy(collectionState = it.collectionState.copy(
+                collections = it.collectionState.collections.map { collectionState ->
+                    collectionState.copy(
+                        items = collectionState.items.map { collectionItemState ->
+                            if (collectionItemState.id == itemId) {
+                                collectionItemState.copy(bookmarkLoading = true)
+                            } else {
+                                collectionItemState
+                            }
                         }
+                    )
+                },
+                recommendedItems = it.collectionState.recommendedItems.map { recommendedItemState ->
+                    if (recommendedItemState.id == itemId) {
+                        recommendedItemState.copy(bookmarkLoading = true)
+                    } else {
+                        recommendedItemState
                     }
-                )
-            }))}
+                }
+            ))}
 
             val newIsBookmarked = repository.toggleLearningLibraryItemIsBookmarked(itemId)
 
-            _uiState.update { it.copy(collectionState = it.collectionState.copy(collections = it.collectionState.collections.map { collectionState ->
-                collectionState.copy(
-                    items = collectionState.items.map { collectionItemState ->
-                        if (collectionItemState.id == itemId) {
-                            collectionItemState.copy(
-                                bookmarkLoading = false,
-                                isBookmarked = newIsBookmarked
-                            )
-                        } else {
-                            collectionItemState
+            _uiState.update { it.copy(collectionState = it.collectionState.copy(
+                collections = it.collectionState.collections.map { collectionState ->
+                    collectionState.copy(
+                        items = collectionState.items.map { collectionItemState ->
+                            if (collectionItemState.id == itemId) {
+                                collectionItemState.copy(
+                                    bookmarkLoading = false,
+                                    isBookmarked = newIsBookmarked
+                                )
+                            } else {
+                                collectionItemState
+                            }
                         }
+                    )
+                },
+                recommendedItems = it.collectionState.recommendedItems.map { recommendedItemState ->
+                    if (recommendedItemState.id == itemId) {
+                        recommendedItemState.copy(
+                            bookmarkLoading = false,
+                            isBookmarked = newIsBookmarked
+                        )
+                    } else {
+                        recommendedItemState
                     }
-                )
-            }))}
+                }
+            ))}
         } catch {
-            _uiState.update { it.copy(collectionState = it.collectionState.copy(collections = it.collectionState.collections.map { collectionState ->
-                collectionState.copy(
-                    items = collectionState.items.map { collectionItemState ->
-                        if (collectionItemState.id == itemId) {
-                            collectionItemState.copy(
-                                bookmarkLoading = false,
-                            )
-                        } else {
-                            collectionItemState
+            _uiState.update { it.copy(collectionState = it.collectionState.copy(
+                collections = it.collectionState.collections.map { collectionState ->
+                    collectionState.copy(
+                        items = collectionState.items.map { collectionItemState ->
+                            if (collectionItemState.id == itemId) {
+                                collectionItemState.copy(
+                                    bookmarkLoading = false,
+                                )
+                            } else {
+                                collectionItemState
+                            }
                         }
+                    )
+                },
+                recommendedItems = it.collectionState.recommendedItems.map { recommendedItemState ->
+                    if (recommendedItemState.id == itemId) {
+                        recommendedItemState.copy(
+                            bookmarkLoading = false,
+                        )
+                    } else {
+                        recommendedItemState
                     }
-                )
-            }, loadingState = it.collectionState.loadingState.copy(snackbarMessage = resources.getString(R.string.learnLearningLibraryFailedToUpdateBookmarkMessage)))) }
+                },
+                loadingState = it.collectionState.loadingState.copy(snackbarMessage = resources.getString(R.string.learnLearningLibraryFailedToUpdateBookmarkMessage)))) }
         }
     }
 
@@ -288,6 +337,13 @@ class LearnLearningLibraryListViewModel @Inject constructor(
                                     }
                                 }
                             )
+                        },
+                        recommendedItems = it.collectionState.recommendedItems.map { recommendedItemState ->
+                            if (recommendedItemState.id == itemId) {
+                                recommendedItemState.copy(bookmarkLoading = true)
+                            } else {
+                                recommendedItemState
+                            }
                         }
                     )
                 )
@@ -323,6 +379,16 @@ class LearnLearningLibraryListViewModel @Inject constructor(
                                     }
                                 }
                             )
+                        },
+                        recommendedItems = it.collectionState.recommendedItems.map { recommendedItemState ->
+                            if (recommendedItemState.id == itemId) {
+                                recommendedItemState.copy(
+                                    bookmarkLoading = false,
+                                    isBookmarked = newIsBookmarked
+                                )
+                            } else {
+                                recommendedItemState
+                            }
                         }
                     )
                 )
@@ -353,6 +419,13 @@ class LearnLearningLibraryListViewModel @Inject constructor(
                                     }
                                 }
                             )
+                        },
+                        recommendedItems = it.collectionState.recommendedItems.map { recommendedItemState ->
+                            if (recommendedItemState.id == itemId) {
+                                recommendedItemState.copy(bookmarkLoading = false)
+                            } else {
+                                recommendedItemState
+                            }
                         }
                     )
                 )

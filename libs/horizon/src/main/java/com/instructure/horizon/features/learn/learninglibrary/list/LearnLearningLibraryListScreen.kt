@@ -17,6 +17,8 @@
 package com.instructure.horizon.features.learn.learninglibrary.list
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -24,16 +26,23 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -63,6 +72,7 @@ import com.instructure.horizon.horizonui.molecules.IconButtonSize
 import com.instructure.horizon.horizonui.molecules.LoadingButton
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.pandautils.compose.modifiers.conditional
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -109,6 +119,41 @@ private fun LearnLearningLibraryCollections(
             contentPadding = PaddingValues(top = 16.dp),
             modifier = Modifier.testTag("CollapsableBody")
         ) {
+            if (state.collectionState.recommendedItems.isNotEmpty()) {
+                item {
+                    LearnLearningLibraryRecommendedSection(state, navController)
+                }
+            }
+
+            item {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .padding(bottom = 24.dp)
+                        .padding(horizontal = 24.dp)
+                ) {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .size(28.dp)
+                            .background(HorizonColors.PrimitivesGrey.grey12(), CircleShape)
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.stacks_filled),
+                            contentDescription = null,
+                            tint = HorizonColors.PrimitivesGrey.grey45(),
+                            modifier = Modifier.size(16.dp)
+                        )
+                    }
+                    HorizonSpace(SpaceSize.SPACE_8)
+                    Text(
+                        text = stringResource(R.string.learnLearningLibraryCollectionsHeader),
+                        style = HorizonTypography.labelMediumBold,
+                        color = HorizonColors.Text.dataPoint()
+                    )
+                }
+            }
+
             LearnLearningLibraryCollection(
                 state.collectionState.collections.take(state.collectionState.itemsToDisplay),
                 state.collectionState.onBookmarkClicked,
@@ -145,6 +190,105 @@ private fun LearnLearningLibraryCollections(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun LearnLearningLibraryRecommendedSection(
+    state: LearnLearningLibraryListUiState,
+    navController: NavHostController,
+) {
+    Column(Modifier.fillMaxWidth()) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(horizontal = 24.dp)
+        ) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .size(28.dp)
+                    .background(HorizonColors.Surface.aiGradient(), CircleShape, 0.15f)
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ai_filled),
+                    contentDescription = null,
+                    tint = HorizonColors.Icon.default(),
+                    modifier = Modifier.size(16.dp)
+                )
+            }
+            HorizonSpace(SpaceSize.SPACE_8)
+            Text(
+                text = stringResource(
+                    R.string.learnLearningLibraryListRecommendedForLabel,
+                    state.collectionState.userName
+                ),
+                style = HorizonTypography.labelMediumBold,
+                color = HorizonColors.Text.dataPoint()
+            )
+        }
+        HorizonSpace(SpaceSize.SPACE_16)
+
+        val pagerState = rememberPagerState { state.collectionState.recommendedItems.size }
+        HorizontalPager(
+            pagerState,
+            pageSpacing = 24.dp,
+            contentPadding = PaddingValues(horizontal = 24.dp)
+        ) { pageIndex ->
+            val itemState = state.collectionState.recommendedItems[pageIndex]
+
+            LearnLearningLibraryItem(
+                itemState,
+                onClick = {
+                    when (itemState.route) {
+                        is LearningLibraryRoute.StringRoute -> {
+                            navController.navigate(itemState.route.route)
+                        }
+                        is LearningLibraryRoute.ObjectRoute -> {
+                            navController.navigate(itemState.route.route)
+                        }
+                        null -> {}
+                    }
+                },
+                onBookmarkClick = {
+                    state.itemState.onBookmarkClicked(itemState.id)
+                },
+                onEnrollClick = {
+                    navController.navigate(LearnRoute.LearnLearningLibraryEnrollScreen.route(itemState.id))
+                },
+            )
+        }
+
+        if (state.collectionState.recommendedItems.size > 1) {
+            HorizonSpace(SpaceSize.SPACE_16)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                modifier = Modifier.align(Alignment.CenterHorizontally).padding(horizontal = 24.dp)
+            ) {
+                val coroutineScope = rememberCoroutineScope()
+                IconButton(
+                    iconRes = R.drawable.chevron_left,
+                    contentDescription = stringResource(R.string.a11y_learningLibraryRecommendedPreviousContentDescription),
+                    size = IconButtonSize.NORMAL,
+                    color = IconButtonColor.WhiteGreyOutline,
+                    enabled = pagerState.currentPage > 0,
+                    onClick = {
+                        coroutineScope.launch { pagerState.animateScrollToPage(pagerState.currentPage - 1) }
+                    }
+                )
+                IconButton(
+                    iconRes = R.drawable.chevron_right,
+                    contentDescription = stringResource(R.string.a11y_learningLibraryRecommendedNextContentDescription),
+                    size = IconButtonSize.NORMAL,
+                    color = IconButtonColor.WhiteGreyOutline,
+                    enabled = pagerState.currentPage < state.collectionState.recommendedItems.lastIndex,
+                    onClick = {
+                        coroutineScope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) }
+                    }
+                )
+            }
+        }
+        HorizonSpace(SpaceSize.SPACE_24)
     }
 }
 
