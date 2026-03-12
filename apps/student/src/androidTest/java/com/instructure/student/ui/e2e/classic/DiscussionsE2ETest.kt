@@ -401,7 +401,7 @@ class DiscussionsE2ETest: StudentComposeTest() {
         Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
 
-        Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Select course: '${course.name}'.")
+        Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered.")
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Click on the 'Calendar' bottom menu to navigate to the Calendar page.")
@@ -450,4 +450,5 @@ class DiscussionsE2ETest: StudentComposeTest() {
         assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Reply to topic due", assignmentDetailsReplyToTopicDueDate)
         assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Additional replies (2) due", assignmentDetailsReplyToEntryDueDate)
     }
+
 }
