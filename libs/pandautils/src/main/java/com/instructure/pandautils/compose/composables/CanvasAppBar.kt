@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
-import com.instructure.canvasapi2.utils.ApiPrefs
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -37,6 +36,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -50,7 +50,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.R
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.getActivityOrNull
 
 /**
  * App bar for edit screens/modal screens, the colors are always the same and has elevation.
@@ -72,6 +75,11 @@ fun CanvasAppBar(
         WindowInsets.statusBars
     }
 ) {
+    val activity = LocalContext.current.getActivityOrNull()
+    activity?.let {
+        ViewStyler.themeStatusBar(activity)
+    }
+
     TopAppBar(
         title = {
             Column(
@@ -147,6 +155,11 @@ fun CanvasAppBar(
         WindowInsets.statusBars
     }
 ) {
+    val activity = LocalContext.current.getActivityOrNull()
+    activity?.let {
+        ViewStyler.themeStatusBar(activity)
+    }
+
     TopAppBar(
         title = {
             Column(

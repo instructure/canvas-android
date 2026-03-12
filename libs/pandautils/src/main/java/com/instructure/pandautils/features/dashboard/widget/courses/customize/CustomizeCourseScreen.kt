@@ -22,10 +22,16 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -70,6 +76,7 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
+import com.instructure.pandautils.compose.composables.CanvasScaffold
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.ColorPicker
 import com.instructure.pandautils.utils.ColorKeeper
@@ -120,101 +127,107 @@ fun CustomizeCourseScreenContent(
         }
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(colorResource(R.color.backgroundLightest))
-            .testTag("customizeCourseScreen")
-    ) {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(top = if (!uiState.showColorOverlay) appBarHeight else 0.dp)
+    CanvasScaffold(
+        contentWindowInsets = WindowInsets.ime.union(WindowInsets.navigationBars.only(WindowInsetsSides.Bottom)),
+        backgroundColor = colorResource(id = R.color.backgroundLightest)
+    ) { padding ->
+        Box(
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize()
+                .background(colorResource(R.color.backgroundLightest))
+                .testTag("customizeCourseScreen")
         ) {
-            item {
-                CourseHeader(
-                    imageUrl = uiState.imageUrl,
-                    color = uiState.selectedColor,
-                    showColorOverlay = uiState.showColorOverlay
-                )
-            }
-
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-
-            item {
-                NicknameCard(
-                    nickname = uiState.nickname,
-                    onNicknameChanged = uiState.onNicknameChanged,
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .testTag("nicknameCard")
-                )
-            }
-
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-
-            item {
-                Card(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .fillMaxWidth()
-                        .testTag("colorPickerCard"),
-                    colors = CardDefaults.cardColors(
-                        containerColor = colorResource(R.color.backgroundLightest)
-                    ),
-                    shape = RoundedCornerShape(16.dp),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-                ) {
-                    ColorPicker(
-                        label = stringResource(R.string.dashboardCourseColor),
-                        selectedColor = uiState.selectedColor,
-                        colors = uiState.availableColors.map { ColorKeeper.createThemedColor(it) },
-                        onColorSelected = uiState.onColorSelected,
-                        isCollapsible = false,
-                        expandedBackgroundColor = Color.Transparent,
-                        titleModifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(top = if (!uiState.showColorOverlay) appBarHeight else 0.dp)
+            ) {
+                item {
+                    CourseHeader(
+                        imageUrl = uiState.imageUrl,
+                        color = uiState.selectedColor,
+                        showColorOverlay = uiState.showColorOverlay
                     )
                 }
+
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+
+                item {
+                    NicknameCard(
+                        nickname = uiState.nickname,
+                        onNicknameChanged = uiState.onNicknameChanged,
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .testTag("nicknameCard")
+                    )
+                }
+
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+
+                item {
+                    Card(
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .fillMaxWidth()
+                            .testTag("colorPickerCard"),
+                        colors = CardDefaults.cardColors(
+                            containerColor = colorResource(R.color.backgroundLightest)
+                        ),
+                        shape = RoundedCornerShape(16.dp),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                    ) {
+                        ColorPicker(
+                            label = stringResource(R.string.dashboardCourseColor),
+                            selectedColor = uiState.selectedColor,
+                            colors = uiState.availableColors.map { ColorKeeper.createThemedColor(it) },
+                            onColorSelected = uiState.onColorSelected,
+                            isCollapsible = false,
+                            expandedBackgroundColor = Color.Transparent,
+                            titleModifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+                        )
+                    }
+                }
             }
+
+            SnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier.align(Alignment.BottomCenter)
+            )
+
+            CanvasThemedAppBar(
+                title = uiState.courseName,
+                subtitle = uiState.courseCode,
+                navIconRes = R.drawable.ic_close_lined,
+                navIconContentDescription = stringResource(R.string.close),
+                navigationActionClick = onNavigateBack,
+                backgroundColor = if (uiState.showColorOverlay) Color.Transparent else Color(uiState.initialColor),
+                contentColor = colorResource(R.color.textLightest),
+                modifier = Modifier.onGloballyPositioned { coordinates ->
+                    appBarHeight = with(density) {
+                        coordinates.size.height.toDp()
+                    }
+                },
+                actions = {
+                    TextButton(
+                        onClick = uiState.onDone,
+                        enabled = !uiState.isLoading,
+                        modifier = Modifier.testTag("doneButton")
+                    ) {
+                        Text(
+                            text = stringResource(R.string.done),
+                            color = colorResource(R.color.textLightest),
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            lineHeight = 19.sp
+                        )
+                    }
+                }
+            )
         }
-
-        SnackbarHost(
-            hostState = snackbarHostState,
-            modifier = Modifier.align(Alignment.BottomCenter)
-        )
-
-        CanvasThemedAppBar(
-            title = uiState.courseName,
-            subtitle = uiState.courseCode,
-            navIconRes = R.drawable.ic_close_lined,
-            navIconContentDescription = stringResource(R.string.close),
-            navigationActionClick = onNavigateBack,
-            backgroundColor = if (uiState.showColorOverlay) Color.Transparent else Color(uiState.initialColor),
-            contentColor = colorResource(R.color.textLightest),
-            modifier = Modifier.onGloballyPositioned { coordinates ->
-                appBarHeight = with(density) {
-                    coordinates.size.height.toDp()
-                }
-            },
-            actions = {
-                TextButton(
-                    onClick = uiState.onDone,
-                    enabled = !uiState.isLoading,
-                    modifier = Modifier.testTag("doneButton")
-                ) {
-                    Text(
-                        text = stringResource(R.string.done),
-                        color = colorResource(R.color.textLightest),
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        lineHeight = 19.sp
-                    )
-                }
-            }
-        )
     }
 }
 

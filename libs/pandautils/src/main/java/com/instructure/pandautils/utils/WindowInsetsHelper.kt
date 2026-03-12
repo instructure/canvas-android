@@ -104,6 +104,26 @@ fun View.applyBottomSystemBarMargin() {
     }
 }
 
+fun View.applyImeAndSystemBarMargin() {
+    if (!EdgeToEdgeHelper.isEdgeToEdgeEnforced()) return
+    val originalBottomMargin = getTag(TAG_ORIGINAL_BOTTOM_MARGIN) as? Int ?: run {
+        val margin = (layoutParams as? android.view.ViewGroup.MarginLayoutParams)?.bottomMargin ?: 0
+        setTag(TAG_ORIGINAL_BOTTOM_MARGIN, margin)
+        margin
+    }
+    ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
+        val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+        val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+        val layoutParams = view.layoutParams as? android.view.ViewGroup.MarginLayoutParams
+        layoutParams?.bottomMargin = originalBottomMargin + maxOf(ime.bottom, systemBars.bottom)
+        view.layoutParams = layoutParams
+        insets
+    }
+    if (isAttachedToWindow) {
+        ViewCompat.requestApplyInsets(this)
+    }
+}
+
 private val TAG_ORIGINAL_BOTTOM_RIGHT_MARGINS = "originalBottomRightMargins".hashCode()
 
 fun View.applyBottomAndRightSystemBarMargin() {

@@ -19,7 +19,10 @@ package com.instructure.student.fragment
 
 import android.app.Activity
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -40,7 +43,20 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_EDIT_PAGE_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.MediaUploadUtils
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.RequestCodes
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
+import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.setupAsCloseButton
+import com.instructure.pandautils.utils.toast
+import com.instructure.pandautils.utils.withArgs
 import com.instructure.student.R
 import com.instructure.student.databinding.FragmentEditPageBinding
 import com.instructure.student.dialog.UnsavedChangesExitDialog
@@ -72,6 +88,15 @@ class EditPageDetailsFragment : ParentFragment() {
             if (!it.frontPage) url.append("/pages/${it.url}/edit")
         }
         return url.toString()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        // Due to the messed up navigation stack in the Student app some screens under this on config change can override the color of the statusbar,
+        // so we need to add a delay to make sure this gets called last.
+        Handler(Looper.getMainLooper()).postDelayed({
+            ViewStyler.setStatusBarLight(requireActivity())
+        }, 100)
     }
 
     //region Fragment Lifecycle Overrides
