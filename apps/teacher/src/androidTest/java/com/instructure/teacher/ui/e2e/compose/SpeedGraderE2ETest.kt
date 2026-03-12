@@ -99,6 +99,7 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
 
         Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
         tokenLogin(teacher)
+        dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Open '${course.name}' course and navigate to Assignments Page.")
         dashboardPage.openCourse(course)
@@ -312,6 +313,7 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
 
         Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
         tokenLogin(teacher)
+        dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Open '${course.name}' course and navigate to Assignments Page.")
         dashboardPage.openCourse(course)

@@ -18,7 +18,6 @@
 package com.instructure.parentapp.utils
 
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import com.instructure.canvas.espresso.common.pages.AssignmentDetailsPage
 import com.instructure.canvas.espresso.common.pages.AssignmentReminderPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarEventCreateEditPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarEventDetailsPage
@@ -43,6 +42,7 @@ import com.instructure.parentapp.ui.pages.compose.CreateAccountPage
 import com.instructure.parentapp.ui.pages.compose.ManageStudentsPage
 import com.instructure.parentapp.ui.pages.compose.NotAParentPage
 import com.instructure.parentapp.ui.pages.compose.PairingCodePage
+import com.instructure.parentapp.ui.pages.compose.ParentAssignmentDetailsPage
 import com.instructure.parentapp.ui.pages.compose.ParentInboxCoursePickerPage
 import com.instructure.parentapp.ui.pages.compose.QrPairingPage
 import com.instructure.parentapp.ui.pages.compose.StudentAlertSettingsPage
@@ -83,7 +83,7 @@ abstract class ParentComposeTest : ParentTest() {
     protected val calendarFilterPage = CalendarFilterPage(composeTestRule)
     protected val assignmentReminderPage = AssignmentReminderPage(composeTestRule)
     protected val inboxSignatureSettingsPage = InboxSignatureSettingsPage(composeTestRule)
-    protected val assignmentDetailsPage = AssignmentDetailsPage(ModuleItemInteractions(), composeTestRule)
+    protected val assignmentDetailsPage = ParentAssignmentDetailsPage(ModuleItemInteractions(), composeTestRule)
 
     override fun displaysPageObjects() = Unit
 }
