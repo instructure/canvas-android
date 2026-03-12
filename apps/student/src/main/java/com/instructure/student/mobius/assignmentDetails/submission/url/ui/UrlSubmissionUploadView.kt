@@ -19,6 +19,9 @@ import android.app.Activity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.webkit.WebViewClient
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.onChangeDebounce
 import com.instructure.pandautils.utils.setMenu
 import com.instructure.pandautils.utils.setVisible
@@ -37,6 +40,8 @@ class UrlSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) : Mob
     init {
         binding.toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
         binding.toolbar.title = context.getString(R.string.websiteUrl)
+        binding.toolbar.applyTopSystemBarInsets()
+        binding.urlPreviewWebView.applyBottomSystemBarInsets()
 
         binding.urlPreviewWebView.webViewClient = WebViewClient()
         binding.urlPreviewWebView.settings.javaScriptEnabled = true
@@ -68,7 +73,10 @@ class UrlSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) : Mob
     }
 
     override fun onDispose() {}
-    override fun applyTheme() {}
+
+    override fun applyTheme() {
+        ViewStyler.themeToolbarLight(context as Activity, binding.toolbar)
+    }
 
     fun showPreviewUrl(url: String) {
         binding.urlPreviewWebView.setVisible()

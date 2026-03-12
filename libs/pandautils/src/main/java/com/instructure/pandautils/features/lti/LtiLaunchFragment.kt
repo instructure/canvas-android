@@ -17,12 +17,16 @@
 package com.instructure.pandautils.features.lti
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.Toast
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -53,6 +57,8 @@ import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.PermissionRequester
 import com.instructure.pandautils.utils.PermissionUtils
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyDisplayCutoutInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.argsWithContext
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.enableAlgorithmicDarkening
@@ -104,6 +110,21 @@ class LtiLaunchFragment : BaseCanvasFragment(), NavigationCallbacks {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Apply display cutout insets to root view to prevent content from extending behind camera cutout
+        view.applyDisplayCutoutInsets()
+
+        binding.toolbar.applyTopSystemBarInsets()
+
+        // Apply bottom insets only in portrait mode to avoid conflict with camera cutout in landscape
+        val isPortrait = resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+        if (isPortrait) {
+            ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
+                val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                v.updatePadding(bottom = systemBars.bottom)
+                insets
+            }
+        }
         binding.loadingView.setOverrideColor(ltiLaunchFragmentBehavior.toolbarColor)
         binding.toolName.setTextForVisibility(title.validOrNull())
         binding.toolbar.setupAsBackButton {

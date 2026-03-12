@@ -55,7 +55,7 @@ class CalendarScreenPage(private val composeTestRule: ComposeTestRule) : BasePag
     }
 
     fun clickAddTodo() {
-        composeTestRule.onNodeWithText("Add To Do").performClick()
+        composeTestRule.onNodeWithText("Add To-do").performClick()
         composeTestRule.waitForIdle()
     }
 

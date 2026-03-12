@@ -74,6 +74,7 @@ class ViewUnsupportedFileFragment : BaseCanvasFragment() {
             fileNameView.text = it.file.displayName
         }
 
+        toolbar.applyTopSystemBarInsets()
         if(isTablet && mToolbarColor != 0) {
             ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.white))
         } else {

@@ -20,6 +20,7 @@ package com.instructure.student.ui.utils
 
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import com.instructure.canvas.espresso.common.pages.AssignmentReminderPage
+import com.instructure.canvas.espresso.common.pages.VideoPlayerPage
 import com.instructure.canvas.espresso.common.pages.compose.AssignmentListPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarEventCreateEditPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarEventDetailsPage
@@ -69,6 +70,7 @@ abstract class StudentComposeTest : StudentTest() {
     val inboxSignatureSettingsPage = InboxSignatureSettingsPage(composeTestRule)
     val toDoListPage = ToDoListPage(composeTestRule)
     val toDoFilterPage = ToDoFilterPage(composeTestRule)
+    val videoPlayerPage = VideoPlayerPage()
     val assignmentDetailsPage = StudentAssignmentDetailsPage(
         ModuleItemInteractions(
             R.id.moduleName,

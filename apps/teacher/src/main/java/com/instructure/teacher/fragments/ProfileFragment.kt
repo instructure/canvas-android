@@ -31,6 +31,8 @@ import com.instructure.pandautils.fragments.BaseFragment
 import com.instructure.pandautils.utils.ProfileUtils
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyDisplayCutoutInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.requestAccessibilityFocus
 import com.instructure.teacher.R
@@ -62,14 +64,20 @@ class ProfileFragment : BaseFragment() {
         super.onResume()
         setupToolbar()
         setupViewableData()
+        setupWindowInsets()
     }
 
     private fun setupToolbar() = with(binding) {
+        toolbar.applyTopSystemBarInsets()
         toolbar.setupMenu(R.menu.menu_settings_edit, menuItemCallback)
         toolbar.setupBackButtonAsBackPressedOnly(this@ProfileFragment)
         titleTextView.adoptToolbarStyle(toolbar)
         ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         toolbar.requestAccessibilityFocus()
+    }
+
+    private fun setupWindowInsets() = with(binding) {
+        profileSettingsPage.applyDisplayCutoutInsets()
     }
 
     private fun setupViewableData() = with(binding) {

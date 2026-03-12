@@ -82,6 +82,7 @@ class EditPageDetailsFragment : ParentFragment() {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
         setupDescription()
+        binding.pageRCEView.applyBottomSystemBarInsets()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -121,7 +122,9 @@ class EditPageDetailsFragment : ParentFragment() {
     //endregion
 
     //region Fragment Interaction Overrides
-    override fun applyTheme() = Unit
+    override fun applyTheme() {
+        ViewStyler.themeToolbarLight(requireActivity(), binding.toolbar)
+    }
 
     override fun title(): String = getString(R.string.editPage)
     //endregion
@@ -192,6 +195,7 @@ class EditPageDetailsFragment : ParentFragment() {
             }
         }
         toolbar.title = page.title
+        toolbar.applyTopSystemBarInsets()
         setupToolbarMenu(toolbar, R.menu.menu_edit_page)
         ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)

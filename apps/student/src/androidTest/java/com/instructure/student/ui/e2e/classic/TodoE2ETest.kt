@@ -104,7 +104,7 @@ class TodoE2ETest : StudentComposeTest() {
         Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
 
-        Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Navigate to 'To Do' Page via bottom-menu.")
+        Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Navigate to 'To-do' Page via bottom-menu.")
         dashboardPage.waitForRender()
         dashboardPage.clickTodoTab()
 
@@ -119,17 +119,17 @@ class TodoE2ETest : StudentComposeTest() {
         toDoListPage.assertItemNotDisplayed(threeWeeksAwayQuiz.title)
         toDoListPage.assertItemNotDisplayed(fourWeeksAwayAssignment.name)
 
-        Log.d(STEP_TAG, "Open the To Do Filter Page.")
+        Log.d(STEP_TAG, "Open the To-do Filter Page.")
         toDoListPage.clickFilterButton()
 
-        Log.d(ASSERTION_TAG, "Assert that the To Do Filter Page is displayed with the correct title.")
+        Log.d(ASSERTION_TAG, "Assert that the To-do Filter Page is displayed with the correct title.")
         toDoFilterPage.assertFilterScreenTitle()
 
         Log.d(ASSERTION_TAG, "Assert that all filter options (and their 'group labels') are displayed correctly on the ToDo Filter Page.")
         toDoFilterPage.assertToDoFilterScreenDetails()
 
         Log.d(ASSERTION_TAG, "Assert that all 'Visible items' filter options are disabled by default on the ToDo Filter Page.")
-        toDoFilterPage.assertVisibleItemOptionCheckedState(R.string.todoFilterShowPersonalToDos, false)
+        toDoFilterPage.assertVisibleItemOptionCheckedState(R.string.todoFilterShowPersonalToDosNew, false)
         toDoFilterPage.assertVisibleItemOptionCheckedState(R.string.todoFilterShowCalendarEvents, false)
         toDoFilterPage.assertVisibleItemOptionCheckedState(R.string.todoFilterShowCompleted, false)
         toDoFilterPage.assertVisibleItemOptionCheckedState(R.string.todoFilterFavoriteCoursesOnly, false)
@@ -161,7 +161,7 @@ class TodoE2ETest : StudentComposeTest() {
         Log.d(STEP_TAG, "Mark the '${todayQuiz.title}' quiz as done.")
         toDoListPage.clickMarkToDoItemAsDone(todayQuiz.id)
 
-        Log.d(ASSERTION_TAG, "Assert that the snack bar is displayed with the correct quiz title. Wait until the item disappears from the To Do List.")
+        Log.d(ASSERTION_TAG, "Assert that the snack bar is displayed with the correct quiz title. Wait until the item disappears from the To-do List.")
         toDoListPage.waitForSnackbar(todayQuiz.title)
         toDoListPage.assertSnackbarDisplayed(todayQuiz.title)
         toDoListPage.waitForItemToDisappear(todayQuiz.title)
@@ -169,18 +169,18 @@ class TodoE2ETest : StudentComposeTest() {
         Log.d(STEP_TAG, "Click on 'Undo' button on the snack bar.")
         toDoListPage.clickSnackbarUndo()
 
-        Log.d(ASSERTION_TAG, "Assert that the '${todayQuiz.title}' quiz is back on the To Do List as we reverted the marking as done activity by clicked on the 'Undo' on the snack bar.")
+        Log.d(ASSERTION_TAG, "Assert that the '${todayQuiz.title}' quiz is back on the To-do List as we reverted the marking as done activity by clicked on the 'Undo' on the snack bar.")
         toDoListPage.waitForItemToAppear(todayQuiz.title)
         toDoListPage.assertItemDisplayed(todayQuiz.title)
 
         Log.d(STEP_TAG, "Mark the '${todayQuiz.title}' quiz as done.")
         toDoListPage.clickMarkToDoItemAsDone(todayQuiz.id)
 
-        Log.d(ASSERTION_TAG, "Assert that the To Do List Page is empty because of the (default) filters.")
+        Log.d(ASSERTION_TAG, "Assert that the To-do List Page is empty because of the (default) filters.")
         toDoListPage.waitForItemToDisappear(todayQuiz.title)
         toDoListPage.assertEmptyState()
 
-        Log.d(STEP_TAG, "Open the To Do Filter Page.")
+        Log.d(STEP_TAG, "Open the To-do Filter Page.")
         toDoListPage.clickFilterButton()
 
         Log.d(ASSERTION_TAG, "Assert that the 'Show tasks until' filter has the 'Today' option selected.")
@@ -190,10 +190,10 @@ class TodoE2ETest : StudentComposeTest() {
         toDoFilterPage.selectVisibleItemsOption(R.string.todoFilterShowCompleted)
         toDoFilterPage.clickClose()
 
-        Log.d(ASSERTION_TAG, "Assert that the To Do List Page is still empty because we did not save the 'Completed' filter by clicking on the 'Done' button, rather we clicked on the Close (X) button so the changes won't be applied.")
+        Log.d(ASSERTION_TAG, "Assert that the To-do List Page is still empty because we did not save the 'Completed' filter by clicking on the 'Done' button, rather we clicked on the Close (X) button so the changes won't be applied.")
         toDoListPage.assertEmptyState()
 
-        Log.d(STEP_TAG, "Open the To Do Filter Page.")
+        Log.d(STEP_TAG, "Open the To-do Filter Page.")
         toDoListPage.clickFilterButton()
 
         Log.d(STEP_TAG, "Select the 'Completed' visible items filter and click on 'Done' button.")
@@ -205,7 +205,7 @@ class TodoE2ETest : StudentComposeTest() {
         toDoListPage.assertItemNotDisplayed(favoriteCourseAssignment.name)
         toDoListPage.assertItemNotDisplayed(thisWeekAssignment.name)
 
-        Log.d(STEP_TAG, "Open the To Do Filter Page.")
+        Log.d(STEP_TAG, "Open the To-do Filter Page.")
         toDoListPage.clickFilterButton()
 
         Log.d(STEP_TAG, "UNselect the 'Completed' visible items filter and set back the 'Show tasks until' filter to 'This Week' (default) option and click on 'Done' button.")
@@ -238,10 +238,10 @@ class TodoE2ETest : StudentComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the unfavorited course, '${course.name}' is NOT displayed on the Dashboard Page.")
         dashboardPage.assertCourseNotDisplayed(course)
 
-        Log.d(STEP_TAG, "Navigate to 'To Do' Page via bottom-menu.")
+        Log.d(STEP_TAG, "Navigate to 'To-do' Page via bottom-menu.")
         dashboardPage.clickTodoTab()
 
-        Log.d(STEP_TAG, "Open the To Do Filter Page.")
+        Log.d(STEP_TAG, "Open the To-do Filter Page.")
         toDoListPage.clickFilterButton()
 
         Log.d(STEP_TAG, "Select the 'Favorite Courses Only' visible items filter and click on 'Done' button.")
@@ -256,7 +256,7 @@ class TodoE2ETest : StudentComposeTest() {
         toDoListPage.assertItemNotDisplayed(nextWeekQuiz.title)
 
         //Check next week in future
-        Log.d(STEP_TAG, "Open the To Do Filter Page.")
+        Log.d(STEP_TAG, "Open the To-do Filter Page.")
         toDoListPage.clickFilterButton()
 
         Log.d(STEP_TAG, "Unselect the 'Favorite Courses Only' visible items filter and change the 'Show tasks until' filter to 'Next Week' option and click on 'Done' button")
@@ -276,7 +276,7 @@ class TodoE2ETest : StudentComposeTest() {
         toDoListPage.assertItemNotDisplayed(todayQuiz.title) // Not displayed as it's completed.
 
         //Check 2 weeks in future
-        Log.d(STEP_TAG, "Open the To Do Filter Page.")
+        Log.d(STEP_TAG, "Open the To-do Filter Page.")
         toDoListPage.clickFilterButton()
 
         Log.d(STEP_TAG, "Change the 'Show tasks until' filter to 'In Two Weeks' option and click on 'Done' button.")
@@ -295,7 +295,7 @@ class TodoE2ETest : StudentComposeTest() {
         toDoListPage.assertItemNotDisplayed(todayQuiz.title) // Not displayed as it's completed.
 
         //Check 3 weeks in future
-        Log.d(STEP_TAG, "Open the To Do Filter Page.")
+        Log.d(STEP_TAG, "Open the To-do Filter Page.")
         toDoListPage.clickFilterButton()
 
         Log.d(STEP_TAG, "Change the 'Show tasks until' filter to 'In Three Weeks' option and click on 'Done' button.")
@@ -314,7 +314,7 @@ class TodoE2ETest : StudentComposeTest() {
         toDoListPage.assertItemNotDisplayed(todayQuiz.title) // Not displayed as it's completed.
 
         //Check 4 weeks in future
-        Log.d(STEP_TAG, "Open the To Do Filter Page.")
+        Log.d(STEP_TAG, "Open the To-do Filter Page.")
         toDoListPage.clickFilterButton()
 
         Log.d(STEP_TAG, "Change the 'Show tasks until' filter to 'In Four Weeks' option and click on 'Done' button.")
@@ -338,7 +338,7 @@ class TodoE2ETest : StudentComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the '${thisWeekAssignment.name}' assignment details page is displayed with the correct assignment details.")
         assignmentDetailsPage.assertAssignmentDetails(thisWeekAssignment)
 
-        Log.d(STEP_TAG, "Navigate back to the To Do List Page.")
+        Log.d(STEP_TAG, "Navigate back to the To-do List Page.")
         Espresso.pressBack()
 
         Log.d(STEP_TAG, "Click on '${nextWeekQuiz.title}' quiz to open its details page.")
@@ -405,7 +405,7 @@ class TodoE2ETest : StudentComposeTest() {
         Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
 
-        Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Navigate to 'To Do' Page via bottom-menu.")
+        Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Navigate to 'To-do' Page via bottom-menu.")
         dashboardPage.waitForRender()
         dashboardPage.clickTodoTab()
 
@@ -419,10 +419,10 @@ class TodoE2ETest : StudentComposeTest() {
         toDoListPage.assertItemDisplayed(fourWeeksAgoAssignment.name)
 
         //Check 3 weeks in past
-        Log.d(STEP_TAG, "Open the To Do Filter Page.")
+        Log.d(STEP_TAG, "Open the To-do Filter Page.")
         toDoListPage.clickFilterButton()
 
-        Log.d(ASSERTION_TAG, "Assert that the To Do Filter Page is displayed with the correct title.")
+        Log.d(ASSERTION_TAG, "Assert that the To-do Filter Page is displayed with the correct title.")
         toDoFilterPage.assertFilterScreenTitle()
 
         Log.d(ASSERTION_TAG, "Assert that the 'Show tasks from' filter has the '4 Weeks Ago' option selected as default.")
@@ -443,7 +443,7 @@ class TodoE2ETest : StudentComposeTest() {
         toDoListPage.assertItemNotDisplayed(fourWeeksAgoAssignment.name)
 
         //Check 2 weeks in past
-        Log.d(STEP_TAG, "Open the To Do Filter Page.")
+        Log.d(STEP_TAG, "Open the To-do Filter Page.")
         toDoListPage.clickFilterButton()
 
         Log.d(STEP_TAG, "Change the 'Show tasks from' filter to '2 Weeks Ago' option and click on 'Done' button.")
@@ -461,7 +461,7 @@ class TodoE2ETest : StudentComposeTest() {
         toDoListPage.assertItemNotDisplayed(threeWeeksAgoQuiz.title)
 
         //Check 1 week in past (Last Week)
-        Log.d(STEP_TAG, "Open the To Do Filter Page.")
+        Log.d(STEP_TAG, "Open the To-do Filter Page.")
         toDoListPage.clickFilterButton()
 
         Log.d(STEP_TAG, "Change the 'Show tasks from' filter to 'Last Week' option and click on 'Done' button.")
@@ -479,7 +479,7 @@ class TodoE2ETest : StudentComposeTest() {
         toDoListPage.assertItemNotDisplayed(twoWeeksAgoAssignment.name)
 
         //Check this week in past (This Week)
-        Log.d(STEP_TAG, "Open the To Do Filter Page.")
+        Log.d(STEP_TAG, "Open the To-do Filter Page.")
         toDoListPage.clickFilterButton()
 
         Log.d(STEP_TAG, "Change the 'Show tasks from' filter to 'This Week' option and click on 'Done' button.")
@@ -497,7 +497,7 @@ class TodoE2ETest : StudentComposeTest() {
         toDoListPage.assertItemNotDisplayed(lastWeekQuiz.title)
 
         //Check Today in past filters (Today)
-        Log.d(STEP_TAG, "Open the To Do Filter Page.")
+        Log.d(STEP_TAG, "Open the To-do Filter Page.")
         toDoListPage.clickFilterButton()
 
         Log.d(STEP_TAG, "Change the 'Show tasks from' filter to 'Today' option and click on 'Done' button.")
@@ -534,7 +534,7 @@ class TodoE2ETest : StudentComposeTest() {
             Date().toApiString()
         )
 
-        Log.d(PREPARATION_TAG, "Seed a personal To Do for '${student.name}' student.")
+        Log.d(PREPARATION_TAG, "Seed a personal To-do for '${student.name}' student.")
         val testCalendarPersonalToDo = PlannerAPI.createPlannerNote(
             student.token,
             "Student Test Personal ToDo",
@@ -545,23 +545,23 @@ class TodoE2ETest : StudentComposeTest() {
         Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
 
-        Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Navigate to 'To Do' Page via bottom-menu.")
+        Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Navigate to 'To-do' Page via bottom-menu.")
         dashboardPage.waitForRender()
         dashboardPage.clickTodoTab()
 
-        Log.d(ASSERTION_TAG, "Assert that the To Do List Page is empty because of the (default) filters.")
+        Log.d(ASSERTION_TAG, "Assert that the To-do List Page is empty because of the (default) filters.")
         toDoListPage.assertEmptyState()
 
-        //Show both types: Calendar Events and Personal To Dos
-        Log.d(STEP_TAG, "Open the To Do Filter Page.")
+        //Show both types: Calendar Events and Personal To-dos
+        Log.d(STEP_TAG, "Open the To-do Filter Page.")
         toDoListPage.clickFilterButton()
 
-        Log.d(STEP_TAG, "Select the 'Show Personal To Dos' and 'Show Calendar Events' visible items filter and click on 'Done' button.")
-        toDoFilterPage.selectVisibleItemsOption(R.string.todoFilterShowPersonalToDos)
+        Log.d(STEP_TAG, "Select the 'Show Personal To-dos' and 'Show Calendar Events' visible items filter and click on 'Done' button.")
+        toDoFilterPage.selectVisibleItemsOption(R.string.todoFilterShowPersonalToDosNew)
         toDoFilterPage.selectVisibleItemsOption(R.string.todoFilterShowCalendarEvents)
         toDoFilterPage.clickDone()
 
-        Log.d(ASSERTION_TAG, "Assert that '${testCalendarEvent.title}' calendar event and '${testCalendarPersonalToDo.title}' personal To Do are displayed because we filtered to Personal To Dos and calendar events.")
+        Log.d(ASSERTION_TAG, "Assert that '${testCalendarEvent.title}' calendar event and '${testCalendarPersonalToDo.title}' personal To-do are displayed because we filtered to Personal To-dos and calendar events.")
         toDoListPage.assertItemDisplayed(testCalendarEvent.title)
         toDoListPage.assertItemDisplayed(testCalendarPersonalToDo.title)
 
@@ -571,40 +571,40 @@ class TodoE2ETest : StudentComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the '${testCalendarEvent.title}' calendar event details page is displayed with the correct event title.")
         calendarEventDetailsPage.assertEventTitle(testCalendarEvent.title)
 
-        Log.d(STEP_TAG, "Navigate back to the To Do List Page.")
+        Log.d(STEP_TAG, "Navigate back to the To-do List Page.")
         Espresso.pressBack()
 
-        Log.d(STEP_TAG, "Click on the '${testCalendarPersonalToDo.title}' personal To Do item to open its details page.")
+        Log.d(STEP_TAG, "Click on the '${testCalendarPersonalToDo.title}' personal To-do item to open its details page.")
         toDoListPage.clickOnItem(testCalendarPersonalToDo.title)
 
-        Log.d(ASSERTION_TAG, "Assert that the '${testCalendarPersonalToDo.title}' personal To Do details page is displayed with the correct event title.")
+        Log.d(ASSERTION_TAG, "Assert that the '${testCalendarPersonalToDo.title}' personal To-do details page is displayed with the correct event title.")
         calendarToDoDetailsPage.assertTitle(testCalendarPersonalToDo.title)
 
-        Log.d(STEP_TAG, "Navigate back to the To Do List Page.")
+        Log.d(STEP_TAG, "Navigate back to the To-do List Page.")
         Espresso.pressBack()
 
-        //Show only Personal To Dos
-        Log.d(STEP_TAG, "Open the To Do Filter Page.")
+        //Show only Personal To-dos
+        Log.d(STEP_TAG, "Open the To-do Filter Page.")
         toDoListPage.clickFilterButton()
 
-        Log.d(STEP_TAG, "Select the 'Show Personal To Dos' visible item filter and click on 'Done' button.")
-        toDoFilterPage.selectVisibleItemsOption(R.string.todoFilterShowCalendarEvents) // Toggle off Calendar Events to show only Personal To Dos
+        Log.d(STEP_TAG, "Select the 'Show Personal To-dos' visible item filter and click on 'Done' button.")
+        toDoFilterPage.selectVisibleItemsOption(R.string.todoFilterShowCalendarEvents) // Toggle off Calendar Events to show only Personal To-dos
         toDoFilterPage.clickDone()
 
-        Log.d(ASSERTION_TAG, "Assert that the '${testCalendarPersonalToDo.title}' personal To Do is displayed, BUT the '${testCalendarEvent.title}' calendar event is not according to current filters.")
+        Log.d(ASSERTION_TAG, "Assert that the '${testCalendarPersonalToDo.title}' personal To-do is displayed, BUT the '${testCalendarEvent.title}' calendar event is not according to current filters.")
         toDoListPage.assertItemDisplayed(testCalendarPersonalToDo.title)
         toDoListPage.assertItemNotDisplayed(testCalendarEvent.title)
 
         //Show only Calendar Events
-        Log.d(STEP_TAG, "Open the To Do Filter Page.")
+        Log.d(STEP_TAG, "Open the To-do Filter Page.")
         toDoListPage.clickFilterButton()
 
         Log.d(STEP_TAG, "Select the 'Show Calendar Events' visible item filter and click on 'Done' button.")
-        toDoFilterPage.selectVisibleItemsOption(R.string.todoFilterShowPersonalToDos) // Toggle off Personal To Dos
+        toDoFilterPage.selectVisibleItemsOption(R.string.todoFilterShowPersonalToDosNew) // Toggle off Personal To-dos
         toDoFilterPage.selectVisibleItemsOption(R.string.todoFilterShowCalendarEvents) // Toggle on Calendar Events
         toDoFilterPage.clickDone()
 
-        Log.d(ASSERTION_TAG, "Assert that the '${testCalendarEvent.title}' calendar event is displayed, BUT the '${testCalendarPersonalToDo.title}' personal To Do is not according to current filters.")
+        Log.d(ASSERTION_TAG, "Assert that the '${testCalendarEvent.title}' calendar event is displayed, BUT the '${testCalendarPersonalToDo.title}' personal To-do is not according to current filters.")
         toDoListPage.assertItemDisplayed(testCalendarEvent.title)
         toDoListPage.assertItemNotDisplayed(testCalendarPersonalToDo.title)
 
@@ -612,22 +612,22 @@ class TodoE2ETest : StudentComposeTest() {
         val todayDayOfMonth = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
         toDoListPage.clickDateBadge(todayDayOfMonth)
 
-        Log.d(ASSERTION_TAG, "Assert that the Calendar Page is displayed with the correct title. Assert that both the previously created calendar event '${testCalendarEvent.title}' and personal To Do '${testCalendarPersonalToDo.title}' are displayed on the calendar for today.")
+        Log.d(ASSERTION_TAG, "Assert that the Calendar Page is displayed with the correct title. Assert that both the previously created calendar event '${testCalendarEvent.title}' and personal To-do '${testCalendarPersonalToDo.title}' are displayed on the calendar for today.")
         calendarScreenPage.assertCalendarPageTitle()
         calendarScreenPage.assertItemDisplayed(testCalendarPersonalToDo.title)
         calendarScreenPage.assertItemDisplayed(testCalendarEvent.title)
 
-        Log.d(STEP_TAG, "Navigate back to the To Do List Page.")
+        Log.d(STEP_TAG, "Navigate back to the To-do List Page.")
         Espresso.pressBack()
 
-        Log.d(STEP_TAG, "Open the To Do Filter Page.")
+        Log.d(STEP_TAG, "Open the To-do Filter Page.")
         toDoListPage.clickFilterButton()
 
         Log.d(STEP_TAG, "Select the 'Show Calendar Events' visible item filter and click on 'Done' button.")
-        toDoFilterPage.selectVisibleItemsOption(R.string.todoFilterShowPersonalToDos) // Toggle off Personal To Dos
+        toDoFilterPage.selectVisibleItemsOption(R.string.todoFilterShowPersonalToDosNew) // Toggle off Personal To-dos
         toDoFilterPage.clickDone()
 
-        Log.d(ASSERTION_TAG, "Assert that '${testCalendarEvent.title}' calendar event and '${testCalendarPersonalToDo.title}' personal To Do are displayed because we filtered to Personal To Dos and calendar events.")
+        Log.d(ASSERTION_TAG, "Assert that '${testCalendarEvent.title}' calendar event and '${testCalendarPersonalToDo.title}' personal To-do are displayed because we filtered to Personal To-dos and calendar events.")
         toDoListPage.assertItemDisplayed(testCalendarEvent.title)
         toDoListPage.assertItemDisplayed(testCalendarPersonalToDo.title)
 
@@ -638,32 +638,32 @@ class TodoE2ETest : StudentComposeTest() {
         toDoListPage.waitForSnackbar(testCalendarEvent.title)
         toDoListPage.assertSnackbarDisplayed(testCalendarEvent.title)
 
-        Log.d(ASSERTION_TAG, "Assert that '${testCalendarEvent.title}' calendar event IS NOT displayed anymore, but the '${testCalendarPersonalToDo.title}' personal To Do is displayed.")
+        Log.d(ASSERTION_TAG, "Assert that '${testCalendarEvent.title}' calendar event IS NOT displayed anymore, but the '${testCalendarPersonalToDo.title}' personal To-do is displayed.")
         toDoListPage.assertItemNotDisplayed(testCalendarEvent.title)
         toDoListPage.assertItemDisplayed(testCalendarPersonalToDo.title)
 
-        Log.d(STEP_TAG, "Swipe left on the '${testCalendarPersonalToDo.title}' personal To Do to mark it as done.")
+        Log.d(STEP_TAG, "Swipe left on the '${testCalendarPersonalToDo.title}' personal To-do to mark it as done.")
         toDoListPage.swipeItemLeft(testCalendarPersonalToDo.id!!.toLong())
 
-        Log.d(ASSERTION_TAG, "Assert that the snack bar is displayed with the correct personal To Do title.")
+        Log.d(ASSERTION_TAG, "Assert that the snack bar is displayed with the correct personal To-do title.")
         toDoListPage.waitForSnackbar(testCalendarPersonalToDo.title)
         toDoListPage.assertSnackbarDisplayed(testCalendarPersonalToDo.title)
 
         Log.d(STEP_TAG, "Click on 'Undo' button on the snack bar to 'revert' the swipe action.")
         toDoListPage.clickSnackbarUndo()
 
-        Log.d(ASSERTION_TAG, "Assert that the '${testCalendarPersonalToDo.title}' personal To Do is back on the To Do List as we reverted the marking as done activity by clicked on the 'Undo' on the snack bar.")
+        Log.d(ASSERTION_TAG, "Assert that the '${testCalendarPersonalToDo.title}' personal To-do is back on the To-do List as we reverted the marking as done activity by clicked on the 'Undo' on the snack bar.")
         toDoListPage.waitForItemToAppear(testCalendarPersonalToDo.title)
         toDoListPage.assertItemDisplayed(testCalendarPersonalToDo.title)
 
-        Log.d(STEP_TAG, "Swipe left on the '${testCalendarPersonalToDo.title}' personal To Do to mark it as done.")
+        Log.d(STEP_TAG, "Swipe left on the '${testCalendarPersonalToDo.title}' personal To-do to mark it as done.")
         toDoListPage.swipeItemLeft(testCalendarPersonalToDo.id!!.toLong())
 
-        Log.d(ASSERTION_TAG, "Assert that the snack bar is displayed with the correct personal To Do title.")
+        Log.d(ASSERTION_TAG, "Assert that the snack bar is displayed with the correct personal To-do title.")
         toDoListPage.waitForSnackbar(testCalendarPersonalToDo.title)
         toDoListPage.assertSnackbarDisplayed(testCalendarPersonalToDo.title)
 
-        Log.d(ASSERTION_TAG, "Assert that the To Do List Page is empty because of the (default) filters.")
+        Log.d(ASSERTION_TAG, "Assert that the To-do List Page is empty because of the (default) filters.")
         toDoListPage.assertEmptyState()
     }
 }

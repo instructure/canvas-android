@@ -21,11 +21,12 @@ import android.content.Context
 import android.net.Uri
 import androidx.annotation.IntegerRes
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.features.shareextension.ShareFileSubmissionTarget
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
+import com.instructure.pandautils.utils.Const
 import com.instructure.student.R
 import com.instructure.student.activity.CandroidPSPDFActivity
-import com.instructure.pandautils.features.shareextension.ShareFileSubmissionTarget
-import com.pspdfkit.PSPDFKit
+import com.pspdfkit.Nutrient
 import com.pspdfkit.annotations.AnnotationType
 import com.pspdfkit.configuration.activity.PdfActivityConfiguration
 import com.pspdfkit.configuration.activity.ThumbnailBarMode
@@ -73,6 +74,7 @@ object FileUtils {
             pspdfActivityConfiguration = PdfActivityConfiguration.Builder(context)
                 .scrollDirection(PageScrollDirection.HORIZONTAL)
                 .setThumbnailBarMode(ThumbnailBarMode.THUMBNAIL_BAR_MODE_PINNED)
+                .contentEditingEnabled(false)
                 .fitMode(PageFitMode.FIT_TO_WIDTH)
                 .build()
         } else {
@@ -82,17 +84,18 @@ object FileUtils {
                 .setDocumentInfoViewSeparated(false)
                 .enabledAnnotationTools(annotationCreationList)
                 .editableAnnotationTypes(annotationEditList)
+                .contentEditingEnabled(false)
                 .fitMode(PageFitMode.FIT_TO_WIDTH)
                 .build()
         }
 
-        if (PSPDFKit.isOpenableUri(context, uri)) {
+        if (Nutrient.isOpenableUri(context, uri)) {
             val intent = PdfActivityIntentBuilder
                 .fromUri(context, uri)
                 .configuration(pspdfActivityConfiguration)
                 .activityClass(CandroidPSPDFActivity::class.java)
                 .build()
-            intent.putExtra(com.instructure.pandautils.utils.Const.SUBMISSION_TARGET, submissionTarget)
+            intent.putExtra(Const.SUBMISSION_TARGET, submissionTarget)
             context.startActivity(intent)
         } else {
             //If we still can't open this PDF, we will then attempt to pass it off to the user's pdfviewer

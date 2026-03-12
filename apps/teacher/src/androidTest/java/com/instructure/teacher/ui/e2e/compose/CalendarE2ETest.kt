@@ -158,12 +158,12 @@ class CalendarE2ETest: TeacherComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the page title is 'Calendar'.")
         calendarScreenPage.assertCalendarPageTitle()
 
-        Log.d(STEP_TAG, "Click on the 'Add' (FAB) button and 'Add To Do' to create a new To Do.")
+        Log.d(STEP_TAG, "Click on the 'Add' (FAB) button and 'Add To-do' to create a new To-do.")
         calendarScreenPage.clickOnAddButton()
         calendarScreenPage.clickAddTodo()
 
-        Log.d(ASSERTION_TAG, "Assert that the page title is 'New To Do' as we are clicked on the 'Add To Do' button to create a new one.")
-        calendarToDoCreateUpdatePage.assertPageTitle("New To Do")
+        Log.d(ASSERTION_TAG, "Assert that the page title is 'New To-do' as we are clicked on the 'Add To-do' button to create a new one.")
+        calendarToDoCreateUpdatePage.assertPageTitle("New To-do")
 
         val testTodoTitle = "Test ToDo Title"
         val testTodoDescription = "Details of ToDo"
@@ -173,26 +173,26 @@ class CalendarE2ETest: TeacherComposeTest() {
         calendarToDoCreateUpdatePage.clickSave()
 
         val currentDate = getDateInCanvasCalendarFormat()
-        Log.d(ASSERTION_TAG, "Assert that the user has been navigated back to the Calendar Screen Page and that the previously created To Do item is displayed with the corresponding title, context and date.")
-        calendarScreenPage.assertItemDetails(testTodoTitle, "To Do", "$currentDate at 12:00 PM")
+        Log.d(ASSERTION_TAG, "Assert that the user has been navigated back to the Calendar Screen Page and that the previously created To-do item is displayed with the corresponding title, context and date.")
+        calendarScreenPage.assertItemDetails(testTodoTitle, "To-do", "$currentDate at 12:00 PM")
 
-        Log.d(STEP_TAG, "Clicks on the '$testTodoTitle' To Do item.")
+        Log.d(STEP_TAG, "Clicks on the '$testTodoTitle' To-do item.")
         calendarScreenPage.clickOnItem(testTodoTitle)
 
-        Log.d(ASSERTION_TAG, "Assert that the title is '$testTodoTitle', the context is 'To Do', the date is the current day with 12:00 PM time and the description is '$testTodoDescription'.")
+        Log.d(ASSERTION_TAG, "Assert that the title is '$testTodoTitle', the context is 'To-do', the date is the current day with 12:00 PM time and the description is '$testTodoDescription'.")
         calendarToDoDetailsPage.assertTitle(testTodoTitle)
-        calendarToDoDetailsPage.assertPageTitle("To Do")
+        calendarToDoDetailsPage.assertPageTitle("To-do")
         calendarToDoDetailsPage.assertDate("$currentDate at 12:00 PM")
         calendarToDoDetailsPage.assertDescription(testTodoDescription)
 
-        Log.d(STEP_TAG, "Click on the 'Edit To Do' within the toolbar more menu and confirm the editing.")
+        Log.d(STEP_TAG, "Click on the 'Edit To-do' within the toolbar more menu and confirm the editing.")
         calendarToDoDetailsPage.clickToolbarMenu()
         calendarToDoDetailsPage.clickEditMenu()
 
-        Log.d(ASSERTION_TAG, "Assert that the page title is 'Edit To Do' as we are editing an existing To Do item.")
-        calendarToDoCreateUpdatePage.assertPageTitle("Edit To Do")
+        Log.d(ASSERTION_TAG, "Assert that the page title is 'Edit To-do' as we are editing an existing To-do item.")
+        calendarToDoCreateUpdatePage.assertPageTitle("Edit To-do")
 
-        Log.d(ASSERTION_TAG, "Assert that the 'original' To Do Title and details has been filled into the input fields as we on the edit screen.")
+        Log.d(ASSERTION_TAG, "Assert that the 'original' To-do Title and details has been filled into the input fields as we on the edit screen.")
         calendarToDoCreateUpdatePage.assertTodoTitle(testTodoTitle)
         calendarToDoCreateUpdatePage.assertDetails(testTodoDescription)
 
@@ -203,19 +203,19 @@ class CalendarE2ETest: TeacherComposeTest() {
         calendarToDoCreateUpdatePage.typeDetails(modifiedTestTodoDescription)
         calendarToDoCreateUpdatePage.clickSave()
 
-        Log.d(ASSERTION_TAG, "Assert that the user has been navigated back to the Calendar Screen Page and that the previously modified To Do item is displayed with the corresponding title, context and with the same date as we haven't changed it.")
-        calendarScreenPage.assertItemDetails(modifiedTestTodoTitle, "To Do", "$currentDate at 12:00 PM")
+        Log.d(ASSERTION_TAG, "Assert that the user has been navigated back to the Calendar Screen Page and that the previously modified To-do item is displayed with the corresponding title, context and with the same date as we haven't changed it.")
+        calendarScreenPage.assertItemDetails(modifiedTestTodoTitle, "To-do", "$currentDate at 12:00 PM")
 
-        Log.d(STEP_TAG, "Clicks on the '$modifiedTestTodoTitle' To Do item.")
+        Log.d(STEP_TAG, "Clicks on the '$modifiedTestTodoTitle' To-do item.")
         calendarScreenPage.clickOnItem(modifiedTestTodoTitle)
 
-        Log.d(ASSERTION_TAG, "Assert that the To Do title is '$modifiedTestTodoTitle', the page title is 'To Do', the date remained current day with 12:00 PM time (as we haven't modified it) and the description is '$modifiedTestTodoDescription'.")
+        Log.d(ASSERTION_TAG, "Assert that the To-do title is '$modifiedTestTodoTitle', the page title is 'To-do', the date remained current day with 12:00 PM time (as we haven't modified it) and the description is '$modifiedTestTodoDescription'.")
         calendarToDoDetailsPage.assertTitle(modifiedTestTodoTitle)
-        calendarToDoDetailsPage.assertPageTitle("To Do")
+        calendarToDoDetailsPage.assertPageTitle("To-do")
         calendarToDoDetailsPage.assertDate("$currentDate at 12:00 PM")
         calendarToDoDetailsPage.assertDescription(modifiedTestTodoDescription)
 
-        Log.d(STEP_TAG, "Click on the 'Delete To Do' within the toolbar more menu and confirm the deletion.")
+        Log.d(STEP_TAG, "Click on the 'Delete To-do' within the toolbar more menu and confirm the deletion.")
         calendarToDoDetailsPage.clickToolbarMenu()
         calendarToDoDetailsPage.clickDeleteMenu()
         calendarToDoDetailsPage.confirmDeletion()
@@ -223,7 +223,7 @@ class CalendarE2ETest: TeacherComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the deleted item does not exist anymore on the Calendar Screen Page.")
         calendarScreenPage.assertItemNotExist(modifiedTestTodoTitle)
 
-        Log.d(ASSERTION_TAG, "Assert that after the deletion the empty view will be displayed since we don't have any To Do items on the current day.")
+        Log.d(ASSERTION_TAG, "Assert that after the deletion the empty view will be displayed since we don't have any To-do items on the current day.")
         calendarScreenPage.assertEmptyView()
     }
 
@@ -273,12 +273,12 @@ class CalendarE2ETest: TeacherComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the event is displayed with the corresponding details (title, context name, date, status) on the page.")
         calendarScreenPage.assertItemDetails(newEventTitle, teacher.name, currentDate)
 
-        Log.d(STEP_TAG, "Click on the 'Add' (FAB) button and 'Add To Do' to create a new To Do.")
+        Log.d(STEP_TAG, "Click on the 'Add' (FAB) button and 'Add To-do' to create a new To-do.")
         calendarScreenPage.clickOnAddButton()
         calendarScreenPage.clickAddTodo()
 
-        Log.d(ASSERTION_TAG, "Assert that the page title is 'New To Do' as we are clicked on the 'Add To Do' button to create a new one.")
-        calendarToDoCreateUpdatePage.assertPageTitle("New To Do")
+        Log.d(ASSERTION_TAG, "Assert that the page title is 'New To-do' as we are clicked on the 'Add To-do' button to create a new one.")
+        calendarToDoCreateUpdatePage.assertPageTitle("New To-do")
 
         val testTodoTitle = "Test ToDo Title"
         val testTodoDescription = "Details of ToDo"
@@ -294,7 +294,7 @@ class CalendarE2ETest: TeacherComposeTest() {
         Log.d(STEP_TAG, "Click on the 'Save' button.")
         calendarToDoCreateUpdatePage.clickSave()
 
-        Log.d(ASSERTION_TAG, "Assert that the '$testTodoTitle' To Do item is displayed because we created it to this particular day." +
+        Log.d(ASSERTION_TAG, "Assert that the '$testTodoTitle' To-do item is displayed because we created it to this particular day." +
                 "Assert that '$newEventTitle' calendar event is not displayed because it's created for today.")
         calendarScreenPage.assertItemDisplayed(testTodoTitle)
         calendarScreenPage.assertItemNotExist(newEventTitle)
@@ -306,7 +306,7 @@ class CalendarE2ETest: TeacherComposeTest() {
         calendarFilterPage.clickOnFilterItem(course.name)
         calendarFilterPage.closeFilterPage()
 
-        Log.d(ASSERTION_TAG, "Assert that the '$testTodoTitle' To Do item is not displayed because we filtered out from the calendar. " +
+        Log.d(ASSERTION_TAG, "Assert that the '$testTodoTitle' To-do item is not displayed because we filtered out from the calendar. " +
                 "Assert that the empty view is displayed because there are no items for today.")
         calendarScreenPage.assertItemNotExist(testTodoTitle)
         calendarScreenPage.assertEmptyView()
@@ -593,12 +593,12 @@ class CalendarE2ETest: TeacherComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the page title is 'Calendar'.")
         calendarScreenPage.assertCalendarPageTitle()
 
-        Log.d(STEP_TAG, "Click on the 'Add' (FAB) button and 'Add To Do' to create a new To Do.")
+        Log.d(STEP_TAG, "Click on the 'Add' (FAB) button and 'Add To-do' to create a new To-do.")
         calendarScreenPage.clickOnAddButton()
         calendarScreenPage.clickAddTodo()
 
-        Log.d(ASSERTION_TAG, "Assert that the page title is 'New To Do' as we are clicked on the 'Add To Do' button to create a new one.")
-        calendarToDoCreateUpdatePage.assertPageTitle("New To Do")
+        Log.d(ASSERTION_TAG, "Assert that the page title is 'New To-do' as we are clicked on the 'Add To-do' button to create a new one.")
+        calendarToDoCreateUpdatePage.assertPageTitle("New To-do")
 
         val testTodoTitle = "Test ToDo With Reminder"
         val testTodoDescription = "Details of ToDo"
@@ -613,15 +613,15 @@ class CalendarE2ETest: TeacherComposeTest() {
         Log.d(STEP_TAG, "Click on the 'Save' button.")
         calendarToDoCreateUpdatePage.clickSave()
 
-        Log.d(ASSERTION_TAG, "Assert that the To Do item is displayed on the calendar.")
+        Log.d(ASSERTION_TAG, "Assert that the To-do item is displayed on the calendar.")
         calendarScreenPage.assertItemDisplayed(testTodoTitle)
 
-        Log.d(STEP_TAG, "Click on the previously created '$testTodoTitle' To Do item.")
+        Log.d(STEP_TAG, "Click on the previously created '$testTodoTitle' To-do item.")
         calendarScreenPage.clickOnItem(testTodoTitle)
 
-        Log.d(ASSERTION_TAG, "Assert that the title is '$testTodoTitle' and the context is 'To Do'.")
+        Log.d(ASSERTION_TAG, "Assert that the title is '$testTodoTitle' and the context is 'To-do'.")
         calendarToDoDetailsPage.assertTitle(testTodoTitle)
-        calendarToDoDetailsPage.assertPageTitle("To Do")
+        calendarToDoDetailsPage.assertPageTitle("To-do")
 
         Log.d(ASSERTION_TAG, "Assert that the reminder section is displayed.")
         calendarToDoDetailsPage.assertReminderSectionDisplayed()
@@ -635,7 +635,7 @@ class CalendarE2ETest: TeacherComposeTest() {
         calendarToDoDetailsPage.selectDate(reminderDateOneHour)
         calendarToDoDetailsPage.selectTime(reminderDateOneHour)
 
-        Log.d(ASSERTION_TAG, "Assert that the reminder has been picked up and displayed on the To Do Details Page.")
+        Log.d(ASSERTION_TAG, "Assert that the reminder has been picked up and displayed on the To-do Details Page.")
         calendarToDoDetailsPage.assertReminderDisplayedWithText(reminderDateOneHour.time.toFormattedString())
 
         Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
@@ -665,7 +665,7 @@ class CalendarE2ETest: TeacherComposeTest() {
         calendarToDoDetailsPage.selectDate(reminderDateOneWeek)
         calendarToDoDetailsPage.selectTime(reminderDateOneWeek)
 
-        Log.d(ASSERTION_TAG, "Assert that a toast message is occurring which warns that we cannot pick up a reminder which has already passed (for example cannot pick '1 Week Before' reminder for a To Do which is due in 2 days).")
+        Log.d(ASSERTION_TAG, "Assert that a toast message is occurring which warns that we cannot pick up a reminder which has already passed (for example cannot pick '1 Week Before' reminder for a To-do which is due in 2 days).")
         calendarToDoDetailsPage.assertReminderNotDisplayedWithText(reminderDateOneWeek.time.toFormattedString())
         checkToastText(R.string.reminderInPast, activityRule.activity)
         futureDate.apply { add(Calendar.WEEK_OF_YEAR, 1) }
@@ -679,7 +679,7 @@ class CalendarE2ETest: TeacherComposeTest() {
         calendarToDoDetailsPage.selectDate(reminderDateOneDay)
         calendarToDoDetailsPage.selectTime(reminderDateOneDay)
 
-        Log.d(ASSERTION_TAG, "Assert that the reminder has been picked up and displayed on the To Do Details Page.")
+        Log.d(ASSERTION_TAG, "Assert that the reminder has been picked up and displayed on the To-do Details Page.")
         calendarToDoDetailsPage.assertReminderDisplayedWithText(reminderDateOneDay.time.toFormattedString())
 
         Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
@@ -697,7 +697,7 @@ class CalendarE2ETest: TeacherComposeTest() {
         Log.d(STEP_TAG, "Navigate back to Calendar Screen Page.")
         Espresso.pressBack()
 
-        Log.d(ASSERTION_TAG, "Assert that the To Do item is displayed on the calendar.")
+        Log.d(ASSERTION_TAG, "Assert that the To-do item is displayed on the calendar.")
         calendarScreenPage.assertItemDisplayed(testTodoTitle)
     }
 
@@ -724,12 +724,12 @@ class CalendarE2ETest: TeacherComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the page title is 'Calendar'.")
         calendarScreenPage.assertCalendarPageTitle()
 
-        Log.d(STEP_TAG, "Click on the 'Add' (FAB) button and 'Add To Do' to create a new To Do.")
+        Log.d(STEP_TAG, "Click on the 'Add' (FAB) button and 'Add To-do' to create a new To-do.")
         calendarScreenPage.clickOnAddButton()
         calendarScreenPage.clickAddTodo()
 
-        Log.d(ASSERTION_TAG, "Assert that the page title is 'New To Do' as we are clicked on the 'Add To Do' button to create a new one.")
-        calendarToDoCreateUpdatePage.assertPageTitle("New To Do")
+        Log.d(ASSERTION_TAG, "Assert that the page title is 'New To-do' as we are clicked on the 'Add To-do' button to create a new one.")
+        calendarToDoCreateUpdatePage.assertPageTitle("New To-do")
 
         val testTodoTitle = "Test ToDo With Reminder"
         val testTodoDescription = "Details of ToDo"
@@ -744,15 +744,15 @@ class CalendarE2ETest: TeacherComposeTest() {
         Log.d(STEP_TAG, "Click on the 'Save' button.")
         calendarToDoCreateUpdatePage.clickSave()
 
-        Log.d(ASSERTION_TAG, "Assert that the To Do item is displayed on the calendar.")
+        Log.d(ASSERTION_TAG, "Assert that the To-do item is displayed on the calendar.")
         calendarScreenPage.assertItemDisplayed(testTodoTitle)
 
-        Log.d(STEP_TAG, "Click on the previously created '$testTodoTitle' To Do item.")
+        Log.d(STEP_TAG, "Click on the previously created '$testTodoTitle' To-do item.")
         calendarScreenPage.clickOnItem(testTodoTitle)
 
-        Log.d(ASSERTION_TAG, "Assert that the title is '$testTodoTitle' and the context is 'To Do'.")
+        Log.d(ASSERTION_TAG, "Assert that the title is '$testTodoTitle' and the context is 'To-do'.")
         calendarToDoDetailsPage.assertTitle(testTodoTitle)
-        calendarToDoDetailsPage.assertPageTitle("To Do")
+        calendarToDoDetailsPage.assertPageTitle("To-do")
 
         Log.d(ASSERTION_TAG, "Assert that the reminder section is displayed.")
         calendarToDoDetailsPage.assertReminderSectionDisplayed()
@@ -764,7 +764,7 @@ class CalendarE2ETest: TeacherComposeTest() {
         Log.d(STEP_TAG, "Select '1 Hour Before'.")
         calendarToDoDetailsPage.clickBeforeReminderOption("1 Hour Before")
 
-        Log.d(ASSERTION_TAG, "Assert that the reminder has been picked up and displayed on the To Do Details Page.")
+        Log.d(ASSERTION_TAG, "Assert that the reminder has been picked up and displayed on the To-do Details Page.")
         calendarToDoDetailsPage.assertReminderDisplayedWithText(reminderDateOneHour.time.toFormattedString())
 
         Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
@@ -790,7 +790,7 @@ class CalendarE2ETest: TeacherComposeTest() {
         Log.d(STEP_TAG, "Select '1 Week Before'.")
         calendarToDoDetailsPage.clickBeforeReminderOption("1 Week Before")
 
-        Log.d(ASSERTION_TAG, "Assert that a toast message is occurring which warns that we cannot pick up a reminder which has already passed (for example cannot pick '1 Week Before' reminder for a To Do which is due in 2 days).")
+        Log.d(ASSERTION_TAG, "Assert that a toast message is occurring which warns that we cannot pick up a reminder which has already passed (for example cannot pick '1 Week Before' reminder for a To-do which is due in 2 days).")
         calendarToDoDetailsPage.assertReminderNotDisplayedWithText(reminderDateOneWeek.time.toFormattedString())
         checkToastText(R.string.reminderInPast, activityRule.activity)
         futureDate.apply { add(Calendar.WEEK_OF_YEAR, 1) }
@@ -802,7 +802,7 @@ class CalendarE2ETest: TeacherComposeTest() {
         Log.d(STEP_TAG, "Select '1 Day Before'.")
         calendarToDoDetailsPage.clickBeforeReminderOption("1 Day Before")
 
-        Log.d(ASSERTION_TAG, "Assert that the reminder has been picked up and displayed on the To Do Details Page.")
+        Log.d(ASSERTION_TAG, "Assert that the reminder has been picked up and displayed on the To-do Details Page.")
         calendarToDoDetailsPage.assertReminderDisplayedWithText(reminderDateOneDay.time.toFormattedString())
 
         Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
@@ -818,7 +818,7 @@ class CalendarE2ETest: TeacherComposeTest() {
         Log.d(STEP_TAG, "Navigate back to Calendar Screen Page.")
         Espresso.pressBack()
 
-        Log.d(ASSERTION_TAG, "Assert that the To Do item is displayed on the calendar.")
+        Log.d(ASSERTION_TAG, "Assert that the To-do item is displayed on the calendar.")
         calendarScreenPage.assertItemDisplayed(testTodoTitle)
     }
 }

@@ -12,6 +12,7 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
+ *
  */
 @file:Suppress("unused")
 
@@ -20,6 +21,7 @@ package com.instructure.teacher.ui.pages.classic
 import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertHasText
+import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.plus
@@ -61,6 +63,23 @@ class StudentContextPage : PersonContextPage() {
      */
     fun assertStudentGrade(grade: String) {
         onView(withId(R.id.gradeBeforePosting)).assertHasText(grade)
+    }
+
+    /**
+     * Asserts the student's grade after posting on the Student Context page.
+     *
+     * @param grade The expected grade after posting.
+     */
+    fun assertStudentGradeAfterPosting(grade: String) {
+        onView(withId(R.id.gradeAfterPosting)).assertHasText(grade)
+    }
+
+    /**
+     * Asserts that the 'Grade after posting' container is not displayed, which is the case
+     * when the grade is posted (both before/after values are equal and only one box is shown).
+     */
+    fun assertGradeAfterPostingNotDisplayed() {
+        onView(withId(R.id.gradeAfterPostingContainer)).assertNotDisplayed()
     }
 
     /**
