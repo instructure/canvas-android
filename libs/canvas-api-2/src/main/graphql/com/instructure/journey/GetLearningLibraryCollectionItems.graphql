@@ -49,6 +49,11 @@ query GetLearningLibraryCollectionItems(
       previousCursor
       hasNextPage
       hasPreviousPage
+      totalCount
+      pageCursors {
+          cursor
+          page
+      }
     }
   }
 }

@@ -29,7 +29,10 @@ import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearnin
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItem
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItemsResponse
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryModuleInfo
+import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryPageCursor
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryPageInfo
+import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryRecommendation
+import com.instructure.canvasapi2.models.journey.learninglibrary.RecommendationSourceContext
 import com.instructure.canvasapi2.models.journey.learninglibrary.toApolloType
 import com.instructure.canvasapi2.models.journey.learninglibrary.toModel
 import com.instructure.journey.EnrollLearningLibraryItemMutation
@@ -37,6 +40,7 @@ import com.instructure.journey.GetEnrolledLearningLibraryCollectionQuery
 import com.instructure.journey.GetEnrolledLearningLibraryCollectionsQuery
 import com.instructure.journey.GetLearningLibraryCollectionItemQuery
 import com.instructure.journey.GetLearningLibraryCollectionItemsQuery
+import com.instructure.journey.GetLearningLibraryRecommendationsQuery
 import com.instructure.journey.ToggleLearningLibraryItemIsBookmarkedMutation
 import com.instructure.journey.type.EnrollLearnerInCollectionItemInput
 import com.instructure.journey.type.ToggleCollectionItemBookmarkInput
@@ -69,6 +73,8 @@ interface GetLearningLibraryManager {
     suspend fun enrollLearningLibraryItem(itemId: String): LearningLibraryCollectionItem
 
     suspend fun getLearningLibraryItem(itemId: String, forceNetwork: Boolean): LearningLibraryCollectionItem
+
+    suspend fun getLearningLibraryRecommendations(forceNetwork: Boolean): List<LearningLibraryRecommendation>
 }
 
 class GetLearningLibraryManagerImpl @Inject constructor(
@@ -137,7 +143,14 @@ class GetLearningLibraryManagerImpl @Inject constructor(
                 nextCursor = result.pageInfo.nextCursor,
                 previousCursor = result.pageInfo.previousCursor,
                 hasNextPage = result.pageInfo.hasNextPage,
-                hasPreviousPage = result.pageInfo.hasPreviousPage
+                hasPreviousPage = result.pageInfo.hasPreviousPage,
+                totalCount = result.pageInfo.totalCount,
+                pageCursors = result.pageInfo.pageCursors?.mapNotNull {
+                    LearningLibraryPageCursor(
+                        cursor = it.cursor ?: return@mapNotNull null,
+                        page = it.page
+                    )
+                }
             )
         )
     }
@@ -351,6 +364,62 @@ class GetLearningLibraryManagerImpl @Inject constructor(
             canvasEnrollmentId = result.canvasEnrollmentId
         )
     }
+
+    override suspend fun getLearningLibraryRecommendations(forceNetwork: Boolean): List<LearningLibraryRecommendation> {
+        val query = GetLearningLibraryRecommendationsQuery()
+        val result = journeyClient.enqueueQuery(query, forceNetwork).dataOrThrow().learningRecommendations.recommendations
+
+        return result.mapNotNull { recommendation ->
+            LearningLibraryRecommendation(
+                courseId = recommendation.courseId,
+                primaryReason = recommendation.primaryReason.toModel(),
+                sourceContext = RecommendationSourceContext(
+                    sourceCourseId = recommendation.sourceContext?.sourceCourseId,
+                    sourceCourseName = recommendation.sourceContext?.sourceCourseName,
+                    sourceSkillName = recommendation.sourceContext?.sourceSkillName
+                ),
+                popularityCount = recommendation.popularityCount,
+                item = recommendation.membership?.let { membership->
+                    LearningLibraryCollectionItem(
+                        id = membership.id,
+                        libraryId = membership.libraryId,
+                        itemType = membership.itemType.toModel(),
+                        displayOrder = membership.displayOrder,
+                        canvasCourse = membership.canvasCourse?.let { course ->
+                            CanvasCourseInfo(
+                                courseId = course.courseId,
+                                canvasUrl = course.canvasUrl,
+                                courseName = course.courseName,
+                                courseImageUrl = course.courseImageUrl,
+                                moduleCount = course.moduleCount,
+                                moduleItemCount = course.moduleItemCount,
+                                estimatedDurationMinutes = course.estimatedDurationMinutes
+                            )
+                        },
+                        moduleInfo = if (membership.canvasModuleItemId != null) {
+                            LearningLibraryModuleInfo(
+                                moduleId = membership.canvasModuleId,
+                                moduleItemId = membership.canvasModuleItemId,
+                                resourceId = membership.canvasResourceId,
+                                moduleItemType = membership.itemType.toModuleItemType()?.name
+                            )
+                        } else {
+                            null
+                        },
+                        programId = membership.programId,
+                        programCourseId = membership.programCourseId,
+                        createdAt = membership.createdAt,
+                        updatedAt = membership.updatedAt,
+                        isBookmarked = membership.isBookmarked,
+                        completionPercentage = membership.completionPercentage,
+                        isEnrolledInCanvas = membership.isEnrolledInCanvas,
+                        canvasEnrollmentId = membership.canvasEnrollmentId
+                    )
+                } ?: return@mapNotNull null
+            )
+        }
+    }
+
 }
 
 private fun com.instructure.journey.type.CollectionItemType.toModuleItemType(): ModuleItem.Type? {

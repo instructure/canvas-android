@@ -148,6 +148,7 @@ type WidgetGQL {
     type: String!
     queryParams: WidgetParamsGQL!
     position: Int
+    colSpan: Int
     prismQueryId: String
     createdAt: DateTime!
     updatedAt: DateTime!
@@ -583,12 +584,34 @@ type ToggleCollectionItemBookmarkResponseGQL {
     isBookmarked: Boolean!
 }
 
+type BatchUnenrollUsersFromCollectionOutput {
+    # Number of users successfully unenrolled from the collection
+    unenrolledCount: Int!
+
+    # Array of Canvas user IDs that were not found (not enrolled in the collection)
+    notFoundUserIds: [String!]!
+}
+
 type CollectionItemEnrollmentResponseGQL {
     # The collection item with enriched metadata
     item: EnrichedLearningLibraryCourseMembershipGQL!
 
     # Whether the user was already enrolled in the Canvas course before this request
     wasAlreadyEnrolled: Boolean!
+}
+
+type PaginationInfoGQL {
+    # Current page number (1-indexed)
+    currentPage: Int!
+
+    # Total number of pages available
+    totalPages: Int
+
+    # Whether there is a next page
+    hasNextPage: Boolean!
+
+    # Whether there is a previous page
+    hasPreviousPage: Boolean!
 }
 
 type CanvasUserGQL {
@@ -633,6 +656,9 @@ type LearningLibraryCollectionEnrollmentGQL {
     # User ID of the enrollee
     enrolleeId: String!
 
+    # Canvas user UUID of the enrollee
+    canvasUserUuid: String
+
     # Enrollment status
     status: LearningLibraryCollectionEnrollmentStatus!
 
@@ -651,18 +677,12 @@ enum LearningLibraryCollectionEnrollmentStatus {
     INACTIVE
 }
 
-type PaginationInfoGQL {
-    # Current page number (1-indexed)
-    currentPage: Int!
+type LearningLibraryCollectionEnrollmentsResponseGQL {
+    # List of enrollments for the collection
+    enrollments: [LearningLibraryCollectionEnrollmentGQL!]!
 
-    # Total number of pages available
-    totalPages: Int
-
-    # Whether there is a next page
-    hasNextPage: Boolean!
-
-    # Whether there is a previous page
-    hasPreviousPage: Boolean!
+    # Pagination information
+    pagination: PaginationInfoGQL!
 }
 
 type KeyValuePairGQL {
@@ -1151,22 +1171,18 @@ type ExperienceGQL {
     alignment: SkillTaxonomySkillAlignmentGQL
 }
 
-type RecommendedSkillMatchGQL {
-    taxonomySkillId: String!
-    taxonomySkillName: String!
-    similarityScore: Float!
-}
-
 type RecommendationSourceContextGQL {
     sourceCourseId: String
     sourceCourseName: String
     sourceSkillName: String
 }
 
-type LearningRecommendationReasonDetailGQL {
-    reason: LearningRecommendationReason!
-    matchedSkills: [RecommendedSkillMatchGQL!]!
-    sourceContexts: [RecommendationSourceContextGQL!]!
+type LearningRecommendationGQL {
+    courseId: String!
+    primaryReason: LearningRecommendationReason!
+    sourceContext: RecommendationSourceContextGQL
+    popularityCount: Int!
+    membership: EnrichedLearningLibraryCourseMembershipGQL
 }
 
 enum LearningRecommendationReason {
@@ -1174,23 +1190,6 @@ enum LearningRecommendationReason {
     BOOKMARKED_ITEMS
     EXISTING_SKILLS
     POPULARITY
-}
-
-type RecommendedCourseMetadataGQL {
-    canvasCourseName: String
-    canvasCourseImageUrl: String
-    canvasCourseModuleCount: Int!
-    canvasCourseModuleItemCount: Int!
-    estimatedDurationMinutes: Int
-    itemType: String!
-}
-
-type LearningRecommendationGQL {
-    courseId: String!
-    reasons: [LearningRecommendationReasonDetailGQL!]!
-    bestSimilarityScore: Float!
-    popularityCount: Int!
-    metadata: RecommendedCourseMetadataGQL
 }
 
 type LearningRecommendationsResponseGQL {
@@ -1257,14 +1256,15 @@ type Query {
         contentLibraryId: ID!
     ): AssetLinkGQL
 
-    # All programs available for the user to administer, optionally filtered by progress state
+    # Returns programs scoped to the caller's permissions. When accountId is provided and the user has read_as_admin, returns all non-deleted programs in admin view. Otherwise returns only published programs in enrollee view.
     programs(
         # Filter programs by progress state
         filter: ProgramFilterInput
+        accountId: String
     ): [ProgramGQL!]!
 
-    # A program by id
-    program(programId: String!): ProgramGQL!
+    # Returns a program by ID scoped to the caller's permissions. When accountId is provided and the user has read_as_admin, returns the program in admin view (including unpublished). Otherwise returns the program in enrollee view; accessing an unpublished program without admin permission is rejected.
+    program(programId: String!, accountId: String): ProgramGQL!
 
     # All user enrolled programs
     enrolledPrograms: [ProgramGQL!]!
@@ -1284,7 +1284,7 @@ type Query {
     # Get a single Learning Library Collection by ID with all course memberships
     learningLibraryCollection(
         id: String!
-        accountId: String!
+        accountId: String
     ): LearningLibraryCollectionWithCoursesGQL!
 
     # Get paginated collection items from enrolled collections with filtering support
@@ -1307,11 +1307,15 @@ type Query {
         id: String!
     ): EnrolledLearningLibraryCollectionGQL!
 
-    # Get all users enrolled in a learning library collection with their Canvas profile data
+    # Get all users enrolled in a learning library collection with their Canvas profile data (supports pagination, search, and sorting)
     collectionEnrollments(
         collectionId: String!
         accountId: String!
-    ): [LearningLibraryCollectionEnrollmentGQL!]!
+        page: Int
+        searchTerm: String
+        sortField: EnrollmentSortField
+        sortDirection: SortDirection
+    ): LearningLibraryCollectionEnrollmentsResponseGQL!
     crmConfigJwt: CrmJwtGQL!
     testSnowflakeQuery: JSON!
     getSnowflakeQueryStatus(queryId: String!): String!
@@ -1445,11 +1449,34 @@ input LearningLibraryCollectionItemsQueryInput {
 
     # Filter items by a specific collection ID
     collectionId: String
+
+    # Sort order for collection items. Sorts by the canvas course name of the underlying program course for name options.
+    sortBy: CollectionItemSortOption = MOST_RECENT
+}
+
+# Sort options for collection items
+enum CollectionItemSortOption {
+    MOST_RECENT
+    LEAST_RECENT
+    NAME_A_Z
+    NAME_Z_A
 }
 
 input EnrolledLearningLibraryCollectionsQueryInput {
     # Maximum number of items to return per collection (default: 4, min: 1, max: 20)
     itemLimitPerCollection: Int = 4
+}
+
+# Fields available for sorting collection enrollments
+enum EnrollmentSortField {
+    ENROLLED_AT
+    CREATED_AT
+}
+
+# Sort direction (ascending or descending)
+enum SortDirection {
+    ASC
+    DESC
 }
 
 input TimeSpanInput {
@@ -1696,6 +1723,12 @@ type Mutation {
         userIds: [String!]!
         accountId: String!
     ): [LearningLibraryCollectionEnrollmentGQL!]!
+
+    # Unenroll multiple users from a single learning library collection (hard deletes enrollment, progress, and bookmarks)
+    batchUnenrollUsersFromCollection(
+        input: BatchUnenrollUsersFromCollectionInput!
+        accountId: String!
+    ): BatchUnenrollUsersFromCollectionOutput!
 
     # Enroll the current user in a Canvas course from a collection item
     enrollLearnerInCollectionItem(
@@ -2097,6 +2130,14 @@ input ToggleCollectionItemBookmarkInput {
     collectionItemId: String!
 }
 
+input BatchUnenrollUsersFromCollectionInput {
+    # The ID of the collection to unenroll users from
+    collectionId: String!
+
+    # Array of Canvas user IDs to unenroll from the collection
+    userIds: [String!]!
+}
+
 input EnrollLearnerInCollectionItemInput {
     # The collection item (course membership) ID to enroll in
     collectionItemId: String!
@@ -2106,6 +2147,7 @@ input CreateWidgetInput {
     type: String!
     queryParams: WidgetParamsInput!
     position: Int
+    colSpan: Int
     widgetGroupId: String
     prismQueryId: String
 }
@@ -2127,6 +2169,7 @@ input UpdateWidgetInput {
     type: String
     queryParams: WidgetParamsInput
     position: Int
+    colSpan: Int
     prismQueryId: String
 }
 
@@ -2147,6 +2190,7 @@ input UpdateWidgetGroupInput {
 input UpdatedWidgetInGroupInput {
     id: String!
     position: Int!
+    colSpan: Int
 }
 
 input CreateWidgetActionInput {
