@@ -75,6 +75,10 @@
         tools:replace="android:supportsRtl"
         tools:overrideLibrary="com.instructure.canvasapi">
 
+        <meta-data
+            android:name="nutrient_automatic_initialize"
+            android:value="false" />
+
         <activity android:name="sdk.pendo.io.activities.PendoGateActivity" android:launchMode="singleInstance" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>

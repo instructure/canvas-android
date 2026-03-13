@@ -5,6 +5,7 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
@@ -12,6 +13,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.CalendarEventApi
+import com.instructure.dataseeding.api.DiscussionTopicsApi
 import com.instructure.dataseeding.api.PlannerAPI
 import com.instructure.dataseeding.api.QuizzesApi
 import com.instructure.dataseeding.model.GradingType
@@ -20,6 +22,8 @@ import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
+import com.instructure.espresso.getCustomDateCalendar
+import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.pandautils.R
 import com.instructure.student.ui.pages.classic.WebViewTextCheck
 import com.instructure.student.ui.utils.StudentComposeTest
@@ -27,8 +31,11 @@ import com.instructure.student.ui.utils.extensions.seedData
 import com.instructure.student.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
+import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 @HiltAndroidTest
 class TodoE2ETest : StudentComposeTest() {
@@ -665,5 +672,99 @@ class TodoE2ETest : StudentComposeTest() {
 
         Log.d(ASSERTION_TAG, "Assert that the To-do List Page is empty because of the (default) filters.")
         toDoListPage.assertEmptyState()
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.TODOS, TestCategory.E2E, SecondaryFeatureCategory.DISCUSSION_CHECKPOINTS)
+    fun testDiscussionCheckpointsToDoE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, teachers = 1, courses = 1, syllabusBody = "this is the syllabus body")
+        val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+
+        val discussionWithCheckpointsTitle = "Test Discussion with Checkpoints"
+        val assignmentName = "Test Assignment with Checkpoints"
+
+        Log.d(PREPARATION_TAG, "Convert dates to match with different formats in different screens (Calendar, Assignment Details)")
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US).apply {
+            timeZone = TimeZone.getTimeZone("UTC")
+        }
+        val assignmentDetailsDisplayFormat = SimpleDateFormat("MMM d, yyyy h:mm a", Locale.US)
+        val replyToTopicCalendar = getCustomDateCalendar(2)
+        val replyToEntryCalendar = getCustomDateCalendar(4)
+        val replyToTopicDueTime = dateFormat.format(replyToTopicCalendar.time)
+        val replyToEntryDueTime = dateFormat.format(replyToEntryCalendar.time)
+        val assignmentDetailsReplyToTopicDueDate = assignmentDetailsDisplayFormat.format(replyToTopicCalendar.time)
+        val assignmentDetailsReplyToEntryDueDate = assignmentDetailsDisplayFormat.format(replyToEntryCalendar.time)
+        val monthFormat = SimpleDateFormat("MMM", Locale.US)
+        val dayOfWeekFormat = SimpleDateFormat("EEE", Locale.US)
+        val dayFormat = SimpleDateFormat("d", Locale.US)
+        val dueTimeDisplayFormat = SimpleDateFormat("h:mm a", Locale.US)
+        val replyToTopicMonth = monthFormat.format(replyToTopicCalendar.time)
+        val replyToTopicDayOfWeek = dayOfWeekFormat.format(replyToTopicCalendar.time)
+        val replyToTopicDay = dayFormat.format(replyToTopicCalendar.time)
+        val replyToEntryMonth = monthFormat.format(replyToEntryCalendar.time)
+        val replyToEntryDayOfWeek = dayOfWeekFormat.format(replyToEntryCalendar.time)
+        val replyToEntryDay = dayFormat.format(replyToEntryCalendar.time)
+        val replyToTopicDueTimeDisplay = dueTimeDisplayFormat.format(replyToTopicCalendar.time)
+        val replyToEntryDueTimeDisplay = dueTimeDisplayFormat.format(replyToEntryCalendar.time)
+
+        Log.d(PREPARATION_TAG, "Seed a discussion topic with checkpoints for '${course.name}' course.")
+        DiscussionTopicsApi.createDiscussionTopicWithCheckpoints(course.id, teacher.token, discussionWithCheckpointsTitle, assignmentName, replyToTopicDueTime, replyToEntryDueTime)
+
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
+        tokenLogin(student)
+
+        Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered.")
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Click on the 'To Do' bottom menu to navigate to the To Do list page.")
+        dashboardPage.clickTodoTab()
+
+        Log.d(ASSERTION_TAG, "Assert that both checkpoints for the '$discussionWithCheckpointsTitle' discussion are displayed on the To Do List Page with the correct titles and due dates.")
+        retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = {
+            Log.d(STEP_TAG, "If some of the checkpoints won't displayed at start, open the To-do Filter Page as they're probably 'out of range' of the filter interval.")
+            toDoListPage.clickFilterButton()
+
+            Log.d(STEP_TAG, "Change the 'Show tasks until' filter to 'In Four Weeks' option and click on 'Done' button.")
+            toDoFilterPage.selectShowTasksUntilOption(R.string.todoFilterInFourWeeks)
+            toDoFilterPage.clickDone()
+        }) {
+            toDoListPage.assertDiscussionCheckpointItemDisplayed(discussionWithCheckpointsTitle, "Reply to topic")
+            toDoListPage.assertDiscussionCheckpointItemDisplayed(discussionWithCheckpointsTitle, "Additional replies (2)")
+        }
+
+        toDoListPage.assertItemDateDay(discussionWithCheckpointsTitle, replyToTopicMonth, replyToTopicDayOfWeek, replyToTopicDay)
+        toDoListPage.assertItemDateDay(discussionWithCheckpointsTitle, replyToEntryMonth, replyToEntryDayOfWeek, replyToEntryDay)
+        toDoListPage.assertItemDueTime(discussionWithCheckpointsTitle, "Reply to topic", replyToTopicDueTimeDisplay)
+        toDoListPage.assertItemDueTime(discussionWithCheckpointsTitle, "Additional replies (2)", replyToEntryDueTimeDisplay)
+
+        Log.d(STEP_TAG, "Click on the '$discussionWithCheckpointsTitle' discussion's 'Reply to topic' checkpoint To Do item to open it's details.")
+        toDoListPage.clickOnItem(discussionWithCheckpointsTitle, "Reply to topic")
+
+        Log.d(ASSERTION_TAG, "Assert that the Assignment Details Page is displayed properly with the correct toolbar title and subtitle.")
+        assignmentDetailsPage.assertDisplayToolbarTitle()
+        assignmentDetailsPage.assertDisplayToolbarSubtitle(course.name)
+
+        Log.d(ASSERTION_TAG, "Assert that the checkpoints are displayed properly on the Assignment Details Page.")
+        assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Reply to topic due", assignmentDetailsReplyToTopicDueDate)
+        assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Additional replies (2) due", assignmentDetailsReplyToEntryDueDate)
+
+        Log.d(STEP_TAG, "Navigate back to To Do list Page.")
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG, "Click on the '$discussionWithCheckpointsTitle' discussion's 'Additional replies' checkpoint To Do item to open it's details.")
+        toDoListPage.clickOnItem(discussionWithCheckpointsTitle, "Additional replies (2)")
+
+        Log.d(ASSERTION_TAG, "Assert that the Assignment Details Page is displayed properly with the correct toolbar title and subtitle.")
+        assignmentDetailsPage.assertDisplayToolbarTitle()
+        assignmentDetailsPage.assertDisplayToolbarSubtitle(course.name)
+
+        Log.d(ASSERTION_TAG, "Assert that the checkpoints are displayed properly on the Assignment Details Page.")
+        assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Reply to topic due", assignmentDetailsReplyToTopicDueDate)
+        assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Additional replies (2) due", assignmentDetailsReplyToEntryDueDate)
     }
 }

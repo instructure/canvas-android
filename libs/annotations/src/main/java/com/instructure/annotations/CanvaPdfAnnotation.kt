@@ -13,10 +13,18 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+@file:Suppress("CONFLICTING_INHERITED_JVM_DECLARATIONS")
+
 package com.instructure.annotations
 
 import android.graphics.RectF
-import com.pspdfkit.annotations.*
+import com.pspdfkit.annotations.FreeTextAnnotation
+import com.pspdfkit.annotations.HighlightAnnotation
+import com.pspdfkit.annotations.InkAnnotation
+import com.pspdfkit.annotations.NoteAnnotation
+import com.pspdfkit.annotations.SquareAnnotation
+import com.pspdfkit.annotations.StampAnnotation
+import com.pspdfkit.annotations.StrikeOutAnnotation
 import com.pspdfkit.annotations.stamps.StampType
 
 class CanvaInkAnnotation(info: CanvaPdfAnnotation) : InkAnnotation(info.page), PSCanvaInterface by info
@@ -31,5 +39,5 @@ class CanvaFreeTextAnnotation(info: CanvaPdfAnnotation, contents: String) : Free
 
 class CanvaNoteAnnotation(info: CanvaPdfAnnotation, iconName: String, contents: String ) : NoteAnnotation(info.page, info.rect ?: RectF(), contents, iconName), PSCanvaInterface by info
 
-class CanvaStampAnnotation(info: CanvaPdfAnnotation) : StampAnnotation(info.page, info.rect ?: RectF(), StampType.APPROVED), PSCanvaInterface by info
+class CanvaStampAnnotation(info: CanvaPdfAnnotation) : StampAnnotation(info.page, info.rect ?: RectF(), StampType("#CustomAp")), PSCanvaInterface by info
 
