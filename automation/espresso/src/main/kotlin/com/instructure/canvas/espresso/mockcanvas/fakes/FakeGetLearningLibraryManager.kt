@@ -19,6 +19,7 @@ package com.instructure.canvas.espresso.mockcanvas.fakes
 import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetLearningLibraryManager
 import com.instructure.canvasapi2.models.journey.learninglibrary.CanvasCourseInfo
+import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemSortOption
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
 import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearningLibraryCollection
 import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearningLibraryCollectionsResponse
@@ -26,6 +27,7 @@ import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibrary
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItem
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItemsResponse
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryPageInfo
+import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryRecommendation
 import java.util.Date
 
 class FakeGetLearningLibraryManager : GetLearningLibraryManager {
@@ -46,6 +48,7 @@ class FakeGetLearningLibraryManager : GetLearningLibraryManager {
         searchTerm: String?,
         types: List<CollectionItemType>?,
         completedOnly: Boolean?,
+        sortBy: CollectionItemSortOption?,
         forceNetwork: Boolean
     ): LearningLibraryCollectionItemsResponse {
         var items = collectionItems.values.flatten()
@@ -74,7 +77,9 @@ class FakeGetLearningLibraryManager : GetLearningLibraryManager {
                 nextCursor = null,
                 previousCursor = null,
                 hasNextPage = false,
-                hasPreviousPage = false
+                hasPreviousPage = false,
+                totalCount = null,
+                pageCursors = null
             )
         )
     }
@@ -169,6 +174,10 @@ class FakeGetLearningLibraryManager : GetLearningLibraryManager {
         forceNetwork: Boolean
     ): LearningLibraryCollectionItem {
         return collectionItems.values.flatten().first { it.id == itemId }
+    }
+
+    override suspend fun getLearningLibraryRecommendations(forceNetwork: Boolean): List<LearningLibraryRecommendation> {
+        return emptyList()
     }
 
     private fun initializeMockData() {

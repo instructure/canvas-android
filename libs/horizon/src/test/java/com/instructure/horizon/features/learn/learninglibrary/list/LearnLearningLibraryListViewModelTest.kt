@@ -19,14 +19,18 @@ package com.instructure.horizon.features.learn.learninglibrary.list
 import android.content.res.Resources
 import androidx.compose.ui.text.input.TextFieldValue
 import com.instructure.canvasapi2.models.journey.learninglibrary.CanvasCourseInfo
+import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemSortOption
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
 import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearningLibraryCollection
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItem
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItemsResponse
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryPageInfo
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.horizon.R
+import com.instructure.horizon.features.learn.LearnEvent
 import com.instructure.horizon.features.learn.LearnEventHandler
-import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryStatusFilter
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryFilterScreenType
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibrarySortOption
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
 import com.instructure.pandautils.utils.ThemePrefs
 import io.mockk.coEvery
@@ -52,14 +56,15 @@ import java.util.Date
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class LearnLearningLibraryListViewModelTest {
-    private val eventHandler: LearnEventHandler = mockk(relaxed = true)
+    private val eventHandler = LearnEventHandler()
     private val resources: Resources = mockk(relaxed = true)
     private val repository: LearnLearningLibraryListRepository = mockk(relaxed = true)
+    private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val emptyItemsResponse = LearningLibraryCollectionItemsResponse(
         items = emptyList(),
-        pageInfo = LearningLibraryPageInfo(null, null, false, false)
+        pageInfo = LearningLibraryPageInfo(null, null, false, false, null, null)
     )
 
     private var testCollections: List<EnrolledLearningLibraryCollection> = listOf(
@@ -119,7 +124,7 @@ class LearnLearningLibraryListViewModelTest {
         every { resources.getQuantityString(any(), any(), *anyVararg()) } returns "2 items"
 
         coEvery { repository.getEnrolledLearningLibraries(any()) } returns testCollections
-        coEvery { repository.getLearningLibraryItems(any(), any(), any(), any(), any(), any(), any()) } returns emptyItemsResponse
+        coEvery { repository.getLearningLibraryItems(any(), any(), any(), any(), any(), any(), any(), any()) } returns emptyItemsResponse
     }
 
     @After
@@ -162,10 +167,17 @@ class LearnLearningLibraryListViewModelTest {
     }
 
     @Test
-    fun `Initial state has All status filter`() = runTest {
+    fun `Initial state has zero active filter count`() = runTest {
         val viewModel = getViewModel()
 
-        assertEquals(LearnLearningLibraryStatusFilter.All, viewModel.uiState.value.statusFilter)
+        assertEquals(0, viewModel.uiState.value.activeFilterCount)
+    }
+
+    @Test
+    fun `Initial state has MostRecent sort option`() = runTest {
+        val viewModel = getViewModel()
+
+        assertEquals(LearnLearningLibrarySortOption.MostRecent, viewModel.uiState.value.sortOption)
     }
 
     @Test
@@ -401,88 +413,113 @@ class LearnLearningLibraryListViewModelTest {
     }
 
     @Test
-    fun `isEmptyFilter returns false when type filter is not All`() = runTest {
+    fun `isEmptyFilter returns false when activeFilterCount is non-zero`() = runTest {
         val viewModel = getViewModel()
 
-        viewModel.uiState.value.updateTypeFilter(LearnLearningLibraryTypeFilter.Pages)
+        eventHandler.postEvent(LearnEvent.UpdateLearningLibraryFilter(
+            screenType = LearnLearningLibraryFilterScreenType.Browse,
+            typeFilter = LearnLearningLibraryTypeFilter.Pages,
+            sortOption = LearnLearningLibrarySortOption.MostRecent
+        ))
 
         assertFalse(viewModel.uiState.value.isEmptyFilter())
     }
 
     @Test
-    fun `isEmptyFilter returns false when status filter is not All`() = runTest {
+    fun `UpdateLearningLibraryFilter event updates typeFilter in state`() = runTest {
         val viewModel = getViewModel()
 
-        viewModel.uiState.value.updateStatusFilter(LearnLearningLibraryStatusFilter.Bookmarked)
+        eventHandler.postEvent(LearnEvent.UpdateLearningLibraryFilter(
+            screenType = LearnLearningLibraryFilterScreenType.Browse,
+            typeFilter = LearnLearningLibraryTypeFilter.Courses,
+            sortOption = LearnLearningLibrarySortOption.MostRecent
+        ))
 
-        assertFalse(viewModel.uiState.value.isEmptyFilter())
+        assertEquals(LearnLearningLibraryTypeFilter.Courses, viewModel.uiState.value.typeFilter)
     }
 
     @Test
-    fun `isEmptyFilter returns true after all filters are cleared`() = runTest {
+    fun `UpdateLearningLibraryFilter event updates sortOption in state`() = runTest {
         val viewModel = getViewModel()
-        viewModel.uiState.value.updateTypeFilter(LearnLearningLibraryTypeFilter.Pages)
-        viewModel.uiState.value.updateStatusFilter(LearnLearningLibraryStatusFilter.Completed)
 
-        viewModel.uiState.value.updateTypeFilter(LearnLearningLibraryTypeFilter.All)
-        viewModel.uiState.value.updateStatusFilter(LearnLearningLibraryStatusFilter.All)
+        eventHandler.postEvent(LearnEvent.UpdateLearningLibraryFilter(
+            screenType = LearnLearningLibraryFilterScreenType.Browse,
+            typeFilter = LearnLearningLibraryTypeFilter.All,
+            sortOption = LearnLearningLibrarySortOption.NameAscending
+        ))
 
-        assertTrue(viewModel.uiState.value.isEmptyFilter())
+        assertEquals(LearnLearningLibrarySortOption.NameAscending, viewModel.uiState.value.sortOption)
     }
 
     @Test
-    fun `updateStatusFilter updates statusFilter in state`() = runTest {
+    fun `UpdateLearningLibraryFilter event increments activeFilterCount when typeFilter is non-All`() = runTest {
         val viewModel = getViewModel()
 
-        viewModel.uiState.value.updateStatusFilter(LearnLearningLibraryStatusFilter.Bookmarked)
+        eventHandler.postEvent(LearnEvent.UpdateLearningLibraryFilter(
+            screenType = LearnLearningLibraryFilterScreenType.Browse,
+            typeFilter = LearnLearningLibraryTypeFilter.Pages,
+            sortOption = LearnLearningLibrarySortOption.MostRecent
+        ))
 
-        assertEquals(LearnLearningLibraryStatusFilter.Bookmarked, viewModel.uiState.value.statusFilter)
+        assertEquals(1, viewModel.uiState.value.activeFilterCount)
     }
 
     @Test
-    fun `updateTypeFilter updates typeFilter in state`() = runTest {
+    fun `UpdateLearningLibraryFilter event resets activeFilterCount to zero when typeFilter is All`() = runTest {
         val viewModel = getViewModel()
+        eventHandler.postEvent(LearnEvent.UpdateLearningLibraryFilter(
+            screenType = LearnLearningLibraryFilterScreenType.Browse,
+            typeFilter = LearnLearningLibraryTypeFilter.Pages,
+            sortOption = LearnLearningLibrarySortOption.MostRecent
+        ))
 
-        viewModel.uiState.value.updateTypeFilter(LearnLearningLibraryTypeFilter.Pages)
+        eventHandler.postEvent(LearnEvent.UpdateLearningLibraryFilter(
+            screenType = LearnLearningLibraryFilterScreenType.Browse,
+            typeFilter = LearnLearningLibraryTypeFilter.All,
+            sortOption = LearnLearningLibrarySortOption.MostRecent
+        ))
 
-        assertEquals(LearnLearningLibraryTypeFilter.Pages, viewModel.uiState.value.typeFilter)
+        assertEquals(0, viewModel.uiState.value.activeFilterCount)
     }
 
     @Test
-    fun `updateStatusFilter triggers item loading`() = runTest {
+    fun `UpdateLearningLibraryFilter event with non-Browse screenType is ignored`() = runTest {
         val viewModel = getViewModel()
 
-        viewModel.uiState.value.updateStatusFilter(LearnLearningLibraryStatusFilter.Bookmarked)
+        eventHandler.postEvent(LearnEvent.UpdateLearningLibraryFilter(
+            screenType = LearnLearningLibraryFilterScreenType.MyContent,
+            typeFilter = LearnLearningLibraryTypeFilter.Pages,
+            sortOption = LearnLearningLibrarySortOption.MostRecent
+        ))
 
-        coVerify { repository.getLearningLibraryItems(null, any(), any(), any(), true, any(), any()) }
+        assertEquals(LearnLearningLibraryTypeFilter.All, viewModel.uiState.value.typeFilter)
+        assertEquals(0, viewModel.uiState.value.activeFilterCount)
     }
 
     @Test
-    fun `updateStatusFilter with Completed triggers item loading with completedOnly`() = runTest {
+    fun `UpdateLearningLibraryFilter event passes typeFilter to repository`() = runTest {
         val viewModel = getViewModel()
 
-        viewModel.uiState.value.updateStatusFilter(LearnLearningLibraryStatusFilter.Completed)
+        eventHandler.postEvent(LearnEvent.UpdateLearningLibraryFilter(
+            screenType = LearnLearningLibraryFilterScreenType.Browse,
+            typeFilter = LearnLearningLibraryTypeFilter.Pages,
+            sortOption = LearnLearningLibrarySortOption.MostRecent
+        ))
 
-        coVerify { repository.getLearningLibraryItems(null, any(), any(), any(), any(), true, any()) }
+        coVerify { repository.getLearningLibraryItems(any(), any(), any(), typeFilter = CollectionItemType.PAGE, any(), any(), any(), any()) }
     }
 
     @Test
-    fun `updateTypeFilter triggers item loading`() = runTest {
+    fun `UpdateLearningLibraryFilter event passes sortOption to repository`() = runTest {
         val viewModel = getViewModel()
 
-        viewModel.uiState.value.updateTypeFilter(LearnLearningLibraryTypeFilter.Pages)
+        eventHandler.postEvent(LearnEvent.UpdateLearningLibraryFilter(
+            screenType = LearnLearningLibraryFilterScreenType.Browse,
+            typeFilter = LearnLearningLibraryTypeFilter.All,
+            sortOption = LearnLearningLibrarySortOption.NameAscending
+        ))
 
-        coVerify { repository.getLearningLibraryItems(any(), any(), any(), typeFilter = CollectionItemType.PAGE, any(), any(), any()) }
-    }
-
-    @Test
-    fun `updateTypeFilter with All passes null typeFilter`() = runTest {
-        val viewModel = getViewModel()
-        viewModel.uiState.value.updateTypeFilter(LearnLearningLibraryTypeFilter.Pages)
-
-        viewModel.uiState.value.updateTypeFilter(LearnLearningLibraryTypeFilter.All)
-
-        coVerify { repository.getLearningLibraryItems(any(), any(), any(), null, any(), any(), any()) }
+        coVerify { repository.getLearningLibraryItems(any(), any(), any(), any(), any(), any(), sortBy = CollectionItemSortOption.NAME_A_Z, any()) }
     }
 
     @Test
@@ -490,13 +527,17 @@ class LearnLearningLibraryListViewModelTest {
         val testItems = listOf(
             createTestCollectionItem(id = "item1", courseId = "1", courseName = "Python Basics")
         )
-        coEvery { repository.getLearningLibraryItems(any(), any(), any(), any(), any(), any(), any()) } returns LearningLibraryCollectionItemsResponse(
+        coEvery { repository.getLearningLibraryItems(any(), any(), any(), any(), any(), any(), any(), any()) } returns LearningLibraryCollectionItemsResponse(
             items = testItems,
-            pageInfo = LearningLibraryPageInfo(null, null, false, false)
+            pageInfo = LearningLibraryPageInfo(null, null, false, false, null, null)
         )
         val viewModel = getViewModel()
 
-        viewModel.uiState.value.updateStatusFilter(LearnLearningLibraryStatusFilter.Bookmarked)
+        eventHandler.postEvent(LearnEvent.UpdateLearningLibraryFilter(
+            screenType = LearnLearningLibraryFilterScreenType.Browse,
+            typeFilter = LearnLearningLibraryTypeFilter.Pages,
+            sortOption = LearnLearningLibrarySortOption.MostRecent
+        ))
 
         val state = viewModel.uiState.value
         assertEquals(1, state.itemState.items.size)
@@ -506,9 +547,13 @@ class LearnLearningLibraryListViewModelTest {
     @Test
     fun `Item loading shows error state when repository fails`() = runTest {
         val viewModel = getViewModel()
-        coEvery { repository.getLearningLibraryItems(any(), any(), any(), any(), any(), any(), any()) } throws Exception("Network error")
+        coEvery { repository.getLearningLibraryItems(any(), any(), any(), any(), any(), any(), any(), any()) } throws Exception("Network error")
 
-        viewModel.uiState.value.updateStatusFilter(LearnLearningLibraryStatusFilter.Bookmarked)
+        eventHandler.postEvent(LearnEvent.UpdateLearningLibraryFilter(
+            screenType = LearnLearningLibraryFilterScreenType.Browse,
+            typeFilter = LearnLearningLibraryTypeFilter.Pages,
+            sortOption = LearnLearningLibrarySortOption.MostRecent
+        ))
 
         val state = viewModel.uiState.value
         assertTrue(state.itemState.loadingState.isError)
@@ -521,7 +566,7 @@ class LearnLearningLibraryListViewModelTest {
         viewModel.uiState.value.updateSearchQuery(TextFieldValue("python"))
         advanceTimeBy(350)
 
-        coVerify { repository.getLearningLibraryItems(null, any(), "python", any(), any(), any(), any()) }
+        coVerify { repository.getLearningLibraryItems(null, any(), "python", any(), any(), any(), any(), any()) }
     }
 
     @Test
@@ -537,20 +582,27 @@ class LearnLearningLibraryListViewModelTest {
     fun `Search query change replaces item list when no cursor`() = runTest {
         val firstResponse = LearningLibraryCollectionItemsResponse(
             items = listOf(createTestCollectionItem(id = "item1", courseName = "Python Basics")),
-            pageInfo = LearningLibraryPageInfo(null, null, false, false)
+            pageInfo = LearningLibraryPageInfo(null, null, false, false, null, null)
         )
-        coEvery { repository.getLearningLibraryItems(null, any(), any(), any(), any(), any(), any()) } returns firstResponse
+        coEvery { repository.getLearningLibraryItems(any(), any(), any(), any(), any(), any(), any(), any()) } returns firstResponse
         val viewModel = getViewModel()
 
-        viewModel.uiState.value.updateStatusFilter(LearnLearningLibraryStatusFilter.Bookmarked)
-        viewModel.uiState.value.updateStatusFilter(LearnLearningLibraryStatusFilter.All)
+        eventHandler.postEvent(LearnEvent.UpdateLearningLibraryFilter(
+            screenType = LearnLearningLibraryFilterScreenType.Browse,
+            typeFilter = LearnLearningLibraryTypeFilter.Pages,
+            sortOption = LearnLearningLibrarySortOption.MostRecent
+        ))
         val secondResponse = LearningLibraryCollectionItemsResponse(
             items = listOf(createTestCollectionItem(id = "item2", courseName = "React Advanced")),
-            pageInfo = LearningLibraryPageInfo(null, null, false, false)
+            pageInfo = LearningLibraryPageInfo(null, null, false, false, null, null)
         )
-        coEvery { repository.getLearningLibraryItems(null, any(), any(), any(), any(), any(), any()) } returns secondResponse
+        coEvery { repository.getLearningLibraryItems(any(), any(), any(), any(), any(), any(), any(), any()) } returns secondResponse
 
-        viewModel.uiState.value.updateStatusFilter(LearnLearningLibraryStatusFilter.Completed)
+        eventHandler.postEvent(LearnEvent.UpdateLearningLibraryFilter(
+            screenType = LearnLearningLibraryFilterScreenType.Browse,
+            typeFilter = LearnLearningLibraryTypeFilter.Courses,
+            sortOption = LearnLearningLibrarySortOption.MostRecent
+        ))
 
         assertEquals(1, viewModel.uiState.value.itemState.items.size)
         assertEquals("React Advanced", viewModel.uiState.value.itemState.items[0].name)
@@ -558,13 +610,17 @@ class LearnLearningLibraryListViewModelTest {
 
     @Test
     fun `showMoreButton is set when API has next page`() = runTest {
-        coEvery { repository.getLearningLibraryItems(any(), any(), any(), any(), any(), any(), any()) } returns LearningLibraryCollectionItemsResponse(
+        coEvery { repository.getLearningLibraryItems(any(), any(), any(), any(), any(), any(), any(), any()) } returns LearningLibraryCollectionItemsResponse(
             items = listOf(createTestCollectionItem(id = "item1")),
-            pageInfo = LearningLibraryPageInfo(nextCursor = "cursor1", null, hasNextPage = true, false)
+            pageInfo = LearningLibraryPageInfo(nextCursor = "cursor1", previousCursor = null, hasNextPage = true, hasPreviousPage = false, totalCount = null, pageCursors = null)
         )
         val viewModel = getViewModel()
 
-        viewModel.uiState.value.updateStatusFilter(LearnLearningLibraryStatusFilter.Bookmarked)
+        eventHandler.postEvent(LearnEvent.UpdateLearningLibraryFilter(
+            screenType = LearnLearningLibraryFilterScreenType.Browse,
+            typeFilter = LearnLearningLibraryTypeFilter.Pages,
+            sortOption = LearnLearningLibrarySortOption.MostRecent
+        ))
 
         assertTrue(viewModel.uiState.value.itemState.showMoreButton)
     }
@@ -573,16 +629,20 @@ class LearnLearningLibraryListViewModelTest {
     fun `onShowMoreClicked fetches next page and appends items`() = runTest {
         val firstPage = LearningLibraryCollectionItemsResponse(
             items = listOf(createTestCollectionItem(id = "item1", courseName = "First Course")),
-            pageInfo = LearningLibraryPageInfo(nextCursor = "cursor1", null, hasNextPage = true, false)
+            pageInfo = LearningLibraryPageInfo(nextCursor = "cursor1", previousCursor = null, hasNextPage = true, hasPreviousPage = false, totalCount = null, pageCursors = null)
         )
         val secondPage = LearningLibraryCollectionItemsResponse(
             items = listOf(createTestCollectionItem(id = "item2", courseName = "Second Course")),
-            pageInfo = LearningLibraryPageInfo(null, null, hasNextPage = false, false)
+            pageInfo = LearningLibraryPageInfo(null, null, false, false, null, null)
         )
-        coEvery { repository.getLearningLibraryItems(null, any(), any(), any(), any(), any(), any()) } returns firstPage
-        coEvery { repository.getLearningLibraryItems("cursor1", any(), any(), any(), any(), any(), any()) } returns secondPage
+        coEvery { repository.getLearningLibraryItems(null, any(), any(), any(), any(), any(), any(), any()) } returns firstPage
+        coEvery { repository.getLearningLibraryItems("cursor1", any(), any(), any(), any(), any(), any(), any()) } returns secondPage
         val viewModel = getViewModel()
-        viewModel.uiState.value.updateStatusFilter(LearnLearningLibraryStatusFilter.Bookmarked)
+        eventHandler.postEvent(LearnEvent.UpdateLearningLibraryFilter(
+            screenType = LearnLearningLibraryFilterScreenType.Browse,
+            typeFilter = LearnLearningLibraryTypeFilter.Pages,
+            sortOption = LearnLearningLibrarySortOption.MostRecent
+        ))
 
         viewModel.uiState.value.itemState.onShowMoreClicked()
 
@@ -604,11 +664,15 @@ class LearnLearningLibraryListViewModelTest {
     @Test
     fun `Items refresh calls repository with forceNetwork true`() = runTest {
         val viewModel = getViewModel()
-        viewModel.uiState.value.updateStatusFilter(LearnLearningLibraryStatusFilter.Bookmarked)
+        eventHandler.postEvent(LearnEvent.UpdateLearningLibraryFilter(
+            screenType = LearnLearningLibraryFilterScreenType.Browse,
+            typeFilter = LearnLearningLibraryTypeFilter.Pages,
+            sortOption = LearnLearningLibrarySortOption.MostRecent
+        ))
 
         viewModel.uiState.value.itemState.loadingState.onRefresh()
 
-        coVerify { repository.getLearningLibraryItems(null, any(), any(), any(), any(), any(), true) }
+        coVerify { repository.getLearningLibraryItems(null, any(), any(), any(), any(), any(), any(), true) }
     }
 
     @Test
@@ -617,9 +681,9 @@ class LearnLearningLibraryListViewModelTest {
         val refreshedItems = listOf(
             createTestCollectionItem(id = "item1", courseName = "Refreshed Course")
         )
-        coEvery { repository.getLearningLibraryItems(null, any(), any(), any(), any(), any(), true) } returns LearningLibraryCollectionItemsResponse(
+        coEvery { repository.getLearningLibraryItems(null, any(), any(), any(), any(), any(), any(), true) } returns LearningLibraryCollectionItemsResponse(
             items = refreshedItems,
-            pageInfo = LearningLibraryPageInfo(null, null, false, false)
+            pageInfo = LearningLibraryPageInfo(null, null, false, false, null, null)
         )
 
         viewModel.uiState.value.itemState.loadingState.onRefresh()
@@ -633,7 +697,7 @@ class LearnLearningLibraryListViewModelTest {
     @Test
     fun `Items refresh on error shows snackbar message`() = runTest {
         val viewModel = getViewModel()
-        coEvery { repository.getLearningLibraryItems(null, any(), any(), any(), any(), any(), true) } throws Exception("Network error")
+        coEvery { repository.getLearningLibraryItems(null, any(), any(), any(), any(), any(), any(), true) } throws Exception("Network error")
 
         viewModel.uiState.value.itemState.loadingState.onRefresh()
 
@@ -647,13 +711,17 @@ class LearnLearningLibraryListViewModelTest {
         val testItems = listOf(
             createTestCollectionItem(id = "item1", courseName = "Python Basics", isBookmarked = false)
         )
-        coEvery { repository.getLearningLibraryItems(any(), any(), any(), any(), any(), any(), any()) } returns LearningLibraryCollectionItemsResponse(
+        coEvery { repository.getLearningLibraryItems(any(), any(), any(), any(), any(), any(), any(), any()) } returns LearningLibraryCollectionItemsResponse(
             items = testItems,
-            pageInfo = LearningLibraryPageInfo(null, null, false, false)
+            pageInfo = LearningLibraryPageInfo(null, null, false, false, null, null)
         )
         coEvery { repository.toggleLearningLibraryItemIsBookmarked("item1") } returns true
         val viewModel = getViewModel()
-        viewModel.uiState.value.updateStatusFilter(LearnLearningLibraryStatusFilter.Bookmarked)
+        eventHandler.postEvent(LearnEvent.UpdateLearningLibraryFilter(
+            screenType = LearnLearningLibraryFilterScreenType.Browse,
+            typeFilter = LearnLearningLibraryTypeFilter.Pages,
+            sortOption = LearnLearningLibrarySortOption.MostRecent
+        ))
 
         viewModel.uiState.value.itemState.onBookmarkClicked("item1")
 
@@ -667,13 +735,17 @@ class LearnLearningLibraryListViewModelTest {
         val testItems = listOf(
             createTestCollectionItem(id = "item1", courseName = "Python Basics", isBookmarked = false)
         )
-        coEvery { repository.getLearningLibraryItems(any(), any(), any(), any(), any(), any(), any()) } returns LearningLibraryCollectionItemsResponse(
+        coEvery { repository.getLearningLibraryItems(any(), any(), any(), any(), any(), any(), any(), any()) } returns LearningLibraryCollectionItemsResponse(
             items = testItems,
-            pageInfo = LearningLibraryPageInfo(null, null, false, false)
+            pageInfo = LearningLibraryPageInfo(null, null, false, false, null, null)
         )
         coEvery { repository.toggleLearningLibraryItemIsBookmarked("item1") } returns true
         val viewModel = getViewModel()
-        viewModel.uiState.value.updateStatusFilter(LearnLearningLibraryStatusFilter.Bookmarked)
+        eventHandler.postEvent(LearnEvent.UpdateLearningLibraryFilter(
+            screenType = LearnLearningLibraryFilterScreenType.Browse,
+            typeFilter = LearnLearningLibraryTypeFilter.Pages,
+            sortOption = LearnLearningLibrarySortOption.MostRecent
+        ))
 
         viewModel.uiState.value.itemState.onBookmarkClicked("item1")
 
@@ -688,14 +760,18 @@ class LearnLearningLibraryListViewModelTest {
         val testItems = listOf(
             createTestCollectionItem(id = "item1", courseName = "Python Basics", isBookmarked = false)
         )
-        coEvery { repository.getLearningLibraryItems(any(), any(), any(), any(), any(), any(), any()) } returns LearningLibraryCollectionItemsResponse(
+        coEvery { repository.getLearningLibraryItems(any(), any(), any(), any(), any(), any(), any(), any()) } returns LearningLibraryCollectionItemsResponse(
             items = testItems,
-            pageInfo = LearningLibraryPageInfo(null, null, false, false)
+            pageInfo = LearningLibraryPageInfo(null, null, false, false, null, null)
         )
         every { resources.getString(R.string.learnLearningLibraryFailedToUpdateBookmarkMessage) } returns "Failed to update bookmark"
         coEvery { repository.toggleLearningLibraryItemIsBookmarked("item1") } throws Exception("Network error")
         val viewModel = getViewModel()
-        viewModel.uiState.value.updateStatusFilter(LearnLearningLibraryStatusFilter.Bookmarked)
+        eventHandler.postEvent(LearnEvent.UpdateLearningLibraryFilter(
+            screenType = LearnLearningLibraryFilterScreenType.Browse,
+            typeFilter = LearnLearningLibraryTypeFilter.Pages,
+            sortOption = LearnLearningLibrarySortOption.MostRecent
+        ))
 
         viewModel.uiState.value.itemState.onBookmarkClicked("item1")
 
@@ -705,7 +781,7 @@ class LearnLearningLibraryListViewModelTest {
     }
 
     private fun getViewModel(): LearnLearningLibraryListViewModel {
-        return LearnLearningLibraryListViewModel(resources, repository, eventHandler)
+        return LearnLearningLibraryListViewModel(resources, repository, eventHandler, apiPrefs)
     }
 
     private fun createTestCollection(

@@ -36,12 +36,12 @@ import com.instructure.horizon.features.learn.LearnTab
 import com.instructure.horizon.features.learn.LearnViewModel
 import com.instructure.horizon.features.learn.course.details.CourseDetailsScreen
 import com.instructure.horizon.features.learn.course.details.CourseDetailsViewModel
-import com.instructure.horizon.features.learn.learninglibrary.bookmarked.LearnLearningLibraryBookmarkedScreen
-import com.instructure.horizon.features.learn.learninglibrary.bookmarked.LearnLearningLibraryBookmarkedViewModel
 import com.instructure.horizon.features.learn.learninglibrary.details.LearnLearningLibraryDetailsScreen
 import com.instructure.horizon.features.learn.learninglibrary.details.LearnLearningLibraryDetailsViewModel
 import com.instructure.horizon.features.learn.learninglibrary.enroll.LearnLearningLibraryEnrollScreen
 import com.instructure.horizon.features.learn.learninglibrary.enroll.LearnLearningLibraryEnrollViewModel
+import com.instructure.horizon.features.learn.learninglibrary.filter.LearnLearningLibraryFilterScreen
+import com.instructure.horizon.features.learn.learninglibrary.filter.LearnLearningLibraryFilterViewModel
 import com.instructure.horizon.features.learn.program.details.ProgramDetailsScreen
 import com.instructure.horizon.features.learn.program.details.ProgramDetailsViewModel
 
@@ -175,13 +175,6 @@ fun NavGraphBuilder.learnNavigation(
         LearnLearningLibraryDetailsScreen(state, navController)
     }
     composable(
-        route = LearnRoute.LearnLearningLibraryBookmarkScreen.route,
-    ) {
-        val viewModel = hiltViewModel<LearnLearningLibraryBookmarkedViewModel>()
-        val state by viewModel.uiState.collectAsState()
-        LearnLearningLibraryBookmarkedScreen(state, navController)
-    }
-    composable(
         route = LearnRoute.LearnLearningLibraryEnrollScreen.route,
         arguments = listOf(
             navArgument(LearnRoute.LearnLearningLibraryEnrollScreen.learningLibraryIdAttr) {
@@ -192,5 +185,23 @@ fun NavGraphBuilder.learnNavigation(
         val viewModel = hiltViewModel<LearnLearningLibraryEnrollViewModel>()
         val state by viewModel.state.collectAsState()
         LearnLearningLibraryEnrollScreen(state, navController)
+    }
+    composable(
+        route = LearnRoute.LearnLearningLibraryFilterScreen.route,
+        arguments = listOf(
+            navArgument(LearnRoute.LearnLearningLibraryFilterScreen.screenTypeAttr) {
+                type = NavType.StringType
+            },
+            navArgument(LearnRoute.LearnLearningLibraryFilterScreen.typeFilterAttr) {
+                type = NavType.StringType
+            },
+            navArgument(LearnRoute.LearnLearningLibraryFilterScreen.sortOptionAttr) {
+                type = NavType.StringType
+            }
+        )
+    ) {
+        val viewModel = hiltViewModel<LearnLearningLibraryFilterViewModel>()
+        val state by viewModel.uiState.collectAsState()
+        LearnLearningLibraryFilterScreen(state, navController)
     }
 }

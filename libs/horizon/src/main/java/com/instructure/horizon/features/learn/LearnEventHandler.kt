@@ -15,6 +15,9 @@
  */
 package com.instructure.horizon.features.learn
 
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryFilterScreenType
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibrarySortOption
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import javax.inject.Inject
@@ -25,6 +28,11 @@ sealed interface LearnEvent {
     data object RefreshCourseList : LearnEvent
     data object RefreshProgramList : LearnEvent
     data object RefreshLearningLibraryList : LearnEvent
+    data class UpdateLearningLibraryFilter(
+        val screenType: LearnLearningLibraryFilterScreenType,
+        val typeFilter: LearnLearningLibraryTypeFilter,
+        val sortOption: LearnLearningLibrarySortOption,
+    ) : LearnEvent
 }
 
 @Singleton

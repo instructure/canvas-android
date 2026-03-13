@@ -14,18 +14,9 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.canvasapi2.models.journey.learninglibrary
+package com.instructure.horizon.features.learn.learninglibrary.common
 
-data class LearningLibraryPageInfo(
-    val nextCursor: String?,
-    val previousCursor: String?,
-    val hasNextPage: Boolean,
-    val hasPreviousPage: Boolean,
-    val totalCount: Int?,
-    val pageCursors: List<LearningLibraryPageCursor>?
-)
-
-data class LearningLibraryPageCursor(
-    val cursor: String,
-    val page: Int
-)
+enum class LearnLearningLibraryFilterScreenType {
+    Browse,
+    MyContent
+}

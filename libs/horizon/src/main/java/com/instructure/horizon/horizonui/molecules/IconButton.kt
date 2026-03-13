@@ -101,7 +101,7 @@ sealed class IconButtonColor(
     )
 
     data object DarkOutline : IconButtonColor(
-        HorizonColors.Surface.pagePrimary(),
+        Color.Transparent,
         HorizonColors.Icon.default(),
         HorizonColors.Surface.inversePrimary()
     )

@@ -613,4 +613,23 @@
     <string name="learnLearningLibraryEnrollDialogDetailsMessage">Enroll to access the course and start learning.</string>
     <string name="learnLearningLibraryEnrollDialogFailedToEnrollMessage">Failed to enroll</string>
     <string name="learnLearningLibraryEmptyCollectionMessage">No items in this collection</string>
+    <string name="learnLearningLibraryRecommendedLabel">Recommended</string>
+    <string name="learnLearningLibraryRecommendationPopularityDescription">Popular with learners at your organization</string>
+    <string name="learnLearningLibraryRecommendationPastLearningDescription">A next step after %1$s</string>
+    <string name="learnLearningLibraryRecommendationBookmarkedDescription">Related to content you\'re interested in</string>
+    <string name="learnLearningLibraryRecommendationExistingSkillsDescription">To deepen your skills in %1$s</string>
+    <string name="learnLEarningLibraryListYou">you</string>
+    <string name="learnLearningLibraryListRecommendedForLabel">Recommended for %1$s</string>
+    <string name="a11y_learningLibraryRecommendedPreviousContentDescription">Previous item</string>
+    <string name="a11y_learningLibraryRecommendedNextContentDescription">Next item</string>
+    <string name="learnLearningLibraryCollectionsHeader">Collections</string>
+    <string name="learnLearningLibraryFilterAndSortTitle">Filter and sort</string>
+    <string name="learnLearningLibraryFilterSortByLabel">Sort by</string>
+    <string name="learnLearningLibraryFilterItemTypeLabel">Item type</string>
+    <string name="learnLearningLibraryFilterClearFiltersLabel">Clear filters</string>
+    <string name="learnLearningLibrarySortMostRecentLabel">Most recent</string>
+    <string name="learnLearningLibrarySortLeastRecentLabel">Least recent</string>
+    <string name="learnLearningLibrarySortNameAZLabel">Name: A-Z</string>
+    <string name="learnLearningLibrarySortNameZALabel">Name: Z-A</string>
+    <string name="a11y_learnLearningLibraryFilterContentDescription">Filter</string>
 </resources>

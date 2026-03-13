@@ -14,18 +14,20 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.canvasapi2.models.journey.learninglibrary
+package com.instructure.horizon.features.learn.learninglibrary.filter
 
-data class LearningLibraryPageInfo(
-    val nextCursor: String?,
-    val previousCursor: String?,
-    val hasNextPage: Boolean,
-    val hasPreviousPage: Boolean,
-    val totalCount: Int?,
-    val pageCursors: List<LearningLibraryPageCursor>?
+data class LearnLearningLibraryFilterItem(
+    val label: String,
+    val isSelected: Boolean,
+    val onSelected: () -> Unit
 )
 
-data class LearningLibraryPageCursor(
-    val cursor: String,
-    val page: Int
+data class LearnLearningLibraryFilterSection(
+    val title: String,
+    val items: List<LearnLearningLibraryFilterItem>
+)
+
+data class LearnLearningLibraryFilterUiState(
+    val sections: List<LearnLearningLibraryFilterSection> = emptyList(),
+    val onClearFilters: () -> Unit = {}
 )
