@@ -62,7 +62,8 @@ object PickerSubmissionUploadPresenter : Presenter<PickerSubmissionUploadModel, 
         submit = model.files.isNotEmpty(),
         sourceFile = !model.mode.isMediaSubmission,
         sourceCamera = !model.mode.isMediaSubmission && allowsCameraImages(model.allowedExtensions),
-        sourceGallery = !model.mode.isMediaSubmission && allowsGalleryImages(model.allowedExtensions)
+        sourceGallery = !model.mode.isMediaSubmission && allowsGalleryImages(model.allowedExtensions),
+        sourceScanner = !model.mode.isMediaSubmission && model.scannerAvailable && allowsScannedDocuments(model.allowedExtensions)
     )
 
     private fun allowsCameraImages(allowedExtensions: List<String>): Boolean {
@@ -71,5 +72,9 @@ object PickerSubmissionUploadPresenter : Presenter<PickerSubmissionUploadModel, 
 
     private fun allowsGalleryImages(allowedExtensions: List<String>): Boolean {
         return allowedExtensions.isEmpty() || allowedExtensions.any { it in listOf("png", "jpg", "jpeg", "mp4", "mov", "gif", "tiff", "bmp") }
+    }
+
+    private fun allowsScannedDocuments(allowedExtensions: List<String>): Boolean {
+        return allowedExtensions.isEmpty() || allowedExtensions.any { it in listOf("pdf") }
     }
 }

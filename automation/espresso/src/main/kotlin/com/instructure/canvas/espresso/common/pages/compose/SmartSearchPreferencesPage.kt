@@ -19,6 +19,8 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsOff
 import androidx.compose.ui.test.assertIsOn
 import androidx.compose.ui.test.assertIsSelected
+import androidx.compose.ui.test.hasAnyAncestor
+import androidx.compose.ui.test.hasAnyDescendant
 import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.junit4.ComposeTestRule
@@ -46,8 +48,12 @@ class SmartSearchPreferencesPage(private val composeTestRule: ComposeTestRule) {
     }
 
     fun cancelFilters() {
-        composeTestRule.onNodeWithTag("navigationButton", useUnmergedTree = true)
-            .performClick()
+        composeTestRule.onNode(
+            hasTestTag("navigationButton").and(
+                hasAnyAncestor(hasTestTag("toolbar").and(hasAnyDescendant(hasTestTag("doneButton"))))
+            ),
+            useUnmergedTree = true
+        ).performClick()
         composeTestRule.waitForIdle()
     }
 

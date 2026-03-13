@@ -89,12 +89,12 @@ class CreateUpdateToDoFragment : BaseCanvasFragment(), NavigationCallbacks, Frag
     }
 
     private fun announceToDoCreation(title: String) {
-        val textToAnnounce = getString(R.string.a11y_toDoCreatedAnnouncement, title)
+        val textToAnnounce = getString(R.string.a11y_toDoCreatedAnnouncementNew, title)
         announceAccessibilityText(requireContext(), textToAnnounce)
     }
 
     private fun announceToDoUpdate(title: String) {
-        val textToAnnounce = getString(R.string.a11y_toDoUpdatedAnnouncement, title)
+        val textToAnnounce = getString(R.string.a11y_toDoUpdatedAnnouncementNew, title)
         announceAccessibilityText(requireContext(), textToAnnounce)
     }
 
@@ -103,9 +103,9 @@ class CreateUpdateToDoFragment : BaseCanvasFragment(), NavigationCallbacks, Frag
 
     override fun title(): String = getString(
         if (arguments?.containsKey(PLANNER_ITEM).orDefault()) {
-            R.string.editTodoScreenTitle
+            R.string.editTodoScreenTitleNew
         } else {
-            R.string.createTodoScreenTitle
+            R.string.createTodoScreenTitleNew
         }
     )
 

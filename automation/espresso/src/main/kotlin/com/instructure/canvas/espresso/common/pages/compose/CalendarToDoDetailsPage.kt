@@ -103,12 +103,12 @@ class CalendarToDoDetailsPage(private val composeTestRule: ComposeTestRule) {
     }
 
     fun assertDeleteDialog() {
-        composeTestRule.onNodeWithText("Delete To Do?").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Delete To-do?").assertIsDisplayed()
     }
 
     fun confirmDeletion() {
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithText("Delete To Do?").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Delete To-do?").assertIsDisplayed()
         composeTestRule.onNodeWithText("Delete").performClick()
     }
 

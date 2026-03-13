@@ -169,6 +169,22 @@ class PickerSubmissionUploadUpdateTest : Assert() {
     }
 
     @Test
+    fun `ScannerClicked event results in LaunchScanner effect`() {
+        val expectedModel = initModel.copy(mediaSource = "scanner")
+        updateSpec
+            .given(initModel)
+            .whenEvent(PickerSubmissionUploadEvent.ScannerClicked)
+            .then(
+                assertThatNext(
+                    NextMatchers.hasModel(expectedModel),
+                    matchesEffects<PickerSubmissionUploadModel, PickerSubmissionUploadEffect>(
+                        PickerSubmissionUploadEffect.LaunchScanner
+                    )
+                )
+            )
+    }
+
+    @Test
     fun `OnFileAdded event results in model change to files`() {
         val startModel = initModel.copy(files = emptyList(), isLoadingFile = true)
         val expectedModel = startModel.copy(files = listOf(initFile), isLoadingFile = false)

@@ -107,7 +107,7 @@ class ToDoFilterViewModel @Inject constructor(
     private fun createCheckboxItems(): List<FilterCheckboxItem> {
         return listOf(
             FilterCheckboxItem(
-                titleRes = R.string.todoFilterShowPersonalToDos,
+                titleRes = R.string.todoFilterShowPersonalToDosNew,
                 checked = checkboxStates[FILTER_PERSONAL_TODOS] ?: false,
                 onToggle = { handleCheckboxToggle(FILTER_PERSONAL_TODOS, it) }
             ),

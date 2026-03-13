@@ -16,7 +16,13 @@
  */
 package com.instructure.student.ui.pages.classic
 
+import android.view.View
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.action.CoordinatesProvider
+import androidx.test.espresso.action.GeneralLocation
+import androidx.test.espresso.action.GeneralSwipeAction
+import androidx.test.espresso.action.Press
+import androidx.test.espresso.action.Swipe
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -158,6 +164,13 @@ open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
     }
 
     /**
+     * Click on the video comment to open it
+     */
+    fun clickVideoComment() {
+        onView(allOf(withId(R.id.attachmentNameTextView), containsTextCaseInsensitive("video"))).click()
+    }
+
+    /**
      * Assert that the comment stream contains an audio comment
      */
     fun assertAudioCommentDisplayed() {
@@ -167,6 +180,13 @@ open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
         )
 
         submissionCommentsRenderPage.scrollAndAssertDisplayed(commentMatcher)
+    }
+
+    /**
+     * Click on the audio comment to open it
+     */
+    fun clickAudioComment() {
+        onView(allOf(withId(R.id.attachmentNameTextView), containsTextCaseInsensitive("audio"))).click()
     }
 
     /**
@@ -218,6 +238,25 @@ open class SubmissionDetailsPage : BasePage(R.id.submissionDetails) {
         openFiles() // Make sure that the files tab is open
         scrollRecyclerView(R.id.recyclerView, matcher)
         onView(matcher).assertDisplayed()
+    }
+
+    /* Grabs the current coordinates of the center of drawerTabLayout */
+    private val tabLayoutCoordinates = CoordinatesProvider { view ->
+        val tabs = view.findViewById<View>(R.id.drawerTabLayout)
+        val xy = IntArray(2).apply { tabs.getLocationOnScreen(this) }
+        val x = xy[0] + (tabs.width / 2f)
+        val y = xy[1] + (tabs.height / 2f)
+        floatArrayOf(x, y)
+    }
+
+    fun swipeDrawerTo(location: GeneralLocation) {
+        onView(withId(R.id.slidingUpPanelLayout)).perform(
+            GeneralSwipeAction(Swipe.FAST, tabLayoutCoordinates, location, Press.FINGER)
+        )
+    }
+
+    fun collapseSlidingPanel() {
+        swipeDrawerTo(GeneralLocation.BOTTOM_CENTER)
     }
 
     fun addAndSendComment(comment: String) {

@@ -29,11 +29,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.canvasapi2.utils.RemoteConfigPrefs
 import com.instructure.pandautils.R
+import com.instructure.pandautils.base.AppConfigProvider
 import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.databinding.FragmentRemoteConfigParamsBinding
+import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyDisplayCutoutInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.setupAsBackButton
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -51,6 +55,16 @@ class RemoteConfigParamsFragment : BaseCanvasFragment() {
         toolbar.setupAsBackButton { requireActivity().onBackPressed() }
         ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         recyclerView.adapter = RemoteConfigParamAdapter()
+        setupWindowInsets()
+    }
+
+    private fun setupWindowInsets() = with(binding) {
+        toolbar.applyTopSystemBarInsets()
+
+        // Apply display cutout insets only in Teacher app where Activity-level handling doesn't cover all containers
+        if (AppConfigProvider.appConfig?.appType == AppType.TEACHER) {
+            remoteConfigSettingsFragment.applyDisplayCutoutInsets()
+        }
     }
 }
 

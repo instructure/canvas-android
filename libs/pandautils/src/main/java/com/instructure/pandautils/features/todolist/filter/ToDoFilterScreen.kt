@@ -17,11 +17,15 @@ package com.instructure.pandautils.features.todolist.filter
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -78,10 +82,11 @@ fun ToDoFilterScreen(
         backgroundColor = colorResource(R.color.backgroundLightest),
         topBar = {
             CanvasThemedAppBar(
-                title = stringResource(id = R.string.todoFilterPreferences),
+                title = stringResource(id = R.string.todoFilterPreferencesNew),
                 navIconRes = R.drawable.ic_close,
                 navIconContentDescription = stringResource(id = R.string.close),
                 navigationActionClick = onDismiss,
+                windowInsets = WindowInsets(0, 0, 0, 0),
                 actions = {
                     TextButton(
                         onClick = {
@@ -97,7 +102,8 @@ fun ToDoFilterScreen(
                 }
             )
         },
-        modifier = modifier
+        modifier = modifier,
+        contentWindowInsets = WindowInsets(0, 0, 0, 0)
     ) { padding ->
         ToDoFilterContent(
             uiState = uiState,
@@ -113,7 +119,11 @@ fun ToDoFilterContent(
     uiState: ToDoFilterUiState,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn(modifier = modifier.testTag("ToDoFilterContent")) {
+    val navigationBarPadding = WindowInsets.navigationBars.asPaddingValues()
+    LazyColumn(
+        modifier = modifier.testTag("ToDoFilterContent"),
+        contentPadding = PaddingValues(bottom = navigationBarPadding.calculateBottomPadding())
+    ) {
         item {
             SectionHeader(title = stringResource(id = R.string.todoFilterVisibleItems))
         }
@@ -285,7 +295,7 @@ fun ToDoFilterScreenPreview() {
             uiState = ToDoFilterUiState(
                 checkboxItems = listOf(
                     FilterCheckboxItem(
-                        titleRes = R.string.todoFilterShowPersonalToDos,
+                        titleRes = R.string.todoFilterShowPersonalToDosNew,
                         checked = false,
                         onToggle = {}
                     ),

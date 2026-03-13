@@ -175,7 +175,7 @@ class CalendarScreenTest {
 
         val fab = composeTestRule.onNode(hasContentDescription("Add new calendar item"))
         fab.assertIsDisplayed()
-        val addToDoItem = composeTestRule.onNode((hasText("Add To Do")))
+        val addToDoItem = composeTestRule.onNode((hasText("Add To-do")))
         addToDoItem.assertIsNotDisplayed()
         val addEventItem = composeTestRule.onNode((hasText("Add Event")))
         addEventItem.assertIsNotDisplayed()
@@ -207,7 +207,7 @@ class CalendarScreenTest {
         fab.assertIsDisplayed()
         fab.performClick()
         composeTestRule.waitForIdle()
-        val addToDoItem = composeTestRule.onNode((hasText("Add To Do")))
+        val addToDoItem = composeTestRule.onNode((hasText("Add To-do")))
         addToDoItem.assertIsDisplayed()
         val addEventItem = composeTestRule.onNode((hasText("Add Event")))
         addEventItem.assertIsDisplayed()
@@ -274,7 +274,7 @@ class CalendarScreenTest {
         val fab = composeTestRule.onNode(hasContentDescription("Add new calendar item"))
         fab.performClick()
         composeTestRule.waitForIdle()
-        val addToDo = composeTestRule.onNode((hasText("Add To Do")))
+        val addToDo = composeTestRule.onNode((hasText("Add To-do")))
         addToDo.performClick()
         composeTestRule.waitForIdle()
 
@@ -334,7 +334,7 @@ class CalendarScreenTest {
         fab.performClick()
         composeTestRule.waitForIdle()
         
-        val addToDoItem = composeTestRule.onNode((hasText("Add To Do")))
+        val addToDoItem = composeTestRule.onNode((hasText("Add To-do")))
         addToDoItem.assertIsDisplayed()
         
         val addEventItem = composeTestRule.onNode((hasText("Add Event")))
@@ -368,7 +368,7 @@ class CalendarScreenTest {
         fab.performClick()
         composeTestRule.waitForIdle()
         
-        val addToDoItem = composeTestRule.onNode((hasText("Add To Do")))
+        val addToDoItem = composeTestRule.onNode((hasText("Add To-do")))
         addToDoItem.assertIsDisplayed()
         
         val addEventItem = composeTestRule.onNode((hasText("Add Event")))

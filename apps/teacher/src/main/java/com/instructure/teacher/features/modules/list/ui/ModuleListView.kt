@@ -30,6 +30,9 @@ import com.instructure.pandarecycler.PaginatedScrollListener
 import com.instructure.pandautils.features.progress.ProgressDialogFragment
 import com.instructure.pandautils.room.appdatabase.entities.ModuleBulkProgressEntity
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyDisplayCutoutInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.showThemed
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentModuleListBinding
@@ -134,6 +137,7 @@ class ModuleListView(
     init {
         // Toolbar setup
         binding.toolbar.apply {
+            applyTopSystemBarInsets()
             subtitle = course.name
             setupBackButton(activity)
             ViewStyler.themeToolbarColored(activity, this, course)
@@ -191,14 +195,20 @@ class ModuleListView(
             }
         }
 
+        // Apply display cutout insets to root view to prevent content from extending behind camera cutout
+        binding.root.applyDisplayCutoutInsets()
+
         binding.recyclerView.apply {
             layoutManager = this@ModuleListView.layoutManager
             adapter = this@ModuleListView.adapter
             addOnScrollListener(scrollListener)
         }
 
-        binding.swipeRefreshLayout.setOnRefreshListener {
-            consumer?.accept(ModuleListEvent.PullToRefresh)
+        binding.swipeRefreshLayout.apply {
+            setOnRefreshListener {
+                consumer?.accept(ModuleListEvent.PullToRefresh)
+            }
+            applyBottomSystemBarInsets()
         }
     }
 

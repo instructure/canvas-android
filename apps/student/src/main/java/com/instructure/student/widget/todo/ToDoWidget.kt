@@ -127,7 +127,7 @@ class ToDoWidget : GlanceAppWidget() {
             WidgetFloatingActionButton(
                 alignment = Alignment.TopEnd,
                 imageRes = R.drawable.ic_canvas_logo_student,
-                contentDescriptionRes = R.string.a11y_widgetToDoOpenToDoList,
+                contentDescriptionRes = R.string.a11y_widgetToDoOpenToDoListNew,
                 backgroundColor = WidgetColors.textDanger,
                 tintColor = WidgetColors.textLightest,
                 onClickAction =
@@ -161,7 +161,7 @@ class ToDoWidget : GlanceAppWidget() {
                     WidgetFloatingActionButton(
                         alignment = Alignment.BottomEnd,
                         imageRes = R.drawable.ic_add_lined,
-                        contentDescriptionRes = R.string.a11y_widgetToDoCreateNewToDo,
+                        contentDescriptionRes = R.string.a11y_widgetToDoCreateNewToDoNew,
                         backgroundColor = ColorProvider(
                             color = Color(color = ThemePrefs.buttonColor)
                         ),
