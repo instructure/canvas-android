@@ -65,7 +65,7 @@ fun LearningLibraryCollectionItem.toUiState(
             this.itemType.toUiChipState(resources),
             this.toEstimatedDurationUiChipState(resources),
             this.toUnitsUiChipState(resources),
-            this.completionPercentage?.toProgressUiChipState(resources),
+            this.toProgressUiChipState(resources),
         )
     )
 }
@@ -90,7 +90,7 @@ fun LearningLibraryRecommendation.toUiState(
             this.item.itemType.toUiChipState(resources),
             this.item.toEstimatedDurationUiChipState(resources),
             this.item.toUnitsUiChipState(resources),
-            this.item.completionPercentage?.toProgressUiChipState(resources),
+            this.item.toProgressUiChipState(resources),
         )
     )
 }
@@ -107,7 +107,8 @@ private fun LearningLibraryCollectionItem.getRoute(): LearningLibraryRoute? {
             courseId = this.canvasCourse?.courseId?.toLongOrNull() ?: -1L,
             moduleItemId = this.moduleInfo?.moduleItemId?.toLongOrNull(),
             moduleItemAssetType = this.moduleInfo?.moduleItemType,
-            moduleItemAssetId = this.moduleInfo?.resourceId
+            moduleItemAssetId = this.moduleInfo?.resourceId,
+            showMyProgressButton = this.canvasCourse?.moduleItemCount != 1.0
         ))
     }
 }
@@ -157,14 +158,17 @@ fun CollectionItemType.toUiChipState(resources: Resources): LearnLearningLibrary
     }
 }
 
-fun Double.toProgressUiChipState(resources: Resources): LearnLearningLibraryCollectionItemChipState? {
-    return if (this > 0 && this < 100) {
+fun LearningLibraryCollectionItem.toProgressUiChipState(resources: Resources): LearnLearningLibraryCollectionItemChipState? {
+    val completionPercentage = this.completionPercentage
+    return if (completionPercentage == null) {
+        null
+    } else if (this.isEnrolledInCanvas.orDefault() && completionPercentage >= 0 && completionPercentage < 100.0) {
         LearnLearningLibraryCollectionItemChipState(
             label = resources.getString(R.string.learnLearningLibraryInProgressLabel),
             color = StatusChipColor.Grey,
             iconRes = R.drawable.trending_up
         )
-    } else if (this == 100.0) {
+    } else if (completionPercentage == 100.0) {
         LearnLearningLibraryCollectionItemChipState(
             label = resources.getString(R.string.learnLearningLibraryCompletedLabel),
             color = StatusChipColor.Green,
@@ -191,7 +195,7 @@ fun LearningLibraryCollectionItem.toEstimatedDurationUiChipState(resources: Reso
 fun LearningLibraryCollectionItem.toUnitsUiChipState(resources: Resources): LearnLearningLibraryCollectionItemChipState? {
     return if (this.itemType == CollectionItemType.COURSE && this.canvasCourse != null && this.canvasCourse?.moduleItemCount.orDefault() > 0) {
         LearnLearningLibraryCollectionItemChipState(
-            label = resources.getQuantityString(R.plurals.learnLearningLibraryContainedUnits, this.canvasCourse?.moduleItemCount.orDefault().toInt(), this.canvasCourse?.moduleItemCount.orDefault().toInt()),
+            label = resources.getQuantityString(R.plurals.learnLearningLibraryContainedUnits, this.canvasCourse?.moduleCount.orDefault().toInt(), this.canvasCourse?.moduleCount.orDefault().toInt()),
             color = StatusChipColor.Grey,
             iconRes = R.drawable.courses_format_list_bulleted
         )

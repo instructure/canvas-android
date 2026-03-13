@@ -163,6 +163,7 @@ private fun LearnLearningLibraryDetailsContentFilter(
             items = LearnLearningLibraryStatusFilter.entries.map { DropdownItem(value = it, label = stringResource(it.labelRes)) },
             selectedItem = DropdownItem(value = state.selectedStatusFilter, label = stringResource(state.selectedStatusFilter.labelRes)),
             onItemSelected = { it?.let { state.updateSelectedStatusFilter(it.value) } },
+            showSelectedIcon = true,
             placeholder = "",
             dropdownWidth = 200.dp,
             verticalPadding = 6.dp
@@ -174,6 +175,7 @@ private fun LearnLearningLibraryDetailsContentFilter(
             items = LearnLearningLibraryTypeFilter.entries.map { DropdownItem(value = it, label = stringResource(it.labelRes)) },
             selectedItem = DropdownItem(value = state.selectedTypeFilter, label = stringResource(state.selectedTypeFilter.labelRes)),
             onItemSelected = { it?.let { state.updateTypeFilter(it.value) } },
+            showSelectedIcon = true,
             placeholder = "",
             dropdownWidth = 200.dp,
             verticalPadding = 6.dp

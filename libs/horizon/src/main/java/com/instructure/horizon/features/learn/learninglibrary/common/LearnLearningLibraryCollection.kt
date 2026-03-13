@@ -142,10 +142,12 @@ fun LearnLearningLibraryCollectionItem(
                     )
                     HorizonSpace(SpaceSize.SPACE_24)
                 }
-                LearnLearningLibraryCollectionDetailsRow(
-                    state.itemCount,
-                    onCollectionDetailsClick = { onCollectionDetailsClick(state.id) }
-                )
+                if (state.itemCount > state.items.size) {
+                    LearnLearningLibraryCollectionDetailsRow(
+                        state.itemCount,
+                        onCollectionDetailsClick = { onCollectionDetailsClick(state.id) }
+                    )
+                }
                 HorizonSpace(SpaceSize.SPACE_24)
             }
         }
@@ -187,12 +189,12 @@ private fun LearnLearningLibraryCollectionTitle(
             )
             HorizonSpace(SpaceSize.SPACE_16)
             IconButton(
-                iconRes = R.drawable.keyboard_arrow_up,
+                iconRes = R.drawable.keyboard_arrow_down,
                 contentDescription = if (isExpanded)
                     stringResource(R.string.a11y_learnLearningLibraryCollectionCollapseContentDescription)
                 else
                     stringResource(R.string.a11y_learnLearningLibraryCollectionExpandContentDescription),
-                color = IconButtonColor.WhiteGreyOutline,
+                color = IconButtonColor.DarkOutline,
                 onClick = { onExpandedChanged(!isExpanded) },
                 modifier = Modifier
                     .rotate(rotationAnimation)

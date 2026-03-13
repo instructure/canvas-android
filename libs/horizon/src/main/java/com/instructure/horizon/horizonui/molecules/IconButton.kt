@@ -16,12 +16,10 @@
 package com.instructure.horizon.horizonui.molecules
 
 import androidx.annotation.DrawableRes
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
@@ -97,7 +95,7 @@ sealed class IconButtonColor(
     )
 
     data object WhiteGreyOutline : IconButtonColor(
-        HorizonColors.Surface.pagePrimary(),
+        HorizonColors.Surface.cardPrimary(),
         HorizonColors.Icon.default(),
         HorizonColors.LineAndBorder.lineStroke()
     )
@@ -143,7 +141,15 @@ fun IconButton(
     enabled: Boolean = true,
     contentDescription: String? = null,
     onClick: () -> Unit = {},
-    badge: @Composable (() -> Unit)? = null
+    badge: @Composable (() -> Unit)? = null,
+    buttonContent: @Composable (() -> Unit) = {
+        Icon(
+            painterResource(id = iconRes),
+            contentDescription = contentDescription,
+            modifier = Modifier.size(24.dp),
+            tint = color.iconColor
+        )
+    }
 ) {
     val buttonModifier = Modifier
         .conditional(!enabled) {
@@ -169,12 +175,7 @@ fun IconButton(
                 .border(HorizonBorder.level1(color.borderColor), shape = CircleShape)
                 .size(size.size)
         ) {
-            Icon(
-                painterResource(id = iconRes),
-                contentDescription = contentDescription,
-                modifier = Modifier.size(24.dp),
-                tint = color.iconColor
-            )
+            buttonContent()
         }
         badge?.let {
             Box(modifier = Modifier.offset(x = size.badgeOffset, y = (-size.badgeOffset))) {
@@ -195,39 +196,30 @@ fun LoadingIconButton(
     enabled: Boolean = true,
     contentDescription: String? = null,
     onClick: () -> Unit = {},
-    contentAlignment: Alignment = Alignment.Center,
     badge: @Composable (() -> Unit)? = null
 ) {
-    Box(
-        contentAlignment = contentAlignment,
-        modifier = modifier
-            .animateContentSize()
+    IconButton(
+        iconRes = iconRes,
+        modifier = modifier,
+        size = size,
+        color = color,
+        elevation = elevation,
+        enabled = enabled,
+        contentDescription = contentDescription,
+        onClick = onClick,
+        badge = badge
     ) {
         if (loading) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .background(color = color.backgroundColor, shape = HorizonCornerRadius.level6)
-            ) {
-                Spinner(
-                    size = SpinnerSize.EXTRA_SMALL,
-                    color = color.iconColor,
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .padding(8.dp),
-                )
-            }
+            Spinner(
+                size = SpinnerSize.EXTRA_SMALL,
+                color = color.iconColor
+            )
         } else {
-            IconButton(
-                iconRes = iconRes,
-                modifier = modifier,
-                size = size,
-                color = color,
-                elevation = elevation,
-                enabled = enabled,
+            Icon(
+                painterResource(id = iconRes),
                 contentDescription = contentDescription,
-                onClick = onClick,
-                badge = badge
+                modifier = Modifier.size(24.dp),
+                tint = color.iconColor
             )
         }
     }
