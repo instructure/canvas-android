@@ -23,6 +23,7 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
+import com.instructure.canvas.espresso.annotations.ReleaseExclude
 import com.instructure.canvas.espresso.checkToastText
 import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.util.days
@@ -574,6 +575,7 @@ class CalendarE2ETest: TeacherComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.CALENDAR, TestCategory.E2E, SecondaryFeatureCategory.CALENDAR_TODO_REMINDER)
+    @ReleaseExclude
     fun testCalendarToDoCustomReminderE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
