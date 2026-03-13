@@ -359,12 +359,14 @@ private fun ModuleHeaderContainer(
                     textAlign = TextAlign.Center
                 )
             }
-            IconButton(
-                iconRes = R.drawable.list_alt,
-                contentDescription = stringResource(R.string.myProgress),
-                color = IconButtonColor.Institution,
-                onClick = uiState.onProgressClick
-            )
+            if (uiState.showMyProgressButton) {
+                IconButton(
+                    iconRes = R.drawable.list_alt,
+                    contentDescription = stringResource(R.string.myProgress),
+                    color = IconButtonColor.Institution,
+                    onClick = uiState.onProgressClick
+                )
+            }
         }
         if (!uiState.currentItem?.detailTags.isNullOrEmpty()) {
             HorizonSpace(SpaceSize.SPACE_24)

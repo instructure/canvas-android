@@ -77,7 +77,8 @@ sealed class MainNavigationRoute(val route: String) {
         val moduleItemId: Long? = null,
         val moduleItemAssetType: String? = null,
         val moduleItemAssetId: String? = null,
-        val scrollToNoteId: String? = null
+        val scrollToNoteId: String? = null,
+        val showMyProgressButton: Boolean = true
     ) :
         MainNavigationRoute("module_item_sequence")
 

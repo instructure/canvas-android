@@ -309,28 +309,14 @@ class LearnLearningLibraryBookmarkedViewModelTest {
     }
 
     @Test
-    fun `toggleItemBookmarked sets isBookmarked to true and clears loading`() {
-        coEvery { repository.toggleLearningLibraryItemIsBookmarked("item1") } returns true
-        val viewModel = getViewModel()
-
-        viewModel.uiState.value.onBookmarkClicked("item1")
-
-        val item = viewModel.uiState.value.items.first { it.id == "item1" }
-        assertTrue(item.isBookmarked)
-        assertFalse(item.bookmarkLoading)
-        coVerify { repository.toggleLearningLibraryItemIsBookmarked("item1") }
-    }
-
-    @Test
-    fun `toggleItemBookmarked sets isBookmarked to false when unbookmarking`() = runTest {
+    fun `toggleItemBookmarked removes item after unbookmarking`() = runTest {
         coEvery { repository.toggleLearningLibraryItemIsBookmarked("item2") } returns false
         val viewModel = getViewModel()
 
         viewModel.uiState.value.onBookmarkClicked("item2")
 
-        val item = viewModel.uiState.value.items.first { it.id == "item2" }
-        assertFalse(item.isBookmarked)
-        assertFalse(item.bookmarkLoading)
+        val item = viewModel.uiState.value.items.firstOrNull { it.id == "item2" }
+        assertNull(item)
     }
 
     @Test

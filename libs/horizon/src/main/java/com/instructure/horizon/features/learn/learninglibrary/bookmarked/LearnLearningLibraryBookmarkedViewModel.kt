@@ -178,16 +178,13 @@ class LearnLearningLibraryBookmarkedViewModel @Inject constructor(
                 )
             }
 
-            val newIsBookmarked = repository.toggleLearningLibraryItemIsBookmarked(itemId)
+            repository.toggleLearningLibraryItemIsBookmarked(itemId)
 
             _uiState.update {
                 it.copy(
-                    items = it.items.map { collectionItemState ->
+                    items = it.items.mapNotNull { collectionItemState ->
                         if (collectionItemState.id == itemId) {
-                            collectionItemState.copy(
-                                isBookmarked = newIsBookmarked,
-                                bookmarkLoading = false
-                            )
+                            null
                         } else {
                             collectionItemState
                         }
