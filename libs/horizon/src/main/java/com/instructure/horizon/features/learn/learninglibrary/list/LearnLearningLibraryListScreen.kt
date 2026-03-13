@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -49,9 +48,8 @@ import androidx.navigation.NavHostController
 import com.instructure.horizon.R
 import com.instructure.horizon.features.learn.common.LearnSearchBar
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryCollection
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryFilterScreenType
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryItem
-import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryStatusFilter
-import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
 import com.instructure.horizon.features.learn.learninglibrary.common.LearningLibraryRoute
 import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -60,12 +58,13 @@ import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.foundation.horizonBorderShadow
+import com.instructure.horizon.horizonui.molecules.Badge
+import com.instructure.horizon.horizonui.molecules.BadgeContent
+import com.instructure.horizon.horizonui.molecules.BadgeType
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.ButtonHeight
 import com.instructure.horizon.horizonui.molecules.ButtonWidth
-import com.instructure.horizon.horizonui.molecules.DropdownChip
-import com.instructure.horizon.horizonui.molecules.DropdownItem
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
@@ -362,116 +361,47 @@ private fun LearnLearningLibraryListFilterRow(
     scrollState: LazyListState,
     navController: NavHostController
 ) {
-    Column(Modifier
-        .fillMaxWidth()
-        .conditional(scrollState.canScrollBackward) {
-            horizonBorderShadow(HorizonColors.LineAndBorder.lineStroke(), bottom = 1.dp)
-        }
-        .background(HorizonColors.Surface.pagePrimary())
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .conditional(scrollState.canScrollBackward) {
+                horizonBorderShadow(HorizonColors.LineAndBorder.lineStroke(), bottom = 1.dp)
+            }
+            .background(HorizonColors.Surface.pagePrimary())
+            .padding(24.dp)
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .background(HorizonColors.Surface.pagePrimary())
-                .padding(24.dp)
-        ) {
-            LearnSearchBar(
-                value = state.searchQuery,
-                onValueChange = state.updateSearchQuery,
-                placeholder = stringResource(R.string.learnLearningLibraryListSearchPlaceholder),
-                modifier = Modifier.weight(1f)
-            )
-            HorizonSpace(SpaceSize.SPACE_16)
-            IconButton(
-                iconRes = R.drawable.bookmarks,
-                size = IconButtonSize.NORMAL,
-                color = IconButtonColor.White,
-                elevation = HorizonElevation.level4,
-                contentDescription = stringResource(R.string.a11y_learnLearningLibraryBookmarkContentDescription),
-                onClick = {
-                    navController.navigate(LearnRoute.LearnLearningLibraryBookmarkScreen.route)
+        LearnSearchBar(
+            value = state.searchQuery,
+            onValueChange = state.updateSearchQuery,
+            placeholder = stringResource(R.string.learnLearningLibraryListSearchPlaceholder),
+            modifier = Modifier.weight(1f)
+        )
+        HorizonSpace(SpaceSize.SPACE_16)
+        IconButton(
+            iconRes = R.drawable.tune,
+            size = IconButtonSize.NORMAL,
+            color = IconButtonColor.White,
+            elevation = HorizonElevation.level4,
+            contentDescription = stringResource(R.string.a11y_learnLearningLibraryFilterContentDescription),
+            onClick = {
+                navController.navigate(
+                    LearnRoute.LearnLearningLibraryFilterScreen.route(
+                        screenType = LearnLearningLibraryFilterScreenType.Browse,
+                        typeFilter = state.typeFilter,
+                        sortOption = state.sortOption,
+                    )
+                )
+            },
+            badge = if (state.activeFilterCount > 0) {
+                {
+                    Badge(
+                        content = BadgeContent.Text(state.activeFilterCount.toString()),
+                        type = BadgeType.Primary
+                    )
                 }
-            )
-        }
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(HorizonColors.Surface.pagePrimary())
-                .padding(horizontal = 24.dp)
-                .padding(bottom = 24.dp)
-        ) {
-            DropdownChip(
-                items = LearnLearningLibraryStatusFilter.entries.map {
-                    DropdownItem(
-                        value = it,
-                        label = stringResource(it.labelRes)
-                    )
-                },
-                selectedItem = DropdownItem(
-                    value = state.statusFilter,
-                    label = stringResource(state.statusFilter.labelRes)
-                ),
-                onItemSelected = { it?.let { state.updateStatusFilter(it.value) } },
-                placeholder = "",
-                dropdownWidth = 200.dp,
-                verticalPadding = 6.dp
-            )
-
-            HorizonSpace(SpaceSize.SPACE_8)
-
-            DropdownChip(
-                items = LearnLearningLibraryTypeFilter.entries.map {
-                    DropdownItem(
-                        value = it,
-                        label = stringResource(it.labelRes)
-                    )
-                },
-                selectedItem = DropdownItem(
-                    value = state.typeFilter,
-                    label = stringResource(state.typeFilter.labelRes)
-                ),
-                onItemSelected = { it?.let { state.updateTypeFilter(it.value) } },
-                placeholder = "",
-                dropdownWidth = 200.dp,
-                verticalPadding = 6.dp
-            )
-
-            if (state.typeFilter != LearnLearningLibraryTypeFilter.All
-                || state.statusFilter != LearnLearningLibraryStatusFilter.All
-            ) {
-                HorizonSpace(SpaceSize.SPACE_8)
-
-                IconButton(
-                    iconRes = R.drawable.close,
-                    contentDescription = stringResource(R.string.a11y_learningLibraryClearFiltersContentDescription),
-                    size = IconButtonSize.SMALL,
-                    color = IconButtonColor.Ghost,
-                    onClick = {
-                        state.updateTypeFilter(LearnLearningLibraryTypeFilter.All)
-                        state.updateStatusFilter(LearnLearningLibraryStatusFilter.All)
-                    }
-                )
-
-                HorizonSpace(SpaceSize.SPACE_16)
-            }
-
-            Spacer(Modifier.weight(1f))
-
-            val itemCount = if (state.isEmptyFilter()) {
-                state.collectionState.collections.take(state.collectionState.itemsToDisplay).size
-            } else {
-                state.itemState.items.size
-            }
-            if (itemCount > 0) {
-                Text(
-                    text = itemCount.toString(),
-                    style = HorizonTypography.p2,
-                    color = HorizonColors.Text.dataPoint()
-                )
-            }
-        }
+            } else null
+        )
     }
 }
 

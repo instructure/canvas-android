@@ -19,7 +19,7 @@ package com.instructure.horizon.features.learn.learninglibrary.list
 import androidx.compose.ui.text.input.TextFieldValue
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryCollectionItemState
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryCollectionState
-import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryStatusFilter
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibrarySortOption
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
 import com.instructure.horizon.horizonui.platform.LoadingState
 
@@ -27,16 +27,13 @@ data class LearnLearningLibraryListUiState(
     val searchQuery: TextFieldValue = TextFieldValue(""),
     val updateSearchQuery: (TextFieldValue) -> Unit = {},
     val typeFilter: LearnLearningLibraryTypeFilter = LearnLearningLibraryTypeFilter.All,
-    val updateTypeFilter: (LearnLearningLibraryTypeFilter) -> Unit = {},
-    val statusFilter: LearnLearningLibraryStatusFilter = LearnLearningLibraryStatusFilter.All,
-    val updateStatusFilter: (LearnLearningLibraryStatusFilter) -> Unit = {},
+    val sortOption: LearnLearningLibrarySortOption = LearnLearningLibrarySortOption.MostRecent,
+    val activeFilterCount: Int = 0,
     val collectionState: LearnLearningLibraryListCollectionUiState = LearnLearningLibraryListCollectionUiState(),
     val itemState: LearnLearningLibraryListItemUiState = LearnLearningLibraryListItemUiState()
 ) {
     fun isEmptyFilter(): Boolean {
-        return searchQuery.text.isEmpty()
-            && typeFilter == LearnLearningLibraryTypeFilter.All
-            && statusFilter == LearnLearningLibraryStatusFilter.All
+        return searchQuery.text.isEmpty() && activeFilterCount == 0
     }
 }
 

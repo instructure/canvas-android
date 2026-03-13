@@ -5,7 +5,8 @@ query GetLearningLibraryCollectionItems(
   $bookmarkedOnly: Boolean = false
   $searchTerm: String
   $types: [CollectionItemType!]
-  $completedOnly: Boolean = false
+  $completedOnly: Boolean = false,
+  $sortBy: CollectionItemSortOption,
 ) {
   learningLibraryCollectionItems(
     input: {
@@ -16,6 +17,7 @@ query GetLearningLibraryCollectionItems(
       searchTerm: $searchTerm
       types: $types
       completedOnly: $completedOnly
+      sortBy: $sortBy
     }
   ) {
     items {

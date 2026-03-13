@@ -14,12 +14,9 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.learn.learninglibrary.bookmark
+package com.instructure.horizon.features.learn.learninglibrary.common
 
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-
-@Composable
-fun LearnLearningLibraryBookmarkScreen() {
-    Text("Learning Library Bookmark Screen")
+enum class LearnLearningLibraryFilterScreenType {
+    Browse,
+    MyContent
 }

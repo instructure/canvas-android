@@ -623,4 +623,13 @@
     <string name="a11y_learningLibraryRecommendedPreviousContentDescription">Previous item</string>
     <string name="a11y_learningLibraryRecommendedNextContentDescription">Next item</string>
     <string name="learnLearningLibraryCollectionsHeader">Collections</string>
+    <string name="learnLearningLibraryFilterAndSortTitle">Filter and sort</string>
+    <string name="learnLearningLibraryFilterSortByLabel">Sort by</string>
+    <string name="learnLearningLibraryFilterItemTypeLabel">Item type</string>
+    <string name="learnLearningLibraryFilterClearFiltersLabel">Clear filters</string>
+    <string name="learnLearningLibrarySortMostRecentLabel">Most recent</string>
+    <string name="learnLearningLibrarySortLeastRecentLabel">Least recent</string>
+    <string name="learnLearningLibrarySortNameAZLabel">Name: A-Z</string>
+    <string name="learnLearningLibrarySortNameZALabel">Name: Z-A</string>
+    <string name="a11y_learnLearningLibraryFilterContentDescription">Filter</string>
 </resources>

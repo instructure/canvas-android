@@ -102,6 +102,12 @@ sealed class IconButtonColor(
         HorizonColors.LineAndBorder.lineStroke()
     )
 
+    data object DarkOutline : IconButtonColor(
+        Color.Transparent,
+        HorizonColors.Icon.default(),
+        HorizonColors.Surface.inversePrimary()
+    )
+
     data object WhiteOutline : IconButtonColor(
         Color.Transparent,
         HorizonColors.Icon.surfaceColored(),

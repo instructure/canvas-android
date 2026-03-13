@@ -17,6 +17,7 @@
 package com.instructure.horizon.features.learn.learninglibrary.list
 
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetLearningLibraryManager
+import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemSortOption
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
 import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearningLibraryCollection
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItemsResponse
@@ -35,6 +36,7 @@ class LearnLearningLibraryListRepository @Inject constructor(
         typeFilter: CollectionItemType? = null,
         bookmarkedOnly: Boolean = false,
         completedOnly: Boolean = false,
+        sortBy: CollectionItemSortOption? = null,
         forceNetwork: Boolean
     ): LearningLibraryCollectionItemsResponse {
         return getLearningLibraryManager.getLearningLibraryCollectionItems(
@@ -44,6 +46,7 @@ class LearnLearningLibraryListRepository @Inject constructor(
             completedOnly = completedOnly,
             searchTerm = searchQuery,
             types = typeFilter?.let { listOf(it) },
+            sortBy = sortBy,
             forceNetwork = forceNetwork
         )
     }

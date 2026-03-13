@@ -14,12 +14,20 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.learn.learninglibrary.completed
+package com.instructure.horizon.features.learn.learninglibrary.filter
 
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+data class LearnLearningLibraryFilterItem(
+    val label: String,
+    val isSelected: Boolean,
+    val onSelected: () -> Unit
+)
 
-@Composable
-fun LearnLearningLibraryCompletedScreen() {
-    Text("Learning Library Completed Screen")
-}
+data class LearnLearningLibraryFilterSection(
+    val title: String,
+    val items: List<LearnLearningLibraryFilterItem>
+)
+
+data class LearnLearningLibraryFilterUiState(
+    val sections: List<LearnLearningLibraryFilterSection> = emptyList(),
+    val onClearFilters: () -> Unit = {}
+)

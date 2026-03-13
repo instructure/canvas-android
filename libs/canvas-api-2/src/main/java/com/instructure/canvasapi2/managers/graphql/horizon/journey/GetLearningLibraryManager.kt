@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.enqueueMutation
 import com.instructure.canvasapi2.enqueueQuery
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.journey.learninglibrary.CanvasCourseInfo
+import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemSortOption
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
 import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearningLibraryCollection
 import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearningLibraryCollectionsResponse
@@ -55,6 +56,7 @@ interface GetLearningLibraryManager {
         searchTerm: String? = null,
         types: List<CollectionItemType>? = null,
         completedOnly: Boolean? = null,
+        sortBy: CollectionItemSortOption? = null,
         forceNetwork: Boolean = false
     ): LearningLibraryCollectionItemsResponse
 
@@ -88,6 +90,7 @@ class GetLearningLibraryManagerImpl @Inject constructor(
         searchTerm: String?,
         types: List<CollectionItemType>?,
         completedOnly: Boolean?,
+        sortBy: CollectionItemSortOption?,
         forceNetwork: Boolean
     ): LearningLibraryCollectionItemsResponse {
         val query = GetLearningLibraryCollectionItemsQuery(
@@ -97,7 +100,8 @@ class GetLearningLibraryManagerImpl @Inject constructor(
             Optional.presentIfNotNull(bookmarkedOnly),
             Optional.presentIfNotNull(searchTerm),
             Optional.presentIfNotNull(types?.map { it.toApolloType() }),
-            Optional.presentIfNotNull(completedOnly)
+            Optional.presentIfNotNull(completedOnly),
+            sortBy = Optional.presentIfNotNull(sortBy?.toApolloModel())
         )
         val result = journeyClient.enqueueQuery(query, forceNetwork = forceNetwork).dataOrThrow().learningLibraryCollectionItems
 
