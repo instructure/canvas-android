@@ -36,7 +36,7 @@ import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.addSearch
-import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyImeAndSystemBarInsets
 import com.instructure.pandautils.utils.applyBottomSystemBarMargin
 import com.instructure.pandautils.utils.applyDisplayCutoutInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
@@ -198,7 +198,7 @@ class PageListFragment : BaseSyncFragment<Page, PageListPresenter, PageListView,
     }
 
     private fun setupViews() = with(binding) {
-        pageRecyclerView.applyBottomSystemBarInsets()
+        pageRecyclerView.applyImeAndSystemBarInsets()
         pageRecyclerView.clipToPadding = false
 
         createNewPage.setGone()
