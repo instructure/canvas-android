@@ -92,7 +92,6 @@ class LearnLearningLibraryFilterViewModel @Inject constructor(
             )
             LearnLearningLibraryFilterScreenType.MyContent -> listOf(
                 LearnLearningLibraryTypeFilter.All,
-                LearnLearningLibraryTypeFilter.Programs,
                 LearnLearningLibraryTypeFilter.Courses
             )
         }
