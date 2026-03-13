@@ -48,6 +48,7 @@ import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.Utils.copyToClipboard
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.filecache.FileCache
 import com.instructure.pandautils.utils.filecache.awaitFileDownload
@@ -101,6 +102,9 @@ class ViewImageFragment : BaseCanvasFragment(), ShareableFile {
         }
 
         if (showToolbar) setupToolbar() else binding.toolbar.setGone()
+
+        binding.photoView.applyBottomSystemBarInsets()
+        binding.errorContainer.applyBottomSystemBarInsets()
     }
 
     private fun setupToolbar() = with(binding) {

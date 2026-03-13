@@ -15,6 +15,7 @@
  *
  */    package com.instructure.student.AnnotationComments
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -144,6 +145,11 @@ class AnnotationCommentListFragment : ParentFragment() {
             PdfStudentSubmissionView.AnnotationCommentDeleteAcknowledged(
                 annotations.filter { it.deleted && it.deleteAcknowledged.isNullOrEmpty() },
                 assigneeId))
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        ViewStyler.setStatusBarLightDelayed(requireActivity())
     }
 
     fun configureRecyclerView() {

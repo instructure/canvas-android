@@ -31,6 +31,7 @@ import android.view.ViewGroup
 import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.CompoundButton
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -41,6 +42,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.Insets
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuItemCompat
 import androidx.core.view.ViewCompat
@@ -132,6 +134,7 @@ import com.instructure.pandautils.utils.postSticky
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.toPx
 import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
 import com.instructure.student.databinding.ActivityNavigationBinding
@@ -334,10 +337,10 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
              only one fragment on the backstack, which commonly occurs with non-root fragments when routing
              from external sources. */
             val visible = isBottomNavFragment(it) || supportFragmentManager.backStackEntryCount <= 1
-            binding.bottomBar.setVisible(visible)
+            binding.bottomBarContainer.setVisible(visible)
             binding.bottomBarDivider.setVisible(visible)
             // Request insets reapplication when bottom bar visibility changes
-            ViewCompat.requestApplyInsets(binding.bottomBar)
+            ViewCompat.requestApplyInsets(binding.bottomBarContainer)
         }
     }
 
@@ -469,27 +472,33 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
                 0
             )
 
-            // Consume bottom insets only when offline indicator is visible
-            // When offline, the offline indicator and bottom bar handle bottom insets at the activity level
-            // When online, fragments need bottom insets to clear Android nav buttons
-            if (offlineIndicator.root.visibility == View.VISIBLE) {
-                WindowInsetsCompat.Builder(insets)
-                    .setInsets(
-                        WindowInsetsCompat.Type.navigationBars(),
-                        androidx.core.graphics.Insets.of(
-                            navigationBars.left,
-                            navigationBars.top,
-                            navigationBars.right,
-                            0 // Consume bottom insets when offline
-                        )
+            // Consume horizontal insets so child ComposeViews don't apply them again
+            // Also consume bottom insets when offline indicator is visible
+            val masquerading = ApiPrefs.isMasquerading
+            val consumeBottom = offlineIndicator.root.visibility == View.VISIBLE
+            WindowInsetsCompat.Builder(insets)
+                .setInsets(
+                    WindowInsetsCompat.Type.navigationBars(),
+                    Insets.of(
+                        0, // Consume left
+                        if (masquerading) 0 else navigationBars.top,
+                        0, // Consume right
+                        if (consumeBottom) 0 else navigationBars.bottom
                     )
-                    .build()
-            } else {
-                insets // Pass through bottom insets when online
-            }
+                )
+                .setInsets(
+                    WindowInsetsCompat.Type.displayCutout(),
+                    Insets.of(
+                        0, // Consume left
+                        if (masquerading) 0 else displayCutout.top,
+                        0, // Consume right
+                        displayCutout.bottom
+                    )
+                )
+                .build()
         }
 
-        ViewCompat.setOnApplyWindowInsetsListener(bottomBar) { view, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(bottomBarContainer) { view, insets ->
             val navigationBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
             val displayCutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
             val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
@@ -531,9 +540,17 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             // When bottom bar is visible, no margin needed (bottom bar handles insets)
             // When bottom bar is not visible, apply margin to clear Android nav buttons
             val layoutParams = offlineIndicator.root.layoutParams as? ViewGroup.MarginLayoutParams
-            layoutParams?.bottomMargin = if (bottomBar.isVisible) 0 else navigationBars.bottom
+            layoutParams?.bottomMargin = if (bottomBarContainer.isVisible) 0 else navigationBars.bottom
             offlineIndicator.root.layoutParams = layoutParams
 
+            insets
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(bottomBarContainer) { view, insets ->
+            val navigationBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+            bottomBarContainer.updateLayoutParams<LinearLayout.LayoutParams> {
+                height = 56.toPx + navigationBars.bottom
+            }
             insets
         }
 
@@ -575,7 +592,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
             windowInsets
         }
 
-        ViewCompat.requestApplyInsets(bottomBar)
+        ViewCompat.requestApplyInsets(bottomBarContainer)
     }
 
     private fun updateStatusBarAppearanceForDrawer() {
@@ -637,9 +654,9 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
         currentFragment?.let {
             val visible = isBottomNavFragment(it) || supportFragmentManager.backStackEntryCount <= 1
-            binding.bottomBar.setVisible(visible)
+            binding.bottomBarContainer.setVisible(visible)
             binding.bottomBarDivider.setVisible(visible)
-            ViewCompat.requestApplyInsets(binding.bottomBar)
+            ViewCompat.requestApplyInsets(binding.bottomBarContainer)
         }
     }
 
