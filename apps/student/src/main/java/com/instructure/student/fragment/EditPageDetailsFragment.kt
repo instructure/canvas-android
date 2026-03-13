@@ -21,8 +21,6 @@ import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -92,11 +90,7 @@ class EditPageDetailsFragment : ParentFragment() {
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        // Due to the messed up navigation stack in the Student app some screens under this on config change can override the color of the statusbar,
-        // so we need to add a delay to make sure this gets called last.
-        Handler(Looper.getMainLooper()).postDelayed({
-            ViewStyler.setStatusBarLight(requireActivity())
-        }, 100)
+        ViewStyler.setStatusBarLightDelayed(requireActivity())
     }
 
     //region Fragment Lifecycle Overrides

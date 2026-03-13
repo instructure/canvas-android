@@ -17,6 +17,7 @@
 package com.instructure.student.mobius.assignmentDetails.submission.text.ui
 
 import android.app.Activity
+import android.content.res.Configuration
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -28,6 +29,7 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.applyBottomSystemBarInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
+import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.setMenu
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAsBackButton
@@ -104,6 +106,13 @@ class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
 
     override fun applyTheme() {
         ViewStyler.themeToolbarLight(context as Activity, binding.toolbar)
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        context.getActivityOrNull()?.let {
+            ViewStyler.setStatusBarLightDelayed(it)
+        }
     }
 
     fun setInitialSubmissionText(text: String?) {

@@ -18,6 +18,7 @@ package com.instructure.student.mobius.assignmentDetails.submission.file.ui
 
 import android.app.Activity
 import android.content.res.ColorStateList
+import android.content.res.Configuration
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
@@ -30,6 +31,7 @@ import com.instructure.pandautils.adapters.BasicRecyclerAdapter
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.applyBottomSystemBarInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
+import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAsBackButton
@@ -68,6 +70,13 @@ class UploadStatusSubmissionView(inflater: LayoutInflater, parent: ViewGroup) :
 
     override fun applyTheme() {
         ViewStyler.themeToolbarLight(context as Activity, binding.toolbar)
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        context.getActivityOrNull()?.let {
+            ViewStyler.setStatusBarLightDelayed(it)
+        }
     }
 
     override fun onConnect(output: Consumer<UploadStatusSubmissionEvent>) = with(binding) {
