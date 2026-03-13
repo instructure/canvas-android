@@ -204,7 +204,7 @@ fun LearningLibraryCollectionItem.recommendedChip(
     resources: Resources,
     recommendations: List<LearningLibraryRecommendation>
 ): LearnLearningLibraryCollectionItemChipState? {
-    return if (recommendations.any { it.item.libraryId == this.libraryId }) {
+    return if (recommendations.any { it.item.id == this.id }) {
         LearnLearningLibraryCollectionItemChipState(
             label = resources.getString(R.string.learnLearningLibraryRecommendedLabel),
             color = StatusChipColor.Honey,
@@ -219,7 +219,7 @@ fun LearningLibraryCollectionItem.itemDescription(
     resources: Resources,
     recommendations: List<LearningLibraryRecommendation>
 ): String? {
-    val recommendation = recommendations.firstOrNull { it.item.libraryId == this.libraryId }
+    val recommendation = recommendations.firstOrNull { it.item.id == this.id }
     return if (recommendation != null) {
         when(recommendation.primaryReason) {
             LearningRecommendationReason.POPULARITY -> resources.getString(R.string.learnLearningLibraryRecommendationPopularityDescription)
