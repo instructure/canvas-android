@@ -31,8 +31,6 @@ import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemT
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryCollectionItemChipState
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryCollectionItemState
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryCollectionState
-import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryStatusFilter
-import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
 import com.instructure.horizon.features.learn.learninglibrary.list.LearnLearningLibraryListCollectionUiState
 import com.instructure.horizon.features.learn.learninglibrary.list.LearnLearningLibraryListItemUiState
 import com.instructure.horizon.features.learn.learninglibrary.list.LearnLearningLibraryListScreen
@@ -57,6 +55,7 @@ class LearnLearningLibraryListUiTest {
                     id = "item1",
                     imageUrl = null,
                     name = "Introduction to Programming",
+                    description = null,
                     isBookmarked = false,
                     bookmarkLoading = false,
                     canEnroll = true,
@@ -71,6 +70,7 @@ class LearnLearningLibraryListUiTest {
                     id = "item2",
                     imageUrl = null,
                     name = "Advanced Algorithms",
+                    description = null,
                     isBookmarked = true,
                     bookmarkLoading = false,
                     canEnroll = false,
@@ -91,6 +91,7 @@ class LearnLearningLibraryListUiTest {
                     id = "item3",
                     imageUrl = null,
                     name = "Machine Learning",
+                    description = null,
                     isBookmarked = false,
                     bookmarkLoading = false,
                     canEnroll = false,
@@ -111,6 +112,7 @@ class LearnLearningLibraryListUiTest {
                     id = "item4",
                     imageUrl = null,
                     name = "React Basics",
+                    description = null,
                     isBookmarked = false,
                     bookmarkLoading = false,
                     canEnroll = true,
@@ -129,6 +131,7 @@ class LearnLearningLibraryListUiTest {
             id = "item1",
             imageUrl = null,
             name = "Introduction to Programming",
+            description = null,
             isBookmarked = false,
             bookmarkLoading = false,
             canEnroll = true,
@@ -143,6 +146,7 @@ class LearnLearningLibraryListUiTest {
             id = "item2",
             imageUrl = null,
             name = "Machine Learning",
+            description = null,
             isBookmarked = true,
             bookmarkLoading = false,
             canEnroll = false,
@@ -172,7 +176,7 @@ class LearnLearningLibraryListUiTest {
     @Test
     fun testItemLoadingStateDisplaysSpinnerWhenFilterActive() {
         val state = LearnLearningLibraryListUiState(
-            statusFilter = LearnLearningLibraryStatusFilter.Bookmarked,
+            activeFilterCount = 1,
             itemState = LearnLearningLibraryListItemUiState(
                 loadingState = LoadingState(isLoading = true)
             )
@@ -307,23 +311,9 @@ class LearnLearningLibraryListUiTest {
     }
 
     @Test
-    fun testItemListDisplayedWhenStatusFilterActive() {
+    fun testItemListDisplayedWhenFilterActive() {
         val state = LearnLearningLibraryListUiState(
-            statusFilter = LearnLearningLibraryStatusFilter.Bookmarked,
-            itemState = LearnLearningLibraryListItemUiState(items = testItems)
-        )
-
-        composeTestRule.setContent {
-            LearnLearningLibraryListScreen(state = state, navController = rememberNavController())
-        }
-
-        composeTestRule.onNodeWithText("Introduction to Programming", useUnmergedTree = true).assertIsDisplayed()
-    }
-
-    @Test
-    fun testItemListDisplayedWhenTypeFilterActive() {
-        val state = LearnLearningLibraryListUiState(
-            typeFilter = LearnLearningLibraryTypeFilter.Pages,
+            activeFilterCount = 1,
             itemState = LearnLearningLibraryListItemUiState(items = testItems)
         )
 
@@ -351,7 +341,7 @@ class LearnLearningLibraryListUiTest {
     @Test
     fun testMultipleItemsDisplayedInItemView() {
         val state = LearnLearningLibraryListUiState(
-            statusFilter = LearnLearningLibraryStatusFilter.Bookmarked,
+            activeFilterCount = 1,
             itemState = LearnLearningLibraryListItemUiState(items = testItems)
         )
 
@@ -369,7 +359,7 @@ class LearnLearningLibraryListUiTest {
     @Test
     fun testCollectionsNotShownWhenFiltersActive() {
         val state = LearnLearningLibraryListUiState(
-            statusFilter = LearnLearningLibraryStatusFilter.Bookmarked,
+            activeFilterCount = 1,
             collectionState = LearnLearningLibraryListCollectionUiState(collections = testCollections),
             itemState = LearnLearningLibraryListItemUiState(items = testItems)
         )
@@ -384,7 +374,7 @@ class LearnLearningLibraryListUiTest {
     @Test
     fun testEmptyMessageDisplayedWhenFilteredItemsAreEmpty() {
         val state = LearnLearningLibraryListUiState(
-            statusFilter = LearnLearningLibraryStatusFilter.Bookmarked,
+            activeFilterCount = 1,
             itemState = LearnLearningLibraryListItemUiState(items = emptyList())
         )
 
@@ -399,7 +389,7 @@ class LearnLearningLibraryListUiTest {
     @Test
     fun testEnrollButtonDisplayedForEligibleItem() {
         val state = LearnLearningLibraryListUiState(
-            statusFilter = LearnLearningLibraryStatusFilter.Bookmarked,
+            activeFilterCount = 1,
             itemState = LearnLearningLibraryListItemUiState(
                 items = listOf(testItems[0])
             )
@@ -415,7 +405,7 @@ class LearnLearningLibraryListUiTest {
     @Test
     fun testEnrollButtonNotDisplayedWhenItemAlreadyEnrolled() {
         val state = LearnLearningLibraryListUiState(
-            statusFilter = LearnLearningLibraryStatusFilter.Bookmarked,
+            activeFilterCount = 1,
             itemState = LearnLearningLibraryListItemUiState(
                 items = listOf(testItems[1])
             )
@@ -431,7 +421,7 @@ class LearnLearningLibraryListUiTest {
     @Test
     fun testBookmarkButtonDisplayedOnNonBookmarkedItem() {
         val state = LearnLearningLibraryListUiState(
-            statusFilter = LearnLearningLibraryStatusFilter.Bookmarked,
+            activeFilterCount = 1,
             itemState = LearnLearningLibraryListItemUiState(
                 items = listOf(testItems[0])
             )
@@ -447,7 +437,7 @@ class LearnLearningLibraryListUiTest {
     @Test
     fun testRemoveBookmarkButtonDisplayedForBookmarkedItem() {
         val state = LearnLearningLibraryListUiState(
-            statusFilter = LearnLearningLibraryStatusFilter.Bookmarked,
+            activeFilterCount = 1,
             itemState = LearnLearningLibraryListItemUiState(
                 items = listOf(testItems[1])
             )
@@ -463,7 +453,7 @@ class LearnLearningLibraryListUiTest {
     @Test
     fun testItemChipDisplayed() {
         val state = LearnLearningLibraryListUiState(
-            statusFilter = LearnLearningLibraryStatusFilter.Bookmarked,
+            activeFilterCount = 1,
             itemState = LearnLearningLibraryListItemUiState(
                 items = listOf(testItems[0])
             )
@@ -480,7 +470,7 @@ class LearnLearningLibraryListUiTest {
     @Test
     fun testShowMoreButtonDisplayedInItemViewWhenMoreButton() {
         val state = LearnLearningLibraryListUiState(
-            statusFilter = LearnLearningLibraryStatusFilter.Bookmarked,
+            activeFilterCount = 1,
             itemState = LearnLearningLibraryListItemUiState(
                 items = testItems,
                 showMoreButton = true
@@ -498,7 +488,7 @@ class LearnLearningLibraryListUiTest {
     @Test
     fun testShowMoreButtonNotDisplayedInItemViewWhenNotLoading() {
         val state = LearnLearningLibraryListUiState(
-            statusFilter = LearnLearningLibraryStatusFilter.Bookmarked,
+            activeFilterCount = 1,
             itemState = LearnLearningLibraryListItemUiState(
                 items = testItems,
                 isMoreButtonLoading = false
@@ -513,7 +503,7 @@ class LearnLearningLibraryListUiTest {
     }
 
     @Test
-    fun testBookmarkIconButtonDisplayed() {
+    fun testFilterButtonDisplayed() {
         val state = LearnLearningLibraryListUiState(
             collectionState = LearnLearningLibraryListCollectionUiState(
                 collections = testCollections,
@@ -525,89 +515,13 @@ class LearnLearningLibraryListUiTest {
             LearnLearningLibraryListScreen(state = state, navController = rememberNavController())
         }
 
-        composeTestRule.onNodeWithContentDescription("Bookmarked items").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Filter").assertIsDisplayed()
     }
 
     @Test
-    fun testClearFiltersButtonDisplayedWhenTypeFilterActive() {
+    fun testFilterButtonBadgeDisplayedWhenFiltersActive() {
         val state = LearnLearningLibraryListUiState(
-            typeFilter = LearnLearningLibraryTypeFilter.Pages,
-            itemState = LearnLearningLibraryListItemUiState(items = emptyList())
-        )
-
-        composeTestRule.setContent {
-            LearnLearningLibraryListScreen(state = state, navController = rememberNavController())
-        }
-
-        composeTestRule.onNodeWithContentDescription("Clear filters").assertIsDisplayed()
-    }
-
-    @Test
-    fun testClearFiltersButtonDisplayedWhenStatusFilterActive() {
-        val state = LearnLearningLibraryListUiState(
-            statusFilter = LearnLearningLibraryStatusFilter.Bookmarked,
-            itemState = LearnLearningLibraryListItemUiState(items = emptyList())
-        )
-
-        composeTestRule.setContent {
-            LearnLearningLibraryListScreen(state = state, navController = rememberNavController())
-        }
-
-        composeTestRule.onNodeWithContentDescription("Clear filters").assertIsDisplayed()
-    }
-
-    @Test
-    fun testClearFiltersButtonNotDisplayedWhenNoFiltersActive() {
-        val state = LearnLearningLibraryListUiState(
-            collectionState = LearnLearningLibraryListCollectionUiState(
-                collections = testCollections,
-                itemsToDisplay = 10
-            )
-        )
-
-        composeTestRule.setContent {
-            LearnLearningLibraryListScreen(state = state, navController = rememberNavController())
-        }
-
-        composeTestRule.onNodeWithContentDescription("Clear filters").assertDoesNotExist()
-    }
-
-    @Test
-    fun testItemCountDisplayedForVisibleCollections() {
-        val state = LearnLearningLibraryListUiState(
-            collectionState = LearnLearningLibraryListCollectionUiState(
-                collections = testCollections,
-                itemsToDisplay = 3
-            )
-        )
-
-        composeTestRule.setContent {
-            LearnLearningLibraryListScreen(state = state, navController = rememberNavController())
-        }
-
-        composeTestRule.onNodeWithText("3", useUnmergedTree = true).assertIsDisplayed()
-    }
-
-    @Test
-    fun testItemCountReflectsPageSizeNotTotalCollections() {
-        val state = LearnLearningLibraryListUiState(
-            collectionState = LearnLearningLibraryListCollectionUiState(
-                collections = testCollections,
-                itemsToDisplay = 2
-            )
-        )
-
-        composeTestRule.setContent {
-            LearnLearningLibraryListScreen(state = state, navController = rememberNavController())
-        }
-
-        composeTestRule.onNodeWithText("2", useUnmergedTree = true).assertIsDisplayed()
-    }
-
-    @Test
-    fun testItemCountDisplayedForFilteredItems() {
-        val state = LearnLearningLibraryListUiState(
-            statusFilter = LearnLearningLibraryStatusFilter.Bookmarked,
+            activeFilterCount = 1,
             itemState = LearnLearningLibraryListItemUiState(items = testItems)
         )
 
@@ -615,14 +529,17 @@ class LearnLearningLibraryListUiTest {
             LearnLearningLibraryListScreen(state = state, navController = rememberNavController())
         }
 
-        composeTestRule.onNodeWithText("2", useUnmergedTree = true).assertIsDisplayed()
+        composeTestRule.onNodeWithText("1", useUnmergedTree = true).assertIsDisplayed()
     }
 
     @Test
-    fun testItemCountNotDisplayedWhenNoItemsInFilteredView() {
+    fun testFilterButtonNoBadgeWhenNoFiltersActive() {
         val state = LearnLearningLibraryListUiState(
-            statusFilter = LearnLearningLibraryStatusFilter.Bookmarked,
-            itemState = LearnLearningLibraryListItemUiState(items = emptyList())
+            activeFilterCount = 0,
+            collectionState = LearnLearningLibraryListCollectionUiState(
+                collections = testCollections,
+                itemsToDisplay = 10
+            )
         )
 
         composeTestRule.setContent {
