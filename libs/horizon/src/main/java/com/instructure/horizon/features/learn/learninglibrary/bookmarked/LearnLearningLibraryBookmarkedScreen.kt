@@ -178,6 +178,7 @@ private fun LearnLearningLibraryBookmarkedContentFilter(
                 value = state.typeFilter,
                 label = stringResource(state.typeFilter.labelRes)
             ),
+            showSelectedIcon = true,
             onItemSelected = { it?.let { state.updateTypeFilter(it.value) } },
             placeholder = "",
             dropdownWidth = 200.dp,

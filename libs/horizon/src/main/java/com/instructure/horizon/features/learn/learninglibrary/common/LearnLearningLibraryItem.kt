@@ -16,7 +16,6 @@
  */
 package com.instructure.horizon.features.learn.learninglibrary.common
 
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -26,8 +25,8 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -179,19 +178,17 @@ private fun LearnLearningLibraryItemButtonContentRow(
             )
         }
 
-        AnimatedContent(state.isBookmarked) { isBookmarked ->
-            LoadingIconButton(
-                loading = state.bookmarkLoading,
-                iconRes = if (isBookmarked) R.drawable.bookmark_fill else R.drawable.bookmark,
-                contentDescription = if (isBookmarked)
-                    stringResource(R.string.a11y_learnLearningLibraryItemRemoveBookmarkContentDescription)
-                else
-                    stringResource(R.string.a11y_learnLearningLibraryItemBookmarkContentDescription),
-                color = IconButtonColor.WhiteGreyOutline,
-                size = IconButtonSize.NORMAL,
-                onClick = { onBookmarkClick() }
-            )
-        }
+        LoadingIconButton(
+            loading = state.bookmarkLoading,
+            iconRes = if (state.isBookmarked) R.drawable.bookmark_fill else R.drawable.bookmark,
+            contentDescription = if (state.isBookmarked)
+                stringResource(R.string.a11y_learnLearningLibraryItemRemoveBookmarkContentDescription)
+            else
+                stringResource(R.string.a11y_learnLearningLibraryItemBookmarkContentDescription),
+            color = IconButtonColor.WhiteGreyOutline,
+            size = IconButtonSize.NORMAL,
+            onClick = { onBookmarkClick() }
+        )
     }
 }
 
