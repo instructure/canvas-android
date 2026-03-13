@@ -137,6 +137,13 @@ class CalendarScreenPage(private val composeTestRule: ComposeTestRule) : BasePag
         composeTestRule.waitForIdle()
     }
 
+    fun clickOnDayNumber(dayNumber: Int) {
+        composeTestRule.onNode(
+            hasTestTag(dayNumber.toString()) and hasAnyAncestor(hasTestTag("calendarBody0"))
+        ).performClick()
+        composeTestRule.waitForIdle()
+    }
+
     fun checkCalendarCollapsed(): Boolean {
         return try {
             composeTestRule.onNode(hasTestTag("calendarRow0").and(hasAnyAncestor(hasTestTag("calendarBody0")))).assertIsDisplayed()
