@@ -19,8 +19,6 @@ package com.instructure.teacher.fragments
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.analytics.SCREEN_VIEW_NOT_A_TEACHER
@@ -28,6 +26,7 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.fragments.BaseFragment
+import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentNotATeacherBinding
 import com.instructure.teacher.tasks.TeacherLogoutTask
@@ -53,6 +52,9 @@ class NotATeacherFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) = with(binding) {
         super.onViewCreated(view, savedInstanceState)
+        if (activity != null) {
+            ViewStyler.themeStatusBar(requireActivity())
+        }
 
         parentLink.setOnClickListener {
             openApp(PARENT_ID)

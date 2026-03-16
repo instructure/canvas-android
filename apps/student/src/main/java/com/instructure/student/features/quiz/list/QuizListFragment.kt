@@ -41,7 +41,7 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.addSearch
-import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyImeAndSystemBarInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.closeSearch
 import com.instructure.pandautils.utils.isTablet
@@ -101,7 +101,8 @@ class QuizListFragment : ParentFragment(), Bookmarkable {
             R.id.emptyView,
             R.id.listView
         )
-        recyclerBinding.swipeRefreshLayout.applyBottomSystemBarInsets()
+        recyclerBinding.swipeRefreshLayout.applyImeAndSystemBarInsets()
+        recyclerBinding.listView.clipToPadding = false
     }
 
     override fun applyTheme() {

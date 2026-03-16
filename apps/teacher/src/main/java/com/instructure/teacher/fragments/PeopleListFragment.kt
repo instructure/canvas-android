@@ -36,7 +36,7 @@ import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyImeAndSystemBarInsets
 import com.instructure.pandautils.utils.applyDisplayCutoutInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.closeSearch
@@ -118,7 +118,8 @@ class PeopleListFragment : BaseSyncFragment<User, PeopleListPresenter, PeopleLis
     private fun setupViews() = with(binding) {
         val canvasContext = nonNullArgs.getParcelable<CanvasContext>(Const.CANVAS_CONTEXT)
         peopleListToolbar.applyTopSystemBarInsets()
-        swipeRefreshLayoutContainerBinding.swipeRefreshLayout.applyBottomSystemBarInsets()
+        swipeRefreshLayoutContainerBinding.swipeRefreshLayout.applyImeAndSystemBarInsets()
+        swipeRefreshLayoutContainerBinding.recyclerView.clipToPadding = false
         peopleListToolbar.setTitle(R.string.tab_people)
         peopleListToolbar.subtitle = canvasContext!!.name
         if (peopleListToolbar.menu.size() == 0) peopleListToolbar.inflateMenu(R.menu.menu_people_list)

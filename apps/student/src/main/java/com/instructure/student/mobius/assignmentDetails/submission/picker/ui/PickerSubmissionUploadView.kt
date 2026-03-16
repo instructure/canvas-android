@@ -18,6 +18,7 @@ package com.instructure.student.mobius.assignmentDetails.submission.picker.ui
 
 import android.app.Activity
 import android.content.Intent
+import android.content.res.Configuration
 import android.net.Uri
 import android.provider.MediaStore
 import android.view.LayoutInflater
@@ -81,6 +82,13 @@ class PickerSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup, va
 
     override fun applyTheme() {
         ViewStyler.themeToolbarLight(context as Activity, binding.toolbar)
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        context.getActivityOrNull()?.let {
+            ViewStyler.setStatusBarLightDelayed(it)
+        }
     }
 
     override fun render(state: PickerSubmissionUploadViewState) = with(binding) {

@@ -36,6 +36,7 @@ import com.instructure.pandautils.databinding.FragmentRemoteConfigParamsBinding
 import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyImeAndSystemBarInsets
 import com.instructure.pandautils.utils.applyDisplayCutoutInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.setupAsBackButton
@@ -65,6 +66,8 @@ class RemoteConfigParamsFragment : BaseCanvasFragment() {
         if (AppConfigProvider.appConfig?.appType == AppType.TEACHER) {
             remoteConfigSettingsFragment.applyDisplayCutoutInsets()
         }
+
+        recyclerView.applyImeAndSystemBarInsets()
     }
 }
 

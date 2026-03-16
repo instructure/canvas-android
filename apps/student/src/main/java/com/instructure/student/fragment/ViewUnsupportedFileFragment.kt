@@ -16,6 +16,7 @@ package com.instructure.student.fragment
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -59,6 +60,12 @@ class ViewUnsupportedFileFragment : BaseCanvasFragment() {
 
         mEditableFile?.let { setupToolbar() } ?: binding.toolbar.setGone()
     }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        ViewStyler.setStatusBarLightDelayed(requireActivity())
+    }
+
     private fun setupToolbar() = with(binding) {
 
         mEditableFile?.let {

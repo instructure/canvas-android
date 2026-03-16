@@ -70,6 +70,7 @@ import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.addListener
 import com.instructure.pandautils.utils.applyBottomAndRightSystemBarMargin
 import com.instructure.pandautils.utils.applyBottomAndRightSystemBarPadding
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.isTablet
@@ -351,6 +352,9 @@ class InboxFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInterac
         // Teacher/Student apps have bottom navigation that handles bottom insets, so use padding
         if (requireContext().packageName == AppType.PARENT.packageName) {
             binding.addMessage.applyBottomAndRightSystemBarMargin()
+            // Parent app has no bottom bar, so apply bottom padding to the list
+            binding.inboxRecyclerView.clipToPadding = false
+            binding.inboxRecyclerView.applyBottomSystemBarInsets()
         } else {
             binding.addMessage.applyBottomAndRightSystemBarPadding()
         }

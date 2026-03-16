@@ -32,6 +32,7 @@ import androidx.annotation.IdRes
 import androidx.annotation.PluralsRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
+import androidx.core.graphics.Insets
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuItemCompat
 import androidx.core.view.ViewCompat
@@ -104,6 +105,7 @@ import com.instructure.pandautils.utils.isAccessibilityEnabled
 import com.instructure.pandautils.utils.items
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.toPx
 import com.instructure.pandautils.utils.toast
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
@@ -320,13 +322,34 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
                 rightPadding,
                 0
             )
-            insets
+
+            // Consume horizontal insets so child ComposeViews don't apply them again
+            WindowInsetsCompat.Builder(insets)
+                .setInsets(
+                    WindowInsetsCompat.Type.navigationBars(),
+                    Insets.of(
+                        0, // Consume left
+                        navigationBars.top,
+                        0, // Consume right
+                        navigationBars.bottom
+                    )
+                )
+                .setInsets(
+                    WindowInsetsCompat.Type.displayCutout(),
+                    Insets.of(
+                        0, // Consume left
+                        displayCutout.top,
+                        0, // Consume right
+                        displayCutout.bottom
+                    )
+                )
+                .build()
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(bottomBar) { view, insets ->
             val navigationBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
-            view.updateLayoutParams<RelativeLayout.LayoutParams> {
-                bottomMargin = navigationBars.bottom
+            bottomBarContainer.updateLayoutParams<RelativeLayout.LayoutParams> {
+                height = 56.toPx + navigationBars.bottom
             }
             insets
         }

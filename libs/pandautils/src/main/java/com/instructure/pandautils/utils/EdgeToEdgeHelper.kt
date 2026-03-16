@@ -73,19 +73,8 @@ object EdgeToEdgeHelper {
         enableEdgeToEdge(activity, statusBarStyle, navigationBarStyle)
     }
 
-    fun setTransparentSystemBars(window: Window) {
-        if (!isEdgeToEdgeEnforced()) return
-        window.statusBarColor = android.graphics.Color.TRANSPARENT
-        window.navigationBarColor = android.graphics.Color.TRANSPARENT
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-    }
-
     fun setStatusBarColor(window: Window, @ColorInt color: Int) {
         window.statusBarColor = color
-    }
-
-    fun setNavigationBarColor(window: Window, @ColorInt color: Int) {
-        window.navigationBarColor = color
     }
 
     fun isEdgeToEdgeEnforced(): Boolean {

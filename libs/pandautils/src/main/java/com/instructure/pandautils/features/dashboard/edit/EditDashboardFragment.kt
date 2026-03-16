@@ -37,7 +37,7 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.addSearch
-import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyImeAndSystemBarInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.setupAsBackButton
 import dagger.hilt.android.AndroidEntryPoint
@@ -74,7 +74,8 @@ class EditDashboardFragment : BaseCanvasFragment() {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
         binding.toolbar.applyTopSystemBarInsets()
-        binding.swipeRefreshLayout.applyBottomSystemBarInsets()
+        binding.swipeRefreshLayout.applyImeAndSystemBarInsets()
+        binding.recyclerView.clipToPadding = false
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
