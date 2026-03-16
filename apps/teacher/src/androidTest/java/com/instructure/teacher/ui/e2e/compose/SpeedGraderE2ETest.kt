@@ -25,8 +25,11 @@ import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
 import com.instructure.canvas.espresso.pressBackButton
 import com.instructure.canvas.espresso.refresh
+import com.instructure.dataseeding.api.LatePolicyApi
 import com.instructure.dataseeding.api.SubmissionsApi
+import com.instructure.dataseeding.model.LatePolicy
 import com.instructure.dataseeding.model.SubmissionType
+import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
@@ -342,6 +345,160 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the current student is '${thirdNoSubmissionStudent.name}'.")
         speedGraderPage.assertCurrentStudent(thirdNoSubmissionStudent.name)
         speedGraderPage.assertCurrentStudentStatus("Not Submitted")
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.GRADES, TestCategory.E2E)
+    fun testSpeedGraderLatePenaltyE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(teachers = 1, courses = 1, students = 1, favoriteCourses = 1)
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+        val student = data.studentsList[0]
+
+        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course with a due date 1 day in the past.")
+        val assignment = seedAssignments(
+            courseId = course.id,
+            dueAt = 1.days.ago.iso8601,
+            submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+            teacherToken = teacher.token,
+            pointsPossible = 100.0
+        )
+
+        Log.d(PREPARATION_TAG, "Creating a late policy for '${course.name}' course: 10% deduction per day.")
+        LatePolicyApi.createLatePolicy(
+            courseId = course.id,
+            latePolicy = LatePolicy(
+                missingSubmissionDeductionEnabled = false,
+                missingSubmissionDeduction = 0,
+                lateSubmissionDeductionEnabled = true,
+                lateSubmissionDeduction = 10,
+                lateSubmissionInterval = "day",
+                lateSubmissionMinimumPercentEnabled = false,
+                lateSubmissionMinimumPercent = 0
+            ),
+            teacherToken = teacher.token
+        )
+
+        Log.d(PREPARATION_TAG, "Seeding a late submission for '${assignment[0].name}' assignment with '${student.name}' student.")
+        seedAssignmentSubmission(
+            submissionSeeds = listOf(SubmissionsApi.SubmissionSeedInfo(
+                amount = 1,
+                submissionType = SubmissionType.ONLINE_TEXT_ENTRY
+            )),
+            assignmentId = assignment[0].id,
+            courseId = course.id,
+            studentToken = student.token
+        )
+
+        Log.d(PREPARATION_TAG, "Grading the late submission for '${student.name}' student with 100 points.")
+        SubmissionsApi.gradeSubmission(teacher.token, course.id, assignment[0].id, student.id, postedGrade = "100")
+
+        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
+        tokenLogin(teacher)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Open '${course.name}' course and navigate to Assignments Page.")
+        dashboardPage.openCourse(course)
+        courseBrowserPage.openAssignmentsTab()
+
+        Log.d(STEP_TAG, "Click on '${assignment[0].name}' assignment.")
+        assignmentListPage.clickAssignment(assignment[0])
+
+        Log.d(STEP_TAG, "Open (all) submissions and click on '${student.name}' student's submission.")
+        assignmentDetailsPage.clickAllSubmissions()
+        assignmentSubmissionListPage.clickSubmission(student)
+
+        Log.d(ASSERTION_TAG, "Assert that the submission of '${student.name}' student is displayed in SpeedGrader.")
+        speedGraderPage.assertDisplaysTextSubmissionViewWithStudentName(student.name)
+
+        Log.d(STEP_TAG, "Click on the 'Expand Panel Button' to show the grade panel.")
+        speedGraderPage.clickExpandPanelButton()
+
+        Log.d(ASSERTION_TAG, "Assert that the entered score is '100'.")
+        speedGraderGradePage.assertCurrentEnteredScore("100")
+
+        Log.d(ASSERTION_TAG, "Assert that the submission is 1 day late.")
+        speedGraderGradePage.assertDaysLate("1")
+
+        Log.d(ASSERTION_TAG, "Assert that the late penalty value is '20' (10% per day × 1 day × 100 pts).")
+        speedGraderGradePage.assertLatePenaltyValueDisplayed("20")
+
+        Log.d(ASSERTION_TAG, "Assert that the final grade points value is '80' (100 pts - 20 pts penalty).")
+        speedGraderGradePage.assertFinalGradePointsValueDisplayed("100 / 100 pts")
+
+        Log.d(ASSERTION_TAG, "Assert that the final grade is displayed as '80'.")
+        speedGraderGradePage.assertFinalGradeIsDisplayed("80 / 100 pts")
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.GRADES, TestCategory.E2E)
+    fun testSpeedGraderOvergradingE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(teachers = 1, courses = 1, students = 1, favoriteCourses = 1)
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+        val student = data.studentsList[0]
+
+        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course with 10 max points.")
+        val assignment = seedAssignments(
+            courseId = course.id,
+            dueAt = 1.days.fromNow.iso8601,
+            submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+            teacherToken = teacher.token,
+            pointsPossible = 10.0
+        )
+
+        Log.d(PREPARATION_TAG, "Seed a submission for '${assignment[0].name}' assignment with '${student.name}' student.")
+        seedAssignmentSubmission(
+            submissionSeeds = listOf(SubmissionsApi.SubmissionSeedInfo(
+                amount = 1,
+                submissionType = SubmissionType.ONLINE_TEXT_ENTRY
+            )),
+            assignmentId = assignment[0].id,
+            courseId = course.id,
+            studentToken = student.token
+        )
+
+        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
+        tokenLogin(teacher)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Open '${course.name}' course and navigate to Assignments Page.")
+        dashboardPage.openCourse(course)
+        courseBrowserPage.openAssignmentsTab()
+
+        Log.d(STEP_TAG, "Click on '${assignment[0].name}' assignment.")
+        assignmentListPage.clickAssignment(assignment[0])
+
+        Log.d(STEP_TAG, "Open (all) submissions and click on '${student.name}' student's submission.")
+        assignmentDetailsPage.clickAllSubmissions()
+        assignmentSubmissionListPage.clickSubmission(student)
+
+        Log.d(ASSERTION_TAG, "Assert that the submission of '${student.name}' student is displayed in SpeedGrader.")
+        speedGraderPage.assertDisplaysTextSubmissionViewWithStudentName(student.name)
+
+        Log.d(STEP_TAG, "Click on the 'Expand Panel Button' to show the grade panel.")
+        speedGraderPage.clickExpandPanelButton()
+
+        Log.d(ASSERTION_TAG, "Assert that the assignment's max points is '10'.")
+        speedGraderGradePage.assertPointsPossible("10")
+
+        Log.d(STEP_TAG, "Enter '15' as the new grade (above the max of 10 points).")
+        speedGraderGradePage.enterNewGrade("15")
+
+        Log.d(ASSERTION_TAG, "Assert that the entered score is '15'.")
+        speedGraderGradePage.assertCurrentEnteredScore("15")
+
+        Log.d(ASSERTION_TAG, "Assert that the final grade points value is '15 / 10 pts' (overgraded above the 10 pts maximum).")
+        speedGraderGradePage.assertFinalGradePointsValueDisplayed("15 / 10 pts")
+
+        Log.d(ASSERTION_TAG, "Assert that the final grade is displayed as '15 / 10 pts'.")
+        speedGraderGradePage.assertFinalGradeIsDisplayed("15 / 10 pts")
     }
 
 }
