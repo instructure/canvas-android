@@ -32,7 +32,7 @@
             android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/bottomBar"
+            android:layout_above="@+id/bottomBarDivider"
             android:animateLayoutChanges="true">
 
             <View
@@ -48,7 +48,7 @@
             android:id="@+id/masterDetailContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/bottomBar"
+            android:layout_above="@+id/bottomBarDivider"
             android:animateLayoutChanges="true"
             android:visibility="gone">
 
@@ -108,17 +108,34 @@
 
         </androidx.percentlayout.widget.PercentRelativeLayout>
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottomBar"
+        <FrameLayout
+            android:id="@+id/bottomBarContainer"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:minHeight="48dp"
             android:layout_alignParentBottom="true"
-            android:background="@color/backgroundLightestElevated"
-            app:itemIconTint="@color/textDarkest"
-            app:itemTextColor="@color/textDarkest"
-            app:menu="@menu/bottom_navigation_items"
-            app:labelVisibilityMode="labeled"/>
+            android:background="@color/backgroundLightestElevated">
+
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/bottomBar"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:minHeight="48dp"
+                android:background="@color/backgroundLightestElevated"
+                android:layout_gravity="top"
+                app:elevation="0dp"
+                app:itemIconTint="@color/textDarkest"
+                app:itemTextColor="@color/textDarkest"
+                app:menu="@menu/bottom_navigation_items"
+                app:labelVisibilityMode="labeled"/>
+
+        </FrameLayout>
+
+        <View
+            android:id="@+id/bottomBarDivider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/backgroundLight"
+            android:layout_alignTop="@id/bottomBarContainer"/>
 
     </RelativeLayout>
 

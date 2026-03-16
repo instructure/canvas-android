@@ -99,9 +99,11 @@ class FileSearchFragment : ParentFragment(), FileSearchView {
         searchHeader.applyTopSystemBarInsets()
         ViewCompat.setOnApplyWindowInsetsListener(fileSearchRecyclerView) { view, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            view.updatePadding(bottom = systemBars.bottom)
+            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+            view.updatePadding(bottom = maxOf(systemBars.bottom, ime.bottom))
             insets
         }
+        fileSearchRecyclerView.clipToPadding = false
         if (fileSearchRecyclerView.isAttachedToWindow) {
             ViewCompat.requestApplyInsets(fileSearchRecyclerView)
         }

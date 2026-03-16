@@ -17,15 +17,14 @@
 package com.instructure.pandautils.utils
 
 import android.app.Activity
-import android.content.res.Configuration
 import android.view.View
 import android.view.Window
 import androidx.annotation.ColorInt
-import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.updatePadding
+import com.instructure.canvasapi2.utils.ApiPrefs
 
 object WindowInsetsHelper {
 
@@ -34,20 +33,10 @@ object WindowInsetsHelper {
         insetsController.isAppearanceLightStatusBars = isLightStatusBar
     }
 
-    fun setNavigationBarAppearance(window: Window, isLightNavigationBar: Boolean) {
-        val insetsController = WindowInsetsControllerCompat(window, window.decorView)
-        insetsController.isAppearanceLightNavigationBars = isLightNavigationBar
-    }
-
     fun setSystemBarsAppearance(window: Window, isLight: Boolean) {
         val insetsController = WindowInsetsControllerCompat(window, window.decorView)
         insetsController.isAppearanceLightStatusBars = isLight
         insetsController.isAppearanceLightNavigationBars = isLight
-    }
-
-    fun setSystemBarsAppearanceAuto(activity: Activity) {
-        val isLightMode = !isDarkModeEnabled(activity)
-        setSystemBarsAppearance(activity.window, isLightMode)
     }
 
     fun setStatusBarColor(activity: Activity, @ColorInt color: Int, lightIcons: Boolean = false) {
@@ -64,31 +53,10 @@ object WindowInsetsHelper {
         activity.window.statusBarColor = activity.getColor(com.instructure.pandautils.R.color.dimLighterGray)
         setStatusBarAppearance(activity.window, isLightStatusBar = true)
     }
-
-    private fun isDarkModeEnabled(activity: Activity): Boolean {
-        val nightModeFlags = activity.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        return nightModeFlags == Configuration.UI_MODE_NIGHT_YES
-    }
-
-    fun getInsetsController(view: View): WindowInsetsControllerCompat? {
-        return ViewCompat.getWindowInsetsController(view)
-    }
-
-    fun hideSystemBars(window: Window) {
-        val insetsController = WindowInsetsControllerCompat(window, window.decorView)
-        insetsController.hide(WindowInsetsCompat.Type.systemBars())
-        insetsController.systemBarsBehavior =
-            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-    }
-
-    fun showSystemBars(window: Window) {
-        val insetsController = WindowInsetsControllerCompat(window, window.decorView)
-        insetsController.show(WindowInsetsCompat.Type.systemBars())
-    }
 }
 
 fun View.applyTopSystemBarInsets() {
-    if (!EdgeToEdgeHelper.isEdgeToEdgeEnforced()) return
+    if (!EdgeToEdgeHelper.isEdgeToEdgeEnforced() || ApiPrefs.isMasquerading) return
     ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
         val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
         view.updatePadding(top = systemBars.top)
@@ -105,26 +73,6 @@ fun View.applyBottomSystemBarInsets() {
     ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
         val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
         view.updatePadding(bottom = systemBars.bottom)
-        insets
-    }
-    // Request insets to be dispatched immediately if view is attached
-    if (isAttachedToWindow) {
-        ViewCompat.requestApplyInsets(this)
-    }
-}
-
-private val TAG_ORIGINAL_MIN_HEIGHT = "originalMinHeight".hashCode()
-
-fun View.applyBottomSystemBarInsetsWithHeight() {
-    if (!EdgeToEdgeHelper.isEdgeToEdgeEnforced()) return
-    // Only capture original minHeight once to prevent accumulation on multiple calls
-    val originalMinHeight = getTag(TAG_ORIGINAL_MIN_HEIGHT) as? Int ?: minimumHeight.also {
-        setTag(TAG_ORIGINAL_MIN_HEIGHT, it)
-    }
-    ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
-        val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-        view.updatePadding(bottom = systemBars.bottom)
-        view.minimumHeight = originalMinHeight + systemBars.bottom
         insets
     }
     // Request insets to be dispatched immediately if view is attached
@@ -151,6 +99,26 @@ fun View.applyBottomSystemBarMargin() {
         insets
     }
     // Request insets to be dispatched immediately if view is attached
+    if (isAttachedToWindow) {
+        ViewCompat.requestApplyInsets(this)
+    }
+}
+
+fun View.applyImeAndSystemBarMargin() {
+    if (!EdgeToEdgeHelper.isEdgeToEdgeEnforced()) return
+    val originalBottomMargin = getTag(TAG_ORIGINAL_BOTTOM_MARGIN) as? Int ?: run {
+        val margin = (layoutParams as? android.view.ViewGroup.MarginLayoutParams)?.bottomMargin ?: 0
+        setTag(TAG_ORIGINAL_BOTTOM_MARGIN, margin)
+        margin
+    }
+    ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
+        val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+        val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+        val layoutParams = view.layoutParams as? android.view.ViewGroup.MarginLayoutParams
+        layoutParams?.bottomMargin = originalBottomMargin + maxOf(ime.bottom, systemBars.bottom)
+        view.layoutParams = layoutParams
+        insets
+    }
     if (isAttachedToWindow) {
         ViewCompat.requestApplyInsets(this)
     }
@@ -220,19 +188,6 @@ fun View.applyBottomAndRightSystemBarPadding() {
     }
 }
 
-fun View.applyHorizontalSystemBarInsets() {
-    if (!EdgeToEdgeHelper.isEdgeToEdgeEnforced()) return
-    ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
-        val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-        view.updatePadding(left = systemBars.left, right = systemBars.right)
-        insets
-    }
-    // Request insets to be dispatched immediately if view is attached
-    if (isAttachedToWindow) {
-        ViewCompat.requestApplyInsets(this)
-    }
-}
-
 fun View.applySystemBarInsets(
     top: Boolean = false,
     bottom: Boolean = false,
@@ -264,13 +219,6 @@ fun View.applyImeAndSystemBarInsets() {
     // Request insets to be dispatched immediately if view is attached
     if (isAttachedToWindow) {
         ViewCompat.requestApplyInsets(this)
-    }
-}
-
-fun View.doOnApplyWindowInsets(block: (view: View, insets: Insets) -> WindowInsetsCompat) {
-    ViewCompat.setOnApplyWindowInsetsListener(this) { view, windowInsets ->
-        val systemBars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
-        block(view, systemBars)
     }
 }
 

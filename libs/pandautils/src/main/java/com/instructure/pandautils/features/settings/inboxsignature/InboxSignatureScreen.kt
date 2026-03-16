@@ -103,7 +103,7 @@ fun InboxSignatureScreen(uiState: InboxSignatureUiState, actionHandler: (InboxSi
 fun InboxSignatureContent(uiState: InboxSignatureUiState, actionHandler: (InboxSignatureAction) -> Unit, modifier: Modifier = Modifier) {
     Column(
         modifier
-            .windowInsetsPadding(WindowInsets.displayCutout)
+            .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
             .fillMaxSize()
             .verticalScroll(rememberScrollState())) {
         Spacer(modifier = Modifier.size(16.dp))
