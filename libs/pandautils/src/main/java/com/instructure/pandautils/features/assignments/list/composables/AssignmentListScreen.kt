@@ -295,7 +295,7 @@ private fun AssignmentListWrapper(
             ScreenState.Empty -> {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = modifier
+                    modifier = Modifier
                         .fillMaxSize()
                         .background(colorResource(R.color.backgroundLightest))
                         .verticalScroll(rememberScrollState())
