@@ -28,6 +28,7 @@ data class LearnUiState(
 enum class LearnTab(@get:StringRes val labelRes: Int, val stringValue: String) {
     COURSES(R.string.learnCoursesTabLabel, "courses"),
     PROGRAMS(R.string.learnProgramsTabLabel, "programs"),
+    MY_CONTENT(R.string.learnMyContentTabLabel, "my-content"),
     BROWSE(R.string.learnBrowseTabLabel, "browse")
     ;
     companion object {

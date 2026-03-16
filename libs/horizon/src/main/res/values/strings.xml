@@ -632,4 +632,18 @@
     <string name="learnLearningLibrarySortNameAZLabel">Name: A-Z</string>
     <string name="learnLearningLibrarySortNameZALabel">Name: Z-A</string>
     <string name="a11y_learnLearningLibraryFilterContentDescription">Filter</string>
+    <string name="learnMyContentCourseLabel">Course</string>
+    <string name="learnMyContentProgramLabel">Program</string>
+    <plurals name="learnMyContentProgramCourseCount">
+        <item quantity="one">%1$d course</item>
+        <item quantity="other">%1$d courses</item>
+    </plurals>
+    <string name="learnMyContentProgramErrorMessage">Failed to load items</string>
+    <string name="learnMyContentStartLearning">Start learning</string>
+    <string name="learnMyContentResumeLearning">Resume learning</string>
+    <string name="LearnMyContentInProgressLabel">In Progress</string>
+    <string name="LearnMyContentCompletedLabel">Completed</string>
+    <string name="LearnMyContentSavedLabel">Saved</string>
+    <string name="learnMyContentSearchLabel">Search</string>
+    <string name="learnMyContentTabLabel">My content</string>
 </resources>

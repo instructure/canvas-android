@@ -35,7 +35,7 @@ class LearnViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(LearnUiState(
         updateSelectedTab = ::updateSelectedTab,
         updateSelectedTabIndex = ::updateSelectedTabIndex,
-        tabs = listOf(LearnTab.COURSES, LearnTab.PROGRAMS)
+        tabs = listOf(LearnTab.COURSES, LearnTab.PROGRAMS, LearnTab.MY_CONTENT)
     ))
     val state = _uiState.asStateFlow()
 
