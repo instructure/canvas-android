@@ -26,6 +26,8 @@ import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetSkillsMana
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetSkillsManagerImpl
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetWidgetsManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetWidgetsManagerImpl
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.MyContentManager
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.MyContentManagerImpl
 import com.instructure.canvasapi2.managers.graphql.horizon.redwood.JourneyRedwoodManagerImpl
 import com.instructure.canvasapi2.managers.graphql.horizon.redwood.RedwoodApiManager
 import dagger.Module
@@ -69,6 +71,13 @@ class JourneyModule {
         @JourneyApolloClient journeyClient: ApolloClient
     ): GetLearningLibraryManager {
         return GetLearningLibraryManagerImpl(journeyClient)
+    }
+
+    @Provides
+    fun provideMyContentManager(
+        @JourneyApolloClient journeyClient: ApolloClient
+    ): MyContentManager {
+        return MyContentManagerImpl(journeyClient)
     }
 
 }

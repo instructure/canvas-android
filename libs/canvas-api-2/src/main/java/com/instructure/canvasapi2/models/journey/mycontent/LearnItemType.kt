@@ -14,19 +14,18 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.learn.mycontent
+package com.instructure.canvasapi2.models.journey.mycontent
 
-import androidx.compose.ui.text.input.TextFieldValue
-import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibrarySortOption
+import com.instructure.journey.type.LearnItemType as ApolloLearnItemType
 
-data class LearnMyContentUiState(
-    val searchQuery: TextFieldValue = TextFieldValue(),
-    val updateSearchQuery: (TextFieldValue) -> Unit = {},
-    val sortByOption: LearnLearningLibrarySortOption = LearnLearningLibrarySortOption.MostRecent,
-)
+enum class LearnItemType {
+    PROGRAM,
+    COURSE;
 
-enum class LearnMyContentTab {
-    InProgress,
-    Completed,
-    Saved,
+    fun toApolloType(): ApolloLearnItemType {
+        return when (this) {
+            PROGRAM -> ApolloLearnItemType.PROGRAM
+            COURSE -> ApolloLearnItemType.COURSE
+        }
+    }
 }

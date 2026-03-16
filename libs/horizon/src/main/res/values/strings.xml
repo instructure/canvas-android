@@ -646,4 +646,13 @@
     <string name="LearnMyContentSavedLabel">Saved</string>
     <string name="learnMyContentSearchLabel">Search</string>
     <string name="learnMyContentTabLabel">My content</string>
+    <string name="learnMyContentShowMoreLabel">Show more</string>
+    <string name="learnMyContentCoursesSection">Courses</string>
+    <plurals name="learnMyContentItemsCount">
+        <item quantity="one">%1$d item</item>
+        <item quantity="other">%1$d items</item>
+    </plurals>
+    <string name="learnMyContentDurationHrsMin">%1$d hrs %2$d min</string>
+    <string name="learnMyContentDurationHrs">%1$d hrs</string>
+    <string name="learnMyContentDurationMin">%1$d min</string>
 </resources>

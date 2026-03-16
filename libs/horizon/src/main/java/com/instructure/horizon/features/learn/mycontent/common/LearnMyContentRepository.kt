@@ -14,42 +14,35 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.learn.mycontent
+package com.instructure.horizon.features.learn.mycontent.common
 
-import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithModuleItemDurations
-import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
-import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetLearningLibraryManager
-import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetProgramsManager
-import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.MyContentManager
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemSortOption
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItemsResponse
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryRecommendation
-import com.instructure.canvasapi2.utils.ApiPrefs
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
+import com.instructure.canvasapi2.models.journey.mycontent.LearnItemStatus
+import com.instructure.canvasapi2.models.journey.mycontent.LearnItemsResponse
 import javax.inject.Inject
 
 class LearnMyContentRepository @Inject constructor(
-    private val getCoursesManager: HorizonGetCoursesManager,
-    private val getProgramsManager: GetProgramsManager,
+    private val myContentManager: MyContentManager,
     private val getLearningLibraryManager: GetLearningLibraryManager,
-    private val apiPrefs: ApiPrefs
 ) {
-    suspend fun getCoursesWithProgress(forceNetwork: Boolean): List<CourseWithProgress> {
-        val courseWithProgress = getCoursesManager.getCoursesWithProgress(apiPrefs.user?.id ?: -1, forceNetwork).dataOrThrow
-        return courseWithProgress
-    }
-
-    suspend fun getPrograms(forceRefresh: Boolean): List<Program> {
-        return getProgramsManager.getPrograms(forceRefresh)
-    }
-
-    suspend fun getCoursesById(courseIds: List<Long>, forceNetwork: Boolean = false): List<CourseWithModuleItemDurations> = coroutineScope {
-        courseIds.map { id ->
-            async { getCoursesManager.getProgramCourses(id, forceNetwork).dataOrThrow }
-        }.awaitAll()
+    suspend fun getLearnItems(
+        cursor: String? = null,
+        searchQuery: String? = null,
+        sortBy: CollectionItemSortOption? = null,
+        status: List<LearnItemStatus>? = null,
+        forceNetwork: Boolean = false,
+    ): LearnItemsResponse {
+        return myContentManager.getLearnItems(
+            cursor = cursor,
+            searchTerm = searchQuery,
+            sortBy = sortBy,
+            status = status,
+            forceNetwork = forceNetwork,
+        )
     }
 
     suspend fun getBookmarkedLearningLibraryItems(
@@ -57,7 +50,7 @@ class LearnMyContentRepository @Inject constructor(
         limit: Int? = 10,
         searchQuery: String? = null,
         sortBy: CollectionItemSortOption? = null,
-        forceNetwork: Boolean
+        forceNetwork: Boolean = false,
     ): LearningLibraryCollectionItemsResponse {
         return getLearningLibraryManager.getLearningLibraryCollectionItems(
             cursor = afterCursor,
@@ -67,7 +60,7 @@ class LearnMyContentRepository @Inject constructor(
             searchTerm = searchQuery,
             types = null,
             sortBy = sortBy,
-            forceNetwork = forceNetwork
+            forceNetwork = forceNetwork,
         )
     }
 

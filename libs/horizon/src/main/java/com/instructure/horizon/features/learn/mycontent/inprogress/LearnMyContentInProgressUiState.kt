@@ -14,19 +14,9 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.learn.mycontent
+package com.instructure.horizon.features.learn.mycontent.inprogress
 
-import androidx.compose.ui.text.input.TextFieldValue
-import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibrarySortOption
+import com.instructure.horizon.features.learn.mycontent.common.LearnContentCardState
+import com.instructure.horizon.features.learn.mycontent.common.LearnMyContentUiState
 
-data class LearnMyContentUiState(
-    val searchQuery: TextFieldValue = TextFieldValue(),
-    val updateSearchQuery: (TextFieldValue) -> Unit = {},
-    val sortByOption: LearnLearningLibrarySortOption = LearnLearningLibrarySortOption.MostRecent,
-)
-
-enum class LearnMyContentTab {
-    InProgress,
-    Completed,
-    Saved,
-}
+typealias LearnMyContentInProgressUiState = LearnMyContentUiState<LearnContentCardState>
