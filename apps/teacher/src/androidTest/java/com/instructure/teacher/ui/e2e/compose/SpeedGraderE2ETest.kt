@@ -426,7 +426,7 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the late penalty value is '20' (10% per day × 1 day × 100 pts).")
         speedGraderGradePage.assertLatePenaltyValueDisplayed("20")
 
-        Log.d(ASSERTION_TAG, "Assert that the final grade points value is '80' (100 pts - 20 pts penalty).")
+        Log.d(ASSERTION_TAG, "Assert that the Points row shows '100 / 100 pts' (the raw entered grade before penalty).")
         speedGraderGradePage.assertFinalGradePointsValueDisplayed("100 / 100 pts")
 
         Log.d(ASSERTION_TAG, "Assert that the final grade is displayed as '80'.")
@@ -487,6 +487,9 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
 
         Log.d(ASSERTION_TAG, "Assert that the assignment's max points is '10'.")
         speedGraderGradePage.assertPointsPossible("10")
+
+        Log.d(ASSERTION_TAG, "Assert that the status is 'None' (submission is on-time, no late penalty applies).")
+        speedGraderGradePage.assertSelectedStatusText("None")
 
         Log.d(STEP_TAG, "Enter '15' as the new grade (above the max of 10 points).")
         speedGraderGradePage.enterNewGrade("15")
