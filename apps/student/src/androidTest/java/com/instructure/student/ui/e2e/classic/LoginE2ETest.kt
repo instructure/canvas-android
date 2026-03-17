@@ -420,7 +420,9 @@ class LoginE2ETest : StudentTest() {
         loginSignInPage.assertPageObjects()
     }
 
+    @E2E
     @Test
+    @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.LOGIN, TestCategory.E2E)
     fun testLoginHowDoIFindMySchoolE2E() {
 
         Log.d(STEP_TAG, "Click 'Find My School' button.")
@@ -448,6 +450,7 @@ class LoginE2ETest : StudentTest() {
         }
     }
 
+    @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.LOGIN, TestCategory.E2E)
     fun testLoginCanFindSchoolE2E() {
