@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemS
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryPageInfo
 import com.instructure.horizon.R
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryCollectionItemState
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
 import com.instructure.horizon.features.learn.learninglibrary.common.toUiState
 import com.instructure.horizon.features.learn.mycontent.common.LearnMyContentRepository
 import com.instructure.horizon.features.learn.mycontent.common.LearnMyContentViewModel
@@ -44,6 +45,7 @@ class LearnMyContentSavedViewModel @Inject constructor(
         cursor: String?,
         searchQuery: String,
         sortBy: CollectionItemSortOption,
+        typeFilter: LearnLearningLibraryTypeFilter,
         forceNetwork: Boolean,
     ): Pair<List<LearnLearningLibraryCollectionItemState>, LearningLibraryPageInfo> {
         val recommendations = repository.getLearningLibraryRecommendedItems(forceNetwork)
@@ -51,6 +53,7 @@ class LearnMyContentSavedViewModel @Inject constructor(
             afterCursor = cursor,
             searchQuery = searchQuery.ifEmpty { null },
             sortBy = sortBy,
+            types = typeFilter.toCollectionItemType()?.let { listOf(it) },
             forceNetwork = forceNetwork,
         )
         return response.items.map { it.toUiState(resources, recommendations) } to response.pageInfo

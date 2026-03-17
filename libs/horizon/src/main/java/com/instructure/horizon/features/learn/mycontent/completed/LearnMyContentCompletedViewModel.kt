@@ -20,7 +20,9 @@ import android.content.res.Resources
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemSortOption
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryPageInfo
 import com.instructure.canvasapi2.models.journey.mycontent.LearnItemStatus
+import com.instructure.canvasapi2.models.journey.mycontent.LearnItemType
 import com.instructure.horizon.R
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
 import com.instructure.horizon.features.learn.mycontent.common.LearnContentCardState
 import com.instructure.horizon.features.learn.mycontent.common.LearnMyContentRepository
 import com.instructure.horizon.features.learn.mycontent.common.LearnMyContentViewModel
@@ -45,6 +47,7 @@ class LearnMyContentCompletedViewModel @Inject constructor(
         cursor: String?,
         searchQuery: String,
         sortBy: CollectionItemSortOption,
+        typeFilter: LearnLearningLibraryTypeFilter,
         forceNetwork: Boolean,
     ): Pair<List<LearnContentCardState>, LearningLibraryPageInfo> {
         val response = repository.getLearnItems(
@@ -52,8 +55,15 @@ class LearnMyContentCompletedViewModel @Inject constructor(
             searchQuery = searchQuery.ifEmpty { null },
             sortBy = sortBy,
             status = listOf(LearnItemStatus.COMPLETED),
+            itemTypes = typeFilter.toLearnItemType()?.let { listOf(it) },
             forceNetwork = forceNetwork,
         )
         return response.items.map { it.toCardState(resources) } to response.pageInfo
+    }
+
+    private fun LearnLearningLibraryTypeFilter.toLearnItemType(): LearnItemType? = when (this) {
+        LearnLearningLibraryTypeFilter.Programs -> LearnItemType.PROGRAM
+        LearnLearningLibraryTypeFilter.Courses -> LearnItemType.COURSE
+        else -> null
     }
 }

@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.learn.learninglibrary.filter
+package com.instructure.horizon.features.learn.filter
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

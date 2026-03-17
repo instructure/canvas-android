@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.learn.learninglibrary.filter
+package com.instructure.horizon.features.learn.filter
 
 import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
@@ -81,7 +81,8 @@ class LearnLearningLibraryFilterViewModel @Inject constructor(
         )
 
         val availableTypeFilters = when (screenType) {
-            LearnLearningLibraryFilterScreenType.Browse -> listOf(
+            LearnLearningLibraryFilterScreenType.Browse,
+            LearnLearningLibraryFilterScreenType.MyContentSaved -> listOf(
                 LearnLearningLibraryTypeFilter.All,
                 LearnLearningLibraryTypeFilter.Assessments,
                 LearnLearningLibraryTypeFilter.Courses,
@@ -92,6 +93,7 @@ class LearnLearningLibraryFilterViewModel @Inject constructor(
             )
             LearnLearningLibraryFilterScreenType.MyContent -> listOf(
                 LearnLearningLibraryTypeFilter.All,
+                LearnLearningLibraryTypeFilter.Programs,
                 LearnLearningLibraryTypeFilter.Courses
             )
         }

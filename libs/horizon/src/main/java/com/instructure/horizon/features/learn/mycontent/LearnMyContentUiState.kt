@@ -18,11 +18,16 @@ package com.instructure.horizon.features.learn.mycontent
 
 import androidx.compose.ui.text.input.TextFieldValue
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibrarySortOption
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
 
 data class LearnMyContentUiState(
     val searchQuery: TextFieldValue = TextFieldValue(),
     val updateSearchQuery: (TextFieldValue) -> Unit = {},
+    val selectedTab: LearnMyContentTab = LearnMyContentTab.InProgress,
+    val onTabSelected: (LearnMyContentTab) -> Unit = {},
     val sortByOption: LearnLearningLibrarySortOption = LearnLearningLibrarySortOption.MostRecent,
+    val typeFilter: LearnLearningLibraryTypeFilter = LearnLearningLibraryTypeFilter.All,
+    val activeFilterCount: Int = 0,
 )
 
 enum class LearnMyContentTab {

@@ -22,7 +22,9 @@ import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemS
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryPageInfo
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryFilterScreenType
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibrarySortOption
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
 import com.instructure.horizon.horizonui.platform.LoadingState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -35,6 +37,7 @@ abstract class LearnMyContentViewModel<T>(
     private var nextCursor: String? = null
     private var currentSearchQuery: String = ""
     private var currentSortBy: LearnLearningLibrarySortOption = LearnLearningLibrarySortOption.MostRecent
+    private var currentTypeFilter: LearnLearningLibraryTypeFilter = LearnLearningLibraryTypeFilter.All
 
     protected val _uiState = MutableStateFlow(
         LearnMyContentUiState<T>(
@@ -49,10 +52,11 @@ abstract class LearnMyContentViewModel<T>(
 
     protected abstract val errorMessage: String
 
-    fun onFiltersChanged(searchQuery: String, sortBy: LearnLearningLibrarySortOption) {
-        if (currentSearchQuery == searchQuery && currentSortBy == sortBy) return
+    fun onFiltersChanged(searchQuery: String, sortBy: LearnLearningLibrarySortOption, typeFilter: LearnLearningLibraryTypeFilter) {
+        if (currentSearchQuery == searchQuery && currentSortBy == sortBy && currentTypeFilter == typeFilter) return
         currentSearchQuery = searchQuery
         currentSortBy = sortBy
+        currentTypeFilter = typeFilter
         load()
     }
 
@@ -93,6 +97,7 @@ abstract class LearnMyContentViewModel<T>(
             cursor = cursor,
             searchQuery = currentSearchQuery,
             sortBy = currentSortBy.toCollectionItemSortOption(),
+            typeFilter = currentTypeFilter,
             forceNetwork = forceNetwork,
         )
         nextCursor = if (pageInfo.hasNextPage) pageInfo.nextCursor else null
@@ -109,6 +114,7 @@ abstract class LearnMyContentViewModel<T>(
         cursor: String?,
         searchQuery: String,
         sortBy: CollectionItemSortOption,
+        typeFilter: LearnLearningLibraryTypeFilter,
         forceNetwork: Boolean,
     ): Pair<List<T>, LearningLibraryPageInfo>
 

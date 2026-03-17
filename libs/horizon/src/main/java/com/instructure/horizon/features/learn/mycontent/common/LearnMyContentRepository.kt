@@ -19,9 +19,11 @@ package com.instructure.horizon.features.learn.mycontent.common
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetLearningLibraryManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.MyContentManager
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemSortOption
+import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItemsResponse
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryRecommendation
 import com.instructure.canvasapi2.models.journey.mycontent.LearnItemStatus
+import com.instructure.canvasapi2.models.journey.mycontent.LearnItemType
 import com.instructure.canvasapi2.models.journey.mycontent.LearnItemsResponse
 import javax.inject.Inject
 
@@ -34,6 +36,7 @@ class LearnMyContentRepository @Inject constructor(
         searchQuery: String? = null,
         sortBy: CollectionItemSortOption? = null,
         status: List<LearnItemStatus>? = null,
+        itemTypes: List<LearnItemType>? = null,
         forceNetwork: Boolean = false,
     ): LearnItemsResponse {
         return myContentManager.getLearnItems(
@@ -41,6 +44,7 @@ class LearnMyContentRepository @Inject constructor(
             searchTerm = searchQuery,
             sortBy = sortBy,
             status = status,
+            itemTypes = itemTypes,
             forceNetwork = forceNetwork,
         )
     }
@@ -50,6 +54,7 @@ class LearnMyContentRepository @Inject constructor(
         limit: Int? = 10,
         searchQuery: String? = null,
         sortBy: CollectionItemSortOption? = null,
+        types: List<CollectionItemType>? = null,
         forceNetwork: Boolean = false,
     ): LearningLibraryCollectionItemsResponse {
         return getLearningLibraryManager.getLearningLibraryCollectionItems(
@@ -58,7 +63,7 @@ class LearnMyContentRepository @Inject constructor(
             bookmarkedOnly = true,
             completedOnly = false,
             searchTerm = searchQuery,
-            types = null,
+            types = types,
             sortBy = sortBy,
             forceNetwork = forceNetwork,
         )
