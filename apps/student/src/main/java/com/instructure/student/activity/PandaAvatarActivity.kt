@@ -56,10 +56,12 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.DP
+import com.instructure.pandautils.utils.EdgeToEdgeHelper
 import com.instructure.pandautils.utils.PermissionUtils
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.applyBottomAndRightSystemBarPadding
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.requestAccessibilityFocus
 import com.instructure.pandautils.utils.setGone
@@ -85,6 +87,7 @@ class PandaAvatarActivity : ParentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        EdgeToEdgeHelper.enableEdgeToEdge(this)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
         setupViews()
@@ -160,6 +163,7 @@ class PandaAvatarActivity : ParentActivity() {
         binding.toolbar.setupAsBackButton { finish() }
         ViewStyler.themeToolbarColored(this, binding.toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         binding.toolbar.elevation = this.DP(2f)
+        binding.toolbar.applyTopSystemBarInsets()
         // Make the head and body all black
         binding.changeHead.background = ColorKeeper.getColoredDrawable(this@PandaAvatarActivity, R.drawable.pandify_head_02, Color.BLACK)
         binding.changeBody.background = ColorKeeper.getColoredDrawable(this@PandaAvatarActivity, R.drawable.pandify_body_11, Color.BLACK)
@@ -383,11 +387,6 @@ class PandaAvatarActivity : ParentActivity() {
                 rightPadding,
                 0
             )
-
-            // Apply top margin to toolbar
-            val toolbarParams = binding.toolbar.layoutParams as? RelativeLayout.LayoutParams
-            toolbarParams?.topMargin = systemBars.top
-            binding.toolbar.layoutParams = toolbarParams
 
             // Apply bottom margin to editOptions
             val editOptionsParams = binding.editOptions.layoutParams as? RelativeLayout.LayoutParams

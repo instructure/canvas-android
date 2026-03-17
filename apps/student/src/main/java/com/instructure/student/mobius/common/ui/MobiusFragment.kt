@@ -18,6 +18,7 @@ package com.instructure.student.mobius.common.ui
 
 import android.app.Activity
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -151,6 +152,11 @@ abstract class MobiusFragment<MODEL, EVENT, EFFECT, VIEW : MobiusView<VIEW_STATE
         effectHandler.cancel()
         super.onDestroy()
     }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        view.onConfigurationChanged(newConfig)
+    }
 }
 
 abstract class UpdateInit<MODEL, EVENT, EFFECT> : Update<MODEL, EVENT, EFFECT>, Init<MODEL, EFFECT>,
@@ -230,6 +236,8 @@ abstract class MobiusView<VIEW_STATE, EVENT, BINDING: ViewBinding>(inflater: Lay
     fun releaseBinding() {
         _binding = null
     }
+
+    open fun onConfigurationChanged(newConfig: Configuration) = Unit
 }
 
 interface Presenter<MODEL, VIEW_STATE> {

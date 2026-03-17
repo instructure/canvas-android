@@ -20,6 +20,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
+import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
@@ -69,15 +70,40 @@ open class FullscreenActivity : BaseAppCompatActivity(), FullScreenInteractions 
 
     private fun setupWindowInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.container) { view, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val navigationBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+            val displayCutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
+
+            val leftPadding = maxOf(navigationBars.left, displayCutout.left)
+            val rightPadding = maxOf(navigationBars.right, displayCutout.right)
+
             view.setPadding(
-                systemBars.left,
+                leftPadding,
                 0,
-                systemBars.right,
+                rightPadding,
                 0
             )
-            // Don't consume the insets - let them propagate to child fragments
-            insets
+
+            // Consume horizontal insets so child ComposeViews don't apply them again
+            WindowInsetsCompat.Builder(insets)
+                .setInsets(
+                    WindowInsetsCompat.Type.navigationBars(),
+                    Insets.of(
+                        0, // Consume left
+                        navigationBars.top,
+                        0, // Consume right
+                        navigationBars.bottom
+                    )
+                )
+                .setInsets(
+                    WindowInsetsCompat.Type.displayCutout(),
+                    Insets.of(
+                        0, // Consume left
+                        displayCutout.top,
+                        0, // Consume right
+                        displayCutout.bottom
+                    )
+                )
+                .build()
         }
     }
 
