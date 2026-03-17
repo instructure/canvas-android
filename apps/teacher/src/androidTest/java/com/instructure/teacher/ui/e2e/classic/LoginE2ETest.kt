@@ -16,8 +16,11 @@
  */
 package com.instructure.teacher.ui.e2e.classic
 
+import android.app.Instrumentation
 import android.util.Log
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
@@ -297,6 +300,36 @@ class LoginE2ETest : TeacherTest() {
 
         Log.d(ASSERTION_TAG, "Assert that the Login Page is open.")
         loginSignInPage.assertPageObjects()
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.LOGIN, TestCategory.E2E)
+    fun testLoginHowDoIFindMySchoolE2E() {
+
+        Log.d(STEP_TAG, "Click 'Find My School' button.")
+        loginLandingPage.clickFindMySchoolButton()
+
+        Log.d(STEP_TAG, "Enter and invalid domain to trigger the 'Tap here for login help.' link to be displayed.")
+        loginFindSchoolPage.enterDomain("invalid-domain")
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Tap here for login help.' link is displayed.")
+        loginFindSchoolPage.assertHowDoIFindMySchoolLinkDisplayed()
+
+        val expectedUrl = "https://community.instructure.com/en/kb/articles/662717-where-do-i-find-my-institutions-url-to-access-canvas"
+        val expectedIntent = IntentMatchers.hasData(expectedUrl)
+        Intents.init()
+        try {
+            Intents.intending(expectedIntent).respondWith(Instrumentation.ActivityResult(0, null))
+
+            Log.d(STEP_TAG, "Click on the 'Tap here for login help.' link.")
+            loginFindSchoolPage.clickOnHowDoIFindMySchoolLink()
+
+            Log.d(ASSERTION_TAG, "Assert that an intent with the correct URL was fired.")
+            Intents.intended(expectedIntent)
+        } finally {
+            Intents.release()
+        }
     }
 
     private fun loginWithUser(user: CanvasUserApiModel, lastSchoolSaved: Boolean = false) {
