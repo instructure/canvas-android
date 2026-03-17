@@ -16,6 +16,7 @@
  */
 package com.instructure.horizon.features.learn.mycontent.inprogress
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -40,10 +41,10 @@ import com.instructure.horizon.features.learn.mycontent.common.LearnMyContentCar
 import com.instructure.horizon.features.learn.mycontent.common.LearnMyContentUiState
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
-import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.ButtonHeight
 import com.instructure.horizon.horizonui.molecules.ButtonWidth
+import com.instructure.horizon.horizonui.molecules.LoadingButton
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 
@@ -56,14 +57,16 @@ fun LearnMyContentInProgressScreen(
 ) {
     LoadingStateWrapper(uiState.loadingState) {
         LazyColumn(contentPadding = contentPadding) {
-            item {
+            stickyHeader {
                 Text(
                     text = pluralStringResource(R.plurals.learnMyContentItemsCount, uiState.totalItemCount, uiState.totalItemCount),
                     style = HorizonTypography.p2,
                     color = HorizonColors.Text.dataPoint(),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 24.dp, vertical = 8.dp)
+                        .background(HorizonColors.Surface.pagePrimary())
+                        .padding(horizontal = 24.dp)
+                        .padding(bottom = 16.dp)
                         .wrapContentWidth(Alignment.End),
                 )
             }
@@ -76,12 +79,15 @@ fun LearnMyContentInProgressScreen(
             }
             if (uiState.showMoreButton) {
                 item {
-                    Button(
+                    LoadingButton(
                         label = stringResource(R.string.learnMyContentShowMoreLabel),
+                        loading = uiState.isMoreLoading,
                         height = ButtonHeight.SMALL,
                         width = ButtonWidth.FILL,
                         color = ButtonColor.BlackOutline,
                         onClick = uiState.increaseTotalItemCount,
+                        contentAlignment = Alignment.Center,
+                        fixedLoadingSize = true,
                         modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
                     )
                 }

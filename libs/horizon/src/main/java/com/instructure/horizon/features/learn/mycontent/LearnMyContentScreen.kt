@@ -43,8 +43,6 @@ import com.instructure.horizon.features.learn.mycontent.inprogress.LearnMyConten
 import com.instructure.horizon.features.learn.mycontent.inprogress.LearnMyContentInProgressViewModel
 import com.instructure.horizon.features.learn.mycontent.saved.LearnMyContentSavedScreen
 import com.instructure.horizon.features.learn.mycontent.saved.LearnMyContentSavedViewModel
-import com.instructure.horizon.horizonui.foundation.HorizonSpace
-import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.FilterChip
 import com.instructure.horizon.horizonui.organisms.scaffolds.CollapsableHeaderScreen
 
@@ -70,13 +68,20 @@ fun LearnMyContentScreen(
 
     CollapsableHeaderScreen(
         headerContent = { paddingValues ->
-            Column(Modifier.padding(paddingValues)) {
+            Column(
+                Modifier
+                    .padding(paddingValues)
+                    .padding(horizontal = 24.dp)
+            ) {
                 LearnMyContentTabSelector(
                     selectedTab = selectedTab,
                     onTabSelected = { selectedTab = it },
+                    modifier = Modifier.padding(vertical = 24.dp)
                 )
-                HorizonSpace(SpaceSize.SPACE_8)
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(bottom = 24.dp)
+                ) {
                     LearnSearchBar(
                         state.searchQuery,
                         state.updateSearchQuery,
