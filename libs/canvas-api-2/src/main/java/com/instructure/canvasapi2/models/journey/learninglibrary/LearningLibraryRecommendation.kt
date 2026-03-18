@@ -16,16 +16,16 @@
  */
 package com.instructure.canvasapi2.models.journey.learninglibrary
 
-data class LearningLibraryPageInfo(
-    val nextCursor: String?,
-    val previousCursor: String?,
-    val hasNextPage: Boolean,
-    val hasPreviousPage: Boolean,
-    val totalCount: Int?,
-    val pageCursors: List<LearningLibraryPageCursor>?
+data class LearningLibraryRecommendation(
+    val courseId: String,
+    val primaryReason: LearningRecommendationReason?,
+    val sourceContext: RecommendationSourceContext?,
+    val popularityCount: Int,
+    val item: LearningLibraryCollectionItem
 )
 
-data class LearningLibraryPageCursor(
-    val cursor: String,
-    val page: Int
+data class RecommendationSourceContext(
+    val sourceCourseId: String?,
+    val sourceCourseName: String?,
+    val sourceSkillName: String?,
 )

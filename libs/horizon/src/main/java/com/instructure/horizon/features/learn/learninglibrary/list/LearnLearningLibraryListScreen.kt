@@ -17,32 +17,39 @@
 package com.instructure.horizon.features.learn.learninglibrary.list
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.instructure.horizon.R
 import com.instructure.horizon.features.learn.common.LearnSearchBar
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryCollection
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryFilterScreenType
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryItem
-import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryStatusFilter
-import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
 import com.instructure.horizon.features.learn.learninglibrary.common.LearningLibraryRoute
 import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -51,18 +58,20 @@ import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.foundation.horizonBorderShadow
+import com.instructure.horizon.horizonui.molecules.Badge
+import com.instructure.horizon.horizonui.molecules.BadgeContent
+import com.instructure.horizon.horizonui.molecules.BadgeType
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.ButtonHeight
 import com.instructure.horizon.horizonui.molecules.ButtonWidth
-import com.instructure.horizon.horizonui.molecules.DropdownChip
-import com.instructure.horizon.horizonui.molecules.DropdownItem
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
 import com.instructure.horizon.horizonui.molecules.LoadingButton
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.pandautils.compose.modifiers.conditional
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -109,6 +118,41 @@ private fun LearnLearningLibraryCollections(
             contentPadding = PaddingValues(top = 16.dp),
             modifier = Modifier.testTag("CollapsableBody")
         ) {
+            if (state.collectionState.recommendedItems.isNotEmpty()) {
+                item {
+                    LearnLearningLibraryRecommendedSection(state, navController)
+                }
+            }
+
+            item {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .padding(bottom = 24.dp)
+                        .padding(horizontal = 24.dp)
+                ) {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .size(28.dp)
+                            .background(HorizonColors.PrimitivesGrey.grey12(), CircleShape)
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.stacks_filled),
+                            contentDescription = null,
+                            tint = HorizonColors.PrimitivesGrey.grey45(),
+                            modifier = Modifier.size(16.dp)
+                        )
+                    }
+                    HorizonSpace(SpaceSize.SPACE_8)
+                    Text(
+                        text = stringResource(R.string.learnLearningLibraryCollectionsHeader),
+                        style = HorizonTypography.labelMediumBold,
+                        color = HorizonColors.Text.dataPoint()
+                    )
+                }
+            }
+
             LearnLearningLibraryCollection(
                 state.collectionState.collections.take(state.collectionState.itemsToDisplay),
                 state.collectionState.onBookmarkClicked,
@@ -145,6 +189,105 @@ private fun LearnLearningLibraryCollections(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun LearnLearningLibraryRecommendedSection(
+    state: LearnLearningLibraryListUiState,
+    navController: NavHostController,
+) {
+    Column(Modifier.fillMaxWidth()) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(horizontal = 24.dp)
+        ) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .size(28.dp)
+                    .background(HorizonColors.Surface.aiGradient(), CircleShape, 0.15f)
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ai_filled),
+                    contentDescription = null,
+                    tint = HorizonColors.Icon.default(),
+                    modifier = Modifier.size(16.dp)
+                )
+            }
+            HorizonSpace(SpaceSize.SPACE_8)
+            Text(
+                text = stringResource(
+                    R.string.learnLearningLibraryListRecommendedForLabel,
+                    state.collectionState.userName
+                ),
+                style = HorizonTypography.labelMediumBold,
+                color = HorizonColors.Text.dataPoint()
+            )
+        }
+        HorizonSpace(SpaceSize.SPACE_16)
+
+        val pagerState = rememberPagerState { state.collectionState.recommendedItems.size }
+        HorizontalPager(
+            pagerState,
+            pageSpacing = 24.dp,
+            contentPadding = PaddingValues(horizontal = 24.dp)
+        ) { pageIndex ->
+            val itemState = state.collectionState.recommendedItems[pageIndex]
+
+            LearnLearningLibraryItem(
+                itemState,
+                onClick = {
+                    when (itemState.route) {
+                        is LearningLibraryRoute.StringRoute -> {
+                            navController.navigate(itemState.route.route)
+                        }
+                        is LearningLibraryRoute.ObjectRoute -> {
+                            navController.navigate(itemState.route.route)
+                        }
+                        null -> {}
+                    }
+                },
+                onBookmarkClick = {
+                    state.itemState.onBookmarkClicked(itemState.id)
+                },
+                onEnrollClick = {
+                    navController.navigate(LearnRoute.LearnLearningLibraryEnrollScreen.route(itemState.id))
+                },
+            )
+        }
+
+        if (state.collectionState.recommendedItems.size > 1) {
+            HorizonSpace(SpaceSize.SPACE_16)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                modifier = Modifier.align(Alignment.CenterHorizontally).padding(horizontal = 24.dp)
+            ) {
+                val coroutineScope = rememberCoroutineScope()
+                IconButton(
+                    iconRes = R.drawable.chevron_left,
+                    contentDescription = stringResource(R.string.a11y_learningLibraryRecommendedPreviousContentDescription),
+                    size = IconButtonSize.NORMAL,
+                    color = IconButtonColor.WhiteGreyOutline,
+                    enabled = pagerState.currentPage > 0,
+                    onClick = {
+                        coroutineScope.launch { pagerState.animateScrollToPage(pagerState.currentPage - 1) }
+                    }
+                )
+                IconButton(
+                    iconRes = R.drawable.chevron_right,
+                    contentDescription = stringResource(R.string.a11y_learningLibraryRecommendedNextContentDescription),
+                    size = IconButtonSize.NORMAL,
+                    color = IconButtonColor.WhiteGreyOutline,
+                    enabled = pagerState.currentPage < state.collectionState.recommendedItems.lastIndex,
+                    onClick = {
+                        coroutineScope.launch { pagerState.animateScrollToPage(pagerState.currentPage + 1) }
+                    }
+                )
+            }
+        }
+        HorizonSpace(SpaceSize.SPACE_24)
     }
 }
 
@@ -218,118 +361,47 @@ private fun LearnLearningLibraryListFilterRow(
     scrollState: LazyListState,
     navController: NavHostController
 ) {
-    Column(Modifier
-        .fillMaxWidth()
-        .conditional(scrollState.canScrollBackward) {
-            horizonBorderShadow(HorizonColors.LineAndBorder.lineStroke(), bottom = 1.dp)
-        }
-        .background(HorizonColors.Surface.pagePrimary())
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .conditional(scrollState.canScrollBackward) {
+                horizonBorderShadow(HorizonColors.LineAndBorder.lineStroke(), bottom = 1.dp)
+            }
+            .background(HorizonColors.Surface.pagePrimary())
+            .padding(24.dp)
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .background(HorizonColors.Surface.pagePrimary())
-                .padding(24.dp)
-        ) {
-            LearnSearchBar(
-                value = state.searchQuery,
-                onValueChange = state.updateSearchQuery,
-                placeholder = stringResource(R.string.learnLearningLibraryListSearchPlaceholder),
-                modifier = Modifier.weight(1f)
-            )
-            HorizonSpace(SpaceSize.SPACE_16)
-            IconButton(
-                iconRes = R.drawable.bookmarks,
-                size = IconButtonSize.NORMAL,
-                color = IconButtonColor.White,
-                elevation = HorizonElevation.level4,
-                contentDescription = stringResource(R.string.a11y_learnLearningLibraryBookmarkContentDescription),
-                onClick = {
-                    navController.navigate(LearnRoute.LearnLearningLibraryBookmarkScreen.route)
+        LearnSearchBar(
+            value = state.searchQuery,
+            onValueChange = state.updateSearchQuery,
+            placeholder = stringResource(R.string.learnLearningLibraryListSearchPlaceholder),
+            modifier = Modifier.weight(1f)
+        )
+        HorizonSpace(SpaceSize.SPACE_16)
+        IconButton(
+            iconRes = R.drawable.tune,
+            size = IconButtonSize.NORMAL,
+            color = IconButtonColor.White,
+            elevation = HorizonElevation.level4,
+            contentDescription = stringResource(R.string.a11y_learnLearningLibraryFilterContentDescription),
+            onClick = {
+                navController.navigate(
+                    LearnRoute.LearnLearningLibraryFilterScreen.route(
+                        screenType = LearnLearningLibraryFilterScreenType.Browse,
+                        typeFilter = state.typeFilter,
+                        sortOption = state.sortOption,
+                    )
+                )
+            },
+            badge = if (state.activeFilterCount > 0) {
+                {
+                    Badge(
+                        content = BadgeContent.Text(state.activeFilterCount.toString()),
+                        type = BadgeType.Primary
+                    )
                 }
-            )
-        }
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(HorizonColors.Surface.pagePrimary())
-                .padding(horizontal = 24.dp)
-                .padding(bottom = 24.dp)
-        ) {
-            DropdownChip(
-                items = LearnLearningLibraryStatusFilter.entries.map {
-                    DropdownItem(
-                        value = it,
-                        label = stringResource(it.labelRes)
-                    )
-                },
-                selectedItem = DropdownItem(
-                    value = state.statusFilter,
-                    label = stringResource(state.statusFilter.labelRes)
-                ),
-                showSelectedIcon = true,
-                onItemSelected = { it?.let { state.updateStatusFilter(it.value) } },
-                placeholder = "",
-                dropdownWidth = 200.dp,
-                verticalPadding = 6.dp
-            )
-
-            HorizonSpace(SpaceSize.SPACE_8)
-
-            DropdownChip(
-                items = LearnLearningLibraryTypeFilter.entries.map {
-                    DropdownItem(
-                        value = it,
-                        label = stringResource(it.labelRes)
-                    )
-                },
-                selectedItem = DropdownItem(
-                    value = state.typeFilter,
-                    label = stringResource(state.typeFilter.labelRes)
-                ),
-                showSelectedIcon = true,
-                onItemSelected = { it?.let { state.updateTypeFilter(it.value) } },
-                placeholder = "",
-                dropdownWidth = 200.dp,
-                verticalPadding = 6.dp
-            )
-
-            if (state.typeFilter != LearnLearningLibraryTypeFilter.All
-                || state.statusFilter != LearnLearningLibraryStatusFilter.All
-            ) {
-                HorizonSpace(SpaceSize.SPACE_8)
-
-                IconButton(
-                    iconRes = R.drawable.close,
-                    contentDescription = stringResource(R.string.a11y_learningLibraryClearFiltersContentDescription),
-                    size = IconButtonSize.SMALL,
-                    color = IconButtonColor.Ghost,
-                    onClick = {
-                        state.updateTypeFilter(LearnLearningLibraryTypeFilter.All)
-                        state.updateStatusFilter(LearnLearningLibraryStatusFilter.All)
-                    }
-                )
-
-                HorizonSpace(SpaceSize.SPACE_16)
-            }
-
-            Spacer(Modifier.weight(1f))
-
-            val itemCount = if (state.isEmptyFilter()) {
-                state.collectionState.collections.take(state.collectionState.itemsToDisplay).size
-            } else {
-                state.itemState.items.size
-            }
-            if (itemCount > 0) {
-                Text(
-                    text = itemCount.toString(),
-                    style = HorizonTypography.p2,
-                    color = HorizonColors.Text.dataPoint()
-                )
-            }
-        }
+            } else null
+        )
     }
 }
 

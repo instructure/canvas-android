@@ -58,15 +58,23 @@ sealed class LearnRoute {
         fun route(collectionId: String) = "${baseUrl}/$collectionId"
     }
 
-    data object LearnLearningLibraryBookmarkScreen: LearnRoute() {
-        const val baseUrl = "learning_library/bookmark"
-        const val route = baseUrl
-    }
-
     data object LearnLearningLibraryEnrollScreen: LearnRoute() {
         const val learningLibraryIdAttr = "learningLibraryId"
         const val baseUrl = "learning_library/enroll"
         const val route = "$baseUrl/{$learningLibraryIdAttr}"
         fun route(learningLibraryId: String) = "$baseUrl/$learningLibraryId"
+    }
+
+    data object LearnLearningLibraryFilterScreen: LearnRoute() {
+        const val screenTypeAttr = "screenType"
+        const val typeFilterAttr = "typeFilter"
+        const val sortOptionAttr = "sortOption"
+        const val baseUrl = "learning_library/filter"
+        const val route = "$baseUrl/{$screenTypeAttr}/{$typeFilterAttr}/{$sortOptionAttr}"
+        fun route(
+            screenType: com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryFilterScreenType,
+            typeFilter: com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter,
+            sortOption: com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibrarySortOption,
+        ) = "$baseUrl/${screenType.name}/${typeFilter.name}/${sortOption.name}"
     }
 }

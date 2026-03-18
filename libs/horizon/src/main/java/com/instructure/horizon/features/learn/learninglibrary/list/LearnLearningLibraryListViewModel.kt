@@ -20,15 +20,19 @@ import android.content.res.Resources
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemSortOption
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
 import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearningLibraryCollection
+import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryRecommendation
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
 import com.instructure.horizon.features.learn.LearnEvent
 import com.instructure.horizon.features.learn.LearnEventHandler
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryCollectionState
-import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryStatusFilter
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryFilterScreenType
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibrarySortOption
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
 import com.instructure.horizon.features.learn.learninglibrary.common.toUiState
 import com.instructure.horizon.horizonui.platform.LoadingState
@@ -48,8 +52,12 @@ import javax.inject.Inject
 class LearnLearningLibraryListViewModel @Inject constructor(
     private val resources: Resources,
     private val repository: LearnLearningLibraryListRepository,
-    private val eventHandler: LearnEventHandler
+    private val eventHandler: LearnEventHandler,
+    private val apiPrefs: ApiPrefs,
 ): ViewModel() {
+
+    private var currentTypeFilter: LearnLearningLibraryTypeFilter = LearnLearningLibraryTypeFilter.All
+    private var currentSortOption: LearnLearningLibrarySortOption = LearnLearningLibrarySortOption.MostRecent
 
     private var allCollections: List<LearnLearningLibraryCollectionState> = emptyList()
     private val collectionPageSize: Int = 3
@@ -60,13 +68,12 @@ class LearnLearningLibraryListViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(LearnLearningLibraryListUiState(
         updateSearchQuery = ::updateSearchQuery,
-        updateTypeFilter = ::updateTypeFilter,
-        updateStatusFilter = ::updateStatusFilter,
         collectionState = LearnLearningLibraryListCollectionUiState(
             loadingState = LoadingState(
                 onRefresh = ::refreshCollections,
                 onSnackbarDismiss = ::onDismissSnackbar
             ),
+            userName = apiPrefs.user?.shortName ?: resources.getString(R.string.learnLEarningLibraryListYou),
             collections = allCollections,
             itemsToDisplay = collectionPageSize,
             increaseItemsToDisplay = ::increaseCollectionsToDisplay,
@@ -105,17 +112,42 @@ class LearnLearningLibraryListViewModel @Inject constructor(
                             refreshItems()
                         }
                     }
+                    is LearnEvent.UpdateLearningLibraryFilter -> {
+                        if (it.screenType == LearnLearningLibraryFilterScreenType.Browse) {
+                            currentTypeFilter = it.typeFilter
+                            currentSortOption = it.sortOption
+                            _uiState.update { state ->
+                                state.copy(
+                                    typeFilter = currentTypeFilter,
+                                    sortOption = currentSortOption,
+                                    activeFilterCount = computeActiveFilterCount()
+                                )
+                            }
+                            loadItems(cursor = null)
+                        }
+                    }
                     else -> {}
                 }
             }
         }
     }
 
+    private suspend fun fetchRecommendedItems(forceNetwork: Boolean = false): List<LearningLibraryRecommendation> {
+        val recommendations = repository.getLearningLibraryRecommendedItems(forceNetwork)
+        _uiState.update {
+            it.copy(collectionState = it.collectionState.copy(
+                recommendedItems = recommendations.map { it.toUiState(resources) }
+            ))
+        }
+        return recommendations
+    }
+
     private fun loadCollections() {
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(collectionState = it.collectionState.copy(loadingState = it.collectionState.loadingState.copy(isLoading = true))) }
             val result = fetchCollections()
-            allCollections = result.toUiState(resources)
+            val recommendedItems = fetchRecommendedItems()
+            allCollections = result.toUiState(resources, recommendedItems)
             _uiState.update { it.copy(collectionState = it.collectionState.copy(collections = allCollections)) }
             _uiState.update { it.copy(collectionState = it.collectionState.copy(loadingState = it.collectionState.loadingState.copy(isLoading = false))) }
         } catch {
@@ -126,13 +158,12 @@ class LearnLearningLibraryListViewModel @Inject constructor(
     private fun loadItems(
         cursor: String? = itemNextCursor,
         searchQuery: String? = uiState.value.searchQuery.text,
-        typeFilter: CollectionItemType? = uiState.value.typeFilter.toCollectionItemType(),
-        bookmarkedOnly: Boolean = uiState.value.statusFilter == LearnLearningLibraryStatusFilter.Bookmarked,
-        completedOnly: Boolean = uiState.value.statusFilter == LearnLearningLibraryStatusFilter.Completed,
+        typeFilter: CollectionItemType? = currentTypeFilter.toCollectionItemType(),
+        sortBy: CollectionItemSortOption? = currentSortOption.toCollectionItemSortOption(),
     ) {
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(itemState = it.itemState.copy(loadingState = it.itemState.loadingState.copy(isLoading = true))) }
-            fetchItems(cursor, searchQuery, typeFilter, bookmarkedOnly, completedOnly)
+            fetchItems(cursor, searchQuery, typeFilter, sortBy = sortBy)
             _uiState.update { it.copy(itemState = it.itemState.copy(loadingState = it.itemState.loadingState.copy(isLoading = false))) }
         } catch {
             _uiState.update { it.copy(itemState = it.itemState.copy(loadingState = it.itemState.loadingState.copy(isLoading = false, isError = true))) }
@@ -143,7 +174,8 @@ class LearnLearningLibraryListViewModel @Inject constructor(
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(collectionState = it.collectionState.copy(loadingState = it.collectionState.loadingState.copy(isRefreshing = true))) }
             val result = fetchCollections(true)
-            allCollections = result.toUiState(resources)
+            val recommendedItems = fetchRecommendedItems(true)
+            allCollections = result.toUiState(resources, recommendedItems)
             _uiState.update { it.copy(collectionState = it.collectionState.copy(collections = allCollections)) }
             _uiState.update { it.copy(collectionState = it.collectionState.copy(loadingState = it.collectionState.loadingState.copy(isRefreshing = false, isError = false))) }
         } catch {
@@ -160,9 +192,8 @@ class LearnLearningLibraryListViewModel @Inject constructor(
     private suspend fun fetchItems(
         cursor: String? = itemNextCursor,
         searchQuery: String? = uiState.value.searchQuery.text,
-        filterType: CollectionItemType? = uiState.value.typeFilter.toCollectionItemType(),
-        bookmarkedOnly: Boolean = uiState.value.statusFilter == LearnLearningLibraryStatusFilter.Bookmarked,
-        completedOnly: Boolean = uiState.value.statusFilter == LearnLearningLibraryStatusFilter.Completed,
+        filterType: CollectionItemType? = currentTypeFilter.toCollectionItemType(),
+        sortBy: CollectionItemSortOption? = currentSortOption.toCollectionItemSortOption(),
         forceNetwork: Boolean = false
     ) {
         val response = repository.getLearningLibraryItems(
@@ -170,34 +201,26 @@ class LearnLearningLibraryListViewModel @Inject constructor(
             limit = itemPageSize,
             searchQuery = searchQuery,
             typeFilter = filterType,
-            bookmarkedOnly = bookmarkedOnly,
-            completedOnly = completedOnly,
+            sortBy = sortBy,
             forceNetwork = forceNetwork
         )
+        val recommendedItemsList = fetchRecommendedItems()
 
         if (response.pageInfo.hasNextPage && response.pageInfo.nextCursor != null) {
             itemNextCursor = response.pageInfo.nextCursor
-            _uiState.update { it.copy(
-                itemState = it.itemState.copy(
-                    showMoreButton = true
-                ),
-            ) }
+            _uiState.update { it.copy(itemState = it.itemState.copy(showMoreButton = true)) }
         } else {
             itemNextCursor = null
-            _uiState.update { it.copy(
-                itemState = it.itemState.copy(
-                    showMoreButton = false
-                ),
-            ) }
+            _uiState.update { it.copy(itemState = it.itemState.copy(showMoreButton = false)) }
         }
 
         _uiState.update {
             it.copy(
                 itemState = it.itemState.copy(
                     items = if (cursor == null)
-                        response.items.map { it.toUiState(resources) }
+                        response.items.map { item -> item.toUiState(resources, recommendedItemsList) }
                     else
-                        it.itemState.items + response.items.map { it.toUiState(resources) }
+                        it.itemState.items + response.items.map { item -> item.toUiState(resources, recommendedItemsList) }
                 ),
             )
         }
@@ -217,48 +240,80 @@ class LearnLearningLibraryListViewModel @Inject constructor(
 
     private fun onCollectionBookmarkItem(itemId: String) {
         viewModelScope.tryLaunch {
-            _uiState.update { it.copy(collectionState = it.collectionState.copy(collections = it.collectionState.collections.map { collectionState ->
-                collectionState.copy(
-                    items = collectionState.items.map { collectionItemState ->
-                        if (collectionItemState.id == itemId) {
-                            collectionItemState.copy(bookmarkLoading = true)
-                        } else {
-                            collectionItemState
+            _uiState.update { it.copy(collectionState = it.collectionState.copy(
+                collections = it.collectionState.collections.map { collectionState ->
+                    collectionState.copy(
+                        items = collectionState.items.map { collectionItemState ->
+                            if (collectionItemState.id == itemId) {
+                                collectionItemState.copy(bookmarkLoading = true)
+                            } else {
+                                collectionItemState
+                            }
                         }
+                    )
+                },
+                recommendedItems = it.collectionState.recommendedItems.map { recommendedItemState ->
+                    if (recommendedItemState.id == itemId) {
+                        recommendedItemState.copy(bookmarkLoading = true)
+                    } else {
+                        recommendedItemState
                     }
-                )
-            }))}
+                }
+            ))}
 
             val newIsBookmarked = repository.toggleLearningLibraryItemIsBookmarked(itemId)
 
-            _uiState.update { it.copy(collectionState = it.collectionState.copy(collections = it.collectionState.collections.map { collectionState ->
-                collectionState.copy(
-                    items = collectionState.items.map { collectionItemState ->
-                        if (collectionItemState.id == itemId) {
-                            collectionItemState.copy(
-                                bookmarkLoading = false,
-                                isBookmarked = newIsBookmarked
-                            )
-                        } else {
-                            collectionItemState
+            _uiState.update { it.copy(collectionState = it.collectionState.copy(
+                collections = it.collectionState.collections.map { collectionState ->
+                    collectionState.copy(
+                        items = collectionState.items.map { collectionItemState ->
+                            if (collectionItemState.id == itemId) {
+                                collectionItemState.copy(
+                                    bookmarkLoading = false,
+                                    isBookmarked = newIsBookmarked
+                                )
+                            } else {
+                                collectionItemState
+                            }
                         }
+                    )
+                },
+                recommendedItems = it.collectionState.recommendedItems.map { recommendedItemState ->
+                    if (recommendedItemState.id == itemId) {
+                        recommendedItemState.copy(
+                            bookmarkLoading = false,
+                            isBookmarked = newIsBookmarked
+                        )
+                    } else {
+                        recommendedItemState
                     }
-                )
-            }))}
+                }
+            ))}
         } catch {
-            _uiState.update { it.copy(collectionState = it.collectionState.copy(collections = it.collectionState.collections.map { collectionState ->
-                collectionState.copy(
-                    items = collectionState.items.map { collectionItemState ->
-                        if (collectionItemState.id == itemId) {
-                            collectionItemState.copy(
-                                bookmarkLoading = false,
-                            )
-                        } else {
-                            collectionItemState
+            _uiState.update { it.copy(collectionState = it.collectionState.copy(
+                collections = it.collectionState.collections.map { collectionState ->
+                    collectionState.copy(
+                        items = collectionState.items.map { collectionItemState ->
+                            if (collectionItemState.id == itemId) {
+                                collectionItemState.copy(
+                                    bookmarkLoading = false,
+                                )
+                            } else {
+                                collectionItemState
+                            }
                         }
+                    )
+                },
+                recommendedItems = it.collectionState.recommendedItems.map { recommendedItemState ->
+                    if (recommendedItemState.id == itemId) {
+                        recommendedItemState.copy(
+                            bookmarkLoading = false,
+                        )
+                    } else {
+                        recommendedItemState
                     }
-                )
-            }, loadingState = it.collectionState.loadingState.copy(snackbarMessage = resources.getString(R.string.learnLearningLibraryFailedToUpdateBookmarkMessage)))) }
+                },
+                loadingState = it.collectionState.loadingState.copy(snackbarMessage = resources.getString(R.string.learnLearningLibraryFailedToUpdateBookmarkMessage)))) }
         }
     }
 
@@ -288,6 +343,13 @@ class LearnLearningLibraryListViewModel @Inject constructor(
                                     }
                                 }
                             )
+                        },
+                        recommendedItems = it.collectionState.recommendedItems.map { recommendedItemState ->
+                            if (recommendedItemState.id == itemId) {
+                                recommendedItemState.copy(bookmarkLoading = true)
+                            } else {
+                                recommendedItemState
+                            }
                         }
                     )
                 )
@@ -323,6 +385,16 @@ class LearnLearningLibraryListViewModel @Inject constructor(
                                     }
                                 }
                             )
+                        },
+                        recommendedItems = it.collectionState.recommendedItems.map { recommendedItemState ->
+                            if (recommendedItemState.id == itemId) {
+                                recommendedItemState.copy(
+                                    bookmarkLoading = false,
+                                    isBookmarked = newIsBookmarked
+                                )
+                            } else {
+                                recommendedItemState
+                            }
                         }
                     )
                 )
@@ -353,6 +425,13 @@ class LearnLearningLibraryListViewModel @Inject constructor(
                                     }
                                 }
                             )
+                        },
+                        recommendedItems = it.collectionState.recommendedItems.map { recommendedItemState ->
+                            if (recommendedItemState.id == itemId) {
+                                recommendedItemState.copy(bookmarkLoading = false)
+                            } else {
+                                recommendedItemState
+                            }
                         }
                     )
                 )
@@ -386,13 +465,7 @@ class LearnLearningLibraryListViewModel @Inject constructor(
         searchQueryFlow.tryEmit(value.text)
     }
 
-    private fun updateStatusFilter(value: LearnLearningLibraryStatusFilter) {
-        _uiState.update { it.copy(statusFilter = value) }
-        loadItems(cursor = null)
-    }
-
-    private fun updateTypeFilter(value: LearnLearningLibraryTypeFilter) {
-        _uiState.update { it.copy(typeFilter = value) }
-        loadItems(cursor = null)
+    private fun computeActiveFilterCount(): Int {
+        return if (currentTypeFilter != LearnLearningLibraryTypeFilter.All) 1 else 0
     }
 }

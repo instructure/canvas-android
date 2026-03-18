@@ -60,6 +60,7 @@ data class LearnLearningLibraryCollectionItemState(
     val id: String,
     val imageUrl: String?,
     val name: String,
+    val description: String?,
     val isBookmarked: Boolean,
     val bookmarkLoading: Boolean,
     val canEnroll: Boolean,
@@ -111,6 +112,16 @@ fun LearnLearningLibraryItem(
                 color = HorizonColors.Text.body(),
             )
             HorizonSpace(SpaceSize.SPACE_12)
+
+            if (!state.description.isNullOrEmpty()) {
+                Text(
+                    text = state.description,
+                    style = HorizonTypography.p2,
+                    color = HorizonColors.Text.dataPoint(),
+                )
+                HorizonSpace(SpaceSize.SPACE_12)
+            }
+
             if (state.canEnroll) {
                 Column {
                     LearnLearningLibraryItemChipContent(state.chips)
@@ -220,6 +231,7 @@ private fun LearningLibraryItemEnrollPreview() {
         id = "1",
         imageUrl = "https://example.com/image.png",
         name = "Example Course",
+        description = null,
         isBookmarked = true,
         canEnroll = true,
         bookmarkLoading = false,
@@ -255,6 +267,7 @@ private fun LearningLibraryItemPreview() {
         id = "1",
         imageUrl = "https://example.com/image.png",
         name = "Example Course",
+        description = null,
         isBookmarked = false,
         canEnroll = true,
         bookmarkLoading = false,

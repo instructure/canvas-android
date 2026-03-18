@@ -18,6 +18,7 @@ package com.instructure.horizon.features.learn.learninglibrary.list
 
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetLearningLibraryManager
 import com.instructure.canvasapi2.models.journey.learninglibrary.CanvasCourseInfo
+import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemSortOption
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
 import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearningLibraryCollection
 import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearningLibraryCollectionsResponse
@@ -88,7 +89,9 @@ class LearnLearningLibraryListRepositoryTest {
         nextCursor = null,
         previousCursor = null,
         hasNextPage = false,
-        hasPreviousPage = false
+        hasPreviousPage = false,
+        totalCount = 10,
+        pageCursors = null
     )
 
     @Before
@@ -215,7 +218,9 @@ class LearnLearningLibraryListRepositoryTest {
             nextCursor = "next_cursor",
             previousCursor = null,
             hasNextPage = true,
-            hasPreviousPage = false
+            hasPreviousPage = false,
+            totalCount = 10,
+            pageCursors = null
         )
         coEvery { getLearningLibraryManager.getLearningLibraryCollectionItems(any(), any(), any(), any(), any(), any(), any(), any()) } returns LearningLibraryCollectionItemsResponse(
             items = emptyList(),
@@ -236,6 +241,24 @@ class LearnLearningLibraryListRepositoryTest {
         repository.getLearningLibraryItems(limit = 5, forceNetwork = false)
 
         coVerify { getLearningLibraryManager.getLearningLibraryCollectionItems(any(), limit = 5, any(), any(), any(), any(), any(), any()) }
+    }
+
+    @Test
+    fun `getLearningLibraryItems with sortBy passes sortBy to manager`() = runTest {
+        val repository = getRepository()
+
+        repository.getLearningLibraryItems(sortBy = CollectionItemSortOption.NAME_A_Z, forceNetwork = false)
+
+        coVerify { getLearningLibraryManager.getLearningLibraryCollectionItems(any(), any(), any(), any(), any(), any(), any(), sortBy = CollectionItemSortOption.NAME_A_Z, any()) }
+    }
+
+    @Test
+    fun `getLearningLibraryItems with null sortBy passes null sortBy to manager`() = runTest {
+        val repository = getRepository()
+
+        repository.getLearningLibraryItems(sortBy = null, forceNetwork = false)
+
+        coVerify { getLearningLibraryManager.getLearningLibraryCollectionItems(any(), any(), any(), any(), any(), any(), any(), sortBy = null, any()) }
     }
 
     @Test

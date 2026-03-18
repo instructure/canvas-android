@@ -20,43 +20,78 @@ import android.content.res.Resources
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
 import com.instructure.canvasapi2.models.journey.learninglibrary.EnrolledLearningLibraryCollection
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItem
+import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryRecommendation
+import com.instructure.canvasapi2.models.journey.learninglibrary.LearningRecommendationReason
 import com.instructure.horizon.R
 import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.pandautils.utils.orDefault
 
-fun List<EnrolledLearningLibraryCollection>.toUiState(resources: Resources): List<LearnLearningLibraryCollectionState> {
+fun List<EnrolledLearningLibraryCollection>.toUiState(
+    resources: Resources,
+    recommendations: List<LearningLibraryRecommendation>
+): List<LearnLearningLibraryCollectionState> {
     return this.map {
         LearnLearningLibraryCollectionState(
             id = it.id,
             name = it.name,
             itemCount = it.totalItemCount,
             items = it.items.map { item ->
-                item.toUiState(resources)
+                item.toUiState(resources, recommendations)
             }
         )
     }
 }
 
-fun LearningLibraryCollectionItem.toUiState(resources: Resources): LearnLearningLibraryCollectionItemState {
+fun LearningLibraryCollectionItem.toUiState(
+    resources: Resources,
+    recommendations: List<LearningLibraryRecommendation>
+): LearnLearningLibraryCollectionItemState {
     val canEnroll = (this.itemType == CollectionItemType.COURSE || this.itemType == CollectionItemType.PROGRAM) && !this.isEnrolledInCanvas.orDefault(true)
 
     return LearnLearningLibraryCollectionItemState(
         id = this.id,
         imageUrl = this.canvasCourse?.courseImageUrl,
         name = this.canvasCourse?.courseName.orEmpty(),
+        description = null,
         isBookmarked = this.isBookmarked,
         canEnroll = canEnroll,
         bookmarkLoading = false,
         type = this.itemType,
         route = this.getRoute(),
-        chips = listOf(
+        chips = listOfNotNull(
+            this.recommendedChip(resources, recommendations),
             this.itemType.toUiChipState(resources),
             this.toEstimatedDurationUiChipState(resources),
             this.toUnitsUiChipState(resources),
             this.toProgressUiChipState(resources),
-        ).mapNotNull { it }
+        )
+    )
+}
+
+fun LearningLibraryRecommendation.toUiState(
+    resources: Resources,
+): LearnLearningLibraryCollectionItemState {
+    val canEnroll = (this.item.itemType == CollectionItemType.COURSE || this.item.itemType == CollectionItemType.PROGRAM) && !this.item.isEnrolledInCanvas.orDefault(true)
+
+    return LearnLearningLibraryCollectionItemState(
+        id = this.item.id,
+        imageUrl = this.item.canvasCourse?.courseImageUrl,
+        name = this.item.canvasCourse?.courseName.orEmpty(),
+        description = this.item.itemDescription(resources, listOf(this)),
+        isBookmarked = this.item.isBookmarked,
+        canEnroll = canEnroll,
+        bookmarkLoading = false,
+        type = this.item.itemType,
+        route = this.item.getRoute(),
+        chips = listOfNotNull(
+            this.item.recommendedChip(resources, listOf(this)),
+            this.item.itemType.toUiChipState(resources),
+            this.item.toEstimatedDurationUiChipState(resources),
+            this.item.toUnitsUiChipState(resources),
+            this.item.toProgressUiChipState(resources),
+        )
     )
 }
 
@@ -164,6 +199,39 @@ fun LearningLibraryCollectionItem.toUnitsUiChipState(resources: Resources): Lear
             color = StatusChipColor.Grey,
             iconRes = R.drawable.courses_format_list_bulleted
         )
+    } else {
+        null
+    }
+}
+
+fun LearningLibraryCollectionItem.recommendedChip(
+    resources: Resources,
+    recommendations: List<LearningLibraryRecommendation>
+): LearnLearningLibraryCollectionItemChipState? {
+    return if (recommendations.any { it.item.id == this.id }) {
+        LearnLearningLibraryCollectionItemChipState(
+            label = resources.getString(R.string.learnLearningLibraryRecommendedLabel),
+            color = StatusChipColor.Honey,
+            iconRes = R.drawable.star_filled
+        )
+    } else {
+        null
+    }
+}
+
+fun LearningLibraryCollectionItem.itemDescription(
+    resources: Resources,
+    recommendations: List<LearningLibraryRecommendation>
+): String? {
+    val recommendation = recommendations.firstOrNull { it.item.id == this.id }
+    return if (recommendation != null) {
+        when(recommendation.primaryReason) {
+            LearningRecommendationReason.POPULARITY -> resources.getString(R.string.learnLearningLibraryRecommendationPopularityDescription)
+            LearningRecommendationReason.PAST_LEARNINGS -> resources.getString(R.string.learnLearningLibraryRecommendationPastLearningDescription, recommendation.sourceContext?.sourceCourseName.orEmpty())
+            LearningRecommendationReason.BOOKMARKED_ITEMS -> resources.getString(R.string.learnLearningLibraryRecommendationBookmarkedDescription)
+            LearningRecommendationReason.EXISTING_SKILLS -> resources.getString(R.string.learnLearningLibraryRecommendationExistingSkillsDescription, recommendation.sourceContext?.sourceSkillName.orEmpty())
+            null -> null
+        }
     } else {
         null
     }
