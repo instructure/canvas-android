@@ -29,8 +29,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.pluralStringResource
@@ -56,7 +54,6 @@ import com.instructure.horizon.horizonui.molecules.ButtonWidth
 import com.instructure.horizon.horizonui.molecules.LoadingButton
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
-import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -69,11 +66,7 @@ fun LearnMyContentInProgressScreen(
     viewModel: LearnMyContentInProgressViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val lastSearchQuery = remember { mutableStateOf(searchQuery) }
     LaunchedEffect(searchQuery, sortByOption, typeFilter) {
-        val isSearchChange = lastSearchQuery.value != searchQuery
-        lastSearchQuery.value = searchQuery
-        if (isSearchChange) delay(300)
         viewModel.onFiltersChanged(searchQuery, sortByOption, typeFilter)
     }
     LearnMyContentInProgressContent(uiState, navController, contentPadding)

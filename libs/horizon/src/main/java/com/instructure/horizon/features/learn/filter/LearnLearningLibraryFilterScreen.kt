@@ -52,6 +52,7 @@ import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.ButtonHeight
 import com.instructure.horizon.horizonui.molecules.ButtonWidth
 import com.instructure.horizon.horizonui.molecules.FilterChip
+import com.instructure.horizon.horizonui.molecules.FilterChipSize
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
@@ -174,7 +175,8 @@ private fun LearnLearningLibraryFilterSectionRow(section: LearnLearningLibraryFi
                 FilterChip(
                     label = item.label,
                     selected = item.isSelected,
-                    onClick = item.onSelected
+                    onClick = item.onSelected,
+                    size = FilterChipSize.LARGE
                 )
             }
         }

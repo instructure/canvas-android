@@ -22,22 +22,31 @@ import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemS
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryPageInfo
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
-import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryFilterScreenType
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibrarySortOption
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
 import com.instructure.horizon.horizonui.platform.LoadingState
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 abstract class LearnMyContentViewModel<T>(
     protected val repository: LearnMyContentRepository,
 ) : ViewModel() {
 
+    private data class Filters(
+        val searchQuery: String = "",
+        val sortBy: LearnLearningLibrarySortOption = LearnLearningLibrarySortOption.MostRecent,
+        val typeFilter: LearnLearningLibraryTypeFilter = LearnLearningLibraryTypeFilter.All,
+    )
+
     private var nextCursor: String? = null
-    private var currentSearchQuery: String = ""
-    private var currentSortBy: LearnLearningLibrarySortOption = LearnLearningLibrarySortOption.MostRecent
-    private var currentTypeFilter: LearnLearningLibraryTypeFilter = LearnLearningLibraryTypeFilter.All
+    private var currentFilters = Filters()
+    private val filtersFlow = MutableSharedFlow<Filters>(extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
 
     protected val _uiState = MutableStateFlow(
         LearnMyContentUiState<T>(
@@ -52,11 +61,19 @@ abstract class LearnMyContentViewModel<T>(
 
     protected abstract val errorMessage: String
 
+    init {
+        viewModelScope.launch {
+            filtersFlow.collectLatest { filters ->
+                val isSearchChange = currentFilters.searchQuery != filters.searchQuery
+                currentFilters = filters
+                if (isSearchChange) delay(300)
+                load()
+            }
+        }
+    }
+
     fun onFiltersChanged(searchQuery: String, sortBy: LearnLearningLibrarySortOption, typeFilter: LearnLearningLibraryTypeFilter) {
-        currentSearchQuery = searchQuery
-        currentSortBy = sortBy
-        currentTypeFilter = typeFilter
-        load()
+        filtersFlow.tryEmit(Filters(searchQuery, sortBy, typeFilter))
     }
 
     private fun load() {
@@ -94,9 +111,9 @@ abstract class LearnMyContentViewModel<T>(
     private suspend fun fetchAndUpdate(cursor: String?, forceNetwork: Boolean = false, append: Boolean = false) {
         val (items, pageInfo) = fetchPage(
             cursor = cursor,
-            searchQuery = currentSearchQuery,
-            sortBy = currentSortBy.toCollectionItemSortOption(),
-            typeFilter = currentTypeFilter,
+            searchQuery = currentFilters.searchQuery,
+            sortBy = currentFilters.sortBy.toCollectionItemSortOption(),
+            typeFilter = currentFilters.typeFilter,
             forceNetwork = forceNetwork,
         )
         nextCursor = if (pageInfo.hasNextPage) pageInfo.nextCursor else null

@@ -29,8 +29,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.pluralStringResource
@@ -50,6 +48,7 @@ import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearni
 import com.instructure.horizon.features.learn.learninglibrary.common.LearningLibraryRoute
 import com.instructure.horizon.features.learn.mycontent.common.LearnMyContentEmptyMessage
 import com.instructure.horizon.features.learn.mycontent.common.LearnMyContentUiState
+import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.molecules.ButtonColor
@@ -58,7 +57,6 @@ import com.instructure.horizon.horizonui.molecules.ButtonWidth
 import com.instructure.horizon.horizonui.molecules.LoadingButton
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
-import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -71,14 +69,10 @@ fun LearnMyContentSavedScreen(
     viewModel: LearnMyContentSavedViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    val lastSearchQuery = remember { mutableStateOf(searchQuery) }
     LaunchedEffect(searchQuery, sortByOption, typeFilter) {
-        val isSearchChange = lastSearchQuery.value != searchQuery
-        lastSearchQuery.value = searchQuery
-        if (isSearchChange) delay(300)
         viewModel.onFiltersChanged(searchQuery, sortByOption, typeFilter)
     }
-    LearnMyContentSavedContent(uiState, navController, contentPadding)
+    LearnMyContentSavedContent(uiState, navController, contentPadding, viewModel::onBookmarkItem)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -87,6 +81,7 @@ private fun LearnMyContentSavedContent(
     uiState: LearnMyContentUiState<LearnLearningLibraryCollectionItemState>,
     navController: NavHostController,
     contentPadding: PaddingValues = PaddingValues(),
+    onBookmarkClick: (String) -> Unit = {},
 ) {
     LoadingStateWrapper(uiState.loadingState) {
         LazyColumn(contentPadding = contentPadding) {
@@ -106,7 +101,7 @@ private fun LearnMyContentSavedContent(
             if (uiState.contentCards.isEmpty()) {
                 item { LearnMyContentEmptyMessage() }
             }
-            items(uiState.contentCards) { card ->
+            items(uiState.contentCards, key = { it.id }) { card ->
                 LearnLearningLibraryItem(
                     state = card,
                     onClick = {
@@ -116,9 +111,11 @@ private fun LearnMyContentSavedContent(
                             null -> {}
                         }
                     },
-                    onBookmarkClick = {},
-                    onEnrollClick = {},
-                    modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
+                    onBookmarkClick = { onBookmarkClick(card.id) },
+                    onEnrollClick = { navController.navigate(LearnRoute.LearnLearningLibraryEnrollScreen.route(card.id)) },
+                    modifier = Modifier
+                        .padding(horizontal = 24.dp, vertical = 8.dp)
+                        .animateItem(),
                 )
             }
             if (uiState.showMoreButton) {

@@ -60,7 +60,7 @@ class LearnMyContentSavedViewModel @Inject constructor(
         return response.items.map { it.toUiState(resources, recommendations) } to response.pageInfo
     }
 
-    private fun onCollectionBookmarkItem(itemId: String) {
+    fun onBookmarkItem(itemId: String) {
         viewModelScope.tryLaunch {
             _uiState.update { 
                 it.copy(
@@ -74,16 +74,12 @@ class LearnMyContentSavedViewModel @Inject constructor(
                 )
             }
 
-            val newIsBookmarked = savedContentRepository.toggleLearningLibraryItemIsBookmarked(itemId)
-
+            savedContentRepository.toggleLearningLibraryItemIsBookmarked(itemId)
             _uiState.update {
                 it.copy(
-                    contentCards = it.contentCards.map { itemState ->
+                    contentCards = it.contentCards.mapNotNull { itemState ->
                         if (itemState.id == itemId) {
-                            itemState.copy(
-                                bookmarkLoading = false,
-                                isBookmarked = newIsBookmarked
-                            )
+                            null
                         } else {
                             itemState
                         }
