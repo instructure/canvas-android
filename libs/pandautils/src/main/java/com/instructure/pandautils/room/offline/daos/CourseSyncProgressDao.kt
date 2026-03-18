@@ -24,6 +24,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CourseSyncProgressDao {
@@ -42,6 +43,9 @@ interface CourseSyncProgressDao {
 
     @Query("SELECT * FROM CourseSyncProgressEntity")
     fun findAllLiveData(): LiveData<List<CourseSyncProgressEntity>>
+
+    @Query("SELECT * FROM CourseSyncProgressEntity")
+    fun findAllFlow(): Flow<List<CourseSyncProgressEntity>>
 
     @Query("SELECT * FROM CourseSyncProgressEntity WHERE courseId = :courseId")
     suspend fun findByCourseId(courseId: Long): CourseSyncProgressEntity?

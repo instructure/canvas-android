@@ -28,6 +28,7 @@ import com.instructure.pandautils.room.offline.OfflineDatabase
 import com.instructure.pandautils.room.offline.entities.StudioMediaProgressEntity
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
@@ -110,6 +111,37 @@ class StudioMediaProgressDaoTest {
         result.observeForever { }
 
         assertEquals(entities, result.value)
+    }
+
+    @Test
+    fun testFindAllFlow() = runTest {
+        val entities = listOf(
+            StudioMediaProgressEntity(
+                ltiLaunchId = "1",
+                progress = 0,
+                fileSize = 1000L,
+                progressState = ProgressState.IN_PROGRESS,
+                id = 1
+            ),
+            StudioMediaProgressEntity(
+                ltiLaunchId = "2",
+                progress = 0,
+                fileSize = 1000L,
+                progressState = ProgressState.IN_PROGRESS,
+                id = 2
+            ),
+            StudioMediaProgressEntity(
+                ltiLaunchId = "3",
+                progress = 0,
+                fileSize = 1000L,
+                progressState = ProgressState.IN_PROGRESS,
+                id = 3
+            )
+        )
+        studioMediaProgressDao.insertAll(entities)
+
+        val result = studioMediaProgressDao.findAllFlow().first()
+        assertEquals(entities, result)
     }
 
     @Test
