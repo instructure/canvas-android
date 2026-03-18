@@ -481,6 +481,7 @@
     <string name="a11y_markAsDoneWithName">%s 완료로 표시</string>
     <string name="a11y_markAsNotDoneWithName">%s 완료되지 않음으로 표시</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="a11y_expand_collapse">섹션 펼치기 또는 접기</string>
     <string name="inboxSignatureError">수신함 서명을 로드하지 못함</string>
     <string name="inboxSignatureSettingsUpdated">수신함 설정이 저장되었습니다.</string>
     <string name="inboxSignatureSettingsError">수신함 설정을 저장하지 못함</string>
@@ -491,4 +492,5 @@
     <plurals name="durationMins">
         <item quantity="other">%d분</item>
     </plurals>
+    <string name="notATeacherDescription">저희의 다른 앱이 더 적합할 수 있습니다. 아이콘을 탭하여 로그인합니다.</string>
 </resources>

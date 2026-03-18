@@ -63,15 +63,15 @@ import com.instructure.pandautils.utils.NetworkStateProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import dagger.hilt.android.components.ActivityRetainedComponent
+import dagger.hilt.android.scopes.ActivityRetainedScoped
 
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(ActivityRetainedComponent::class)
 class RepositoryModule {
 
     @Provides
-    @Singleton
+    @ActivityRetainedScoped
     fun provideEnrollmentRepository(
         enrollmentApi: EnrollmentAPI.EnrollmentInterface
     ): EnrollmentRepository {
@@ -94,7 +94,7 @@ class RepositoryModule {
     }
 
     @Provides
-    @Singleton
+    @ActivityRetainedScoped
     fun provideCourseRepository(
         localDataSource: CourseLocalDataSource,
         networkDataSource: CourseNetworkDataSource,
@@ -105,7 +105,7 @@ class RepositoryModule {
     }
 
     @Provides
-    @Singleton
+    @ActivityRetainedScoped
     fun provideAccountNotificationRepository(
         accountNotificationApi: AccountNotificationAPI.AccountNotificationInterface
     ): AccountNotificationRepository {
@@ -113,7 +113,7 @@ class RepositoryModule {
     }
 
     @Provides
-    @Singleton
+    @ActivityRetainedScoped
     fun provideUserRepository(
         userApi: UserAPI.UsersInterface
     ): UserRepository {
@@ -135,7 +135,7 @@ class RepositoryModule {
     }
 
     @Provides
-    @Singleton
+    @ActivityRetainedScoped
     fun provideAnnouncementRepository(
         localDataSource: AnnouncementLocalDataSource,
         networkDataSource: AnnouncementNetworkDataSource,
@@ -146,7 +146,7 @@ class RepositoryModule {
     }
 
     @Provides
-    @Singleton
+    @ActivityRetainedScoped
     fun provideCourseNicknameRepository(
         courseNicknameApi: CourseNicknameAPI.NicknameInterface
     ): CourseNicknameRepository {
@@ -166,7 +166,7 @@ class RepositoryModule {
     }
 
     @Provides
-    @Singleton
+    @ActivityRetainedScoped
     fun provideGroupRepository(
         localDataSource: GroupLocalDataSource,
         networkDataSource: GroupNetworkDataSource,
@@ -177,7 +177,7 @@ class RepositoryModule {
     }
 
     @Provides
-    @Singleton
+    @ActivityRetainedScoped
     fun provideAssignmentRepository(
         userApi: UserAPI.UsersInterface,
         assignmentApi: AssignmentAPI.AssignmentInterface
@@ -186,7 +186,7 @@ class RepositoryModule {
     }
 
     @Provides
-    @Singleton
+    @ActivityRetainedScoped
     fun providePlannerRepository(
         plannerApi: PlannerAPI.PlannerInterface
     ): PlannerRepository {
@@ -194,7 +194,7 @@ class RepositoryModule {
     }
 
     @Provides
-    @Singleton
+    @ActivityRetainedScoped
     fun provideSubmissionRepository(
         recentGradedSubmissionsManager: RecentGradedSubmissionsManager
     ): SubmissionRepository {
@@ -202,7 +202,7 @@ class RepositoryModule {
     }
 
     @Provides
-    @Singleton
+    @ActivityRetainedScoped
     fun provideConferenceRepository(
         conferencesApi: ConferencesApi.ConferencesInterface
     ): ConferenceRepository {

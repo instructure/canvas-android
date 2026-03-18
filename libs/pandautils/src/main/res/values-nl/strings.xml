@@ -501,4 +501,8 @@
         <item quantity="other">%d minuten</item>
     </plurals>
     <string name="notATeacherDescription">Een van onze andere apps zou wel eens beter kunnen passen. Tik op een pictogram om daar in te loggen.</string>
+    <string name="gradePercentAccessibility">Cijfer: %d procent</string>
+    <string name="gradePointsAccessibility">Cijfer: %s punten</string>
+    <string name="gradePercentTextFieldAccessibility">Cijfer: %d procent, %s</string>
+    <string name="gradePointsTextFieldAccessibility">Cijfer: %s punten, %s</string>
 </resources>

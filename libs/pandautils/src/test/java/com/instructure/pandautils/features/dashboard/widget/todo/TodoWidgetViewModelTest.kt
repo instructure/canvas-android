@@ -524,6 +524,71 @@ class TodoWidgetViewModelTest {
     }
 
     @Test
+    fun `calendar shared event SelectDay with fromTodoList false selects day in same week`() = runTest {
+        every { toDoStateMapper.mapToUiState(any(), any(), any(), any()) } answers {
+            createToDoItemUiState(firstArg(), thirdArg(), arg(3))
+        }
+
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        val initialSelectedDay = viewModel.uiState.value.selectedDay
+        val newDay = LocalDate.of(2025, 2, 13)
+
+        sharedEventsFlow.emit(SharedCalendarAction.SelectDay(newDay, fromTodoList = false))
+        advanceUntilIdle()
+
+        assertEquals(newDay, viewModel.uiState.value.selectedDay)
+        assertTrue(initialSelectedDay != newDay)
+    }
+
+    @Test
+    fun `calendar shared event SelectDay with fromTodoList false selects day in different week`() = runTest {
+        every { toDoStateMapper.mapToUiState(any(), any(), any(), any()) } answers {
+            createToDoItemUiState(firstArg(), thirdArg(), arg(3))
+        }
+
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        val initialSelectedDay = viewModel.uiState.value.selectedDay
+        val futureDay = LocalDate.of(2025, 2, 25)
+
+        sharedEventsFlow.emit(SharedCalendarAction.SelectDay(futureDay, fromTodoList = false))
+        advanceUntilIdle()
+
+        // Should have scroll offset since day is in different week
+        assertEquals(1, viewModel.uiState.value.scrollToPageOffset)
+
+        // Simulate page change to complete the navigation
+        viewModel.uiState.value.onPageChanged(1)
+        advanceUntilIdle()
+
+        assertEquals(futureDay, viewModel.uiState.value.selectedDay)
+        assertTrue(initialSelectedDay != futureDay)
+    }
+
+    @Test
+    fun `calendar shared event SelectDay with fromTodoList true does not select day`() = runTest {
+        every { toDoStateMapper.mapToUiState(any(), any(), any(), any()) } answers {
+            createToDoItemUiState(firstArg(), thirdArg(), arg(3))
+        }
+
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        val initialSelectedDay = viewModel.uiState.value.selectedDay
+        val newDay = LocalDate.of(2025, 2, 17)
+
+        sharedEventsFlow.emit(SharedCalendarAction.SelectDay(newDay, fromTodoList = true))
+        advanceUntilIdle()
+
+        // Should still be on the initial day
+        assertEquals(initialSelectedDay, viewModel.uiState.value.selectedDay)
+        assertEquals(0, viewModel.uiState.value.scrollToPageOffset)
+    }
+
+    @Test
     fun `showCompleted filter shows completed items`() = runTest {
         val completedItem = createPlannerItem(id = 1L, title = "Completed", isComplete = true)
         val incompleteItem = createPlannerItem(id = 2L, title = "Incomplete", isComplete = false)

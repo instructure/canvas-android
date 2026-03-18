@@ -42,6 +42,7 @@ class PairObserverView(inflater: LayoutInflater, parent: ViewGroup) :
 
     init {
         binding.toolbar.setupAsBackButton { (context as? Activity)?.onBackPressed() }
+        binding.toolbar.applyTopSystemBarInsets()
     }
 
     override fun applyTheme() {

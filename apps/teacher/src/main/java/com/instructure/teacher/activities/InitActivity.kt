@@ -26,14 +26,19 @@ import android.util.Log
 import android.view.View
 import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.CompoundButton
+import android.widget.RelativeLayout
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.IdRes
 import androidx.annotation.PluralsRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
+import androidx.core.graphics.Insets
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuItemCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import androidx.drawerlayout.widget.DrawerLayout.SimpleDrawerListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -88,6 +93,7 @@ import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.utils.CanvasFont
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.EdgeToEdgeHelper
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.ProfileUtils
@@ -99,6 +105,7 @@ import com.instructure.pandautils.utils.isAccessibilityEnabled
 import com.instructure.pandautils.utils.items
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.toPx
 import com.instructure.pandautils.utils.toast
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
@@ -215,6 +222,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        EdgeToEdgeHelper.enableEdgeToEdge(this)
 
         val nightModeFlags: Int = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         ColorKeeper.darkTheme = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
@@ -237,6 +245,8 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
 
         navigationDrawerBinding = NavigationDrawerBinding.bind(binding.root)
         setContentView(binding.root)
+
+        setupWindowInsets()
 
         selectedTab = savedInstanceState?.getInt(SELECTED_TAB) ?: 0
 
@@ -270,6 +280,95 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
     override fun onResume() {
         super.onResume()
         webViewAuthenticator.authenticateWebViews(lifecycleScope, this)
+        updateStatusBarAppearanceForDrawer()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        updateStatusBarAppearanceForDrawer()
+    }
+
+    private fun updateStatusBarAppearanceForDrawer() {
+        // Check if drawer is open and update status bar appearance accordingly (handles config changes)
+        // Post to ensure drawer state is checked after current layout pass
+        binding.drawerLayout.post {
+            if (binding.drawerLayout.isDrawerOpen(GravityCompat.START) && !ColorKeeper.darkTheme) {
+                window?.let { window ->
+                    val controller = ViewCompat.getWindowInsetsController(window.decorView)
+                    controller?.isAppearanceLightStatusBars = true
+                }
+            } else if (!ColorKeeper.darkTheme) {
+                window?.let { window ->
+                    val controller = ViewCompat.getWindowInsetsController(window.decorView)
+                    controller?.isAppearanceLightStatusBars = false
+                }
+            }
+        }
+    }
+
+    private fun setupWindowInsets() = with(binding) {
+        ViewCompat.setOnApplyWindowInsetsListener(container) { view, insets ->
+            val navigationBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+            val displayCutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
+
+            // Apply both navigation bar and display cutout insets
+            // This ensures content is not hidden behind the navigation bar OR the hole punch camera
+            val leftPadding = maxOf(navigationBars.left, displayCutout.left)
+            val rightPadding = maxOf(navigationBars.right, displayCutout.right)
+
+            view.setPadding(
+                leftPadding,
+                0,
+                rightPadding,
+                0
+            )
+
+            // Consume horizontal insets so child ComposeViews don't apply them again
+            WindowInsetsCompat.Builder(insets)
+                .setInsets(
+                    WindowInsetsCompat.Type.navigationBars(),
+                    Insets.of(
+                        0, // Consume left
+                        navigationBars.top,
+                        0, // Consume right
+                        navigationBars.bottom
+                    )
+                )
+                .setInsets(
+                    WindowInsetsCompat.Type.displayCutout(),
+                    Insets.of(
+                        0, // Consume left
+                        displayCutout.top,
+                        0, // Consume right
+                        displayCutout.bottom
+                    )
+                )
+                .build()
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(bottomBar) { view, insets ->
+            val navigationBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+            bottomBarContainer.updateLayoutParams<RelativeLayout.LayoutParams> {
+                height = 56.toPx + navigationBars.bottom
+            }
+            insets
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(navigationDrawerBinding.navigationDrawer) { view, windowInsets ->
+            val insets = windowInsets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+            val isLandscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
+            if (isLandscape) {
+                // In landscape, navigation bar is on the left side (where drawer opens from)
+                // Apply left padding only to prevent overlap with nav bar
+                view.setPadding(insets.left, insets.top, 0, 0)
+            } else {
+                view.setPadding(insets.left, insets.top, insets.right, insets.bottom)
+            }
+            windowInsets
+        }
     }
 
     private fun requestNotificationsPermission() {
@@ -460,6 +559,24 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
         binding.drawerLayout.addDrawerListener(object : SimpleDrawerListener() {
             override fun onDrawerOpened(drawerView: View) {
                 setCloseDrawerVisibility()
+                // Set status bar icons to dark only in light mode (for visibility on white drawer background)
+                if (!ColorKeeper.darkTheme) {
+                    window?.let { window ->
+                        val controller = ViewCompat.getWindowInsetsController(window.decorView)
+                        controller?.isAppearanceLightStatusBars = true
+                    }
+                }
+            }
+
+            override fun onDrawerClosed(drawerView: View) {
+                super.onDrawerClosed(drawerView)
+                // Restore status bar icons to light only in light mode (for dark toolbar)
+                if (!ColorKeeper.darkTheme) {
+                    window?.let { window ->
+                        val controller = ViewCompat.getWindowInsetsController(window.decorView)
+                        controller?.isAppearanceLightStatusBars = false
+                    }
+                }
             }
         })
 

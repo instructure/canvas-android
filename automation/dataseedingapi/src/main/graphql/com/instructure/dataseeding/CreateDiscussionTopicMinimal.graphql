@@ -19,7 +19,8 @@ mutation CreateDiscussionTopicMinimal(
     $contextType: DiscussionTopicContextType!,
     $title: String!,
     $assignment: AssignmentCreate!,
-    $checkpoints: [DiscussionCheckpoints!]!
+    $checkpoints: [DiscussionCheckpoints!]!,
+    $fileId: ID
 ) {
     createDiscussionTopic(
         input: {
@@ -28,7 +29,8 @@ mutation CreateDiscussionTopicMinimal(
             title: $title,
             published: true,
             assignment: $assignment,
-            checkpoints: $checkpoints
+            checkpoints: $checkpoints,
+            fileId: $fileId
         }
     ) {
         discussionTopic {

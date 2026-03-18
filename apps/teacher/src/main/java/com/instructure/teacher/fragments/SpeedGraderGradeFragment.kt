@@ -17,6 +17,9 @@ package com.instructure.teacher.fragments
 
 import android.view.LayoutInflater
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import com.instructure.canvasapi2.models.Assignee
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
@@ -70,6 +73,18 @@ class SpeedGraderGradeFragment : BasePresenterFragment<
 
     override fun onPresenterPrepared(presenter: SpeedGraderGradePresenter) {
         setupViews()
+        setupWindowInsets()
+    }
+
+    private fun setupWindowInsets() = with(binding) {
+        ViewCompat.setOnApplyWindowInsetsListener(speedGraderGradeContentLayout) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.updatePadding(bottom = systemBars.bottom)
+            insets
+        }
+        if (speedGraderGradeScrollView.isAttachedToWindow) {
+            ViewCompat.requestApplyInsets(speedGraderGradeScrollView)
+        }
     }
 
     override fun onStart() {

@@ -30,6 +30,8 @@ import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
+import com.instructure.espresso.retryWithIncreasingDelay
+import com.instructure.teacher.R
 import com.instructure.teacher.ui.pages.classic.PeopleListPage
 import com.instructure.teacher.ui.pages.classic.PersonContextPage
 import com.instructure.teacher.ui.utils.TeacherComposeTest
@@ -245,5 +247,97 @@ class PeopleE2ETest: TeacherComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the previously sent conversation is displayed.")
         inboxPage.assertHasConversation()
      }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.COMMON, FeatureCategory.PEOPLE, TestCategory.E2E)
+    fun testHiddenGradeDisplaysBothBeforeAndAfterGradesE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(teachers = 1, courses = 1, students = 1, favoriteCourses = 1)
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+        val student = data.studentsList[0]
+
+        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course.")
+        val assignments = seedAssignments(
+            courseId = course.id,
+            dueAt = 1.days.fromNow.iso8601,
+            submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+            teacherToken = teacher.token,
+            pointsPossible = 15.0
+        )
+
+        Log.d(PREPARATION_TAG, "Seed a submission for '${assignments[0].name}' assignment with '${student.name}' student.")
+        seedAssignmentSubmission(
+            submissionSeeds = listOf(SubmissionsApi.SubmissionSeedInfo(
+                amount = 1,
+                submissionType = SubmissionType.ONLINE_TEXT_ENTRY
+            )),
+            assignmentId = assignments[0].id,
+            courseId = course.id,
+            studentToken = student.token
+        )
+
+        Log.d(PREPARATION_TAG, "Grade the previously seeded submission for '${student.name}' student.")
+        SubmissionsApi.gradeSubmission(teacher.token, course.id, assignments[0].id, student.id, postedGrade = "15")
+
+        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
+        tokenLogin(teacher)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Open '${course.name}' course and navigate to People tab.")
+        dashboardPage.openCourse(course.name)
+        courseBrowserPage.openPeopleTab()
+
+        Log.d(STEP_TAG, "Click on '${student.name}' student.")
+        peopleListPage.clickPerson(student)
+
+        Log.d(ASSERTION_TAG, "Assert that only 1 grade box is shown while the grade is posted: 'Grade before posting' shows '100.0' (current grade) and 'Grade after posting' container is not visible since both values are equal.")
+        studentContextPage.assertStudentGrade("100.0")
+        studentContextPage.assertGradeAfterPostingNotDisplayed()
+
+        Log.d(STEP_TAG, "Navigate back to the Course Browser Page.")
+        pressBackButton(2)
+
+        Log.d(STEP_TAG, "Navigate to Assignments tab.")
+        courseBrowserPage.openAssignmentsTab()
+
+        Log.d(STEP_TAG, "Click on '${assignments[0].name}' assignment.")
+        assignmentListPage.clickAssignment(assignments[0])
+
+        Log.d(STEP_TAG, "Open (all) submissions.")
+        assignmentDetailsPage.clickAllSubmissions()
+
+        Log.d(STEP_TAG, "Click on 'Post Policies' (eye) icon.")
+        assignmentSubmissionListPage.clickOnPostPolicies()
+
+        Log.d(STEP_TAG, "Click on 'Hide Grades' tab.")
+        postSettingsPage.clickOnTab(R.string.hideGradesTab)
+
+        Log.d(ASSERTION_TAG, "Assert that there is 1 grade which is currently posted.")
+        postSettingsPage.assertPostPolicyStatusCount(1, false)
+
+        Log.d(STEP_TAG, "Click on 'Hide Grades' button. It will automatically navigate back to the Assignment Submission List Page.")
+        postSettingsPage.clickOnHideGradesButton()
+
+        Log.d(ASSERTION_TAG, "Assert that the hide grades (eye) icon is displayed next to '${student.name}'.")
+        retryWithIncreasingDelay(initialDelay = 500, maxDelay = 5000, times = 5) {
+            assignmentSubmissionListPage.assertGradesHidden(student.name)
+        }
+
+        Log.d(STEP_TAG, "Navigate back to Course Browser Page.")
+        pressBackButton(3)
+
+        Log.d(STEP_TAG, "Navigate to People tab.")
+        courseBrowserPage.openPeopleTab()
+
+        Log.d(STEP_TAG, "Click on '${student.name}' student.")
+        peopleListPage.clickPerson(student)
+
+        Log.d(ASSERTION_TAG, "Assert that both grade boxes are now shown: 'Grade before posting' shows '--' (what students currently see since the grade is hidden) and 'Grade after posting' shows '100.0' (what they will see once the grade is posted).")
+        studentContextPage.assertStudentGrade("--")
+        studentContextPage.assertStudentGradeAfterPosting("100.0")
+    }
 
 }

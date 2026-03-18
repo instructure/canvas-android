@@ -1027,7 +1027,7 @@ class ScheduleViewModelTest {
         every { resources.getString(R.string.tomorrow) } returns "Tomorrow"
         every { resources.getString(R.string.yesterday) } returns "Yesterday"
         every { resources.getString(R.string.today) } returns "Today"
-        every { resources.getString(R.string.schedule_todo_title) } returns "To Do"
+        every { resources.getString(R.string.schedule_todo_title_new) } returns "To Do"
         every { resources.getQuantityString(R.plurals.schedule_tag_replies, 2, 2) } returns "2 Replies"
         every { resources.getQuantityString(R.plurals.schedule_tag_replies, 1, 1) } returns "1 Reply"
         every { resources.getQuantityString(R.plurals.schedule_points, 20, "20") } returns "20 pts"

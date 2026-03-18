@@ -30,7 +30,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
@@ -49,7 +48,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.utils.ContextKeeper
@@ -88,8 +86,7 @@ import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextAreaState
 import com.instructure.horizon.horizonui.organisms.inputs.textfield.TextField
 import com.instructure.horizon.horizonui.organisms.inputs.textfield.TextFieldInputSize
 import com.instructure.horizon.horizonui.organisms.inputs.textfield.TextFieldState
-import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.getActivityOrNull
+import com.instructure.horizon.horizonui.organisms.scaffolds.EdgeToEdgeScaffold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -107,14 +104,10 @@ fun HorizonInboxComposeScreen(
             }
         }
     }
-    val activity = LocalContext.current.getActivityOrNull()
-    LaunchedEffect(Unit) {
-        if (activity != null) {
-            ViewStyler.setStatusBarColor(activity, ContextCompat.getColor(activity, R.color.surface_pageSecondary))
-        }
-    }
 
-    Scaffold(
+    EdgeToEdgeScaffold(
+        statusBarColor = HorizonColors.Surface.pageSecondary(),
+        navigationBarColor = HorizonColors.Surface.pageSecondary(),
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         containerColor = HorizonColors.Surface.pageSecondary(),
         topBar = {

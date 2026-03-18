@@ -39,9 +39,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -67,6 +65,8 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasDivider
+import com.instructure.pandautils.compose.composables.CanvasScaffold
+import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
@@ -112,20 +112,15 @@ private fun SmartSearchScreenContent(
     navigationItemClick: () -> Unit,
     onFilterClick: () -> Unit
 ) {
-    Scaffold(
+    CanvasScaffold(
         topBar = {
-            TopAppBar(
+            CanvasThemedAppBar(
                 backgroundColor = Color(uiState.canvasContext.color),
-                navigationIcon = {
-                    IconButton(onClick = { navigationItemClick() }) {
-                        Icon(
-                            painterResource(id = R.drawable.ic_back_arrow),
-                            contentDescription = stringResource(R.string.contentDescription_back),
-                            tint = colorResource(R.color.textLightest)
-                        )
-                    }
-                },
-                title = {
+                navIconRes = R.drawable.ic_back_arrow,
+                navIconContentDescription = stringResource(R.string.contentDescription_back),
+                navigationActionClick = navigationItemClick,
+                contentColor = colorResource(R.color.textLightest),
+                content = {
                     SearchBar(
                         modifier = Modifier.testTag("searchBar"),
                         icon = R.drawable.ic_smart_search,
@@ -194,8 +189,8 @@ private fun SmartSearchScreenContent(
                     modifier = Modifier
                         .testTag("results")
                         .fillMaxSize()
-                        .padding(padding)
                         .background(colorResource(R.color.backgroundLightest))
+                        .padding(padding)
                 ) {
                     item {
                         CourseHeader(uiState.canvasContext.name.orEmpty())

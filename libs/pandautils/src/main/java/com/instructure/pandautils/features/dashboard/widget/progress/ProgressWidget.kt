@@ -22,9 +22,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -57,9 +57,9 @@ import androidx.compose.ui.unit.sp
 import androidx.fragment.app.FragmentActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.instructure.canvasapi2.utils.ContextKeeper
-import com.instructure.pandautils.utils.getFragmentActivityOrNull
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.offline.sync.ProgressState
+import com.instructure.pandautils.utils.getFragmentActivityOrNull
 import kotlinx.coroutines.flow.SharedFlow
 import java.util.UUID
 
@@ -102,7 +102,14 @@ fun ProgressWidgetContent(
     columns: Int,
     activity: FragmentActivity? = null
 ) {
-    if (uiState.loading || (uiState.uploadItems.isEmpty() && uiState.syncProgress == null)) {
+    if (uiState.loading) {
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .height(1.dp))
+        return
+    }
+
+    if (uiState.uploadItems.isEmpty() && uiState.syncProgress == null) {
         return
     }
 

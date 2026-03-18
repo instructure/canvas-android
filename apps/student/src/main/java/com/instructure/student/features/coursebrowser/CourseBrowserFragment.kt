@@ -27,6 +27,9 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.appbar.AppBarLayout
@@ -34,6 +37,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.RemoteConfigParam
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.canvasapi2.utils.isValid
@@ -59,6 +63,8 @@ import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.a11yManager
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.isSwitchAccessEnabled
 import com.instructure.pandautils.utils.makeBundle
@@ -216,6 +222,40 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
         noOverlayToolbar.title = canvasContext.name
         (canvasContext as? Course)?.term?.name?.let { noOverlayToolbar.subtitle = it }
         noOverlayToolbar.setBackgroundColor(canvasContext.color)
+        appBarLayout.setBackgroundColor(canvasContext.color)
+
+        // Apply top padding to noOverlayToolbar (skip when masquerading - MasqueradeUI handles it)
+        if (!ApiPrefs.isMasquerading) {
+            noOverlayToolbar.applyTopSystemBarInsets()
+        }
+
+        // Handle insets for color overlay mode
+        ViewCompat.setOnApplyWindowInsetsListener(appBarLayout) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+            // Skip top insets when masquerading - MasqueradeUI handles it
+            val topInset = if (ApiPrefs.isMasquerading) 0 else systemBars.top
+
+            if (overlayToolbar.isVisible) {
+                // Color overlay enabled: apply padding to push content below status bar
+                view.setPadding(view.paddingLeft, topInset, view.paddingRight, view.paddingBottom)
+            } else {
+                view.setPadding(view.paddingLeft, 0, view.paddingRight, view.paddingBottom)
+            }
+
+            // Reset any margins
+            val layoutParams = view.layoutParams as? ViewGroup.MarginLayoutParams
+            layoutParams?.topMargin = 0
+            view.layoutParams = layoutParams
+
+            insets
+        }
+
+        ViewCompat.requestApplyInsets(appBarLayout)
+
+        // Add a status bar background view when color overlay is enabled
+        setupStatusBarBackground()
+
         updateToolbarVisibility()
 
         // Hide image placeholder if color overlay is disabled and there is no valid image
@@ -232,6 +272,8 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
         }
 
         swipeRefreshLayout.setOnRefreshListener { loadTabs(true) }
+
+        swipeRefreshLayout.applyBottomSystemBarInsets()
 
         loadTabs()
     }
@@ -273,6 +315,44 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
         courseHeader.setVisible(useOverlay)
     }
 
+    private var statusBarBackgroundView: View? = null
+
+    private fun setupStatusBarBackground() {
+        if (hideColorOverlay) {
+            // Remove status bar background if it exists
+            statusBarBackgroundView?.let {
+                (it.parent as? ViewGroup)?.removeView(it)
+            }
+            statusBarBackgroundView = null
+            return
+        }
+
+        // Find the fullscreen container in the activity
+        val fullscreenContainer = activity?.findViewById<ViewGroup>(R.id.fullscreen) ?: return
+
+        // Create or update the status bar background view
+        if (statusBarBackgroundView == null) {
+            statusBarBackgroundView = View(requireContext()).apply {
+                id = View.generateViewId()
+            }
+            fullscreenContainer.addView(statusBarBackgroundView, 0)
+        }
+
+        statusBarBackgroundView?.apply {
+            setBackgroundColor(canvasContext.color)
+            ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
+                val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                val params = view.layoutParams
+                    ?: ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, systemBars.top)
+                params.width = ViewGroup.LayoutParams.MATCH_PARENT
+                params.height = systemBars.top
+                view.layoutParams = params
+                insets
+            }
+            ViewCompat.requestApplyInsets(this)
+        }
+    }
+
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         // Set course image again after orientation change to ensure correct scale/crop
@@ -288,6 +368,11 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
     override fun onDestroyView() {
         super.onDestroyView()
         apiCalls?.cancel()
+        // Clean up the status bar background view
+        statusBarBackgroundView?.let {
+            (it.parent as? ViewGroup)?.removeView(it)
+        }
+        statusBarBackgroundView = null
     }
     //endregion
 

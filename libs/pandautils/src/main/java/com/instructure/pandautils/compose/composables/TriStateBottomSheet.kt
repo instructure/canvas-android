@@ -52,7 +52,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
@@ -209,14 +216,30 @@ fun TriStateBottomSheet(
                         state = anchoredDraggableState,
                         orientation = Orientation.Vertical,
                     )
-                    .zIndex(1f),
+                    .zIndex(1f)
+                    .graphicsLayer { clip = false }
+                    .drawWithContent {
+                        val shadowHeight = 10.dp.toPx()
+                        val cornerRadius = 16.dp.toPx()
+                        drawRoundRect(
+                            brush = Brush.verticalGradient(
+                                colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.15f)),
+                                startY = -shadowHeight,
+                                endY = cornerRadius
+                            ),
+                            topLeft = Offset(0f, -shadowHeight),
+                            size = Size(size.width, shadowHeight + cornerRadius),
+                            cornerRadius = CornerRadius(cornerRadius, cornerRadius)
+                        )
+                        drawContent()
+                    },
                 shape = RoundedCornerShape(
                     topStart = 16.dp,
                     topEnd = 16.dp,
                     bottomStart = 0.dp,
                     bottomEnd = 0.dp
                 ),
-                elevation = CardDefaults.elevatedCardElevation(defaultElevation = 6.dp),
+                elevation = CardDefaults.elevatedCardElevation(defaultElevation = 0.dp),
             ) {
                 Column(Modifier.fillMaxSize()) {
                     Row(

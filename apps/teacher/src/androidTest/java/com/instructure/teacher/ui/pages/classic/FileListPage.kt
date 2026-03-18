@@ -85,6 +85,20 @@ class FileListPage(val searchable: Searchable) : BasePage(R.id.fileListPage) {
     }
 
     /**
+     * Clicks the add (+) FAB button to reveal upload/folder options.
+     */
+    fun clickAddButton() {
+        onView(allOf(withId(R.id.addFab), isDisplayed())).perform(click())
+    }
+
+    /**
+     * Clicks the upload file FAB button.
+     */
+    fun clickUploadFileButton() {
+        onView(allOf(withId(R.id.addFileFab), isDisplayed())).perform(click())
+    }
+
+    /**
      * Selects the specified item in the file list.
      *
      * @param itemName The name of the item to select.
