@@ -21,22 +21,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -54,10 +45,6 @@ import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.ButtonHeight
 import com.instructure.horizon.horizonui.molecules.ButtonWidth
-import com.instructure.horizon.horizonui.molecules.HorizonDivider
-import com.instructure.horizon.horizonui.molecules.IconButton
-import com.instructure.horizon.horizonui.molecules.IconButtonColor
-import com.instructure.horizon.horizonui.molecules.IconButtonSize
 import com.instructure.horizon.horizonui.molecules.LoadingImage
 import com.instructure.horizon.horizonui.molecules.ProgressBarSmallInline
 import com.instructure.horizon.horizonui.molecules.StatusChip
@@ -66,108 +53,6 @@ import com.instructure.horizon.horizonui.molecules.StatusChipState
 
 @Composable
 fun LearnMyContentCard(
-    cardState: LearnContentCardState,
-    navController: NavHostController,
-    modifier: Modifier = Modifier,
-) {
-    if (cardState.isProgram) {
-        LearnMyContentProgramCard(cardState, navController, modifier)
-    } else {
-        LearnMyContentCourseCard(cardState, navController, modifier)
-    }
-}
-
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
-private fun LearnMyContentProgramCard(
-    cardState: LearnContentCardState,
-    navController: NavHostController,
-    modifier: Modifier = Modifier,
-) {
-    var coursesExpanded by remember { mutableStateOf(false) }
-
-    Box(
-        modifier = modifier
-            .horizonShadow(HorizonElevation.level4, shape = HorizonCornerRadius.level3_5)
-            .background(color = HorizonColors.Surface.cardPrimary(), shape = HorizonCornerRadius.level3_5)
-            .clickable { navController.navigate(cardState.route) }
-            .padding(24.dp)
-    ) {
-        Column(Modifier.fillMaxWidth()) {
-            Text(
-                text = cardState.name,
-                style = HorizonTypography.labelLargeBold,
-                color = HorizonColors.Text.title(),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-
-            if (cardState.progress != null) {
-                HorizonSpace(SpaceSize.SPACE_12)
-                ProgressBarSmallInline(cardState.progress)
-            }
-
-            HorizonSpace(SpaceSize.SPACE_12)
-
-            FlowRow(
-                verticalArrangement = Arrangement.Center,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                cardState.cardChips.forEach { chip ->
-                    StatusChip(
-                        StatusChipState(
-                            label = chip.label,
-                            color = chip.color,
-                            iconRes = chip.iconRes,
-                            fill = true,
-                        )
-                    )
-                }
-            }
-
-            if (cardState.courseNames.isNotEmpty()) {
-                HorizonSpace(SpaceSize.SPACE_24)
-                HorizonDivider()
-                HorizonSpace(SpaceSize.SPACE_8)
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    Text(
-                        text = stringResource(R.string.learnMyContentCoursesSection),
-                        style = HorizonTypography.labelMediumBold,
-                        color = HorizonColors.Text.title(),
-                        modifier = Modifier.weight(1f),
-                    )
-                    IconButton(
-                        iconRes = if (coursesExpanded) R.drawable.keyboard_arrow_up else R.drawable.keyboard_arrow_down,
-                        size = IconButtonSize.SMALL,
-                        color = IconButtonColor.Ghost,
-                        onClick = { coursesExpanded = !coursesExpanded },
-                    )
-                }
-
-                if (coursesExpanded) {
-                    HorizonSpace(SpaceSize.SPACE_4)
-                    Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                        cardState.courseNames.forEach { courseName ->
-                            Text(
-                                text = "\u2022 $courseName",
-                                style = HorizonTypography.p2,
-                                color = HorizonColors.Text.dataPoint(),
-                            )
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
-private fun LearnMyContentCourseCard(
     cardState: LearnContentCardState,
     navController: NavHostController,
     modifier: Modifier = Modifier,
@@ -184,18 +69,7 @@ private fun LearnMyContentCourseCard(
                     cardState.imageUrl,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(182.dp)
                         .clip(HorizonCornerRadius.level4Top),
-                )
-            } else {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(182.dp)
-                        .background(
-                            color = HorizonColors.LineAndBorder.lineStroke(),
-                            shape = HorizonCornerRadius.level4Top,
-                        )
                 )
             }
 
@@ -262,7 +136,6 @@ private fun LearnMyContentProgramCardPreview() {
             name = "Introduction to Programming",
             progress = 45.0,
             route = "",
-            isProgram = true,
             cardChips = listOf(
                 LearnContentCardChipState(label = "Program", color = StatusChipColor.Violet, iconRes = R.drawable.book_5),
                 LearnContentCardChipState(label = "3 courses"),

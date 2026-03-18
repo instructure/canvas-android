@@ -37,10 +37,6 @@ class LearnMyContentSavedViewModel @Inject constructor(
     override val errorMessage: String
         get() = resources.getString(R.string.learnMyContentProgramErrorMessage)
 
-    init {
-        load()
-    }
-
     override suspend fun fetchPage(
         cursor: String?,
         searchQuery: String,

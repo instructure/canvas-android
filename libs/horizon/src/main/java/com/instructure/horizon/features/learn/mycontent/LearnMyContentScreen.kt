@@ -21,57 +21,36 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.instructure.horizon.R
 import com.instructure.horizon.features.learn.common.LearnSearchBar
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryFilterScreenType
 import com.instructure.horizon.features.learn.mycontent.completed.LearnMyContentCompletedScreen
-import com.instructure.horizon.features.learn.mycontent.completed.LearnMyContentCompletedViewModel
 import com.instructure.horizon.features.learn.mycontent.inprogress.LearnMyContentInProgressScreen
-import com.instructure.horizon.features.learn.mycontent.inprogress.LearnMyContentInProgressViewModel
 import com.instructure.horizon.features.learn.mycontent.saved.LearnMyContentSavedScreen
-import com.instructure.horizon.features.learn.mycontent.saved.LearnMyContentSavedViewModel
 import com.instructure.horizon.features.learn.navigation.LearnRoute
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.molecules.Badge
 import com.instructure.horizon.horizonui.molecules.BadgeContent
 import com.instructure.horizon.horizonui.molecules.BadgeType
 import com.instructure.horizon.horizonui.molecules.FilterChip
+import com.instructure.horizon.horizonui.molecules.FilterChipSize
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
 import com.instructure.horizon.horizonui.organisms.scaffolds.CollapsableHeaderScreen
-import kotlinx.coroutines.delay
 
 @Composable
 fun LearnMyContentScreen(
     state: LearnMyContentUiState,
     navController: NavHostController,
-    inProgressViewModel: LearnMyContentInProgressViewModel = hiltViewModel(),
-    completedViewModel: LearnMyContentCompletedViewModel = hiltViewModel(),
-    savedViewModel: LearnMyContentSavedViewModel = hiltViewModel(),
 ) {
-    val inProgressUiState by inProgressViewModel.uiState.collectAsState()
-    val completedUiState by completedViewModel.uiState.collectAsState()
-    val savedUiState by savedViewModel.uiState.collectAsState()
-
-    LaunchedEffect(state.searchQuery.text, state.sortByOption, state.typeFilter) {
-        delay(300)
-        inProgressViewModel.onFiltersChanged(state.searchQuery.text, state.sortByOption, state.typeFilter)
-        completedViewModel.onFiltersChanged(state.searchQuery.text, state.sortByOption, state.typeFilter)
-        savedViewModel.onFiltersChanged(state.searchQuery.text, state.sortByOption, state.typeFilter)
-    }
-
     CollapsableHeaderScreen(
         headerContent = { paddingValues ->
             Column(
@@ -128,9 +107,27 @@ fun LearnMyContentScreen(
         },
         bodyContent = { paddingValues ->
             when (state.selectedTab) {
-                LearnMyContentTab.InProgress -> LearnMyContentInProgressScreen(inProgressUiState, navController, paddingValues)
-                LearnMyContentTab.Completed -> LearnMyContentCompletedScreen(completedUiState, navController, paddingValues)
-                LearnMyContentTab.Saved -> LearnMyContentSavedScreen(savedUiState, navController, paddingValues)
+                LearnMyContentTab.InProgress -> LearnMyContentInProgressScreen(
+                    searchQuery = state.searchQuery.text,
+                    sortByOption = state.sortByOption,
+                    typeFilter = state.typeFilter,
+                    navController = navController,
+                    contentPadding = paddingValues,
+                )
+                LearnMyContentTab.Completed -> LearnMyContentCompletedScreen(
+                    searchQuery = state.searchQuery.text,
+                    sortByOption = state.sortByOption,
+                    typeFilter = state.typeFilter,
+                    navController = navController,
+                    contentPadding = paddingValues,
+                )
+                LearnMyContentTab.Saved -> LearnMyContentSavedScreen(
+                    searchQuery = state.searchQuery.text,
+                    sortByOption = state.sortByOption,
+                    typeFilter = state.typeFilter,
+                    navController = navController,
+                    contentPadding = paddingValues,
+                )
             }
         }
     )
@@ -157,6 +154,7 @@ private fun LearnMyContentTabSelector(
                 label = tabLabel,
                 selected = selectedTab == tab,
                 onClick = { onTabSelected(tab) },
+                size = FilterChipSize.LARGE
             )
         }
     }

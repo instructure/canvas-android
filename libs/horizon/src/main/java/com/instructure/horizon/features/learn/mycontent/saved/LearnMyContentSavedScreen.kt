@@ -26,12 +26,18 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
@@ -39,6 +45,8 @@ import com.instructure.horizon.R
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryCollectionItemChipState
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryCollectionItemState
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryItem
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibrarySortOption
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
 import com.instructure.horizon.features.learn.learninglibrary.common.LearningLibraryRoute
 import com.instructure.horizon.features.learn.mycontent.common.LearnMyContentUiState
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -49,10 +57,32 @@ import com.instructure.horizon.horizonui.molecules.ButtonWidth
 import com.instructure.horizon.horizonui.molecules.LoadingButton
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LearnMyContentSavedScreen(
+    searchQuery: String,
+    sortByOption: LearnLearningLibrarySortOption,
+    typeFilter: LearnLearningLibraryTypeFilter,
+    navController: NavHostController,
+    contentPadding: PaddingValues = PaddingValues(),
+    viewModel: LearnMyContentSavedViewModel = hiltViewModel(),
+) {
+    val uiState by viewModel.uiState.collectAsState()
+    val lastSearchQuery = remember { mutableStateOf(searchQuery) }
+    LaunchedEffect(searchQuery, sortByOption, typeFilter) {
+        val isSearchChange = lastSearchQuery.value != searchQuery
+        lastSearchQuery.value = searchQuery
+        if (isSearchChange) delay(300)
+        viewModel.onFiltersChanged(searchQuery, sortByOption, typeFilter)
+    }
+    LearnMyContentSavedContent(uiState, navController, contentPadding)
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun LearnMyContentSavedContent(
     uiState: LearnMyContentUiState<LearnLearningLibraryCollectionItemState>,
     navController: NavHostController,
     contentPadding: PaddingValues = PaddingValues(),
@@ -109,7 +139,7 @@ fun LearnMyContentSavedScreen(
 @Preview(showBackground = true)
 @Composable
 private fun LearnMyContentSavedScreenPreview() {
-    LearnMyContentSavedScreen(
+    LearnMyContentSavedContent(
         uiState = LearnMyContentUiState(
             totalItemCount = 2,
             contentCards = listOf(

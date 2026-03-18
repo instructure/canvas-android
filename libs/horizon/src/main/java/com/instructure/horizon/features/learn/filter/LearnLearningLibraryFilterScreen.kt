@@ -83,7 +83,10 @@ fun LearnLearningLibraryFilterScreen(
 
             Spacer(Modifier.weight(1f))
 
-            LearnLearningLibraryClearFilter(state.onClearFilters)
+            LearnLearningLibraryButtonSection(
+                { navController.popBackStack() },
+                state.onClearFilters
+            )
         }
     }
 }
@@ -121,7 +124,10 @@ private fun LearnLearningLibraryFilterTopBar(onClose: () -> Unit) {
 }
 
 @Composable
-private fun LearnLearningLibraryClearFilter(onClearFilters: () -> Unit) {
+private fun LearnLearningLibraryButtonSection(
+    onApplyFilters: () -> Unit,
+    onClearFilters: () -> Unit
+) {
     Column(
         modifier = Modifier
             .horizonBorder(HorizonColors.LineAndBorder.lineStroke(), top = 1.dp)
@@ -129,6 +135,17 @@ private fun LearnLearningLibraryClearFilter(onClearFilters: () -> Unit) {
             .padding(top = 16.dp)
 
     ) {
+        Button(
+            label = stringResource(R.string.learnLearningLibraryFilterApplyFiltersLabel),
+            height = ButtonHeight.SMALL,
+            width = ButtonWidth.FILL,
+            color = ButtonColor.Black,
+            onClick = onApplyFilters,
+            modifier = Modifier.padding(horizontal = 16.dp)
+        )
+
+        HorizonSpace(SpaceSize.SPACE_4)
+
         Button(
             label = stringResource(R.string.learnLearningLibraryFilterClearFiltersLabel),
             height = ButtonHeight.SMALL,

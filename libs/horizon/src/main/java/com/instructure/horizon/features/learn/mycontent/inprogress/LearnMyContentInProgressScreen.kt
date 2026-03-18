@@ -26,15 +26,23 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.instructure.horizon.R
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibrarySortOption
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
 import com.instructure.horizon.features.learn.mycontent.common.LearnContentCardChipState
 import com.instructure.horizon.features.learn.mycontent.common.LearnContentCardState
 import com.instructure.horizon.features.learn.mycontent.common.LearnMyContentCard
@@ -47,10 +55,32 @@ import com.instructure.horizon.horizonui.molecules.ButtonWidth
 import com.instructure.horizon.horizonui.molecules.LoadingButton
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LearnMyContentInProgressScreen(
+    searchQuery: String,
+    sortByOption: LearnLearningLibrarySortOption,
+    typeFilter: LearnLearningLibraryTypeFilter,
+    navController: NavHostController,
+    contentPadding: PaddingValues = PaddingValues(),
+    viewModel: LearnMyContentInProgressViewModel = hiltViewModel(),
+) {
+    val uiState by viewModel.uiState.collectAsState()
+    val lastSearchQuery = remember { mutableStateOf(searchQuery) }
+    LaunchedEffect(searchQuery, sortByOption, typeFilter) {
+        val isSearchChange = lastSearchQuery.value != searchQuery
+        lastSearchQuery.value = searchQuery
+        if (isSearchChange) delay(300)
+        viewModel.onFiltersChanged(searchQuery, sortByOption, typeFilter)
+    }
+    LearnMyContentInProgressContent(uiState, navController, contentPadding)
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun LearnMyContentInProgressContent(
     uiState: LearnMyContentUiState<LearnContentCardState>,
     navController: NavHostController,
     contentPadding: PaddingValues = PaddingValues(),
@@ -99,7 +129,7 @@ fun LearnMyContentInProgressScreen(
 @Preview(showBackground = true)
 @Composable
 private fun LearnMyContentInProgressScreenPreview() {
-    LearnMyContentInProgressScreen(
+    LearnMyContentInProgressContent(
         uiState = LearnMyContentUiState(
             totalItemCount = 4,
             contentCards = listOf(
@@ -107,7 +137,6 @@ private fun LearnMyContentInProgressScreenPreview() {
                     name = "Introduction to Programming",
                     progress = 45.0,
                     route = "",
-                    isProgram = true,
                     buttonLabel = null,
                     cardChips = listOf(
                         LearnContentCardChipState(label = "Program", color = StatusChipColor.Violet, iconRes = R.drawable.book_5),

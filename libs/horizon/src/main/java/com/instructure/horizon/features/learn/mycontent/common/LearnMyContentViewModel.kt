@@ -53,14 +53,13 @@ abstract class LearnMyContentViewModel<T>(
     protected abstract val errorMessage: String
 
     fun onFiltersChanged(searchQuery: String, sortBy: LearnLearningLibrarySortOption, typeFilter: LearnLearningLibraryTypeFilter) {
-        if (currentSearchQuery == searchQuery && currentSortBy == sortBy && currentTypeFilter == typeFilter) return
         currentSearchQuery = searchQuery
         currentSortBy = sortBy
         currentTypeFilter = typeFilter
         load()
     }
 
-    protected fun load() {
+    private fun load() {
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = true)) }
             nextCursor = null

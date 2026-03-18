@@ -10,7 +10,6 @@ data class LearnContentCardState(
     val route: String = "",
     val buttonLabel: String? = null,
     val cardChips: List<LearnContentCardChipState> = emptyList(),
-    val isProgram: Boolean = false,
     val courseNames: List<String> = emptyList(),
 )
 

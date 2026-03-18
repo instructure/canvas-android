@@ -626,6 +626,7 @@
     <string name="learnLearningLibraryFilterAndSortTitle">Filter and sort</string>
     <string name="learnLearningLibraryFilterSortByLabel">Sort by</string>
     <string name="learnLearningLibraryFilterItemTypeLabel">Item type</string>
+    <string name="learnLearningLibraryFilterApplyFiltersLabel">Apply filters</string>
     <string name="learnLearningLibraryFilterClearFiltersLabel">Clear filters</string>
     <string name="learnLearningLibrarySortMostRecentLabel">Most recent</string>
     <string name="learnLearningLibrarySortLeastRecentLabel">Least recent</string>

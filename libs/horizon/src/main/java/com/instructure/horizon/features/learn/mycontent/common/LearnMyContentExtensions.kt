@@ -40,7 +40,6 @@ private fun ProgramEnrollmentItem.toCardState(resources: Resources): LearnConten
         progress = completionPercentage,
         route = LearnRoute.LearnProgramDetailsScreen.route(id),
         buttonLabel = null,
-        isProgram = true,
         cardChips = buildList {
             add(
                 LearnContentCardChipState(
