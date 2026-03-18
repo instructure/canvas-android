@@ -105,7 +105,7 @@ abstract class LearnMyContentViewModel<T>(
             fetchAndUpdate(cursor = nextCursor, append = true)
             _uiState.update { it.copy(isMoreLoading = false) }
         } catch {
-            _uiState.update { it.copy(isMoreLoading = false) }
+            _uiState.update { it.copy(isMoreLoading = false, loadingState = it.loadingState.copy(snackbarMessage = errorMessage)) }
         }
     }
 

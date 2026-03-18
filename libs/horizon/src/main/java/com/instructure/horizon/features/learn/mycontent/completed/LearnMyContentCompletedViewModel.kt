@@ -61,10 +61,4 @@ class LearnMyContentCompletedViewModel @Inject constructor(
             )
         } to response.pageInfo
     }
-
-    private fun LearnLearningLibraryTypeFilter.toLearnItemType(): LearnItemType? = when (this) {
-        LearnLearningLibraryTypeFilter.Programs -> LearnItemType.PROGRAM
-        LearnLearningLibraryTypeFilter.Courses -> LearnItemType.COURSE
-        else -> null
-    }
 }

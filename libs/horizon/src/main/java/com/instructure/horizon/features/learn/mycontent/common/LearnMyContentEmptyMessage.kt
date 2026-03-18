@@ -32,6 +32,6 @@ fun LearnMyContentEmptyMessage(modifier: Modifier = Modifier) {
         text = stringResource(R.string.learnMyContentEmptyMessage),
         style = HorizonTypography.p1,
         color = HorizonColors.Text.body(),
-        modifier = Modifier.padding(horizontal = 24.dp)
+        modifier = modifier.padding(horizontal = 24.dp)
     )
 }

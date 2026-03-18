@@ -20,7 +20,6 @@ import android.content.res.Resources
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemSortOption
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryPageInfo
 import com.instructure.canvasapi2.models.journey.mycontent.LearnItemStatus
-import com.instructure.canvasapi2.models.journey.mycontent.LearnItemType
 import com.instructure.horizon.R
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
 import com.instructure.horizon.features.learn.mycontent.common.LearnContentCardState
@@ -60,11 +59,5 @@ class LearnMyContentInProgressViewModel @Inject constructor(
                 { fetchNextModuleItemRoute(it, forceNetwork) }
             )
         } to response.pageInfo
-    }
-
-    private fun LearnLearningLibraryTypeFilter.toLearnItemType(): LearnItemType? = when (this) {
-        LearnLearningLibraryTypeFilter.Programs -> LearnItemType.PROGRAM
-        LearnLearningLibraryTypeFilter.Courses -> LearnItemType.COURSE
-        else -> null
     }
 }
