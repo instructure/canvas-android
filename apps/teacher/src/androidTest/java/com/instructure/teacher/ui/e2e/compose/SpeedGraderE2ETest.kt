@@ -32,6 +32,7 @@ import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
+import com.instructure.dataseeding.util.hours
 import com.instructure.dataseeding.util.iso8601
 import com.instructure.espresso.page.getStringFromResource
 import com.instructure.espresso.retry
@@ -358,10 +359,10 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
         val course = data.coursesList[0]
         val student = data.studentsList[0]
 
-        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course with a due date 1 day in the past.")
+        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course with a due date 12 hours in the past.")
         val assignment = seedAssignments(
             courseId = course.id,
-            dueAt = 1.days.ago.iso8601,
+            dueAt = 12.hours.ago.iso8601,
             submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
             teacherToken = teacher.token,
             pointsPossible = 100.0
@@ -420,17 +421,17 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the entered score is '100'.")
         speedGraderGradePage.assertCurrentEnteredScore("100")
 
-        Log.d(ASSERTION_TAG, "Assert that the submission is 1 day late.")
-        speedGraderGradePage.assertDaysLate("1")
+        Log.d(ASSERTION_TAG, "Assert that the submission is 0.5 days late (12 hours).")
+        speedGraderGradePage.assertDaysLate("0.5")
 
-        Log.d(ASSERTION_TAG, "Assert that the late penalty value is '20' (10% per day × 1 day × 100 pts).")
-        speedGraderGradePage.assertLatePenaltyValueDisplayed("20")
+        Log.d(ASSERTION_TAG, "Assert that the late penalty value is '10' (10% per day × 1 interval × 100 pts).")
+        speedGraderGradePage.assertLatePenaltyValueDisplayed("10")
 
         Log.d(ASSERTION_TAG, "Assert that the Points row shows '100 / 100 pts' (the raw entered grade before penalty).")
         speedGraderGradePage.assertFinalGradePointsValueDisplayed("100 / 100 pts")
 
-        Log.d(ASSERTION_TAG, "Assert that the final grade is displayed as '80'.")
-        speedGraderGradePage.assertFinalGradeIsDisplayed("80 / 100 pts")
+        Log.d(ASSERTION_TAG, "Assert that the final grade is displayed as '90 / 100 pts'.")
+        speedGraderGradePage.assertFinalGradeIsDisplayed("90 / 100 pts")
     }
 
     @E2E
