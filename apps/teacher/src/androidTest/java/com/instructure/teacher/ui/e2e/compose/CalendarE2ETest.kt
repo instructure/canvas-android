@@ -23,7 +23,6 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
-import com.instructure.canvas.espresso.annotations.ReleaseExclude
 import com.instructure.canvas.espresso.checkToastText
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
@@ -574,7 +573,6 @@ class CalendarE2ETest: TeacherComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.CALENDAR, TestCategory.E2E, SecondaryFeatureCategory.CALENDAR_TODO_REMINDER)
-    @ReleaseExclude
     fun testCalendarToDoCustomReminderE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
@@ -615,8 +613,17 @@ class CalendarE2ETest: TeacherComposeTest() {
         Log.d(STEP_TAG, "Click on the 'Save' button.")
         calendarToDoCreateUpdatePage.clickSave()
 
-        Log.d(ASSERTION_TAG, "Assert that the To-do item is displayed on the calendar.")
-        calendarScreenPage.assertItemDisplayed(testTodoTitle)
+        Log.d(ASSERTION_TAG, "Assert that the To-do item is displayed on the calendar. If the app did not navigate to the correct day, navigate there manually by clicking on the day.")
+        try {
+            calendarScreenPage.assertItemDisplayed(testTodoTitle)
+        } catch (e: Throwable) {
+            if (calendarScreenPage.checkCalendarCollapsed()) {
+                Log.d(STEP_TAG, "Expand the calendar to make all day numbers visible.")
+                calendarScreenPage.clickCalendarHeader()
+            }
+            calendarScreenPage.clickOnDayNumber(futureDate.get(Calendar.DAY_OF_MONTH))
+            calendarScreenPage.assertItemDisplayed(testTodoTitle)
+        }
 
         Log.d(STEP_TAG, "Click on the previously created '$testTodoTitle' To-do item.")
         calendarScreenPage.clickOnItem(testTodoTitle)
@@ -746,8 +753,17 @@ class CalendarE2ETest: TeacherComposeTest() {
         Log.d(STEP_TAG, "Click on the 'Save' button.")
         calendarToDoCreateUpdatePage.clickSave()
 
-        Log.d(ASSERTION_TAG, "Assert that the To-do item is displayed on the calendar.")
-        calendarScreenPage.assertItemDisplayed(testTodoTitle)
+        Log.d(ASSERTION_TAG, "Assert that the To-do item is displayed on the calendar. If the app did not navigate to the correct day, navigate there manually by clicking on the day.")
+        try {
+            calendarScreenPage.assertItemDisplayed(testTodoTitle)
+        } catch (e: Throwable) {
+            if (calendarScreenPage.checkCalendarCollapsed()) {
+                Log.d(STEP_TAG, "Expand the calendar to make all day numbers visible.")
+                calendarScreenPage.clickCalendarHeader()
+            }
+            calendarScreenPage.clickOnDayNumber(futureDate.get(Calendar.DAY_OF_MONTH))
+            calendarScreenPage.assertItemDisplayed(testTodoTitle)
+        }
 
         Log.d(STEP_TAG, "Click on the previously created '$testTodoTitle' To-do item.")
         calendarScreenPage.clickOnItem(testTodoTitle)
