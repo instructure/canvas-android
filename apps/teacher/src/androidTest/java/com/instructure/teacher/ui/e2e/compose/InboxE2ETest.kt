@@ -1140,16 +1140,12 @@ class InboxE2ETest : TeacherComposeTest() {
         tokenLogin(teacher)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG, "Open '${course.name}' course.")
+        Log.d(STEP_TAG, "Open '${course.name}' course and navigate to the Assignments page.")
         dashboardPage.openCourse(course)
-
-        Log.d(STEP_TAG, "Navigate to the Assignments page of '${course.name}' course.")
         courseBrowserPage.openAssignmentsTab()
 
-        Log.d(STEP_TAG, "Click on '${assignment[0].name}' assignment.")
+        Log.d(STEP_TAG, "Navigate to All Submissions page for '${assignment[0].name}' assignment.")
         assignmentListPage.clickAssignment(assignment[0])
-
-        Log.d(STEP_TAG, "Click 'All Submissions' to open the submission list.")
         assignmentDetailsPage.clickAllSubmissions()
 
         Log.d(ASSERTION_TAG, "Assert that both '${student1.name}' and '${student2.name}' are listed on the All Submissions page.")
@@ -1164,12 +1160,10 @@ class InboxE2ETest : TeacherComposeTest() {
         inboxComposePage.assertRecipientSelected(student1.shortName)
         inboxComposePage.assertRecipientSelected(student2.shortName)
 
-        val subject = "All Submissions on ${assignment[0].name}"
         val body = "This message was sent from the All Submissions page."
-        Log.d(STEP_TAG, "Type body '$body' and send the message. Subject is pre-populated as '$subject'.")
+        Log.d(STEP_TAG, "Type body '$body' and send the message.")
         inboxComposePage.typeBody(body)
         inboxComposePage.pressSendButton()
-        composeTestRule.waitForIdle()
 
         Log.d(STEP_TAG, "Navigate back from All Submissions to the Dashboard.")
         pressBackButton(4)
@@ -1180,6 +1174,7 @@ class InboxE2ETest : TeacherComposeTest() {
         Log.d(STEP_TAG, "Filter the Inbox by selecting 'Sent' category.")
         inboxPage.filterInbox("Sent")
 
+        val subject = "All Submissions on ${assignment[0].name}"
         Log.d(ASSERTION_TAG, "Assert that the sent conversation with subject '$subject' is displayed.")
         inboxPage.assertConversationDisplayed(subject)
 
