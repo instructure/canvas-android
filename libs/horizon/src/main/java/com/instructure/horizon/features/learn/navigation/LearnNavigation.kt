@@ -38,8 +38,6 @@ import com.instructure.horizon.features.learn.learninglibrary.details.LearnLearn
 import com.instructure.horizon.features.learn.learninglibrary.details.LearnLearningLibraryDetailsViewModel
 import com.instructure.horizon.features.learn.learninglibrary.enroll.LearnLearningLibraryEnrollScreen
 import com.instructure.horizon.features.learn.learninglibrary.enroll.LearnLearningLibraryEnrollViewModel
-import com.instructure.horizon.features.learn.learninglibrary.filter.LearnLearningLibraryFilterScreen
-import com.instructure.horizon.features.learn.learninglibrary.filter.LearnLearningLibraryFilterViewModel
 import com.instructure.horizon.features.learn.program.details.ProgramDetailsScreen
 import com.instructure.horizon.features.learn.program.details.ProgramDetailsViewModel
 

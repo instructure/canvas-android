@@ -81,7 +81,8 @@ class LearnLearningLibraryFilterViewModel @Inject constructor(
         )
 
         val availableTypeFilters = when (screenType) {
-            LearnLearningLibraryFilterScreenType.Browse -> listOf(
+            LearnLearningLibraryFilterScreenType.Browse,
+                LearnLearningLibraryFilterScreenType.MyContentSaved -> listOf(
                 LearnLearningLibraryTypeFilter.All,
                 LearnLearningLibraryTypeFilter.Assessments,
                 LearnLearningLibraryTypeFilter.Courses,
