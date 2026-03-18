@@ -26,6 +26,8 @@ import android.view.WindowManager
 import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.DialogFragment
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.MasqueradeHelper
@@ -88,6 +90,14 @@ private fun Window.showMasqueradeNotification() {
                     }
                     .show()
             }
+
+            // Apply top padding based on status bar height
+            ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
+                val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                view.setPadding(view.paddingLeft, systemBars.top, view.paddingRight, view.paddingBottom)
+                insets
+            }
+
             it.addView(binding.root, 0)
         }
     }

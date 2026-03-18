@@ -16,6 +16,7 @@
  */
 package com.instructure.student.mobius.assignmentDetails.submission.annnotation
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -99,6 +100,11 @@ class AnnotationSubmissionUploadFragment : BaseCanvasFragment() {
             }
         }
         ViewStyler.themeToolbarLight(requireActivity(), toolbar)
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        ViewStyler.setStatusBarLightDelayed(requireActivity())
     }
 
     companion object {
