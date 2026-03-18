@@ -16,8 +16,12 @@
  */
 package com.instructure.horizon.features.learn.mycontent.common
 
+import com.instructure.canvasapi2.apis.ModuleAPI
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetLearningLibraryManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.MyContentManager
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemSortOption
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItemsResponse
@@ -29,6 +33,7 @@ import javax.inject.Inject
 class LearnMyContentRepository @Inject constructor(
     private val myContentManager: MyContentManager,
     private val getLearningLibraryManager: GetLearningLibraryManager,
+    private val moduleApi: ModuleAPI.ModuleInterface,
 ) {
     suspend fun getLearnItems(
         cursor: String? = null,
@@ -66,5 +71,15 @@ class LearnMyContentRepository @Inject constructor(
             sortBy = sortBy,
             forceNetwork = forceNetwork,
         )
+    }
+
+    suspend fun getFirstPageModulesWithItems(courseId: Long, forceNetwork: Boolean): List<ModuleObject> {
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        return moduleApi.getFirstPageModulesWithItems(
+            CanvasContext.Type.COURSE.apiString,
+            courseId,
+            params,
+            includes = listOf("estimated_durations")
+        ).dataOrThrow
     }
 }

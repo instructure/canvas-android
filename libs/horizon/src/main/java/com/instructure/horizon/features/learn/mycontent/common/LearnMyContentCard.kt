@@ -111,14 +111,14 @@ fun LearnMyContentCard(
                     }
                 }
 
-                if (cardState.buttonLabel != null) {
+                if (cardState.buttonState != null) {
                     HorizonSpace(SpaceSize.SPACE_16)
                     Button(
-                        label = cardState.buttonLabel,
+                        label = cardState.buttonState.label,
                         height = ButtonHeight.NORMAL,
                         width = ButtonWidth.FILL,
                         color = ButtonColor.WhiteWithOutline,
-                        onClick = { navController.navigate(cardState.route) },
+                        onClick = { navController.navigate(cardState.buttonState.route) },
                     )
                 }
 
@@ -156,7 +156,7 @@ private fun LearnMyContentCourseCardPreview() {
             name = "Lorem Ipsum Course Name Here",
             progress = 65.0,
             route = "",
-            buttonLabel = "Resume learning",
+            buttonState = LearnContentCardButtonState("Resume learning"),
             cardChips = listOf(
                 LearnContentCardChipState(label = "Course", color = StatusChipColor.Institution, iconRes = R.drawable.book_2),
                 LearnContentCardChipState(label = "01/01/25 – 06/30/25", iconRes = R.drawable.calendar_today),

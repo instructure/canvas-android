@@ -54,7 +54,12 @@ class LearnMyContentCompletedViewModel @Inject constructor(
             itemTypes = typeFilter.toLearnItemType()?.let { listOf(it) },
             forceNetwork = forceNetwork,
         )
-        return response.items.map { it.toCardState(resources) } to response.pageInfo
+        return response.items.map {
+            it.toCardState(
+                resources,
+                { fetchNextModuleItemRoute(it, forceNetwork) }
+            )
+        } to response.pageInfo
     }
 
     private fun LearnLearningLibraryTypeFilter.toLearnItemType(): LearnItemType? = when (this) {

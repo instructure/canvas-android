@@ -26,10 +26,13 @@ import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.pandautils.utils.formatMonthDayYear
 import com.instructure.pandautils.utils.orDefault
 
-fun LearnItem.toCardState(resources: Resources): LearnContentCardState {
+suspend fun LearnItem.toCardState(
+    resources: Resources,
+    fetchNextModuleItemRoute: suspend (courseId: Long?) -> Any?
+): LearnContentCardState {
     return when (this) {
         is ProgramEnrollmentItem -> toCardState(resources)
-        is CourseEnrollmentItem -> toCardState(resources)
+        is CourseEnrollmentItem -> toCardState(resources, fetchNextModuleItemRoute)
     }
 }
 
@@ -39,7 +42,7 @@ private fun ProgramEnrollmentItem.toCardState(resources: Resources): LearnConten
         name = name,
         progress = completionPercentage,
         route = LearnRoute.LearnProgramDetailsScreen.route(id),
-        buttonLabel = null,
+        buttonState = null,
         cardChips = buildList {
             add(
                 LearnContentCardChipState(
@@ -84,17 +87,26 @@ private fun ProgramEnrollmentItem.toCardState(resources: Resources): LearnConten
     )
 }
 
-private fun CourseEnrollmentItem.toCardState(resources: Resources): LearnContentCardState {
+private suspend fun CourseEnrollmentItem.toCardState(
+    resources: Resources,
+    fetchNextModuleItemRoute: suspend (courseId: Long?) -> Any?
+): LearnContentCardState {
+    val buttonLabel = when {
+        completionPercentage == null || completionPercentage == 0.0 -> resources.getString(R.string.learnMyContentStartLearning)
+        completionPercentage.orDefault() < 100.0 -> resources.getString(R.string.learnMyContentResumeLearning)
+        else -> null
+    }
+    val buttonRoute = fetchNextModuleItemRoute(this.id.toLongOrNull())
+    val buttonState = if (buttonLabel != null && buttonRoute != null) {
+        LearnContentCardButtonState(buttonLabel, buttonRoute)
+    } else { null }
+
     return LearnContentCardState(
         imageUrl = imageUrl,
         name = name,
         progress = completionPercentage,
         route = LearnRoute.LearnCourseDetailsScreen.route(id.toLongOrNull() ?: -1L),
-        buttonLabel = when {
-            completionPercentage == null || completionPercentage == 0.0 -> resources.getString(R.string.learnMyContentStartLearning)
-            completionPercentage.orDefault() < 100.0 -> resources.getString(R.string.learnMyContentResumeLearning)
-            else -> null
-        },
+        buttonState = buttonState,
         cardChips = buildList {
             add(
                 LearnContentCardChipState(

@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibrarySortOption
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
 import com.instructure.horizon.horizonui.platform.LoadingState
+import com.instructure.horizon.navigation.MainNavigationRoute
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -133,6 +134,20 @@ abstract class LearnMyContentViewModel<T>(
         typeFilter: LearnLearningLibraryTypeFilter,
         forceNetwork: Boolean,
     ): Pair<List<T>, LearningLibraryPageInfo>
+
+    protected suspend fun fetchNextModuleItemRoute(courseId: Long?, forceNetwork: Boolean): Any? {
+        if (courseId == null) return null
+        val modules = repository.getFirstPageModulesWithItems(courseId, forceNetwork = forceNetwork)
+        val nextModuleItem = modules.flatMap { module -> module.items }.firstOrNull()
+        if (nextModuleItem == null) {
+            return null
+        }
+
+        return MainNavigationRoute.ModuleItemSequence(
+            courseId,
+            nextModuleItem.id
+        )
+    }
 
     private fun onSnackbarDismiss() {
         _uiState.update { it.copy(loadingState = it.loadingState.copy(snackbarMessage = null)) }

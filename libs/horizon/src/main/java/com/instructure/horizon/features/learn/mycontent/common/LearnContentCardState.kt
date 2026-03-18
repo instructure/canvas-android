@@ -8,9 +8,14 @@ data class LearnContentCardState(
     val name: String = "",
     val progress: Double? = null,
     val route: String = "",
-    val buttonLabel: String? = null,
+    val buttonState: LearnContentCardButtonState? = null,
     val cardChips: List<LearnContentCardChipState> = emptyList(),
     val courseNames: List<String> = emptyList(),
+)
+
+data class LearnContentCardButtonState(
+    val label: String = "",
+    val route: Any = "",
 )
 
 data class LearnContentCardChipState(

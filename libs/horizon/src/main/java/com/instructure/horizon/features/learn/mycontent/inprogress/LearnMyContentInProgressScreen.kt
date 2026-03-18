@@ -41,6 +41,7 @@ import androidx.navigation.compose.rememberNavController
 import com.instructure.horizon.R
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibrarySortOption
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
+import com.instructure.horizon.features.learn.mycontent.common.LearnContentCardButtonState
 import com.instructure.horizon.features.learn.mycontent.common.LearnContentCardChipState
 import com.instructure.horizon.features.learn.mycontent.common.LearnContentCardState
 import com.instructure.horizon.features.learn.mycontent.common.LearnMyContentCard
@@ -134,7 +135,7 @@ private fun LearnMyContentInProgressScreenPreview() {
                     name = "Introduction to Programming",
                     progress = 45.0,
                     route = "",
-                    buttonLabel = null,
+                    buttonState = null,
                     cardChips = listOf(
                         LearnContentCardChipState(label = "Program", color = StatusChipColor.Violet, iconRes = R.drawable.book_5),
                         LearnContentCardChipState(label = "3 courses"),
@@ -144,7 +145,7 @@ private fun LearnMyContentInProgressScreenPreview() {
                     name = "Advanced Data Structures",
                     progress = 10.0,
                     route = "",
-                    buttonLabel = "Start learning",
+                    buttonState = LearnContentCardButtonState("Start learning"),
                     cardChips = listOf(
                         LearnContentCardChipState(label = "Course", color = StatusChipColor.Institution, iconRes = R.drawable.book_2),
                     ),
