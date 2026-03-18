@@ -48,6 +48,7 @@ import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearni
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibrarySortOption
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
 import com.instructure.horizon.features.learn.learninglibrary.common.LearningLibraryRoute
+import com.instructure.horizon.features.learn.mycontent.common.LearnMyContentEmptyMessage
 import com.instructure.horizon.features.learn.mycontent.common.LearnMyContentUiState
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
@@ -101,6 +102,9 @@ private fun LearnMyContentSavedContent(
                         .padding(bottom = 16.dp)
                         .wrapContentWidth(Alignment.End),
                 )
+            }
+            if (uiState.contentCards.isEmpty()) {
+                item { LearnMyContentEmptyMessage() }
             }
             items(uiState.contentCards) { card ->
                 LearnLearningLibraryItem(

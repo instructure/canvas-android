@@ -21,7 +21,6 @@ import com.instructure.canvasapi2.managers.graphql.horizon.journey.MyContentMana
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemSortOption
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryCollectionItemsResponse
-import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryRecommendation
 import com.instructure.canvasapi2.models.journey.mycontent.LearnItemStatus
 import com.instructure.canvasapi2.models.journey.mycontent.LearnItemType
 import com.instructure.canvasapi2.models.journey.mycontent.LearnItemsResponse
@@ -67,9 +66,5 @@ class LearnMyContentRepository @Inject constructor(
             sortBy = sortBy,
             forceNetwork = forceNetwork,
         )
-    }
-
-    suspend fun getLearningLibraryRecommendedItems(forceNetwork: Boolean): List<LearningLibraryRecommendation> {
-        return getLearningLibraryManager.getLearningLibraryRecommendations(forceNetwork)
     }
 }

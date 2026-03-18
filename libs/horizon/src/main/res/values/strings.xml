@@ -656,4 +656,6 @@
     <string name="learnMyContentDurationHrsMin">%1$d hrs %2$d min</string>
     <string name="learnMyContentDurationHrs">%1$d hrs</string>
     <string name="learnMyContentDurationMin">%1$d min</string>
+    <string name="learnMyContentEmptyMessage">No results found. Try adjusting your search terms.</string>
+    <string name="learnMyContentSavedFailedToBookmarkErrorMessage">Failed to update</string>
 </resources>

@@ -15,12 +15,10 @@
  */
 package com.instructure.horizon.features.learn
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
-import com.instructure.horizon.features.learn.navigation.LearnRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,13 +27,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LearnViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
     private val repository: LearnRepository,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(LearnUiState(
         updateSelectedTab = ::updateSelectedTab,
         updateSelectedTabIndex = ::updateSelectedTabIndex,
-        tabs = listOf(LearnTab.COURSES, LearnTab.PROGRAMS, LearnTab.MY_CONTENT)
+        tabs = listOf(LearnTab.MY_CONTENT)
     ))
     val state = _uiState.asStateFlow()
 
@@ -44,10 +41,6 @@ class LearnViewModel @Inject constructor(
             val enrolledLearningLibraries = repository.getEnrolledLearningLibraries(false)
             if (enrolledLearningLibraries.isNotEmpty()) {
                 _uiState.update { it.copy(tabs = it.tabs + LearnTab.BROWSE) }
-            }
-            val selectedTabValue = savedStateHandle.get<String>(LearnRoute.LearnScreen.selectedTabAttr)
-            LearnTab.fromStringValue(selectedTabValue)?.let { selectedTab ->
-                _uiState.update { it.copy(selectedTab = selectedTab) }
             }
         } catch { }
     }

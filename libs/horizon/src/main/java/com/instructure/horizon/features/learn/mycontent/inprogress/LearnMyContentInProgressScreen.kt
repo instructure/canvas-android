@@ -46,6 +46,7 @@ import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearni
 import com.instructure.horizon.features.learn.mycontent.common.LearnContentCardChipState
 import com.instructure.horizon.features.learn.mycontent.common.LearnContentCardState
 import com.instructure.horizon.features.learn.mycontent.common.LearnMyContentCard
+import com.instructure.horizon.features.learn.mycontent.common.LearnMyContentEmptyMessage
 import com.instructure.horizon.features.learn.mycontent.common.LearnMyContentUiState
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
@@ -99,6 +100,9 @@ private fun LearnMyContentInProgressContent(
                         .padding(bottom = 16.dp)
                         .wrapContentWidth(Alignment.End),
                 )
+            }
+            if (uiState.contentCards.isEmpty()) {
+                item { LearnMyContentEmptyMessage() }
             }
             items(uiState.contentCards) { card ->
                 LearnMyContentCard(

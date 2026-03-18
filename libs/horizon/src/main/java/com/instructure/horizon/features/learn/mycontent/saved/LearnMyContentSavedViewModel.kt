@@ -17,8 +17,11 @@
 package com.instructure.horizon.features.learn.mycontent.saved
 
 import android.content.res.Resources
+import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemSortOption
 import com.instructure.canvasapi2.models.journey.learninglibrary.LearningLibraryPageInfo
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryCollectionItemState
 import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
@@ -26,13 +29,15 @@ import com.instructure.horizon.features.learn.learninglibrary.common.toUiState
 import com.instructure.horizon.features.learn.mycontent.common.LearnMyContentRepository
 import com.instructure.horizon.features.learn.mycontent.common.LearnMyContentViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
 class LearnMyContentSavedViewModel @Inject constructor(
     private val resources: Resources,
-    repository: LearnMyContentRepository,
-) : LearnMyContentViewModel<LearnLearningLibraryCollectionItemState>(repository) {
+    myContentRepository: LearnMyContentRepository,
+    private val savedContentRepository: LearnMyContentSavedRepository,
+) : LearnMyContentViewModel<LearnLearningLibraryCollectionItemState>(myContentRepository) {
 
     override val errorMessage: String
         get() = resources.getString(R.string.learnMyContentProgramErrorMessage)
@@ -44,7 +49,7 @@ class LearnMyContentSavedViewModel @Inject constructor(
         typeFilter: LearnLearningLibraryTypeFilter,
         forceNetwork: Boolean,
     ): Pair<List<LearnLearningLibraryCollectionItemState>, LearningLibraryPageInfo> {
-        val recommendations = repository.getLearningLibraryRecommendedItems(forceNetwork)
+        val recommendations = savedContentRepository.getLearningLibraryRecommendedItems(forceNetwork)
         val response = repository.getBookmarkedLearningLibraryItems(
             afterCursor = cursor,
             searchQuery = searchQuery.ifEmpty { null },
@@ -53,5 +58,51 @@ class LearnMyContentSavedViewModel @Inject constructor(
             forceNetwork = forceNetwork,
         )
         return response.items.map { it.toUiState(resources, recommendations) } to response.pageInfo
+    }
+
+    private fun onCollectionBookmarkItem(itemId: String) {
+        viewModelScope.tryLaunch {
+            _uiState.update { 
+                it.copy(
+                    contentCards = it.contentCards.map { itemState ->
+                        if (itemState.id == itemId) {
+                            itemState.copy(bookmarkLoading = true)
+                        } else {
+                            itemState
+                        }
+                    }
+                )
+            }
+
+            val newIsBookmarked = savedContentRepository.toggleLearningLibraryItemIsBookmarked(itemId)
+
+            _uiState.update {
+                it.copy(
+                    contentCards = it.contentCards.map { itemState ->
+                        if (itemState.id == itemId) {
+                            itemState.copy(
+                                bookmarkLoading = false,
+                                isBookmarked = newIsBookmarked
+                            )
+                        } else {
+                            itemState
+                        }
+                    }
+                )
+            }
+        } catch {
+            _uiState.update {
+                it.copy(
+                    contentCards = it.contentCards.map { itemState ->
+                        if (itemState.id == itemId) {
+                            itemState.copy(bookmarkLoading = false,)
+                        } else {
+                            itemState
+                        }
+                    },
+                    loadingState = it.loadingState.copy(snackbarMessage = resources.getString(R.string.learnMyContentSavedFailedToBookmarkErrorMessage))
+                )
+            }
+        }
     }
 }
