@@ -18,7 +18,9 @@
 package com.instructure.dataseeding.util
 
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 
 val Int.week: Pair<Int, Int>
@@ -28,6 +30,10 @@ val Int.week: Pair<Int, Int>
 val Int.days: Pair<Int, Int>
     get() =
         Pair(Calendar.DAY_OF_YEAR, this)
+
+val Int.hours: Pair<Int, Int>
+    get() =
+        Pair(Calendar.HOUR_OF_DAY, this)
 
 val Pair<Int, Int>.fromNow: Calendar
     get() {

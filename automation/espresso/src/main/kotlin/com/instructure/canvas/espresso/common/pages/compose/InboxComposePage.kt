@@ -156,8 +156,8 @@ class InboxComposePage(private val composeTestRule: ComposeTestRule) {
     }
 
     fun pressSendButton() {
-        composeTestRule.waitForIdle()
         composeTestRule.onNodeWithContentDescription("Send message").performClick()
+        composeTestRule.waitForIdle()
     }
 
     fun pressCourseSelector() {
