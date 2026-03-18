@@ -104,7 +104,7 @@ object AssignmentAPI {
         @GET
         suspend fun getNextPageAssignmentGroupListWithAssignmentsForObserver(@Url nextUrl: String, @Tag restParams: RestParams): DataResult<List<ObserveeAssignmentGroup>>
 
-        // https://canvas.instructure.com/doc/api/all_resources.html#method.submissions_api.for_students
+        // https://sso.canvaslms.com/doc/api/all_resources.html#method.submissions_api.for_students
         @GET("courses/{courseId}/assignment_groups?include[]=assignments&include[]=discussion_topic&include[]=submission&override_assignment_dates=true&include[]=all_dates&include[]=overrides")
         fun getFirstPageAssignmentGroupListWithAssignmentsForGradingPeriod(@Path("courseId") courseId: Long, @Query("grading_period_id") gradingPeriodId: Long, @Query("scope_assignments_to_student") scopeToStudent: Boolean, @Query("order") order: String = "id"): Call<List<AssignmentGroup>>
 

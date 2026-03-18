@@ -42,13 +42,21 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -149,6 +157,7 @@ fun GradesScreen(
     actionHandler: (GradesAction) -> Unit,
     canvasContextColor: Int,
     appBarUiState: AppBarUiState? = null,
+    applyInsets: Boolean = true
 ) {
     CanvasTheme {
         val snackbarHostState = remember { SnackbarHostState() }
@@ -166,6 +175,8 @@ fun GradesScreen(
         CanvasScaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
             snackbarHost = { SnackbarHost(hostState = snackbarHostState, modifier = Modifier.testTag("snackbarHost")) },
+            contentWindowInsets = if (applyInsets) WindowInsets.navigationBars.only(WindowInsetsSides.Bottom)
+                .union(WindowInsets.ime) else WindowInsets(0, 0, 0, 0),
             topBar = {
                 appBarUiState?.let {
                     CanvasThemedAppBar(
@@ -285,7 +296,10 @@ fun GradesScreen(
                             actionHandler = actionHandler,
                             canvasContextColor = canvasContextColor,
                             showActionsOnCard = appBarUiState == null,
-                            scaffoldPadding = padding
+                            scaffoldPadding = padding,
+                            modifier = if (uiState.gradePreferencesUiState.show) Modifier.padding(
+                                bottom = WindowInsets.systemBars.asPaddingValues().calculateBottomPadding()
+                            ) else Modifier
                         )
                     }
                 }
@@ -338,7 +352,8 @@ private fun GradesScreenContent(
     actionHandler: (GradesAction) -> Unit,
     showActionsOnCard: Boolean,
     canvasContextColor: Int,
-    scaffoldPadding: PaddingValues = PaddingValues(0.dp)
+    modifier: Modifier = Modifier,
+    scaffoldPadding: PaddingValues = PaddingValues(0.dp),
 ) {
     val lazyListState = rememberLazyListState()
 
@@ -350,7 +365,7 @@ private fun GradesScreenContent(
 
     val isPortrait = LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = modifier.fillMaxSize()) {
         if (isPortrait) {
             SearchCardTransition(
                 uiState = uiState,
@@ -412,7 +427,8 @@ private fun GradesScreenContent(
                             .height(24.dp)
                             .semantics {
                                 hideFromAccessibility()
-                            }.testTag("basedOnGradedAssignmentsSwitch")
+                            }
+                            .testTag("basedOnGradedAssignmentsSwitch")
                     )
                 }
 
@@ -455,7 +471,8 @@ private fun GradesScreenContent(
                                 .height(24.dp)
                                 .semantics {
                                     hideFromAccessibility()
-                                }.testTag("showWhatIfScoreSwitch")
+                                }
+                                .testTag("showWhatIfScoreSwitch")
                         )
                     }
                 }
@@ -785,7 +802,9 @@ private fun GradesCard(
                         } else {
                             colorResource(id = R.color.textDarkest)
                         },
-                        modifier = Modifier.padding(start = 8.dp).testTag("totalGradeScoreText")
+                        modifier = Modifier
+                            .padding(start = 8.dp)
+                            .testTag("totalGradeScoreText")
                     )
                 }
             }

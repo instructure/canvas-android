@@ -102,10 +102,10 @@ class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteractions) 
     }
 
     /**
-     * Open all dates page (by clicking on the due dates layout).
+     * Open Due Dates page (by clicking on the due dates layout).
      *
      */
-    fun openAllDatesPage() {
+    fun openDueDatesPage() {
         dueDatesLayout.click()
     }
 

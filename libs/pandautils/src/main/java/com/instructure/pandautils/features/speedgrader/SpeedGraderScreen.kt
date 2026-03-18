@@ -18,8 +18,10 @@ package com.instructure.pandautils.features.speedgrader
 
 import android.view.WindowManager
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.pager.HorizontalPager
@@ -52,8 +54,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.LocalCourseColor
-import com.instructure.pandautils.compose.composables.CanvasAppBar
 import com.instructure.pandautils.compose.composables.CanvasScaffold
+import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.utils.getFragmentActivity
 import kotlinx.coroutines.launch
@@ -118,13 +120,13 @@ fun SpeedGraderScreen(
             }
         },
         topBar = {
-            CanvasAppBar(
+            CanvasThemedAppBar(
                 title = uiState.assignmentName,
                 subtitle = uiState.courseName,
                 backgroundColor = LocalCourseColor.current,
                 navigationActionClick = navigationActionClick,
                 navIconRes = R.drawable.ic_back_arrow,
-                textColor = colorResource(id = R.color.textLightest),
+                contentColor = colorResource(id = R.color.textLightest),
                 modifier = Modifier.testTag("speedGraderAppBar"),
                 actions = {
                     IconButton(onClick = {
@@ -153,7 +155,7 @@ fun SpeedGraderScreen(
 
                 HorizontalPager(
                     modifier = Modifier
-                        .windowInsetsPadding(WindowInsets.displayCutout)
+                        .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
                         .padding(padding)
                         .testTag("speedGraderPager"),
                     state = pagerState,

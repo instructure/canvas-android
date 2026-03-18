@@ -244,9 +244,9 @@ abstract class BaseLoginFindSchoolActivity : BaseCanvasActivity() {
     private fun validateDomain(accountDomain: AccountDomain) {
         var url: String? = accountDomain.domain!!.lowercase(Locale.getDefault()).replace(" ", "")
 
-        //if the user enters nothing, try to connect to canvas.instructure.com
+        //if the user enters nothing, try to connect to sso.canvaslms.com
         if (url!!.trim { it <= ' ' }.isEmpty()) {
-            url = "canvas.instructure.com"
+            url = "sso.canvaslms.com"
         }
 
         //remove invalid characters at the end of the domain

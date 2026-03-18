@@ -21,8 +21,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -530,7 +528,8 @@ private fun DateBadge(
             fontSize = 12.sp,
             color = dateBadgeData.dateTextColor,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.testTag("dateBadgeDayOfWeek")
         )
         Box(
             contentAlignment = Alignment.Center,
@@ -546,7 +545,8 @@ private fun DateBadge(
                 text = dateBadgeData.day.toString(),
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
-                color = dateBadgeData.dateTextColor
+                color = dateBadgeData.dateTextColor,
+                modifier = Modifier.testTag("dateBadgeDay")
             )
         }
         Text(
@@ -554,7 +554,8 @@ private fun DateBadge(
             fontSize = 10.sp,
             color = dateBadgeData.dateTextColor,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.testTag("dateBadgeMonth")
         )
     }
 }

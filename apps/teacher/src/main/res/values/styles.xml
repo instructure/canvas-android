@@ -79,7 +79,7 @@
 
     <style name="StampPickerStyle">
         <item name="pspdf__maxHeight">380dp</item>
-        <item name="pspdf__maxWidth">100dp</item>
+        <item name="pspdf__maxWidth">200dp</item>
         <item name="pspdf__backgroundColor">@color/backgroundLightest</item>
     </style>
 

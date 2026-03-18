@@ -38,6 +38,7 @@ import androidx.compose.ui.window.DialogWindowProvider
 import androidx.core.view.WindowCompat
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.R
+import com.instructure.pandautils.utils.EdgeToEdgeHelper
 
 
 @Composable
@@ -56,11 +57,13 @@ fun FullScreenDialog(
         (LocalView.current.parent as? DialogWindowProvider)?.window?.apply {
             setDimAmount(0f)
             clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-            WindowCompat.setDecorFitsSystemWindows(this, false)
+            if (EdgeToEdgeHelper.isEdgeToEdgeEnforced()) {
+                WindowCompat.setDecorFitsSystemWindows(this, false)
 
-            // Enable drawing behind system bars
-            addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN)
-            addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+                // Enable drawing behind system bars
+                addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN)
+                addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+            }
 
             // Ensure the window extends to full screen height
             setLayout(
@@ -73,10 +76,11 @@ fun FullScreenDialog(
         var modifier = Modifier
             .fillMaxSize()
             .padding(
-                top = insets.calculateTopPadding(),
                 start = insets.calculateLeftPadding(layoutDirection),
                 end = insets.calculateRightPadding(layoutDirection)
-                // Intentionally not applying bottom padding so content background extends behind navigation bar
+                // Intentionally not applying top or bottom padding:
+                // - Top: Let content (Scaffold/AppBar) handle status bar insets to avoid double padding
+                // - Bottom: Content background extends behind navigation bar
             )
         if (ApiPrefs.isMasquerading) {
             modifier = modifier.padding(

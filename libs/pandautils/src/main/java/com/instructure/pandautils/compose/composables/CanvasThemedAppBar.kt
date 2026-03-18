@@ -19,6 +19,8 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -39,12 +41,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.ThemePrefs
 
 /**
- * App bar for main screens, colors are defined by the Canvas theme.
+ * App bar for main screens, colors are defined by the Canvas theme and has no elevation.
  */
 @Composable
 fun CanvasThemedAppBar(
@@ -56,7 +59,11 @@ fun CanvasThemedAppBar(
     navIconContentDescription: String = stringResource(id = R.string.back),
     backgroundColor: Color = Color(color = ThemePrefs.primaryColor),
     contentColor: Color = Color(color = ThemePrefs.primaryTextColor),
-    windowInsets: WindowInsets = WindowInsets.statusBars,
+    windowInsets: WindowInsets = if (ApiPrefs.isMasquerading) {
+        WindowInsets.statusBars.only(WindowInsetsSides.Horizontal)
+    } else {
+        WindowInsets.statusBars
+    },
     actions: @Composable RowScope.() -> Unit = {}
 ) {
     TopAppBar(
@@ -82,6 +89,52 @@ fun CanvasThemedAppBar(
                         overflow = TextOverflow.Ellipsis
                     )
                 }
+            }
+        },
+        actions = actions,
+        backgroundColor = backgroundColor,
+        contentColor = contentColor,
+        navigationIcon = if (navIconRes == null) null else {
+            {
+                IconButton(onClick = navigationActionClick, modifier = Modifier.testTag("navigationButton")) {
+                    Icon(
+                        painterResource(id = navIconRes),
+                        contentDescription = navIconContentDescription
+                    )
+                }
+            }
+        },
+        modifier = modifier.testTag("toolbar"),
+        elevation = 0.dp,
+        windowInsets = windowInsets
+    )
+}
+
+/**
+ * App bar for main screens, colors are defined by the Canvas theme and has no elevation.
+ */
+@Composable
+fun CanvasThemedAppBar(
+    content: @Composable () -> Unit,
+    navigationActionClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    @DrawableRes navIconRes: Int? = R.drawable.ic_back_arrow,
+    navIconContentDescription: String = stringResource(id = R.string.back),
+    backgroundColor: Color = Color(color = ThemePrefs.primaryColor),
+    contentColor: Color = Color(color = ThemePrefs.primaryTextColor),
+    windowInsets: WindowInsets = WindowInsets.statusBars,
+    actions: @Composable RowScope.() -> Unit = {}
+) {
+    TopAppBar(
+        title = {
+            Column(
+                modifier = Modifier.semantics(mergeDescendants = true) {
+                    isTraversalGroup = true
+                    traversalIndex = -1f
+                    heading()
+                }
+            ) {
+                content()
             }
         },
         actions = actions,

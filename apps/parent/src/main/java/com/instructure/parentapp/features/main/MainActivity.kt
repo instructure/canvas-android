@@ -27,6 +27,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
@@ -114,7 +115,28 @@ class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated, Masqueradin
                 rightPadding,
                 0
             )
-            insets
+
+            // Consume horizontal insets so child ComposeViews don't apply them again
+            WindowInsetsCompat.Builder(insets)
+                .setInsets(
+                    WindowInsetsCompat.Type.navigationBars(),
+                    Insets.of(
+                        0, // Consume left
+                        navigationBars.top,
+                        0, // Consume right
+                        navigationBars.bottom
+                    )
+                )
+                .setInsets(
+                    WindowInsetsCompat.Type.displayCutout(),
+                    Insets.of(
+                        0, // Consume left
+                        displayCutout.top,
+                        0, // Consume right
+                        displayCutout.bottom
+                    )
+                )
+                .build()
         }
     }
 

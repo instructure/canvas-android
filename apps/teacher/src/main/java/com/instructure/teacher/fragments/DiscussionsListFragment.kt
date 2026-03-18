@@ -43,7 +43,7 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.addSearch
 import com.instructure.pandautils.utils.applyBottomAndRightSystemBarMargin
-import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyImeAndSystemBarInsets
 import com.instructure.pandautils.utils.applyDisplayCutoutInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.closeSearch
@@ -229,7 +229,8 @@ open class DiscussionsListFragment : BaseExpandableSyncFragment<
 
     private fun setupToolbar() = with(binding) {
         discussionListToolbar.applyTopSystemBarInsets()
-        swipeRefreshLayout.applyBottomSystemBarInsets()
+        swipeRefreshLayout.applyImeAndSystemBarInsets()
+        discussionRecyclerView.clipToPadding = false
         discussionListToolbar.title = if(isAnnouncements) getString(R.string.tab_announcements) else getString(R.string.tab_discussions)
         discussionListToolbar.subtitle = canvasContext.name
         discussionListToolbar.setupBackButton(this@DiscussionsListFragment)
