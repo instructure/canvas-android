@@ -25,6 +25,7 @@ import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseSettings
+import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.type.EnrollmentType
@@ -98,8 +99,9 @@ class CourseDetailsViewModelTest {
 
     @Test
     fun `Load course details with front page tab`() = runTest {
-        coEvery { repository.getCourse(1, any()) } returns Course(id = 1, name = "Course 1", homePage = Course.HomePage.HOME_WIKI)
+        coEvery { repository.getCourse(1, any()) } returns Course(id = 1, name = "Course 1")
         coEvery { repository.getCourseTabs(1, any()) } returns listOf(Tab("tab1"))
+        coEvery { repository.getFrontPage(1, any()) } returns Page(body = "Front page content")
 
         createViewModel()
 
@@ -109,6 +111,92 @@ class CourseDetailsViewModelTest {
             isLoading = false,
             isError = false,
             tabs = listOf(TabType.GRADES, TabType.FRONT_PAGE),
+            baseUrl = "domain/courses/1"
+        )
+
+        Assert.assertEquals(expected, viewModel.uiState.value)
+    }
+
+    @Test
+    fun `Front page tab not shown when front page body is empty`() = runTest {
+        coEvery { repository.getCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { repository.getCourseTabs(1, any()) } returns listOf(Tab("tab1"))
+        coEvery { repository.getFrontPage(1, any()) } returns Page(body = "")
+
+        createViewModel()
+
+        val expected = CourseDetailsUiState(
+            courseName = "Course 1",
+            studentColor = 1,
+            isLoading = false,
+            isError = false,
+            tabs = listOf(TabType.GRADES),
+            baseUrl = "domain/courses/1"
+        )
+
+        Assert.assertEquals(expected, viewModel.uiState.value)
+    }
+
+    @Test
+    fun `Front page tab not shown when no front page`() = runTest {
+        coEvery { repository.getCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { repository.getCourseTabs(1, any()) } returns listOf(Tab("tab1"))
+        coEvery { repository.getFrontPage(1, any()) } returns null
+
+        createViewModel()
+
+        val expected = CourseDetailsUiState(
+            courseName = "Course 1",
+            studentColor = 1,
+            isLoading = false,
+            isError = false,
+            tabs = listOf(TabType.GRADES),
+            baseUrl = "domain/courses/1"
+        )
+
+        Assert.assertEquals(expected, viewModel.uiState.value)
+    }
+
+    @Test
+    fun `Front page tab shown when default view is not front page`() = runTest {
+        coEvery { repository.getCourse(1, any()) } returns Course(id = 1, name = "Course 1", homePage = Course.HomePage.HOME_ASSIGNMENTS)
+        coEvery { repository.getCourseTabs(1, any()) } returns listOf(Tab("tab1"))
+        coEvery { repository.getFrontPage(1, any()) } returns Page(body = "Front page content")
+
+        createViewModel()
+
+        val expected = CourseDetailsUiState(
+            courseName = "Course 1",
+            studentColor = 1,
+            isLoading = false,
+            isError = false,
+            tabs = listOf(TabType.GRADES, TabType.FRONT_PAGE),
+            baseUrl = "domain/courses/1"
+        )
+
+        Assert.assertEquals(expected, viewModel.uiState.value)
+    }
+
+    @Test
+    fun `Front page tab shown alongside syllabus tab`() = runTest {
+        coEvery { repository.getCourse(1, any()) } returns Course(
+            id = 1,
+            name = "Course 1",
+            homePage = Course.HomePage.HOME_SYLLABUS,
+            syllabusBody = "Syllabus body"
+        )
+        coEvery { repository.getCourseTabs(1, any()) } returns listOf(Tab(Tab.SYLLABUS_ID))
+        coEvery { repository.getFrontPage(1, any()) } returns Page(body = "Front page content")
+
+        createViewModel()
+
+        val expected = CourseDetailsUiState(
+            courseName = "Course 1",
+            studentColor = 1,
+            isLoading = false,
+            isError = false,
+            tabs = listOf(TabType.GRADES, TabType.FRONT_PAGE, TabType.SYLLABUS),
+            syllabus = "Syllabus body",
             baseUrl = "domain/courses/1"
         )
 

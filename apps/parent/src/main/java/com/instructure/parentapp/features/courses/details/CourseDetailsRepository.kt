@@ -18,16 +18,19 @@
 package com.instructure.parentapp.features.courses.details
 
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.PageAPI
 import com.instructure.canvasapi2.apis.TabAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.models.Tab
 
 
 class CourseDetailsRepository(
     private val courseApi: CourseAPI.CoursesInterface,
-    private val tabApi: TabAPI.TabsInterface
+    private val tabApi: TabAPI.TabsInterface,
+    private val pageApi: PageAPI.PagesInterface
 ) {
 
     suspend fun getCourse(id: Long, forceRefresh: Boolean): Course {
@@ -38,5 +41,10 @@ class CourseDetailsRepository(
     suspend fun getCourseTabs(id: Long, forceRefresh: Boolean): List<Tab> {
         val params = RestParams(isForceReadFromNetwork = forceRefresh)
         return tabApi.getTabs(id, CanvasContext.Type.COURSE.apiString, params).dataOrThrow
+    }
+
+    suspend fun getFrontPage(courseId: Long, forceRefresh: Boolean): Page? {
+        val params = RestParams(isForceReadFromNetwork = forceRefresh)
+        return pageApi.getFrontPage(CanvasContext.Type.COURSE.apiString, courseId, params).dataOrNull
     }
 }
