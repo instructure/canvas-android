@@ -17,6 +17,7 @@ package com.instructure.pandautils.features.inbox.details
 
 import android.content.Context
 import androidx.lifecycle.SavedStateHandle
+import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.BasicUser
 import com.instructure.canvasapi2.models.Conversation
@@ -72,6 +73,7 @@ class InboxDetailsViewModelTest {
         coEvery { inboxDetailsRepository.getConversation(any(), any(), any()) } returns DataResult.Success(conversation)
         coEvery { savedStateHandle.get<Long>(InboxDetailsFragment.CONVERSATION_ID) } returns conversation.id
         coEvery { savedStateHandle.get<Boolean>(InboxDetailsFragment.UNREAD) } returns false
+        coEvery { savedStateHandle.get<String>(InboxDetailsFragment.SCOPE) } returns null
         coEvery { context.getString(
             com.instructure.pandautils.R.string.inboxForwardSubjectFwPrefix,
             conversation.subject
@@ -675,6 +677,24 @@ class InboxDetailsViewModelTest {
         uiState.messageStates.forEach { messageState ->
             assertEquals(true, messageState.canDelete)
             assertEquals(true, messageState.canReplyAll)
+        }
+    }
+
+    @Test
+    fun `Test Sent scope hides archive option`() {
+        coEvery { savedStateHandle.get<String>(InboxDetailsFragment.SCOPE) } returns InboxApi.Scope.SENT.name
+        val viewModel = getViewModel()
+
+        assertEquals(false, viewModel.uiState.value.showArchiveOption)
+    }
+
+    @Test
+    fun `Test non-Sent scope shows archive option`() {
+        InboxApi.Scope.entries.filter { it != InboxApi.Scope.SENT }.forEach { scope ->
+            coEvery { savedStateHandle.get<String>(InboxDetailsFragment.SCOPE) } returns scope.name
+            val viewModel = getViewModel()
+
+            assertEquals(true, viewModel.uiState.value.showArchiveOption)
         }
     }
 
