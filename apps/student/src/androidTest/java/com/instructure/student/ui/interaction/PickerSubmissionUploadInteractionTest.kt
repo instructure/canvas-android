@@ -42,6 +42,7 @@ import com.instructure.canvas.espresso.annotations.Stub
 import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvas.espresso.mockcanvas.addAssignment
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeCustomGradeStatusesManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeDocumentScannerManager
 import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvasapi2.di.graphql.CustomGradeStatusModule
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
@@ -49,7 +50,6 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.pandautils.di.DocumentScannerModule
 import com.instructure.pandautils.features.file.upload.scanner.DocumentScannerManager
 import com.instructure.pandautils.utils.FilePrefs
-import com.instructure.student.ui.utils.FakeDocumentScannerManager
 import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.BindValue

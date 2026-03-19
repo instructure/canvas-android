@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.student.ui.utils
+package com.instructure.canvas.espresso.mockcanvas.fakes
 
 import android.app.Activity
 import android.content.Intent
@@ -27,20 +27,7 @@ import com.instructure.pandautils.utils.ActivityResult
 import com.instructure.pandautils.utils.OnActivityResults
 import com.instructure.pandautils.utils.postSticky
 
-/**
- * A fake [DocumentScannerManager] for use in instrumentation tests.
- *
- * By default [isDeviceSupported] returns `true` so the scanner button is shown. Set
- * [scannerSupported] to `false` before navigating to the screen under test to verify the scanner
- * button is hidden for unsupported devices.
- *
- * [scanResultUri] must be set to a valid [Uri] before the scanner button is tapped. The fake
- * intercepts the scanner launch and immediately posts an [OnActivityResults] EventBus event so the
- * effect handler treats the scan as complete without invoking the real ML Kit scanner.
- *
- * The [requestCode] must match the one used by the effect handler that processes the result
- * (e.g. [PickerSubmissionUploadEffectHandler.REQUEST_DOCUMENT_SCANNING] = 5103).
- */
+
 class FakeDocumentScannerManager(
     private val requestCode: Int = REQUEST_DOCUMENT_SCANNING
 ) : DocumentScannerManager {
@@ -51,9 +38,6 @@ class FakeDocumentScannerManager(
     override fun isDeviceSupported(): Boolean = scannerSupported
 
     override fun getStartScanIntent(activity: Activity, pageLimit: Int): Task<IntentSender> {
-        // Post a fake activity result so the effect handler treats the scan as complete.
-        // Using a non-completing TaskCompletionSource ensures startIntentSenderForResult is never
-        // called, avoiding any interaction with the real ML Kit scanner.
         val fakeResultIntent = Intent()
         OnActivityResults(ActivityResult(requestCode, Activity.RESULT_OK, fakeResultIntent)).postSticky()
         return TaskCompletionSource<IntentSender>().task
@@ -66,7 +50,6 @@ class FakeDocumentScannerManager(
     override fun generateFileName(): String = "Scanned_Document_test.pdf"
 
     companion object {
-        // Matches PickerSubmissionUploadEffectHandler.REQUEST_DOCUMENT_SCANNING
-        const val REQUEST_DOCUMENT_SCANNING = 5103
+        const val REQUEST_DOCUMENT_SCANNING = 5103 //Matches PickerSubmissionUploadEffectHandler.REQUEST_DOCUMENT_SCANNING
     }
 }
