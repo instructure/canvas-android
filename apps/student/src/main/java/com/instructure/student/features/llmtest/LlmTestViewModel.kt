@@ -21,6 +21,7 @@ import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.pandautils.domain.usecase.announcements.LoadCourseAnnouncementsUseCase
 import com.instructure.pandautils.domain.usecase.assignment.LoadAssignmentGroupsUseCase
 import com.instructure.pandautils.features.llm.engine.LlmEngine
 import com.instructure.pandautils.features.llm.engine.LlmState
@@ -50,6 +51,7 @@ import javax.inject.Inject
 class LlmTestViewModel @Inject constructor(
     private val llmEngine: LlmEngine,
     private val loadAssignmentGroupsUseCase: LoadAssignmentGroupsUseCase,
+    private val loadCourseAnnouncementsUseCase: LoadCourseAnnouncementsUseCase,
     @ApplicationContext private val appContext: Context
 ) : ViewModel() {
 
@@ -76,6 +78,25 @@ class LlmTestViewModel @Inject constructor(
                 )
                 Log.i(TAG, "Got ${groups.size} assignment groups")
                 formatAssignmentGroups(groups)
+            }
+        }
+        tool("get_latest_announcement") {
+            description = "Get the latest unread announcement for a course, including its title and full message content"
+            parameter("course_id", "integer", "The ID of the course")
+            execute { args ->
+                val rawId = args["course_id"]
+                Log.d(TAG, "get_latest_announcement called with course_id=$rawId (${rawId?.javaClass?.simpleName})")
+                val courseId = when (rawId) {
+                    is Number -> rawId.toLong()
+                    is String -> rawId.toLongOrNull() ?: error("Invalid course_id: $rawId")
+                    else -> error("Missing or invalid course_id: $rawId")
+                }
+                Log.i(TAG, "Fetching announcements for course $courseId...")
+                val announcements = loadCourseAnnouncementsUseCase(
+                    LoadCourseAnnouncementsUseCase.Params(courseId, forceNetwork = true)
+                )
+                Log.i(TAG, "Got ${announcements.size} unread announcements")
+                formatLatestAnnouncement(announcements)
             }
         }
     }
@@ -242,10 +263,30 @@ class LlmTestViewModel @Inject constructor(
 
     companion object {
         private const val TAG = "LlmTestViewModel"
-        private const val MODEL_URL = "https://huggingface.co/bartowski/Llama-3.2-3B-Instruct-GGUF/resolve/main/Llama-3.2-3B-Instruct-Q4_K_M.gguf"
-        private const val MODEL_FILENAME = "Llama-3.2-3B-Instruct-Q4_K_M.gguf"
+        private const val MODEL_URL = "https://huggingface.co/litert-community/Qwen3-0.6B/resolve/main/Qwen3-0.6B.litertlm"
+        private const val MODEL_FILENAME = "Qwen3-0.6B.litertlm"
 
         private val DATE_FORMAT = SimpleDateFormat("MMM d, yyyy 'at' h:mm a", Locale.US)
+
+        private fun formatLatestAnnouncement(
+            announcements: List<com.instructure.canvasapi2.models.DiscussionTopicHeader>
+        ): String {
+            if (announcements.isEmpty()) return "No unread announcements found."
+            val latest = announcements.maxByOrNull { it.postedDate ?: it.createdDate ?: java.util.Date(0) }
+                ?: return "No unread announcements found."
+            return buildString {
+                appendLine("Title: ${latest.title ?: "Untitled"}")
+                val date = latest.postedDate ?: latest.createdDate
+                if (date != null) appendLine("Posted: ${DATE_FORMAT.format(date)}")
+                appendLine()
+                val body = latest.message
+                    ?.replace(Regex("<[^>]*>"), " ")
+                    ?.replace(Regex("\\s+"), " ")
+                    ?.trim()
+                    ?: "No content"
+                appendLine(body)
+            }
+        }
 
         private fun formatAssignmentGroups(
             groups: List<com.instructure.canvasapi2.models.AssignmentGroup>

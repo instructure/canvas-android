@@ -23,8 +23,11 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -42,7 +45,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.LocalContentAlpha
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
+import androidx.compose.material3.SuggestionChip
+import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -301,6 +307,8 @@ private fun InboxComposeScreenContent(
         }
 
         if (uiState.hiddenFields.isBodyHidden.not()) {
+            QuickRepliesSection(uiState, actionHandler)
+
             TextFieldWithHeader(
                 label = stringResource(R.string.message),
                 value = uiState.body,
@@ -371,6 +379,71 @@ private fun InboxComposeScreenContent(
 
                     Spacer(modifier = Modifier.height(16.dp))
                 }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun QuickRepliesSection(
+    uiState: InboxComposeUiState,
+    actionHandler: (InboxComposeActionHandler) -> Unit,
+) {
+    if (uiState.quickRepliesLoading) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .testTag("QuickRepliesLoading")
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(20.dp),
+                strokeWidth = 2.dp,
+                color = colorResource(id = R.color.textDark),
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = stringResource(com.instructure.pandautils.R.string.suggestingReplies),
+                color = colorResource(id = R.color.textDark),
+                fontSize = 14.sp,
+            )
+        }
+    }
+
+    if (uiState.quickReplies.isNotEmpty()) {
+        FlowRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .testTag("QuickRepliesRow"),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp),
+        ) {
+            uiState.quickReplies.forEach { reply ->
+                SuggestionChip(
+                    onClick = { actionHandler(InboxComposeActionHandler.QuickReplySelected(reply)) },
+                    label = {
+                        Text(
+                            text = if (reply.length > 60) reply.take(57) + "..." else reply,
+                            fontSize = 13.sp,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    },
+                    icon = {
+                        Icon(
+                            painter = painterResource(id = com.instructure.pandautils.R.drawable.ic_ai_sparkle),
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp),
+                            tint = colorResource(id = R.color.textDark),
+                        )
+                    },
+                    colors = SuggestionChipDefaults.suggestionChipColors(
+                        containerColor = colorResource(id = R.color.backgroundLight),
+                        labelColor = colorResource(id = R.color.textDarkest),
+                    ),
+                )
             }
         }
     }

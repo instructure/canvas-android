@@ -44,6 +44,7 @@ class LlmAssistant(
 
         var currentMessage = userMessage
         var round = 0
+        var hasToolResult = false
 
         while (true) {
             val buffer = StringBuilder()
@@ -55,6 +56,13 @@ class LlmAssistant(
 
             val fullResponse = buffer.toString()
             Log.d(TAG, "Full response (round $round): $fullResponse")
+
+            // After feeding a tool result, don't parse for more tool calls —
+            // just accept whatever the model says as the final answer.
+            if (hasToolResult) {
+                Log.d(TAG, "Post-tool-result round, accepting response as final answer")
+                break
+            }
 
             val toolCall = parseToolCall(fullResponse) ?: break
 
@@ -82,7 +90,8 @@ class LlmAssistant(
             Log.i(TAG, "Tool result (${result.length} chars): ${result.take(500)}")
             emit(ChatEvent.ToolResult(toolCall.name, result))
 
-            currentMessage = "Tool result for ${toolCall.name}:\n$result"
+            hasToolResult = true
+            currentMessage = "Here is the data you requested. Summarize it for the user.\n\n$result"
         }
     }
 
@@ -117,7 +126,7 @@ class LlmAssistant(
         private const val TAG = "LlmAssistant"
 
         internal fun parseToolCall(response: String): LlmToolCall? {
-            val trimmed = response.trim()
+            val trimmed = stripThinkingBlocks(response).trim()
                 .removePrefix("```json").removePrefix("```")
                 .removeSuffix("```")
                 .trim()
@@ -148,6 +157,18 @@ class LlmAssistant(
                 Log.d(TAG, "Not a tool call: ${e.message}")
                 null
             }
+        }
+
+        private val THINK_PATTERN = Regex("<think>[\\s\\S]*?</think>", RegexOption.IGNORE_CASE)
+
+        internal fun stripThinkingBlocks(text: String): String {
+            var result = THINK_PATTERN.replace(text, "")
+            // Handle unclosed <think> tag (model still reasoning, no final answer yet)
+            val openIdx = result.lastIndexOf("<think>", ignoreCase = true)
+            if (openIdx != -1) {
+                result = result.substring(0, openIdx)
+            }
+            return result
         }
 
         private fun extractJsonObject(text: String): String? {

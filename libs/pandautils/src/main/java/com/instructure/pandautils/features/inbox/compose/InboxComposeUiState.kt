@@ -49,6 +49,8 @@ data class InboxComposeUiState(
     val hiddenBodyMessage: String? = null,
     val enableCustomBackHandler: Boolean = true,
     val signatureLoading: Boolean = false,
+    val quickReplies: List<String> = emptyList(),
+    val quickRepliesLoading: Boolean = false,
 ) {
     val isSendButtonEnabled: Boolean
         get() = selectContextUiState.selectedCanvasContext != null &&
@@ -86,6 +88,7 @@ sealed class InboxComposeActionHandler {
     data class RemoveAttachment(val attachment: AttachmentCardItem) : InboxComposeActionHandler()
     data class OpenAttachment(val attachment: AttachmentCardItem) : InboxComposeActionHandler()
     data class UrlSelected(val url: String) : InboxComposeActionHandler()
+    data class QuickReplySelected(val reply: String) : InboxComposeActionHandler()
 }
 
 sealed class InboxComposeScreenOptions {

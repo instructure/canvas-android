@@ -16,6 +16,7 @@
 package com.instructure.pandautils.features.inbox.compose
 
 import android.content.Context
+import android.text.Html
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -105,9 +106,33 @@ class InboxComposeViewModel @Inject constructor(
         loadContexts()
         if (options != null) {
             initFromOptions(options)
+            if (options.mode == InboxComposeOptionsMode.REPLY || options.mode == InboxComposeOptionsMode.REPLY_ALL) {
+                generateQuickReplies()
+            }
         }
         checkAndApplyFeatureFlagRestrictions()
         loadSignature()
+    }
+
+    private fun generateQuickReplies() {
+        val lastMessageBody = uiState.value.previousMessages
+            ?.previousMessages
+            ?.firstOrNull()
+            ?.body
+            ?.let { Html.fromHtml(it, Html.FROM_HTML_MODE_COMPACT).toString().trim() }
+
+        if (lastMessageBody.isNullOrBlank()) return
+
+        viewModelScope.launch {
+            _uiState.update { it.copy(quickRepliesLoading = true) }
+            try {
+                val snippet = lastMessageBody.take(200)
+                val replies = inboxComposeBehavior.suggestQuickReplies(snippet)
+                _uiState.update { it.copy(quickReplies = replies, quickRepliesLoading = false) }
+            } catch (_: Exception) {
+                _uiState.update { it.copy(quickReplies = emptyList(), quickRepliesLoading = false) }
+            }
+        }
     }
 
     fun composeContentHasChanged(): Boolean {
@@ -404,6 +429,9 @@ class InboxComposeViewModel @Inject constructor(
                 viewModelScope.launch {
                     _events.send(InboxComposeViewModelAction.UrlSelected(action.url))
                 }
+            }
+            is InboxComposeActionHandler.QuickReplySelected -> {
+                _uiState.update { it.copy(body = TextFieldValue(action.reply), quickReplies = emptyList()) }
             }
         }
     }

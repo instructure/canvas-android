@@ -17,8 +17,40 @@
 package com.instructure.student.features.inbox.compose
 
 import com.instructure.pandautils.features.inbox.compose.InboxComposeBehavior
-import javax.inject.Inject
+import com.instructure.pandautils.features.llm.engine.LlmEngine
+import com.instructure.pandautils.features.llm.engine.LlmState
+import com.instructure.pandautils.features.llm.engine.isModelLoaded
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withTimeoutOrNull
 
-class StudentInboxComposeBehavior @Inject constructor() : InboxComposeBehavior {
+class StudentInboxComposeBehavior(
+    private val llmEngine: LlmEngine
+) : InboxComposeBehavior {
+
     override suspend fun shouldHideSendIndividual(): Boolean = false
+
+    override suspend fun suggestQuickReplies(conversationSnippet: String): List<String> {
+        if (!llmEngine.state.value.isModelLoaded) {
+            val ready = withTimeoutOrNull(60_000L) {
+                llmEngine.state.first { it is LlmState.ModelLoaded || it is LlmState.Error }
+            }
+            if (ready == null || ready is LlmState.Error) return emptyList()
+        }
+
+        val snippet = conversationSnippet.take(200)
+        val prompt = "/no_think\nReply options for: \"$snippet\"\n1."
+
+        val raw = llmEngine.complete(prompt, maxTokens = 60)
+        val cleaned = raw.replace(Regex("<think>[\\s\\S]*?</think>"), "").trim()
+        return parseNumberedList("1.$cleaned")
+    }
+
+    private fun parseNumberedList(response: String): List<String> {
+        return response.lines()
+            .map { it.trim() }
+            .filter { it.matches(Regex("""^\d+[.)]\s+.+""")) }
+            .map { it.replaceFirst(Regex("""^\d+[.)]\s+"""), "").trim() }
+            .filter { it.isNotBlank() }
+            .take(3)
+    }
 }

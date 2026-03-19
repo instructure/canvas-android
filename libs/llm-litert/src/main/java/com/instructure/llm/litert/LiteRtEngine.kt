@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 - present Instructure, Inc.
+ * Copyright (C) 2026 - present Instructure, Inc.
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -13,9 +13,13 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.pandautils.features.inbox.compose
+package com.instructure.llm.litert
 
-interface InboxComposeBehavior {
-    suspend fun shouldHideSendIndividual(): Boolean = false
-    suspend fun suggestQuickReplies(conversationSnippet: String): List<String> = emptyList()
+import android.content.Context
+import com.instructure.llm.litert.internal.LiteRtBridge
+import com.instructure.pandautils.features.llm.engine.LlmEngine
+
+object LiteRtEngine {
+
+    fun create(context: Context): LlmEngine = LiteRtBridge.getInstance(context)
 }

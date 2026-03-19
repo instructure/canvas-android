@@ -242,6 +242,7 @@ dependencies {
     implementation project(path: ':interactions')
     implementation project(path: ':horizon')
     implementation project(path: ':llm-llamacpp')
+    implementation project(path: ':llm-litert')
 
     /* Android Test Dependencies */
     androidTestImplementation project(path: ':espresso')

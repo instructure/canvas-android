@@ -16,7 +16,7 @@
 package com.instructure.student.di
 
 import android.content.Context
-import com.instructure.llm.llamacpp.LlamaCppEngine
+import com.instructure.llm.litert.LiteRtEngine
 import com.instructure.pandautils.features.llm.engine.LlmEngine
 import dagger.Module
 import dagger.Provides
@@ -32,6 +32,6 @@ object LlmModule {
     @Provides
     @Singleton
     fun provideLlmEngine(@ApplicationContext context: Context): LlmEngine {
-        return LlamaCppEngine.create(context)
+        return LiteRtEngine.create(context)
     }
 }

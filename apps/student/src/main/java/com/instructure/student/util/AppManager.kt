@@ -34,6 +34,9 @@ import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.student.BuildConfig
 import com.instructure.student.tasks.StudentLogoutTask
 import dagger.hilt.android.HiltAndroidApp
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import sdk.pendo.io.Pendo
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -56,8 +59,14 @@ class AppManager : BaseAppManager() {
     @Inject
     lateinit var workManager: WorkManager
 
+    @Inject
+    lateinit var llmModelInitializer: LlmModelInitializer
+
+    private val appScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+
     override fun onCreate() {
         super.onCreate()
+        llmModelInitializer.initialize(appScope)
         MasqueradeHelper.masqueradeLogoutTask = Runnable {
             StudentLogoutTask(
                 LogoutTask.Type.LOGOUT,

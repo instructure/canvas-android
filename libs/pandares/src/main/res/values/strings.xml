@@ -451,6 +451,7 @@
     <string name="inboxMessageRecipientsText">%1$s + %2$s Others</string>
     <string name="inboxMessageFailedToOpenUrl">Failed to open url</string>
     <string name="previousMessages">Previous Messages</string>
+    <string name="suggestingReplies">Suggesting replies…</string>
     <plurals name="people">
         <item quantity="one">%d Person</item>
         <item quantity="other">%d People</item>
