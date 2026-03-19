@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 - present Instructure, Inc.
+ * Copyright (C) 2026 - present Instructure, Inc.
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -12,30 +12,24 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- *
  */
+package com.instructure.pandautils.data.repository.accountdomain
 
-package com.instructure.canvasapi2.apis
-
+import com.instructure.canvasapi2.apis.AccountDomainInterface
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.AccountDomain
-import com.instructure.canvasapi2.utils.DataResult
-import retrofit2.http.GET
-import retrofit2.http.Query
-import retrofit2.http.Tag
-import retrofit2.http.Url
+import com.instructure.canvasapi2.utils.depaginate
 
-interface AccountDomainInterface {
-
-    @GET
-    suspend fun next(
-        @Url nextURL: String,
-        @Tag restParams: RestParams
-    ): DataResult<List<AccountDomain>>
-
-    @GET("accounts/search")
-    suspend fun campusSearch(
-        @Query("search_term") term: String,
-        @Tag restParams: RestParams
-    ): DataResult<List<AccountDomain>>
+class AccountDomainRepositoryImpl(private val api: AccountDomainInterface) :
+    AccountDomainRepository {
+    override suspend fun search(query: String): List<AccountDomain> {
+        val restParams = RestParams(
+            usePerPageQueryParam = true,
+            isForceReadFromNetwork = true,
+        )
+        val result = api.campusSearch(query, restParams).depaginate {
+            api.next(it, restParams)
+        }
+        return result.dataOrNull.orEmpty()
+    }
 }
