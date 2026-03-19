@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -130,7 +131,8 @@ private fun SpeedGraderContentScreen(
 ) {
     CanvasScaffold(
         backgroundColor = colorResource(id = R.color.backgroundLightest),
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
+        contentWindowInsets = WindowInsets(0, 0, 0, 0)
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             UserHeader(
@@ -237,7 +239,8 @@ private fun UserHeader(
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 16.sp,
                 maxLines = 2,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.testTag("speedGraderUserName")
             )
             if (submissionStatus != SubmissionStateLabel.None) {
                 SubmissionStatus(

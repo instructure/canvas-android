@@ -29,6 +29,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.itemviewmodels.FileItemViewModel
+import com.instructure.pandautils.features.file.upload.scanner.DocumentScannerManager
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.room.appdatabase.daos.FileUploadInputDao
@@ -46,7 +47,8 @@ class FileUploadDialogViewModel @Inject constructor(
         private val fileUploadUtils: FileUploadUtilsHelper,
         private val resources: Resources,
         private val workManager: WorkManager,
-        private val fileUploadInputDao: FileUploadInputDao
+        private val fileUploadInputDao: FileUploadInputDao,
+        private val documentScannerManager: DocumentScannerManager
 ) : ViewModel() {
 
     val data: LiveData<FileUploadDialogViewData>
@@ -56,6 +58,9 @@ class FileUploadDialogViewModel @Inject constructor(
     val events: LiveData<Event<FileUploadAction>>
         get() = _events
     private val _events = MutableLiveData<Event<FileUploadAction>>()
+
+    val scannerAvailable: Boolean
+        get() = documentScannerManager.isDeviceSupported()
 
     private var assignment: Assignment? = null
     private var uploadType: FileUploadType = FileUploadType.ASSIGNMENT
@@ -139,6 +144,14 @@ class FileUploadDialogViewModel @Inject constructor(
         } else {
             _events.value = Event(FileUploadAction.PickMultipleFile)
         }
+    }
+
+    fun onScannerClicked() {
+        if (isOneFileOnly && filesToUpload.isNotEmpty()) {
+            _events.value = Event(FileUploadAction.ShowToast(resources.getString(R.string.oneFileOnly)))
+            return
+        }
+        _events.value = Event(FileUploadAction.LaunchScanner)
     }
 
     fun addFile(fileUri: Uri) {

@@ -18,9 +18,12 @@ package com.instructure.pandautils.compose.composables
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.union
+import androidx.compose.material.DrawerDefaults
 import androidx.compose.material.FabPosition
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -33,6 +36,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.unit.Dp
 
 /**
  * Canvas Scaffold with edge-to-edge support.
@@ -60,13 +64,13 @@ fun CanvasScaffold(
     isFloatingActionButtonDocked: Boolean = false,
     drawerContent: @Composable (ColumnScope.() -> Unit)? = null,
     drawerShape: Shape? = null,
-    drawerElevation: androidx.compose.ui.unit.Dp = androidx.compose.material.DrawerDefaults.Elevation,
+    drawerElevation: Dp = DrawerDefaults.Elevation,
     drawerBackgroundColor: Color = MaterialTheme.colors.surface,
     drawerContentColor: Color = contentColorFor(drawerBackgroundColor),
-    drawerScrimColor: Color = androidx.compose.material.DrawerDefaults.scrimColor,
+    drawerScrimColor: Color = DrawerDefaults.scrimColor,
     backgroundColor: Color = MaterialTheme.colors.background,
     contentColor: Color = contentColorFor(backgroundColor),
-    contentWindowInsets: WindowInsets = WindowInsets.navigationBars.only(WindowInsetsSides.Bottom),
+    contentWindowInsets: WindowInsets = WindowInsets.navigationBars.only(WindowInsetsSides.Bottom).union(WindowInsets.ime),
     content: @Composable (PaddingValues) -> Unit
 ) {
     Scaffold(

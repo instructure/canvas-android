@@ -42,7 +42,7 @@ import com.instructure.pandautils.binding.BindableSpinnerAdapter
 import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptItemViewModel
 import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptViewData
 import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.applyImeAndSystemBarInsets
+import com.instructure.pandautils.utils.applyImeAndSystemBarMargin
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.asStateList
 import com.instructure.pandautils.utils.color
@@ -120,7 +120,7 @@ class SubmissionDetailsView(
         configureDrawerTabLayout()
         configureSlidingPanelHeight()
 
-        binding.slidingUpPanelLayout.applyImeAndSystemBarInsets()
+        binding.slidingUpPanelLayout.applyImeAndSystemBarMargin()
 
         if (isAccessibilityEnabled(context)) {
             binding.slidingUpPanelLayout.anchorPoint = 1.0f

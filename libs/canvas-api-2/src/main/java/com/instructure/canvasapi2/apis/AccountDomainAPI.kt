@@ -17,39 +17,25 @@
 
 package com.instructure.canvasapi2.apis
 
-import com.instructure.canvasapi2.StatusCallback
-import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.AccountDomain
-
-import retrofit2.Call
+import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.http.GET
 import retrofit2.http.Query
+import retrofit2.http.Tag
 import retrofit2.http.Url
 
+interface AccountDomainInterface {
 
-object AccountDomainAPI {
-    private const val DEFAULT_DOMAIN = "https://canvas.instructure.com/"
+    @GET
+    suspend fun next(
+        @Url nextURL: String,
+        @Tag restParams: RestParams
+    ): DataResult<List<AccountDomain>>
 
-    interface AccountDomainInterface {
-        @GET
-        fun next(@Url nextURL: String): Call<List<AccountDomain>>
-
-        @GET("accounts/search")
-        fun campusSearch(@Query("search_term") term: String): Call<List<AccountDomain>>
-    }
-
-    fun searchAccounts(query: String?, callback: StatusCallback<List<AccountDomain>>) {
-        if (query == null || query.length < 3) return
-
-        val adapter = RestBuilder(callback)
-        val params = RestParams(
-                shouldIgnoreToken = true,
-                usePerPageQueryParam = true,
-                isForceReadFromNetwork = true,
-                domain = DEFAULT_DOMAIN
-        )
-
-        callback.addCall(adapter.build(AccountDomainInterface::class.java, params).campusSearch(query)).enqueue(callback)
-    }
+    @GET("accounts/search")
+    suspend fun campusSearch(
+        @Query("search_term") term: String,
+        @Tag restParams: RestParams
+    ): DataResult<List<AccountDomain>>
 }

@@ -20,6 +20,7 @@ import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.canvas.espresso.annotations.StubLandscape
 import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvas.espresso.mockcanvas.addAssignment
 import com.instructure.canvas.espresso.mockcanvas.addCoursePermissions
@@ -138,6 +139,7 @@ class CommentLibraryInteractionTest : TeacherComposeTest() {
 
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
+    @StubLandscape
     fun selectCommentLibrarySuggestionComment() {
         createCommentLibraryMockData()
         goToSpeedGraderCommentsPage()
@@ -155,6 +157,7 @@ class CommentLibraryInteractionTest : TeacherComposeTest() {
 
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
+    @StubLandscape
     fun selectCommentLibrarySuggestionAndSendComment() {
         createCommentLibraryMockData()
         goToSpeedGraderCommentsPage()
@@ -194,6 +197,7 @@ class CommentLibraryInteractionTest : TeacherComposeTest() {
 
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
+    @StubLandscape
     fun reopenCommentLibraryWhenTextIsModified() {
         createCommentLibraryMockData()
         goToSpeedGraderCommentsPage()
@@ -227,6 +231,7 @@ class CommentLibraryInteractionTest : TeacherComposeTest() {
 
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
+    @StubLandscape
     fun selectCommentLibrarySuggestionFromMultipleItemResult() {
         createCommentLibraryMockData()
         goToSpeedGraderCommentsPage()
@@ -247,6 +252,7 @@ class CommentLibraryInteractionTest : TeacherComposeTest() {
 
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
+    @StubLandscape
     fun showAllCommentLibraryItemsAfterClearingCommentFieldFilter() {
         val commentLibraryItems = createCommentLibraryMockData()
         goToSpeedGraderCommentsPage()

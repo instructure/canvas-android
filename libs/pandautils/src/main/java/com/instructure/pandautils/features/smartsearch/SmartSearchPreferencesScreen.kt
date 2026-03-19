@@ -58,8 +58,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.models.SmartSearchFilter
 import com.instructure.pandautils.R
-import com.instructure.pandautils.compose.composables.CanvasAppBar
 import com.instructure.pandautils.compose.composables.CanvasScaffold
+import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.FullScreenDialog
 
 enum class SmartSearchSortType {
@@ -81,12 +81,11 @@ fun SmartSearchPreferencesScreen(
         CanvasScaffold(
             contentWindowInsets = WindowInsets(0),
             topBar = {
-                CanvasAppBar(
+                CanvasThemedAppBar(
                     backgroundColor = color,
-                    textColor = colorResource(R.color.textLightest),
+                    contentColor = colorResource(R.color.textLightest),
                     title = stringResource(R.string.searchPreferencesTitle),
                     navigationActionClick = onCancel,
-                    windowInsets = WindowInsets(0, 0, 0, 0),
                     actions = {
                         TextButton(
                             onClick = { onDone(selectedTypes, selectedSort) },

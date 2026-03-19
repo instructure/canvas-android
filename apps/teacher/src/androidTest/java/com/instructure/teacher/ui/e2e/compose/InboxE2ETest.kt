@@ -14,7 +14,6 @@
  *     limitations under the License.
  *
  */
-
 package com.instructure.teacher.ui.e2e.compose
 
 import android.os.Environment
@@ -32,15 +31,21 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
+import com.instructure.canvas.espresso.pressBackButton
 import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.api.ConversationsApi
 import com.instructure.dataseeding.api.GroupsApi
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.CourseApiModel
+import com.instructure.dataseeding.model.SubmissionType
+import com.instructure.dataseeding.util.days
+import com.instructure.dataseeding.util.fromNow
+import com.instructure.dataseeding.util.iso8601
 import com.instructure.espresso.getVideoPosition
 import com.instructure.espresso.retry
 import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.teacher.ui.utils.TeacherComposeTest
+import com.instructure.teacher.ui.utils.extensions.seedAssignments
 import com.instructure.teacher.ui.utils.extensions.seedData
 import com.instructure.teacher.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -816,26 +821,26 @@ class InboxE2ETest : TeacherComposeTest() {
         Log.d(STEP_TAG, "Click on the attachment to verify it can be opened.")
         inboxDetailsPage.clickAttachment(videoFileName)
 
-        Log.d(ASSERTION_TAG, "Wait for video to load and assert that the media play button is visible.")
-        inboxDetailsPage.assertPlayButtonDisplayed()
+        Log.d(ASSERTION_TAG, "Assert that the media comment preview (and the 'Play button') is displayed.")
+        videoPlayerPage.assertMediaCommentPreviewDisplayed()
 
-        Log.d(STEP_TAG, "Click the play button to start the video and on the screen to show media controls.")
-        inboxDetailsPage.clickPlayButton()
-        inboxDetailsPage.clickScreenCenterToShowControls(device)
+        Log.d(STEP_TAG, "Click the play button to start the video and wait for it to finish loading.")
+        videoPlayerPage.clickPlayButton()
+        videoPlayerPage.waitForVideoToStart(device)
 
         Log.d(ASSERTION_TAG, "Assert that the play/pause button is visible in the media controls.")
-        inboxDetailsPage.assertPlayPauseButtonDisplayed()
+        videoPlayerPage.assertPlayPauseButtonDisplayed()
 
         Log.d(STEP_TAG, "Click play/pause button to pause the video.")
-        inboxDetailsPage.clickPlayPauseButton()
+        videoPlayerPage.clickPlayPauseButton()
 
         Log.d(STEP_TAG, "Get the current video position.")
         val firstPositionText = getVideoPosition(R.id.exo_position)
 
         Log.d(STEP_TAG, "Click play/pause button to resume video playback, wait for video to play for 2 seconds then click play/pause button to pause again.")
-        inboxDetailsPage.clickPlayPauseButton()
+        videoPlayerPage.clickPlayPauseButton()
         sleep(2000)
-        inboxDetailsPage.clickPlayPauseButton()
+        videoPlayerPage.clickPlayPauseButton()
 
         Log.d(STEP_TAG, "Get the video position again.")
         val secondPositionText = getVideoPosition(R.id.exo_position)
@@ -1108,6 +1113,76 @@ class InboxE2ETest : TeacherComposeTest() {
 
         Log.d(ASSERTION_TAG, "Assert that the original message is also displayed.")
         inboxDetailsPage.assertMessageDisplayed(conversationBody)
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.E2E)
+    fun testSendMessageFromAllSubmissionsPageE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 2, teachers = 1, courses = 1)
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+        val student1 = data.studentsList[0]
+        val student2 = data.studentsList[1]
+
+        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course.")
+        val assignment = seedAssignments(
+            courseId = course.id,
+            dueAt = 1.days.fromNow.iso8601,
+            submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+            teacherToken = teacher.token,
+            pointsPossible = 10.0
+        )
+
+        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
+        tokenLogin(teacher)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Open '${course.name}' course and navigate to the Assignments page.")
+        dashboardPage.openCourse(course)
+        courseBrowserPage.openAssignmentsTab()
+
+        Log.d(STEP_TAG, "Navigate to All Submissions page for '${assignment[0].name}' assignment.")
+        assignmentListPage.clickAssignment(assignment[0])
+        assignmentDetailsPage.clickAllSubmissions()
+
+        Log.d(ASSERTION_TAG, "Assert that both '${student1.name}' and '${student2.name}' are listed on the All Submissions page.")
+        assignmentSubmissionListPage.assertHasSubmission(2)
+        assignmentSubmissionListPage.assertHasStudentSubmission(student1)
+        assignmentSubmissionListPage.assertHasStudentSubmission(student2)
+
+        Log.d(STEP_TAG, "Click the 'Add Message' button on the toolbar.")
+        assignmentSubmissionListPage.clickAddMessage()
+
+        Log.d(ASSERTION_TAG, "Assert that both students are pre-populated as recipients.")
+        inboxComposePage.assertRecipientSelected(student1.shortName)
+        inboxComposePage.assertRecipientSelected(student2.shortName)
+
+        val body = "This message was sent from the All Submissions page."
+        Log.d(STEP_TAG, "Type body '$body' and send the message.")
+        inboxComposePage.typeBody(body)
+        inboxComposePage.pressSendButton()
+
+        Log.d(STEP_TAG, "Navigate back from All Submissions to the Dashboard.")
+        pressBackButton(4)
+
+        Log.d(STEP_TAG, "Open Inbox.")
+        dashboardPage.openInbox()
+
+        Log.d(STEP_TAG, "Filter the Inbox by selecting 'Sent' category.")
+        inboxPage.filterInbox("Sent")
+
+        val subject = "All Submissions on ${assignment[0].name}"
+        Log.d(ASSERTION_TAG, "Assert that the sent conversation with subject '$subject' is displayed.")
+        inboxPage.assertConversationDisplayed(subject)
+
+        Log.d(STEP_TAG, "Open the '$subject' conversation.")
+        inboxPage.openConversation(subject)
+
+        Log.d(ASSERTION_TAG, "Assert that the message body '$body' is displayed in the conversation.")
+        inboxDetailsPage.assertMessageDisplayed(body)
     }
 
 }

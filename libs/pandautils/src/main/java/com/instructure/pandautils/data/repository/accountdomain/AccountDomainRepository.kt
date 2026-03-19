@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 - present Instructure, Inc.
+ * Copyright (C) 2026 - present Instructure, Inc.
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -12,22 +12,12 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- *
  */
-package com.instructure.canvasapi2.managers
+package com.instructure.pandautils.data.repository.accountdomain
 
-import com.instructure.canvasapi2.StatusCallback
-import com.instructure.canvasapi2.apis.AccountDomainAPI
 import com.instructure.canvasapi2.models.AccountDomain
 
-object AccountDomainManager {
+interface AccountDomainRepository {
 
-    /**
-     * Searches by campus name or domain based on query input
-     * @param query Any string, strings less than 3 characters are rejected. Any string with a "." will use the domain search.
-     * @param callback Any valid status callback
-     */
-    fun searchAccounts(query: String, callback: StatusCallback<List<AccountDomain>>) {
-        AccountDomainAPI.searchAccounts(query, callback)
-    }
+    suspend fun search(query: String): List<AccountDomain>
 }

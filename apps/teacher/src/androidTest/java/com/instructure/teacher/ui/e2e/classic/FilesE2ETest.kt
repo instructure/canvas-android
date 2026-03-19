@@ -20,8 +20,11 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.pdf.PdfDocument
 import android.os.Environment
+import android.os.SystemClock.sleep
 import android.util.Log
+import androidx.media3.ui.R
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.intent.Intents
 import androidx.test.uiautomator.UiSelector
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
@@ -40,6 +43,8 @@ import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.model.FileUploadType
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.Randomizer
+import com.instructure.espresso.getVideoPosition
+import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.espresso.triggerWorkManagerJobs
 import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.extensions.seedData
@@ -348,6 +353,150 @@ class FilesE2ETest: TeacherComposeTest() {
 
         Log.d(ASSERTION_TAG, "Assert that Comments label is displayed with value '1' because one comment with attachment was uploaded.")
         speedGraderPage.assertCommentsLabelDisplayed(1)
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.FILES, TestCategory.E2E)
+    fun testVideoFileUploadE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+        val videoFileName = "test_video.mp4"
+
+        Log.d(PREPARATION_TAG, "Setup the '$videoFileName' file on the device.")
+        setupFileOnDevice(videoFileName)
+
+        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
+        tokenLogin(teacher)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Navigate to the global 'Files' Page from the left side menu.")
+        leftSideNavigationDrawerPage.clickFilesMenu()
+
+        Log.d(STEP_TAG, "Click on the 'Add' (+) icon and after that on the 'Upload File' icon.")
+        fileListPage.clickAddButton()
+        fileListPage.clickUploadFileButton()
+
+        Log.d(PREPARATION_TAG, "Simulate file picker intent for '$videoFileName'.")
+        Intents.init()
+        try {
+            stubFilePickerIntent(videoFileName)
+            fileChooserPage.chooseDevice()
+        } finally {
+            Intents.release()
+        }
+
+        Log.d(STEP_TAG, "Click on the 'Upload' button.")
+        fileChooserPage.clickUpload()
+
+        Log.d(ASSERTION_TAG, "Assert that '$videoFileName' is displayed in My Files after the upload.")
+        retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = {
+            triggerWorkManagerJobs("FileUploadWorker", 20000)
+        }) {
+            fileListPage.assertItemDisplayed(videoFileName)
+        }
+
+        Log.d(STEP_TAG, "Click on '$videoFileName' to open it.")
+        fileListPage.selectItem(videoFileName)
+
+        Log.d(ASSERTION_TAG, "Assert that the media comment preview (and the 'Play button') is displayed.")
+        videoPlayerPage.assertMediaCommentPreviewDisplayed()
+
+        Log.d(STEP_TAG, "Click the play button to start the video and wait for it to finish loading.")
+        videoPlayerPage.clickPlayButton()
+        videoPlayerPage.waitForVideoToStart(device)
+
+        Log.d(ASSERTION_TAG, "Assert that the play/pause button is visible in the media controls.")
+        videoPlayerPage.assertPlayPauseButtonDisplayed()
+
+        Log.d(STEP_TAG, "Click play/pause button to pause the video.")
+        videoPlayerPage.clickPlayPauseButton()
+
+        Log.d(STEP_TAG, "Get the current video position.")
+        var firstVideoPositionText = getVideoPosition(R.id.exo_position)
+        Log.d(ASSERTION_TAG, "First video position: $firstVideoPositionText")
+
+        Log.d(STEP_TAG, "Click play/pause button to resume video playback, wait for video to play for 2 seconds then click play/pause button to pause again.")
+        videoPlayerPage.clickPlayPauseButton()
+        sleep(2000)
+        videoPlayerPage.clickPlayPauseButton()
+
+        Log.d(STEP_TAG, "Get the video position again.")
+        var secondVideoPositionText = getVideoPosition(R.id.exo_position)
+        Log.d(ASSERTION_TAG, "Second video position: $secondVideoPositionText")
+
+        Log.d(ASSERTION_TAG, "Assert that the video position has changed, confirming video is playing.")
+        assert(firstVideoPositionText != secondVideoPositionText) {
+            "Video position did not change. First: $firstVideoPositionText, Second: $secondVideoPositionText"
+        }
+
+        Log.d(STEP_TAG, "Navigate back to Dashboard Page.")
+        pressBackButton(2)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Open '${course.name}' course and navigate to the Files tab.")
+        dashboardPage.openCourse(course.name)
+        courseBrowserPage.openFilesTab()
+
+        Log.d(STEP_TAG, "Click on the 'Add' (+) icon and after that on the 'Upload File' icon.")
+        fileListPage.clickAddButton()
+        fileListPage.clickUploadFileButton()
+
+        Log.d(PREPARATION_TAG, "Simulate file picker intent for '$videoFileName'.")
+        Intents.init()
+        try {
+            stubFilePickerIntent(videoFileName)
+            fileChooserPage.chooseDevice()
+        } finally {
+            Intents.release()
+        }
+
+        Log.d(STEP_TAG, "Click on the 'Upload' button.")
+        fileChooserPage.clickUpload()
+
+        Log.d(ASSERTION_TAG, "Assert that '$videoFileName' is displayed in course files after the upload.")
+        retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = {
+            triggerWorkManagerJobs("FileUploadWorker", 20000)
+        }) {
+            fileListPage.assertItemDisplayed(videoFileName)
+        }
+
+        Log.d(STEP_TAG, "Click on '$videoFileName' to open it.")
+        fileListPage.selectItem(videoFileName)
+
+        Log.d(ASSERTION_TAG, "Assert that the media comment preview (and the 'Play button') is displayed.")
+        videoPlayerPage.assertMediaCommentPreviewDisplayed()
+
+        Log.d(STEP_TAG, "Click the play button to start the video and wait for it to finish loading.")
+        videoPlayerPage.clickPlayButton()
+        videoPlayerPage.waitForVideoToStart(device)
+
+        Log.d(ASSERTION_TAG, "Assert that the play/pause button is visible in the media controls.")
+        videoPlayerPage.assertPlayPauseButtonDisplayed()
+
+        Log.d(STEP_TAG, "Click play/pause button to pause the video.")
+        videoPlayerPage.clickPlayPauseButton()
+
+        Log.d(STEP_TAG, "Get the current video position.")
+        firstVideoPositionText = getVideoPosition(R.id.exo_position)
+        Log.d(ASSERTION_TAG, "First video position: $firstVideoPositionText")
+
+        Log.d(STEP_TAG, "Click play/pause button to resume video playback, wait for video to play for 2 seconds then click play/pause button to pause again.")
+        videoPlayerPage.clickPlayPauseButton()
+        sleep(2000)
+        videoPlayerPage.clickPlayPauseButton()
+
+        Log.d(STEP_TAG, "Get the video position again.")
+        secondVideoPositionText = getVideoPosition(R.id.exo_position)
+        Log.d(ASSERTION_TAG, "Second video position: $secondVideoPositionText")
+
+        Log.d(ASSERTION_TAG, "Assert that the video position has changed, confirming video is playing.")
+        assert(firstVideoPositionText != secondVideoPositionText) {
+            "Video position did not change. First: $firstVideoPositionText, Second: $secondVideoPositionText"
+        }
     }
 
 }

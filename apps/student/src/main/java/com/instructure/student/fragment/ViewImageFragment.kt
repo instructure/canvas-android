@@ -16,6 +16,7 @@
  */
 package com.instructure.student.fragment
 
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
@@ -77,6 +78,11 @@ class ViewImageFragment : BaseCanvasFragment(), ShareableFile {
             requireActivity().finish()
 
         if (mShowToolbar) setupToolbar() else binding.toolbar.setGone()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        ViewStyler.setStatusBarLightDelayed(requireActivity())
     }
 
     private fun setupToolbar() = with(binding) {
