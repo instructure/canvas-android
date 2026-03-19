@@ -30,6 +30,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -63,6 +65,7 @@ fun FilterChip(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(2.dp),
         modifier = modifier
+            .semantics { this.selected = selected }
             .background(color = backgroundColor, shape = HorizonCornerRadius.level1)
             .border(HorizonBorder.level1(HorizonColors.Surface.inversePrimary()), shape = HorizonCornerRadius.level1)
             .clickable(onClick = onClick)

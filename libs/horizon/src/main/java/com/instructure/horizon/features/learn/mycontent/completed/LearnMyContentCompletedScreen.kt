@@ -74,7 +74,7 @@ fun LearnMyContentCompletedScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun LearnMyContentCompletedContent(
+internal fun LearnMyContentCompletedContent(
     uiState: LearnMyContentUiState<LearnContentCardState>,
     navController: NavHostController,
     contentPadding: PaddingValues = PaddingValues(),

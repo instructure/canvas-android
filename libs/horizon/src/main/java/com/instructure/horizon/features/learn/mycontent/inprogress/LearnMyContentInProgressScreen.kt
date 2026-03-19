@@ -75,7 +75,7 @@ fun LearnMyContentInProgressScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun LearnMyContentInProgressContent(
+internal fun LearnMyContentInProgressContent(
     uiState: LearnMyContentUiState<LearnContentCardState>,
     navController: NavHostController,
     contentPadding: PaddingValues = PaddingValues(),

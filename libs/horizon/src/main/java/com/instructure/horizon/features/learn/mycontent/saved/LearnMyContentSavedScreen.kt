@@ -77,7 +77,7 @@ fun LearnMyContentSavedScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun LearnMyContentSavedContent(
+internal fun LearnMyContentSavedContent(
     uiState: LearnMyContentUiState<LearnLearningLibraryCollectionItemState>,
     navController: NavHostController,
     contentPadding: PaddingValues = PaddingValues(),
