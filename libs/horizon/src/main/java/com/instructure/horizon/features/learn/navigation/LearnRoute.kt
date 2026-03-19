@@ -16,21 +16,13 @@
  */
 package com.instructure.horizon.features.learn.navigation
 
-import com.instructure.horizon.features.learn.LearnTab
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryFilterScreenType
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibrarySortOption
+import com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter
 
 sealed class LearnRoute {
     data object LearnScreen: LearnRoute() {
-        const val selectedTabAttr = "selectedTab"
-        const val selectedTabFromDetailsKey = "selectedTabFromDetails"
-        const val currentTabKey = "currentTab"
-        private const val baseUrl = "learn_screen"
-        const val route = "$baseUrl/{$selectedTabAttr}"
-        fun route(selectedTab: LearnTab? = null): String {
-            return if (selectedTab == null)
-                "$baseUrl"
-            else
-                "$baseUrl/${selectedTab.stringValue}"
-        }
+        const val route = "learn_screen"
     }
 
     data class LearnCourseDetailsScreen(val courseId: Long): LearnRoute() {
@@ -72,9 +64,9 @@ sealed class LearnRoute {
         const val baseUrl = "learning_library/filter"
         const val route = "$baseUrl/{$screenTypeAttr}/{$typeFilterAttr}/{$sortOptionAttr}"
         fun route(
-            screenType: com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryFilterScreenType,
-            typeFilter: com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibraryTypeFilter,
-            sortOption: com.instructure.horizon.features.learn.learninglibrary.common.LearnLearningLibrarySortOption,
+            screenType: LearnLearningLibraryFilterScreenType,
+            typeFilter: LearnLearningLibraryTypeFilter,
+            sortOption: LearnLearningLibrarySortOption,
         ) = "$baseUrl/${screenType.name}/${typeFilter.name}/${sortOption.name}"
     }
 }

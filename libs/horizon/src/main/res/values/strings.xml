@@ -626,10 +626,36 @@
     <string name="learnLearningLibraryFilterAndSortTitle">Filter and sort</string>
     <string name="learnLearningLibraryFilterSortByLabel">Sort by</string>
     <string name="learnLearningLibraryFilterItemTypeLabel">Item type</string>
+    <string name="learnLearningLibraryFilterApplyFiltersLabel">Apply filters</string>
     <string name="learnLearningLibraryFilterClearFiltersLabel">Clear filters</string>
     <string name="learnLearningLibrarySortMostRecentLabel">Most recent</string>
     <string name="learnLearningLibrarySortLeastRecentLabel">Least recent</string>
     <string name="learnLearningLibrarySortNameAZLabel">Name: A-Z</string>
     <string name="learnLearningLibrarySortNameZALabel">Name: Z-A</string>
     <string name="a11y_learnLearningLibraryFilterContentDescription">Filter</string>
+    <string name="learnMyContentCourseLabel">Course</string>
+    <string name="learnMyContentProgramLabel">Program</string>
+    <plurals name="learnMyContentProgramCourseCount">
+        <item quantity="one">%1$d course</item>
+        <item quantity="other">%1$d courses</item>
+    </plurals>
+    <string name="learnMyContentProgramErrorMessage">Failed to load items</string>
+    <string name="learnMyContentStartLearning">Start learning</string>
+    <string name="learnMyContentResumeLearning">Resume learning</string>
+    <string name="LearnMyContentInProgressLabel">In Progress</string>
+    <string name="LearnMyContentCompletedLabel">Completed</string>
+    <string name="LearnMyContentSavedLabel">Saved</string>
+    <string name="learnMyContentSearchLabel">Search</string>
+    <string name="learnMyContentTabLabel">My content</string>
+    <string name="learnMyContentShowMoreLabel">Show more</string>
+    <string name="learnMyContentCoursesSection">Courses</string>
+    <plurals name="learnMyContentItemsCount">
+        <item quantity="one">%1$d item</item>
+        <item quantity="other">%1$d items</item>
+    </plurals>
+    <string name="learnMyContentDurationHrsMin">%1$d hrs %2$d min</string>
+    <string name="learnMyContentDurationHrs">%1$d hrs</string>
+    <string name="learnMyContentDurationMin">%1$d min</string>
+    <string name="learnMyContentEmptyMessage">No results found. Try adjusting your search terms.</string>
+    <string name="learnMyContentSavedFailedToBookmarkErrorMessage">Failed to update</string>
 </resources>

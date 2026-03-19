@@ -30,7 +30,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
@@ -39,12 +43,19 @@ import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 
+enum class FilterChipSize(val fontStyle: TextStyle, val verticalPadding: Dp) {
+    LARGE(HorizonTypography.p2, 6.dp),
+    MEDIUM(HorizonTypography.p2, 2.dp),
+    SMALL(HorizonTypography.p3, 1.dp)
+}
+
 @Composable
 fun FilterChip(
     label: String,
     selected: Boolean,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    size: FilterChipSize = FilterChipSize.MEDIUM
 ) {
     val backgroundColor = if (selected) HorizonColors.Surface.inversePrimary() else HorizonColors.Surface.cardPrimary()
     val textColor = if (selected) HorizonColors.Text.surfaceColored() else HorizonColors.Text.title()
@@ -54,10 +65,11 @@ fun FilterChip(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(2.dp),
         modifier = modifier
+            .semantics { this.selected = selected }
             .background(color = backgroundColor, shape = HorizonCornerRadius.level1)
             .border(HorizonBorder.level1(HorizonColors.Surface.inversePrimary()), shape = HorizonCornerRadius.level1)
             .clickable(onClick = onClick)
-            .padding(horizontal = horizontalPadding, vertical = 4.dp)
+            .padding(horizontal = horizontalPadding, vertical = size.verticalPadding)
     ) {
         if (selected) {
             Icon(
@@ -69,7 +81,7 @@ fun FilterChip(
         }
         Text(
             text = label,
-            style = HorizonTypography.p2,
+            style = size.fontStyle,
             color = textColor
         )
     }

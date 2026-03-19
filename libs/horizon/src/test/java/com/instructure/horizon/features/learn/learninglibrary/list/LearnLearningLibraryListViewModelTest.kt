@@ -483,11 +483,25 @@ class LearnLearningLibraryListViewModelTest {
     }
 
     @Test
-    fun `UpdateLearningLibraryFilter event with non-Browse screenType is ignored`() = runTest {
+    fun `UpdateLearningLibraryFilter event with MyContent screenType is ignored by Browse VM`() = runTest {
         val viewModel = getViewModel()
 
         eventHandler.postEvent(LearnEvent.UpdateLearningLibraryFilter(
             screenType = LearnLearningLibraryFilterScreenType.MyContent,
+            typeFilter = LearnLearningLibraryTypeFilter.Pages,
+            sortOption = LearnLearningLibrarySortOption.MostRecent
+        ))
+
+        assertEquals(LearnLearningLibraryTypeFilter.All, viewModel.uiState.value.typeFilter)
+        assertEquals(0, viewModel.uiState.value.activeFilterCount)
+    }
+
+    @Test
+    fun `UpdateLearningLibraryFilter event with MyContentSaved screenType is ignored by Browse VM`() = runTest {
+        val viewModel = getViewModel()
+
+        eventHandler.postEvent(LearnEvent.UpdateLearningLibraryFilter(
+            screenType = LearnLearningLibraryFilterScreenType.MyContentSaved,
             typeFilter = LearnLearningLibraryTypeFilter.Pages,
             sortOption = LearnLearningLibrarySortOption.MostRecent
         ))

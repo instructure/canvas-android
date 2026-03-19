@@ -165,12 +165,41 @@ type WidgetActionGQL {
     updatedAt: DateTime!
 }
 
+type PageCursorGQL {
+    # Page number (1-based)
+    page: Int!
+
+    # Cursor to pass when fetching this page (null for page 1)
+    cursor: String
+}
+
+type CursorPaginationInfoGQL {
+    # Cursor for the next page
+    nextCursor: String
+
+    # Cursor for the previous page
+    previousCursor: String
+
+    # Whether there is a next page
+    hasNextPage: Boolean!
+
+    # Whether there is a previous page
+    hasPreviousPage: Boolean!
+
+    # Total count of items
+    totalCount: Int
+
+    # Cursors for all pages, enabling direct navigation to any page number
+    pageCursors: [PageCursorGQL!]
+}
+
 type WidgetDataResultGQL {
     # The most recent last modified timestamp among the underlying S3 objects used for this widget data
     lastModifiedDate: DateTime
 
     # The widget data array (unchanged from the legacy getWidgetData)
     data: [JSON!]!
+    pageInfo: CursorPaginationInfoGQL
 }
 
 type WidgetGroupUserDataGQL {
@@ -275,6 +304,114 @@ type PlatformEngagementTrend {
     trend: Float!
 }
 
+type LearnItemsResponseGQL {
+    # List of learn items (programs and courses)
+    items: [LearnItem!]!
+
+    # Pagination information
+    pageInfo: CursorPaginationInfoGQL!
+}
+
+# A learn item that can be either a program or a course enrollment
+union LearnItem = ProgramEnrollmentItemGQL | CourseEnrollmentItemGQL
+
+type ProgramEnrollmentItemGQL {
+    # Unique identifier for the program
+    id: String!
+
+    # Name of the program
+    name: String!
+
+    # Position in the sorted list
+    position: Int!
+
+    # Type of item (always PROGRAM for this type)
+    itemType: LearnItemType!
+
+    # Program start date
+    startDate: DateTime
+
+    # Program end date
+    endDate: DateTime
+
+    # When the user was enrolled in the program
+    enrolledAt: DateTime
+
+    # Completion percentage (0-100)
+    completionPercentage: Float
+
+    # Enrollment status (active, completed, dropped)
+    status: String!
+
+    # Program description
+    description: String
+
+    # Program variant type (linear or non_linear)
+    variant: String!
+
+    # Estimated duration in minutes (sum of all courses)
+    estimatedDurationMinutes: Int
+
+    # Number of courses in the program
+    courseCount: Int!
+}
+
+# Type of learn item - either a program or a standalone course
+enum LearnItemType {
+    # A learning program composed of multiple courses
+    PROGRAM
+
+    # A standalone Canvas course not part of a program
+    COURSE
+}
+
+type CourseEnrollmentItemGQL {
+    # Unique identifier for the course
+    id: String!
+
+    # Name of the course
+    name: String!
+
+    # Position in the sorted list
+    position: Int!
+
+    # Type of item (always COURSE for this type)
+    itemType: LearnItemType!
+
+    # Course start date
+    startAt: DateTime
+
+    # Course end date
+    endAt: DateTime
+
+    # When the user was enrolled in the course (null if unknown)
+    enrolledAt: DateTime
+
+    # Completion percentage (0-100)
+    completionPercentage: Float
+
+    # Total number of requirements in the course
+    requirementCount: Int
+
+    # Number of completed requirements
+    requirementCompletedCount: Int
+
+    # When the course was completed
+    completedAt: DateTime
+
+    # Final grade (0-100)
+    grade: Float
+
+    # Course image URL
+    imageUrl: String
+
+    # Course workflow state (available, completed, etc.)
+    workflowState: String!
+
+    # Last activity timestamp in the course
+    lastActivityAt: DateTime
+}
+
 type UserMetadataGQL {
     # Unique identifier for the user metadata
     id: ID!
@@ -332,34 +469,6 @@ type DeleteUsersResultGQL {
 type MetadataUsersGql {
     # List of users
     users: [MetadataUserGQL!]!
-}
-
-type PageCursorGQL {
-    # Page number (1-based)
-    page: Int!
-
-    # Cursor to pass when fetching this page (null for page 1)
-    cursor: String
-}
-
-type CursorPaginationInfoGQL {
-    # Cursor for the next page
-    nextCursor: String
-
-    # Cursor for the previous page
-    previousCursor: String
-
-    # Whether there is a next page
-    hasNextPage: Boolean!
-
-    # Whether there is a previous page
-    hasPreviousPage: Boolean!
-
-    # Total count of items
-    totalCount: Int
-
-    # Cursors for all pages, enabling direct navigation to any page number
-    pageCursors: [PageCursorGQL!]
 }
 
 type CanvasCourseInfoGQL {
@@ -1316,6 +1425,9 @@ type Query {
         sortField: EnrollmentSortField
         sortDirection: SortDirection
     ): LearningLibraryCollectionEnrollmentsResponseGQL!
+
+    # Get user's enrolled programs and standalone courses with cursor-based pagination, search, filtering, and sorting
+    learnItems(input: LearnItemsQueryInput): LearnItemsResponseGQL!
     crmConfigJwt: CrmJwtGQL!
     testSnowflakeQuery: JSON!
     getSnowflakeQueryStatus(queryId: String!): String!
@@ -1479,6 +1591,51 @@ enum SortDirection {
     DESC
 }
 
+input LearnItemsQueryInput {
+    # Cursor for pagination (opaque item ID from previous page - can be program UUID or Canvas course ID)
+    cursor: String
+
+    # Number of items to return per page (default: 4, max: 100)
+    limit: Int = 4
+
+    # Direction to paginate (true = forward/next, false = backward/previous)
+    forward: Boolean = true
+
+    # Search term to filter items by name (case-insensitive, partial match)
+    searchTerm: String
+
+    # Filter by item types (PROGRAM, COURSE). If not provided, returns both types.
+    itemTypes: [LearnItemType!]
+
+    # Filter by completion status (IN_PROGRESS, COMPLETED, NOT_STARTED). If not provided, returns all statuses.
+    status: [LearnItemStatus!]
+
+    # Sort order for items (default: MOST_RECENT)
+    sortBy: LearnItemSortOption = MOST_RECENT
+}
+
+# Status of a learn item based on completion percentage
+enum LearnItemStatus {
+    IN_PROGRESS
+    COMPLETED
+    NOT_STARTED
+}
+
+# Sort options for learn items (programs and courses)
+enum LearnItemSortOption {
+    # Sort by enrollment date, newest first (most recently enrolled)
+    MOST_RECENT
+
+    # Sort by enrollment date, oldest first (least recently enrolled)
+    LEAST_RECENT
+
+    # Sort by name alphabetically (A to Z)
+    NAME_A_Z
+
+    # Sort by name reverse alphabetically (Z to A)
+    NAME_Z_A
+}
+
 input TimeSpanInput {
     type: TimeSpanType!
     startDate: DateTime
@@ -1504,6 +1661,8 @@ input WidgetDataFiltersInput {
     delayDaysAfterAction: Float
     year: Float
     month: Float
+    cursor: String
+    limit: Int
 }
 
 input UsersQueryInputGQL {

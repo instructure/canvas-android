@@ -17,6 +17,7 @@
 package com.instructure.horizon.ui.features.learn
 
 import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -202,13 +203,13 @@ class LearnLearningLibraryListUiTest {
             LearnLearningLibraryListScreen(state = state, navController = rememberNavController())
         }
 
-        composeTestRule.onNodeWithTag("CollapsableBody").performScrollToNode(hasText("Software Engineering Basics"))
+        composeTestRule.onNodeWithTag("CollapsableBody").performScrollToNode(hasContentDescription("Software Engineering Basics"))
         composeTestRule.onNodeWithText("Software Engineering Basics", useUnmergedTree = true).assertIsDisplayed()
 
-        composeTestRule.onNodeWithTag("CollapsableBody").performScrollToNode(hasText("Data Science Fundamentals"))
+        composeTestRule.onNodeWithTag("CollapsableBody").performScrollToNode(hasContentDescription("Data Science Fundamentals"))
         composeTestRule.onNodeWithText("Data Science Fundamentals", useUnmergedTree = true).assertIsDisplayed()
 
-        composeTestRule.onNodeWithTag("CollapsableBody").performScrollToNode(hasText("Web Development"))
+        composeTestRule.onNodeWithTag("CollapsableBody").performScrollToNode(hasContentDescription("Web Development"))
         composeTestRule.onNodeWithText("Web Development", useUnmergedTree = true).assertIsDisplayed()
     }
 

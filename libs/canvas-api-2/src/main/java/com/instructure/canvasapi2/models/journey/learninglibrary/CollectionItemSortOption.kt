@@ -17,6 +17,7 @@
 package com.instructure.canvasapi2.models.journey.learninglibrary
 
 import com.instructure.journey.type.CollectionItemSortOption as ApolloCollectionItemSortOption
+import com.instructure.journey.type.LearnItemSortOption as ApolloLearnItemSortOption
 
 enum class CollectionItemSortOption {
     MOST_RECENT,
@@ -41,5 +42,14 @@ fun ApolloCollectionItemSortOption.toModel(): CollectionItemSortOption? {
         ApolloCollectionItemSortOption.NAME_A_Z -> CollectionItemSortOption.NAME_A_Z
         ApolloCollectionItemSortOption.NAME_Z_A -> CollectionItemSortOption.NAME_Z_A
         else -> null
+    }
+}
+
+fun CollectionItemSortOption.toLearnItemSortOption(): ApolloLearnItemSortOption {
+    return when (this) {
+        CollectionItemSortOption.MOST_RECENT -> ApolloLearnItemSortOption.MOST_RECENT
+        CollectionItemSortOption.LEAST_RECENT -> ApolloLearnItemSortOption.LEAST_RECENT
+        CollectionItemSortOption.NAME_A_Z -> ApolloLearnItemSortOption.NAME_A_Z
+        CollectionItemSortOption.NAME_Z_A -> ApolloLearnItemSortOption.NAME_Z_A
     }
 }

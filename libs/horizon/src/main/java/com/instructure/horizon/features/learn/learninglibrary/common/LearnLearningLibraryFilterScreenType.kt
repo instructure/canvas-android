@@ -18,5 +18,6 @@ package com.instructure.horizon.features.learn.learninglibrary.common
 
 enum class LearnLearningLibraryFilterScreenType {
     Browse,
-    MyContent
+    MyContent,
+    MyContentSaved
 }

@@ -189,6 +189,7 @@ class LearnLearningLibraryDetailsViewModel @Inject constructor(
         return when (typeFilter) {
             LearnLearningLibraryTypeFilter.All -> true
             LearnLearningLibraryTypeFilter.Courses -> this.itemType == CollectionItemType.COURSE
+            LearnLearningLibraryTypeFilter.Programs -> this.itemType == CollectionItemType.PROGRAM
             LearnLearningLibraryTypeFilter.Assessments -> this.itemType == CollectionItemType.QUIZ
             LearnLearningLibraryTypeFilter.Assignments -> this.itemType == CollectionItemType.ASSIGNMENT
             LearnLearningLibraryTypeFilter.ExternalLinks -> this.itemType == CollectionItemType.EXTERNAL_URL

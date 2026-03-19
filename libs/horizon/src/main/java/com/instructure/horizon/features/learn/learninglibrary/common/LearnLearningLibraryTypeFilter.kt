@@ -18,10 +18,12 @@ package com.instructure.horizon.features.learn.learninglibrary.common
 
 import androidx.annotation.StringRes
 import com.instructure.canvasapi2.models.journey.learninglibrary.CollectionItemType
+import com.instructure.canvasapi2.models.journey.mycontent.LearnItemType
 import com.instructure.horizon.R
 
 enum class LearnLearningLibraryTypeFilter(@StringRes val labelRes: Int) {
     All(R.string.LearnLearningLibraryTypeFilterAllLabel),
+    Programs(R.string.LearnLearningLibraryTypeFilterProgramsLabel),
     Courses(R.string.LearnLearningLibraryTypeFilterCoursesLabel),
     Assessments(R.string.LearnLearningLibraryTypeFilterAssessmentsLabel),
     Assignments(R.string.LearnLearningLibraryTypeFilterAssignmentsLabel),
@@ -34,6 +36,7 @@ enum class LearnLearningLibraryTypeFilter(@StringRes val labelRes: Int) {
     fun toCollectionItemType(): CollectionItemType? {
         return when(this) {
             All -> null
+            Programs -> CollectionItemType.PROGRAM
             Courses -> CollectionItemType.COURSE
             Assessments -> CollectionItemType.QUIZ
             Assignments -> CollectionItemType.ASSIGNMENT
@@ -42,5 +45,11 @@ enum class LearnLearningLibraryTypeFilter(@StringRes val labelRes: Int) {
             Files -> CollectionItemType.FILE
             Pages -> CollectionItemType.PAGE
         }
+    }
+
+    fun toLearnItemType(): LearnItemType? = when (this) {
+        Programs -> LearnItemType.PROGRAM
+        Courses -> LearnItemType.COURSE
+        else -> null
     }
 }
