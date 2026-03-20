@@ -447,6 +447,42 @@ class InboxDetailsViewModelTest {
     }
 
     @Test
+    fun `Test archiving conversation shows archived snackbar`() = runTest {
+        val viewModel = getViewModel()
+        val newState = Conversation.WorkflowState.ARCHIVED
+        val newConversation = conversation.copy(workflowState = newState)
+
+        coEvery { inboxDetailsRepository.updateState(conversation.id, newState) } returns DataResult.Success(newConversation)
+
+        val events = mutableListOf<InboxDetailsFragmentAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.handleAction(InboxDetailsAction.UpdateState(conversation.id, newState))
+
+        assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationArchived)), events[0])
+    }
+
+    @Test
+    fun `Test unarchiving conversation shows unarchived snackbar`() = runTest {
+        val viewModel = getViewModel()
+        val newState = Conversation.WorkflowState.READ
+        val newConversation = conversation.copy(workflowState = newState)
+
+        coEvery { inboxDetailsRepository.updateState(conversation.id, newState) } returns DataResult.Success(newConversation)
+
+        val events = mutableListOf<InboxDetailsFragmentAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        viewModel.handleAction(InboxDetailsAction.UpdateState(conversation.id, newState))
+
+        assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationUnarchived)), events[0])
+    }
+
+    @Test
     fun `Test Conversation workflow state update failed`() = runTest {
         val viewModel = getViewModel()
         val newState = Conversation.WorkflowState.READ

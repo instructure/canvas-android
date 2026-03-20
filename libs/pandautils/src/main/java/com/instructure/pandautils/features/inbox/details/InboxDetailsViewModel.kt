@@ -274,7 +274,12 @@ class InboxDetailsViewModel @Inject constructor(
             val result = repository.updateState(conversationId, state)
             if (result.isSuccess) {
                 _uiState.update { it.copy(conversation = it.conversation?.copy(workflowState = result.dataOrNull?.workflowState)) }
-
+                val message = if (state == Conversation.WorkflowState.ARCHIVED) {
+                    context.getString(R.string.conversationArchived)
+                } else {
+                    context.getString(R.string.conversationUnarchived)
+                }
+                _events.send(InboxDetailsFragmentAction.ShowScreenResult(message))
                 refreshParentFragment()
             } else {
                 _events.send(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationUpdateFailed)))
