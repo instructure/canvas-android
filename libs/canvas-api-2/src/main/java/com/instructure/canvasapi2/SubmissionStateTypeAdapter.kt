@@ -20,6 +20,7 @@ import com.google.gson.*
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonWriter
 import com.instructure.canvasapi2.models.SubmissionState
+import com.instructure.canvasapi2.utils.toDate
 import java.lang.reflect.Type
 
 class SubmissionStateTypeAdapter : JsonDeserializer<SubmissionState?> {
@@ -34,7 +35,8 @@ class SubmissionStateTypeAdapter : JsonDeserializer<SubmissionState?> {
             val needsGrading = json.asJsonObject?.get("needs_grading")?.asBoolean ?: false
             val withFeedback = json.asJsonObject?.get("with_feedback")?.asBoolean ?: false
             val redoRequest = json.asJsonObject?.get("redo_request")?.asBoolean ?: false
-            return SubmissionState(submitted, missing, late, excused, graded, needsGrading, withFeedback, redoRequest)
+            val postedAt = json.asJsonObject?.get("posted_at")?.takeIf { !it.isJsonNull }?.asString?.toDate()
+            return SubmissionState(submitted, missing, late, excused, graded, needsGrading, withFeedback, redoRequest, postedAt)
         } else {
             return null
         }
