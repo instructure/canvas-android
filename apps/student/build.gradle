@@ -318,8 +318,6 @@ dependencies {
     implementation Libs.ANDROIDX_WORK_MANAGER
     implementation Libs.ANDROIDX_WORK_MANAGER_KTX
 
-    implementation Libs.PENDO
-
     /* ROOM */
     implementation Libs.ROOM
     ksp Libs.ROOM_COMPILER

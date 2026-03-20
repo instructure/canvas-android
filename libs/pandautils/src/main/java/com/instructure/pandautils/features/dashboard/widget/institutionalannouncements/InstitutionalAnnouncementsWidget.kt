@@ -67,6 +67,7 @@ import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ThemedColor
 import kotlinx.coroutines.flow.SharedFlow
+import sdk.pendo.io.pendoTag
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -194,6 +195,7 @@ private fun AnnouncementCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .pendoTag("institutionalAnnouncementsWidget_announcementCard", true)
                 .clickable(onClick = onClick)
                 .padding(16.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -287,6 +289,7 @@ private fun AnnouncementCard(
                 contentDescription = null,
                 modifier = Modifier
                     .size(24.dp)
+                    .pendoTag("institutionalAnnouncementsWidget_dismissAnnouncement", true)
                     .clickable(onClick = onDismiss),
                 tint = colorResource(R.color.textDark)
             )

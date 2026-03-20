@@ -75,6 +75,7 @@ import com.instructure.pandautils.features.dashboard.widget.courses.model.GradeD
 import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getFragmentActivityOrNull
+import sdk.pendo.io.pendoTag
 
 internal val COURSE_CARD_HEIGHT = 76.dp
 
@@ -119,6 +120,7 @@ fun CourseCard(
                 .fillMaxWidth()
                 .height(COURSE_CARD_HEIGHT)
                 .alpha(if (courseCard.isClickable) 1f else 0.5f)
+                .pendoTag("coursesWidget_courseCard", true)
                 .clickable(enabled = courseCard.isClickable) { activity?.let { onCourseClick(it, courseCard.id) } },
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -157,6 +159,7 @@ fun CourseCard(
                         Box(
                             modifier = Modifier
                                 .size(24.dp)
+                                .pendoTag("coursesWidget_courseCardMenu", true)
                                 .clickable(onClick = openMenuClick)
                                 .background(
                                     color = colorResource(R.color.backgroundLightest),
@@ -189,7 +192,8 @@ fun CourseCard(
                                 onClick = {
                                     showMenu = false
                                     activity?.let { onManageOfflineContent.invoke(it, courseCard.id) }
-                                }
+                                },
+                                modifier = Modifier.pendoTag("coursesWidget_manageOfflineContent", true)
                             )
                             DropdownMenuItem(
                                 text = {
@@ -202,7 +206,8 @@ fun CourseCard(
                                 onClick = {
                                     showMenu = false
                                     activity?.let { onCustomizeCourse.invoke(it, courseCard.id) }
-                                }
+                                },
+                                modifier = Modifier.pendoTag("coursesWidget_customizeCourse", true)
                             )
                         }
                     }
@@ -248,6 +253,7 @@ fun CourseCard(
                     modifier = Modifier
                         .clip(CircleShape)
                         .size(48.dp)
+                        .pendoTag("coursesWidget_announcementBell", true)
                         .clickable(enabled = courseCard.isClickable) {
                             activity?.let {
                                 onAnnouncementClick?.invoke(
