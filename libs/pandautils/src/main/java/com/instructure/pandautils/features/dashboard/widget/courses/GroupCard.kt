@@ -59,6 +59,7 @@ import com.instructure.pandautils.compose.composables.Shimmer
 import com.instructure.pandautils.features.dashboard.widget.courses.model.GroupCardItem
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getFragmentActivityOrNull
+import sdk.pendo.io.pendoTag
 
 @Composable
 fun GroupCard(
@@ -85,6 +86,7 @@ fun GroupCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(76.dp)
+                .pendoTag("coursesWidget_groupCard", true)
                 .clickable { activity?.let { onGroupClick(it, groupCard.id) } },
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -174,6 +176,7 @@ fun GroupCard(
                     .padding(end = 16.dp)
                     .clip(CircleShape)
                     .size(48.dp)
+                    .pendoTag("coursesWidget_groupMessage", true)
                     .clickable { activity?.let { onMessageClick.invoke(it, groupCard.id) } },
                 contentAlignment = Alignment.Center
             ) {

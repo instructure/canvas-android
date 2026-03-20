@@ -87,6 +87,7 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.format.TextStyle
 import java.util.Date
 import java.util.Locale
+import sdk.pendo.io.pendoTag
 
 @Composable
 fun TodoWidget(
@@ -169,7 +170,8 @@ fun TodoWidgetContent(
                     title = stringResource(R.string.todoWidget_today),
                     onClick = uiState.onJumpToToday,
                     buttonColor = Color(uiState.color.color()),
-                    textColor = colorResource(R.color.textLightest)
+                    textColor = colorResource(R.color.textLightest),
+                    modifier = Modifier.pendoTag("todoWidget_todayButton", true)
                 )
             } else {
                 Spacer(modifier = Modifier.height(24.dp))
@@ -230,7 +232,7 @@ fun TodoWidgetContent(
                                 checked = uiState.showCompleted,
                                 onCheckedChange = { uiState.onToggleShowCompleted() },
                                 color = Color(uiState.color.color()),
-                                modifier = Modifier.testTag("ShowCompletedSwitch")
+                                modifier = Modifier.testTag("ShowCompletedSwitch").pendoTag("todoWidget_showCompletedSwitch", true)
                             )
                         }
                     }
@@ -294,6 +296,7 @@ fun TodoWidgetContent(
                         modifier = Modifier
                             .align(Alignment.TopStart)
                             .offset(x = 8.dp, y = calendarCenterY - 12.dp)
+                            .pendoTag("todoWidget_previousWeek", true)
                     )
 
                     CalendarNavigationButton(
@@ -305,6 +308,7 @@ fun TodoWidgetContent(
                         modifier = Modifier
                             .align(Alignment.TopEnd)
                             .offset(x = (-8).dp, y = calendarCenterY - 12.dp)
+                            .pendoTag("todoWidget_nextWeek", true)
                     )
                 }
             }
@@ -479,7 +483,7 @@ private fun TodoItemsError(
                     containerColor = buttonColor
                 ),
                 shape = RoundedCornerShape(100.dp),
-                modifier = Modifier.height(30.dp),
+                modifier = Modifier.height(30.dp).pendoTag("todoWidget_refreshButton", true),
                 contentPadding = PaddingValues(
                     start = 12.dp,
                     top = 4.dp,
@@ -570,7 +574,7 @@ private fun AddTodoButton(
             containerColor = buttonColor
         ),
         shape = RoundedCornerShape(24.dp),
-        modifier = modifier.height(30.dp),
+        modifier = modifier.height(30.dp).pendoTag("todoWidget_addTodoButton", true),
         contentPadding = PaddingValues(
             start = 8.dp,
             top = 4.dp,
