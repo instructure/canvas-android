@@ -498,6 +498,10 @@ class AssignmentDetailsFragment : BasePresenterFragment<
     override fun onResume() {
         super.onResume()
         setupToolbar()
+        if (needToForceNetwork) {
+            needToForceNetwork = false
+            presenter.loadData(true)
+        }
     }
 
     override fun onStart() {
