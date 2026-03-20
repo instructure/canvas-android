@@ -31,6 +31,7 @@ import com.instructure.canvasapi2.utils.toDate
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.composables.calendar.CalendarStateMapper
 import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
 import com.instructure.pandautils.utils.getIconForPlannerItem
 import com.instructure.pandautils.utils.getTagForPlannerItem
@@ -316,9 +317,9 @@ class CalendarViewModel @Inject constructor(
     private fun getContextNameForPlannerItem(plannerItem: PlannerItem): String {
         return if (plannerItem.plannableType == PlannableType.PLANNER_NOTE) {
             if (plannerItem.contextName.isNullOrEmpty()) {
-                context.getString(R.string.userCalendarToDo)
+                context.getString(R.string.userCalendarToDoNew)
             } else {
-                context.getString(R.string.courseToDo, plannerItem.contextName)
+                context.getString(R.string.courseToDoNew, plannerItem.contextName)
             }
         } else {
             plannerItem.contextName.orEmpty()
@@ -532,7 +533,10 @@ class CalendarViewModel @Inject constructor(
         viewModelScope.launch {
             val event = when (plannerItem.plannableType) {
                 PlannableType.ASSIGNMENT -> {
-                    CalendarViewModelAction.OpenAssignment(plannerItem.canvasContext, plannerItem.plannable.id)
+                    CalendarViewModelAction.OpenAssignment(
+                        plannerItem.canvasContext,
+                        plannerItem.plannable.assignmentId ?: plannerItem.plannable.id
+                    )
                 }
 
                 PlannableType.SUB_ASSIGNMENT -> {

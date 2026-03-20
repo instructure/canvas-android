@@ -487,6 +487,7 @@
     <string name="a11y_markAsDoneWithName">%s Merkja sem lokið</string>
     <string name="a11y_markAsNotDoneWithName">%s Merkja sem ólokið</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="a11y_expand_collapse">Stækka eða minnka hluta</string>
     <string name="inboxSignatureError">Mistókst að hlaða undirskrift innhólfs</string>
     <string name="inboxSignatureSettingsUpdated">Innhólfsstillingar vistaðar!</string>
     <string name="inboxSignatureSettingsError">Mistókst að vista innhólfsstillingar</string>
@@ -500,4 +501,8 @@
         <item quantity="other">%d mín.</item>
     </plurals>
     <string name="notATeacherDescription">Eitthvað af hinum öppunum okkar gæti hentað betur. Pikkaðu á tákn til að skrá þig inn þar.</string>
+    <string name="gradePercentAccessibility">Einkunn: %d prósent</string>
+    <string name="gradePointsAccessibility">Einkunn: %s punktar</string>
+    <string name="gradePercentTextFieldAccessibility">Einkunn: %d prósent, %s</string>
+    <string name="gradePointsTextFieldAccessibility">Einkunn: %s punktar, %s</string>
 </resources>

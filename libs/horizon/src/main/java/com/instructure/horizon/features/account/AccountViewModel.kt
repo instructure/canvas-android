@@ -20,6 +20,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.ExperienceSummary
+import com.instructure.canvasapi2.models.HelpLink
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
@@ -34,6 +35,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,7 +45,8 @@ class AccountViewModel @Inject constructor(
     private val logoutHelper: LogoutHelper,
     private val databaseProvider: DatabaseProvider,
     private val alarmScheduler: AlarmScheduler,
-    private val apiPrefs: ApiPrefs
+    private val apiPrefs: ApiPrefs,
+    private val accountEventHandler: AccountEventHandler
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(
         AccountUiState(
@@ -59,9 +62,22 @@ class AccountViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     private var showExperienceSwitcher = false
+    private var helpLinks: List<HelpLink> = emptyList()
 
     init {
         initData()
+
+        viewModelScope.launch {
+            accountEventHandler.events.collect { event ->
+                when (event) {
+                    is AccountEvent.ShowSnackbar -> {
+                        _uiState.update {
+                            it.copy(screenState = it.screenState.copy(snackbarMessage = event.message))
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun initOptions() {
@@ -70,7 +86,7 @@ class AccountViewModel @Inject constructor(
                 accountGroups = buildList {
                     if (showExperienceSwitcher) add(getExperienceGroup())
                     add(getSettingsGroup())
-                    add(getSupportGroup())
+                    add(getHelpGroup())
                     add(getLogOutGroup())
                 }
             )
@@ -114,14 +130,25 @@ class AccountViewModel @Inject constructor(
         )
     )
 
-    private fun getSupportGroup() = AccountGroupState(
-        title = context.getString(R.string.accountSupportHeading),
-        items = listOf(
-            AccountItemState(
-                title = context.getString(R.string.accountReportABug),
-                type = AccountItemType.OpenExternal(AccountRoute.BugReportWebView)
-            )
-        )
+    private fun getHelpGroup() = AccountGroupState(
+        title = context.getString(R.string.accountHelpHeading),
+        items = helpLinks.map { helpLink ->
+            val enabledIds = listOf("report_a_problem", "training_services_portal")
+
+            val title = if (helpLink.id == "report_a_problem")
+                context.getString(R.string.reportProblem)
+            else
+                helpLink.text ?: helpLink.subtext ?: ""
+
+            val type = if (helpLink.id == "report_a_problem")
+                AccountItemType.OpenWithoutIndicator(AccountRoute.ReportABug)
+            else
+                AccountItemType.OpenExternal(helpLink.url.orEmpty())
+
+            val visible = (enabledIds.contains(helpLink.id) || helpLink.type == "custom") && helpLink.availableTo.contains("student")
+
+            AccountItemState(title, type, visible)
+        }
     )
 
     private fun getLogOutGroup() = AccountGroupState(
@@ -141,15 +168,7 @@ class AccountViewModel @Inject constructor(
             initOptions()
             _uiState.update { it.copy(screenState = it.screenState.copy(isLoading = false)) }
         } catch {
-            _uiState.update {
-                it.copy(
-                    screenState = it.screenState.copy(
-                        isLoading = false,
-                        isError = true,
-                        errorMessage = context.getString(R.string.failedToLoadAccount)
-                    )
-                )
-            }
+            _uiState.update { it.copy(screenState = it.screenState.copy(isLoading = false, isError = true)) }
         }
     }
 
@@ -158,6 +177,8 @@ class AccountViewModel @Inject constructor(
 
         val experiences = repository.getExperiences(forceRefresh = forceRefresh)
         showExperienceSwitcher = experiences.contains(ExperienceSummary.ACADEMIC_EXPERIENCE)
+
+        helpLinks = repository.getHelpLinks(forceRefresh = forceRefresh)
 
         _uiState.update {
             it.copy(

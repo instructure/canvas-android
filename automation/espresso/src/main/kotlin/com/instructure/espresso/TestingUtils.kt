@@ -13,10 +13,12 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+
 package com.instructure.espresso
 
 import android.os.Build
 import android.view.View
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ApplicationProvider
@@ -339,4 +341,22 @@ private fun waitForWorkManagerJobsToComplete(tag: String? = null, timeoutMillis:
 
         Thread.sleep(100)
     }
+}
+
+/**
+ * Gets the video position text from a media player view.
+ * Useful for verifying video playback progress in E2E tests.
+ *
+ * @param viewId The resource ID of the TextView displaying the video position (e.g., exo_position)
+ * @return The position text as a String (e.g., "0:05")
+ */
+fun getVideoPosition(viewId: Int): String {
+    var positionText = ""
+    onView(withId(viewId))
+        .check { view, _ ->
+            if (view is TextView) {
+                positionText = view.text.toString()
+            }
+        }
+    return positionText
 }

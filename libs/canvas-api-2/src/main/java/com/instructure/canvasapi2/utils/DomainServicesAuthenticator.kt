@@ -18,7 +18,6 @@ package com.instructure.canvasapi2.utils
 
 import com.instructure.canvasapi2.managers.graphql.horizon.DomainServicesAuthenticationManager
 import com.instructure.canvasapi2.managers.graphql.horizon.JourneyAuthenticationManager
-import com.instructure.canvasapi2.managers.graphql.horizon.RedwoodAuthenticationManager
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
 import okhttp3.Request
@@ -45,10 +44,6 @@ abstract class DomainServicesAuthenticator(
             .build()
     }
 }
-
-class RedwoodAuthenticator @Inject constructor(
-    redwoodAuthenticationManager: RedwoodAuthenticationManager
-) : DomainServicesAuthenticator(redwoodAuthenticationManager)
 
 class JourneyAuthenticator @Inject constructor(
     journeyAuthenticationManager: JourneyAuthenticationManager

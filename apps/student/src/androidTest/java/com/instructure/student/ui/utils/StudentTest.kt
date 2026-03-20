@@ -34,6 +34,7 @@ import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.canvas.espresso.common.pages.AboutPage
 import com.instructure.canvas.espresso.common.pages.CanvasNetworkSignInPage
 import com.instructure.canvas.espresso.common.pages.EmailNotificationsPage
+import com.instructure.canvas.espresso.common.pages.FileChooserPage
 import com.instructure.canvas.espresso.common.pages.InboxPage
 import com.instructure.canvas.espresso.common.pages.LegalPage
 import com.instructure.canvas.espresso.common.pages.LoginFindSchoolPage
@@ -55,14 +56,12 @@ import com.instructure.student.ui.pages.classic.CanvasWebViewPage
 import com.instructure.student.ui.pages.classic.ConferenceDetailsPage
 import com.instructure.student.ui.pages.classic.ConferenceListPage
 import com.instructure.student.ui.pages.classic.CourseBrowserPage
-import com.instructure.student.ui.pages.classic.CourseGradesPage
 import com.instructure.student.ui.pages.classic.DashboardPage
 import com.instructure.student.ui.pages.classic.DiscussionDetailsPage
 import com.instructure.student.ui.pages.classic.DiscussionListPage
-import com.instructure.student.ui.pages.classic.FileChooserPage
+import com.instructure.student.ui.pages.classic.ElementaryGradesPage
 import com.instructure.student.ui.pages.classic.FileListPage
 import com.instructure.student.ui.pages.classic.GoToQuizPage
-import com.instructure.student.ui.pages.classic.GradesPage
 import com.instructure.student.ui.pages.classic.GroupBrowserPage
 import com.instructure.student.ui.pages.classic.HelpPage
 import com.instructure.student.ui.pages.classic.LeftSideNavigationDrawerPage
@@ -86,7 +85,6 @@ import com.instructure.student.ui.pages.classic.ShareExtensionStatusPage
 import com.instructure.student.ui.pages.classic.ShareExtensionTargetPage
 import com.instructure.student.ui.pages.classic.SubmissionDetailsPage
 import com.instructure.student.ui.pages.classic.SyllabusPage
-import com.instructure.student.ui.pages.classic.TextSubmissionUploadPage
 import com.instructure.student.ui.pages.classic.UrlSubmissionUploadPage
 import com.instructure.student.ui.pages.classic.k5.ElementaryCoursePage
 import com.instructure.student.ui.pages.classic.k5.ElementaryDashboardPage
@@ -124,7 +122,6 @@ abstract class StudentTest : CanvasTest() {
     val conferenceListPage = ConferenceListPage()
     val conferenceDetailsPage = ConferenceDetailsPage()
     val elementaryCoursePage = ElementaryCoursePage()
-    val courseGradesPage = CourseGradesPage()
     val dashboardPage = DashboardPage()
     val leftSideNavigationDrawerPage = LeftSideNavigationDrawerPage()
     val discussionDetailsPage = DiscussionDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next_item, R.id.prev_item))
@@ -161,13 +158,12 @@ abstract class StudentTest : CanvasTest() {
     val pushNotificationsPage = PushNotificationsPage()
     val emailNotificationsPage = EmailNotificationsPage()
     val submissionDetailsPage = SubmissionDetailsPage()
-    val textSubmissionUploadPage = TextSubmissionUploadPage()
     val syllabusPage = SyllabusPage()
     val urlSubmissionUploadPage = UrlSubmissionUploadPage()
     val elementaryDashboardPage = ElementaryDashboardPage()
     val homeroomPage = HomeroomPage()
     val schedulePage = SchedulePage()
-    val gradesPage = GradesPage()
+    val elementaryGradesPage = ElementaryGradesPage()
     val resourcesPage = ResourcesPage()
     val importantDatesPage = ImportantDatesPage()
     val shareExtensionTargetPage = ShareExtensionTargetPage()
@@ -212,6 +208,7 @@ abstract class StudentTest : CanvasTest() {
             file
         )
         resultData.data = newFileUri
+        resultData.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 
         Intents.intending(
             AllOf.allOf(

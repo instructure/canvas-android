@@ -487,6 +487,7 @@
     <string name="a11y_markAsDoneWithName">%s Make kòm fini</string>
     <string name="a11y_markAsNotDoneWithName">%s Make kòm poko fini</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="a11y_expand_collapse">Elaji oswa retresi seksyon</string>
     <string name="inboxSignatureError">Echwe pou monte siyati bwat resepsyon</string>
     <string name="inboxSignatureSettingsUpdated">Paramèt bwat resepsyon sovgade!</string>
     <string name="inboxSignatureSettingsError">Sovgade paramèt bwat resepsyon yo echwe</string>
@@ -500,4 +501,8 @@
         <item quantity="other">%d Mins</item>
     </plurals>
     <string name="notATeacherDescription"> Youn nan lòt aplikasyon nou yo ka pi bon pou ou. Peze yon ikòn pou w konekte la.</string>
+    <string name="gradePercentAccessibility">Nòt: %d pousantaj</string>
+    <string name="gradePointsAccessibility">Nòt: %s pwen</string>
+    <string name="gradePercentTextFieldAccessibility">Nòt: %d pousantaj, %s</string>
+    <string name="gradePointsTextFieldAccessibility">Nòt: %s pwen, %s</string>
 </resources>

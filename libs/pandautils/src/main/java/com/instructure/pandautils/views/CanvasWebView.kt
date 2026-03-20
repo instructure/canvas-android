@@ -109,6 +109,7 @@ class CanvasWebView @JvmOverloads constructor(
     private var addedJavascriptInterface: Boolean = false
     private var shouldInjectStudioScript: Boolean = false
     private var currentBaseUrl: String? = null
+    private var currentHtmlContent: String? = null
 
     interface CanvasWebViewClientCallback {
         fun openMediaFromWebView(mime: String, url: String, filename: String)
@@ -168,13 +169,14 @@ class CanvasWebView @JvmOverloads constructor(
                     val message = org.json.JSONObject(messageJson)
                     val data = message.optJSONObject("data")
                     val mediaUrl = data?.optString("url")
+                    val title = data?.optString("title")
 
                     if (mediaUrl != null && mediaUrl.isNotEmpty()) {
                         val baseUrl = currentBaseUrl
                         if (baseUrl != null) {
                             val contextUrl = extractContextUrl(baseUrl)
                             if (contextUrl != null) {
-                                val studioUrl = buildStudioUrl(contextUrl, mediaUrl)
+                                val studioUrl = buildStudioUrl(contextUrl, mediaUrl, title)
                                 canvasWebViewClientCallback?.routeInternallyCallback(studioUrl)
                             }
                         }
@@ -222,6 +224,9 @@ class CanvasWebView @JvmOverloads constructor(
             setDownloadListener { url, _, contentDisposition, mimetype, _ ->
                 // Check if this download was triggered by an internal file link
                 if (isInternalFileDownloadLink(url)) {
+                    val fileName = parseFileNameFromContentDisposition(contentDisposition, url)
+                    mediaDownloadCallback?.downloadInternalMedia(mimetype, url, fileName)
+                } else if (isInstructureMediaDrmDownload(url)) {
                     val fileName = parseFileNameFromContentDisposition(contentDisposition, url)
                     mediaDownloadCallback?.downloadInternalMedia(mimetype, url, fileName)
                 } else if (contentDisposition != null) {
@@ -423,6 +428,18 @@ class CanvasWebView @JvmOverloads constructor(
                 mediaDownloadCallback?.downloadMedia("", url, fileName)
                 view.post { stopLoading() } // Hack to stop loading the file in the WebView, since returning an empty response breaks what's being shown
             }
+
+            if (isInstructureMediaCaptionFile(url) &&
+                request.hasGesture() &&
+                request.requestHeaders.containsKey("Authorization") &&
+                mediaDownloadCallback != null
+            ) {
+                val fileName = parseFileNameFromContentDisposition(url, url)
+                mediaDownloadCallback?.downloadInternalMedia(null, url, fileName)
+                view.post { stopLoading() }
+                return WebResourceResponse(null, null, null)
+            }
+
             return super.shouldInterceptRequest(view, request)
         }
 
@@ -488,7 +505,9 @@ class CanvasWebView @JvmOverloads constructor(
             }
             // Is the URL something we can link to inside our application?
             if (canvasWebViewClientCallback?.canRouteInternallyDelegate(url) == true) {
-                canvasWebViewClientCallback?.routeInternallyCallback(url)
+                // Append Studio video title if available
+                val finalUrl = appendStudioTitleToUrl(url)
+                canvasWebViewClientCallback?.routeInternallyCallback(finalUrl)
                 return true
             }
 
@@ -553,8 +572,9 @@ class CanvasWebView @JvmOverloads constructor(
     }
 
     override fun loadDataWithBaseURL(url: String?, data: String, mimeType: String?, encoding: String?, history: String?) {
-        // Store baseUrl for Studio URL building
+        // Store baseUrl and HTML content for Studio URL building
         currentBaseUrl = url
+        currentHtmlContent = data
         // Check if HTML contains Studio/LTI content
         shouldInjectStudioScript = containsStudioContent(data)
         addJavascriptInterface()
@@ -860,11 +880,21 @@ class CanvasWebView @JvmOverloads constructor(
 
     /**
      * Builds the Studio URL for launching in immersive view
-     * Format: {contextUrl}external_tools/retrieve?display=borderless&url={encodedMediaUrl}
+     * Format: {contextUrl}external_tools/retrieve?display=borderless&url={encodedMediaUrl}&title={encodedTitle}
      */
-    private fun buildStudioUrl(contextUrl: String, mediaUrl: String): String {
-        val encodedMediaUrl = URLEncoder.encode(mediaUrl, "UTF-8")
-        return "${contextUrl}external_tools/retrieve?display=borderless&url=$encodedMediaUrl"
+    private fun buildStudioUrl(contextUrl: String, mediaUrl: String, title: String?): String {
+        val mediaUrlWithoutHeader = Uri.parse(mediaUrl)
+            .buildUpon()
+            .appendQueryParameter("custom_embed_hide_header", "true")
+            .build()
+            .toString()
+        val encodedMediaUrl = URLEncoder.encode(mediaUrlWithoutHeader, "UTF-8")
+        var url = "${contextUrl}external_tools/retrieve?display=borderless&url=$encodedMediaUrl"
+        if (!title.isNullOrEmpty()) {
+            val encodedTitle = URLEncoder.encode(title, "UTF-8")
+            url += "&title=$encodedTitle"
+        }
+        return url
     }
 
     /**
@@ -872,6 +902,64 @@ class CanvasWebView @JvmOverloads constructor(
      */
     private fun containsStudioContent(html: String): Boolean {
         return html.contains(URLEncoder.encode("custom_arc_launch_type=immersive_view", "UTF-8"), ignoreCase = true)
+    }
+
+    /**
+     * Extracts the title attribute from an iframe with the given src URL
+     */
+    private fun extractTitleFromIframe(html: String?, url: String): String? {
+        if (html == null) return null
+
+        try {
+            // Find all iframes in the HTML
+            val iframePattern = Regex("<iframe[^>]*>", RegexOption.IGNORE_CASE)
+            val iframes = iframePattern.findAll(html)
+
+            for (iframeMatch in iframes) {
+                val iframeTag = iframeMatch.value
+
+                // Check if this iframe has the matching src URL
+                if (iframeTag.contains(url, ignoreCase = true)) {
+                    // Extract the title attribute from this iframe
+                    val titlePattern = Regex("title=\"([^\"]+)\"", RegexOption.IGNORE_CASE)
+                    val titleMatch = titlePattern.find(iframeTag)
+
+                    if (titleMatch != null) {
+                        val title = titleMatch.groupValues[1]
+                        // Clean up the title: remove "Video player for " prefix if present
+                        return title.replace("Video player for ", "").trim()
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            FirebaseCrashlytics.getInstance().recordException(e)
+        }
+
+        return null
+    }
+
+    /**
+     * Appends the Studio video title to the URL if available
+     * This is used when routing Studio embed URLs to add the title parameter
+     */
+    private fun appendStudioTitleToUrl(url: String): String {
+        // Transform the URL to match the iframe src format for title extraction
+        val srcUrlToCheck = url
+            .replace("/immersive_view", "")
+            .replace("media_attachments", "media_attachments_iframe")
+
+        // Extract title from iframe and append it to the URL if found
+        val title = extractTitleFromIframe(currentHtmlContent, srcUrlToCheck)
+        return if (title != null && !url.contains("title=")) {
+            Uri.parse(url)
+                .buildUpon()
+                .appendQueryParameter("title", title)
+                .appendQueryParameter("custom_embed_hide_header", "true")
+                .build()
+                .toString()
+        } else {
+            url
+        }
     }
 
     private fun evaluateStudioButtonScript(view: WebView) {
@@ -931,6 +1019,14 @@ class CanvasWebView @JvmOverloads constructor(
 
         private fun isCanvadocsDownload(url: String): Boolean {
             return url.contains("canvadocs") && url.contains("/download/") && url.contains("single_use_token=")
+        }
+
+        private fun isInstructureMediaDrmDownload(url: String): Boolean {
+            return url.contains("instructuremedia.com") && url.contains("/downloadables/")
+        }
+
+        private fun isInstructureMediaCaptionFile(url: String): Boolean {
+            return url.contains("instructuremedia.com") && url.contains("/api/media_management/caption_files/")
         }
 
         fun containsLTI(html: String, encoding: String?): Boolean {

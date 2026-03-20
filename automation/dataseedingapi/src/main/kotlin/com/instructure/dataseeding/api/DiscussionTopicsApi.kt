@@ -14,7 +14,6 @@
  *     limitations under the License.
  *
  */
-
 package com.instructure.dataseeding.api
 
 import com.apollographql.apollo.api.Optional
@@ -35,15 +34,32 @@ import com.instructure.dataseedingapi.type.DiscussionCheckpoints
 import com.instructure.dataseedingapi.type.DiscussionTopicContextType
 import com.instructure.dataseedingapi.type.GradingType
 import kotlinx.coroutines.runBlocking
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.Part
 import retrofit2.http.Path
 
 object DiscussionTopicsApi {
     interface DiscussionTopicsService {
         @POST("courses/{courseId}/discussion_topics")
         fun createDiscussionTopic(@Path("courseId") courseId: Long, @Body createDiscussionTopic: CreateDiscussionTopic): Call<DiscussionApiModel>
+
+        @Multipart
+        @POST("courses/{courseId}/discussion_topics")
+        fun createDiscussionTopicWithAttachment(
+            @Path("courseId") courseId: Long,
+            @Part("title") title: RequestBody,
+            @Part("message") message: RequestBody,
+            @Part("is_announcement") isAnnouncement: RequestBody,
+            @Part("published") published: RequestBody,
+            @Part attachment: MultipartBody.Part
+        ): Call<DiscussionApiModel>
 
         @POST("courses/{courseId}/discussion_topics/{discussionId}/entries")
         fun createEntryToDiscussionTopic(@Path("courseId") courseId: Long, @Path("discussionId") discussionId: Long, @Body discussionTopicEntry: DiscussionTopicEntryRequest): Call<DiscussionTopicEntryResponse>
@@ -72,8 +88,22 @@ object DiscussionTopicsApi {
             .body()!!
     }
 
-    fun createDiscussion(courseId: Long, token: String, isAnnouncement: Boolean = false, lockedForUser: Boolean = false, locked: Boolean = false, discussionTitle: String? = null): DiscussionApiModel {
+    fun createDiscussion(courseId: Long, token: String, isAnnouncement: Boolean = false, lockedForUser: Boolean = false, locked: Boolean = false, discussionTitle: String? = null, fileBytes: ByteArray? = null, fileName: String? = null): DiscussionApiModel {
         val discussionTopic = Randomizer.randomDiscussion(discussionTitle, isAnnouncement, lockedForUser, locked)
+        if (fileBytes != null && fileName != null) {
+            val attachment = MultipartBody.Part.createFormData("attachment", fileName, fileBytes.toRequestBody("application/octet-stream".toMediaTypeOrNull()))
+            return discussionTopicsService(token)
+                .createDiscussionTopicWithAttachment(
+                    courseId,
+                    discussionTopic.title.toRequestBody("text/plain".toMediaTypeOrNull()),
+                    discussionTopic.message.toRequestBody("text/plain".toMediaTypeOrNull()),
+                    isAnnouncement.toString().toRequestBody("text/plain".toMediaTypeOrNull()),
+                    "true".toRequestBody("text/plain".toMediaTypeOrNull()),
+                    attachment
+                )
+                .execute()
+                .body()!!
+        }
         return discussionTopicsService(token)
                 .createDiscussionTopic(courseId, discussionTopic)
                 .execute()
@@ -86,7 +116,8 @@ object DiscussionTopicsApi {
         discussionTitle: String,
         assignmentName: String,
         replyToTopicDueDate: String? = null,
-        replyToEntryDueDate: String? = null
+        replyToEntryDueDate: String? = null,
+        fileId: String? = null
     ) {
         val apolloClient = CanvasNetworkAdapter.getApolloClient(token)
 
@@ -131,7 +162,8 @@ object DiscussionTopicsApi {
             contextType = DiscussionTopicContextType.Course,
             title = discussionTitle,
             assignment = assignment,
-            checkpoints = checkpoints
+            checkpoints = checkpoints,
+            fileId = Optional.presentIfNotNull(fileId)
         )
 
         runBlocking {
@@ -139,8 +171,8 @@ object DiscussionTopicsApi {
         }
     }
 
-    fun createAnnouncement(courseId: Long, token: String, lockedForUser: Boolean = false, locked: Boolean = false, announcementTitle: String? = null): DiscussionApiModel {
-        val discussion = createDiscussion(courseId, token, true, lockedForUser, locked, announcementTitle)
+    fun createAnnouncement(courseId: Long, token: String, lockedForUser: Boolean = false, locked: Boolean = false, announcementTitle: String? = null, fileBytes: ByteArray? = null, fileName: String? = null): DiscussionApiModel {
+        val discussion = createDiscussion(courseId, token, true, lockedForUser, locked, announcementTitle, fileBytes, fileName)
 
         if(!lockedForUser) {
             return DiscussionApiModel(

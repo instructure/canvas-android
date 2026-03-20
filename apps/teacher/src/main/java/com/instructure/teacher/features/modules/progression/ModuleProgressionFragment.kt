@@ -34,6 +34,7 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.StringArg
+import com.instructure.pandautils.utils.applyBottomSystemBarMargin
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.utils.setHidden
 import com.instructure.teacher.R
@@ -67,6 +68,10 @@ class ModuleProgressionFragment : BaseCanvasFragment() {
 
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+
+        binding.previous.applyBottomSystemBarMargin()
+        binding.moduleName.applyBottomSystemBarMargin()
+        binding.next.applyBottomSystemBarMargin()
 
         viewModel.data.observe(viewLifecycleOwner) {
             setupPager(it)
@@ -107,19 +112,19 @@ class ModuleProgressionFragment : BaseCanvasFragment() {
 
     private fun createFragment(item: ModuleItemViewData) = when (item) {
         is ModuleItemViewData.Page -> PageDetailsFragment.newInstance(
-            canvasContext, PageDetailsFragment.makeBundle(item.pageUrl)
+            canvasContext, PageDetailsFragment.makeBundle(item.pageUrl, isInModulesPager = true)
         )
 
         is ModuleItemViewData.Assignment -> AssignmentDetailsFragment.newInstance(
-            canvasContext as Course, AssignmentDetailsFragment.makeBundle(item.assignmentId)
+            canvasContext as Course, AssignmentDetailsFragment.makeBundle(item.assignmentId, isInModulesPager = true)
         )
 
         is ModuleItemViewData.Discussion -> DiscussionDetailsWebViewFragment.newInstance(
-            DiscussionDetailsWebViewFragment.makeRoute(canvasContext, item.discussionTopicHeaderId)
+            DiscussionDetailsWebViewFragment.makeRoute(canvasContext, item.discussionTopicHeaderId, isInModulesPager = true)
         )!!
 
         is ModuleItemViewData.Quiz -> QuizDetailsFragment.newInstance(
-            canvasContext as Course, QuizDetailsFragment.makeBundle(item.quizId)
+            canvasContext as Course, QuizDetailsFragment.makeBundle(item.quizId, isInModulesPager = true)
         )
 
         is ModuleItemViewData.External -> InternalWebViewFragment.newInstance(
@@ -134,7 +139,7 @@ class ModuleProgressionFragment : BaseCanvasFragment() {
         )
 
         is ModuleItemViewData.File -> FileDetailsFragment.newInstance(
-            FileDetailsFragment.makeBundle(canvasContext, item.fileUrl)
+            FileDetailsFragment.makeBundle(canvasContext, item.fileUrl, isInModulesPager = true)
         )
     }
 

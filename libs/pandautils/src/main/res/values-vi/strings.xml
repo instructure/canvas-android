@@ -488,6 +488,7 @@
     <string name="a11y_markAsDoneWithName">%s Đánh dấu là đã xong</string>
     <string name="a11y_markAsNotDoneWithName">%s Đánh dấu là chưa xong</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="a11y_expand_collapse">Mở rộng hoặc thu gọn phần</string>
     <string name="inboxSignatureError">Tải chữ ký hộp thư đến không thành công</string>
     <string name="inboxSignatureSettingsUpdated">Đã lưu cài đặt hộp thư đến!</string>
     <string name="inboxSignatureSettingsError">Lưu cài đặt hộp thư đến không thành công</string>
@@ -501,4 +502,8 @@
         <item quantity="other">%d Phút</item>
     </plurals>
     <string name="notATeacherDescription">Một trong các ứng dụng khác có thể thích hợp hơn. Chạm một biểu tượng để đăng nhập vào đó.</string>
+    <string name="gradePercentAccessibility">Điểm: %d phần trăm</string>
+    <string name="gradePointsAccessibility">Điểm: %s điểm</string>
+    <string name="gradePercentTextFieldAccessibility">Điểm: %d phần trăm, %s</string>
+    <string name="gradePointsTextFieldAccessibility">Điểm: %s điểm, %s</string>
 </resources>

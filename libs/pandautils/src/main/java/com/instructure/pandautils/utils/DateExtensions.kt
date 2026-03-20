@@ -17,6 +17,8 @@
 package com.instructure.pandautils.utils
 
 import android.content.Context
+import android.content.res.Resources
+import androidx.annotation.PluralsRes
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.pandautils.R
 import org.threeten.bp.Instant
@@ -183,4 +185,26 @@ fun String.toLocalDateOrNull(formatter: DateTimeFormatter = DateTimeFormatter.IS
     } catch (e: ThreeTenDateTimeParseException) {
         null
     }
+}
+
+fun Duration.toFormattedString(
+    resources: Resources,
+    @PluralsRes hoursLabelRes: Int = R.plurals.durationHours,
+    @PluralsRes minutesLabelRes: Int = R.plurals.durationMins,
+    separator: String = " "
+): String {
+    val hours = inWholeHours.toInt()
+    val minutes = (inWholeMinutes % 60).toInt()
+
+    val hoursLabel = resources.getQuantityString(hoursLabelRes, hours, hours)
+    val minutesLabel = resources.getQuantityString(minutesLabelRes, minutes, minutes)
+
+    val formattedStringParts = mutableListOf<String>()
+    if (hours > 0) { formattedStringParts.add(hoursLabel) }
+    if (minutes > 0) { formattedStringParts.add(minutesLabel) }
+    return formattedStringParts.joinToString(separator)
+}
+
+fun List<Duration>.sum(): Duration {
+    return fold(Duration.ZERO) { acc, d -> acc + d }
 }

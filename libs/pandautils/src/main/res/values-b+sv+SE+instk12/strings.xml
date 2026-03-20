@@ -487,6 +487,7 @@
     <string name="a11y_markAsDoneWithName">%s Markera som färdig</string>
     <string name="a11y_markAsNotDoneWithName">%s Markera som ej färdig</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="a11y_expand_collapse">Visa eller dölj sektionen</string>
     <string name="inboxSignatureError">Det gick inte att läsa in inkorgssignaturen</string>
     <string name="inboxSignatureSettingsUpdated">Inställningarna för Inkorgen har sparats!</string>
     <string name="inboxSignatureSettingsError">Det gick inte att spara inkorgens inställningar</string>
@@ -500,4 +501,8 @@
         <item quantity="other">%d minuter</item>
     </plurals>
     <string name="notATeacherDescription">En av våra andra appar kanske passar bättre. Tryck på en ikon för att logga in där.</string>
+    <string name="gradePercentAccessibility">Bedömning: %d procent</string>
+    <string name="gradePointsAccessibility">Bedömning: %s poäng</string>
+    <string name="gradePercentTextFieldAccessibility">Bedömning: %d procent, %s</string>
+    <string name="gradePointsTextFieldAccessibility">Bedömning: %s poäng, %s</string>
 </resources>

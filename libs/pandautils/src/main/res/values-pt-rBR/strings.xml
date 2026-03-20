@@ -487,6 +487,7 @@
     <string name="a11y_markAsDoneWithName">%s Marcar como feito</string>
     <string name="a11y_markAsNotDoneWithName">%s Marcar como não feito</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="a11y_expand_collapse">Expandir ou recolher seção</string>
     <string name="inboxSignatureError">Falha ao carregar a assinatura da caixa de entrada</string>
     <string name="inboxSignatureSettingsUpdated">Configurações da caixa de entrada salvas!</string>
     <string name="inboxSignatureSettingsError">Falha ao salvar as configurações da caixa de entrada</string>
@@ -500,4 +501,8 @@
         <item quantity="other">%d Mins</item>
     </plurals>
     <string name="notATeacherDescription">Um de nossos outros aplicativos pode ser mais adequado. Toque em um ícone para fazer login nele.</string>
+    <string name="gradePercentAccessibility">Nota: %d por cento</string>
+    <string name="gradePointsAccessibility">Nota: %s pontos</string>
+    <string name="gradePercentTextFieldAccessibility">Nota: %d por cento, %s</string>
+    <string name="gradePointsTextFieldAccessibility">Nota: %s pontos, %s</string>
 </resources>

@@ -20,7 +20,7 @@ import android.os.SystemClock.sleep
 import android.util.Log
 import android.view.KeyEvent
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
@@ -28,13 +28,13 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
-import com.instructure.canvas.espresso.annotations.Stub
 import com.instructure.canvas.espresso.checkToastText
 import com.instructure.canvas.espresso.common.pages.compose.AssignmentListPage
 import com.instructure.canvas.espresso.pressBackButton
 import com.instructure.dataseeding.api.AssignmentGroupsApi
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.CoursesApi
+import com.instructure.dataseeding.api.FileUploadsApi
 import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.model.FileUploadType
 import com.instructure.dataseeding.model.GradingType
@@ -43,6 +43,7 @@ import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
+import com.instructure.espresso.getVideoPosition
 import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.espresso.triggerWorkManagerJobs
 import com.instructure.pandautils.utils.toFormattedString
@@ -57,6 +58,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runners.MethodSorters
 import java.util.Calendar
+import androidx.media3.ui.R as Media3R
 
 @HiltAndroidTest
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -76,7 +78,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SUBMISSIONS, TestCategory.E2E)
-    fun commentsBelongToSubmissionAttempts() {
+    fun testCommentsBelongToSubmissionAttempts() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(teachers = 1, courses = 1, students = 1)
@@ -120,7 +122,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         Log.d(PREPARATION_TAG, "Submit assignment: '${pointsTextAssignment.name}' for student: '${student.name}'.")
         SubmissionsApi.seedAssignmentSubmission(course.id, student.token, pointsTextAssignment.id, submissionSeedsList = listOf(SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = SubmissionType.ONLINE_TEXT_ENTRY)))
 
-        Log.d(ASSERTION_TAG, "Refresh the Assignment Details Page. Assert that the assignment's status is submitted and the 'Submission and Rubric' label is displayed.")
+        Log.d(ASSERTION_TAG, "Refresh the Assignment Details Page. Assert that the assignment's status is submitted and the 'Submission and Feedback' label is displayed.")
         assignmentDetailsPage.refresh()
         assignmentDetailsPage.assertStatusSubmitted()
         assignmentDetailsPage.assertSubmissionAndRubricLabel()
@@ -128,7 +130,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         Log.d(PREPARATION_TAG, "Make another submission for assignment: '${pointsTextAssignment.name}' for student: '${student.name}'.")
         val secondSubmissionAttempt = SubmissionsApi.seedAssignmentSubmission(course.id, student.token, pointsTextAssignment.id, submissionSeedsList = listOf(SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = SubmissionType.ONLINE_TEXT_ENTRY)))
 
-        Log.d(ASSERTION_TAG, "Refresh the Assignment Details Page. Assert that the assignment's status is submitted and the 'Submission and Rubric' label is displayed.")
+        Log.d(ASSERTION_TAG, "Refresh the Assignment Details Page. Assert that the assignment's status is submitted and the 'Submission and Feedback' label is displayed.")
         assignmentDetailsPage.refresh()
         assignmentDetailsPage.assertStatusSubmitted()
         assignmentDetailsPage.assertSubmissionAndRubricLabel()
@@ -875,6 +877,43 @@ class AssignmentsE2ETest: StudentComposeTest() {
             submissionDetailsPage.assertVideoCommentDisplayed()
         }
 
+        Log.d(STEP_TAG, "Click on the video comment to open it.")
+        submissionDetailsPage.clickVideoComment()
+
+        Log.d(ASSERTION_TAG, "Assert that the media comment preview (and the 'Play button') is displayed.")
+        videoPlayerPage.assertMediaCommentPreviewDisplayed()
+
+        Log.d(STEP_TAG, "Click the play button to start the video and wait for it to finish loading.")
+        videoPlayerPage.clickPlayButton()
+        videoPlayerPage.waitForVideoToStart(device)
+
+        Log.d(ASSERTION_TAG, "Assert that the play/pause button is visible in the media controls.")
+        videoPlayerPage.assertPlayPauseButtonDisplayed()
+
+        Log.d(STEP_TAG, "Click play/pause button to pause the video.")
+        videoPlayerPage.clickPlayPauseButton()
+
+        Log.d(STEP_TAG, "Get the current video position.")
+        val firstVideoPositionText = getVideoPosition(Media3R.id.exo_position)
+        Log.d(ASSERTION_TAG, "First video position: $firstVideoPositionText")
+
+        Log.d(STEP_TAG, "Click play/pause button to resume video playback, wait for video to play for 2 seconds then click play/pause button to pause again.")
+        videoPlayerPage.clickPlayPauseButton()
+        sleep(2000)
+        videoPlayerPage.clickPlayPauseButton()
+
+        Log.d(STEP_TAG, "Get the video position again.")
+        val secondVideoPositionText = getVideoPosition(Media3R.id.exo_position)
+        Log.d(ASSERTION_TAG, "Second video position: $secondVideoPositionText")
+
+        Log.d(ASSERTION_TAG, "Assert that the video position has changed, confirming video is playing.")
+        assert(firstVideoPositionText != secondVideoPositionText) {
+            "Video position did not change. First: $firstVideoPositionText, Second: $secondVideoPositionText"
+        }
+
+        Log.d(STEP_TAG, "Navigate back to submission comments.")
+        Espresso.pressBack()
+
         Log.d(STEP_TAG, "Send an audio comment.")
         submissionDetailsPage.addAndSendAudioComment()
 
@@ -883,6 +922,44 @@ class AssignmentsE2ETest: StudentComposeTest() {
             triggerWorkManagerJobs("SubmissionWorker")
             submissionDetailsPage.assertAudioCommentDisplayed()
         }
+
+        Log.d(STEP_TAG, "Click on the audio comment to open it.")
+        submissionDetailsPage.clickAudioComment()
+
+        Log.d(ASSERTION_TAG, "Assert that the media comment preview (and the 'Play button') is displayed.")
+        videoPlayerPage.assertMediaCommentPreviewDisplayed()
+
+        Log.d(STEP_TAG, "Click the play button to start the video and wait for it to finish loading.")
+        videoPlayerPage.clickPlayButton()
+        videoPlayerPage.waitForVideoToStart(device)
+
+        Log.d(ASSERTION_TAG, "Assert that the play/pause button is visible in the media controls.")
+        videoPlayerPage.assertPlayPauseButtonDisplayed()
+
+        Log.d(STEP_TAG, "Click play/pause button to pause the audio.")
+        videoPlayerPage.clickPlayPauseButton()
+
+        Log.d(STEP_TAG, "Get the current audio position.")
+        val firstAudioPositionText = getVideoPosition(Media3R.id.exo_position)
+        Log.d(ASSERTION_TAG, "First audio position: $firstAudioPositionText")
+
+        Log.d(STEP_TAG, "Click play/pause button to resume audio playback, wait for audio to play for 2 seconds then click play/pause button to pause again.")
+        videoPlayerPage.clickPlayPauseButton()
+        sleep(2000)
+        videoPlayerPage.clickPlayPauseButton()
+
+        Log.d(STEP_TAG, "Get the audio position again.")
+        val secondAudioPositionText = getVideoPosition(Media3R.id.exo_position)
+        Log.d(ASSERTION_TAG, "Second audio position: $secondAudioPositionText")
+
+        Log.d(ASSERTION_TAG, "Assert that the audio position has changed, confirming audio is playing.")
+        assert(firstAudioPositionText != secondAudioPositionText) {
+            "Audio position did not change. First: $firstAudioPositionText, Second: $secondAudioPositionText"
+        }
+
+        Log.d(STEP_TAG, "Navigate back to submission comments and assert that the audio comment still displayed.")
+        Espresso.pressBack()
+        submissionDetailsPage.assertAudioCommentDisplayed()
     }
 
     @E2E
@@ -1002,6 +1079,78 @@ class AssignmentsE2ETest: StudentComposeTest() {
 
         Log.d(ASSERTION_TAG, "Assert that the selected attempt is 'Attempt 1'.")
         submissionDetailsPage.assertSelectedAttempt("Attempt 1")
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
+    fun testDraftAssignmentE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(teachers = 1, courses = 1, students = 1)
+        val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+
+        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course.")
+        val pointsTextAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
+
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
+        tokenLogin(student)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Select course: '${course.name}'.")
+        dashboardPage.selectCourse(course)
+
+        Log.d(STEP_TAG, "Navigate to course Assignments Page.")
+        courseBrowserPage.selectAssignments()
+
+        Log.d(ASSERTION_TAG, "Assert that our assignments are present," +
+                "along with any grade/date info.")
+        assignmentListPage.assertHasAssignment(pointsTextAssignment)
+
+        Log.d(STEP_TAG, "Click on assignment '${pointsTextAssignment.name}'.")
+        assignmentListPage.clickAssignment(pointsTextAssignment)
+
+        Log.d(ASSERTION_TAG, "Assert that 'Submission & Rubric' label is displayed and navigate to Submission Details Page.")
+        assignmentDetailsPage.assertSubmissionAndRubricLabel()
+
+        Log.d(STEP_TAG, "Click on the 'Submit Assignment' button.")
+        assignmentDetailsPage.clickSubmit()
+
+        Log.d(STEP_TAG," Type some text into the submission text input and click on the back button to trigger the 'Save Draft' dialog, then click on the 'Don't Save' button on the 'Save Draft' pop-up dialog to not save the draft submission.")
+        val draftText = "Draft submission text"
+        textSubmissionUploadPage.typeText(draftText)
+        textSubmissionUploadPage.clickToolbarBackButton()
+        textSubmissionUploadPage.clickDontSaveDraft()
+
+        Log.d(ASSERTION_TAG, "Assert that 'Submission & Rubric' label is displayed and navigate to Submission Details Page.")
+        assignmentDetailsPage.assertSubmissionAndRubricLabel()
+
+        Log.d(STEP_TAG, "Click on the 'Submit Assignment' button.")
+        assignmentDetailsPage.clickSubmit()
+
+        Log.d(STEP_TAG," Type some text into the submission text input and click on the back button to trigger the 'Save Draft' dialog, then click on the 'Save' button on the 'Save Draft' pop-up dialog to make a draft submission.")
+        textSubmissionUploadPage.typeText(draftText)
+        textSubmissionUploadPage.clickToolbarBackButton()
+        textSubmissionUploadPage.clickSaveDraft()
+
+        Log.d(ASSERTION_TAG, "Assert that the Draft submission info (title, subtitle) are displayed on the Assignment Details Page since we saved a draft.")
+        assignmentDetailsPage.assertDraftAvailableInformation()
+
+        Log.d(STEP_TAG, "Click on the 'Draft Available' link to open the saved draft assignment.")
+        assignmentDetailsPage.clickDraftSubmission()
+
+        Log.d(ASSERTION_TAG, "Assert that the previously saved text ($draftText) is displayed in the text submission input.")
+        textSubmissionUploadPage.assertTextSubmissionDisplayed(draftText)
+
+        Log.d(STEP_TAG, "Click on the 'Submit' button to submit the draft assignment.")
+        textSubmissionUploadPage.clickOnSubmitButton()
+        triggerWorkManagerJobs("SubmissionWorker")
+
+        Log.d(ASSERTION_TAG, "Assert that the assignment's status is submitted and the 'Successfully submitted!' label is displayed.")
+        assignmentDetailsPage.assertStatusSubmitted()
+        assignmentDetailsPage.assertAssignmentSubmitted()
     }
 
     @E2E
@@ -1210,7 +1359,101 @@ class AssignmentsE2ETest: StudentComposeTest() {
         dashboardPage.assertCourseGrade(course.name, "49.47%")
     }
 
-    @Stub("Grades screen has been redesigned, needs to be fixed in ticket MBL-19258")
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
+    fun testVideoFileUploadSubmissionE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(teachers = 1, courses = 1, students = 1)
+        val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+
+        Log.d(PREPARATION_TAG, "Seeding 'File Upload' assignment for '${course.name}' course.")
+        val videoUploadAssignment = AssignmentsApi.createAssignment(
+            courseId = course.id,
+            teacherToken = teacher.token,
+            gradingType = GradingType.POINTS,
+            pointsPossible = 15.0,
+            dueAt = 1.days.fromNow.iso8601,
+            submissionTypes = listOf(SubmissionType.ONLINE_UPLOAD)
+        )
+
+        Log.d(PREPARATION_TAG, "Upload the mp4 file from assets as an assignment submission file.")
+        val videoFileName = "test_video.mp4"
+        val videoFileBytes = InstrumentationRegistry.getInstrumentation().context.assets.open(videoFileName).readBytes()
+        val uploadInfo = FileUploadsApi.uploadFile(
+            courseId = course.id,
+            assignmentId = videoUploadAssignment.id,
+            file = videoFileBytes,
+            fileName = videoFileName,
+            token = student.token,
+            fileUploadType = FileUploadType.ASSIGNMENT_SUBMISSION
+        )
+
+        Log.d(PREPARATION_TAG, "Submit '${videoUploadAssignment.name}' assignment for '${student.name}' student with the uploaded mp4 file.")
+        SubmissionsApi.submitCourseAssignment(course.id, student.token, videoUploadAssignment.id, SubmissionType.ONLINE_UPLOAD, fileIds = mutableListOf(uploadInfo.id))
+
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
+        tokenLogin(student)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Select '${course.name}' course and navigate to its Assignments Page.")
+        dashboardPage.selectCourse(course)
+        courseBrowserPage.selectAssignments()
+
+        Log.d(ASSERTION_TAG, "Assert that '${videoUploadAssignment.name}' assignment is displayed.")
+        assignmentListPage.assertHasAssignment(videoUploadAssignment)
+
+        Log.d(STEP_TAG, "Click on '${videoUploadAssignment.name}' assignment.")
+        assignmentListPage.clickAssignment(videoUploadAssignment)
+
+        Log.d(ASSERTION_TAG, "Assert that the assignment has been submitted.")
+        assignmentDetailsPage.assertAssignmentSubmittedStatus()
+
+        Log.d(STEP_TAG, "Navigate to submission details and open Files Tab.")
+        assignmentDetailsPage.goToSubmissionDetails()
+        submissionDetailsPage.openFiles()
+
+        Log.d(ASSERTION_TAG, "Assert that '$videoFileName' file has been displayed in the Files tab.")
+        submissionDetailsPage.assertFileDisplayed(videoFileName)
+
+        Log.d(STEP_TAG, "Collapse the sliding panel to show the video player.")
+        submissionDetailsPage.collapseSlidingPanel()
+
+        Log.d(ASSERTION_TAG, "Assert that the media comment preview (and the 'Play button') is displayed.")
+        videoPlayerPage.assertMediaCommentPreviewDisplayed()
+
+        Log.d(STEP_TAG, "Click the play button to start the video and wait for it to finish loading.")
+        videoPlayerPage.clickPlayButton()
+        videoPlayerPage.waitForVideoToStart(device)
+
+        Log.d(ASSERTION_TAG, "Assert that the play/pause button is visible in the media controls.")
+        videoPlayerPage.assertPlayPauseButtonDisplayed()
+
+        Log.d(STEP_TAG, "Click play/pause button to pause the video.")
+        videoPlayerPage.clickPlayPauseButton()
+
+        Log.d(STEP_TAG, "Get the current video position.")
+        val firstVideoPositionText = getVideoPosition(Media3R.id.exo_position)
+        Log.d(ASSERTION_TAG, "First video position: $firstVideoPositionText")
+
+        Log.d(STEP_TAG, "Click play/pause button to resume video playback, wait for video to play for 2 seconds then click play/pause button to pause again.")
+        videoPlayerPage.clickPlayPauseButton()
+        sleep(2000)
+        videoPlayerPage.clickPlayPauseButton()
+
+        Log.d(STEP_TAG, "Get the video position again.")
+        val secondVideoPositionText = getVideoPosition(Media3R.id.exo_position)
+        Log.d(ASSERTION_TAG, "Second video position: $secondVideoPositionText")
+
+        Log.d(ASSERTION_TAG, "Assert that the video position has changed, confirming video is playing.")
+        assert(firstVideoPositionText != secondVideoPositionText) {
+            "Video position did not change. First: $firstVideoPositionText, Second: $secondVideoPositionText"
+        }
+    }
+
     @E2E
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.GRADES, TestCategory.E2E)
@@ -1246,7 +1489,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         CoursesApi.updateCourseSettings(course.id, restrictQuantitativeDataMap)
 
         Log.d(ASSERTION_TAG, "Refresh the Dashboard page. Assert that the course grade is B-, as it is converted to letter grade because of the restriction.")
-        retryWithIncreasingDelay(times = 10, maxDelay = 4000) {
+        retryWithIncreasingDelay(times = 15, maxDelay = 5000) {
             dashboardPage.refresh()
             dashboardPage.assertCourseGrade(course.name, "B-")
         }
@@ -1282,30 +1525,29 @@ class AssignmentsE2ETest: StudentComposeTest() {
         dashboardPage.selectCourse(course)
         courseBrowserPage.selectGrades()
 
-        Log.d(ASSERTION_TAG, "Assert that the Total Grade is F and all of the assignment grades are displayed properly (so they have been converted to letter grade).")
-        courseGradesPage.assertTotalGrade(ViewMatchers.withText("F"))
-        courseGradesPage.assertAssignmentDisplayed(pointsTextAssignment.name, "B-")
-        courseGradesPage.assertAssignmentDisplayed(percentageAssignment.name, "D")
-        courseGradesPage.assertAssignmentDisplayed(letterGradeAssignment.name, "C")
-        courseGradesPage.assertAssignmentDisplayed(passFailAssignment.name, "Incomplete")
-        if(isLowResDevice()) courseGradesPage.swipeUp()
-        courseGradesPage.assertAssignmentDisplayed(gpaScaleAssignment.name, "F")
+        Log.d(ASSERTION_TAG, "Assert that the Total Grade is 'F' and all of the assignment grades are displayed properly (so they have been converted to letter grade).")
+        gradesPage.assertTotalGradeText("F")
+        gradesPage.assertAssignmentGradeText(pointsTextAssignment.name, "B-")
+        gradesPage.assertAssignmentGradeText(percentageAssignment.name, "D")
+        gradesPage.assertAssignmentGradeText(letterGradeAssignment.name, "C")
+        gradesPage.assertAssignmentGradeText(passFailAssignment.name, "Incomplete")
+        gradesPage.assertAssignmentGradeText(gpaScaleAssignment.name, "F")
 
         Log.d(PREPARATION_TAG, "Update '${course.name}' course's settings: Enable restriction for quantitative data.")
         restrictQuantitativeDataMap["restrict_quantitative_data"] = false
         CoursesApi.updateCourseSettings(course.id, restrictQuantitativeDataMap)
 
-        Log.d(STEP_TAG, "Refresh the Course Grade Page.")
-        courseGradesPage.refresh() //First go to the top of the recycler view
-        courseGradesPage.refresh() //Actual refresh
+        Log.d(STEP_TAG, "Swipe to the top of the Course Grades Page and refresh it.")
+        gradesPage.scrollDownScreen() // First go to the top of the recycler view
+        gradesPage.refresh() // Actual refresh
 
-        Log.d(ASSERTION_TAG, "Assert that the Total Grade is 49.47% and all of the assignment grades are displayed properly. We now show numeric grades because restriction to quantitative data has been disabled.")
-        courseGradesPage.assertTotalGrade(ViewMatchers.withText("49.47%"))
-        courseGradesPage.assertAssignmentDisplayed(pointsTextAssignment.name, "12/15")
-        courseGradesPage.assertAssignmentDisplayed(percentageAssignment.name, "66.67%")
-        courseGradesPage.assertAssignmentDisplayed(letterGradeAssignment.name, "11.4/15 (C)")
-        courseGradesPage.assertAssignmentDisplayed(passFailAssignment.name, "Incomplete")
-        courseGradesPage.swipeUp()
-        courseGradesPage.assertAssignmentDisplayed(gpaScaleAssignment.name, "3.7/15 (F)")
+        Log.d(ASSERTION_TAG, "Assert that the Total Grade is '49.47%' and all of the assignment grades are displayed properly. We now show numeric grades because restriction to quantitative data has been disabled.")
+        gradesPage.assertTotalGradeText("49.47%")
+        gradesPage.assertAssignmentGradeText(pointsTextAssignment.name, "12/15")
+        gradesPage.assertAssignmentGradeText(percentageAssignment.name, "66.67%")
+        gradesPage.assertAssignmentGradeText(letterGradeAssignment.name, "11.4/15 (C)")
+        gradesPage.assertAssignmentGradeText(passFailAssignment.name, "Incomplete")
+        gradesPage.scrollDownScreen()
+        gradesPage.assertAssignmentGradeText(gpaScaleAssignment.name, "3.7/15 (F)")
     }
 }

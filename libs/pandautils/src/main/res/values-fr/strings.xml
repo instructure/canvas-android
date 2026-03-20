@@ -487,6 +487,7 @@
     <string name="a11y_markAsDoneWithName">%s marquer comme fait</string>
     <string name="a11y_markAsNotDoneWithName">%s marquer comme non fait</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="a11y_expand_collapse">Développer ou réduire la section</string>
     <string name="inboxSignatureError">Échec de chargement de la signature de la boîte de réception</string>
     <string name="inboxSignatureSettingsUpdated">Paramètres de boîte de réception enregistrés !</string>
     <string name="inboxSignatureSettingsError">Échec d’enregistrement des paramètres de boîte de réception</string>
@@ -500,4 +501,8 @@
         <item quantity="other">%d Min</item>
     </plurals>
     <string name="notATeacherDescription">L’une de nos autres applications pourrait s’avérer plus adaptée. Appuyez sur une icône pour vous connecter.</string>
+    <string name="gradePercentAccessibility">Note : %d pour cent</string>
+    <string name="gradePointsAccessibility">Note : %s points</string>
+    <string name="gradePercentTextFieldAccessibility">Note : %d pour cent, %s</string>
+    <string name="gradePointsTextFieldAccessibility">Note : %s points, %s</string>
 </resources>

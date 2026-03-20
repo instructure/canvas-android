@@ -27,6 +27,8 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.composables.todo.ToDoItemType
+import com.instructure.pandautils.compose.composables.todo.ToDoItemUiState
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -87,7 +89,7 @@ class ToDoListScreenTest {
         }
 
         composeTestRule.onNodeWithTag("todoListEmpty").assertIsDisplayed()
-        composeTestRule.onNodeWithText(context.getString(R.string.noToDosForNow)).assertIsDisplayed()
+        composeTestRule.onNodeWithText(context.getString(R.string.noToDosForNowNew)).assertIsDisplayed()
         composeTestRule.onNodeWithText(context.getString(R.string.noToDosForNowSubtext)).assertIsDisplayed()
     }
 
@@ -243,7 +245,7 @@ class ToDoListScreenTest {
             )
         }
 
-        composeTestRule.onNodeWithText(context.getString(R.string.noToDosForNow)).assertIsDisplayed()
+        composeTestRule.onNodeWithText(context.getString(R.string.noToDosForNowNew)).assertIsDisplayed()
         composeTestRule.onNodeWithText("Filtered Item").assertIsNotDisplayed()
     }
 

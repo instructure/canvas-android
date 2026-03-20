@@ -38,16 +38,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.HorizonDivider
+import com.instructure.horizon.horizonui.organisms.scaffolds.EdgeToEdgeScaffold
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
+import com.instructure.horizon.util.plus
 import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.getActivityOrNull
 
@@ -55,7 +59,7 @@ import com.instructure.pandautils.utils.getActivityOrNull
 @Composable
 fun AccountScreen(
     state: AccountUiState,
-    navController: NavController,
+    navController: NavHostController,
 ) {
 
     val renameFlow = remember { navController.currentBackStackEntry?.savedStateHandle?.getStateFlow<String?>(AccountViewModel.CHANGE_USER_NAME, null) }
@@ -75,14 +79,29 @@ fun AccountScreen(
     }
 
     LoadingStateWrapper(state.screenState) {
-        AccountContentScreen(state, navController, state.performLogout, state.switchExperience)
+        EdgeToEdgeScaffold (
+            statusBarColor = HorizonColors.Surface.pagePrimary(),
+        ) { contentPadding ->
+            AccountContentScreen(
+                state,
+                contentPadding,
+                navController,
+                state.performLogout,
+                state.switchExperience)
+        }
     }
 }
 
 @Composable
-private fun AccountContentScreen(state: AccountUiState, navController: NavController, onLogout: () -> Unit, switchExperience: () -> Unit) {
+private fun AccountContentScreen(
+    state: AccountUiState,
+    contentPadding: PaddingValues,
+    navController: NavController,
+    onLogout: () -> Unit,
+    switchExperience: () -> Unit
+) {
     LazyColumn(
-        contentPadding = PaddingValues(24.dp)
+        contentPadding = PaddingValues(24.dp, 24.dp, 24.dp, 24.dp) + contentPadding
     ) {
         item {
             Column {
@@ -97,7 +116,7 @@ private fun AccountContentScreen(state: AccountUiState, navController: NavContro
         }
 
         state.accountGroups.forEach { accountGroup ->
-            if (accountGroup.title != null) {
+            if (accountGroup.title != null && accountGroup.items.isNotEmpty()) {
                 item {
                     Text(
                         text = accountGroup.title,
@@ -105,15 +124,17 @@ private fun AccountContentScreen(state: AccountUiState, navController: NavContro
                         color = HorizonColors.Text.title(),
                     )
                 }
-            }
-            item {
-                Spacer(modifier = Modifier.height(12.dp))
+
+                item {
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
             }
 
-            itemsIndexed(accountGroup.items) { index, accountItem  ->
+            val items = accountGroup.items.filter { it.visible }
+            itemsIndexed(items) { index, accountItem  ->
                 if (accountItem.visible) {
                     val clipModifier = when {
-                        accountGroup.items.lastIndex == 0 -> {
+                        items.lastIndex == 0 -> {
                             Modifier.clip(HorizonCornerRadius.level3)
                         }
 
@@ -121,7 +142,7 @@ private fun AccountContentScreen(state: AccountUiState, navController: NavContro
                             Modifier.clip(HorizonCornerRadius.level3Top)
                         }
 
-                        index == accountGroup.items.lastIndex -> {
+                        index == items.lastIndex -> {
                             Modifier.clip(HorizonCornerRadius.level3Bottom)
                         }
 
@@ -138,14 +159,14 @@ private fun AccountContentScreen(state: AccountUiState, navController: NavContro
                             clipModifier
                         )
 
-                        if (index != accountGroup.items.lastIndex) {
+                        if (index != items.lastIndex) {
                             HorizonDivider()
                         }
                     }
                 }
             }
 
-            if (accountGroup != state.accountGroups.last()) {
+            if (accountGroup != items.lastOrNull() && items.isNotEmpty()) {
                 item {
                     Spacer(modifier = Modifier.height(24.dp))
                 }
@@ -156,6 +177,7 @@ private fun AccountContentScreen(state: AccountUiState, navController: NavContro
 
 @Composable
 private fun AccountItem(item: AccountItemState, navController: NavController, onLogout: () -> Unit, switchExperience: () -> Unit, modifier: Modifier = Modifier) {
+    val uriHandler = LocalUriHandler.current
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
@@ -165,7 +187,9 @@ private fun AccountItem(item: AccountItemState, navController: NavController, on
                 when (item.type) {
                     is AccountItemType.Open -> navController.navigate(item.type.route.route)
 
-                    is AccountItemType.OpenExternal -> navController.navigate(item.type.route.route)
+                    is AccountItemType.OpenWithoutIndicator -> navController.navigate(item.type.route.route)
+
+                    is AccountItemType.OpenExternal -> uriHandler.openUri(item.type.url)
 
                     is AccountItemType.LogOut -> {
                         onLogout()
@@ -185,17 +209,19 @@ private fun AccountItem(item: AccountItemState, navController: NavController, on
                 text = item.title,
                 style = HorizonTypography.labelLargeBold,
                 color = HorizonColors.Text.body(),
+                modifier = Modifier.weight(1f)
             )
 
-            Spacer(modifier = Modifier.weight(1f))
-
-            Icon(
-                painter = painterResource(id = item.type.icon),
-                contentDescription = null,
-                tint = HorizonColors.Icon.medium(),
-                modifier = Modifier
-                    .size(24.dp)
-            )
+            item.type.icon?.let { icon ->
+                Icon(
+                    painter = painterResource(id = icon),
+                    contentDescription = null,
+                    tint = HorizonColors.Icon.medium(),
+                    modifier = Modifier
+                        .padding(start = 8.dp)
+                        .size(24.dp)
+                )
+            }
         }
     }
 }

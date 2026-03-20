@@ -16,20 +16,36 @@
 
 package com.instructure.student.features.dashboard.compose
 
+import android.os.Bundle
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.MutableLiveData
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.pandautils.compose.SnackbarMessage
+import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
 import com.instructure.pandautils.features.dashboard.widget.WidgetMetadata
 import com.instructure.pandautils.features.dashboard.widget.usecase.EnsureDefaultWidgetsUseCase
+import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveGlobalConfigUseCase
 import com.instructure.pandautils.features.dashboard.widget.usecase.ObserveWidgetMetadataUseCase
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.pandautils.utils.ThemedColor
+import io.mockk.Runs
+import io.mockk.clearMocks
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
+import io.mockk.mockkConstructor
+import io.mockk.mockkObject
+import io.mockk.slot
 import io.mockk.unmockkAll
+import io.mockk.verify
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertFalse
 import junit.framework.Assert.assertTrue
@@ -60,22 +76,49 @@ class DashboardViewModelTest {
     private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
     private val ensureDefaultWidgetsUseCase: EnsureDefaultWidgetsUseCase = mockk(relaxed = true)
     private val observeWidgetMetadataUseCase: ObserveWidgetMetadataUseCase = mockk(relaxed = true)
+    private val analytics: Analytics = mockk(relaxed = true)
+    private val bundleStorage = mutableMapOf<String, String?>()
+    private val observeGlobalConfigUseCase: ObserveGlobalConfigUseCase = mockk(relaxed = true)
+    private val crashlytics: FirebaseCrashlytics = mockk(relaxed = true)
 
     private lateinit var viewModel: DashboardViewModel
+
+    private val networkStateLiveData = MutableLiveData(true)
 
     @Before
     fun setUp() {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         Dispatchers.setMain(testDispatcher)
 
-        every { networkStateProvider.isOnline() } returns true
-        coEvery { observeWidgetMetadataUseCase(Unit) } returns flowOf(emptyList())
+        // Mock Bundle constructor for analytics tests
+        mockkConstructor(Bundle::class)
+        every { anyConstructed<Bundle>().putString(any(), any()) } answers {
+            val key = firstArg<String>()
+            val value = secondArg<String>()
+            bundleStorage[key] = value
+        }
+        every { anyConstructed<Bundle>().getString(any()) } answers {
+            val key = firstArg<String>()
+            bundleStorage[key]
+        }
 
-        viewModel = createViewModel()
+        // Clear bundle storage and analytics before each test
+        bundleStorage.clear()
+        clearMocks(analytics, answers = false)
+
+        every { networkStateProvider.isOnline() } returns true
+        every { networkStateProvider.isOnlineLiveData } returns networkStateLiveData
+        coEvery { observeWidgetMetadataUseCase(Unit) } returns flowOf(emptyList())
+        coEvery { observeGlobalConfigUseCase(Unit) } returns flowOf(GlobalConfig())
+        every { crashlytics.recordException(any()) } just Runs
+
+        mockkObject(ColorKeeper)
+        every { ColorKeeper.createThemedColor(any()) } returns ThemedColor(0, 0)
     }
 
     private fun createViewModel(): DashboardViewModel {
-        return DashboardViewModel(networkStateProvider, ensureDefaultWidgetsUseCase, observeWidgetMetadataUseCase)
+        return DashboardViewModel(networkStateProvider, ensureDefaultWidgetsUseCase, observeWidgetMetadataUseCase, analytics, observeGlobalConfigUseCase,
+            crashlytics)
     }
 
     @After
@@ -86,6 +129,7 @@ class DashboardViewModelTest {
 
     @Test
     fun testInitialState() = runTest {
+        viewModel = createViewModel()
         val state = viewModel.uiState.value
 
         assertFalse(state.loading)
@@ -95,6 +139,7 @@ class DashboardViewModelTest {
 
     @Test
     fun testLoadDashboardSuccess() = runTest {
+        viewModel = createViewModel()
         val state = viewModel.uiState.value
 
         assertEquals(false, state.loading)
@@ -103,6 +148,7 @@ class DashboardViewModelTest {
 
     @Test
     fun testRefresh() = runTest {
+        viewModel = createViewModel()
         viewModel.uiState.value.onRefresh()
 
         val state = viewModel.uiState.value
@@ -112,6 +158,7 @@ class DashboardViewModelTest {
 
     @Test
     fun testRetry() = runTest {
+        viewModel = createViewModel()
         viewModel.uiState.value.onRetry()
 
         val state = viewModel.uiState.value
@@ -121,6 +168,7 @@ class DashboardViewModelTest {
 
     @Test
     fun testCallbacksExist() {
+        viewModel = createViewModel()
         val state = viewModel.uiState.value
 
         assertTrue(state.onRefresh != null)
@@ -129,6 +177,7 @@ class DashboardViewModelTest {
 
     @Test
     fun testEnsureDefaultWidgetsCalledOnInit() = runTest {
+        viewModel = createViewModel()
         coVerify { ensureDefaultWidgetsUseCase(Unit) }
     }
 
@@ -188,6 +237,7 @@ class DashboardViewModelTest {
 
     @Test
     fun testShowSnackbarEmitsMessage() = runTest {
+        viewModel = createViewModel()
         val message = "Test message"
         val messages = mutableListOf<SnackbarMessage>()
 
@@ -210,6 +260,7 @@ class DashboardViewModelTest {
 
     @Test
     fun testShowSnackbarWithActionEmitsMessageAndAction() = runTest {
+        viewModel = createViewModel()
         val message = "Test message"
         val actionLabel = "Retry"
         var actionInvoked = false
@@ -233,5 +284,277 @@ class DashboardViewModelTest {
         assertTrue(actionInvoked)
 
         job.cancel()
+    }
+
+    @Test
+    fun testObserveNetworkStateEmitsRefreshSignalOnNetworkChange() = runTest {
+        val networkStateLiveData = MutableLiveData<Boolean>()
+        every { networkStateProvider.isOnlineLiveData } returns networkStateLiveData
+
+        // Create new ViewModel to start observing
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        val refreshSignals = mutableListOf<Unit>()
+        val job = launch(testDispatcher) {
+            viewModel.refreshSignal.collect {
+                refreshSignals.add(Unit)
+            }
+        }
+
+        // Simulate network state change from online to offline
+        networkStateLiveData.postValue(false)
+        advanceUntilIdle()
+
+        // Simulate network state change from offline to online
+        networkStateLiveData.postValue(true)
+        advanceUntilIdle()
+
+        // Should have received 2 refresh signals (one for each network state change)
+        assertEquals(2, refreshSignals.size)
+
+        job.cancel()
+    }
+
+    @Test
+    fun testObserveNetworkStateEmitsRefreshSignalWhenGoingOnline() = runTest {
+        val networkStateLiveData = MutableLiveData(false)
+        every { networkStateProvider.isOnlineLiveData } returns networkStateLiveData
+
+        // Create new ViewModel to start observing
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        val refreshSignals = mutableListOf<Unit>()
+        val job = launch(testDispatcher) {
+            viewModel.refreshSignal.collect {
+                refreshSignals.add(Unit)
+            }
+        }
+
+        // Initially offline, no signals yet
+        assertEquals(0, refreshSignals.size)
+
+        // Simulate going online
+        networkStateLiveData.postValue(true)
+        advanceUntilIdle()
+
+        // Should have received 1 refresh signal
+        assertEquals(1, refreshSignals.size)
+
+        job.cancel()
+    }
+
+    @Test
+    fun testObserveNetworkStateEmitsRefreshSignalWhenGoingOffline() = runTest {
+        val networkStateLiveData = MutableLiveData(true)
+        every { networkStateProvider.isOnlineLiveData } returns networkStateLiveData
+
+        // Create new ViewModel to start observing
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        val refreshSignals = mutableListOf<Unit>()
+        val job = launch(testDispatcher) {
+            viewModel.refreshSignal.collect {
+                refreshSignals.add(Unit)
+            }
+        }
+
+        // Initially online, no signals yet
+        assertEquals(0, refreshSignals.size)
+
+        // Simulate going offline
+        networkStateLiveData.postValue(false)
+        advanceUntilIdle()
+
+        // Should have received 1 refresh signal
+        assertEquals(1, refreshSignals.size)
+
+        job.cancel()
+    }
+
+    @Test
+    fun testOfflineFiltersToOfflineVisibleWidgetsOnly() = runTest {
+        val networkStateLiveData = MutableLiveData(false)
+        every { networkStateProvider.isOnlineLiveData } returns networkStateLiveData
+
+        val widgets = listOf(
+            WidgetMetadata(WidgetMetadata.WIDGET_ID_COURSES, 0, true),
+            WidgetMetadata(WidgetMetadata.WIDGET_ID_CONFERENCES, 1, true),
+            WidgetMetadata(WidgetMetadata.WIDGET_ID_COURSE_INVITATIONS, 2, true),
+            WidgetMetadata(WidgetMetadata.WIDGET_ID_INSTITUTIONAL_ANNOUNCEMENTS, 3, true),
+            WidgetMetadata(WidgetMetadata.WIDGET_ID_WELCOME, 4, true),
+            WidgetMetadata(WidgetMetadata.WIDGET_ID_FORECAST, 5, true),
+            WidgetMetadata(WidgetMetadata.WIDGET_ID_TODO, 6, true)
+        )
+        coEvery { observeWidgetMetadataUseCase(Unit) } returns flowOf(widgets)
+
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertEquals(3, state.widgets.size)
+        assertEquals(WidgetMetadata.WIDGET_ID_COURSES, state.widgets[0].id)
+        assertEquals(WidgetMetadata.WIDGET_ID_COURSE_INVITATIONS, state.widgets[1].id)
+        assertEquals(WidgetMetadata.WIDGET_ID_INSTITUTIONAL_ANNOUNCEMENTS, state.widgets[2].id)
+        assertFalse(state.isOnline)
+    }
+
+    @Test
+    fun testOnlineShowsAllVisibleWidgets() = runTest {
+        val networkStateLiveData = MutableLiveData(true)
+        every { networkStateProvider.isOnlineLiveData } returns networkStateLiveData
+
+        val widgets = listOf(
+            WidgetMetadata(WidgetMetadata.WIDGET_ID_COURSES, 0, true),
+            WidgetMetadata(WidgetMetadata.WIDGET_ID_CONFERENCES, 1, true),
+            WidgetMetadata(WidgetMetadata.WIDGET_ID_COURSE_INVITATIONS, 2, true),
+            WidgetMetadata(WidgetMetadata.WIDGET_ID_TODO, 3, true)
+        )
+        coEvery { observeWidgetMetadataUseCase(Unit) } returns flowOf(widgets)
+
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertEquals(4, state.widgets.size)
+        assertTrue(state.isOnline)
+    }
+
+    @Test
+    fun testIsOnlineStateUpdatesWhenNetworkChanges() = runTest {
+        val networkStateLiveData = MutableLiveData(true)
+        every { networkStateProvider.isOnlineLiveData } returns networkStateLiveData
+
+        val widgets = listOf(
+            WidgetMetadata(WidgetMetadata.WIDGET_ID_COURSES, 0, true),
+            WidgetMetadata(WidgetMetadata.WIDGET_ID_CONFERENCES, 1, true)
+        )
+        coEvery { observeWidgetMetadataUseCase(Unit) } returns flowOf(widgets)
+
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        // Initially online
+        assertTrue(viewModel.uiState.value.isOnline)
+        assertEquals(2, viewModel.uiState.value.widgets.size)
+
+        // Go offline
+        networkStateLiveData.postValue(false)
+        advanceUntilIdle()
+
+        assertFalse(viewModel.uiState.value.isOnline)
+        assertEquals(1, viewModel.uiState.value.widgets.size)
+        assertEquals(WidgetMetadata.WIDGET_ID_COURSES, viewModel.uiState.value.widgets[0].id)
+
+        // Go back online
+        networkStateLiveData.postValue(true)
+        advanceUntilIdle()
+
+        assertTrue(viewModel.uiState.value.isOnline)
+        assertEquals(2, viewModel.uiState.value.widgets.size)
+    }
+
+    @Test
+    fun testWidgetVisibilityTrackedOnLoad() = runTest {
+        val widgets = listOf(
+            WidgetMetadata("welcome", 0, true),
+            WidgetMetadata("forecast", 1, false),
+            WidgetMetadata("todo", 2, true),
+            WidgetMetadata("courses", 3, true)
+        )
+        coEvery { observeWidgetMetadataUseCase(Unit) } returns flowOf(widgets)
+
+        val eventNameSlot = slot<String>()
+        val bundleSlot = slot<Bundle>()
+        every { analytics.logEvent(capture(eventNameSlot), capture(bundleSlot)) } returns Unit
+
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        verify(exactly = 1) { analytics.logEvent(any(), any<Bundle>()) }
+        assertEquals(AnalyticsEventConstants.DASHBOARD_WIDGET_VISIBILITY, eventNameSlot.captured)
+
+        val capturedBundle = bundleSlot.captured
+        assertEquals("0", capturedBundle.getString("welcome"))
+        assertEquals("-1", capturedBundle.getString("forecast"))
+        assertEquals("2", capturedBundle.getString("todo"))
+        assertEquals("3", capturedBundle.getString("courses"))
+    }
+
+    @Test
+    fun testWidgetVisibilityTrackedOnlyOnce() = runTest {
+        val widgets = listOf(
+            WidgetMetadata("welcome", 0, true),
+            WidgetMetadata("todo", 1, false)
+        )
+        coEvery { observeWidgetMetadataUseCase(Unit) } returns flowOf(widgets)
+        every { analytics.logEvent(any(), any<Bundle>()) } returns Unit
+
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        verify(exactly = 1) { analytics.logEvent(AnalyticsEventConstants.DASHBOARD_WIDGET_VISIBILITY, any()) }
+    }
+
+    @Test
+    fun testWidgetVisibilityIncludesHiddenWidgets() = runTest {
+        val widgets = listOf(
+            WidgetMetadata("widget1", 0, true),
+            WidgetMetadata("widget2", 1, false),
+            WidgetMetadata("widget3", 2, false)
+        )
+        coEvery { observeWidgetMetadataUseCase(Unit) } returns flowOf(widgets)
+
+        val bundleSlot = slot<Bundle>()
+        every { analytics.logEvent(any(), capture(bundleSlot)) } returns Unit
+
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        val capturedBundle = bundleSlot.captured
+        assertEquals("0", capturedBundle.getString("widget1"))
+        assertEquals("-1", capturedBundle.getString("widget2"))
+        assertEquals("-1", capturedBundle.getString("widget3"))
+    }
+
+    @Test
+    fun testWidgetPositionTrackedCorrectly() = runTest {
+        val widgets = listOf(
+            WidgetMetadata("welcome", 0, true),
+            WidgetMetadata("forecast", 3, true),
+            WidgetMetadata("todo", 5, false),
+            WidgetMetadata("courses", 1, true)
+        )
+        coEvery { observeWidgetMetadataUseCase(Unit) } returns flowOf(widgets)
+
+        val bundleSlot = slot<Bundle>()
+        every { analytics.logEvent(any(), capture(bundleSlot)) } returns Unit
+
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        val capturedBundle = bundleSlot.captured
+        // Visible widgets should report their actual position
+        assertEquals("0", capturedBundle.getString("welcome"))
+        assertEquals("3", capturedBundle.getString("forecast"))
+        assertEquals("1", capturedBundle.getString("courses"))
+        // Hidden widgets should report -1
+        assertEquals("-1", capturedBundle.getString("todo"))
+    }
+
+    @Test
+    fun testObserveConfigUpdatesColor() = runTest {
+        val testColor = 0xFF00FF00.toInt()
+        val themedColor = ThemedColor(testColor, testColor)
+        every { ColorKeeper.createThemedColor(testColor) } returns themedColor
+        coEvery { observeGlobalConfigUseCase(Unit) } returns flowOf(GlobalConfig(backgroundColor = testColor))
+
+        viewModel = createViewModel()
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertEquals(themedColor, state.color)
     }
 }

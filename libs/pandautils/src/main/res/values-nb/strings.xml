@@ -488,6 +488,7 @@
     <string name="a11y_markAsDoneWithName">%s Merk som ferdig</string>
     <string name="a11y_markAsNotDoneWithName">%s Merket som ikke ferdig</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="a11y_expand_collapse">Vis eller skjul delen</string>
     <string name="inboxSignatureError">Kunne ikke laste inn innbokssignatur</string>
     <string name="inboxSignatureSettingsUpdated">Innboks-innstillinger lagret!</string>
     <string name="inboxSignatureSettingsError">Kunne ikke lagre innboksinnstillinger</string>
@@ -501,4 +502,8 @@
         <item quantity="other">%d minutter</item>
     </plurals>
     <string name="notATeacherDescription">En av våre andre applikasjoner kan være mer tilpasset. Trykk på et ikon for å logge inn der.</string>
+    <string name="gradePercentAccessibility">Vurdering: %d prosent</string>
+    <string name="gradePointsAccessibility">Vurdering: %s poeng</string>
+    <string name="gradePercentTextFieldAccessibility">Vurdering: %d prosent, %s</string>
+    <string name="gradePointsTextFieldAccessibility">Vurdering: %s poeng, %s</string>
 </resources>

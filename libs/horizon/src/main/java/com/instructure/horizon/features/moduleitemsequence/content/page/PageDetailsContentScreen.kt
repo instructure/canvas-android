@@ -53,7 +53,7 @@ fun PageDetailsContentScreen(
     uiState: PageDetailsUiState,
     scrollState: ScrollState,
     updateAiContext: (AiAssistContextSource, String) -> Unit,
-    mainNavController: NavHostController,
+    navController: NavHostController,
     scrollToNoteId: String?,
     modifier: Modifier = Modifier,
 ) {
@@ -102,7 +102,7 @@ fun PageDetailsContentScreen(
                     ),
                     notesCallback = NotesCallback(
                         onNoteSelected = { noteId, noteType, selectedText, userComment, startContainer, startOffset, endContainer, endOffset, textSelectionStart, textSelectionEnd, updatedAt ->
-                            mainNavController.navigate(
+                            navController.navigate(
                                 NotebookRoute.EditNotebook(
                                     noteId = noteId,
                                     noteType = noteType,

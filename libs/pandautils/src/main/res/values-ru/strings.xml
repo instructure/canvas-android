@@ -501,6 +501,7 @@
     <string name="a11y_markAsDoneWithName">%s Отметить как выполненное</string>
     <string name="a11y_markAsNotDoneWithName">%s Отметить как невыполненное</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="a11y_expand_collapse">Развернуть или свернуть раздел</string>
     <string name="inboxSignatureError">Не удалось загрузить подпись Inbox</string>
     <string name="inboxSignatureSettingsUpdated">Настройки Inbox сохранены!</string>
     <string name="inboxSignatureSettingsError">Не удалось сохранить настройки Inbox</string>
@@ -518,4 +519,8 @@
         <item quantity="other">%d мин</item>
     </plurals>
     <string name="notATeacherDescription">Одно из наших других приложений может подойти лучше. Нажмите на значок, чтобы авторизоваться.</string>
+    <string name="gradePercentAccessibility">Оценка: %d процент</string>
+    <string name="gradePointsAccessibility">Оценка: %s баллов</string>
+    <string name="gradePercentTextFieldAccessibility">Оценка: %d процент, %s</string>
+    <string name="gradePointsTextFieldAccessibility">Оценка: %s балла(-ов), %s</string>
 </resources>

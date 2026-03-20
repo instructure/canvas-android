@@ -64,9 +64,14 @@ import com.instructure.pandautils.features.inbox.utils.InboxSharedAction
 import com.instructure.pandautils.features.inbox.utils.InboxSharedEvents
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.addListener
+import com.instructure.pandautils.utils.applyBottomAndRightSystemBarMargin
+import com.instructure.pandautils.utils.applyBottomAndRightSystemBarPadding
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.isVisible
@@ -343,9 +348,22 @@ class InboxFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInterac
         ViewStyler.themeToolbarColored(requireActivity(), binding.editToolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         binding.toolbarWrapper.setBackgroundColor(ThemePrefs.primaryColor)
         ViewStyler.themeFAB(binding.addMessage)
+        // Parent app doesn't have bottom navigation on inbox screen, so use margin for positioning
+        // Teacher/Student apps have bottom navigation that handles bottom insets, so use padding
+        if (requireContext().packageName == AppType.PARENT.packageName) {
+            binding.addMessage.applyBottomAndRightSystemBarMargin()
+            // Parent app has no bottom bar, so apply bottom padding to the list
+            binding.inboxRecyclerView.clipToPadding = false
+            binding.inboxRecyclerView.applyBottomSystemBarInsets()
+        } else {
+            binding.addMessage.applyBottomAndRightSystemBarPadding()
+        }
+
         binding.scopeFilterText.setTextColor(ThemePrefs.textButtonColor)
         binding.scopeFilterIcon.setColorFilter(ThemePrefs.textButtonColor)
         inboxRouter.attachNavigationIcon(binding.toolbar)
+        binding.toolbar.applyTopSystemBarInsets()
+        binding.editToolbar.applyTopSystemBarInsets()
     }
 
     override fun getFragment(): Fragment? = this

@@ -17,15 +17,25 @@
 
 package com.instructure.parentapp.utils
 
+import android.app.Activity
+import android.app.Instrumentation
+import android.content.Intent
+import android.net.Uri
+import androidx.core.content.FileProvider
+import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.matcher.IntentMatchers
+import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.canvas.espresso.common.pages.AboutPage
 import com.instructure.canvas.espresso.common.pages.CanvasNetworkSignInPage
+import com.instructure.canvas.espresso.common.pages.FileChooserPage
 import com.instructure.canvas.espresso.common.pages.InboxPage
 import com.instructure.canvas.espresso.common.pages.LegalPage
 import com.instructure.canvas.espresso.common.pages.LoginFindSchoolPage
 import com.instructure.canvas.espresso.common.pages.LoginLandingPage
 import com.instructure.canvas.espresso.common.pages.LoginSignInPage
 import com.instructure.canvas.espresso.common.pages.WrongDomainPage
+import com.instructure.pandautils.utils.Const
 import com.instructure.parentapp.BuildConfig
 import com.instructure.parentapp.features.login.LoginActivity
 import com.instructure.parentapp.ui.pages.classic.DashboardPage
@@ -33,6 +43,8 @@ import com.instructure.parentapp.ui.pages.classic.FrontPagePage
 import com.instructure.parentapp.ui.pages.classic.HelpPage
 import com.instructure.parentapp.ui.pages.classic.LeftSideNavigationDrawerPage
 import com.instructure.parentapp.ui.pages.compose.SyllabusPage
+import org.hamcrest.core.AllOf
+import java.io.File
 
 
 abstract class ParentTest : CanvasTest() {
@@ -47,6 +59,7 @@ abstract class ParentTest : CanvasTest() {
     val helpPage = HelpPage()
     val syllabusPage = SyllabusPage()
     val frontPagePage = FrontPagePage()
+    val fileChooserPage = FileChooserPage()
 
     // Common pages (it's common for all apps)
     val loginLandingPage = LoginLandingPage()
@@ -57,4 +70,40 @@ abstract class ParentTest : CanvasTest() {
     val inboxPage = InboxPage()
     val legalPage = LegalPage()
     val aboutPage = AboutPage()
+
+    fun setupFileOnDevice(fileName: String): Uri {
+        File(InstrumentationRegistry.getInstrumentation().targetContext.cacheDir, "file_upload").deleteRecursively()
+        copyAssetFileToExternalCache(activityRule.activity, fileName)
+
+        val dir = activityRule.activity.externalCacheDir
+        val file = File(dir?.path, fileName)
+
+        val instrumentationContext = InstrumentationRegistry.getInstrumentation().context
+        return FileProvider.getUriForFile(
+            instrumentationContext,
+            "com.instructure.parentapp" + Const.FILE_PROVIDER_AUTHORITY,
+            file
+        )
+    }
+
+    fun stubFilePickerIntent(fileName: String) {
+        val resultData = Intent()
+        val dir = activityRule.activity.externalCacheDir
+        val file = File(dir?.path, fileName)
+        val newFileUri = FileProvider.getUriForFile(
+            activityRule.activity,
+            "com.instructure.parentapp" + Const.FILE_PROVIDER_AUTHORITY,
+            file
+        )
+        resultData.data = newFileUri
+        resultData.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+
+        Intents.intending(
+            AllOf.allOf(
+                IntentMatchers.hasAction(Intent.ACTION_GET_CONTENT),
+                IntentMatchers.hasType("*/*"),
+            )
+        ).respondWith(Instrumentation.ActivityResult(Activity.RESULT_OK, resultData))
+    }
+
 }

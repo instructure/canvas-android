@@ -20,6 +20,7 @@ import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.filterToOne
+import androidx.compose.ui.test.hasAnyDescendant
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasTestTag
@@ -33,7 +34,10 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.onParent
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
+import androidx.test.espresso.Espresso.onView
+import com.instructure.canvas.espresso.withResourceIdContaining
 import com.instructure.canvasapi2.models.Conversation
+import com.instructure.espresso.assertDisplayed
 
 class InboxDetailsPage(private val composeTestRule: ComposeTestRule) {
 
@@ -180,5 +184,33 @@ class InboxDetailsPage(private val composeTestRule: ComposeTestRule) {
         )
 
         overflowButton.performClick()
+    }
+
+    fun assertAttachmentDisplayed(fileName: String) {
+        composeTestRule.onNode(
+            hasTestTag("attachment").and(hasAnyDescendant(hasText(fileName))),
+            useUnmergedTree = true
+        ).performScrollTo().assertIsDisplayed()
+    }
+
+    fun clickAttachment(fileName: String) {
+        composeTestRule.onNode(
+            hasTestTag("attachment").and(hasAnyDescendant(hasText(fileName))),
+            useUnmergedTree = true
+        ).performScrollTo().performClick()
+        composeTestRule.waitForIdle()
+
+    }
+
+    // PDF viewer method for PSPDFKit toolbar verification
+    fun assertPdfViewerToolbarDisplayed() {
+        onView(withResourceIdContaining("pspdf__toolbar_main"))
+            .assertDisplayed()
+    }
+
+    // Verifies that the PSPDFKit document view is displayed
+    fun assertPdfDocumentViewDisplayed() {
+        onView(withResourceIdContaining("pdfFragmentContainer"))
+            .assertDisplayed()
     }
 }

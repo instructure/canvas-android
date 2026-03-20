@@ -487,6 +487,7 @@
     <string name="a11y_markAsDoneWithName">%s Marcar como terminado</string>
     <string name="a11y_markAsNotDoneWithName">%s Marcar como no terminado</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="a11y_expand_collapse">Expandir o colapsar sección</string>
     <string name="inboxSignatureError">Error al cargar la firma de la bandeja de entrada</string>
     <string name="inboxSignatureSettingsUpdated">Se guardaron las configuraciones de la bandeja de entrada.</string>
     <string name="inboxSignatureSettingsError">Error al guardar las configuraciones de la bandeja de entrada</string>
@@ -500,4 +501,8 @@
         <item quantity="other">%d minutos</item>
     </plurals>
     <string name="notATeacherDescription">Una de nuestras otras aplicaciones podría ser más adecuada. Toque un ícono para iniciar sesión allí.</string>
+    <string name="gradePercentAccessibility">Calificación: %d porcentaje</string>
+    <string name="gradePointsAccessibility">Calificación: %s puntos</string>
+    <string name="gradePercentTextFieldAccessibility">Calificación: %d porcentaje, %s</string>
+    <string name="gradePointsTextFieldAccessibility">Calificación: %s puntos, %s</string>
 </resources>

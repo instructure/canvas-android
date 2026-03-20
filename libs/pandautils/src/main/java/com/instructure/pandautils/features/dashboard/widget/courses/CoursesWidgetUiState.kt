@@ -17,8 +17,10 @@
 package com.instructure.pandautils.features.dashboard.widget.courses
 
 import androidx.fragment.app.FragmentActivity
+import com.instructure.pandautils.features.dashboard.widget.GlobalConfig
 import com.instructure.pandautils.features.dashboard.widget.courses.model.CourseCardItem
 import com.instructure.pandautils.features.dashboard.widget.courses.model.GroupCardItem
+import com.instructure.pandautils.utils.ThemedColor
 
 data class CoursesWidgetUiState(
     val isLoading: Boolean = false,
@@ -29,11 +31,15 @@ data class CoursesWidgetUiState(
     val isGroupsExpanded: Boolean = true,
     val showGrades: Boolean = false,
     val showColorOverlay: Boolean = false,
+    val color: ThemedColor = ThemedColor(GlobalConfig.DEFAULT_COLOR),
     val onCourseClick: (FragmentActivity, Long) -> Unit = { _, _ -> },
     val onGroupClick: (FragmentActivity, Long) -> Unit = { _, _ -> },
     val onToggleCoursesExpanded: () -> Unit = {},
     val onToggleGroupsExpanded: () -> Unit = {},
     val onManageOfflineContent: (FragmentActivity, Long) -> Unit = { _, _ -> },
     val onCustomizeCourse: (FragmentActivity, Long) -> Unit = { _, _ -> },
-    val onAllCourses: (FragmentActivity) -> Unit = {}
+    val onAllCourses: (FragmentActivity) -> Unit = {},
+    val onAnnouncementClick: (FragmentActivity, Long) -> Unit = { _, _ -> },
+    val onGroupMessageClick: (FragmentActivity, Long) -> Unit = { _, _ -> },
+    val onCourseMoved: (Int, Int) -> Unit = { _, _ -> },
 )

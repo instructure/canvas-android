@@ -30,6 +30,10 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.composables.calendar.CalendarBodyUiState
+import com.instructure.pandautils.compose.composables.calendar.CalendarHeaderUiState
+import com.instructure.pandautils.compose.composables.calendar.CalendarPageUiState
+import com.instructure.pandautils.compose.composables.calendar.CalendarStateMapper
 import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -106,7 +110,7 @@ class CalendarViewModelTest {
             "${args[0]} ${args[1]} - ${args[2]}"
         }
 
-        every { context.getString(eq(R.string.courseToDo), any()) } answers {
+        every { context.getString(eq(R.string.courseToDoNew), any()) } answers {
             val args = secondArg<Array<Any>>()
             "${args[0]} To Do"
         }
@@ -125,7 +129,7 @@ class CalendarViewModelTest {
         every { context.getString(R.string.calendarEventMissing) } returns "missing"
         every { context.getString(R.string.calendarEventGraded) } returns "graded"
         every { context.getString(R.string.calendarEventSubmitted) } returns "needs grading"
-        every { context.getString(R.string.userCalendarToDo) } returns "To Do"
+        every { context.getString(R.string.userCalendarToDoNew) } returns "To Do"
         every { context.getString(eq(R.string.calendarEventPoints), any()) } answers {
             val args = secondArg<Array<Any>>()
             "${args[0]} pts"
@@ -728,8 +732,28 @@ class CalendarViewModelTest {
 
     @Test
     fun `Open assignment when assignment is selected`() = runTest {
+        val plannerItem = createPlannerItem(1, 100, PlannableType.ASSIGNMENT, createDate(2023, 4, 20, 12))
         coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns listOf(
-            createPlannerItem(1, 1, PlannableType.ASSIGNMENT, createDate(2023, 4, 20, 12)),
+            plannerItem.copy(plannable = plannerItem.plannable.copy(assignmentId = 50))
+        )
+        initViewModel()
+
+        viewModel.handleAction(CalendarAction.EventSelected(100))
+
+        val events = mutableListOf<CalendarViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        val expectedAction = CalendarViewModelAction.OpenAssignment(Course(1), 50)
+        assertEquals(expectedAction, events.last())
+    }
+
+    @Test
+    fun `Open assignment using plannable id when assignmentId is null`() = runTest {
+        val plannerItem = createPlannerItem(1, 1, PlannableType.ASSIGNMENT, createDate(2023, 4, 20, 12))
+        coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns listOf(
+            plannerItem.copy(plannable = plannerItem.plannable.copy(assignmentId = null))
         )
         initViewModel()
 

@@ -488,6 +488,7 @@
     <string name="a11y_markAsNotDoneWithName">%s Tanda sebagai tidak siap</string>
 
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="a11y_expand_collapse">Kembangkan atau runtuhkan seksyen</string>
     <string name="inboxSignatureError">Gagal memuatkan tandatangan peti masuk</string>
     <string name="inboxSignatureSettingsUpdated">Tetapan peti masuk disimpan!</string>
     <string name="inboxSignatureSettingsError">Gagal menyimpan tetapan peti masuk</string>
@@ -501,4 +502,8 @@
         <item quantity="other">%d Minit</item>
     </plurals>
     <string name="notATeacherDescription">Salah satu daripada aplikasi kami yang lain mungkin lebih sesuai. Ketik ikon untuk log masuk di sana.</string>
+    <string name="gradePercentAccessibility">Gred: %d peratus</string>
+    <string name="gradePointsAccessibility">Gred: %s mata</string>
+    <string name="gradePercentTextFieldAccessibility">Gred: %d peratusan, %s</string>
+    <string name="gradePointsTextFieldAccessibility">Gred: %s mata, %s</string>
 </resources>

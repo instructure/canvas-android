@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.features.dashboard.notifications.DashboardRouter
 import com.instructure.pandautils.features.offline.sync.progress.SyncProgressFragment
 import com.instructure.pandautils.features.dashboard.customize.CustomizeDashboardFragment
+import com.instructure.pandautils.features.offline.offlinecontent.OfflineContentFragment
 import com.instructure.student.activity.LoginActivity
 import com.instructure.student.features.files.list.FileListFragment
 import com.instructure.student.fragment.InternalWebviewFragment
@@ -63,6 +64,13 @@ class StudentDashboardRouter(private val activity: FragmentActivity) : Dashboard
         RouteMatcher.route(
             activity,
             SyncProgressFragment.makeRoute()
+        )
+    }
+
+    override fun routeToManageOfflineContent() {
+        RouteMatcher.route(
+            activity,
+            OfflineContentFragment.makeRoute()
         )
     }
 

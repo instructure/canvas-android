@@ -40,7 +40,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
@@ -57,7 +57,7 @@ import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 @Composable
 fun AccountNotificationsScreen(
     state: AccountNotificationsUiState,
-    navController: NavController,
+    navController: NavHostController,
 ) {
     HorizonScaffold(
         title = stringResource(R.string.accountNotificationsTitle),

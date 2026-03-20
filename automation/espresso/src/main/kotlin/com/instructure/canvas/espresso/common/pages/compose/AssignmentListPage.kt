@@ -46,6 +46,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.dataseeding.model.AssignmentApiModel
 import com.instructure.dataseeding.model.QuizApiModel
 import com.instructure.espresso.R
+import com.instructure.espresso.assertDoesNotExistWithTimeout
 import com.instructure.espresso.page.plus
 import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.pandautils.utils.toFormattedString
@@ -266,6 +267,13 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
             hasText("Grading Period:").and(hasParent(hasAnyDescendant(hasText(gradingPeriodName ?: "All"))))
         )
         .assertIsDisplayed()
+    }
+
+    fun assertGradingPeriodLabelDoesNotExist(gradingPeriodName: String? = null) {
+        composeTestRule.onNode(
+            hasText("Grading Period:").and(hasParent(hasAnyDescendant(hasText(gradingPeriodName ?: "All"))))
+        )
+            .assertDoesNotExistWithTimeout(5)
     }
 
     private fun clickFilterMenu() {

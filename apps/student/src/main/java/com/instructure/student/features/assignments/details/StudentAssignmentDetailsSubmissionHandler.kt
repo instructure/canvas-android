@@ -238,7 +238,6 @@ class StudentAssignmentDetailsSubmissionHandler(
                         isUploading = false
                         isFailed = false
                         refreshAssignment()
-                        context.toast(R.string.submissionSuccessTitle)
                     }
                 }
         }

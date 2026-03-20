@@ -20,6 +20,7 @@ import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.canvas.espresso.annotations.StubLandscape
 import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvas.espresso.mockcanvas.addAssignment
 import com.instructure.canvas.espresso.mockcanvas.addCoursePermissions
@@ -30,6 +31,7 @@ import com.instructure.canvas.espresso.mockcanvas.fakes.FakeCustomGradeStatusesM
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeDifferentiationTagsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeInboxSettingsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakePostPolicyManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeRecentGradedSubmissionsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeStudentContextManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionCommentsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionContentManager
@@ -47,6 +49,7 @@ import com.instructure.canvasapi2.managers.SubmissionRubricManager
 import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.managers.graphql.DifferentiationTagsManager
+import com.instructure.canvasapi2.managers.graphql.RecentGradedSubmissionsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionCommentsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionDetailsManager
@@ -115,6 +118,10 @@ class CommentLibraryInteractionTest : TeacherComposeTest() {
     @JvmField
     val customGradeStatusesManager: CustomGradeStatusesManager = FakeCustomGradeStatusesManager()
 
+    @BindValue
+    @JvmField
+    val recentGradedSubmissionsManager: RecentGradedSubmissionsManager = FakeRecentGradedSubmissionsManager()
+
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun showAllItemsWhenCommentFieldIsClicked() {
@@ -132,6 +139,7 @@ class CommentLibraryInteractionTest : TeacherComposeTest() {
 
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
+    @StubLandscape
     fun selectCommentLibrarySuggestionComment() {
         createCommentLibraryMockData()
         goToSpeedGraderCommentsPage()
@@ -149,6 +157,7 @@ class CommentLibraryInteractionTest : TeacherComposeTest() {
 
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
+    @StubLandscape
     fun selectCommentLibrarySuggestionAndSendComment() {
         createCommentLibraryMockData()
         goToSpeedGraderCommentsPage()
@@ -188,6 +197,7 @@ class CommentLibraryInteractionTest : TeacherComposeTest() {
 
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
+    @StubLandscape
     fun reopenCommentLibraryWhenTextIsModified() {
         createCommentLibraryMockData()
         goToSpeedGraderCommentsPage()
@@ -221,6 +231,7 @@ class CommentLibraryInteractionTest : TeacherComposeTest() {
 
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
+    @StubLandscape
     fun selectCommentLibrarySuggestionFromMultipleItemResult() {
         createCommentLibraryMockData()
         goToSpeedGraderCommentsPage()
@@ -241,6 +252,7 @@ class CommentLibraryInteractionTest : TeacherComposeTest() {
 
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
+    @StubLandscape
     fun showAllCommentLibraryItemsAfterClearingCommentFieldFilter() {
         val commentLibraryItems = createCommentLibraryMockData()
         goToSpeedGraderCommentsPage()

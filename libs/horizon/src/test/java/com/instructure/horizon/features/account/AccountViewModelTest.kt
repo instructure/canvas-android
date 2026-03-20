@@ -50,6 +50,7 @@ class AccountViewModelTest {
     private val databaseProvider: DatabaseProvider = mockk(relaxed = true)
     private val alarmScheduler: AlarmScheduler = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
+    private val accountEventHandler: AccountEventHandler = AccountEventHandler()
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val testUser = User(
@@ -204,7 +205,8 @@ class AccountViewModelTest {
             logoutHelper,
             databaseProvider,
             alarmScheduler,
-            apiPrefs
+            apiPrefs,
+            accountEventHandler
         )
     }
 }

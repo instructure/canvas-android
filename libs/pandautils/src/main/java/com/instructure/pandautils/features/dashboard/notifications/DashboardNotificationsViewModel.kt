@@ -65,7 +65,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import org.threeten.bp.OffsetDateTime
 import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
@@ -326,18 +325,8 @@ class DashboardNotificationsViewModel @Inject constructor(
 
     private fun hasValidCourseForEnrollment(enrollment: Enrollment): Boolean {
         return coursesMap[enrollment.courseId]?.let { course ->
-            course.isValidTerm() && !course.accessRestrictedByDate && isEnrollmentBeforeEndDateOrNotRestricted(course)
+            course.isValidTerm() && !course.accessRestrictedByDate && course.isEnrollmentBeforeEndDateOrNotRestricted()
         } ?: false
-    }
-
-    private fun isEnrollmentBeforeEndDateOrNotRestricted(course: Course): Boolean {
-        val isBeforeEndDate = course.endAt?.let {
-            val now = OffsetDateTime.now()
-            val endDate = OffsetDateTime.parse(it).withOffsetSameInstant(OffsetDateTime.now().offset)
-            now.isBefore(endDate)
-        } ?: true // Case when the course has no end date
-
-        return !course.restrictEnrollmentsToCourseDate || isBeforeEndDate
     }
 
     private fun openUploadNotification(state: WorkInfo.State, uuid: UUID, fileUploadEntity: DashboardFileUploadEntity) {

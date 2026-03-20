@@ -23,7 +23,6 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.OfflineE2E
-import com.instructure.canvas.espresso.annotations.Stub
 import com.instructure.canvas.espresso.common.pages.compose.AssignmentListPage
 import com.instructure.canvas.espresso.pressBackButton
 import com.instructure.canvas.espresso.refresh
@@ -50,7 +49,6 @@ class OfflineAssignmentsE2ETest : StudentComposeTest() {
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
-    @Stub
     @OfflineE2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E, SecondaryFeatureCategory.OFFLINE_MODE)
@@ -134,8 +132,8 @@ class OfflineAssignmentsE2ETest : StudentComposeTest() {
         Log.d(STEP_TAG, "Navigate to course Assignments Page.")
         courseBrowserPage.selectAssignments()
 
-        Log.d(ASSERTION_TAG, "Assert that the grading period label is 'Grading Period: All'.")
-        assignmentListPage.assertGradingPeriodLabel()
+        Log.d(ASSERTION_TAG, "Assert that the grading period label does not exists because we only have one grading period and we don't show the label in this case.")
+        assignmentListPage.assertGradingPeriodLabelDoesNotExist()
 
         Log.d(ASSERTION_TAG, "Assert that all the previously seeded (4) assignments are displayed on the Assignment List Page.")
         assignmentListPage.assertHasAssignment(notSubmittedAssignment)

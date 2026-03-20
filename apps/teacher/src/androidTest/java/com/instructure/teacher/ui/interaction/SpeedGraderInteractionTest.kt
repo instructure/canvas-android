@@ -15,42 +15,51 @@
  */
 package com.instructure.teacher.ui.interaction
 
-import com.instructure.canvas.espresso.annotations.Stub
 import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvas.espresso.mockcanvas.addAssignment
 import com.instructure.canvas.espresso.mockcanvas.addCoursePermissions
-import com.instructure.canvas.espresso.mockcanvas.addSubmissionsForAssignment
+import com.instructure.canvas.espresso.mockcanvas.addSubmissionForAssignment
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeAssignmentDetailsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeCommentLibraryManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeCustomGradeStatusesManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeDifferentiationTagsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeInboxSettingsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakePostPolicyManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeRecentGradedSubmissionsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeStudentContextManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionCommentsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionContentManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionDetailsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionGradeManager
-import com.instructure.canvas.espresso.mockcanvas.fakes.FakeDifferentiationTagsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionRubricManager
 import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvasapi2.di.GraphQlApiModule
+import com.instructure.canvasapi2.di.graphql.CustomGradeStatusModule
 import com.instructure.canvasapi2.managers.CommentLibraryManager
 import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.canvasapi2.managers.PostPolicyManager
 import com.instructure.canvasapi2.managers.StudentContextManager
 import com.instructure.canvasapi2.managers.SubmissionRubricManager
 import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
+import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.managers.graphql.DifferentiationTagsManager
+import com.instructure.canvasapi2.managers.graphql.RecentGradedSubmissionsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionCommentsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionDetailsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionGradeManager
-import com.instructure.pandautils.di.DifferentiationTagsModule
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Assignment.SubmissionType.EXTERNAL_TOOL
+import com.instructure.canvasapi2.models.Assignment.SubmissionType.NONE
 import com.instructure.canvasapi2.models.Assignment.SubmissionType.ONLINE_TEXT_ENTRY
 import com.instructure.canvasapi2.models.Assignment.SubmissionType.ONLINE_URL
 import com.instructure.canvasapi2.models.Assignment.SubmissionType.ON_PAPER
 import com.instructure.canvasapi2.models.CanvasContextPermission
+import com.instructure.canvasapi2.type.GradingType
+import com.instructure.dataseeding.util.ago
+import com.instructure.dataseeding.util.days
+import com.instructure.dataseeding.util.iso8601
+import com.instructure.pandautils.di.DifferentiationTagsModule
 import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.extensions.tokenLogin
@@ -60,8 +69,14 @@ import dagger.hilt.android.testing.UninstallModules
 import org.junit.Test
 
 @HiltAndroidTest
-@UninstallModules(GraphQlApiModule::class, DifferentiationTagsModule::class)
+@UninstallModules(
+    GraphQlApiModule::class,
+    DifferentiationTagsModule::class,
+    CustomGradeStatusModule::class
+)
 class SpeedGraderInteractionTest : TeacherComposeTest() {
+
+    override fun displaysPageObjects() = Unit
 
     @BindValue
     @JvmField
@@ -107,24 +122,23 @@ class SpeedGraderInteractionTest : TeacherComposeTest() {
     @JvmField
     val submissionCommentsManager: SubmissionCommentsManager = FakeSubmissionCommentsManager()
 
-    @Stub
-    @Test
-    override fun displaysPageObjects() {
-        goToSpeedGraderPage()
-        speedGraderPage.assertPageObjects()
-    }
+    @BindValue
+    @JvmField
+    val recentGradedSubmissionsManager: RecentGradedSubmissionsManager = FakeRecentGradedSubmissionsManager()
 
-    @Stub
+    @BindValue
+    @JvmField
+    val customGradeStatusesManager: CustomGradeStatusesManager = FakeCustomGradeStatusesManager()
+
     @Test
     fun displaysSubmissionDropDown() {
-        goToSpeedGraderPage(submissionTypeList = listOf(ONLINE_TEXT_ENTRY), students = 1, submissions = listOf(2))
+        goToSpeedGraderPage(attempts = 2)
         speedGraderPage.assertHasSubmissionDropDown()
     }
 
-    @Stub
     @Test
     fun opensToCorrectSubmission() {
-        val data = goToSpeedGraderPage(students = 4, submissionTypeList = listOf(ONLINE_TEXT_ENTRY))
+        val data = goToSpeedGraderPage(studentCount = 4)
         speedGraderPage.clickBackButton()
         val students = data.students
         students.forEach {
@@ -134,52 +148,39 @@ class SpeedGraderInteractionTest : TeacherComposeTest() {
         }
     }
 
-    @Stub
-    @Test
-    fun hasCorrectPageCount() {
-        goToSpeedGraderPage(students = 4)
-        speedGraderPage.assertPageCount(4)
-    }
-
-    @Stub
     @Test
     fun displaysTextSubmission() {
-        goToSpeedGraderPage(submissionTypeList = listOf(ONLINE_TEXT_ENTRY), submissions = listOf(1))
+        goToSpeedGraderPage(submissionTypeList = listOf(ONLINE_TEXT_ENTRY))
         speedGraderPage.assertDisplaysTextSubmissionView()
     }
 
-    @Stub
     @Test
     fun displaysUnsubmittedEmptyState() {
-        goToSpeedGraderPage(submissionTypeList = listOf(ONLINE_TEXT_ENTRY))
+        goToSpeedGraderPage(attempts = 0)
         speedGraderPage.assertDisplaysEmptyState(R.string.noSubmissionTeacher)
     }
 
-    @Stub
     @Test
     fun displaysNoSubmissionsAllowedEmptyState() {
-        goToSpeedGraderPage(submissionTypeList = listOf(Assignment.SubmissionType.NONE))
+        goToSpeedGraderPage(submissionTypeList = listOf(NONE), attempts = 0)
         speedGraderPage.assertDisplaysEmptyState(R.string.speedGraderNoneMessage)
     }
 
-    @Stub
     @Test
     fun displaysOnPaperEmptyState() {
-        goToSpeedGraderPage(submissionTypeList = listOf(ON_PAPER))
+        goToSpeedGraderPage(submissionTypeList = listOf(ON_PAPER), attempts = 0)
         speedGraderPage.assertDisplaysEmptyState(R.string.speedGraderOnPaperMessage)
     }
 
-    @Stub
     @Test
     fun displaysExternalToolEmptyState() {
-        goToSpeedGraderPage(submissionTypeList = listOf(EXTERNAL_TOOL))
+        goToSpeedGraderPage(submissionTypeList = listOf(EXTERNAL_TOOL), attempts = 0)
         speedGraderPage.assertDisplaysEmptyState(R.string.noSubmissionTeacher)
     }
 
-    @Stub
     @Test
     fun displaysUrlSubmission() {
-        val data = goToSpeedGraderPage(submissionTypeList = listOf(ONLINE_URL), submissions = listOf(1))
+        val data = goToSpeedGraderPage(submissionTypeList = listOf(ONLINE_URL))
         val assignment = data.assignments.values.first()
         val submission = data.submissions[assignment.id]!!.first()
         speedGraderPage.assertDisplaysUrlSubmissionLink(submission)
@@ -187,38 +188,59 @@ class SpeedGraderInteractionTest : TeacherComposeTest() {
     }
 
     private fun goToSpeedGraderPage(
-        students: Int = 1,
-        submissionTypeList: List<Assignment.SubmissionType> = listOf(Assignment.SubmissionType.NONE),
-        submissions: List<Int> = listOf(0),
-        selectStudent: Int = 0
+        gradingType: GradingType = GradingType.points,
+        pointsPossible: Int = 20,
+        score: Double = 12.0,
+        grade: String = "60%",
+        attempts: Int = 1,
+        studentCount: Int = 1,
+        submissionTypeList: List<Assignment.SubmissionType> = listOf(ONLINE_TEXT_ENTRY)
     ): MockCanvas {
-        val data = MockCanvas.init(teacherCount = 1, studentCount = students, courseCount = 1, favoriteCourseCount = 1)
+        val data = MockCanvas.init(teacherCount = 1, studentCount = studentCount, courseCount = 1, favoriteCourseCount = 1)
         val teacher = data.teachers[0]
+        val student = data.students[0]
         val course = data.courses.values.first()
 
         data.addCoursePermissions(
                 course.id,
-                CanvasContextPermission() // Just need to have some sort of permissions object registered
+                CanvasContextPermission()
         )
 
         val assignment = data.addAssignment(
-                courseId = course.id,
-                submissionTypeList = submissionTypeList
+            courseId = course.id,
+            submissionTypeList = submissionTypeList,
+            pointsPossible = pointsPossible,
+            gradingType = gradingType.rawValue,
+            dueAt = 1.days.ago.iso8601
         )
 
-        (0 until submissions.size).map {
-            if(students < it + 1) throw Exception("student count does not agree with submissions")
-            val student = data.students[it]
-            val submissionCount = submissions[it]
-            val submissionTypesRaw = submissionTypeList.map { it.apiString }
-            repeat(submissionCount) { index ->
-                data.addSubmissionsForAssignment(
-                        assignmentId = assignment.id,
-                        userId = student.id,
-                        types = submissionTypesRaw,
-                        body = if(submissionTypesRaw.contains(ONLINE_URL.apiString)) null else "AssignmentBody $index",
-                        url = if(submissionTypesRaw.contains(ONLINE_URL.apiString)) "www.google.com" else null
-                )
+        data.students.forEach { currentStudent ->
+            repeat(attempts) { index ->
+                val submissionType = submissionTypeList.firstOrNull() ?: ONLINE_TEXT_ENTRY
+                when (submissionType) {
+                    ONLINE_URL -> {
+                        data.addSubmissionForAssignment(
+                            assignmentId = assignment.id,
+                            userId = currentStudent.id,
+                            type = submissionType.apiString,
+                            url = "www.google.com",
+                            score = score,
+                            grade = grade,
+                            attempt = (index + 1).toLong()
+                        )
+                    }
+                    else -> {
+                        data.addSubmissionForAssignment(
+                            assignmentId = assignment.id,
+                            userId = currentStudent.id,
+                            type = submissionType.apiString,
+                            body = "Submission attempt ${index + 1} for ${currentStudent.shortName}",
+                            score = score,
+                            grade = grade,
+                            attempt = (index + 1).toLong()
+                        )
+                    }
+                }
             }
         }
 
@@ -228,7 +250,10 @@ class SpeedGraderInteractionTest : TeacherComposeTest() {
         courseBrowserPage.openAssignmentsTab()
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.clickAllSubmissions()
-        assignmentSubmissionListPage.clickSubmission(data.students[selectStudent])
+        assignmentSubmissionListPage.clickSubmission(student)
+        composeTestRule.waitForIdle()
+        if (isCompactDevice()) speedGraderPage.clickExpandPanelButton()
+        speedGraderPage.selectTab("Grade & Rubric")
 
         return data
     }

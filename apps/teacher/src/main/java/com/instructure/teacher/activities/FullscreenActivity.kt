@@ -20,6 +20,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
+import androidx.core.graphics.Insets
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.GroupManager
@@ -41,7 +44,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 
 @AndroidEntryPoint
-class FullscreenActivity : BaseAppCompatActivity(), FullScreenInteractions {
+open class FullscreenActivity : BaseAppCompatActivity(), FullScreenInteractions {
 
     private val binding by viewBinding(ActivityFullscreenBinding::inflate)
 
@@ -53,6 +56,8 @@ class FullscreenActivity : BaseAppCompatActivity(), FullScreenInteractions {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        setupWindowInsets()
+
         if (savedInstanceState == null) {
             mRoute = intent.extras!!.getParcelable(Route.ROUTE)
             mRoute?.let { handleRoute(it) }
@@ -60,6 +65,45 @@ class FullscreenActivity : BaseAppCompatActivity(), FullScreenInteractions {
             if (mRoute == null) {
                 finish()
             }
+        }
+    }
+
+    private fun setupWindowInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.container) { view, insets ->
+            val navigationBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+            val displayCutout = insets.getInsets(WindowInsetsCompat.Type.displayCutout())
+
+            val leftPadding = maxOf(navigationBars.left, displayCutout.left)
+            val rightPadding = maxOf(navigationBars.right, displayCutout.right)
+
+            view.setPadding(
+                leftPadding,
+                0,
+                rightPadding,
+                0
+            )
+
+            // Consume horizontal insets so child ComposeViews don't apply them again
+            WindowInsetsCompat.Builder(insets)
+                .setInsets(
+                    WindowInsetsCompat.Type.navigationBars(),
+                    Insets.of(
+                        0, // Consume left
+                        navigationBars.top,
+                        0, // Consume right
+                        navigationBars.bottom
+                    )
+                )
+                .setInsets(
+                    WindowInsetsCompat.Type.displayCutout(),
+                    Insets.of(
+                        0, // Consume left
+                        displayCutout.top,
+                        0, // Consume right
+                        displayCutout.bottom
+                    )
+                )
+                .build()
         }
     }
 

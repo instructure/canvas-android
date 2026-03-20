@@ -488,6 +488,7 @@
     <string name="a11y_markAsDoneWithName">%s กำกับว่าเสร็จสิ้นแล้ว</string>
     <string name="a11y_markAsNotDoneWithName">%s กำกับว่ายังไม่เสร็จสิ้น</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="a11y_expand_collapse">ขยายหรือย่อหัวข้อ</string>
     <string name="inboxSignatureError">ไม่สามารถโหลดลายมือชื่อกำกับกล่องจดหมาย</string>
     <string name="inboxSignatureSettingsUpdated">บันทึกค่าปรับตั้งกล่องจดหมายแล้ว!</string>
     <string name="inboxSignatureSettingsError">ไม่สามารถบันทึกค่าปรับแต่งกล่องจดหมาย</string>
@@ -501,4 +502,8 @@
         <item quantity="other">%d นาที</item>
     </plurals>
     <string name="notATeacherDescription">แอพอื่น ๆ บางส่วนของเราอาจเหมาะสมมากกว่า กดเลือกไอคอนเพื่อล็อกอินจากที่นี่</string>
+    <string name="gradePercentAccessibility">เกรด: %d เปอร์เซ็นต์</string>
+    <string name="gradePointsAccessibility">เกรด: %s คะแนน</string>
+    <string name="gradePercentTextFieldAccessibility">เกรด: %d เปอร์เซ็นต์, %s</string>
+    <string name="gradePointsTextFieldAccessibility">เกรด: %s คะแนน, %s</string>
 </resources>

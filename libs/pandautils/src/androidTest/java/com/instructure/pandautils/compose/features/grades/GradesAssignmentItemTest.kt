@@ -27,9 +27,9 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.composetest.hasDrawable
 import com.instructure.espresso.assertTextColor
 import com.instructure.pandares.R
+import com.instructure.pandautils.compose.composables.SubmissionStateLabel
 import com.instructure.pandautils.features.grades.AssignmentItem
 import com.instructure.pandautils.features.grades.AssignmentUiState
-import com.instructure.pandautils.features.grades.SubmissionStateLabel
 import com.instructure.pandautils.utils.DisplayGrade
 import org.junit.Rule
 import org.junit.Test

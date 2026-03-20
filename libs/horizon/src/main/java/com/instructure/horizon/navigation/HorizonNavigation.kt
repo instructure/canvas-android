@@ -15,6 +15,9 @@
  */
 package com.instructure.horizon.navigation
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -27,6 +30,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -35,8 +40,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.horizon.features.home.HomeScreen
-import com.instructure.horizon.features.home.HomeViewModel
+import com.instructure.horizon.features.home.HomeBottomNavigationBar
+import com.instructure.horizon.features.home.horizonHomeNavigation
+import com.instructure.horizon.features.home.isBottomBarVisible
 import com.instructure.horizon.features.inbox.navigation.horizonInboxNavigation
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemSequenceScreen
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemSequenceViewModel
@@ -52,6 +58,7 @@ import com.instructure.horizon.navigation.MainNavigationRoute.Companion.ASSIGNME
 import com.instructure.horizon.navigation.MainNavigationRoute.Companion.COURSE_ID
 import com.instructure.horizon.navigation.MainNavigationRoute.Companion.PAGE_ID
 import com.instructure.horizon.navigation.MainNavigationRoute.Companion.QUIZ_ID
+import com.instructure.horizon.util.zeroScreenInsets
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
@@ -88,19 +95,32 @@ sealed class MainNavigationRoute(val route: String) {
 fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Modifier) {
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+    val layoutDirection = LocalLayoutDirection.current
+    val bottomBarVisible = isBottomBarVisible(navController)
+
     Scaffold(
+        contentWindowInsets = WindowInsets.zeroScreenInsets,
         containerColor = HorizonColors.Surface.pagePrimary(),
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        bottomBar = { BottomNavigationBar(navController) }
     ) { innerPadding ->
+        val animatedBottomPadding = if (bottomBarVisible) innerPadding.calculateBottomPadding() else 0.dp
+
         NavHost(
             enterTransition = { enterTransition() },
             exitTransition = { exitTransition() },
             popEnterTransition = { popEnterTransition() },
             popExitTransition = { popExitTransition() },
-            modifier = modifier.padding(innerPadding),
+            modifier = modifier.padding(
+                start = innerPadding.calculateStartPadding(layoutDirection),
+                top = innerPadding.calculateTopPadding(),
+                end = innerPadding.calculateEndPadding(layoutDirection),
+                bottom = animatedBottomPadding
+            ),
             navController = navController,
             startDestination = MainNavigationRoute.Home.route
         ) {
+            horizonHomeNavigation(navController)
             notebookNavigation(navController) { snackbarMessage, onDismiss ->
                 scope.launch {
                     if (snackbarMessage != null) {
@@ -112,9 +132,6 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
                 }
             }
             horizonInboxNavigation(navController)
-            composable(MainNavigationRoute.Home.route) {
-                HomeScreen(navController, hiltViewModel<HomeViewModel>())
-            }
             composable<MainNavigationRoute.ModuleItemSequence>(
                 enterTransition = { enterTransition() },
                 exitTransition = { exitTransition() },
@@ -163,7 +180,9 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
                             moduleItemAssetId = assignmentId?.toString()
                         )
                     ) {
-                        popUpTo(MainNavigationRoute.AssignmentDetailsDeepLink.route) { inclusive = true }
+                        popUpTo(MainNavigationRoute.AssignmentDetailsDeepLink.route) {
+                            inclusive = true
+                        }
                     }
                 }
             }
@@ -200,7 +219,9 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
                             moduleItemAssetId = quizId?.toString()
                         )
                     ) {
-                        popUpTo(MainNavigationRoute.QuizDetailsDeepLink.route) { inclusive = true }
+                        popUpTo(MainNavigationRoute.QuizDetailsDeepLink.route) {
+                            inclusive = true
+                        }
                     }
                 }
             }
@@ -235,11 +256,18 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
                             moduleItemAssetId = pageId
                         )
                     ) {
-                        popUpTo(MainNavigationRoute.PageDetailsDeepLink.route) { inclusive = true }
+                        popUpTo(MainNavigationRoute.PageDetailsDeepLink.route) {
+                            inclusive = true
+                        }
                     }
                 }
             }
         }
     }
+}
+
+@Composable
+private fun BottomNavigationBar(navController: NavHostController) {
+    HomeBottomNavigationBar(navController)
 }
 

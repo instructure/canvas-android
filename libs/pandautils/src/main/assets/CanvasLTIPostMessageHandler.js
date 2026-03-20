@@ -294,6 +294,16 @@
 
       case 'requestFullWindowLaunch':
         console.log('[Canvas Mobile LTI] Handling requestFullWindowLaunch');
+
+        // Find the iframe that sent this message and extract its title
+        var iframe = findDomForWindow(event.source) || findDomForWindowInRCEIframe(event.source);
+        var iframeTitle = iframe ? iframe.getAttribute('title') : null;
+
+        // Add the title to the message data if we found it
+        if (iframeTitle && message.data) {
+          message.data.title = iframeTitle;
+        }
+
         if (typeof CanvasStudioInterface !== 'undefined' && CanvasStudioInterface !== null) {
           // Android
           console.log('[Canvas Mobile LTI] Using Android interface');

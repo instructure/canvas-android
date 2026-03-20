@@ -17,14 +17,16 @@
 package com.instructure.pandautils.features.lti
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.Toast
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -55,6 +57,8 @@ import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.PermissionRequester
 import com.instructure.pandautils.utils.PermissionUtils
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyDisplayCutoutInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.argsWithContext
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.enableAlgorithmicDarkening
@@ -88,6 +92,8 @@ class LtiLaunchFragment : BaseCanvasFragment(), NavigationCallbacks {
     private var ltiUrl: String? by NullableStringArg(key = LTI_URL)
     private var canvasContext: CanvasContext by ParcelableArg(default = CanvasContext.emptyUserContext(), key = Const.CANVAS_CONTEXT)
 
+    private var customTabLaunched = false
+
     @Inject
     lateinit var ltiLaunchFragmentBehavior: LtiLaunchFragmentBehavior
 
@@ -104,6 +110,21 @@ class LtiLaunchFragment : BaseCanvasFragment(), NavigationCallbacks {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Apply display cutout insets to root view to prevent content from extending behind camera cutout
+        view.applyDisplayCutoutInsets()
+
+        binding.toolbar.applyTopSystemBarInsets()
+
+        // Apply bottom insets only in portrait mode to avoid conflict with camera cutout in landscape
+        val isPortrait = resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+        if (isPortrait) {
+            ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
+                val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                v.updatePadding(bottom = systemBars.bottom)
+                insets
+            }
+        }
         binding.loadingView.setOverrideColor(ltiLaunchFragmentBehavior.toolbarColor)
         binding.toolName.setTextForVisibility(title.validOrNull())
         binding.toolbar.setupAsBackButton {
@@ -123,12 +144,22 @@ class LtiLaunchFragment : BaseCanvasFragment(), NavigationCallbacks {
         }
 
         savedInstanceState?.let {
+            customTabLaunched = it.getBoolean(KEY_CUSTOM_TAB_LAUNCHED, false)
             binding.webView.restoreState(it)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (customTabLaunched) {
+            customTabLaunched = false
+            ltiLaunchFragmentBehavior.closeLtiLaunchFragment(requireActivity())
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
+        outState.putBoolean(KEY_CUSTOM_TAB_LAUNCHED, customTabLaunched)
         binding.webView.saveState(outState)
     }
 
@@ -148,10 +179,8 @@ class LtiLaunchFragment : BaseCanvasFragment(), NavigationCallbacks {
 
     private fun launchCustomTab(url: String) {
         activity?.let {
+            customTabLaunched = true
             it.launchCustomTab(url, ltiLaunchFragmentBehavior.toolbarColor)
-            Handler(Looper.getMainLooper()).postDelayed({
-                it.onBackPressed()
-            }, 500)
         }
     }
 
@@ -177,7 +206,9 @@ class LtiLaunchFragment : BaseCanvasFragment(), NavigationCallbacks {
             }
 
             private fun canRouteInternally(url: String) =
-                webViewRouter.canRouteInternally(url) && ltiUrl?.substringBefore("?") != url.substringBefore("?")
+                webViewRouter.canRouteInternally(url)
+                    && ltiUrl?.substringBefore("?") != url.substringBefore("?")
+                    && !url.contains("sessionless_launch")
 
             override fun routeInternallyCallback(url: String) {
                 // Handle return button in external tools. Links to course homepage should close the tool.
@@ -236,6 +267,8 @@ class LtiLaunchFragment : BaseCanvasFragment(), NavigationCallbacks {
     }
 
     companion object {
+        private const val KEY_CUSTOM_TAB_LAUNCHED = "key_custom_tab_launched"
+
         const val LTI_URL = "lti_url"
         const val LTI_TITLE = "lti_title"
         const val LTI_TAB = "lti_tab"

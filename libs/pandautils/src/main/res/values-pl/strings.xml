@@ -501,6 +501,7 @@
     <string name="a11y_markAsDoneWithName">%s Oznacz jako gotowe</string>
     <string name="a11y_markAsNotDoneWithName">%s Oznacz jako niegotowe</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="a11y_expand_collapse">Rozwiń lub zwiń sekcję</string>
     <string name="inboxSignatureError">Nie udało się wczytać podpisu skrzynki odbiorczej</string>
     <string name="inboxSignatureSettingsUpdated">Zapisano ustawienia skrzynki odbiorczej!</string>
     <string name="inboxSignatureSettingsError">Nie udało się zapisać ustawień skrzynki odbiorczej</string>
@@ -518,4 +519,8 @@
         <item quantity="other">%d min</item>
     </plurals>
     <string name="notATeacherDescription">Jedna z innych naszych aplikacji może się okazać bardziej przydatna. Stuknij ikonę, aby się zalogować.</string>
+    <string name="gradePercentAccessibility">Ocena: %d – procent</string>
+    <string name="gradePointsAccessibility">Ocena: %s punkty</string>
+    <string name="gradePercentTextFieldAccessibility">Ocena: %d %. %s</string>
+    <string name="gradePointsTextFieldAccessibility">Ocena: %s pkt, %s</string>
 </resources>

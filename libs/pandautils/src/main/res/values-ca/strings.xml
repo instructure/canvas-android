@@ -488,6 +488,7 @@
     <string name="a11y_markAsDoneWithName">%s Marca-ho com fet</string>
     <string name="a11y_markAsNotDoneWithName">%s Marca-ho com no fet</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="a11y_expand_collapse">Desplegueu o contraieu la secció</string>
     <string name="inboxSignatureError">No s’ha pogut carregar la signatura de la safata d\'entrada</string>
     <string name="inboxSignatureSettingsUpdated">S’ha desat la configuració de la safata d\'entrada!</string>
     <string name="inboxSignatureSettingsError">No s’ha pogut desar la configuració de la safata d\'entrada</string>
@@ -501,4 +502,8 @@
         <item quantity="other">%d minuts</item>
     </plurals>
     <string name="notATeacherDescription">És possible que alguna de les altres aplicacions nostres us sigui més útil. Toqueu una icona per iniciar-hi la sessió.</string>
+    <string name="gradePercentAccessibility">Nota: %d per cent</string>
+    <string name="gradePointsAccessibility">Nota: %s punts</string>
+    <string name="gradePercentTextFieldAccessibility">Nota: %d per cent, %s</string>
+    <string name="gradePointsTextFieldAccessibility">Nota: %s punts, %s</string>
 </resources>

@@ -110,7 +110,7 @@ object Const {
     const val DISCUSSION_REPLY_SUBMITTED = "discussion_reply_submitted"
     const val TITLE = "title"
     const val BODY = "body"
-    const val PROFILE_URL = "canvas.instructure.com"
+    const val PROFILE_URL = "sso.canvaslms.com"
     const val CONVERSATION = "conversations"
     const val COURSES = "courses"
     const val GROUPS = "groups"
@@ -180,4 +180,6 @@ object Const {
     // Discussion Checkpoints tags
     const val REPLY_TO_TOPIC = "reply_to_topic"
     const val REPLY_TO_ENTRY = "reply_to_entry"
+
+    const val PRIVACY_POLICY_URL = "https://www.instructure.com/policies/product-privacy-policy"
 }

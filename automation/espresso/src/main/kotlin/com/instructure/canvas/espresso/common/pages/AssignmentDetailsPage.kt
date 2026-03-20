@@ -44,6 +44,7 @@ import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.stringContainsTextCaseInsensitive
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
+import com.instructure.canvas.espresso.withResourceIdContaining
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.dataseeding.model.AssignmentApiModel
 import com.instructure.espresso.ModuleItemInteractions
@@ -175,7 +176,7 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
     }
 
     fun assertSubmissionAndRubricLabel() {
-        onView(allOf(withId(R.id.submissionAndRubricLabel), withText(R.string.submissionAndRubric))).assertDisplayed()
+        onView(allOf(withId(R.id.submissionAndRubricLabel), withText(R.string.submissionAndFeedback))).assertDisplayed()
     }
 
     private fun assertStatus(statusResourceId: Int) {
@@ -316,12 +317,40 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
         onView(withText(R.string.done)).click()
     }
 
+    fun clickDraftSubmission() {
+        onView(withId(R.id.draftTitle) + withText(R.string.submissionDraftAvailableTitle)).click()
+    }
+
     fun clickSubmissionAndRubric() {
-        onView(allOf(withId(R.id.submissionAndRubricLabel), withText(R.string.submissionAndRubric))).click()
+        onView(allOf(withId(R.id.submissionAndRubricLabel), withText(R.string.submissionAndFeedback))).click()
     }
 
     fun clickComposeMessageFAB() {
         onView(withContentDescription("Send a message about this assignment")).click()
+    }
+
+    fun assertDraftAvailableInformation() {
+        onView(withId(R.id.draftTitle) + withText(R.string.submissionDraftAvailableTitle)).assertDisplayed()
+        onView(withId(R.id.draftSubtitle) + withText(R.string.submissionDraftAvailableSubtitle)).assertDisplayed()
+        onView(withId(R.id.draftDivider)).assertDisplayed()
+    }
+
+    fun assertAttachmentIconDisplayed() {
+        onView(withId(R.id.attachmentIcon))
+            .scrollTo()
+            .assertDisplayed()
+    }
+
+    fun clickAttachmentIcon() {
+        onView(withId(R.id.attachmentIcon))
+            .scrollTo()
+            .click()
+    }
+
+    // PDF viewer method for PSPDFKit toolbar verification
+    fun assertPdfViewerToolbarDisplayed() {
+        Espresso.onView(withResourceIdContaining("pspdf__toolbar_main"))
+            .assertDisplayed()
     }
 
     //OfflineMethod

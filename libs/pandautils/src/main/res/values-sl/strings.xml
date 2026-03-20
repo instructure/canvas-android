@@ -487,6 +487,7 @@
     <string name="a11y_markAsDoneWithName">%s označi kot dokončano</string>
     <string name="a11y_markAsNotDoneWithName">%s označi kot nedokončano</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="a11y_expand_collapse">Razširi ali strni razdelek</string>
     <string name="inboxSignatureError">Podpisa za pošto ni bilo mogoče naložiti</string>
     <string name="inboxSignatureSettingsUpdated">Nastavitve pošte shranjene!</string>
     <string name="inboxSignatureSettingsError">Nastavitev pošte ni bilo mogoče shraniti</string>
@@ -500,4 +501,8 @@
         <item quantity="other">%d min</item>
     </plurals>
     <string name="notATeacherDescription">Morda bi bolj ustrezala kakšna druga aplikacija. Tapnite ikono, da se prijavite tam.</string>
+    <string name="gradePercentAccessibility">Ocena: %d odstotkov</string>
+    <string name="gradePointsAccessibility">Ocena: %s točk</string>
+    <string name="gradePercentTextFieldAccessibility">Ocena: %d odstotkov, %s</string>
+    <string name="gradePointsTextFieldAccessibility">Ocena: %s točk, %s</string>
 </resources>

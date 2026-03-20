@@ -29,9 +29,9 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.instructure.pandautils.compose.composables.calendar.CalendarStateMapper
 import com.instructure.pandautils.features.calendar.CalendarAction
 import com.instructure.pandautils.features.calendar.CalendarScreenUiState
-import com.instructure.pandautils.features.calendar.CalendarStateMapper
 import com.instructure.pandautils.features.calendar.CalendarUiState
 import com.instructure.pandautils.features.calendar.composables.CalendarScreen
 import com.jakewharton.threetenabp.AndroidThreeTen
@@ -175,7 +175,7 @@ class CalendarScreenTest {
 
         val fab = composeTestRule.onNode(hasContentDescription("Add new calendar item"))
         fab.assertIsDisplayed()
-        val addToDoItem = composeTestRule.onNode((hasText("Add To Do")))
+        val addToDoItem = composeTestRule.onNode((hasText("Add To-do")))
         addToDoItem.assertIsNotDisplayed()
         val addEventItem = composeTestRule.onNode((hasText("Add Event")))
         addEventItem.assertIsNotDisplayed()
@@ -207,7 +207,7 @@ class CalendarScreenTest {
         fab.assertIsDisplayed()
         fab.performClick()
         composeTestRule.waitForIdle()
-        val addToDoItem = composeTestRule.onNode((hasText("Add To Do")))
+        val addToDoItem = composeTestRule.onNode((hasText("Add To-do")))
         addToDoItem.assertIsDisplayed()
         val addEventItem = composeTestRule.onNode((hasText("Add Event")))
         addEventItem.assertIsDisplayed()
@@ -274,7 +274,7 @@ class CalendarScreenTest {
         val fab = composeTestRule.onNode(hasContentDescription("Add new calendar item"))
         fab.performClick()
         composeTestRule.waitForIdle()
-        val addToDo = composeTestRule.onNode((hasText("Add To Do")))
+        val addToDo = composeTestRule.onNode((hasText("Add To-do")))
         addToDo.performClick()
         composeTestRule.waitForIdle()
 
@@ -334,7 +334,7 @@ class CalendarScreenTest {
         fab.performClick()
         composeTestRule.waitForIdle()
         
-        val addToDoItem = composeTestRule.onNode((hasText("Add To Do")))
+        val addToDoItem = composeTestRule.onNode((hasText("Add To-do")))
         addToDoItem.assertIsDisplayed()
         
         val addEventItem = composeTestRule.onNode((hasText("Add Event")))
@@ -368,7 +368,7 @@ class CalendarScreenTest {
         fab.performClick()
         composeTestRule.waitForIdle()
         
-        val addToDoItem = composeTestRule.onNode((hasText("Add To Do")))
+        val addToDoItem = composeTestRule.onNode((hasText("Add To-do")))
         addToDoItem.assertIsDisplayed()
         
         val addEventItem = composeTestRule.onNode((hasText("Add Event")))

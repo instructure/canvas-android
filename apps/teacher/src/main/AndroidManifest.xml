@@ -58,6 +58,10 @@
         android:networkSecurityConfig="@xml/network_security_config"
         tools:replace="android:icon">
 
+        <meta-data
+            android:name="nutrient_automatic_initialize"
+            android:value="false" />
+
         <activity android:name="sdk.pendo.io.activities.PendoGateActivity" android:launchMode="singleInstance" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
@@ -204,6 +208,11 @@
 
         <activity android:name=".activities.FullscreenActivity"
             android:windowSoftInputMode="adjustResize"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity android:name=".activities.RetainedFullscreenActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity

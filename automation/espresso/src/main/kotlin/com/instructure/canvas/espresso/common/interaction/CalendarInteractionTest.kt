@@ -111,7 +111,7 @@ abstract class CalendarInteractionTest : CanvasComposeTest() {
         calendarScreenPage.assertItemDetails(assignment.name!!, course.name, index = 0)
         calendarScreenPage.assertItemDetails(quiz.title!!, course.name, index = 1)
         calendarScreenPage.assertItemDetails(discussionAssignment.name!!, course.name, index = 2)
-        calendarScreenPage.assertItemDetails(todo.plannable.title, "${course.name} To Do", index = 3)
+        calendarScreenPage.assertItemDetails(todo.plannable.title, "${course.name} To-do", index = 3)
         calendarScreenPage.assertItemDetails(event.title!!, course.name, index = 4)
     }
 
@@ -407,7 +407,7 @@ abstract class CalendarInteractionTest : CanvasComposeTest() {
         clickTodayButton()
 
         calendarScreenPage.assertItemDetails(event.title!!, course.name)
-        calendarScreenPage.assertItemDetails(todo.plannable.title, "${course.name} To Do")
+        calendarScreenPage.assertItemDetails(todo.plannable.title, "${course.name} To-do")
     }
 
     override fun displaysPageObjects() = Unit

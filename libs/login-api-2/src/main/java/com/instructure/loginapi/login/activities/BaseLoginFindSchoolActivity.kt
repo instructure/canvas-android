@@ -16,17 +16,14 @@
  */
 package com.instructure.loginapi.login.activities
 
-import android.content.Context
 import android.content.Intent
 import android.content.pm.ApplicationInfo
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.LayoutInflater
-import android.view.View
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityManager
 import android.widget.ImageView
@@ -35,15 +32,15 @@ import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.instructure.canvasapi2.StatusCallback
-import com.instructure.canvasapi2.managers.AccountDomainManager
 import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.canvasapi2.utils.APIHelper
-import com.instructure.canvasapi2.utils.ApiType
-import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.loginapi.login.R
 import com.instructure.loginapi.login.adapter.DomainAdapter
 import com.instructure.loginapi.login.databinding.ActivityFindSchoolBinding
@@ -51,53 +48,57 @@ import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.loginapi.login.util.Const
 import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.domain.usecase.accountdomain.SearchAccountDomainUseCase
 import com.instructure.pandautils.utils.ColorUtils
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.setupAsBackButton
-import retrofit2.Response
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.util.Locale
 import java.util.regex.Pattern
+import javax.inject.Inject
 
+@AndroidEntryPoint
 abstract class BaseLoginFindSchoolActivity : BaseCanvasActivity() {
+
+    @Inject
+    lateinit var searchAccountDomainUseCase: SearchAccountDomainUseCase
 
     private val binding by viewBinding(ActivityFindSchoolBinding::inflate)
 
-    private var mDomainAdapter: DomainAdapter? = null
-    private var mNextActionButton: TextView? = null
-    private val mDelayFetchAccountHandler = Handler()
-    protected var mWhatsYourSchoolName: TextView? = null
-    private var mLoginFlowLogout: TextView? = null
+    private var domainAdapter: DomainAdapter? = null
+    private var nextActionButton: TextView? = null
+    private val delayFetchAccountHandler = Handler()
+    protected var whatsYourSchoolName: TextView? = null
+    private var loginFlowLogout: TextView? = null
 
     /**
      * Worker thread for fetching account domains.
      */
-    private val mFetchAccountsWorker = Runnable {
+    private val fetchAccountsWorker = Runnable {
         val query = binding.domainInput.text.toString()
-        AccountDomainManager.searchAccounts(query, mAccountDomainCallback)
-    }
+        lifecycleScope.launch {
+            searchAccountDomainUseCase(SearchAccountDomainUseCase.Params(query)).let { result ->
+                val domains = result.toMutableList()
 
-    private val mAccountDomainCallback = object : StatusCallback<List<AccountDomain>>() {
+                val isDebuggable = 0 != applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE
 
-        override fun onResponse(response: Response<List<AccountDomain>>, linkHeaders: LinkHeaders, type: ApiType) {
-            if (type.isCache) return
+                if (isDebuggable) {
+                    // Put these domains first
+                    domains.add(0, createAccountForDebugging("mobiledev.instructure.com"))
+                    domains.add(1, createAccountForDebugging("mobiledev.beta.instructure.com"))
+                    domains.add(2, createAccountForDebugging("mobileqa.instructure.com"))
+                    domains.add(3, createAccountForDebugging("mobileqat.instructure.com"))
+                    domains.add(4, createAccountForDebugging("clare.instructure.com"))
+                    domains.add(5, createAccountForDebugging("mobileqa.beta.instructure.com"))
+                }
 
-            val domains = response.body()?.toMutableList() ?: mutableListOf()
-
-            val isDebuggable = 0 != applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE
-
-            if (isDebuggable) {
-                // Put these domains first
-                domains.add(0, createAccountForDebugging("mobiledev.instructure.com"))
-                domains.add(1, createAccountForDebugging("mobiledev.beta.instructure.com"))
-                domains.add(2, createAccountForDebugging("mobileqa.instructure.com"))
-                domains.add(3, createAccountForDebugging("mobileqat.instructure.com"))
-                domains.add(4, createAccountForDebugging("clare.instructure.com"))
-                domains.add(5, createAccountForDebugging("mobileqa.beta.instructure.com"))
-            }
-
-            if (mDomainAdapter != null) {
-                mDomainAdapter!!.setItems(domains)
-                mDomainAdapter!!.filter.filter(binding.domainInput!!.text.toString())
+                if (domainAdapter != null) {
+                    domainAdapter!!.setItems(domains)
+                    domainAdapter!!.filter.filter(binding.domainInput.text.toString())
+                }
             }
         }
     }
@@ -110,14 +111,31 @@ abstract class BaseLoginFindSchoolActivity : BaseCanvasActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        setupWindowInsets()
         bindViews()
         applyTheme()
     }
 
+    private fun setupWindowInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
+            val insets = windowInsets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            )
+            view.setPadding(
+                insets.left,
+                0,
+                insets.right,
+                0
+            )
+            windowInsets
+        }
+    }
+
     private fun bindViews() = with(binding) {
-        mWhatsYourSchoolName = findViewById(R.id.whatsYourSchoolName)
-        mLoginFlowLogout = findViewById(R.id.loginFlowLogout)
+        this@BaseLoginFindSchoolActivity.whatsYourSchoolName = findViewById(R.id.whatsYourSchoolName)
+        this@BaseLoginFindSchoolActivity.loginFlowLogout = findViewById(R.id.loginFlowLogout)
         toolbar.apply {
+            applyTopSystemBarInsets()
             navigationIcon?.isAutoMirrored = true
             setupAsBackButton { finish() }
             inflateMenu(R.menu.menu_next)
@@ -135,8 +153,8 @@ abstract class BaseLoginFindSchoolActivity : BaseCanvasActivity() {
             })
         }
 
-        val a11yManager = getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
-        if (a11yManager != null && (a11yManager.isEnabled || a11yManager.isTouchExplorationEnabled)) {
+        val a11yManager = getSystemService(ACCESSIBILITY_SERVICE) as AccessibilityManager
+        if (a11yManager.isEnabled || a11yManager.isTouchExplorationEnabled) {
             toolbar.isFocusable = true
             toolbar.isFocusableInTouchMode = true
             toolbar.postDelayed({
@@ -145,9 +163,14 @@ abstract class BaseLoginFindSchoolActivity : BaseCanvasActivity() {
             }, 500)
         }
 
-        mNextActionButton = findViewById(R.id.next)
-        mNextActionButton!!.isEnabled = false
-        mNextActionButton!!.setTextColor(ContextCompat.getColor(this@BaseLoginFindSchoolActivity, R.color.backgroundMedium))
+        nextActionButton = findViewById(R.id.next)
+        nextActionButton!!.isEnabled = false
+        nextActionButton!!.setTextColor(
+            ContextCompat.getColor(
+                this@BaseLoginFindSchoolActivity,
+                R.color.backgroundMedium
+            )
+        )
 
         domainInput.requestFocus()
         domainInput.setOnEditorActionListener { _, _, _ ->
@@ -161,26 +184,32 @@ abstract class BaseLoginFindSchoolActivity : BaseCanvasActivity() {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable) {
-                if (mDomainAdapter != null) {
-                    mDomainAdapter!!.filter.filter(s)
+                if (domainAdapter != null) {
+                    domainAdapter!!.filter.filter(s)
                     fetchAccountDomains()
                 }
 
-                if (mNextActionButton != null) {
+                if (nextActionButton != null) {
                     if (TextUtils.isEmpty(s.toString())) {
-                        mNextActionButton!!.isEnabled = false
-                        mNextActionButton!!.setTextColor(ContextCompat.getColor(
-                                this@BaseLoginFindSchoolActivity, R.color.backgroundMedium))
+                        nextActionButton!!.isEnabled = false
+                        nextActionButton!!.setTextColor(
+                            ContextCompat.getColor(
+                                this@BaseLoginFindSchoolActivity, R.color.backgroundMedium
+                            )
+                        )
                     } else {
-                        mNextActionButton!!.isEnabled = true
-                        mNextActionButton!!.setTextColor(ContextCompat.getColor(
-                                this@BaseLoginFindSchoolActivity, R.color.textInfo))
+                        nextActionButton!!.isEnabled = true
+                        nextActionButton!!.setTextColor(
+                            ContextCompat.getColor(
+                                this@BaseLoginFindSchoolActivity, R.color.textInfo
+                            )
+                        )
                     }
                 }
             }
         })
 
-        mDomainAdapter = DomainAdapter(object : DomainAdapter.DomainEvents {
+        domainAdapter = DomainAdapter(object : DomainAdapter.DomainEvents {
             override fun onDomainClick(account: AccountDomain) {
                 domainInput.setText(account.domain)
                 domainInput.setSelection(domainInput.text.length)
@@ -188,15 +217,23 @@ abstract class BaseLoginFindSchoolActivity : BaseCanvasActivity() {
             }
 
             override fun onHelpClick() {
-                val webHelpIntent = Intent(Intent.ACTION_VIEW, Uri.parse(Const.FIND_SCHOOL_HELP_URL))
+                val webHelpIntent =
+                    Intent(Intent.ACTION_VIEW, Const.FIND_SCHOOL_HELP_URL.toUri())
                 startActivity(webHelpIntent)
             }
         })
 
         val recyclerView = findViewById<RecyclerView>(R.id.findSchoolRecyclerView)
-        recyclerView.addItemDecoration(DividerItemDecoration(this@BaseLoginFindSchoolActivity, RecyclerView.VERTICAL))
-        recyclerView.layoutManager = LinearLayoutManager(this@BaseLoginFindSchoolActivity, RecyclerView.VERTICAL, false)
-        recyclerView.adapter = mDomainAdapter
+        recyclerView.addItemDecoration(
+            DividerItemDecoration(
+                this@BaseLoginFindSchoolActivity,
+                RecyclerView.VERTICAL
+            )
+        )
+        recyclerView.layoutManager =
+            LinearLayoutManager(this@BaseLoginFindSchoolActivity, RecyclerView.VERTICAL, false)
+        recyclerView.adapter = domainAdapter
+        recyclerView.applyBottomSystemBarInsets()
     }
 
     /**
@@ -204,27 +241,16 @@ abstract class BaseLoginFindSchoolActivity : BaseCanvasActivity() {
      */
     protected fun logout() {}
 
-    /**
-     * Shows a logout button. Calls from click return to a logout()
-     * @param show a value to indicate if the logout button should be shown.
-     */
-    protected fun showLogout(show: Boolean) {
-        mLoginFlowLogout!!.visibility = if (show) View.VISIBLE else View.GONE
-        if (show) {
-            mLoginFlowLogout!!.setOnClickListener { logout() }
-        }
-    }
-
     private fun validateDomain(accountDomain: AccountDomain) {
         var url: String? = accountDomain.domain!!.lowercase(Locale.getDefault()).replace(" ", "")
 
-        //if the user enters nothing, try to connect to canvas.instructure.com
+        //if the user enters nothing, try to connect to sso.canvaslms.com
         if (url!!.trim { it <= ' ' }.isEmpty()) {
-            url = "canvas.instructure.com"
+            url = "sso.canvaslms.com"
         }
 
         //remove invalid characters at the end of the domain
-        val pattern = Pattern.compile("(.*)([a-zA-Z0-9]){1}")
+        val pattern = Pattern.compile("(.*)([a-zA-Z0-9])")
         val matcher = pattern.matcher(url)
         if (matcher.find()) {
             url = matcher.group()
@@ -241,7 +267,7 @@ abstract class BaseLoginFindSchoolActivity : BaseCanvasActivity() {
         }
 
         //Get just the host.
-        val uri = Uri.parse(url)
+        val uri = url.toUri()
         url = uri.host
 
         //Strip off www. if they typed it.
@@ -272,8 +298,8 @@ abstract class BaseLoginFindSchoolActivity : BaseCanvasActivity() {
      * Handles fetching account domains. Uses a worker runnable and handler to cancel fetching too often.
      */
     private fun fetchAccountDomains() {
-        mDelayFetchAccountHandler.removeCallbacks(mFetchAccountsWorker)
-        mDelayFetchAccountHandler.postDelayed(mFetchAccountsWorker, 500)
+        delayFetchAccountHandler.removeCallbacks(fetchAccountsWorker)
+        delayFetchAccountHandler.postDelayed(fetchAccountsWorker, 500)
     }
 
     private fun createAccountForDebugging(domain: String): AccountDomain {
@@ -285,9 +311,7 @@ abstract class BaseLoginFindSchoolActivity : BaseCanvasActivity() {
     }
 
     override fun onDestroy() {
-        if (mDelayFetchAccountHandler != null && mFetchAccountsWorker != null) {
-            mDelayFetchAccountHandler.removeCallbacks(mFetchAccountsWorker)
-        }
+        delayFetchAccountHandler.removeCallbacks(fetchAccountsWorker)
         super.onDestroy()
     }
 

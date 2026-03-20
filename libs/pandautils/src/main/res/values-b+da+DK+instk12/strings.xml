@@ -487,6 +487,7 @@
     <string name="a11y_markAsDoneWithName">%s Marker som udført</string>
     <string name="a11y_markAsNotDoneWithName">%s Marker som ikke udført</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="a11y_expand_collapse">Udvid eller skjul sektion</string>
     <string name="inboxSignatureError">Indbakkesignaturen kunne ikke indlæses</string>
     <string name="inboxSignatureSettingsUpdated">Indbakkeindstillinger gemt!</string>
     <string name="inboxSignatureSettingsError">Indbakkeindstillingerne kunne ikke gemmes</string>
@@ -500,4 +501,8 @@
         <item quantity="other">%d min.</item>
     </plurals>
     <string name="notATeacherDescription">En af vores andre apps kan være et bedre valg. Tryk på et ikon for at logge ind der.</string>
+    <string name="gradePercentAccessibility">Vurdering: %d procent</string>
+    <string name="gradePointsAccessibility">Vurdering: %s point</string>
+    <string name="gradePercentTextFieldAccessibility">Vurdering: %d procent, %s</string>
+    <string name="gradePointsTextFieldAccessibility">Vurdering: %s point, %s</string>
 </resources>

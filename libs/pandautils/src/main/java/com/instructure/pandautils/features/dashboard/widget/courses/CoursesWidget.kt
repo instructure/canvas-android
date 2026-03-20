@@ -26,6 +26,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -37,24 +42,27 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.times
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.dashboard.widget.courses.model.CourseCardItem
 import com.instructure.pandautils.features.dashboard.widget.courses.model.GradeDisplay
 import com.instructure.pandautils.features.dashboard.widget.courses.model.GroupCardItem
-import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.getFragmentActivityOrNull
 import kotlinx.coroutines.flow.SharedFlow
+import sh.calvin.reorderable.ReorderableItem
+import sh.calvin.reorderable.rememberReorderableLazyGridState
 
 @Composable
 fun CoursesWidget(
@@ -96,22 +104,42 @@ fun CoursesWidgetContent(
                     isExpanded = uiState.isCoursesExpanded,
                     onToggleExpanded = uiState.onToggleCoursesExpanded
                 ) {
-                    NonLazyGrid(
-                        columns = columns,
-                        itemCount = uiState.courses.size,
-                        modifier = Modifier.padding(horizontal = 16.dp),
-                        horizontalSpacing = 12.dp,
-                        verticalSpacing = 12.dp
-                    ) { index ->
-                        val course = uiState.courses[index]
-                        CourseCard(
-                            courseCard = course,
-                            showGrade = uiState.showGrades,
-                            showColorOverlay = uiState.showColorOverlay,
-                            onCourseClick = uiState.onCourseClick,
-                            onManageOfflineContent = uiState.onManageOfflineContent,
-                            onCustomizeCourse = uiState.onCustomizeCourse
-                        )
+                    val lazyGridState = rememberLazyGridState()
+                    val reorderableLazyGridState = rememberReorderableLazyGridState(
+                        lazyGridState = lazyGridState,
+                        onMove = { from, to ->
+                            uiState.onCourseMoved(from.index, to.index)
+                        }
+                    )
+
+                    val rows = (uiState.courses.size + columns - 1) / columns
+                    val gridHeight = rows * COURSE_CARD_HEIGHT + (rows - 1) * 6.dp
+
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(columns),
+                        state = lazyGridState,
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .height(gridHeight),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp),
+                        userScrollEnabled = false
+                    ) {
+                        items(uiState.courses, key = { it.id }) { course ->
+                            ReorderableItem(reorderableLazyGridState, key = course.id) { isDragging ->
+                                CourseCard(
+                                    courseCard = course,
+                                    showGrade = uiState.showGrades,
+                                    showColorOverlay = uiState.showColorOverlay,
+                                    onCourseClick = uiState.onCourseClick,
+                                    onManageOfflineContent = uiState.onManageOfflineContent,
+                                    onCustomizeCourse = uiState.onCustomizeCourse,
+                                    onAnnouncementClick = uiState.onAnnouncementClick,
+                                    modifier = Modifier.longPressDraggableHandle(),
+                                    dashboardColor = Color(uiState.color.color())
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -128,13 +156,14 @@ fun CoursesWidgetContent(
                         columns = columns,
                         itemCount = uiState.groups.size,
                         modifier = Modifier.padding(horizontal = 16.dp),
-                        horizontalSpacing = 12.dp,
-                        verticalSpacing = 12.dp
+                        horizontalSpacing = 6.dp,
+                        verticalSpacing = 6.dp
                     ) { index ->
                         val group = uiState.groups[index]
                         GroupCard(
                             groupCard = group,
-                            onGroupClick = uiState.onGroupClick
+                            onGroupClick = uiState.onGroupClick,
+                            onMessageClick = uiState.onGroupMessageClick
                         )
                     }
                 }
@@ -148,37 +177,33 @@ fun CoursesWidgetContent(
             ) {
                 Button(
                     onClick = { activity?.let { uiState.onAllCourses(it) } },
-                    modifier = Modifier
-                        .height(24.dp)
-                        .padding(start = 16.dp),
+                    shape = RoundedCornerShape(24.dp),
+                    modifier = Modifier.height(30.dp),
                     contentPadding = PaddingValues(
-                        top = 0.dp,
+                        start = 12.dp,
+                        0.dp,
+                        end = 8.dp,
                         bottom = 0.dp,
-                        start = 10.dp,
-                        end = 6.dp
                     ),
-                    shape = RoundedCornerShape(100.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(ThemePrefs.buttonColor),
-                        contentColor = Color(ThemePrefs.buttonTextColor)
+                        containerColor = Color(uiState.color.color()),
+                        contentColor = colorResource(R.color.textLightest)
                     )
                 ) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
                         Text(
                             stringResource(R.string.allCourses),
-                            fontSize = 12.sp,
-                            lineHeight = 14.sp,
-                            modifier = Modifier.padding(top = 4.dp, bottom = 6.dp)
+                            color = colorResource(R.color.textLightest),
+                            fontSize = 14.sp,
+                            modifier = Modifier.align(Alignment.CenterVertically)
                         )
                         Icon(
-                            painter = painterResource(R.drawable.ic_chevron_down_small),
+                            painter = painterResource(R.drawable.ic_chevron_right),
+                            tint = colorResource(R.color.textLightest),
                             contentDescription = null,
-                            modifier = Modifier.rotate(270f)
+                            modifier = Modifier
+                                .size(16.dp)
+                                .align(Alignment.CenterVertically)
                         )
-                    }
                 }
             }
         }
@@ -223,8 +248,8 @@ private fun CoursesWidgetLoadingState(columns: Int = 1) {
         columns = columns,
         itemCount = 3,
         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-        horizontalSpacing = 12.dp,
-        verticalSpacing = 12.dp
+        horizontalSpacing = 6.dp,
+        verticalSpacing = 6.dp
     ) {
         CourseCardShimmer()
     }
@@ -249,9 +274,12 @@ private fun CoursesWidgetContentPreview() {
                     courseCode = "CS 101",
                     imageUrl = null,
                     grade = GradeDisplay.Percentage("85%"),
-                    announcementCount = 2,
+                    announcements = listOf(
+                        DiscussionTopicHeader(id = 1L, title = "Announcement")
+                    ),
                     isSynced = true,
-                    isClickable = true
+                    isClickable = true,
+                    color = android.graphics.Color.RED
                 ),
                 CourseCardItem(
                     id = 2,
@@ -259,9 +287,10 @@ private fun CoursesWidgetContentPreview() {
                     courseCode = "MATH 201",
                     imageUrl = null,
                     grade = GradeDisplay.Letter("A-"),
-                    announcementCount = 0,
+                    announcements = emptyList(),
                     isSynced = false,
-                    isClickable = true
+                    isClickable = true,
+                    color = android.graphics.Color.RED
                 )
             ),
             groups = listOf(
@@ -300,9 +329,12 @@ private fun CoursesWidgetTabletContentPreview() {
                     courseCode = "CS 101",
                     imageUrl = null,
                     grade = GradeDisplay.Percentage("85%"),
-                    announcementCount = 2,
+                    announcements = listOf(
+                        DiscussionTopicHeader(id = 1L, title = "Announcement")
+                    ),
                     isSynced = true,
-                    isClickable = true
+                    isClickable = true,
+                    color = android.graphics.Color.RED
                 ),
                 CourseCardItem(
                     id = 2,
@@ -310,9 +342,10 @@ private fun CoursesWidgetTabletContentPreview() {
                     courseCode = "MATH 201",
                     imageUrl = null,
                     grade = GradeDisplay.Letter("A-"),
-                    announcementCount = 0,
+                    announcements = emptyList(),
                     isSynced = false,
-                    isClickable = true
+                    isClickable = true,
+                    color = android.graphics.Color.RED
                 )
             ),
             groups = listOf(

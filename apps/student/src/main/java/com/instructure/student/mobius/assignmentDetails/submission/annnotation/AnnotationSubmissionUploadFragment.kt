@@ -16,6 +16,7 @@
  */
 package com.instructure.student.mobius.assignmentDetails.submission.annnotation
 
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -30,6 +31,8 @@ import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.setMenu
 import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.pandautils.utils.withArgs
@@ -80,6 +83,8 @@ class AnnotationSubmissionUploadFragment : BaseCanvasFragment() {
         }
 
         setUpToolbar(binding.annotationSubmissionToolbar)
+        binding.annotationSubmissionToolbar.applyTopSystemBarInsets()
+        binding.annotationSubmissionViewContainer.applyBottomSystemBarInsets()
 
         return binding.root
     }
@@ -95,6 +100,11 @@ class AnnotationSubmissionUploadFragment : BaseCanvasFragment() {
             }
         }
         ViewStyler.themeToolbarLight(requireActivity(), toolbar)
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        ViewStyler.setStatusBarLightDelayed(requireActivity())
     }
 
     companion object {

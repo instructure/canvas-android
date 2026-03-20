@@ -25,7 +25,7 @@ object Versions {
 
     /* Others */
     const val APOLLO = "4.3.3"
-    const val NUTRIENT = "10.7.0"
+    const val NUTRIENT = "11.1.1"
     const val PHOTO_VIEW = "2.3.0"
     const val MOBIUS = "1.2.1"
     const val HILT = "2.57.2"
@@ -46,6 +46,8 @@ object Versions {
     const val JAVA_JWT = "4.5.0"
     const val GLANCE = "1.1.1"
     const val LIVEDATA = "1.9.0"
+    const val REORDERABLE = "2.4.0"
+    const val MLKIT_DOCUMENT_SCANNER = "16.0.0"
 }
 
 object Libs {
@@ -94,6 +96,7 @@ object Libs {
     const val PLAY_IN_APP_UPDATES = "com.google.android.play:app-update:2.1.0"
     const val FLEXBOX_LAYOUT = "com.google.android.flexbox:flexbox:3.0.0"
     const val MATERIAL_DESIGN = "com.google.android.material:material:1.13.0"
+    const val MLKIT_DOCUMENT_SCANNER = "com.google.android.gms:play-services-mlkit-document-scanner:${Versions.MLKIT_DOCUMENT_SCANNER}"
 
     /* Mobius */
     const val MOBIUS_CORE = "com.spotify.mobius:mobius-core:${Versions.MOBIUS}"
@@ -195,6 +198,7 @@ object Libs {
     const val COMPOSE_MATERIAL3_WINDOW_SIZE = "androidx.compose.material3:material3-window-size-class"
     const val COMPOSE_NAVIGATION_HILT = "androidx.hilt:hilt-navigation-compose:1.3.0"
     const val COMPOSE_FRAGMENT = "androidx.fragment:fragment-compose:1.8.9"
+    const val COMPOSE_REORDERABLE = "sh.calvin.reorderable:reorderable:${Versions.REORDERABLE}"
 
     // Glance
     const val GLANCE = "androidx.glance:glance:${Versions.GLANCE}"

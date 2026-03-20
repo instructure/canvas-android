@@ -58,6 +58,8 @@ import com.instructure.pandautils.utils.ProfileUtils
 import com.instructure.pandautils.utils.RequestCodes
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyDisplayCutoutInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
 import com.instructure.pandautils.utils.setGone
@@ -129,15 +131,21 @@ class ProfileEditFragment : BasePresenterFragment<
     override fun onResume() {
         super.onResume()
         setupToolbar()
+        setupWindowInsets()
     }
 
     fun setupToolbar() = with(binding) {
+        toolbar.applyTopSystemBarInsets()
         toolbar.setupCloseButton(this@ProfileEditFragment)
         toolbar.title = getString(R.string.editProfile)
         toolbar.setupMenu(R.menu.menu_save_generic) { saveProfile() }
         ViewStyler.themeToolbarLight(requireActivity(), toolbar)
         ViewStyler.setToolbarElevationSmall(requireContext(), toolbar)
         saveButton?.setTextColor(ThemePrefs.textButtonColor)
+    }
+
+    private fun setupWindowInsets() = with(binding) {
+        editProfileSettingsPage.applyDisplayCutoutInsets()
     }
 
     override fun readyToLoadUI(user: User?) = with(binding) {

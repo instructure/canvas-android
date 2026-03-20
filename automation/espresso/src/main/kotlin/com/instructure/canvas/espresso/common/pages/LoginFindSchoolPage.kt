@@ -24,6 +24,7 @@ import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.getStringFromResource
 import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.waitForView
+import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withText
 import com.instructure.espresso.replaceText
@@ -80,6 +81,20 @@ class LoginFindSchoolPage: BasePage() {
     fun assertHintText(schoolText: Int) {
         val hintText = getHintText(withId(R.id.domainInput))
         assertEquals(hintText, getStringFromResource(schoolText))
+    }
+
+    /**
+     * Assert that the "Tap here for login help." link is displayed.
+     */
+    fun assertHowDoIFindMySchoolLinkDisplayed() {
+        waitForView(withId(R.id.helpLink) + withText(R.string.accountDomainFooterLoginHelp) + withAncestor(withId(R.id.findSchoolRecyclerView))).assertDisplayed()
+    }
+
+    /**
+     * Clicks the "Tap here for login help." link.
+     */
+    fun clickOnHowDoIFindMySchoolLink() {
+        waitForView(withId(R.id.helpLink) + withText(R.string.accountDomainFooterLoginHelp) + withAncestor(withId(R.id.findSchoolRecyclerView))).click()
     }
 }
 

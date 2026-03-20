@@ -21,6 +21,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
@@ -50,7 +51,6 @@ import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.utils.orDefault
-import com.instructure.pandautils.utils.showNoConnectionDialog
 import com.instructure.pandautils.utils.withArgs
 import com.instructure.student.R
 import com.instructure.student.activity.NavigationActivity
@@ -95,7 +95,7 @@ class GradesFragment : ParentFragment(), Bookmarkable {
                             if (APIHelper.hasNetworkConnection()) {
                                 (activity as? NavigationActivity)?.addBookmark()
                             } else {
-                                showNoConnectionDialog(context)
+                                Toast.makeText(requireContext(), getString(R.string.notAvailableOffline), Toast.LENGTH_SHORT).show()
                             }
                         }
                     ),

@@ -19,6 +19,7 @@ package com.instructure.teacher.ui.pages.classic
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertContainsText
+import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
@@ -67,6 +68,13 @@ open class ProfileSettingsPage : BasePage(R.id.profileSettingsPage) {
      */
     fun assertPronouns(pronounString: String) {
         usersName.assertContainsText(pronounString)
+    }
+
+    /**
+     * Asserts that the user's avatar is displayed.
+     */
+    fun assertUserAvatarDisplayed() {
+        usersAvatar.assertDisplayed()
     }
 
 }

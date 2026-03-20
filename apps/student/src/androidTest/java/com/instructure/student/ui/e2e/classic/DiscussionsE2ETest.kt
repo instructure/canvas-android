@@ -20,6 +20,7 @@ package com.instructure.student.ui.e2e.classic
 import android.os.SystemClock.sleep
 import android.util.Log
 import androidx.test.espresso.Espresso
+import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
@@ -28,16 +29,20 @@ import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
 import com.instructure.canvas.espresso.pressBackButton
 import com.instructure.dataseeding.api.DiscussionTopicsApi
-import com.instructure.dataseeding.api.EnrollmentsApi
-import com.instructure.dataseeding.model.EnrollmentTypes.STUDENT_ENROLLMENT
-import com.instructure.dataseeding.model.EnrollmentTypes.TEACHER_ENROLLMENT
+import com.instructure.dataseeding.api.FileFolderApi
+import com.instructure.dataseeding.api.FileUploadsApi
+import com.instructure.dataseeding.model.FileUploadType
 import com.instructure.espresso.convertIso8601ToCanvasFormat
+import com.instructure.espresso.getCustomDateCalendar
 import com.instructure.espresso.getDateInCanvasFormat
 import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.extensions.seedData
 import com.instructure.student.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.TimeZone
 
 @HiltAndroidTest
 class DiscussionsE2ETest: StudentComposeTest() {
@@ -180,12 +185,6 @@ class DiscussionsE2ETest: StudentComposeTest() {
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
-        Log.d(PREPARATION_TAG, "Enroll '${student.name}' student to the dedicated course (${course.name}) with '${course.id}' id.")
-        EnrollmentsApi.enrollUser(course.id, student.id, STUDENT_ENROLLMENT)
-
-        Log.d(PREPARATION_TAG, "Enroll '${teacher.name}' teacher to the dedicated course (${course.name}) with '${course.id}' id.")
-        EnrollmentsApi.enrollUser(course.id, teacher.id, TEACHER_ENROLLMENT)
-
         Log.d(PREPARATION_TAG, "Seed a discussion topic with checkpoints for '${course.name}' course.")
         val discussionWithCheckpointsWithoutDueDatesTitle = "Test Discussion with Checkpoints"
         val assignmentName = "Test Assignment with Checkpoints"
@@ -250,13 +249,10 @@ class DiscussionsE2ETest: StudentComposeTest() {
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.DISCUSSIONS, TestCategory.E2E, SecondaryFeatureCategory.DISCUSSION_CHECKPOINTS)
     fun testDiscussionCheckpointsSyllabusE2E() {
         Log.d(PREPARATION_TAG, "Seeding data.")
-        val data = seedData(students = 1, teachers = 1, courses = 1, syllabusBody = "this is the syllabus body") // This course and syllabus will be used once the seeding will be fixed
+        val data = seedData(students = 1, teachers = 1, courses = 1, syllabusBody = "this is the syllabus body")
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
-
-        Log.d(PREPARATION_TAG, "Enroll '${student.name}' student to the dedicated course (${course.name}) with '$course.id' id.")
-        EnrollmentsApi.enrollUser(course.id, student.id, STUDENT_ENROLLMENT)
 
         Log.d(PREPARATION_TAG, "Seed a discussion topic with checkpoints for '${course.name}' course.")
         val discussionWithCheckpointsTitle = "Test Discussion with Checkpoints"
@@ -301,4 +297,159 @@ class DiscussionsE2ETest: StudentComposeTest() {
         assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Reply to topic due", convertedReplyToTopicDueDate)
         assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Additional replies (2) due",convertedReplyToEntryDueDate)
     }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.DISCUSSIONS, TestCategory.E2E, SecondaryFeatureCategory.DISCUSSION_CHECKPOINTS)
+    fun testDiscussionCheckpointWithPdfAttachmentE2E() {
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+
+        Log.d(PREPARATION_TAG, "Get course root folder to upload the PDF file.")
+        val courseRootFolder = FileFolderApi.getCourseRootFolder(course.id, teacher.token)
+
+        Log.d(PREPARATION_TAG, "Read PDF file from assets.")
+        val pdfFileName = "samplepdf.pdf"
+        val context = InstrumentationRegistry.getInstrumentation().context
+        val pdfBytes = context.assets.open(pdfFileName).use { it.readBytes() }
+
+        Log.d(PREPARATION_TAG, "Upload PDF file to course root folder using teacher token.")
+        val uploadedFile = FileUploadsApi.uploadFile(courseId = courseRootFolder.id, assignmentId = null, file = pdfBytes, fileName = pdfFileName, token = teacher.token, fileUploadType = FileUploadType.COURSE_FILE)
+
+        Log.d(PREPARATION_TAG, "Seed a discussion topic with checkpoints and PDF attachment for '${course.name}' course.")
+        val discussionWithCheckpointsTitle = "Discussion with PDF Attachment"
+        val assignmentName = "Assignment with Checkpoints and PDF"
+        val replyToTopicDueDate = "2029-11-12T22:59:00Z"
+        val replyToEntryDueDate = "2029-11-19T22:59:00Z"
+        DiscussionTopicsApi.createDiscussionTopicWithCheckpoints(courseId = course.id, token = teacher.token, discussionTitle = discussionWithCheckpointsTitle, assignmentName = assignmentName, replyToTopicDueDate = replyToTopicDueDate, replyToEntryDueDate = replyToEntryDueDate, fileId = uploadedFile.id.toString())
+
+        val convertedReplyToTopicDueDate = "Due " + convertIso8601ToCanvasFormat("2029-11-12T22:59:00Z") + " 2:59 PM"
+        val convertedReplyToEntryDueDate = "Due " + convertIso8601ToCanvasFormat("2029-11-19T22:59:00Z") + " 2:59 PM"
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
+        tokenLogin(student)
+
+        Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Select course: '${course.name}'.")
+        dashboardPage.waitForRender()
+        dashboardPage.selectCourse(course.name)
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Discussions' Tab is displayed on the CourseBrowser Page.")
+        courseBrowserPage.assertTabDisplayed("Discussions")
+
+        Log.d(STEP_TAG, "Navigate to Assignments Page.")
+        courseBrowserPage.selectAssignments()
+
+        Log.d(ASSERTION_TAG, "Assert that the '${discussionWithCheckpointsTitle}' discussion is present along with 2 date info (For the 2 checkpoints).")
+        assignmentListPage.assertHasAssignmentWithCheckpoints(discussionWithCheckpointsTitle, dueAtString = convertedReplyToTopicDueDate, dueAtStringSecondCheckpoint = convertedReplyToEntryDueDate, expectedGrade = "-/15")
+
+        Log.d(STEP_TAG, "Click on '$discussionWithCheckpointsTitle' assignment.")
+        assignmentListPage.clickAssignment(discussionWithCheckpointsTitle)
+
+        Log.d(ASSERTION_TAG, "Assert that Assignment Details Page is displayed with correct title.")
+        assignmentDetailsPage.assertDisplayToolbarTitle()
+        assignmentDetailsPage.assertAssignmentTitle(discussionWithCheckpointsTitle)
+
+        Log.d(ASSERTION_TAG, "Assert that attachment icon is displayed.")
+        assignmentDetailsPage.assertAttachmentIconDisplayed()
+
+        Log.d(STEP_TAG, "Click on attachment icon to view attachments.")
+        assignmentDetailsPage.clickAttachmentIcon()
+
+        Log.d(ASSERTION_TAG, "Verify PDF viewer toolbar is displayed.")
+        assignmentDetailsPage.assertPdfViewerToolbarDisplayed()
+
+        Log.d(STEP_TAG, "Navigate back from PDF viewer to assignment details.")
+        Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that we're back on the assignment details page.")
+        assignmentDetailsPage.assertAssignmentTitle(discussionWithCheckpointsTitle)
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.DISCUSSIONS, TestCategory.E2E, SecondaryFeatureCategory.DISCUSSION_CHECKPOINTS)
+    fun testDiscussionCheckpointsCalendarE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, teachers = 1, courses = 1, syllabusBody = "this is the syllabus body")
+        val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+
+        val discussionWithCheckpointsTitle = "Test Discussion with Checkpoints"
+        val assignmentName = "Test Assignment with Checkpoints"
+
+        Log.d(PREPARATION_TAG, "Convert dates to match with different formats in different screens (Calendar, Assignment Details)")
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US).apply {
+            timeZone = TimeZone.getTimeZone("UTC")
+        }
+        val calendarDisplayFormat = SimpleDateFormat(" MMM d 'at' h:mm a", Locale.US)
+        val assignmentDetailsDisplayFormat = SimpleDateFormat("MMM d, yyyy h:mm a", Locale.US)
+        val replyToTopicCalendar = getCustomDateCalendar(2)
+        val replyToEntryCalendar = getCustomDateCalendar(4)
+        val replyToTopicDueTime = dateFormat.format(replyToTopicCalendar.time)
+        val replyToEntryDueTime = dateFormat.format(replyToEntryCalendar.time)
+        val convertedReplyToTopicDueDate = calendarDisplayFormat.format(replyToTopicCalendar.time)
+        val convertedReplyToEntryDueDate = calendarDisplayFormat.format(replyToEntryCalendar.time)
+        val assignmentDetailsReplyToTopicDueDate = assignmentDetailsDisplayFormat.format(replyToTopicCalendar.time)
+        val assignmentDetailsReplyToEntryDueDate = assignmentDetailsDisplayFormat.format(replyToEntryCalendar.time)
+
+        Log.d(PREPARATION_TAG, "Seed a discussion topic with checkpoints for '${course.name}' course.")
+        DiscussionTopicsApi.createDiscussionTopicWithCheckpoints(course.id, teacher.token, discussionWithCheckpointsTitle, assignmentName, replyToTopicDueTime, replyToEntryDueTime)
+
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
+        tokenLogin(student)
+
+        Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered.")
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Click on the 'Calendar' bottom menu to navigate to the Calendar page.")
+        dashboardPage.clickCalendarTab()
+
+        Log.d(STEP_TAG , "Swipe 2 days to the future to find the 'Reply to Topic' Discussion Checkpoint calendar item.")
+        calendarScreenPage.swipeEventsLeft(2)
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Reply to Topic' checkpoint is displayed on the Calendar Page with the correct title, course name, and due date.")
+        calendarScreenPage.assertItemDetails(discussionWithCheckpointsTitle, course.name, "Due$convertedReplyToTopicDueDate")
+
+        Log.d(STEP_TAG , "Swipe 2 additional days to the future to find the 'Additional replies' Discussion Checkpoint calendar item.")
+        calendarScreenPage.swipeEventsLeft(2)
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Additional replies' checkpoint is displayed on the Calendar Page with the correct title, course name, and due date.")
+        calendarScreenPage.assertItemDetails(discussionWithCheckpointsTitle, course.name,"Due$convertedReplyToEntryDueDate")
+
+        Log.d(STEP_TAG, "Click on the '$discussionWithCheckpointsTitle' discussion's 'Additional replies' checkpoint calendar item to open it's details.")
+        calendarScreenPage.clickOnItem(discussionWithCheckpointsTitle)
+
+        Log.d(ASSERTION_TAG, "Assert that the Assignment Details Page is displayed properly with the correct toolbar title and subtitle.")
+        assignmentDetailsPage.assertDisplayToolbarTitle()
+        assignmentDetailsPage.assertDisplayToolbarSubtitle(course.name)
+
+        Log.d(ASSERTION_TAG, "Assert that the checkpoints are displayed properly on the Assignment Details Page.")
+        assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Reply to topic due", assignmentDetailsReplyToTopicDueDate)
+        assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Additional replies (2) due", assignmentDetailsReplyToEntryDueDate)
+
+        Log.d(STEP_TAG, "Navigate back to Calendar Page.")
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG , "Swipe 2 days BACK to find the 'Reply to Topic' Discussion Checkpoint calendar item again.")
+        calendarScreenPage.swipeEventsRight(2)
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Reply to Topic' checkpoint is displayed on the Calendar Page with the correct title, course name, and due date.")
+        calendarScreenPage.assertItemDetails(discussionWithCheckpointsTitle, course.name, "Due$convertedReplyToTopicDueDate")
+
+        Log.d(STEP_TAG, "Click on the '$discussionWithCheckpointsTitle' discussion's 'Reply to Topic' checkpoint calendar item to open it's details.")
+        calendarScreenPage.clickOnItem(discussionWithCheckpointsTitle)
+
+        Log.d(ASSERTION_TAG, "Assert that the Assignment Details Page is displayed properly with the correct toolbar title and subtitle.")
+        assignmentDetailsPage.assertDisplayToolbarTitle()
+        assignmentDetailsPage.assertDisplayToolbarSubtitle(course.name)
+
+        Log.d(ASSERTION_TAG, "Assert that the checkpoints are displayed properly on the Assignment Details Page.")
+        assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Reply to topic due", assignmentDetailsReplyToTopicDueDate)
+        assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Additional replies (2) due", assignmentDetailsReplyToEntryDueDate)
+    }
+
 }

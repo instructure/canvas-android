@@ -40,7 +40,7 @@ class StudentEditDashboardNetworkDataSource(
             val pastCourses = async { courseApi.firstPageCoursesByEnrollmentState("completed", params)
                 .depaginate { nextUrl -> courseApi.next(nextUrl, params) }.dataOrThrow }
             val futureCourses = async { courseApi.firstPageCoursesByEnrollmentState("invited_or_pending", params)
-                .depaginate { nextUrl -> courseApi.next(nextUrl, params) }.dataOrThrow.filter { it.workflowState != Course.WorkflowState.UNPUBLISHED } }
+                .depaginate { nextUrl -> courseApi.next(nextUrl, params) }.dataOrThrow }
 
             return@coroutineScope listOf(currentCourses, pastCourses, futureCourses).awaitAll()
         }
