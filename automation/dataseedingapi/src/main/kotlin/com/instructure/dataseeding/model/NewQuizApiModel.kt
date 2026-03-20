@@ -71,3 +71,67 @@ data class CreateNewQuiz(
     val submissionType: String = "external_tool",
     val published: Boolean
 )
+
+data class CreateQuizItem(
+    val item: QuizItemData
+)
+
+data class QuizItemData(
+    @SerializedName("entry_type")
+    val entryType: String,
+    val position: Int,
+    @SerializedName("points_possible")
+    val pointsPossible: Double,
+    val entry: QuizItemEntry
+)
+
+data class QuizItemEntry(
+    val title: String,
+    @SerializedName("item_body")
+    val itemBody: String,
+    @SerializedName("interaction_type_slug")
+    val interactionTypeSlug: String,
+    @SerializedName("calculator_type")
+    val calculatorType: String,
+    @SerializedName("interaction_data")
+    val interactionData: TrueFalseInteractionData,
+    @SerializedName("scoring_data")
+    val scoringData: TrueFalseScoringData,
+    @SerializedName("scoring_algorithm")
+    val scoringAlgorithm: String
+)
+
+data class TrueFalseInteractionData(
+    @SerializedName("true_choice")
+    val trueChoice: String = "True",
+    @SerializedName("false_choice")
+    val falseChoice: String = "False"
+)
+
+data class TrueFalseScoringData(
+    val value: Boolean
+)
+
+data class NewQuizItemApiModel(
+    val id: String?,
+    val position: Int?,
+    @SerializedName("points_possible")
+    val pointsPossible: Double?,
+    @SerializedName("entry_type")
+    val entryType: String?,
+    @SerializedName("entry_editable")
+    val entryEditable: Boolean?,
+    @SerializedName("stimulus_quiz_entry_id")
+    val stimulusQuizEntryId: String?,
+    @SerializedName("clone_of_id")
+    val cloneOfId: String?,
+    val status: String?,
+    val properties: Map<String, Any>?,
+    @SerializedName("regrade_adjusted_points_possible")
+    val regradeAdjustedPointsPossible: Double?,
+    @SerializedName("regrade_adjusted_scoring_data")
+    val regradeAdjustedScoringData: Any?,
+    @SerializedName("quiz_entry_regrades")
+    val quizEntryRegrades: List<Any>?,
+    val entry: Map<String, Any>?
+)

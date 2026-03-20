@@ -14,21 +14,31 @@
  *     limitations under the License.
  *
  */
-
 package com.instructure.student.ui.e2e.classic
 
 import android.util.Log
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.web.assertion.WebViewAssertions
+import androidx.test.espresso.web.sugar.Web
+import androidx.test.espresso.web.webdriver.DriverAtoms
+import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
+import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.api.NewQuizzesApi
+import com.instructure.espresso.retryWithIncreasingDelay
+import com.instructure.student.R
 import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.extensions.seedData
 import com.instructure.student.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
+import org.hamcrest.Matchers
+import org.hamcrest.Matchers.allOf
 import org.junit.Test
 
 @HiltAndroidTest
@@ -48,11 +58,25 @@ class NewQuizzesE2ETest : StudentComposeTest() {
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
+        //Log.d(PREPARATION_TAG, "Enroll '${student.name}' student to the dedicated course (${course.name}) with '${course.id}' id.")
+        //EnrollmentsApi.enrollUser(3594441, student.id, STUDENT_ENROLLMENT)
+
         Log.d(PREPARATION_TAG, "Seed a NEW quiz for '${course.name}' course.")
         val newQuiz1 = NewQuizzesApi.createNewQuiz(courseId = course.id, token = teacher.token, published = true)
 
         Log.d(PREPARATION_TAG, "Seed another NEW quiz for '${course.name}' course.")
-        val newQuiz2 = NewQuizzesApi.createNewQuiz(courseId = course.id, token = teacher.token,)
+        val newQuiz2 = NewQuizzesApi.createNewQuiz(courseId = course.id, token = teacher.token, published = true)
+
+        Log.d(PREPARATION_TAG, "Add a True/False question to '${newQuiz2.title}' quiz.")
+        NewQuizzesApi.createTrueFalseQuestion(
+            courseId = course.id,
+            quizId = newQuiz2.id,
+            token = teacher.token,
+            questionTitle = "True or False Question",
+            questionText = "<p>The Earth is round.</p>",
+            pointsPossible = 1.0,
+            correctAnswer = true
+        )
 
         Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
@@ -64,22 +88,9 @@ class NewQuizzesE2ETest : StudentComposeTest() {
         Log.d(STEP_TAG, "Navigate to Quizzes Page.")
         courseBrowserPage.selectQuizzes()
 
-        Thread.sleep(2000)
-
         Log.d(ASSERTION_TAG, "Assert that both NEW quizzes ('${newQuiz1.title}' and '${newQuiz2.title}') are displayed.")
         quizListPage.assertNewQuizDisplayed(newQuiz1)
         quizListPage.assertNewQuizDisplayed(newQuiz2)
-
-        Log.d(STEP_TAG, "Select '${newQuiz1.title}' quiz.")
-        quizListPage.selectNewQuiz(newQuiz1)
-
-        Thread.sleep(2000)
-
-        Log.d(ASSERTION_TAG, "Assert that the NEW quiz is displayed in a webview (external LTI tool).")
-        canvasWebViewPage.waitForWebView()
-
-        Log.d(STEP_TAG, "Navigate back to Quiz List Page.")
-        Espresso.pressBack()
 
         Log.d(STEP_TAG, "Open the search bar and search for '${newQuiz2.title}' quiz.")
         quizListPage.searchable.clickOnSearchButton()
@@ -94,8 +105,6 @@ class NewQuizzesE2ETest : StudentComposeTest() {
         Log.d(STEP_TAG, "Clear the search bar.")
         quizListPage.searchable.clickOnClearSearchButton()
 
-        Thread.sleep(1000)
-
         Log.d(ASSERTION_TAG, "Assert that both quizzes are displayed again after clearing search.")
         quizListPage.assertNewQuizDisplayed(newQuiz1)
         quizListPage.assertNewQuizDisplayed(newQuiz2)
@@ -103,15 +112,11 @@ class NewQuizzesE2ETest : StudentComposeTest() {
         Log.d(STEP_TAG, "Search for a non-existing quiz.")
         quizListPage.searchable.typeToSearchBar("Non-existing Quiz")
 
-        Thread.sleep(1000)
-
         Log.d(ASSERTION_TAG, "Assert that the empty view is displayed.")
         quizListPage.assertEmptyStateDisplayed()
 
         Log.d(STEP_TAG, "Clear the search bar.")
         quizListPage.searchable.clickOnClearSearchButton()
-
-        Thread.sleep(1000)
 
         Log.d(ASSERTION_TAG, "Assert that both quizzes are displayed again.")
         quizListPage.assertNewQuizDisplayed(newQuiz1)
@@ -120,9 +125,44 @@ class NewQuizzesE2ETest : StudentComposeTest() {
         Log.d(STEP_TAG, "Select '${newQuiz2.title}' quiz.")
         quizListPage.selectNewQuiz(newQuiz2)
 
-        Thread.sleep(2000)
+        Log.d(ASSERTION_TAG, "Assert that we are on the Assignment Details page.")
+        assignmentDetailsPage.assertDisplayToolbarTitle()
+
+        Log.d(ASSERTION_TAG, "Assert that the submission type is 'Quiz'.")
+        assignmentDetailsPage.assertSubmissionTypeDisplayed("Quiz")
+
+        Log.d(STEP_TAG, "Click 'Open the Quiz' button.")
+        assignmentDetailsPage.clickSubmit()
+        Thread.sleep(10000)
 
         Log.d(ASSERTION_TAG, "Assert that the NEW quiz is displayed in a webview (external LTI tool).")
-        canvasWebViewPage.waitForWebView()
+        canvasWebViewPage.waitForAnotherWebView()
+
+        Log.d(ASSERTION_TAG, "Assert that '${newQuiz2.title}' title is displayed in the toolbar.")
+        canvasWebViewPage.assertTitle(newQuiz2.title)
+
+        retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = {
+            Espresso.pressBack()
+            composeTestRule.waitForIdle()
+            refresh()
+            assignmentDetailsPage.clickSubmit()}
+            ) {
+
+            canvasWebViewPage.waitForAnotherWebView()
+            canvasWebViewPage.assertTitle(newQuiz2.title)
+            canvasWebViewPage.waitForWebView()
+
+        }
+
+
+        Log.d(ASSERTION_TAG, "Assert that the quiz question is displayed in the webview.")
+        Thread.sleep(5000) // Additional wait for New Quizzes LTI content to fully load
+        Web.onWebView(allOf(withId(R.id.webView), isDisplayed())).withElement(
+            DriverAtoms.findElement(
+                Locator.XPATH,
+                "//*[contains(text(), 'The Earth is round')]"
+            )
+        ).check(WebViewAssertions.webMatches(DriverAtoms.getText(), Matchers.containsString("The Earth is round")))
     }
+
 }
