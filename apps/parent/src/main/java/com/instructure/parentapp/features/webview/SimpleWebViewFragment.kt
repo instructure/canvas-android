@@ -19,8 +19,6 @@ package com.instructure.parentapp.features.webview
 
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -70,6 +68,8 @@ class SimpleWebViewFragment : BaseCanvasFragment(), NavigationCallbacks {
 
     private var title: String? by NullableStringArg(key = Const.TITLE)
 
+    private var customTabLaunched = false
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_simple_webview, container, false)
     }
@@ -88,13 +88,23 @@ class SimpleWebViewFragment : BaseCanvasFragment(), NavigationCallbacks {
         }
 
         savedInstanceState?.let {
+            customTabLaunched = it.getBoolean(KEY_CUSTOM_TAB_LAUNCHED, false)
             binding.webView.restoreState(it)
             binding.webView.enableAlgorithmicDarkening()
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (customTabLaunched) {
+            customTabLaunched = false
+            activity?.supportFragmentManager?.popBackStack()
+        }
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
+        outState.putBoolean(KEY_CUSTOM_TAB_LAUNCHED, customTabLaunched)
         binding.webView.saveState(outState)
     }
 
@@ -112,7 +122,9 @@ class SimpleWebViewFragment : BaseCanvasFragment(), NavigationCallbacks {
 
             is SimpleWebViewAction.ShowError -> {
                 toast(com.instructure.pandautils.R.string.errorOccurred)
-                activity?.onBackPressed()
+                if (isAdded && !parentFragmentManager.isStateSaved) {
+                    activity?.supportFragmentManager?.popBackStack()
+                }
             }
         }
     }
@@ -167,11 +179,13 @@ class SimpleWebViewFragment : BaseCanvasFragment(), NavigationCallbacks {
 
     private fun launchCustomTab(url: String) {
         activity?.let {
+            customTabLaunched = true
             it.launchCustomTab(url, parentPrefs.currentStudent.studentColor)
-            Handler(Looper.getMainLooper()).postDelayed({
-                it.onBackPressed()
-            }, 500)
         }
+    }
+
+    companion object {
+        private const val KEY_CUSTOM_TAB_LAUNCHED = "key_custom_tab_launched"
     }
 
     private fun showAlertJavascript(webView: WebView, infoText: String = getString(R.string.webAccessLimitedMessage)) {
