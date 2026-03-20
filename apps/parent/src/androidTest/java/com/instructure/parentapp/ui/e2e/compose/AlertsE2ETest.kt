@@ -442,4 +442,172 @@ class AlertsE2ETest : ParentComposeTest() {
         alertsPage.assertAlertRead("Course grade: 90.0% in ${course.courseCode}")
     }
 
+    @E2E
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ALERTS, TestCategory.E2E)
+    fun testAlertSettingsMarkBelowAboveDependencyE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, courses = 1, teachers = 1, parents = 1)
+        val parent = data.parentsList[0]
+        val student = data.studentsList[0]
+
+        Log.d(STEP_TAG, "Login with user: '${parent.name}', login id: '${parent.loginId}'.")
+        tokenLogin(parent)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Open the Left Side Navigation Drawer menu.")
+        dashboardPage.openLeftSideMenu()
+
+        Log.d(STEP_TAG, "Open the Manage Students Page.")
+        leftSideNavigationDrawerPage.clickManageStudents()
+
+        Log.d(STEP_TAG, "Open the Student Alert Settings Page.")
+        manageStudentsPage.clickStudent(student.shortName)
+
+        val assignmentGradeBelow = "Assignment grade below"
+        val assignmentGradeAbove = "Assignment grade above"
+        Log.d(STEP_TAG, "Set '$assignmentGradeBelow' threshold to 30%.")
+        studentAlertSettingsPage.setThreshold(AlertType.ASSIGNMENT_GRADE_LOW, "30")
+
+        Log.d(ASSERTION_TAG, "Assert that '$assignmentGradeBelow' threshold is set to '30%'.")
+        studentAlertSettingsPage.assertPercentageThreshold(AlertType.ASSIGNMENT_GRADE_LOW, "30%")
+
+        Log.d(STEP_TAG, "Open the '$assignmentGradeAbove' dialog and enter '20' (below the low threshold of 30).")
+        studentAlertSettingsPage.clickThreshold(AlertType.ASSIGNMENT_GRADE_HIGH)
+        studentAlertSettingsPage.enterThreshold("20")
+
+        Log.d(ASSERTION_TAG, "Assert that an error is shown because 20 is not above the '$assignmentGradeBelow' threshold of 30.")
+        studentAlertSettingsPage.assertThresholdDialogError()
+
+        Log.d(STEP_TAG, "Change the '$assignmentGradeAbove' threshold value to '70'.")
+        studentAlertSettingsPage.enterThreshold("70")
+
+        Log.d(ASSERTION_TAG, "Assert that there is no error for '$assignmentGradeAbove' value 70.")
+        studentAlertSettingsPage.assertThresholdDialogNotError()
+
+        Log.d(STEP_TAG, "Save the '$assignmentGradeAbove' threshold.")
+        studentAlertSettingsPage.tapThresholdSaveButton()
+
+        Log.d(ASSERTION_TAG, "Assert that '$assignmentGradeAbove' threshold is saved as '70%'.")
+        studentAlertSettingsPage.assertPercentageThreshold(AlertType.ASSIGNMENT_GRADE_HIGH, "70%")
+
+        Log.d(STEP_TAG, "Open the '$assignmentGradeBelow' dialog and enter '80' (above the '$assignmentGradeAbove' threshold of 70).")
+        studentAlertSettingsPage.clickThreshold(AlertType.ASSIGNMENT_GRADE_LOW)
+        studentAlertSettingsPage.enterThreshold("80")
+
+        Log.d(ASSERTION_TAG, "Assert that an error is shown because 80 is not below the '$assignmentGradeAbove' threshold of 70.")
+        studentAlertSettingsPage.assertThresholdDialogError()
+
+        Log.d(STEP_TAG, "Change the '$assignmentGradeBelow' threshold value to '50'.")
+        studentAlertSettingsPage.enterThreshold("50")
+
+        Log.d(ASSERTION_TAG, "Assert that there is no error for '$assignmentGradeBelow' value 50.")
+        studentAlertSettingsPage.assertThresholdDialogNotError()
+
+        Log.d(STEP_TAG, "Save the '$assignmentGradeBelow' threshold.")
+        studentAlertSettingsPage.tapThresholdSaveButton()
+
+        Log.d(ASSERTION_TAG, "Assert that '$assignmentGradeBelow' threshold is saved as '50%'.")
+        studentAlertSettingsPage.assertPercentageThreshold(AlertType.ASSIGNMENT_GRADE_LOW, "50%")
+
+        Log.d(STEP_TAG, "Set '$assignmentGradeBelow' to Never so the '$assignmentGradeAbove' threshold has no lower bound.")
+        studentAlertSettingsPage.clickThreshold(AlertType.ASSIGNMENT_GRADE_LOW)
+        studentAlertSettingsPage.tapThresholdNeverButton()
+
+        Log.d(ASSERTION_TAG, "Assert that '$assignmentGradeBelow' threshold is set to 'Never'.")
+        studentAlertSettingsPage.assertPercentageThreshold(AlertType.ASSIGNMENT_GRADE_LOW, "Never")
+
+        Log.d(STEP_TAG, "Open the '$assignmentGradeAbove' dialog and enter '100' (boundary value that is not allowed).")
+        studentAlertSettingsPage.clickThreshold(AlertType.ASSIGNMENT_GRADE_HIGH)
+        studentAlertSettingsPage.enterThreshold("100")
+
+        Log.d(ASSERTION_TAG, "Assert that an error is shown because 100 is not a valid '$assignmentGradeAbove' threshold (max is exclusive).")
+        studentAlertSettingsPage.assertThresholdDialogError()
+
+        Log.d(STEP_TAG, "Change the '$assignmentGradeAbove' threshold value to '99' (the maximum valid value).")
+        studentAlertSettingsPage.enterThreshold("99")
+
+        Log.d(ASSERTION_TAG, "Assert that there is no error for '$assignmentGradeAbove' value 99.")
+        studentAlertSettingsPage.assertThresholdDialogNotError()
+
+        Log.d(STEP_TAG, "Save the '$assignmentGradeAbove' threshold.")
+        studentAlertSettingsPage.tapThresholdSaveButton()
+
+        Log.d(ASSERTION_TAG, "Assert that '$assignmentGradeAbove' threshold is saved as '99%'.")
+        studentAlertSettingsPage.assertPercentageThreshold(AlertType.ASSIGNMENT_GRADE_HIGH, "99%")
+
+        val courseGradeBelow = "Course grade below"
+        val courseGradeAbove = "Course grade above"
+        Log.d(STEP_TAG, "Set '$courseGradeBelow' threshold to 30%.")
+        studentAlertSettingsPage.setThreshold(AlertType.COURSE_GRADE_LOW, "30")
+
+        Log.d(ASSERTION_TAG, "Assert that '$courseGradeBelow' threshold is set to '30%'.")
+        studentAlertSettingsPage.assertPercentageThreshold(AlertType.COURSE_GRADE_LOW, "30%")
+
+        Log.d(STEP_TAG, "Open the '$courseGradeAbove' dialog and enter '20' (below the low threshold of 30).")
+        studentAlertSettingsPage.clickThreshold(AlertType.COURSE_GRADE_HIGH)
+        studentAlertSettingsPage.enterThreshold("20")
+
+        Log.d(ASSERTION_TAG, "Assert that an error is shown because 20 is not above the '$courseGradeBelow' threshold of 30.")
+        studentAlertSettingsPage.assertThresholdDialogError()
+
+        Log.d(STEP_TAG, "Change the '$courseGradeAbove' threshold value to '70'.")
+        studentAlertSettingsPage.enterThreshold("70")
+
+        Log.d(ASSERTION_TAG, "Assert that there is no error for '$courseGradeAbove' value 70.")
+        studentAlertSettingsPage.assertThresholdDialogNotError()
+
+        Log.d(STEP_TAG, "Save the '$courseGradeAbove' threshold.")
+        studentAlertSettingsPage.tapThresholdSaveButton()
+
+        Log.d(ASSERTION_TAG, "Assert that '$courseGradeAbove' threshold is saved as '70%'.")
+        studentAlertSettingsPage.assertPercentageThreshold(AlertType.COURSE_GRADE_HIGH, "70%")
+
+        Log.d(STEP_TAG, "Open the '$courseGradeBelow' dialog and enter '80' (above the '$courseGradeAbove' threshold of 70).")
+        studentAlertSettingsPage.clickThreshold(AlertType.COURSE_GRADE_LOW)
+        studentAlertSettingsPage.enterThreshold("80")
+
+        Log.d(ASSERTION_TAG, "Assert that an error is shown because 80 is not below the '$courseGradeAbove' threshold of 70.")
+        studentAlertSettingsPage.assertThresholdDialogError()
+
+        Log.d(STEP_TAG, "Change the '$courseGradeBelow' threshold value to '50'.")
+        studentAlertSettingsPage.enterThreshold("50")
+
+        Log.d(ASSERTION_TAG, "Assert that there is no error for '$courseGradeBelow' value 50.")
+        studentAlertSettingsPage.assertThresholdDialogNotError()
+
+        Log.d(STEP_TAG, "Save the '$courseGradeBelow' threshold.")
+        studentAlertSettingsPage.tapThresholdSaveButton()
+
+        Log.d(ASSERTION_TAG, "Assert that '$courseGradeBelow' threshold is saved as '50%'.")
+        studentAlertSettingsPage.assertPercentageThreshold(AlertType.COURSE_GRADE_LOW, "50%")
+
+        Log.d(STEP_TAG, "Set '$courseGradeBelow' to Never so the '$courseGradeAbove' threshold has no lower bound.")
+        studentAlertSettingsPage.clickThreshold(AlertType.COURSE_GRADE_LOW)
+        studentAlertSettingsPage.tapThresholdNeverButton()
+
+        Log.d(ASSERTION_TAG, "Assert that '$courseGradeBelow' threshold is set to 'Never'.")
+        studentAlertSettingsPage.assertPercentageThreshold(AlertType.COURSE_GRADE_LOW, "Never")
+
+        Log.d(STEP_TAG, "Open the '$courseGradeAbove' dialog and enter '100' (boundary value that is not allowed).")
+        studentAlertSettingsPage.clickThreshold(AlertType.COURSE_GRADE_HIGH)
+        studentAlertSettingsPage.enterThreshold("100")
+
+        Log.d(ASSERTION_TAG, "Assert that an error is shown because 100 is not a valid '$courseGradeAbove' threshold (max is exclusive).")
+        studentAlertSettingsPage.assertThresholdDialogError()
+
+        Log.d(STEP_TAG, "Change the '$courseGradeAbove' threshold value to '99' (the maximum valid value).")
+        studentAlertSettingsPage.enterThreshold("99")
+
+        Log.d(ASSERTION_TAG, "Assert that there is no error for '$courseGradeAbove' value 99.")
+        studentAlertSettingsPage.assertThresholdDialogNotError()
+
+        Log.d(STEP_TAG, "Save the '$courseGradeAbove' threshold.")
+        studentAlertSettingsPage.tapThresholdSaveButton()
+
+        Log.d(ASSERTION_TAG, "Assert that '$courseGradeAbove' threshold is saved as '99%'.")
+        studentAlertSettingsPage.assertPercentageThreshold(AlertType.COURSE_GRADE_HIGH, "99%")
+    }
+
 }
