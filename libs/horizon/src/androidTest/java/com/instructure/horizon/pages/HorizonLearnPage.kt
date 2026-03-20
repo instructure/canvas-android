@@ -43,7 +43,17 @@ class HorizonLearnPage(private val composeTestRule: ComposeTestRule) {
     }
 
     fun assertEmptyState() {
-        composeTestRule.onNodeWithText("No courses", substring = true)
+        composeTestRule.onNodeWithText("No results found", substring = true)
             .assertIsDisplayed()
+    }
+
+    fun assertMyContentTabDisplayed(tabLabel: String) {
+        composeTestRule.onNodeWithText(tabLabel)
+            .assertIsDisplayed()
+    }
+
+    fun clickMyContentTab(tabLabel: String) {
+        composeTestRule.onNodeWithText(tabLabel)
+            .performClick()
     }
 }

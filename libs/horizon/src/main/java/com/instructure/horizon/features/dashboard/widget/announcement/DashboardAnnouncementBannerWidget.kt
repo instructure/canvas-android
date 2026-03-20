@@ -16,12 +16,14 @@
  */
 package com.instructure.horizon.features.dashboard.widget.announcement
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.instructure.horizon.R
@@ -80,7 +82,7 @@ fun DashboardAnnouncementBannerSection(
                 false,
                 DashboardWidgetPageState.Empty,
                 { state.onRefresh {} },
-                modifier
+                modifier.padding(horizontal = 24.dp)
             )
         }
         DashboardItemState.SUCCESS -> {

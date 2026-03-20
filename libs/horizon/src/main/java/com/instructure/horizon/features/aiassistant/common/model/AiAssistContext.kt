@@ -1,6 +1,6 @@
 package com.instructure.horizon.features.aiassistant.common.model
 
-import com.instructure.canvasapi2.models.journey.JourneyAssistState
+import com.instructure.canvasapi2.models.journey.assist.JourneyAssistState
 
 data class AiAssistContext(
     val contextString: String? = null,
