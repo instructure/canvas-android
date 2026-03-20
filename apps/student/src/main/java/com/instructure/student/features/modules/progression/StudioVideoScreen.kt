@@ -28,7 +28,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -79,7 +81,8 @@ fun StudioVideoScreen(
                 .fillMaxSize()
                 .background(colorResource(R.color.backgroundLightest))
                 .padding(padding)
-                .padding(16.dp),
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -119,14 +122,6 @@ fun StudioVideoScreen(
                 fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center,
                 color = colorResource(id = R.color.textDarkest)
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = "video/mp4",
-                fontSize = 14.sp,
-                color = colorResource(id = R.color.textDark)
             )
 
             Spacer(modifier = Modifier.height(24.dp))
