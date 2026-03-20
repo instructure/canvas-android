@@ -23,6 +23,6 @@ import androidx.lifecycle.ViewModel
  * going through the Binder IPC boundary (which has a ~1 MB limit). This prevents
  * TransactionTooLargeException when the WebView state is large.
  */
-internal class ComposeCanvasWebViewStateViewModel : ViewModel() {
+class ComposeCanvasWebViewStateViewModel : ViewModel() {
     val webViewState = Bundle()
 }
