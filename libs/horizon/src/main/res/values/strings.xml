@@ -201,6 +201,8 @@
     <string name="fileDetails_downloadError">File couldn’t be downloaded.</string>
     <string name="studyToolsToolbarTitle">Study tools</string>
     <string name="studyToolsDismissContentDescription">Dismiss Study tools</string>
+    <string name="igniteAIToolbarTitle">IgniteAI</string>
+    <string name="igniteAIDismissContentDescription">Dismiss IgniteAI</string>
     <string name="a11y_studyToolsPositiveFeedback">Rate Study tools with positive feedback</string>
     <string name="a11y_studyToolsNegativeFeedback">Rate Study tools with negative feedback</string>
     <string name="aiAssistEnterAPromptLabel">Enter a prompt</string>
