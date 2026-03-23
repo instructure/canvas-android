@@ -123,8 +123,9 @@ system('git commit -m "Update translations"')
 success = system('git push origin HEAD')
 raise 'Failed to push new git branch' unless success
 
-# Create pull request
-success = system('gh pr create --base master --title "Update translations" --body "Automated translation import"')
+# Create pull request using REST API (GraphQL is not supported by GitHub App tokens)
+repo = ENV['GITHUB_REPOSITORY'] || 'instructure/canvas-android'
+success = system(%(gh api repos/#{repo}/pulls -f title="Update translations" -f body="Automated translation import" -f head="#{branch_name}" -f base="master"))
 raise 'Failed to create pull request' unless success
 
 puts 'Translations successfully imported!'
