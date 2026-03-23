@@ -50,6 +50,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.pandautils.R
+import sdk.pendo.io.pendoTag
 
 @Composable
 fun ForecastSegmentedControl(
@@ -148,6 +149,7 @@ private fun SegmentButton(
     Box(
         modifier = modifier
             .fillMaxHeight()
+            .pendoTag("forecastWidget_segmentButton", true)
             .clickable { onSelected(section) }
             .shadow(
                 elevation = if (isSelected) 2.dp else 0.dp,
