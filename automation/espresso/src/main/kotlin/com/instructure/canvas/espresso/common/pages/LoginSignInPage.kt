@@ -39,12 +39,12 @@ import org.hamcrest.CoreMatchers.containsString
 @Suppress("unused")
 class LoginSignInPage: BasePage() {
 
-    private val EMAIL_FIELD_CSS = "input[name=\"pseudonym_session[unique_id]\"]"
-    private val PASSWORD_FIELD_CSS = "input[name=\"pseudonym_session[password]\"]"
-    private val LOGIN_BUTTON_CSS = "button[type=\"submit\"]"
-    private val FORGOT_PASSWORD_BUTTON_CSS = "a[class=\"forgot-password flip-to-back\"]"
-    private val AUTHORIZE_BUTTON_CSS = "button[type=\"submit\"]"
-    private val LOGIN_ERROR_MESSAGE_HOLDER_CSS = "div[class='error']"
+    private val EMAIL_FIELD_CSS = "input[data-testid=\"username-input\"]\"]"
+    private val PASSWORD_FIELD_CSS = "input[data-testid=\"password-input\"]\"]"
+    private val LOGIN_BUTTON_CSS = "button[data-testid\"login-button\"]"
+    private val FORGOT_PASSWORD_BUTTON_CSS = "a[data-testid=\"forgot-password-link\"]"
+    private val EMAIL_LOGIN_ERROR_MESSAGE_HOLDER_CSS = "div[id=\"TextInput-messages___0\"] span[class\$='formFieldMessage']"
+    private val PASSWORD_LOGIN_ERROR_MESSAGE_HOLDER_CSS = "div[id=\"TextInput-messages___1\"] span[class\$='formFieldMessage']"
 
     private val signInRoot by OnViewWithId(R.id.signInRoot, autoAssert = false)
     private val toolbar by OnViewWithId(R.id.toolbar, autoAssert = false)
@@ -67,12 +67,12 @@ class LoginSignInPage: BasePage() {
         return onWebView().withElement(findElement(Locator.CSS_SELECTOR, FORGOT_PASSWORD_BUTTON_CSS))
     }
 
-    private fun authorizeButton(): Web.WebInteraction<*> {
-        return onWebView().withElement(findElement(Locator.CSS_SELECTOR, AUTHORIZE_BUTTON_CSS))
+    private fun emailLoginErrorMessageHolder(): Web.WebInteraction<*> {
+        return onWebView().withElement(findElement(Locator.CSS_SELECTOR, EMAIL_LOGIN_ERROR_MESSAGE_HOLDER_CSS))
     }
 
-    private fun loginErrorMessageHolder(): Web.WebInteraction<*> {
-        return onWebView().withElement(findElement(Locator.CSS_SELECTOR, LOGIN_ERROR_MESSAGE_HOLDER_CSS))
+    private fun passwordLoginErrorMessageHolder(): Web.WebInteraction<*> {
+        return onWebView().withElement(findElement(Locator.CSS_SELECTOR, PASSWORD_LOGIN_ERROR_MESSAGE_HOLDER_CSS))
     }
 
     //endregion
@@ -119,8 +119,12 @@ class LoginSignInPage: BasePage() {
         forgotPasswordButton().perform(webClick())
     }
 
-    fun assertLoginErrorMessage(errorMessage: String) {
-        loginErrorMessageHolder().check(webMatches(getText(), containsString(errorMessage)))
+    fun assertLoginEmailErrorMessage(emailErrorMessage: String) {
+        emailLoginErrorMessageHolder().check(webMatches(getText(), containsString(emailErrorMessage)))
+    }
+
+    fun assertLoginPasswordErrorMessage(passwordErrorMessage: String) {
+        passwordLoginErrorMessageHolder().check(webMatches(getText(), containsString(passwordErrorMessage)))
     }
 
     fun loginAs(user: CanvasUserApiModel) {

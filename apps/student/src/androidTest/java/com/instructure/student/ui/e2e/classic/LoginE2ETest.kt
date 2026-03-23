@@ -260,8 +260,9 @@ class LoginE2ETest : StudentTest() {
 
         val INVALID_USERNAME = "invalidusercred@test.com"
         val INVALID_PASSWORD = "invalidpw"
-        val INVALID_CREDENTIALS_ERROR_MESSAGE = "Please verify your username or password and try again. Trouble logging in? Check out our Login FAQs."
-        val NO_PASSWORD_GIVEN_ERROR_MESSAGE = "No password was given"
+        val INVALID_CREDENTIALS_ERROR_MESSAGE = "Please verify your username or password and try again."
+        val NO_EMAIL_GIVEN_ERROR_MESSAGE = "Please enter your email."
+        val NO_PASSWORD_GIVEN_ERROR_MESSAGE = "Please enter your password."
         val DOMAIN = "mobileqa.beta"
 
         Log.d(STEP_TAG, "Click 'Find My School' button.")
@@ -277,25 +278,26 @@ class LoginE2ETest : StudentTest() {
         loginSignInPage.loginAs(INVALID_USERNAME, INVALID_PASSWORD)
 
         Log.d(ASSERTION_TAG, "Assert that the invalid credentials error message is displayed.")
-        loginSignInPage.assertLoginErrorMessage(INVALID_CREDENTIALS_ERROR_MESSAGE)
+        loginSignInPage.assertLoginEmailErrorMessage(INVALID_CREDENTIALS_ERROR_MESSAGE) // Invalid credentials error message will be displayed within the email error message holder on the login page.
 
         Log.d(STEP_TAG, "Try to login with no credentials typed in either of the username and password field.")
         loginSignInPage.loginAs(EMPTY_STRING, EMPTY_STRING)
 
-        Log.d(ASSERTION_TAG, "Assert that the no password was given error message is displayed.")
-        loginSignInPage.assertLoginErrorMessage(NO_PASSWORD_GIVEN_ERROR_MESSAGE)
+        Log.d(ASSERTION_TAG, "Assert that the no email and no password error messages are displayed.")
+        loginSignInPage.assertLoginEmailErrorMessage(NO_EMAIL_GIVEN_ERROR_MESSAGE)
+        loginSignInPage.assertLoginPasswordErrorMessage(NO_PASSWORD_GIVEN_ERROR_MESSAGE)
 
         Log.d(STEP_TAG, "Try to login with leaving only the password field empty.")
         loginSignInPage.loginAs(INVALID_USERNAME, EMPTY_STRING)
 
         Log.d(ASSERTION_TAG, "Assert that the no password was given error message is displayed.")
-        loginSignInPage.assertLoginErrorMessage(NO_PASSWORD_GIVEN_ERROR_MESSAGE)
+        loginSignInPage.assertLoginEmailErrorMessage(NO_PASSWORD_GIVEN_ERROR_MESSAGE)
 
         Log.d(STEP_TAG, "Try to login with leaving only the username field empty.")
         loginSignInPage.loginAs(EMPTY_STRING, INVALID_PASSWORD)
 
         Log.d(ASSERTION_TAG, "Assert that the invalid credentials error message is displayed.")
-        loginSignInPage.assertLoginErrorMessage(INVALID_CREDENTIALS_ERROR_MESSAGE)
+        loginSignInPage.assertLoginEmailErrorMessage(INVALID_CREDENTIALS_ERROR_MESSAGE) // Invalid credentials error message will be displayed within the email error message holder on the login page.
     }
 
     // Verify that students can sign into vanity domain
