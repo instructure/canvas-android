@@ -103,195 +103,221 @@ fun CourseCard(
 
     val cardShape = RoundedCornerShape(16.dp)
 
-    Box(modifier = modifier.testTag("CourseCard_${courseCard.id}")) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth(),
-        shape = cardShape,
-        colors = CardDefaults.cardColors(
-            containerColor = colorResource(R.color.backgroundLightest)
-        ),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = if (courseCard.isClickable) 2.dp else 0.dp
-        )
+    Box(
+        modifier = modifier
+            .testTag("CourseCard_${courseCard.id}")
+            .pendoTag("coursesWidget_courseCard", true)
     ) {
-        Row(
+        Card(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(COURSE_CARD_HEIGHT)
-                .alpha(if (courseCard.isClickable) 1f else 0.5f)
-                .pendoTag("coursesWidget_courseCard", true)
-                .clickable(enabled = courseCard.isClickable) { activity?.let { onCourseClick(it, courseCard.id) } },
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxWidth(),
+            shape = cardShape,
+            colors = CardDefaults.cardColors(
+                containerColor = colorResource(R.color.backgroundLightest)
+            ),
+            elevation = CardDefaults.cardElevation(
+                defaultElevation = if (courseCard.isClickable) 2.dp else 0.dp
+            )
         ) {
-            Box(
+            Row(
                 modifier = Modifier
-                    .padding(start = 2.dp, top = 2.dp, bottom = 2.dp)
-                    .size(72.dp)
+                    .fillMaxWidth()
+                    .height(COURSE_CARD_HEIGHT)
+                    .alpha(if (courseCard.isClickable) 1f else 0.5f)
+                    .clickable(enabled = courseCard.isClickable) {
+                        activity?.let {
+                            onCourseClick(
+                                it,
+                                courseCard.id
+                            )
+                        }
+                    },
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Box(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .background(
-                            color = Color(courseCard.color),
-                            shape = RoundedCornerShape(14.dp)
-                        )
-                )
-
-                if (courseCard.imageUrl != null) {
-                    GlideImage(
-                        model = courseCard.imageUrl,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .clip(RoundedCornerShape(14.dp))
-                            .alpha(if (showColorOverlay) 0.4f else 1f),
-                        contentScale = ContentScale.Crop
-                    )
-                }
-
-                if (hasMenu && courseCard.isClickable) {
+                        .padding(start = 2.dp, top = 2.dp, bottom = 2.dp)
+                        .size(72.dp)
+                ) {
                     Box(
                         modifier = Modifier
-                            .align(Alignment.TopStart)
-                            .padding(start = 8.dp, top = 8.dp)
-                    ) {
+                            .fillMaxSize()
+                            .background(
+                                color = Color(courseCard.color),
+                                shape = RoundedCornerShape(14.dp)
+                            )
+                    )
+
+                    if (courseCard.imageUrl != null) {
+                        GlideImage(
+                            model = courseCard.imageUrl,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .clip(RoundedCornerShape(14.dp))
+                                .alpha(if (showColorOverlay) 0.4f else 1f),
+                            contentScale = ContentScale.Crop
+                        )
+                    }
+
+                    if (hasMenu && courseCard.isClickable) {
                         Box(
                             modifier = Modifier
-                                .size(24.dp)
-                                .pendoTag("coursesWidget_courseCardMenu", true)
-                                .clickable(onClick = openMenuClick)
-                                .background(
-                                    color = colorResource(R.color.backgroundLightest),
-                                    shape = RoundedCornerShape(12.dp)
-                                ),
-                            contentAlignment = Alignment.Center
+                                .align(Alignment.TopStart)
+                                .padding(start = 8.dp, top = 8.dp)
                         ) {
-                            Icon(
-                                painter = painterResource(R.drawable.ic_kebab),
-                                contentDescription = stringResource(R.string.a11y_contentDescription_moreOptions),
-                                modifier = Modifier.size(16.dp),
-                                tint = Color(CanvasContext.emptyCourseContext(id = courseCard.id).color)
-                            )
-                        }
+                            Box(
+                                modifier = Modifier
+                                    .size(24.dp)
+                                    .pendoTag("coursesWidget_courseCardMenu", true)
+                                    .clickable(onClick = openMenuClick)
+                                    .background(
+                                        color = colorResource(R.color.backgroundLightest),
+                                        shape = RoundedCornerShape(12.dp)
+                                    ),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_kebab),
+                                    contentDescription = stringResource(R.string.a11y_contentDescription_moreOptions),
+                                    modifier = Modifier.size(16.dp),
+                                    tint = Color(CanvasContext.emptyCourseContext(id = courseCard.id).color)
+                                )
+                            }
 
-                        DropdownMenu(
-                            expanded = showMenu,
-                            onDismissRequest = { showMenu = false },
-                            shape = RoundedCornerShape(8.dp),
-                            containerColor = colorResource(R.color.backgroundLightest)
-                        ) {
-                            DropdownMenuItem(
-                                text = {
-                                    Text(
-                                        text = stringResource(R.string.course_menu_manage_offline_content),
-                                        fontSize = 16.sp,
-                                        color = colorResource(R.color.textDarkest)
+                            DropdownMenu(
+                                expanded = showMenu,
+                                onDismissRequest = { showMenu = false },
+                                shape = RoundedCornerShape(8.dp),
+                                containerColor = colorResource(R.color.backgroundLightest)
+                            ) {
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            text = stringResource(R.string.course_menu_manage_offline_content),
+                                            fontSize = 16.sp,
+                                            color = colorResource(R.color.textDarkest)
+                                        )
+                                    },
+                                    onClick = {
+                                        showMenu = false
+                                        activity?.let {
+                                            onManageOfflineContent.invoke(
+                                                it,
+                                                courseCard.id
+                                            )
+                                        }
+                                    },
+                                    modifier = Modifier.pendoTag(
+                                        "coursesWidget_manageOfflineContent",
+                                        true
                                     )
-                                },
-                                onClick = {
-                                    showMenu = false
-                                    activity?.let { onManageOfflineContent.invoke(it, courseCard.id) }
-                                },
-                                modifier = Modifier.pendoTag("coursesWidget_manageOfflineContent", true)
-                            )
-                            DropdownMenuItem(
-                                text = {
-                                    Text(
-                                        text = stringResource(R.string.customizeCourse),
-                                        fontSize = 16.sp,
-                                        color = colorResource(R.color.textDarkest)
+                                )
+                                DropdownMenuItem(
+                                    text = {
+                                        Text(
+                                            text = stringResource(R.string.customizeCourse),
+                                            fontSize = 16.sp,
+                                            color = colorResource(R.color.textDarkest)
+                                        )
+                                    },
+                                    onClick = {
+                                        showMenu = false
+                                        activity?.let {
+                                            onCustomizeCourse.invoke(
+                                                it,
+                                                courseCard.id
+                                            )
+                                        }
+                                    },
+                                    modifier = Modifier.pendoTag(
+                                        "coursesWidget_customizeCourse",
+                                        true
                                     )
-                                },
-                                onClick = {
-                                    showMenu = false
-                                    activity?.let { onCustomizeCourse.invoke(it, courseCard.id) }
-                                },
-                                modifier = Modifier.pendoTag("coursesWidget_customizeCourse", true)
-                            )
+                                )
+                            }
                         }
+                    }
+
+                    if (showGrade && courseCard.grade !is GradeDisplay.Hidden) {
+                        GradeBadge(
+                            grade = courseCard.grade,
+                            courseColor = Color(CanvasContext.emptyCourseContext(id = courseCard.id).color),
+                            modifier = Modifier
+                                .align(Alignment.BottomStart)
+                                .padding(bottom = 8.dp, start = 8.dp)
+                        )
                     }
                 }
 
-                if (showGrade && courseCard.grade !is GradeDisplay.Hidden) {
-                    GradeBadge(
-                        grade = courseCard.grade,
-                        courseColor = Color(CanvasContext.emptyCourseContext(id = courseCard.id).color),
-                        modifier = Modifier
-                            .align(Alignment.BottomStart)
-                            .padding(bottom = 8.dp, start = 8.dp)
-                    )
-                }
-            }
-
-            Text(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 16.dp, end = 8.dp),
-                text = courseCard.name,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Medium,
-                color = colorResource(R.color.textDarkest),
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-                lineHeight = 21.sp
-            )
-
-            if (courseCard.isSynced) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_offline_synced),
-                    contentDescription = stringResource(R.string.offline_content_available),
+                Text(
                     modifier = Modifier
-                        .padding(end = 8.dp)
-                        .size(24.dp),
-                    tint = colorResource(R.color.textDark)
+                        .weight(1f)
+                        .padding(start = 16.dp, end = 8.dp),
+                    text = courseCard.name,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = colorResource(R.color.textDarkest),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    lineHeight = 21.sp
                 )
-            }
 
-            if (courseCard.announcements.isNotEmpty()) {
-                Box(
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .size(48.dp)
-                        .pendoTag("coursesWidget_announcementBell", true)
-                        .clickable(enabled = courseCard.isClickable) {
-                            activity?.let {
-                                onAnnouncementClick?.invoke(
-                                    it,
-                                    courseCard.id
-                                )
-                            }
-                        },
-                    contentAlignment = Alignment.Center
-                ) {
+                if (courseCard.isSynced) {
                     Icon(
-                        painter = painterResource(R.drawable.ic_announcement),
-                        contentDescription = stringResource(R.string.announcements),
-                        modifier = Modifier.requiredSize(24.dp),
+                        painter = painterResource(R.drawable.ic_offline_synced),
+                        contentDescription = stringResource(R.string.offline_content_available),
+                        modifier = Modifier
+                            .padding(end = 8.dp)
+                            .size(24.dp),
                         tint = colorResource(R.color.textDark)
                     )
+                }
+
+                if (courseCard.announcements.isNotEmpty()) {
                     Box(
                         modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .offset(x = (-8).dp, y = 6.dp)
-                            .background(
-                                color = dashboardColor,
-                                shape = RoundedCornerShape(12.dp)
-                            )
-                            .padding(horizontal = 5.dp, vertical = 2.dp)
+                            .clip(CircleShape)
+                            .size(48.dp)
+                            .pendoTag("coursesWidget_announcementBell", true)
+                            .clickable(enabled = courseCard.isClickable) {
+                                activity?.let {
+                                    onAnnouncementClick?.invoke(
+                                        it,
+                                        courseCard.id
+                                    )
+                                }
+                            },
+                        contentAlignment = Alignment.Center
                     ) {
-                        Text(
-                            text = courseCard.announcements.size.toString(),
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = colorResource(R.color.textLightest),
-                            lineHeight = 8.sp
+                        Icon(
+                            painter = painterResource(R.drawable.ic_announcement),
+                            contentDescription = stringResource(R.string.announcements),
+                            modifier = Modifier.requiredSize(24.dp),
+                            tint = colorResource(R.color.textDark)
                         )
+                        Box(
+                            modifier = Modifier
+                                .align(Alignment.TopEnd)
+                                .offset(x = (-8).dp, y = 6.dp)
+                                .background(
+                                    color = dashboardColor,
+                                    shape = RoundedCornerShape(12.dp)
+                                )
+                                .padding(horizontal = 5.dp, vertical = 2.dp)
+                        ) {
+                            Text(
+                                text = courseCard.announcements.size.toString(),
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = colorResource(R.color.textLightest),
+                                lineHeight = 8.sp
+                            )
+                        }
                     }
                 }
             }
         }
-    }
     }
 }
 
@@ -323,6 +349,7 @@ private fun GradeBadge(
                         lineHeight = 19.sp
                     )
                 }
+
                 is GradeDisplay.Letter -> {
                     Text(
                         text = grade.grade,
@@ -332,6 +359,7 @@ private fun GradeBadge(
                         lineHeight = 19.sp
                     )
                 }
+
                 GradeDisplay.Locked -> {
                     Icon(
                         painter = painterResource(R.drawable.ic_lock),
@@ -340,6 +368,7 @@ private fun GradeBadge(
                         tint = courseColor
                     )
                 }
+
                 GradeDisplay.NotAvailable -> {
                     Text(
                         text = stringResource(R.string.noGradeText),
@@ -349,6 +378,7 @@ private fun GradeBadge(
                         lineHeight = 19.sp
                     )
                 }
+
                 GradeDisplay.Hidden -> {
                     // Don't show anything for hidden grades
                 }
@@ -418,10 +448,10 @@ private fun CourseCardPreview() {
         ),
         showGrade = true,
         showColorOverlay = true,
-        onCourseClick = {_, _ ->},
-        onCustomizeCourse = {_, _ ->},
-        onManageOfflineContent = {_, _ ->},
-        onAnnouncementClick = {_, _ ->}
+        onCourseClick = { _, _ -> },
+        onCustomizeCourse = { _, _ -> },
+        onManageOfflineContent = { _, _ -> },
+        onAnnouncementClick = { _, _ -> }
     )
 }
 
