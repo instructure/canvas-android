@@ -1,0 +1,40 @@
+name: Import Translations
+
+on:
+  workflow_dispatch:
+
+jobs:
+  import-translations:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.GH_APP_ID }}
+          private-key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: canvas-android
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ steps.app-token.outputs.token }}
+
+      - name: Configure git
+        run: |
+          git config user.name "inst-danger"
+          git config user.email "ios@instructure.com"
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+
+      - name: Import translations
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.TRANSLATIONS_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.TRANSLATIONS_AWS_SECRET_ACCESS_KEY }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: ruby translations/import.rb
