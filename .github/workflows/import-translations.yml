@@ -32,9 +32,15 @@ jobs:
         with:
           ruby-version: '3.2'
 
-      - name: Import translations
+      - name: Import translations from S3
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.TRANSLATIONS_AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.TRANSLATIONS_AWS_SECRET_ACCESS_KEY }}
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
         run: ruby translations/import.rb
+
+      - name: Create pull request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH=$(git branch --show-current)
+          gh pr create --base master --title "Update translations" --body "Automated translation import" --head "$BRANCH"
