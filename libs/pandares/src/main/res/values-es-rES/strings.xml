@@ -46,6 +46,7 @@
     <string name="submissionStatusFailedTitle">No se ha podido entregar</string>
     <string name="submissionStatusFailedSubtitle">Toca para ver los detalles</string>
     <string name="submissionAndRubric">Entrega y rúbrica</string>
+    <string name="submissionAndFeedback">Entrega y comentarios</string>
     <string name="commentsAndRubric">Comentarios y Rúbrica</string>
     <string name="errorLoadingAssignment">Se ha producido un problema al cargar esta actividad. Comprueba tu conexión y vuelve a intentarlo.</string>
     <string name="submitted">Entregado</string>
@@ -219,6 +220,7 @@
 
     <!-- Date strings -->
     <string name="today">Hoy</string>
+    <string name="tomorrow">Mañana</string>
     <string name="past">Pasado</string>
     <string name="noDate">Sin fecha</string>
     <string name="future">Futuro</string>
@@ -291,6 +293,7 @@
     <string name="monologue">Monólogo</string>
     <string name="noItemsToDisplayShort">No hay ítems para mostrar</string>
     <string name="Todo">Tareas pendientes</string>
+    <string name="TodoNew">Tareas pendientes</string>
     <string name="todoFilter">Filtrar las asignaturas</string>
     <string name="filterByEllipsis">Filtrar por...</string>
     <string name="favoriteCoursesLabel">Asignaturas favoritas</string>
@@ -474,6 +477,7 @@
     <string name="groups">Grupos</string>
     <string name="groupMembers">Miembros del grupo</string>
 
+    <string name="messageGroup">Mensaje al grupo</string>
     <string name="loading">Cargando&#8230;</string>
     <string name="select_item_to_display">Seleccionar desde la lista</string>
 
@@ -690,9 +694,11 @@
 
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Tareas pendientes</string>
+    <string name="todoWidgetTitleNew">Tareas pendientes</string>
     <string name="gradesWidgetTitle">Notas</string>
     <string name="notificationWidgetTitle">Notificaciones</string>
     <string name="todoWidgetTitleLong">Canvas: tareas pendientes</string>
+    <string name="todoWidgetTitleLongNew">Canvas: tareas pendientes</string>
     <string name="gradesWidgetTitleLong">Canvas: Notas</string>
     <string name="gradeWidgetTitleLong">Canvas: nota</string>
     <string name="notificationWidgetTitleLong">Canvas: Notificaciones</string>
@@ -728,6 +734,8 @@
     <!-- Tablet Strings -->
     <string name="courses">Asignaturas</string>
     <string name="toDoList">Lista de tareas pendientes</string>
+    <string name="toDoListNew">Lista de tareas pendientes</string>
+
     <string name="notifications">Notificaciones</string>
     <string name="pushNotifications">Notificaciones automáticas</string>
     <string name="pushNotificationsError">No se han registrado notificaciones automáticas para este dispositivo.</string>
@@ -742,7 +750,6 @@
 
     <string name="launchSpeedgrader">Abrir SpeedGrader</string>
 
-    <string name="search_todo">Lista de tareas pendientes</string>
     <string name="search_course">asignatura asignaturas clase clases</string>
     <string name="search_grades">evaluar notas</string>
 
@@ -1077,6 +1084,13 @@
     <string name="pageTitleMustBeSet">Se debe establecer el título de la página.</string>
     <string name="pageDetails">Detalles de la página</string>
     <string name="saving">Guardando</string>
+    <string name="speedGraderSaving">Guardando</string>
+    <string name="speedGraderSaved">Guardado</string>
+    <string name="speedGraderFailed">Ha habido un error</string>
+    <string name="speedGraderSaveErrorTitle">Lo sentimos, algo ha salido mal</string>
+    <string name="speedGraderSaveErrorMessage">Se ha producido un error al guardar tu modificación de nota. Puedes volver a intentarlo o probar más tarde.</string>
+    <string name="speedGraderSaveErrorContentDescription">Se ha producido un error al guardar la nota. Toca para obtener detalles.</string>
+
     <string name="confirmDeleteEvent">¿Estás seguro de que quieres eliminar este evento?</string>
     <string name="conferencesNotSupported">Los teléfonos móviles aún no admiten conferencias.</string>
     <string name="filePreviewContentDescription">Imagen de vista previa del archivo</string>
@@ -1225,6 +1239,10 @@
     <string name="recordings">Grabaciones</string>
     <string name="conferenceInProgress">Conferencia en curso</string>
 
+    <!-- Conferences Widget -->
+    <string name="conferencesWidgetTitle">Conferencias (%d)</string>
+    <string name="conferencesWidgetConferenceInProgress">Conferencia en curso</string>
+    <string name="conferencesWidgetDismissed">Conferencia descartada</string>
     <string name="a11y_criterion_content_description">Valoración del criterio %s</string>
     <string name="a11y_criterion_description_content_description">%s, %s</string>
     <string name="a11y_criterion_button_click_description">más información</string>
@@ -1374,6 +1392,10 @@
     </plurals>
 
     <plurals name="a11y_todoBadgeCount">
+        <item quantity="one">%s ítem de tareas pendientes</item>
+        <item quantity="other">%s ítems de tareas pendientes</item>
+    </plurals>
+    <plurals name="a11y_todoBadgeCountNew">
         <item quantity="one">%s ítem de tareas pendientes</item>
         <item quantity="other">%s ítems de tareas pendientes</item>
     </plurals>
@@ -1663,7 +1685,9 @@
     <string name="calendarNoEvents">¡Hoy no hay ningún evento!</string>
     <string name="calendarNoEventsDescription">Parece un día perfecto para descansar, relajarse y recobrar energías.</string>
     <string name="userCalendarToDo">Tareas pendientes</string>
+    <string name="userCalendarToDoNew">Tareas pendientes</string>
     <string name="courseToDo">%s tareas pendientes</string>
+    <string name="courseToDoNew">%s tareas pendientes</string>
     <string name="calendarEventExcused">Justificado</string>
     <string name="calendarEventMissing">No presentado</string>
     <string name="calendarEventGraded">Evaluado</string>
@@ -1688,21 +1712,30 @@
     <string name="a11y_eventCreatedAnnouncement">Se ha creado el evento %s.</string>
     <string name="a11y_eventUpdatedAnnouncement">Se ha actualizado el evento %s.</string>
     <string name="a11y_toDoCreatedAnnouncement">Se han creado las tareas pendientes %s.</string>
+    <string name="a11y_toDoCreatedAnnouncementNew">Se han creado las tareas pendientes %s.</string>
     <string name="a11y_toDoUpdatedAnnouncement">Se han actualizado las tareas pendientes %s.</string>
+    <string name="a11y_toDoUpdatedAnnouncementNew">Se han actualizado las tareas pendientes %s.</string>
     <string name="todoScreenTitle">Tareas pendientes</string>
+    <string name="todoScreenTitleNew">Tareas pendientes</string>
     <string name="todoDateLabel">Fecha</string>
     <string name="todoDescriptionLabel">Descripción</string>
     <string name="todoDeleteConfirmationTitle">¿Eliminar tareas pendientes?</string>
+    <string name="todoDeleteConfirmationTitleNew">¿Eliminar tarea pendiente?</string>
     <string name="todoDeleteConfirmationText">Esto eliminará permanentemente tu ítem de tareas pendientes.</string>
+    <string name="todoDeleteConfirmationTextNew">Esto eliminará permanentemente tu ítem de tareas pendientes.</string>
     <string name="todoDeleteErrorMessage">Se ha producido un error al eliminar esta tarea pendiente. Comprueba tu conexión y vuelve a intentarlo.</string>
+    <string name="todoDeleteErrorMessageNew">Se ha producido un error al eliminar esta tarea pendiente. Comprueba tu conexión y vuelve a intentarlo.</string>
     <string name="createTodoScreenTitle">Nueva tarea pendiente</string>
+    <string name="createTodoScreenTitleNew">Nueva tarea pendiente</string>
     <string name="editTodoScreenTitle">Editar tarea pendiente</string>
+    <string name="editTodoScreenTitleNew">Editar tarea pendiente</string>
     <string name="createToDoTitleHint">Añadir título</string>
     <string name="createToDoDateLabel">Fecha</string>
     <string name="createToDoTimeLabel">Hora</string>
     <string name="createToDoCalendarLabel">Calendario</string>
     <string name="createToDoDetailsLabel">Detalles</string>
     <string name="todoSaveErrorMessage">Se ha producido un error al guardar esta tarea pendiente. Comprueba tu conexión y vuelve a intentarlo.</string>
+    <string name="todoSaveErrorMessageNew">Se ha producido un error al guardar esta tarea pendiente. Comprueba tu conexión y vuelve a intentarlo.</string>
     <string name="selectCalendarScreenTitle">Seleccionar calendario</string>
     <string name="errorContentRetryButton">Reintentar</string>
     <string name="eventLocationLabel">Ubicación</string>
@@ -1710,6 +1743,7 @@
     <string name="eventDetailsLabel">Detalles</string>
     <string name="errorLoadingEvent">Ha surgido un problema al cargar este evento. Comprueba tu conexión y vuelve a intentarlo.</string>
     <string name="errorLoadingTodo">Ha surgido un problema al cargar estas tareas pendientes. Comprueba tu conexión y vuelve a intentarlo.</string>
+    <string name="errorLoadingTodoNew">Se ha producido un problema al cargar esta tarea pendiente. Comprueba tu conexión y vuelve a intentarlo.</string>
     <string name="eventDeleteConfirmationTitle">¿Eliminar el evento?</string>
     <string name="eventDeleteConfirmationText">Esto eliminará permanentemente tu evento.</string>
     <string name="eventDeleteErrorMessage">Se ha producido un error al eliminar este evento. Comprueba tu conexión y vuelve a intentarlo.</string>
@@ -1726,6 +1760,7 @@
     <string name="eventDeleteScopeAll">Todos los eventos</string>
     <string name="eventDeleteScopeFollowing">Este y todos los eventos siguientes</string>
     <string name="calendarAddToDo">Añadir tarea pendiente</string>
+    <string name="calendarAddToDoNew">Añadir tarea pendiente</string>
     <string name="calendarAddEvent">Añadir evento</string>
     <string name="createEventScreenTitle">Nuevo evento</string>
     <string name="editEventScreenTitle">Editar evento</string>
@@ -2104,7 +2139,9 @@
     <string name="widgetNotLoggedInTitle">¡Permítenos ayudarte a iniciar sesión!</string>
     <string name="widgetToDoNotLoggedInSubtitle">Para ver tus tareas pendientes, inicia sesión en tu cuenta desde la aplicación. ¡Solo te llevará un segundo!</string>
     <string name="a11y_widgetToDoOpenToDoList">Abrir la pantalla de la lista de tareas pendientes</string>
+    <string name="a11y_widgetToDoOpenToDoListNew">Abrir la pantalla de la lista de tareas pendientes</string>
     <string name="a11y_widgetToDoCreateNewToDo">Crear nueva tarea pendiente</string>
+    <string name="a11y_widgetToDoCreateNewToDoNew">Crear nueva tarea pendiente</string>
     <string name="widgetGradesErrorSubtitle">Estamos teniendo problemas para mostrar tus notas en este momento. Inténtalo de nuevo transcurridos unos instantes o dirígete a la aplicación.</string>
     <string name="widgetGradesNotLoggedInSubtitle">Para ver tus notas, inicia sesión en tu cuenta desde la aplicación. ¡Solo te llevará un segundo!</string>
     <string name="widgetSingleGradeErrorSubtitle">Estamos teniendo problemas para mostrar tus notas en este momento.</string>
@@ -2112,6 +2149,19 @@
     <string name="widgetSingleGradeSelectCourse">Elijamos una asignatura</string>
     <string name="widgetGradesErrorLoadingCourses">Se ha producido un error al cargar las asignaturas.</string>
     <string name="settingsSwitchExperience">Cambiar a Canvas Career</string>
+    <string name="forecastWidgetTitle">Resumen semanal</string>
+    <string name="forecastWidgetWeekPeriod">Semana %1$d | %2$s</string>
+    <string name="forecastWidgetMissing">No presentado</string>
+    <string name="forecastWidgetDue">Fecha de entrega</string>
+    <string name="forecastWidgetRecentGrades">Nuevas notas</string>
+    <string name="forecastWidgetGradeWeight">%d%% de la nota final</string>
+    <string name="forecastWidgetErrorMessage">Tenemos problemas para cargar tus actividades. Comprueba tu conexión y vuelve a intentarlo.</string>
+    <string name="forecastWidgetEmptyMissing">No falta ninguna actividad. ¡Ya estás al día!</string>
+    <string name="forecastWidgetEmptyDue">No hay ninguna actividad que entregar esta semana.</string>
+    <string name="forecastWidgetEmptyRecentGrades">No hay notas nuevas esta semana.</string>
+    <string name="a11y_contentDescription_previousWeek">Semana anterior</string>
+    <string name="a11y_contentDescription_nextWeek">Semana siguiente</string>
+
     <string name="speedGraderGradeTabTitle">Nota y rúbrica</string>
     <string name="speedGraderDetailsTabTitle">Detalles</string>
     <string name="a11y_contentDescription_expandPanel">Expandir panel</string>
@@ -2190,6 +2240,7 @@
     <string name="errorLoadingToDos">Se ha producido un error al cargar tus ítems de tareas pendientes. Comprueba tu conexión y vuelve a intentarlo.</string>
     <string name="errorUpdatingToDo">Se ha producido un error al actualizar el ítem de tareas pendientes. Comprueba tu conexión y vuelve a intentarlo.</string>
     <string name="noToDosForNow">¡No hay ninguna tarea pendiente por ahora!</string>
+    <string name="noToDosForNowNew">¡No hay tareas pendientes de momento!</string>
     <string name="noToDosForNowSubtext">Parece un momento perfecto para descansar, relajarse y recobrar energías.</string>
     <string name="todoSwipeDone">Hecho</string>
     <string name="todoSwipeUndo">Deshacer</string>
@@ -2200,8 +2251,10 @@
 
     <!-- To Do List Filter Screen -->
     <string name="todoFilterPreferences">Preferencias de la lista de tareas pendientes</string>
+    <string name="todoFilterPreferencesNew">Preferencias de la lista de tareas pendientes</string>
     <string name="todoFilterVisibleItems">Elementos visibles</string>
     <string name="todoFilterShowPersonalToDos">Mostrar tareas pendientes personales</string>
+    <string name="todoFilterShowPersonalToDosNew">Mostrar tareas pendientes personales</string>
     <string name="todoFilterShowCalendarEvents">Mostrar eventos del calendario</string>
     <string name="todoFilterShowCompleted">Mostrar lo completado</string>
     <string name="todoFilterFavoriteCoursesOnly">Solo asignaturas favoritas</string>
@@ -2227,6 +2280,9 @@
     <string name="courseInvitationDeclined">Se ha rechazado la invitación a %s</string>
     <string name="courseInvitationDeclineConfirmTitle">Rechazar invitación</string>
     <string name="courseInvitationDeclineConfirmMessage">¿Seguro que quieres rechazar la invitación a %s?</string>
+
+    <!-- Progress Widget -->
+    <string name="progressWidgetTitle">Progreso</string>
 
     <!-- Welcome Widget -->
     <!-- Greetings with name (%s is the student's first name) -->
@@ -2350,6 +2406,7 @@
     <!-- Widget Display Names -->
     <string name="widget_hello">Hola, %s</string>
 
+    <string name="courses_and_groups">Asignaturas y grupos</string>
     <!-- Customize Dashboard -->
     <string name="customize_dashboard">Personalizar el panel de control</string>
     <string name="dashboard_widgets">Componentes</string>
@@ -2359,16 +2416,44 @@
     <string name="changing_dashboard_layout">Cambiar el diseño del panel de control</string>
     <string name="changing_dashboard_layout_message">Para cambiar el diseño del panel de control, debes reiniciar la aplicación</string>
     <string name="restart_now">Reiniciar ahora</string>
+    <string name="turn_on_new_dashboard">Activar el nuevo panel de control</string>
     <string name="switched_back">¿Has vuelto a cambiar?</string>
     <string name="switched_back_message">¡Gracias por probar el nuevo panel de control! ¿Podrías decirnos por qué has vuelto a cambiar?</string>
+    <string name="survey_option_hard_to_find">Es difícil encontrar las cosas</string>
+    <string name="survey_option_prefer_old_layout">Prefiero el diseño anterior</string>
+    <string name="survey_option_something_broken">Algo no ha funcionado bien</string>
     <string name="what_could_we_improve">¿Qué podríamos mejorar?</string>
+    <string name="what_do_you_think_of_new_dashboard">¿Qué te parece el nuevo panel de control?</string>
+    <string name="let_us_know">¡Cuéntanos!</string>
+    <string name="no_app_to_handle_link">No hay ninguna aplicación disponible para abrir este enlace</string>
     <string name="skip">Saltar</string>
     <string name="widget_setting_show_greeting">Mostrar saludo</string>
     <string name="background_color">Color de fondo</string>
+    <string name="widget_setting_show_grades">Notas de la asignatura</string>
+    <string name="widget_setting_show_color_overlay">Superposición de colores de la asignatura</string>
     <string name="offline_content_available">Contenido disponible sin conexión</string>
     <string name="a11y_contentDescription_moreOptions">Más opciones</string>
     <string name="customizeCourse">Personalizar asignatura</string>
     <string name="favoriteCoursesAndGroups">Asignaturas y grupos favoritos</string>
     <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
     <string name="ltiToolsOffline">Las herramientas externas no están disponibles sin conexión.</string>
+    <string name="widget_weekly_summary">Resumen semanal</string>
+
+    <string name="dashboardCourseNickname">Apodo</string>
+    <string name="dashboardCourseNicknameHint">Escribe aquí el apodo de la asignatura</string>
+    <string name="dashboardCourseColor">Color de la asignatura</string>
+    <string name="widget_toDo">Tareas pendientes diarias</string>
+    <string name="dailyToDoWidgetTitle">Tareas pendientes diarias</string>
+    <string name="todoWidget_showCompleted">Mostrar lo completado</string>
+    <string name="todoWidget_emptyTitle">¡De momento, has terminado!</string>
+    <string name="todoWidget_emptyMessage">Parece que estás libre este día.\n¿Quieres añadir algunas tareas pendientes?</string>
+    <string name="todoWidget_addTodo">Añadir tarea pendiente</string>
+    <string name="todoWidget_errorTitle">Lo sentimos, algo ha salido mal</string>
+    <string name="todoWidget_errorMessage">No hemos podido cargar tus tareas pendientes.\nInténtalo de nuevo o vuelve más tarde.</string>
+    <string name="todoWidget_refresh">Actualizar</string>
+    <string name="todoWidget_today">Hoy</string>
+    <string name="a11y_todoWidget_jumpToToday">Ir a hoy</string>
+    <string name="widgetSettings_widgetsColor">Color principal del panel de control</string>
+    <string name="dashboard_globalAnnouncement">Anuncio global</string>
+    <string name="forecastWidget_currentWeek">Semana actual</string>
 </resources>

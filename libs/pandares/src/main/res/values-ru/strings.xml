@@ -48,6 +48,7 @@
     <string name="submissionStatusFailedTitle">Ошибка отправки</string>
     <string name="submissionStatusFailedSubtitle">Нажмите для просмотра подробностей</string>
     <string name="submissionAndRubric">Предоставление и рубрика</string>
+    <string name="submissionAndFeedback">Отправка и обратная связь</string>
     <string name="commentsAndRubric">Комментарии и рубрика</string>
     <string name="errorLoadingAssignment">Возникла проблема при загрузке данного задания. Проверьте подключение и попробуйте еще раз.</string>
     <string name="submitted">Отправлено</string>
@@ -229,6 +230,7 @@
 
     <!-- Date strings -->
     <string name="today">Сегодня</string>
+    <string name="tomorrow">Завтра</string>
     <string name="past">Прошлый</string>
     <string name="noDate">Дата отсутствует</string>
     <string name="future">Будущее</string>
@@ -301,6 +303,7 @@
     <string name="monologue">Монолог</string>
     <string name="noItemsToDisplayShort">Нет элементов для отображения</string>
     <string name="Todo">Задачи</string>
+    <string name="TodoNew">Задача</string>
     <string name="todoFilter">Фильтровать курсы</string>
     <string name="filterByEllipsis">Фильтровать по&#8230;</string>
     <string name="favoriteCoursesLabel">Избранные курсы</string>
@@ -496,6 +499,7 @@
     <string name="groups">Группы</string>
     <string name="groupMembers">Члены группы</string>
 
+    <string name="messageGroup">Сообщение группы</string>
     <string name="loading">Загрузка&#8230;</string>
     <string name="select_item_to_display">Выбрать из списка</string>
 
@@ -712,9 +716,11 @@
 
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">Задачи</string>
+    <string name="todoWidgetTitleNew">Задача</string>
     <string name="gradesWidgetTitle">Оценки</string>
     <string name="notificationWidgetTitle">Уведомления</string>
     <string name="todoWidgetTitleLong">Canvas - задачи</string>
+    <string name="todoWidgetTitleLongNew">Canvas - Задача</string>
     <string name="gradesWidgetTitleLong">Canvas - Оценки</string>
     <string name="gradeWidgetTitleLong">Canvas - Оценка</string>
     <string name="notificationWidgetTitleLong">Canvas - Уведомления</string>
@@ -750,6 +756,8 @@
     <!-- Tablet Strings -->
     <string name="courses">Курсы</string>
     <string name="toDoList">Список текущих задач</string>
+    <string name="toDoListNew">Список текущих задач</string>
+
     <string name="notifications">Уведомления</string>
     <string name="pushNotifications">Push-уведомления</string>
     <string name="pushNotificationsError">Для данного устройства не было зарегистрировано ни одного push-уведомления.</string>
@@ -764,7 +772,6 @@
 
     <string name="launchSpeedgrader">Открыть Speedgrader</string>
 
-    <string name="search_todo">для выполнения выполнить список заданий список задач</string>
     <string name="search_course">курс курсы класс классы</string>
     <string name="search_grades">оценка оценки</string>
 
@@ -1113,6 +1120,13 @@
     <string name="pageTitleMustBeSet">Необходимо задать заголовок страницы.</string>
     <string name="pageDetails">Данные страницы</string>
     <string name="saving">Выполняется сохранение</string>
+    <string name="speedGraderSaving">Выполняется сохранение</string>
+    <string name="speedGraderSaved">Сохранено</string>
+    <string name="speedGraderFailed">Сбой</string>
+    <string name="speedGraderSaveErrorTitle">Ой, что-то пошло не так</string>
+    <string name="speedGraderSaveErrorMessage">Произошла ошибка при сохранении вашего изменения оценки. Вы можете повторить попытку или попробовать позже.</string>
+    <string name="speedGraderSaveErrorContentDescription">Не удалось сохранить оценку. Нажмите для получения подробных сведений.</string>
+
     <string name="confirmDeleteEvent">Вы действительно хотите удалить это событие?</string>
     <string name="conferencesNotSupported">Конференции еще не поддерживаются на мобильных устройствах.</string>
     <string name="filePreviewContentDescription">Изображение для предварительного просмотра</string>
@@ -1267,6 +1281,10 @@
     <string name="recordings">Записи</string>
     <string name="conferenceInProgress">Идет конференция</string>
 
+    <!-- Conferences Widget -->
+    <string name="conferencesWidgetTitle">Конференции (%d)</string>
+    <string name="conferencesWidgetConferenceInProgress">Идет конференция</string>
+    <string name="conferencesWidgetDismissed">Конференция отклонена</string>
     <string name="a11y_criterion_content_description">Оценка критерия %s</string>
     <string name="a11y_criterion_description_content_description">%s, %s</string>
     <string name="a11y_criterion_button_click_description">дополнительная информация</string>
@@ -1422,6 +1440,12 @@
         <item quantity="few">%s элемента(-ов) задачи</item>
         <item quantity="many">%s элемента(-ов) задачи</item>
         <item quantity="other">%s элемента(-ов) задачи</item>
+    </plurals>
+    <plurals name="a11y_todoBadgeCountNew">
+        <item quantity="one">%s элемент задачи</item>
+        <item quantity="few">%s элементов задачи</item>
+        <item quantity="many">%s элементов задачи</item>
+        <item quantity="other">%s элементов задачи</item>
     </plurals>
     <string name="noAnnotationSelected">Аннотация не выбрана</string>
     <string name="emailNotifications">Уведомления по электронной почте</string>
@@ -1719,7 +1743,9 @@
     <string name="calendarNoEvents">На сегодня события отсутствуют!</string>
     <string name="calendarNoEventsDescription">Похоже, что сегодня можно отдохнуть, расслабиться и набраться сил.</string>
     <string name="userCalendarToDo">Задачи</string>
+    <string name="userCalendarToDoNew">Задача</string>
     <string name="courseToDo">Задача %s</string>
+    <string name="courseToDoNew">%s задача</string>
     <string name="calendarEventExcused">По уважительной причине</string>
     <string name="calendarEventMissing">Отсутствует</string>
     <string name="calendarEventGraded">С оценкой</string>
@@ -1744,21 +1770,30 @@
     <string name="a11y_eventCreatedAnnouncement">Событие %s успешно создано.</string>
     <string name="a11y_eventUpdatedAnnouncement">Событие %s успешно обновлено.</string>
     <string name="a11y_toDoCreatedAnnouncement">Задание %s успешно создано.</string>
+    <string name="a11y_toDoCreatedAnnouncementNew">Задача %s была успешно создана.</string>
     <string name="a11y_toDoUpdatedAnnouncement">Задание %s успешно обновлено.</string>
+    <string name="a11y_toDoUpdatedAnnouncementNew">Задача %s была успешно обновлена.</string>
     <string name="todoScreenTitle">Задачи</string>
+    <string name="todoScreenTitleNew">Задача</string>
     <string name="todoDateLabel">Дата</string>
     <string name="todoDescriptionLabel">Описание</string>
     <string name="todoDeleteConfirmationTitle">Удалить список задач?</string>
+    <string name="todoDeleteConfirmationTitleNew">Удалить задачу?</string>
     <string name="todoDeleteConfirmationText">Это приведет к окончательному удалению пункта Задачи.</string>
+    <string name="todoDeleteConfirmationTextNew">Это приведет к окончательному удалению задачи.</string>
     <string name="todoDeleteErrorMessage">Произошла ошибка при удалении этой задачи. Проверьте подключение и попробуйте еще раз.</string>
+    <string name="todoDeleteErrorMessageNew">Возникла ошибка при сохранении этой задачи. Проверьте подключение и повторите попытку.</string>
     <string name="createTodoScreenTitle">Новая задача</string>
+    <string name="createTodoScreenTitleNew">Новая задача</string>
     <string name="editTodoScreenTitle">Задача редактирования</string>
+    <string name="editTodoScreenTitleNew">Редактировать задачу</string>
     <string name="createToDoTitleHint">Добавить заголовок</string>
     <string name="createToDoDateLabel">Дата</string>
     <string name="createToDoTimeLabel">Время</string>
     <string name="createToDoCalendarLabel">Календарь</string>
     <string name="createToDoDetailsLabel">Подробные сведения</string>
     <string name="todoSaveErrorMessage">Произошла ошибка при сохранении этой задачи. Проверьте подключение и попробуйте еще раз.</string>
+    <string name="todoSaveErrorMessageNew">Возникла ошибка при сохранении этой задачи. Проверьте подключение и повторите попытку.</string>
     <string name="selectCalendarScreenTitle">Выбрать календарь</string>
     <string name="errorContentRetryButton">Повторить</string>
     <string name="eventLocationLabel">Местоположение</string>
@@ -1766,6 +1801,7 @@
     <string name="eventDetailsLabel">Подробные сведения</string>
     <string name="errorLoadingEvent">Возникла проблема при загрузке этого события. Проверьте подключение и попробуйте еще раз.</string>
     <string name="errorLoadingTodo">Возникла проблема при загрузке этого задания. Проверьте подключение и попробуйте еще раз.</string>
+    <string name="errorLoadingTodoNew">Возникла проблема при загрузке этой задачи. Проверьте подключение и повторите попытку.</string>
     <string name="eventDeleteConfirmationTitle">Удалить Событие?</string>
     <string name="eventDeleteConfirmationText">Это приведет к необратимому удалению вашего события.</string>
     <string name="eventDeleteErrorMessage">Произошла ошибка при удалении этого события. Проверьте подключение и попробуйте еще раз.</string>
@@ -1784,6 +1820,7 @@
     <string name="eventDeleteScopeAll">Все события</string>
     <string name="eventDeleteScopeFollowing">Это и все последующие события</string>
     <string name="calendarAddToDo">Добавить в задачи</string>
+    <string name="calendarAddToDoNew">Добавить задачу</string>
     <string name="calendarAddEvent">Добавить Событие</string>
     <string name="createEventScreenTitle">Новое Событие</string>
     <string name="editEventScreenTitle">Редактировать Событие</string>
@@ -2174,7 +2211,9 @@
     <string name="widgetNotLoggedInTitle">Давайте войдем в систему!</string>
     <string name="widgetToDoNotLoggedInSubtitle">Чтобы увидеть свои задачи, войдите в свою учетную запись в приложении. Это займет всего секунду!</string>
     <string name="a11y_widgetToDoOpenToDoList">Открыть окно со списком задач</string>
+    <string name="a11y_widgetToDoOpenToDoListNew">Открыть окно списка задач</string>
     <string name="a11y_widgetToDoCreateNewToDo">Создать новую задачу</string>
+    <string name="a11y_widgetToDoCreateNewToDoNew">Создать новую задачу</string>
     <string name="widgetGradesErrorSubtitle">В настоящее время у нас возникли проблемы с отображением ваших оценок. Попробуйте снова через некоторое время или перейдите в приложение.</string>
     <string name="widgetGradesNotLoggedInSubtitle">Чтобы увидеть свои оценки, войдите в свою учетную запись в приложении. Это займет всего секунду!</string>
     <string name="widgetSingleGradeErrorSubtitle">В настоящее время у нас возникли проблемы с отображением ваших оценок.</string>
@@ -2182,6 +2221,19 @@
     <string name="widgetSingleGradeSelectCourse">Давайте выберем курс</string>
     <string name="widgetGradesErrorLoadingCourses">Произошла ошибка при загрузке курсов.</string>
     <string name="settingsSwitchExperience">Переключение на Canvas Career</string>
+    <string name="forecastWidgetTitle">Еженедельная сводка</string>
+    <string name="forecastWidgetWeekPeriod">Неделя %1$d | %2$s</string>
+    <string name="forecastWidgetMissing">Отсутствует</string>
+    <string name="forecastWidgetDue">Срок</string>
+    <string name="forecastWidgetRecentGrades">Новые оценки</string>
+    <string name="forecastWidgetGradeWeight">%d%% итоговой оценки</string>
+    <string name="forecastWidgetErrorMessage">У нас возникла проблема с загрузкой вашего задания Проверьте подключение и попробуйте еще раз.</string>
+    <string name="forecastWidgetEmptyMissing">Нет отсутствующих заданий. Вы все нагнали!</string>
+    <string name="forecastWidgetEmptyDue">Нет заданий, подлежащих выполнению на этой неделе.</string>
+    <string name="forecastWidgetEmptyRecentGrades">Нет новых оценок на этой неделе.</string>
+    <string name="a11y_contentDescription_previousWeek">Предыдущая неделя</string>
+    <string name="a11y_contentDescription_nextWeek">Следующая неделя</string>
+
     <string name="speedGraderGradeTabTitle">Класс и рубрика</string>
     <string name="speedGraderDetailsTabTitle">Подробные сведения</string>
     <string name="a11y_contentDescription_expandPanel">Развернуть панель</string>
@@ -2264,6 +2316,7 @@
     <string name="errorLoadingToDos">Произошла ошибка при загрузке ваших задач. Проверьте подключение и попробуйте еще раз.</string>
     <string name="errorUpdatingToDo">Произошла ошибка при обновлении задачи. Проверьте подключение и попробуйте еще раз.</string>
     <string name="noToDosForNow">Нет задач на данный момент!</string>
+    <string name="noToDosForNowNew">Нет задач на данный момент!</string>
     <string name="noToDosForNowSubtext">Похоже, что можно отдохнуть, расслабиться и набраться сил.</string>
     <string name="todoSwipeDone">Готово</string>
     <string name="todoSwipeUndo">Отменить</string>
@@ -2274,8 +2327,10 @@
 
     <!-- To Do List Filter Screen -->
     <string name="todoFilterPreferences">Предпочтения списка задач</string>
+    <string name="todoFilterPreferencesNew">Предпочтительные настройки списка задач</string>
     <string name="todoFilterVisibleItems">Видимые позиции</string>
     <string name="todoFilterShowPersonalToDos">Показать персональные задачи</string>
+    <string name="todoFilterShowPersonalToDosNew">Показать персональные задачи</string>
     <string name="todoFilterShowCalendarEvents">Показать календарные события</string>
     <string name="todoFilterShowCompleted">Показать завершенные</string>
     <string name="todoFilterFavoriteCoursesOnly">Только избранные курсы</string>
@@ -2301,6 +2356,9 @@
     <string name="courseInvitationDeclined">Приглашение на %s отклонено</string>
     <string name="courseInvitationDeclineConfirmTitle">Отклонить приглашение</string>
     <string name="courseInvitationDeclineConfirmMessage">Вы действительно хотите отклонить приглашение на %s?</string>
+
+    <!-- Progress Widget -->
+    <string name="progressWidgetTitle">Прогресс</string>
 
     <!-- Welcome Widget -->
     <!-- Greetings with name (%s is the student's first name) -->
@@ -2424,6 +2482,7 @@
     <!-- Widget Display Names -->
     <string name="widget_hello">Здравствуйте, %s</string>
 
+    <string name="courses_and_groups">Курсы и группы</string>
     <!-- Customize Dashboard -->
     <string name="customize_dashboard">Настроить панель управления</string>
     <string name="dashboard_widgets">Виджеты</string>
@@ -2433,16 +2492,44 @@
     <string name="changing_dashboard_layout">Изменение компоновки панели управления</string>
     <string name="changing_dashboard_layout_message">Чтобы изменить компоновку панели управления, необходимо перезапустить приложение</string>
     <string name="restart_now">Перезапустить сейчас</string>
+    <string name="turn_on_new_dashboard">Включить новую панель инструментов</string>
     <string name="switched_back">Переключились обратно?</string>
     <string name="switched_back_message">Спасибо за использование новой панели управления! Не могли бы вы указать, почему вы переключились обратно?</string>
+    <string name="survey_option_hard_to_find">Трудно найти позиции</string>
+    <string name="survey_option_prefer_old_layout">Предпочитаю старую компоновку</string>
+    <string name="survey_option_something_broken">Что-то работает неправильно</string>
     <string name="what_could_we_improve">Что мы могли бы улучшить?</string>
+    <string name="what_do_you_think_of_new_dashboard">Что вы думаете о новой панели управления?</string>
+    <string name="let_us_know">Сообщите нам!</string>
+    <string name="no_app_to_handle_link">Нет доступного приложения для открытия этой ссылки</string>
     <string name="skip">Пропустить</string>
     <string name="widget_setting_show_greeting">Показать приветствие</string>
     <string name="background_color">Цвет фона</string>
+    <string name="widget_setting_show_grades">Оценки курса</string>
+    <string name="widget_setting_show_color_overlay">Наложение цветов курсов</string>
     <string name="offline_content_available">Доступно автономное содержимое</string>
     <string name="a11y_contentDescription_moreOptions">Дополнительные опции</string>
     <string name="customizeCourse">Настроить курс</string>
     <string name="favoriteCoursesAndGroups">Избранные курсы и группы</string>
     <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
     <string name="ltiToolsOffline">Внешние инструменты недоступны в режиме офлайн.</string>
+    <string name="widget_weekly_summary">Еженедельная сводка</string>
+
+    <string name="dashboardCourseNickname">Ник</string>
+    <string name="dashboardCourseNicknameHint">Напишите краткое имя курса здесь</string>
+    <string name="dashboardCourseColor">Цвет курса</string>
+    <string name="widget_toDo">Ежедневная задача</string>
+    <string name="dailyToDoWidgetTitle">Ежедневная задача</string>
+    <string name="todoWidget_showCompleted">Показать завершенные</string>
+    <string name="todoWidget_emptyTitle">К настоящему времени вы все выполнили!</string>
+    <string name="todoWidget_emptyMessage">Похоже, у вас нет планов на этот день.\nХотите добавить несколько задач?</string>
+    <string name="todoWidget_addTodo">Добавить задачу</string>
+    <string name="todoWidget_errorTitle">Ой, что-то пошло не так</string>
+    <string name="todoWidget_errorMessage">Нам не удалось загрузить ваши задачи.\nПопробуйте еще раз или вернитесь позже.</string>
+    <string name="todoWidget_refresh">Обновить</string>
+    <string name="todoWidget_today">Сегодня</string>
+    <string name="a11y_todoWidget_jumpToToday">Перейти к сегодняшнему дню</string>
+    <string name="widgetSettings_widgetsColor">Основной цвета панели инструментов</string>
+    <string name="dashboard_globalAnnouncement">Общее объявление</string>
+    <string name="forecastWidget_currentWeek">Текущая неделя</string>
 </resources>

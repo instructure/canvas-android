@@ -450,11 +450,13 @@
     <string name="schedule_calendar_event_due_text">A las %s</string>
     <string name="schedule_calendar_event_interval_text">%1$s a %2$s</string>
     <string name="schedule_todo_due_text">Tareas pendientes: %s</string>
+    <string name="schedule_todo_due_text_new">Tareas pendientes: %s</string>
     <string name="schedule_due_text">Fecha de entrega: %s</string>
     <string name="show_missing_items_title">Mostrar %d ítems no presentados</string>
     <string name="hide_missing_items_title">Ocultar %d ítems no presentados</string>
     <string name="schedule_error_message">No se ha podido obtener el planificador</string>
     <string name="schedule_todo_title">Tareas pendientes</string>
+    <string name="schedule_todo_title_new">Tareas pendientes</string>
     <plurals name="schedule_points">
         <item quantity="zero">%s punto</item>
         <item quantity="one">%s punto</item>
@@ -478,6 +480,7 @@
     <string name="a11y_planner_note">Nota del planificador</string>
     <string name="a11y_quiz">Prueba</string>
     <string name="a11y_todo">Tareas pendientes</string>
+    <string name="a11y_todo_new">Tareas pendientes</string>
     <string name="a11y_page">Página</string>
     <string name="a11y_assessment_request">Solicitud de evaluación</string>
     <string name="a11y_marked_as_done">Marcado como hecho</string>

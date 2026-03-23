@@ -31,6 +31,7 @@
     <string name="tab_attendance">出勤</string>
     <string name="tab_pages">页面</string>
     <string name="tab_todo">待办事项</string>
+    <string name="tab_todo_new">待办</string>
     <string name="content_description_school_logo">学校徽标</string>
     <string name="search_guides">搜索 Canvas 指南</string>
     <string name="canvas_guides">Canvas 指南</string>
@@ -830,6 +831,7 @@
     <string name="toDoEmpty">无需再执行其他操作！\n祝您度过愉快的一天。</string>
     <string name="toDoNoSubmissions">此作业没有要评分的提交项。</string>
     <string name="errorToDoRouteFailed">尝试查看此待办事项时出错。</string>
+    <string name="errorToDoRouteFailedNew">尝试查看此待办任务时出错。</string>
     <string name="errorIsDesigner">设计者注册无法查看。</string>
 
     <string name="sections">章节</string>

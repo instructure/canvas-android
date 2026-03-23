@@ -445,11 +445,13 @@
     <string name="schedule_calendar_event_due_text">%s</string>
     <string name="schedule_calendar_event_interval_text">%1$s 至 %2$s</string>
     <string name="schedule_todo_due_text">待办事项：%s</string>
+    <string name="schedule_todo_due_text_new">待办：%s</string>
     <string name="schedule_due_text">到期：%s</string>
     <string name="show_missing_items_title">显示 %d 个缺失的项目</string>
     <string name="hide_missing_items_title">隐藏 %d 个缺失的项目</string>
     <string name="schedule_error_message">无法获取您的日程计划</string>
     <string name="schedule_todo_title">待办事项</string>
+    <string name="schedule_todo_title_new">待办</string>
     <plurals name="schedule_points">
         <item quantity="zero">%s 分</item>
         <item quantity="other">%s 分</item>
@@ -472,6 +474,7 @@
     <string name="a11y_planner_note">计划者备注</string>
     <string name="a11y_quiz">测验</string>
     <string name="a11y_todo">待办事项</string>
+    <string name="a11y_todo_new">待办</string>
     <string name="a11y_page">页面</string>
     <string name="a11y_assessment_request">评估请求</string>
     <string name="a11y_marked_as_done">标记为完成</string>

@@ -513,10 +513,36 @@
     <string name="a11y_nextModuleItem">Volgende module-item</string>
     <string name="a11y_nextModule">Volgende module</string>
     <string name="a11y_notebookHighlightMarkedAs">%1$s, gemarkeerd als %2$s, tik twee keer om notitie te bewerken</string>
+    <string name="learnCoursesTabLabel">Cursussen</string>
+    <string name="learnProgramsTabLabel">Programma\'s</string>
     <string name="reportAProblemDescriptionMessage">Dien een ticket in en krijg een persoonlijk antwoord van ons ondersteuningsteam.</string>
     <string name="igniteAIEnterAPromptLabel">Een prompt invoeren</string>
     <string name="a11y_igniteAiLoadingContentDescription">Bezig met laden van reactie</string>
     <string name="a11y_aiAssistFlashcardClickActionLabel">De kaart omdraaien</string>
+    <string name="learnCourseListFailedToLoadCoursesMessage">Kan cursussen niet laden</string>
+    <string name="learnCourseListFilterAll">Alle cursussen</string>
+    <string name="learnCourseListFilterNotStarted">Niet gestart</string>
+    <string name="learnCourseListFilterInProgress">Lopend</string>
+    <string name="learnCourseListFilterCompleted">Voltooid</string>
+    <string name="learnCourseListStartLearningLabel">Begin met leren</string>
+    <string name="learnCourseListResumeLearningLabel">Doorgaan met leren</string>
+    <string name="learnCourseListViewCourseLabel">Cursus weergeven</string>
+    <string name="learnCourseListShowMoreLabel">Meer weergeven</string>
+    <string name="learnCourseListSearchBarPlaceholder">Cursussen zoeken</string>
+    <string name="learnCourseOverviewPartOfProgramsLabel">Onderdeel van %1$s</string>
+    <string name="learnCourseListEmptyMessage">Geen resultaten aangetroffen. Probeer je zoektermen aan te passen.</string>
+    <string name="learnProgramListFilterAll">Alle programma\'s</string>
+    <string name="learnProgramListFilterNotStarted">Niet gestart</string>
+    <string name="learnProgramListFilterInProgress">Lopend</string>
+    <string name="learnProgramListFilterCompleted">Voltooid</string>
+    <string name="learnProgramListShowMoreLabel">Meer weergeven</string>
+    <string name="learnProgramListEmptyMessage">Geen resultaten aangetroffen. Probeer je zoektermen aan te passen.</string>
+    <string name="learnProgramListSearchBarPlaceholder">Zoeken naar programma\'s</string>
+    <string name="learnProgramListFailedToLoadMessage">Kan programma\'s niet laden.</string>
+    <plurals name="learnProgramListCourseCount">
+        <item quantity="one">%1$d cursus</item>
+        <item quantity="other">%1$d cursussen</item>
+    </plurals>
     <string name="a11y_inputErrorMessage">Fout: %1$s</string>
     <string name="a11y_required">Vereist</string>
 </resources>

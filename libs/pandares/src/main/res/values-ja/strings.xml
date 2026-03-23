@@ -45,6 +45,7 @@
     <string name="submissionStatusFailedTitle">提出に失敗しました</string>
     <string name="submissionStatusFailedSubtitle">タップして詳細を表示する</string>
     <string name="submissionAndRubric">課題提出とルーブリック</string>
+    <string name="submissionAndFeedback">提出＆amp;フィードバック</string>
     <string name="commentsAndRubric">コメント &amp; ルブリック</string>
     <string name="errorLoadingAssignment">この課題の読み込み中、問題がありました。接続を確認して、もう一度お試しください。</string>
     <string name="submitted">タスクの評定を送信</string>
@@ -214,6 +215,7 @@
 
     <!-- Date strings -->
     <string name="today">今日</string>
+    <string name="tomorrow">明日</string>
     <string name="past">過去</string>
     <string name="noDate">日付なし</string>
     <string name="future">未来</string>
@@ -286,6 +288,7 @@
     <string name="monologue">モノローグ</string>
     <string name="noItemsToDisplayShort">表示するアイテムがありません</string>
     <string name="Todo">タスク</string>
+    <string name="TodoNew">するべきこと</string>
     <string name="todoFilter">コースをフィルタする</string>
     <string name="filterByEllipsis">フィルタの基準</string>
     <string name="favoriteCoursesLabel">お気に入りのコース</string>
@@ -463,6 +466,7 @@
     <string name="groups">グループ</string>
     <string name="groupMembers">グループメンバー</string>
 
+    <string name="messageGroup">メッセージグループ</string>
     <string name="loading">&#8230;を読み込み中</string>
     <string name="select_item_to_display">リストから選択</string>
 
@@ -679,9 +683,11 @@
 
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">タスク</string>
+    <string name="todoWidgetTitleNew">するべきこと</string>
     <string name="gradesWidgetTitle">評定</string>
     <string name="notificationWidgetTitle">通知</string>
     <string name="todoWidgetTitleLong">Canvas - タスク</string>
+    <string name="todoWidgetTitleLongNew">Canvas - するべきこと</string>
     <string name="gradesWidgetTitleLong">Canvas - 採点</string>
     <string name="gradeWidgetTitleLong">Canvas - 評定</string>
     <string name="notificationWidgetTitleLong">Canvas - 通知</string>
@@ -717,6 +723,8 @@
     <!-- Tablet Strings -->
     <string name="courses">コース</string>
     <string name="toDoList">タスクリスト</string>
+    <string name="toDoListNew">するべきことリスト</string>
+
     <string name="notifications">通知</string>
     <string name="pushNotifications">プッシュ通知</string>
     <string name="pushNotificationsError">プッシュ通知はこのデバイスには登録されていません。</string>
@@ -731,7 +739,6 @@
 
     <string name="launchSpeedgrader">SpeedGraderを開く</string>
 
-    <string name="search_todo">するべきこと するべきこと するべきことリスト</string>
     <string name="search_course">コース コース クラス クラス</string>
     <string name="search_grades">採点 採点</string>
 
@@ -1059,6 +1066,13 @@
     <string name="pageTitleMustBeSet">ページのタイトルを設定しなければなりません。</string>
     <string name="pageDetails">ページ詳細</string>
     <string name="saving">保存</string>
+    <string name="speedGraderSaving">保存</string>
+    <string name="speedGraderSaved">保存済み</string>
+    <string name="speedGraderFailed">失敗</string>
+    <string name="speedGraderSaveErrorTitle">おっと、何か問題が発生しました</string>
+    <string name="speedGraderSaveErrorMessage">評定の修正を保存中にエラーが発生しました。再試行するか、後でまた試しください。</string>
+    <string name="speedGraderSaveErrorContentDescription">評定が保存されました。タップして詳細を表示する。</string>
+
     <string name="confirmDeleteEvent">このイベントを削除してもよろしいですか？</string>
     <string name="conferencesNotSupported">会議はまだモバイルではサポートされていません。</string>
     <string name="filePreviewContentDescription">ファイルプレビュー画像</string>
@@ -1204,6 +1218,10 @@
     <string name="recordings">録画</string>
     <string name="conferenceInProgress">会議進行中</string>
 
+    <!-- Conferences Widget -->
+    <string name="conferencesWidgetTitle">会議 (%d)</string>
+    <string name="conferencesWidgetConferenceInProgress">会議進行中</string>
+    <string name="conferencesWidgetDismissed">会議終了</string>
     <string name="a11y_criterion_content_description">基準の評価 %s</string>
     <string name="a11y_criterion_description_content_description">%s、%s</string>
     <string name="a11y_criterion_button_click_description">詳細はこちら</string>
@@ -1349,6 +1367,9 @@
     </plurals>
 
     <plurals name="a11y_todoBadgeCount">
+        <item quantity="other">%sのするべきこと項目</item>
+    </plurals>
+    <plurals name="a11y_todoBadgeCountNew">
         <item quantity="other">%sのするべきこと項目</item>
     </plurals>
     <string name="noAnnotationSelected">注釈が選択されていません</string>
@@ -1632,7 +1653,9 @@
     <string name="calendarNoEvents">今日イベントはありません！</string>
     <string name="calendarNoEventsDescription">休息をとってリラックスし、充電するためにぴったりな日のようです。</string>
     <string name="userCalendarToDo">タスク</string>
+    <string name="userCalendarToDoNew">するべきこと</string>
     <string name="courseToDo">%s  To Do</string>
+    <string name="courseToDoNew">%s のするべきこと</string>
     <string name="calendarEventExcused">評価対象外(免除)</string>
     <string name="calendarEventMissing">提出なし</string>
     <string name="calendarEventGraded">採点済み</string>
@@ -1657,21 +1680,30 @@
     <string name="a11y_eventCreatedAnnouncement">イベント%sの作成に成功しました。</string>
     <string name="a11y_eventUpdatedAnnouncement">イベント%sが更新されました。</string>
     <string name="a11y_toDoCreatedAnnouncement">ToDo%sが正常に作成されました。</string>
+    <string name="a11y_toDoCreatedAnnouncementNew">するべきこと%sが正常に作成されました。</string>
     <string name="a11y_toDoUpdatedAnnouncement">ToDo%sが正常に更新されました。</string>
+    <string name="a11y_toDoUpdatedAnnouncementNew">するべきこと%sが正常に更新されました。</string>
     <string name="todoScreenTitle">タスク</string>
+    <string name="todoScreenTitleNew">するべきこと</string>
     <string name="todoDateLabel">日付</string>
     <string name="todoDescriptionLabel">説明</string>
     <string name="todoDeleteConfirmationTitle">削除しますか？</string>
+    <string name="todoDeleteConfirmationTitleNew">するべきことを削除しますか？</string>
     <string name="todoDeleteConfirmationText">この場合、To Do項目は永久に削除されます。</string>
+    <string name="todoDeleteConfirmationTextNew">この場合、するべきことの項目は永久に削除されます。</string>
     <string name="todoDeleteErrorMessage">この To Do を削除中にエラーが起こりました。接続を確認して、もう一度お試しください。</string>
+    <string name="todoDeleteErrorMessageNew">このするべきことの削除中にエラーが発生しました。接続を確認して、もう一度やり直してください。</string>
     <string name="createTodoScreenTitle">新しい To Do</string>
+    <string name="createTodoScreenTitleNew">新しいするべきこと</string>
     <string name="editTodoScreenTitle">To Do を編集</string>
+    <string name="editTodoScreenTitleNew">するべきこと を編集する</string>
     <string name="createToDoTitleHint">タイトルを追加</string>
     <string name="createToDoDateLabel">日付</string>
     <string name="createToDoTimeLabel">制限時間</string>
     <string name="createToDoCalendarLabel">カレンダー</string>
     <string name="createToDoDetailsLabel">詳細</string>
     <string name="todoSaveErrorMessage">この To Do を保存中にエラーが起こりました。接続を確認して、もう一度お試しください。</string>
+    <string name="todoSaveErrorMessageNew">このするべきことの保存中にエラーが発生しました。接続を確認して、もう一度やり直してください。</string>
     <string name="selectCalendarScreenTitle">予定表を選択する</string>
     <string name="errorContentRetryButton">再試行</string>
     <string name="eventLocationLabel">場所</string>
@@ -1679,6 +1711,7 @@
     <string name="eventDetailsLabel">詳細</string>
     <string name="errorLoadingEvent">このイベントの読み込み中、問題がありました。接続を確認して、もう一度お試しください。</string>
     <string name="errorLoadingTodo">このTodoの読み込み中、問題がありました。接続を確認して、もう一度お試しください。</string>
+    <string name="errorLoadingTodoNew">このするべきことの読み込み中に問題が発生しました。接続を確認して、もう一度やり直してください。</string>
     <string name="eventDeleteConfirmationTitle">イベントを削除しますか？</string>
     <string name="eventDeleteConfirmationText">これにより、イベントは永久に削除されます。</string>
     <string name="eventDeleteErrorMessage">この イベント を削除中にエラーが起こりました。接続を確認して、もう一度お試しください。</string>
@@ -1694,6 +1727,7 @@
     <string name="eventDeleteScopeAll">すべてのイベント</string>
     <string name="eventDeleteScopeFollowing">このイベントと次のすべてのイベント</string>
     <string name="calendarAddToDo">タスクに追加</string>
+    <string name="calendarAddToDoNew">するべきことを追加する</string>
     <string name="calendarAddEvent">イベントの追加</string>
     <string name="createEventScreenTitle">新しいイベント</string>
     <string name="editEventScreenTitle">イベントの編集</string>
@@ -2066,7 +2100,9 @@
     <string name="widgetNotLoggedInTitle">ログインしましょう！</string>
     <string name="widgetToDoNotLoggedInSubtitle">するべきことを表示するには、アプリでアカウントにログインしてください。すぐに完了します！</string>
     <string name="a11y_widgetToDoOpenToDoList">するべきことリスト画面を開く</string>
+    <string name="a11y_widgetToDoOpenToDoListNew">するべきことリスト画面を開く</string>
     <string name="a11y_widgetToDoCreateNewToDo">新しいするべきことを作成する</string>
+    <string name="a11y_widgetToDoCreateNewToDoNew">新しいするべきことを作成する</string>
     <string name="widgetGradesErrorSubtitle">現在、評定を表示できません。しばらくしてからもういちどやり直すか、アプリに移動してください。</string>
     <string name="widgetGradesNotLoggedInSubtitle">評定を表示するには、アプリでアカウントにログインしてください。すぐに完了します！</string>
     <string name="widgetSingleGradeErrorSubtitle">現在、評定を表示できません。</string>
@@ -2074,6 +2110,19 @@
     <string name="widgetSingleGradeSelectCourse">コースを選択しましょう</string>
     <string name="widgetGradesErrorLoadingCourses">コースの読み込み中にエラーが発生しました。</string>
     <string name="settingsSwitchExperience">Canvas Career に切り替える</string>
+    <string name="forecastWidgetTitle">週間サマリー</string>
+    <string name="forecastWidgetWeekPeriod">週 %1$d | %2$s</string>
+    <string name="forecastWidgetMissing">欠如</string>
+    <string name="forecastWidgetDue">期限</string>
+    <string name="forecastWidgetRecentGrades">新規評定</string>
+    <string name="forecastWidgetGradeWeight">%d%% 最終的な評定</string>
+    <string name="forecastWidgetErrorMessage">課題の読み込みに問題が発生しました。接続を確認して、もう一度お試しください。</string>
+    <string name="forecastWidgetEmptyMissing">未提出の課題はありませんあなたは深くかかわっています！</string>
+    <string name="forecastWidgetEmptyDue">今週提出期限の課題はありません。 </string>
+    <string name="forecastWidgetEmptyRecentGrades">今週の新しい成績はありません。</string>
+    <string name="a11y_contentDescription_previousWeek">前週</string>
+    <string name="a11y_contentDescription_nextWeek">来週</string>
+
     <string name="speedGraderGradeTabTitle">学年 &amp; ルブリック</string>
     <string name="speedGraderDetailsTabTitle">詳細</string>
     <string name="a11y_contentDescription_expandPanel">パネルを展開する</string>
@@ -2150,6 +2199,7 @@
     <string name="errorLoadingToDos">するべきこと項目のロード中にエラーが発生しました。接続を確認して、もう一度お試しください。</string>
     <string name="errorUpdatingToDo">するべきこと項目の更新中にエラーが発生しました。接続を確認して、もう一度お試しください。</string>
     <string name="noToDosForNow">現在するべきことはありません！</string>
+    <string name="noToDosForNowNew">現在するべきことはありません！</string>
     <string name="noToDosForNowSubtext">少し休んでリラックスして英気を養うのにちょうどいい時間のようです。</string>
     <string name="todoSwipeDone">終了</string>
     <string name="todoSwipeUndo">アンドゥーする</string>
@@ -2160,8 +2210,10 @@
 
     <!-- To Do List Filter Screen -->
     <string name="todoFilterPreferences">するべきことリスト設定</string>
+    <string name="todoFilterPreferencesNew">するべきことリストの設定</string>
     <string name="todoFilterVisibleItems">表示項目</string>
     <string name="todoFilterShowPersonalToDos">個人のするべきことを表示</string>
+    <string name="todoFilterShowPersonalToDosNew">個人のするべきことを表示</string>
     <string name="todoFilterShowCalendarEvents">カレンダーイベントを表示</string>
     <string name="todoFilterShowCompleted">完了項目を表示</string>
     <string name="todoFilterFavoriteCoursesOnly">お気に入りのコースのみ</string>
@@ -2187,6 +2239,9 @@
     <string name="courseInvitationDeclined">%sへの招待が辞退されました！</string>
     <string name="courseInvitationDeclineConfirmTitle">招待を辞退する</string>
     <string name="courseInvitationDeclineConfirmMessage">%sへの招待を辞退してよろしいですか？</string>
+
+    <!-- Progress Widget -->
+    <string name="progressWidgetTitle">進歩</string>
 
     <!-- Welcome Widget -->
     <!-- Greetings with name (%s is the student's first name) -->
@@ -2310,6 +2365,7 @@
     <!-- Widget Display Names -->
     <string name="widget_hello">こんにちは、%sさん</string>
 
+    <string name="courses_and_groups">コース &amp; グループ</string>
     <!-- Customize Dashboard -->
     <string name="customize_dashboard">ダッシュボードカスタマイズ</string>
     <string name="dashboard_widgets">ウィジェット</string>
@@ -2319,16 +2375,44 @@
     <string name="changing_dashboard_layout">ダッシュボードのレイアウトを変更する</string>
     <string name="changing_dashboard_layout_message">ダッシュボードのレイアウトを変更するには、アプリケーションを再起動する必要があります。</string>
     <string name="restart_now">今すぐ再起動する</string>
+    <string name="turn_on_new_dashboard">新しいダッシュボードをオンにする</string>
     <string name="switched_back">元に戻しましたか？</string>
     <string name="switched_back_message">新しいダッシュボードをお試しいただき、ありがとうございます！元に戻した理由をお聞かせいただけますか？</string>
+    <string name="survey_option_hard_to_find">見つけるのが難しい</string>
+    <string name="survey_option_prefer_old_layout">古いレイアウトのほうがよかった</string>
+    <string name="survey_option_something_broken">なにかがうまくいかなかった</string>
     <string name="what_could_we_improve">改善すべき点は何でしょうか？</string>
+    <string name="what_do_you_think_of_new_dashboard">新しいダッシュボードについてどう思いますか？</string>
+    <string name="let_us_know">お知らせください！</string>
+    <string name="no_app_to_handle_link">このリンクを開くためのアプリがありません</string>
     <string name="skip">スキップ</string>
     <string name="widget_setting_show_greeting">挨拶を表示する</string>
     <string name="background_color">背景色</string>
+    <string name="widget_setting_show_grades">コース評定</string>
+    <string name="widget_setting_show_color_overlay">コースカラーオーバーレイ</string>
     <string name="offline_content_available">オフラインコンテンツが利用可能</string>
     <string name="a11y_contentDescription_moreOptions">その他のオプション</string>
     <string name="customizeCourse">コースをカスタマイズ</string>
     <string name="favoriteCoursesAndGroups">お気に入りのコースとグループ</string>
     <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
     <string name="ltiToolsOffline">外部のツールは、オフラインでは使用できません。</string>
+    <string name="widget_weekly_summary">週間サマリー</string>
+
+    <string name="dashboardCourseNickname">ニックネーム</string>
+    <string name="dashboardCourseNicknameHint">コースニックネームをここに書く</string>
+    <string name="dashboardCourseColor">コースの色</string>
+    <string name="widget_toDo">毎日のするべきこと</string>
+    <string name="dailyToDoWidgetTitle">毎日のするべきこと</string>
+    <string name="todoWidget_showCompleted">完了項目を表示</string>
+    <string name="todoWidget_emptyTitle">今のところすべて完了です！</string>
+    <string name="todoWidget_emptyMessage">今日は空き時間のようです。\nするべきことを追加しますか？</string>
+    <string name="todoWidget_addTodo">するべきことを追加する</string>
+    <string name="todoWidget_errorTitle">おっと、何か問題が発生しました</string>
+    <string name="todoWidget_errorMessage">するべきことの読み込みができませんでした。\n再試行するか、また後で戻ってきてください。</string>
+    <string name="todoWidget_refresh">更新</string>
+    <string name="todoWidget_today">今日</string>
+    <string name="a11y_todoWidget_jumpToToday">今日にジャンプ</string>
+    <string name="widgetSettings_widgetsColor">ダッシュボードのメインカラー</string>
+    <string name="dashboard_globalAnnouncement">グローバル アナウンスメント</string>
+    <string name="forecastWidget_currentWeek">今週</string>
 </resources>

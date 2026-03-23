@@ -503,10 +503,35 @@
     <string name="a11y_nextModuleItem">下一個單元項目</string>
     <string name="a11y_nextModule">下一個單元</string>
     <string name="a11y_notebookHighlightMarkedAs">%1$s 標記為 %2$s，點選兩下以編輯筆記</string>
+    <string name="learnCoursesTabLabel">課程</string>
+    <string name="learnProgramsTabLabel">項目</string>
     <string name="reportAProblemDescriptionMessage">提交票證，以獲取支援團隊親自回覆。</string>
     <string name="igniteAIEnterAPromptLabel">輸入提示</string>
     <string name="a11y_igniteAiLoadingContentDescription">載入回應</string>
     <string name="a11y_aiAssistFlashcardClickActionLabel">翻轉卡片</string>
+    <string name="learnCourseListFailedToLoadCoursesMessage">無法載入課程</string>
+    <string name="learnCourseListFilterAll">所有課程</string>
+    <string name="learnCourseListFilterNotStarted">未開始</string>
+    <string name="learnCourseListFilterInProgress">進行中</string>
+    <string name="learnCourseListFilterCompleted">已完成</string>
+    <string name="learnCourseListStartLearningLabel">開始學習</string>
+    <string name="learnCourseListResumeLearningLabel">繼續學習</string>
+    <string name="learnCourseListViewCourseLabel">檢視課程</string>
+    <string name="learnCourseListShowMoreLabel">顯示更多</string>
+    <string name="learnCourseListSearchBarPlaceholder">搜尋課程</string>
+    <string name="learnCourseOverviewPartOfProgramsLabel">部份 %1$s</string>
+    <string name="learnCourseListEmptyMessage">找不到結果。請嘗試調整您的搜尋詞彙。</string>
+    <string name="learnProgramListFilterAll">所有程式</string>
+    <string name="learnProgramListFilterNotStarted">未開始</string>
+    <string name="learnProgramListFilterInProgress">進行中</string>
+    <string name="learnProgramListFilterCompleted">已完成</string>
+    <string name="learnProgramListShowMoreLabel">顯示更多</string>
+    <string name="learnProgramListEmptyMessage">找不到結果。請嘗試調整您的搜尋詞彙。</string>
+    <string name="learnProgramListSearchBarPlaceholder">搜尋程式</string>
+    <string name="learnProgramListFailedToLoadMessage">無法載入程式</string>
+    <plurals name="learnProgramListCourseCount">
+        <item quantity="other">%1$d 個課程</item>
+    </plurals>
     <string name="a11y_inputErrorMessage">錯誤：%1$s</string>
     <string name="a11y_required">必填</string>
 </resources>
