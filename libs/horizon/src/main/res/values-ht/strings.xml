@@ -513,10 +513,36 @@
     <string name="a11y_nextModuleItem">Atik modil apre a</string>
     <string name="a11y_nextModule">pwochen modil la</string>
     <string name="a11y_notebookHighlightMarkedAs">%1$s, make kòm %2$s, Tape de fwa pou modifye nòt la</string>
+    <string name="learnCoursesTabLabel">Kou</string>
+    <string name="learnProgramsTabLabel">Pwogram</string>
     <string name="reportAProblemDescriptionMessage">Depoze yon biyè pou ekip sipò nou an pou yon repons pèsonèl.</string>
     <string name="igniteAIEnterAPromptLabel">Antre yon demann</string>
     <string name="a11y_igniteAiLoadingContentDescription">Chajman repons</string>
     <string name="a11y_aiAssistFlashcardClickActionLabel">Vire kat la</string>
+    <string name="learnCourseListFailedToLoadCoursesMessage">Echwe pou chaje kou yo</string>
+    <string name="learnCourseListFilterAll">Tout kou yo</string>
+    <string name="learnCourseListFilterNotStarted">Pa kòmanse</string>
+    <string name="learnCourseListFilterInProgress">Ankou</string>
+    <string name="learnCourseListFilterCompleted">Fini</string>
+    <string name="learnCourseListStartLearningLabel">Kòmanse aprann</string>
+    <string name="learnCourseListResumeLearningLabel">Rekòmanse aprantisaj</string>
+    <string name="learnCourseListViewCourseLabel">Gade kou a</string>
+    <string name="learnCourseListShowMoreLabel">Afiche plis</string>
+    <string name="learnCourseListSearchBarPlaceholder">Chèche kou</string>
+    <string name="learnCourseOverviewPartOfProgramsLabel">Pati nan %1$s</string>
+    <string name="learnCourseListEmptyMessage">Nou pa jwenn rezilta. Eseye ajiste tèm rechèch ou yo.</string>
+    <string name="learnProgramListFilterAll">Tout pwogram yo</string>
+    <string name="learnProgramListFilterNotStarted">Pa kòmanse</string>
+    <string name="learnProgramListFilterInProgress">Ankou</string>
+    <string name="learnProgramListFilterCompleted">Fini</string>
+    <string name="learnProgramListShowMoreLabel">Afiche plis</string>
+    <string name="learnProgramListEmptyMessage">Nou pa jwenn rezilta. Eseye ajiste tèm rechèch ou yo.</string>
+    <string name="learnProgramListSearchBarPlaceholder">Chèche pwogram</string>
+    <string name="learnProgramListFailedToLoadMessage">Echèk pou chaje pwogram yo</string>
+    <plurals name="learnProgramListCourseCount">
+        <item quantity="one">%1$d kou</item>
+        <item quantity="other">%1$d kou</item>
+    </plurals>
     <string name="a11y_inputErrorMessage">Erè: %1$s</string>
     <string name="a11y_required">Obligatwa</string>
 </resources>

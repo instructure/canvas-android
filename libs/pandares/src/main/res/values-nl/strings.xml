@@ -46,6 +46,7 @@
     <string name="submissionStatusFailedTitle">Inlevering mislukt</string>
     <string name="submissionStatusFailedSubtitle">Tik om details te bekijken</string>
     <string name="submissionAndRubric">Inlevering en rubriek</string>
+    <string name="submissionAndFeedback">Inlevering en feedback</string>
     <string name="commentsAndRubric">Opmerkingen &amp; Rubriek</string>
     <string name="errorLoadingAssignment">Er is een probleem met het laden van deze opdracht. Controleer je verbinding en probeer het opnieuw.</string>
     <string name="submitted">Ingediend</string>
@@ -219,6 +220,7 @@
 
     <!-- Date strings -->
     <string name="today">Vandaag</string>
+    <string name="tomorrow">Morgen</string>
     <string name="past">Vorige</string>
     <string name="noDate">Geen datum</string>
     <string name="future">Toekomst</string>
@@ -291,6 +293,7 @@
     <string name="monologue">Monoloog</string>
     <string name="noItemsToDisplayShort">Geen items te tonen</string>
     <string name="Todo">To-do lijst</string>
+    <string name="TodoNew">Opdracht</string>
     <string name="todoFilter">Cursussen filteren</string>
     <string name="filterByEllipsis">Filteren op...</string>
     <string name="favoriteCoursesLabel">Favoriete cursussen</string>
@@ -474,6 +477,7 @@
     <string name="groups">Groepen</string>
     <string name="groupMembers">Groepsleden</string>
 
+    <string name="messageGroup">Bericht sturen naar groep</string>
     <string name="loading">Laden&#8230;</string>
     <string name="select_item_to_display">Geselecteerd van de lijst</string>
 
@@ -690,9 +694,11 @@
 
     <!-- Widget Strings -->
     <string name="todoWidgetTitle">To-do lijst</string>
+    <string name="todoWidgetTitleNew">Opdracht</string>
     <string name="gradesWidgetTitle">Cijfers</string>
     <string name="notificationWidgetTitle">Meldingen</string>
     <string name="todoWidgetTitleLong">Canvas - To-do</string>
+    <string name="todoWidgetTitleLongNew">Canvas - Opdracht</string>
     <string name="gradesWidgetTitleLong">Canvas - Cijfers</string>
     <string name="gradeWidgetTitleLong">Canvas – Cijfer</string>
     <string name="notificationWidgetTitleLong">Canvas - Berichtgevingen</string>
@@ -728,6 +734,8 @@
     <!-- Tablet Strings -->
     <string name="courses">Cursussen</string>
     <string name="toDoList">To-do lijst</string>
+    <string name="toDoListNew">Lijst met opdrachten</string>
+
     <string name="notifications">Meldingen</string>
     <string name="pushNotifications">Push berichtgevingen</string>
     <string name="pushNotificationsError">Er zijn geen pushberichten voor dit apparaat geregistreerd.</string>
@@ -742,7 +750,6 @@
 
     <string name="launchSpeedgrader">Speedgrader openen</string>
 
-    <string name="search_todo">to do to do to do to do lijst</string>
     <string name="search_course">cursus cursussen les lessen</string>
     <string name="search_grades">cijfer cijfers</string>
 
@@ -1077,6 +1084,13 @@
     <string name="pageTitleMustBeSet">Paginatitel moet worden ingesteld.</string>
     <string name="pageDetails">Paginadetails</string>
     <string name="saving">Opslaan</string>
+    <string name="speedGraderSaving">Opslaan</string>
+    <string name="speedGraderSaved">Opgeslagen</string>
+    <string name="speedGraderFailed">Mislukt</string>
+    <string name="speedGraderSaveErrorTitle">Oeps, er ging iets mis</string>
+    <string name="speedGraderSaveErrorMessage">Er is een fout opgetreden bij het opslaan van je cijferaanpassing. Je kunt het nu of later opnieuw proberen.</string>
+    <string name="speedGraderSaveErrorContentDescription">Kan cijfer niet opslaan. Tik voor details.</string>
+
     <string name="confirmDeleteEvent">Weet je zeker dat je dit evenement wilt verwijderen?</string>
     <string name="conferencesNotSupported">Vergaderingen worden nog niet ondersteund op mobiele apparatenó.</string>
     <string name="filePreviewContentDescription">Voorbeeldweergave bestand</string>
@@ -1225,6 +1239,10 @@
     <string name="recordings">Opnamen</string>
     <string name="conferenceInProgress">Vergadering is bezig</string>
 
+    <!-- Conferences Widget -->
+    <string name="conferencesWidgetTitle">Vergaderingen (%d)</string>
+    <string name="conferencesWidgetConferenceInProgress">Vergadering is bezig</string>
+    <string name="conferencesWidgetDismissed">Vergadering afgewezen</string>
     <string name="a11y_criterion_content_description">Criteriabeoordeling %s</string>
     <string name="a11y_criterion_description_content_description">%s, %s</string>
     <string name="a11y_criterion_button_click_description">meer informatie</string>
@@ -1374,6 +1392,10 @@
     <plurals name="a11y_todoBadgeCount">
         <item quantity="one">%s to-do-item</item>
         <item quantity="other">%s to-do-items</item>
+    </plurals>
+    <plurals name="a11y_todoBadgeCountNew">
+        <item quantity="one">%s item van lijst met opdrachten</item>
+        <item quantity="other">%s items van lijst met opdrachten</item>
     </plurals>
     <string name="noAnnotationSelected">Geen aantekening geselecteerd</string>
     <string name="emailNotifications">E-mail meldingen</string>
@@ -1661,7 +1683,9 @@
     <string name="calendarNoEvents">Vandaag geen gebeurtenissen!</string>
     <string name="calendarNoEventsDescription">Dat lijkt een prima dag om lekker uit te rusten, te relaxen en de batterij op te laden.</string>
     <string name="userCalendarToDo">Takenlijst</string>
+    <string name="userCalendarToDoNew">Opdracht</string>
     <string name="courseToDo">%s Takenlijst</string>
+    <string name="courseToDoNew">%s opdracht</string>
     <string name="calendarEventExcused">Vrijgesteld</string>
     <string name="calendarEventMissing">Ontbrekend</string>
     <string name="calendarEventGraded">Beoordeeld</string>
@@ -1686,21 +1710,30 @@
     <string name="a11y_eventCreatedAnnouncement">Evenement %s is gemaakt.</string>
     <string name="a11y_eventUpdatedAnnouncement">Evenement %s is bijgewerkt.</string>
     <string name="a11y_toDoCreatedAnnouncement">Lijst met opdrachten %s is gemaakt.</string>
+    <string name="a11y_toDoCreatedAnnouncementNew">Opdracht %s gemaakt.</string>
     <string name="a11y_toDoUpdatedAnnouncement">Lijst met opdrachten %s is bijgewerkt.</string>
+    <string name="a11y_toDoUpdatedAnnouncementNew">Opdracht %s bijgewerkt.</string>
     <string name="todoScreenTitle">Takenlijst</string>
+    <string name="todoScreenTitleNew">Opdracht</string>
     <string name="todoDateLabel">Datum</string>
     <string name="todoDescriptionLabel">Beschrijving</string>
     <string name="todoDeleteConfirmationTitle">Lijst met opdrachten verwijderen?</string>
+    <string name="todoDeleteConfirmationTitleNew">Opdrachten verwijderen?</string>
     <string name="todoDeleteConfirmationText">Dit verwijdert je Lijst met opdrachten definitief</string>
+    <string name="todoDeleteConfirmationTextNew">Dit verwijdert je item uit de lijst met opdrachten definitief</string>
     <string name="todoDeleteErrorMessage">Er is een fout opgetreden bij het verwijderen van deze takenlijst. Controleer je verbinding en probeer het opnieuw.</string>
+    <string name="todoDeleteErrorMessageNew">Er is een fout opgetreden bij het verwijderen van deze opdracht. Controleer je verbinding en probeer het opnieuw.</string>
     <string name="createTodoScreenTitle">Nieuwe takenlijst</string>
+    <string name="createTodoScreenTitleNew">Nieuwe opdracht</string>
     <string name="editTodoScreenTitle">Lijst met opdrachten bewerken</string>
+    <string name="editTodoScreenTitleNew">Opdracht bewerken</string>
     <string name="createToDoTitleHint">Titel toevoegen</string>
     <string name="createToDoDateLabel">Datum</string>
     <string name="createToDoTimeLabel">Tijd</string>
     <string name="createToDoCalendarLabel">Kalender</string>
     <string name="createToDoDetailsLabel">Details</string>
     <string name="todoSaveErrorMessage">Er is een fout opgetreden bij het opslaan van deze takenlijst. Controleer je verbinding en probeer het opnieuw.</string>
+    <string name="todoSaveErrorMessageNew">Er is een fout opgetreden bij het opslaan van deze opdracht. Controleer je verbinding en probeer het opnieuw.</string>
     <string name="selectCalendarScreenTitle">Kalender selecteren</string>
     <string name="errorContentRetryButton">Opnieuw proberen</string>
     <string name="eventLocationLabel">Locatie</string>
@@ -1708,6 +1741,7 @@
     <string name="eventDetailsLabel">Details</string>
     <string name="errorLoadingEvent">Er is een probleem met het laden van dit evenement. Controleer je verbinding en probeer het opnieuw.</string>
     <string name="errorLoadingTodo">Er is een probleem met het laden van deze to-do. Controleer je verbinding en probeer het opnieuw.</string>
+    <string name="errorLoadingTodoNew">Er is een fout opgetreden bij het laden van deze opdracht. Controleer je verbinding en probeer het opnieuw.</string>
     <string name="eventDeleteConfirmationTitle">Evenement verwijderen?</string>
     <string name="eventDeleteConfirmationText">Dit verwijdert je evenement definitief</string>
     <string name="eventDeleteErrorMessage">Er is een fout opgetreden bij het verwijderen van dit evenement. Controleer je verbinding en probeer het opnieuw.</string>
@@ -1724,6 +1758,7 @@
     <string name="eventDeleteScopeAll">Alle evenementen</string>
     <string name="eventDeleteScopeFollowing">Dit en alle volgende evenementen</string>
     <string name="calendarAddToDo">Lijst met opdrachten toevoegen</string>
+    <string name="calendarAddToDoNew">Opdracht toevoegen</string>
     <string name="calendarAddEvent">Evenement toevoegen</string>
     <string name="createEventScreenTitle">Nieuw evenement</string>
     <string name="editEventScreenTitle">De gebeurtenis bewerken</string>
@@ -2102,7 +2137,9 @@
     <string name="widgetNotLoggedInTitle">Laten we je aanmelden!</string>
     <string name="widgetToDoNotLoggedInSubtitle">Meld je in de app aan bij je account om je lijst met opdrachten te bekijken. Het kost je maar een momentje!</string>
     <string name="a11y_widgetToDoOpenToDoList">Open het scherm van de lijst met opdrachten</string>
+    <string name="a11y_widgetToDoOpenToDoListNew">Scherm met lijst met opdrachten openen</string>
     <string name="a11y_widgetToDoCreateNewToDo">Nieuwe opdracht maken</string>
+    <string name="a11y_widgetToDoCreateNewToDoNew">Nieuwe opdracht maken</string>
     <string name="widgetGradesErrorSubtitle">We kunnen je cijfers op dit moment niet weergeven. Probeer het wat later nog een keer of open de app.</string>
     <string name="widgetGradesNotLoggedInSubtitle">Meld je in de app aan bij je account om je cijfers te bekijken. Het kost je maar een momentje!</string>
     <string name="widgetSingleGradeErrorSubtitle">We kunnen je cijfers op dit moment niet weergeven.</string>
@@ -2110,6 +2147,19 @@
     <string name="widgetSingleGradeSelectCourse">Laten we cursus kiezen</string>
     <string name="widgetGradesErrorLoadingCourses">Er is een fout opgetreden tijdens het laden van cursussen.</string>
     <string name="settingsSwitchExperience">Schakel over naar Canvas Career</string>
+    <string name="forecastWidgetTitle">Wekelijks overzicht</string>
+    <string name="forecastWidgetWeekPeriod">Week %1$d | %2$s</string>
+    <string name="forecastWidgetMissing">Ontbrekend</string>
+    <string name="forecastWidgetDue">Inleverdatum</string>
+    <string name="forecastWidgetRecentGrades">Nieuwe beoordelingen</string>
+    <string name="forecastWidgetGradeWeight">%d%% van eindcijfer</string>
+    <string name="forecastWidgetErrorMessage">We ondervinden problemen bij het laden van je opdrachten. Controleer je verbinding en probeer het opnieuw.</string>
+    <string name="forecastWidgetEmptyMissing">Geen ontbrekende opdrachten. Je hebt alles ingehaald!</string>
+    <string name="forecastWidgetEmptyDue">Geen opdrachten die deze week moet worden ingeleverd.</string>
+    <string name="forecastWidgetEmptyRecentGrades">Geen nieuwe cijfers in deze week.</string>
+    <string name="a11y_contentDescription_previousWeek">Vorige week</string>
+    <string name="a11y_contentDescription_nextWeek">Volgende week</string>
+
     <string name="speedGraderGradeTabTitle">Cijfer en rubriek</string>
     <string name="speedGraderDetailsTabTitle">Details</string>
     <string name="a11y_contentDescription_expandPanel">Panel uitvouwen</string>
@@ -2188,6 +2238,7 @@
     <string name="errorLoadingToDos">Er is een fout opgetreden bij het laden van je to-do-items. Controleer je verbinding en probeer het opnieuw.</string>
     <string name="errorUpdatingToDo">Er is een fout opgetreden bij het bijwerken van het to-do-item. Controleer je verbinding en probeer het opnieuw.</string>
     <string name="noToDosForNow">Er zijn op dit moment geen to-do\'s!</string>
+    <string name="noToDosForNowNew">Geen opdrachten op dit moment!</string>
     <string name="noToDosForNowSubtext">Dit lijkt een prima moment om uit te rusten, te ontspannen en nieuwe energie op te doen.</string>
     <string name="todoSwipeDone">Gereed</string>
     <string name="todoSwipeUndo">Ongedaan maken</string>
@@ -2198,8 +2249,10 @@
 
     <!-- To Do List Filter Screen -->
     <string name="todoFilterPreferences">Voorkeuren voor to-do-lijst</string>
+    <string name="todoFilterPreferencesNew">Voorkeuren voor lijst met opdrachten</string>
     <string name="todoFilterVisibleItems">Zichtbare items</string>
     <string name="todoFilterShowPersonalToDos">Persoonlijke to-do\'s weergeven</string>
+    <string name="todoFilterShowPersonalToDosNew">Persoonlijke opdrachten weergeven</string>
     <string name="todoFilterShowCalendarEvents">Kalenderevenementen weergeven</string>
     <string name="todoFilterShowCompleted">Voltooid weergeven</string>
     <string name="todoFilterFavoriteCoursesOnly">Alleen favoriete cursus</string>
@@ -2225,6 +2278,9 @@
     <string name="courseInvitationDeclined">Uitnodiging voor %s geweigerd</string>
     <string name="courseInvitationDeclineConfirmTitle">Uitnodiging weigeren</string>
     <string name="courseInvitationDeclineConfirmMessage">Weet je zeker dat je de uitnodiging voor %s wilt weigeren?</string>
+
+    <!-- Progress Widget -->
+    <string name="progressWidgetTitle">Voortgang</string>
 
     <!-- Welcome Widget -->
     <!-- Greetings with name (%s is the student's first name) -->
@@ -2349,6 +2405,7 @@
     <!-- Widget Display Names -->
     <string name="widget_hello">Hallo, %s</string>
 
+    <string name="courses_and_groups">Cursussen en groepen</string>
     <!-- Customize Dashboard -->
     <string name="customize_dashboard">Dashboard aanpassen</string>
     <string name="dashboard_widgets">Widgets</string>
@@ -2358,16 +2415,44 @@
     <string name="changing_dashboard_layout">Lay-out van dashboard wordt gewijzigd</string>
     <string name="changing_dashboard_layout_message">Je moet de applicatie opnieuw starten om de lay-out van het dashboard te wijzigen</string>
     <string name="restart_now">Nu opnieuw starten</string>
+    <string name="turn_on_new_dashboard">Het nieuwe dashboard inschakelen</string>
     <string name="switched_back">Teruggekeerd?</string>
     <string name="switched_back_message">Bedankt dat je het nieuwe dashboard hebt geprobeerd! Kun je ons vertellen waarom je bent teruggekeerd naar het oude dashboard?</string>
+    <string name="survey_option_hard_to_find">Het is moeilijk om dingen te vinden</string>
+    <string name="survey_option_prefer_old_layout">Ik geef de voorkeur aan de oude layout</string>
+    <string name="survey_option_something_broken">Iets functioneerde niet goed</string>
     <string name="what_could_we_improve">Wat kunnen we verbeteren?</string>
+    <string name="what_do_you_think_of_new_dashboard">Wat vind je van het nieuwe dashboard?</string>
+    <string name="let_us_know">Laat het ons weten!</string>
+    <string name="no_app_to_handle_link">Er is geen app beschikbaar om deze link te openen</string>
     <string name="skip">Overslaan</string>
     <string name="widget_setting_show_greeting">Begroeting weergeven</string>
     <string name="background_color">Achtergrondkleur</string>
+    <string name="widget_setting_show_grades">Cursuscijfers</string>
+    <string name="widget_setting_show_color_overlay">Cursuskleuroverlay</string>
     <string name="offline_content_available">Er is offline inhoud beschikbaar</string>
     <string name="a11y_contentDescription_moreOptions">Meer opties</string>
     <string name="customizeCourse">Cursus aanpassen</string>
     <string name="favoriteCoursesAndGroups">Favoriete cursussen en groepen</string>
     <string name="collapsibleSectionTitle">%1$s (%2$d)</string>
     <string name="ltiToolsOffline">Er zijn offline geen externe tools beschikbaar</string>
+    <string name="widget_weekly_summary">Wekelijks overzicht</string>
+
+    <string name="dashboardCourseNickname">Bijnaam</string>
+    <string name="dashboardCourseNicknameHint">Vul hier de bijnaam van de cursus in</string>
+    <string name="dashboardCourseColor">Cursuskleur</string>
+    <string name="widget_toDo">Dagelijkse lijst met opdrachten</string>
+    <string name="dailyToDoWidgetTitle">Dagelijkse lijst met opdrachten</string>
+    <string name="todoWidget_showCompleted">Voltooid weergeven</string>
+    <string name="todoWidget_emptyTitle">Voor nu ben je klaar!</string>
+    <string name="todoWidget_emptyMessage">Het lijkt erop dat je deze dag nog niets hebt.\nWil je een paar opdrachten toevoegen?</string>
+    <string name="todoWidget_addTodo">Opdracht toevoegen</string>
+    <string name="todoWidget_errorTitle">Oeps, er is iets misgegaan</string>
+    <string name="todoWidget_errorMessage">We konden je taken niet toevoegen.\nProbeer het opnieuw, of kom later terug.</string>
+    <string name="todoWidget_refresh">Vernieuwen</string>
+    <string name="todoWidget_today">Vandaag</string>
+    <string name="a11y_todoWidget_jumpToToday">Naar vandaag springen</string>
+    <string name="widgetSettings_widgetsColor">Hoofdkleur dashboard</string>
+    <string name="dashboard_globalAnnouncement">Algemene aankondiging</string>
+    <string name="forecastWidget_currentWeek">Huidige week</string>
 </resources>

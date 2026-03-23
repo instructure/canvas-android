@@ -31,6 +31,7 @@
     <string name="tab_attendance">उपस्थिति</string>
     <string name="tab_pages">पेज</string>
     <string name="tab_todo">करने के लिए</string>
+    <string name="tab_todo_new">करने के लिए</string>
     <string name="content_description_school_logo">स्कूल का लोगो</string>
     <string name="search_guides">Canvas गाइड में खोजें</string>
     <string name="canvas_guides">Canvas गाइड</string>
@@ -844,6 +845,7 @@
     <string name="toDoEmpty">करके के लिए और कुछ नहीं है!\n अपने दिन का आनंद लें।</string>
     <string name="toDoNoSubmissions">इस असाइनमेंट को ग्रेड करने के लिए कोई सबमिशन नहीं है।</string>
     <string name="errorToDoRouteFailed">इस करने के लिए आइटम को देखने की कोशिश करने के दौरान त्रुटि उत्पन्न हुई।</string>
+    <string name="errorToDoRouteFailedNew">इस \'करने के लिए\' आइटम को देखने का प्रयास करते समय एक त्रुटि हुई।</string>
     <string name="errorIsDesigner">डिज़ाइनर नामांकन इसे नहीं देख सकता।</string>
 
     <string name="sections">अनुभाग</string>

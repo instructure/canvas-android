@@ -513,10 +513,36 @@
     <string name="a11y_nextModuleItem">अगला मॉड्यूल आइटम</string>
     <string name="a11y_nextModule">अगला मॉड्यूल</string>
     <string name="a11y_notebookHighlightMarkedAs">%1$s, जिसे %2$s के रूप में चिह्नित किया गया है, नोट संपादित करने के लिए दो बार टैप करें</string>
+    <string name="learnCoursesTabLabel">पाठ्यक्रम</string>
+    <string name="learnProgramsTabLabel">कार्यक्रम</string>
     <string name="reportAProblemDescriptionMessage">हमारी सहायता टीम से व्यक्तिगत प्रतिक्रिया पाने के लिए टिकट दाखिल करें।</string>
     <string name="igniteAIEnterAPromptLabel">प्रॉम्प्ट दर्ज करें</string>
     <string name="a11y_igniteAiLoadingContentDescription">प्रतिक्रिया लोड की जा रही है</string>
     <string name="a11y_aiAssistFlashcardClickActionLabel">कार्ड फ़्लिप करें</string>
+    <string name="learnCourseListFailedToLoadCoursesMessage">पाठ्यक्रम लोड करने में विफल</string>
+    <string name="learnCourseListFilterAll">सभी पाठ्यक्रम</string>
+    <string name="learnCourseListFilterNotStarted">शुरू नहीं हुआ</string>
+    <string name="learnCourseListFilterInProgress">प्रगति में</string>
+    <string name="learnCourseListFilterCompleted">पूरा हुआ</string>
+    <string name="learnCourseListStartLearningLabel">सीखना शुरू करें</string>
+    <string name="learnCourseListResumeLearningLabel">सीखना फिर से शुरू करें</string>
+    <string name="learnCourseListViewCourseLabel">पाठ्यक्रम देखें</string>
+    <string name="learnCourseListShowMoreLabel">और अधिक दिखाएं</string>
+    <string name="learnCourseListSearchBarPlaceholder">पाठ्यक्रम खोजें</string>
+    <string name="learnCourseOverviewPartOfProgramsLabel">%1$s का हिस्सा</string>
+    <string name="learnCourseListEmptyMessage">कोई नतीजा नहीं मिला। अपने खोज शब्द समायोजित करने की कोशिश करें।</string>
+    <string name="learnProgramListFilterAll">सभी कार्यक्रम</string>
+    <string name="learnProgramListFilterNotStarted">शुरू नहीं हुआ</string>
+    <string name="learnProgramListFilterInProgress">प्रगति में</string>
+    <string name="learnProgramListFilterCompleted">पूरा हुआ</string>
+    <string name="learnProgramListShowMoreLabel">और अधिक दिखाएं</string>
+    <string name="learnProgramListEmptyMessage">कोई नतीजा नहीं मिला। अपने खोज शब्द समायोजित करने की कोशिश करें।</string>
+    <string name="learnProgramListSearchBarPlaceholder">कार्यक्रम खोजें</string>
+    <string name="learnProgramListFailedToLoadMessage">कार्यक्रम लोड नहीं किए जा सके</string>
+    <plurals name="learnProgramListCourseCount">
+        <item quantity="one">%1$d पाठ्यक्रम</item>
+        <item quantity="other">%1$d पाठ्यक्रम</item>
+    </plurals>
     <string name="a11y_inputErrorMessage">त्रुटि: %1$s</string>
     <string name="a11y_required">आवश्यक</string>
 </resources>

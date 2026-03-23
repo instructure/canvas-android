@@ -31,6 +31,7 @@
     <string name="tab_attendance">Attendance</string>
     <string name="tab_pages">Pages</string>
     <string name="tab_todo">To Do</string>
+    <string name="tab_todo_new">To-do</string>
     <string name="content_description_school_logo">School Logo</string>
     <string name="search_guides">Search the Canvas Guides</string>
     <string name="canvas_guides">Canvas Guides</string>
@@ -845,6 +846,7 @@
     <string name="toDoEmpty">Nothing more to do!\n Enjoy your day.</string>
     <string name="toDoNoSubmissions">There are no submissions to grade for this assignment.</string>
     <string name="errorToDoRouteFailed">An error occurred trying to view this To Do item.</string>
+    <string name="errorToDoRouteFailedNew">An error occurred trying to view this To-do item.</string>
     <string name="errorIsDesigner">Designer enrollment cannot view this.</string>
 
     <string name="sections">Sections</string>

@@ -450,11 +450,13 @@
     <string name="schedule_calendar_event_due_text">Ag %s</string>
     <string name="schedule_calendar_event_interval_text">%1$s go %2$s</string>
     <string name="schedule_todo_due_text">Le Déanamh: %s</string>
+    <string name="schedule_todo_due_text_new">Le déanamh: %s</string>
     <string name="schedule_due_text">Dlite: %s</string>
     <string name="show_missing_items_title">Taispeáin %d mír atá ar iarraidh</string>
     <string name="hide_missing_items_title">Folaigh %d mír atá in easnamh</string>
     <string name="schedule_error_message">Ní féidir do sceideal a fháil</string>
     <string name="schedule_todo_title">Le Déanamh</string>
+    <string name="schedule_todo_title_new">Le déanamh</string>
     <plurals name="schedule_points">
         <item quantity="zero">%s pt</item>
         <item quantity="one">%s pt</item>
@@ -478,6 +480,7 @@
     <string name="a11y_planner_note">Nóta pleanálaí</string>
     <string name="a11y_quiz">Quiz</string>
     <string name="a11y_todo">Le Déanamh</string>
+    <string name="a11y_todo_new">Le déanamh</string>
     <string name="a11y_page">Leathanach</string>
     <string name="a11y_assessment_request">Iarratas taisc</string>
     <string name="a11y_marked_as_done">Marcáilte mar déanta</string>
