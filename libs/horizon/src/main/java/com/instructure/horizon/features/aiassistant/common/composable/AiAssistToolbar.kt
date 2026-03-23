@@ -17,16 +17,14 @@
 package com.instructure.horizon.features.aiassistant.common.composable
 
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -49,53 +47,48 @@ fun AiAssistToolbar(
     modifier: Modifier = Modifier,
     onBackPressed: (() -> Unit)? = null,
 ) {
-    CenterAlignedTopAppBar(
-        colors = TopAppBarDefaults.centerAlignedTopAppBarColors().copy(
-            containerColor = Color.Transparent
-        ),
-        modifier = modifier,
-        title = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ai_filled),
-                    contentDescription = null,
-                    tint = HorizonColors.Icon.surfaceColored(),
-                    modifier = Modifier
-                        .size(24.dp)
-                )
-
-                HorizonSpace(SpaceSize.SPACE_4)
-
-                Text(
-                    text = stringResource(R.string.igniteAIToolbarTitle),
-                    style = HorizonTypography.h3,
-                    color = HorizonColors.Text.surfaceColored()
-                )
-            }
-        },
-        navigationIcon = {
-            if (onBackPressed != null) {
-                IconButton(
-                    iconRes = R.drawable.arrow_back,
-                    contentDescription = stringResource(R.string.a11yNavigateBack),
-                    size = IconButtonSize.SMALL,
-                    color = IconButtonColor.WhiteOutline,
-                    onClick = onBackPressed,
-                )
-            }
-        },
-        actions = {
+    Row(
+        modifier = modifier.padding(24.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        if (onBackPressed != null) {
             IconButton(
-                iconRes = R.drawable.close,
-                contentDescription = stringResource(R.string.igniteAIDismissContentDescription),
+                iconRes = R.drawable.arrow_back,
+                contentDescription = stringResource(R.string.a11yNavigateBack),
                 size = IconButtonSize.SMALL,
                 color = IconButtonColor.WhiteOutline,
-                onClick = onDismissPressed,
+                onClick = onBackPressed,
             )
+            HorizonSpace(SpaceSize.SPACE_4)
         }
-    )
+
+        Icon(
+            painter = painterResource(R.drawable.ai_filled),
+            contentDescription = null,
+            tint = HorizonColors.Icon.surfaceColored(),
+            modifier = Modifier
+                .size(24.dp)
+        )
+
+        HorizonSpace(SpaceSize.SPACE_4)
+
+        Text(
+            text = stringResource(R.string.studyToolsToolbarTitle),
+            style = HorizonTypography.h3,
+            color = HorizonColors.Text.surfaceColored(),
+            modifier = modifier.weight(1f)
+        )
+
+        HorizonSpace(SpaceSize.SPACE_4)
+
+        IconButton(
+            iconRes = R.drawable.close,
+            contentDescription = stringResource(R.string.studyToolsDismissContentDescription),
+            size = IconButtonSize.SMALL,
+            color = IconButtonColor.WhiteOutline,
+            onClick = onDismissPressed,
+        )
+    }
 }
 
 @Composable

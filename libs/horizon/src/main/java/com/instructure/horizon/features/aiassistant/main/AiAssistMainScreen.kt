@@ -130,7 +130,7 @@ fun AiAssistMainScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .semantics {
-                                contentDescription = context.getString(R.string.a11y_igniteAiLoadingContentDescription)
+                                contentDescription = context.getString(R.string.a11y_studyToolsLoadingContentDescription)
                             }
                             .focusRequester(loadingFocusRequester)
                             .focusable()

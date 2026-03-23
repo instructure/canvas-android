@@ -4,10 +4,12 @@ import com.instructure.canvasapi2.models.journey.JourneyAssistRequestBody
 import com.instructure.canvasapi2.models.journey.JourneyAssistResponse
 import retrofit2.http.Body
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface JourneyAssistAPI {
     @POST("assist")
     suspend fun answerPrompt(
         @Body body: JourneyAssistRequestBody,
+        @Query("studyToolsOnly") studyToolsOnly: Boolean
     ): JourneyAssistResponse
 }

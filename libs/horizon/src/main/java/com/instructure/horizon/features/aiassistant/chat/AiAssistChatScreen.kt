@@ -43,7 +43,6 @@ import com.instructure.canvasapi2.models.journey.JourneyAssistRole
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.aiassistant.common.composable.AiAssistMessage
-import com.instructure.horizon.features.aiassistant.common.composable.AiAssistMessage
 import com.instructure.horizon.features.aiassistant.common.composable.AiAssistScaffold
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
 import com.instructure.horizon.features.aiassistant.navigation.AiAssistRoute
@@ -129,7 +128,7 @@ fun AiAssistChatScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .semantics {
-                                contentDescription = context.getString(R.string.a11y_igniteAiLoadingContentDescription)
+                                contentDescription = context.getString(R.string.a11y_studyToolsLoadingContentDescription)
                             }
                             .focusRequester(loadingFocusRequester)
                             .focusable()
